@@ -2278,8 +2278,6 @@ lv:
         selected: "izvēlēti (%{count})"
         select_post:
           label: "izvēlēties"
-        select_replies:
-          label: "izvēlēties +atbildes"
         delete: dzēst izvēlētos
         cancel: atcelt izvēlēšanos
         select_all: izvēlēties visu

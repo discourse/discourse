@@ -35,8 +35,6 @@ export function setup(helper) {
     "details.ai-quote",
     "details[data-ai-generated=true]",
     "details.elided",
-    "span.ai-details-label",
-    "span[title]",
   ]);
 
   helper.registerPlugin((md) => {
@@ -50,7 +48,7 @@ export function setup(helper) {
 
       const label = md.utils.escapeHtml(i18n("post.ai_generated"));
       const title = md.utils.escapeHtml(i18n("post.ai_generated_title"));
-      return `<span>${summary}</span><span class="ai-details-label" title="${title}">${label}</span>`;
+      return `<span>${summary}</span><span class="ai-badge" data-ai-label="${label}" title="${title}"></span>`;
     };
   });
 }

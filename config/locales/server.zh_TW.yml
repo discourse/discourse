@@ -3974,6 +3974,8 @@ zh_TW:
         作為預防措施，您的新帳號已被禁言；在工作人員審查您的帳號前，您將無法建立新回覆或主題。造成不便，敬請見諒。
 
         如需進一步指引，請參閱我們的[社群指南](%{base_url}/guidelines)。
+    moderator_silence:
+      subject_template: "您的帳號已被禁言"
     silenced_by_staff:
       title: "被管理人員禁言"
       preview: "帳號已暫時停用。"
@@ -4357,14 +4359,6 @@ zh_TW:
       title: "帳號已停權"
       subject_template: "[%{email_prefix}] 您的帳號已被停權"
       subject_template_improved: "您的帳號已被停權"
-    account_silenced:
-      title: "帳號已禁言"
-      subject_template: "[%{email_prefix}] 您的帳號已被禁言"
-      subject_template_improved: "您的帳號已被禁言"
-    account_silenced_forever:
-      title: "帳號已禁言"
-      subject_template: "[%{email_prefix}] 您的帳號已被禁言"
-      subject_template_improved: "您的帳號已被禁言"
     account_deleted:
       title: "帳號已刪除"
       subject_template: "[%{email_prefix}] 您的帳號已被刪除"

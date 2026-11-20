@@ -2354,12 +2354,6 @@ ca:
     account_suspended_forever:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
-    account_silenced:
-      title: "Compte silenciat"
-      subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
-    account_silenced_forever:
-      title: "Compte silenciat"
-      subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"

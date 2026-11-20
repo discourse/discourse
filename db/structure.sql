@@ -1432,7 +1432,10 @@ CREATE TABLE public.appearance_changes (
     user_id integer NOT NULL,
     activated_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    styles jsonb DEFAULT '{}'::jsonb NOT NULL,
+    css text DEFAULT ''::text NOT NULL,
+    replaces_theme_id integer
 );
 
 
@@ -1541,7 +1544,10 @@ CREATE TABLE public.ask_ai_logs (
     ask_tab_opened_after_ms integer DEFAULT 0 NOT NULL,
     ask_answer_seen_after_ms integer,
     ask_result_clicked_tab character varying DEFAULT ''::character varying NOT NULL,
-    ask_result_clicked_after_ms integer DEFAULT 0 NOT NULL
+    ask_result_clicked_after_ms integer DEFAULT 0 NOT NULL,
+    cache_hit boolean DEFAULT false NOT NULL,
+    answer_deferred_reason character varying,
+    cache_evictions integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2252,6 +2258,47 @@ ALTER SEQUENCE public.badges_id_seq OWNED BY public.badges.id;
 
 
 --
+-- Name: blog_instances; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_instances (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    about text DEFAULT ''::text NOT NULL,
+    slug character varying NOT NULL,
+    url character varying,
+    category_id integer,
+    path_format character varying DEFAULT '/{slug}'::character varying NOT NULL,
+    posts_per_page integer DEFAULT 10 NOT NULL,
+    active_theme jsonb,
+    is_default boolean DEFAULT false NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_instances_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_instances_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_instances_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_instances_id_seq OWNED BY public.blog_instances.id;
+
+
+--
 -- Name: blog_paths; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2260,7 +2307,8 @@ CREATE TABLE public.blog_paths (
     publication_id bigint NOT NULL,
     path character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    blog_id bigint NOT NULL
 );
 
 
@@ -2318,7 +2366,8 @@ CREATE TABLE public.blog_publications (
     cover_alt character varying DEFAULT ''::character varying NOT NULL,
     word_count integer,
     co_author_ids integer[] DEFAULT '{}'::integer[] NOT NULL,
-    page boolean DEFAULT false NOT NULL
+    page boolean DEFAULT false NOT NULL,
+    blog_id bigint NOT NULL
 );
 
 
@@ -14728,6 +14777,13 @@ ALTER TABLE ONLY public.badges ALTER COLUMN id SET DEFAULT nextval('public.badge
 
 
 --
+-- Name: blog_instances id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_instances ALTER COLUMN id SET DEFAULT nextval('public.blog_instances_id_seq'::regclass);
+
+
+--
 -- Name: blog_paths id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -17360,6 +17416,14 @@ ALTER TABLE ONLY public.badge_types
 
 ALTER TABLE ONLY public.badges
     ADD CONSTRAINT badges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: blog_instances blog_instances_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_instances
+    ADD CONSTRAINT blog_instances_pkey PRIMARY KEY (id);
 
 
 --
@@ -20227,6 +20291,13 @@ CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summ
 
 
 --
+-- Name: idx_blog_publications_on_blog_id_published_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_blog_publications_on_blog_id_published_at ON public.blog_publications USING btree (blog_id, published, published_at);
+
+
+--
 -- Name: idx_blog_publications_scheduled_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21865,10 +21936,38 @@ CREATE UNIQUE INDEX index_badges_on_name ON public.badges USING btree (name);
 
 
 --
--- Name: index_blog_paths_on_path; Type: INDEX; Schema: public; Owner: -
+-- Name: index_blog_instances_on_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_blog_paths_on_path ON public.blog_paths USING btree (path);
+CREATE UNIQUE INDEX index_blog_instances_on_category_id ON public.blog_instances USING btree (category_id);
+
+
+--
+-- Name: index_blog_instances_on_is_default; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_is_default ON public.blog_instances USING btree (is_default) WHERE is_default;
+
+
+--
+-- Name: index_blog_instances_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_slug ON public.blog_instances USING btree (slug);
+
+
+--
+-- Name: index_blog_instances_on_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_instances_on_url ON public.blog_instances USING btree (url);
+
+
+--
+-- Name: index_blog_paths_on_blog_id_and_path; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_blog_paths_on_blog_id_and_path ON public.blog_paths USING btree (blog_id, path);
 
 
 --
@@ -21890,13 +21989,6 @@ CREATE UNIQUE INDEX index_blog_publications_on_discussion_topic_id ON public.blo
 --
 
 CREATE UNIQUE INDEX index_blog_publications_on_draft_topic_id ON public.blog_publications USING btree (draft_topic_id);
-
-
---
--- Name: index_blog_publications_on_published_and_published_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_blog_publications_on_published_and_published_at ON public.blog_publications USING btree (published, published_at);
 
 
 --
@@ -26727,6 +26819,11 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261119153028'),
+('20261118215054'),
+('20261118184327'),
+('20261118184323'),
+('20261118172233'),
 ('20261117234001'),
 ('20261117200926'),
 ('20261113163304'),

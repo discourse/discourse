@@ -2262,12 +2262,6 @@ hr:
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-    account_silenced:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-    account_silenced_forever:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"

@@ -592,6 +592,7 @@ class Reviewable < ActiveRecord::Base
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
           .includes(reviewable_notes: { user: :user_stat })
+      result = DiscoursePluginRegistry.apply_modifier(:reviewable_preload_relation, result, user)
     end
     return result if user.admin?
 

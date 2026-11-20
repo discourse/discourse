@@ -7,10 +7,7 @@ RSpec.describe DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage do
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:tool) { described_class.new({ page_name: "pricing" }, bot_user: bot_user, llm: llm) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   it "exposes the configured page names to the model" do
     expect(described_class.signature[:parameters]).to contain_exactly(

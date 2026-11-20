@@ -4019,10 +4019,8 @@ hr:
           label: "odabran"
           title: "Kliknite da biste uklonili post iz izbora"
         select_replies:
-          label: "odaberi +odgovori"
           title: "Dodajte post i sve njegove odgovore odabiru"
         select_below:
-          label: "odaberite +ispod"
           title: "Dodaj post i sve nakon toga na odabir"
         delete: obriši odabrano
         cancel: odustani od odabranog
@@ -7181,7 +7179,6 @@ hr:
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
         silence_reason_placeholder: "Razlog utišavanja"
-        silence_message: "Pošaljite poruku e-mailom"
         suspended_until: "(do %{until})"
         suspend_forever: "Zauvijek suspendirajte"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."

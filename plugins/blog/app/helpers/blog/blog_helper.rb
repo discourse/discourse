@@ -2,8 +2,12 @@
 
 module ::Blog
   module BlogHelper
+    def current_blog
+      @blog ||= Instance.default_blog
+    end
+
     def blog_url(path = "")
-      Configuration.url(path, preview_token: @theme_preview_token)
+      Configuration.url(path, blog: current_blog, preview_token: @theme_preview_token)
     end
 
     def blog_theme

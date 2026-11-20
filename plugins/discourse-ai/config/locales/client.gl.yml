@@ -46,6 +46,8 @@ gl:
         error: "Erro"
         response: "Resposta"
       discourse_workflows:
+        ai_tool:
+          list_item: "Elemento da listaxe"
         classify:
           text: "Texto"
           upload_ids: "Imaxes"
@@ -80,6 +82,9 @@ gl:
           enabled: "Activado"
         search:
           name: "Buscar"
+        review_queue:
+          setting_groups:
+            settings: "Configuración"
         image_caption:
           setting_groups:
             settings: "Configuración"

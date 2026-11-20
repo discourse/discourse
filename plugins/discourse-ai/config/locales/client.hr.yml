@@ -48,6 +48,8 @@ hr:
       discourse_workflows:
         ai_agent:
           mode: "Modus"
+        ai_tool:
+          list_item: "Predmet popisa"
         classify:
           text: "Tekst"
           upload_ids: "Slike"
@@ -84,6 +86,9 @@ hr:
           enabled: "Omogućeno"
         search:
           name: "Pretraživanje"
+        review_queue:
+          setting_groups:
+            settings: "Postavke"
         image_caption:
           setting_groups:
             settings: "Postavke"

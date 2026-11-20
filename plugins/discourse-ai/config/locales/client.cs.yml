@@ -59,6 +59,12 @@ cs:
       discourse_workflows:
         ai_agent:
           mode: "Režim"
+        ai_tool:
+          tool_ref: "Nástroj"
+          list_item: "Položka seznamu"
+          add_list_item: "Přidat položku"
+        mcp_tool:
+          tool_name: "Nástroj"
         classify:
           text: "Text"
           upload_ids: "Obrázky"
@@ -114,6 +120,9 @@ cs:
           smart_dates: "Chytré datumy"
           markdown_tables: "Generovat Markdown tabulku"
           custom_prompt: "Vlastní pokyn"
+        review_queue:
+          setting_groups:
+            settings: "Nastavení"
         image_caption:
           setting_groups:
             settings: "Nastavení"
@@ -448,7 +457,6 @@ cs:
         filter_all: "Vše"
         filter_standalone: "Samostatná"
       ai_bot:
-        llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
         cancel_streaming: "Zastavit odpověď"
         try_again: "Zkusit znovu"
@@ -503,7 +511,6 @@ cs:
         conversations:
           header: "S čím mohu pomoci?"
           submit: "Odeslat otázku"
-          disclaimer: "Generativní umělá inteligence může dělat chyby. Ověřte si důležité informace."
           placeholder: "Zeptejte se..."
           new: "Nová otázka"
           messages_sidebar_title: "Konverzace"

@@ -34,6 +34,7 @@ jobs:
 
     env:
       RAILS_ENV: test
+      RUBY_YJIT_ENABLE: "1"
       PGUSER: discourse
       PGPASSWORD: discourse
       LOAD_PLUGINS: 1
@@ -45,6 +46,10 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
+
+      - name: Log Ruby version and YJIT status
+        run: |
+          ruby --disable=gems -v -e 'puts "YJIT enabled: #{defined?(RubyVM::YJIT) ? RubyVM::YJIT.enabled? : false}"'
 
       - name: Setup Git
         run: |

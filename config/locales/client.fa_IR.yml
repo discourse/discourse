@@ -3589,10 +3589,8 @@ fa_IR:
           label: "انتخاب شده"
           title: "برای حذف پست از حالت انتخاب کلیک کنید"
         select_replies:
-          label: "انتخاب کردن + جواب دادن"
           title: "پست و تمام پاسخ های آن را به انتخاب اضافه کنید"
         select_below:
-          label: "انتخاب نوشته  + موارد زیر آن"
           title: "پست و همه پس از آن را به انتخاب اضافه کنید"
         delete: حذف انتخاب شده ها
         cancel: لغو انتخاب
@@ -6757,7 +6755,6 @@ fa_IR:
         silence_duration: "کاربر تا چه مدت در حالت سکوت خواهد بود؟"
         silence_reason_title: "دلیل سکوت"
         silence_reason_placeholder: "دلیل سکوت"
-        silence_message: "پیام ایمیل"
         suspended_until: "(تا %{until})"
         suspend_forever: "تعلیق برای همیشه"
         cant_suspend: "این کاربر نمی‌تواند معلق شود."

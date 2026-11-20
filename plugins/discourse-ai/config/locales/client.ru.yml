@@ -64,6 +64,7 @@ ru:
         requires_ai: "Для этого нужно включить плагин ИИ"
       nodes:
         "action:ai_agent": "ИИ Агент"
+        "action:ai_tool": "Инструмент искусственного интеллекта"
       node_descriptions:
         "action:ai_agent": "Запустите агента искусственного интеллекта для обработки данных или генерации контента."
     discourse_automation:
@@ -247,6 +248,14 @@ ru:
           agent_id: "Агент"
           mode: "Режим"
           select_agent: "Выберите агента..."
+        ai_tool:
+          tool_ref: "Инструмент"
+          arguments: "Аргументы"
+          list_item: "Элемент списка"
+          add_list_item: "Добавить элемент"
+        mcp_tool:
+          tool_name: "Инструмент"
+          arguments: "Аргументы"
         classify:
           text: "Текст"
           upload_ids: "Изображения"
@@ -378,6 +387,9 @@ ru:
             enabled_features: "Включенные функции"
             automation: "Автоматизация"
             agents: "Агенты"
+        review_queue:
+          setting_groups:
+            settings: "Настроек"
         image_caption:
           setting_groups:
             settings: "Настроек"
@@ -1077,8 +1089,7 @@ ru:
         filter_standalone: "Обособленное"
       ai_bot:
         title: "AI-бот"
-        agent: "Агент:"
-        llm: "Модель:"
+        agent_menu_heading: "Агент"
         pm_warning: "Сообщения чат-бота с AI регулярно отслеживаются модераторами."
         cancel_streaming: "Прекратить отвечать"
         try_again: "Попробовать снова"
@@ -1138,7 +1149,6 @@ ru:
           tab_label: "AI"
           header: "Чем я могу помочь?"
           submit: "Задать вопрос"
-          disclaimer: "Генеративный AI может ошибаться. Проверяйте важную информацию."
           placeholder: "Задайте вопрос..."
           new: "Новый вопрос"
           min_input_length_message:

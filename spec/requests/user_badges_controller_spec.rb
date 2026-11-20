@@ -736,14 +736,22 @@ RSpec.describe UserBadgesController do
       sign_in(moderator)
 
       [private_message_post, restricted_post].each do |inaccessible_post|
-        post "/user_badges.json",
-             params: {
-               badge_id: badge.id,
-               username: user.username,
-               post_id: inaccessible_post.id,
-             }
+        post_references = [
+          { post_id: inaccessible_post.id },
+          { reason: "/p/#{inaccessible_post.id}" },
+          { reason: "/posts/#{inaccessible_post.id}.json" },
+          { reason: inaccessible_post.url },
+        ]
+        post_references.each do |reference|
+          post "/user_badges.json",
+               params: {
+                 badge_id: badge.id,
+                 username: user.username,
+                 **reference,
+               }
 
-        expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:forbidden)
+        end
       end
       expect(UserBadge.exists?(user:, badge:)).to eq(false)
 

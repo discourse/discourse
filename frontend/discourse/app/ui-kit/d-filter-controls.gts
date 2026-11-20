@@ -700,9 +700,6 @@ export default class DFilterControls<T = unknown> extends Component<
   @action
   async resetFilters() {
     this.textFilter = "";
-    if (this.#searchDebounce) {
-      this.#scheduleSearchSync();
-    }
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
@@ -721,9 +718,14 @@ export default class DFilterControls<T = unknown> extends Component<
       ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
     ].filter((name): name is string => Boolean(name));
     if (queryParams.length) {
-      this.updateQueryParams(
-        Object.fromEntries(queryParams.map((name) => [name, null]))
+      const updates = Object.fromEntries(
+        queryParams.map((name) => [name, null])
       );
+      this.updateQueryParams(updates);
+      // a search write still in flight can land after this one
+      if (this.#searchDebounce) {
+        this.#scheduleSearchSync(updates);
+      }
     }
 
     await this.args.onResetFilters?.();
@@ -745,13 +747,13 @@ export default class DFilterControls<T = unknown> extends Component<
     this.args.onFilterDropdownsToggle?.(this.showFilterDropdowns);
   }
 
-  #scheduleSearchSync() {
+  #scheduleSearchSync(updates = {}) {
     if (this.args.textFilterQueryParam) {
       this.#searchSeed.value ??= this.initialTextFilterValue;
       this.#searchDebounce = discourseDebounce(
         this,
         this.updateQueryParams,
-        {},
+        updates,
         INPUT_DELAY
       );
     }

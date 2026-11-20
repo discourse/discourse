@@ -3734,6 +3734,8 @@ nl:
         Als voorzorgsmaatregel is je nieuwe account gedempt en kun je geen nieuwe antwoorden of topics maken totdat een medewerker je account kan beoordelen. Onze excuses voor het ongemak.
 
         Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
+    moderator_silence:
+      subject_template: "Je account is gedempt"
     silenced_by_staff:
       title: "Gedempt door medewerker"
       preview: "Account tijdelijk geblokkeerd."
@@ -4117,14 +4119,6 @@ nl:
       title: "Account geschorst"
       subject_template: "[%{email_prefix}] Je account is geschorst"
       subject_template_improved: "Je account is geschorst"
-    account_silenced:
-      title: "Account gedempt"
-      subject_template: "[%{email_prefix}] Je account is gedempt"
-      subject_template_improved: "Je account is gedempt"
-    account_silenced_forever:
-      title: "Account gedempt"
-      subject_template: "[%{email_prefix}] Je account is gedempt"
-      subject_template_improved: "Je account is gedempt"
     account_deleted:
       title: "Account verwijderd"
       subject_template: "[%{email_prefix}] Je account is verwijderd"

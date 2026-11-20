@@ -39,7 +39,7 @@ export default class SettingFieldTopic extends Component {
       <TopicChooser
         @content={{this.content}}
         @onChange={{this.onChange}}
-        @options={{hash castInteger=true}}
+        @options={{hash castInteger=true disabled=@field.disabled}}
         @value={{@field.value}}
       />
     </@field.Control>

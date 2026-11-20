@@ -635,10 +635,20 @@ describe "AI combined search" do
       search.expect_tab("ask")
       expect_opening("spring gardening", tab: "ask", reason: "searched_again")
 
-      # Disjoint queries avoid searched_again; verify each independent opening reason.
-      ask("green thumb")
-      search.expect_tab("ask")
-      expect_opening("green thumb", tab: "ask", reason: "no_keyword_matches")
+      previous_count = requests.size
+      search.search("green thumb")
+      search.expect_tab("topics")
+      expect_opening(
+        "green thumb",
+        tab: "topics",
+        reason: "answer_deferred",
+        ask_outcome: "skipped",
+        answer_deferred_reason: "exact_user_match",
+      )
+      expect(requests.size).to eq(previous_count)
+
+      search.select_tab("ask")
+      wait_for_request("green thumb", after: previous_count)
 
       ask("gardening?")
       search.expect_tab("ask")

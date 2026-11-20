@@ -133,10 +133,14 @@ pl_PL:
         requires_ai_translation: "Wymaga skonfigurowania tłumaczenia AI"
       nodes:
         "action:ai_agent": "Agent AI"
+        "action:ai_tool": "Narzędzie AI"
+        "action:mcp_tool": "Narzędzie MCP"
         "action:classify": "Klasyfikuj"
         "trigger:post_locale_detected": "Wykryto język wpisu"
       node_descriptions:
         "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
+        "action:ai_tool": "Uruchom narzędzie AI raz dla każdego elementu wejściowego"
+        "action:mcp_tool": "Wywołanie narzędzia na skonfigurowanym serwerze MCP"
         "action:classify": "Zadaj modelowi decyzyjnemu pytania dotyczące każdego elementu"
         "trigger:post_locale_detected": "Uruchamia się, gdy zostanie wykryty język nowego lub edytowanego wpisu"
     discourse_automation:
@@ -317,6 +321,7 @@ pl_PL:
       title: "AI"
       dsa_classification:
         suggest: "Zasugeruj za pomocą AI"
+        suggested_by_ai: "Propozycja od AI"
         updated: "Klasyfikacja zaktualizowana"
         no_suggestion: "AI nie mogła zasugerować klasyfikacji"
       copied: "Skopiowano"
@@ -357,6 +362,29 @@ pl_PL:
           upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Każde przesyłanie musi dotrzeć do modelu, w przeciwnym razie węzeł ulegnie awarii: obrazy wymagają widoczności w agencie i LLM, a dokumenty muszą mieć włączony typ pliku w LLM."
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "Wybierz agenta..."
+        ai_tool:
+          tool_ref: "Narzędzie"
+          llm_model_id: "Model LLM"
+          arguments: "Argumenty"
+          loading_arguments: "Ładowanie argumentów narzędzia…"
+          list_item: "Element listy"
+          add_list_item: "Dodaj element"
+          remove_list_item: "Usuń element"
+          invalid_json: "Przed wykonaniem tego kroku napraw lub przywróć kod JSON."
+          revert_json: "Przywróć edycję JSON"
+          json_arguments: "Argumenty jako JSON"
+          json_arguments_description: "Wprowadź argumenty tego narzędzia jako obiekt JSON, używając dokładnie tych samych kluczy, które wymieniono poniżej."
+          invalid_arguments: "Zapisane argumenty nie są obiektem. Wyczyść je, aby edytować poszczególne argumenty."
+          clear_arguments: "Wyczyść argumenty"
+          stale_argument: "Zapisany argument „%{name}” nie znajduje się w bieżącym podpisie narzędzia."
+          remove_argument: "Usuń argument"
+          true_value: "Prawda"
+          false_value: "Fałsz"
+        mcp_tool:
+          mcp_server_id: "Serwer MCP"
+          mcp_server_id_description: "Argumenty są wysyłane do tego serwera przy użyciu jego skonfigurowanych danych uwierzytelniających, jeśli takowe istnieją."
+          tool_name: "Narzędzie"
+          arguments: "Argumenty"
         classify:
           decision_model_id: "Model decyzyjny"
           text: "Tekst"
@@ -588,6 +616,14 @@ pl_PL:
             enabled_features: "Włączone funkcje"
             automation: "Automatyzacja"
             agents: "Agenty"
+        review_queue:
+          name: "Przejrzyj sugestie kolejki"
+          description: "Wykorzystuje model decyzyjny do sugerowania działań personelu dla nowych pozycji przeglądu"
+          add_model: "Dodaj model decyzyjny"
+          no_models: "Dodaj model decyzyjny, aby rozpocząć generowanie sugestii dotyczących kolejki przeglądu."
+          reviewable_action: "Zaproponuj działanie w ramach przeglądu"
+          setting_groups:
+            settings: "Ustawienia"
         image_caption:
           name: "Podpis obrazu"
           description: "Generuje podpisy AI do obrazów w wpisach i udostępnia je czytelnikom oraz technologiom wspomagającym"
@@ -1950,8 +1986,9 @@ pl_PL:
         unavailable: "Ten link do konwersacji nie jest już dostępny. Nadal możesz go anulować."
       ai_bot:
         title: "Bot AI"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
+        model_menu_heading: "Model językowy"
+        manage_language_models: "Zarządzaj modelami językowymi"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."
         cancel_streaming: "Zatrzymaj odpowiedź"
         try_again: "Spróbuj ponownie"
@@ -2026,7 +2063,7 @@ pl_PL:
             body: "Uzyskaj odpowiedzi od sztucznej inteligencji i przechowuj swoje konwersacje tutaj, aby móc do nich wrócić później."
           header: "W czym mogę pomóc?"
           submit: "Prześlij pytanie"
-          disclaimer: "Generatywna sztuczna inteligencja może popełniać błędy. Zweryfikuj ważne informacje."
+          disclaimer: "AI może popełniać błędy. Zweryfikuj ważne informacje."
           placeholder: "Zadaj pytanie..."
           new: "Nowe pytanie"
           min_input_length_message:

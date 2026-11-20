@@ -4027,12 +4027,6 @@ sk:
     account_suspended_forever:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
-    account_silenced:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
-    account_silenced_forever:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
     account_deleted:
       title: "Účet bol odstránený"
       subject_template: "[%{email_prefix}] Vaše konto bolo vymazané"

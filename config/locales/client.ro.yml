@@ -3028,10 +3028,7 @@ ro:
           label: "selectat"
           title: "Apasă pentru a exclude postarea din selecție"
         select_replies:
-          label: "selectează +răspunsuri"
           title: "Adaugă postarea și toate răspunsurile la selecție"
-        select_below:
-          label: "selectează +tot ce urmează"
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -5437,7 +5434,6 @@ ro:
         suspended_by: "Suspendat de"
         silence_reason: "Motiv"
         silence_modal_title: "Suspendă utilizatorul"
-        silence_message: "Mesaj email"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"

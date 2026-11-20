@@ -6,9 +6,15 @@
 # - palettes: a new light and dark palette for an existing theme
 # - existing_palettes: a light and dark palette the site already has, for an
 #   existing theme
-# - theme: a new theme with its own new palettes
+# - theme: a new theme with its own new palettes, and optionally styles
 #
-# The fonts it sets apply when it goes live.
+# A new theme can be a new version of a theme an earlier change created. It is
+# saved as "Name (draft)"; making it live renames the version it replaces to
+# "Name (previous)", for an instant switch back, and removes older versions.
+#
+# The fonts it sets apply when it goes live. A theme's styles are typed (see
+# AppearanceStyles::Policy); the CSS written from them is kept here and in the
+# theme's common SCSS, so edits made to the theme by hand can be noticed.
 class AppearanceChange < ActiveRecord::Base
   # the site-wide settings a change can set when it goes live
   SITE_SETTING_NAMES = %w[base_font heading_font].freeze
@@ -25,6 +31,7 @@ class AppearanceChange < ActiveRecord::Base
   belongs_to :light_color_scheme, class_name: "ColorScheme", optional: true
   belongs_to :dark_color_scheme, class_name: "ColorScheme", optional: true
   belongs_to :user, optional: true
+  belongs_to :replaces_theme, class_name: "Theme", optional: true
 
   validates :name, presence: true, length: { maximum: 100 }
   validate :only_supported_site_settings
@@ -36,12 +43,34 @@ class AppearanceChange < ActiveRecord::Base
     I18n.t("appearance_changes.dark_palette_name", name:, locale: SiteSetting.default_locale)
   end
 
+  # "Name (draft)" or "Name (previous)"
+  def self.version_name(name, version)
+    I18n.t("appearance_changes.#{version}_name", name:, locale: SiteSetting.default_locale)
+  end
+
+  # Whether a new version can replace a theme: it was created by an
+  # appearance change, nobody has changed it since, and users can't have
+  # chosen it.
+  def self.replaceable?(theme)
+    theme.present? && !theme.user_selectable && managed_theme_ids.include?(theme.id)
+  end
+
   # Themes created by appearance changes that nobody has added files or
-  # components to since, so all they hold is their palettes.
-  def self.palette_only_theme_ids
+  # components to since, so all they hold is their palettes and the styles
+  # the change wrote.
+  def self.managed_theme_ids
     kind_theme
       .where.not(
-        ThemeField.where("theme_fields.theme_id = appearance_changes.theme_id").arel.exists,
+        ThemeField
+          .where("theme_fields.theme_id = appearance_changes.theme_id")
+          .where.not(<<~SQL, common: Theme.targets[:common])
+            appearance_changes.css <> ''
+            AND theme_fields.target_id = :common
+            AND theme_fields.name = 'scss'
+            AND theme_fields.value = appearance_changes.css
+          SQL
+          .arel
+          .exists,
       )
       .where.not(
         ChildTheme.where("child_themes.parent_theme_id = appearance_changes.theme_id").arel.exists,
@@ -56,6 +85,18 @@ class AppearanceChange < ActiveRecord::Base
 
   def palettes
     [light_color_scheme, dark_color_scheme].compact
+  end
+
+  def styled?
+    css.present?
+  end
+
+  # Whether a new theme still holds only what the change put in it: no
+  # components, and no files except the styles it wrote.
+  def theme_unchanged?
+    return true if !kind_theme?
+
+    theme.theme_fields.all? { |field| generated_styles?(field) } && theme.child_theme_relation.none?
   end
 
   def palettes_exist?
@@ -96,6 +137,12 @@ class AppearanceChange < ActiveRecord::Base
       "site_settings" =>
         activation_site_settings.keys.index_with { |setting_name| SiteSetting.get(setting_name) },
     }
+    if kind_theme? && replaces_theme
+      state["theme_names"] = {
+        theme_id.to_s => theme.name,
+        replaces_theme_id.to_s => replaces_theme.name,
+      }
+    end
     return state if kind_theme?
 
     state.merge(
@@ -149,6 +196,59 @@ class AppearanceChange < ActiveRecord::Base
     end
   end
 
+  # Once this change's theme is live, keeps the version it replaced as
+  # "Name (previous)" and removes the one before that, so a theme has at most
+  # a live, a previous and a draft version.
+  def replace_previous_version!
+    return if replaces_theme.nil?
+
+    transaction do
+      replaces_theme.update!(name: self.class.version_name(name, :previous))
+      theme.update!(name:)
+
+      previous = AppearanceChange.kind_theme.find_by(theme_id: replaces_theme_id)
+      older = previous&.replaces_theme
+      # the previous version's own switch back to the older one is dropped
+      # below, but another change may still need it
+      if older.nil? || older.default? ||
+           self.class.switch_back_target?(older, except: [previous.id])
+        next
+      end
+
+      # the previous version can't switch back to the older one any more
+      previous.update!(replaces_theme_id: nil, previous_state: {})
+      AppearanceChange.kind_theme.where(theme_id: older.id).find_each(&:discard_version!)
+    end
+  end
+
+  # The themes making this change live renames or removes: the version it
+  # replaces, and the one before that.
+  def versions_changed_on_activation
+    return [] if !kind_theme? || replaces_theme.nil?
+
+    previous = AppearanceChange.kind_theme.find_by(theme_id: replaces_theme_id)
+    [replaces_theme, previous&.replaces_theme].compact
+  end
+
+  # Whether switching back from some change would make this theme live again.
+  def self.switch_back_target?(theme, except: [])
+    where
+      .not(id: except)
+      .where("previous_state -> 'site_settings' ->> 'default_theme_id' = ?", theme.id.to_s)
+      .exists?
+  end
+
+  # Removes an old version's change, theme and the palettes nothing else uses.
+  # A theme someone has changed or let users choose since stays as an
+  # ordinary theme.
+  def discard_version!
+    transaction do
+      destroy!
+      theme.destroy! if !theme.default? && !theme.user_selectable? && theme_unchanged?
+      created_palettes.each { |palette| palette.destroy! if disposable_palette?(palette) }
+    end
+  end
+
   private
 
   def retrying_activation?
@@ -165,14 +265,18 @@ class AppearanceChange < ActiveRecord::Base
     errors.add(:site_settings, :invalid) if (site_settings.keys - SITE_SETTING_NAMES).present?
   end
 
+  def generated_styles?(field)
+    styled? && field.target_id == Theme.targets[:common] && field.name == "scss" &&
+      field.value == css
+  end
+
   # Anything edited since the change was saved belongs to whoever edited it.
   def edited_since_saved?(record)
     record.updated_at > created_at
   end
 
   def disposable_theme?
-    !edited_since_saved?(theme) && !theme.default? && !theme.user_selectable? &&
-      theme.theme_fields.none? && theme.child_theme_relation.none? &&
+    !edited_since_saved?(theme) && !theme.default? && !theme.user_selectable? && theme_unchanged? &&
       AppearanceChange.where(
         "previous_state -> 'site_settings' ->> 'default_theme_id' = ?",
         theme.id.to_s,
@@ -195,14 +299,17 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  activated_at          :datetime
+#  css                   :text             default(""), not null
 #  kind                  :integer          not null
 #  name                  :string           not null
 #  previous_state        :jsonb            not null
 #  site_settings         :jsonb            not null
+#  styles                :jsonb            not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  dark_color_scheme_id  :integer          not null
 #  light_color_scheme_id :integer          not null
+#  replaces_theme_id     :integer
 #  theme_id              :integer          not null
 #  user_id               :integer          not null
 #

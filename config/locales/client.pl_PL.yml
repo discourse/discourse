@@ -938,9 +938,9 @@ pl_PL:
           many: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
           other: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
     copy_codeblock:
-      copied: "skopiowane!"
-      copy: "skopiuj kod do schowka"
-      fullscreen: "pokaż kod na pełnym ekranie"
+      copied: "Skopiowano!"
+      copy: "Skopiuj kod do schowka"
+      fullscreen: "Pokaż kod na pełnym ekranie"
       view_code: "Zobacz kod"
     drafts:
       label: "Szkice"
@@ -1046,12 +1046,12 @@ pl_PL:
       none_found: "Nie znaleziono tematów."
       title:
         search: "Wyszukaj temat"
-        placeholder: "tutaj wpisz tytuł tematu, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł tematu, adres URL lub identyfikator"
     choose_message:
       none_found: "Nie znaleziono wiadomości."
       title:
         search: "Wyszukaj wiadomość"
-        placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł wiadomości, adres URL lub identyfikator"
     dsa_statements:
       title: "Klasyfikacja DSA"
       help_title: "O klasyfikacji w ramach ustawy o usługach cyfrowych UE"
@@ -1814,16 +1814,16 @@ pl_PL:
       "15": "Szkice"
       "17": "Linki"
     categories:
-      categories_label: "kategorie"
-      subcategories_label: "podkategorie"
-      no_subcategories: "brak podkategorii"
-      remove_filter: "usuń filtr"
+      categories_label: "Kategorie"
+      subcategories_label: "Podkategorie"
+      no_subcategories: "Brak podkategorii"
+      remove_filter: "Usuń filtr"
       plus_more_count:
         one: "+%{count} więcej"
         few: "+%{count} więcej"
         many: "+%{count} więcej"
         other: "+%{count} więcej"
-      view_all: "pokaż wszystkie"
+      view_all: "Pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
       page_layout: "Układ strony kategorii"
@@ -5205,19 +5205,19 @@ pl_PL:
       invite_private:
         title: "Zaproś do dyskusji"
         email_or_username: "Adres email lub nazwa użytkownika zapraszanej osoby"
-        email_or_username_placeholder: "adres email lub nazwa użytkownika"
+        email_or_username_placeholder: "Adres e-mail lub nazwa użytkownika"
         action: "Zaproś"
         success: "Wskazany użytkownik został zaproszony do udziału w tej dyskusji."
         success_group: "Zaprosiliśmy tę grupę do uczestnictwa w tej wiadomości"
         error: "Przepraszamy, wystąpił błąd w trakcie zapraszania użytkownika(-czki)."
         not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
-        group_name: "nazwa grupy"
+        group_name: "Nazwa grupy"
       controls: "Ustawienia tematu"
       invite_reply:
         title: "Zaproś"
-        username_placeholder: "nazwa użytkownika"
+        username_placeholder: "Nazwa użytkownika"
         action: "Wyślij zaproszenie"
-        help: "zaproś innych do tego tematu e-mailem lub powiadomieniem"
+        help: "Zaproś innych do tego tematu e-mailem lub powiadomieniem"
         to_forum: "Wyślemy krótką wiadomość e-mail umożliwiającą znajomemu natychmiastowe dołączenie poprzez kliknięcie linku."
         discourse_connect_enabled: "Wpisz nazwę użytkownika osoby, którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
@@ -5239,11 +5239,11 @@ pl_PL:
         cancel: "Usuń filtr"
       move_to:
         title: "Przenieś do"
-        action: "przenieś do"
+        action: "Przenieś do"
         error: "Podczas przenoszenia wpisów wystąpił błąd."
       split_topic:
         title: "Przenieś do nowego tematu"
-        action: "przenieś do nowego tematu"
+        action: "Przenieś do nowego tematu"
         topic_name: "Nowy tytuł tematu"
         radio_label: "Nowy temat"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
@@ -5254,7 +5254,7 @@ pl_PL:
           other: "Masz zamiar utworzyć nowy temat, składający się z <b>%{count}</b> wybranych przez ciebie wpisów."
       merge_topic:
         title: "Przenieś do Istniejącego Tematu"
-        action: "przenieś do istniejącego tematu"
+        action: "Przenieś do istniejącego tematu"
         error: "Wystąpił błąd podczas przenoszenia wpisów do danego tematu."
         radio_label: "Istniejący temat"
         instructions:
@@ -5265,7 +5265,7 @@ pl_PL:
         chronological_order: "zachować porządek chronologiczny po połączeniu"
       move_to_new_message:
         title: "Przejdź do nowej wiadomości"
-        action: "przejdź do nowej wiadomości"
+        action: "Przejdź do nowej wiadomości"
         message_title: "Tytuł nowej wiadomości"
         radio_label: "Nowa wiadomość"
         participants: "Uczestnicy"
@@ -5276,7 +5276,7 @@ pl_PL:
           other: "Za chwilę utworzysz nową wiadomość i wypełnisz ją wybranymi <b>%{count}</b> postami."
       move_to_existing_message:
         title: "Przejdź do istniejącej wiadomości"
-        action: "przejdź do istniejącej wiadomości"
+        action: "Przejdź do istniejącej wiadomości"
         radio_label: "Istniejąca wiadomość"
         participants: "Uczestnicy"
         instructions:
@@ -5286,7 +5286,7 @@ pl_PL:
           other: "Wybierz wiadomość, do której chcesz przenieść te <b>%{count}</b> postów."
       merge_posts:
         title: "Scal wybrane wpisy"
-        action: "scal wybrane wpisy"
+        action: "Scal wybrane wpisy"
         error: "Wystąpił błąd podczas łączenia wybranych wpisów"
       publish_page:
         title: "Publikowanie strony"
@@ -5304,9 +5304,9 @@ pl_PL:
         publishing_settings: "Ustawienia publikowania"
       change_owner:
         title: "Zmiana właściciela"
-        action: "zmień właściciela"
+        action: "Zmiana właściciela"
         error: "Wystąpił błąd podczas zmiany właściciela wpisów."
-        placeholder: "nazwa nowego właściciela"
+        placeholder: "Nazwa użytkownika nowego właściciela"
         instructions:
           one: "Wybierz nowego właściciela posta przez <b>@ %{old_user}</b>"
           few: "Wybierz nowego właściciela postów %{count} autorstwa <b>@ %{old_user}</b>"
@@ -5324,24 +5324,24 @@ pl_PL:
         error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
         instructions: "Wybierz nowy znacznik czasu dla tematu. Wpisy w temacie zostaną zaktualizowane o tę samą różnicę."
       multi_select:
-        select: "wybierz"
-        selected: "wybrano (%{count})"
+        select: "Wybierz"
+        selected: "Wybrano (%{count})"
         select_post:
-          label: "wybierz"
+          label: "Wybierz"
           title: "Dodaj wpis do zaznaczenia"
         selected_post:
-          label: "zaznaczone"
+          label: "Wybrane"
           title: "Kliknij aby usunąć wpis z zaznaczenia"
         select_replies:
-          label: "wybierz +replies"
+          label: "Wybierz i odpowiedzi"
           title: "Dodaj wpis i wszystkie jego odpowiedzi do wyboru"
         select_below:
-          label: "wybierz + poniżej"
+          label: "Wybierz i poniżej"
           title: "Dodaj wpis i wszystko po nim do wyboru"
-        delete: usuń wybrane
-        cancel: anuluj wybieranie
-        select_all: zaznacz wszystkie
-        deselect_all: odznacz wszystkie
+        delete: Usuń wybrane
+        cancel: Anuluj wybieranie
+        select_all: Wybierz wszystkie
+        deselect_all: Usuń wybór wszystkich
         description:
           one: Wybrano <b>%{count}</b> wpis.
           few: "Wybrano <b>%{count}</b> wpisy."
@@ -6518,9 +6518,9 @@ pl_PL:
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
-      selector_tags: "tagi"
-      selector_no_tags: "brak tagów"
-      selector_remove_filter: "usuń filtr"
+      selector_tags: "Tagi"
+      selector_no_tags: "Brak tagów"
+      selector_remove_filter: "Usuń filtr"
       tags: "Tagi"
       choose_for_topic: "Opcjonalne tagi…"
       choose_for_topic_required:
@@ -9089,6 +9089,7 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
+          your_organization_description: "Szczegóły dotyczące osób zarządzających tą witryną."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
           company_url: "Strona internetowa"
@@ -10003,6 +10004,8 @@ pl_PL:
             web_hook_update: "zaktualizuj webhooka"
             web_hook_destroy: "zniszcz webhooka"
             web_hook_deactivate: "deaktywuj webhooka"
+            web_hook_ping: "Ping webhooka"
+            web_hook_redeliver: "Ponowne wysłanie webhooka"
             embeddable_host_create: "utwórz hosta do osadzania"
             embeddable_host_update: "zmodyfikuj hosta do osadzania"
             embeddable_host_destroy: "usuń hosta do osadzania"
@@ -10424,8 +10427,8 @@ pl_PL:
         silence_reason_hidden_label: "Dlaczego wyciszasz? Ten tekst będzie widoczny tylko dla personelu i tego użytkownika. Niech będzie krótki."
         silence_reason_title: "Powód wyciszenia"
         silence_reason_placeholder: "Powód wyciszenia"
-        silence_message: "Wiadomość Email"
-        silence_message_placeholder: "Opcjonalnie podaj więcej informacji na temat tej czynności. Zostaną one dołączone do wiadomości e-mail wysłanej do uciszonego użytkownika."
+        silence_notice_message: "Wiadomość do użytkownika"
+        silence_notice_message_placeholder: "Opcjonalnie możesz dodać szczegóły do wiadomości, którą otrzyma uciszony użytkownik."
         suspended_until: "(do %{until})"
         suspend_forever: "Zawieś na zawsze"
         cant_suspend: "Nie można zawiesić tego użytkownika."
@@ -10864,9 +10867,9 @@ pl_PL:
           many: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
           other: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
         clear_filter: "Wyczyść"
-        add_url: "dodaj URL"
-        add_host: "dodaj host"
-        add_group: "dodaj grupę"
+        add_url: "Dodaj adres URL"
+        add_host: "Dodaj host"
+        add_group: "Dodaj grupę"
         uploaded_image_list:
           label: "Edytuj listę"
           empty: "Nie ma jeszcze zdjęć. Proszę jakieś przesłać."

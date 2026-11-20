@@ -56,7 +56,7 @@ module ::Blog
       return "draft" if viewed_topic.id == working_copy&.id
       # Any public Blog-category topic is a discussion, whether or not it has been published yet.
       return "discussion" if viewed_topic.id == object.discussion_topic_id
-      return "discussion" if viewed_topic.category_id == SiteSetting.blog_category.to_i
+      return "discussion" if viewed_topic.category_id == object.blog.category_id
       "source"
     end
 

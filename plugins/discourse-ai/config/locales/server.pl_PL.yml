@@ -199,6 +199,9 @@ pl_PL:
     ai_discord_search_agent: "Agent używany do wyszukiwania Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
+    ai_reviewable_action_suggestions_enabled: "Generuj sugestie działań dla nowych elementów kolejki przeglądu."
+    ai_reviewable_action_decision_model: "Wyślij nowe elementy oczekujące na sprawdzenie, w tym oznaczone treści prywatne, do tego modelu decyzyjnego w celu uzyskania sugestii działań. Pozostaw puste, aby wyłączyć."
+    ai_reviewable_action_min_confidence: "Minimalny poziom ufności wymagany do zapisania sugerowanej czynności przeglądu, od 0 do 1."
     ai_dsa_classification_decision_model: "Wybierz model używany do sugerowania reguł i kategorii społeczności podczas klasyfikacji DSA. Pozostaw puste, aby wyłączyć sugestie."
     ai_translation_locale_detector_decision_model: "Model decyzyjny, który wykrywa język treści przed jej przetłumaczeniem. Treści w języku, którego nie można poprawnie przetłumaczyć, są pozostawiane agentowi wykrywającemu ustawienia regionalne. Pozostaw puste pole, aby wykryć wszystkie języki za pomocą agenta."
     ai_translation_category_scope: "Wybierz kategorie, z których może korzystać tłumaczenie AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_translation_categories}}. Prywatne wiadomości są kontrolowane przez {{setting:ai_translation_personal_messages}}."
@@ -359,6 +362,12 @@ pl_PL:
     unknown_model: "Nieznany model AI"
     multiple_models: "Wiele modeli"
     discourse_workflows:
+      ai_tool:
+        errors:
+          unavailable: "Wybrane narzędzie AI nie jest dostępne do wykonania przepływu pracy."
+          invalid_arguments: "Argumenty narzędzia AI są nieprawidłowe"
+          invalid_schema: "Narzędzie zwróciło schemat argumentów, którego nie można rozwiązać."
+          llm_not_found: "Wybrany model języka nie został znaleziony."
       ai_agent:
         errors:
           invalid_mode: "„%{mode}” nie jest obsługiwanym trybem wykonywania agenta AI."

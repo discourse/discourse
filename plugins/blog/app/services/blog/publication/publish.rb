@@ -81,9 +81,13 @@ class Blog::Publication::Publish
     end
   end
 
-  def ensure_public_category
-    Blog::EnsurePublicCategory.call do
-      on_failure { fail!(Blog::Readiness.new.error || I18n.t("blog.errors.category_unavailable")) }
+  def ensure_public_category(publication:)
+    Blog::EnsurePublicCategory.call(params: { blog_id: publication.blog_id }) do
+      on_failure do
+        fail!(
+          Blog::Readiness.new(publication.blog).error || I18n.t("blog.errors.category_unavailable"),
+        )
+      end
     end
   end
 

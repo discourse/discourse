@@ -66,7 +66,9 @@ RSpec.describe Blog::Article::List do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+    subject(:result) do
+      described_class.call(params: { blog_id: blog.id, **params }, **dependencies)
+    end
 
     include_context "with a public blog"
 
@@ -86,6 +88,7 @@ RSpec.describe Blog::Article::List do
       )
     end
 
+    let(:blog) { Blog::Instance.default_blog }
     let(:params) { {} }
     let(:dependencies) { { guardian: Guardian.new } }
 
@@ -121,6 +124,13 @@ RSpec.describe Blog::Article::List do
 
     context "when everything's ok" do
       it { is_expected.to run_successfully }
+
+      it "leaves out articles from other blogs" do
+        other_blog = Blog::Instance.create!(name: "Engineering", slug: "engineering")
+        newer_publication.update_columns(blog_id: other_blog.id)
+
+        expect(result.listing[:publications]).to eq([featured_publication, older_publication])
+      end
 
       it "leaves out standalone pages" do
         newer_publication.update_columns(page: true)
