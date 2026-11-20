@@ -213,7 +213,8 @@ module Email
             optional_tags: ->(_) { format_tag_hashtags },
           )
 
-        body = I18n.t("#{@opts[:template]}.text_body_template", augmented_template_args).dup
+        body_template = @opts[:body_template] || "#{@opts[:template]}.text_body_template"
+        body = I18n.t(body_template, augmented_template_args).dup
       else
         body = @opts[:body].dup
       end

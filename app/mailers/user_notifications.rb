@@ -66,24 +66,20 @@ class UserNotifications < ActionMailer::Base
 
   def signup_after_reject(user, opts = {})
     locale = user_locale(user)
-    reject_reason = opts[:reject_reason]
-    reason_text = reject_reason.to_s.sub(/\A[[:space:]]+/, "")
-    reason_line =
-      if reason_text.present?
-        I18n.t(
-          "user_notifications.signup_after_reject.reason_line",
-          locale:,
-          reject_reason: reason_text,
-        )
-      end
+    template = "user_notifications.signup_after_reject"
+    reason = opts[:reject_reason]
+    if reason.to_s.match?(/\A[[:space:]]*\z/)
+      body_template = signup_rejection_body_without_reason(template:, locale:)
+    end
 
     build_email(
       user.email,
-      template: "user_notifications.signup_after_reject",
+      template:,
+      body_template:,
       **Dsa::AppealInstructions.message_options,
-      locale: locale,
-      reject_reason:,
-      reject_reason_line: reason_line && "\n\n#{reason_line}",
+      locale:,
+      reason:,
+      reject_reason: reason,
       recipient_user: user,
     )
   end
@@ -1001,6 +997,21 @@ class UserNotifications < ActionMailer::Base
   end
 
   private
+
+  def signup_rejection_body_without_reason(template:, locale:)
+    default = "#{template}.text_body_template"
+    without_reason = "#{template}.text_body_template_without_reason"
+
+    I18n.fallbacks[locale].each do |fallback|
+      break if I18n.overrides_by_locale(fallback).key?(default)
+      if I18n.t(without_reason, locale: fallback, fallback: false, default: nil)
+        return without_reason
+      end
+      break if I18n.t(default, locale: fallback, fallback: false, default: nil)
+    end
+
+    nil
+  end
 
   def build_user_email_token_by_template(template, user, email_token)
     build_email(
