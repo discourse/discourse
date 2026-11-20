@@ -213,4 +213,26 @@ describe LocalizationGuardian do
       end
     end
   end
+
+  describe "#can_localize_tag?" do
+    fab!(:tag)
+    fab!(:category_group, :group)
+    fab!(:member, :user)
+
+    before do
+      SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      category_group.add(member)
+      Fabricate(:private_category, group: category_group).update!(tags: [tag])
+    end
+
+    it "returns false for a tag restricted to a category the user can't see" do
+      expect(Guardian.new(user).can_localize_tag?(tag)).to eq(false)
+      expect(Guardian.new(user).can_localize_tag?(tag.id)).to eq(false)
+    end
+
+    it "returns true for a tag restricted to a category the user can see" do
+      expect(Guardian.new(member).can_localize_tag?(tag)).to eq(true)
+      expect(Guardian.new(member).can_localize_tag?(tag.id)).to eq(true)
+    end
+  end
 end
