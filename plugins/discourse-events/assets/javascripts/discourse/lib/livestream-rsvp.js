@@ -7,7 +7,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 
 export default class LivestreamRsvp extends Component {
-  @service appEvents;
   @service currentUser;
   @service discoursePostEventApi;
   @service messageBus;
@@ -85,15 +84,7 @@ export default class LivestreamRsvp extends Component {
         this.livestreamTopic.event_id
       );
       const payload = { status: "going" };
-      const data = { status: "going", postId: event.id };
-
-      if (event.watchingInvitee) {
-        await this.discoursePostEventApi.updateEventAttendance(event, payload);
-        this.appEvents.trigger("calendar:update-invitee-status", data);
-      } else {
-        await this.discoursePostEventApi.joinEvent(event, payload);
-        this.appEvents.trigger("calendar:create-invitee-status", data);
-      }
+      await this.discoursePostEventApi.rsvp(event, payload);
     } catch (e) {
       popupAjaxError(e);
     } finally {

@@ -30,6 +30,9 @@ module DiscourseEvents
       self.table_name = "discourse_post_event_events"
       self.ignored_columns = %w[starts_at ends_at]
 
+      has_many :registrations,
+               class_name: "DiscourseEvents::Events::Registration",
+               dependent: :delete_all
       has_many :event_dates, dependent: :destroy
       # this is a cross plugin dependency, only called if chat is enabled
       belongs_to :chat_channel, class_name: "Chat::Channel"
@@ -83,6 +86,32 @@ module DiscourseEvents
       validate :allowed_custom_fields
       validate :url_is_a_uri, if: :url_changed?
       validate :hosts_are_valid
+      validate :valid_registration_form, if: :registration_form_changed?
+
+      def registration_revision
+        return unless registration_form
+        Digest::SHA256.hexdigest(
+          [registration_form, starts_at, recurrence, recurrence_until, timezone].to_json,
+        )
+      end
+
+      def registration_host_ids
+        (event_hosts.map(&:user_id) + [post.user_id]).uniq
+      end
+
+      def sync_registration_topic_recipients
+        return unless registration_topic_id
+        topic = Topic.private_messages.find_by(id: registration_topic_id)
+        return unless topic
+
+        ids = registration_host_ids + [Discourse.system_user.id]
+        topic.topic_allowed_groups.delete_all
+        topic.topic_allowed_users.where.not(user_id: ids).delete_all
+        (ids - topic.topic_allowed_users.pluck(:user_id)).each do |user_id|
+          topic.topic_allowed_users.create!(user_id:)
+        end
+        topic
+      end
 
       def self.attributes_protected_by_default
         super - %w[id]
@@ -346,6 +375,14 @@ module DiscourseEvents
             I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
           )
         end
+      end
+
+      def valid_registration_form
+        return if registration_form.nil? || FormDefinition.new(registration_form).valid?
+        errors.add(
+          :registration_form,
+          I18n.t("discourse_post_event.errors.models.event.invalid_registration_form"),
+        )
       end
 
       def hosts_are_valid
@@ -774,6 +811,7 @@ module DiscourseEvents
         EventHost.insert_all!(inserts) if inserts.present?
 
         association(:event_hosts).reset
+        sync_registration_topic_recipients if stale_ids.any? || inserts.any?
       end
 
       def apply_params_for_status(params)

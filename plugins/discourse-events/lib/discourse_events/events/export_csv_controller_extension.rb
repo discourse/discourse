@@ -33,14 +33,14 @@ module DiscourseEvents
       end
 
       def post_event_export?
-        params[:entity] === "post_event"
+        %w[post_event event_registrations].include?(params[:entity])
       end
 
       def ensure_can_export_post_event
         return if !SiteSetting.discourse_post_event_enabled
 
         post_event = DiscourseEvents::Events::Event.find(export_params[:args][:id])
-        post_event && guardian.can_act_on_discourse_post_event?(post_event)
+        post_event && guardian.can_export_entity?(params[:entity], nil, export_params[:args])
       end
     end
   end

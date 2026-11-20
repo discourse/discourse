@@ -307,6 +307,8 @@ after_initialize do
   # DISCOURSE POST EVENT
 
   require_relative "app/jobs/regular/discourse_post_event_bulk_invite"
+  require_relative "jobs/regular/report_event_registrations"
+  Rails.application.config.filter_parameters += ["invitee.registration"]
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
   require_relative "jobs/regular/discourse_post_event/warm_event_onebox"
@@ -985,6 +987,13 @@ after_initialize do
   register_anonymous_action("rsvp_event") do |user, params|
     event_id = params["event_id"]
     recurring = ActiveModel::Type::Boolean.new.cast(params["recurring"])
+    if params["status"] == "going" &&
+         DiscourseEvents::Events::Event
+           .where(id: event_id)
+           .where.not(registration_form: nil)
+           .exists?
+      next
+    end
     existing_invitee = DiscourseEvents::Events::Invitee.find_by(post_id: event_id, user_id: user.id)
 
     if existing_invitee

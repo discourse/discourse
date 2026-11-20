@@ -12,6 +12,15 @@ en:
           calendar_event_updated: "Calendar event is updated"
           calendar_event_destroyed: "Calendar event is destroyed"
   js:
+    event_registration:
+      enable: "Require registration to RSVP"
+      edit: "Edit registration form"
+      title: "Event registration"
+      host_notice: "Each submission includes the member’s username, email address, and submission time in the registration report."
+      member_notice: "The event hosts will receive your answers, username, email address, and submission time."
+      submit: "Submit and RSVP as Going"
+      download: "Download registration submissions"
+      export_queued: "We’ll send you a personal message with the CSV download when it’s ready."
     notifications:
       titles:
         event_reminder: "event reminder"

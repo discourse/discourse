@@ -47,6 +47,12 @@ export default class MyForm extends Component {
 }
 ```
 
+## Authoring configurable forms
+
+Use `FormDefinitionEditor` when users need to build a form. Pass a plain object with a title, description and ordered fields as `@definition`. The editor calls `@onSave` with the edited definition. Pass `@onPreview` to preview the current draft and `@fieldTypes` to limit the available types. The field and choice IDs are independent of their labels and positions.
+
+To display the saved questions or preview a draft, pass the same fields and the enclosing FormKit form to `FormDefinitionFields`. The form owner supplies initial answers and handles submission. Dropdown and radio values are choice IDs. On the server, validate a definition with `FormDefinition.new(definition).valid?` before storing it. Call `invalid_answers(answers)` on the saved definition when accepting responses.
+
 # Form
 
 ## Yielded Parameters

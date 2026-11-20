@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -219,6 +220,9 @@ export default class DiscoursePostEventStatus extends Component {
       }
 
       const event = this.args.event;
+      if (event.registrationForm && payload.status === "going") {
+        return getOwner(this).lookup("route:application").send("showLogin");
+      }
       const register = () =>
         deferAnonymousAction(this, "rsvp_event", {
           event_id: event.id,
@@ -237,18 +241,8 @@ export default class DiscoursePostEventStatus extends Component {
     const previousStatus = event.watchingInvitee?.status;
     let rsvpSuccess = false;
     try {
-      const data = { status: payload.status, postId: event.id };
       this.calendarPrompt = null;
-
-      if (event.watchingInvitee) {
-        await this.discoursePostEventApi.updateEventAttendance(event, payload);
-        this.appEvents.trigger("calendar:update-invitee-status", data);
-      } else {
-        await this.discoursePostEventApi.joinEvent(event, payload);
-        this.appEvents.trigger("calendar:create-invitee-status", data);
-      }
-
-      rsvpSuccess = true;
+      rsvpSuccess = await this.discoursePostEventApi.rsvp(event, payload);
     } catch (err) {
       popupAjaxError(err);
     }

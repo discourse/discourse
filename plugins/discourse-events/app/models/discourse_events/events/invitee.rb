@@ -42,7 +42,9 @@ module DiscourseEvents
         end
 
         invitee = create!(post_id:, user_id:, status: statuses[status], recurring:)
-        invitee.publish_attendance_change!(acting_user:)
+        ActiveRecord.after_all_transactions_commit do
+          invitee.publish_attendance_change!(acting_user:)
+        end
         invitee
       rescue ActiveRecord::RecordNotUnique
         # multiple attendances may be created concurrently — return the winning row
@@ -57,7 +59,7 @@ module DiscourseEvents
         end
 
         update!(status: self.class.statuses[status], recurring:)
-        publish_attendance_change!(acting_user:)
+        ActiveRecord.after_all_transactions_commit { publish_attendance_change!(acting_user:) }
         self
       end
 

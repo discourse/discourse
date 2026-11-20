@@ -33,7 +33,18 @@ module DiscourseEvents
           all_day: all_day?,
           custom_fields: custom_fields,
           host_user_ids: host_user_ids,
+          registration_form: registration_form,
         }
+      end
+
+      def registration_form
+        encoded = raw_event[:"registration-form"]
+        return if encoded.nil?
+        return false if encoded.bytesize > 100_000
+
+        JSON.parse(URI::DEFAULT_PARSER.unescape(encoded))
+      rescue JSON::ParserError
+        false
       end
 
       def is_livestream
