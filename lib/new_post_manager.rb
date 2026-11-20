@@ -231,36 +231,12 @@ class NewPostManager
   end
 
   def perform
-    if !self.class.exempt_user?(@user) &&
-         matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
+    on_error = ->(message) do
       result = NewPostResult.new(:created_post, false)
-      if matches.size == 1
-        key = "contains_blocked_word"
-        translation_args = { word: CGI.escapeHTML(matches[0]) }
-      else
-        key = "contains_blocked_words"
-        translation_args = { words: CGI.escapeHTML(matches.join(", ")) }
-      end
-      result.errors.add(:base, I18n.t(key, translation_args))
-      return result
+      result.errors.add(:base, message)
+      result
     end
-
-    # Perform handlers until one returns a result
-    NewPostManager.handlers.any? do |handler|
-      result = handler.call(self)
-      return result if result
-    end
-
-    # We never queue private messages
-    if @args[:archetype] == Archetype.private_message ||
-         (
-           args[:topic_id] &&
-             Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
-         )
-      return perform_create_post
-    end
-
-    NewPostManager.default_handler(self) || perform_create_post
+    UserSlowMode.check_posting(@user, @args, on_error:) { process_new_post }
   end
 
   # Enqueue this post
@@ -336,5 +312,40 @@ class NewPostManager
     end
 
     result
+  end
+
+  private
+
+  def process_new_post
+    if !self.class.exempt_user?(@user) &&
+         matches = WordWatcher.new("#{@args[:title]} #{@args[:raw]}").should_block?.presence
+      result = NewPostResult.new(:created_post, false)
+      if matches.size == 1
+        key = "contains_blocked_word"
+        translation_args = { word: CGI.escapeHTML(matches[0]) }
+      else
+        key = "contains_blocked_words"
+        translation_args = { words: CGI.escapeHTML(matches.join(", ")) }
+      end
+      result.errors.add(:base, I18n.t(key, translation_args))
+      return result
+    end
+
+    # Perform handlers until one returns a result
+    NewPostManager.handlers.any? do |handler|
+      result = handler.call(self)
+      return result if result
+    end
+
+    # We never queue private messages
+    if @args[:archetype] == Archetype.private_message ||
+         (
+           args[:topic_id] &&
+             Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
+         )
+      return perform_create_post
+    end
+
+    NewPostManager.default_handler(self) || perform_create_post
   end
 end

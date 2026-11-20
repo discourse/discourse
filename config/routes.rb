@@ -226,6 +226,7 @@ Discourse::Application.routes.draw do
         put "deactivate"
         put "silence"
         put "unsilence"
+        put "slow_mode"
         put "trust_level"
         put "trust_level_lock"
         put "primary_group"

@@ -101,6 +101,10 @@ module UserGuardian
     user && is_staff? && not(user.staff?)
   end
 
+  def can_set_user_slow_mode?(user)
+    SiteSetting.enable_user_slow_mode && user&.human? && can_silence_user?(user)
+  end
+
   def can_unsilence_user?(user)
     user && is_staff? && (!user.staff? || is_admin?)
   end

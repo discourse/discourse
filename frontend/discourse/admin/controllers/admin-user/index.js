@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
+import UserSlowModeModal from "discourse/admin/components/modal/user-slow-mode";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -540,6 +541,11 @@ export default class AdminUserIndexController extends Controller {
   @action
   unsuspend() {
     this.model.unsuspend().catch(popupAjaxError);
+  }
+
+  @action
+  showSlowModeModal() {
+    this.modal.show(UserSlowModeModal, { model: this.model });
   }
 
   @action

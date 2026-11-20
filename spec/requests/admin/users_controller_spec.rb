@@ -2258,6 +2258,71 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#slow_mode" do
+    before { sign_in(moderator) }
+
+    it "rejects changes when the setting is disabled" do
+      put "/admin/users/#{user.id}/slow_mode.json", params: { seconds: 300 }
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    context "when user slow mode is enabled" do
+      before { SiteSetting.enable_user_slow_mode = true }
+
+      it "allows a moderator to set a wait and end time and clear it" do
+        ends_at = 2.days.from_now.change(usec: 0)
+        put "/admin/users/#{user.id}/slow_mode.json",
+            params: {
+              seconds: 300,
+              ends_at: ends_at.iso8601,
+            }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.fetch("user_slow_mode")).to eq(
+          "seconds" => 300,
+          "ends_at" => ends_at.utc.iso8601,
+        )
+        expect(user.reload).to have_attributes(
+          user_slow_mode_seconds: 300,
+          user_slow_mode_until: ends_at,
+        )
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.parsed_body).to include("can_set_user_slow_mode" => true)
+
+        put "/admin/users/#{user.id}/slow_mode.json", params: { seconds: 0 }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.fetch("user_slow_mode")).to be_nil
+        expect(user.reload).to have_attributes(user_slow_mode_seconds: 0, user_slow_mode_until: nil)
+        expect(
+          UserHistory.where(
+            action: UserHistory.actions[:user_slow_mode_changed],
+            target_user: user,
+            acting_user: moderator,
+          ).count,
+        ).to eq(2)
+      end
+
+      it "rejects staff targets and invalid intervals or dates" do
+        put "/admin/users/#{admin.id}/slow_mode.json", params: { seconds: 300 }
+        expect(response).to have_http_status(:forbidden)
+
+        put "/admin/users/#{user.id}/slow_mode.json", params: { seconds: "-60" }
+        expect(response).to have_http_status(:bad_request)
+
+        put "/admin/users/#{user.id}/slow_mode.json",
+            params: {
+              seconds: 60,
+              ends_at: 1.day.ago.iso8601,
+            }
+        expect(response).to have_http_status(:bad_request)
+        expect(user.reload.user_slow_mode_seconds).to eq(0)
+      end
+    end
+  end
+
   describe "#silence" do
     fab!(:reg_user, :user)
     fab!(:other_user, :user)

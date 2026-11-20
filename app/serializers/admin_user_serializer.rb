@@ -8,6 +8,8 @@ class AdminUserSerializer < AdminUserListSerializer
              :can_deactivate,
              :can_approve,
              :can_change_trust_level,
+             :can_set_user_slow_mode,
+             :user_slow_mode,
              :ip_address,
              :registration_ip_address,
              :include_ip
@@ -16,6 +18,22 @@ class AdminUserSerializer < AdminUserListSerializer
 
   def include_single_sign_on_record?
     scope.can_check_sso_details?(object)
+  end
+
+  def include_can_set_user_slow_mode?
+    scope.can_set_user_slow_mode?(object)
+  end
+
+  def can_set_user_slow_mode
+    true
+  end
+
+  def include_user_slow_mode?
+    include_can_set_user_slow_mode?
+  end
+
+  def user_slow_mode
+    UserSlowMode.summary(object)
   end
 
   def can_approve

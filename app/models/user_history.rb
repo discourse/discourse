@@ -196,6 +196,7 @@ class UserHistory < ActiveRecord::Base
         create_bot: 136,
         web_hook_ping: 137,
         web_hook_redeliver: 138,
+        user_slow_mode_changed: 140,
       )
   end
 
@@ -312,6 +313,7 @@ class UserHistory < ActiveRecord::Base
       delete_watched_word_group
       topic_slow_mode_set
       topic_slow_mode_removed
+      user_slow_mode_changed
       custom_emoji_create
       custom_emoji_destroy
       delete_post_permanently
@@ -400,6 +402,7 @@ class UserHistory < ActiveRecord::Base
       :topic_timestamps_changed,
       :topic_slow_mode_set,
       :topic_slow_mode_removed,
+      :user_slow_mode_changed,
       :recover_topic,
       :delete_topic,
       :delete_topic_permanently,

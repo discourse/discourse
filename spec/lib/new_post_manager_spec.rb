@@ -18,6 +18,130 @@ RSpec.describe NewPostManager do
     end
   end
 
+  describe "user slow mode" do
+    before do
+      freeze_time
+      SiteSetting.enable_user_slow_mode = true
+      user.update!(user_slow_mode_seconds: 5.minutes)
+    end
+
+    it "limits replies across topics until the interval has passed" do
+      result =
+        described_class.new(user, raw: "This first reply is allowed", topic_id: topic.id).perform
+      expect(result).to be_success
+
+      other_topic = Fabricate(:topic)
+      result =
+        described_class.new(user, raw: "A reply in another topic", topic_id: other_topic.id).perform
+      expect(result).not_to be_success
+      expect(result.errors.full_messages).to include(
+        I18n.t("user_slow_mode.wait", time_left: RateLimiter.time_left(5.minutes.to_i)),
+      )
+
+      new_topic =
+        described_class.new(
+          user,
+          raw: "This also waits for the posting interval",
+          title: "A new topic during slow mode",
+        ).perform
+      expect(new_topic).not_to be_success
+      expect(new_topic.errors.full_messages).to eq(result.errors.full_messages)
+
+      freeze_time(5.minutes.from_now)
+      expect(
+        described_class.new(
+          user,
+          raw: "The waiting period has passed",
+          topic_id: other_topic.id,
+        ).perform,
+      ).to be_success
+    end
+
+    it "counts a backdated submission using the time it was received" do
+      result =
+        described_class.new(
+          user,
+          title: "A new topic sent by email",
+          raw: "A topic with an older date in the email header",
+          created_at: 1.day.ago,
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post.created_at).to eq_time(Time.current)
+      expect(
+        described_class.new(user, raw: "A second submission", topic_id: topic.id).perform,
+      ).not_to be_success
+    end
+
+    it "shares the posting interval with the user's anonymous profile" do
+      SiteSetting.allow_anonymous_mode = true
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: user, active: true)
+      Fabricate(:post, user: shadow)
+
+      result =
+        described_class.new(user, raw: "A reply in the main account", topic_id: topic.id).perform
+
+      expect(result).not_to be_success
+    end
+
+    it "allows personal messages while a user is waiting to post" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone].to_s
+      Fabricate(:post, user:)
+      recipient = Fabricate(:user)
+
+      result =
+        described_class.new(
+          user,
+          raw: "This is a personal message",
+          title: "A personal message",
+          archetype: Archetype.private_message,
+          target_usernames: recipient.username,
+        ).perform
+
+      expect(result).to be_success
+      expect(result.post.topic).to be_private_message
+    end
+
+    it "continues to count soft-deleted posts until the slow mode expires" do
+      old_post = Fabricate(:post, user:, created_at: 1.minute.ago, deleted_at: Time.zone.now)
+      user.update!(user_slow_mode_until: 1.minute.from_now)
+
+      result =
+        described_class.new(user, raw: "A replacement reply", topic_id: old_post.topic_id).perform
+      expect(result).not_to be_success
+
+      freeze_time(1.minute.from_now)
+      expect(
+        described_class.new(user, raw: "The slow mode has expired", topic_id: topic.id).perform,
+      ).to be_success
+    end
+
+    it "limits users to one pending submission while in slow mode" do
+      SiteSetting.approve_post_count = 10
+      result = described_class.new(user, raw: "A reply awaiting review", topic_id: topic.id).perform
+      expect(result.reviewable).to be_pending
+
+      result = described_class.new(user, raw: "A second queued reply", topic_id: topic.id).perform
+      expect(result).not_to be_success
+      expect(result.errors.full_messages).to include(I18n.t("user_slow_mode.pending"))
+    end
+
+    it "continues to allow ordinary posting when the feature is disabled" do
+      Fabricate(:post, user:)
+      SiteSetting.enable_user_slow_mode = false
+
+      result =
+        described_class.new(
+          user,
+          raw: "A reply with the feature disabled",
+          topic_id: topic.id,
+        ).perform
+
+      expect(result).to be_success
+    end
+  end
+
   describe "default action for private messages" do
     fab!(:other_user, :user)
 

@@ -467,6 +467,22 @@ describe DiscourseMcp::Tools do
     fab!(:topic) { Fabricate(:topic, user:) }
     fab!(:post) { Fabricate(:post, topic:, user:) }
 
+    it "applies the posting interval when writing via MCP" do
+      SiteSetting.enable_user_slow_mode = true
+      user.update!(user_slow_mode_seconds: 5.minutes)
+      post
+
+      expect do
+        DiscourseMcp::Tools::ReplyTopic.call(
+          arguments: {
+            "topic_id" => topic.id,
+            "raw" => "A reply before the posting interval",
+          },
+          request_context: request_context(user),
+        )
+      end.to raise_error(DiscourseMcp::ToolError)
+    end
+
     it "does not allow author_username to impersonate another user" do
       expect do
         DiscourseMcp::Tools::ReplyTopic.call(
