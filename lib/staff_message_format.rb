@@ -14,21 +14,32 @@ class StaffMessageFormat
 
     label = I18n.t("system_messages.moderation_reason_label", locale:)
     reason = details.sub(/\A(?:[ \t]*\r?\n)+/, "")
-    if preserve_markdown_blocks && starts_with_markdown_block?(reason)
+    inline = "**#{label}** #{reason.lstrip}"
+    if preserve_markdown_blocks && !inline_label_preserves_markdown?(reason, inline)
       "\n\n**#{label}**\n\n#{reason}"
     else
-      "\n\n**#{label}** #{reason.lstrip}"
+      "\n\n#{inline}"
     end
   end
 
-  def self.starts_with_markdown_block?(reason)
-    first_element = Nokogiri::HTML5.fragment(PrettyText.markdown(reason)).element_children.first
-    return false unless first_element
+  def self.inline_label_preserves_markdown?(reason, inline)
+    original = Nokogiri::HTML5.fragment(PrettyText.markdown(CGI.unescapeHTML(reason)))
+    return true if original.element_children.empty?
+    return false if original.element_children.first.name != "p"
 
-    first_element.name != "p" || first_element.at_css("a.onebox").present? ||
-      reason.match?(/\A[ \t]*\[[^\r\n]+\]:/)
+    prefixed = Nokogiri::HTML5.fragment(PrettyText.markdown(CGI.unescapeHTML(inline)))
+    paragraph = prefixed.element_children.first
+    return false unless paragraph&.name == "p"
+
+    label = paragraph.child
+    text = label&.next_sibling
+    return false unless label&.name == "strong" && text&.text?
+
+    text.content = text.content.delete_prefix(" ")
+    label.remove
+    original.to_html == prefixed.to_html
   end
-  private_class_method :starts_with_markdown_block?
+  private_class_method :inline_label_preserves_markdown?
 
   def initialize(type, reason, message = nil)
     @type = type
