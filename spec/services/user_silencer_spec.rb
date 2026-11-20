@@ -200,13 +200,13 @@ RSpec.describe UserSilencer do
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
-      it "includes appeal instructions in the unsilence notice" do
+      it "omits appeal instructions from the unsilence notice" do
         user.update!(silenced_till: 1.year.from_now)
 
         UserSilencer.unsilence(user, admin)
 
-        pm = user.topics_allowed.order("topics.id desc").first
-        expect(pm.first_post.raw).to include("To appeal this decision, contact appeals@example.com")
+        pm = Topic.private_messages_for_user(user).sole
+        expect(pm.first_post.raw).not_to include(SiteSetting.dsa_moderation_appeal_email)
       end
     end
 

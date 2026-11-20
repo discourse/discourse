@@ -1713,7 +1713,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
-      it "includes appeal instructions in the restored post notice" do
+      it "omits appeal instructions from the restored post notice" do
         reviewable = Fabricate(:reviewable_flagged_post)
         reviewable.post.update(
           hidden: true,
@@ -1724,8 +1724,8 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         reviewable.perform(moderator, :disagree_and_restore)
 
         args = Jobs::SendSystemMessage.jobs.last["args"][0].with_indifferent_access
-        Jobs::SendSystemMessage.new.execute(args)
-        expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+        notice = Jobs::SendSystemMessage.new.execute(args)
+        expect(notice.raw).not_to include(SiteSetting.dsa_moderation_appeal_email)
       end
     end
 

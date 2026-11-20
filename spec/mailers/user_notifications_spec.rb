@@ -186,10 +186,10 @@ RSpec.describe UserNotifications do
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
-      it "includes appeal instructions when DSA reporting and an appeal address are configured" do
+      it "omits appeal instructions from the post approval email" do
         mail = UserNotifications.post_approved(user, notification_data_hash: { post_url: post.url })
 
-        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
+        expect(mail.body.decoded).not_to include(SiteSetting.dsa_moderation_appeal_email)
       end
     end
 
