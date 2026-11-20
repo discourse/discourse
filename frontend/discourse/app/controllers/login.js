@@ -51,6 +51,8 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+
+  /** @type {string | null} */
   @tracked loginMode = null;
   queryParams = [{ loginMode: "mode" }];
 
@@ -179,6 +181,7 @@ export default class LoginPageController extends Controller {
 
   @action
   showCodeLogin() {
+    this.flash = null;
     this.codeLoginSelected = true;
   }
 
@@ -313,14 +316,7 @@ export default class LoginPageController extends Controller {
             set("redirect", window.location.href);
           }
 
-          if (this.capabilities.isIOS && this.capabilities.isSafari) {
-            // In case of Safari on iOS do not submit hidden login form
-            window.location.href = _form.querySelector(
-              "input[name=redirect]"
-            ).value;
-          } else {
-            _form.submit();
-          }
+          _form.submit();
         }
       }
     } catch (e) {

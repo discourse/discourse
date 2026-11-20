@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const autofocus = modifier((element) => element.focus());
@@ -11,6 +10,8 @@ const autofocus = modifier((element) => element.focus());
 export default class CellEditor extends Component {
   @tracked isEditing = false;
   @tracked editValue = "";
+
+  #initialValue;
 
   get columnType() {
     return this.args.column.type;
@@ -63,6 +64,7 @@ export default class CellEditor extends Component {
     } else {
       this.editValue = String(this.args.value);
     }
+    this.#initialValue = this.isNull ? null : this.editValue;
     this.isEditing = true;
   }
 
@@ -77,7 +79,16 @@ export default class CellEditor extends Component {
 
   @action
   save() {
+    if (!this.isEditing) {
+      return;
+    }
+
     this.isEditing = false;
+
+    if (this.editValue === this.#initialValue) {
+      return;
+    }
+
     this.args.onSave(this.args.column.name, this.editValue);
   }
 

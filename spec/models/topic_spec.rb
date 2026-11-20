@@ -251,6 +251,33 @@ RSpec.describe Topic do
     end
   end
 
+  describe "archetype validation" do
+    fab!(:topic)
+
+    it "is invalid with an unregistered archetype" do
+      topic.archetype = "unknown"
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:archetype]).to be_present
+    end
+
+    it "is valid with an archetype registered by a plugin" do
+      Archetype.register("plugin_archetype")
+      topic.archetype = "plugin_archetype"
+
+      expect(topic).to be_valid
+    ensure
+      Archetype.deregister("plugin_archetype")
+    end
+
+    it "does not block saving a topic that already has an unregistered archetype" do
+      topic.update_column(:archetype, "unknown")
+      topic.title = "this is a brand new topic title"
+
+      expect(topic).to be_valid
+    end
+  end
+
   describe "slug" do
     context "with encoded generator" do
       before { SiteSetting.slug_generation_method = "encoded" }
@@ -1610,7 +1637,9 @@ RSpec.describe Topic do
           2.times { topic.update_status("closed", true, user) }
         end
 
-      expect(events.map { |event| event[:params] }).to eq([[topic, "closed", true]])
+      expect(events.map { |event| event[:params] }).to eq(
+        [[topic, "closed", true, { acting_user: user }]],
+      )
     end
 
     it "emits pin status events only when pin attributes change" do
@@ -1624,7 +1653,10 @@ RSpec.describe Topic do
         end
 
       expect(events.map { |event| event[:params] }).to eq(
-        [[topic, "pinned", true], [topic, "pinned", false]],
+        [
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned", false, { acting_user: user }],
+        ],
       )
     end
 
@@ -1642,9 +1674,9 @@ RSpec.describe Topic do
 
       expect(events.map { |event| event[:params] }).to eq(
         [
-          [topic, "pinned", true],
-          [topic, "pinned_globally", true],
-          [topic, "pinned_globally", true],
+          [topic, "pinned", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
+          [topic, "pinned_globally", true, { acting_user: user }],
         ],
       )
     end
@@ -2368,6 +2400,20 @@ RSpec.describe Topic do
   end
 
   describe "scopes" do
+    describe "private message access" do
+      it "keeps participant access consistent across scopes" do
+        direct_pm = Fabricate(:private_message_topic, recipient: user)
+        group = Fabricate(:group, users: [user])
+        group_pm = Fabricate(:group_private_message_topic, recipient_group: group)
+        Fabricate(:private_message_topic)
+
+        expected_ids = [direct_pm.id, group_pm.id]
+
+        expect(Topic.private_messages_for_user(user).pluck(:id)).to match_array(expected_ids)
+        expect(Topic.private_messages.allowed_to_user(user).pluck(:id)).to match_array(expected_ids)
+      end
+    end
+
     describe "#by_most_recently_created" do
       it "returns topics ordered by created_at desc, id desc" do
         now = Time.now
@@ -3792,16 +3838,24 @@ RSpec.describe Topic do
   describe "#featured_link_root_domain" do
     let(:topic) { Fabricate.build(:topic) }
 
-    %w[
-      https://meta.discourse.org
-      https://meta.discourse.org/
-      https://meta.discourse.org/?filter=test
-      https://meta.discourse.org/t/中國/1
-    ].each do |featured_link|
-      it "extracts the root domain from #{featured_link}" do
-        topic.featured_link = featured_link
-        expect(topic.featured_link_root_domain).to eq("discourse.org")
-      end
+    it "extracts the root domain from https://meta.discourse.org" do
+      topic.featured_link = "https://meta.discourse.org"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/" do
+      topic.featured_link = "https://meta.discourse.org/"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/?filter=test" do
+      topic.featured_link = "https://meta.discourse.org/?filter=test"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
+    end
+
+    it "extracts the root domain from https://meta.discourse.org/t/中國/1" do
+      topic.featured_link = "https://meta.discourse.org/t/中國/1"
+      expect(topic.featured_link_root_domain).to eq("discourse.org")
     end
   end
 
@@ -4017,6 +4071,20 @@ RSpec.describe Topic do
       end
 
       expect(topic.auto_close_threshold_reached?).to eq(true)
+    end
+  end
+
+  describe ".recalculate_like_counts!" do
+    it "sums the like counts of each topic's live non-whisper posts" do
+      topic_1 = Fabricate(:post, like_count: 2).topic
+      Fabricate(:post, topic: topic_1, like_count: 3, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic_1, like_count: 4, deleted_at: Time.zone.now)
+      topic_2 = Fabricate(:post, like_count: 5).topic
+
+      Topic.recalculate_like_counts!([topic_1.id, topic_2.id])
+
+      expect(topic_1.reload.like_count).to eq(2)
+      expect(topic_2.reload.like_count).to eq(5)
     end
   end
 

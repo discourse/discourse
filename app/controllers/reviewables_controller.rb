@@ -95,7 +95,14 @@ class ReviewablesController < ApplicationController
     end
     json.merge!(hash)
 
-    render_json_dump(json, rest_serializer: true)
+    render_json_dump(
+      json,
+      rest_serializer: true,
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
+    )
   end
 
   def user_menu_list
@@ -172,6 +179,10 @@ class ReviewablesController < ApplicationController
       rest_serializer: true,
       claimed_topics: ReviewableClaimedTopic.claimed_hash([reviewable.topic_id]),
       root: "reviewable",
+      extras: {
+        dsa_classification:
+          DsaClassificationSerializer.new({}, scope: guardian, root: false).as_json,
+      },
       meta: {
         types: meta_types,
       },
@@ -254,6 +265,7 @@ class ReviewablesController < ApplicationController
 
   def perform
     args = { version: params[:version].to_i }
+    args[:dsa_classification] = dsa_classification_args if params.has_key?(:dsa_classification)
 
     result = nil
     begin
@@ -331,6 +343,24 @@ class ReviewablesController < ApplicationController
     end
   end
 
+  def dsa_classification_args
+    raise Discourse::InvalidAccess unless DsaStatementOfRecord.classification_enabled?
+
+    unless params[:dsa_classification].is_a?(ActionController::Parameters)
+      raise Discourse::InvalidParameters.new(:dsa_classification)
+    end
+
+    classification =
+      DsaStatementOfRecord::ClassificationContract.new(
+        **params.require(:dsa_classification).permit(:community_rule, :category).to_h,
+      )
+    rule = classification.rule
+
+    raise Discourse::InvalidParameters.new(:dsa_classification) if !classification.valid? || !rule
+
+    { community_rule: rule, category: classification.category }
+  end
+
   def find_reviewable
     reviewable = Reviewable.viewable_by(current_user).where(id: params[:reviewable_id]).first
     raise Discourse::NotFound.new if reviewable.blank?
@@ -338,7 +368,8 @@ class ReviewablesController < ApplicationController
   end
 
   def allowed_statuses
-    @allowed_statuses ||= (%i[reviewed all] + Reviewable.statuses.symbolize_keys.keys)
+    @allowed_statuses ||=
+      %i[reviewed all] + Reviewable::OUTCOME_STATUSES + Reviewable.statuses.symbolize_keys.keys
   end
 
   def version_required

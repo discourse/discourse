@@ -1,4 +1,5 @@
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import eventCalendarDetails from "./event-calendar-details.js";
 
 export default function addEventToCalendar(event) {
   downloadCalendar(
@@ -18,7 +19,7 @@ export default function addEventToCalendar(event) {
           ? null
           : event.rrule,
       location: event.location,
-      details: event.description,
+      details: eventCalendarDetails(event),
     }
   );
 }

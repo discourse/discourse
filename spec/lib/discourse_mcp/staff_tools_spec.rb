@@ -679,6 +679,44 @@ describe DiscourseMcp::Tools do
       end.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "respects plugin restrictions on theme edits" do
+      component = Fabricate(:theme, component: true, name: "Restricted")
+      plugin = Plugin::Instance.new
+      modifier = proc { |allowed, _guardian, target| allowed && target.id != component.id }
+      plugin.register_modifier(:user_guardian_can_edit_theme, &modifier)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => component.id,
+            "name" => "Renamed",
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect do
+        described_class.call(
+          arguments: {
+            "theme_id" => theme.id,
+            "child_theme_ids" => [component.id],
+          },
+          request_context: request_context(admin),
+        )
+      end.to raise_error(Discourse::InvalidAccess)
+
+      expect(component.reload.name).to eq("Restricted")
+      expect(theme.reload.child_theme_ids).to be_empty
+    ensure
+      if plugin
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :user_guardian_can_edit_theme,
+          &modifier
+        )
+      end
+    end
+
     it "updates attributes and fields" do
       result =
         described_class.call(
@@ -885,6 +923,13 @@ describe DiscourseMcp::Tools do
       "discourse_get_theme" => [DiscourseMcp::Scopes::THEMES_READ],
       "discourse_create_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
       "discourse_update_theme" => [DiscourseMcp::Scopes::THEMES_WRITE],
+      "discourse_get_category" => [DiscourseMcp::Scopes::CATEGORIES_READ],
+      "discourse_create_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_update_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_delete_category" => [DiscourseMcp::Scopes::CATEGORIES_WRITE],
+      "discourse_list_users" => [DiscourseMcp::Scopes::USERS_READ],
+      "discourse_create_user" => [DiscourseMcp::Scopes::USERS_WRITE],
+      "discourse_manage_user_activation" => [DiscourseMcp::Scopes::USERS_WRITE],
     }
 
     actual =
@@ -899,6 +944,10 @@ describe DiscourseMcp::Tools do
     expect(
       DiscourseMcp.registry.find(:tool, "discourse_update_site_setting").annotations,
     ).to include("destructiveHint" => true, "idempotentHint" => true, "openWorldHint" => true)
+    expect(DiscourseMcp.registry.find(:tool, "discourse_delete_category").annotations).to include(
+      "destructiveHint" => true,
+      "openWorldHint" => false,
+    )
 
     schemas = DiscourseMcp.registry.all.map(&:input_schema)
     expect(schemas.to_json).not_to include('\\\\A', '\\\\z')

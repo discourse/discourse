@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
-import { eq } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const BROWSER_ICONS = {

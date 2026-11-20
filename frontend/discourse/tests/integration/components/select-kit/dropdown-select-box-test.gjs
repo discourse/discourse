@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -33,15 +34,21 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("selection behavior", async function (assert) {
       setDefaultState(this);
+      const value = tracked(DEFAULT_VALUE);
+      const onChange = (newValue) => (value.value = newValue);
 
       await render(
         <template>
-          <DropdownSelectBox @content={{this.content}} @value={{this.value}} />
+          <DropdownSelectBox
+            @content={{this.content}}
+            @onChange={{onChange}}
+            @value={{value.value}}
+          />
         </template>
       );
 

@@ -6,7 +6,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import PostVotingFlag from "../lib/post-voting-flag";
+import PostVotingFlag from "../lib/post-voting-flag.js";
 
 export default class PostVotingCommentActions extends Component {
   @service dialog;
@@ -60,6 +60,7 @@ export default class PostVotingCommentActions extends Component {
     this.comment.availableFlags = this.comment.available_flags;
     this.modal.show(FlagModal, {
       model: {
+        allowIllegalContentReport: true,
         flagTarget: new PostVotingFlag(),
         flagModel: this.comment,
         setHidden: () => (this.comment.hidden = true),

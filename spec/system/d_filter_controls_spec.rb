@@ -8,12 +8,16 @@ describe "DFilterControls" do
   before do
     sign_in(admin)
 
-    poll_plugin = Plugin::Instance.parse_from_source(Rails.root.join("plugins/poll/plugin.rb").to_s)
+    csp_extension =
+      Plugin::Instance.parse_from_source(
+        Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb").to_s,
+      )
+    my_plugin =
+      Plugin::Instance.parse_from_source(
+        Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb").to_s,
+      )
 
-    spoiler_alert_plugin =
-      Plugin::Instance.parse_from_source(Rails.root.join("plugins/spoiler-alert/plugin.rb").to_s)
-
-    Discourse.stubs(:plugins_sorted_by_name).returns([poll_plugin, spoiler_alert_plugin])
+    Discourse.stubs(:plugins_sorted_by_name).returns([csp_extension, my_plugin])
   end
 
   it "lets admins search plugins and reset matching or empty results" do
@@ -23,14 +27,14 @@ describe "DFilterControls" do
     expect(filter_controls).to have_disabled_reset_button
     expect(filter_controls).to have_no_no_results_reset_button
 
-    filter_controls.type_in_search("poll")
+    filter_controls.type_in_search("csp")
     expect(page).to have_css(".admin-plugins-list__row", count: 1)
 
     filter_controls.clear_search
     expect(page).to have_css(".admin-plugins-list__row", count: 2)
     expect(filter_controls).to have_disabled_reset_button
 
-    filter_controls.type_in_search("poll")
+    filter_controls.type_in_search("csp")
     expect(page).to have_css(".admin-plugins-list__row", count: 1)
 
     filter_controls.click_reset_button

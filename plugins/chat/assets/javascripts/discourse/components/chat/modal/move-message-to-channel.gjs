@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
-import ChatChannelChooser from "../../chat-channel-chooser";
+import ChatChannelChooser from "../../chat-channel-chooser.js";
 
 export default class ChatModalMoveMessageToChannel extends Component {
   @service chatApi;
@@ -50,6 +50,11 @@ export default class ChatModalMoveMessageToChannel extends Component {
   }
 
   @action
+  changeDestinationChannel(channelId) {
+    this.destinationChannelId = channelId;
+  }
+
+  @action
   moveMessages() {
     return this.chatApi
       .moveChannelMessages(this.sourceChannel.id, {
@@ -84,6 +89,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
           class="chat-modal-move-message-to-channel__channel-chooser"
           @content={{this.availableChannels}}
           @nameProperty="title"
+          @onChange={{this.changeDestinationChannel}}
           @value={{this.destinationChannelId}}
         />
       </:body>

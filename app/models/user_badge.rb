@@ -31,6 +31,15 @@ class UserBadge < ActiveRecord::Base
   scope :for_enabled_badges,
         -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)") }
 
+  # Narrows grants to holders whose profile the guardian can see, so filtering
+  # happens before pagination instead of after it.
+  scope :with_visible_profiles,
+        ->(guardian) do
+          joins("INNER JOIN users ON users.id = user_badges.user_id").where(
+            guardian.can_see_profile_sql,
+          )
+        end
+
   scope :by_post_and_user,
         ->(posts) do
           posts.reduce(UserBadge.none) do |scope, post|
@@ -146,6 +155,7 @@ end
 #
 # Indexes
 #
+#  idx_user_badges_granted_at                             (granted_at DESC)
 #  index_user_badges_on_badge_id_and_user_id              (badge_id,user_id)
 #  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE WHERE (post_id IS NOT NULL)
 #  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE WHERE (post_id IS NULL)

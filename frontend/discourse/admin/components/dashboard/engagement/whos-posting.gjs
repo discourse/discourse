@@ -7,6 +7,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import CompareGroups from "discourse/admin/components/modal/compare-groups";
+import CompareGroupsReorderable from "discourse/admin/components/modal/compare-groups-reorderable";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
@@ -29,13 +30,27 @@ function sameGroups(a, b) {
   return a.length === b.length && a.every((token, index) => token === b[index]);
 }
 
+/**
+ * @typedef {{
+ *   type: string,
+ *   kind: "synthetic" | "group",
+ *   group_id: number | null,
+ *   name: string,
+ *   count: number,
+ *   share: number,
+ *   share_formatted: string
+ * }} MemberTypePosterRow
+ */
 export default class WhosPosting extends Component {
   @service currentUser;
   @service toasts;
   @service modal;
+  @service siteSettings;
 
   @tracked selectedCategories = [];
   @tracked selectedGroups = [];
+
+  /** @type {{ rows: MemberTypePosterRow[], total: number, category_ids: number[] | null | undefined, groups: string[] } | null} */
   @tracked overridePosters = null;
   @tracked loading = false;
 
@@ -131,7 +146,13 @@ export default class WhosPosting extends Component {
 
   @action
   openCompareGroups() {
-    this.modal.show(CompareGroups, {
+    // TODO (ui-kit-reorderable-list-cleanup) drop the branch and the legacy
+    // component once the change ships.
+    const Modal = this.siteSettings.enable_new_reordering_controls
+      ? CompareGroupsReorderable
+      : CompareGroups;
+
+    this.modal.show(Modal, {
       model: {
         currentTokens: this.selectedGroups,
         footerNote: i18n(

@@ -13,6 +13,10 @@ nb_NO:
             topic_id:
               label: Emne-ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrer"
       preferences:
         reminders:
           preferences:
@@ -52,13 +56,14 @@ nb_NO:
         status: "Status"
       models:
         event:
-          expired: "Utløpt"
           closed: "Lukket"
           status:
             public:
               title: "Offentlig"
             private:
               title: "Privat"
+      recording_modal:
+        save: "Lagre"
       composer:
         url_placeholder: "Legg til URL"
         reminder:

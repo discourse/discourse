@@ -89,6 +89,17 @@ module Onebox
 
         {
           :link => @url,
+          :layout_class => "github-onebox --github-#{status}",
+          :repository => "#{match[:org]}/#{match[:repo]}",
+          :i18n => {
+            header: {
+              success: I18n.t("onebox.github.header.success"),
+              failure: I18n.t("onebox.github.header.failure"),
+              pending: I18n.t("onebox.github.header.pending"),
+              unknown: I18n.t("onebox.github.header.unknown"),
+              check_run: I18n.t("onebox.github.header.check_run"),
+            },
+          },
           :title => title,
           :name => result["name"],
           :run_number => result["run_number"],

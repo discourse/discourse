@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import ExpressionWrapper from "./expression-wrapper";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class UserOrGroupControl extends Component {
   @action

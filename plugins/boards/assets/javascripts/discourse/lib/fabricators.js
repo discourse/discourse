@@ -7,9 +7,9 @@ in a placeholder component. It should not be used for any other case.
 import ApplicationInstance from "@ember/application/instance";
 import { setOwner } from "@ember/owner";
 import CoreFabricators, { incrementSequence } from "discourse/lib/fabricators";
-import Board from "../models/board";
-import Card from "../models/card";
-import Column from "../models/column";
+import Board from "../models/board.js";
+import Card from "../models/card.js";
+import Column from "../models/column.js";
 
 export default class BoardsFabricators {
   constructor(owner) {
@@ -52,6 +52,7 @@ export default class BoardsFabricators {
       columns: args.columns || [],
       can_write: args.can_write ?? true,
       can_manage: args.can_manage ?? true,
+      owners: args.owners || [this.coreFabricators.user()],
     });
   }
 

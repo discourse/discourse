@@ -68,11 +68,23 @@ export default class AskAiReportSubjects extends Component {
             </a>
           {{/if}}
         </div>
-        <span class="ask-ai-reports__hint">{{i18n
-            "admin.dashboard.ask_ai.reports.coverage"
-            count=@report.reported_ask_count
-            total=@report.total_ask_count
-          }}
+        <span class="ask-ai-reports__hint">
+          {{#if @reportQueryUrl}}
+            <a
+              class="ask-ai-report-subjects__coverage-link"
+              href={{@reportQueryUrl}}
+            >{{i18n
+                "admin.dashboard.ask_ai.reports.coverage"
+                count=@report.reported_ask_count
+                total=@report.total_ask_count
+              }}</a>
+          {{else}}
+            {{i18n
+              "admin.dashboard.ask_ai.reports.coverage"
+              count=@report.reported_ask_count
+              total=@report.total_ask_count
+            }}
+          {{/if}}
           ·
           {{i18n "admin.dashboard.ask_ai.reports.overlap"}}</span>
       </div>

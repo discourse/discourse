@@ -19,7 +19,7 @@ module DiscourseWorkflows
     private
 
     def fetch_variable(params:)
-      DiscourseWorkflows::Variable.find_by(id: params.variable_id)
+      DiscourseWorkflows::Variable.where(workflow_id: nil).find_by(id: params.variable_id)
     end
 
     def log_variable_deletion(variable:, guardian:)

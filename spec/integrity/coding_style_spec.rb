@@ -4,15 +4,6 @@ def list_files(base_dir, pattern = "*")
   Dir[File.join("#{base_dir}", pattern)]
 end
 
-def grep_files(files, regex)
-  files.select { |file| grep_file(file, regex) }
-end
-
-def grep_file(file, regex)
-  lines = File.open(file).grep(regex)
-  lines.count > 0 ? file : nil
-end
-
 RSpec.describe "Coding style" do
   describe "Post Migrations" do
     def check_offenses(files, method_name, constant_name)
@@ -43,20 +34,6 @@ RSpec.describe "Coding style" do
 
       check_offenses(migration_files, "ColumnDropper.execute_drop", "DROPPED_COLUMNS")
       check_offenses(migration_files, "TableDropper.execute_drop", "DROPPED_TABLES")
-    end
-  end
-
-  describe "non-colocated component templates" do
-    {
-      "discourse" => "frontend/discourse/app/templates/components",
-      "admin" => "frontend/admin/addon/templates/components",
-      "chat/discourse" => "plugins/chat/assets/javascripts/discourse/templates/components",
-      "chat/admin" => "plugins/chat/assets/javascripts/admin/templates/components",
-      "styleguide" => "plugins/styleguide/assets/javascripts/discourse/templates/components",
-    }.each_pair do |name, dir|
-      it "do not exist for #{name}" do
-        expect(list_files(dir)).to eq([])
-      end
     end
   end
 end

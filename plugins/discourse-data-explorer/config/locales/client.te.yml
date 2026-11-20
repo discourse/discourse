@@ -11,10 +11,8 @@ te:
         no_results: "ఫలితాలు లేవు"
     explorer:
       or: "లేదా"
-      create: "సృష్టించండి"
       ai:
         generate: "ఉత్పత్తించు"
-        optional: "ఐచ్ఛికం"
       help:
         label: "సహాయం"
       types:
@@ -22,6 +20,7 @@ te:
           yes: "అవును"
           no: "లేదు"
       delete: "తొలగించండి"
+      name: "పేరు"
       query_groups: "సమూహాలు"
       query_tags: "ట్యాగులు"
       query_description: "వివరణ"

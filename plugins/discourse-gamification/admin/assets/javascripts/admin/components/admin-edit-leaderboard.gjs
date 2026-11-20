@@ -4,6 +4,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
@@ -65,7 +67,7 @@ export default class AdminEditLeaderboard extends Component {
       included_groups_ids: this.args.leaderboard.includedGroupsIds,
       excluded_groups_ids: this.args.leaderboard.excludedGroupsIds,
       visible_to_groups_ids: this.args.leaderboard.visibleToGroupsIds,
-      default_period: this.args.leaderboard.defaultPeriod,
+      default_period: this.args.leaderboard.defaultPeriodId,
       period_filter_disabled: this.args.leaderboard.periodFilterDisabled,
       scorable_category_ids: this.args.leaderboard.scorableCategoryIds,
     };
@@ -154,354 +156,385 @@ export default class AdminEditLeaderboard extends Component {
 
   <template>
     <BackButton
-      @label="gamification.back"
+      @label="gamification.back_to_leaderboards"
       @route="adminPlugins.show.discourse-gamification-leaderboards"
     />
-    <Form
-      class="edit-create-leaderboard-form"
-      @data={{this.formData}}
-      @onSubmit={{this.save}}
-      as |form|
-    >
-      <form.Field
-        @name="name"
-        @title={{i18n "gamification.leaderboard.name"}}
-        @type="input"
-        @validation="required"
-        as |field|
-      >
-        <field.Control />
-      </form.Field>
-
-      <form.Section
-        @subtitle={{i18n
-          "gamification.leaderboard.section.time_period_description"
-        }}
-        @title={{i18n "gamification.leaderboard.section.time_period"}}
-      >
-        <form.Row as |row|>
-          <row.Col @size={{6}}>
-            <form.Field
-              @name="from_date"
-              @title={{i18n "gamification.leaderboard.date.from"}}
-              @type="input-date"
-              as |field|
-            >
-              <field.Control />
-            </form.Field>
-          </row.Col>
-
-          <row.Col @size={{6}}>
-            <form.Field
-              @name="to_date"
-              @title={{i18n "gamification.leaderboard.date.to"}}
-              @type="input-date"
-              as |field|
-            >
-              <field.Control />
-            </form.Field>
-          </row.Col>
-        </form.Row>
-
-        <form.Field
-          @name="period_filter_disabled"
-          @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
-          @type="toggle"
-          as |field|
-        >
-          <field.Control />
-        </form.Field>
-
-        <form.Field
-          @name="default_period"
-          @title={{i18n "gamification.leaderboard.default_period"}}
-          @type="custom"
-          as |field|
-        >
-          <field.Control>
-            <PeriodInput @onChange={{field.set}} @value={{field.value}} />
-          </field.Control>
-        </form.Field>
-      </form.Section>
-
-      <form.Section
-        @subtitle={{i18n "gamification.leaderboard.section.groups_description"}}
-        @title={{i18n "gamification.leaderboard.section.groups"}}
-      >
-        <form.Field
-          @name="included_groups_ids"
-          @title={{i18n "gamification.leaderboard.included_groups"}}
-          @type="custom"
-          as |field|
-        >
-          <field.Control>
-            <GroupChooser
-              @content={{this.siteGroups}}
-              @id="leaderboard-edit__included-groups"
-              @labelProperty="name"
-              @onChange={{field.set}}
-              @value={{field.value}}
-            />
-          </field.Control>
-        </form.Field>
-
-        <form.Field
-          @name="excluded_groups_ids"
-          @title={{i18n "gamification.leaderboard.excluded_groups"}}
-          @type="custom"
-          as |field|
-        >
-          <field.Control>
-            <GroupChooser
-              @content={{this.siteGroups}}
-              @id="leaderboard-edit__excluded-groups"
-              @labelProperty="name"
-              @onChange={{field.set}}
-              @value={{field.value}}
-            />
-          </field.Control>
-        </form.Field>
-
-        <form.Field
-          @name="visible_to_groups_ids"
-          @title={{i18n "gamification.leaderboard.visible_to_groups"}}
-          @type="custom"
-          as |field|
-        >
-          <field.Control>
-            <GroupChooser
-              @content={{this.siteGroups}}
-              @id="leaderboard-edit__visible-groups"
-              @labelProperty="name"
-              @onChange={{field.set}}
-              @value={{field.value}}
-            />
-          </field.Control>
-        </form.Field>
-      </form.Section>
-
-      <details class="leaderboard-scoring-details">
-        <summary>{{i18n
-            "gamification.leaderboard.scoring_configuration"
-          }}</summary>
-
-        <p class="leaderboard-scoring-details__description">{{i18n
-            "gamification.leaderboard.scoring_configuration_description"
-          }}</p>
-
-        <form.Section
-          @title={{i18n "gamification.leaderboard.scorable_categories"}}
+    <AdminConfigAreaCard @heading="gamification.leaderboard.edit">
+      <:content>
+        <Form
+          class="edit-create-leaderboard-form"
+          @data={{this.formData}}
+          @onSubmit={{this.save}}
+          as |form|
         >
           <form.Field
-            @description={{i18n
-              "gamification.leaderboard.scorable_categories_help"
-            }}
-            @name="scorable_category_ids"
-            @title={{i18n "gamification.leaderboard.scorable_categories"}}
-            @type="custom"
+            @name="name"
+            @title={{i18n "gamification.leaderboard.name"}}
+            @type="input"
+            @validation="required"
             as |field|
           >
-            <field.Control>
-              <div
-                {{didUpdate
-                  (fn this.syncSelectedScorableCategories field.value)
-                  field.value
-                }}
-              >
-                <CategorySelector
-                  @categories={{this.selectedScorableCategories}}
-                  @onChange={{fn this.onCategoryChange field.set}}
+            <field.Control />
+          </form.Field>
+
+          <form.Section
+            @subtitle={{i18n
+              "gamification.leaderboard.section.time_period_description"
+            }}
+            @title={{i18n "gamification.leaderboard.section.time_period"}}
+          >
+            <form.Row as |row|>
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="from_date"
+                  @title={{i18n "gamification.leaderboard.date.from"}}
+                  @type="input-date"
+                  as |field|
+                >
+                  <field.Control />
+                </form.Field>
+              </row.Col>
+
+              <row.Col @size={{6}}>
+                <form.Field
+                  @name="to_date"
+                  @title={{i18n "gamification.leaderboard.date.to"}}
+                  @type="input-date"
+                  as |field|
+                >
+                  <field.Control />
+                </form.Field>
+              </row.Col>
+            </form.Row>
+
+            <form.Field
+              @name="period_filter_disabled"
+              @title={{i18n "gamification.leaderboard.period_filter_disabled"}}
+              @type="toggle"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
+
+            <form.Field
+              @name="default_period"
+              @title={{i18n "gamification.leaderboard.default_period"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                <PeriodInput @onChange={{field.set}} @value={{field.value}} />
+              </field.Control>
+            </form.Field>
+          </form.Section>
+
+          <form.Section
+            @subtitle={{i18n
+              "gamification.leaderboard.section.groups_description"
+            }}
+            @title={{i18n "gamification.leaderboard.section.groups"}}
+          >
+            <form.Field
+              @name="included_groups_ids"
+              @title={{i18n "gamification.leaderboard.included_groups"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                <GroupChooser
+                  @content={{this.siteGroups}}
+                  @id="leaderboard-edit__included-groups"
+                  @labelProperty="name"
+                  @onChange={{field.set}}
+                  @value={{field.value}}
                 />
-              </div>
-            </field.Control>
-          </form.Field>
-        </form.Section>
+              </field.Control>
+            </form.Field>
 
-        <form.Section
-          @subtitle={{i18n "gamification.leaderboard.score_overrides_help"}}
-          @title={{i18n "gamification.leaderboard.score_overrides"}}
-        >
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_like_given"
-                @title={{i18n "gamification.leaderboard.weight.like_given"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_like_received"
-                @title={{i18n "gamification.leaderboard.weight.like_received"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
+            <form.Field
+              @name="excluded_groups_ids"
+              @title={{i18n "gamification.leaderboard.excluded_groups"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                <GroupChooser
+                  @content={{this.siteGroups}}
+                  @id="leaderboard-edit__excluded-groups"
+                  @labelProperty="name"
+                  @onChange={{field.set}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            </form.Field>
 
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_post_created"
-                @title={{i18n "gamification.leaderboard.weight.post_created"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_topic_created"
-                @title={{i18n "gamification.leaderboard.weight.topic_created"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
+            <form.Field
+              @name="visible_to_groups_ids"
+              @title={{i18n "gamification.leaderboard.visible_to_groups"}}
+              @type="custom"
+              as |field|
+            >
+              <field.Control>
+                <GroupChooser
+                  @content={{this.siteGroups}}
+                  @id="leaderboard-edit__visible-groups"
+                  @labelProperty="name"
+                  @onChange={{field.set}}
+                  @value={{field.value}}
+                />
+              </field.Control>
+            </form.Field>
+          </form.Section>
 
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_solution"
-                @title={{i18n "gamification.leaderboard.weight.solution"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_flag_created"
-                @title={{i18n "gamification.leaderboard.weight.flag_created"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
-
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_day_visited"
-                @title={{i18n "gamification.leaderboard.weight.day_visited"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_user_invited"
-                @title={{i18n "gamification.leaderboard.weight.user_invited"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
-
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_post_read"
-                @title={{i18n "gamification.leaderboard.weight.post_read"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_time_read"
-                @title={{i18n "gamification.leaderboard.weight.time_read"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
-
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_reaction_given"
-                @title={{i18n "gamification.leaderboard.weight.reaction_given"}}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_reaction_received"
-                @title={{i18n
-                  "gamification.leaderboard.weight.reaction_received"
-                }}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
-
-          <form.Row as |row|>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_chat_message_created"
-                @title={{i18n
-                  "gamification.leaderboard.weight.chat_message_created"
-                }}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-            <row.Col @size={{6}}>
-              <form.Field
-                @name="score_override_chat_reaction_given"
-                @title={{i18n
-                  "gamification.leaderboard.weight.chat_reaction_given"
-                }}
-                @type="input-number"
-                as |field|
-              >
-                <field.Control min="0" step="1" />
-              </form.Field>
-            </row.Col>
-          </form.Row>
-
-          <form.Field
-            @name="score_override_chat_reaction_received"
-            @title={{i18n
-              "gamification.leaderboard.weight.chat_reaction_received"
-            }}
-            @type="input-number"
-            as |field|
+          <AdminConfigAreaCardSection
+            class="leaderboard-scoring"
+            @collapsable={{true}}
+            @collapsed={{true}}
+            @heading={{i18n "gamification.leaderboard.scoring_configuration"}}
           >
-            <field.Control min="0" step="1" />
-          </form.Field>
-        </form.Section>
-      </details>
+            <:content>
+              <p class="leaderboard-scoring__description">{{i18n
+                  "gamification.leaderboard.scoring_configuration_description"
+                }}</p>
 
-      <form.Submit />
-    </Form>
+              <form.Section
+                @title={{i18n "gamification.leaderboard.scorable_categories"}}
+              >
+                <form.Field
+                  @description={{i18n
+                    "gamification.leaderboard.scorable_categories_help"
+                  }}
+                  @name="scorable_category_ids"
+                  @title={{i18n "gamification.leaderboard.scorable_categories"}}
+                  @type="custom"
+                  as |field|
+                >
+                  <field.Control>
+                    <div
+                      {{didUpdate
+                        (fn this.syncSelectedScorableCategories field.value)
+                        field.value
+                      }}
+                    >
+                      <CategorySelector
+                        @categories={{this.selectedScorableCategories}}
+                        @onChange={{fn this.onCategoryChange field.set}}
+                      />
+                    </div>
+                  </field.Control>
+                </form.Field>
+              </form.Section>
+
+              <form.Section
+                @subtitle={{i18n
+                  "gamification.leaderboard.score_overrides_help"
+                }}
+                @title={{i18n "gamification.leaderboard.score_overrides"}}
+              >
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_like_given"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.like_given"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_like_received"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.like_received"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_post_created"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.post_created"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_topic_created"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.topic_created"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_solution"
+                      @title={{i18n "gamification.leaderboard.weight.solution"}}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_flag_created"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.flag_created"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_day_visited"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.day_visited"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_user_invited"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.user_invited"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_post_read"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.post_read"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_time_read"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.time_read"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_reaction_given"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.reaction_given"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_reaction_received"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.reaction_received"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Row as |row|>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_chat_message_created"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.chat_message_created"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                  <row.Col @size={{6}}>
+                    <form.Field
+                      @name="score_override_chat_reaction_given"
+                      @title={{i18n
+                        "gamification.leaderboard.weight.chat_reaction_given"
+                      }}
+                      @type="input-number"
+                      as |field|
+                    >
+                      <field.Control min="0" step="1" />
+                    </form.Field>
+                  </row.Col>
+                </form.Row>
+
+                <form.Field
+                  @name="score_override_chat_reaction_received"
+                  @title={{i18n
+                    "gamification.leaderboard.weight.chat_reaction_received"
+                  }}
+                  @type="input-number"
+                  as |field|
+                >
+                  <field.Control min="0" step="1" />
+                </form.Field>
+              </form.Section>
+            </:content>
+          </AdminConfigAreaCardSection>
+
+          <form.Submit />
+        </Form>
+      </:content>
+    </AdminConfigAreaCard>
   </template>
 }

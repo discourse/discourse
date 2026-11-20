@@ -38,3 +38,14 @@ Fabricator(:gemini_embedding_def, from: :embedding_definition) do
   tokenizer_class "DiscourseAi::Tokenizer::OpenAiTokenizer"
   url "https://generativelanguage.googleapis.com/v1beta/models/embedding-001:embedContent"
 end
+
+Fabricator(:bedrock_embedding_def, from: :embedding_definition) do
+  display_name "Cohere Embed v4"
+  provider "aws_bedrock"
+  api_key nil
+  provider_params { { model_id: "cohere.embed-v4:0", region: "us-east-1" } }
+  tokenizer_class "DiscourseAi::Tokenizer::OpenAiCl100kTokenizer"
+  max_sequence_length 8192
+  dimensions 1536
+  matryoshka_dimensions true
+end

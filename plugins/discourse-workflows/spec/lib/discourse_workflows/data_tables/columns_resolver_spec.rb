@@ -36,28 +36,33 @@ RSpec.describe DiscourseWorkflows::DataTables::ColumnsResolver do
       expect(resolver.resolve(nil)).to eq({})
     end
 
-    it "raises for unknown column names" do
-      expect { resolver.resolve("unknown" => "x") }.to raise_error(
-        ArgumentError,
-        /Unknown column name/,
-      )
+    it "raises when the input is not a hash or an array of column fields" do
+      ["oops", 42, [1, 2], [{ "value" => "x" }]].each do |input|
+        expect { resolver.resolve(input) }.to raise_error(
+          ArgumentError,
+          /Columns must be an object of column names to values/,
+        )
+      end
     end
 
-    it "does not resolve system columns" do
-      expect { resolver.resolve("id" => 1) }.to raise_error(ArgumentError, /Unknown column name/)
+    it "raises for unknown and system column names" do
+      %w[unknown id].each do |name|
+        expect { resolver.resolve(name => 1) }.to raise_error(ArgumentError, /Unknown column name/)
+      end
+    end
+  end
+
+  describe ".column_pairs" do
+    it "returns nil when the columns are not keyed by column name" do
+      ["={{ $json }}", ["oops", { "columnName" => "email" }]].each do |input|
+        expect(described_class.column_pairs(input)).to be_nil
+      end
     end
   end
 
   describe "#validate_column!" do
     it "returns nil for known columns" do
       expect(resolver.validate_column!("email")).to be_nil
-    end
-
-    it "raises for unknown column names" do
-      expect { resolver.validate_column!("unknown") }.to raise_error(
-        ArgumentError,
-        /Unknown column name/,
-      )
     end
   end
 end

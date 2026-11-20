@@ -2,8 +2,8 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import Status from "../../discourse/components/discourse-post-event/status";
-import Event from "../../discourse/models/discourse-post-event-event";
+import Status from "discourse/plugins/discourse-events/discourse/components/discourse-post-event/status";
+import Event from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 
 module("Integration | Component | EventCalendarPrompt", function (hooks) {
   setupRenderingTest(hooks);

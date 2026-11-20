@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import Assignment from "./assignment";
+import Assignment from "./assignment.gjs";
 
 export default class TopicAssignments extends Component {
   @tracked selectedAssignment = this.args.assignments.find((a) => a.id === 0);

@@ -1,0 +1,46 @@
+name: Dependency submission
+
+# GitHub's dependency graph reads only the first document of a two-document
+# pnpm-lock.yaml. Submitting the full lockfile keeps Dependabot alerts working.
+# https://github.com/dependabot/dependabot-core/issues/15904
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: dependency-submission
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  submit:
+    if: github.repository == 'discourse/discourse'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Generate SBOM from the lockfile
+        run: pnpm sbom --lockfile-only --sbom-format cyclonedx > sbom.json
+
+      - name: Convert to a dependency snapshot
+        env:
+          MIN_PACKAGES: 1000
+        run: node script/pnpm_dependency_snapshot.mjs sbom.json > snapshot.json
+
+      - name: Submit the snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api "repos/${{ github.repository }}/dependency-graph/snapshots" --input snapshot.json

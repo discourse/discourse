@@ -9,7 +9,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import OneTable from "./explorer-schema/one-table";
+import OneTable from "./explorer-schema/one-table.gjs";
 
 export default class ExplorerSchema extends Component {
   @tracked filter;
@@ -140,7 +140,7 @@ export default class ExplorerSchema extends Component {
   <template>
     {{#if @hideSchema}}
       <DButton
-        class="schema__toggle --expand no-text unhide"
+        class="schema__toggle --expand no-text"
         @action={{this.expandSchema}}
         @ariaLabel="explorer.schema.show"
         @icon="chevron-left"

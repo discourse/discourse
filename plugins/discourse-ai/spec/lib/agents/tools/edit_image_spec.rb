@@ -49,7 +49,7 @@ RSpec.describe DiscourseAi::Agents::Tools::EditImage do
     ).create_for(user.id)
   end
 
-  let(:bot_user) { DiscourseAi::AiBot::EntryPoint.find_user_from_model(gpt_35_turbo.name) }
+  fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(gpt_35_turbo) }
   let(:progress_blk) { Proc.new {} }
 

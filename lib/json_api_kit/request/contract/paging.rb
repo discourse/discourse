@@ -77,8 +77,8 @@ module JsonApiKit
 
             def cursors
               raw_cursors
-                .select { |_, raw| Pagination::Cursor.valid?(raw) }
-                .transform_values { Pagination::Cursor.parse(it) }
+                .select { |_, raw| resource.valid_cursor?(raw) }
+                .transform_values { resource.parse_cursor(it) }
             end
 
             def resource = options[:resource]
@@ -136,16 +136,14 @@ module JsonApiKit
             end
 
             def check_anchor_ordering
+              return unless anchoring.name.in?(resource.anchor_names)
               return if resource.anchored_by?(anchor_name: anchoring.name, ordering:)
               errors.add(
                 :anchor,
                 :not_the_sort,
                 name: Name::Anchor.new(value: anchoring.name, type: resource.type),
                 key:
-                  Name::Sort.new(
-                    value: resource.order(ordering).leading.name.to_s,
-                    type: resource.type,
-                  ),
+                  Name::Sort.new(value: resource.leading_sort_name(ordering), type: resource.type),
                 message: "not the sort",
               )
             end

@@ -84,7 +84,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DDateInput`, `DDatePicker`, `DTimeInput`, `DDateTimeInput`, `DDateTimeInputRange`, `DFutureDateInput`, `DRelativeTimePicker`, `DTimeShortcutPicker`, `DCalendarDateTimeInput` | Dates, times, and ranges.                   | [Date/time inputs](https://meta.discourse.org/styleguide/atoms/date-time-inputs) |
 | `DOtp`, `DSecondFactorInput`                                                                                                                                                   | One-time codes.                             | [OTP](https://meta.discourse.org/styleguide/atoms/otp)                           |
 | `DFilterInput`, `DFilterControls`                                                                                                                                              | Filter a list.                              |                                                                                  |
-| `DColorPicker`, `DIconGridPicker`, `DPickFilesButton`                                                                                                                          | Specialised pickers.                        |                                                                                  |
+| `DIconGridPicker`, `DPickFilesButton`                                                                                                                                          | Specialised pickers.                        |                                                                                  |
 | `DCharCounter`, `DInputTip`, `DPopupInputTip`                                                                                                                                  | Feedback attached to an input.              | [Char counter](https://meta.discourse.org/styleguide/molecules/char-counter)     |
 | `DAccessControl`, `DAccessControlField`                                                                                                                                        | Edit access control lists.                  |                                                                                  |
 | `DEditor`                                                                                                                                                                      | The composer's markdown editor.             |                                                                                  |
@@ -100,11 +100,13 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DTabs`                                                 | Tab panels switched in place, with the strip, keyboard cursor, and ARIA pairing built in.                                      | [Tabs](https://meta.discourse.org/styleguide/molecules/tabs)                           |
 | `DResponsiveTable`, `DTableHeaderToggle`                | Tables that stay usable on narrow viewports, with sortable column headers.                                                     |                                                                                        |
 | `DVirtualList`                                          | Long lists that render only the rows in view.                                                                                  | [Virtual list](https://meta.discourse.org/styleguide/molecules/virtual-list)           |
+| `DReorderableList`, `DReorderableListGroup`             | Lists the user can reorder by drag, a move menu, or the keyboard. The group lets a row move between lists.                     | [Reorderable list](https://meta.discourse.org/styleguide/molecules/reorderable-list)   |
 | `DStatTiles`                                            | Rows of headline numbers.                                                                                                      |                                                                                        |
 | `DTapTileGrid`, `DTapTile`                              | Grids of tappable choices.                                                                                                     |                                                                                        |
 | `DPostAccordion`, `DPostAccordionItem`                  | Collapsible sections.                                                                                                          |                                                                                        |
 | `DResizeHandles`, `DResizeSeparator`                    | User-resizable regions.                                                                                                        | [Drag and drop](https://meta.discourse.org/styleguide/molecules/drag-and-drop)         |
 | `DSaveControls`                                         | The save button and "saved" feedback of a settings form.                                                                       |                                                                                        |
+| `DFloatingControlBar`                                   | A bar pinned to the bottom of the page offering to save or discard unsaved changes.                                            |                                                                                        |
 
 ## Loading, empty, and feedback states
 
@@ -128,6 +130,7 @@ Form-level composition belongs to [FormKit](22-form-kit.md). These are the under
 | `DInterpolatedTranslation`, `DCountI18n` | Translations whose placeholders are components or counts.                     |
 | `DRelativeDate`                          | A live-updating relative timestamp.                                           |
 | `DCdnImg`, `DLightDarkImg`               | Images that follow the CDN and the colour scheme.                             |
+| `DAnimatedEmoji`                         | An emoji animated where an animation exists, static otherwise.                |
 
 ## Users, avatars, and categories
 
@@ -202,7 +205,7 @@ Use the buckets that apply; a two-file split needs only `types.ts`. What goes wh
 - **`-internals/constants.ts`** exists so two collaborators that must agree on a value (a menu identifier, a selector) import it rather than restating it.
 - **`README.md`** explains the split: what each collaborator owns, the invariants that cross files, and the design decisions a future reader would otherwise undo.
 
-Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers.
+Something shared by several primitives, rather than private to one, goes in `ui-kit/-internals/<topic>/` (`scroll-strip`, for example, which the overflow controls and the tab strip share), still off-limits to consumers. [Private modules](32-private-modules.md) covers where a shared mechanism goes and how to move one out of a single owner.
 
 # Blast radius and backward compatibility
 
@@ -229,6 +232,29 @@ Every primitive is browsable at `/styleguide/<category>/<section>`, and the sect
 
 A section should be designed, with multiple examples that each isolate one capability. `sections/molecules/drag-and-drop.gjs` is the model: it groups its examples with `StyleguideGroups`, and each `Example` carries a title, a `@kind`, a description of what the example demonstrates, a `@tryThis` prompt telling the reader what to do, an optional `@note` on the subtlety it exposes, and the source via `@code` so the reader can copy it. Aim for one example per argument or behaviour worth understanding (types, positions, disabled state, nesting, custom preview, and so on), rather than a single kitchen-sink demo.
 
+## DMultiSelect footer actions
+
+`DMultiSelect` accepts an optional `footer` block below the search results, including when
+there are no matching results. The block receives the menu API; await `menu.close()` before
+opening another dialog so focus moves to the new dialog. Without a footer block, no footer
+or divider is rendered. Set `@matchTriggerWidth={{true}}` when a caller needs the menu to
+match the trigger width; this is opt-in and independent of the footer.
+
+```hbs
+<DMultiSelect
+  @matchTriggerWidth={{true}}
+  @loadFn={{this.loadItems}}
+  @selection={{this.selection}}
+  @onChange={{this.selectItems}}
+>
+  <:selection as |item|>{{item.name}}</:selection>
+  <:result as |item|>{{item.name}}</:result>
+  <:footer as |menu|>
+    <DButton @action={{fn this.createItem menu}} @label="create" @icon="plus" />
+  </:footer>
+</DMultiSelect>
+```
+
 # Related guides
 
 - [FormKit](22-form-kit.md) for forms.
@@ -237,3 +263,4 @@ A section should be designed, with multiple examples that each isolate one capab
 - [Designing for devices](28-designing-for-devices.md) and [responsive widths](29-designing-for-responsive-widths.md).
 - [Drag, resize, and gesture primitives](30-drag-and-gesture-primitives.md) for the modifiers that handle input.
 - [Types](27-types.md) for the Glint and TypeScript conventions the kit follows.
+- [Private modules](32-private-modules.md) for where `-internals` code goes.

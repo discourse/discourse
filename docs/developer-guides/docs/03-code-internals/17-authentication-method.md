@@ -40,6 +40,16 @@ https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e
 
 Data is stored in the `user_associated_accounts` database table. `provider_uid`, `info`, `credentials` and `extra` are all taken directly from the data returned by omniauth.
 
+Provider images are downloaded from `info.image` on authentication and retained in each account's `avatar_upload_id`. They remain separate from the user's uploaded picture and selectable presets. The avatar picker offers cached images from enabled providers under the existing avatar permissions.
+
+`UserAvatar` owns avatar imports, selection, refreshes, and cleanup. Authentication schedules provider retrieval through `UserAvatar.retrieve_for_associated_account`; download jobs and importers use `UserAvatar.import_url_for_user`, passing `associated_account_id` for provider images. User convenience methods and account/upload lifecycle callbacks delegate avatar changes to `UserAvatar`; permissions remain in Guardian.
+
+`user_avatars.selected_user_associated_account_id` records an explicitly selected provider. Subsequent downloads update the displayed avatar only while that provider remains selected. New accounts initially select their provider when no avatar was assigned; `auth_overrides_avatar` continues to enforce provider selection. Existing avatars retain their appearance and are not assigned a provider automatically. Existing linked accounts populate their provider choices on their next login.
+
+Choosing another avatar clears provider selection. Disconnecting an account preserves its currently displayed image as a local snapshot and preserves any separate uploaded picture. Failed downloads retain the previous image. Queued downloads are discarded if the account was disconnected, moved to another user, or now supplies a different image URL.
+
+Gravatar selection still uses upload-ID matching. A custom or preset picture identical to the cached Gravatar can therefore follow subsequent Gravatar updates.
+
 https://github.com/discourse/discourse/blob/b46b6e72d1906ca31e29855bda71f3498c8e203f/app/models/user_associated_account.rb#L13-L24
 
 Once an `Authenticator` class has been defined, it needs to be registered. This must happen early in the application's lifecycle, and can **not** happen within a plugin's `after_initialize` method. The minimum registration can simply contain a reference to the authenticator. In a plugin, registration can be done using the `auth_provider` function. For example:

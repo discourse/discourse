@@ -22,7 +22,6 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DTextField from "discourse/ui-kit/d-text-field";

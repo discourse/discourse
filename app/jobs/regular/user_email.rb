@@ -220,6 +220,8 @@ module Jobs
         email_args[:user_agent] = args[:user_agent]
       end
 
+      email_args[:provider_name] = args[:provider_name] if args[:provider_name].present?
+
       if EmailLog.reached_max_emails?(user, type)
         return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
       end

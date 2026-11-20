@@ -5,7 +5,6 @@ import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
-import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 
@@ -13,6 +12,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   @service footer;
+  @service mobileTabBar;
   @service router;
   @service scrollState;
   @service sidebarState;
@@ -23,6 +23,8 @@ export default class ApplicationController extends Controller {
   showTop = true;
 
   sidebarDisabledRouteOverride = false;
+
+  /** @type {string | null} */
   navigationMenuQueryParamOverride = null;
   _showSiteHeader = true;
   @tracked _showSidebar;
@@ -50,14 +52,6 @@ export default class ApplicationController extends Controller {
 
   get showFooter() {
     return this.footer.showFooter;
-  }
-
-  set showFooter(value) {
-    deprecated(
-      "showFooter state is now stored in the `footer` service, and should be controlled by adding the {{hideApplicationFooter}} helper to an Ember template.",
-      { id: "discourse.application-show-footer" }
-    );
-    this.footer.showFooter = value;
   }
 
   get isCurrentAdminRoute() {
@@ -114,8 +108,13 @@ export default class ApplicationController extends Controller {
     return this.siteSettings.login_required && !this.currentUser;
   }
 
-  @computed
+  // The tab bar stands in for the footer nav: it has its own back button, and
+  // inside the app a tab back to the app's list of sites
   get showFooterNav() {
+    if (this.mobileTabBar.enabled) {
+      return false;
+    }
+
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   }
 

@@ -38,6 +38,12 @@ hu:
             delete: "Törlés"
         multi_select:
           title: "Több kijelölése"
+        reorderable_list:
+          policies_pinned: "Kiemelt"
+          policies_required: "Kötelező"
+          table_field: "Mező"
+          table_type: "Típus"
+          cross_list_primary: "Elsődleges"
         toasts:
           title: "Köszöntők"
         font_scale:

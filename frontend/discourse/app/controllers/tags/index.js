@@ -11,6 +11,8 @@ export default class TagsIndexController extends Controller {
 
   @tracked bulkTagInput = "";
   @tracked isCreatingTags = false;
+
+  /** @type {{ created: string[], existing: string[], failed: Record<string, string> } | null} */
   @tracked bulkCreateResults = null;
 
   sortedByCount = true;

@@ -11,7 +11,6 @@ import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -28,9 +27,14 @@ import { i18n } from "discourse-i18n";
 export default class DPickFilesButton extends Component {
   @service dialog;
 
+  /** @type {string | null | undefined} */
   fileInputId = null;
+
+  /** @type {string | null | undefined} */
   fileInputClass = null;
   fileInputDisabled = false;
+
+  /** @type {string | string[] | null | undefined} */
   acceptedFormatsOverride = null;
   allowMultiple = false;
   showButton = false;

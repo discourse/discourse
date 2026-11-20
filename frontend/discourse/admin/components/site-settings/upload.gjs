@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -70,13 +69,24 @@ const FilePreview = <template>
   </div>
 </template>;
 
+/**
+ * @typedef {{
+ *   file_name: string,
+ *   url?: string,
+ *   original_filename?: string,
+ *   human_filesize?: string,
+ *   width?: number | null,
+ *   height?: number | null
+ * }} SiteSettingUploadedFile
+ */
 export default class SiteSettingUpload extends Component {
   @service currentUser;
   @service siteSettings;
 
+  /** @type {SiteSettingUploadedFile | null} */
   @tracked uploadedFile = null;
 
-  uppyUpload = new UppyUpload(getOwner(this), {
+  uppyUpload = new UppyUpload(this, {
     id: this.settingId,
     type: "site_setting",
     additionalParams: () => ({

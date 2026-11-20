@@ -160,6 +160,12 @@ uk:
           message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
           message_5: "Ваші улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
+        live_usage:
+          minutes:
+            one: "%{count} хвилина"
+            few: "%{count} хвилини"
+            many: "%{count} хвилин"
+            other: "%{count} хвилин"
         invites:
           guest_book_title: Гостьова книга
           guest_book_subtitle: Ваші запрошення до спільноти

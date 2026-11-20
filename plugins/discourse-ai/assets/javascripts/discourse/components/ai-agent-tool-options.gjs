@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
 import { action, get } from "@ember/object";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AiLlmSelector from "./ai-llm-selector";
+import AiLlmSelector from "./ai-llm-selector.gjs";
 
 export default class AiAgentToolOptions extends Component {
   get showToolOptions() {

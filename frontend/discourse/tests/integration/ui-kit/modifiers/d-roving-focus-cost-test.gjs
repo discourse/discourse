@@ -236,9 +236,7 @@ module(
     setupRenderingTest(hooks);
 
     test("rovingCost M5 tabStop=false performs no per-item forced reads on modify", async function (assert) {
-      const state = new (class {
-        @tracked key = 0;
-      })();
+      const key = tracked(0);
 
       await render(
         <template>
@@ -248,7 +246,7 @@ module(
               orientation="vertical"
               itemSelector="[role=option]"
               tabStop=false
-              itemsKey=state.key
+              itemsKey=key.value
             }}
           >
             {{#each SMALL_GROUP_ITEMS as |index|}}
@@ -259,7 +257,7 @@ module(
       );
 
       const reads = await measureForcedReads(async () => {
-        state.key++;
+        key.value++;
         await settled();
       });
 
@@ -273,17 +271,15 @@ module(
     });
 
     test("rovingCost M5 modify preserves at most one tab stop with author-supplied zeros", async function (assert) {
-      const state = new (class {
-        @tracked items = authorItems("initial");
-      })();
+      const items = tracked(authorItems("initial"));
 
       await render(
         <template>
           <div
             role="listbox"
-            {{dRovingFocus itemSelector="[role=option]" itemsKey=state.items}}
+            {{dRovingFocus itemSelector="[role=option]" itemsKey=items.value}}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button
                 class="author-item"
                 data-id={{item.id}}
@@ -301,7 +297,7 @@ module(
         "initial modify collapses three author-supplied zeros to one tab stop"
       );
 
-      state.items = authorItems("rerendered");
+      items.value = authorItems("rerendered");
       await settled();
 
       assert.strictEqual(
@@ -531,9 +527,7 @@ module(
     test("rovingCost M5 replacement and repeated steps preserve one tab stop", async function (assert) {
       let api;
       const registerApi = (registeredApi) => (api = registeredApi);
-      const state = new (class {
-        @tracked items = authorItems("initial-sequence");
-      })();
+      const items = tracked(authorItems("initial-sequence"));
 
       await render(
         <template>
@@ -542,11 +536,11 @@ module(
             {{dRovingFocus
               orientation="vertical"
               itemSelector="[role=option]"
-              itemsKey=state.items
+              itemsKey=items.value
               onRegisterApi=registerApi
             }}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button
                 class="replacement-item"
                 data-id={{item.id}}
@@ -560,7 +554,7 @@ module(
 
       assert.true(api.focusIndex(2), "the old item set establishes a holder");
 
-      state.items = authorItems("replacement-sequence");
+      items.value = authorItems("replacement-sequence");
       await settled();
 
       assert.strictEqual(

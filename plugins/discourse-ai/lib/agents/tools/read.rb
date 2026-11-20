@@ -84,7 +84,13 @@ module DiscourseAi
           end
 
           posts.each do |post|
-            content << "\n\n#{post.user&.name}(#{post.username}) said:\n\n#{post.raw}"
+            author =
+              if SiteSetting.enable_names?
+                "#{post.user&.name}(#{post.username})"
+              else
+                post.username
+              end
+            content << "\n\n#{author} said:\n\n#{post.raw}"
           end
 
           truncated_content =

@@ -39,7 +39,6 @@ import Composer from "discourse/models/composer";
 import { PENDING } from "discourse/models/reviewable";
 import { CLAIMED, UNCLAIMED } from "discourse/models/reviewable-history";
 import Topic from "discourse/models/topic";
-import { eq, not, or } from "discourse/truth-helpers";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
@@ -108,6 +107,7 @@ export default class ReviewableItem extends Component {
   @service store;
   @service toasts;
   @service messageBus;
+  @service reviewableDsa;
   @optionalService adminTools;
 
   @tracked disabled = false;
@@ -125,6 +125,7 @@ export default class ReviewableItem extends Component {
     this.messageBus.unsubscribe("/reviewable_action", this._updateStatus);
   }
 
+  /** @returns {{ activeTab: string, insightsOpened: boolean, updates: Record<string, unknown> | null }} */
   @cached
   get state() {
     // reading the argument is what ties this cache to a single reviewable
@@ -169,8 +170,7 @@ export default class ReviewableItem extends Component {
     return (
       (reviewable?.created_from_flag &&
         reviewable?.status === PENDING &&
-        (this.claimOptional ||
-          (this.claimRequired && reviewable?.claimed_by !== null))) ||
+        (!this.claimRequired || reviewable?.claimed_by !== null)) ||
       this.isAiReviewable
     );
   }
@@ -199,13 +199,6 @@ export default class ReviewableItem extends Component {
         reviewable?.claimed_by?.automatic) &&
       !!this.topicId &&
       reviewable?.status === PENDING
-    );
-  }
-
-  get claimOptional() {
-    return (
-      !this.claimEnabled ||
-      this.siteSettings?.reviewable_claiming === "optional"
     );
   }
 
@@ -325,12 +318,22 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  clientSuspend(reviewable, performAction) {
-    return this._penalize("showSuspendModal", reviewable, performAction);
+  clientSuspend(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSuspendModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
-  clientSilence(reviewable, performAction) {
-    return this._penalize("showSilenceModal", reviewable, performAction);
+  clientSilence(reviewable, performAction, dsaClassification) {
+    return this._penalize(
+      "showSilenceModal",
+      reviewable,
+      performAction,
+      dsaClassification
+    );
   }
 
   async clientEdit(reviewable, performAction) {
@@ -353,7 +356,10 @@ export default class ReviewableItem extends Component {
       draftKey: topic.draft_key,
       draftSequence: topic.draft_sequence,
       skipJumpOnSave: true,
-      onSaved: () => performAction().catch(popupAjaxError),
+      onSaved: (result) =>
+        performAction({ post_version: result.payload.version }).catch(
+          popupAjaxError
+        ),
     });
   }
 
@@ -410,6 +416,22 @@ export default class ReviewableItem extends Component {
     const actionModalClass = requireRejectReason
       ? RejectReasonReviewableModal
       : actionModalClassMap[performableAction.server_action];
+
+    if (
+      this.reviewableDsa.handlesConfirmation({
+        action: performableAction,
+        options: this.args.classificationOptions,
+        modalClass: actionModalClass,
+      })
+    ) {
+      return this._performConfirmed(
+        performableAction,
+        {},
+        {
+          modalClass: actionModalClass,
+        }
+      );
+    }
 
     if (message) {
       if (await this.#claimReviewable()) {
@@ -613,10 +635,14 @@ export default class ReviewableItem extends Component {
   }
 
   @bind
-  async _performConfirmed(performableAction, additionalData = {}) {
+  async _performConfirmed(
+    performableAction,
+    additionalData = {},
+    { modalClass } = {}
+  ) {
     let reviewable = this.args.reviewable;
 
-    let performAction = async () => {
+    let performAction = async (actionData = {}) => {
       this.disabled = true;
 
       let version = reviewable.version;
@@ -626,6 +652,7 @@ export default class ReviewableItem extends Component {
         send_email: reviewable.sendEmail,
         reject_reason: reviewable.rejectReason,
         ...additionalData,
+        ...actionData,
       };
 
       (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
@@ -655,22 +682,48 @@ export default class ReviewableItem extends Component {
         });
     };
 
-    try {
-      if (performableAction.client_action) {
-        let actionMethod =
-          this[`client${classify(performableAction.client_action)}`];
-        if (actionMethod) {
-          if (await this.#claimReviewable()) {
-            await actionMethod.call(this, reviewable, performAction);
-          }
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(
-            `No handler for ${performableAction.client_action} found`
+    const classificationOptions = this.reviewableDsa.optionsFor({
+      action: performableAction,
+      options: this.args.classificationOptions,
+    });
+
+    const dispatch = async (perform) => {
+      if (!performableAction.client_action) {
+        return perform();
+      }
+
+      const actionMethod =
+        this[`client${classify(performableAction.client_action)}`];
+      if (actionMethod) {
+        if (await this.#claimReviewable()) {
+          return actionMethod.call(
+            this,
+            reviewable,
+            perform,
+            classificationOptions
           );
         }
       } else {
-        await performAction();
+        // eslint-disable-next-line no-console
+        console.error(
+          `No handler for ${performableAction.client_action} found`
+        );
+      }
+    };
+
+    try {
+      if (classificationOptions) {
+        await this.reviewableDsa.perform({
+          action: performableAction,
+          reviewable,
+          options: classificationOptions,
+          modalClass,
+          claim: () => this.#claimReviewable(),
+          dispatch,
+          performAction,
+        });
+      } else {
+        await dispatch(performAction);
       }
     } catch (error) {
       popupAjaxError(error);
@@ -707,17 +760,21 @@ export default class ReviewableItem extends Component {
     }
   }
 
-  _penalize(adminToolMethod, reviewable, performAction) {
+  _penalize(adminToolMethod, reviewable, performAction, dsaClassification) {
     if (!this.adminTools) {
       return;
     }
 
-    return this.adminTools[adminToolMethod](reviewable.target_created_by, {
-      postId: reviewable.post_id,
-      postEdit: reviewable.raw ?? reviewable.payload?.raw,
-      reviewableId: reviewable.id,
-      before: performAction,
-    });
+    return this.adminTools[adminToolMethod](
+      reviewable.target_created_by ?? reviewable.target_user,
+      {
+        postId: reviewable.post_id,
+        postEdit: reviewable.raw ?? reviewable.payload?.raw,
+        reviewableId: reviewable.id,
+        dsaClassification,
+        perform: performAction,
+      }
+    );
   }
 
   <template>
@@ -751,7 +808,12 @@ export default class ReviewableItem extends Component {
                 {{dIcon "link"}}
               </button>
 
-              {{newReviewableStatus @reviewable.status @reviewable.type}}
+              {{newReviewableStatus
+                @reviewable.status
+                @reviewable.type
+                @reviewable.approval_style
+                @reviewable.answersProblem
+              }}
 
               <span class="reviewable-created-date">
                 {{dFormatDate @reviewable.created_at format="tiny"}}
@@ -846,7 +908,6 @@ export default class ReviewableItem extends Component {
         </div>
 
         <div class="review-item__aside">
-
           {{#unless @reviewable.last_performing_username}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">

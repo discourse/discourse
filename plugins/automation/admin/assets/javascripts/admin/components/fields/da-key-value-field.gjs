@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import BaseField from "./da-base-field";
-import DAFieldDescription from "./da-field-description";
-import DAFieldLabel from "./da-field-label";
+import BaseField from "./da-base-field.gjs";
+import DAFieldDescription from "./da-field-description.gjs";
+import DAFieldLabel from "./da-field-label.gjs";
 
 export default class KeyValueField extends BaseField {
   @tracked showJsonEditorModal = false;
@@ -44,7 +44,7 @@ export default class KeyValueField extends BaseField {
               @closeModal={{this.closeModal}}
               @model={{hash
                 value=this.value
-                updateValue=this.handleValueChange
+                updateValue=this.mutValue
                 settingName=@label
                 jsonSchema=this.jsonSchema
               }}
@@ -79,14 +79,6 @@ export default class KeyValueField extends BaseField {
       return i18n("discourse_automation.fields.key_value.label_with_count", {
         count: this.keyCount,
       });
-    }
-  }
-
-  @action
-  handleValueChange(value) {
-    if (value !== this.args.field.metadata.value) {
-      this.mutValue(value);
-      this.args.saveAutomation();
     }
   }
 

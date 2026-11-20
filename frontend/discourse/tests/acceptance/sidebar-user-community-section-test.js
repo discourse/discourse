@@ -466,7 +466,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
     );
 
-    assert.strictEqual(currentRouteName(), "admin.dashboard.general");
+    assert.strictEqual(currentRouteName(), "admin.dashboard");
   });
 
   test("admin section link is not shown to non-staff users", async function (assert) {

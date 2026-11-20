@@ -38,7 +38,28 @@ RSpec.describe "Silenced user" do
       chat.visit_channel(channel_1)
       channel.hover_message(message_1)
 
-      expect(page).to have_no_css(".chat-message-actions")
+      expect(page).to have_css(".chat-message-actions")
+      expect(page).to have_no_css(".chat-message-actions .react-btn")
+      expect(page).to have_no_css(".chat-message-actions .reply-btn")
+    end
+
+    it "allows flagging messages as illegal when allow_all_users_to_flag_illegal_content is enabled" do
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      message_1 = Fabricate(:chat_message, chat_channel: channel_1)
+      flag_modal = PageObjects::Modals::Flag.new
+
+      chat.visit_channel(channel_1)
+      channel.messages.flag(message_1)
+
+      expect(flag_modal).to have_choices(I18n.t("js.flagging.formatted_name.illegal"))
+
+      flag_modal.choose_type(:illegal)
+      flag_modal.fill_message("This looks totally illegal to me.")
+      flag_modal.check_confirmation
+      flag_modal.confirm_flag
+
+      expect(channel.message_by_id(message_1.id)).to have_css(".chat-message-info__flag")
     end
   end
 end

@@ -11,6 +11,7 @@ module DiscourseAi
             .all
             .includes(
               :llm_models,
+              :decision_models,
               :embedding_definitions,
               :ai_mcp_servers,
               ai_tool_secret_bindings: :ai_tool,
@@ -31,6 +32,7 @@ module DiscourseAi
         secret =
           AiSecret.includes(
             :llm_models,
+            :decision_models,
             :embedding_definitions,
             :ai_mcp_servers,
             ai_tool_secret_bindings: :ai_tool,

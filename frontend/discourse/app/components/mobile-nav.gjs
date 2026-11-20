@@ -13,6 +13,7 @@ export default class MobileNav extends Component {
   @service router;
   @service site;
 
+  /** @type {string | null} */
   @tracked selectedHtml = null;
   @tracked expanded = false;
 

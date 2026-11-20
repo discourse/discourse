@@ -3,7 +3,6 @@
 require "fileutils"
 require "logger"
 require "open3"
-require "pathname"
 
 module Migrations
   module Converters

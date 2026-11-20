@@ -48,6 +48,8 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      dsa_classification:
+        suggest: "Navrhnout s AI"
       copied: "Zkopírováno"
       ai_decoded_transcript:
         tool: "Nástroj"
@@ -57,6 +59,12 @@ cs:
       discourse_workflows:
         ai_agent:
           mode: "Režim"
+        classify:
+          text: "Text"
+          upload_ids: "Obrázky"
+          name: "Jméno"
+          type: "Typ"
+          type_score: "Skóre"
       ai_tool_approval:
         loading: "Načítá se..."
         tool: "Akce"
@@ -68,25 +76,38 @@ cs:
       llm_selector:
         none: "Žádný"
       features:
-        disabled: "(vypnuto)"
-        groups: "Skupiny:"
+        table:
+          status: "Stav"
+          enabled: "Zapnuto"
+          feature: "Funkce"
+          groups: "Skupiny"
+        who_can_use:
+          no_one: "Nikdo"
+        status:
+          "on": "Zapnuto"
+          "off": "Vypnuto"
+        chatbot:
+          places:
+            personal_messages: "Soukromé zprávy"
+            chat_direct_messages: "Zprávy v chatu"
+            none: "Není k dispozici"
         no_agent: "Nenastaveno"
         no_groups: "Žádná"
         edit: "Nastavení"
-        expand_list:
-          one: "(%{count} další)"
-          few: "(%{count} další)"
-          many: "(%{count} další)"
-          other: "(%{count} další)"
-        collapse_list: "(zobrazit méně)"
         nav:
           enabled: "Zapnuto"
         filters:
-          all: "Vše"
           reset: "obnovit výchozí"
+        sentiment:
+          sentiment: "Sentiment"
+          enabled: "Zapnuto"
+          setting_groups:
+            sentiment: "Sentiment"
         search:
           name: "Vyhledávání"
           ask_ai: "Zeptejte se AI"
+        embeddings:
+          related_topics: "Související témata"
         ai_helper:
           proofread: Korektura textu
           explain: "Vysvětlit"
@@ -102,7 +123,20 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
-        category_scope: "Kategorie"
+        sections:
+          advanced: "Pokročilé"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorie"
+          ai_translation_personal_messages:
+            label: "Soukromé zprávy"
+            choices:
+              none: "Žádný"
+              all: "Vše"
+          content_localization_language_switcher:
+            choices:
+              none: "Nikdo"
+              all: "Všichni"
         model_progress:
           detail:
             retry: "Zkuste znovu"
@@ -119,6 +153,8 @@ cs:
               title: "Kategorie"
             tag:
               title: "Štítky"
+        admin_actions:
+          enabled: "Zapnuto"
         stats:
           eta_minutes:
             one: "%{count} minutu"
@@ -143,6 +179,8 @@ cs:
             other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Žádný"
+        no_decision_model_selected: "Žádný"
         last_seven_days: "Posledních 7 dní"
         enable: "Zapnout"
         save_button: "Uložit změny"
@@ -254,6 +292,15 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      decision_models:
+        no_preset: "Žádný"
+        display_name: "Jméno"
+        model: "Model"
+        edit: "Upravit"
+        delete: "Smazat"
+        test: "Spustit test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Název"
         description: "Popis"
@@ -270,6 +317,16 @@ cs:
         delete: "Smazat"
         tools_modal:
           required: "Povinné"
+      models:
+        name: "Jméno"
+        type: "Typ"
+        edit: "Upravit"
+        select_type: "Vybrat"
+        types:
+          embedding: "Zabudování"
+        filters:
+          all: "Všechny typy"
+          reset: "Odstranit filtry"
       llms:
         display_name: "Název"
         vision_modes:
@@ -370,6 +427,7 @@ cs:
           hugging_face: "Hugging Face"
           open_ai: "OpenAI"
           google: "Google"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Přizpůsobené"
         semantic_search_tooltips:
@@ -377,7 +435,18 @@ cs:
         quick_search:
           suffix: "ve všech tématech a příspěvcích s AI"
       ai_artifact:
+        editor:
+          version: "Verze"
+          default: "Výchozí"
+          option_on: "Zapnuto"
+          option_off: "Vypnuto"
+          apply: "Použít"
         collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
+        share: "Sdílet"
+        create_link: "Vytvořit odkaz"
+        copy_link: "Kopírovat odkaz"
+        filter_all: "Vše"
+        filter_standalone: "Samostatná"
       ai_bot:
         llm: "Model:"
         pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
@@ -446,8 +515,6 @@ cs:
           scroll_to_bottom: "Přejít na konec"
           editing_post: "Příspěvek je upravován"
       sentiments:
-        dashboard:
-          title: "Sentiment"
         sentiment_analysis:
           filter_types:
             all: "Vše"
@@ -475,6 +542,17 @@ cs:
             compact: "Kompaktní"
             expanded: "Rozšířený"
             expanded_description: "se souhrny AI"
+      ai_search:
+        related_topics: "Související témata"
+        related_replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
+        tabs:
+          ask: "Zeptejte se AI"
+          topics: "Témata"
+          messages: "Zprávy"
       discobot_discoveries:
         main_title: "Zeptejte se AI"
         legacy:

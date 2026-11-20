@@ -41,6 +41,10 @@ ar:
         remove: "إزالة هذا الإعجاب"
         cant_remove: "لم يعد بإمكانك إزالة إعجابك"
         unauthenticated: "يُرجى الاشتراك أو تسجيل الدخول لتسجيل الإعجاب بهذا المنشور"
+    discourse_workflows:
+      post_reaction_changed:
+        changes_added: "تمت الإضافة"
+        changes_removed: "تمت إزالتها"
     notifications:
       reaction_1_user_multiple_posts:
         zero: "تفاعل على %{count} من منشوراتك"

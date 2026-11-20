@@ -27,6 +27,24 @@ zh_CN:
         run_sql: "已运行 SQL 查询"
         submit_query: "提交的生成查询 %{name}"
   discourse_data_explorer:
+    admin_assistant:
+      generating: "生成并测试查询草稿"
+      create_summary: "保存此数据浏览器查询？"
+      not_allowed: "只有管理员才能创建数据资源管理器查询。"
+      invalid_request: "查询请求为空或过长。请提供更简短的描述。"
+      invalid_draft: "此查询草稿引用无效、不可用或已过期。请生成新的草稿。"
+      incomplete_draft: "生成的查询草稿缺少名称或 SQL 语句。请生成新的草稿。"
+      requester_not_admin: "提出此查询请求的管理员已不再拥有管理员权限。请使用管理员帐户重新提交查询请求。"
+      approval_required: "保存此查询需要人工审核。"
+      draft_used: "此查询草稿已被使用或正在保存。请生成新的草稿。"
+      generation_failed: "查询无法生成。请重试或完善您的查询。"
+      creation_failed: "查询无法保存。未创建任何查询。"
+      availability:
+        available: "数据浏览器已支持创建查询。保存操作需要明确批准。"
+        restricted: "此站点不支持数据浏览器查询创建功能。"
+        disabled: "数据浏览器或 Discourse AI 已禁用。管理员需要先启用所需的插件才能创建查询。"
+        generation_disabled: "AI查询生成功能已禁用。管理员需要先启用该功能，才能通过聊天创建查询。"
+        unconfigured: "数据探索者的查询生成 AI 模型尚未配置或无法使用。"
     mcp:
       query_failed: "查询无法运行： %{message}"
       query_not_found: "查询未找到"
@@ -34,7 +52,12 @@ zh_CN:
       error_agent_not_configured: "AI 智能体尚未配置。请检查 AI 功能设置。"
       error_no_sql_returned: "AI 未返回有效的 SQL 查询。请重试或手动编写查询。"
     errors:
+      default_tag_reserved: "默认标签保留用于系统查询。"
+      custom_tag_reserved: "custom 标签保留给用户自行创建的查询使用。"
+      tag_contains_comma: "标签中不能包含逗号。"
+      tag_too_long: "标签最多可以包含 %{max} 个字符。"
       tool_not_allowed: "您无权使用此工具"
+      too_many_tags: "一个查询最多可以有 %{max} 个标签，不包括自动标签。"
     discourse_workflows:
       sql_action:
         no_query_selected: "未选择查询。"

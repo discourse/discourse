@@ -3,7 +3,7 @@ import { i18n } from "discourse-i18n";
 import WorkflowsIndex from "discourse/plugins/discourse-workflows/admin/components/workflows/index";
 
 export default <template>
-  <div class="admin-config-page__main-area">
+  <div class="admin-config-page__main-area admin-detail">
     <DBreadcrumbsItem
       @label={{i18n "discourse_workflows.tabs.all_workflows"}}
     />

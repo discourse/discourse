@@ -20,13 +20,11 @@ module(
     setupRenderingTest(hooks);
 
     test("registration marker follows the target lifecycle", async function (assert) {
-      const state = new (class {
-        @tracked show = true;
-      })();
+      const show = tracked(true);
 
       await render(
         <template>
-          {{#if state.show}}
+          {{#if show.value}}
             <div
               id="external-target"
               {{dDragAndDropExternalTarget accepts="files"}}
@@ -41,7 +39,7 @@ module(
         "the target is marked while registered"
       );
 
-      state.show = false;
+      show.value = false;
       await settled();
 
       assert.false(
@@ -446,16 +444,14 @@ module(
       });
 
       test("an external target switching between destination and slot mid-hover shows one indicator family", async function (assert) {
-        const state = new (class {
-          @tracked axis = undefined;
-        })();
+        const axis = tracked(undefined);
 
         await render(
           <template>
             <div
               id="ext"
               style="height: 100px"
-              {{dDragAndDropExternalTarget accepts="text" axis=state.axis}}
+              {{dDragAndDropExternalTarget accepts="text" axis=axis.value}}
             >ext</div>
           </template>
         );
@@ -480,7 +476,7 @@ module(
           )
           .doesNotHaveClass("--drag-below");
 
-        state.axis = "vertical";
+        axis.value = "vertical";
         await settled();
         await dragEvent("#ext", "dragover", { dataTransfer, ...lowerHalf });
 
@@ -492,7 +488,7 @@ module(
             "and drops the destination class it had"
           );
 
-        state.axis = undefined;
+        axis.value = undefined;
         await settled();
         await dragEvent("#ext", "dragover", { dataTransfer, ...lowerHalf });
 

@@ -15,8 +15,8 @@ import {
   fieldShowDescription,
   isExpression,
   propertyDescription,
-} from "../../../lib/workflows/property-engine";
-import ExpressionWrapper from "./expression-wrapper";
+} from "../../../lib/workflows/property-engine.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 const GROUP_SCHEMA = {
   type: "array",

@@ -15,6 +15,11 @@ te:
           actions:
             duplicate: "నకిలీ చేయండి"
             delete: "తొలగించండి"
+        reorderable_list:
+          policies_pinned: "పిన్ చేయబడింది"
+          policies_required: "అవసరం"
+          table_type: "రకం"
+          cross_list_primary: "ప్రాథమిక"
         colors:
           title: "రంగులు"
         categories:

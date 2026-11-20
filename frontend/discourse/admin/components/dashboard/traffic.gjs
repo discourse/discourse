@@ -8,7 +8,6 @@ import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { formatMinutesSeconds } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
-import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 

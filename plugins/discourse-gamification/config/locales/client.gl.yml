@@ -26,16 +26,16 @@ gl:
       close: "Pechar"
       delete: "Eliminar"
       edit: "Editar"
-      back: "Volver"
       save: "Gardar"
-      apply: "Aplicar"
       update_range:
         all_time: "Desde o principio"
       custom_range_from: "De"
       admin:
         name: "Nome"
+        created_by: "Creado por"
     discourse_workflows:
       gamification_score:
         username: "Usuario"
         date: "Data"
         description: "Descrición"
+        category_id: "Categoría"

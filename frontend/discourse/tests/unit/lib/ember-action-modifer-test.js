@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components */
+/* eslint-disable discourse/no-test-context-set -- tests the classic `action` modifier */
 import { setComponentTemplate } from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { click, doubleClick, render } from "@ember/test-helpers";
@@ -13,10 +14,8 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   test("`{{action}}` can target a function", async function (assert) {
     let i = 0;
 
-    this.setProperties({
-      onChildClick: () => this.set("childClicked", i++),
-      childClicked: undefined,
-    });
+    this.onChildClick = () => this.set("childClicked", i++);
+    this.childClicked = undefined;
 
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
@@ -35,10 +34,8 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   test("`{{action}}` can target a method on the current context by name", async function (assert) {
     let i = 0;
 
-    this.setProperties({
-      onChildClick: () => this.set("childClicked", i++),
-      childClicked: undefined,
-    });
+    this.onChildClick = () => this.set("childClicked", i++);
+    this.childClicked = undefined;
 
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
@@ -57,10 +54,8 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   test("`{{action}}` will ignore clicks combined with modifier keys", async function (assert) {
     let i = 0;
 
-    this.setProperties({
-      onChildClick: () => this.set("childClicked", i++),
-      childClicked: undefined,
-    });
+    this.onChildClick = () => this.set("childClicked", i++);
+    this.childClicked = undefined;
 
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
@@ -79,10 +74,8 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   test("`{{action}}` can specify an event other than `click` via `on`", async function (assert) {
     let i = 0;
 
-    this.setProperties({
-      onDblClick: () => this.set("dblClicked", i++),
-      dblClicked: undefined,
-    });
+    this.onDblClick = () => this.set("dblClicked", i++);
+    this.dblClicked = undefined;
 
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
@@ -155,17 +148,15 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
     test("it can target a listener on the context", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onOneClick: (source) => {
-          assert.strictEqual(
-            source,
-            "doSomething",
-            "handler on context is invoked"
-          );
-          this.set("oneClicked", i++);
-        },
-        oneClicked: undefined,
-      });
+      this.onOneClick = (source) => {
+        assert.strictEqual(
+          source,
+          "doSomething",
+          "handler on context is invoked"
+        );
+        this.set("oneClicked", i++);
+      };
+      this.oneClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
@@ -186,17 +177,15 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
     test("it can target a listener on the actions hash", async function (assert) {
       let i = 0;
 
-      this.setProperties({
-        onOneClick: (source) => {
-          assert.strictEqual(
-            source,
-            "actions.doSomething",
-            "handler on actions hash is given precedence"
-          );
-          this.set("oneClicked", i++);
-        },
-        oneClicked: undefined,
-      });
+      this.onOneClick = (source) => {
+        assert.strictEqual(
+          source,
+          "actions.doSomething",
+          "handler on actions hash is given precedence"
+        );
+        this.set("oneClicked", i++);
+      };
+      this.oneClicked = undefined;
 
       await withSilencedDeprecationsAsync(
         "discourse.template-action",

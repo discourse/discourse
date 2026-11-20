@@ -19,14 +19,10 @@ sl:
       admins_only: "Raziskovalec podatkov je na voljo samo skrbnikom."
       allow_groups: "Dovoli skupinam dostop do te poizvedbe"
       title: "Raziskovalec podatkov"
-      create: "Ustvari"
       create_placeholder: "Ime poizvedbe..."
       description_placeholder: "Vnesite opis tukaj"
       ai:
         generate: "Ustvari"
-        optional: "neobvezno"
-      import:
-        label: "Uvozi"
       help:
         label: "Pomoč"
       schema:
@@ -44,14 +40,13 @@ sl:
         form:
           label: "Vrsta grafikona"
           bar: "Stolpični"
-      others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
       run_time: "Poizvedba končana v %{value} ms."
       result_count:
         one: "%{count} zadetek."
         two: "%{count} zadetka."
         few: "%{count} zadetki."
         other: "%{count} zadetkov."
-      query_name: "Poizvedba"
+      name: "Ime"
       query_groups: "Skupine"
       query_tags: "Oznake"
       link: "Povezava za"
@@ -61,7 +56,6 @@ sl:
       query_user: "Ustvaril"
       column: "Stolpec %{number}"
       reset_params: "Ponastavi"
-      search_placeholder: "Išči..."
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
     group:
       reports: "Poročila"

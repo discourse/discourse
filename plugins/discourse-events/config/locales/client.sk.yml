@@ -27,6 +27,10 @@ sk:
               label: ID témy
     discourse_events:
       title: "Udalosti"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrácia"
       preferences:
         reminders:
           preferences:
@@ -436,7 +440,6 @@ sk:
               many: "%{count} pozvaní používatelia"
               other: "%{count} pozvaných používateľov"
         event:
-          expired: "Vypršala platnosť"
           closed: "Hlasovanie ukončené"
           status:
             standalone:
@@ -448,6 +451,8 @@ sk:
             private:
               title: "Súkromné"
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
+      recording_modal:
+        save: "Uložiť"
       composer:
         name_placeholder: "Názov udalosti"
         url_placeholder: "Pridaj URL"

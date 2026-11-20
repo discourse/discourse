@@ -23,14 +23,11 @@ he:
       admins_only: "דפדפן הנתונים זמין למנהלים בלבד."
       allow_groups: "לאפשר לקבוצות לגשת לשאילתה הזאת"
       title: "דפדפן נתונים"
-      create: "יצירה"
       create_placeholder: "שם השאילתה…"
       description_placeholder: "יש להקליד תיאור כאן"
       ai:
         generate: "ייצר"
-        optional: "רשות"
       import:
-        label: "ייבוא"
         unparseable_json: "קובץ JSON שאינו ניתן לפענוח."
         wrong_json: "קובץ JSON שגוי. קובץ JSON צריך להכיל רכיב ‚query’, שצריך לכלול לפחות מאפיין ‚sql’."
       help:
@@ -56,7 +53,6 @@ he:
           bar: "עמודות"
         tooltip:
           total: "סה״כ: %{count}"
-      others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
       run_time: "השאילתה הושלמה תוך %{value} מילישניות."
       result_count:
         one: "תוצאה."
@@ -66,7 +62,7 @@ he:
         one: "התוצאה המובילה מופיעה."
         two: "שתי התוצאות המובילות מופיעות."
         other: "%{count} התוצאות המובילות מופיעות."
-      query_name: "שאילתה"
+      name: "שם"
       query_groups: "קבוצות"
       query_tags: "תגיות"
       link: "קישור אל"
@@ -76,7 +72,6 @@ he:
       query_user: "נוצר על ידי"
       column: "עמודה %{number}"
       reset_params: "איפוס"
-      search_placeholder: "חיפוש…"
       no_search_results: "לא הצלחנו למצוא תוצאות שעונות לטקסט שלך, עמך הסליחה."
       form:
         errors:

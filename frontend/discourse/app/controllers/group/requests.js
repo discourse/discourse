@@ -11,8 +11,14 @@ export default class GroupRequestsController extends Controller {
 
   queryParams = ["order", "asc", "filter"];
   order = "";
+
+  /** @type {boolean | string | null} */
   asc = null;
+
+  /** @type {string | null} */
   filter = null;
+
+  /** @type {string | null} */
   filterInput = null;
   loading = false;
 

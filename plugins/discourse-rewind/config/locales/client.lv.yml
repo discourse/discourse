@@ -15,5 +15,10 @@ lv:
         chat_usage:
           author: Tu
           author_others: "%{username}"
+        live_usage:
+          minutes:
+            zero: "%{count} minūtes"
+            one: "%{count} minūtes"
+            other: "%{count} minūtes"
         writing_analysis:
           menu_other: Citi

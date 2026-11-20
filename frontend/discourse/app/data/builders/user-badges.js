@@ -23,8 +23,20 @@ export function findUserBadgesByUsername(username, opts = {}) {
 export function findUserBadgesByBadgeId(badgeId, opts = {}) {
   const url = applyQueryParams("/user_badges.json", {
     badge_id: badgeId,
+    limit: opts.limit,
     offset: opts.offset,
     username: opts.username,
+  });
+  return readMany(url, normalizeUserBadgesPayload);
+}
+
+export function findUserBadgesByBadgeIds(badgeIds, opts = {}) {
+  const url = applyQueryParams("/user_badges.json", {
+    badge_ids: badgeIds.length ? badgeIds.join(",") : null,
+    badge_type_id: opts.badgeTypeId,
+    offset: opts.offset,
+    username: opts.username,
+    limit: opts.limit,
   });
   return readMany(url, normalizeUserBadgesPayload);
 }

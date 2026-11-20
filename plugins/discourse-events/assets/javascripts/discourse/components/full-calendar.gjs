@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,8 +16,9 @@ import DiscoursePostEvent from "discourse/plugins/discourse-events/discourse/com
 import {
   getCalendarButtonsText,
   getCurrentBcp47Locale,
-} from "../lib/calendar-locale";
-import { normalizeViewForCalendar } from "../lib/calendar-view-helper";
+} from "../lib/calendar-locale.js";
+import { normalizeViewForCalendar } from "../lib/calendar-view-helper.js";
+import CalendarPlaceholder from "./calendar-placeholder.gjs";
 
 const PostEventMenu = <template>
   <DiscoursePostEvent
@@ -37,6 +39,8 @@ export default class FullCalendar extends Component {
   @service loadingSlider;
 
   @controller topic;
+
+  @tracked isRendered = false;
 
   calendar = null;
 
@@ -84,6 +88,10 @@ export default class FullCalendar extends Component {
         this.args.rightHeaderToolbar ??
         "timeGridDay,timeGridWeek,dayGridMonth,listYear",
     };
+  }
+
+  get showPlaceholder() {
+    return this.args.placeholder && !this.isRendered;
   }
 
   get initialView() {
@@ -206,6 +214,7 @@ export default class FullCalendar extends Component {
     });
 
     this.calendar.render();
+    this.isRendered = true;
   }
 
   @action
@@ -217,7 +226,15 @@ export default class FullCalendar extends Component {
   }
 
   <template>
+    {{#if this.showPlaceholder}}
+      <CalendarPlaceholder
+        @height={{@height}}
+        @view={{this.initialView}}
+        @weekends={{@weekends}}
+      />
+    {{/if}}
     <div
+      aria-busy={{if this.showPlaceholder "true"}}
       ...attributes
       {{didInsert this.setupCalendar}}
       {{didUpdate

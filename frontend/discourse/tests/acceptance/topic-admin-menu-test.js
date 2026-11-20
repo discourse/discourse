@@ -63,7 +63,7 @@ acceptance("Topic - Admin Menu", function (needs) {
 
   test("Button added using addTopicAdminMenuButton", async function (assert) {
     updateCurrentUser({ admin: true });
-    this.set("actionCalled", false);
+    let actionCalled = false;
 
     withPluginApi((api) => {
       api.addTopicAdminMenuButton(() => {
@@ -72,7 +72,7 @@ acceptance("Topic - Admin Menu", function (needs) {
           icon: "heart",
           label: "yes_value",
           action: () => {
-            this.set("actionCalled", true);
+            actionCalled = true;
           },
         };
       });
@@ -88,7 +88,7 @@ acceptance("Topic - Admin Menu", function (needs) {
       .dom(".extra-button .d-button-label")
       .hasText(i18n("yes_value"), "The label was rendered");
     await click(".extra-button");
-    assert.true(this.actionCalled, "The action was called");
+    assert.true(actionCalled, "The action was called");
   });
 
   test("Buttons with a section are rendered under a subheader", async function (assert) {

@@ -80,12 +80,6 @@ loaderShim("discourse/components/cdn-img", () =>
 loaderShim("discourse/components/char-counter", () =>
   importSync("discourse/ui-kit/d-char-counter")
 );
-loaderShim("discourse/components/color-picker", () =>
-  importSync("discourse/ui-kit/d-color-picker")
-);
-loaderShim("discourse/components/color-picker-choice", () =>
-  importSync("discourse/ui-kit/d-color-picker-choice")
-);
 loaderShim("discourse/components/conditional-in-element", () =>
   importSync("discourse/ui-kit/d-conditional-in-element")
 );
@@ -166,9 +160,6 @@ loaderShim("discourse/components/load-more", () =>
 );
 loaderShim("discourse/components/nav-item", () =>
   importSync("discourse/ui-kit/d-nav-item")
-);
-loaderShim("discourse/components/number-field", () =>
-  importSync("discourse/ui-kit/d-number-field")
 );
 loaderShim("discourse/components/password-field", () =>
   importSync("discourse/ui-kit/d-password-field")

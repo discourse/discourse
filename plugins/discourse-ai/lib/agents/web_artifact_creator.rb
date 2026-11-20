@@ -3,6 +3,10 @@
 module DiscourseAi
   module Agents
     class WebArtifactCreator < Agent
+      def thinking_effort
+        "medium"
+      end
+
       def tools
         [Tools::CreateArtifact, Tools::UpdateArtifact, Tools::ReadArtifact]
       end

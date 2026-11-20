@@ -7,11 +7,21 @@ module Jobs
     every 1.day
 
     def execute(args)
-      return if SiteSetting.auto_handle_queued_age.to_i.zero?
+      age = SiteSetting.auto_handle_queued_age.to_i
+      return if age.zero?
+
+      cutoff = age.days.ago
+      recently_reopened =
+        ReviewableHistory
+          .transitioned
+          .pending
+          .where(created_at: cutoff..)
+          .where("reviewable_histories.reviewable_id = reviewables.id")
 
       Reviewable
         .pending
-        .where("created_at < ?", SiteSetting.auto_handle_queued_age.to_i.days.ago)
+        .where("created_at < ?", cutoff)
+        .where.not(recently_reopened.arel.exists)
         .find_each do |reviewable|
           if reviewable.is_a?(ReviewableFlaggedPost)
             reviewable.perform(Discourse.system_user, :ignore_and_do_nothing, expired: true)

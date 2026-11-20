@@ -16,9 +16,7 @@ module(
     setupRenderingTest(hooks);
 
     test("replacing the active controller preserves the cursor and rebinds navigation", async function (assert) {
-      const state = new (class {
-        @tracked controller = ".first-controller";
-      })();
+      const controller = tracked(".first-controller");
       const changes = [];
       const onActiveChange = (item) => changes.push(item);
 
@@ -39,7 +37,7 @@ module(
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
-              controllerElement=state.controller
+              controllerElement=controller.value
               itemSelector="[role=option]"
               activeClass="--active"
               entryFocus="first"
@@ -54,7 +52,7 @@ module(
 
       const activeId = document.querySelector(".a").id;
       changes.length = 0;
-      state.controller = ".second-controller";
+      controller.value = ".second-controller";
       await settled();
 
       assert
@@ -87,9 +85,7 @@ module(
     });
 
     test("replacing the controller cancels a pending reannouncement", async function (assert) {
-      const state = new (class {
-        @tracked controller = ".first-controller";
-      })();
+      const controller = tracked(".first-controller");
       let api;
       const register = (value) => (api = value);
 
@@ -110,7 +106,7 @@ module(
             role="listbox"
             {{dRovingFocus
               focusStrategy="active-descendant"
-              controllerElement=state.controller
+              controllerElement=controller.value
               itemSelector="[role=option]"
               activeClass="--active"
               entryFocus="first"
@@ -126,7 +122,7 @@ module(
       const activeId = document.querySelector(".a").id;
       assert.true(api.reannounceActive(), "the reannouncement is scheduled");
 
-      state.controller = ".second-controller";
+      controller.value = ".second-controller";
       await settled();
 
       assert
@@ -146,10 +142,8 @@ module(
     });
 
     test("leaving active mode disarms a pending seed", async function (assert) {
-      const state = new (class {
-        @tracked mode = "active-descendant";
-        @tracked items = [];
-      })();
+      const mode = tracked("active-descendant");
+      const items = tracked([]);
 
       await render(
         <template>
@@ -162,24 +156,24 @@ module(
             id="lifecycle-list"
             role="listbox"
             {{dRovingFocus
-              focusStrategy=state.mode
+              focusStrategy=mode.value
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
               entryFocus="first"
-              itemsKey=state.items
+              itemsKey=items.value
             }}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
         </template>
       );
 
-      state.mode = "roving-tabindex";
+      mode.value = "roving-tabindex";
       await settled();
-      state.items = [{ id: "a" }, { id: "b" }];
+      items.value = [{ id: "a" }, { id: "b" }];
       await settled();
 
       assert
@@ -202,10 +196,8 @@ module(
     });
 
     test("entryFocus none disarms a pending seed", async function (assert) {
-      const state = new (class {
-        @tracked entryFocus = "first";
-        @tracked items = [];
-      })();
+      const entryFocus = tracked("first");
+      const items = tracked([]);
 
       await render(
         <template>
@@ -222,20 +214,20 @@ module(
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
-              entryFocus=state.entryFocus
-              itemsKey=state.items
+              entryFocus=entryFocus.value
+              itemsKey=items.value
             }}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
         </template>
       );
 
-      state.entryFocus = "none";
+      entryFocus.value = "none";
       await settled();
-      state.items = [{ id: "a" }];
+      items.value = [{ id: "a" }];
       await settled();
 
       assert
@@ -248,9 +240,7 @@ module(
     });
 
     test("active selector replacement releases every artifact from the old scope", async function (assert) {
-      const state = new (class {
-        @tracked selector = ".first-item";
-      })();
+      const selector = tracked(".first-item");
 
       await render(
         <template>
@@ -265,7 +255,7 @@ module(
             {{dRovingFocus
               focusStrategy="active-descendant"
               controllerElement=".controller"
-              itemSelector=state.selector
+              itemSelector=selector.value
               activeClass="--active"
               entryFocus="first"
             }}
@@ -280,7 +270,7 @@ module(
       const firstId = document.querySelector(".first-item").id;
       assert.true(Boolean(firstId), "the first scope receives a minted id");
 
-      state.selector = ".second-item";
+      selector.value = ".second-item";
       await settled();
 
       assert
@@ -313,10 +303,8 @@ module(
       const secondChanges = [];
       const firstCallback = (item) => firstChanges.push(item);
       const secondCallback = (item) => secondChanges.push(item);
-      const state = new (class {
-        @tracked callback = firstCallback;
-        @tracked items = [];
-      })();
+      const callback = tracked(firstCallback);
+      const items = tracked([]);
 
       await render(
         <template>
@@ -334,11 +322,11 @@ module(
               itemSelector="[role=option]"
               activeClass="--active"
               entryFocus="first"
-              itemsKey=state.items
-              onActiveChange=state.callback
+              itemsKey=items.value
+              onActiveChange=callback.value
             }}
           >
-            {{#each state.items key="id" as |item|}}
+            {{#each items.value key="id" as |item|}}
               <button id={{item.id}} role="option">{{item.id}}</button>
             {{/each}}
           </div>
@@ -346,9 +334,9 @@ module(
       );
 
       firstChanges.length = 0;
-      state.callback = secondCallback;
+      callback.value = secondCallback;
       await settled();
-      state.items = [{ id: "a" }];
+      items.value = [{ id: "a" }];
       await settled();
 
       assert.deepEqual(
@@ -364,9 +352,7 @@ module(
     });
 
     test("strategy round trips leave only the current strategy artifacts", async function (assert) {
-      const state = new (class {
-        @tracked mode = "active-descendant";
-      })();
+      const mode = tracked("active-descendant");
 
       await render(
         <template>
@@ -379,7 +365,7 @@ module(
             id="lifecycle-list"
             role="listbox"
             {{dRovingFocus
-              focusStrategy=state.mode
+              focusStrategy=mode.value
               controllerElement=".controller"
               itemSelector="[role=option]"
               activeClass="--active"
@@ -392,14 +378,14 @@ module(
         </template>
       );
 
-      state.mode = "roving-tabindex";
+      mode.value = "roving-tabindex";
       await settled();
       assert.dom(".a").doesNotHaveClass("--active", "active state is released");
       assert
         .dom(".a")
         .hasAttribute("tabindex", "0", "the roving strategy owns the item");
 
-      state.mode = "active-descendant";
+      mode.value = "active-descendant";
       await settled();
 
       assert
@@ -471,9 +457,7 @@ module(
     });
 
     test("tabStop toggles without moving the roving cursor", async function (assert) {
-      const state = new (class {
-        @tracked tabStop = true;
-      })();
+      const tabStop = tracked(true);
 
       await render(
         <template>
@@ -482,7 +466,7 @@ module(
             {{dRovingFocus
               orientation="horizontal"
               itemSelector="[role=option]"
-              tabStop=state.tabStop
+              tabStop=tabStop.value
             }}
           >
             <button class="a" role="option">A</button>
@@ -492,7 +476,7 @@ module(
       );
 
       await focus(".b");
-      state.tabStop = false;
+      tabStop.value = false;
       await settled();
 
       assert.dom(".b").isFocused("the cursor remains on the focused item");
@@ -500,7 +484,7 @@ module(
         .dom("[role=option][tabindex='0']")
         .doesNotExist("the group leaves the Tab sequence");
 
-      state.tabStop = true;
+      tabStop.value = true;
       await settled();
 
       assert.dom(".b").isFocused("restoring the tab stop does not move focus");
@@ -510,23 +494,20 @@ module(
     });
 
     test("restoring lost focus copes with the selector matching nothing", async function (assert) {
-      const state = new (class {
-        @tracked
-        rows = [
-          { id: "a", nav: true },
-          { id: "b", nav: true },
-          { id: "c", nav: true },
-        ];
-        @tracked key = 0;
-      })();
+      const rows = tracked([
+        { id: "a", nav: true },
+        { id: "b", nav: true },
+        { id: "c", nav: true },
+      ]);
+      const key = tracked(0);
 
       await render(
         <template>
           <div
             role="listbox"
-            {{dRovingFocus itemSelector="[data-nav]" itemsKey=state.key}}
+            {{dRovingFocus itemSelector="[data-nav]" itemsKey=key.value}}
           >
-            {{#each state.rows key="id" as |row|}}
+            {{#each rows.value key="id" as |row|}}
               <button
                 class="opt-{{row.id}}"
                 data-nav={{if row.nav "true"}}
@@ -538,11 +519,11 @@ module(
       );
 
       await focus(".opt-a");
-      state.rows = [
+      rows.value = [
         { id: "b", nav: false },
         { id: "c", nav: false },
       ];
-      state.key++;
+      key.value++;
       await settled();
 
       assert.strictEqual(

@@ -7,13 +7,15 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
-import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef {{ action?: () => unknown, icon?: string, className?: string, label?: string, translatedLabel?: string, section?: { id: string, label?: string, translatedLabel?: string } }} TopicAdminButton
+ */
 export default class TopicAdminMenu extends Component {
   @service adminTopicMenuButtons;
   @service currentUser;
@@ -27,6 +29,7 @@ export default class TopicAdminMenu extends Component {
       .filter(Boolean);
   }
 
+  /** @returns {{ id: string | null, label: string | null, buttons: TopicAdminButton[] }[]} */
   get extraButtonGroups() {
     const groups = [];
     let currentGroup = null;
@@ -315,7 +318,7 @@ export default class TopicAdminMenu extends Component {
               </dropdown.item>
             {{/if}}
 
-            {{#if (and this.details.can_convert_topic)}}
+            {{#if this.details.can_convert_topic}}
               <dropdown.item class="topic-admin-convert">
                 <DButton
                   @action={{fn

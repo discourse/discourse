@@ -9,14 +9,13 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
-import { and, eq, not, or } from "discourse/truth-helpers";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
-import AuthButtons from "./header/auth-buttons";
-import Contents from "./header/contents";
-import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
-import Icons from "./header/icons";
-import SearchMenuWrapper from "./header/search-menu-wrapper";
-import UserMenuWrapper from "./header/user-menu-wrapper";
+import AuthButtons from "./header/auth-buttons.gjs";
+import Contents from "./header/contents.gjs";
+import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper.gjs";
+import Icons from "./header/icons.gjs";
+import SearchMenuWrapper from "./header/search-menu-wrapper.gjs";
+import UserMenuWrapper from "./header/user-menu-wrapper.gjs";
 
 export const SEARCH_BUTTON_ID = "search-button";
 const USER_BUTTON_ID = "toggle-current-user";
@@ -157,18 +156,12 @@ export default class GlimmerHeader extends Component {
     }
 
     if (this.site.mobileView) {
-      const context = this.search.searchContext;
-      let params = "";
-      if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.site.mobileView}`;
-      }
-
       if (this.router.currentRouteName === "full-page-search") {
         scrollTop();
         document.querySelector(".full-page-search").focus();
         return false;
       } else {
-        return DiscourseURL.routeTo("/search" + params);
+        return DiscourseURL.routeTo(this.search.fullPageSearchURL);
       }
     }
 

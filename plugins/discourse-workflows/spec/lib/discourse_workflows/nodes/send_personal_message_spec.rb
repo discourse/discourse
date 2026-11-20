@@ -43,6 +43,8 @@ RSpec.describe DiscourseWorkflows::Nodes::SendPersonalMessage::V1 do
         "user_id" => sender.id,
         "username" => sender.username,
       )
+      expect(result.dig("topic", "first_post_id")).to eq(post.id)
+      expect(result).to match_node_output_schema(described_class)
     end
 
     it "resolves dynamic recipients and message body", :aggregate_failures do

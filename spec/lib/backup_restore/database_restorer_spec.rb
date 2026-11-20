@@ -17,6 +17,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       expect_psql(stub_thread: true).in_sequence(restore)
       expect_db_migrate.in_sequence(restore)
       expect_db_reconnect.in_sequence(restore)
+      ActiveRecord::Base.connection.expects(:reconnect!).in_sequence(restore)
 
       restorer.restore("foo.sql")
     end
@@ -27,6 +28,28 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       execute_stubbed_restore
 
       expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
+    end
+
+    context "without transactional tests" do
+      self.use_transactional_tests = false
+
+      after { BackupMetadata.delete_all }
+
+      it "reconnects when the database connection drops while the dump is restored" do
+        pid = DB.query_single("SELECT pg_backend_pid()").first
+        psql = BackupRestore::DatabaseRestorer.psql_command
+        BackupRestore::DatabaseRestorer.stubs(:psql_command).returns(
+          "#{psql} --command='SELECT pg_terminate_backend(#{pid})'",
+        )
+
+        execute_stubbed_restore(
+          stub_psql: false,
+          stub_reconnect: false,
+          dump_file_path: "/dev/null",
+        )
+
+        expect(BackupMetadata.last_restore_date).to be_present
+      end
     end
 
     context "with real psql" do

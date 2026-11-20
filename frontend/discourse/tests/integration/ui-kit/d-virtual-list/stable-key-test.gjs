@@ -13,14 +13,6 @@ import DVirtualList from "discourse/ui-kit/d-virtual-list";
 const ROW_HEIGHT = 40;
 const estimateSize = () => ROW_HEIGHT;
 
-class State {
-  @tracked items;
-
-  constructor(items) {
-    this.items = items;
-  }
-}
-
 function buildRows(count) {
   return Array.from({ length: count }, (_, id) => ({
     id: String(id),
@@ -40,7 +32,7 @@ module("Integration | ui-kit | DVirtualList | stable key", function (hooks) {
   });
 
   test("stable @key reuses row DOM across an item-array replacement", async function (assert) {
-    const state = new State(buildRows(1000));
+    const items = tracked(buildRows(1000));
     const insertCounts = new Map();
     const recordInsert = (id) => {
       insertCounts.set(id, (insertCounts.get(id) ?? 0) + 1);
@@ -59,7 +51,7 @@ module("Integration | ui-kit | DVirtualList | stable key", function (hooks) {
         </style>
         <DVirtualList
           @estimateSize={{estimateSize}}
-          @items={{state.items}}
+          @items={{items.value}}
           @key="id"
           as |item|
         >
@@ -86,7 +78,7 @@ module("Integration | ui-kit | DVirtualList | stable key", function (hooks) {
       `a real window mounts fewer than 40 rows (${rowsBefore.size} rows)`
     );
 
-    state.items = state.items.map((row) => ({ ...row }));
+    items.value = items.value.map((row) => ({ ...row }));
     await settled();
 
     const rowsAfter = new Map(

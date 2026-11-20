@@ -143,17 +143,10 @@ RSpec.describe Onebox::Mixins::GithubApi do
       )
     end
 
-    [
-      ["pull request", Onebox::Engine::GithubPullRequestOnebox, "https://github.com/d/d/pull/1"],
-      ["commit", Onebox::Engine::GithubCommitOnebox, "https://github.com/d/d/commit/#{"a" * 40}"],
-      ["issue", Onebox::Engine::GithubIssueOnebox, "https://github.com/d/d/issues/1"],
-      ["repo", Onebox::Engine::GithubRepoOnebox, "https://github.com/d/d"],
-      ["actions", Onebox::Engine::GithubActionsOnebox, "https://github.com/d/d/actions/runs/1"],
-      ["gist", Onebox::Engine::GithubGistOnebox, "https://gist.github.com/d/abc123def456"],
-    ].each do |name, klass, link|
-      it "records a backoff when the #{name} engine is rate-limited" do
+    shared_examples "recording GitHub API rate limit backoff" do |engine_class:, url:|
+      it "records an unauthenticated API backoff" do
         begin
-          klass.new(link).to_html
+          engine_class.new(url).to_html
         rescue StandardError
           nil
         end
@@ -161,6 +154,42 @@ RSpec.describe Onebox::Mixins::GithubApi do
           Discourse.redis.without_namespace.get("onebox_github_backoff_unauthenticated"),
         ).to be_present
       end
+    end
+
+    context "with the pull request engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubPullRequestOnebox,
+                       url: "https://github.com/d/d/pull/1"
+    end
+
+    context "with the commit engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubCommitOnebox,
+                       url: "https://github.com/d/d/commit/#{"a" * 40}"
+    end
+
+    context "with the issue engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubIssueOnebox,
+                       url: "https://github.com/d/d/issues/1"
+    end
+
+    context "with the repo engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubRepoOnebox,
+                       url: "https://github.com/d/d"
+    end
+
+    context "with the actions engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubActionsOnebox,
+                       url: "https://github.com/d/d/actions/runs/1"
+    end
+
+    context "with the gist engine" do
+      include_examples "recording GitHub API rate limit backoff",
+                       engine_class: Onebox::Engine::GithubGistOnebox,
+                       url: "https://gist.github.com/d/abc123def456"
     end
   end
 

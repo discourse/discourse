@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CategoryCalendar from "../../components/category-calendar";
+import CategoryCalendar from "../../components/category-calendar.gjs";
 
 export default class CategoryEventsCalendar extends Component {
   static shouldRender(_, ctx) {

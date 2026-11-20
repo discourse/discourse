@@ -14,7 +14,6 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import { eq, gt } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
@@ -24,8 +23,8 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import AiCreditBar from "discourse/plugins/discourse-ai/discourse/components/ai-credit-bar";
 import { normalizeAiUsageTimeSeriesData } from "discourse/plugins/discourse-ai/discourse/lib/ai-usage-time-series";
-import AiCreditBar from "./ai-credit-bar";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 const DEFAULT_PERIOD = "month";

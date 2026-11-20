@@ -241,13 +241,20 @@ RSpec.describe DiscourseAssign do
       it "creates missing notifications for added user" do
         group.add(user)
         [first_assignment, second_assignment].each do |assignment|
-          expect_job_enqueued(job: Jobs::AssignNotification, args: { assignment_id: assignment.id })
+          expect_job_enqueued(
+            job: Jobs::AssignNotification,
+            args: {
+              assignment_id: assignment.id,
+              user_id: user.id,
+            },
+          )
         end
         expect(
           job_enqueued?(
             job: Jobs::AssignNotification,
             args: {
               assignment_id: third_assignment.id,
+              user_id: user.id,
             },
           ),
         ).to eq(false)

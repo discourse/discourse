@@ -1,7 +1,4 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import Component from "@glimmer/component";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import { arraySortedByProperties } from "discourse/lib/array-tools";
 import { slugify } from "discourse/lib/utilities";
@@ -11,38 +8,33 @@ import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class TagList extends Component {
-  isPrivateMessage = false;
+  get isPrivateMessage() {
+    return this.args.isPrivateMessage ?? false;
+  }
 
-  @computed("tags", "sortProperties")
   get sortedTags() {
-    return arraySortedByProperties(this.tags, this.sortProperties);
+    return arraySortedByProperties(this.args.tags, this.args.sortProperties);
   }
 
-  @computed("titleKey")
   get title() {
-    return this.titleKey && i18n(this.titleKey);
+    return this.args.titleKey && i18n(this.args.titleKey);
   }
 
-  @computed("categoryId")
   get category() {
-    return this.categoryId && Category.findById(this.categoryId);
+    return this.args.categoryId && Category.findById(this.args.categoryId);
   }
 
-  @computed("category.fullSlug")
   get categoryClass() {
     return this.category?.fullSlug && `tag-list-${this.category?.fullSlug}`;
   }
 
-  @computed("tagGroupName")
   get tagGroupNameSlug() {
-    if (this.tagGroupName) {
-      return slugify(this.tagGroupName);
+    if (this.args.tagGroupName) {
+      return slugify(this.args.tagGroupName);
     }
   }
 
-  @computed("tagGroupNameSlug")
   get tagGroupNameClass() {
     return this.tagGroupNameSlug && `tag-group-${this.tagGroupNameSlug}`;
   }
@@ -63,12 +55,12 @@ export default class TagList extends Component {
       {{#if this.category}}
         <CategoryTitleLink @category={{this.category}} />
       {{/if}}
-      {{#if this.tagGroupName}}
+      {{#if @tagGroupName}}
         <h3 id={{this.tagGroupNameSlug}}><a
             aria-label={{i18n "post.heading_anchor"}}
             class="anchor"
             href="#{{this.tagGroupNameSlug}}"
-          ></a>{{this.tagGroupName}}</h3>
+          ></a>{{@tagGroupName}}</h3>
       {{/if}}
       {{#each this.sortedTags as |tag|}}
         <div class="tag-box">
@@ -77,7 +69,7 @@ export default class TagList extends Component {
             description=tag.description
             isPrivateMessage=this.isPrivateMessage
             pmOnly=tag.pmOnly
-            tagsForUser=this.tagsForUser
+            tagsForUser=@tagsForUser
           }}
           {{#if tag.pmOnly}}
             {{dIcon "envelope"}}

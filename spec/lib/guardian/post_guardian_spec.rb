@@ -51,6 +51,26 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#can_embed_media?" do
+    before { SiteSetting.embedded_media_post_allowed_groups = group.id }
+
+    it "is true for users in embedded_media_post_allowed_groups" do
+      expect(user.guardian.can_embed_media?).to eq(true)
+    end
+
+    it "is false for users outside embedded_media_post_allowed_groups" do
+      expect(groupless_user.guardian.can_embed_media?).to eq(false)
+    end
+
+    it "is true for staff" do
+      expect(moderator.guardian.can_embed_media?).to eq(true)
+    end
+
+    it "is false for anonymous users" do
+      expect(Guardian.new.can_embed_media?).to eq(false)
+    end
+  end
+
   describe "can_post_link?" do
     let(:host) { "discourse.org" }
 
@@ -165,6 +185,16 @@ RSpec.describe PostGuardian do
       expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
       expect(Guardian.new(user).post_can_act?(post, :bookmark)).to be_truthy
+    end
+
+    it "lets silenced users flag illegal content when allow_all_users_to_flag_illegal_content" do
+      UserSilencer.silence(user, admin)
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be false
+
+      SiteSetting.email_address_to_report_illegal_content = "illegal@example.com"
+      SiteSetting.allow_all_users_to_flag_illegal_content = true
+      expect(Guardian.new(user).post_can_act?(post, :illegal)).to be true
+      expect(Guardian.new(user).post_can_act?(post, :spam)).to be false
     end
 
     it "allows flagging archived posts" do
@@ -467,6 +497,13 @@ RSpec.describe PostGuardian do
         SiteSetting.enable_system_message_replies = false
         expect(Guardian.new(user).can_create_post?(private_message)).to eq(false)
       end
+
+      it "allows replies from members of an allowed group" do
+        group.add(groupless_user)
+        private_message.topic_allowed_groups.create!(group: group)
+
+        expect(groupless_user.guardian.can_create?(Post, private_message)).to eq(true)
+      end
     end
 
     context "with private message" do
@@ -580,6 +617,24 @@ RSpec.describe PostGuardian do
       guardian = Guardian.new(user)
 
       expect(guardian.can_edit?(post)).to be_truthy
+    end
+
+    it "returns false for the author of a wiki post hidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(false)
+    end
+
+    it "returns true for the author of a wiki post unhidden during the cooldown" do
+      post.update!(user: user, wiki: true, hidden: false, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
+    end
+
+    it "returns true for other wiki editors of a wiki post hidden during the cooldown" do
+      post.update!(wiki: true, hidden: true, hidden_at: Time.zone.now)
+
+      expect(user.guardian.can_edit_post?(post)).to eq(true)
     end
   end
 

@@ -20,7 +20,6 @@ if defined?(DiscourseWorkflows)
             available: -> { SiteSetting.discourse_ai_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_ai",
             i18n_prefix: "discourse_ai.discourse_workflows",
-            output_schema_resolver: "ai-agent",
             capabilities: {
               run_scope: {
                 parameter: "mode",
@@ -217,29 +216,45 @@ if defined?(DiscourseWorkflows)
             validate_mode!(mode)
 
             agent = resolve_agent(exec_ctx)
+            exec_ctx.set_metadata(
+              review_agent: {
+                id: agent[:record].id,
+                name: agent[:record].name,
+              },
+            )
 
-            return [[run_once_for_all_items(exec_ctx, agent)]] if mode == RUN_ONCE_FOR_ALL_ITEMS
-
-            items =
-              exec_ctx.input_items.map.with_index do |item, item_index|
-                result =
-                  run_agent(
-                    agent,
-                    item_config(exec_ctx, item_index),
-                    exec_ctx.log,
-                    runner(exec_ctx, item_index),
-                  )
-
-                wrap(result, paired_item: exec_ctx.paired_item_for(item))
+            with_cancel_manager(exec_ctx.deadline) do |cancel_manager|
+              if mode == RUN_ONCE_FOR_ALL_ITEMS
+                next [[run_once_for_all_items(exec_ctx, agent, cancel_manager)]]
               end
 
-            [items]
+              items =
+                exec_ctx.input_items.map.with_index do |item, item_index|
+                  result = run_agent(agent, exec_ctx, item_index, cancel_manager)
+                  wrap(result, paired_item: exec_ctx.paired_item_for(item))
+                end
+
+              [items]
+            end
           end
 
           private
 
-          def run_once_for_all_items(exec_ctx, agent)
-            result = run_agent(agent, item_config(exec_ctx, 0), exec_ctx.log, runner(exec_ctx, 0))
+          def with_cancel_manager(deadline)
+            cancel_manager = DiscourseAi::Completions::CancelManager.new
+            if deadline
+              timer =
+                Concurrent::ScheduledTask.execute([deadline - Time.current, 0].max) do
+                  cancel_manager.cancel!
+                end
+            end
+            yield cancel_manager
+          ensure
+            timer&.cancel
+          end
+
+          def run_once_for_all_items(exec_ctx, agent, cancel_manager)
+            result = run_agent(agent, exec_ctx, 0, cancel_manager)
 
             wrap(
               result,
@@ -306,7 +321,7 @@ if defined?(DiscourseWorkflows)
           end
 
           def prompt_content(prompt, upload_ids, agent_record, llm_model, runner, log)
-            upload_ids = normalize_upload_ids(upload_ids)
+            upload_ids = ::DiscourseAi::Completions::UploadEncoder.normalize_upload_ids(upload_ids)
             return prompt if upload_ids.blank?
 
             uploads_by_id =
@@ -319,7 +334,7 @@ if defined?(DiscourseWorkflows)
                 key = drop_reason_key(uploads_by_id[upload_id], agent_record, llm_model, guardian)
                 next if key.nil?
 
-                error_text(
+                upload_error_text(
                   key,
                   upload_id: upload_id,
                   agent: agent_record.name,
@@ -335,8 +350,8 @@ if defined?(DiscourseWorkflows)
           end
 
           def drop_reason_key(upload, agent_record, llm_model, guardian)
-            return "upload_not_found" if upload.nil?
-            return "upload_not_visible" if !guardian.can_see_upload?(upload)
+            return "not_found" if upload.nil?
+            return "not_visible" if !guardian.can_see_upload?(upload)
 
             encoder = ::DiscourseAi::Completions::UploadEncoder
             if !encoder.image?(upload)
@@ -360,32 +375,14 @@ if defined?(DiscourseWorkflows)
             I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.#{key}", **args)
           end
 
-          def normalize_upload_ids(upload_ids)
-            case upload_ids
-            when String
-              parsed = parse_upload_ids_json(upload_ids)
-              return normalize_upload_ids(parsed) if parsed
-
-              upload_ids.split(",")
-            when Array
-              upload_ids.flatten
-            else
-              Array.wrap(upload_ids)
-            end
-              .filter_map do |upload_id|
-                id = Integer(upload_id, exception: false)
-                id if id&.positive?
-              end
-              .uniq
+          def upload_error_text(key, **args)
+            I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
 
-          def parse_upload_ids_json(upload_ids)
-            JSON.parse(upload_ids)
-          rescue JSON::ParserError, TypeError
-            nil
-          end
-
-          def run_agent(agent, config, log, runner)
+          def run_agent(agent, exec_ctx, item_index, cancel_manager)
+            config = item_config(exec_ctx, item_index)
+            runner = runner(exec_ctx, item_index)
+            log = exec_ctx.log
             agent_record = agent[:record]
             llm_model = agent[:llm_model]
             prompt = config["prompt"].to_s
@@ -406,12 +403,14 @@ if defined?(DiscourseWorkflows)
                 messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
                 execution_context: execution_context,
+                cancel_manager: cancel_manager,
               )
 
             result, structured = collect_reply(agent[:bot], bot_context, log)
+            raise DiscourseWorkflows::Executor::ExecutionTimedOut if cancel_manager.cancelled?
 
             skipped =
-              execution_context.upload_skips.map { |skip| error_text("upload_skipped", **skip) }
+              execution_context.upload_skips.map { |skip| upload_error_text("skipped", **skip) }
             raise_uploads_not_sent!(agent_record, skipped) if skipped.any?
 
             { "result" => result }.merge(structured_fields(structured, agent_record))

@@ -1,6 +1,5 @@
 import { concat } from "@ember/helper";
 import FormText from "discourse/form-kit/components/fk/text";
-import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 

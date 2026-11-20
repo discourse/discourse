@@ -1,5 +1,5 @@
 import { defaultMarkdownParser, MarkdownParser } from "prosemirror-markdown";
-import { parse } from "../lib/markdown-it";
+import { parse } from "../lib/markdown-it.js";
 
 // TODO(renato): We need a workaround for this parsing issue:
 //   https://github.com/ProseMirror/prosemirror-markdown/issues/82
@@ -39,6 +39,19 @@ export default class Parser {
 
     // Adding function parse handlers directly
     Object.assign(parser.tokenHandlers, this.postParseTokens);
+
+    // An inline node left open by unbalanced HTML must not outlive its block.
+    // The length guard spares extensions that swap in a single-entry stack.
+    for (const [type, handler] of Object.entries(parser.tokenHandlers)) {
+      parser.tokenHandlers[type] = (state, token, tokens, i) => {
+        if (token.block) {
+          while (state.stack.length > 1 && state.top().type.isInline) {
+            state.closeNode();
+          }
+        }
+        return handler(state, token, tokens, i);
+      };
+    }
 
     try {
       return parser.parse(text);

@@ -46,7 +46,14 @@ module Onebox
       end
 
       def i18n
-        { opened: I18n.t("onebox.github.opened"), closed: I18n.t("onebox.github.closed") }
+        {
+          opened: I18n.t("onebox.github.opened"),
+          closed: I18n.t("onebox.github.closed"),
+          header: {
+            open_issue: I18n.t("onebox.github.header.open_issue"),
+            closed_issue: I18n.t("onebox.github.header.closed_issue"),
+          },
+        }
       end
 
       def data
@@ -64,6 +71,8 @@ module Onebox
 
         {
           link: @url,
+          layout_class: "github-onebox",
+          repository: "#{ulink.path.split("/")[1]}/#{ulink.path.split("/")[2]}",
           title: result["title"],
           body: body,
           excerpt: excerpt,

@@ -26,8 +26,22 @@ describe "AI Tool List Editor Dropdown" do
 
     tool_menu.option(".btn[data-option='image_generation_category']").click
 
-    expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_openai']")
-    expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_gemini']")
+    expect(page).to have_css(
+      ".ai-tool-preset-item[data-option='image_generation_openai']",
+      text: "GPT Image 2.6 Flare",
+    )
+    expect(page).to have_css(
+      ".ai-tool-preset-item[data-option='image_generation_openai_sunburst']",
+      text: "GPT Image 2.6 Sunburst",
+    )
+    expect(page).to have_css(
+      ".ai-tool-preset-item[data-option='image_generation_gemini']",
+      text: "Nano Banana 2.1",
+    )
+    expect(page).to have_css(
+      ".ai-tool-preset-item[data-option='image_generation_gemini_pro']",
+      text: "Nano Banana Pro",
+    )
     expect(page).to have_css(".ai-tool-preset-item[data-option='image_generation_flux']")
     expect(page).to have_css(".btn[data-option='image_generation_custom']")
 
@@ -70,7 +84,7 @@ describe "AI Tool List Editor Dropdown" do
     )
 
     expect(page).to have_field("tool_name", with: "image_generation_openai")
-    expect(page).to have_field("name", with: "GPT Image")
+    expect(page).to have_field("name", with: "GPT Image 2.6 Flare")
   end
 
   it "navigates to new tool page when clicking non-category preset" do

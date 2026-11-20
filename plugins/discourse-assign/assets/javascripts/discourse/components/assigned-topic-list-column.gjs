@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AssignActionsDropdown from "./assign-actions-dropdown";
+import AssignActionsDropdown from "./assign-actions-dropdown.js";
 
 export default class AssignedTopicListColumn extends Component {
   @service taskActions;

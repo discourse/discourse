@@ -37,7 +37,7 @@ class TopicTimestampChanger
     end
 
     # Burst the cache for stats
-    [AdminDashboardData, About].each { |klass| Discourse.redis.del klass.stats_cache_key }
+    Discourse.redis.del About.stats_cache_key
   end
 
   private

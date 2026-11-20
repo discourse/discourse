@@ -12,10 +12,9 @@ import SelectKitComponent, {
 } from "discourse/select-kit/components/select-kit";
 import SelectKitBody from "discourse/select-kit/components/select-kit/select-kit-body";
 import { isNumeric } from "discourse/select-kit/lib/input-utils";
-import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import MultiSelectFilter from "./multi-select/multi-select-filter";
-import MultiSelectHeader from "./multi-select/multi-select-header";
+import MultiSelectFilter from "./multi-select/multi-select-filter.gjs";
+import MultiSelectHeader from "./multi-select/multi-select-header.gjs";
 
 @classNames("multi-select")
 @selectKitOptions({

@@ -114,6 +114,9 @@ zh_TW:
           message_4: "您的平均訊息長度為 <strong>%{length}</strong> 個字元"
           message_5: "您最愛的頻道："
           dancing_baby_alt: "跳舞的嬰兒"
+        live_usage:
+          minutes:
+            other: "%{count} 分鐘"
         invites:
           guest_book_title: 訪客簿
           guest_book_subtitle: 您的社群邀請

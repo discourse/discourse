@@ -22,6 +22,53 @@ const SEARCH_SCORES = {
   pageBonusScore: 20,
 };
 
+/**
+ * @typedef {object} AdminNavLink
+ * @property {string} [name]
+ * @property {string} [route]
+ * @property {unknown[]} [routeModels]
+ * @property {string} [href]
+ * @property {string} [label] Translation key, used when `text` is absent.
+ * @property {string} [text]
+ * @property {string} [keywords] Translation key for `|`-separated keywords.
+ * @property {string} [description] Translated text, or a translation key.
+ */
+
+/**
+ * @typedef {object} AdminNavSection
+ * @property {string} [label] Translation key, used when `text` is absent.
+ * @property {string} [text]
+ */
+
+/**
+ * @typedef {object} AdminSearchSetting
+ * @property {string} setting
+ * @property {string} [humanized_name]
+ * @property {string} [description]
+ * @property {string[]} [keywords]
+ * @property {string} [plugin]
+ * @property {string | null} [primary_area]
+ * @property {string} [category]
+ */
+
+/**
+ * @typedef {object} AdminSearchPlugin
+ * @property {{ label?: string, location: string, use_new_show_route?: boolean }} admin_route
+ */
+
+/**
+ * @typedef {object} AdminSettingPageMap
+ * @property {Record<string, string>} categories URL of each settings category page.
+ * @property {Record<string, string>} areas URL of each config area page.
+ */
+
+/**
+ * @typedef {object} AdminSearchUpcomingChange
+ * @property {string} setting
+ * @property {string} humanized_name
+ * @property {string} description
+ */
+
 function labelOrText(obj, fallback = "") {
   return obj.text || (obj.label ? i18n(obj.label) : fallback);
 }
@@ -41,10 +88,10 @@ function buildKeywords(...keywords) {
 export class PageLinkFormatter {
   /**
    * @param {DiscourseRouter} router - The ember router service
-   * @param {Object} navMapSection - The section of the admin nav map that the link belongs to,
+   * @param {AdminNavSection | null} navMapSection - The section of the admin nav map that the link belongs to,
    *                                 used for the parent label.
-   * @param {Object} link - The link object from the admin nav map, with name/route/label etc.
-   * @param {String} parentLabel - The parent label of the link, if any, this should be translated.
+   * @param {AdminNavLink} link - The link object from the admin nav map, with name/route/label etc.
+   * @param {string | null} [parentLabel] - The parent label of the link, if any, this should be translated.
    */
   constructor(router, navMapSection, link, parentLabel = null) {
     this.router = router;
@@ -103,9 +150,9 @@ export class PageLinkFormatter {
 export class SettingLinkFormatter {
   /**
    * @param {DiscourseRouter} router - The ember router service
-   * @param {Object} setting - The setting object from the site settings API
-   * @param {Object} plugins - The plugins object built from the visible plugins in preload store
-   * @param {Object} settingPageMap - The setting page map object with categories and areas.
+   * @param {AdminSearchSetting} setting - The setting object from the site settings API
+   * @param {Record<string, AdminSearchPlugin>} plugins - The plugins object built from the visible plugins in preload store
+   * @param {AdminSettingPageMap} settingPageMap - The setting page map object with categories and areas.
    *                                 This points to the URL of the relevant setting page
    */
   constructor(router, setting, plugins, settingPageMap) {
@@ -205,7 +252,7 @@ export class SettingLinkFormatter {
 
 export class UpcomingChangeLinkFormatter {
   /**
-   * @param {Object} upcomingChange - The upcoming change object from the upcoming changes API
+   * @param {AdminSearchUpcomingChange} upcomingChange - The upcoming change object from the upcoming changes API
    */
   constructor(upcomingChange) {
     this.upcomingChange = upcomingChange;

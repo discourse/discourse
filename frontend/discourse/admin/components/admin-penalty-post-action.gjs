@@ -1,11 +1,12 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component, { Input, Textarea } from "@ember/component";
+import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import { afterRender } from "discourse/lib/decorators";
+import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import I18n, { i18n } from "discourse-i18n";
 
 const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
@@ -13,21 +14,14 @@ const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
 export default class AdminPenaltyPostAction extends Component {
   @tracked confirmDeleteAll = false;
 
-  postId = null;
-  postAction = null;
-  postEdit = null;
-
-  @computed("postAction")
   get editing() {
-    return this.postAction === "edit";
+    return this.args.postAction === "edit";
   }
 
-  @computed("postAction")
   get deletingAll() {
-    return this.postAction === "delete_all";
+    return this.args.postAction === "delete_all";
   }
 
-  @computed
   get penaltyActions() {
     const allActions = ACTIONS.map((id) => ({
       id,
@@ -36,7 +30,7 @@ export default class AdminPenaltyPostAction extends Component {
 
     // Remove "delete all" option for users at or above the configured trust level
     // For now the trust level is static, add a site setting later if we want users to be able to modify this
-    if (this.user.trust_level >= 2) {
+    if (this.args.user.trust_level >= 2) {
       return allActions.filter((act) => act.id !== "delete_all");
     }
 
@@ -44,15 +38,15 @@ export default class AdminPenaltyPostAction extends Component {
   }
 
   get topicsCount() {
-    return this.user.topic_count;
+    return this.args.user.topic_count;
   }
 
   get repliesCount() {
-    return this.user.post_count - this.user.topic_count;
+    return this.args.user.post_count - this.args.user.topic_count;
   }
 
   get readyToDeleteAll() {
-    return this.canSubmitDeleteAll();
+    return this.deletingAll && this.confirmDeleteAll;
   }
 
   get deleteAllMessage() {
@@ -65,64 +59,49 @@ export default class AdminPenaltyPostAction extends Component {
     );
   }
 
-  canSubmitDeleteAll() {
-    return this.postAction === "delete_all" && this.confirmDeleteAll;
-  }
-
-  @action
-  penaltyChanged(postAction) {
-    this.set("postAction", postAction);
-
-    // If we switch to edit mode, jump to the edit textarea
-    if (postAction === "edit") {
-      this._focusEditTextarea();
-    }
-  }
-
   @action
   toggleConfirmDeleteAll(event) {
-    this.set("confirmDeleteAll", event.target.checked);
+    this.confirmDeleteAll = event.target.checked;
 
-    this.onDeleteAllPostsReady?.(this.readyToDeleteAll);
-  }
-
-  @afterRender
-  _focusEditTextarea() {
-    const elem = this.element;
-    const body = elem.closest(".d-modal__body");
-    body.scrollTo(0, body.clientHeight);
-    elem.querySelector(".post-editor").focus();
+    this.args.onDeleteAllPostsReady?.(this.readyToDeleteAll);
   }
 
   <template>
-    <div class="penalty-post-controls">
-      <label>
-        <div class="penalty-post-label">
-          {{trustHTML (i18n "admin.user.penalty_post_actions")}}
-        </div>
-      </label>
-      <ComboBox
-        @content={{this.penaltyActions}}
-        @onChange={{this.penaltyChanged}}
-        @value={{this.postAction}}
-      />
-    </div>
-
-    {{#if this.editing}}
-      <div class="penalty-post-edit">
-        <Textarea class="post-editor" @value={{this.postEdit}} />
-      </div>
-    {{/if}}
-
-    {{#if this.deletingAll}}
-      <label>
-        <Input
-          @checked={{this.confirmDeleteAll}}
-          @type="checkbox"
-          {{on "click" this.toggleConfirmDeleteAll}}
+    <div ...attributes>
+      <div class="penalty-post-controls">
+        <label>
+          <div class="penalty-post-label">
+            {{trustHTML (i18n "admin.user.penalty_post_actions")}}
+          </div>
+        </label>
+        <ComboBox
+          @content={{this.penaltyActions}}
+          @onChange={{@onChangePostAction}}
+          @value={{@postAction}}
         />
-        {{trustHTML this.deleteAllMessage}}
-      </label>
-    {{/if}}
+      </div>
+
+      {{#if this.editing}}
+        <div class="penalty-post-edit">
+          <textarea
+            class="post-editor"
+            value={{@postEdit}}
+            {{dAutoFocus preventScroll=false}}
+            {{on "input" (withEventValue @onChangePostEdit)}}
+          />
+        </div>
+      {{/if}}
+
+      {{#if this.deletingAll}}
+        <label>
+          <Input
+            @checked={{this.confirmDeleteAll}}
+            @type="checkbox"
+            {{on "click" this.toggleConfirmDeleteAll}}
+          />
+          {{trustHTML this.deleteAllMessage}}
+        </label>
+      {{/if}}
+    </div>
   </template>
 }

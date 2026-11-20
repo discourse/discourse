@@ -49,17 +49,17 @@ export default class BaseCommunitySectionLink {
   get href() {}
 
   /**
-   * @returns {Object} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {string | number | object | null | undefined} Model for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get model() {}
 
   /**
-   * @returns {Object} Models for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {Array<string | number | object> | undefined} Models for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get models() {}
 
   /**
-   * @returns {Object} Query parameters for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
+   * @returns {Record<string, unknown>} Query parameters for <LinkTo> component. See https://api.emberjs.com/ember/release/classes/Ember.Templates.components/methods/LinkTo?anchor=LinkTo
    */
   get query() {
     return {};

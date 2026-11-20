@@ -7,17 +7,11 @@ import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import CategorySelector from "discourse/select-kit/components/category-selector";
-import ExpressionWrapper from "./expression-wrapper";
-
-function categoryIdsFromValue(value) {
-  if (value == null || value === "") {
-    return [];
-  }
-
-  return (Array.isArray(value) ? value : [value])
-    .map((id) => parseInt(id, 10))
-    .filter((id) => !isNaN(id));
-}
+import {
+  integerIdsFromValue,
+  sameIds,
+} from "../../../lib/workflows/id-values.js";
+import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class CategoryControl extends Component {
   @service siteSettings;
@@ -45,7 +39,7 @@ export default class CategoryControl extends Component {
   }
 
   get categoryIds() {
-    return categoryIdsFromValue(this.args.field.value);
+    return integerIdsFromValue(this.args.field.value);
   }
 
   async updateSelectedCategories(previousRequest) {
@@ -60,7 +54,7 @@ export default class CategoryControl extends Component {
 
     await previousRequest;
 
-    if (this.isDestroying || !this.#sameIds(this.categoryIds, requestedIds)) {
+    if (this.isDestroying || !sameIds(this.categoryIds, requestedIds)) {
       return;
     }
 
@@ -71,7 +65,7 @@ export default class CategoryControl extends Component {
   hydrateSelectedCategories() {
     const ids = this.categoryIds;
     if (
-      this.#sameIds(
+      sameIds(
         ids,
         this.selectedCategories.map((category) => category.id)
       )
@@ -94,10 +88,6 @@ export default class CategoryControl extends Component {
     categories = categories || [];
     this.selectedCategories = categories;
     this.args.field.set(categories.map((category) => category.id));
-  }
-
-  #sameIds(a, b) {
-    return a.length === b.length && a.every((id, index) => id === b[index]);
   }
 
   <template>

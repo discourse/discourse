@@ -6,6 +6,64 @@ import AiLogRow from "discourse/plugins/discourse-ai/discourse/components/ai-log
 module("Integration | Component | AiLogRow", function (hooks) {
   setupRenderingTest(hooks);
 
+  test("renders empty outcomes as warnings", async function (assert) {
+    this.log = {
+      id: 1,
+      outcome: "empty",
+      response_status: 200,
+      request_tokens: 3000,
+      response_tokens: 2000,
+      reasoning_tokens: 1900,
+    };
+    await render(
+      <template>
+        <table><tbody><AiLogRow @log={{this.log}} /></tbody></table>
+      </template>
+    );
+    assert
+      .dom(".ai-logs__status-icon.--warning.d-icon-triangle-exclamation")
+      .hasAttribute(
+        "aria-label",
+        "Empty response",
+        "warnings have an accessible label"
+      );
+    assert
+      .dom(".ai-logs__token-summary .sr-only")
+      .hasText(
+        "3,000 input tokens and 2,000 output tokens",
+        "reasoning usage is left to the detail view"
+      );
+  });
+
+  test("renders truncated outcomes as warnings", async function (assert) {
+    this.log = {
+      id: 1,
+      outcome: "truncated",
+      response_status: 200,
+      request_tokens: 3000,
+      response_tokens: 2000,
+      reasoning_tokens: 1900,
+    };
+    await render(
+      <template>
+        <table><tbody><AiLogRow @log={{this.log}} /></tbody></table>
+      </template>
+    );
+    assert
+      .dom(".ai-logs__status-icon.--warning.d-icon-triangle-exclamation")
+      .hasAttribute(
+        "aria-label",
+        "Truncated at output limit",
+        "warnings have an accessible label"
+      );
+    assert
+      .dom(".ai-logs__token-summary .sr-only")
+      .hasText(
+        "3,000 input tokens and 2,000 output tokens",
+        "reasoning usage is left to the detail view"
+      );
+  });
+
   test("renders statusless positive-token calls as successful", async function (assert) {
     this.log = {
       id: 43,

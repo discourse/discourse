@@ -5,8 +5,6 @@ class DiscourseEvents::Livestream::PrepareZoomJoin
 
   params do
     attribute :topic_id, :integer
-    # TODO (martin) ignore_timeframe backs the showzoom testing workaround,
-    # remove before merge
     attribute :ignore_timeframe, :boolean, default: false
 
     validates :topic_id, presence: true
@@ -17,6 +15,8 @@ class DiscourseEvents::Livestream::PrepareZoomJoin
   model :topic
   policy :can_see_topic
   model :event
+  policy :can_see_event
+  policy :can_join_event
   policy :event_has_livestream
   policy :event_within_timeframe
   model :zoom_join_data, :build_zoom_join_data
@@ -46,13 +46,23 @@ class DiscourseEvents::Livestream::PrepareZoomJoin
     topic.first_post&.event
   end
 
+  def can_see_event(event:, guardian:)
+    guardian.authenticated? || guardian.can_see_livestream_event?(event)
+  end
+
+  def can_join_event(event:, guardian:)
+    guardian.authenticated? || event.allow_anonymous_livestream?
+  end
+
   def event_has_livestream(event:)
     event.livestream? && event.livestream_url.present?
   end
 
   def event_within_timeframe(event:, params:, guardian:)
-    # TODO (martin) showzoom is for testing only, remove before merge
-    return true if params.ignore_timeframe && guardian.is_staff?
+    if Rails.env.development? && params.ignore_timeframe &&
+         (guardian.is_staff? || (guardian.anonymous? && event.allow_anonymous_livestream?))
+      return true
+    end
 
     event.currently_within_event_timeframe?
   end

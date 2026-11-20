@@ -21,6 +21,28 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_preloaded_data" do
+    it "namespaces keys and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_preloaded_data("visibility") { |guardian| guardian.authenticated? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks.pluck(:key)).to eq(
+        ["discourse-sample-plugin:visibility"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks).to eq([])
+    end
+
+    it "requires a block" do
+      expect { plugin_instance.register_preloaded_data("visibility") }.to raise_error(
+        ArgumentError,
+        "register_preloaded_data requires a block",
+      )
+    end
+  end
+
   describe "#register_navigation_destination" do
     it "namespaces destinations and filters disabled plugins at lookup time" do
       plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
@@ -133,9 +155,9 @@ TEXT
         :participating_users_last_day,
         :participating_users_7_days,
         :participating_users_30_days,
-        # onboarding stats are grouped under their stat type rather than being
-        # flat top-level keys
+        # grouped under their stat type rather than being flat top-level keys
         :onboarding,
+        :category_types,
       )
     end
 
@@ -394,7 +416,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "frontend/discourse/node_modules/moment/moment.js",
+        "#{Rails.root.join("vendor/runtime_node_modules/moment/moment.js")}",
       )
     end
   end
@@ -516,6 +538,19 @@ TEXT
     end
   end
 
+  describe "#gem" do
+    let(:plugin_instance) { described_class.new(metadata, "/tmp/sample/plugin.rb") }
+
+    it "refuses to be mixed with a Gemfile" do
+      metadata.gemfile = "true"
+
+      expect { plugin_instance.gem("some_gem", "1.0.0") }.to raise_error(
+        RuntimeError,
+        "Plugin sample declares its gems in a Gemfile, `gem` can't be mixed with that",
+      )
+    end
+  end
+
   describe "#add_model_callback" do
     let(:metadata) do
       metadata = Plugin::Metadata.new
@@ -626,12 +661,12 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        ["pt-br", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/pt-br.js")}"],
+        ["pt-br", "#{Rails.root.join("vendor/runtime_node_modules/moment/locale/pt-br.js")}"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
           "pt",
-          "#{Rails.root.join("node_modules/@discourse/moment-timezone-names-translations/locales/pt.js")}",
+          "#{Rails.root.join("vendor/runtime_node_modules/moment-timezone-names/locales/pt.js")}",
         ],
       )
       expect(locale[:plural]).to be_nil
@@ -647,7 +682,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root.join("frontend/discourse/node_modules/moment/locale/tlh.js")}"],
+        ["tlh", "#{Rails.root.join("vendor/runtime_node_modules/moment/locale/tlh.js")}"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
@@ -659,13 +694,9 @@ TEXT
       expect(DiscoursePluginRegistry.locales.count).to eq(0)
     end
 
-    %w[
-      config/locales/client.foo_BAR.yml
-      config/locales/server.foo_BAR.yml
-      lib/javascripts/locale/moment_js/foo_BAR.js
-    ].each do |path|
-      it "does not register a new locale when #{path} is missing" do
-        path = "#{plugin_path}/#{path}"
+    shared_examples "rejecting an incomplete plugin locale" do |missing_path:|
+      it "does not register the locale when a required file is missing" do
+        path = "#{plugin_path}/#{missing_path}"
         File.stubs("exist?").returns(false)
         File.stubs("exist?").with(regexp_matches(/#{Regexp.quote(plugin_path)}.*/)).returns(true)
         File.stubs("exist?").with(path).returns(false)
@@ -673,6 +704,21 @@ TEXT
         register_locale("foo_BAR", name: "Foo", nativeName: "Foo Bar", plural: plural)
         expect(DiscoursePluginRegistry.locales.count).to eq(0)
       end
+    end
+
+    context "without the client translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/client.foo_BAR.yml"
+    end
+
+    context "without the server translations" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "config/locales/server.foo_BAR.yml"
+    end
+
+    context "without the Moment locale" do
+      include_examples "rejecting an incomplete plugin locale",
+                       missing_path: "lib/javascripts/locale/moment_js/foo_BAR.js"
     end
   end
 
@@ -1275,6 +1321,15 @@ TEXT
           server_side: nil,
         )
       end.to raise_error(ArgumentError, /server_side/)
+
+      expect do
+        plugin_instance.register_homepage(
+          "other_homepage",
+          name: "plugin.other_homepage",
+          path: "other",
+          route: "plugin#other",
+        )
+      end.to raise_error(ArgumentError, /path/)
 
       expect do
         plugin_instance.register_homepage(

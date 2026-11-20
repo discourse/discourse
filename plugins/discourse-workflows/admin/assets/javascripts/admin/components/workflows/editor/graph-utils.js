@@ -7,18 +7,18 @@ import {
   normalizeSourceOutput,
   normalizeSourceOutputIndex,
   normalizeTargetInputIndex,
-} from "../../../lib/workflows/graph-constants";
-import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape";
+} from "../../../lib/workflows/graph-constants.js";
+import { NODE_DIRECT_SETTING_KEYS } from "../../../lib/workflows/node-data-shape.js";
 import {
   nodeTypeConnectionIndexedInputKey,
   nodeTypeHasConfigurationFields,
   nodeTypeInputUsesConnectionIndexes,
-} from "../../../lib/workflows/node-types";
+} from "../../../lib/workflows/node-types.js";
 
 export {
   buildOutgoingIndex,
   LOOP_NODE_TYPE,
-} from "../../../lib/workflows/graph-constants";
+} from "../../../lib/workflows/graph-constants.js";
 
 function clientConnectionKey(connection) {
   return graphConnectionKey({

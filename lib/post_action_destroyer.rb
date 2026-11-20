@@ -81,10 +81,6 @@ class PostActionDestroyer
 
   protected
 
-  def self.notify_types
-    @notify_types ||= PostActionType.notify_flag_types.keys
-  end
-
   def notify_subscribers
     name = post_action_type_view.types[@post_action_type_id]
     if name == :like
@@ -92,7 +88,7 @@ class PostActionDestroyer
         :unliked,
         { likes_count: @post.like_count, user_id: @destroyed_by.id },
       )
-    elsif self.class.notify_types.include?(name)
+    elsif post_action_type_view.notify_flag_type_ids.include?(@post_action_type_id)
       @post.publish_change_to_clients!(:acted)
     end
   end

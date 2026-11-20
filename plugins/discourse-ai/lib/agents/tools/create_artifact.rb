@@ -157,6 +157,7 @@ module DiscourseAi
             user: user,
             feature_name: "create_artifact",
             cancel_manager: context.cancel_manager,
+            execution_context: context.execution_context,
           ) do |partial_response|
             next if !partial_response.is_a?(String)
 
@@ -355,7 +356,7 @@ module DiscourseAi
             [/details]
 
             ### Preview
-            <div class="ai-artifact" data-ai-artifact-id="#{artifact.id}"></div>
+            [ai-artifact id="#{artifact.id}"]
           MD
 
           self.custom_raw = html_preview

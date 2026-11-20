@@ -13,6 +13,10 @@ sq:
             topic_id:
               label: ID e temës
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Regjistrohuni"
       preferences:
         reminders:
           preferences:
@@ -51,13 +55,14 @@ sq:
         status: "Status"
       models:
         event:
-          expired: "Skaduar"
           closed: "Mbyllur"
           status:
             public:
               title: "Publike"
             private:
               title: "Private"
+      recording_modal:
+        save: "Ruani"
       composer:
         url_placeholder: "Shto URL"
         reminder:

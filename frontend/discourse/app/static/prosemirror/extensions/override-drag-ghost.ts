@@ -1,3 +1,4 @@
+import { assert } from "@ember/debug";
 import { Fragment, Slice } from "prosemirror-model";
 import { NodeSelection, Plugin } from "prosemirror-state";
 import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
@@ -27,7 +28,7 @@ const dropSelectionPlugin = new Plugin({
       selection instanceof NodeSelection &&
       selection.node.type.name === "paragraph" &&
       selection.node.childCount === 1 &&
-      selection.node.firstChild.type.name === "image"
+      selection.node.child(0).type.name === "image"
     ) {
       // Select the image inside the paragraph instead
       const imagePos = selection.from + 1; // paragraph boundary + image position
@@ -54,6 +55,7 @@ const extension: RichEditorExtension = {
             }
 
             const dragging = view.dragging.slice.content.firstChild;
+            assert("A dragged slice has content", dragging);
             if (dragging.type.name === "image") {
               const wrappedNode = view.state.schema.nodes.paragraph.create(
                 null,
@@ -64,7 +66,9 @@ const extension: RichEditorExtension = {
             return false;
           },
           dragstart(view, event) {
-            event.dataTransfer.setDragImage(EMPTY_DRAG_IMG, 0, 0);
+            const { dataTransfer } = event;
+            assert("A dragstart event carries a data transfer", dataTransfer);
+            dataTransfer.setDragImage(EMPTY_DRAG_IMG, 0, 0);
             return false;
           },
         },

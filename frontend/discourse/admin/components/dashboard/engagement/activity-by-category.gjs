@@ -13,18 +13,34 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
 import Category from "discourse/models/category";
 import MultipleCategoriesSelector from "discourse/select-kit/components/multiple-categories-selector";
-import { eq } from "discourse/truth-helpers";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 const MAX_CATEGORIES = 10;
 
+/**
+ * @typedef {{
+ *   category_id: number,
+ *   name: string,
+ *   color: string,
+ *   slug: string,
+ *   topics: number,
+ *   posts: number,
+ *   page_views: number,
+ *   share: number,
+ *   share_change: number,
+ *   share_formatted: string,
+ *   share_change_formatted: string
+ * }} CategoryActivityRow
+ */
 export default class ActivityByCategory extends Component {
   @service currentUser;
   @service toasts;
 
   @tracked selectedCategories = [];
+
+  /** @type {{ rows: CategoryActivityRow[], total: number } | null} */
   @tracked overrideActivity = null;
   @tracked loading = false;
   @tracked sortBy = "share";

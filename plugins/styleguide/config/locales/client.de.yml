@@ -39,6 +39,12 @@ de:
             delete: "Löschen"
         multi_select:
           title: "Mehrfachauswahl"
+        reorderable_list:
+          policies_pinned: "Angeheftet"
+          policies_required: "Erforderlich"
+          table_field: "Feld"
+          table_type: "Typ"
+          cross_list_primary: "Primär"
         toasts:
           title: "Toasts"
         font_scale:

@@ -17,6 +17,7 @@ export default class AdminSiteTextIndexController extends Controller {
   @service modal;
   @service store;
 
+  /** @type {number | string | null} */
   @tracked themeId = null;
   @tracked locale;
   @tracked q;

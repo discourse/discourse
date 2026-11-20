@@ -36,18 +36,21 @@ module PageObjects
         translation_args: {},
         locale: SiteSetting.default_locale
       )
+        enabled_for = "eligible_users" if enabled_for == "everyone"
         enabled_for_text =
           if enabled_for == "specific_groups_with_group_names"
             I18n.t(
               "admin_js.admin.upcoming_changes.enabled_for_options.#{enabled_for}",
               translation_args.merge(locale: locale),
-            ).downcase
+            )
           else
             I18n.t(
               "admin_js.admin.upcoming_changes.enabled_for_options.#{enabled_for}",
               translation_args.merge(locale: locale),
-            ).downcase
+            )
           end
+
+        enabled_for_text = enabled_for_text.downcase if enabled_for == "eligible_users"
 
         enabled_for_success_text =
           I18n.t(
@@ -57,6 +60,10 @@ module PageObjects
           )
 
         page.has_content?(enabled_for_success_text)
+      end
+
+      def has_groups_updated_success_toast?
+        page.has_content?(I18n.t("admin_js.admin.upcoming_changes.groups_updated"))
       end
 
       def has_disabled_success_toast?

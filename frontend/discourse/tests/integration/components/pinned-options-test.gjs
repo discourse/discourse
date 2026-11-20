@@ -11,15 +11,12 @@ module("Integration | Component | PinnedOptions", function (hooks) {
     this.siteSettings.automatically_unpin_topics = false;
 
     const store = getOwner(this).lookup("service:store");
-    this.set(
-      "topic",
-      store.createRecord("topic", {
-        id: 1234,
-        title: "Qunit Test Topic",
-        deleted_at: new Date(),
-        pinned: true,
-      })
-    );
+    this.topic = store.createRecord("topic", {
+      id: 1234,
+      title: "Qunit Test Topic",
+      deleted_at: new Date(),
+      pinned: true,
+    });
 
     await render(
       <template>
@@ -41,16 +38,13 @@ module("Integration | Component | PinnedOptions", function (hooks) {
     this.siteSettings.automatically_unpin_topics = false;
 
     const store = getOwner(this).lookup("service:store");
-    this.set(
-      "topic",
-      store.createRecord("topic", {
-        id: 1234,
-        title: "Qunit Test Topic",
-        deleted_at: new Date(),
-        pinned: false,
-        unpinned: true,
-      })
-    );
+    this.topic = store.createRecord("topic", {
+      id: 1234,
+      title: "Qunit Test Topic",
+      deleted_at: new Date(),
+      pinned: false,
+      unpinned: true,
+    });
 
     await render(
       <template>

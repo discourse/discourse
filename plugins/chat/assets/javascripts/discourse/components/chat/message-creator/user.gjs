@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import userStatus from "discourse/helpers/user-status";
-import { not } from "discourse/truth-helpers";
 import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -48,7 +47,10 @@ export default class ChatableUser extends Component {
 
       {{#if this.showIndicator}}
         <div
-          class={{dConcatClass "unread-indicator" (if this.isUrgent "-urgent")}}
+          class={{dConcatClass
+            "unread-indicator d-new-indicator"
+            (if this.isUrgent "-urgent")
+          }}
         ></div>
       {{/if}}
 

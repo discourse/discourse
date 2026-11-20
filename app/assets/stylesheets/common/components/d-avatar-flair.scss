@@ -1,0 +1,55 @@
+// Contexts set --avatar-flair-size (and position); the inset of the icon or
+// image within the box is owned here so flair keeps the same proportions
+// wherever it renders. Scales are unitless fractions of the box because the
+// image inset multiplies --avatar-flair-size, which may be a percentage.
+.avatar-flair {
+  --avatar-flair-size: 20px;
+  --avatar-flair-icon-scale: 0.8;
+  --avatar-flair-image-scale: 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--avatar-flair-size);
+  height: var(--avatar-flair-size);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-size: contain;
+
+  &.avatar-flair-image {
+    padding: calc(
+      var(--avatar-flair-size) * (1 - var(--avatar-flair-image-scale)) / 2
+    );
+  }
+
+  .d-icon {
+    width: calc(100% * var(--avatar-flair-icon-scale));
+    height: calc(100% * var(--avatar-flair-icon-scale));
+  }
+
+  // .rounded comes from the group's own flair colour; --has-background is for
+  // contexts that always show flair on a background
+  &.rounded,
+  &.--has-background {
+    --avatar-flair-icon-scale: 0.6667;
+    --avatar-flair-image-scale: 0.75;
+    border-radius: 50%;
+  }
+
+  &.--has-background {
+    background-color: var(--avatar-flair-background, var(--primary-200));
+  }
+
+  &.--bot {
+    --avatar-flair-icon-scale: 0.7;
+    background-color: var(--primary);
+    color: var(--secondary);
+    border-radius: var(--d-border-radius);
+
+    .d-icon {
+      fill: var(--secondary);
+    }
+  }
+}

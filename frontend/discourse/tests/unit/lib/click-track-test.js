@@ -49,7 +49,8 @@ module("Unit | Utility | click-track", function (hooks) {
     fixture().innerHTML = `<div id="topic" data-topic-id="1337">
         <article data-post-id="42" data-user-id="3141">
           <a href="http://www.google.com">google.com</a>
-          <a class="lightbox back" href="http://www.google.fr">google.fr</a>
+          <a class="lightbox" href="http://www.google.fr">google.fr</a>
+          <a class="back" href="http://www.google.fr">google.fr</a>
           <a id="with-badge" data-user-id="314" href="http://www.google.de">google.de<span class="badge">1</span></a>
           <a id="with-badge-but-not-mine" href="http://www.google.es">google.es<span class="badge">1</span></a>
           <div class="onebox-result">
@@ -63,6 +64,8 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="mention" href="/u/joe">@joe</a>
           <a class="hashtag-cooked" href="/c/staff/42" data-type="category" data-slug="staff"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>staff</span></a>
           <a class="mention-group" href="/g/support">@support</a>
+          <a class="user-card-link" href="/u/joe" data-user-card="joe">joe</a>
+          <a class="group-card-link" href="/g/support" data-group-card="support">support</a>
           <a class="hashtag-cooked category-card-hashtag" href="/c/staff/42" data-type="category" data-id="42">staff</a>
           <a class="mailto" href="mailto:foo@bar.com">email-me</a>
           <a class="a-without-href">no href</a>
@@ -73,6 +76,10 @@ module("Unit | Utility | click-track", function (hooks) {
           <a class="prefix-url" href="/forum/thing">prefix link</a>
           <a class="abs-prefix-url" href="${window.location.origin}/forum/thing">prefix link</a>
           <a class="diff-prefix-url" href="/thing">diff prefix link</a>
+          <svg>
+            <a id="svg-link" href="http://www.google.ch"><text>google.ch</text></a>
+            <a id="svg-link-blank" href="http://www.google.ch" target="_blank"><text>google.ch</text></a>
+          </svg>
         </article>
       </div>`;
   });
@@ -210,16 +217,37 @@ module("Unit | Utility | click-track", function (hooks) {
     assert.true(window.open.calledWith("http://www.google.com/", "_blank"));
   });
 
-  test("does not track clicks on lightboxes", async function (assert) {
-    assert.false(track(generateClickEventOn(".lightbox")));
+  test("opens SVG links in a new tab when external links open in new tab", async function (assert) {
+    User.currentProp("user_option.external_links_in_new_tab", true);
+
+    assert.false(track(generateClickEventOn("#svg-link")));
+    assert.true(window.open.calledWith("http://www.google.ch", "_blank"));
   });
 
-  test("does not track clicks when forcibly disabled", async function (assert) {
-    assert.false(track(generateClickEventOn(".no-track-link")));
+  test("lets the browser open SVG links with target=_blank", async function (assert) {
+    assert.true(track(generateClickEventOn("#svg-link-blank")));
   });
 
-  test("does not track clicks on back buttons", async function (assert) {
-    assert.false(track(generateClickEventOn(".back")));
+  test("does not track clicks on excluded links", async function (assert) {
+    pretender.post("/clicks/track", () => {
+      assert.step("tracked");
+      return [200, {}, ""];
+    });
+
+    for (const selector of [
+      ".lightbox",
+      ".no-track-link",
+      ".back",
+      ".hashtag",
+      ".hashtag-cooked",
+      ".quote a:last-child",
+    ]) {
+      await track(generateClickEventOn(selector), null, {
+        returnPromise: true,
+      });
+    }
+
+    assert.verifySteps([]);
   });
 
   test("does not track right clicks inside quotes", async function (assert) {
@@ -228,20 +256,14 @@ module("Unit | Utility | click-track", function (hooks) {
     assert.true(track(event));
   });
 
-  test("does not track clicks links in quotes", async function (assert) {
-    User.currentProp("user_option.external_links_in_new_tab", true);
-    assert.false(track(generateClickEventOn(".quote a:last-child")));
-    assert.true(window.open.calledWith("https://google.com/", "_blank"));
-  });
-
-  test("does not track clicks on hashtags for categories and tags", async function (assert) {
-    assert.false(track(generateClickEventOn(".hashtag")));
-    assert.false(track(generateClickEventOn(".hashtag-cooked")));
-  });
-
   test("returns true for tracking mentions and group mentions so the card can appear", async function (assert) {
     assert.true(track(generateClickEventOn(".mention")));
     assert.true(track(generateClickEventOn(".mention-group")));
+  });
+
+  test("leaves user and group card links to the card listener", async function (assert) {
+    assert.true(track(generateClickEventOn(".user-card-link")));
+    assert.true(track(generateClickEventOn(".group-card-link")));
   });
 
   test("leaves category card hashtags to the card listener", async function (assert) {
@@ -320,6 +342,6 @@ module("Unit | Utility | click-track", function (hooks) {
   );
 
   testOpenInANewTab("it opens in a new tab on middle click", (clickEvent) => {
-    sinon.stub(clickEvent, "button").get(() => 2);
+    sinon.stub(clickEvent, "button").get(() => 1);
   });
 });

@@ -38,21 +38,29 @@ module DiscourseAi
           DiscourseAi::Completions::Llm.proxy(
             LlmModel.find(agent.class.default_llm_id.presence || SiteSetting.ai_default_llm_model),
           )
-        if llm.tokenizer.size(prompt.messages.to_json) + 8000 > llm.max_prompt_tokens
+        input_size, input_capacity =
+          llm.prompt_capacity(prompt, thinking_effort: agent.thinking_effort)
+        if input_capacity <= 0 || input_size > input_capacity
           raise InvalidAnalysis, "Snapshot exceeds model context"
         end
         prompt.skip_trim = true
-        response =
-          llm.generate(
-            prompt,
-            user: @report.requested_by,
-            feature_name: "ask_ai_report",
-            temperature: agent.temperature,
-            top_p: agent.top_p,
-            thinking_effort: agent.thinking_effort,
-            response_format: response_format(agent),
-            max_tokens: 8000,
-          )
+        response = +""
+        llm.generate(
+          prompt,
+          user: @report.requested_by,
+          feature_name: "ask_ai_report",
+          temperature: agent.temperature,
+          top_p: agent.top_p,
+          thinking_effort: agent.thinking_effort,
+          response_format: response_format(agent),
+        ) do |partial|
+          if partial.is_a?(DiscourseAi::Completions::StructuredOutput)
+            # The structured callback retains prefill and excludes provider reasoning.
+            response = partial
+          elsif partial.is_a?(String) && response.is_a?(String)
+            response << partial
+          end
+        end
         result = JSON.parse(DiscourseAi::Completions::Llm.text_from_response(response))
         ids = asks.map(&:first)
         validate!(result, ids)
@@ -102,16 +110,13 @@ module DiscourseAi
                    subject["name"].length.between?(1, 100) &&
                    subject["description"].is_a?(String) &&
                    subject["description"].length.between?(1, 1000) &&
-                   subject["ask_ids"].is_a?(Array) && subject["ask_ids"].present? &&
-                   subject["ask_ids"].all? { |id| id.is_a?(Integer) } &&
-                   subject["ask_ids"].uniq.size == subject["ask_ids"].size
+                   subject["ask_ids"].is_a?(Array) &&
+                   subject["ask_ids"].all? { |id| id.is_a?(Integer) }
             raise InvalidAnalysis
           end
+          subject["ask_ids"] &= ids
         end
         validate_insights!(result["insights"], ids)
-        assigned = subjects.flat_map { |subject| subject["ask_ids"] }
-        unknown = assigned - ids
-        raise InvalidAnalysis, "Unknown IDs: #{unknown}" if unknown.present?
       end
 
       def validate_insights!(insights, ids)

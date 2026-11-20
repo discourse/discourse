@@ -13,9 +13,9 @@ module Jobs
         PrivateMessageTopicTrackingState.publish_unread(post) if post.post_number > 1
         TopicGroup.new_message_update(topic.last_poster, topic.id, post.post_number)
       else
-        TopicTrackingState.publish_unmuted(post.topic)
+        TopicTrackingState.publish_unmuted(post.topic, whisper: post.whisper?)
         if post.post_number > 1
-          TopicTrackingState.publish_muted(post.topic)
+          TopicTrackingState.publish_muted(post.topic, whisper: post.whisper?)
           TopicTrackingState.publish_unread(post)
         end
         TopicTrackingState.publish_latest(post.topic) unless post.whisper?

@@ -42,6 +42,13 @@ RSpec.describe CrawlerDetection do
       crawler! "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3694.0 Mobile Safari/537.36 Chrome-Lighthouse"
     end
 
+    it "returns true for AI agents fetching pages for a person" do
+      # https://docs.perplexity.ai/guides/bots
+      crawler! "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Perplexity-User/1.0; +https://perplexity.ai/perplexity-user)"
+      # https://support.claude.com/en/articles/8896518
+      crawler! "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Claude-User/1.0; +Claude-User@anthropic.com)"
+    end
+
     it "returns true when VIA header contains 'web.archive.org'" do
       crawler! "Mozilla/5.0 (compatible; archive.org_bot +http://archive.org/details/archive.org_bot)"
       crawler! "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",

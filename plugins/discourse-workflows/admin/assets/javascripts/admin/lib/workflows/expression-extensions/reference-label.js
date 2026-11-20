@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import { NODE_REF_RE, parseNodeReferenceName } from "../expression-context";
+import { NODE_REF_RE, parseNodeReferenceName } from "../expression-context.js";
 
 // Parses a "simple reference" into source + path. Anything more involved
 // (operators, arithmetic, multiple refs, method calls) returns null.
@@ -20,6 +20,7 @@ const ROOT_SOURCES = {
   $trigger: "trigger",
   $itemIndex: "item_index",
   $vars: "variable",
+  $workflow_vars: "workflow_variable",
   $current_user: "current_user",
   $site_settings: "site_setting",
   $execution: "execution",
@@ -31,6 +32,7 @@ const SOURCE_ICONS = {
   trigger: "play",
   item_index: "hashtag",
   variable: "dollar-sign",
+  workflow_variable: "dollar-sign",
   current_user: "user",
   site_setting: "gear",
   execution: "bolt",

@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import helperFn from "discourse/helpers/helper-fn";
-import { gt } from "discourse/truth-helpers";
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import { i18n } from "discourse-i18n";

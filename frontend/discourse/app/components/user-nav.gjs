@@ -1,6 +1,5 @@
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { and } from "discourse/truth-helpers";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DNavigationItem from "discourse/ui-kit/d-navigation-item";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

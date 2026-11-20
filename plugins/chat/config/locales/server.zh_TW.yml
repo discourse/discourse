@@ -9,10 +9,7 @@ zh_TW:
     chat_separate_sidebar_mode: "為論壇和聊天顯示單獨的邊欄模式。"
     chat_enabled: "啟用聊天。"
     chat_pinned_messages: "在聊天頻道中啟用置頂消息。"
-    enable_new_chat_reactions_popup: "在聊天消息上啟用重新設計的回應彈出窗口，通過無限滾動和原生移動體驗顯示誰做出了回應。"
     enable_public_channels: "基于分類啟用公開頻道。"
-    chat_allowed_groups: "這些群組中的使用者可以聊天，但匿名使用者除外，他們只有在被添加到此設置后才能查看聊天。請注意，管理員和版主可以隨時訪問聊天。"
-    chat_channel_retention_days: "常規頻道中的聊天消息將保留此天數。設置為 0 將永久保留消息。"
     chat_dm_retention_days: "個人聊天頻道中的聊天消息將保留此天數。設置為 0 將永久保留消息。"
     chat_auto_silence_duration: "使用者超過聊天消息創建速率限值時將被禁言的分鐘數。設置為 0 將禁用自動禁言。"
     chat_allowed_messages_for_trust_level_0: "信任級別 0 使用者在 30 秒內可以發送的消息數。設置為 0 將禁用限制。"
@@ -63,7 +60,15 @@ zh_TW:
 
         請前往 %{channel_url} 的頻道重試。
   chat:
+    design_wizard_homepage_name: "聊天"
     deleted_chat_username: 已刪除
+    crawler:
+      directory_title: "聊天頻道"
+      nav_title: "聊天"
+      members_count:
+        other: "%{count} 位成員"
+      thread_replies:
+        other: "%{count} 則回覆"
     errors:
       users_cant_be_added_to_channel: "無法將使用者添加到此頻道。"
       user_cant_be_removed_from_channel: "無法將使用者從此頻道中移除"
@@ -236,13 +241,10 @@ zh_TW:
       default_deny_label: "拒絕"
     errors:
       send_chat_message:
-        invalid_params: "無效參數： %{errors}"
         channel_not_found: "未找到頻道： %{channel_id}"
-        failed: "無法發送聊天消息。"
       chat_approval:
         channel_not_found: "聊天消息發送失敗：未找到頻道 %{channel_id}。"
         invalid_params: "聊天消息發送失敗： %{errors}"
-        failed: "聊天消息發送失敗： %{steps}"
         timeout_must_be_positive: "超時時長必須大于 0 分鐘。"
         invalid_timeout_action: "無效的逾時操作：%{action}。"
         buttons_required: "至少需要一個聊天核准按鈕。"

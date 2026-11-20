@@ -547,7 +547,8 @@ export default class DTabs extends Component<DTabsSignature> {
         node instanceof Element &&
         (node.getAttribute("role") !== "tab" ||
           registeredKey === undefined ||
-          this.#tabs.get(registeredKey) !== node);
+          // `node instanceof Element` already ruled out the `false` branch.
+          this.#tabs.get(registeredKey as string) !== node);
       const isStrayText =
         node.nodeType === Node.TEXT_NODE &&
         (node.textContent ?? "").trim() !== "";

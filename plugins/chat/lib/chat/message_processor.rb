@@ -11,13 +11,13 @@ module Chat
       @model = chat_message
       @previous_cooked = (chat_message.cooked || "").dup
       @should_secure_uploads = false
-      @size_cache = {}
       @opts = opts
       @used_hotlinked_media_ids = Set.new
       @stale_hotlinked_media_ids = []
 
       cook_opts = {
         user_id: chat_message.last_editor_id,
+        hashtag_user_ids: chat_message.hashtag_user_ids,
         author_username: chat_message.user&.username,
       }
       cook_opts[:invalidate_oneboxes] = true if opts[:invalidate_oneboxes] == true

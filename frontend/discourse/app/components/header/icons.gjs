@@ -8,9 +8,8 @@ import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import { languageSwitcherEnabled } from "discourse/lib/content-localization";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
-import { eq } from "discourse/truth-helpers";
-import Dropdown from "./dropdown";
-import UserDropdown from "./user-dropdown";
+import Dropdown from "./dropdown.gjs";
+import UserDropdown from "./user-dropdown.gjs";
 
 let headerIcons;
 resetHeaderIcons();
@@ -44,12 +43,17 @@ export default class Icons extends Component {
   @service search;
   @service interfaceColor;
   @service router;
+  @service mobileTabBar;
 
   get showHamburger() {
     // NOTE: In this scenario, we are forcing the sidebar on admin users,
     // so we need to still show the hamburger menu to be able to
     // access the legacy hamburger forum menu.
     if (this.header.headerButtonsHidden.includes("menu")) {
+      return false;
+    }
+
+    if (this.mobileTabBar.enabled) {
       return false;
     }
 

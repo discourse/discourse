@@ -9,12 +9,13 @@ import {
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
+  deprecateImplicitMutation,
   pluginApiIdentifiers,
   selectKitOptions,
 } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import SelectKitRow from "./select-kit/select-kit-row";
-import TagRow from "./tag-row";
+import SelectKitRow from "./select-kit/select-kit-row.gjs";
+import TagRow from "./tag-row.gjs";
 
 @attributeBindings("selectKit.options.categoryId:category-id")
 @classNames("mini-tag-chooser")
@@ -189,6 +190,7 @@ export default class MiniTagChooser extends MultiSelectComponent {
     if (this.onChange) {
       this.onChange(items);
     } else {
+      deprecateImplicitMutation();
       this.set("value", items);
     }
   }

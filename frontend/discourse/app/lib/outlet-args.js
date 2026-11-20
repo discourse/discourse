@@ -40,11 +40,11 @@ export function _setIncludeDeprecatedArgsProperty(value) {
  * Both current and deprecated args are accessed via property getters for lazy
  * evaluation. Deprecated args trigger a deprecation warning when accessed.
  *
- * @param {Object} args - Current outlet args.
- * @param {Object} deprecatedArgs - Deprecated args created with `deprecatedOutletArgument` helper.
+ * @param {Record<string, unknown> | null | undefined} args - Current outlet args.
+ * @param {Record<string, ReturnType<typeof import("discourse/helpers/deprecated-outlet-argument").default>> | null | undefined} deprecatedArgs - Deprecated args created with `deprecatedOutletArgument` helper.
  * @param {Object} [opts={}] - Options passed to deprecation warnings.
  * @param {string} [opts.outletName] - The outlet name for warning messages.
- * @returns {Object} Combined args object with lazy property getters.
+ * @returns {Record<string, unknown>} Combined args object with lazy property getters.
  *
  * @example
  * const argsWithDeprecations = buildArgsWithDeprecations(
@@ -107,7 +107,7 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
  * The warning is triggered each time the value is accessed. If the deprecated
  * arg has a `silence` option, the warning is silenced under that deprecation ID.
  *
- * @param {Object} deprecatedArg - A deprecated arg created with `deprecatedOutletArgument` helper.
+ * @param {ReturnType<typeof import("discourse/helpers/deprecated-outlet-argument").default>} deprecatedArg - A deprecated arg created with `deprecatedOutletArgument` helper.
  * @param {Object} options - Options for the deprecation warning.
  * @param {string} options.argumentName - The name of the deprecated arg.
  * @param {string} [options.outletName] - The outlet name for the warning message.
@@ -115,7 +115,7 @@ export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
  * @param {string} [options.templateModule] - Module name for connector template.
  * @param {string} [options.connectorName] - Connector name.
  * @param {string} [options.layoutName] - Layout name.
- * @returns {*} The value of the deprecated arg.
+ * @returns {unknown} The value of the deprecated arg.
  * @throws {Error} If the deprecated arg was not created with `deprecatedOutletArgument`.
  */
 export function deprecatedArgumentValue(deprecatedArg, options) {

@@ -131,6 +131,10 @@ hu:
           message_4: "Az átlagos üzenethossz <strong>%{length}</strong> karakter volt"
           message_5: "Kedvenc csatornáid:"
           dancing_baby_alt: "Táncoló baba"
+        live_usage:
+          minutes:
+            one: "%{count} perc"
+            other: "%{count} perc"
         invites:
           guest_book_title: Vendégkönyv
           guest_book_subtitle: Közösségi meghívóid

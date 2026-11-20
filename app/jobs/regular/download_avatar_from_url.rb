@@ -14,7 +14,12 @@ module Jobs
       return unless user = User.find_by(id: user_id)
 
       begin
-        UserAvatar.import_url_for_user(url, user, override_gravatar: args[:override_gravatar])
+        UserAvatar.import_url_for_user(
+          url,
+          user,
+          override_gravatar: args[:override_gravatar],
+          associated_account_id: args[:associated_account_id],
+        )
       rescue Discourse::InvalidParameters => e
         raise e unless e.message == "url"
       end

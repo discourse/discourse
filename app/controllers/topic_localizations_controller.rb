@@ -4,10 +4,7 @@ class TopicLocalizationsController < ApplicationController
   before_action :ensure_logged_in
 
   def show
-    topic = Topic.find_by(id: params[:topic_id])
-    raise Discourse::NotFound unless topic
-
-    guardian.ensure_can_see!(topic)
+    topic = find_visible_topic!
 
     localization = TopicLocalization.find_by(topic_id: topic.id, locale: params[:locale])
     raise Discourse::NotFound unless localization
@@ -16,10 +13,9 @@ class TopicLocalizationsController < ApplicationController
   end
 
   def create_or_update
-    topic_id, locale, title = params.require(%i[topic_id locale title])
+    locale, title = params.require(%i[locale title])
 
-    topic = Topic.find_by(id: topic_id)
-    raise Discourse::NotFound unless topic
+    topic = find_visible_topic!
 
     guardian.ensure_can_localize_topic!(topic)
 
@@ -39,8 +35,7 @@ class TopicLocalizationsController < ApplicationController
   end
 
   def update_locale
-    topic = Topic.find_by(id: params[:topic_id])
-    raise Discourse::NotFound unless topic
+    topic = find_visible_topic!
 
     updated_topic =
       TopicLocaleUpdater.update(topic:, locale: params.fetch(:locale).presence, user: current_user)
@@ -48,14 +43,30 @@ class TopicLocalizationsController < ApplicationController
   end
 
   def destroy
-    topic_id, locale = params.require(%i[topic_id locale])
+    locale = params.require(:locale)
 
-    topic = Topic.find_by(id: topic_id)
-    raise Discourse::NotFound unless topic
+    topic = find_visible_topic!
 
     guardian.ensure_can_localize_topic!(topic)
 
     TopicLocalizationDestroyer.destroy(topic:, locale:, acting_user: current_user)
     head :no_content
+  end
+
+  private
+
+  def find_visible_topic!
+    topic = Topic.find_by(id: params.require(:topic_id))
+    raise Discourse::NotFound unless topic
+
+    begin
+      guardian.ensure_can_see!(topic)
+    rescue Discourse::InvalidAccess
+      raise if SiteSetting.detailed_404
+
+      raise Discourse::NotFound
+    end
+
+    topic
   end
 end

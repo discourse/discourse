@@ -26,6 +26,78 @@ acceptance("User Card", function (needs) {
   });
 });
 
+acceptance("User Card - bot flair", function (needs) {
+  needs.user();
+
+  let profileHidden;
+
+  needs.pretender((server, helper) => {
+    profileHidden = false;
+    server.get("/u/charlie/card.json", () => {
+      const card = cloneJSON(userFixtures["/u/charlie/card.json"]);
+      card.user.id = -1201;
+      card.user.profile_hidden = profileHidden;
+      return helper.response(card);
+    });
+  });
+
+  test("exposes the bot marker without announcing the redundant avatar", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
+    await click('a[data-user-card="charlie"]');
+
+    assert
+      .dom(".user-card .avatar-flair.--bot")
+      .hasAttribute("role", "img", "the card exposes the bot marker");
+    assert
+      .dom(".user-card .avatar-flair.--bot")
+      .hasAttribute(
+        "aria-label",
+        i18n("user.bot_account"),
+        "the card describes the automated account"
+      );
+    assert
+      .dom(".user-card .user-card-avatar")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "the marker is not hidden from assistive technology"
+      );
+    assert
+      .dom(".user-card .card-huge-avatar")
+      .hasAttribute("aria-hidden", "true", "the redundant avatar stays hidden");
+  });
+  test("keeps a hidden profile's redundant avatar hidden without hiding its bot marker", async function (assert) {
+    profileHidden = true;
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-map__users-trigger");
+    await click('a[data-user-card="charlie"]');
+
+    assert
+      .dom(".user-card .profile-hidden")
+      .exists("the hidden-profile branch is displayed");
+    assert
+      .dom(".user-card span.card-huge-avatar")
+      .hasAttribute(
+        "aria-hidden",
+        "true",
+        "the non-interactive avatar stays hidden"
+      );
+    assert
+      .dom(".user-card .user-card-avatar")
+      .doesNotHaveAttribute(
+        "aria-hidden",
+        "the marker's parent remains exposed"
+      );
+    assert
+      .dom(".user-card .avatar-flair.--bot")
+      .hasAttribute(
+        "aria-label",
+        i18n("user.bot_account"),
+        "the hidden profile still exposes its bot marker"
+      );
+  });
+});
+
 acceptance("Category Card", function (needs) {
   needs.user();
   needs.settings({ enable_category_hashtag_cards: true });
@@ -157,6 +229,24 @@ acceptance(
     });
   }
 );
+
+acceptance("User Card - names disabled", function (needs) {
+  needs.user();
+  needs.settings({ enable_names: false, prioritize_username_in_ux: false });
+  needs.pretender((server, helper) => {
+    const cardResponse = cloneJSON(userFixtures["/u/eviltrout/card.json"]);
+    server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
+  });
+
+  test("does not display a name present in the card payload", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert.dom(".user-card .username").includesText("eviltrout");
+    assert.dom(".user-card .full-name").doesNotExist();
+    assert.dom(".user-card").doesNotIncludeText("Robin Ward");
+  });
+});
 
 acceptance("User Card - User Status", function (needs) {
   needs.user();

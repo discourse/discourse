@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import ChatScrollableList from "../modifiers/chat/scrollable-list";
+import ChatScrollableList from "../modifiers/chat/scrollable-list.js";
 
 const ChatMessagesScroller = <template>
   <div

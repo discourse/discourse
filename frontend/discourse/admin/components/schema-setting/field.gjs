@@ -64,10 +64,13 @@ export default class SchemaSettingField extends Component {
       <div class="schema-field__input">
         <this.component
           @description={{this.description}}
+          @isTranslationIdentifier={{@isTranslationIdentifier}}
           @name={{@name}}
           @onChange={{@onValueChange}}
+          @sendTagIds={{@sendTagIds}}
           @setting={{@setting}}
           @spec={{@spec}}
+          @tagRecords={{@tagRecords}}
           @value={{@value}}
         />
       </div>

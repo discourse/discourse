@@ -6,8 +6,8 @@ import { ajax } from "discourse/lib/ajax";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
-import fullnumber from "../helpers/fullnumber";
-import MinimalGamificationLeaderboardRow from "./minimal-gamification-leaderboard-row";
+import fullnumber from "../helpers/fullnumber.js";
+import MinimalGamificationLeaderboardRow from "./minimal-gamification-leaderboard-row.gjs";
 
 export default class extends Component {
   @service site;

@@ -1,8 +1,13 @@
-import type { DRovingFocusConfig } from "./config";
-import type ItemScope from "./item-scope";
-import { scan, step, type StepOutcome, stepRow } from "./navigation";
-import TypeAhead from "./type-ahead";
-import type { DRovingFocusApi, DRovingFocusAxis } from "./types";
+import type ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
+import {
+  scan,
+  step,
+  type StepOutcome,
+  stepRow,
+} from "discourse/ui-kit/-internals/cursor/navigation";
+import type { DRovingFocusConfig } from "./config.ts";
+import TypeAhead from "./type-ahead.ts";
+import type { DRovingFocusApi, DRovingFocusAxis } from "./types.ts";
 
 /**
  * Input types with no text caret, so an arrow key means navigation there rather than a cursor

@@ -13,13 +13,9 @@ et:
     explorer:
       or: "või"
       title: "Andmete eksportija"
-      create: "Loo"
       create_placeholder: "Päringu nimi..."
       ai:
         generate: "Genereeri"
-        optional: "valikuline"
-      import:
-        label: "Impordi"
       help:
         label: "Abi"
       schema:
@@ -32,11 +28,11 @@ et:
           null_: "Nulli"
       run: "Käivita"
       delete: "Kustuta"
+      name: "Nimi"
       query_groups: "Rühmad"
       query_tags: "Sildid"
       query_description: "Kirjeldus"
       reset_params: "Nulli"
-      search_placeholder: "Otsi..."
     discourse_workflows:
       nodes:
         "action:sql": "Andmete eksportija"

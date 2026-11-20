@@ -2,7 +2,7 @@ import { iconHTML } from "discourse/lib/icon-library";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import { boardsBoardUrl } from "./boards-urls";
+import { boardsBoardUrl } from "./boards-urls.js";
 
 export const MULTI_BOARD_TRIGGER_SELECTOR =
   ".discourse-boards-topic-pill--multiple";

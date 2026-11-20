@@ -1,5 +1,6 @@
 .has-full-page-chat {
-  .d-header-icons .search-dropdown,
+  // The site's own; chat's search icon takes its place
+  .d-header-icons:not(.c-header__search) .search-dropdown,
   .d-header-icons .hamburger-dropdown {
     display: none;
   }
@@ -31,4 +32,42 @@
       padding: 0.4rem 0.8rem;
     }
   }
+}
+
+.c-header.--site {
+  gap: var(--space-2);
+  min-width: 0;
+
+  .c-header__navbar-slot {
+    // Navbar parts are sized for their own bar, not the site header
+    --chat-header-offset: auto;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .c-navbar {
+    align-items: center;
+    min-width: 0;
+  }
+
+  .c-navbar__channel-title {
+    min-width: 0;
+    overflow: hidden;
+    font-weight: bold;
+  }
+
+  // Where the site's search would be, beside the user menu. The site's icons
+  // share one list; this one sits in its own, so it takes back the margin the
+  // next list opens with.
+  .c-header__search {
+    margin-left: auto;
+    margin-right: -0.5em;
+  }
+}
+
+// The channel's navbar lives in the site header, so the channel no longer
+// makes room for it
+.c-routes.--navbar-in-header {
+  --chat-header-offset: 0px;
 }

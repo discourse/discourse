@@ -7,6 +7,10 @@
 ca:
   chat:
     deleted_chat_username: suprimit
+    crawler:
+      thread_replies:
+        one: "%{count} resposta"
+        other: "%{count} respostes"
     errors:
       not_accepting_dms: "De moment %{username} no accepta missatges."
     reviewables:

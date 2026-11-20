@@ -13,11 +13,11 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("default", async function (assert) {
-      this.set("value", 1);
+      this.value = 1;
       setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
 
       await render(

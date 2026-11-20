@@ -1,4 +1,3 @@
-import { not } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DNavItem from "discourse/ui-kit/d-nav-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
