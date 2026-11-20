@@ -22,7 +22,12 @@ class ReviewableActionSerializer < ApplicationSerializer
   end
 
   def confirm_title
-    I18n.t(object.confirm_title, default: nil, **(object.confirm_message_args || {}))
+    I18n.t(
+      object.confirm_title,
+      default: nil,
+      fallback: false,
+      **(object.confirm_message_args || {}),
+    )
   end
 
   def confirm_message

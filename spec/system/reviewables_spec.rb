@@ -260,7 +260,9 @@ describe "Reviewables" do
     context "with a ReviewableQueuedPost" do
       fab!(:queued_post_reviewable, :reviewable_queued_post)
 
-      it "delete_user does not delete reviewable" do
+      it "lets a moderator classify an author deletion and keeps the reviewable" do
+        enable_dsa_reporting
+        modal = PageObjects::Modals::DsaModeration.new
         review_page.visit_reviewable(queued_post_reviewable)
 
         expect(queued_post_reviewable).to be_pending
@@ -269,11 +271,11 @@ describe "Reviewables" do
 
         review_page.select_bundled_action(queued_post_reviewable, "delete_user")
 
-        expect(dialog).to have_content(
-          "Are you sure you want to delete @#{queued_post_reviewable.target_created_by.username}?",
+        expect(modal).to have_action_title(
+          "Delete @#{queued_post_reviewable.target_created_by.username}?",
         )
-        expect(page).to have_css(".dialog-footer .btn-danger", text: I18n.t("js.delete"))
-        dialog.click_danger
+        expect(modal).to have_classification
+        modal.confirm("Delete user")
 
         expect(review_page).to have_no_error_dialog_visible
         expect(review_page).to have_reviewable_with_problem_confirmed_status(queued_post_reviewable)
