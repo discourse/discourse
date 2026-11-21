@@ -232,6 +232,8 @@ export interface SiteFields {
   can_associate_groups?: boolean;
   wizard_required?: true;
   topic_featured_link_allowed_category_ids?: number[];
+  /** Additional destinations for topic moves by the current user's category groups. */
+  category_group_moderator_topic_move_ids?: number[];
   user_themes?: SiteUserTheme[];
   user_color_schemes?: SiteSelectableColorScheme[];
   default_light_color_scheme?: SiteColorScheme | null;

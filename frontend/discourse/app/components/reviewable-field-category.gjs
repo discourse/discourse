@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 
@@ -14,6 +15,10 @@ export default class extends Component {
   }
 
   <template>
-    <CategoryChooser @onChange={{this.onChange}} @value={{this.categoryId}} />
+    <CategoryChooser
+      @onChange={{this.onChange}}
+      @options={{hash includeTopicMoveDestinations=true}}
+      @value={{this.categoryId}}
+    />
   </template>
 }
