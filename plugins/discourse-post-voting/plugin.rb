@@ -12,8 +12,148 @@ register_asset "stylesheets/common/post-voting-crawler.scss"
 
 enabled_site_setting :post_voting_enabled
 
+require_relative "lib/post_voting/category_mode_site_setting"
+
 module ::PostVoting
   PLUGIN_NAME = "discourse-post-voting"
+  ALLOW_POST_VOTING = "allow_post_voting"
+  APPLY_TO_SUBCATEGORIES = "apply_post_voting_to_subcategories"
+
+  def self.overrides_cache
+    @overrides_cache ||= ::DistributedCache.new("post_voting_category_overrides")
+  end
+
+  def self.post_voting_enabled_for?(category_id)
+    return true if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
+    return false if category_id.blank?
+
+    override = category_override(category_id)
+    override.nil? ? mode_default : override
+  end
+
+  def self.mode_default
+    SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::OPT_OUT
+  end
+
+  def self.category_override(category_id)
+    return nil if category_id.blank?
+
+    category_overrides[category_id.to_i]
+  end
+
+  def self.stored_category_override(category_id)
+    CategoryModeSiteSetting.normalize_override(
+      ::CategoryCustomField.where(category_id: category_id, name: ALLOW_POST_VOTING).pick(:value),
+    )
+  end
+
+  def self.category_overrides
+    cache = overrides_cache
+    cached = cache["overrides"]
+    return cached if cached
+
+    generation = cache["generation"]
+    resolved = resolve_category_overrides
+
+    if cache["generation"] == generation
+      cache["overrides"] = resolved
+      cache.delete("overrides") if cache["generation"] != generation
+    end
+
+    resolved
+  end
+
+  def self.clear_category_overrides_cache(after_commit: true)
+    clear = -> do
+      overrides_cache.clear(after_commit: false)
+      overrides_cache["generation"] = SecureRandom.hex(8)
+    end
+
+    if after_commit && !GlobalSetting.skip_db?
+      ::DB.after_commit { clear.call }
+    else
+      clear.call
+    end
+  end
+
+  def self.resolve_category_overrides
+    ::CategoryCustomField
+      .where(name: ALLOW_POST_VOTING)
+      .pluck(:category_id, :value)
+      .each_with_object({}) do |(category_id, value), overrides|
+        override = CategoryModeSiteSetting.normalize_override(value)
+        overrides[category_id] = override if !override.nil?
+      end
+  end
+
+  # Selecting a mode sets every category to that mode's default, so the category
+  # setting always shows the value in force rather than a blank that means
+  # something different in each mode.
+  def self.reset_category_overrides!
+    return if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
+
+    write_category_overrides(::Category.pluck(:id), mode_default)
+    invalidate_category_caches
+  end
+
+  def self.backfill_missing_category_overrides!
+    return if SiteSetting.post_voting_category_mode == CategoryModeSiteSetting::ALL_CATEGORIES
+
+    missing_ids = ::Category.pluck(:id) - resolve_category_overrides.keys
+    return if missing_ids.blank?
+
+    write_category_overrides(missing_ids, mode_default)
+    invalidate_category_caches
+  end
+
+  def self.write_category_override(category, value)
+    category.upsert_custom_fields(ALLOW_POST_VOTING => value)
+  end
+
+  def self.write_category_overrides(category_ids, value)
+    return if category_ids.blank?
+
+    stored = value ? "t" : "f"
+    now = Time.zone.now
+    scope = ::CategoryCustomField.where(name: ALLOW_POST_VOTING, category_id: category_ids)
+    existing_ids = scope.pluck(:category_id)
+
+    scope.update_all(value: stored, updated_at: now) if existing_ids.present?
+
+    missing_ids = category_ids - existing_ids
+    return if missing_ids.blank?
+
+    ::CategoryCustomField.insert_all(
+      missing_ids.map do |category_id|
+        {
+          category_id: category_id,
+          name: ALLOW_POST_VOTING,
+          value: stored,
+          created_at: now,
+          updated_at: now,
+        }
+      end,
+    )
+  end
+
+  def self.invalidate_category_caches
+    clear_category_overrides_cache(after_commit: false)
+    clear_category_overrides_cache
+    ::Site.clear_cache
+  end
+
+  def self.apply_to_subcategories!(category_id)
+    clear_category_overrides_cache(after_commit: false)
+    value = post_voting_enabled_for?(category_id)
+    descendant_ids = ::Category.subcategory_ids(category_id) - [category_id]
+
+    write_category_overrides(descendant_ids, value)
+    invalidate_category_caches
+  end
+
+  def self.discard_apply_to_subcategories_flag(category_id)
+    ::CategoryCustomField.where(category_id: category_id, name: APPLY_TO_SUBCATEGORIES).delete_all
+  end
 end
 
 require_relative "lib/post_voting/engine"
@@ -25,6 +165,7 @@ after_initialize do
   require_relative "lib/post_voting/guardian_extension"
   require_relative "lib/post_voting/comment_creator"
   require_relative "lib/post_voting/comment_review_queue"
+  require_relative "extensions/category_extension"
   require_relative "extensions/post_extension"
   require_relative "extensions/post_serializer_extension"
   require_relative "extensions/topic_extension"
@@ -58,6 +199,7 @@ after_initialize do
   end
 
   reloadable_patch do
+    Category.prepend(PostVoting::CategoryExtension)
     Post.include(PostVoting::PostExtension)
     Topic.include(PostVoting::TopicExtension)
     PostSerializer.include(PostVoting::PostSerializerExtension)
@@ -219,7 +361,8 @@ after_initialize do
 
     category = Category.find_by(id: category_id)
 
-    if category&.create_as_post_voting_default || category&.only_post_voting_in_this_category
+    if PostVoting.post_voting_enabled_for?(category_id) &&
+         (category&.create_as_post_voting_default || category&.only_post_voting_in_this_category)
       args[:subtype] = Topic::POST_VOTING_SUBTYPE
     end
 
@@ -251,6 +394,51 @@ after_initialize do
   end
   add_to_serializer(:basic_category, :only_post_voting_in_this_category) do
     object.only_post_voting_in_this_category
+  end
+
+  register_category_custom_field_type(PostVoting::ALLOW_POST_VOTING, :boolean)
+  register_preloaded_category_custom_fields PostVoting::ALLOW_POST_VOTING
+  register_category_custom_field_type(PostVoting::APPLY_TO_SUBCATEGORIES, :boolean)
+
+  add_to_serializer(:basic_category, :post_voting_allowed) do
+    PostVoting.post_voting_enabled_for?(object.id)
+  end
+
+  %i[category_created category_updated category_destroyed].each do |event|
+    on(event) { PostVoting.clear_category_overrides_cache }
+  end
+
+  add_model_callback(CategoryCustomField, :after_commit) do
+    PostVoting.clear_category_overrides_cache if name == PostVoting::ALLOW_POST_VOTING
+  end
+
+  # A new category starts from its parent's value so a subcategory added later
+  # matches the tree it was created in, rather than the mode's default.
+  on(:category_created) do |category|
+    if SiteSetting.post_voting_category_mode == PostVoting::CategoryModeSiteSetting::ALL_CATEGORIES
+      next
+    end
+
+    # A value can be submitted with the category itself, and this event fires
+    # after that has committed. Inheriting unconditionally would overwrite it.
+    next if !PostVoting.stored_category_override(category.id).nil?
+
+    inherited =
+      if category.parent_category_id
+        PostVoting.post_voting_enabled_for?(category.parent_category_id)
+      else
+        PostVoting.mode_default
+      end
+
+    PostVoting.write_category_override(category, inherited)
+  end
+
+  DiscourseEvent.on(:site_setting_changed) do |name, _old_value, _new_value| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    PostVoting.reset_category_overrides! if name == :post_voting_category_mode
+  end
+
+  on_enabled_change do |_old_value, new_value|
+    PostVoting.backfill_missing_category_overrides! if new_value
   end
 
   add_model_callback(:post, :before_create) do
