@@ -12,3 +12,6 @@ plugins:
   user_notes_moderators_delete:
     default: true
     client: false
+  user_notes_notification_groups:
+    type: group_list
+    default: ""

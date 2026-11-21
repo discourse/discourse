@@ -3,6 +3,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { userPath } from "discourse/lib/url";
+import { i18n } from "discourse-i18n";
 import PostMetadataUserNotes from "../components/post-metadata-user-notes.gjs";
 import { showUserNotes, updatePostUserNotesCount } from "../lib/user-notes.js";
 
@@ -23,6 +25,27 @@ export default {
       customizePost(api, container);
       customizePostMenu(api, container);
       handleReviewableNoteCreation(api);
+      api.registerNotificationTypeRenderer(
+        "staff_user_note",
+        (NotificationTypeBase) =>
+          class extends NotificationTypeBase {
+            get icon() {
+              return "pen-to-square";
+            }
+
+            get label() {
+              return this.notification.data.username;
+            }
+
+            get description() {
+              return i18n("notifications.staff_user_note");
+            }
+
+            get linkHref() {
+              return userPath(this.notification.data.username);
+            }
+          }
+      );
     });
   },
 };

@@ -8,6 +8,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "staff_user_note": {
+          "type": "integer"
+        },
         "mentioned": {
           "type": "integer"
         },

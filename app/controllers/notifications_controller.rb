@@ -84,7 +84,12 @@ class NotificationsController < ApplicationController
       offset = params[:offset].to_i
 
       notifications =
-        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
+        Notification
+          .where(user_id: user.id)
+          .visible
+          .visible_to(guardian)
+          .includes(:topic)
+          .order(created_at: :desc)
 
       notifications = notifications.where(read: true) if params[:filter] == "read"
 
