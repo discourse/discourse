@@ -23,6 +23,11 @@ class EmailBackupToken
     Discourse.redis.del key(user_id)
   end
 
+  def self.ttl(user_id)
+    ttl = Discourse.redis.ttl(key(user_id)).to_i
+    ttl.positive? ? ttl : 0
+  end
+
   def self.compare(user_id, token)
     token == get(user_id)
   end
