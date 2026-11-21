@@ -266,39 +266,24 @@ module("Unit | Utility | click-track", function (hooks) {
     assert.true(track(generateClickEventOn(".group-card-link")));
   });
 
-  test("leaves category card hashtags to the card listener", async function (assert) {
-    this.owner.lookup("service:site-settings").enable_category_hashtag_cards =
-      true;
+  for (const enabled of [false, true]) {
+    test(`navigates category hashtags with category cards ${enabled ? "enabled" : "disabled"}`, async function (assert) {
+      this.owner.lookup("service:site-settings").enable_category_hashtag_cards =
+        enabled;
 
-    assert.true(
-      track(generateClickEventOn(".category-card-hashtag"), this.owner),
-      "the event reaches the card listener"
-    );
+      assert.false(
+        track(generateClickEventOn(".category-card-hashtag"), this.owner),
+        "the link tracker handles navigation"
+      );
 
-    await settled();
+      await settled();
 
-    assert.false(
-      DiscourseURL.routeTo.called,
-      "the link tracker does not navigate away from the card"
-    );
-  });
-
-  test("navigates category hashtags when category cards are disabled", async function (assert) {
-    this.owner.lookup("service:site-settings").enable_category_hashtag_cards =
-      false;
-
-    assert.false(
-      track(generateClickEventOn(".category-card-hashtag"), this.owner),
-      "the link tracker handles navigation"
-    );
-
-    await settled();
-
-    assert.true(
-      DiscourseURL.routeTo.calledWith("/c/staff/42"),
-      "the category opens normally"
-    );
-  });
+      assert.true(
+        DiscourseURL.routeTo.calledWith("/c/staff/42"),
+        "the category opens normally"
+      );
+    });
+  }
 
   test("does not track clicks on mailto", async function (assert) {
     assert.true(track(generateClickEventOn(".mailto")));

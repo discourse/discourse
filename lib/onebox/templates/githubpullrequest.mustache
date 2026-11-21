@@ -2,18 +2,12 @@
   <div class="github-info-container">
     {{#commit}}
       <h4>
-        <a href="{{link}}" target="_blank" rel="noopener">{{commit.message.lines.first}}</a>
+        {{i18n.commit_by}}
+        <a href="{{author.html_url}}" target="_blank" rel="noopener">
+          <img alt="" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
+          {{author.login}}
+        </a> - <a href="{{link}}" target="_blank" rel="noopener">{{commit.message.lines.first}}</a>
       </h4>
-
-      <div class="github-info">
-        <span>
-          {{i18n.commit_by}}
-          <a href="{{author.html_url}}" target="_blank" rel="noopener">
-            <img alt="" src="{{author.avatar_url}}" class="onebox-avatar-inline" width="20" height="20">
-            {{author.login}}
-          </a> - <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
-        </span>
-      </div>
     {{/commit}}
 
     {{#comment}}
@@ -38,12 +32,12 @@
 
     {{#pr}}
       <h4>
-        <a href="{{link}}" target="_blank" rel="noopener">{{title}} (#{{number}})</a>
+        <a class="github-pull-request__title" href="{{link}}" title="{{title}} (#{{number}})" target="_blank" rel="noopener">{{title}} (#{{number}})</a>
       </h4>
     {{/pr}}
 
     <div class="branches">
-      <code>{{base.label}}</code> ← <code>{{head.label}}</code>
+      <code title="{{base.label}}">{{base.label}}</code> ← <code title="{{head.label}}">{{head.label}}</code>
     </div>
 
     {{#pr}}

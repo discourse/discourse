@@ -32,7 +32,7 @@ module Onebox
 
     def placeholder_html
       return "" unless engine
-      sanitize process_html engine.placeholder_html
+      sanitize(process_html(engine.placeholder_html), transformers: @options[:preview_transformers])
     rescue *WEB_EXCEPTIONS
       ""
     end
@@ -89,10 +89,12 @@ module Onebox
       html
     end
 
-    def sanitize(html)
+    def sanitize(html, transformers: nil)
       config = @options[:sanitize_config] || SanitizeConfig::ONEBOX
       config = config.merge(allowed_iframe_regexes: @options[:allowed_iframe_regexes])
 
+      config =
+        config.merge(transformers: Array(config[:transformers]) + transformers) if transformers
       Sanitize.fragment(html, config)
     end
 

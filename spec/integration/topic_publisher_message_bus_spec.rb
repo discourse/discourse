@@ -7,6 +7,7 @@ RSpec.describe "topic publisher message bus security" do
   fab!(:shared_drafts_category, :category)
   fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
   fab!(:opening_post) { Fabricate(:post, topic: topic) }
+  fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: private_category) }
 
   before do
     SiteSetting.shared_drafts_category = shared_drafts_category.id

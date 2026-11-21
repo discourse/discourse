@@ -158,7 +158,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_suspended_till?
-    object.suspended?
+    object.suspended? && (scope.is_staff? || !object.anonymous_user_master)
   end
 
   def include_silence_reason?
@@ -166,7 +166,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_silenced_till?
-    object.silenced?
+    object.silenced? && (scope.is_staff? || !object.anonymous_user_master)
   end
 
   def user_fields

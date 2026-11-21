@@ -3,7 +3,9 @@ import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import VersionCheck from "discourse/admin/models/version-check";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import dashIfEmpty from "discourse/helpers/dash-if-empty";
+import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
@@ -135,10 +137,7 @@ export default class DashboardSystem extends Component {
   }
 
   get hasStatus() {
-    return !!(
-      this.args.data?.discourse_updated_at ||
-      this.args.data?.dashboard_updated_at
-    );
+    return !!this.args.data?.discourse_updated_at;
   }
 
   get backupsSummary() {
@@ -225,6 +224,11 @@ export default class DashboardSystem extends Component {
               {{this.versionStatus.message}}
             </span>
           </div>
+
+          <PluginOutlet
+            @name="admin-upgrade-header"
+            @outletArgs={{lazyHash versionCheck=this.versionCheck}}
+          />
         </div>
 
         {{#if @data.storage}}
@@ -318,17 +322,6 @@ export default class DashboardSystem extends Component {
                 </div>
                 <div class="db-system__label">
                   {{i18n "admin.dashboard.sections.system.discourse_updated"}}
-                </div>
-              </div>
-            {{/if}}
-
-            {{#if @data.dashboard_updated_at}}
-              <div class="db-system__headline">
-                <div class="db-system__value">
-                  {{dFormatDate @data.dashboard_updated_at leaveAgo="true"}}
-                </div>
-                <div class="db-system__label">
-                  {{i18n "admin.dashboard.sections.system.dashboard_updated"}}
                 </div>
               </div>
             {{/if}}

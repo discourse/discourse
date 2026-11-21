@@ -198,6 +198,8 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      dsa_classification:
+        suggest: "הצעה עם בינה מלאכותית"
       copied: "הועתק"
       ai_decoded_transcript:
         tool: "כלי"
@@ -208,6 +210,14 @@ he:
       discourse_workflows:
         ai_agent:
           mode: "מצב"
+        ai_tool:
+          tool_ref: "כלי"
+          arguments: "ארגומנטים"
+          list_item: "פריט ברשימה"
+          add_list_item: "הוספת פריט"
+        mcp_tool:
+          tool_name: "כלי"
+          arguments: "ארגומנטים"
         classify:
           text: "טקסט"
           upload_ids: "תמונות"
@@ -228,21 +238,25 @@ he:
         none: "ללא"
       features:
         short_title: "יכולות"
-        disabled: "(כבוי)"
-        groups: "קבוצות:"
-        llm:
-          one: "LLM/מש״ג:"
-          two: "LLMים:"
-          other: "LLMים:"
+        table:
+          status: "מצב"
+          enabled: "פעיל"
+          feature: "יכולת"
+          llm: "LLM"
+          groups: "קבוצות"
+        who_can_use:
+          no_one: "אף אחד"
+        chatbot:
+          column: "בוט שיחה"
+          places:
+            personal_messages: "הודעות פרטיות"
+            chat_direct_messages: "הודעות צ׳אט"
+            none: "לא זמין"
+        set_up: "הגדרה"
         no_llm: "לא נבחר מש״ג/LLM"
         no_agent: "לא מוגדר"
         no_groups: "ללא"
         edit: "הגדרות"
-        expand_list:
-          one: "(עוד %{count})"
-          two: "(עוד %{count})"
-          other: "(עוד %{count})"
-        collapse_list: "(להציג פחות)"
         bot:
           bot: "בוט שיחה"
           name: "בוט"
@@ -250,10 +264,16 @@ he:
         nav:
           enabled: "פעיל"
         filters:
-          all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
           reset: "איפוס"
         no_automations: "אין אוטומציות עדיין"
+        sentiment:
+          sentiment: "רגש"
+          emotion: "רגש"
+          enabled: "פעיל"
+          setting_groups:
+            sentiment: "רגש"
+            emotion: "רגש"
         summarization:
           name: "סיכומים"
           description: "להנגיש את כפתור הסיכום שמאפשר למבקרים לסכם נושאים"
@@ -265,13 +285,12 @@ he:
           ask_ai: "לשאול בינה מלאכותית"
         embeddings:
           name: "הטמעות"
-          hyde: "HyDE"
+          related_topics: "נושאים קשורים"
           setting_groups:
             related_topics: "נושאים קשורים"
             semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
-          description: "הוספת היכולת לחפש בערוצי Discord"
           search: "חיפוש ב־Discord"
         inference:
           description: "סיווג נושאים ופוסטים לפי תחומי עניין / תוויות."
@@ -290,6 +309,9 @@ he:
           custom_prompt: "בקשה מותאמת אישית"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+        review_queue:
+          setting_groups:
+            settings: "הגדרות"
         image_caption:
           setting_groups:
             settings: "הגדרות"
@@ -321,8 +343,20 @@ he:
       translations:
         title: "תרגומים"
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
-        supported_locales: "שפות נתמכות"
-        category_scope: "קטגוריות"
+        sections:
+          advanced: "מתקדם"
+        settings:
+          ai_translation_category_scope:
+            label: "קטגוריות"
+          ai_translation_personal_messages:
+            label: "הודעות פרטיות"
+            choices:
+              none: "ללא"
+              all: "הכול"
+          content_localization_language_switcher:
+            choices:
+              none: "אף אחד"
+              all: "כולם"
         model_progress:
           detail:
             columns:
@@ -339,7 +373,7 @@ he:
             tag:
               title: "תגיות"
         admin_actions:
-          enable_translations: "הפעלת תרגומים אוטומטיים"
+          enabled: "פעיל"
         stats:
           title: "סטטיסטיקת תרגום"
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
@@ -375,6 +409,8 @@ he:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
+        no_llm_selected: "ללא"
+        no_decision_model_selected: "ללא"
         custom_instructions: "הנחיות מותאמות אישית"
         custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
@@ -647,6 +683,8 @@ he:
         edit: "עריכה"
         delete: "מחיקה"
         test: "הרצת בדיקה"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "שם"
         description: "תיאור"
@@ -670,6 +708,7 @@ he:
         type: "סוג"
         provider: "ספק"
         edit: "עריכה"
+        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         select_type: "בחירה"
         types:
           embedding: "שילוב (embedding)"
@@ -858,7 +897,6 @@ he:
         presets: "בחירת ערכה…"
         configure_manually: "הגדרה ידנית"
         edit: "עריכה"
-        seeded_warning: "מוגדר מראש באתר שלך ואי אפשר לערוך אותו."
         tests:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"
@@ -884,6 +922,7 @@ he:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "מותאם"
         provider_fields:
@@ -909,7 +948,6 @@ he:
         filter_standalone: "עצמאי"
       ai_bot:
         title: "בוט בינה מלאכותית"
-        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"
@@ -966,9 +1004,9 @@ he:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "בינה מלאכותית"
           header: "איך אפשר לעזור?"
           submit: "הגשת שאלה"
-          disclaimer: "בינה מלאכותית מחוללת עלולה לשגות. כדאי לאמת פרטים חשובים."
           placeholder: "הגשת שאלה…"
           new: "שאלה חדשה"
           min_input_length_message:
@@ -983,10 +1021,7 @@ he:
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
           editing_post: "רשומה נערכת"
       sentiments:
-        dashboard:
-          title: "רגש"
         sidebar:
-          overview: "סקירת הבעה"
           analysis: "ניתוח הבעות"
         sentiment_analysis:
           share_chart: "העתקת קישור לתרשים"

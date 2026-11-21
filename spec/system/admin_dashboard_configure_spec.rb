@@ -6,8 +6,6 @@ describe "Admin Dashboard Configure menu" do
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
 
-  before { SiteSetting.dashboard_improvements = true }
-
   context "as an admin" do
     before { sign_in(admin) }
 
@@ -65,6 +63,7 @@ describe "Admin Dashboard Configure menu" do
     end
 
     it "reorders sections via the arrow buttons on mobile", mobile: true do
+      SiteSetting.enable_new_reordering_controls = false
       dashboard.visit
 
       dashboard.open_configure_menu.move_section_up("reports")

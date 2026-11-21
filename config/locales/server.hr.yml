@@ -347,12 +347,6 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
-  no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
-  too_many_embedded_media:
-    one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
-    few: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
-    other: "Žao nam je, novi korisnici mogu dodati najviše %{count} priloga u objavu."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
     one: "Žao nam je, novi korisnici mogu dodati samo jedan prilog u objavu."
@@ -1533,9 +1527,6 @@ hr:
     heading_font: "Font koji se koristi za naslove na stranici. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--heading-font-family`."
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
-    dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
-    dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
-    dashboard_general_tab_activity_metrics: "Odaberite izvješća koja će se prikazivati kao metrika aktivnosti na kartici općenito."
     share_quote_buttons: "Odredite koje se stavke pojavljuju u widgetu za dijeljenje ponuda i kojim redoslijedom."
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
@@ -1550,6 +1541,19 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
+    keywords:
+      about_banner_image: "slika bannera"
+      about_page_extra_groups_order: "redoslijed sortiranja"
+      company_url: "web stranica"
+      extended_site_description: "opis zajednice"
+      large_icon: "kvadratna ikona"
+      logo: "primarni logotip"
+      logo_dark: "primarni logotip taman"
+      logo_small: "mali logotip"
+      logo_small_dark: "mali tamni logotip"
+      short_site_description: "naslov zajednice"
+      site_description: "sažetak zajednice"
+      title: "naziv zajednice"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1845,20 +1849,6 @@ hr:
     post_hidden:
       title: "Skrivena objava"
       subject_template: "Objava skrivena zbog prijava članova zajednice"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ova je objava skrivena zbog prijava članova zajednice, stoga razmislite o tome kako možete prilagoditi svoju objavu na temelju njihovih povratnih informacija. **Možete urediti svoju objavu nakon %{edit_delay} minuta i automatski će se ponoviti prikazivanje.**
-
-        Međutim, ako zajednica drugi put prijavi objavu, ona će ostati skrivena dok je ne obradi osoblje.
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     reviewable_queued_post_revise_and_reject:
       title: "Povratne informacije o vašoj objavi"
       subject_template: "Povratne informacije o vašoj objavi u %{topic_title}"
@@ -1868,31 +1858,9 @@ hr:
     post_hidden_again:
       title: "Objava je opet skrivena"
       subject_template: "Objava skrivena zbog prijava članova zajednice, osoblje obaviješteno"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka %{site_name}a kojom vas obavještavamo da je vaša objava ponovno skrivena.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Članovi zajednica su prijavili ovu objavu i sada je skrivena. **Budući da je ova objava skrivena više puta, vaša će objava ostati skrivena dok je ne obradi član osoblja.**
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     queued_by_staff:
       title: "Objava zahtijeva odobrenje"
       subject_template: "Osoblje sakrilo objavu, čeka odobrenje"
-      text_body_template: |
-        Pozdrav,
-
-        Ovo je automatska poruka od %{site_name} kojom vas obavještavamo da je vaša objava skrivena.
-
-        <%{base_url}%{url}>
-
-        Vaša će objava ostati skrivena dok je ne pregleda član osoblja.
-
-        Za dodatne upute pogledajte naše [smjernice zajednice](%{base_url}/smjernice).
     flags_disagreed:
       title: "Osoblje vratilo prijavljenu objavu"
       subject_template: "Osoblje vratilo prijavljenu objavu"
@@ -2258,12 +2226,6 @@ hr:
     account_suspended_forever:
       title: "Korisnički račun je suspendiran"
       subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
-    account_silenced:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
-    account_silenced_forever:
-      title: "Korisnički račun je utišan"
-      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
     account_exists:
       title: "Korisnički račun već postoji"
       subject_template: "[%{email_prefix}] Korisnički račun već postoji"
@@ -2426,10 +2388,6 @@ hr:
         Uživajte u boravku!
     signup_after_reject:
       subject_template: "Odbijeni ste na %{site_name}"
-      text_body_template: |
-        Član osoblja odbio je vaš korisnički račun na %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registracija"
       subject_template: "[%{email_prefix}] Potvrdite svoj novi korisnički račun"
@@ -2797,13 +2755,30 @@ hr:
               private:
                 label: "Privatno"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Svaki dan"
+        ordinals:
+          last: "zadnji"
+        weekdays:
+          sunday: "nedjelja"
+          monday: "ponedjeljak"
+          tuesday: "utorak"
+          wednesday: "srijeda"
+          thursday: "četvrtak"
+          friday: "petak"
+          saturday: "subota"
     google_meet:
       meeting_code: "Šifra:"
     github:
+      header:
+        success: "Uspjeh"
       closed: "zatvoreno"
-      status_date:
-        approved: "odobrio/la"
-        closed: "zatvoreno"
+      pr_status:
+        draft: "Skica"
+        open: "Otvori"
+        approved: "Odobrio/la"
+        closed: "🔐"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -2837,6 +2812,10 @@ hr:
         few: "%{count} sekundi"
         other: "%{count} sekundi"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       delete:

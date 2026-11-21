@@ -19,7 +19,6 @@ import downloadBlob from "discourse/lib/download-blob";
 import { attachmentDownloadStrategy } from "discourse/lib/download-strategy";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
-import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
 import { searchParamsFromPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -383,14 +382,6 @@ class ComponentRow extends Component {
     }
   }
 
-  get description() {
-    const remoteUrl = this.args.component.remote_theme?.remote_url;
-    return (
-      this.args.component.description ??
-      (remoteUrl && descriptionForRemoteUrl(remoteUrl))
-    );
-  }
-
   get exportAction() {
     return attachmentDownloadStrategy() === "native" ? undefined : this.export;
   }
@@ -547,11 +538,11 @@ class ComponentRow extends Component {
               (hash name=@component.remote_theme.authors)
             }}</div>
         {{/if}}
-        {{#if this.description}}
+        {{#if @component.description}}
           <div
             class="d-table__overview-about admin-config-components__description"
           >
-            {{this.description}}
+            {{@component.description}}
             {{#if @component.remote_theme.about_url}}
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"

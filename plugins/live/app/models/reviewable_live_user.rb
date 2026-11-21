@@ -38,6 +38,7 @@ class ReviewableLiveUser < Reviewable
         icon: "ban",
         bundle: agree,
         client_action: "suspend",
+        dsa_classification_required: true,
       )
       build_action(
         actions,
@@ -45,6 +46,7 @@ class ReviewableLiveUser < Reviewable
         icon: "microphone-slash",
         bundle: agree,
         client_action: "silence",
+        dsa_classification_required: true,
       )
     end
 

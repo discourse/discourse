@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { splitString } from "discourse/lib/utilities";
@@ -48,6 +49,7 @@ export default class SettingFieldCategoryList extends Component {
         <CategorySelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onChangeCategories}}
+          @options={{hash disabled=@field.disabled}}
         />
       </div>
     </@field.Control>

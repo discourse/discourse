@@ -13,6 +13,10 @@ sw:
             topic_id:
               label: Utambulisho wa Mada
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Jisajili"
       preferences:
         reminders:
           preferences:
@@ -48,6 +52,8 @@ sw:
               title: "Umma"
             private:
               title: "Binafsi"
+      recording_modal:
+        save: "Hifadhi"
       composer:
         url_placeholder: "Ongeza anwani ya mtandao"
         reminder:

@@ -43,6 +43,8 @@ bg:
         type: "Тип"
         error: "Грешка"
       discourse_workflows:
+        ai_tool:
+          list_item: "Списък"
         classify:
           text: "Текст"
           upload_ids: "Изображения"
@@ -60,22 +62,27 @@ bg:
       llm_selector:
         none: "Без"
       features:
-        disabled: "(деактивирани)"
-        groups: "Групи:"
+        table:
+          status: "Статус"
+          enabled: "Да е включен"
+          groups: "Групи"
+        chatbot:
+          places:
+            none: "Не е наличен!"
         no_agent: "Не е зададено"
         no_groups: "Без"
         edit: "Настройки"
-        expand_list:
-          one: "(още %{count})"
-          other: "(още %{count})"
-        collapse_list: "(покажи по-малко)"
         nav:
           enabled: "Да е включен"
         filters:
-          all: "Всички"
           reset: "Нулиране"
+        sentiment:
+          enabled: "Да е включен"
         search:
           name: "Търсене"
+        review_queue:
+          setting_groups:
+            settings: "Настройки"
         image_caption:
           setting_groups:
             settings: "Настройки"
@@ -84,7 +91,17 @@ bg:
       modals:
         select_option: "Изберете опция..."
       translations:
-        category_scope: "Категории"
+        settings:
+          ai_translation_category_scope:
+            label: "Категории"
+          ai_translation_personal_messages:
+            choices:
+              none: "Без"
+              all: "Всички"
+          content_localization_language_switcher:
+            choices:
+              none: "Никой"
+              all: "Всички"
         model_progress:
           detail:
             columns:
@@ -99,6 +116,8 @@ bg:
               title: "Категории"
             tag:
               title: "Етикети"
+        admin_actions:
+          enabled: "Да е включен"
         stats:
           eta_minutes:
             one: "%{count} минута"
@@ -115,6 +134,8 @@ bg:
             other: "%{count} публикации"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Без"
+        no_decision_model_selected: "Без"
         last_seven_days: "Последните 7 дни"
         enable: "Позволи"
         test_modal:

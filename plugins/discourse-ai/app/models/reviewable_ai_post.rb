@@ -20,17 +20,35 @@ class ReviewableAiPost < Reviewable
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
     if !post.user_deleted? && !post.hidden?
-      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_hide,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_keep_hidden,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     else
       build_action(actions, :agree_and_keep, icon: "far-eye", bundle: agree)
     end
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: agree)
+      build_action(
+        actions,
+        :delete_and_agree,
+        icon: "trash-can",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
       if post.reply_count > 0
         build_action(
           actions,
@@ -38,6 +56,7 @@ class ReviewableAiPost < Reviewable
           icon: "trash-can",
           bundle: agree,
           confirm: true,
+          dsa_classification_required: true,
         )
       end
     end
@@ -49,6 +68,7 @@ class ReviewableAiPost < Reviewable
         icon: "ban",
         bundle: agree,
         client_action: "suspend",
+        dsa_classification_required: true,
       )
       build_action(
         actions,
@@ -56,10 +76,13 @@ class ReviewableAiPost < Reviewable
         icon: "microphone-slash",
         bundle: agree,
         client_action: "silence",
+        dsa_classification_required: true,
       )
     end
 
-    delete_user_actions(actions, agree) if guardian.can_delete_user?(target_created_by)
+    if guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree, dsa_classification_required: true)
+    end
 
     build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree) if post.user_deleted?
 
@@ -79,7 +102,13 @@ class ReviewableAiPost < Reviewable
     build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: disagree_bundle)
+      build_action(
+        actions,
+        :delete_and_ignore,
+        icon: "trash-can",
+        bundle: disagree_bundle,
+        dsa_classification_required: true,
+      )
       if post.reply_count > 0
         build_action(
           actions,
@@ -87,6 +116,7 @@ class ReviewableAiPost < Reviewable
           icon: "trash-can",
           confirm: true,
           bundle: disagree_bundle,
+          dsa_classification_required: true,
         )
       end
     end
@@ -280,9 +310,10 @@ class ReviewableAiPost < Reviewable
     button_class: nil,
     bundle: nil,
     client_action: nil,
-    confirm: false
+    confirm: false,
+    dsa_classification_required: false
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, dsa_classification_required:) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
       action.button_class = button_class

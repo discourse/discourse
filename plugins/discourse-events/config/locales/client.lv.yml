@@ -13,6 +13,10 @@ lv:
             topic_id:
               label: Tēmas ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Reģistrēties"
       preferences:
         reminders:
           preferences:
@@ -48,6 +52,8 @@ lv:
               title: "Publisks"
             private:
               title: "Privāts"
+      recording_modal:
+        save: "Saglabāt"
       composer:
         url_placeholder: "Pievienot URL"
         reminder:

@@ -111,7 +111,17 @@ class About
     allowed_cats = guardian.allowed_category_ids
     return [] if allowed_cats.blank?
 
-    cats_with_mods = Category.joins(:category_moderation_groups).distinct.pluck(:id)
+    moderation_group_ids =
+      Group
+        .where(id: CategoryModerationGroup.select(:group_id))
+        .visible_groups(@user)
+        .members_visible_groups(@user)
+        .unscope(:order)
+        .pluck(:id)
+    return [] if moderation_group_ids.blank?
+
+    cats_with_mods =
+      CategoryModerationGroup.where(group_id: moderation_group_ids).distinct.pluck(:category_id)
 
     category_ids = cats_with_mods & allowed_cats
     return [] if category_ids.blank?
@@ -121,7 +131,7 @@ class About
 
     filter_hidden_profiles = !guardian.is_staff? && SiteSetting.allow_users_to_hide_profile
 
-    results = DB.query(<<~SQL, category_ids:)
+    results = DB.query(<<~SQL, category_ids:, moderation_group_ids:)
       WITH moderator_users AS (
         SELECT
           cmg.category_id AS category_id,
@@ -135,6 +145,7 @@ class About
           ON gu.user_id = u.id
         #{"LEFT JOIN user_options uo ON uo.user_id = u.id" if filter_hidden_profiles}
         WHERE cmg.category_id IN (:category_ids)
+          AND cmg.group_id IN (:moderation_group_ids)
         #{"AND uo.hide_profile IS NOT TRUE" if filter_hidden_profiles}
       )
       SELECT id AS category_id, user_ids

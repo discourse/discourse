@@ -46,6 +46,37 @@ RSpec.describe Live::InvitesController do
       )
     end
 
+    it "disconnects a call's DM as soon as a third person is invited" do
+      SiteSetting.live_chat_enabled = true
+      SiteSetting.chat_enabled = true
+      channel =
+        Fabricate(:direct_message_channel, users: [user, room_owner], threading_enabled: false)
+      call =
+        Live::EphemeralRoomManager.create!(
+          creator: room_owner,
+          name: "Private call",
+          moderators: [user],
+          chat_channel_id: channel.id,
+        )
+      sign_in(user)
+
+      messages =
+        MessageBus.track_publish do
+          post "/live/rooms/#{call.id}/invites.json", params: { usernames: [invitee.username] }
+        end
+
+      expect(response.status).to eq(200)
+      expect(call.reload.chat_channel_id).to be_nil
+      expect(channel.chatable.users).to contain_exactly(user, room_owner)
+      expect(channel.user_chat_channel_memberships.where(user_id: invitee.id)).not_to exist
+      disabled = messages.find { |message| message.data[:type] == "chat_disabled" }
+      expect(disabled.channel).to eq(Live.room_channel(call.id))
+      expect(disabled.user_ids).to include(user.id, room_owner.id)
+
+      call.room_memberships.find_by!(user: invitee).destroy!
+      expect(call.reload.chat_channel_id).to be_nil
+    end
+
     it "does not duplicate the invite or re-notify when the same user is invited again" do
       sign_in(user)
 

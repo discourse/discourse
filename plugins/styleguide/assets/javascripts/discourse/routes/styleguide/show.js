@@ -1,12 +1,15 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { createData } from "discourse/plugins/styleguide/discourse/lib/dummy-data";
-import { sectionById } from "discourse/plugins/styleguide/discourse/lib/styleguide";
+import {
+  sectionById,
+  sectionComponent,
+} from "discourse/plugins/styleguide/discourse/lib/styleguide";
 
 export default class StyleguideShow extends Route {
   @service router;
 
-  model(params) {
+  async model(params) {
     const section = sectionById(params.section);
 
     if (!section) {
@@ -14,12 +17,13 @@ export default class StyleguideShow extends Route {
       return;
     }
 
-    return section;
+    return { section, component: await sectionComponent(section) };
   }
 
-  setupController(controller, section) {
+  setupController(controller, { section, component }) {
     controller.setProperties({
       section,
+      component,
       dummy: createData(this.store),
     });
   }

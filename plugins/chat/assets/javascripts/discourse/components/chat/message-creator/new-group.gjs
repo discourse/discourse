@@ -60,48 +60,46 @@ export default class NewGroup extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__new-group-container">
-      <div class="chat-message-creator__new-group">
-        <div class="chat-message-creator__new-group-header-container">
-          <div class="chat-message-creator__new-group-header">
-            <Input
-              class="chat-message-creator__new-group-header__input"
-              name="channel-name"
-              placeholder={{this.placeholder}}
-              @value={{this.newGroupTitle}}
+    <div class="chat-message-creator__new-group">
+      <div class="chat-message-creator__new-group-header-container">
+        <div class="chat-message-creator__new-group-header">
+          <Input
+            class="chat-message-creator__new-group-header__input"
+            name="channel-name"
+            placeholder={{this.placeholder}}
+            @value={{this.newGroupTitle}}
+          />
+
+          <MembersCount
+            @count={{this.membersCount}}
+            @max={{this.siteSettings.chat_max_direct_message_users}}
+          />
+        </div>
+      </div>
+
+      <MembersSelector
+        @cancel={{@cancel}}
+        @channel={{@channel}}
+        @close={{@close}}
+        @maxReached={{gte this.membersCount this.maxMembers}}
+        @members={{@members}}
+        @membersCount={{this.membersCount}}
+        @onChange={{@onChangeMembers}}
+      />
+
+      {{#if @members.length}}
+        <div class="chat-message-creator__new-group-footer-container">
+          <div class="chat-message-creator__new-group-footer">
+            <DButton class="btn-flat" @action={{@cancel}} @label="cancel" />
+            <DButton
+              class="btn-primary create-chat-group"
+              @action={{this.createGroup}}
+              @label="chat.new_message_modal.create_new_group_chat"
             />
 
-            <MembersCount
-              @count={{this.membersCount}}
-              @max={{this.siteSettings.chat_max_direct_message_users}}
-            />
           </div>
         </div>
-
-        <MembersSelector
-          @cancel={{@cancel}}
-          @channel={{@channel}}
-          @close={{@close}}
-          @maxReached={{gte this.membersCount this.maxMembers}}
-          @members={{@members}}
-          @membersCount={{this.membersCount}}
-          @onChange={{@onChangeMembers}}
-        />
-
-        {{#if @members.length}}
-          <div class="chat-message-creator__new-group-footer-container">
-            <div class="chat-message-creator__new-group-footer">
-              <DButton class="btn-flat" @action={{@cancel}} @label="cancel" />
-              <DButton
-                class="btn-primary create-chat-group"
-                @action={{this.createGroup}}
-                @label="chat.new_message_modal.create_new_group_chat"
-              />
-
-            </div>
-          </div>
-        {{/if}}
-      </div>
+      {{/if}}
     </div>
   </template>
 }

@@ -10,7 +10,7 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders backend form schema with FormKit controls", async function (assert) {
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       data: {
         name: "",
@@ -81,7 +81,7 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
           html: "<strong>Escaped intro</strong>",
         },
       ],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
 
@@ -107,13 +107,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
   });
 
   test("autofocuses the first field", async function (assert) {
-    this.set("model", {
+    this.model = {
       data: { name: "", email: "" },
       fields: [
         { name: "name", title: "Name", type: "input" },
         { name: "email", title: "Email", type: "input-email" },
       ],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
 
@@ -121,11 +121,11 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
   });
 
   test("renders the test mode banner", async function (assert) {
-    this.set("model", {
+    this.model = {
       form_mode: "test",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
 
@@ -147,13 +147,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
         })
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();
@@ -174,13 +174,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
         })
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();
@@ -200,13 +200,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
         })
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();
@@ -225,13 +225,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
         })
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();
@@ -255,13 +255,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
       })
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();
@@ -276,13 +276,13 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
       () => [200, {}, ""]
     );
 
-    this.set("model", {
+    this.model = {
       form_title: "Intake",
       form_submit_url:
         "/workflows/form/a1b2c3d4-e5f6-7890-abcd-ef0123456789.json",
       data: {},
       fields: [],
-    });
+    };
 
     await render(<template><WorkflowsForm @model={{this.model}} /></template>);
     await formKit().submit();

@@ -116,6 +116,36 @@ module Chat
           end
     scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
+    # Replies of an effective thread are only reachable through the thread, so they
+    # are hidden once the thread's original message is trashed or purged. Replies in
+    # channels with threading disabled stay in the channel timeline and are unaffected.
+    scope :excluding_deleted_threads, -> { where(<<~SQL) }
+              NOT EXISTS (
+                SELECT 1
+                FROM chat_threads
+                INNER JOIN chat_channels ON chat_channels.id = chat_threads.channel_id
+                WHERE chat_threads.id = chat_messages.thread_id
+                  AND (chat_threads.force OR chat_channels.threading_enabled)
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM chat_messages original_messages
+                    WHERE original_messages.id = chat_threads.original_message_id
+                      AND original_messages.deleted_at IS NULL
+                  )
+              )
+            SQL
+
+    # Messages that render in the channel's main stream
+    scope :channel_stream, -> { where(<<~SQL) }
+        chat_messages.thread_id IS NULL
+          OR chat_messages.broadcasted
+          OR EXISTS (
+            SELECT 1
+            FROM chat_threads
+            WHERE chat_threads.id = chat_messages.thread_id
+              AND chat_threads.original_message_id = chat_messages.id
+          )
+      SQL
 
     before_save { ensure_last_editor_id }
 
@@ -223,10 +253,19 @@ module Chat
       ensure_last_editor_id
 
       self.cooked =
-        self.class.cook(message, user_id: last_editor_id, author_username: user&.username)
+        self.class.cook(
+          message,
+          user_id: last_editor_id,
+          hashtag_user_ids:,
+          author_username: user&.username,
+        )
       self.cooked_version = BAKED_VERSION
 
       invalidate_parsed_mentions
+    end
+
+    def hashtag_user_ids
+      [user_id, last_editor_id].compact
     end
 
     def rebake!(invalidate_oneboxes: false, priority: nil, skip_notifications: false)
@@ -294,15 +333,14 @@ module Chat
 
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
-      # generally up to date than the creating user. For example, we use
-      # this when cooking #hashtags to determine whether we should render
-      # the found hashtag based on whether the user can access the channel it
-      # is referencing.
+      # generally up to date than the creating user.
       {
         features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
         markdown_it_rules: rules,
         force_quote_link: true,
+        onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
         user_id: opts[:user_id],
+        hashtag_user_ids: opts[:hashtag_user_ids],
         hashtag_context: "chat-composer",
       }
     end
@@ -419,6 +457,10 @@ module Chat
       in_thread? && thread&.original_message_id == id
     end
 
+    def channel_stream?
+      !in_thread? || thread_om? || broadcasted?
+    end
+
     def parsed_mentions
       @parsed_mentions ||= Chat::ParsedMentions.new(self)
     end
@@ -513,6 +555,7 @@ end
 #
 #  id              :bigint           not null, primary key
 #  blocks          :jsonb
+#  broadcasted     :boolean          default(FALSE), not null
 #  cooked          :text
 #  cooked_version  :integer
 #  created_by_sdk  :boolean          default(FALSE), not null

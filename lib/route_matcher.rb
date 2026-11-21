@@ -51,8 +51,11 @@ class RouteMatcher
     # message_bus is not a rails route, special handling
     return true if actions.include?("message_bus") && request.fullpath =~ %r{\A/message-bus/.*/poll}
 
-    # logster is not a rails route, special handling
-    return true if actions.include?(Logster::Web) && request.fullpath =~ %r{\A/logs/.*\.json\z}
+    # logster is not a rails route, special handling. Only its read endpoints are
+    # allowed, matched on the path so that a query string can't change the match.
+    if actions.include?(Logster::Web)
+      return request.path.match?(%r{\A/logs/(messages|show/\h+)\.json\z})
+    end
 
     recognized_params = path_params_from_request(request)
     actions.include? "#{recognized_params[:controller]}##{recognized_params[:action]}"
@@ -75,7 +78,7 @@ class RouteMatcher
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
 
       value = requested_params[param.to_s]
-      alias_value = requested_params[param_alias.to_s]
+      alias_value = requested_params[param_alias.to_s] if param_alias
 
       return false if value.present? && alias_value.present?
 
@@ -89,15 +92,21 @@ class RouteMatcher
   def path_params_allowed?(request)
     return true if path_params.nil?
 
+    restricted_params =
+      path_params.select { |param| [allowed_param_values.fetch(param.to_s, [])].flatten.present? }
+    return true if restricted_params.empty?
+
+    return false if path_selector_in_non_path_params?(request)
+
     requested_params = path_params_from_request(request)
 
-    path_params.all? do |param|
+    restricted_params.all? do |param|
       allowed_values = [allowed_param_values.fetch(param.to_s, [])].flatten
-      next true if allowed_values.blank?
 
       param_alias = param_alias_for(param)
       value_present, value = path_parameter(requested_params, param)
       alias_present, alias_value = path_parameter(requested_params, param_alias)
+      alias_value = extract_category_id(alias_value) if param_alias == :category_slug_path_with_id
 
       next false if value_present && alias_present
       next false unless value_present || alias_present
@@ -105,6 +114,16 @@ class RouteMatcher
       requested_value = value_present ? value : alias_value
       scalar_path_value?(requested_value) && allowed_values.include?(requested_value)
     end
+  end
+
+  # Record selection must remain consistent with the restricted path, including
+  # controllers that accept alternative selectors.
+  def path_selector_in_non_path_params?(request)
+    selector_keys =
+      path_params.flat_map { |param| [param.to_s, param_alias_for(param)&.to_s] }.compact.uniq
+
+    non_path_params = request.query_parameters.merge(request.request_parameters)
+    selector_keys.any? { |key| non_path_params.key?(key) }
   end
 
   def param_alias_for(param)

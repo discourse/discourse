@@ -727,7 +727,6 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     it "increments browser counters without emitting beacon events" do
-      SiteSetting.dashboard_improvements = false
       DiscourseIpInfo.stubs(:get).returns(country_code: "US")
       middleware = Middleware::RequestTracker.new(lambda { |env| [200, {}, ["OK"]] })
 
@@ -850,8 +849,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(204)
     end
 
-    it "accepts beacon requests when dashboard improvements are disabled" do
-      SiteSetting.dashboard_improvements = false
+    it "handles beacon requests without passing them to the app" do
       app_called = false
       middleware =
         Middleware::RequestTracker.new(

@@ -24,7 +24,7 @@ export default class AiModelNew extends Component {
   @service router;
 
   get types() {
-    return modelTypes(this.args.decisionModels);
+    return modelTypes();
   }
 
   get selectedType() {

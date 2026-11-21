@@ -14,6 +14,7 @@ en:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Chat bot discoverability changed"
             chat_channel_status_change: "Chat channel status changed"
             chat_channel_delete: "Chat channel deleted"
             chat_auto_remove_membership: "Memberships automatically removed from channels"
@@ -39,6 +40,7 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      new_chat: "New chat"
       homepage_option: "Chat channel"
       edit_category:
         tab_title: "Chat"
@@ -80,6 +82,10 @@ en:
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"
+      broadcast_to_channel: "Send to #%{channelName}"
+      remove_broadcast_from_channel: "Remove from #%{channelName}"
+      broadcast_to_dm: "Also send in main DM"
+      remove_broadcast_from_dm: "Remove from main DM"
       pinned: "Pinned"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
@@ -96,8 +102,7 @@ en:
           other: "Are you sure you want to delete these %{count} messages?"
       channel_settings:
         title: "Channel settings"
-        edit: "Edit"
-        add: "Add"
+        page_title: "%{channel} settings"
         star_channel: "Star channel"
         unstar_channel: "Unstar channel"
         close_channel: "Close channel"
@@ -106,10 +111,21 @@ en:
         open_channel_disabled_read_only: "Read-only channels cannot be reopened."
         archive_channel: "Archive channel"
         delete_channel: "Delete channel"
+        danger_zone:
+          title: "Danger zone"
+          archive_title: "Archive this channel"
+          archive_description: "Move this channel’s messages into a topic and make the channel read-only."
+          close_title: "Close this channel"
+          close_description: "Stop members from sending new messages. You can reopen the channel at any time."
+          open_title: "Reopen this channel"
+          open_description: "Let members send messages in this channel again."
+          delete_title: "Delete this channel"
+          delete_description: "Once deleted, this channel and all of its messages cannot be recovered."
+          leave_title: "Leave this channel"
+          leave_description: "You will stop receiving messages and notifications from this channel. You can rejoin at any time."
         join_channel: "Join channel"
         leave_channel: "Leave channel"
         leave_groupchat_info: "By leaving this group chat, you will no longer have access to it and won’t receive notifications related to it. To rejoin, you will need to be re-invited by a member of the group chat."
-        notification_settings: "Notification settings"
         notification_settings_context: "Notifications"
         join: "Join"
         leave: "Leave"
@@ -407,24 +423,26 @@ en:
 
       members_view:
         filter_placeholder: Find members
-        add_member: Add Member
-        back_to_settings: "Back to settings"
+        add_member: Add member
 
       about_view:
         associated_topic: Linked topic
         associated_category: Linked category
-        title: Title
         name: Name
         description: Description
 
       channel_info:
         back_to_all_channels: "All channels"
         back_to_channel: "Back"
+        nav_label: "Channel info"
         tabs:
           members: Members
+          preferences: Preferences
           settings: Settings
           search: Search
         remove_member: "Remove"
+        members_title: "%{channel} members"
+        preferences_title: "%{channel} preferences"
 
       new_message_modal:
         title: Send message
@@ -446,7 +464,6 @@ en:
         group_with_too_many_members: "has too many members (%{membersCount})"
 
       channel_edit_name_slug_modal:
-        title: Edit channel
         input_placeholder: Add a name
         slug_description: A channel slug is used in the URL instead of the channel name
         name: Channel name
@@ -455,9 +472,7 @@ en:
         reset_emoji: Reset emoji
 
       channel_edit_description_modal:
-        title: Edit description
         input_placeholder: Add a description
-        description: Tell people what this channel is all about
 
       direct_message_creator:
         add_to_channel: "Add to channel"
@@ -577,6 +592,8 @@ en:
         bold_text: "strong text"
         code_text: "code text"
         send: "Send"
+        broadcast_label: "Also send to #%{channelName}"
+        broadcast_label_dm: "Also send in main DM"
 
       quote:
         original_channel: 'Originally sent in <a href="%{channelLink}">%{channel}</a>'
@@ -592,7 +609,6 @@ en:
 
       settings:
         channel_wide_mentions_label: "Allow @all and @here mentions"
-        channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
         channel_threading_label: "Threading"
         channel_threading_description: "When threading is enabled, replies to a chat message will create a separate conversation, which will exist alongside the main channel."
         auto_join_users_label: "Automatically add users"
@@ -604,6 +620,15 @@ en:
         followed: "Joined"
         mute: "Mute channel"
         unmute: "Unmute channel"
+        muted_until_hint: "until %{until}"
+        mute_options:
+          "off": "Off"
+          15_minutes: "For 15 minutes"
+          1_hour: "For 1 hour"
+          8_hours: "For 8 hours"
+          24_hours: "For 24 hours"
+          until_unmuted: "Until I turn it back on"
+          current: "Until %{until}"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"
         muted_on: "On"
@@ -613,14 +638,14 @@ en:
         save: "Save"
         saved: "Saved"
         unfollow: "Leave"
-        admin_title: "Admin"
-        settings_title: "Settings"
-        info_title: "Channel info"
         category_label: "Category"
         history_label: "History"
         members_label: "Members"
 
       admin:
+        bot_discoverability:
+          label: "Show in chat"
+          description: "Let people find this bot when starting a chat direct message"
         title: "Chat"
         export_messages:
           title: "Export chat messages"
@@ -633,6 +658,7 @@ en:
         short_title: Search
         title: Search chat
         aria_label: "Switch to chat search"
+        channel_aria_label: "Search this channel"
         no_results: "No results found"
         sort:
           relevance: "Relevance"
@@ -769,20 +795,6 @@ en:
       anonymous_flagging:
         description: "To report illegal content, please contact <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
 
-      emoji_picker:
-        favorites: "Frequently used"
-        smileys_&_emotion: "Smileys and emotion"
-        objects: "Objects"
-        people_&_body: "People and body"
-        travel_&_places: "Travel and places"
-        animals_&_nature: "Animals and nature"
-        food_&_drink: "Food and drink"
-        activities: "Activities"
-        flags: "Flags"
-        symbols: "Symbols"
-        search_placeholder: "Search by emoji name and alias..."
-        no_results: "No results"
-
       thread:
         title: "Title"
         view_thread: View thread
@@ -790,6 +802,8 @@ en:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
+        broadcast_also_sent_to: "Sent to"
+        broadcast_sent_from_thread: "Sent from thread"
         close: "Close Thread"
         original_message:
           started_by: "Started by"

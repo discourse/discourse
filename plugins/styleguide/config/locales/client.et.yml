@@ -22,6 +22,9 @@ et:
           table_type: "Tüüp"
         colors:
           title: "Värvid"
+        design_variables:
+          type: "Tüüp"
+          default: "Vaikimisi"
         icons:
           title: "Ikoonid"
         categories:

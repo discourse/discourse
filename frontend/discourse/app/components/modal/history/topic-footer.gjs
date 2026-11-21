@@ -1,6 +1,9 @@
+import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import VisibilityMenu from "./visibility-menu.gjs";
 
 const TopicFooter = <template>
   <div id="revision-controls">
@@ -44,6 +47,16 @@ const TopicFooter = <template>
   </div>
 
   <div id="revision-footer-buttons">
+    {{#if @showUnlistedToggle}}
+      <DToggleSwitch
+        class="show-unlisted-revisions"
+        disabled={{@loading}}
+        @label="post.revisions.show_all_edits"
+        @state={{@includeUnlisted}}
+        {{on "click" @toggleIncludeUnlisted}}
+      />
+    {{/if}}
+
     {{#if @displayEdit}}
       <DButton
         class="btn-default edit-post"
@@ -64,33 +77,13 @@ const TopicFooter = <template>
         />
       {{/if}}
 
-      {{#if @model.previous_hidden}}
-        <DButton
-          class="btn-default show-revision"
-          @action={{@showVersion}}
-          @disabled={{@loading}}
-          @icon="far-eye"
-          @label="post.revisions.controls.show"
-        />
-      {{else}}
-        <DButton
-          class="btn-danger hide-revision"
-          @action={{@hideVersion}}
-          @disabled={{@loading}}
-          @icon="far-eye-slash"
-          @label="post.revisions.controls.hide"
-        />
-      {{/if}}
-
-      {{#if (and @canPermanentlyDelete @model.previous_hidden)}}
-        <DButton
-          class="btn-danger destroy-revision"
-          @action={{@permanentlyDeleteVersions}}
-          @disabled={{@loading}}
-          @icon="trash-can"
-          @label="post.revisions.controls.destroy"
-        />
-      {{/if}}
+      <VisibilityMenu
+        @canPermanentlyDelete={{@canPermanentlyDelete}}
+        @disabled={{@loading}}
+        @onChange={{@changeVisibility}}
+        @onPermanentlyDelete={{@permanentlyDeleteVersions}}
+        @visibility={{@visibility}}
+      />
     {{/if}}
   </div>
 </template>;

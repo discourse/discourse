@@ -55,7 +55,6 @@ de:
         save_query: "Abfrage speichern"
         write_manually: "SQL manuell eingeben"
         sql_label: "SQL"
-        optional: "optional"
       import:
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
         wrong_json: "Falsche JSON-Datei. Eine JSON-Datei sollte ein „query“-Objekt enthalten, das zumindest eine „sql“-Eigenschaft haben sollte."
@@ -118,7 +117,7 @@ de:
       max_result_count:
         one: "Zeige das Top-%{count} Ergebnis."
         other: "Zeige die Top-%{count} Ergebnisse."
-      query_name: "Anfrage"
+      name: "Name"
       query_groups: "Gruppen"
       query_tags: "Schlagwörter"
       link: "Link für"

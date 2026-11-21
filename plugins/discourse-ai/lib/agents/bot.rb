@@ -41,6 +41,11 @@ module DiscourseAi
         Answer directly from what you have; do not spend tokens deliberating at length.
         Provide one final response using the information already gathered.
       TEXT
+      MCP_FAILURE_FINAL_ANSWER_HINT = <<~TEXT.strip
+        [Repeated MCP tool failures have stopped further tool calls for this turn.]
+        Provide a concise final answer explaining the actual error and what remains undone.
+        Do not claim success without successful tool evidence. Do not repeat or promise more calls.
+      TEXT
       LEGACY_BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
         Answer directly from what you have; do not spend tokens deliberating at length.
@@ -53,6 +58,7 @@ module DiscourseAi
         TOKEN_BUDGET_FINAL_ANSWER_HINT,
         TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT,
         COMPLETION_LIMIT_FINAL_ANSWER_HINT,
+        MCP_FAILURE_FINAL_ANSWER_HINT,
         LEGACY_BUDGET_EXHAUSTED_HINT,
       ].freeze
 
@@ -179,6 +185,7 @@ module DiscourseAi
         if context.subagent_depth.to_i.zero? && execution_context.root_reply_completed
           execution_context = execution_context.for_new_turn
           context.subagent_execution_state = nil
+          context.reset_mcp_failures!
         end
         execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
         context.execution_context = execution_context
@@ -250,6 +257,12 @@ module DiscourseAi
             break # already ran the final text-only generate
           end
           break if context.cancel_manager.cancelled?
+
+          if context.mcp_failure_limit_reached?
+            prompt.push(type: :user, content: MCP_FAILURE_FINAL_ANSWER_HINT)
+            prompt.tool_choice = :none
+            final_answer_requested = true
+          end
 
           if tool_invocation_budget_exhausted
             self.class.inject_tool_invocation_budget_final_answer_hint(prompt)
@@ -418,7 +431,6 @@ module DiscourseAi
 
                   tool_invocation_budget_exhausted ||=
                     tool_batch_count >= MAX_TOOL_CALLS_PER_COMPLETION ||
-                      spawn_agent_budget_exhausted?(tool, context) ||
                       tool_invocation_budget_exhausted?(context)
 
                   chain_next_response =
@@ -516,21 +528,13 @@ module DiscourseAi
 
       private
 
-      def spawn_agent_budget_exhausted?(tool, context)
-        tool.is_a?(Tools::SpawnAgent) && !context.subagent_execution_state.spawn_available?
-      end
-
       def tool_invocation_budget_exhausted?(context)
         runtime_tools = context.runtime_tools.presence || agent.available_tools
         return false if runtime_tools.empty?
 
         runtime_tools.all? do |tool_class|
-          if tool_class <= Tools::SpawnAgent
-            !context.subagent_execution_state.spawn_available?
-          else
-            limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
-            context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
-          end
+          limit = agent.options[tool_class].to_h.with_indifferent_access[:max_invocations].to_i
+          context.tool_invocation_limit_reached?(tool_class.name, limit: limit)
         end
       end
 
@@ -633,7 +637,7 @@ module DiscourseAi
               reviewable_id: reviewable.id,
               summary: tool.approval_title,
               changes: tool.approval_changes,
-              details: tool.approval_details,
+              details: chat_approval_details(tool),
               description_label: tool.approval_description_label,
               show_description: tool.approval_show_description?,
               question: tool.approval_question,
@@ -658,6 +662,16 @@ module DiscourseAi
         end
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
+      end
+
+      # The approval card is posted as a chat message, so its details must fit
+      # within the chat message length limit or the card cannot be created.
+      def chat_approval_details(tool)
+        details = tool.approval_details.to_s
+        max_length = SiteSetting.chat_maximum_message_length
+        return details if details.length <= max_length
+
+        tool.compact_approval_details(max_length:).to_s.truncate(max_length)
       end
 
       def process_tool(
@@ -839,6 +853,10 @@ module DiscourseAi
 
         result =
           tool.invoke do |progress, render_raw|
+            if !render_raw && progress.is_a?(String) && progress.present?
+              context.tool_progress_callback&.call(tool, progress)
+            end
+
             if render_raw
               update_blk.call("", tool.custom_raw, :partial_invoke)
               show_placeholder = false

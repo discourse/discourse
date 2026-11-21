@@ -5,18 +5,44 @@ function hex(colors, name, fallback) {
   return `#${`${value}`.replace(/[^0-9a-f]/gi, "")}`;
 }
 
+// further apart than this (out of ~441), a header reads as a color of its own
+// rather than a shade of the background
+const DISTINCT_HEADER_DISTANCE = 64;
+
+function rgb(hexColor) {
+  let digits = hexColor.slice(1);
+  if (digits.length === 3) {
+    digits = [...digits].map((digit) => digit + digit).join("");
+  }
+  return [0, 2, 4].map((start) => parseInt(digits.slice(start, start + 2), 16));
+}
+
+function colorDistance(a, b) {
+  const [first, second] = [rgb(a), rgb(b)];
+  return Math.hypot(...first.map((channel, i) => channel - second[i]));
+}
+
 /**
- * Builds the inline style for a palette swatch in the design wizard rail.
+ * Builds the inline style for a palette swatch in the design wizard.
+ *
+ * The swatch leads with the palette's accent, unless the palette has a header
+ * color distinct from its background: that sets the palette's look more than
+ * an accent used only on links and buttons.
  *
  * @param {{ colors?: Record<string, string> } | null | undefined} palette - serialized palette with a `colors` map
  * @returns {import("@ember/template").TrustedHTML} inline style string
  */
 export function swatchStyle(palette) {
-  const bg = hex(palette?.colors, "secondary", "ffffff");
-  const accent = hex(palette?.colors, "tertiary", "0088cc");
+  const colors = palette?.colors;
+  const bg = hex(colors, "secondary", "ffffff");
+  const header = colors?.header_background && hex(colors, "header_background");
+  const lead =
+    header && colorDistance(header, bg) > DISTINCT_HEADER_DISTANCE
+      ? header
+      : hex(colors, "tertiary", "0088cc");
 
   return trustHTML(
-    `background: linear-gradient(135deg, ${accent} 50%, color-mix(in srgb, ${accent} 18%, ${bg}) 50%)`
+    `background: linear-gradient(135deg, ${lead} 50%, color-mix(in srgb, ${lead} 18%, ${bg}) 50%)`
   );
 }
 

@@ -46,7 +46,7 @@ Discourse::Application.routes.draw do
         "t/:slug/:topic_id" => "topics#show",
       }.each do |path, action|
         # Require the format so HTML URL generation cannot select a Markdown route.
-        get "#{path}.:format", to: action, constraints: { format: /md/ }
+        get "#{path}.:format", to: action, constraints: { format: "md" }
         get path,
             to: action,
             defaults: {
@@ -57,7 +57,30 @@ Discourse::Application.routes.draw do
     end
   end
 
-  scope path: nil, constraints: { format: %r{(json|html|\*/\*)} } do
+  # Defined outside the format-constrained scope: with `format: false` that
+  # scope's constraint would apply to the Accept header and reject media loads.
+  # The extension stays inside `path` because optional dotted segments after a
+  # glob make route recognition cubic in the number of dots.
+  #
+  # NOTE: secure-media-uploads is the old form, all new URLs generated for
+  # secure uploads will be secure-uploads, this is left in for backwards
+  # compat without needing to rebake all posts for each site.
+  get "secure-media-uploads/*path" => "uploads#_show_secure_deprecated", :format => false
+  get "secure-uploads/*path" => "uploads#show_secure", :format => false
+
+  get "svg-sprite/search/:keyword" => "svg_sprite#search",
+      :format => false,
+      :constraints => {
+        keyword: /[-a-z0-9\s\%]+/,
+      }
+  get "favicon/proxied" => "static#favicon", :format => false
+
+  # Apple accepts either of these paths for the apple-app-site-association file
+  # Might as well support both
+  get "apple-app-site-association" => "metadata#app_association_ios", :format => false
+  get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
+
+  scope path: nil, constraints: { format: %w[json html] } do
     relative_url_root =
       (
         if defined?(Rails.configuration.relative_url_root) && Rails.configuration.relative_url_root
@@ -144,6 +167,7 @@ Discourse::Application.routes.draw do
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
       get "search" => "search#index"
+      get "menu" => "admin#index"
       get "schema/:setting_name" => "admin#index"
 
       get "plugins" => "plugins#index"
@@ -170,6 +194,11 @@ Discourse::Application.routes.draw do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
       resources :groups, only: [:destroy], constraints: AdminConstraint.new
+
+      get "users/bots/new" => "users#new_bot"
+      get "users/bots/username_suggestion" => "users#bot_username_suggestion",
+          :constraints => AdminConstraint.new
+      post "users/bots" => "users#create_bot", :constraints => AdminConstraint.new
 
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
@@ -380,10 +409,6 @@ Discourse::Application.routes.draw do
       put "dashboard/sections/:section_id/settings/:setting_key" =>
             "dashboard#update_section_settings",
           :constraints => AdminConstraint.new
-      get "dashboard/general" => "dashboard#general"
-      get "dashboard/moderation" => "dashboard#moderation"
-      get "dashboard/security" => "dashboard#security"
-      get "dashboard/reports" => "dashboard#reports"
       post "dashboard/reports/bulk" => "dashboard#bulk_reports"
       get "dashboard/reports/available" => "dashboard#available_reports",
           :constraints => AdminConstraint.new
@@ -548,6 +573,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/popular-themes" => "customize#popular_themes"
             get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end
@@ -1140,11 +1166,6 @@ Discourse::Application.routes.draw do
           theme_id: /(-?[0-9]+)?/,
           format: :js,
         }
-    get "svg-sprite/search/:keyword" => "svg_sprite#search",
-        :format => false,
-        :constraints => {
-          keyword: /[-a-z0-9\s\%]+/,
-        }
     get "svg-sprite/picker-search" => "svg_sprite#icon_picker_search",
         :defaults => {
           format: :json,
@@ -1250,18 +1271,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    # NOTE: secure-media-uploads is the old form, all new URLs generated for
-    # secure uploads will be secure-uploads, this is left in for backwards
-    # compat without needing to rebake all posts for each site.
-    get "secure-media-uploads/*path(.:extension)" => "uploads#_show_secure_deprecated",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-    get "secure-uploads/*path(.:extension)" => "uploads#show_secure",
-        :constraints => {
-          extension: /[a-z0-9\._]+/i,
-        }
-
     get "posts" => "posts#latest", :id => "latest_posts", :constraints => { format: /(json|rss)/ }
     get "private-posts" => "posts#latest",
         :id => "private_posts",
@@ -1365,6 +1374,14 @@ Discourse::Application.routes.draw do
       get "revisions/:revision" => "posts#revisions", :constraints => { revision: /\d+/ }
       put "revisions/:revision/hide" => "posts#hide_revision", :constraints => { revision: /\d+/ }
       put "revisions/:revision/show" => "posts#show_revision", :constraints => { revision: /\d+/ }
+      put "revisions/:revision/unlist" => "posts#unlist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
+      put "revisions/:revision/relist" => "posts#relist_revision",
+          :constraints => {
+            revision: /\d+/,
+          }
       put "revisions/:revision/revert" => "posts#revert", :constraints => { revision: /\d+/ }
       delete "revisions/permanently_delete" => "posts#permanently_delete_revisions"
       get "permanently_delete_check" => "posts#permanently_delete_check",
@@ -1741,6 +1758,7 @@ Discourse::Application.routes.draw do
 
     resources :invites, only: %i[create update destroy]
     get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    post "/invites/:id/sso" => "invites#sso", :constraints => { format: :html }
     post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"
@@ -1774,8 +1792,6 @@ Discourse::Application.routes.draw do
           format: /.*/,
         }
 
-    get "favicon/proxied" => "static#favicon", :format => false
-
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
     get "llms.txt" => "static#llms_txt"
@@ -1784,10 +1800,6 @@ Discourse::Application.routes.draw do
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
     get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
-    # Apple accepts either of these paths for the apple-app-site-association file
-    # Might as well support both
-    get "apple-app-site-association" => "metadata#app_association_ios", :format => false
-    get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
     # Tag Routes - Canonical vs Legacy
@@ -1873,7 +1885,7 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       # canonical slug/id format for category+tag routes
-      constraints(tag_id: /\d+/, format: /json|rss/) do
+      constraints(tag_id: /\d+/, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
@@ -1909,7 +1921,7 @@ Discourse::Application.routes.draw do
       end
 
       # legacy name-based format for category+tag routes
-      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+      constraints(tag_name: %r{[^/]+?}, format: %w[json rss]) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
             get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
@@ -2050,6 +2062,8 @@ Discourse::Application.routes.draw do
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
+
+    get "/bundle-analysis.json" => "bundle_analysis#index"
 
     get "/dev-mode" => "dev_mode#index"
     post "/dev-mode" => "dev_mode#enter", :as => "dev_mode_enter"

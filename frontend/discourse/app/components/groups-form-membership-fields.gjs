@@ -99,30 +99,23 @@ export default class GroupsFormMembershipFields extends Component {
     );
   }
 
-  @computed(
-    "model.members_visibility_level",
-    "visibilityLevelOptions.firstObject.value"
-  )
+  @computed("model.members_visibility_level", "visibilityLevelOptions")
   get membersVisibilityLevel() {
     return (
       this.model?.members_visibility_level ||
-      this.visibilityLevelOptions?.firstObject?.value
+      this.visibilityLevelOptions?.[0]?.value
     );
   }
 
   @computed("membersVisibilityLevel")
   get membersVisibilityPrivate() {
-    return (
-      this.membersVisibilityLevel !==
-      this.visibilityLevelOptions.firstObject.value
-    );
+    return this.membersVisibilityLevel !== this.visibilityLevelOptions[0].value;
   }
 
   @computed("model.grant_trust_level", "trustLevelOptions")
   get groupTrustLevel() {
     return (
-      this.model.get("grant_trust_level") ||
-      this.trustLevelOptions.firstObject.value
+      this.model.get("grant_trust_level") || this.trustLevelOptions[0].value
     );
   }
 

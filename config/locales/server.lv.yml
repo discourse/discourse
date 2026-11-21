@@ -505,6 +505,8 @@ lv:
     default_other_skip_new_user_tips: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti."
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
+    keywords:
+      company_url: "vietne"
   search:
     within_post: "#%{post_number} - %{username}"
     types:
@@ -597,13 +599,27 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "Katru dienu"
+        weekdays:
+          sunday: "Svētdiena"
+          monday: "Pirmdiena"
+          tuesday: "Otrdiena"
+          wednesday: "Trešdiena"
+          thursday: "Ceturtdiena"
+          friday: "Piektdiena"
+          saturday: "Sestdiena"
     google_meet:
       meeting_code: "Kods:"
     github:
+      header:
+        success: "Veiksmīgi"
       closed: "slēgts"
-      status_date:
-        approved: "apstiprināt"
-        closed: "slēgts"
+      pr_status:
+        open: "Atvērt"
+        approved: "Apstiprināt"
+        closed: "Slēgts"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -626,6 +642,10 @@ lv:
       medium: "Vidējs"
       high: "Augsta"
     actions:
+      answer_yes:
+        title: "Jā"
+      answer_no:
+        title: "Nē"
       agree:
         title: "Jā"
       delete:

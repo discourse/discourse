@@ -50,6 +50,9 @@ lt:
             delete_ai_embedding: "Ištrinti dirbtinio intelekto įterpimą"
             update_ai_spam_settings: "Atnaujinti dirbtinio intelekto šlamšto nustatymus"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_tool": "Dirbtinio intelekto įrankis"
     discourse_automation:
       scriptables:
         llm_report:
@@ -148,6 +151,14 @@ lt:
         error: "Klaida"
         response: "Atsakymas"
       discourse_workflows:
+        ai_tool:
+          tool_ref: "Įrankis"
+          arguments: "Argumentai"
+          list_item: "Įkelti"
+        mcp_tool:
+          mcp_server_id: "MCP serveris"
+          tool_name: "Įrankis"
+          arguments: "Argumentai"
         classify:
           text: "Tekstas"
           upload_ids: "Paveiksliukai"
@@ -166,16 +177,25 @@ lt:
         none: "Nieko"
       features:
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
-        disabled: "(uždrausta)"
-        groups: "Grupės:"
+        table:
+          status: "Statusas"
+          enabled: "Įgalinta"
+          feature: "Funkcija"
+          groups: "Grupės"
+        who_can_use:
+          no_one: "Niekas"
+        status:
+          "on": "Įjungta"
+          "off": "Išjungta"
+        chatbot:
+          places:
+            personal_messages: "Asmeninės žinutės"
+            chat_direct_messages: "Pokalbių žinutės"
+            none: "Nepasiekiamas"
+        toggle: "Įjungti %{name}"
+        set_up: "Nustatymai"
         no_groups: "Nieko"
         edit: "Nustatymai"
-        expand_list:
-          one: "(%{count} daugiau)"
-          few: "(%{count}daugiau)"
-          many: "(%{count}daugiau)"
-          other: "(%{count} daugiau)"
-        collapse_list: "(rodyti mažiau)"
         bot:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -185,8 +205,12 @@ lt:
         nav:
           enabled: "Galimas"
         filters:
-          all: "Visi"
           reset: "Atstatyti"
+        sentiment:
+          emotion: "Emocija"
+          enabled: "Įgalinti"
+          setting_groups:
+            emotion: "Emocija"
         summarization:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -231,6 +255,9 @@ lt:
             access_permissions: "Prieiga ir leidimai"
             enabled_features: "Įjungtos funkcijos"
             automation: "Automatizavimas"
+        review_queue:
+          setting_groups:
+            settings: "Nustatymai"
         image_caption:
           setting_groups:
             settings: "Nustatymai"
@@ -241,9 +268,6 @@ lt:
           post_raw_translator: "Neapdoroto įrašo vertėjas"
           topic_title_translator: "Temos pavadinimo vertėjas"
           short_text_translator: "Trumpų tekstų vertėjas"
-          setting_groups:
-            settings: "Pagrindiniai nustatymai"
-            backfill_and_limits: "Užpildymas ir apribojimai"
         spam:
           name: "Šlamštas"
           description: "Naudodamas pasirinktą LLM, identifikuoja galimą šlamštą ir pažymi jį svetainės moderatoriams, kad jie galėtų jį patikrinti peržiūros eilėje."
@@ -255,7 +279,21 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
-        category_scope: "Kategorijos"
+        sections:
+          languages: "Kalbos"
+          advanced: "Išplėstinis"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorijos"
+          ai_translation_personal_messages:
+            label: "Asmeninės žinutės"
+            choices:
+              none: "Nėra"
+              all: "Visi"
+          content_localization_language_switcher:
+            choices:
+              none: "Niekas"
+              all: "Visi"
         model_progress:
           detail:
             retry: "Bandykite dar kartą"
@@ -271,6 +309,8 @@ lt:
               title: "Kategorijos"
             tag:
               title: "Žymos"
+        admin_actions:
+          enabled: "Įgalinta"
         stats:
           eta_minutes:
             one: "%{count} minutė"
@@ -303,6 +343,8 @@ lt:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
         select_llm: "Pasirinkite teisės magistro laipsnį (LLM)"
+        no_llm_selected: "Nėra"
+        no_decision_model_selected: "Nėra"
         custom_instructions: "Individualūs nurodymai"
         custom_instructions_help: "Jūsų svetainei pritaikytos instrukcijos, padedančios dirbtiniam intelektui atpažinti šlamštą, pvz., „Aktyviau nuskaitykite įrašus ne anglų kalba“."
         last_seven_days: "Paskutinės 7 dienos"
@@ -574,7 +616,6 @@ lt:
         empty: "Kol kas nėra bendrinamų AI pokalbių."
         unavailable: "Šios pokalbio nuoroda nebėra pasiekiama. Vis dar galite ją atšaukti."
       ai_bot:
-        llm: "Modelis:"
         debug_ai_modal:
           duration_label: "Trukmė:"
           request: "Užklausa"
@@ -589,6 +630,7 @@ lt:
         bot_names:
           claude-2: "Claude 2"
         conversations:
+          tab_label: "AI"
           today: "Šiandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"

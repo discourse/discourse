@@ -19,6 +19,9 @@ sw:
           table_type: "Aina"
         colors:
           title: "Rangi"
+        design_variables:
+          type: "Aina"
+          default: "Halisi"
         icons:
           title: "Ikoni"
         categories:

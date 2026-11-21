@@ -3,6 +3,21 @@
 RSpec.describe ReviewablePost do
   fab!(:admin)
 
+  describe "#actions_for" do
+    it "requires classification for rejecting or restricting the submitted post" do
+      post = Fabricate(:post)
+      reviewable = described_class.queue_for_review(post)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "reject_and_delete",
+        "reject_and_suspend",
+        "reject_and_silence",
+      )
+    end
+  end
+
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }
     let(:reviewable) { ReviewablePost.new(target: post, target_created_by: post.user) }
@@ -26,6 +41,17 @@ RSpec.describe ReviewablePost do
 
     it "includes the reject and delete action if the user is allowed" do
       expect(reviewable_actions(Guardian.new(admin)).has?(:reject_and_delete)).to eq(true)
+    end
+
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable_actions(Guardian.new(admin))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve reviewables.actions.answer_no.title]])
     end
 
     it "includes the approve post and unhide action if the post is hidden" do
@@ -185,7 +211,7 @@ RSpec.describe ReviewablePost do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve handles the post reviewable" do

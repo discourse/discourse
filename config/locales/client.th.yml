@@ -6,6 +6,13 @@
 
 th:
   js:
+    code_editor:
+      search:
+        next: "ต่อไป"
+        previous: "ก่อนหน้า"
+        close: "ปิด"
+      fold:
+        to: "ถึง"
     user_api_key:
       deny: "ยกเลิก"
       copied: "คัดลอกแล้ว!"
@@ -21,6 +28,7 @@ th:
         failed: "ล้มเหลว"
     access_control:
       manage:
+        access_permission_owner: "เจ้าของ"
         access_permission_remove: "ลบ"
     number:
       format:
@@ -313,15 +321,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "กลับ"
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"
-      sections:
-        theme: "ธีม"
-        search: "ค้นหา"
       theme:
         selected: "เลือก"
       homepage:
@@ -1498,6 +1500,8 @@ th:
       medium_dark_tone: โทนผิวเข้มปานกลาง
       dark_tone: โทนผิวเข้ม
       default: อีโมจิที่กำหนดเอง
+    filter_controls:
+      sort_label: "เรียงโดย"
     shared_drafts:
       title: "แบบร่างที่ถูกแบ่งปัน"
       publish: "เผยแพร่แบบร่างที่ถูกแบ่งปัน"
@@ -1505,6 +1509,9 @@ th:
     composer:
       emoji: "อีโมจิ :)"
       options: "ตัวเลือก"
+      ai_content:
+        quote: "อ้างอิง"
+        details: "รายละเอียด"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
@@ -2069,10 +2076,8 @@ th:
           label: "เลือกแล้ว"
           title: "คลิกเพื่อลบโพสต์จากการเลือก"
         select_replies:
-          label: "เลือก + ตอบ"
           title: "เพิ่มโพสต์และคำตอบทั้งหมดไปยังการเลือก"
         select_below:
-          label: "เลือก+ด้านล่าง"
           title: "เพิ่มโพสต์และทุกอย่างหลังจากนั้นไปยังการเลือก"
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
@@ -2175,6 +2180,9 @@ th:
         confirm:
           other: "คุณแน่ใจหรือว่าต้องการลบ %{count}โพสต์นี้"
       revisions:
+        visibility:
+          hidden:
+            title: "ถูกซ่อน"
         controls:
           edit_post: "แก้ไขโพสต์"
           comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong>%{icon}<strong>%{current}</strong> / %{total}"
@@ -2569,6 +2577,11 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
+    mobile_tab_bar:
+      create: "สร้าง"
+      more: "อื่น"
+      back: "กลับ"
+      topics: "หัวข้อ"
     trust_levels:
       names:
         member: "สมาชิก"
@@ -2687,9 +2700,9 @@ th:
           title: "ตัวเสริม"
       upcoming_changes:
         name: "ชื่อ"
+        enabled: "เปิดใช้"
+        settings: "การตั้งค่า"
         preview: "แสดงตัวอย่าง"
-        enabled_for_options:
-          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -2703,6 +2716,9 @@ th:
           impact_role_admins: "แอดมิน"
           impact_role_moderators: "ผู้ดูแลระบบ"
           impact_role_staff: "ทีมงาน"
+        sort:
+          status: "สถานะ"
+          name: "ชื่อ"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2859,28 +2875,14 @@ th:
         version: "เวอร์ชัน"
         up_to_date: "คุณเป็นเวอร์ชั่นล่าสุด!"
         updates_available: "มีการอัปเดต"
-        installed_version: "ติดตั้งแล้ว"
-        github: "กิตฮับ"
         dismiss_notice: "ไม่สนใจ"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
-        last_checked: "ตรวจล่าสุด"
         refresh_problems: "รีเฟรช"
-        no_problems: "ไม่พบปัญหา"
-        moderators: "ผู้ดูแล:"
-        admins: "แอดมิน:"
-        suspended: "ถูกระงับชั่วคราว:"
-        private_messages_short: "ข้อความ"
-        private_messages_title: "ข้อความ"
-        mobile_title: "โทรศัพท์"
         space_used_and_free: "%{usedSize}(%{freeSize}ฟรี)"
         uploads: "อัปโหลด"
         backups: "สำรองข้อมูล"
         lastest_backup: "ล่าสุด: %{date}"
-        traffic_short: "การจราจร"
-        moderators_activity: กิจกรรมของผู้ดูแลระบบ
-        general_tab: "ทั่วไป"
-        security_tab: "ความปลอดภัย"
         report_filter_any: "ใดๆ"
         disabled: ปิดใช้งานแล้ว
         sections:
@@ -2915,9 +2917,6 @@ th:
           series:
             anonymous: "ไม่ระบุชื่อ"
           crawler_learn_more: "เรียนรู้เพิ่มเติม"
-        period:
-          last_7_days: "7 วันที่ผ่านมา"
-          last_30_days: "30 วันที่ผ่านมา"
         reports:
           today: "วันนี้"
           yesterday: "เมื่อวาน"
@@ -3427,6 +3426,9 @@ th:
         activation_filter:
           activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
+        bots:
+          name: "ชื่อ"
+          username: "ชื่อผู้ใช้"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"
           newuser: "ผู้ใช้ที่ระดับความไว้ใจ 0 (ผู้ใช้ใหม่)"
@@ -3449,7 +3451,6 @@ th:
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
-        silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"
@@ -3559,6 +3560,8 @@ th:
           dropdown: "ดร็อปดาวน์"
       site_text:
         search_label: "ค้นหา"
+        preview:
+          default: "ค่าเริ่มต้น"
         theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -3627,7 +3630,7 @@ th:
           modal_title: การจัดกลุ่มเหรียญ
         granted_by: อนุญาตโดย
         granted_at: อนุญาตเมื่อ
-        reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
+        reason_help: ลิงก์ไปยังหัวข้อหรือโพส
         save: บันทึก
         delete: ลบ
         delete_confirm: คุณแน่ใจหรือว่าต้องการลบเหรียญนี้

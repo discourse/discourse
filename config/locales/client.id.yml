@@ -6,6 +6,11 @@
 
 id:
   js:
+    code_editor:
+      search:
+        close: "Tutup"
+      fold:
+        to: "kepada"
     user_api_key:
       authorize: "Izinkan"
       deny: "Batal"
@@ -23,6 +28,7 @@ id:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Pemilik"
         access_permission_remove: "Hapus"
     number:
       format:
@@ -273,16 +279,12 @@ id:
       title: "Topik Baru & Belum Dibaca"
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Kembali"
     design_wizard:
       back: "Kembali"
-      sections:
-        theme: "Tema"
-        search: "Cari"
       theme:
         selected: "Dipilih"
+      fonts:
+        base_font: "Konten"
       homepage:
         topics: "Topik"
         categories: "Kategori"
@@ -436,7 +438,6 @@ id:
         placeholder: "ketikkan judul pesan, url atau id di sini"
     dsa_statements:
       category: "Kategori"
-      saving: "Menyimpan…"
     review:
       show_more: "Tampilkan lebih banyak"
       show_less: "Tampilkan lebih sedikit"
@@ -589,6 +590,7 @@ id:
         is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
         something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
+        something_wrong_with_post: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -1674,6 +1676,9 @@ id:
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
+      ai_content:
+        code: "Kode"
+        details: "Detil"
       add_warning: "Ini adalah peringatan resmi."
       esc_label: "abaikan pesan"
       reference_topic_title: "RE: %{title}"
@@ -1973,12 +1978,16 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
       multi_select:
+        select: "Pilih"
+        select_post:
+          label: "Pilih"
         selected_post:
           label: "dipilih"
         deselect_all: batalkan pilihan semua
     post_list:
       title: "Pos terbaru"
     post:
+      ai_generated: "AI"
       quote_edit: "Ubah"
       edit_reason: "Alasan:"
       collapse: "persempit"
@@ -2290,6 +2299,13 @@ id:
           new: "Anda tidak memiliki topik baru"
     footer_nav:
       dismiss: "Bubar"
+    mobile_tab_bar:
+      create: "Buat"
+      more: "Selengkapnya"
+      back: "Kembali"
+      topics: "Topik"
+      drafts:
+        other: "Rancangan (%{count})"
     trust_levels:
       names:
         newuser: "pengguna baru"
@@ -2444,9 +2460,9 @@ id:
           title: "Surel"
       upcoming_changes:
         name: "Nama"
-        enabled: "Diaktifkan"
-        enabled_for_options:
-          everyone: "Semua orang"
+        enabled: "Diaktifkan?"
+        feedback: "Umpan balik"
+        settings: "Pengaturan"
         impact_roles:
           moderators: "Moderator"
           staff: "Staf"
@@ -2459,6 +2475,9 @@ id:
           impact_type_other: "Lainnya"
           impact_role_moderators: "Moderator"
           impact_role_staff: "Staf"
+        sort:
+          status: "Status"
+          name: "Nama"
       config:
         mcp:
           tabs:
@@ -2585,17 +2604,9 @@ id:
         series:
           anonymous_human: "Anonim"
       dashboard:
-        please_update: "Harap perbarui!"
         version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
-        github: "GitHub"
         dismiss_notice: "Abaikan"
-        last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
-        moderators: "Moderator:"
-        private_messages_title: "Pesan"
-        page_views: "Tampilan halaman"
-        page_views_short: "Tampilan halaman"
-        general_tab: "Umum"
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
         custom_date_range: Rentang tanggal tertentu
@@ -2630,9 +2641,6 @@ id:
           series:
             anonymous: "Anonim"
             crawlers: "Perayap"
-        period:
-          last_7_days: "7 hari terakhir"
-          last_30_days: "30 hari terakhir"
         reports:
           last_7_days: "7 terakhir"
           last_30_days: "30 terakhir"
@@ -2646,8 +2654,6 @@ id:
               other: "%{count} pengguna"
             posts_count:
               other: "%{count} post"
-          trending_search:
-            disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
           sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:
@@ -3018,6 +3024,10 @@ id:
           active: "Aktif"
           staff: "Staf"
         approved: "Disetujui?"
+        bots:
+          name: "Nama"
+          username: "Nama Pengguna"
+          trust_level: "Trust level"
         titles:
           active: "Pengguna Aktif"
           staff: "Staf"
@@ -3040,6 +3050,7 @@ id:
         permissions: Izin
         activity: Aktifitas
         posts_read_count: Tulisan dilihat
+        post_count: Post dibuat
         topics_entered: Topik dilihat
         approve: "Terima"
         time_read: "Waktu Baca"
@@ -3096,6 +3107,8 @@ id:
           date: "Tanggal"
       site_text:
         search_label: "Cari"
+        preview:
+          default: "Asal"
         theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

@@ -189,6 +189,12 @@ export default class ReorderCategories extends Component {
         type: "POST",
         data: { mapping: JSON.stringify(data) },
       });
+      if (this.args.model?.enableFixedPositions) {
+        await ajax("/admin/site_settings/fixed_category_positions", {
+          type: "PUT",
+          data: { fixed_category_positions: true },
+        });
+      }
       window.location.reload();
     } catch (e) {
       popupAjaxError(e);

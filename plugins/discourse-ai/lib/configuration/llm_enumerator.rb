@@ -86,8 +86,8 @@ module DiscourseAi
           }
         end
 
-        if SiteSetting.ai_spam_detection_enabled && AiModerationSetting.spam.present?
-          model_id = AiModerationSetting.spam[:llm_model_id]
+        if SiteSetting.ai_spam_detection_enabled &&
+             (model_id = AiModerationSetting.spam&.llm_model_id).present?
           rval[model_id] << { type: :ai_spam, id: DiscourseAi::Configuration::Module::SPAM_ID }
         end
 

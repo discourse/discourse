@@ -11,6 +11,191 @@ RSpec.describe Post do
 
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
+  describe ".secured" do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic, reply_to_post_number: post.post_number) }
+    fab!(:hidden_reply) do
+      Fabricate(:post, topic: topic, hidden: true, reply_to_post_number: post.post_number)
+    end
+    fab!(:deleted_reply) do
+      Fabricate(:post, topic: topic, deleted_at: Time.current, deleted_by_id: user.id)
+    end
+
+    it "adds visibility rules without erasing incoming conditions or restoring deleted posts" do
+      guardian = user.guardian
+      expect(Post.where(id: [reply.id, hidden_reply.id]).secured(guardian)).to contain_exactly(
+        reply,
+      )
+      expect(Post.secured(guardian).where(topic_id: topic.id)).to contain_exactly(post, reply)
+      expect(Post.with_deleted.secured(guardian).where(topic_id: topic.id)).to contain_exactly(
+        post,
+        reply,
+      )
+      expect(Post.secured(guardian).with_deleted.where(topic_id: topic.id)).to contain_exactly(
+        post,
+        reply,
+      )
+
+      user.update!(trust_level: TrustLevel[4])
+      expect(Post.secured(user.guardian).where(topic_id: topic.id)).to contain_exactly(post, reply)
+      expect(Post.with_deleted.secured(user.guardian).where(topic_id: topic.id)).to contain_exactly(
+        post,
+        reply,
+        deleted_reply,
+      )
+      expect(Post.secured(user.guardian).with_deleted.where(topic_id: topic.id)).to contain_exactly(
+        post,
+        reply,
+        deleted_reply,
+      )
+    end
+
+    it "composes with associations, limits, aggregates, subqueries, and OR" do
+      guardian = user.guardian
+      PostReply.create!(post: post, reply: reply)
+      PostReply.create!(post: post, reply: hidden_reply)
+      expect(post.replies.secured(guardian)).to contain_exactly(reply)
+      expect(topic.posts.secured(guardian).order(:post_number).limit(2).pluck(:id)).to eq(
+        [post.id, reply.id],
+      )
+      expect(topic.posts.secured(guardian).count).to eq(2)
+      expect(Post.where(id: topic.posts.secured(guardian).select(:id))).to contain_exactly(
+        post,
+        reply,
+      )
+      expect(
+        Post.where(id: post.id).secured(guardian).or(Post.where(id: reply.id).secured(guardian)),
+      ).to contain_exactly(post, reply)
+    end
+
+    it "merges into a foreign-root relation without losing the deletion rule" do
+      visible_bookmark = Fabricate(:bookmark, user: user, bookmarkable: reply)
+      Fabricate(:bookmark, user: user, bookmarkable: hidden_reply)
+      Fabricate(:bookmark, user: user, bookmarkable: deleted_reply)
+      bookmarks =
+        user.bookmarks.joins(
+          "INNER JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'",
+        )
+      expect(bookmarks.merge(Post.secured(user.guardian).with_deleted)).to contain_exactly(
+        visible_bookmark,
+      )
+    end
+
+    it "accepts nil as anonymous and leaves an admin's input relation unchanged" do
+      expect(Post.where(topic_id: topic.id).secured(nil).pluck(:id)).to match_array(
+        Post.where(topic_id: topic.id).secured(Guardian.new).pluck(:id),
+      )
+      admin = Fabricate(:admin)
+      scope = Post.with_deleted.where(id: [post.id, deleted_reply.id])
+      expect(scope.secured(admin.guardian).to_sql).to eq(scope.to_sql)
+      expect(scope.secured(admin.guardian)).to contain_exactly(post, deleted_reply)
+      expect(Post.secured(admin.guardian).where(id: deleted_reply.id)).to be_empty
+    end
+
+    it "adds no topic joins and memoizes guardian lookups across relation construction" do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group, users: [user])
+      Fabricate(:category_moderation_group, category: topic.category, group: group)
+      guardian = user.guardian
+      cold_queries = track_sql_queries { Post.secured(guardian).to_sql }
+      warm_queries = track_sql_queries { 3.times { Post.secured(guardian).to_sql } }
+      expect(cold_queries.size).to be <= 10
+      expect(warm_queries).to be_empty
+      expect(Post.secured(guardian).to_sql).not_to match(/JOIN "topics"|LEFT OUTER JOIN/)
+    end
+  end
+
+  describe "Guardian#filter_visible_posts with a topic" do
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:other_post, :post)
+
+    it "authorizes and constrains the supplied topic while retaining incoming conditions" do
+      guardian = user.guardian
+      expect(guardian.filter_visible_posts(Post.all, topic: post.topic)).to contain_exactly(post)
+      expect(
+        guardian.filter_visible_posts(Post.where(id: other_post.id), topic: post.topic),
+      ).to be_empty
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      Fabricate(:post, topic: private_topic)
+      expect(guardian.filter_visible_posts(Post.all, topic: private_topic)).to be_empty
+      admin = Fabricate(:admin)
+      expect(admin.guardian.filter_visible_posts(Post.all, topic: post.topic)).to contain_exactly(
+        post,
+      )
+    end
+
+    it "fails closed for an explicit nil topic but authorizes all topics when omitted" do
+      [user.guardian, Fabricate(:admin).guardian, Guardian.new].each do |guardian|
+        scope = Post.where(id: [post.id, other_post.id])
+        expect(guardian.filter_visible_posts(scope, topic: nil)).to be_empty
+        expect(guardian.filter_visible_posts(scope)).to contain_exactly(post, other_post)
+      end
+    end
+
+    it "preserves deletion authorization in both scope orders" do
+      post.trash!(user)
+      guardian = user.guardian
+      expect(guardian.filter_visible_posts(Post.with_deleted, topic: post.topic)).to be_empty
+      expect(guardian.filter_visible_posts(Post.all, topic: post.topic).with_deleted).to be_empty
+      user.update!(trust_level: TrustLevel[4])
+      expect(
+        user.guardian.filter_visible_posts(Post.with_deleted, topic: post.topic),
+      ).to contain_exactly(post)
+    end
+
+    it "fails closed for unsaved or dirty supplied topics" do
+      topic = post.topic
+      topic.category_id = other_post.topic.category_id + 1000
+      expect(user.guardian.filter_visible_posts(Post.all, topic: topic)).to be_empty
+      expect(user.guardian.filter_visible_posts(Post.all, topic: Topic.new)).to be_empty
+    end
+  end
+
+  describe "#reply_ids visibility" do
+    it "treats nil as anonymous and retains the author's and moderator's hidden descendants" do
+      parent = Fabricate(:post)
+      hidden_reply = Fabricate(:post, topic: parent.topic, hidden: true)
+      visible_reply = Fabricate(:post, topic: parent.topic)
+      PostReply.create!(post: parent, reply: hidden_reply)
+      PostReply.create!(post: parent, reply: visible_reply)
+      expect(parent.reply_ids).to eq([{ id: visible_reply.id, level: 1 }])
+      expect(parent.reply_ids(Guardian.new)).to eq(parent.reply_ids)
+      [hidden_reply.user, Fabricate(:moderator)].each do |viewer|
+        expect(parent.reply_ids(viewer.guardian)).to eq(
+          [{ id: hidden_reply.id, level: 1 }, { id: visible_reply.id, level: 1 }],
+        )
+      end
+    end
+  end
+
+  describe ".with_visible_post_types" do
+    it "retains the type-only contract without authorizing topic or post state" do
+      private_topic =
+        Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      posts =
+        Post.types.values.map do |post_type|
+          Fabricate(
+            :post,
+            topic: private_topic,
+            post_type: post_type,
+            hidden: true,
+            deleted_at: Time.current,
+          )
+        end
+      guardian = Guardian.new
+      expected =
+        posts.select { |candidate| Topic.visible_post_types(nil).include?(candidate.post_type) }
+      expect(
+        Post.with_deleted.where(id: posts.map(&:id)).with_visible_post_types(guardian),
+      ).to match_array(expected)
+      expect(Post.with_deleted.where(id: posts.map(&:id)).secured(guardian)).to be_empty
+    end
+  end
+
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do
       it "'flag_threshold_reached' should be at 1st position" do
@@ -1172,6 +1357,7 @@ RSpec.describe Post do
           {
             cook_method: Post.cook_methods[:regular],
             user_id: post.last_editor_id,
+            hashtag_user_ids: [post.user_id, post.last_editor_id],
             post_id: post.id,
           },
         )
@@ -1183,9 +1369,48 @@ RSpec.describe Post do
         .expects(:cook)
         .with(
           post.raw,
-          { cook_method: Post.cook_methods[:regular], user_id: user_editor.id, post_id: post.id },
+          {
+            cook_method: Post.cook_methods[:regular],
+            user_id: user_editor.id,
+            hashtag_user_ids: [post.user_id, user_editor.id],
+            post_id: post.id,
+          },
         )
       post.cook(post.raw)
+    end
+
+    it "does not resolve a hashtag that one of the post's writers cannot see" do
+      category = Fabricate(:private_category, group: Fabricate(:group), slug: "secret-plans")
+      admin = Fabricate(:admin)
+      authored_post = Fabricate(:post, user:, last_editor_id: admin.id)
+      revised_post = Fabricate(:post, user: admin, last_editor_id: admin.id)
+      Fabricate(:post_revision, post: revised_post, user:)
+
+      expect(authored_post.cook("#secret-plans")).not_to include(category.name)
+      expect(revised_post.cook("#secret-plans")).not_to include(category.name)
+    end
+
+    context "when the post is a system message" do
+      subject(:cooked) { system_message.cook("##{restricted_category.slug}") }
+
+      fab!(:recipient, :user)
+      fab!(:restricted_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      let(:system_message) { SystemMessage.create(recipient, :welcome_user) }
+
+      context "when the recipient cannot see the category" do
+        it "does not resolve the hashtag" do
+          expect(cooked).not_to include(restricted_category.name)
+        end
+      end
+
+      context "when the recipient can see the category" do
+        before { restricted_category.groups.first.add(recipient) }
+
+        it "resolves the hashtag" do
+          expect(cooked).to include(restricted_category.name)
+        end
+      end
     end
 
     describe "mentions" do
@@ -1320,6 +1545,30 @@ RSpec.describe Post do
 
     post = Post.find(post.id)
     expect(post.custom_fields).to eq("Tommy" => "Hanks", "Vincent" => "Vega")
+  end
+
+  describe "#system_message?" do
+    fab!(:recipient, :user)
+
+    let(:system_message) { SystemMessage.create(recipient, :welcome_user) }
+
+    context "when the post is the first post of a system message topic" do
+      subject(:post) { system_message }
+
+      it { is_expected.to be_a_system_message }
+    end
+
+    context "when the post is a reply in a system message topic" do
+      subject(:reply) { Fabricate(:post, topic: system_message.topic, user: recipient) }
+
+      it { is_expected.not_to be_a_system_message }
+    end
+
+    context "when the post is the first post of a regular topic" do
+      subject(:post) { Fabricate(:post) }
+
+      it { is_expected.not_to be_a_system_message }
+    end
   end
 
   describe "#excerpt_for_topic" do
@@ -1625,7 +1874,7 @@ RSpec.describe Post do
 
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
         SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
       end
 
@@ -2452,6 +2701,42 @@ RSpec.describe Post do
       other_message = messages.select { |msg| msg.data[:type] == :anything }.first
       expect(other_message).to be_present
       expect(other_message.data.key?(:skip_topic_stats)).to be_falsey
+    end
+
+    it "includes moderators only when they can see the private message" do
+      moderator = Fabricate(:moderator)
+      original_subtype = topic.subtype
+      expect(created_audience).not_to include(moderator.id)
+
+      topic.update!(subtype: TopicSubtype.moderator_warning)
+      expect(created_audience).to include(moderator.id)
+
+      topic.update!(subtype: original_subtype)
+      expect(created_audience).not_to include(moderator.id)
+
+      PostActionCreator.create(user1, post, :off_topic)
+      expect(created_audience).to include(moderator.id)
+    end
+
+    it "excludes staff who cannot see the private message from whisper audiences" do
+      moderator = Fabricate(:moderator)
+      admin = Fabricate(:admin)
+      whisper = Fabricate(:whisper, topic: topic, user: admin)
+
+      audience = created_audience(whisper)
+
+      expect(audience).to include(admin.id)
+      expect(audience).not_to include(moderator.id)
+    end
+
+    def created_audience(target = post)
+      target.reload # the topic association memoizes attributes this audience depends on
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}") do
+          target.publish_change_to_clients!(:created)
+        end
+
+      messages.find { |message| message.data[:type] == :created }.user_ids
     end
   end
 

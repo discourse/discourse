@@ -18,11 +18,9 @@ RSpec.describe DiscourseAi::Agents::Tools::SearchSettings do
     ]
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    toggle_enabled_bots(bots: [llm_model])
-  end
+  include_context "with AI bot enabled"
+
+  before { toggle_enabled_bots(bots: [llm_model]) }
 
   def search_settings(query, mock: true)
     search = described_class.new({ query: query }, bot_user: bot_user, llm: llm)

@@ -1,6 +1,8 @@
 import * as fs from "fs";
 import { basename, relative } from "path";
 import { viteAliasPlugin, viteImportGlobPlugin } from "rolldown/experimental";
+import brotliAssetsPlugin from "./lib/brotli-assets-plugin.mjs";
+import bundleAnalyzerPlugin from "./lib/bundle-analyzer-plugin.mjs";
 import chunkImportMapPlugin from "./lib/chunk-import-map-plugin.mjs";
 import discourseChunkNamesPlugin from "./lib/discourse-chunk-names.mjs";
 import discourseSourceImports from "./lib/discourse-source-imports.mjs";
@@ -30,7 +32,7 @@ writeResolverConfig(
 const extensions = [".gjs", ".mjs", ".js", ".mts", ".gts", ".ts", ".hbs"];
 
 const aliases = [
-  { find: "pretty-text", replacement: "pretty-text/addon" },
+  { find: "pretty-text", replacement: "discourse/pretty-text" },
   {
     find: "ember-buffered-proxy/helpers",
     replacement: "ember-buffered-proxy/addon/helpers",
@@ -111,7 +113,7 @@ export function buildConfig({ devMode } = {}) {
         skipPreflightCheck: true, // Skip per-file config verification
         babelrc: false, // Skip per-file `.babelrc`/`.babelignore` checks
       }),
-      wrapTestModulesPlugin(),
+      wrapTestModulesPlugin({ root: import.meta.dirname }),
       discourseChunkNamesPlugin(),
       chunkImportMapPlugin({
         root: import.meta.dirname,
@@ -207,6 +209,11 @@ export function buildConfig({ devMode } = {}) {
           }
         },
       },
+      brotliAssetsPlugin({ enabled: isProduction }),
+      bundleAnalyzerPlugin({
+        compress: isProduction,
+        root: import.meta.dirname,
+      }),
       {
         name: "bundle-manifest",
         generateBundle(_outputOptions, bundle) {

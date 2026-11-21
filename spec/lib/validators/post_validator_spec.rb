@@ -326,6 +326,18 @@ RSpec.describe PostValidator do
       expect(post.errors[:base]).to be_present
     end
 
+    it "counts quote openers with whitespace after the tag name" do
+      post.raw = <<~RAW
+        [quote]First quote[/quote]
+        [quote ]Second quote[/quote]
+        [quote\tsource=user]Third quote[/quote]
+        [quote\u00A0]Fourth quote[/quote]
+      RAW
+
+      validator.max_quotes_validator(post)
+      expect(post.errors[:base]).to contain_exactly(I18n.t(:too_many_quotes, count: 3))
+    end
+
     it "is case-insensitive" do
       post.raw = "[QUOTE=foo]\n" * 4
       validator.max_quotes_validator(post)

@@ -20,6 +20,7 @@ module DiscourseAi
         def targets_data
           target
             .chat_messages
+            .excluding_deleted_threads
             .where("chat_messages.created_at > ?", since.hours.ago)
             .includes(:user)
             .order(created_at: :asc)

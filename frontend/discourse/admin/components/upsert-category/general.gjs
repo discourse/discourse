@@ -626,7 +626,7 @@ export default class UpsertCategoryGeneral extends Component {
     {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @format="max"
-        @name="category_types"
+        @name="category_type_ids"
         @showOptional={{false}}
         @title={{i18n "category.category_types"}}
         @type="custom"
@@ -743,6 +743,7 @@ export default class UpsertCategoryGeneral extends Component {
         @name="style_type"
         @title={{i18n "category.style"}}
         @type="custom"
+        @validation="required"
         as |styleField|
       >
         <styleField.Control>

@@ -58,6 +58,15 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     end
   end
 
+  it "expires an inaccessible hidden post's reminder without notifying or deleting its bookmark" do
+    bookmark1.bookmarkable.update!(hidden: true)
+    bookmark1.update!(auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent])
+    expect { job.execute }.to change { Notification.where(user: user).count }.by(2)
+    expect(bookmark1.reload.reminder_last_sent_at).to be_present
+    expect(Bookmark.pending_reminders.where(id: bookmark1.id)).to be_empty
+    expect(bookmark1).to be_persisted
+  end
+
   it "does not notify when the topic is unavailable" do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy

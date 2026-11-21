@@ -44,6 +44,8 @@ bs_BA:
         error: "Greška"
         response: "Odgovor"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listaj predmet"
         classify:
           text: "Poruka"
           upload_ids: "Images"
@@ -61,21 +63,26 @@ bs_BA:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(neomogućen)"
-        groups: "Grupa:"
+        table:
+          status: "Status"
+          enabled: "Omogućen"
+          groups: "Grupa"
+        chatbot:
+          places:
+            none: "Nedostupno"
         no_groups: "Ništa"
         edit: "Postavke"
-        expand_list:
-          one: "(još %{count})"
-          few: "(još %{count})"
-          other: "(još %{count})"
         nav:
           enabled: "Omogućen"
         filters:
-          all: "Sve"
           reset: "Resetovati"
+        sentiment:
+          enabled: "Omogućen"
         search:
           name: "Pretraži"
+        review_queue:
+          setting_groups:
+            settings: "Postavke"
         image_caption:
           setting_groups:
             settings: "Postavke"
@@ -85,7 +92,17 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Niko"
+              all: "Svatko"
         model_progress:
           detail:
             columns:
@@ -100,6 +117,8 @@ bs_BA:
               title: "Kategorije"
             tag:
               title: "Oznake"
+        admin_actions:
+          enabled: "Omogućen"
         stats:
           eta_hours:
             one: "%{count} sat"
@@ -116,6 +135,8 @@ bs_BA:
             other: "%{count} objava"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         enable: "Omogući"
         test_modal:
           spam: "Spam"

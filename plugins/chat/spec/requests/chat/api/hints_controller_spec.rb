@@ -48,6 +48,29 @@ RSpec.describe Chat::Api::HintsController do
         expect(response.parsed_body["unreachable"]).to be_empty
       end
 
+      it "doesn't disclose whether a mentionable group with hidden members exceeds the notification limit" do
+        hidden_members_group =
+          Fabricate(
+            :group,
+            mentionable_level: Group::ALIAS_LEVELS[:everyone],
+            members_visibility_level: Group.visibility_levels[:owners],
+            users: [Fabricate(:user), Fabricate(:user)],
+          )
+
+        SiteSetting.max_users_notified_per_group_mention = 5
+        get "/chat/api/mentions/groups", params: { mentions: [hidden_members_group.name] }
+        below_limit_response = response.parsed_body
+
+        SiteSetting.max_users_notified_per_group_mention = 1
+        get "/chat/api/mentions/groups", params: { mentions: [hidden_members_group.name] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(below_limit_response)
+        expect(response.parsed_body["unreachable"]).to be_empty
+        expect(response.parsed_body["over_members_limit"]).to be_empty
+        expect(response.parsed_body["invalid"]).to contain_exactly(hidden_members_group.name)
+      end
+
       it "returns a warning if the group has too many users" do
         user_1 = Fabricate(:user)
         user_2 = Fabricate(:user)

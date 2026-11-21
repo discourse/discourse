@@ -6,6 +6,8 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
+import { escapeExpression } from "discourse/lib/utilities";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
@@ -17,7 +19,10 @@ import LiveRoomForm from "discourse/plugins/live/discourse/components/live-room-
 import roomIcon from "discourse/plugins/live/discourse/lib/live/room-icon";
 
 export default class LiveRoomInfoModal extends Component {
+  @service dialog;
   @service liveRooms;
+  @service liveWebrtc;
+  @service router;
   @service toasts;
 
   @tracked memberships = [];
@@ -113,6 +118,43 @@ export default class LiveRoomInfoModal extends Component {
   }
 
   @action
+  deleteRoom() {
+    const room = this.room;
+
+    this.dialog.deleteConfirm({
+      message: i18n("live.room.delete_confirm", {
+        name: escapeExpression(room.name),
+      }),
+      didConfirm: async () => {
+        try {
+          await ajax(`/live/rooms/${room.id}`, { type: "DELETE" });
+        } catch (e) {
+          popupAjaxError(e);
+          return;
+        }
+
+        // The server already dropped the room, so a server-side leave would
+        // only fail; tear down the local call state instead.
+        if (this.liveWebrtc.connectionStateFor(room.id) !== "idle") {
+          this.liveWebrtc.leave(room, { skipServer: true });
+        }
+        this.liveRooms.handleDirectoryEvent({ type: "destroyed", room });
+
+        const currentRoute = this.router.currentRoute;
+        if (
+          currentRoute?.name === "live-room" &&
+          currentRoute.params?.slug === room.slug
+        ) {
+          this.router.replaceWith(homepageNavigationDestination());
+        }
+
+        this.toasts.success({ data: { message: i18n("live.room.deleted") } });
+        this.args.closeModal();
+      },
+    });
+  }
+
+  @action
   setSelectedUsernames(usernames) {
     this.selectedUsernames = usernames;
   }
@@ -185,6 +227,14 @@ export default class LiveRoomInfoModal extends Component {
               @onSubmit={{this.handleEdit}}
               @room={{this.room}}
             />
+            {{#if this.room.can_delete}}
+              <DButton
+                class="btn-danger live-room-info-modal__delete-btn"
+                @action={{this.deleteRoom}}
+                @icon="trash-can"
+                @label="live.room.delete"
+              />
+            {{/if}}
           </div>
         {{else}}
           <div class="live-room-info-modal__header">

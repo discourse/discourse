@@ -43,6 +43,22 @@ RSpec.describe TopicTitleLengthValidator do
       expect(record.errors[:title]).to_not be_present
     end
 
+    it "uses the minimum length from the min_topic_title_length modifier" do
+      plugin = Plugin::Instance.new
+      modifier = Proc.new { |min_length, topic| topic == record ? 3 : min_length }
+      DiscoursePluginRegistry.register_modifier(plugin, :min_topic_title_length, &modifier)
+
+      record.title = "aaa"
+      validate
+      expect(record.errors[:title]).to be_empty
+
+      record.title = "aa"
+      validate
+      expect(record.errors[:title]).to be_present
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :min_topic_title_length, &modifier)
+    end
+
     include_examples "validating any topic title"
   end
 

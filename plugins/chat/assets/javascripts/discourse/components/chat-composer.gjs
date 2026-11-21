@@ -111,7 +111,9 @@ export default class ChatComposer extends Component {
   get shouldRenderMessageDetails() {
     return (
       this.draft?.editing ||
-      (this.context === "channel" && this.draft?.inReplyTo)
+      (!!this.draft?.inReplyTo &&
+        (this.siteSettings.chat_thread_improvements ||
+          this.context === "channel"))
     );
   }
 
@@ -197,6 +199,21 @@ export default class ChatComposer extends Component {
       "Shift+ArrowUp": () => skip() || !this.#editOrReplyToLastMessage(true),
     };
   }
+
+  get showBroadcastOption() {
+    return false;
+  }
+
+  get broadcastChecked() {
+    return false;
+  }
+
+  get broadcastOptionLabel() {
+    return "";
+  }
+
+  @action
+  toggleBroadcast() {}
 
   @action
   persistDraft() {}
@@ -434,6 +451,7 @@ export default class ChatComposer extends Component {
       this.draft.uploads = cloneJSON(uploads);
       this.persistDraft();
     }
+    this.args.onUploadActivity?.(this.inProgressUploadsCount);
   }
 
   @action
@@ -468,7 +486,9 @@ export default class ChatComposer extends Component {
     }
 
     await this.args.onSendMessage(this.draft);
-    this.editor.refreshHeight();
+    if (!this.isDestroying) {
+      this.editor?.refreshHeight();
+    }
   }
 
   async reactingToLastMessage() {
@@ -507,7 +527,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel || !this.draft) {
+    if (!this.args.channel || !this.draft || !this.presenceChannelName) {
       return;
     }
 
@@ -1083,6 +1103,17 @@ export default class ChatComposer extends Component {
             />
           {{/if}}
         </div>
+
+        {{#if this.showBroadcastOption}}
+          <label class="chat-composer__broadcast-option checkbox-label">
+            <input
+              checked={{this.broadcastChecked}}
+              type="checkbox"
+              {{on "change" this.toggleBroadcast}}
+            />
+            <span>{{this.broadcastOptionLabel}}</span>
+          </label>
+        {{/if}}
       </div>
 
       {{#if this.canAttachUploads}}
@@ -1096,11 +1127,13 @@ export default class ChatComposer extends Component {
         />
       {{/if}}
 
-      <div class="chat-replying-indicator-container">
-        <ChatReplyingIndicator
-          @presenceChannelName={{this.presenceChannelName}}
-        />
-      </div>
+      {{#if this.presenceChannelName}}
+        <div class="chat-replying-indicator-container">
+          <ChatReplyingIndicator
+            @presenceChannelName={{this.presenceChannelName}}
+          />
+        </div>
+      {{/if}}
     </div>
   </template>
 }

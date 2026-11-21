@@ -553,6 +553,14 @@ RSpec.describe TopicView do
       end
     end
 
+    describe ".participant_count" do
+      it "uses the cached participant count on mega topics" do
+        topic.update!(posts_count: TopicView::MEGA_TOPIC_POSTS_COUNT, participant_count: 42)
+
+        expect(topic_view.participant_count).to eq(42)
+      end
+    end
+
     describe ".all_post_actions" do
       it "is blank at first" do
         expect(topic_view.all_post_actions).to be_blank

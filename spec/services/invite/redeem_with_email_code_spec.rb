@@ -120,6 +120,24 @@ RSpec.describe Invite::RedeemWithEmailCode do
       end
     end
 
+    context "when a required number field gets a value that isn't a number" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "number") }
+
+      let(:params) do
+        {
+          invite_key: invite.invite_key,
+          email:,
+          code:,
+          username:,
+          user_fields: {
+            user_field.id.to_s => "abc",
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
+    end
+
     context "when required signup fields are provided" do
       fab!(:user_field)
 

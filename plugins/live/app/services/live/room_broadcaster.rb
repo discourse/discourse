@@ -22,6 +22,10 @@ module Live
       new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
     end
 
+    def self.publish_reaction(room, user, emoji)
+      new(room).publish_reaction(user, emoji)
+    end
+
     # Someone in the room started ringing `user` — lets open room pages show
     # a pending tile for them without refetching the room.
     def self.publish_ringing(room, user, notified_at:)
@@ -38,6 +42,7 @@ module Live
     # a client can seed from goes through here so none of them lacks them.
     def self.participant_entries(room, users, guardian:, metadata:)
       entitlements = Live::MediaEntitlements.for_users(room, users)
+      file_sender_ids = Live::FileTransferEntitlements.for_users(users)
 
       users.map do |user|
         BasicUserSerializer
@@ -45,6 +50,12 @@ module Live
           .as_json
           .merge(metadata[user.id] || {})
           .merge(entitlements[user.id] || Live::MediaEntitlements::NONE)
+          .merge(
+            can_send_files: file_sender_ids.include?(user.id),
+            # Receivers apply the sender's upload extension list, which is
+            # wider for staff.
+            can_send_staff_file_types: file_sender_ids.include?(user.id) && user.staff?,
+          )
       end
     end
 
@@ -127,6 +138,25 @@ module Live
           raised: raised,
           raised_at: raised_at,
           reason: reason,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    # Fire-and-forget: nothing is stored, so a client that misses one simply
+    # never sees it float by.
+    def publish_reaction(user, emoji)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "reaction",
+          room_id: room.id,
+          user_id: user.id,
+          username: user.username,
+          emoji: emoji,
         },
         user_ids: participant_ids,
       )
