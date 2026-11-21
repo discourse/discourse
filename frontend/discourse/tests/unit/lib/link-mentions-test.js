@@ -45,4 +45,154 @@ module("Unit | Utility | link-mentions", function (hooks) {
       .hasText("@mentionable_group");
     assert.dom("span.mention", root).hasHtml("@invalid");
   });
+
+  test("linkSeenMentions does not reuse cached results in another context", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/composer/mentions", (request) => {
+      requestCount++;
+      if (request.queryParams.topic_id === "1") {
+        return response({
+          users: ["pm_user"],
+          user_reasons: { pm_user: "private" },
+          groups: {},
+          group_reasons: {},
+          max_users_notified_per_group_mention: 100,
+        });
+      }
+      return response({
+        users: ["pm_user"],
+        user_reasons: {},
+        groups: {},
+        group_reasons: {},
+        max_users_notified_per_group_mention: 100,
+      });
+    });
+
+    await fetchUnseenMentions({ names: ["pm_user"], topicId: 1 });
+
+    const pmPreview = domFromString(
+      `<div><span class="mention">@pm_user</span></div>`
+    )[0];
+    linkSeenMentions(pmPreview, { min_username_length: 2 }, { topicId: 1 });
+    assert
+      .dom(pmPreview.querySelector("a.mention"))
+      .hasAttribute("data-reason", "private");
+
+    const publicPreview = domFromString(
+      `<div><span class="mention">@pm_user</span></div>`
+    )[0];
+    const unseen = linkSeenMentions(
+      publicPreview,
+      { min_username_length: 2 },
+      { topicId: 2 }
+    );
+    assert.deepEqual(
+      unseen,
+      ["pm_user"],
+      "it invalidates the cached mention in the new context"
+    );
+
+    await fetchUnseenMentions({ names: unseen, topicId: 2 });
+    linkSeenMentions(publicPreview, { min_username_length: 2 }, { topicId: 2 });
+
+    assert
+      .dom(publicPreview.querySelector("a.mention"))
+      .exists("the mention is linked again");
+    assert
+      .dom(publicPreview.querySelector("a.mention"))
+      .doesNotHaveAttribute(
+        "data-reason",
+        "the private reason from the PM context is not reused"
+      );
+    assert.strictEqual(
+      requestCount,
+      2,
+      "each context validates with its own request"
+    );
+  });
+
+  test("results are keyed by PM recipients regardless of order and case", async function (assert) {
+    let requestCount = 0;
+    pretender.get("/composer/mentions", () => {
+      requestCount++;
+      return response({
+        users: ["pm_user"],
+        user_reasons: { pm_user: "private" },
+        groups: {},
+        group_reasons: {},
+        max_users_notified_per_group_mention: 100,
+      });
+    });
+
+    const unseenFor = (allowedNames) =>
+      linkSeenMentions(
+        domFromString(`<div><span class="mention">@pm_user</span></div>`)[0],
+        { min_username_length: 2 },
+        { allowedNames }
+      );
+
+    await fetchUnseenMentions({
+      names: ["pm_user"],
+      allowedNames: ["alice", "bob"],
+    });
+
+    assert.deepEqual(
+      unseenFor(["Bob", "alice"]),
+      [],
+      "the same recipients reuse the cached result"
+    );
+    assert.deepEqual(
+      unseenFor(["alice"]),
+      ["pm_user"],
+      "different recipients validate again"
+    );
+    assert.strictEqual(requestCount, 1);
+  });
+
+  test("a response arriving after a context switch does not populate the new context", async function (assert) {
+    let resolvePm;
+    const pmPending = new Promise((resolve) => (resolvePm = resolve));
+
+    pretender.get("/composer/mentions", (request) => {
+      if (request.queryParams.topic_id === "1") {
+        return pmPending;
+      }
+      return response({
+        users: ["pm_user"],
+        user_reasons: {},
+        groups: {},
+        group_reasons: {},
+        max_users_notified_per_group_mention: 100,
+      });
+    });
+
+    const pmFetch = fetchUnseenMentions({ names: ["pm_user"], topicId: 1 });
+    await fetchUnseenMentions({ names: ["pm_user"], topicId: 2 });
+
+    resolvePm(
+      response({
+        users: ["pm_user"],
+        user_reasons: { pm_user: "private" },
+        groups: {},
+        group_reasons: {},
+        max_users_notified_per_group_mention: 100,
+      })
+    );
+    await pmFetch;
+
+    const preview = domFromString(
+      `<div><span class="mention">@pm_user</span></div>`
+    )[0];
+    linkSeenMentions(preview, { min_username_length: 2 }, { topicId: 2 });
+
+    assert
+      .dom(preview.querySelector("a.mention"))
+      .exists("the mention remains linked");
+    assert
+      .dom(preview.querySelector("a.mention"))
+      .doesNotHaveAttribute(
+        "data-reason",
+        "the late PM response is discarded instead of leaking into the public context"
+      );
+  });
 });
