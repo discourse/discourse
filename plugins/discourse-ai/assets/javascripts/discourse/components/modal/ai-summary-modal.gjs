@@ -1,16 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import htmlClass from "discourse/helpers/html-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { smartShortDate } from "discourse/lib/formatter";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import DModal from "discourse/ui-kit/d-modal";
@@ -28,6 +32,7 @@ export default class AiSummaryModal extends Component {
   @service messageBus;
   @service currentUser;
   @service modal;
+  @service site;
 
   @tracked text = "";
   @tracked summarizedOn = null;
@@ -138,6 +143,26 @@ export default class AiSummaryModal extends Component {
   }
 
   @action
+  handleSummaryClick(event) {
+    if (this.site.desktopView) {
+      return;
+    }
+
+    const link = event.target.closest("a");
+    if (
+      !link ||
+      wantsNewWindow(event, link) ||
+      !DiscourseURL.isInternalTopic(link.href)
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.handleClose();
+    next(() => DiscourseURL.routeTo(link.href));
+  }
+
+  @action
   _requestSummary(url, ajaxOpts = {}) {
     if (this.loading || (this.text && !this.canRegenerate)) {
       return;
@@ -216,7 +241,12 @@ export default class AiSummaryModal extends Component {
             {{#if this.loading}}
               <AiSummarySkeleton />
             {{else}}
-              <div class="generated-summary cooked">
+              {{! Delegate clicks from the cooked links, including keyboard activation. }}
+              {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
+              <div
+                class="generated-summary cooked"
+                {{on "click" this.handleSummaryClick}}
+              >
                 <DCookText @rawText={{this.smoothStreamer.renderedText}} />
               </div>
             {{/if}}
