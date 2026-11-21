@@ -122,7 +122,7 @@ class PostAlerter
   end
 
   def not_allowed?(user, post)
-    user.blank? || user.bot? || user.id == post.user_id
+    user.blank? || (user.bot? && !user.interactive_bot?) || user.id == post.user_id
   end
 
   def all_allowed_users(post)
@@ -138,7 +138,8 @@ class PostAlerter
   end
 
   def directly_targeted_users(post)
-    allowed_users(post) - allowed_group_users(post)
+    (allowed_users(post) - allowed_group_users(post)) |
+      allowed_users(post).select(&:interactive_bot?)
   end
 
   def indirectly_targeted_users(post)
@@ -483,6 +484,8 @@ class PostAlerter
   end
 
   def notify_group_summary(user, topic, acting_user_id: nil)
+    return if user.bot?
+
     @group_stats ||= {}
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
@@ -558,8 +561,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank? || user.bot? || post.blank?
+    return if user.blank? || post.blank?
+    return if user.bot? && !user.interactive_bot?
     return if (topic = post.topic).blank?
+    return if user.interactive_bot? && !direct_interactive_bot_notification?(user, type, post, opts)
 
     is_liked = type == Notification.types[:liked]
     if is_liked &&
@@ -714,7 +719,7 @@ class PostAlerter
       notification_data[:group_name] = group.name
     end
 
-    if opts[:skip_send_email_to]&.include?(user.email)
+    if user.bot? || opts[:skip_send_email_to]&.include?(user.email)
       skip_send_email = true
     elsif original_post.via_email && (incoming_email = original_post.incoming_email)
       skip_send_email =
@@ -960,7 +965,7 @@ class PostAlerter
         .includes(user: :user_option)
         .order(:created_at)
         .reject do |tau|
-          not_allowed?(tau.user, post) ||
+          not_allowed?(tau.user, post) || tau.user.bot? ||
             tau.user.user_option.email_messages_level == UserOption.email_level_types[:never]
         end
     return emails_to_skip_send if topic_allowed_users_by_age.empty?
@@ -1140,6 +1145,36 @@ class PostAlerter
   end
 
   private
+
+  def direct_interactive_bot_notification?(user, type, post, opts)
+    actor = opts[:user_id] ? User.find_by(id: opts[:user_id]) : post.user
+    return false if !actor || actor.bot? || actor.id == user.id || post.user&.bot?
+    return false unless notify_about_reply?(post)
+    return false if post.whisper? && !user.guardian.can_see_whispers?(post.topic)
+
+    if post.topic.private_message?
+      return false unless post.topic.allowed_users.exists?(id: user.id)
+    end
+
+    case type
+    when Notification.types[:mentioned]
+      post.raw_mentions.include?(user.username_lower)
+    when Notification.types[:replied]
+      post.reply_to_post_number.present? &&
+        post.topic.posts.exists?(post_number: post.reply_to_post_number, user_id: user.id)
+    when Notification.types[:private_message]
+      post.topic.private_message? &&
+        (
+          pm_watching_users(post).include?(user) ||
+            (
+              post.reply_to_post_number.present? &&
+                post.topic.posts.exists?(post_number: post.reply_to_post_number, user_id: user.id)
+            )
+        )
+    else
+      false
+    end
+  end
 
   def can_see_original_title?(user, post, title_revision)
     guardian = Guardian.new(user)

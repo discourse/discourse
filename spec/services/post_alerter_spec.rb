@@ -1401,17 +1401,17 @@ RSpec.describe PostAlerter do
     end
 
     it "adds display name to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:display_name] = "Benji McCool"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:display_name] = "Benji McCool"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:display_name]).to eq("Benji McCool")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
 
     it "does not add a display name when names are disabled" do
@@ -1423,17 +1423,17 @@ RSpec.describe PostAlerter do
     end
 
     it "applies modifiers to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:silly_key] = "silly value"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:silly_key] = "silly value"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:silly_key]).to eq("silly value")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
   end
 

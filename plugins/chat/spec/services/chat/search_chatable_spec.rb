@@ -79,6 +79,23 @@ RSpec.describe Chat::SearchChatable do
           expect(described_class.call(params: params, **dependencies).users).to be_empty
         end
 
+        it "lists interactive bots without opting chat-only bots into notifications" do
+          bot = Fabricate(:bot, interactive_bot: true)
+          legacy = Fabricate(:bot)
+          Chat::DiscoverableBot.create!(user: legacy)
+
+          params[:term] = bot.username
+          expect(result.users).to contain_exactly(bot)
+
+          bot.update!(interactive_bot: false)
+          expect(described_class.call(params: params, **dependencies).users).to be_empty
+          params[:term] = legacy.username
+          expect(described_class.call(params: params, **dependencies).users).to contain_exactly(
+            legacy,
+          )
+          expect(legacy.reload).not_to be_interactive_bot
+        end
+
         it "preserves listed bots when a modifier replaces the allowlist" do
           bot = Fabricate(:bot)
           Chat::DiscoverableBot.create!(user: bot)

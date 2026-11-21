@@ -82,6 +82,7 @@ module Chat
         DiscoursePluginRegistry.apply_modifier(:chat_allowed_bot_user_ids, [], guardian)
 
       # Replacing modifiers must not drop bots explicitly listed by admins.
+      allowed_bot_user_ids |= User.interactive_bots.pluck(:id)
       allowed_bot_user_ids |= Chat::DiscoverableBot.pluck(:user_id)
       user_search = user_search.real(allowed_bot_user_ids:)
       user_search = user_search.includes(:user_option)

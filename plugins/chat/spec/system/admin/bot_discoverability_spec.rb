@@ -7,9 +7,7 @@ RSpec.describe "Manage bot chat discovery" do
   let(:form) { PageObjects::Components::FormKit.new(".admin-bot-form") }
   let(:admin_user) { PageObjects::Pages::AdminUser.new }
   let(:toggle) do
-    PageObjects::Components::DToggleSwitch.new(
-      ".chat-bot-discoverability .d-toggle-switch__checkbox",
-    )
+    PageObjects::Components::DToggleSwitch.new(".interactive-bot .d-toggle-switch__checkbox")
   end
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -24,8 +22,8 @@ RSpec.describe "Manage bot chat discovery" do
     sign_in(admin)
     visit "/admin/users/bots/new"
     form.field("username").fill_in("discoverable_bot")
-    expect(form.field("chat_discoverable")).to be_unchecked
-    form.field("chat_discoverable").check
+    expect(form.field("interactive_bot")).to be_unchecked
+    form.field("interactive_bot").check
     form.submit
     expect(toasts).to have_success(
       I18n.t("admin_js.admin.users.bots.created", username: "discoverable_bot"),
@@ -42,12 +40,30 @@ RSpec.describe "Manage bot chat discovery" do
     admin_user.visit(bot)
     expect(toggle).to be_checked
     toggle.toggle
-    try_until_success { expect(Chat::DiscoverableBot.exists?(user_id: bot.id)).to eq(false) }
+    try_until_success { expect(bot.reload).not_to be_interactive_bot }
 
     sign_in(member)
     visit "/"
     chat.open_new_message
     chat.message_creator.filter(bot.username)
     expect(chat.message_creator).to be_not_listing(bot)
+  end
+
+  it "lets an admin remove an existing chat-only listing without enabling notifications" do
+    bot = Fabricate(:bot)
+    Chat::DiscoverableBot.create!(user: bot)
+    sign_in(admin)
+    admin_user.visit(bot)
+
+    expect(toggle).to be_unchecked
+    legacy_toggle =
+      PageObjects::Components::DToggleSwitch.new(
+        ".chat-bot-discoverability .d-toggle-switch__checkbox",
+      )
+    expect(legacy_toggle).to be_checked
+    legacy_toggle.toggle
+
+    try_until_success { expect(Chat::DiscoverableBot.exists?(user_id: bot.id)).to eq(false) }
+    expect(bot.reload).not_to be_interactive_bot
   end
 end

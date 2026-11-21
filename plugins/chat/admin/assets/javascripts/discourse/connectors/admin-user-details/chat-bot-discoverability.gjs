@@ -8,9 +8,9 @@ import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class ChatBotDiscoverability extends Component {
-  // The server only sends this to admins, for eligible bots, while chat is enabled.
+  // Retain the narrower opt-out for bots already listed in chat.
   static shouldRender(args) {
-    return args.model.chat_discoverable !== undefined;
+    return args.model.chat_discoverable === true && !args.model.interactive_bot;
   }
 
   @tracked saving = false;

@@ -25,20 +25,16 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
         });
       });
 
-      test("discovery is opt-in and only offered while chat is enabled", async function (assert) {
+      test("interactive is available regardless of chat, without a second discoverability option", async function (assert) {
         await visit("/admin/users/bots/new");
-        assert
-          .dom('[data-name="chat_discoverable"] input')
-          .exists({ count: chatEnabled ? 1 : 0 });
+        assert.dom('[data-name="chat_discoverable"] input').doesNotExist();
+        assert.dom('[data-name="interactive_bot"] input').isNotChecked();
 
         const form = formKit(".admin-bot-form");
         await form.field("username").fillIn("test_bot");
         await form.submit();
 
-        assert.strictEqual(
-          payload.bot.chat_discoverable,
-          chatEnabled ? false : undefined
-        );
+        assert.strictEqual(payload.bot.chat_discoverable, undefined);
       });
     }
   );
