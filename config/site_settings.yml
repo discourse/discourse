@@ -490,6 +490,36 @@ basic:
     default: true
     client: true
     area: "notifications"
+  enable_desktop_notification_toasts:
+    default: false
+    client: true
+    area: "notifications"
+  desktop_notification_toast_duration_seconds:
+    default: 20
+    min: 3
+    max: 300
+    client: true
+    depends_on:
+      - "enable_desktop_notification_toasts"
+    area: "notifications"
+  desktop_notification_toast_max_stack:
+    default: 3
+    min: 1
+    max: 5
+    client: true
+    depends_on:
+      - "enable_desktop_notification_toasts"
+    area: "notifications"
+  desktop_notification_toast_excluded_types:
+    default: ""
+    client: true
+    type: list
+    list_type: compact
+    choices: "Notification.toast_type_names"
+    allow_any: false
+    depends_on:
+      - "enable_desktop_notification_toasts"
+    area: "notifications"
   push_notification_time_window_mins:
     default: 1
     min: 0

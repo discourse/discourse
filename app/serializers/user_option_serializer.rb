@@ -23,6 +23,7 @@ class UserOptionSerializer < ApplicationSerializer
              :email_in_reply_to,
              :like_notification_frequency,
              :notify_on_linked_posts,
+             :show_notification_toasts,
              :push_notification_level,
              :enable_upcoming_change_available_notifications,
              :include_tl0_in_digests,

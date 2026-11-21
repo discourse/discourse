@@ -32,4 +32,23 @@ describe "User preferences | Notifications" do
       expect(user_preferences_notifications_page).to have_notify_on_linked_posts_enabled
     end
   end
+
+  describe "notification toast preference" do
+    it "is hidden unless the site enables toast notifications" do
+      user_preferences_notifications_page.visit(user)
+      expect(page).to have_no_css(".pref-show-notification-toasts")
+    end
+
+    it "saves the user's opt-in" do
+      SiteSetting.enable_desktop_notification_toasts = true
+      user_preferences_notifications_page.visit(user)
+
+      find(".pref-show-notification-toasts input[type='checkbox']").check
+      user_preferences_notifications_page.save_changes
+
+      expect(user.user_option.reload.show_notification_toasts).to eq(true)
+      page.refresh
+      expect(page).to have_css(".pref-show-notification-toasts input[type='checkbox']:checked")
+    end
+  end
 end

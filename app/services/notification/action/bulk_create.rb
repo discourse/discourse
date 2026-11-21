@@ -57,11 +57,18 @@ class Notification::Action::BulkCreate < Service::ActionBase
 
     result = Notification.insert_all!(rows, returning: %i[id user_id])
     @notification_ids = result.rows.map(&:first)
-    @user_ids_from_insert = result.rows.map(&:second).uniq
+    @latest_notification_id_by_user =
+      result.rows.group_by(&:second).transform_values { |entries| entries.map(&:first).max }
   end
 
   def publish_notification_states
-    User.where(id: @user_ids_from_insert).find_each(&:publish_notifications_state)
+    User
+      .where(id: @latest_notification_id_by_user.keys)
+      .find_each do |user|
+        user.publish_notifications_state(
+          new_notification_id: @latest_notification_id_by_user[user.id],
+        )
+      end
   end
 
   def post_process_notifications

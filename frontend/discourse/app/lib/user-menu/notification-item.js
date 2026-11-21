@@ -86,7 +86,7 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
     return this.site.notificationLookup[this.notification.notification_type];
   }
 
-  onClick() {
+  prepareClick() {
     this.renderDirector.onClick?.();
     this.appEvents.trigger("user-menu:notification-click", {
       notification: this.notification,
@@ -114,6 +114,10 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
       setTransientHeader("Discourse-Clear-Notifications", this.notification.id);
       cookie("cn", this.notification.id, { path: getURL("/") });
     }
+  }
+
+  onClick() {
+    this.prepareClick();
     super.onClick(...arguments);
   }
 }

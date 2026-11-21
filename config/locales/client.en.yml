@@ -4020,6 +4020,11 @@ en:
       unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:
+      desktop_toast:
+        title: "New notification"
+        open: "Open notification"
+        preference: "Show notification toasts while I browse on desktop"
+        sender_and_topic: "%{sender} · %{topic}"
       tooltip:
         regular:
           one: "%{count} unseen notification"

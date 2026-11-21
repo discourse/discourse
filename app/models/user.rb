@@ -921,7 +921,7 @@ class User < ActiveRecord::Base
     seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
-  def publish_notifications_state
+  def publish_notifications_state(new_notification_id: nil)
     return if !allow_live_notifications?
 
     # publish last notification json with the message so we can apply an update
@@ -960,6 +960,7 @@ class User < ActiveRecord::Base
       unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
+      new_notification: new_notification_id.present? && notification&.id == new_notification_id,
       recent: recent,
       seen_notification_id: seen_notification_id,
     }
