@@ -1305,12 +1305,7 @@ task "uploads:downsize" => :environment do
     print "\r#{progress}% Fixed dimensions: #{dimensions_count} Downsized: #{downsized_count} Skipped: #{skipped} (upload id: #{upload.id})"
     log "\n"
 
-    path =
-      if upload.local?
-        Discourse.store.path_for(upload)
-      else
-        Discourse.store.download(upload, max_file_size_kb: 100.megabytes)
-      end
+    path = Discourse.store.download(upload, max_file_size_kb: 100.megabytes)
 
     unless path
       log "No image path"
