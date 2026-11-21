@@ -139,7 +139,7 @@
     "@floating-ui/dom": "^1.8.0",
     "@glimmer/component": "^2.2.1",
     "@glimmer/env": "^0.1.7",
-    "@rolldown/pluginutils": "1.0.1",
+    "@rolldown/pluginutils": "1.1.0",
     "@rollup/plugin-babel": "^7.1.0",
     "@tanstack/virtual-core": "3.19.11",
     "@types/jquery": "^4.0.1",
