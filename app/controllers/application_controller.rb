@@ -456,7 +456,6 @@ class ApplicationController < ActionController::Base
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
         Notification.read(current_user, notification_ids)
-        current_user.reload
         current_user.publish_notifications_state
         cookie_args = {}
         cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?

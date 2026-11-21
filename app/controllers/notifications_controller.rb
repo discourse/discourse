@@ -30,11 +30,12 @@ class NotificationsController < ApplicationController
       # notification_types is blank for the "all notifications" user menu tab
       include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
 
-      if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
-        if current_user.bump_last_seen_notification!
-          current_user.reload
-          current_user.publish_notifications_state
+      if !@readonly_mode
+        if notifications.present? && !params.has_key?(:silent)
+          current_user.bump_last_seen_notification!
         end
+
+        current_user.publish_notifications_state
       end
 
       if !params.has_key?(:silent) && params[:bump_last_seen_reviewable] && !@readonly_mode &&
@@ -95,6 +96,8 @@ class NotificationsController < ApplicationController
         )
       end
 
+      user.publish_notifications_state if user == current_user && !@readonly_mode
+
       render_json_dump(json)
     end
   end
@@ -107,7 +110,6 @@ class NotificationsController < ApplicationController
       current_user.bump_last_seen_notification!
     end
 
-    current_user.reload
     current_user.publish_notifications_state
 
     render json: success_json

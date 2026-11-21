@@ -2119,6 +2119,8 @@ class UsersController < ApplicationController
       serialized_bookmarks = serialize_data(bookmark_list.bookmarks, UserMenuBookmarkSerializer)
     end
 
+    current_user.publish_notifications_state if !@readonly_mode
+
     render json: {
              notifications: serialized_notifications || [],
              bookmarks: serialized_bookmarks || [],
@@ -2180,6 +2182,8 @@ class UsersController < ApplicationController
     if read_notifications.present?
       serialized_read_notifications = serialize_data(read_notifications, NotificationSerializer)
     end
+
+    current_user.publish_notifications_state if !@readonly_mode
 
     render json: {
              unread_notifications: serialized_unread_notifications || [],

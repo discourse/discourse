@@ -214,6 +214,24 @@ RSpec.describe "Notification visibility", type: :request do
     expect_no_visible_notification
   end
 
+  it "publishes current counts whenever the user fetches a notification list" do
+    notify(:edited, topic:)
+    category.set_permissions(group => :full)
+    category.save!
+    sign_in(user)
+
+    [
+      "/notifications.json?recent=true",
+      "/notifications.json?username=#{user.username}",
+      "/u/#{user.username}/user-menu-bookmarks.json",
+      "/u/#{user.username}/user-menu-private-messages.json",
+    ].each do |path|
+      messages = MessageBus.track_publish("/notification/#{user.id}") { get path }
+
+      expect(messages.map(&:data)).to contain_exactly(include(all_unread_notifications_count: 0))
+    end
+  end
+
   it "lists for staff only what both they and the owner can see, without publishing" do
     SiteSetting.suppress_secured_categories_from_admin = true
     group.add(user)
