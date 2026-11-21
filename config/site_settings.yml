@@ -189,6 +189,10 @@ branding:
     default: ""
     client: true
     type: upload
+  manifest_maskable_icon:
+    default: ""
+    client: true
+    type: upload
   manifest_screenshots:
     type: list
     list_type: simple

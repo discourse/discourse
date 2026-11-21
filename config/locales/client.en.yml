@@ -7417,6 +7417,10 @@ en:
               title: "Manifest icon"
               description: "Image used as logo/splash image on Android. If left blank, large_icon will be used."
               help_text: "Recommended size is 512 x 512 pixels."
+            manifest_maskable_icon:
+              title: "Maskable manifest icon"
+              description: "Optional icon for platforms that crop installed app icons to a shape. If left blank, the standard manifest icon is used."
+              help_text: "Use a square image with a solid background and keep the artwork within the centered safe area. Recommended size is 512 x 512 pixels."
             manifest_screenshots:
               title: "Manifest screenshots"
               description: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."

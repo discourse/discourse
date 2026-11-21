@@ -24,8 +24,45 @@ RSpec.describe MetadataController do
 
       expect(manifest["name"]).to eq(title)
 
-      expect(manifest["icons"].first["src"]).to eq(
-        UrlHelper.absolute(SiteSetting.site_manifest_icon_url),
+      icon = {
+        "src" => UrlHelper.absolute(SiteSetting.site_manifest_icon_url),
+        "sizes" => "512x512",
+        "type" => "image/png",
+      }
+      expect(manifest["icons"]).to eq([icon, icon.merge("purpose" => "maskable")])
+    end
+
+    it "uses the separate upload for the maskable icon" do
+      maskable_upload =
+        UploadCreator.new(file_from_fixtures("logo.jpg"), "maskable.jpg").create_for(
+          Discourse.system_user.id,
+        )
+      SiteSetting.manifest_icon = upload
+      SiteSetting.manifest_maskable_icon = maskable_upload
+
+      get "/manifest.webmanifest"
+
+      expect(response.status).to eq(200)
+      maskable_icon = SiteIconManager.manifest_maskable_icon
+      expect(maskable_icon).to have_attributes(
+        upload_id: maskable_upload.id,
+        width: 512,
+        height: 512,
+      )
+      expect(JSON.parse(response.body)["icons"]).to eq(
+        [
+          {
+            "src" => UrlHelper.absolute(SiteSetting.site_manifest_icon_url),
+            "sizes" => "512x512",
+            "type" => "image/png",
+          },
+          {
+            "src" => UrlHelper.absolute(GlobalPath.full_cdn_url(maskable_icon.url)),
+            "sizes" => "512x512",
+            "type" => "image/jpeg",
+            "purpose" => "maskable",
+          },
+        ],
       )
     end
 

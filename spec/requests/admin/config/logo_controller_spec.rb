@@ -6,6 +6,20 @@ RSpec.describe Admin::Config::LogoController do
   fab!(:user)
   fab!(:topic)
 
+  describe "#update" do
+    before { sign_in(admin) }
+
+    it "keeps the maskable icon when an update omits it" do
+      maskable_icon = Fabricate(:image_upload)
+      SiteSetting.manifest_maskable_icon = maskable_icon
+
+      put "/admin/config/logo.json", params: { manifest_icon: "" }
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.manifest_maskable_icon).to eq(maskable_icon)
+    end
+  end
+
   describe "#og_image_preview" do
     before do
       TopicOgImageGenerator.any_instance.stubs(:generate_bytes).returns("\x89PNG\r\n\x1A\n".b)
