@@ -125,6 +125,24 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#with_savepoint" do
+    it "rolls back the whole group when an insert fails at a batch boundary" do
+      create_connection(transaction_batch_size: 1) do |connection|
+        connection.execute("CREATE TABLE foo (id INTEGER PRIMARY KEY)")
+
+        expect do
+          connection.with_savepoint do
+            connection.insert("INSERT INTO foo (id) VALUES (?)", [1])
+            connection.insert("INSERT INTO foo (id) VALUES (?)", [1])
+          end
+        end.to raise_error(Extralite::Error)
+
+        connection.commit_transaction
+        expect(connection.query_value("SELECT COUNT(*) FROM foo")).to eq(0)
+      end
+    end
+  end
+
   describe "#attach_database" do
     it "commits pending inserts and safely quotes the database name" do
       create_connection do |connection|

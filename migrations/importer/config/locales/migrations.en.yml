@@ -4,6 +4,10 @@ en:
     done: "Done. Total runtime: %{runtime}"
     site_setting_log_message: "Updated by import script"
     site_settings:
+      applied: "Changed site settings for the import (limits, emails, cleanup jobs, rate limits)"
+      restored:
+        one: "Restored %{count} site setting changed for the import"
+        other: "Restored %{count} site settings changed for the import"
       id_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original %{type_name} ID '%{original_id}' to Discourse ID"
       username_not_mapped: "Failed to update site setting '%{setting_name}': Could not map original username '%{original_username}' to Discourse username"
     fallback_names:
@@ -17,6 +21,8 @@ en:
       surplus_found: "found %{count} surplus uploads (run with delete_surplus_uploads to remove them)"
       upload_failed: "failed to create upload %{id}: %{error}"
       insert_failed: "failed to record upload %{id}: %{error}"
+      adaptive_controller_failed: "Worker tuning failed, keeping the current worker count until it recovers: %{error}"
+      file_not_found: "source file not found for upload %{id} (%{filename})"
       fixer_missing_summary:
         one: "removed %{count} missing upload"
         other: "removed %{count} missing uploads"
@@ -30,3 +36,4 @@ en:
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
       s3_uploads_disabled: "WARNING: S3 upload settings are configured, but enable_s3_uploads is false. Files will be stored locally."
       s3_public_access_failed: "The S3 test upload could not be read without credentials (HTTP %{status}). Check the bucket's public access configuration, including s3_enable_access_control_tags."
+      inline_not_configured: "Some uploads are files on disk, but there is no files database and inline upload mode has no `root_paths`. Either run `disco upload` to build a files database, or add an `uploads:` section with `root_paths` to import.yml."
