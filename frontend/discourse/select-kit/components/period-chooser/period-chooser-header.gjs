@@ -22,6 +22,8 @@ export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponen
       }}
     </h2>
 
-    {{dIcon this.caretIcon class="angle-icon"}}
+    {{#unless this.selectKit.options.disabled}}
+      {{dIcon this.caretIcon class="angle-icon"}}
+    {{/unless}}
   </template>
 }
