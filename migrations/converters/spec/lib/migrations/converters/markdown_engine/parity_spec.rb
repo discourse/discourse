@@ -53,6 +53,8 @@ RSpec.describe Migrations::Converters::MarkdownEngine::Context, :rails do
       "> markdown quote with @someuser\n\nheading anchor test\n\n# A Heading",
       "<code>@someuser</code> and <pre>@someuser</pre>",
       "html block:\n\n<div>\n@someuser\n</div>",
+      %{inline tag <img src="upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png"> in prose},
+      %{<div>\n<img src="upload://2Yjf3WE4KOQ88YUb4fUMubKB9My.png">\n<img src='upload://abcdefghijklmnopqrstuvwxy.png'>\n</div>},
       "a\rb\r\nc with @someuser",
     ]
   end

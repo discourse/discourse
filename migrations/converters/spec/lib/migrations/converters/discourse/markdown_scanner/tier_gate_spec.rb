@@ -100,6 +100,12 @@ RSpec.describe Migrations::Converters::Discourse::MarkdownScanner::TierGate do
       expect(gate.classify("![p](upload://abc.png)")).to eq(:engine)
     end
 
+    it "treats an upload source inside a raw tag as a candidate" do
+      # A tag spells no trigger character of its own, so the scheme has to be
+      # one — core rewrites the source there like any other upload.
+      expect(gate.classify(%{<img src="upload://abc.png">})).to eq(:engine)
+    end
+
     it "treats supported full upload URLs as candidates, but not generic uploads paths" do
       sha1 = "0123456789abcdef0123456789abcdef01234567"
       expect(gate.classify("/uploads/default/original/2X/#{sha1}.png")).to eq(:engine)
