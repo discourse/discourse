@@ -176,6 +176,21 @@ RSpec.describe BadgeGranter do
   end
 
   describe ".backfill" do
+    it "uses the configured threshold for triggered and full badge grants" do
+      badge = Badge.find(Badge::NiceTopic)
+      post = Fabricate(:post, like_count: 3)
+      SiteSetting.builtin_badge_thresholds = [{ badge: "Nice Topic", threshold: 3 }]
+
+      BadgeGranter.backfill(badge, post_ids: [post.id])
+
+      expect(UserBadge.exists?(badge: badge, user: post.user, post_id: post.id)).to eq(true)
+
+      SiteSetting.builtin_badge_thresholds = []
+      BadgeGranter.backfill(badge)
+
+      expect(UserBadge.exists?(badge: badge, user: post.user, post_id: post.id)).to eq(false)
+    end
+
     it "has no broken badge queries" do
       Badge.all.each { |b| BadgeGranter.backfill(b) }
     end
