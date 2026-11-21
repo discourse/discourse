@@ -38,6 +38,17 @@ module PageObjects
         post.find(".contents > .cooked")
       end
 
+      def has_rtl_quote_border_in_ltr_interface?
+        page.has_css?("#{post_id} .cooked > blockquote") { |quote| quote.evaluate_script(<<~JS) }
+            (() => {
+              const style = getComputedStyle(this);
+              return getComputedStyle(document.documentElement).direction === "ltr" &&
+                style.direction === "rtl" &&
+                parseFloat(style.borderRightWidth) > 0 && style.borderLeftWidth === "0px";
+            })()
+          JS
+      end
+
       def click_category_hashtag(category)
         post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").click
       end
