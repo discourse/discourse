@@ -10,6 +10,7 @@ import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
 import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
+import CreateSubcategory from "discourse/components/modal/create-subcategory";
 import NavigationBar from "discourse/components/navigation-bar";
 import NavigationOptionsMenu from "discourse/components/navigation-options-menu";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -37,6 +38,7 @@ export default class DNavigation extends Component {
   @service currentUser;
   @service discovery;
   @service mobileTabBar;
+  @service modal;
 
   #topicCreator = {
     canCreate: () => this.canCreateTopic,
@@ -172,6 +174,21 @@ export default class DNavigation extends Component {
     return this.category?.can_edit;
   }
 
+  @computed(
+    "category.id",
+    "category.level",
+    "site.category_group_moderator_subcategory_parent_ids.[]"
+  )
+  get showCreateSubcategory() {
+    return (
+      this.category &&
+      this.site.category_group_moderator_subcategory_parent_ids?.includes(
+        this.category.id
+      ) &&
+      this.category.level + 1 < this.siteSettings.max_category_nesting
+    );
+  }
+
   @computed("tag", "tag.name", "additionalTags", "currentUser.canEditTags")
   get showTagEdit() {
     return (
@@ -257,6 +274,11 @@ export default class DNavigation extends Component {
       !this.notCategoriesRoute &&
       !this.category
     );
+  }
+
+  @action
+  createSubcategory() {
+    this.modal.show(CreateSubcategory, { model: this.category });
   }
 
   @action
@@ -446,6 +468,15 @@ export default class DNavigation extends Component {
             }}
           />
         {{/if}}
+      {{/if}}
+
+      {{#if this.showCreateSubcategory}}
+        <DButton
+          class="btn-default create-subcategory"
+          @action={{this.createSubcategory}}
+          @icon="plus"
+          @label="category.create_subcategory"
+        />
       {{/if}}
 
       {{#if this.showCombinedAdminDropdown}}

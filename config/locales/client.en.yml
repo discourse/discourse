@@ -5574,6 +5574,8 @@ en:
       edit: "Edit"
       edit_title: "Edit this category"
       edit_dialog_title: "Edit: %{categoryName}"
+      create_subcategory: "Create subcategory"
+      create_subcategory_description: "The subcategory will inherit access and moderation from %{categoryName}."
       view: "View Topics in Category"
       back: "Back to category"
       general: "General"
