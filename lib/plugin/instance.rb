@@ -1640,6 +1640,13 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
+  def register_notification_visibility_rule(types:, &rule)
+    raise ArgumentError, "types cannot be empty" if types.blank?
+
+    Notification.types.fetch_values(*types)
+    DiscoursePluginRegistry.notification_visibility_rules << { plugin: self, types:, rule: }
+  end
+
   ##
   # Register a class that implements [AdminDashboard::Reports::SourceProvider],
   # exposing a kind of report (built-in, Data Explorer query, etc.) for the

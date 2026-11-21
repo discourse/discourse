@@ -116,6 +116,13 @@ after_initialize do
 
   register_reviewable_type ReviewableLiveUser
 
+  register_notification_visibility_rule(types: [:live_invitation]) do |guardian|
+    room_id = Notification::Feed.data_id("room_id")
+    rooms = Live::Room.visible_to(guardian).unscope(where: :ephemeral)
+
+    Notification::Feed.exists(rooms.where("live_rooms.id = #{room_id}"))
+  end
+
   # Chat snapshots the hashtag orderings into Site.markdown_additional_options
   # at its own after_initialize, which runs before this one (plugins load
   # alphabetically) — refresh it so chat transcripts quoted inside posts can

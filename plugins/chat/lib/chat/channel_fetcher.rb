@@ -59,16 +59,35 @@ module Chat
       SQL
     end
 
-    def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
-      category_scope =
-        if guardian.anonymous? && Chat.anonymous_public_channel_access_allowed?
-          Category.secured(guardian)
-        else
-          Category.post_create_allowed(guardian)
-        end
+    def self.allowed_channels(guardian)
+      return Chat::Channel.none if !guardian.can_chat?
 
+      categories =
+        allowed_categories(guardian).secured(guardian).where(
+          "categories.id = chat_channels.chatable_id",
+        )
+      direct_messages =
+        Chat::DirectMessageUser.where(user_id: guardian.user&.id).where(
+          "direct_message_users.direct_message_channel_id = chat_channels.chatable_id",
+        )
+
+      Chat::Channel.where(<<~SQL)
+        (chat_channels.chatable_type = 'Category' AND #{Notification::Feed.exists(categories)})
+        OR (chat_channels.chatable_type = 'DirectMessage' AND #{Notification::Feed.exists(direct_messages)})
+      SQL
+    end
+
+    def self.allowed_categories(guardian)
+      if guardian.anonymous? && Chat.anonymous_public_channel_access_allowed?
+        Category.secured(guardian)
+      else
+        Category.post_create_allowed(guardian)
+      end
+    end
+
+    def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
       category_channel_sql =
-        category_scope
+        allowed_categories(guardian)
           .joins(
             "INNER JOIN chat_channels ON chat_channels.chatable_id = categories.id AND chat_channels.chatable_type = 'Category'",
           )

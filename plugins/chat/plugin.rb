@@ -715,6 +715,38 @@ after_initialize do
 
   register_bookmarkable(Chat::MessageBookmarkable)
 
+  register_notification_visibility_rule(
+    types: %i[chat_mention chat_invitation chat_watched_thread],
+  ) do |guardian|
+    channel_id = Notification::Feed.data_id("chat_channel_id")
+    channel =
+      Chat::ChannelFetcher.allowed_channels(guardian).where("chat_channels.id = #{channel_id}")
+
+    Notification::Feed.exists(channel)
+  end
+
+  register_notification_visibility_rule(types: %i[chat_watched_thread]) do |guardian|
+    thread_id = Notification::Feed.data_id("chat_thread_id")
+    original_messages =
+      Chat::Message.unscoped.where(
+        "chat_messages.id = (SELECT original_message_id FROM chat_threads WHERE id = #{thread_id})",
+      )
+
+    if !guardian.is_staff?
+      moderated_channels =
+        Chat::Channel.where(
+          chatable_type: Category.polymorphic_name,
+          chatable_id: guardian.moderated_category_ids.to_a,
+        )
+      original_messages =
+        original_messages.where(deleted_at: nil).or(
+          original_messages.where(chat_channel_id: moderated_channels.select(:id)),
+        )
+    end
+
+    Notification::Feed.exists(original_messages)
+  end
+
   # When we eventually allow secure_uploads in chat, this will need to be
   # removed. Depending on the channel, uploads may end up being secure.
   UploadSecurity.register_custom_public_type("chat-composer")

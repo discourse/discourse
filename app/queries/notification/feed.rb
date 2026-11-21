@@ -150,6 +150,7 @@ class Notification::Feed
   def visible
     @visible ||= [
       *@guardians.flat_map { |guardian| [visible_topic(guardian), visible_reviewable(guardian)] },
+      *registered_rules,
       visible_badge,
       visible_like,
     ].compact.join(" AND ")
@@ -214,6 +215,15 @@ class Notification::Feed
       end
 
     unless_type(:granted_badge, badge)
+  end
+
+  def registered_rules
+    DiscoursePluginRegistry.notification_visibility_rules.flat_map do |registered|
+      registered => { plugin:, types:, rule: }
+      next [unless_type(types, "FALSE")] if !plugin.enabled?
+
+      @guardians.map { |guardian| unless_type(types, rule.call(guardian).presence || "FALSE") }
+    end
   end
 
   def visible_like

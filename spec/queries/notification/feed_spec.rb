@@ -154,6 +154,47 @@ RSpec.describe Notification::Feed do
       expect(described_class.new(user).counts.grouped).to be_empty
     end
 
+    context "with a plugin rule" do
+      let(:plugin) { Plugin::Instance.new }
+
+      before { notify(:edited, topic: Fabricate(:topic)) }
+
+      after do
+        DiscoursePluginRegistry.notification_visibility_rules.reject! do |registered|
+          registered[:plugin] == plugin
+        end
+      end
+
+      it "hides the types of a rule that returns nothing" do
+        plugin.register_notification_visibility_rule(types: [:edited]) { nil }
+
+        expect(described_class.new(user).counts.grouped).to be_empty
+      end
+
+      it "rejects a rule for an unknown type or for no type" do
+        expect {
+          plugin.register_notification_visibility_rule(types: [:unknown]) { "TRUE" }
+        }.to raise_error(KeyError)
+        expect {
+          plugin.register_notification_visibility_rule(types: []) { "TRUE" }
+        }.to raise_error(ArgumentError)
+      end
+
+      it "applies the rule to its types only" do
+        plugin.register_notification_visibility_rule(types: [:liked]) { "FALSE" }
+        notify(:liked, topic: Fabricate(:topic))
+
+        expect(described_class.new(user).counts.grouped).to eq(Notification.types[:edited] => 1)
+      end
+
+      it "hides the types of a disabled plugin" do
+        plugin.register_notification_visibility_rule(types: [:edited]) { "TRUE" }
+        plugin.stubs(:enabled?).returns(false)
+
+        expect(described_class.new(user).counts.grouped).to be_empty
+      end
+    end
+
     it "counts the newest visible notifications past the unread limit" do
       notify(:edited, topic: Fabricate(:topic))
       notify(:liked, topic: Fabricate(:topic))
