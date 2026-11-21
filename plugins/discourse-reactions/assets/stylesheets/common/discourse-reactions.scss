@@ -253,8 +253,8 @@ html.discourse-reactions-no-select {
   font-family: inherit;
 
   &:focus-visible {
-    outline: none;
-    background: var(--d-post-control-background--hover);
+    outline: 2px solid var(--d-input-focused-color);
+    outline-offset: 2px;
   }
 
   .reactions-counter {
