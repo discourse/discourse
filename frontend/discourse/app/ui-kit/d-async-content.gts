@@ -459,6 +459,6 @@ class AsyncContentInlineError extends Component<AsyncContentInlineErrorSignature
   }
 
   <template>
-    <DFlashMessage role="alert" @flash={{this.errorMessage}} @type="error" />
+    <DFlashMessage @flash={{this.errorMessage}} @type="error" />
   </template>
 }

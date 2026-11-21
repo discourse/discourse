@@ -152,7 +152,6 @@ export default class CodeEditor extends Component<CodeEditorSignature> {
         <:error>
           <DFlashMessage
             class="code-editor__error"
-            role="alert"
             @flash={{i18n "code_editor.load_failed"}}
             @type="error"
           />
