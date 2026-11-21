@@ -171,6 +171,7 @@ class Notification < ActiveRecord::Base
         boost: 43, # Used by https://github.com/discourse/discourse-boosts
         suggested_edit_created: 44, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
         suggested_edit_accepted: 45, # Used by https://github.com/discourse/discourse/tree/main/plugins/discourse-suggested-edits
+        staff_queued_post_review: 47,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -252,10 +253,27 @@ class Notification < ActiveRecord::Base
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
+  def self.staff_queued_review_visibility_sql(guardian, table_name = "notifications")
+    type = types[:staff_queued_post_review]
+    return "#{table_name}.notification_type <> #{type}" unless guardian.can_see_review_queue?
+
+    accessible_ids = Reviewable.viewable_by(guardian.user, preload: false).reorder(nil).select(:id)
+    <<~SQL.squish
+      (#{table_name}.notification_type <> #{type} OR
+        EXISTS (
+          SELECT 1 FROM (#{accessible_ids.to_sql}) visible_reviews
+          WHERE visible_reviews.id =
+            CASE WHEN #{table_name}.data::jsonb ->> 'reviewable_id' ~ '^[0-9]{1,18}$'
+              THEN (#{table_name}.data::jsonb ->> 'reviewable_id')::bigint
+            END
+        ))
+    SQL
+  end
+
   def self.filter_inaccessible_reviewable_notifications(guardian, notifications)
     reviewable_ids =
       notifications
-        .select(&:reviewable_mention?)
+        .select(&:reviewable_linked?)
         .map { |notification| notification.data_hash[:reviewable_id].to_i }
         .uniq
     return notifications if reviewable_ids.empty?
@@ -272,7 +290,7 @@ class Notification < ActiveRecord::Base
       end
 
     notifications.reject do |notification|
-      notification.reviewable_mention? &&
+      notification.reviewable_linked? &&
         !accessible_ids.include?(notification.data_hash[:reviewable_id].to_i)
     end
   end
@@ -316,8 +334,16 @@ class Notification < ActiveRecord::Base
     notification_type == Notification.types[:mentioned] && data_hash[:reviewable_id].present?
   end
 
+  def reviewable_linked?
+    reviewable_mention? ||
+      (
+        notification_type == Notification.types[:staff_queued_post_review] &&
+          data_hash[:reviewable_id].present?
+      )
+  end
+
   def url
-    return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}" if reviewable_mention?
+    return "#{Discourse.base_path}/review/#{data_hash[:reviewable_id]}" if reviewable_linked?
 
     return if topic.blank?
     return consolidated_nested_replied_url if consolidated_nested_replied?

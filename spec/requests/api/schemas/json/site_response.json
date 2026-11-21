@@ -8,6 +8,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "staff_queued_post_review": {
+          "type": "integer"
+        },
         "mentioned": {
           "type": "integer"
         },

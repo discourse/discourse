@@ -741,6 +741,7 @@ class User < ActiveRecord::Base
          WHERE t.deleted_at IS NULL
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
+           AND #{staff_queued_review_visibility_sql}
            AND NOT read
            #{since ? "AND n.created_at > :since" : ""}
     SQL
@@ -758,6 +759,7 @@ class User < ActiveRecord::Base
          WHERE t.deleted_at IS NULL
            AND n.high_priority = :high_priority
            AND n.user_id = :user_id
+           AND #{staff_queued_review_visibility_sql}
            AND NOT read
     SQL
 
@@ -766,7 +768,11 @@ class User < ActiveRecord::Base
   end
 
   def available_notification_types
-    notifications.visible.distinct.pluck(:notification_type)
+    notifications
+      .visible
+      .where(Notification.staff_queued_review_visibility_sql(guardian))
+      .distinct
+      .pluck(:notification_type)
   end
 
   MAX_UNREAD_BACKLOG = 400
@@ -778,6 +784,7 @@ class User < ActiveRecord::Base
         LEFT JOIN topics t ON t.id = n.topic_id
         WHERE t.deleted_at IS NULL
           AND n.user_id = :user_id
+          AND #{staff_queued_review_visibility_sql}
           AND NOT n.read
         LIMIT :limit
       ) AS X
@@ -833,6 +840,7 @@ class User < ActiveRecord::Base
            WHERE t.deleted_at IS NULL AND
             n.high_priority = FALSE AND
             n.user_id = :user_id AND
+            #{staff_queued_review_visibility_sql} AND
             n.id > :seen_notification_id AND
             NOT read
           LIMIT :limit
@@ -860,6 +868,7 @@ class User < ActiveRecord::Base
           LEFT JOIN topics t ON t.id = n.topic_id
            WHERE t.deleted_at IS NULL AND
             n.user_id = :user_id AND
+            #{staff_queued_review_visibility_sql} AND
             n.id > :seen_notification_id AND
             NOT read
           LIMIT :limit
@@ -925,7 +934,16 @@ class User < ActiveRecord::Base
     return if !allow_live_notifications?
 
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order("notifications.created_at desc").first
+    notification =
+      notifications
+        .visible
+        .where(Notification.staff_queued_review_visibility_sql(guardian))
+        .order("notifications.created_at desc")
+        .first
+    if notification&.reviewable_linked?
+      notification =
+        Notification.filter_inaccessible_reviewable_notifications(guardian, [notification]).first
+    end
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = <<~SQL
@@ -936,6 +954,7 @@ class User < ActiveRecord::Base
           t.deleted_at IS NULL AND
           n.high_priority AND
           n.user_id = :user_id AND
+          #{staff_queued_review_visibility_sql} AND
           NOT read
         ORDER BY n.id DESC
         LIMIT 20
@@ -947,7 +966,8 @@ class User < ActiveRecord::Base
        WHERE
         t.deleted_at IS NULL AND
         (n.high_priority = FALSE OR read) AND
-        n.user_id = :user_id
+        n.user_id = :user_id AND
+        #{staff_queued_review_visibility_sql}
        ORDER BY n.id DESC
        LIMIT 20
       ) AS y
@@ -2342,6 +2362,10 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def staff_queued_review_visibility_sql
+    Notification.staff_queued_review_visibility_sql(guardian, "n")
+  end
 
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)
