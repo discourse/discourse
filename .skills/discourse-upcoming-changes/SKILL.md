@@ -129,8 +129,8 @@ Ask user to provide an image, then process it using the skill's optimization scr
 
    This script:
 
-   - Converts any image format to PNG using Discourse's ImageMagick integration
-   - Resizes to max 1200px width using `OptimizedImage.downsize`
+   - Converts supported images to PNG using libvips
+   - Resizes images wider than 1200px while preserving their aspect ratio
    - Compresses with pngquant via `FileHelper.optimize_image!`
 
 3. **Final path:** `public/images/upcoming_changes/<setting_name>.png`

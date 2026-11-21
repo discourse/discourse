@@ -41,7 +41,7 @@ class OptimizedImage < ActiveRecord::Base
     # no extension so try to guess it
     upload.fix_image_extension if !upload.extension
 
-    if !upload.extension.match?(IM_DECODERS)
+    if !upload.extension.match?(SUPPORTED_EXTENSIONS)
       if opts[:raise_on_error]
         raise InvalidAccess
       else
@@ -98,17 +98,8 @@ class OptimizedImage < ActiveRecord::Base
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
 
-        if GlobalSetting.enable_vips_image_processing
-          if %w[.jpg .jpeg].include?(extension.downcase)
-            opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
-          end
-        else
-          target_quality =
-            upload.target_jpeg_image_quality(
-              original_path,
-              SiteSetting.ImageQuality.image_preview_jpg_quality,
-            )
-          opts = opts.merge(quality: target_quality) if target_quality
+        if %w[.jpg .jpeg].include?(extension.downcase)
+          opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
         end
         opts = opts.merge(upload_id: upload.id)
 
@@ -203,11 +194,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS = /\A(jpe?g|png|gif|webp|avif|svg)\z/i
-
-  def self.prepend_decoder!(path, ext_path = nil, opts = nil)
-    "#{image_extension(path: path, ext_path: ext_path, opts: opts || {})}:#{path}"
-  end
+  SUPPORTED_EXTENSIONS = /\A(jpe?g|png|gif|webp|avif|svg)\z/i
 
   def self.image_extension(path:, ext_path:, opts:)
     # This logic is a little messy but the result of using mocks for most
@@ -222,249 +209,79 @@ class OptimizedImage < ActiveRecord::Base
       extension = File.extname(opts[:filename] || ext_path || path)[1..-1]
     end
 
-    if !extension || !extension.match?(IM_DECODERS)
+    if !extension || !extension.match?(SUPPORTED_EXTENSIONS)
       raise Discourse::InvalidAccess.new("Unsupported extension: #{extension}")
     end
     extension
   end
   private_class_method :image_extension
 
-  def self.thumbnail_or_resize
-    SiteSetting.strip_image_metadata ? "thumbnail" : "resize"
-  end
-
-  def self.resize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    # note FROM my not be named correctly
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = ["#{from}[0]"]
-
-    instructions << "-colors" << opts[:colors].to_s if opts[:colors]
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    # NOTE: ORDER is important!
-    instructions.concat(
-      %W[
-        -auto-orient
-        -gravity
-        center
-        -background
-        transparent
-        -#{thumbnail_or_resize}
-        #{dimensions}^
-        -extent
-        #{dimensions}
-        -interpolate
-        catrom
-        -unsharp
-        2x0.5+0.7+0
-        -interlace
-        none
-        -profile
-        #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-        #{to}
-      ],
-    )
-  end
-
-  def self.crop_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    instructions = %W{
-      #{from}[0]
-      -auto-orient
-      -gravity
-      north
-      -background
-      transparent
-      -#{thumbnail_or_resize}
-      #{dimensions}^
-      -crop
-      #{dimensions}+0+0
-      -unsharp
-      2x0.5+0.7+0
-      -interlace
-      none
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-    }
-
-    instructions << "-quality" << opts[:quality].to_s if opts[:quality]
-
-    instructions << to
-  end
-
-  def self.downsize_instructions(from, to, dimensions, opts = {})
-    ensure_safe_paths!(from, to)
-
-    from = prepend_decoder!(from, to, opts)
-    to = prepend_decoder!(to, to, opts)
-
-    %W{
-      #{from}[0]
-      -auto-orient
-      -gravity
-      center
-      -background
-      transparent
-      -interlace
-      none
-      -resize
-      #{dimensions}
-      -profile
-      #{Rails.root.join("vendor/data/RT_sRGB.icm")}
-      #{to}
-    }
-  end
-
   def self.resize(from, to, width, height, opts = {})
-    if opts[:quality].nil? &&
-         image_extension(path: to, ext_path: to, opts: opts).match?(/\Ajpe?g\z/i)
-      opts = opts.merge(quality: SiteSetting.ImageQuality.image_preview_jpg_quality)
+    quality = opts[:quality]
+    if quality.nil? && image_extension(path: to, ext_path: to, opts: opts).match?(/\Ajpe?g\z/i)
+      quality = SiteSetting.ImageQuality.image_preview_jpg_quality
     end
 
-    if GlobalSetting.enable_vips_image_processing
-      ensure_safe_paths!(from, to)
-      resize_with_vips(from: from, to: to, width: width, height: height, opts: opts)
-    else
-      optimize(:optimized_image_resize, from, to, "#{width}x#{height}", opts)
-    end
-  end
-
-  def self.resize_with_vips(from:, to:, width:, height:, opts:)
-    DiscourseVips.thumbnail(
-      input_path: from,
-      output_path: to,
-      input_format: image_extension(path: from, ext_path: to, opts: opts),
-      output_format: image_extension(path: to, ext_path: to, opts: opts),
-      width: width,
-      height: height,
+    thumbnail(
+      from,
+      to,
+      opts,
+      width:,
+      height:,
       size: :both,
       crop: :centre,
-      sharpen: true,
+      quality:,
       operation: :optimized_image_resize,
-      quality: opts[:quality],
-      strip_metadata: SiteSetting.strip_image_metadata,
-      timeout: MAX_CONVERT_SECONDS,
     )
-    optimize_image(to: to)
-  rescue => error
-    handle_optimization_error(error: error, to: to, opts: opts)
   end
-  private_class_method :resize_with_vips
 
   def self.crop(from, to, width, height, opts = {})
-    if GlobalSetting.enable_vips_image_processing
-      ensure_safe_paths!(from, to)
-      crop_with_vips(from: from, to: to, width: width, height: height, opts: opts)
-    else
-      optimize(:optimized_image_crop, from, to, "#{width}x#{height}", opts)
-    end
-  end
-
-  def self.crop_with_vips(from:, to:, width:, height:, opts:)
-    DiscourseVips.thumbnail(
-      input_path: from,
-      output_path: to,
-      input_format: image_extension(path: from, ext_path: to, opts: opts),
-      output_format: image_extension(path: to, ext_path: to, opts: opts),
-      width: width,
-      height: height,
+    thumbnail(
+      from,
+      to,
+      opts,
+      width:,
+      height:,
       crop: :all,
       gravity: :north,
-      sharpen: true,
-      operation: :optimized_image_crop,
       quality: opts[:quality],
-      strip_metadata: SiteSetting.strip_image_metadata,
-      timeout: MAX_CONVERT_SECONDS,
+      operation: :optimized_image_crop,
     )
-    optimize_image(to: to)
-  rescue => error
-    handle_optimization_error(error: error, to: to, opts: opts)
   end
-  private_class_method :crop_with_vips
 
   def self.downsize(from:, to:, scale: nil, width: nil, height: nil, max_pixels: nil, **opts)
-    if GlobalSetting.enable_vips_image_processing
-      ensure_safe_paths!(from, to)
-      downsize_with_vips(
-        from: from,
-        to: to,
-        scale: scale,
-        width: width,
-        height: height,
-        max_pixels: max_pixels,
-        opts: opts,
-      )
-    else
-      dimensions =
-        if scale
-          "#{scale * 100}%"
-        elsif max_pixels
-          "#{max_pixels}@"
-        else
-          "#{width}x#{height}>"
-        end
-      optimize(:optimized_image_downsize, from, to, dimensions, opts)
-    end
-  end
-
-  def self.downsize_with_vips(from:, to:, scale:, width:, height:, max_pixels:, opts:)
-    DiscourseVips.thumbnail(
-      input_path: from,
-      output_path: to,
-      input_format: image_extension(path: from, ext_path: to, opts: opts),
-      output_format: image_extension(path: to, ext_path: to, opts: opts),
-      scale: scale,
-      width: width,
-      height: height,
-      max_pixels: max_pixels,
+    thumbnail(
+      from,
+      to,
+      opts,
+      scale:,
+      width:,
+      height:,
+      max_pixels:,
       size: width ? :down : :both,
-      sharpen: true,
       operation: :optimized_image_downsize,
-      strip_metadata: SiteSetting.strip_image_metadata,
-      timeout: MAX_CONVERT_SECONDS,
     )
-    optimize_image(to: to)
-  rescue => error
-    handle_optimization_error(error: error, to: to, opts: opts)
   end
-  private_class_method :downsize_with_vips
 
-  INSTRUCTION_METHODS = {
-    optimized_image_resize: :resize_instructions,
-    optimized_image_crop: :crop_instructions,
-    optimized_image_downsize: :downsize_instructions,
-  }.freeze
-  private_constant :INSTRUCTION_METHODS
-
-  def self.optimize(operation, from, to, dimensions, opts = {})
-    instructions = nil
+  def self.thumbnail(from, to, opts, **options)
+    ensure_safe_paths!(from, to)
     begin
-      ImageProcessing::OutputFile.write(to) do |temporary_path|
-        instructions =
-          public_send(INSTRUCTION_METHODS.fetch(operation), from, temporary_path, dimensions, opts)
-        ImageMagick.magick(
-          *instructions,
-          operation: operation,
-          read: [from],
-          write: [temporary_path],
-          nice: 10,
-          timeout: MAX_CONVERT_SECONDS,
-        )
-      end
+      DiscourseVips.thumbnail(
+        input_path: from,
+        output_path: to,
+        input_format: image_extension(path: from, ext_path: to, opts: opts),
+        output_format: image_extension(path: to, ext_path: to, opts: opts),
+        sharpen: true,
+        strip_metadata: SiteSetting.strip_image_metadata,
+        timeout: MAX_CONVERT_SECONDS,
+        **options,
+      )
       optimize_image(to: to)
     rescue => error
-      handle_optimization_error(error: error, to: to, opts: opts, instructions: instructions)
+      handle_optimization_error(error: error, to: to, opts: opts)
     end
   end
+  private_class_method :thumbnail
 
   def self.optimize_image(to:)
     allow_pngquant = to.downcase.ends_with?(".png") && File.size(to) < MAX_PNGQUANT_SIZE
@@ -473,25 +290,17 @@ class OptimizedImage < ActiveRecord::Base
   end
   private_class_method :optimize_image
 
-  def self.handle_optimization_error(error:, to:, opts:, instructions: nil)
+  def self.handle_optimization_error(error:, to:, opts:)
     raise error if opts[:raise_on_error]
 
     message = +"Failed to optimize image:"
-    if error.message =~ /\A(?:convert|magick):([^`]+)/
-      message << $1
-    elsif error.is_a?(DiscourseVips::Error)
+    if error.is_a?(DiscourseVips::Error)
       message << " #{error.message}"
     else
       message << " unknown reason"
     end
 
-    Discourse.warn(
-      message,
-      upload_id: opts[:upload_id],
-      location: to,
-      error_message: error.message,
-      instructions: instructions,
-    )
+    Discourse.warn(message, upload_id: opts[:upload_id], location: to, error_message: error.message)
     false
   end
   private_class_method :handle_optimization_error

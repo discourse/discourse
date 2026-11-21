@@ -83,7 +83,6 @@ class ProblemCheck
     ProblemCheck::GoogleOauth2Config,
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
-    ProblemCheck::ImageMagick,
     ProblemCheck::Landlock,
     ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,

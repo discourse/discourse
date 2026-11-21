@@ -263,53 +263,39 @@ RSpec.describe Upload do
   end
 
   describe "#fix_dimensions!" do
-    shared_examples "SVG dimension repair" do |expected_zero_dimensions|
-      it "persists SVG dimensions and thumbnail dimensions" do
-        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
-        file = file_from_fixtures("tiny.svg")
-        upload.update!(url: Discourse.store.store_upload(file, upload))
+    it "persists SVG dimensions and thumbnail dimensions" do
+      upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+      file = file_from_fixtures("tiny.svg")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
 
-        upload.fix_dimensions!
+      upload.fix_dimensions!
 
-        expect(
-          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
-        ).to eq("width" => 115, "height" => 86, "thumbnail_width" => 115, "thumbnail_height" => 86)
-      end
-
-      it "stores the detected dimensions for a zero-sized SVG" do
-        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
-        file = file_from_fixtures("zero_sized.svg")
-        upload.update!(url: Discourse.store.store_upload(file, upload))
-
-        upload.fix_dimensions!
-
-        expect([upload.reload.width, upload.height]).to eq(expected_zero_dimensions)
-        expect([upload.thumbnail_width, upload.thumbnail_height]).to eq(expected_zero_dimensions)
-      end
-
-      it "stores zero dimensions when SVG dimension detection fails" do
-        upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
-        file = file_from_contents("invalid SVG", "invalid.svg")
-        upload.update!(url: Discourse.store.store_upload(file, upload))
-
-        upload.fix_dimensions!
-
-        expect(
-          upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
-        ).to eq("width" => 0, "height" => 0, "thumbnail_width" => 0, "thumbnail_height" => 0)
-      end
+      expect(
+        upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+      ).to eq("width" => 115, "height" => 86, "thumbnail_width" => 115, "thumbnail_height" => 86)
     end
 
-    context "with libvips disabled" do
-      before { global_setting :enable_vips_image_processing, false }
+    it "stores the detected dimensions for a zero-sized SVG" do
+      upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+      file = file_from_fixtures("zero_sized.svg")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
 
-      include_examples "SVG dimension repair", [120, 90]
+      upload.fix_dimensions!
+
+      expect([upload.reload.width, upload.height]).to eq([0, 0])
+      expect([upload.thumbnail_width, upload.thumbnail_height]).to eq([0, 0])
     end
 
-    context "with libvips enabled" do
-      before { global_setting :enable_vips_image_processing, true }
+    it "stores zero dimensions when SVG dimension detection fails" do
+      upload = Fabricate(:upload, extension: "svg", width: nil, height: nil)
+      file = file_from_contents("invalid SVG", "invalid.svg")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
 
-      include_examples "SVG dimension repair", [0, 0]
+      upload.fix_dimensions!
+
+      expect(
+        upload.reload.attributes.slice("width", "height", "thumbnail_width", "thumbnail_height"),
+      ).to eq("width" => 0, "height" => 0, "thumbnail_width" => 0, "thumbnail_height" => 0)
     end
   end
 
@@ -980,7 +966,12 @@ RSpec.describe Upload do
   describe "#dominant_color" do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
-    let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
+    let(:high_color_image) do
+      upload = Fabricate(:upload)
+      file = file_from_fixtures("dominant-color-low-alpha-16bit.png")
+      upload.update!(url: Discourse.store.store_upload(file, upload))
+      upload
+    end
     let(:tiny_image) do
       upload = Fabricate(:upload, extension: "png")
       file = file_from_fixtures("cropped.png")
@@ -1014,50 +1005,14 @@ RSpec.describe Upload do
       upload
     end
 
-    it "correctly identifies and stores an image's dominant color with ImageMagick" do
-      global_setting :enable_vips_image_processing, false
-
-      expect(white_image.dominant_color).to eq(nil)
-      expect(white_image.dominant_color(calculate_if_missing: true)).to eq("FFFFFF")
-      expect(white_image.dominant_color).to eq("FFFFFF")
-
-      expect(red_image.dominant_color).to eq(nil)
-      expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
-      expect(red_image.dominant_color).to eq("FF0000")
-
-      expect(high_color_image.dominant_color).to eq(nil)
-      # original is: #000A00F00
-      # downsamples to: #009FEF
-      # A00 is closer to 9F than A0
-      # EF is closer to F00 than F0
-      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
-      expect(high_color_image.dominant_color).to eq("009FEF")
-
-      uncached_tiny_color = tiny_image.dominant_color
-
-      expect(uncached_tiny_color).to eq(nil)
-
-      calculated_tiny_color = tiny_image.dominant_color(calculate_if_missing: true)
-
-      expect(calculated_tiny_color).to eq("524F40")
-
-      cached_tiny_color = tiny_image.dominant_color
-
-      expect(cached_tiny_color).to eq(calculated_tiny_color)
-    end
-
-    it "uses libvips to calculate the dominant color when enabled" do
-      global_setting :enable_vips_image_processing, true
-
+    it "calculates the dominant color" do
       expect(tiny_image.dominant_color(calculate_if_missing: true)).to eq("565342")
     end
 
-    it "normalizes a 16-bit dominant color when libvips is enabled" do
-      global_setting :enable_vips_image_processing, true
-
+    it "normalizes a 16-bit dominant color" do
       color = high_color_image.dominant_color(calculate_if_missing: true)
 
-      expect(color).to eq("00A0F0")
+      expect(color).to eq("FF0000")
       expect(high_color_image.dominant_color).to eq(color)
     end
 
@@ -1067,7 +1022,6 @@ RSpec.describe Upload do
     end
 
     it "stores an empty dominant color after image processing fails" do
-      global_setting :enable_vips_image_processing, true
       DiscourseVips.stubs(:dominant_color).raises(DiscourseVips::Error).then.returns("FFFFFF")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
@@ -1120,19 +1074,7 @@ RSpec.describe Upload do
       expect(invalid_image.dominant_color).to eq("")
     end
 
-    it "raises when ImageMagick returns an invalid dominant color" do
-      global_setting :enable_vips_image_processing, false
-      ImageMagick.stubs(:magick).returns("someinvalidoutput")
-
-      expect(invalid_image.dominant_color).to eq(nil)
-      expect { invalid_image.dominant_color(calculate_if_missing: true) }.to raise_error(
-        /Calculated dominant color but unable to parse output/,
-      )
-      expect(invalid_image.dominant_color).to eq(nil)
-    end
-
     it "stores an empty string for an invalid dominant color response" do
-      global_setting :enable_vips_image_processing, true
       DiscourseVips.stubs(:dominant_color).returns("invalid")
 
       expect(white_image.dominant_color(calculate_if_missing: true)).to eq("")
@@ -1170,22 +1112,6 @@ RSpec.describe Upload do
       )
 
       expect { u.update!(dominant_color: "abcd") }.to raise_error(ActiveRecord::RecordInvalid)
-    end
-  end
-
-  describe "#target_jpeg_image_quality" do
-    let(:local_path) { Rails.root.join("spec/fixtures/images/logo.jpg").to_s }
-
-    it "returns nil when the target quality is higher than the source quality" do
-      target_quality = upload.target_jpeg_image_quality(local_path, 100)
-
-      expect(target_quality).to eq(nil)
-    end
-
-    it "returns the target quality when it is lower than the source quality" do
-      target_quality = upload.target_jpeg_image_quality(local_path, 10)
-
-      expect(target_quality).to eq(10)
     end
   end
 
