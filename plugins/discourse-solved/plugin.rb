@@ -56,6 +56,7 @@ after_initialize do
     register_category_type(DiscourseSolved::Categories::Types::Support)
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
+    ::Badge.prepend(DiscourseSolved::BadgeExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
     ::Topic.prepend(DiscourseSolved::TopicExtension)
     ::User.prepend(DiscourseSolved::UserExtension)

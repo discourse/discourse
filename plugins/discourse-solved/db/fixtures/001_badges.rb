@@ -30,20 +30,6 @@ Badge.seed(:name) do |badge|
   badge.system = true
 end
 
-def solved_query_with_count(min_count)
-  <<~SQL
-    SELECT p.user_id, MAX(dsta.created_at) AS granted_at
-    FROM discourse_solved_solved_topics dsst
-         JOIN discourse_solved_topic_answers dsta ON dsta.solved_topic_id = dsst.id
-         JOIN badge_posts p ON dsta.answer_post_id = p.id
-         JOIN topics t ON p.topic_id = t.id
-    WHERE p.user_id <> t.user_id -- ignore topics solved by OP
-      AND (:backfill OR p.id IN (:post_ids))
-    GROUP BY p.user_id
-    HAVING COUNT(*) >= #{min_count}
-  SQL
-end
-
 [
   ["Solved 2", BadgeType::Silver, 10],
   ["Solved 3", BadgeType::Gold, 50],
@@ -54,7 +40,7 @@ end
     badge.default_icon = "square-check"
     badge.badge_type_id = level
     badge.default_badge_grouping_id = BadgeGrouping::Community
-    badge.query = solved_query_with_count(count)
+    badge.query = DiscourseSolved::Queries.solved_badge_query(count)
     badge.listable = true
     badge.default_allow_title = true
     badge.target_posts = false
