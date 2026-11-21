@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableScore, type: :model do
+  describe "#automated_detection?" do
+    it "recognizes core automated reasons only for the system user" do
+      score = Fabricate.build(:reviewable_score, user: Discourse.system_user)
+
+      %w[watched_word fast_typer auto_silence_regex email_spam suspect_user].each do |reason|
+        score.reason = reason
+        expect(score.automated_detection?).to eq(true)
+      end
+      score.reason = "unknown"
+      expect(score.automated_detection?).to eq(false)
+      score.reason = "watched_word"
+      score.user = Fabricate(:user)
+      expect(score.automated_detection?).to eq(false)
+    end
+  end
+
   describe "transitions" do
     fab!(:user) { Fabricate(:user, trust_level: TrustLevel[3]) }
     fab!(:post)

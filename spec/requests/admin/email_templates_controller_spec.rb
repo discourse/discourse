@@ -40,6 +40,30 @@ RSpec.describe Admin::EmailTemplatesController do
         )
       end
 
+      it "lists the moderation notice variants with action and source labels" do
+        expected = {
+          "system_messages.post_hidden_moderator" =>
+            "Post hidden by a moderator after community flags",
+          "system_messages.post_hidden_automated" =>
+            "Post hidden by a moderator after an automated flag",
+          "system_messages.post_hidden_again_moderator" =>
+            "Post hidden again by a moderator after community flags",
+          "system_messages.post_hidden_again_automated" =>
+            "Post hidden again by a moderator after an automated flag",
+          "system_messages.flags_agreed_and_post_deleted_automated" =>
+            "Post removed by staff after automated flags",
+          "system_messages.flags_agreed_and_post_deleted_for_responders_automated" =>
+            "Reply removed with an automatically flagged post",
+        }
+
+        get "/admin/email/templates.json"
+
+        expect(response.status).to eq(200)
+        templates = response.parsed_body["email_templates"]
+        notices = templates.select { |template| expected.key?(template["id"]) }
+        expect(notices.to_h { |template| [template["id"], template["title"]] }).to eq(expected)
+      end
+
       it "returns overridden = true if subject or body has translation_overrides record" do
         put "/admin/email/templates/user_notifications.admin_login",
             params: {
@@ -149,6 +173,46 @@ RSpec.describe Admin::EmailTemplatesController do
   describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
+
+      it "applies an edited automated notice subject and body to delivered messages" do
+        subject = "Custom automated flag notice"
+        body =
+          "Custom moderation instructions.\n\n#{original_text("system_messages.post_hidden_automated.text_body_template")}"
+
+        put "/admin/email/templates/system_messages.post_hidden_automated",
+            params: {
+              email_template: {
+                subject:,
+                body:,
+              },
+            },
+            headers: headers
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["email_template"]).to include(
+          "subject" => subject,
+          "body" => body,
+        )
+
+        Jobs::SendSystemMessage.clear
+        ModerationNotice.enqueue(
+          user:,
+          message_type: "post_hidden",
+          post_action_type_id: PostActionType.types[:inappropriate],
+          message_options: {
+            flag_source: "automated",
+            url: "/flagged-post",
+            edit_delay: 10,
+          },
+        )
+        Jobs::SendSystemMessage.new.execute(
+          Jobs::SendSystemMessage.jobs.sole["args"].first.deep_symbolize_keys,
+        )
+
+        expect(Post.last.topic.title).to eq(subject)
+        expect(Post.last.raw).to start_with("Custom moderation instructions.")
+        expect(Post.last.raw).to include("an automated check indicates")
+      end
 
       it "returns 'not found' when an unknown email template id is used" do
         put "/admin/email/templates/non_existent_template",

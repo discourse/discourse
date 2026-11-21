@@ -8,6 +8,34 @@ RSpec.describe ReviewableFlaggedPost do
       enable_dsa_reporting
     end
 
+    it "uses automated notice wording for triage flags and community wording when a community flag contributes" do
+      moderator = Fabricate(:admin)
+      %i[automated mixed].each do |source|
+        reviewable = Fabricate(:reviewable_flagged_post)
+        reviewable.reviewable_scores.destroy_all
+        reviewable.add_score(
+          Discourse.system_user,
+          ReviewableScore.types[:inappropriate],
+          context: "#{DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX}123",
+        )
+        if source == :mixed
+          reviewable.add_score(Fabricate(:user), ReviewableScore.types[:inappropriate])
+        end
+
+        reviewable.perform(moderator, :delete_and_agree)
+
+        args = Jobs::SendSystemMessage.jobs.last["args"].first
+        expected = source == :automated ? "flagged automatically" : "flagged by the community"
+        Jobs::SendSystemMessage.new.execute(args.deep_symbolize_keys)
+        expect(Post.last.raw).to include(expected)
+        expect(
+          DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).payload[
+            "automated_detection"
+          ],
+        ).to eq("Yes")
+      end
+    end
+
     it "records automatic detection when a moderator deletes spam detected by the spam bot" do
       AiModerationSetting.create!(setting_type: :spam, llm_model: Fabricate(:llm_model))
       SiteSetting.ai_spam_detection_enabled = true
@@ -19,6 +47,12 @@ RSpec.describe ReviewableFlaggedPost do
       SiteSetting.ai_spam_detection_enabled = false
 
       reviewable.perform(Fabricate(:admin), :delete_and_agree)
+
+      args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+      Jobs::SendSystemMessage.new.execute(args)
+      expect(Post.last.raw).to include(
+        "This post was flagged automatically and a staff member opted to remove it.",
+      )
 
       statement = DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id)
       expect(statement.payload).to include(

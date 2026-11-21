@@ -18,6 +18,15 @@ class ReviewableModerationActions
     @reviewable = reviewable
     @performed_by = performed_by
     @classification = classification
+
+    if performed_by.human?
+      scores =
+        reviewable.reviewable_scores.pending.where(
+          reviewable_score_type: reviewable.post_action_type_view.flag_types.values,
+        )
+      @flag_source =
+        scores.present? && scores.all?(&:automated_detection?) ? "automated" : "community"
+    end
   end
 
   def hide(post_action_type_id:)
@@ -45,6 +54,8 @@ class ReviewableModerationActions
   private
 
   def notice_options
-    self.class.message_options(classification: @classification)
+    options = self.class.message_options(classification: @classification)
+    options[:flag_source] = @flag_source if @flag_source
+    options
   end
 end
