@@ -165,11 +165,21 @@ class Notification::Feed
       Post.unscoped.where(
         "posts.topic_id = topics.id AND posts.post_number = notifications.post_number",
       )
+    covered_posts = Post.unscoped.where(<<~SQL)
+      posts.topic_id = topics.id
+      AND posts.post_number > notifications.post_number
+      AND posts.id <= #{data_id("original_post_id")}
+    SQL
     visible_posts = guardian.filter_visible_posts_without_topic_check(posts)
+    visible_covered_posts = guardian.filter_visible_posts_without_topic_check(covered_posts)
     topics = topics.where(<<~SQL)
       notifications.post_number IS NULL
       OR #{exists(visible_posts)}
       OR NOT #{exists(posts)}
+      OR (
+        notifications.notification_type IN (#{PostAlerter::COLLAPSED_NOTIFICATION_TYPES.join(", ")})
+        AND #{exists(visible_covered_posts)}
+      )
     SQL
 
     "(notifications.topic_id IS NULL OR #{exists(topics)})"

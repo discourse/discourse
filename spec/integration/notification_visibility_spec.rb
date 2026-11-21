@@ -130,6 +130,36 @@ RSpec.describe "Notification visibility", type: :request do
       expect_no_visible_notification
     end
 
+    it "keeps a collapsed notification while a later post it covers is visible" do
+      later = Fabricate(:post, topic:)
+      Notification.where(user:).update_all(data: { original_post_id: later.id }.to_json)
+      post.trash!(admin)
+      sign_in(user)
+
+      expect(menu_notifications.size).to eq(1)
+      expect(user.reload.all_unread_notifications_count).to eq(1)
+
+      later.trash!(admin)
+
+      expect_no_visible_notification
+    end
+
+    it "hides a notification covering only a hidden post even when a later post is visible" do
+      Notification.where(user:).update_all(data: { original_post_id: post.id }.to_json)
+      Fabricate(:post, topic:)
+      post.trash!(admin)
+
+      expect_no_visible_notification
+    end
+
+    it "hides a mention of a hidden post even when a later post is visible" do
+      Notification.where(user:).update_all(notification_type: Notification.types[:mentioned])
+      Fabricate(:post, topic:)
+      post.trash!(admin)
+
+      expect_no_visible_notification
+    end
+
     it "hides the notification when the post is hidden" do
       post.update!(hidden: true)
 
