@@ -6,6 +6,61 @@ RSpec.describe BadgesController do
 
   before { SiteSetting.enable_badges = true }
 
+  describe "#message_recipients" do
+    fab!(:moderator)
+    fab!(:repeatable_badge) { Fabricate(:badge, multiple_grant: true) }
+    fab!(:inactive_user) { Fabricate(:user, active: false) }
+
+    def get_recipients
+      get "/badges/#{repeatable_badge.id}/recipients/for-message.json",
+          headers: {
+            "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+          }
+    end
+
+    it "requires the site to opt in" do
+      sign_in(moderator)
+      get_recipients
+      expect(response.status).to eq(404)
+    end
+
+    context "when the site opts in" do
+      before { SiteSetting.enable_badge_holder_pm_recipients = true }
+
+      it "denies regular users" do
+        sign_in(user)
+        get_recipients
+        expect(response.status).to eq(403)
+      end
+
+      it "requires badges to be enabled" do
+        SiteSetting.enable_badges = false
+        sign_in(moderator)
+        get_recipients
+        expect(response.status).to eq(404)
+      end
+
+      it "returns active holders once and excludes the sender" do
+        2.times { |seq| Fabricate(:user_badge, badge: repeatable_badge, user:, seq:) }
+        Fabricate(:user_badge, badge: repeatable_badge, user: inactive_user)
+        Fabricate(:user_badge, badge: repeatable_badge, user: moderator)
+        sign_in(moderator)
+
+        get_recipients
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["usernames"]).to eq([user.username])
+      end
+
+      it "rejects a disabled badge" do
+        repeatable_badge.update!(enabled: false)
+        sign_in(moderator)
+        get_recipients
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#index" do
     it "returns all badges" do
       get "/badges.json"

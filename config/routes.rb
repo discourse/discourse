@@ -1444,6 +1444,10 @@ Discourse::Application.routes.draw do
     resources :user_actions, only: %i[index show]
 
     resources :badges, only: [:index]
+    get "/badges/:id/recipients/for-message" => "badges#message_recipients",
+        :defaults => {
+          format: :json,
+        }
     get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: /(json|html|rss)/ }
     resources :user_badges, only: %i[index create destroy] do
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }

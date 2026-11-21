@@ -2,6 +2,7 @@
 
 class BadgesController < ApplicationController
   skip_before_action :check_xhr, only: %i[index show]
+  requires_login only: [:message_recipients]
   after_action :add_noindex_header
 
   def index
@@ -44,6 +45,27 @@ class BadgesController < ApplicationController
       end
       format.json { render json: serialized }
     end
+  end
+
+  def message_recipients
+    unless SiteSetting.enable_badges && SiteSetting.enable_badge_holder_pm_recipients
+      raise Discourse::NotFound
+    end
+    guardian.ensure_is_staff!
+    guardian.ensure_can_send_private_messages!
+
+    badge = Badge.enabled.find(params[:id])
+    usernames =
+      User
+        .human_users
+        .joins(:user_badges)
+        .where(active: true, user_badges: { badge_id: badge.id })
+        .where.not(id: current_user.id)
+        .distinct
+        .order(:username)
+        .pluck(:username)
+
+    render json: { usernames: }
   end
 
   def show

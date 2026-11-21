@@ -3111,6 +3111,7 @@ en:
     code_formatting_style: "Code button in composer will default to this code formatting style"
 
     max_allowed_message_recipients: "Maximum recipients allowed in a message."
+    enable_badge_holder_pm_recipients: "Allow staff to add the active holders of a badge as personal message recipients."
     disable_watched_word_checking_in_user_fields: "disable watched word checking in user fields"
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
