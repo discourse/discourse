@@ -61,6 +61,14 @@
     min-width: 2em;
     width: 0;
 
+    .poster {
+      display: flex;
+
+      &:focus-visible {
+        @include default-focus;
+      }
+    }
+
     .avatar {
       width: 2em;
       height: 2em;
