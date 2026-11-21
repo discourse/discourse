@@ -364,6 +364,10 @@ basic:
       - anonymous
       - all
     area: "sharing"
+  show_post_selection_search:
+    default: false
+    client: true
+    area: "posts_and_topics"
   share_quote_buttons:
     client: true
     type: list

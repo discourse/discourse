@@ -4,16 +4,21 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { isValidSearchTerm } from "discourse/lib/search";
 import Sharing from "discourse/lib/sharing";
 import { clipboardCopyAsync, postUrl } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+const MAX_SEARCH_SELECTION_LENGTH = 100;
+
 export default class PostTextSelectionToolbar extends Component {
   @service currentUser;
+  @service router;
   @service site;
   @service siteSettings;
   @service toasts;
@@ -67,6 +72,25 @@ export default class PostTextSelectionToolbar extends Component {
     );
   }
 
+  get selectionSearchTerm() {
+    return this.args.data.selectedText.replace(/\s+/g, " ").trim();
+  }
+
+  get showSelectionSearch() {
+    if (
+      !this.siteSettings.show_post_selection_search ||
+      !this.site.can_search
+    ) {
+      return false;
+    }
+
+    const term = this.selectionSearchTerm;
+    return (
+      term.length <= MAX_SEARCH_SELECTION_LENGTH &&
+      isValidSearchTerm(term, this.siteSettings)
+    );
+  }
+
   @action
   async copyQuoteToClipboard() {
     await clipboardCopyAsync(() =>
@@ -79,6 +103,21 @@ export default class PostTextSelectionToolbar extends Component {
       data: { message: i18n("post.quote_copied_to_clipboard") },
     });
     await this.args.data.hideToolbar();
+  }
+
+  @action
+  async searchSelection() {
+    const q = this.selectionSearchTerm;
+    await this.args.data.hideToolbar();
+    this.router.transitionTo("full-page-search", {
+      queryParams: {
+        q,
+        context: null,
+        context_id: null,
+        skip_context: undefined,
+        search_type: SEARCH_TYPE_DEFAULT,
+      },
+    });
   }
 
   @action
@@ -128,6 +167,16 @@ export default class PostTextSelectionToolbar extends Component {
               @label="post.quote_copy"
               @title="post.quote_copy"
               {{on "click" this.copyQuoteToClipboard}}
+            />
+          {{/if}}
+
+          {{#if this.showSelectionSearch}}
+            <DButton
+              class="btn-flat search-post-selection"
+              @action={{this.searchSelection}}
+              @icon="magnifying-glass"
+              @label="post.search_selection"
+              @title="post.search_selection_title"
             />
           {{/if}}
 

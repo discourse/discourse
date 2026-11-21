@@ -173,6 +173,7 @@ export default class PostTextSelection extends Component {
 
   @bind
   async showToolbar(cooked) {
+    const selectedText = window.getSelection()?.toString() ?? "";
     const shouldRenderBelow = this.shouldRenderBelow();
     const quoteState = this.computeQuoteState(cooked);
     const supportsFastEdit = await this.computeSupportsFastEdit(
@@ -215,6 +216,7 @@ export default class PostTextSelection extends Component {
         canCopyQuote: this.canCopyQuote,
         topic: this.args.topic,
         quoteState,
+        selectedText,
         insertQuote: this.insertQuote,
         buildQuote: this.buildQuote,
         hideToolbar: this.hideToolbar,
