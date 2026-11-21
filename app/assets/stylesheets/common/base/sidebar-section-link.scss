@@ -284,7 +284,8 @@
     }
   }
 
-  &.--hovering .sidebar-section-hover-button {
+  &.--hovering .sidebar-section-hover-button,
+  &:has(:focus-visible) .sidebar-section-hover-button {
     opacity: 1;
   }
 
