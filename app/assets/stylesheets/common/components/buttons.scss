@@ -126,17 +126,8 @@
   }
 
   &:focus-visible {
-    outline: none;
-    background-color: $hover-bg-color;
-    color: $hover-text-color;
-
-    .d-icon {
-      color: $hover-icon-color;
-
-      @media (forced-colors: active) {
-        color: Highlight;
-      }
-    }
+    outline: 2px solid var(--d-input-focused-color);
+    outline-offset: 2px;
   }
 
   &[disabled],
@@ -465,12 +456,8 @@
   }
 
   &:focus-visible {
-    outline: none;
-    background: var(--primary-low);
-
-    .d-icon {
-      color: var(--primary);
-    }
+    outline: 2px solid var(--d-input-focused-color);
+    outline-offset: 2px;
   }
 }
 
@@ -507,15 +494,6 @@
       $border: 0,
       $hover-border: 0
     );
-
-    &:focus-visible {
-      background: transparent;
-      color: var(--d-button-transparent-text-color--hover);
-
-      .d-icon {
-        color: currentcolor;
-      }
-    }
   }
 
   /* The full classname is the old way of combining transparent buttons with colours – no longer use like this
