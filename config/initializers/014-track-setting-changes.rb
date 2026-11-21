@@ -35,6 +35,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Report.clear_cache(:storage_stats) if %i[backup_location s3_backup_bucket].include?(name)
 
+  if name == :exclude_categories_from_like_stats
+    category_ids = (old_value.to_s.split("|") | new_value.to_s.split("|")).map(&:to_i)
+    Jobs.enqueue(:refresh_category_like_stats, category_ids:) if category_ids.present?
+  end
+
   if name == :slug_generation_method
     Scheduler::Defer.later("Null topic slug") { Topic.update_all(slug: nil) }
   end

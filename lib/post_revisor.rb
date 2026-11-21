@@ -664,7 +664,7 @@ class PostRevisor
 
       unless private_message
         UserStatCountUpdater.decrement!(@post, user_stat: prev_owner_user_stat) if !@post.trashed?
-        prev_owner_user_stat.likes_received -= likes
+        prev_owner_user_stat.likes_received -= likes unless @topic.like_stats_excluded?
       end
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
@@ -676,9 +676,13 @@ class PostRevisor
       new_owner_user_stat = new_owner.user_stat
       unless private_message
         UserStatCountUpdater.increment!(@post, user_stat: new_owner_user_stat) if !@post.trashed?
-        new_owner_user_stat.likes_received += likes
+        new_owner_user_stat.likes_received += likes unless @topic.like_stats_excluded?
       end
       new_owner_user_stat.save!
+
+      if likes.positive? && @topic.like_stats_excluded?
+        UserStat.recalculate_likes!([prev_owner.id, new_owner.id])
+      end
     end
   end
 

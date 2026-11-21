@@ -850,6 +850,10 @@ class PostMover
     Jobs.enqueue(:notify_moved_posts, post_ids: @post_ids_after_move, moved_by_id: user.id)
 
     Jobs.enqueue(:delete_inaccessible_notifications, topic_id: topic.id)
+
+    if original_topic.like_stats_excluded? != topic.like_stats_excluded?
+      Jobs.enqueue(:refresh_category_like_stats, topic_ids: [original_topic.id, topic.id])
+    end
   end
 
   def close_topic_and_schedule_deletion
