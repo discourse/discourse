@@ -24,7 +24,11 @@ module Jobs
           )
         end
 
-        cp = CookedPostProcessor.new(post, args)
+        cp =
+          CookedPostProcessor.new(
+            post,
+            args.merge(defer_thumbnails: args[:defer_thumbnails] != false),
+          )
         cp.post_process(new_post: args[:new_post])
 
         # If we changed the document, save it
@@ -44,6 +48,7 @@ module Jobs
           end
         end
 
+        enqueue_deferred_thumbnails(post, cp, args)
         enqueue_pull_hotlinked_images(post) unless args[:skip_pull_hotlinked_images]
 
         if !post.user&.staff? && !post.user&.staged?
@@ -68,6 +73,18 @@ module Jobs
     def extract_links(post)
       TopicLink.extract_from(post)
       QuotedPost.extract_from(post)
+    end
+
+    def enqueue_deferred_thumbnails(post, cp, args)
+      return if cp.deferred_thumbnails.blank?
+
+      Jobs.enqueue(
+        :create_post_image_thumbnails,
+        post_id: post.id,
+        thumbnails: cp.deferred_thumbnails,
+        cooking_options: args[:cooking_options],
+        image_sizes: args[:image_sizes],
+      )
     end
 
     def enqueue_pull_hotlinked_images(post)
