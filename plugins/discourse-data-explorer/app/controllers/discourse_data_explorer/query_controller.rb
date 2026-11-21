@@ -157,13 +157,20 @@ module DiscourseDataExplorer
     end
 
     def create
-      query_params = params.require(:query).permit(:name, :description, :sql, tags: [])
-      group_ids = params.require(:query)[:group_ids]
-
-      query =
-        QueryCreator.create(query_params: query_params, group_ids: group_ids, user: current_user)
-
-      render_serialized query, QueryDetailsSerializer, root: "query"
+      CreateQuery.call(service_params.merge(params: create_params)) do
+        on_success { |query:| render_serialized query, QueryDetailsSerializer, root: "query" }
+        on_failed_policy(:can_create_query) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(:name) if contract.errors.include?(:name)
+          render_json_error(contract)
+        end
+        on_failed_policy(:requested_groups_exist) { raise Discourse::NotFound }
+        on_model_errors(:query) { |query| render_json_error(query, type: :record_invalid) }
+        on_exceptions(ActiveRecord::RecordInvalid) do |error|
+          render_json_error(error, type: :record_invalid, status: 422)
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      end
     end
 
     def generate_with_ai
@@ -302,6 +309,10 @@ module DiscourseDataExplorer
     end
 
     private
+
+    def create_params
+      params.require(:query).permit(:name, :description, :sql, tags: [], group_ids: []).to_h
+    end
 
     def rate_limit_query_runs!
       return if !is_api? && !is_user_api?

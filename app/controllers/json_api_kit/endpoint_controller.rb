@@ -2,10 +2,7 @@
 
 module JsonApiKit
   class EndpointController < ::ApplicationController
-    skip_before_action :check_xhr,
-                       :redirect_to_login_if_required,
-                       :verify_authenticity_token,
-                       raise: false
+    skip_before_action :check_xhr, :redirect_to_login_if_required, raise: false
 
     # Order matters here
     include Rendering
