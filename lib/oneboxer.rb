@@ -327,7 +327,7 @@ module Oneboxer
       when "topics"
         local_topic_html(url, route, opts)
       when "users"
-        local_user_html(url, route, opts)
+        local_user_html(url, route)
       when "list"
         local_category_html(url, route)
       else
@@ -468,12 +468,14 @@ module Oneboxer
     [title, excerpt]
   end
 
-  def self.local_user_html(url, route, opts)
+  def self.local_user_html(url, route)
     username = route[:username] || ""
 
     if user = User.find_by(username_lower: username.downcase)
       return if SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
-      return unless Guardian.new(User.find_by(id: opts[:user_id])).can_see_profile?(user)
+      # The onebox is baked into cooked HTML that every reader gets, so only show
+      # profile details that anonymous visitors can see.
+      return if Guardian.new.restrict_user_fields?(user)
       name = user.name if SiteSetting.enable_names
 
       args = {

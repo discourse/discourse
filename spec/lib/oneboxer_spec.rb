@@ -182,6 +182,36 @@ RSpec.describe Oneboxer do
       expect(preview("/u/#{user.username}")).not_to include(user.name)
     end
 
+    it "only links to a user profile hidden from the public" do
+      SiteSetting.hide_user_profiles_from_public = true
+      user = Fabricate(:user)
+      user.user_stat.update!(post_count: 1)
+
+      expect(preview("/u/#{user.username}", Fabricate(:user))).to match_html(
+        link("/u/#{user.username}"),
+      )
+    end
+
+    it "only links to a user profile anonymous visitors can't see" do
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      user.user_stat.update!(post_count: 1)
+      author = Fabricate(:user, trust_level: TrustLevel[1])
+
+      expect(Guardian.new(author).can_see_profile?(user)).to eq(true)
+      expect(preview("/u/#{user.username}", author)).to match_html(link("/u/#{user.username}"))
+    end
+
+    it "only links to a new user's profile whose details anonymous visitors can't see" do
+      SiteSetting.hide_new_user_profiles = false
+      user = Fabricate(:user, trust_level: TrustLevel[0])
+      user.user_stat.update!(post_count: 1)
+
+      expect(Guardian.new.can_see_profile?(user)).to eq(true)
+      expect(preview("/u/#{user.username}", Fabricate(:user))).to match_html(
+        link("/u/#{user.username}"),
+      )
+    end
+
     it "links to an upload" do
       path = "/uploads/default/original/3X/e/8/e8fcfa624e4fb6623eea57f54941a58ba797f14d"
 
