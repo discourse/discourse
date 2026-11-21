@@ -20,6 +20,7 @@ register_asset "stylesheets/common/streaming.scss"
 register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
+register_asset "stylesheets/common/ai-review-bulk.scss"
 register_asset "stylesheets/common/ai-payload-viewer.scss"
 register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
