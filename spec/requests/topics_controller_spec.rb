@@ -6938,6 +6938,82 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "#set_footer_staff_notice" do
+    fab!(:notice_topic) { Fabricate(:post).topic }
+
+    def set_footer_notice(topic, notice)
+      put "/t/#{topic.id}/footer_staff_notice.json", params: { notice: }
+    end
+
+    it "requires an opt-in and hides existing notices while disabled" do
+      notice_topic.upsert_custom_fields(Topic::FOOTER_STAFF_NOTICE_FIELD => "Read the rules.")
+      sign_in(moderator)
+
+      set_footer_notice(notice_topic, "New notice")
+      expect(response.status).to eq(404)
+
+      get "/t/#{notice_topic.id}.json"
+      expect(response.parsed_body).not_to have_key("footer_staff_notice")
+    end
+
+    context "when opted in" do
+      before { SiteSetting.enable_topic_footer_notices = true }
+
+      it "does not let nonstaff edit the notice" do
+        sign_in(trust_level_4)
+        set_footer_notice(notice_topic, "Staff only")
+        expect(response).to be_forbidden
+      end
+
+      it "does not let staff edit a topic they cannot see" do
+        restricted_category = Fabricate(:private_category, group: Fabricate(:group))
+        restricted_topic = Fabricate(:topic, category: restricted_category)
+        sign_in(moderator)
+        set_footer_notice(restricted_topic, "Staff only")
+        expect(response).to be_forbidden
+      end
+
+      it "does not let staff set a notice on personal messages" do
+        message = Fabricate(:private_message_post, user: moderator, recipient: user)
+        sign_in(moderator)
+        set_footer_notice(message.topic, "Staff only")
+        expect(response.status).to eq(404)
+      end
+
+      it "rejects notices that exceed the server limit" do
+        sign_in(moderator)
+        set_footer_notice(notice_topic, "a" * 1001)
+        expect(response.status).to eq(400)
+      end
+
+      it "sets, audits, and clears a notice visible to topic readers" do
+        sign_in(moderator)
+        set_footer_notice(notice_topic, "  Read the rules.  ")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["footer_staff_notice"]).to eq("Read the rules.")
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "topic_footer_staff_notice",
+          acting_user_id: moderator.id,
+          topic_id: notice_topic.id,
+        )
+
+        sign_in(user)
+        get "/t/#{notice_topic.id}.json"
+        expect(response.parsed_body["footer_staff_notice"]).to eq("Read the rules.")
+
+        sign_in(moderator)
+        set_footer_notice(notice_topic, "")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["footer_staff_notice"]).to be_nil
+        expect(notice_topic.reload.footer_staff_notice).to be_nil
+
+        sign_in(user)
+        get "/t/#{notice_topic.id}.json"
+        expect(response.parsed_body).to include("footer_staff_notice" => nil)
+      end
+    end
+  end
+
   describe "#set_slow_mode" do
     context "when not logged in" do
       it "forbids anonymous users and allows admins" do

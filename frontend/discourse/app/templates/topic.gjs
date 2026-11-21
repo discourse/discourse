@@ -25,6 +25,7 @@ import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import TopicCategory from "discourse/components/topic-category";
 import TopicContentLanguagePreferences from "discourse/components/topic-content-language-preferences";
 import TopicFooterButtons from "discourse/components/topic-footer-buttons";
+import TopicFooterNotice from "discourse/components/topic-footer-notice";
 import TopicMap from "discourse/components/topic-map/index";
 import TopicMetadata from "discourse/components/topic-metadata";
 import TopicNavigation from "discourse/components/topic-navigation";
@@ -692,6 +693,7 @@ export default <template>
 
           </div>
           {{#if @controller.loadedAllPosts}}
+            <TopicFooterNotice @topic={{@controller.model}} />
             {{#if @controller.session.showSignupCta}}
               {{! replace "Log In to Reply" with the infobox }}
               <SignupCta />

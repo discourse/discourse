@@ -1,6 +1,9 @@
 {
   "additionalProperties": false,
   "properties": {
+    "footer_staff_notice": {
+      "type": ["string", "null"]
+    },
     "post_stream": {
       "type": "object",
       "additionalProperties": false,

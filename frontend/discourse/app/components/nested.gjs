@@ -10,6 +10,7 @@ import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import MoreTopics from "discourse/components/more-topics";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicFooterNotice from "discourse/components/topic-footer-notice";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
@@ -1142,6 +1143,7 @@ export default class Nested extends Component {
       />
 
       {{#unless this.isMobileFocused}}
+        <TopicFooterNotice @topic={{@topic}} />
         <NestedFloatingActions
           @replyAction={{fn @replyToPost @opPost 0}}
           @topic={{@topic}}

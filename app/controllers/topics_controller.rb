@@ -36,6 +36,7 @@ class TopicsController < ApplicationController
                    publish
                    reset_bump_date
                    set_slow_mode
+                   set_footer_staff_notice
                  ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -1350,6 +1351,36 @@ class TopicsController < ApplicationController
 
     topic.reset_bumped_at(params[:post_id])
     render body: nil
+  end
+
+  def set_footer_staff_notice
+    raise Discourse::NotFound unless SiteSetting.enable_topic_footer_notices
+    guardian.ensure_is_staff!
+
+    topic = Topic.find(params[:topic_id])
+    guardian.ensure_can_see!(topic)
+    raise Discourse::NotFound if topic.private_message?
+
+    notice = params[:notice]
+    unless notice.is_a?(String) && notice.length <= Topic::MAX_FOOTER_STAFF_NOTICE_LENGTH
+      raise Discourse::InvalidParameters.new(:notice)
+    end
+    notice = notice.strip.presence
+
+    topic.with_lock do
+      previous = topic.footer_staff_notice
+      if notice != previous
+        topic.upsert_custom_fields(Topic::FOOTER_STAFF_NOTICE_FIELD => notice.to_s)
+        StaffActionLogger.new(current_user).log_custom(
+          "topic_footer_staff_notice",
+          topic_id: topic.id,
+          previous_value: previous,
+          new_value: notice,
+        )
+      end
+    end
+
+    render json: { footer_staff_notice: notice }
   end
 
   def set_slow_mode
