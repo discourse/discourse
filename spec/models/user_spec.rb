@@ -3015,6 +3015,43 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "publishes the state stored in the database, not the one held in memory" do
+      Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: Notification.maximum(:id))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { in_memory.publish_notifications_state }
+          .first
+
+      expect(message.data).to include(
+        seen_notification_id: user.seen_notification_id,
+        unread_notifications: 0,
+      )
+    end
+
+    it "counts and publishes under a per-user lock" do
+      DistributedMutex
+        .expects(:synchronize)
+        .with("notifications_state_#{user.id}", validity: User::NOTIFICATIONS_STATE_LOCK_SECONDS)
+        .yields
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
+    it "still publishes when the lock cannot be taken" do
+      DistributedMutex.stubs(:synchronize).raises(Discourse::ReadOnly)
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)

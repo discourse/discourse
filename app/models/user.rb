@@ -934,55 +934,17 @@ class User < ActiveRecord::Base
     seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
+  NOTIFICATIONS_STATE_LOCK_SECONDS = 5
+
   def publish_notifications_state
     return if !interactive_bot? && !allow_live_notifications?
 
-    # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order(created_at: :desc, id: :desc).first
-    json = NotificationSerializer.new(notification).as_json if notification
-
-    sql = <<~SQL
-       SELECT * FROM (
-         SELECT n.id, n.read FROM notifications n
-         LEFT JOIN topics t ON n.topic_id = t.id
-         WHERE
-          t.deleted_at IS NULL AND
-          n.high_priority AND
-          n.user_id = :user_id AND
-          NOT read
-        ORDER BY n.id DESC
-        LIMIT 20
-      ) AS x
-      UNION ALL
-      SELECT * FROM (
-       SELECT n.id, n.read FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        (n.high_priority = FALSE OR read) AND
-        n.user_id = :user_id
-       ORDER BY n.id DESC
-       LIMIT 20
-      ) AS y
-    SQL
-
-    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
-
-    payload = {
-      unread_notifications: unread_notifications,
-      unread_high_priority_notifications: unread_high_priority_notifications,
-      read_first_notification: read_first_notification?,
-      last_notification: json,
-      recent: recent,
-      seen_notification_id: seen_notification_id,
-    }
-
-    payload[:all_unread_notifications_count] = all_unread_notifications_count
-    payload[:grouped_unread_notifications] = grouped_unread_notifications
-    payload[:available_notification_types] = available_notification_types
-    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
-
-    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
+    DistributedMutex.synchronize(
+      "notifications_state_#{id}",
+      validity: NOTIFICATIONS_STATE_LOCK_SECONDS,
+    ) { publish_stored_notifications_state }
+  rescue Discourse::ReadOnly
+    publish_stored_notifications_state
   end
 
   def publish_do_not_disturb(ends_at: nil)
@@ -2131,6 +2093,55 @@ class User < ActiveRecord::Base
 
   protected
 
+  def notifications_state
+    # publish last notification json with the message so we can apply an update
+    notification = notifications.visible.order(created_at: :desc, id: :desc).first
+    json = NotificationSerializer.new(notification).as_json if notification
+
+    sql = <<~SQL
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         WHERE
+          t.deleted_at IS NULL AND
+          n.high_priority AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        (n.high_priority = FALSE OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    SQL
+
+    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
+
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_high_priority_notifications: unread_high_priority_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
+
+    payload
+  end
+
   def badge_grant
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
@@ -2358,6 +2369,15 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def publish_stored_notifications_state
+    self.class.uncached do
+      stored = self.class.find_by(id:)
+      next if !stored
+
+      MessageBus.publish("/notification/#{id}", stored.notifications_state, user_ids: [id])
+    end
+  end
 
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)
