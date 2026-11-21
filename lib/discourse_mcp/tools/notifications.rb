@@ -22,6 +22,14 @@ module DiscourseMcp
               .left_joins(:topic)
               .where("topics.id IS NULL OR topics.archetype <> ?", Archetype.private_message)
         end
+        DiscoursePluginRegistry.mcp_notification_scopes.each do |required|
+          next if request_context.has_scopes?(required[:scopes])
+
+          notifications =
+            notifications.where.not(
+              notification_type: Notification.types.values_at(*required[:types]),
+            )
+        end
         notifications =
           Notification.filter_inaccessible_topic_notifications(
             request_context.guardian,

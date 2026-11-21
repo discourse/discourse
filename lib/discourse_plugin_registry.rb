@@ -164,6 +164,7 @@ class DiscoursePluginRegistry
   define_filtered_register :svg_symbol_sources
 
   define_filtered_register :reviewable_types do |singleton|
+    define_register :mcp_notification_scopes, Array
     singleton.define_singleton_method("reviewable_types_lookup") do
       public_send(:_raw_reviewable_types)
         .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }

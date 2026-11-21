@@ -738,6 +738,10 @@ end
 after_initialize do
   require_relative "lib/chat/mcp_tools"
 
+  register_mcp_notification_scopes(
+    types: %i[chat_mention chat_group_mention chat_invitation chat_watched_thread],
+    scopes: Chat::McpTools::ListMessages::REQUIRED_SCOPES,
+  )
   register_mcp_tool(
     "chat_channel_list",
     title: "List chat channels",

@@ -1211,6 +1211,10 @@ class Plugin::Instance
     register_mcp_primitive(:prompt, identifier, **attributes)
   end
 
+  def register_mcp_notification_scopes(types:, scopes:)
+    DiscoursePluginRegistry.mcp_notification_scopes << { types:, scopes: }
+  end
+
   def register_mcp_primitive(kind, identifier, **attributes)
     configured_availability = attributes.delete(:availability)
     attributes[:provider] ||= name || directory_name
