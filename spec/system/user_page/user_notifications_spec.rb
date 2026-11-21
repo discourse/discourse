@@ -10,6 +10,28 @@ describe "User notifications" do
 
   before { sign_in(user) }
 
+  it "shows the topic and action in a staff reply deletion notification" do
+    Jobs.run_immediately!
+    admin = Fabricate(:admin)
+    staff = Fabricate(:moderator)
+    group = Fabricate(:group)
+    group.add(staff)
+    SiteSetting.staff_post_deletion_notification_groups = group.id.to_s
+    first_post = Fabricate(:post)
+    reply = Fabricate(:post, topic: first_post.topic, raw: "This reply was removed by staff.")
+    PostDestroyer.new(admin, reply).destroy
+    notification =
+      staff.notifications.find_by!(notification_type: Notification.types[:staff_post_deleted])
+    sign_in(staff)
+
+    user_notifications_page.visit(staff)
+
+    item = user_notifications_page.find_notification(notification)
+    expect(item).to have_text(I18n.t("js.notifications.titles.staff_post_deleted"))
+    expect(item).to have_text(first_post.topic.title)
+    expect(item).to have_no_text(reply.raw)
+  end
+
   describe "filtering" do
     it "correctly filters all / read / unread notifications" do
       user_notifications_page.visit(user)
