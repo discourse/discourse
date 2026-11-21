@@ -1268,6 +1268,10 @@
   flex-wrap: wrap;
   max-width: 100%;
 
+  &:not(:has(> :not(:empty))) {
+    display: none;
+  }
+
   .user-profile-location {
     margin-right: 1em;
   }
