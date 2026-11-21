@@ -833,6 +833,10 @@ class Topic < ActiveRecord::Base
     archetype == Archetype.default
   end
 
+  def like_activity_suppressed?
+    SiteSetting.suppress_like_notifications_in_categories_map.include?(category_id)
+  end
+
   # Single source of truth for "this topic renders as nested." Both
   # TopicListItemSerializer and TopicViewSerializer delegate here.
   #

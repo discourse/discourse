@@ -17,6 +17,28 @@ describe DiscourseReactions::ReactionNotification do
   fab!(:reaction_user1) { Fabricate(:reaction_user, reaction: thumbsup, user: user_1) }
   fab!(:like_reaction) { Fabricate(:reaction, post: post_1, reaction_value: "heart") }
 
+  it "does not send notifications in a category where like activity is suppressed" do
+    SiteSetting.suppress_like_notifications_in_categories = post_1.topic.category_id.to_s
+
+    expect { described_class.new(thumbsup, user_1).create }.not_to change {
+      post_1.user.notifications.where(notification_type: Notification.types[:reaction]).count
+    }
+  end
+
+  it "does not recreate a notification when a reaction is removed in a suppressed category" do
+    Fabricate(:reaction_user, reaction: thumbsup, user: user_2)
+    described_class.new(thumbsup, user_1).create
+    notifications =
+      post_1.user.notifications.where(notification_type: Notification.types[:reaction])
+    expect(notifications).to be_exists
+
+    SiteSetting.suppress_like_notifications_in_categories = post_1.topic.category_id.to_s
+    reaction_user1.destroy!
+    described_class.new(thumbsup, user_1).delete
+
+    expect(notifications).not_to be_exists
+  end
+
   it "does not create notification when user is muted" do
     MutedUser.create!(user_id: post_1.user.id, muted_user_id: user_1.id)
     expect { described_class.new(thumbsup, user_1).create }.not_to change { Notification.count }

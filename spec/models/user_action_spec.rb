@@ -83,6 +83,47 @@ RSpec.describe UserAction do
       expect(m[0].user_ids).to eq(nil)
     end
 
+    it "hides likes from activity without deleting them or changing their counts" do
+      other_topic = Fabricate(:topic, category: Fabricate(:category))
+      other_post = Fabricate(:post, user: public_post.user, topic: other_topic)
+      PostActionCreator.like(user, public_post)
+      PostActionCreator.like(user, other_post)
+      given =
+        described_class.find_by!(action_type: UserAction::LIKE, user:, target_post: public_post)
+      received =
+        described_class.find_by!(action_type: UserAction::WAS_LIKED, target_post: public_post)
+
+      SiteSetting.suppress_like_notifications_in_categories = public_topic.category_id.to_s
+
+      expect(described_class.stream_item(given.id, user.guardian)).to be_nil
+      expect(described_class.stream_item(received.id, public_post.user.guardian)).to be_nil
+      likes =
+        described_class.stream(
+          user_id: user.id,
+          guardian: user.guardian,
+          action_types: [UserAction::LIKE],
+        )
+      expect(likes.map(&:post_id)).to contain_exactly(other_post.id)
+      stats = described_class.stats(user.id, user.guardian)
+      expect(stats.find { |entry| entry.action_type == UserAction::LIKE }.count).to eq(1)
+      expect(public_post.reload.like_count).to eq(1)
+      expect(user.user_stat.reload.likes_given).to eq(2)
+    end
+
+    it "does not broadcast new likes to profile activity in a suppressed category" do
+      SiteSetting.suppress_like_notifications_in_categories = public_topic.category_id.to_s
+
+      messages =
+        MessageBus.track_publish("/u/#{public_post.user.username_lower}") do
+          PostActionCreator.like(user, public_post)
+        end
+
+      expect(messages).to be_empty
+      expect(
+        described_class.exists?(action_type: UserAction::WAS_LIKED, target_post: public_post),
+      ).to eq(true)
+    end
+
     describe "integration" do
       def stats_for_user(viewer = nil)
         UserAction.stats(user.id, Guardian.new(viewer)).map { |r| r.action_type.to_i }.sort
