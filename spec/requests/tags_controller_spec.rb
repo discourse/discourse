@@ -2546,6 +2546,20 @@ RSpec.describe TagsController do
       expect_same_tag_names(topic.reload.tags, [hidden_tag_by_id, hidden_tag_by_name])
     end
 
+    it "does not merge hidden tags submitted in a different letter case" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|14"
+      hidden_tag = Fabricate(:tag, name: "İzmir")
+      topic = Fabricate(:topic, tags: [hidden_tag])
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [hidden_tag])
+
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "izmir" }] }
+
+      expect(response.status).to eq(200)
+      expect(hidden_tag.reload.target_tag_id).to be_nil
+      expect_same_tag_names(topic.reload.tags, [hidden_tag])
+    end
+
     context "when signed in as admin" do
       before { sign_in(admin) }
 
