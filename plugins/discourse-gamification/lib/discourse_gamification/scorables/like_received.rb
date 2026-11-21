@@ -14,11 +14,15 @@ module DiscourseGamification
     end
 
     def self.query(leaderboard: nil)
-      <<~SQL
+      daily_cap = SiteSetting.gamification_like_received_per_user_daily_cap
+      capped = daily_cap.positive?
+      like_count = capped ? "LEAST(COUNT(*), #{daily_cap})" : "COUNT(*)"
+
+      scores = <<~SQL
         SELECT
           p.user_id AS user_id,
           date_trunc('day', pa.created_at) AS date,
-          COUNT(*) * #{score_multiplier(leaderboard:)} AS points
+          #{like_count} * #{score_multiplier(leaderboard:)} AS points
         FROM
           post_actions AS pa
         INNER JOIN posts AS p
@@ -33,7 +37,15 @@ module DiscourseGamification
           post_action_type_id = 2 AND
           pa.created_at >= :since
         GROUP BY
-          1, 2
+          1, 2#{", pa.user_id" if capped}
+      SQL
+
+      return scores unless capped
+
+      <<~SQL
+        SELECT user_id, date, SUM(points) AS points
+        FROM (#{scores}) AS scores_by_liker
+        GROUP BY 1, 2
       SQL
     end
   end
