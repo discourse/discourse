@@ -36,16 +36,26 @@ export function listColorSchemes(site, options = {}) {
     }
   });
 
-  const defaultLightColorScheme = site.get("default_light_color_scheme");
-  const defaultDarkColorScheme = site.get("default_dark_color_scheme");
+  // Keep single-palette pickers hidden on restricted themes.
+  const choices = options.darkOnly
+    ? results
+    : results.filter((scheme) => !scheme.is_dark);
+  if (!limitToTheme || choices.length > 1) {
+    const themeDefaultSchemeId = options.darkOnly
+      ? currentTheme?.dark_color_scheme_id
+      : currentTheme?.color_scheme_id;
+    const defaultScheme = limitToTheme
+      ? schemes.find((scheme) => scheme.id === themeDefaultSchemeId)
+      : site.get(
+          options.darkOnly
+            ? "default_dark_color_scheme"
+            : "default_light_color_scheme"
+        );
 
-  if (!limitToTheme) {
     results.unshift({
       id: -1,
-      name: `${i18n("user.color_schemes.default_description")}`,
-      colors: options.darkOnly
-        ? defaultDarkColorScheme?.colors || []
-        : defaultLightColorScheme?.colors || [],
+      name: i18n("user.color_schemes.default_description"),
+      colors: defaultScheme?.colors || [],
     });
   }
 
