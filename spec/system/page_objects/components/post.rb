@@ -11,6 +11,20 @@ module PageObjects
         find(post_id)
       end
 
+      def focus_lightbox_link
+        find("#{post_id} a.lightbox").execute_script("this.focus()")
+      end
+
+      def has_inset_lightbox_focus_outline?
+        has_css?("#{post_id} a.lightbox:focus-visible") { |link| link.evaluate_script(<<~JS) }
+            (() => {
+              const { outlineWidth, outlineOffset } = getComputedStyle(this);
+              return parseFloat(outlineWidth) > 0 &&
+                parseFloat(outlineOffset) <= -parseFloat(outlineWidth);
+            })()
+          JS
+      end
+
       def reply
         post.find(".reply.create").click
       end
