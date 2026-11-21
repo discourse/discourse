@@ -2,6 +2,8 @@
 
 require "colored2"
 require "psych"
+require_relative "../lib/i18n/locale_file_walker"
+require_relative "../lib/i18n/duplicate_key_finder"
 
 class I18nLinter
   def initialize(filenames_or_patterns)
@@ -13,15 +15,30 @@ class I18nLinter
     has_errors = false
 
     @filenames.each do |filename|
-      validator = LocaleFileValidator.new(filename)
-
-      if validator.has_errors?
-        validator.print_errors
-        has_errors = true
+      [LocaleFileValidator.new(filename), *translation_validators(filename)].each do |validator|
+        if validator.has_errors?
+          validator.print_errors
+          has_errors = true
+        end
       end
     end
 
     exit 1 if has_errors
+  end
+
+  private
+
+  def translation_validators(english_path)
+    return [] if !english_path.end_with?(".en.yml")
+
+    english = Psych.safe_load(File.read(english_path), aliases: true)
+    return [] if !english.is_a?(Hash) || !english["en"].is_a?(Hash)
+
+    Dir[english_path.sub(/\.en\.yml\z/, ".*.yml")]
+      .reject { |path| path == english_path }
+      .map { |path| LocaleFileValidator.new(path, english: english["en"]) }
+  rescue Psych::Exception
+    []
   end
 end
 
@@ -40,6 +57,12 @@ class LocaleFileValidator
       "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
     invalid_file_format:
       "The file is not a valid YAML format or does not contain a valid locale structure.",
+    duplicate_keys: "The following keys are defined more than once:",
+    invalid_top_level_key: "The locale from the file name must be the only top-level key.",
+    invalid_interpolation_keys:
+      "The following keys contain interpolation keys made only of digits or symbols:",
+    incompatible_with_english: "The following keys have a different type than in the English file:",
+    missing_client_sections: "The following required top-level sections are missing:",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
     invalid_setting_link_format:
@@ -73,18 +96,40 @@ class LocaleFileValidator
     js.discourse_ai.discourse_workflows.ai_agent.upload_ids_placeholder
   ]
 
-  def initialize(filename)
+  INVALID_INTERPOLATION_KEY_REGEX = /%\{[^a-zA-Z\s]+\}|\{\{[^a-zA-Z\s]+\}\}/
+
+  CORE_LOCALES_DIR = File.expand_path("../config/locales", __dir__)
+
+  def initialize(filename, english: nil)
     @filename = filename
+    @locale = File.basename(filename)[/\.([^.]{2,})\.yml\z/, 1]
+    @english = english
     @errors = {}
     ERROR_MESSAGES.keys.each { |type| @errors[type] = [] }
   end
 
   def has_errors?
-    yaml = Psych.safe_load(File.read(@filename), aliases: true)
-    yaml = yaml[yaml.keys.first]
+    @errors[:duplicate_keys] = DuplicateKeyFinder.new.find_duplicates(@filename)
 
-    validate_pluralizations(yaml)
-    validate_content(yaml)
+    yaml = Psych.safe_load(File.read(@filename), aliases: true)
+
+    top_level_keys = yaml.is_a?(Hash) ? yaml.keys : []
+    if top_level_keys != [@locale]
+      @errors[:invalid_top_level_key] << "Expected #{[@locale]}, found #{top_level_keys}"
+      return true
+    end
+
+    yaml = yaml[@locale]
+
+    validate_interpolation_keys(yaml)
+    validate_core_client_sections(yaml)
+
+    if @english
+      validate_compatibility(@english, yaml) if !@filename.include?("transliterate")
+    else
+      validate_pluralizations(yaml)
+      validate_content(yaml)
+    end
 
     @errors.any? { |_, value| value.any? }
   rescue StandardError => e
@@ -104,6 +149,41 @@ class LocaleFileValidator
   end
 
   private
+
+  def validate_interpolation_keys(yaml)
+    return if !yaml.is_a?(Hash)
+
+    each_translation(yaml) do |key, value|
+      invalid = value.scan(INVALID_INTERPOLATION_KEY_REGEX).uniq
+      @errors[:invalid_interpolation_keys] << "#{key}: #{invalid.join(", ")}" if invalid.any?
+    end
+  end
+
+  def validate_core_client_sections(yaml)
+    return if File.realpath(@filename) != File.join(CORE_LOCALES_DIR, "client.#{@locale}.yml")
+
+    required_sections = @locale == "en" ? %w[js wizard_js] : %w[js]
+    required_sections.each do |section|
+      @errors[:missing_client_sections] << section if !yaml.is_a?(Hash) || !yaml[section]
+    end
+  end
+
+  def validate_compatibility(english, translated, parent_key = "")
+    return if !english.is_a?(Hash) || !translated.is_a?(Hash)
+
+    english.each do |key, english_value|
+      next if !translated.key?(key)
+
+      current_key = parent_key.empty? ? key : "#{parent_key}.#{key}"
+      translated_value = translated[key]
+
+      if english_value.class != translated_value.class
+        @errors[:incompatible_with_english] << current_key
+      elsif Hash === english_value
+        validate_compatibility(english_value, translated_value, current_key)
+      end
+    end
+  end
 
   def each_translation(hash, parent_key = "", &block)
     hash.each do |key, value|

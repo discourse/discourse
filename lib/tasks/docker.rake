@@ -196,7 +196,7 @@ task "docker:test" do
 
         @good &&=
           run_or_fail(
-            'bundle exec ruby script/i18n_lint.rb "config/locales/{client,server}.en.yml"',
+            'bundle exec ruby script/i18n_lint.rb "config/**/locales/*.en.yml" "migrations/**/locales/*.en.yml" "spec/support/locales/*.en.yml"',
           ) unless ENV["SKIP_CORE"]
         @good &&=
           run_or_fail(
