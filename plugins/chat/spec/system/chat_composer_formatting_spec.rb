@@ -16,7 +16,42 @@ RSpec.describe "Chat composer formatting" do
 
   after { page.execute_script("localStorage.removeItem('discourse_chat_composer_formatting_bar')") }
 
+  shared_examples "a formatting bar" do |composition_mode|
+    before do
+      current_user.user_option.update!(
+        composition_mode: UserOption.composition_mode_types[composition_mode],
+      )
+    end
+
+    it "advertises chat's own link shortcut" do
+      chat_page.visit_channel(channel_1)
+      find(".chat-composer-button.-toggle-formatting").click
+
+      expect(find(".chat-composer__formatting-bar .link")["aria-keyshortcuts"]).to end_with("+L")
+    end
+
+    it "toggles a formatting bar that applies formatting" do
+      chat_page.visit_channel(channel_1)
+      expect(page).to have_no_css(".chat-composer__formatting-bar")
+
+      find(".chat-composer-button.-toggle-formatting").click
+      channel_page.composer.input.send_keys(
+        "groceries",
+        [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
+      )
+      find(".chat-composer__formatting-bar .bullet-list").click
+
+      expect(channel_page.composer).to have_value("* groceries")
+
+      find(".chat-composer-button.-toggle-formatting").click
+
+      expect(page).to have_no_css(".chat-composer__formatting-bar")
+    end
+  end
+
   context "with the rich editor" do
+    include_examples "a formatting bar", :rich
+
     before do
       current_user.user_option.update!(composition_mode: UserOption.composition_mode_types[:rich])
     end
@@ -79,38 +114,7 @@ RSpec.describe "Chat composer formatting" do
     end
   end
 
-  %i[markdown rich].each do |composition_mode|
-    context "with the #{composition_mode} editor" do
-      before do
-        current_user.user_option.update!(
-          composition_mode: UserOption.composition_mode_types[composition_mode],
-        )
-      end
-
-      it "advertises chat's own link shortcut" do
-        chat_page.visit_channel(channel_1)
-        find(".chat-composer-button.-toggle-formatting").click
-
-        expect(find(".chat-composer__formatting-bar .link")["aria-keyshortcuts"]).to end_with("+L")
-      end
-
-      it "toggles a formatting bar that applies formatting" do
-        chat_page.visit_channel(channel_1)
-        expect(page).to have_no_css(".chat-composer__formatting-bar")
-
-        find(".chat-composer-button.-toggle-formatting").click
-        channel_page.composer.input.send_keys(
-          "groceries",
-          [SystemHelpers::PLATFORM_KEY_MODIFIER, "a"],
-        )
-        find(".chat-composer__formatting-bar .bullet-list").click
-
-        expect(channel_page.composer).to have_value("* groceries")
-
-        find(".chat-composer-button.-toggle-formatting").click
-
-        expect(page).to have_no_css(".chat-composer__formatting-bar")
-      end
-    end
+  context "with the markdown editor" do
+    include_examples "a formatting bar", :markdown
   end
 end
