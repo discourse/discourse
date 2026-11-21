@@ -44,6 +44,16 @@ module PageObjects
         page.has_css?("[data-setting-name='user-content-languages'] .control-label")
       end
 
+      def has_understood_languages_picker_within_form?
+        page.has_css?("#understood-languages-selector") { |picker| picker.evaluate_script(<<~JS) }
+            (() => {
+              const picker = this.getBoundingClientRect();
+              const form = this.closest(".form-vertical").getBoundingClientRect();
+              return picker.left >= form.left && picker.right <= form.right;
+            })()
+          JS
+      end
+
       def automatic_translation_enabled?
         page.has_css?("#{AUTOMATIC_TRANSLATION_SELECTOR}:checked")
       end
