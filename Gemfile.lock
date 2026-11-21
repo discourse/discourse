@@ -111,7 +111,7 @@ GEM
     addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
     afm (1.0.1)
-    annotaterb (4.25.0)
+    annotaterb (4.26.0)
       activerecord (>= 6.0.0)
       activesupport (>= 6.0.0)
     anonymous_loader (0.1.5)
@@ -247,9 +247,14 @@ GEM
       faraday (~> 2.0)
     fast_blank (1.0.1)
     fastimage (2.4.3)
+    ffi (1.17.4)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
+    ffi (1.17.4-arm-linux-gnu)
+    ffi (1.17.4-arm-linux-musl)
     ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x86-linux-gnu)
+    ffi (1.17.4-x86-linux-musl)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     ffi (1.17.4-x86_64-linux-musl)
@@ -262,6 +267,9 @@ GEM
     goldiloader (6.0.1)
       activerecord (>= 7.2, < 8.3)
       activesupport (>= 7.2, < 8.3)
+    google-protobuf (4.36.2)
+      bigdecimal
+      rake (~> 13.3)
     google-protobuf (4.36.2-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
@@ -269,6 +277,12 @@ GEM
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.36.2-arm64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.36.2-x86-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.36.2-x86-linux-musl)
       bigdecimal
       rake (~> 13.3)
     google-protobuf (4.36.2-x86_64-darwin)
@@ -290,7 +304,7 @@ GEM
       reline
     htmlentities (4.4.2)
     http_accept_language (2.1.1)
-    i18n (1.14.8)
+    i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     inflection (1.0.0)
     io-console (0.9.5)
@@ -315,6 +329,7 @@ GEM
       base64
     landlock (0.6.0)
     language_server-protocol (3.17.0.6)
+    libv8-node (24.12.0.1)
     libv8-node (24.12.0.1-aarch64-linux)
     libv8-node (24.12.0.1-aarch64-linux-musl)
     libv8-node (24.12.0.1-arm64-darwin)
@@ -365,6 +380,7 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2026.1103)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     mini_racer (0.22.2)
       libv8-node (~> 24.12.0.1)
     mini_scheduler (0.20.0)
@@ -396,9 +412,16 @@ GEM
     net-smtp (0.5.2)
       net-protocol
     nio4r (2.7.5)
+    nokogiri (1.19.7)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.7-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.7-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.7-arm-linux-musl)
       racc (~> 1.4)
     nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
@@ -480,6 +503,7 @@ GEM
       afm (>= 0.2.1, < 2)
       hashery (~> 2.0)
       ttfunk
+    pg (1.7.0)
     pg (1.7.0-aarch64-linux)
     pg (1.7.0-aarch64-linux-musl)
     pg (1.7.0-arm64-darwin)
@@ -550,9 +574,12 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.4.2)
+    rake-compiler-dock (1.12.0)
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
+    rb_sys (0.9.130)
+      rake-compiler-dock (= 1.12.0)
     rbs (4.2.0)
       logger
       prism (>= 1.6.0)
@@ -698,13 +725,32 @@ GEM
     sanitize (7.0.2)
       crass (~> 1.0.8)
       nokogiri (>= 1.19.7)
+    sass-embedded (1.108.2)
+      google-protobuf (~> 4.31)
+      rake (~> 13.3)
+    sass-embedded (1.108.2-aarch64-linux-android)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-aarch64-linux-gnu)
       google-protobuf (~> 4.31)
     sass-embedded (1.108.2-aarch64-linux-musl)
       google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-androideabi)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-gnueabihf)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-arm-linux-musleabihf)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-arm64-darwin)
       google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-android)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-riscv64-linux-musl)
+      google-protobuf (~> 4.31)
     sass-embedded (1.108.2-x86_64-darwin)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.108.2-x86_64-linux-android)
       google-protobuf (~> 4.31)
     sass-embedded (1.108.2-x86_64-linux-gnu)
       google-protobuf (~> 4.31)
@@ -731,9 +777,15 @@ GEM
     snaky_hash (2.0.9)
       hashie (>= 0.1.0, < 6)
       version_gem (~> 1.1, >= 1.1.16)
+    sqlite3 (2.10.2)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (2.10.2-aarch64-linux-gnu)
     sqlite3 (2.10.2-aarch64-linux-musl)
+    sqlite3 (2.10.2-arm-linux-gnu)
+    sqlite3 (2.10.2-arm-linux-musl)
     sqlite3 (2.10.2-arm64-darwin)
+    sqlite3 (2.10.2-x86-linux-gnu)
+    sqlite3 (2.10.2-x86-linux-musl)
     sqlite3 (2.10.2-x86_64-darwin)
     sqlite3 (2.10.2-x86_64-linux-gnu)
     sqlite3 (2.10.2-x86_64-linux-musl)
@@ -749,13 +801,19 @@ GEM
     test-prof (1.6.4)
       logger
     thor (1.5.0)
+    tiktoken_ruby (0.0.18)
+      rb_sys (~> 0.9)
     tiktoken_ruby (0.0.18-aarch64-linux)
     tiktoken_ruby (0.0.18-aarch64-linux-musl)
+    tiktoken_ruby (0.0.18-arm-linux-gnu)
+    tiktoken_ruby (0.0.18-arm-linux-musl)
     tiktoken_ruby (0.0.18-arm64-darwin)
     tiktoken_ruby (0.0.18-x86_64-darwin)
     tiktoken_ruby (0.0.18-x86_64-linux)
     tiktoken_ruby (0.0.18-x86_64-linux-musl)
     timeout (0.6.1)
+    tokenizers (0.6.4)
+      rb_sys
     tokenizers (0.6.4-aarch64-linux)
     tokenizers (0.6.4-aarch64-linux-musl)
     tokenizers (0.6.4-arm64-darwin)
@@ -812,11 +870,24 @@ GEM
 
 PLATFORMS
   aarch64-linux
+  aarch64-linux-android
   aarch64-linux-gnu
   aarch64-linux-musl
+  arm-linux-androideabi
+  arm-linux-gnu
+  arm-linux-gnueabihf
+  arm-linux-musl
+  arm-linux-musleabihf
   arm64-darwin
+  riscv64-linux-android
+  riscv64-linux-gnu
+  riscv64-linux-musl
+  ruby
+  x86-linux-gnu
+  x86-linux-musl
   x86_64-darwin
   x86_64-linux
+  x86_64-linux-android
   x86_64-linux-gnu
   x86_64-linux-musl
 
@@ -1005,7 +1076,7 @@ CHECKSUMS
   activesupport (8.1.4.1) sha256=16ac4f341ca65c85a1fcdb8ac73f68891aae9e3c4a6f9c3a27daed8b00017ed7
   addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
   afm (1.0.1) sha256=4fc98c6ea9cad60c25ae12bad517513b0d6fdbedc099e25be88bf47977b7d879
-  annotaterb (4.25.0) sha256=1c7a4c43d6afe3eb460731289ea8c831e9d864ce2f57897b5e1c749c1dd4ed89
+  annotaterb (4.26.0) sha256=f884a1cca92f7894b8b9efc1505cad597e6b666ed4295037ee7f5a34a33c9516
   anonymous_loader (0.1.5) sha256=c96a4a1b5f49f320037fae63e931ac15b3823686e4f0ee6f24f75a0ade4227cb
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   auth-sanitizer (0.2.5) sha256=eec0f5ee354931a1431be6f7025bc38d03db1731a2185726cbe6248e49bee177
@@ -1073,9 +1144,14 @@ CHECKSUMS
   faraday-retry (2.4.0) sha256=7b79c48fb7e56526faf247b12d94a680071ff40c9fda7cf1ec1549439ad11ebe
   fast_blank (1.0.1) sha256=269fc30414fed4e6403bc4a49081e1ea539f8b9226e59276ed1efaefabaa17ea
   fastimage (2.4.3) sha256=304457e3c35bfdaefda3f1dacab2222a96b230b8ce6977b6b54748c1cc7ec539
+  ffi (1.17.4) sha256=bcd1642e06f0d16fc9e09ac6d49c3a7298b9789bcb58127302f934e437d60acf
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
   ffi (1.17.4-aarch64-linux-musl) sha256=9286b7a615f2676245283aef0a0a3b475ae3aae2bb5448baace630bb77b91f39
+  ffi (1.17.4-arm-linux-gnu) sha256=d6dbddf7cb77bf955411af5f187a65b8cd378cb003c15c05697f5feee1cb1564
+  ffi (1.17.4-arm-linux-musl) sha256=9d4838ded0465bef6e2426935f6bcc93134b6616785a84ffd2a3d82bc3cf6f95
   ffi (1.17.4-arm64-darwin) sha256=19071aaf1419251b0a46852abf960e77330a3b334d13a4ab51d58b31a937001b
+  ffi (1.17.4-x86-linux-gnu) sha256=38e150df5f4ca555e25beca4090823ae09657bceded154e3c52f8631c1ed72cf
+  ffi (1.17.4-x86-linux-musl) sha256=fbeec0fc7c795bcf86f623bb18d31ea1820f7bd580e1703a3d3740d527437809
   ffi (1.17.4-x86_64-darwin) sha256=aa70390523cf3235096cf64962b709b4cfbd5c082a2cb2ae714eb0fe2ccda496
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
@@ -1084,9 +1160,12 @@ CHECKSUMS
   fiber-storage (1.0.1) sha256=f48e5b6d8b0be96dac486332b55cee82240057065dc761c1ea692b2e719240e1
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   goldiloader (6.0.1) sha256=79e61ce94beb3667dfd367d5770021525eeb9ee002f976cfef10c729a08bc683
+  google-protobuf (4.36.2) sha256=2f8daff50ae14aad36ab0ccdcf284065fa71d726c444efe114e6db82ffe62494
   google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
   google-protobuf (4.36.2-aarch64-linux-musl) sha256=0772c9dde1e6dce9a6b44d1d35c28c29adee99d9bd6aff5e21840daeb22161ce
   google-protobuf (4.36.2-arm64-darwin) sha256=f70d810e6bbab9d8ad9c1d5fd685a21de4c10ad3ad32efb9455e17e5b1286917
+  google-protobuf (4.36.2-x86-linux-gnu) sha256=ffcd06d49bffca24afff18c900dd61a51ea3028d43c47d0d9621d00bf38a5866
+  google-protobuf (4.36.2-x86-linux-musl) sha256=e1afec03babd73c9117cc09d5fc2a98dfef37a414bfd8a4d0ceaac7bd66fc028
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
@@ -1098,7 +1177,7 @@ CHECKSUMS
   highline (3.1.2) sha256=67cbd34d19f6ef11a7ee1d82ffab5d36dfd5b3be861f450fc1716c7125f4bb4a
   htmlentities (4.4.2) sha256=bbafbdf69f2eca9262be4efef7e43e6a1de54c95eb600f26984f71d2fe96c5c3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
-  i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
+  i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   inflection (1.0.0) sha256=ceba9b26fc28b9af82e33e822d28f78a4312af75687efec81d5ef1062498d355
   io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   irb (1.19.0) sha256=55ee56acbdd6c9fe06a2e6909f46a24e5c41f45f16906bab04e8049cf46f1d27
@@ -1111,6 +1190,7 @@ CHECKSUMS
   jwt (3.3.0) sha256=44cc34fbc341c148233cf66641522b4bce0dfb1ce55e8073f05c56f44f4ee546
   landlock (0.6.0) sha256=fb8ae70640636a170770dcd28c77a5a0e29d4edce29f9f421b6d641f02f6f3b6
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
+  libv8-node (24.12.0.1) sha256=d93d23b861bfe5de3ba829e34a142402fb83b4c3592dd58d9ac4e027588d739a
   libv8-node (24.12.0.1-aarch64-linux) sha256=22bd0246cde85d70c88cf772727ac3677a20ac1d169105f82efe5f1f7c39f755
   libv8-node (24.12.0.1-aarch64-linux-musl) sha256=791b5960f79525e87d1bd1e5f2bf3715ef2a38bac6c97f297853e98a8411ba89
   libv8-node (24.12.0.1-arm64-darwin) sha256=124904a46b4a15c01ac024b4cf537dcf199cfb49a309cc59f66315e156e48339
@@ -1143,6 +1223,7 @@ CHECKSUMS
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
   mime-types-data (3.2026.1103) sha256=cda7af94d895f1fd33e000acea800e6ed31e4c861e3d6c1a27c8b74f9e44dc64
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
+  mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   mini_racer (0.22.2) sha256=6a5b0d1e8bfe296ce9005d7d2bdbed1709a79d071a04bcd0e6699d899bf23cca
   mini_scheduler (0.20.0) sha256=bd8948228bf4a48a603a8e20de850d16b68295413d8651c8c05288f4c6997b05
   mini_sql (1.6.0) sha256=5296637f6a4af5bb43e06788037e9a2968ff9c8eb65928befcba8cb41f42d6ee
@@ -1160,8 +1241,11 @@ CHECKSUMS
   net-protocol (0.4.0) sha256=f9f90c8c6f64794a45160bf422177a336db12809de3beeeaa26b88fcd2e8c853
   net-smtp (0.5.2) sha256=35103cc04d6b2d94632f9928ede07483c24b70b9c0db1f231fea43909b678f3c
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
+  nokogiri (1.19.7) sha256=abe94507c54cb18f872777b16bdca4aad32b1abdc4c52fe843f1c80fbdf992b8
   nokogiri (1.19.7-aarch64-linux-gnu) sha256=8f5e15d299602456406e1f03a9f3456cceb33a0722811e818d2ee2214eb4c84a
   nokogiri (1.19.7-aarch64-linux-musl) sha256=efe0c3602e6e54521bc21c681930ce5568e2d11203de17400710b2b3ca2e4cb4
+  nokogiri (1.19.7-arm-linux-gnu) sha256=7fd1907125691aa89e838cc91161761c758b4e17bb32f0dd9b5515a82cc759af
+  nokogiri (1.19.7-arm-linux-musl) sha256=28d0ff0c87b6bb2e56580323a6fb049d5d4a02b94f0958fdd47e9ac146991c77
   nokogiri (1.19.7-arm64-darwin) sha256=f27d7f25f4873fbc3aa35a2cc2fb680c98555fec1925348da439d0869d541142
   nokogiri (1.19.7-x86_64-darwin) sha256=508e81e8c5f84aaa240dce981bf1c43faae60808726f0ce7024ee92effc5cafe
   nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
@@ -1187,6 +1271,7 @@ CHECKSUMS
   parser (3.3.13.0) sha256=e02f9b63c2fe05b0c68f692ba4df89b3cb113b663964f75d988fbebfd6c3deca
   pastel (0.8.0) sha256=481da9fb7d2f6e6b1a08faf11fa10363172dc40fd47848f096ae21209f805a75
   pdf-reader (2.16.0) sha256=bf1b5564c085264d8279bde3cf1467778b75841494d20c0fe7da3dad475f3732
+  pg (1.7.0) sha256=f7b536501284e883d4c9ef86dbde0313063e4aaafc23575b0017b0d572a26afb
   pg (1.7.0-aarch64-linux) sha256=101dd3a261000eb64b03ff41a5890674b735b626dbdce88652969b59fb0b1157
   pg (1.7.0-aarch64-linux-musl) sha256=5ca4d4619a1a39fb22de47350130956ece69cf0512858ee68dca926e46f65e4a
   pg (1.7.0-arm64-darwin) sha256=9fa895bbe28bdd579b83ccc80464c01d1015ea7549a7919134c9f8f10c060e4b
@@ -1219,8 +1304,10 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   raindrops (0.20.1)
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
+  rake-compiler-dock (1.12.0) sha256=f13205c2738f3d2053afcd03491a9e4541b22a59a0bfc53fc8bc883bd8188023
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
+  rb_sys (0.9.130) sha256=7d486d99c1da02635515deaf9860fc5aea90bb4ab2589b2deec7fdc7d3548615
   rbs (4.2.0) sha256=51f7b886dcc05bc09e10b901daa6a81829f6adc03101d6ca9ea4aac6103e0674
   rbtrace (0.5.5) sha256=ed0200ffeac4251f3464412e52f36cd64c473673c2739129e0b48c568672fe68
   rdoc (8.1.0) sha256=befc37880a5cfd36dcb176c748b5fd5ee39dd3536a75e81824e4972ce230f60a
@@ -1271,10 +1358,19 @@ CHECKSUMS
   rubyzip (3.7.0) sha256=65c19294da75297a939006f3516deacc33185fbd721ff1954f7a231db6d3e121
   samovar (2.5.1) sha256=8a9fc41eb8868084f0321eb41678c485cfbc7d282fb306c0be67c3284b1d2394
   sanitize (7.0.2) sha256=84c14aca3f69ee42da4ccd8aef5ee0f70c94bd600a652260b37fbfe833a77b97
+  sass-embedded (1.108.2) sha256=d3df2784ab3195aae3c5893a7dabe985d191cae4210868f99774d0f5ae7b97af
+  sass-embedded (1.108.2-aarch64-linux-android) sha256=5abb2547112254f1c89e5f43812a1f1a01fd5e2b2005b46476bb0b9c34a47388
   sass-embedded (1.108.2-aarch64-linux-gnu) sha256=79372c347ebfef0b80c29511487e80a78950b449538d1c162b2bc09b92967587
   sass-embedded (1.108.2-aarch64-linux-musl) sha256=e09cd8faf9468ee726bfc225d6fdb1705d12fb4d323039e1b2176f13d318d41f
+  sass-embedded (1.108.2-arm-linux-androideabi) sha256=a8ae928aee0d574c6d3ccf3d8f3f9ffcae073c05b91f147e4030e77030e40124
+  sass-embedded (1.108.2-arm-linux-gnueabihf) sha256=de55d4296132b44399a615dd7b676589bb1c546496683e746ccc3559412ef62e
+  sass-embedded (1.108.2-arm-linux-musleabihf) sha256=3404e087506d9ec30ab417f6f3b7a444d99e781d8b197c7ecfef90769b095cc6
   sass-embedded (1.108.2-arm64-darwin) sha256=08d38ac71e9b6fcb651efeb40c7a27394357d8a044e19f620712a410f68c2c03
+  sass-embedded (1.108.2-riscv64-linux-android) sha256=051cdf9110f85d75a04fba968793bcab2076eed60774569a8142c553ddf476dd
+  sass-embedded (1.108.2-riscv64-linux-gnu) sha256=4d79a784f1c857af11282d90b2be4aa623f3017b47a8e1b42130c214ee4d7783
+  sass-embedded (1.108.2-riscv64-linux-musl) sha256=571040cbf6c2d0e1cd3680792b7eeac3e58b7027ed0d6f094ed928c762aa00a5
   sass-embedded (1.108.2-x86_64-darwin) sha256=e1e97527a9392d8368a9e3fbe34822ae0353432eed874d7634a036386364589d
+  sass-embedded (1.108.2-x86_64-linux-android) sha256=758f65a05713354598277b847768f5c0d58e524e03836a1e01ba1cfcd694af63
   sass-embedded (1.108.2-x86_64-linux-gnu) sha256=797f7128c5cb11e527e390c2a8dbbdee09832e43b754f2c2ce7f691e27fec75d
   sass-embedded (1.108.2-x86_64-linux-musl) sha256=a0e16d18bd90a63139fe5644a915abb6073a12660e4648754c5a5240dc65444e
   sassc-embedded (1.80.10) sha256=6baf835e2208d5905d8cff7d0322af45ee3a5933d4d93d22e2875ade967d8a57
@@ -1286,9 +1382,14 @@ CHECKSUMS
   simpleidn (0.3.0) sha256=12ca730bed2f3db04d11e9bfd1bca3e11fb37f55b21eb2e9793fb5814bf54d03
   smarter_json (1.2.6) sha256=6638a2d23954e26d268212b4c8f5b9871d31b72f3d169371cca1082c1a722b45
   snaky_hash (2.0.9) sha256=e93e6ec80632f8c8c4a3fe6e25d51eaef253e0e58dc7100f0f8370320feb3128
+  sqlite3 (2.10.2) sha256=f1ea68cd3287f8a49f39a088ac9e4bd0ef4e7f394c3d4a60dd4c7e44b0566964
   sqlite3 (2.10.2-aarch64-linux-gnu) sha256=e9aea2c2b3476fc875dd8a89313a9a2862818519c0186bfb5b56d6f57bb08d98
   sqlite3 (2.10.2-aarch64-linux-musl) sha256=4986fc40cdf21342362b72a941df28e95cfe0e644f3ad2532d948b157c39dbee
+  sqlite3 (2.10.2-arm-linux-gnu) sha256=762f609ef891463226b472d3df66aea84d5466ff4376d3ccf4a059718c4ce9c9
+  sqlite3 (2.10.2-arm-linux-musl) sha256=833623eaf1157b1b85d1c0830e3e8f9beb3bb95a9bec3d252f20557a50e9803a
   sqlite3 (2.10.2-arm64-darwin) sha256=5b0d235ea037e6dcd1b8387a19d73be571917db9f93044d35741cf933a21a37d
+  sqlite3 (2.10.2-x86-linux-gnu) sha256=46a02a29e9ae452824082388be5c24fd26f133b14bdd268610c6aa9a8d924c44
+  sqlite3 (2.10.2-x86-linux-musl) sha256=38980cf01eb2e4ac1c0755964d60b3d743ccf00686798a626bab852ff4cd3d1e
   sqlite3 (2.10.2-x86_64-darwin) sha256=fd2c67b49d313031af112e172c83ab321681a2b4996bf882eefac50be7bea08f
   sqlite3 (2.10.2-x86_64-linux-gnu) sha256=ca92731ab464df9cae503fa1a439a549e2724f6953c8c05a7769b59366e38f15
   sqlite3 (2.10.2-x86_64-linux-musl) sha256=b9f8fc62f3e0eb8966b41de251b492b4c8e9d1b23559beb6e150ad7f8d590941
@@ -1300,13 +1401,17 @@ CHECKSUMS
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.6.4) sha256=95dd0cab62fde10ce61c41778b925a0def41bd6f58252fab2576b4cfcc25fb1d
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
+  tiktoken_ruby (0.0.18) sha256=3b4ac99f287a324d833b81ef5a8c7d2fd0b38f7192f02b4fcfa28f56a54513ed
   tiktoken_ruby (0.0.18-aarch64-linux) sha256=0c2dcd55bacb659e61b9af0a7bd18b8d6390fb6fda6cbb35ac95c4230565e0f8
   tiktoken_ruby (0.0.18-aarch64-linux-musl) sha256=35580c76464c69b2e6a225dcd37fa0cd11c32499782f055b97965bd24c0422f3
+  tiktoken_ruby (0.0.18-arm-linux-gnu) sha256=d5fb49087b3cbb306a5573392d7053b3ccbd695a241710288fd8fb87c6667630
+  tiktoken_ruby (0.0.18-arm-linux-musl) sha256=e3ce86fb7b464005e99ed5bd3c3f27ab9fbfdf0dc0cfeac896abe995614a3b72
   tiktoken_ruby (0.0.18-arm64-darwin) sha256=30881dfd8215d4ea00ef17a350ad2f2181266c5c9cc5310017d1ac2807b3090f
   tiktoken_ruby (0.0.18-x86_64-darwin) sha256=c24815fa26b4aadca5ec095d0c3e1a871029e4f23648790092a1e2c295f22758
   tiktoken_ruby (0.0.18-x86_64-linux) sha256=0a20788674970f6c3083541686308bed02b598d0d9d4f8320339c60f6f8e6200
   tiktoken_ruby (0.0.18-x86_64-linux-musl) sha256=df1e7cff3b0a0fceb837ca0cf21f3babaf1f27b4361787d87de9d4e798559447
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
+  tokenizers (0.6.4) sha256=7881f2afee7e605dec6be0c382d4bd138622b77263a67ca66f4ef3156e8e8f47
   tokenizers (0.6.4-aarch64-linux) sha256=4898a86c726106967a929a318ffaacb7fa99a6cba5b50e3957f80151c0d7789a
   tokenizers (0.6.4-aarch64-linux-musl) sha256=351428bcf096c931666ee148d23b875b0e519749a57a5d2984e319af11ea791f
   tokenizers (0.6.4-arm64-darwin) sha256=ab123cb46e8df7e118bee0833d0bc21d4004a0d39816c0def56503be59de26c3
