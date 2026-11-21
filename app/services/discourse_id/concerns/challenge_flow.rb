@@ -38,7 +38,15 @@ module DiscourseId
       end
 
       def store_challenge_token(token:)
-        Discourse.redis.setex("discourse_id_challenge_token", 600, token)
+        # DiscourseRedis swallows Redis::ReadOnlyError and returns nil, so on a
+        # read-only replica this write silently no-ops. Without this check the
+        # provider later fetches /.well-known/discourse-id-challenge, finds no
+        # token, and the failure is misattributed to an upstream 404.
+        return if Discourse.redis.setex("discourse_id_challenge_token", 600, token)
+
+        error = "Challenge token could not be stored in Redis (read-only replica)"
+        log_error("store_challenge_token", error)
+        fail!(error)
       end
 
       def post_json(path, body)
