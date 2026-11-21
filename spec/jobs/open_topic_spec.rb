@@ -17,6 +17,19 @@ RSpec.describe Jobs::OpenTopic do
     end
   end
 
+  it "cancels a pending open timer when its TL4 user loses reopen permission" do
+    leader = Fabricate(:trust_level_4, refresh_auto_groups: true)
+    timer = topic.set_or_create_timer(TopicTimer.types[:open], "1", by_user: leader)
+    expect(timer.user).to eq(leader)
+    SiteSetting.tl4_can_reopen_topics = false
+    freeze_time(timer.execute_at + 1.minute)
+
+    described_class.new.execute(topic_timer_id: timer.id)
+
+    expect(topic.reload).to be_closed
+    expect(topic.public_topic_timer).to be_nil
+  end
+
   it "publishes to the topic message bus so the topic status reloads" do
     MessageBus.expects(:publish).at_least_once
     MessageBus

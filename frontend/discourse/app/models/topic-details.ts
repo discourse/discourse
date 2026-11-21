@@ -96,7 +96,7 @@ export interface TopicDetailsAllowedGroupPayload {
 
 /**
  * TopicViewDetailsSerializer fields, all optional because a topic creates its details before they load.
- * Permissions are sent only when granted, except `can_edit`; client code may also set them to false.
+ * Most permissions are sent only when granted. Client code may also set them to false.
  */
 export interface TopicDetailsFields {
   can_edit?: boolean;
@@ -115,6 +115,8 @@ export interface TopicDetailsFields {
   can_edit_tags?: boolean;
   can_publish_page?: boolean;
   can_close_topic?: boolean;
+  /** Reopen permission for users who can close topics, even before the topic is closed. */
+  can_open_topic?: boolean;
   can_archive_topic?: boolean;
   can_split_merge_topic?: boolean;
   can_edit_staff_notes?: boolean;

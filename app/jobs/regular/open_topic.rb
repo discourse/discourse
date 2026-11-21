@@ -4,8 +4,10 @@ module Jobs
   class OpenTopic < ::Jobs::TopicTimerBase
     def execute_timer_action(topic_timer, topic)
       user = topic_timer.user
+      guardian = user&.guardian || Guardian.new
 
-      if !Guardian.new(user).can_set_topic_timer?(topic) || topic.open?
+      if !guardian.can_set_topic_timer?(topic) || guardian.tl4_topic_reopen_restricted? ||
+           topic.open?
         topic_timer.destroy!
         topic.reload
 
