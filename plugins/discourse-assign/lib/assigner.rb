@@ -232,15 +232,14 @@ class ::Assigner
 
   def update_details(assign_to, note, status, skip_small_action_post: false, should_notify: true)
     case
-    when note.present? && status.present? && @target.assignment.note != note &&
-           @target.assignment.status != status
+    when status.present? && @target.assignment.note != note && @target.assignment.status != status
       small_action_text = <<~TEXT
         Status: #{@target.assignment.status} → #{status}
 
         #{note}
       TEXT
       change_type = "details"
-    when note.present? && @target.assignment.note != note
+    when @target.assignment.note != note
       small_action_text = note
       change_type = "note"
     when @target.assignment.status != status
@@ -589,7 +588,7 @@ class ::Assigner
   end
 
   def details_change?(note, status)
-    note.present? || @target.assignment&.status != status
+    @target.assignment&.note != note || @target.assignment&.status != status
   end
 
   def assignment_eq?(assignment, assign_to, type, note, status)

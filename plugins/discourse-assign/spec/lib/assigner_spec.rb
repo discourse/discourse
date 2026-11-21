@@ -605,6 +605,38 @@ RSpec.describe Assigner do
     end
 
     describe "updating notes" do
+      it "clears a note without recreating the assignment or changing its status" do
+        assigner.assign(moderator, note: "Please investigate", status: "In Progress")
+        assignment = topic.reload.assignment
+
+        messages =
+          MessageBus.track_publish("/staff/topic-assignment") do
+            expect(assigner.assign(moderator, note: nil, status: "In Progress")).to eq(
+              success: true,
+            )
+          end
+
+        expect(topic.reload.assignment.id).to eq(assignment.id)
+        expect(assignment.reload.note).to be_nil
+        expect(assignment.status).to eq("In Progress")
+        expect(topic.posts.last.action_code).to eq("note_change")
+        expect(messages.last.data[:assignment_note]).to be_nil
+      end
+
+      it "records a details change when clearing a note and changing status together" do
+        assigner.assign(moderator, note: "Please investigate", status: "In Progress")
+        assignment = topic.reload.assignment
+
+        assigner.assign(moderator, note: nil, status: "Done")
+
+        expect(topic.reload.assignment.id).to eq(assignment.id)
+        expect(assignment.reload.note).to be_nil
+        expect(assignment.status).to eq("Done")
+        expect(topic.posts.last.action_code).to eq("details_change")
+        expect(topic.posts.last.raw).to include("In Progress → Done")
+        expect(topic.posts.last.raw).not_to include("Please investigate")
+      end
+
       it "does not recreate assignment if no assignee change" do
         assigner.assign(moderator)
 
