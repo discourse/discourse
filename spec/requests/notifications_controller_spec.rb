@@ -396,6 +396,18 @@ RSpec.describe NotificationsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([liked1.id])
           end
+
+          it "filters paginated notifications when recent is not set" do
+            get "/notifications.json", params: { filter_by_types: "liked,replied", limit: 2 }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
+              [liked1.id, replied.id],
+            )
+            expect(response.parsed_body["total_rows_notifications"]).to eq(3)
+            expect(response.parsed_body["load_more_notifications"]).to eq(
+              "/notifications?filter_by_types=liked%2Creplied&limit=2&offset=2&username=#{user.username}",
+            )
+          end
         end
 
         context "when username params is not valid" do

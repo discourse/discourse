@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -9,6 +9,7 @@ import DismissNotificationConfirmationModal from "discourse/components/modal/dis
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
+import notificationHistoryTypeFilters from "discourse/lib/notification-history-type-filters";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import DRelativeDate from "discourse/ui-kit/d-relative-date";
 import { i18n } from "discourse-i18n";
@@ -26,11 +27,29 @@ export default class UserNotificationsController extends Controller {
   @service siteSettings;
 
   @tracked filter = "all";
+  @tracked notificationType = null;
 
-  queryParams = ["filter"];
+  queryParams = ["filter", "notificationType"];
+
+  @cached
+  get notificationTypeOptions() {
+    return [
+      ...notificationHistoryTypeFilters(this.site.notification_types).keys(),
+    ];
+  }
+
+  get typeFilterValue() {
+    if (
+      this.siteSettings.enable_notification_history_type_filter &&
+      this.notificationTypeOptions.includes(this.notificationType)
+    ) {
+      return this.notificationType;
+    }
+    return null;
+  }
 
   get isFiltered() {
-    return this.filter && this.filter !== "all";
+    return (this.filter && this.filter !== "all") || !!this.typeFilterValue;
   }
 
   get items() {
@@ -86,6 +105,11 @@ export default class UserNotificationsController extends Controller {
   @action
   updateFilter(value) {
     this.filter = value;
+  }
+
+  @action
+  updateNotificationType(value) {
+    this.notificationType = value;
   }
 
   @action
