@@ -116,6 +116,7 @@ module DiscourseWorkflows
       emoji
       field_path
       filter_query
+      form_fields
       group_select
       icon
       multi_combo_box

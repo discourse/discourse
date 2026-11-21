@@ -1,11 +1,14 @@
 import { getOwner } from "@ember/owner";
-import { click, fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, find, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
+
+const registrationField = '[data-name="registrationForm"]';
 
 function eventWith(attrs = {}) {
   return DiscoursePostEventEvent.create({
@@ -57,6 +60,107 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     getOwner(this).register("service:current-user", this.user, {
       instantiate: false,
     });
+  });
+
+  test("hides form creation and management from members outside the event creation groups", async function (assert) {
+    this.user.setProperties({
+      admin: false,
+      can_create_discourse_post_event: false,
+    });
+    this.siteSettings.discourse_post_event_enabled = true;
+    await renderAdvanced(eventWith());
+    const control = find(registrationField + " select");
+    assert.dom(registrationField).hasClass("--full");
+    assert.dom(control).hasClass("form-kit__control-select");
+    assert
+      .dom(registrationField + " label")
+      .includesText("Registration form")
+      .hasAttribute("for", control.id);
+    assert.dom(".event-registration-picker__sizer").doesNotExist();
+    assert.dom(registrationField + ' option[value="create"]').doesNotExist();
+    assert.dom(registrationField + ' option[value="manage"]').doesNotExist();
+  });
+
+  test("offers Create new and Manage my forms to members who can create events", async function (assert) {
+    this.user.setProperties({
+      admin: false,
+      can_create_discourse_post_event: true,
+    });
+    this.siteSettings.discourse_post_event_enabled = true;
+    await renderAdvanced(eventWith());
+    assert
+      .dom(registrationField + ' option[value="create"]')
+      .hasText("Create new");
+    assert
+      .dom(registrationField + ' option[value="manage"]')
+      .hasText("Manage my forms");
+  });
+
+  test("selects a form created in another tab and previews it without leaving the event", async function (assert) {
+    const event = eventWith();
+    let forms = [];
+    pretender.get("/discourse-post-event/registration-forms.json", () =>
+      response({ registration_forms: forms })
+    );
+    pretender.get("/discourse-post-event/registration-forms/3.json", () =>
+      response({
+        id: 3,
+        definition: {
+          title: "Workshop signup",
+          fields: [
+            { id: "team", label: "Team", required: false, type: "text" },
+          ],
+        },
+      })
+    );
+    await renderAdvanced(event);
+    await fillIn('[data-name="location"] input', "Room 4");
+    assert.dom(registrationField + ' option[value="create"]').exists();
+    forms = [{ id: 3, title: "Workshop signup" }];
+    window.dispatchEvent(new Event("focus"));
+    await settled();
+    await formKit().field("registrationForm").select("3");
+    assert
+      .dom(registrationField + " select")
+      .hasAttribute(
+        "aria-describedby",
+        find(registrationField + " .form-kit__container-help-text").id
+      );
+    assert.dom(registrationField + " .btn-link").hasText("Preview");
+    await click(registrationField + " .btn-link");
+    assert.dom(".event-registration h1").hasText("Event registration");
+    assert
+      .dom('.event-registration [data-name="team"] label')
+      .includesText("Team");
+    await click(".event-registration .modal-close");
+    assert.dom(registrationField + " select").hasValue("3");
+    assert.dom('[data-name="location"] input').hasValue("Room 4");
+    assert.strictEqual(event.registrationFormId, undefined);
+    await click(".btn-primary");
+    assert.strictEqual(event.registrationFormId, 3);
+  });
+
+  test("keeps an event’s removed form selected until the host chooses another registration option", async function (assert) {
+    pretender.get("/discourse-post-event/registration-forms.json", () =>
+      response({ registration_forms: [] })
+    );
+    const event = eventWith({
+      registration_form_id: 7,
+      registration_form: { title: "Original signup", fields: [] },
+    });
+    await renderAdvanced(event);
+    const control = registrationField + " select";
+    assert.dom(control).hasValue("7");
+    assert
+      .dom(control + ' option[value="7"]')
+      .isDisabled()
+      .hasText("Original signup");
+    await formKit().field("registrationForm").select("account");
+    assert.dom(control).hasValue("account");
+    assert.dom(registrationField + " .btn-link").doesNotExist();
+    await click(".btn-primary");
+    assert.strictEqual(event.registrationForm.builtin, "account");
+    assert.strictEqual(event.registrationFormId, null);
   });
 
   test("reminder edits persist in advanced settings and the saved event", async function (assert) {

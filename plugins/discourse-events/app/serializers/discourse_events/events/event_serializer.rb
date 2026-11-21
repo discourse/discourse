@@ -6,6 +6,10 @@ module DiscourseEvents
       attributes :can_act_on_discourse_post_event
       attributes :can_update_attendance
       attributes :creator
+      attributes :registration_form,
+                 :registration_form_id,
+                 :registration_revision,
+                 :can_export_registrations
       attributes :hosts
       attributes :is_closed
       attributes :is_expired
@@ -48,6 +52,26 @@ module DiscourseEvents
       attributes :at_capacity
 
       has_one :image_upload, embed: :object, serializer: UploadSerializer
+
+      def can_export_registrations
+        (object.registration_form.present? || object.registration_topic_id.present?) &&
+          scope.can_export_event_registrations?(object)
+      end
+
+      def registration_form
+        # Editors need the original definition to round-trip legacy inline forms in post markup.
+        if !object.registration_form_id && can_act_on_discourse_post_event
+          return object.registration_form
+        end
+        object.registration_form.slice("fields", "builtin")
+      end
+
+      def include_registration_form?
+        object.registration_form.present?
+      end
+
+      alias include_registration_form_id? include_registration_form?
+      alias include_registration_revision? include_registration_form?
 
       def livestream_enabled
         object.livestream? && object.livestream_url.present?

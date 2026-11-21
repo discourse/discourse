@@ -9,6 +9,7 @@ module DiscourseEvents
         attribute :event_id, :integer
         attribute :invitee_id, :integer
         attribute :status, :symbol
+        attribute :registration, :string
         attribute :recurring, :boolean, default: false
 
         validates :event_id, presence: true
@@ -51,12 +52,19 @@ module DiscourseEvents
         params.status != :going || !event.at_capacity? || invitee.status == Invitee.statuses[:going]
       end
 
-      def update(invitee:, params:, guardian:)
-        invitee.update_attendance!(
-          params.status,
-          recurring: params.recurring,
+      def update(event:, invitee:, params:, guardian:)
+        Registration.record_attendance!(
+          event:,
+          user: invitee.user,
           acting_user: guardian.user,
-        )
+          params:,
+        ) do
+          invitee.update_attendance!(
+            params.status,
+            recurring: params.recurring,
+            acting_user: guardian.user,
+          )
+        end
       end
     end
   end

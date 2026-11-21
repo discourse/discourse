@@ -49,7 +49,12 @@ module DiscourseEvents
 
       def upsert_event(post:, raw_event:)
         event = post.event || Event.new(id: post.id)
-        attributes = Event::Action::AttributesFromRaw.call(raw_event:, current_status: event.status)
+        attributes =
+          Event::Action::AttributesFromRaw.call(
+            raw_event:,
+            current_status: event.status,
+            current_event: event,
+          )
         attributes[:image_upload_id] = Event::Action::ResolveImageUpload.call(
           image: raw_event[:image],
           post:,

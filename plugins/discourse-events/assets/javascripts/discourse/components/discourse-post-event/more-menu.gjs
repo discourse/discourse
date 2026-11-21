@@ -14,6 +14,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import addEventToCalendar from "../../lib/add-event-to-calendar.js";
 import { buildParams, replaceRaw } from "../../lib/raw-event-helper.js";
+import { downloadRegistrationSubmissions } from "../../lib/registration-forms.js";
 import { showPostEventEditor } from "../../lib/show-post-event-editor.js";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite.gjs";
 import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group.gjs";
@@ -47,6 +48,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       this.canInvite,
       this.canSeeUpcomingEvents,
       this.shouldShowParticipants,
+      this.args.event.canExportRegistrations,
       this.canActOnEvent,
     ].some(Boolean);
   }
@@ -135,6 +137,12 @@ export default class DiscoursePostEventMoreMenu extends Component {
     } catch (e) {
       popupAjaxError(e);
     }
+  }
+
+  @action
+  async exportRegistrations() {
+    this.menuApi.close();
+    await downloadRegistrationSubmissions(this.args.event.id, this.dialog);
   }
 
   @action
@@ -346,6 +354,15 @@ export default class DiscoursePostEventMoreMenu extends Component {
               </dropdown.item>
 
               <dropdown.divider />
+            {{/if}}
+            {{#if @event.canExportRegistrations}}
+              <dropdown.item>
+                <DButton
+                  @action={{this.exportRegistrations}}
+                  @icon="file-csv"
+                  @label="event_registration.download"
+                />
+              </dropdown.item>
             {{/if}}
             {{#if this.canActOnEvent}}
               <dropdown.item class="export-event">

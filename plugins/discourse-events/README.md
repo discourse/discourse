@@ -4,6 +4,16 @@ Adds the ability to create a dynamic calendar in the first post of a topic.
 
 Topic discussing the plugin itself can be found here: [https://meta.discourse.org/t/discourse-calendar/97376](https://meta.discourse.org/t/discourse-calendar/97376)
 
+## Event registration forms
+
+Admins manage reusable forms under **Admin → Plugins → Events → Registration forms**. Members in **Groups that can create events** can also create forms and manage their own. In the event editor, **Create new** opens the form editor in a new tab. Saving the form selects it in the event draft. Published events keep the questions selected at publication.
+
+RSVP-enabled events default to **Do not track registration**. Selecting **Username/Email only** records a signed-in member’s details automatically when they RSVP as Going. Selecting a custom form opens it for the member to complete.
+
+**Admin → Plugins → Events → Submissions** shows registration counts and the latest submission time by event. The first submission starts a personal message to the event hosts with the member’s answers, username, and submission time. Later submissions appear as replies. Hosts can export a CSV from the event menu. Account email addresses are included only in exports requested by an administrator who also hosts the event.
+
+Signed-in members see their primary account email as a read-only field when they register. Form previews show the viewer’s own address.
+
 ## Customization
 
 ### Events

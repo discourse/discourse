@@ -33,8 +33,39 @@ module DiscourseEvents
         attributes =
           Event::Action::AttributesFromRaw.new(
             raw_event: extracted_event,
+            current_event: @post.event,
             current_status: @post.event&.status || Event.statuses[:standalone],
           )
+
+        if extracted_event.key?(:"registration-form-id") &&
+             (extracted_event.key?(:"registration-form") || !attributes.registration_form)
+          add_error("unknown_registration_form")
+          return
+        end
+
+        if extracted_event.key?(:"registration-form") &&
+             extracted_event[:"registration-form"] != RegistrationForm::ACCOUNT_ONLY &&
+             (
+               @post.event&.registration_form_id ||
+                 @post.event&.registration_form != attributes.registration_form
+             )
+          add_error("unknown_registration_form")
+          return
+        end
+
+        if extracted_event.key?(:"registration-form") ||
+             extracted_event.key?(:"registration-form-id")
+          error =
+            RegistrationForm.definition_error(
+              attributes.registration_form,
+              allow_account_only:
+                extracted_event[:"registration-form"] == RegistrationForm::ACCOUNT_ONLY,
+            )
+          if error
+            add_error(error)
+            return
+          end
+        end
 
         group_names = attributes.raw_invitees.to_a
         invitees = group_names - [Event::PUBLIC_GROUP]
@@ -46,6 +77,7 @@ module DiscourseEvents
 
         return unless can_invite_groups?(group_names)
         return unless valid_hosts?(extracted_event)
+        return unless valid_registration_edit?(extracted_event, attributes)
 
         if @post.acting_user && @post.event
           if !@post.acting_user.guardian.can_act_on_discourse_post_event?(@post.event)
@@ -127,6 +159,23 @@ module DiscourseEvents
 
       def add_error(key, **args)
         @post.errors.add(:base, I18n.t("discourse_post_event.errors.models.event.#{key}", **args))
+      end
+
+      def valid_registration_edit?(raw, attributes)
+        event = @post.event
+        return true unless event
+        if attributes.registration_form_id == event.registration_form_id &&
+             attributes.registration_form == event.registration_form &&
+             (
+               !event.registration_form && !event.registration_topic_id ||
+                 extract_hosts(raw).sort == event.hosts.pluck(:username_lower).sort
+             )
+          return true
+        end
+        return true if @post.acting_user&.guardian&.can_export_event_registrations?(event)
+
+        add_error("registration_hosts")
+        false
       end
 
       def valid_hosts?(event)

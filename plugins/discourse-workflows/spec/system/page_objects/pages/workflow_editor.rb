@@ -118,6 +118,57 @@ module PageObjects
           page.has_css?(".workflows-configurator-modal__save-status--saved")
         end
 
+        def move_form_field_up(label)
+          actions = I18n.t("js.form_definition.field_actions", label:)
+          find(".form-definition-editor__field-menu") do |button|
+            button["aria-label"] == actions
+          end.click
+          find("[data-field-action='up']").click
+          self
+        end
+
+        def move_last_choice_up
+          PageObjects::Components::ReorderableList.new(
+            ".form-definition-editor__questions .d-reorderable-list__row:last-child",
+          ).move(:up)
+          self
+        end
+
+        def set_form_field_required(label, required:)
+          find(:button, I18n.t("js.form_definition.field_attributes", label:)).click
+          find("[data-field-attribute='required'][aria-pressed='#{!required}']").click
+          self
+        end
+
+        def has_requirement_badge?(text)
+          page.has_css?(".form-definition-editor__requirement", exact_text: text)
+        end
+
+        def press_requirement_badge(label, key)
+          name = I18n.t("js.form_definition.required_response", label:)
+          find(".form-definition-editor__requirement") do |badge|
+            badge["aria-label"] == name
+          end.send_keys(key)
+          self
+        end
+
+        def has_type_before_label?
+          page.has_css?(
+            ".form-definition-editor__question:first-child [data-name$='.field_type'] + [data-name$='.field_label']",
+          )
+        end
+
+        def has_no_form_field_requirement_toggle?
+          page.has_no_css?(".form-definition-editor__question [data-name$='.required']")
+        end
+
+        def has_first_form_field?(label)
+          actions = I18n.t("js.form_definition.field_actions", label:)
+          page.has_css?(
+            ".form-definition-editor__question:first-child .form-definition-editor__field-menu",
+          ) { |button| button["aria-label"] == actions }
+        end
+
         def add_data_table_column(name)
           PageObjects::Components::DMenu.new(
             ".workflows-data-table-columns .workflows-property-engine__add-attrs-btn",

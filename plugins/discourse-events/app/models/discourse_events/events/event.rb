@@ -29,6 +29,9 @@ module DiscourseEvents
       self.table_name = "discourse_post_event_events"
       self.ignored_columns = %w[starts_at ends_at]
 
+      has_many :registrations,
+               class_name: "DiscourseEvents::Events::Registration",
+               dependent: :delete_all
       has_many :event_dates, dependent: :destroy
       # this is a cross plugin dependency, only called if chat is enabled
       belongs_to :chat_channel, class_name: "Chat::Channel"
@@ -40,6 +43,15 @@ module DiscourseEvents
       has_many :upload_references, as: :target, dependent: :destroy
 
       scope :visible, -> { where(deleted_at: nil) }
+      scope :with_library_form,
+            -> { where.not(registration_form_id: nil).where.not(registration_form: nil) }
+      scope :with_account_only_registration,
+            -> do
+              where(
+                "discourse_post_event_events.registration_form->>'builtin' = ?",
+                RegistrationForm::ACCOUNT_ONLY,
+              )
+            end
       scope :open, -> { where(closed: false) }
 
       before_validation :reset_invalid_livestream
@@ -80,9 +92,37 @@ module DiscourseEvents
 
       validate :raw_invitees_length
       validate :ends_before_start
+      validate :selected_registration_form_exists,
+               if: -> { registration_form_id && will_save_change_to_registration_form_id? }
       validate :allowed_custom_fields
       validate :url_is_a_uri, if: :url_changed?
       validate :hosts_are_valid
+      validate :valid_registration_form, if: :registration_form_changed?
+
+      def registration_revision
+        return unless registration_form
+        Digest::SHA256.hexdigest(
+          [registration_form, starts_at, recurrence, recurrence_until, timezone].to_json,
+        )
+      end
+
+      def registration_host_ids
+        (event_hosts.map(&:user_id) + [post.user_id]).uniq
+      end
+
+      def sync_registration_topic_recipients
+        return unless registration_topic_id
+        topic = Topic.private_messages.find_by(id: registration_topic_id)
+        return unless topic
+
+        ids = registration_host_ids + [Discourse.system_user.id]
+        topic.topic_allowed_groups.delete_all
+        topic.topic_allowed_users.where.not(user_id: ids).delete_all
+        (ids - topic.topic_allowed_users.pluck(:user_id)).each do |user_id|
+          topic.topic_allowed_users.create!(user_id:)
+        end
+        topic
+      end
 
       def self.attributes_protected_by_default
         super - %w[id]
@@ -336,6 +376,21 @@ module DiscourseEvents
         end
       end
 
+      def valid_registration_form
+        return if registration_form.nil?
+        error =
+          RegistrationForm.definition_error(
+            registration_form,
+            allow_account_only: registration_form_id.nil?,
+          )
+        if error
+          errors.add(
+            :registration_form,
+            I18n.t("discourse_post_event.errors.models.event.#{error}"),
+          )
+        end
+      end
+
       def hosts_are_valid
         ids = host_user_ids
         return if ids.blank?
@@ -359,6 +414,16 @@ module DiscourseEvents
           errors.add(
             :base,
             I18n.t("discourse_post_event.errors.models.event.ends_at_before_starts_at"),
+          )
+        end
+      end
+
+      def selected_registration_form_exists
+        # Hold the form until this event is saved so removal sees any new use.
+        unless RegistrationForm.lock("FOR SHARE").exists?(registration_form_id)
+          errors.add(
+            :base,
+            I18n.t("discourse_post_event.errors.models.event.unknown_registration_form"),
           )
         end
       end
@@ -762,6 +827,7 @@ module DiscourseEvents
         EventHost.insert_all!(inserts) if inserts.present?
 
         association(:event_hosts).reset
+        sync_registration_topic_recipients if stale_ids.any? || inserts.any?
       end
 
       def apply_params_for_status(params)
@@ -936,6 +1002,7 @@ end
 #  recording_url              :string(1000)
 #  recurrence                 :string
 #  recurrence_until           :datetime
+#  registration_form          :jsonb
 #  reminders                  :string
 #  show_local_time            :boolean          default(FALSE), not null
 #  status                     :integer          default(0), not null
@@ -943,8 +1010,11 @@ end
 #  url                        :string(1000)
 #  chat_channel_id            :bigint
 #  image_upload_id            :bigint
+#  registration_form_id       :bigint
+#  registration_topic_id      :bigint
 #
 # Indexes
 #
-#  index_discourse_post_event_events_on_image_upload_id  (image_upload_id)
+#  index_discourse_post_event_events_on_image_upload_id       (image_upload_id)
+#  index_discourse_post_event_events_on_registration_form_id  (registration_form_id) WHERE ((registration_form_id IS NOT NULL) AND (deleted_at IS NULL))
 #

@@ -26,6 +26,21 @@ module PageObjects
           self
         end
 
+        def has_choices?(name, choices)
+          page.has_css?("select[name='#{name}']") do |select|
+            select.all("option.form-kit__control-option", visible: :all).map(&:value) == choices
+          end
+        end
+
+        def choose(name, value)
+          find("select[name='#{name}']").select(value)
+          self
+        end
+
+        def has_completion_text?(text)
+          page.has_css?(".workflows-form__complete", text:)
+        end
+
         def submit
           find(".workflows-form .btn-primary[type='submit']").click
           self

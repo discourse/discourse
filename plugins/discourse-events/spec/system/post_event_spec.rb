@@ -36,6 +36,23 @@ describe "Post event" do
     end
   end
 
+  it "registers a signed-in member’s account details as soon as they RSVP as Going" do
+    event_post =
+      create_post_with_event(admin, 'status="public" registrationForm=account', 2.days.from_now)
+    member = Fabricate(:user)
+    sign_in(member)
+    visit event_post.topic.url
+    post_event_page.going
+    expect(post_event_page).to have_pressed_status(:going)
+    expect(page).to have_no_css(".event-registration")
+    expect(event_post.event.registrations.sole).to have_attributes(
+      username: member.username,
+      email: member.email,
+      answers: {
+      },
+    )
+  end
+
   it "shows the event hosts" do
     first_host = Fabricate(:user, username: "event_host_maya")
     second_host = Fabricate(:user, username: "event_host_noah")

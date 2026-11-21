@@ -36,13 +36,19 @@ import {
   reconcileDefaultReminder,
   showRecordingField,
 } from "../../lib/raw-event-helper.js";
+import { registrationFormSelection } from "../../lib/registration-forms.js";
 import CompactEventEditor from "../compact-event-editor.gjs";
+import EventRegistrationPicker from "../event-registration-picker.gjs";
+import EventRegistration from "./event-registration.gjs";
 
 export default class PostEventBuilder extends Component {
   @service dialog;
   @service siteSettings;
   @service currentUser;
 
+  @tracked registrationForm = this.event.registrationForm ?? null;
+  @tracked registrationFormId = this.event.registrationFormId ?? null;
+  @tracked registrationPreview;
   @tracked flash = null;
   @tracked isSaving = false;
   @tracked screen = this.args.model.initialScreen || "compact";
@@ -253,6 +259,8 @@ export default class PostEventBuilder extends Component {
         this.event.imageUpload?.url ??
         null,
       allowedGroups: (this.event.rawInvitees || []).join(",") || null,
+      registrationForm: this.registrationForm,
+      registrationFormId: this.registrationFormId,
       hosts:
         (this.event.hosts || []).map((host) => host.username).join(",") || null,
       closed: !!this.event.isClosed,
@@ -262,6 +270,16 @@ export default class PostEventBuilder extends Component {
 
   get allowsRsvps() {
     return this.event.status !== "standalone";
+  }
+
+  @action
+  selectRegistration(id, definition) {
+    this.registrationFormId = id;
+    this.registrationForm = definition;
+    this.formApi?.set(
+      "registrationForm",
+      registrationFormSelection(id, definition)
+    );
   }
 
   @action
@@ -418,6 +436,8 @@ export default class PostEventBuilder extends Component {
     this.event.rawInvitees = state.allowedGroups
       ? state.allowedGroups.split(",")
       : [];
+    this.registrationForm = state.registrationForm;
+    this.registrationFormId = state.registrationFormId;
     this.event.hosts = state.hosts
       ? state.hosts.split(",").map((username) => ({ username }))
       : [];
@@ -619,6 +639,8 @@ export default class PostEventBuilder extends Component {
       return;
     }
 
+    this.event.registrationForm = this.registrationForm;
+    this.event.registrationFormId = this.registrationFormId;
     const eventParams = buildParams(
       this.startsAt,
       this.endsAt,
@@ -634,7 +656,11 @@ export default class PostEventBuilder extends Component {
 
   @action
   async updateEvent() {
+    const previousRegistration = this.event.registrationForm;
+    const previousRegistrationId = this.event.registrationFormId;
     try {
+      this.event.registrationForm = this.registrationForm;
+      this.event.registrationFormId = this.registrationFormId;
       this.isSaving = true;
 
       await this.args.model.onUpdate(
@@ -646,6 +672,8 @@ export default class PostEventBuilder extends Component {
 
       this.args.closeModal();
     } catch (e) {
+      this.event.registrationForm = previousRegistration;
+      this.event.registrationFormId = previousRegistrationId;
       this.flash = extractError(e);
     } finally {
       this.isSaving = false;
@@ -691,6 +719,10 @@ export default class PostEventBuilder extends Component {
       allowAnonymousLivestream: !!this.event.allowAnonymousLivestream,
       recordingUrl: this.event.recordingUrl ?? "",
       attendanceMode: this.attendanceMode,
+      registrationForm: registrationFormSelection(
+        this.registrationFormId,
+        this.registrationForm
+      ),
       maxAttendees: this.event.maxAttendees ?? null,
       eventType:
         this.event.status === "standalone"
@@ -759,6 +791,7 @@ export default class PostEventBuilder extends Component {
         {{if this.isAdvancedScreen 'is-advanced' 'is-compact'}}"
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
+      @hidden={{this.registrationPreview}}
       @inline={{@inline}}
       @title={{i18n
         (concat
@@ -1032,6 +1065,15 @@ export default class PostEventBuilder extends Component {
                 </form.Field>
 
                 {{#if this.allowsRsvps}}
+                  <EventRegistrationPicker
+                    @definition={{this.registrationForm}}
+                    @form={{form}}
+                    @onPreview={{fn (mut this.registrationPreview)}}
+                    @onSelect={{this.selectRegistration}}
+                    @originalDefinition={{this.event.registrationForm}}
+                    @originalId={{this.event.registrationFormId}}
+                    @selectedId={{this.registrationFormId}}
+                  />
                   <form.Field
                     @format="full"
                     @name="eventType"
@@ -1378,6 +1420,7 @@ export default class PostEventBuilder extends Component {
                 @initialState={{this.compactInitialState}}
                 @namePlaceholder={{this.namePlaceholder}}
                 @onChange={{this.onCompactChange}}
+                @onPreviewRegistration={{fn (mut this.registrationPreview)}}
               />
             </div>
           {{/if}}
@@ -1414,5 +1457,12 @@ export default class PostEventBuilder extends Component {
         {{/if}}
       </:footer>
     </DModal>
+    {{#if this.registrationPreview}}
+      <EventRegistration
+        @closeModal={{fn (mut this.registrationPreview) null}}
+        @inline={{@inline}}
+        @model={{hash definition=this.registrationPreview}}
+      />
+    {{/if}}
   </template>
 }

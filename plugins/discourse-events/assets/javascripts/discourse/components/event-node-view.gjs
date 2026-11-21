@@ -32,6 +32,8 @@ const CLEARABLE_ATTRS = [
   "image",
   "closed",
   "hosts",
+  "registrationForm",
+  "registrationFormId",
   "recording",
 ];
 
