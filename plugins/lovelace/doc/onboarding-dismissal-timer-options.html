@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>Lovelace dismissal timer options</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --page: #f6f7f8;
+        --surface: #fff;
+        --text: #262626;
+        --muted: #60646b;
+        --border: #d9dce1;
+        --header: #f0f0f0;
+        --track: #e6e8eb;
+        --quiet-timer: #747b84;
+        --success: #22813a;
+        --accent: #1764a0;
+        --button: #ececec;
+        --button-hover: #e0e2e5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page: #181a1e;
+          --surface: #23262b;
+          --text: #f0f1f3;
+          --muted: #b9bec7;
+          --border: #484e57;
+          --header: #2d3137;
+          --track: #3d434c;
+          --quiet-timer: #a4acb8;
+          --success: #79bd88;
+          --accent: #8cbfec;
+          --button: #363b43;
+          --button-hover: #444b55;
+        }
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: clamp(16px, 3vw, 40px); background: var(--page); color: var(--text); font: 16px/1.5 system-ui, sans-serif; }
+      main { max-width: 1440px; margin-inline: auto; }
+      h1 { margin: 0 0 10px; font-size: clamp(25px, 3vw, 36px); line-height: 1.2; }
+      h2 { margin: 4px 0 8px; font-size: 20px; }
+      h3 { margin: 0; font-size: 15px; font-weight: 600; }
+      p { margin: 0 0 12px; }
+      .intro { max-width: 880px; color: var(--muted); }
+      .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-block: 22px 10px; }
+      button { min-height: 44px; padding: 8px 13px; border: 1px solid var(--border); border-radius: 4px; background: var(--button); color: var(--text); font: inherit; cursor: pointer; }
+      button:hover:not(:disabled) { background: var(--button-hover); }
+      button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .primary { border-color: var(--accent); background: var(--accent); color: var(--surface); }
+      .primary:hover:not(:disabled) { background: var(--accent); filter: brightness(0.9); }
+      .toolbar [aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .page-status { min-height: 24px; color: var(--muted); font-size: 14px; }
+      .options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; margin-block: 20px; }
+      .option { min-width: 0; padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+      .option-label { color: var(--muted); font-size: 13px; font-weight: 650; letter-spacing: 0.02em; }
+      .description { min-height: 72px; color: var(--muted); font-size: 14px; }
+      .demo { min-height: 338px; padding-block: 14px; }
+      .checklist { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); }
+      .checklist__header { display: grid; grid-template-columns: minmax(0, 1fr) auto; padding: 10px 12px 8px; background: var(--header); }
+      .checklist__heading { display: flex; align-items: center; gap: 7px; }
+      .checklist__close { min-width: 44px; min-height: 44px; padding: 0; border: 0; background: transparent; font-size: 23px; line-height: 1; }
+      .checklist__progress { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; grid-column: 1 / -1; color: var(--muted); font-size: 11px; font-weight: 600; }
+      .checklist__progress-track { width: 84px; height: 3px; background: var(--track); }
+      .checklist__progress-fill { width: 66.667%; height: 100%; background: var(--accent); }
+      .checklist__items { margin: 0; padding: 0; list-style: none; }
+      .checklist__row { display: flex; align-items: center; gap: 9px; padding: 10px 12px; border-block-start: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+      .checklist__check { color: var(--success); }
+      .checklist__last { width: 100%; border: 0; border-block-start: 1px solid var(--border); border-radius: 0; background: transparent; text-align: start; font-size: 13px; }
+      .checklist__completion { padding: 16px 12px 18px; }
+      .checklist__message { margin-block-end: 14px; font-size: 14px; }
+      .dismiss-stack { display: inline-grid; justify-items: center; gap: 8px; }
+      .dismiss { min-width: 76px; font-size: 14px; }
+      .timer { height: 2px; width: 100%; border-radius: 1px; overflow: hidden; background: var(--track); }
+      .timer__fill { height: 100%; background: var(--success); transform-origin: 0 50%; }
+      .timer__fill:dir(rtl) { transform-origin: 100% 50%; }
+      .timer.--short { width: 48px; }
+      .timer.--short .timer__fill { background: var(--quiet-timer); }
+      .timer.--segments { display: flex; gap: 6px; width: 48px; overflow: visible; background: transparent; }
+      .timer__segment { width: 12px; height: 2px; border-radius: 1px; background: var(--quiet-timer); }
+      .timer__segment.--empty { background: var(--track); }
+      .checklist__confetti { position: absolute; inset: 0; display: flex; justify-content: space-around; overflow: hidden; pointer-events: none; }
+      .checklist__confetti span { width: 4px; height: 8px; background: var(--accent); animation: confetti-fall 2s ease-in both; }
+      .checklist__confetti span:nth-child(3n) { background: var(--success); }
+      .checklist__confetti span:nth-child(even) { animation-delay: 0.2s; }
+      .sample-content { padding-block: 18px; color: var(--muted); font-size: 13px; }
+      .option-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+      .option-status { color: var(--muted); font-size: 13px; }
+      .detail { margin-block: 16px 0; color: var(--muted); font-size: 13px; }
+      .notes { max-width: 900px; color: var(--muted); font-size: 14px; }
+      [hidden] { display: none !important; }
+      @keyframes confetti-fall { from { transform: translateY(-12px) rotate(0); opacity: 1; } to { transform: translateY(260px) rotate(180deg); opacity: 0; } }
+      .--reduced-motion .checklist__confetti { display: none; }
+      @media (forced-colors: active) {
+        .timer { outline: 1px solid CanvasText; }
+        .timer__fill, .timer__segment { background: CanvasText; }
+        .timer__segment.--empty { background: Canvas; outline: 1px solid CanvasText; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>A quieter dismissal timer</h1>
+      <p class="intro">Option A is implemented in the Lovelace member checklist and admin preview. These earlier alternatives remain as a design reference. Each puts a compact indicator directly beneath <strong>Dismiss</strong>, without helper copy. The checklist celebrates, waits three seconds, then fades out over 300 ms.</p>
+      <p class="intro">Choose <strong>Play all</strong> to compare them together, or finish the last item in one example. <strong>Pause all</strong> holds the moment for a closer look; <strong>Replay</strong> starts an option again.</p>
+      <div class="toolbar" aria-label="Comparison controls">
+        <button class="primary" id="play-all" type="button">Play all</button>
+        <button id="pause-all" type="button" aria-pressed="false" disabled>Pause all</button>
+        <button id="reset-all" type="button">Reset all</button>
+        <button id="reduce-motion" type="button" aria-pressed="false">Reduced motion</button>
+      </div>
+      <p class="page-status" id="page-status" role="status">Ready to compare. Option A is implemented in the live checklist.</p>
+      <div class="options">
+        <article class="option" data-option="a">
+          <span class="option-label">Option A · Selected</span>
+          <h2>Button-width line</h2>
+          <p class="description">A thin green line matches the button width. It keeps the familiar progress-bar cue, with much less distance to travel.</p>
+          <div class="demo">
+            <section class="checklist" aria-label="Option A onboarding checklist">
+              <header class="checklist__header">
+                <h3 class="checklist__heading"><span aria-hidden="true">☷</span>Your onboarding checklist</h3>
+                <button class="checklist__close" type="button" aria-label="Dismiss option A checklist">×</button>
+                <div class="checklist__progress"><span class="progress-text">2 of 3 complete</span><div class="checklist__progress-track" aria-hidden="true"><div class="checklist__progress-fill"></div></div></div>
+              </header>
+              <ul class="checklist__items">
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Add a profile picture</li>
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Complete your profile</li>
+                <li><button class="checklist__last" type="button"><span aria-hidden="true">○</span> Read community guidelines</button></li>
+              </ul>
+              <div class="checklist__completion" hidden>
+                <p class="checklist__message">Well done! You’ve completed your onboarding checklist.</p>
+                <div class="dismiss-stack"><button class="dismiss" type="button">Dismiss</button><div class="timer" aria-hidden="true"><div class="timer__fill"></div></div></div>
+              </div>
+              <div class="checklist__confetti" aria-hidden="true" hidden><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </section>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <div class="option-actions"><button class="replay" type="button">Replay A</button><span class="option-status" role="status">Ready</span></div>
+          <p class="detail">Button width · 2 px high · continuous drain</p>
+        </article>
+        <article class="option" data-option="b">
+          <span class="option-label">Option B</span>
+          <h2>Short muted line</h2>
+          <p class="description">A 48 px neutral line sits centered under the button. The shorter path and quieter color draw less attention.</p>
+          <div class="demo">
+            <section class="checklist" aria-label="Option B onboarding checklist">
+              <header class="checklist__header">
+                <h3 class="checklist__heading"><span aria-hidden="true">☷</span>Your onboarding checklist</h3>
+                <button class="checklist__close" type="button" aria-label="Dismiss option B checklist">×</button>
+                <div class="checklist__progress"><span class="progress-text">2 of 3 complete</span><div class="checklist__progress-track" aria-hidden="true"><div class="checklist__progress-fill"></div></div></div>
+              </header>
+              <ul class="checklist__items">
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Add a profile picture</li>
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Complete your profile</li>
+                <li><button class="checklist__last" type="button"><span aria-hidden="true">○</span> Read community guidelines</button></li>
+              </ul>
+              <div class="checklist__completion" hidden>
+                <p class="checklist__message">Well done! You’ve completed your onboarding checklist.</p>
+                <div class="dismiss-stack"><button class="dismiss" type="button">Dismiss</button><div class="timer --short" aria-hidden="true"><div class="timer__fill"></div></div></div>
+              </div>
+              <div class="checklist__confetti" aria-hidden="true" hidden><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </section>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <div class="option-actions"><button class="replay" type="button">Replay B</button><span class="option-status" role="status">Ready</span></div>
+          <p class="detail">48 px wide · 2 px high · continuous drain</p>
+        </article>
+        <article class="option" data-option="c">
+          <span class="option-label">Option C</span>
+          <h2>Three quiet segments</h2>
+          <p class="description">Three small segments disappear once per second. The timing stays visible without a continuously moving edge.</p>
+          <div class="demo">
+            <section class="checklist" aria-label="Option C onboarding checklist">
+              <header class="checklist__header">
+                <h3 class="checklist__heading"><span aria-hidden="true">☷</span>Your onboarding checklist</h3>
+                <button class="checklist__close" type="button" aria-label="Dismiss option C checklist">×</button>
+                <div class="checklist__progress"><span class="progress-text">2 of 3 complete</span><div class="checklist__progress-track" aria-hidden="true"><div class="checklist__progress-fill"></div></div></div>
+              </header>
+              <ul class="checklist__items">
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Add a profile picture</li>
+                <li class="checklist__row"><span class="checklist__check" aria-label="Complete">✓</span>Complete your profile</li>
+                <li><button class="checklist__last" type="button"><span aria-hidden="true">○</span> Read community guidelines</button></li>
+              </ul>
+              <div class="checklist__completion" hidden>
+                <p class="checklist__message">Well done! You’ve completed your onboarding checklist.</p>
+                <div class="dismiss-stack"><button class="dismiss" type="button">Dismiss</button><div class="timer --segments" aria-hidden="true"><span class="timer__segment"></span><span class="timer__segment"></span><span class="timer__segment"></span></div></div>
+              </div>
+              <div class="checklist__confetti" aria-hidden="true" hidden><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            </section>
+            <div class="sample-content">Community discussions continue here.</div>
+          </div>
+          <div class="option-actions"><button class="replay" type="button">Replay C</button><span class="option-status" role="status">Ready</span></div>
+          <p class="detail">48 px wide · 2 px high · one change per second</p>
+        </article>
+      </div>
+      <p class="notes">These are standalone demonstrations. Option A is implemented in the live checklist; B and C remain alternatives for reference. Dismiss or the × button starts the fade early. Reduced motion hides confetti, changes the lines in steps, and skips fading. Comparison controls and status labels are outside the proposed checklist.</p>
+    </main>
+    <script>
+      const duration = 3000;
+      const fadeDuration = 300;
+      const pauseButton = document.querySelector("#pause-all");
+      const motionButton = document.querySelector("#reduce-motion");
+      const pageStatus = document.querySelector("#page-status");
+      const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+      let reducedMotion = motionPreference.matches;
+      let paused = false;
+      let frame = null;
+      const states = [...document.querySelectorAll(".option")].map((card) => ({
+        card,
+        widget: card.querySelector(".checklist"),
+        items: card.querySelector(".checklist__items"),
+        completion: card.querySelector(".checklist__completion"),
+        progress: card.querySelector(".progress-text"),
+        progressFill: card.querySelector(".checklist__progress-fill"),
+        confetti: card.querySelector(".checklist__confetti"),
+        fill: card.querySelector(".timer__fill"),
+        segments: [...card.querySelectorAll(".timer__segment")],
+        status: card.querySelector(".option-status"),
+        replay: card.querySelector(".replay"),
+        phase: "ready",
+        elapsed: 0,
+        lastFrame: 0,
+      }));
+
+      function active(state) {
+        return state.phase === "running" || state.phase === "fading";
+      }
+
+      function updateControls() {
+        pauseButton.disabled = !states.some(active);
+        pauseButton.textContent = paused ? "Resume all" : "Pause all";
+        pauseButton.setAttribute("aria-pressed", String(paused));
+      }
+
+      function drawTimer(state) {
+        const remaining = Math.max(0, 1 - state.elapsed / duration);
+        const fraction = reducedMotion ? Math.ceil(remaining * 3) / 3 : remaining;
+        if (state.fill) {
+          state.fill.style.transform = `scaleX(${fraction})`;
+        }
+        const visibleSegments = Math.ceil(remaining * 3);
+        state.segments.forEach((segment, index) => {
+          segment.classList.toggle("--empty", index >= visibleSegments);
+        });
+      }
+
+      function finish(state) {
+        state.phase = "dismissed";
+        state.widget.hidden = true;
+        state.status.textContent = "Dismissed";
+        if (state.widget.contains(document.activeElement)) {
+          state.replay.focus({ preventScroll: true });
+        }
+        updateControls();
+      }
+
+      function dismiss(state) {
+        if (state.phase === "dismissed" || state.phase === "fading") {
+          return;
+        }
+        if (reducedMotion) {
+          finish(state);
+          return;
+        }
+        state.phase = "fading";
+        state.elapsed = 0;
+        state.lastFrame = performance.now();
+        state.status.textContent = paused ? "Paused during fade" : "Fading";
+        state.widget.querySelectorAll("button").forEach((button) => { button.disabled = true; });
+        requestFrame();
+        updateControls();
+      }
+
+      function tick(now) {
+        frame = null;
+        states.filter(active).forEach((state) => {
+          state.elapsed += Math.max(0, now - state.lastFrame);
+          state.lastFrame = now;
+          if (state.phase === "running") {
+            drawTimer(state);
+            if (state.elapsed >= duration) {
+              dismiss(state);
+            }
+          } else {
+            state.widget.style.opacity = String(Math.max(0, 1 - state.elapsed / fadeDuration));
+            if (state.elapsed >= fadeDuration) {
+              finish(state);
+            }
+          }
+        });
+        requestFrame();
+      }
+
+      function requestFrame() {
+        if (frame === null && !paused && states.some(active)) {
+          frame = requestAnimationFrame(tick);
+        }
+      }
+
+      function reset(state) {
+        state.phase = "ready";
+        state.elapsed = 0;
+        state.widget.hidden = false;
+        state.widget.style.opacity = "1";
+        state.widget.querySelectorAll("button").forEach((button) => { button.disabled = false; });
+        state.items.hidden = false;
+        state.completion.hidden = true;
+        state.confetti.hidden = true;
+        state.progress.textContent = "2 of 3 complete";
+        state.progressFill.style.width = "66.667%";
+        state.status.textContent = "Ready";
+        drawTimer(state);
+      }
+
+      function play(state, focusDismiss = false) {
+        reset(state);
+        state.phase = "running";
+        state.lastFrame = performance.now();
+        state.items.hidden = true;
+        state.completion.hidden = false;
+        state.confetti.hidden = false;
+        state.progress.textContent = "3 of 3 complete";
+        state.progressFill.style.width = "100%";
+        state.status.textContent = paused ? "Paused" : "Counting down";
+        state.confetti.getAnimations({ subtree: true }).forEach((animation) => {
+          animation.currentTime = 0;
+          if (paused) { animation.pause(); } else { animation.play(); }
+        });
+        if (focusDismiss) {
+          state.card.querySelector(".dismiss").focus({ preventScroll: true });
+        }
+        requestFrame();
+        updateControls();
+      }
+
+      function syncMotion() {
+        document.documentElement.classList.toggle("--reduced-motion", reducedMotion);
+        motionButton.setAttribute("aria-pressed", String(reducedMotion));
+        states.forEach((state) => {
+          if (state.phase === "running") { drawTimer(state); }
+          if (state.phase === "fading" && reducedMotion) { finish(state); }
+        });
+      }
+
+      states.forEach((state) => {
+        state.card.querySelector(".checklist__last").addEventListener("click", () => play(state, true));
+        state.card.querySelector(".dismiss").addEventListener("click", () => dismiss(state));
+        state.card.querySelector(".checklist__close").addEventListener("click", () => dismiss(state));
+        state.replay.addEventListener("click", () => play(state));
+      });
+
+      document.querySelector("#play-all").addEventListener("click", () => {
+        paused = false;
+        states.forEach((state) => play(state));
+        pageStatus.textContent = "Playing A, B, and C together. All use the same three-second countdown.";
+      });
+
+      pauseButton.addEventListener("click", () => {
+        paused = !paused;
+        const now = performance.now();
+        states.filter(active).forEach((state) => {
+          state.lastFrame = now;
+          state.status.textContent = paused ? "Paused" : state.phase === "running" ? "Counting down" : "Fading";
+          state.confetti.getAnimations({ subtree: true }).forEach((animation) => {
+            if (paused) { animation.pause(); } else { animation.play(); }
+          });
+        });
+        if (paused && frame !== null) {
+          cancelAnimationFrame(frame);
+          frame = null;
+        }
+        pageStatus.textContent = paused ? "Paused for inspection. Resume all to continue." : "Comparison resumed.";
+        requestFrame();
+        updateControls();
+      });
+
+      document.querySelector("#reset-all").addEventListener("click", () => {
+        if (frame !== null) { cancelAnimationFrame(frame); frame = null; }
+        paused = false;
+        states.forEach(reset);
+        updateControls();
+        pageStatus.textContent = "Ready to compare. Option A is implemented in the live checklist.";
+      });
+
+      motionButton.addEventListener("click", () => {
+        reducedMotion = !reducedMotion;
+        syncMotion();
+        pageStatus.textContent = reducedMotion ? "Reduced motion on: stepped timers, no confetti or fade." : "Reduced motion off: continuous lines and a brief fade.";
+      });
+
+      motionPreference.addEventListener("change", (event) => {
+        reducedMotion = event.matches;
+        syncMotion();
+      });
+
+      syncMotion();
+    </script>
+  </body>
+</html>

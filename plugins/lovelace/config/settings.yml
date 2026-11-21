@@ -1,0 +1,4 @@
+lovelace:
+  lovelace_enabled:
+    default: true
+    client: true

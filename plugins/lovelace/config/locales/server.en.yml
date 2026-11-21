@@ -1,0 +1,42 @@
+en:
+  site_settings:
+    lovelace_enabled: "Enable the Lovelace plugin."
+  lovelace:
+    checklist_conflict: "Another administrator changed the checklist. Reload the page before saving again."
+    items:
+      profile_picture:
+        title: "Add a profile picture"
+        description: "Add a picture to make your profile stand out."
+        button_text: "Add picture"
+      profile:
+        title: "Complete your profile"
+        description: "Fill out your bio and other details so we can get to know you."
+        button_text: "Complete profile"
+      guidelines:
+        title: "Read community guidelines"
+        description: "Learn about our community and how to participate here."
+        button_text: "Read guidelines"
+      notifications:
+        title: "Set up your notifications"
+        description: "Turn on push notifications to keep up to speed with the community."
+        button_text: "Set up notifications"
+    reporting:
+      metric: "Onboarding activity"
+      item: "Checklist item"
+      members: "Members"
+      clicked_item_link: "Clicked item link"
+      marked_item_complete: "Marked item complete"
+      clicked: "Clicked at least one item link"
+      clicked_all: "Clicked all item links"
+      seen: "Seen the checklist"
+      engaged: "Completed at least one item"
+      completed: "Completed all items"
+      dismissed: "Dismissed the checklist"
+      dismissed_without_completion: "Dismissed without completing any items"
+  reports:
+    lovelace_onboarding:
+      title: "Member onboarding"
+      description: "Members first shown the Lovelace checklist in the selected period and their subsequent activity. Milestones count each member once, including completions later undone."
+    lovelace_onboarding_items:
+      title: "Member onboarding item completions"
+      description: "Members first shown the Lovelace checklist in the selected period who clicked each item link or marked each item complete. Includes completions later undone and removed items by ID."
