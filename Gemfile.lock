@@ -350,7 +350,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    markbridge (0.4.3)
+    markbridge (0.5.0)
     matrix (0.4.3)
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
@@ -790,7 +790,7 @@ GEM
     web-push (3.1.0)
       jwt (~> 3.0)
       openssl (>= 3.0)
-    webmock (3.29.0)
+    webmock (3.34.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -1129,7 +1129,7 @@ CHECKSUMS
   lru_redux (1.1.0) sha256=ee71d0ccab164c51de146c27b480a68b3631d5b4297b8ffe8eda1c72de87affb
   lz4-ruby (0.3.3) sha256=011be5ee230cfddc8308d4e2e0b05300c7bc755a887de799377ca6c5b6aede89
   mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
-  markbridge (0.4.3) sha256=8cb66ecbed5c32954d65426b8fd1bd045cd1b818289532d99322f83a2225552b
+  markbridge (0.5.0) sha256=29ae8f5912953645d59fa7d3f433b95cd24e61e98f4d7c32302e058d663b8fa3
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
@@ -1330,7 +1330,7 @@ CHECKSUMS
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   version_gem (1.1.17) sha256=70420b9675fbb77a7e7e7eb8ed6580dd4dd25be53b1454c1a79cc18f3c5a8dfd
   web-push (3.1.0) sha256=501ab00340c58fb70dabda59f28a86b3cccb0930c6f1f30721b2a5b24de7187d
-  webmock (3.29.0) sha256=a854b243019d503d3446ab7807c9192f41826d5b673b5dfe0d287ced9606ecbc
+  webmock (3.34.0) sha256=72eed29dc8c00148d592acaedaaa6b869e2e397de57dfc8602b84aa834f46b33
   webrick (1.9.2) sha256=beb4a15fc474defed24a3bda4ffd88a490d517c9e4e6118c3edce59e45864131
   wisper (2.0.1) sha256=ce17bc5c3a166f241a2e6613848b025c8146fce2defba505920c1d1f3f88fae6
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
