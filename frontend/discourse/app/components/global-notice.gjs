@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -84,6 +85,7 @@ class Notice extends EmberObject {
 }
 
 export default class GlobalNotice extends Component {
+  @service a11y;
   @service currentUser;
   @service keyValueStore;
   @service("logsNotice") logsNoticeService;
@@ -263,6 +265,18 @@ export default class GlobalNotice extends Component {
   }
 
   @action
+  announceNotice(notice, element) {
+    const text = element.textContent.trim();
+
+    if (text) {
+      this.a11y.announce(
+        text,
+        notice.options.level === "error" ? "assertive" : "polite"
+      );
+    }
+  }
+
+  @action
   dismissNotice(notice) {
     notice.options.onDismiss?.(notice);
 
@@ -282,7 +296,7 @@ export default class GlobalNotice extends Component {
   <template>
     <div class="global-notice">
       {{#if this.visible}}
-        {{#each this.notices as |notice|}}
+        {{#each this.notices key="id" as |notice|}}
           <div class="row">
             <div
               class="alert alert-{{notice.options.level}} {{notice.id}}"
@@ -292,12 +306,18 @@ export default class GlobalNotice extends Component {
                 {{trustHTML notice.options.html}}
               {{/if}}
 
-              <span class="text">{{trustHTML notice.text}}</span>
+              <span
+                class="text"
+                id="global-notice-text-{{notice.id}}"
+                {{didInsert (fn this.announceNotice notice)}}
+              >{{trustHTML notice.text}}</span>
 
               {{#if notice.options.dismissable}}
                 <DButton
+                  aria-describedby="global-notice-text-{{notice.id}}"
                   class="btn-transparent close"
                   @action={{fn this.dismissNotice notice}}
+                  @ariaLabel="close"
                   @icon="xmark"
                 />
               {{/if}}
