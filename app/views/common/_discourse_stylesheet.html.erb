@@ -2,7 +2,7 @@
 
 <%= discourse_stylesheet_link_tag(:common, supports_rtl: true) %>
 
-<%- if staff? %>
+<%- if staff? || guardian.can_edit_categories_as_group_moderator? %>
   <%= discourse_stylesheet_link_tag(:admin, supports_rtl: true) %>
 <%- end %>
 

@@ -1100,6 +1100,89 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(403)
     end
 
+    context "when signed in as a category group moderator" do
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        mod_group_1.add(user)
+        Fabricate(:category_moderation_group, category:, group: mod_group_1)
+        sign_in(user)
+      end
+
+      it "is disabled by default" do
+        put "/categories/#{category.id}.json", params: { name: "A new category name" }
+        expect(response).to be_forbidden
+      end
+
+      it "saves allowed settings and preserves restricted category settings" do
+        SiteSetting.category_group_moderators_can_edit_categories = true
+        category.set_permissions(mod_group_1.name => :create_post)
+        category.update!(require_topic_approval: true)
+        parent = Fabricate(:category)
+        original_position = category.position
+
+        put "/categories/#{category.id}.json",
+            params: {
+              name: "Moderated announcements",
+              color: "df4321",
+              permissions: {
+                "everyone" => 1,
+              },
+              moderating_group_ids: [mod_group_2.id],
+              category_setting_attributes: {
+                topic_posting_review_mode: "no_one",
+              },
+              parent_category_id: parent.id,
+              position: 1,
+              email_in: "category@example.com",
+              custom_fields: {
+                "extra" => "value",
+              },
+            }
+
+        expect(response).to have_http_status(:ok)
+        data = response.parsed_body.fetch("category")
+        expect(data).to include("can_edit" => true, "can_edit_as_group_moderator" => true)
+        expect(data).not_to have_key("group_permissions")
+        expect(category.reload).to have_attributes(
+          name: "Moderated announcements",
+          color: "df4321",
+          permissions_params: {
+            mod_group_1.name => CategoryGroup.permission_types[:create_post],
+          },
+          moderating_group_ids: [mod_group_1.id],
+          require_topic_approval: true,
+          parent_category_id: nil,
+          position: original_position,
+          email_in: nil,
+        )
+        expect(category.custom_fields).not_to have_key("extra")
+      end
+
+      it "rejects oversized category templates and featured topic counts" do
+        SiteSetting.category_group_moderators_can_edit_categories = true
+
+        put "/categories/#{category.id}.json",
+            params: {
+              topic_template: "a" * 10_001,
+              num_featured_topics: 11,
+            }
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.parsed_body.fetch("errors").size).to eq(2)
+      end
+
+      it "denies edits to other categories and deletion of a moderated category" do
+        SiteSetting.category_group_moderators_can_edit_categories = true
+        other_category = Fabricate(:category)
+
+        put "/categories/#{other_category.id}.json", params: { name: "Another name" }
+        expect(response).to be_forbidden
+
+        delete "/categories/#{category.id}.json"
+        expect(response).to be_forbidden
+      end
+    end
+
     describe "logged in" do
       before { sign_in(admin) }
 

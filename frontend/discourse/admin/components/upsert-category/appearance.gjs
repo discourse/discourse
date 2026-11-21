@@ -154,59 +154,67 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   <template>
-    <@form.Container
-      @format="full"
-      @subtitle={{i18n "category.logo_description"}}
-      @title={{i18n "category.logo"}}
-    >
-      <UppyImageUploader
-        class="no-repeat contain-image"
-        @id="category-logo-uploader"
-        @imageUrl={{this.logoImageUrl}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo"}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_logo"}}
-        @type="category_logo"
-      />
-    </@form.Container>
+    {{#unless @category.can_edit_as_group_moderator}}
+      <@form.Container
+        @format="full"
+        @subtitle={{i18n "category.logo_description"}}
+        @title={{i18n "category.logo"}}
+      >
+        <UppyImageUploader
+          class="no-repeat contain-image"
+          @id="category-logo-uploader"
+          @imageUrl={{this.logoImageUrl}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo"}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_logo"}}
+          @type="category_logo"
+        />
+      </@form.Container>
 
-    <@form.Container
-      @format="full"
-      @subtitle={{i18n "category.logo_description"}}
-      @title={{i18n "category.logo_dark"}}
-    >
-      <UppyImageUploader
-        class="no-repeat contain-image"
-        @id="category-dark-logo-uploader"
-        @imageUrl={{this.logoDarkImageUrl}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo_dark"}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_logo_dark"}}
-        @type="category_logo_dark"
-      />
-    </@form.Container>
+      <@form.Container
+        @format="full"
+        @subtitle={{i18n "category.logo_description"}}
+        @title={{i18n "category.logo_dark"}}
+      >
+        <UppyImageUploader
+          class="no-repeat contain-image"
+          @id="category-dark-logo-uploader"
+          @imageUrl={{this.logoDarkImageUrl}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo_dark"}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_logo_dark"}}
+          @type="category_logo_dark"
+        />
+      </@form.Container>
 
-    <@form.Container @format="full" @title={{i18n "category.background_image"}}>
-      <UppyImageUploader
-        @id="category-background-uploader"
-        @imageUrl={{this.backgroundImageUrl}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background"}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_background"}}
-        @type="category_background"
-      />
-    </@form.Container>
+      <@form.Container
+        @format="full"
+        @title={{i18n "category.background_image"}}
+      >
+        <UppyImageUploader
+          @id="category-background-uploader"
+          @imageUrl={{this.backgroundImageUrl}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background"}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_background"}}
+          @type="category_background"
+        />
+      </@form.Container>
 
-    <@form.Container
-      @format="full"
-      @title={{i18n "category.background_image_dark"}}
-    >
-      <UppyImageUploader
-        @id="category-dark-background-uploader"
-        @imageUrl={{this.backgroundDarkImageUrl}}
-        @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background_dark"}}
-        @onUploadDone={{fn this.onUploadDone "uploaded_background_dark"}}
-        @type="category_background_dark"
-      />
-    </@form.Container>
+      <@form.Container
+        @format="full"
+        @title={{i18n "category.background_image_dark"}}
+      >
+        <UppyImageUploader
+          @id="category-dark-background-uploader"
+          @imageUrl={{this.backgroundDarkImageUrl}}
+          @onUploadDeleted={{fn
+            this.onUploadDeleted
+            "uploaded_background_dark"
+          }}
+          @onUploadDone={{fn this.onUploadDone "uploaded_background_dark"}}
+          @type="category_background_dark"
+        />
+      </@form.Container>
 
+    {{/unless}}
     <@form.Field
       @format="max"
       @name="text_color"
@@ -350,9 +358,11 @@ export default class UpsertCategoryAppearance extends Component {
       <field.Control @maxlength="255" />
     </@form.Field>
 
-    <PluginOutlet
-      @name="category-custom-images"
-      @outletArgs={{lazyHash category=@category form=@form}}
-    />
+    {{#unless @category.can_edit_as_group_moderator}}
+      <PluginOutlet
+        @name="category-custom-images"
+        @outletArgs={{lazyHash category=@category form=@form}}
+      />
+    {{/unless}}
   </template>
 }

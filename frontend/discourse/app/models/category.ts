@@ -155,6 +155,8 @@ export interface CategoryFields {
   parent_category_id?: number | null;
   notification_level?: number | null;
   can_edit?: boolean;
+  /** The viewer can edit general and appearance settings as a category group moderator. */
+  can_edit_as_group_moderator?: true;
   can_delete?: true;
   cannot_delete_reason?: string;
   is_special?: true;
@@ -1151,7 +1153,9 @@ export default class Category extends RestModel {
         slug: this.slug,
         color: this.color,
         text_color: this.text_color,
-        permissions: this._permissionsForUpdate(),
+        permissions: this.can_edit_as_group_moderator
+          ? undefined
+          : this._permissionsForUpdate(),
         auto_close_hours: this.auto_close_hours,
         auto_close_based_on_last_post: this.get(
           "auto_close_based_on_last_post"

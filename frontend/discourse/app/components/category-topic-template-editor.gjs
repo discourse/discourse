@@ -121,7 +121,11 @@ export default class CategoryTopicTemplateEditor extends Component {
         @value={{this.topicTitlePlaceholder}}
       />
     </div>
-    {{#if this.siteSettings.enable_form_templates}}
+    {{#if
+      (and
+        this.siteSettings.enable_form_templates (not @hideFormTemplateControls)
+      )
+    }}
       <div class="control-group">
         <DToggleSwitch
           class="toggle-template-type"
