@@ -9,6 +9,7 @@ en:
     post_read_score_value: "The value of the cheer awarded for every one hundred posts a user reads"
     topic_created_score_value: "The value of the cheer awarded when a user creates a topic"
     post_created_score_value: "The value of the cheer awarded when a user creates a post"
+    gamification_post_created_daily_cap: "Maximum number of replies that earn cheers per user per day (UTC). Use 0 for no limit."
     flag_created_score_value: "The value of the cheer awarded when a user flags a post and that flag is accepted by a staff user"
     day_visited_score_value: "The value of the cheer awarded for every day a user visits the site"
     scorable_categories: "List of categories where actions will generate cheers. Leave empty to enable cheers on all categories"

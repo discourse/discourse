@@ -15,11 +15,14 @@ module DiscourseGamification
     end
 
     def self.query(leaderboard: nil)
+      daily_cap = SiteSetting.gamification_post_created_daily_cap
+      reply_count = daily_cap.positive? ? "LEAST(COUNT(*), #{daily_cap})" : "COUNT(*)"
+
       <<~SQL
         SELECT
           p.user_id AS user_id,
           date_trunc('day', p.created_at) AS date,
-          COUNT(*) * #{score_multiplier(leaderboard:)} AS points
+          #{reply_count} * #{score_multiplier(leaderboard:)} AS points
         FROM
           posts AS p
         INNER JOIN topics AS t
