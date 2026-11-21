@@ -100,5 +100,16 @@ describe "Composer redesign" do
       composer.toggle_toolbar
       expect(composer).to have_visible_toolbar
     end
+
+    it "keeps a message's tag picker below the title on a narrow screen", mobile: true do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      resize_window(width: 375) do
+        visit("/new-message")
+
+        expect(composer).to have_stacked_message_tag_picker
+      end
+    end
   end
 end
