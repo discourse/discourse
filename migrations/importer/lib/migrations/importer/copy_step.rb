@@ -96,6 +96,7 @@ module Migrations
           table_name,
           column_names,
           fetch_rows,
+          on_failed_row: ->(row, error) { report_failed_row(row, error) },
         ) do |inserted_rows, skipped_rows|
           after_commit_of_inserted_rows(inserted_rows) if inserted_rows.any?
           after_commit_of_skipped_rows(skipped_rows) if skipped_rows.any?
@@ -124,6 +125,15 @@ module Migrations
             update_progressbar
           end
         end
+      end
+
+      def report_failed_row(row, error)
+        identifier =
+          row[:original_id] ? "original_id #{row[:original_id]}" : row.inspect.truncate(100)
+        notice("Failed to insert row (#{identifier}): #{error.message.lines.first.strip}")
+
+        @stats.reset(error_count: 1)
+        update_progressbar(increment_by: 0)
       end
 
       def after_commit_of_inserted_rows(rows)
