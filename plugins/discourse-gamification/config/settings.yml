@@ -9,6 +9,9 @@ discourse_gamification:
     default: 1
   like_given_score_value:
     default: 1
+  gamification_like_given_daily_cap:
+    default: 0
+    min: 0
   solution_score_value:
     default: 10
   user_invited_score_value:

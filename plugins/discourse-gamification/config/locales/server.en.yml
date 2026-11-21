@@ -3,6 +3,7 @@ en:
     discourse_gamification_enabled: "Enable the Discourse Gamification Plugin"
     like_received_score_value: "The value of the cheer awarded when a user receives a like"
     like_given_score_value: "The value of the cheer awarded for every like a user gives"
+    gamification_like_given_daily_cap: "Maximum number of likes a user can give for cheers per day (UTC). Use 0 for no limit."
     solution_score_value: "The value of the cheer awarded when a user's post is marked as a solution"
     user_invited_score_value: "The value of the cheer awarded when a user has an invite redeemed"
     time_read_score_value: "The value of the cheer awarded for every hour of time spent reading"
