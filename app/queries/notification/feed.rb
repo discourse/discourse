@@ -149,7 +149,14 @@ class Notification::Feed
 
   def visible
     @visible ||= [
-      *@guardians.flat_map { |guardian| [visible_topic(guardian), visible_reviewable(guardian)] },
+      *@guardians.flat_map do |guardian|
+        [
+          visible_topic(guardian),
+          visible_reviewable(guardian),
+          visible_group_inbox(guardian),
+          visible_bookmark(guardian),
+        ]
+      end,
       *registered_rules,
       visible_badge,
       visible_like,
@@ -204,6 +211,35 @@ class Notification::Feed
       :mentioned,
       "NULLIF(notifications.data::jsonb->>'reviewable_id', '') IS NULL OR #{reviewable}",
     )
+  end
+
+  def visible_group_inbox(guardian)
+    return if guardian.is_admin?
+
+    memberships = GroupUser.where(user_id: guardian.user&.id)
+    if !guardian.user&.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+      memberships = memberships.where(group_id: Group::AUTO_GROUPS[:moderators])
+    end
+
+    unless_type(
+      :group_message_summary,
+      "#{data_id("group_id")} IN (#{memberships.select(:group_id).to_sql})",
+    )
+  end
+
+  def visible_bookmark(guardian)
+    vouched =
+      Bookmark.registered_bookmarkables.filter_map do |bookmarkable|
+        next if !(bookmarked = bookmarkable.visible_scope(guardian))
+
+        bookmarked =
+          bookmarked.where("#{bookmarkable.table_name}.id = #{data_id("bookmarkable_id")}")
+        type = Notification.connection.quote(bookmarkable.model.polymorphic_name)
+
+        "(notifications.data::jsonb->>'bookmarkable_type' = #{type} AND #{exists(bookmarked)})"
+      end
+
+    unless_type(:bookmark_reminder, ["notifications.topic_id IS NOT NULL", *vouched].join(" OR "))
   end
 
   def visible_badge

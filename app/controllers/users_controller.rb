@@ -2089,8 +2089,10 @@ class UsersController < ApplicationController
     end
 
     reminder_notifications =
-      BookmarkQuery.new(user: current_user, guardian:).unread_notifications(
+      current_user.notification_feed.menu(
         limit: USER_MENU_LIST_LIMIT,
+        types: [Notification.types[:bookmark_reminder]],
+        state: :unread,
       )
     if reminder_notifications.size < USER_MENU_LIST_LIMIT
       exclude_bookmark_ids =

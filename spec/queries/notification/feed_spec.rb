@@ -88,6 +88,42 @@ RSpec.describe Notification::Feed do
       expect(described_class.new(user).notifications).to contain_exactly(enabled)
     end
 
+    it "hides a bookmark reminder that neither its topic nor its bookmarkable can vouch for" do
+      register_test_bookmarkable
+      UserTestBookmarkable.stubs(:visible_scope).returns(User.where(id: admin.id))
+      on_topic = notify(:bookmark_reminder, topic: Fabricate(:topic))
+      vouched =
+        notify(:bookmark_reminder, data: { bookmarkable_type: "User", bookmarkable_id: admin.id })
+      notify(:bookmark_reminder, data: { bookmarkable_type: "User", bookmarkable_id: user.id })
+      notify(:bookmark_reminder, data: { bookmarkable_type: "Unknown", bookmarkable_id: 1 })
+      notify(:bookmark_reminder, data: { bookmarkable_type: "Post", bookmarkable_id: 1 })
+      notify(:bookmark_reminder)
+
+      expect(described_class.new(user).notifications).to contain_exactly(on_topic, vouched)
+    ensure
+      DiscoursePluginRegistry.reset_register!(:bookmarkables)
+    end
+
+    it "shows a group inbox summary to admins, and to members only while they may use personal messages" do
+      group.add(user)
+      data = { group_id: group.id }
+      for_admin =
+        Fabricate(
+          :notification,
+          user: admin,
+          notification_type: Notification.types[:group_message_summary],
+          data: data.to_json,
+        )
+      for_member = notify(:group_message_summary, data:)
+
+      expect(described_class.new(admin).notifications).to contain_exactly(for_admin)
+      expect(described_class.new(user).notifications).to contain_exactly(for_member)
+
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+
+      expect(described_class.new(user.reload).notifications).to be_empty
+    end
+
     it "only returns notifications both the owner and the viewer can see" do
       SiteSetting.suppress_secured_categories_from_admin = true
       group.add(user)

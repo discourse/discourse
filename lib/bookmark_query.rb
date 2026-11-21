@@ -60,21 +60,6 @@ class BookmarkQuery
     results
   end
 
-  def unread_notifications(limit: 20)
-    notifications = fetch_reminder_notifications(limit)
-    bookmark_ids = notifications.filter_map { |n| n.data_hash[:bookmark_id] }
-
-    bookmarks = Bookmark.where(user: @user, id: bookmark_ids)
-    BookmarkQuery.preload(bookmarks, self)
-
-    bookmarks_by_id = bookmarks.index_by(&:id)
-    deleted_bookmarkables = load_deleted_bookmarkables(notifications, bookmarks_by_id)
-
-    notifications.select do |n|
-      can_see_notification_bookmark?(n, bookmarks_by_id, deleted_bookmarkables)
-    end
-  end
-
   private
 
   def list_queries
@@ -93,47 +78,5 @@ class BookmarkQuery
   def apply_search_filter(bookmarkable, query)
     ts_query = Search.ts_query(term: @search_term)
     bookmarkable.perform_search_query(query, "%#{@search_term}%", ts_query)
-  end
-
-  def fetch_reminder_notifications(limit)
-    @user.notification_feed.menu(
-      limit: [limit, 100].min,
-      types: [Notification.types[:bookmark_reminder]],
-      state: :unread,
-    )
-  end
-
-  def load_deleted_bookmarkables(notifications, bookmarks_by_id)
-    notifications
-      .select do |n|
-        data = n.data_hash
-        data[:bookmark_id].present? && data[:bookmarkable_type].present? &&
-          !bookmarks_by_id[data[:bookmark_id]]
-      end
-      .group_by { |n| n.data_hash[:bookmarkable_type] }
-      .transform_values do |notifs|
-        ids = notifs.map { |n| n.data_hash[:bookmarkable_id] }
-        type = notifs.first.data_hash[:bookmarkable_type]
-        Bookmark.registered_bookmarkable_from_type(type).model.where(id: ids).index_by(&:id)
-      end
-  end
-
-  def can_see_notification_bookmark?(notification, bookmarks_by_id, deleted_bookmarkables)
-    data = notification.data_hash
-    return false if data[:bookmark_id].nil?
-
-    if bookmark = bookmarks_by_id[data[:bookmark_id]]
-      Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type).can_see?(
-        @guardian,
-        bookmark,
-      )
-    else
-      bookmarkable = deleted_bookmarkables.dig(data[:bookmarkable_type], data[:bookmarkable_id])
-      bookmarkable &&
-        Bookmark.registered_bookmarkable_from_type(data[:bookmarkable_type]).can_see_bookmarkable?(
-          @guardian,
-          bookmarkable,
-        )
-    end
   end
 end

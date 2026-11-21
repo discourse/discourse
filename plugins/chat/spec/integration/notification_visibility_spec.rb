@@ -11,8 +11,11 @@ RSpec.describe "Chat notification visibility" do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    register_test_bookmarkable(Chat::MessageBookmarkable)
     group.add(user)
   end
+
+  after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
   def notify(type, recipient: user, **data)
     Fabricate(
@@ -26,6 +29,43 @@ RSpec.describe "Chat notification visibility" do
 
   def visible_notifications(recipient: user)
     Notification::Feed.new(User.find(recipient.id)).notifications
+  end
+
+  it "hides a bookmark reminder when its message is trashed" do
+    reminder =
+      notify(
+        :bookmark_reminder,
+        bookmarkable_type: Chat::Message.polymorphic_name,
+        bookmarkable_id: message.id,
+      )
+
+    expect(visible_notifications).to contain_exactly(reminder)
+
+    message.trash!
+
+    expect(visible_notifications).to be_empty
+  end
+
+  it "hides a bookmark reminder when the user loses its channel" do
+    notify(
+      :bookmark_reminder,
+      bookmarkable_type: Chat::Message.polymorphic_name,
+      bookmarkable_id: message.id,
+    )
+    group.remove(user)
+
+    expect(visible_notifications).to be_empty
+  end
+
+  it "hides a bookmark reminder when its channel is trashed" do
+    notify(
+      :bookmark_reminder,
+      bookmarkable_type: Chat::Message.polymorphic_name,
+      bookmarkable_id: message.id,
+    )
+    channel.trash!
+
+    expect(visible_notifications).to be_empty
   end
 
   it "hides mentions, invitations and watched thread notifications when the user loses their channel" do

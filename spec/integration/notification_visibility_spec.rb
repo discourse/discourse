@@ -194,6 +194,26 @@ RSpec.describe "Notification visibility", type: :request do
     expect_no_visible_notification
   end
 
+  it "hides a group inbox summary when the user leaves the group" do
+    group.add(user)
+    summary =
+      notify(
+        :group_message_summary,
+        data: {
+          group_id: group.id,
+          group_name: group.name,
+          inbox_count: 1,
+        },
+      )
+    sign_in(user)
+
+    expect(menu_notifications.map { |item| item["id"] }).to contain_exactly(summary.id)
+
+    group.remove(user)
+
+    expect_no_visible_notification
+  end
+
   it "lists for staff only what both they and the owner can see, without publishing" do
     SiteSetting.suppress_secured_categories_from_admin = true
     group.add(user)
