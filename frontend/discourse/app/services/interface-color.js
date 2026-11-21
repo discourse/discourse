@@ -114,6 +114,7 @@ export default class InterfaceColor extends Service {
         lightStylesheet.media = "all";
         darkStylesheet.media = "none";
       }
+      this.#syncPreviewStylesheets("all", "none");
     }
     this.appEvents.trigger("interface-color:changed", LIGHT_VALUE_FOR_COOKIE);
   }
@@ -132,6 +133,7 @@ export default class InterfaceColor extends Service {
         lightStylesheet.media = "none";
         darkStylesheet.media = "all";
       }
+      this.#syncPreviewStylesheets("none", "all");
     }
     this.appEvents.trigger("interface-color:changed", DARK_VALUE_FOR_COOKIE);
   }
@@ -161,6 +163,11 @@ export default class InterfaceColor extends Service {
           DARK_VALUE_FOR_COOKIE
         );
       }
+
+      this.#syncPreviewStylesheets(
+        "(prefers-color-scheme: light)",
+        "(prefers-color-scheme: dark)"
+      );
     }
   }
 
@@ -170,5 +177,27 @@ export default class InterfaceColor extends Service {
 
   #darkColorsStylesheet() {
     return document.querySelector("link.dark-scheme");
+  }
+
+  #syncPreviewStylesheets(lightMedia, darkMedia) {
+    const lightPreview = document.querySelector("link#cs-preview-light");
+    const darkPreview = document.querySelector("link#cs-preview-dark");
+
+    if (
+      lightPreview &&
+      darkPreview &&
+      lightPreview.getAttribute("href") === darkPreview.getAttribute("href")
+    ) {
+      lightPreview.media = lightMedia;
+      darkPreview.media = "none";
+      return;
+    }
+
+    if (lightPreview) {
+      lightPreview.media = lightMedia;
+    }
+    if (darkPreview) {
+      darkPreview.media = darkMedia;
+    }
   }
 }

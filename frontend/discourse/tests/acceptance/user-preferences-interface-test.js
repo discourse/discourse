@@ -386,7 +386,31 @@ acceptance(
 
       assert
         .dom("link#cs-preview-light", document.body)
-        .hasAttribute("href", "3.css", "correct stylesheet loaded");
+        .hasAttribute("href", "3.css", "correct stylesheet loaded")
+        .hasAttribute(
+          "media",
+          "all",
+          "preview stylesheet matches active mode media"
+        );
+
+      const interfaceColor = this.container.lookup("service:interface-color");
+      interfaceColor.forceDarkMode();
+      assert
+        .dom("link#cs-preview-light", document.body)
+        .hasAttribute(
+          "media",
+          "none",
+          "disables light preview stylesheet when switching to dark mode"
+        );
+
+      interfaceColor.forceLightMode();
+      assert
+        .dom("link#cs-preview-light", document.body)
+        .hasAttribute(
+          "media",
+          "all",
+          "re-enables light preview stylesheet when switching back to light mode"
+        );
 
       document.querySelector("link#cs-preview-light").remove();
       document.querySelector("link#cs-preview-dark").remove();
