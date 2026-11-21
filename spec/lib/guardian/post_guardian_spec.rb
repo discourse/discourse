@@ -128,6 +128,12 @@ RSpec.describe PostGuardian do
           expect(Guardian.new(anon).post_can_act?(post, :like)).to be_truthy
         end
 
+        it "respects the category setting for anonymous accounts" do
+          SiteSetting.disable_likes_in_categories = post.topic.category_id.to_s
+
+          expect(anon.guardian.post_can_act?(post, :like)).to eq(false)
+        end
+
         it "cannot perform any other action" do
           expect(Guardian.new(anon).post_can_act?(post, :flag)).to be_falsey
           expect(Guardian.new(anon).post_can_act?(post, :bookmark)).to be_falsey

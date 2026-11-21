@@ -54,13 +54,21 @@ export default class ReactionsReactionButton extends Component {
     }
 
     const likeAction = this.args.post.likeAction;
+    const currentUserReaction = this.args.post.current_user_reaction;
+    if (this.args.post.likesDisabledInCategory && currentUserReaction) {
+      return i18n(
+        currentUserReaction.can_undo
+          ? "discourse_reactions.picker.remove_reaction"
+          : "discourse_reactions.picker.cant_remove_reaction",
+        { reaction: currentUserReaction.id }
+      );
+    }
     if (!likeAction) {
       return null;
     }
 
     let title;
     let options;
-    const currentUserReaction = this.args.post.current_user_reaction;
 
     if (likeAction.canToggle && isBlank(likeAction.can_undo)) {
       title = "discourse_reactions.main_reaction.add";
