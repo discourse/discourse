@@ -38,6 +38,19 @@ module PageObjects
         post.find(".contents > .cooked")
       end
 
+      def has_ltr_code_copy_padding_in_rtl_interface?
+        page.has_css?("#{post_id} .cooked pre.codeblock-buttons:has(.copy-cmd) > code") do |code|
+          code.evaluate_script(<<~JS)
+            (() => {
+              const style = getComputedStyle(this);
+              return getComputedStyle(document.documentElement).direction === "rtl" &&
+                style.direction === "ltr" &&
+                parseFloat(style.paddingRight) > parseFloat(style.paddingLeft);
+            })()
+          JS
+        end
+      end
+
       def click_category_hashtag(category)
         post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").click
       end

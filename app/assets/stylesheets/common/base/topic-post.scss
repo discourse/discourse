@@ -1324,7 +1324,7 @@ pre {
 
   @include viewport.until(sm) {
     > code {
-      padding-right: 2.75em;
+      padding-inline-end: 2.75em;
     }
   }
 
