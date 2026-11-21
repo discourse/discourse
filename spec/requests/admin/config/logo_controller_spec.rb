@@ -6,6 +6,19 @@ RSpec.describe Admin::Config::LogoController do
   fab!(:user)
   fab!(:topic)
 
+  describe "#update" do
+    before { sign_in(admin) }
+
+    it "keeps the small logo preference when an update omits it" do
+      SiteSetting.use_small_logo_on_mobile = true
+
+      put "/admin/config/logo.json", params: { mobile_logo: "" }
+
+      expect(response.status).to eq(200)
+      expect(SiteSetting.use_small_logo_on_mobile).to eq(true)
+    end
+  end
+
   describe "#og_image_preview" do
     before do
       TopicOgImageGenerator.any_instance.stubs(:generate_bytes).returns("\x89PNG\r\n\x1A\n".b)

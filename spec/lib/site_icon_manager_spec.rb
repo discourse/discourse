@@ -8,6 +8,8 @@ RSpec.describe SiteIconManager do
 
   fab!(:logo_image) { Fabricate(:image_upload, color: "black", width: 600, height: 80) }
   fab!(:logo_dark_image) { Fabricate(:image_upload, color: "white", width: 600, height: 80) }
+  fab!(:small_logo_image) { Fabricate(:image_upload, color: "black", width: 120, height: 120) }
+  fab!(:small_logo_dark_image) { Fabricate(:image_upload, color: "white", width: 120, height: 120) }
 
   before { SiteIconManager.enable }
 
@@ -95,6 +97,51 @@ RSpec.describe SiteIconManager do
       expect(SiteIconManager.mobile_logo_dark_url).to eq(
         GlobalPath.full_cdn_url(logo_dark_image.url),
       )
+    end
+  end
+
+  describe "using the small logo on mobile" do
+    before do
+      SiteSetting.logo = logo_image
+      SiteSetting.logo_dark = logo_dark_image
+      SiteSetting.logo_small = small_logo_image
+      SiteSetting.logo_small_dark = small_logo_dark_image
+    end
+
+    it "keeps the primary logos by default and refreshes the cached URLs when enabled" do
+      expect(SiteIconManager.mobile_logo_url).to eq(GlobalPath.full_cdn_url(logo_image.url))
+      expect(SiteIconManager.mobile_logo_dark_url).to eq(
+        GlobalPath.full_cdn_url(logo_dark_image.url),
+      )
+
+      SiteSetting.use_small_logo_on_mobile = true
+
+      expect(SiteIconManager.mobile_logo_url).to eq(GlobalPath.full_cdn_url(small_logo_image.url))
+      expect(SiteIconManager.mobile_logo_dark_url).to eq(
+        GlobalPath.full_cdn_url(small_logo_dark_image.url),
+      )
+
+      SiteSetting.logo_small_dark = ""
+      expect(SiteIconManager.mobile_logo_dark_url).to eq("")
+    end
+
+    it "prefers uploaded mobile logos and keeps the primary fallback without a small logo" do
+      SiteSetting.use_small_logo_on_mobile = true
+      SiteSetting.mobile_logo_dark = mobile_logo_dark_image
+
+      expect(SiteIconManager.mobile_logo_dark).to eq(mobile_logo_dark_image)
+
+      SiteSetting.mobile_logo = mobile_logo_image
+      SiteSetting.mobile_logo_dark = ""
+
+      expect(SiteIconManager.mobile_logo).to eq(mobile_logo_image)
+      expect(SiteIconManager.mobile_logo_dark).to eq(logo_dark_image)
+
+      SiteSetting.mobile_logo = ""
+      SiteSetting.logo_small = ""
+
+      expect(SiteIconManager.mobile_logo).to eq(logo_image)
+      expect(SiteIconManager.mobile_logo_dark).to eq(logo_dark_image)
     end
   end
 end

@@ -19,6 +19,7 @@ module SiteIconManager
       width: nil,
       height: nil,
       settings: %i[mobile_logo logo],
+      small_logo_settings: %i[mobile_logo logo_small logo],
       fallback_to_sketch: false,
       resize_required: false,
     },
@@ -26,6 +27,7 @@ module SiteIconManager
       width: nil,
       height: nil,
       settings: %i[mobile_logo_dark logo_dark],
+      small_logo_settings: %i[mobile_logo_dark logo_small_dark],
       fallback_to_sketch: false,
       resize_required: false,
     },
@@ -66,7 +68,7 @@ module SiteIconManager
     },
   }
 
-  WATCHED_SETTINGS = ICONS.keys + %i[logo logo_small]
+  WATCHED_SETTINGS = ICONS.keys + %i[logo logo_small logo_small_dark use_small_logo_on_mobile]
 
   def self.clear_cache!
     @cache.clear
@@ -120,7 +122,15 @@ module SiteIconManager
   end
 
   def self.resolve_original(info)
-    info[:settings].each do |setting_name|
+    settings =
+      if info[:small_logo_settings] && SiteSetting.use_small_logo_on_mobile &&
+           !SiteSetting.mobile_logo && SiteSetting.logo_small
+        info[:small_logo_settings]
+      else
+        info[:settings]
+      end
+
+    settings.each do |setting_name|
       value = SiteSetting.get(setting_name)
       return value if value
     end
