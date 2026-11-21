@@ -25,7 +25,6 @@ acceptance("notifications", function (needs) {
             },
           },
         ],
-        total_rows_notifications: 1,
       });
     });
   });

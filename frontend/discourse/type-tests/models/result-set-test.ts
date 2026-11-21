@@ -65,6 +65,7 @@ results.filter(Boolean);
 
 expectTypeOf(results).toExtend<LegacyArrayLikeObject<Gadget>>();
 expectTypeOf(results.totalRows).toEqualTypeOf<number>();
+expectTypeOf(results.hasTotalRows).toEqualTypeOf<boolean>();
 expectTypeOf(results.loadMoreUrl).toEqualTypeOf<string | null | undefined>();
 expectTypeOf(results.refreshUrl).toEqualTypeOf<string | null | undefined>();
 expectTypeOf(results.loading).toEqualTypeOf<boolean>();

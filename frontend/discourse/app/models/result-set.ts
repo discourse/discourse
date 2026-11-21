@@ -20,12 +20,17 @@ export default class ResultSet<T = unknown> extends LegacyArrayLikeObject<T> {
   @tracked resultSetMeta: unknown;
   @tracked totalRows = 0;
 
+  /** False when the endpoint sent no total; `loadMoreUrl` alone then signals that more rows exist. */
+  @tracked hasTotalRows = true;
+
   store: StoreService | null = null;
   __type: string | undefined;
 
   @dependentKeyCompat
   get canLoadMore() {
-    return this.content.length < this.totalRows;
+    return this.hasTotalRows
+      ? this.content.length < this.totalRows
+      : !!this.loadMoreUrl;
   }
 
   @action
@@ -35,8 +40,7 @@ export default class ResultSet<T = unknown> extends LegacyArrayLikeObject<T> {
       return;
     }
 
-    const totalRows = this.totalRows;
-    if (this.content.length < totalRows && !this.loadingMore) {
+    if (this.canLoadMore && !this.loadingMore) {
       this.loadingMore = true;
 
       // Store hydration supplies store and __type before pagination is used.

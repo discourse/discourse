@@ -125,26 +125,105 @@ RSpec.describe NotificationsController do
                            }
         end
 
-        it "respects limit param and properly bumps offset for load_more_notifications URL" do
-          7.times { notification = Fabricate(:notification, user: user) }
+        it "pages through every notification by following load_more_notifications" do
+          created_at = 1.hour.ago
+          7.times { Fabricate(:notification, user: user, created_at:) }
+          expected = user.notifications.order(created_at: :desc, id: :desc).pluck(:id)
 
-          get "/notifications.json", params: { username: user.username, limit: 2 }
-          expect(response.parsed_body["notifications"].count).to eq(2)
-          expect(response.parsed_body["load_more_notifications"]).to eq(
-            "/notifications?limit=2&offset=2&username=#{user.username}",
-          )
+          paged = []
+          url = "/notifications.json?limit=2&username=#{user.username}"
 
-          # Same as response above but we need .json added before query params.
-          get "/notifications.json?limit=2&offset=2&username=#{user.username}"
-          expect(response.parsed_body["load_more_notifications"]).to eq(
-            "/notifications?limit=2&offset=4&username=#{user.username}",
-          )
+          while url
+            get url
+            page = response.parsed_body
+            expect(page["notifications"].size).to be <= 2
+            paged.concat(page["notifications"].map { |notification| notification["id"] })
+            url = page["load_more_notifications"]&.sub("/notifications?", "/notifications.json?")
+          end
 
-          # We are seeing that the offset is increasing properly and limit is staying the same
-          get "/notifications.json?limit=2&offset=4&username=#{user.username}"
-          expect(response.parsed_body["load_more_notifications"]).to eq(
-            "/notifications?limit=2&offset=6&username=#{user.username}",
-          )
+          expect(paged).to eq(expected)
+        end
+
+        it "keeps paging after the last notification of a page is deleted" do
+          3.times { Fabricate(:notification, user: user) }
+          expected = user.notifications.order(created_at: :desc, id: :desc).pluck(:id)
+
+          get "/notifications.json", params: { username: user.username, limit: 1 }
+          first_page = response.parsed_body
+          Notification.find(first_page["notifications"].last["id"]).destroy!
+
+          get first_page["load_more_notifications"].sub("/notifications?", "/notifications.json?")
+          expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([expected.second])
+        end
+
+        it "returns an empty page for a limit of zero" do
+          Fabricate(:notification, user: user)
+
+          get "/notifications.json", params: { username: user.username, limit: 0 }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["notifications"]).to be_empty
+        end
+
+        it "rejects a malformed cursor" do
+          get "/notifications.json",
+              params: {
+                username: user.username,
+                before_id: 1,
+                before_created_at: "yesterday",
+              }
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects a cursor missing its id" do
+          get "/notifications.json",
+              params: {
+                username: user.username,
+                before_created_at: Time.zone.now.iso8601,
+              }
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects a cursor id larger than any notification id" do
+          get "/notifications.json",
+              params: {
+                username: user.username,
+                before_created_at: Time.zone.now.iso8601,
+                before_id: "9" * 30,
+              }
+          expect(response.status).to eq(400)
+        end
+
+        it "rejects offset pagination" do
+          get "/notifications.json", params: { username: user.username, offset: 60 }
+          expect(response.status).to eq(400)
+        end
+
+        it "ignores an unknown filter without echoing it back" do
+          2.times { Fabricate(:notification, user: user) }
+
+          get "/notifications.json",
+              params: {
+                username: user.username,
+                limit: 1,
+                filter: {
+                  nested: "value",
+                },
+              }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["load_more_notifications"]).not_to include("nested")
+        end
+
+        it "only sends a load_more_notifications URL while more notifications exist" do
+          3.times { Fabricate(:notification, user: user) }
+          total = user.notifications.count
+
+          get "/notifications.json", params: { username: user.username, limit: total - 1 }
+          expect(response.parsed_body["notifications"].count).to eq(total - 1)
+          expect(response.parsed_body).to include("load_more_notifications")
+
+          get "/notifications.json", params: { username: user.username, limit: total }
+          expect(response.parsed_body["notifications"].count).to eq(total)
+          expect(response.parsed_body).not_to include("load_more_notifications")
         end
 
         it "get notifications with all filters" do
@@ -401,7 +480,6 @@ RSpec.describe NotificationsController do
             get "/notifications.json", params: { filter_by_types: "liked", limit: 1 }
 
             expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([liked1.id])
-            expect(response.parsed_body["total_rows_notifications"]).to eq(2)
             expect(response.parsed_body["load_more_notifications"]).to include(
               "filter_by_types=liked",
             )

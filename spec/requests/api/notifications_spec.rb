@@ -71,9 +71,6 @@ RSpec.describe "notifications" do
                      },
                    },
                  },
-                 total_rows_notifications: {
-                   type: :integer,
-                 },
                  seen_notification_id: {
                    type: :integer,
                  },

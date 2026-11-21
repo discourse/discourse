@@ -79,9 +79,6 @@ export default {
         },
       },
     ],
-    total_rows_notifications: 4,
     seen_notification_id: 193,
-    load_more_notifications:
-      "/notifications?filter=all&offset=60&username=eviltrout",
   },
 };
