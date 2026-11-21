@@ -264,5 +264,69 @@ module PlaywrightSoftReset
   end
 end
 
+module PlaywrightPersistentProfile
+  PROFILES_ROOT = Rails.root.join("tmp/playwright-profiles#{ENV["TEST_ENV_NUMBER"]}")
+
+  # Stands in for `Playwright::Browser` so the driver's one context keeps its code cache on disk.
+  class Browser
+    attr_reader :browser_type
+
+    def self.profile_dir
+      if !@profiles_root_cleared
+        # Profiles left by a killed process would otherwise pile up.
+        FileUtils.rm_rf(PROFILES_ROOT)
+        FileUtils.mkdir_p(PROFILES_ROOT)
+        @profiles_root_cleared = true
+      end
+
+      Dir.mktmpdir("profile-", PROFILES_ROOT)
+    end
+
+    def initialize(browser_type, launch_options)
+      @browser_type = browser_type
+      @launch_options = launch_options
+      @profile_dir = self.class.profile_dir
+    end
+
+    def new_context(**options)
+      @context = @browser_type.launch_persistent_context(@profile_dir, **@launch_options, **options)
+      clear_profile_data(@context)
+      @context
+    end
+
+    def contexts
+      @context && !@context.closed? ? [@context] : []
+    end
+
+    def close
+      @context&.close
+      @context = nil
+      FileUtils.rm_rf(@profile_dir)
+    end
+
+    private
+
+    # A relaunch after a hard reset reads the same profile, so drop what earlier examples stored.
+    def clear_profile_data(context)
+      blank_page = context.pages.first || context.new_page
+      cdp = context.new_cdp_session(blank_page)
+      cdp.send_message("Storage.clearDataForOrigin", params: { origin: "*", storageTypes: "all" })
+      cdp.detach
+      context.clear_cookies
+      context.clear_permissions
+      context.pages.each(&:close)
+    end
+  end
+
+  module PlaywrightCreate
+    def playwright_browser
+      Browser.new(playwright_execution.playwright.send(@browser_type), @browser_options.value)
+    end
+  end
+end
+
 Capybara::Playwright::Browser.prepend(PlaywrightSoftReset::Browser)
 Capybara::Playwright::Driver.prepend(PlaywrightSoftReset::Driver)
+Capybara::Playwright::BrowserRunner::PlaywrightCreate.prepend(
+  PlaywrightPersistentProfile::PlaywrightCreate,
+)
