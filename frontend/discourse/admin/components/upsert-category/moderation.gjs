@@ -204,6 +204,32 @@ export default class UpsertCategoryModeration extends Component {
       />
     </@form.Container>
 
+    <@form.Section @title={{i18n "category.topic_creation_prompt.title"}}>
+      <@form.Field
+        @description={{i18n "category.topic_creation_prompt.description"}}
+        @format="full"
+        @name="topic_creation_prompt"
+        @title={{i18n "category.topic_creation_prompt.message"}}
+        @type="textarea"
+        @validation="length:0,1000"
+        as |field|
+      >
+        <field.Control @height={{80}} />
+      </@form.Field>
+
+      <@form.Field
+        @description={{i18n
+          "category.topic_creation_prompt.max_level_description"
+        }}
+        @name="topic_creation_prompt_max_trust_level"
+        @title={{i18n "category.topic_creation_prompt.max_level"}}
+        @type="input"
+        as |field|
+      >
+        <field.Control max="4" min="0" @type="number" />
+      </@form.Field>
+    </@form.Section>
+
     <@form.Section @title={{i18n "category.new_topic_approval"}}>
       <@form.Object @name="category_setting" as |object|>
         <object.Field

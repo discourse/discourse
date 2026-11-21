@@ -118,6 +118,8 @@ interface ExpectedCategoryFields {
   is_special?: true;
   is_uncategorized?: true;
   topic_template?: string | null;
+  topic_creation_prompt?: string | null;
+  topic_creation_prompt_max_trust_level?: number | null;
   topic_title_placeholder?: string | null;
   has_children?: boolean | null;
   subcategory_count?: number | null;
