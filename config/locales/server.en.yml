@@ -4136,8 +4136,8 @@ en:
     private_topic_title: "Topic #%{id}"
     contents_hidden: "Please visit the post to see its contents."
     moderation_appeal_instructions: "To appeal this decision, contact %{email}"
-    moderation_reason: "More specifically, your post violated the following community guideline: **%{ground}**. %{explanation}"
-    moderation_reason_for_responders: "More specifically, the post you replied to violated the following community guideline: **%{ground}**. %{explanation}"
+    moderation_guideline: "The moderator based this decision on the following guideline:"
+    moderation_guideline_for_responders: "The moderator based the decision to remove the original post on the following guideline:"
 
     post_hidden:
       title: "Post Hidden"

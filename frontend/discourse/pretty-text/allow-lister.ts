@@ -195,6 +195,7 @@ export const DEFAULT_LIST = [
   "code",
   "dd",
   "del",
+  "details.moderation-guideline",
   "div",
   "div.quote-controls",
   "div.title",
@@ -259,6 +260,7 @@ export const DEFAULT_LIST = [
   "strike",
   "strong",
   "sub",
+  "summary",
   "sup",
   "source[data-orig-src]",
   // source[src] and source[srcset] handled by sanitizer.js

@@ -481,6 +481,12 @@ class PostDestroyer
     return unless post_action_type_view.flag_types[rs.reviewable_score_type]
 
     notify_responders = options[:notify_responders]
+    subject_post = notify_responders ? options[:parent_post] : @post
+    message_options = @opts[:message_options] || {}
+    if message_options[:community_rule] &&
+         (reviewable.target_type != "Post" || reviewable.target_id != subject_post.id)
+      message_options = message_options.except(:community_rule)
+    end
 
     ModerationNotice.enqueue(
       user: @post.user,
@@ -495,10 +501,10 @@ class PostDestroyer
         ),
       message_options: {
         **Dsa::AppealInstructions.message_options,
-        flagged_post_raw_content: notify_responders ? options[:parent_post].raw : @post.raw,
+        flagged_post_raw_content: subject_post.raw,
         flagged_post_response_raw_content: @post.raw,
-        url: notify_responders ? options[:parent_post].url : @post.url,
-        **(@opts[:message_options] || {}),
+        url: subject_post.url,
+        **message_options,
       },
     )
   end

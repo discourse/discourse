@@ -116,7 +116,7 @@ module ReviewableActionBuilder
   end
 
   def perform_delete_user(performed_by, args, &)
-    delete_user(target_user, delete_opts, performed_by) if target_user
+    delete_user(target_user, delete_opts, performed_by, args:) if target_user
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -124,7 +124,7 @@ module ReviewableActionBuilder
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
-    delete_user(target_user, delete_options, performed_by) if target_user
+    delete_user(target_user, delete_options, performed_by, args:) if target_user
     create_result(:success, :rejected, [], false, &)
   end
 
@@ -164,6 +164,15 @@ module ReviewableActionBuilder
 
   private
 
+  def moderation_action(performed_by:, args:)
+    ReviewableModerationActions.new(
+      post:,
+      reviewable_id: id,
+      performed_by:,
+      classification: args[:dsa_classification],
+    )
+  end
+
   def perform_penalty(performed_by:, args:, penalty_type:)
     guardian = args[:guardian] || Guardian.new(performed_by)
     service = penalty_type == "suspend" ? User::Suspend : User::Silence
@@ -176,7 +185,16 @@ module ReviewableActionBuilder
         reviewable_id: id,
       )
 
-    service.call(guardian:, params: penalty_params, options: { raise_on_failure: true }) do
+    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
+
+    service.call(
+      guardian:,
+      params: penalty_params,
+      options: {
+        raise_on_failure: true,
+        community_rule:,
+      },
+    ) do
       on_success { result = create_result(:success) }
       on_failed_contract { |contract| result.errors = contract.errors }
       on_model_not_found(:user) { raise Discourse::NotFound }
@@ -199,12 +217,14 @@ module ReviewableActionBuilder
     }
   end
 
-  def delete_user(user, delete_options, performed_by)
+  def delete_user(user, delete_options, performed_by, args:)
     email = user.email
+    community_rule = Dsa::ModerationGuideline.selected_rule(args[:dsa_classification])
 
     UserDestroyer.new(performed_by).destroy(user, delete_options.merge(reviewable_id: id))
 
-    message = UserNotifications.account_deleted(email, self)
+    mail_options = community_rule ? { community_rule: } : {}
+    message = UserNotifications.account_deleted(email, self, **mail_options)
     Email::Sender.new(message, :account_deleted).send
   end
 

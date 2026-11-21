@@ -96,6 +96,11 @@ module Email
           "![](" + url_prefix + '\1)',
         )
 
+      if @message.header[Dsa::ModerationGuideline::EMAIL_HEADER]
+        @message.text_part.body = renderer.text
+        @message.header[Dsa::ModerationGuideline::EMAIL_HEADER] = nil
+      end
+
       @message.text_part.content_type = "text/plain; charset=UTF-8"
       user_id = @user&.id
 
