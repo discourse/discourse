@@ -318,6 +318,10 @@
         list-style-type: none;
         margin: 0 0 0.5em 0;
 
+        > li:empty {
+          display: none;
+        }
+
         @include viewport.until(md) {
           li,
           > span {
