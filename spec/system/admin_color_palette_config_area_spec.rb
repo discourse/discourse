@@ -10,10 +10,16 @@ describe "Admin Color Palette Config Area Page" do
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:cdp) { PageObjects::CDP.new }
 
-  before { sign_in(admin) }
+  before do
+    sign_in(admin)
+    manager = Stylesheet::Manager.new
+    %i[common admin wizard].each { |target| manager.stylesheet_details(target) }
+    @baseline_stylesheets = Dir.glob("#{Stylesheet::Manager.cache_fullpath}/*")
+  end
 
   after do
-    Stylesheet::Manager.rm_cache_folder
+    # Discard edited palettes before rollback can reuse their versions, but retain baseline CSS.
+    FileUtils.rm_f(Dir.glob("#{Stylesheet::Manager.cache_fullpath}/*") - @baseline_stylesheets)
     Stylesheet::Manager.cache.clear
   end
 

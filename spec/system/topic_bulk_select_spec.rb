@@ -381,7 +381,7 @@ describe "Topic bulk select" do
       expect(topic_list).to have_closed_status(topics.first)
 
       # Check that the topic now has the message
-      visit("/t/#{topic.slug}/#{topic.id}")
+      topic_list.click_topic_title(topic)
       expect(topic_page).to have_content("None of these are useful")
     end
 
