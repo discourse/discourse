@@ -324,6 +324,15 @@
 
     .first {
       flex-shrink: 0;
+      max-width: 100%;
+
+      > a {
+        @include ellipsis;
+
+        &:focus-visible {
+          @include default-focus;
+        }
+      }
     }
   }
 
