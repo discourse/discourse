@@ -126,4 +126,19 @@ RSpec.describe FormTemplate, type: :model do
       expect(g2["attributes"]["multiple"]).to eq(true)
     end
   end
+
+  it "rejects output templates the renderer cannot parse" do
+    template = Fabricate.build(:form_template, output_template: "{% if answers.name %}")
+
+    expect(template).not_to be_valid
+    expect(template.errors[:output_template]).to be_present
+  end
+
+  it "rejects output templates that would only fail once rendered, explaining why" do
+    template =
+      Fabricate.build(:form_template, output_template: "{% if answers.a = 1 %}x{% endif %}")
+
+    expect(template).not_to be_valid
+    expect(template.errors[:output_template].join).to include("(line 1): Unexpected character =")
+  end
 end

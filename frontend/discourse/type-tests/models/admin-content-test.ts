@@ -33,7 +33,12 @@ type TextStatus =
   | "outdated"
   | "invalid_interpolation_keys"
   | "deprecated";
-type TemplateData = { id: number; name: string; template: string };
+type TemplateData = {
+  id: number;
+  name: string;
+  template: string;
+  output_template: string | null;
+};
 type PaletteData = {
   id: number;
   name: string;
