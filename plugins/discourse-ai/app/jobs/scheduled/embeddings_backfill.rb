@@ -92,7 +92,7 @@ module Jobs
               "LEFT JOIN #{table_name} ON #{table_name}.post_id = posts.id AND #{table_name}.model_id = #{vector_def.id}",
             )
             .where(deleted_at: nil)
-            .where(post_type: Post.types[:regular])
+            .where(post_type: Post.types[:regular], hidden: false)
         posts = posts.public_posts if !SiteSetting.ai_embeddings_generate_for_pms
 
         # First, we'll try to backfill embeddings for posts that have none

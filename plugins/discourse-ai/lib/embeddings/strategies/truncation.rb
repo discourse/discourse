@@ -11,10 +11,14 @@ module DiscourseAi
         end
 
         def version
-          1
+          2
         end
 
         def prepare_target_text(target, vdef)
+          if target.is_a?(Post) && (target.post_type != Post.types[:regular] || target.hidden?)
+            return ""
+          end
+
           max_length = vdef.max_sequence_length - 2
 
           prepared_text =
@@ -82,15 +86,18 @@ module DiscourseAi
           posts_text = +""
           posts_text_size = 0
 
-          topic.posts.find_each do |post|
-            posts_text_size += tokenizer.size(post.cooked)
-            posts_text << post.cooked
-            posts_text << " "
+          topic
+            .posts
+            .where(post_type: Post.types[:regular], hidden: false)
+            .find_each do |post|
+              posts_text_size += tokenizer.size(post.cooked)
+              posts_text << post.cooked
+              posts_text << " "
 
-            # Since we will strip all HTML tags before embedding, we can fit more text
-            # than the max_length as it will shrink after Nokogiri extracts the text
-            break if posts_text_size >= max_length * TEXT_TO_HTML_TOKEN_RATIO
-          end
+              # Since we will strip all HTML tags before embedding, we can fit more text
+              # than the max_length as it will shrink after Nokogiri extracts the text
+              break if posts_text_size >= max_length * TEXT_TO_HTML_TOKEN_RATIO
+            end
 
           text << Nokogiri::HTML5.fragment(posts_text).text
 

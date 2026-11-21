@@ -3,6 +3,15 @@
 module DiscourseAi
   module Embeddings
     class EntryPoint
+      def self.invalidate_post_visibility(post)
+        Topic.where(id: post.topic_id).update_all(updated_at: Time.current)
+        DB.exec("DELETE FROM ai_posts_embeddings WHERE post_id = :post_id", post_id: post.id)
+        DB.exec(
+          "DELETE FROM ai_topics_embeddings WHERE topic_id = :topic_id",
+          topic_id: post.topic_id,
+        )
+      end
+
       def inject_into(plugin)
         # Include random topics in the suggested list *only* if there are no related topics.
         plugin.register_modifier(
@@ -69,6 +78,12 @@ module DiscourseAi
         plugin.on(:topic_edited, &callback)
         plugin.on(:post_created, &callback)
         plugin.on(:post_edited, &callback)
+
+        plugin.add_model_callback(Post, :after_update) do
+          if saved_change_to_hidden? || saved_change_to_post_type?
+            DiscourseAi::Embeddings::EntryPoint.invalidate_post_visibility(self)
+          end
+        end
 
         plugin.add_api_key_scope(
           :ai,

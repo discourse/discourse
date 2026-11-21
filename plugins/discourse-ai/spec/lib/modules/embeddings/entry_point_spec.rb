@@ -12,6 +12,20 @@ describe DiscourseAi::Embeddings::EntryPoint do
 
   after { DiscourseAi::Embeddings::ProviderHealth.clear!(embedding_definition) }
 
+  it "invalidates post and topic vectors when a post is hidden" do
+    post = Fabricate(:post)
+    embedding = [1] * embedding_definition.dimensions
+    post_schema = DiscourseAi::Embeddings::Schema.for(Post, vector_def: embedding_definition)
+    topic_schema = DiscourseAi::Embeddings::Schema.for(Topic, vector_def: embedding_definition)
+    post_schema.store(post, embedding, "post digest")
+    topic_schema.store(post.topic, embedding, "topic digest")
+
+    post.update!(hidden: true)
+
+    expect(post_schema.find_by_target(post)).to be_nil
+    expect(topic_schema.find_by_target(post.topic)).to be_nil
+  end
+
   describe "registering event callbacks" do
     context "when creating a topic" do
       let(:creator) do

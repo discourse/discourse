@@ -54,7 +54,7 @@ module DiscourseAi
           if result.is_a?(StandardError)
             errors << result
           else
-            schema.store(result[:target], result[:embedding], result[:digest]) if result.present?
+            store_if_current(schema, result[:target], result[:embedding], result[:digest])
           end
           queued -= 1
         end
@@ -83,7 +83,7 @@ module DiscourseAi
 
         embeddings = request_embedding!(text)
 
-        schema.store(target, embeddings, new_digest)
+        store_if_current(schema, target, embeddings, new_digest)
       end
 
       def vector_from(text, asymmetric = false)
@@ -96,6 +96,23 @@ module DiscourseAi
       attr_reader :vdef
 
       private
+
+      def store_if_current(schema, target, embedding, digest)
+        if target.is_a?(Topic) || target.is_a?(Post)
+          current = target.class.find_by(id: target.id)
+          return unless current
+
+          current.with_lock do
+            return unless current.updated_at == target.updated_at
+
+            schema.store(current, embedding, digest)
+          end
+        else
+          schema.store(target, embedding, digest)
+        end
+      rescue ActiveRecord::RecordNotFound
+        nil
+      end
 
       def request_embedding!(text)
         ProviderHealth.request!(vdef) { vdef.inference_client.perform!(text) }
