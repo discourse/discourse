@@ -394,6 +394,10 @@
     @include ellipsis;
   }
 
+  :is(.topic-link, a.badge-category__wrapper):focus-visible {
+    @include default-focus;
+  }
+
   .topic-statuses {
     .d-icon {
       color: var(--header_primary-medium);
