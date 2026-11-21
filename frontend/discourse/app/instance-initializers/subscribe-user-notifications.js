@@ -11,7 +11,9 @@ import {
 import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import {
+  consentPromptDismissedKey,
   isPushNotificationsEnabled,
+  keyValueStore as pushNotificationKeyValueStore,
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
@@ -22,6 +24,7 @@ class SubscribeUserNotificationsInit {
   @service appEvents;
   @service capabilities;
   @service currentUser;
+  @service desktopNotifications;
   @service messageBus;
   @service pmTopicTrackingState;
   @service router;
@@ -81,11 +84,28 @@ class SubscribeUserNotificationsInit {
 
       if (isPushNotificationsEnabled(this.currentUser)) {
         disableDesktopNotifications();
-        registerPushNotifications(
-          this.currentUser,
-          this.router,
-          this.appEvents
-        );
+
+        if (this.desktopNotifications.isGrantedPermission) {
+          registerPushNotifications(
+            this.currentUser,
+            this.router,
+            this.appEvents,
+            this.siteSettings.vapid_public_key_bytes
+          )?.then((registered) => {
+            // keep alerting through this tab until a later boot restores push
+            if (
+              registered === false &&
+              isPushNotificationsEnabled(this.currentUser)
+            ) {
+              this.desktopNotifications.setIsEnabledBrowser(true);
+            }
+          });
+        } else {
+          // the stored subscription can no longer display anything, so turn
+          // push off and let the consent banner ask again
+          this.desktopNotifications.disable();
+          pushNotificationKeyValueStore.remove(consentPromptDismissedKey);
+        }
       } else if (!this.currentUser.isInDoNotDisturb()) {
         unsubscribePushNotifications(this.currentUser);
       }
