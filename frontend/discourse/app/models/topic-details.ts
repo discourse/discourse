@@ -115,6 +115,8 @@ export interface TopicDetailsFields {
   can_edit_tags?: boolean;
   can_publish_page?: boolean;
   can_close_topic?: boolean;
+  can_set_reply_approval?: boolean;
+  reply_approval_required?: boolean;
   can_archive_topic?: boolean;
   can_split_merge_topic?: boolean;
   can_edit_staff_notes?: boolean;

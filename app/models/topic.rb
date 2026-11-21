@@ -2426,6 +2426,7 @@ end
 #  pinned_globally           :boolean          default(FALSE), not null
 #  pinned_until              :datetime
 #  posts_count               :integer          default(0), not null
+#  reply_approval_required   :boolean          default(FALSE), not null
 #  reply_count               :integer          default(0), not null
 #  reviewable_score          :float            default(0.0), not null
 #  score                     :float

@@ -1424,6 +1424,92 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "#reply_approval" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
+
+    it "rejects updates while the site setting is disabled" do
+      sign_in(moderator)
+
+      put "/t/#{topic.id}/reply-approval.json", params: { enabled: true }
+
+      expect(response).to have_http_status(:forbidden)
+      expect(topic.reload).not_to be_reply_approval_required
+    end
+
+    context "when topic reply approval is enabled" do
+      before { SiteSetting.enable_topic_reply_approval = true }
+
+      it "returns a writer's pending reply even when only topic approval is enabled" do
+        topic.update!(reply_approval_required: true)
+        sign_in(user)
+        post "/posts.json", params: { topic_id: topic.id, raw: "A reply requiring approval" }
+
+        get "/t/#{topic.id}.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.fetch("pending_posts").size).to eq(1)
+      end
+
+      it "lets moderators change the requirement and records each change" do
+        sign_in(moderator)
+
+        put "/t/#{topic.id}/reply-approval.json", params: { enabled: true }
+        expect(response).to have_http_status(:no_content)
+
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body.fetch("details")).to include(
+          "can_set_reply_approval" => true,
+          "reply_approval_required" => true,
+        )
+
+        put "/t/#{topic.id}/reply-approval.json", params: { enabled: false }
+        expect(response).to have_http_status(:no_content)
+
+        expect(topic.reload).not_to be_reply_approval_required
+        expect(
+          UserHistory
+            .where(topic: topic, action: UserHistory.actions[:topic_reply_approval_changed])
+            .order(:id)
+            .pluck(:acting_user_id, :previous_value, :new_value),
+        ).to eq([[moderator.id, "false", "true"], [moderator.id, "true", "false"]])
+      end
+
+      it "lets category moderators change the requirement in their own category" do
+        SiteSetting.enable_category_group_moderation = true
+        topic.update!(category:)
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+        sign_in(user)
+
+        put "/t/#{topic.id}/reply-approval.json", params: { enabled: true }
+        expect(response).to have_http_status(:no_content)
+        expect(topic.reload).to be_reply_approval_required
+
+        put "/t/#{dest_topic.id}/reply-approval.json", params: { enabled: true }
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "rejects users who cannot review the topic" do
+        sign_in(trust_level_4)
+
+        put "/t/#{topic.id}/reply-approval.json", params: { enabled: true }
+        expect(response).to have_http_status(:forbidden)
+
+        get "/t/#{topic.id}.json"
+        expect(response.parsed_body.fetch("details")).not_to have_key("can_set_reply_approval")
+      end
+
+      it "rejects personal messages and invalid values" do
+        sign_in(moderator)
+
+        put "/t/#{pm.id}/reply-approval.json", params: { enabled: true }
+        expect(response).to have_http_status(:forbidden)
+
+        put "/t/#{topic.id}/reply-approval.json", params: { enabled: "invalid" }
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+  end
+
   describe "#status" do
     it "needs you to be logged in" do
       put "/t/1/status.json", params: { status: "visible", enabled: true }

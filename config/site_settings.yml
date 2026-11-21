@@ -1587,6 +1587,9 @@ posting:
     default: 1
     client: true
     area: "posts_and_topics"
+  enable_topic_reply_approval:
+    default: false
+    area: "posts_and_topics"
   post_undo_action_window_mins:
     default: 10
     area: "posts_and_topics"
