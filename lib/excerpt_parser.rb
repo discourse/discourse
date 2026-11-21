@@ -17,6 +17,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @text_entities = options[:text_entities] == true
     @keep_newlines = options[:keep_newlines] == true
     @keep_emoji_images = options[:keep_emoji_images] == true
+    @strip_emojis = options[:strip_emojis] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
     @keep_onebox_body = options[:keep_onebox_body] == true
     @keep_quotes = options[:keep_quotes] == true
@@ -77,6 +78,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       attributes = Hash[*attributes.flatten]
 
       if attributes["class"]&.include?("emoji")
+        return if @strip_emojis
+
         if @remap_emoji
           title = (attributes["alt"] || "").gsub(":", "")
           title = Emoji.lookup_unicode(title) || attributes["alt"]
