@@ -75,19 +75,16 @@ export default class DsaModerationDetails extends Component {
         @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.category"}}
         @tooltip={{component CategoryHelp}}
-        @type="select"
+        @type="custom"
         @validation="required"
         as |field|
       >
-        <field.Control
-          @nonePlaceholder={{i18n "dsa_statements.category_prompt"}}
-          as |select|
-        >
-          {{#each @options.categories as |category|}}
-            <select.Option
-              @value={{category.id}}
-            >{{category.name}}</select.Option>
-          {{/each}}
+        <field.Control>
+          <DsaClassificationSelect
+            @field={{field}}
+            @options={{@options.categories}}
+            @placeholder={{i18n "dsa_statements.category_prompt"}}
+          />
         </field.Control>
       </form.Field>
     </Form>

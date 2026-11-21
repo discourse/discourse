@@ -165,7 +165,7 @@ describe "Classifying reviewable moderation" do
     modal.select_rule(rule[:ground])
 
     expect(modal).to have_selected_rule(rule[:ground])
-    expect(modal).to have_accessible_rule_description(rule[:ground])
+    expect(modal).to have_accessible_selection("community_rule", rule[:ground])
     expect(page).to have_no_text(rule[:explanation])
     expect(modal).to have_selected_category(category)
 

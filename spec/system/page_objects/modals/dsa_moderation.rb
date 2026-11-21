@@ -52,7 +52,14 @@ module PageObjects
       end
 
       def select_category(category)
-        within(full_modal_selector) { select(category, from: "Category") }
+        within(full_modal_selector) do
+          find("[data-name='category'] .form-kit__control-menu-trigger").click
+        end
+        find(
+          ".dsa-classification-options .dsa-classification-option",
+          text: category,
+          exact_text: true,
+        ).click
       end
 
       def continue
@@ -128,14 +135,21 @@ module PageObjects
         )
       end
 
-      def has_accessible_rule_description?(ground)
+      def has_accessible_selection?(field, label)
         has_css?(
-          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
-        ) { |trigger| trigger["aria-description"] == ground }
+          "#{full_modal_selector} [data-name='#{field}'] .dsa-classification-select",
+        ) do |trigger|
+          trigger.evaluate_script("this.ariaLabelledByElements?.at(-1)?.textContent.trim()") ==
+            label
+        end
       end
 
       def has_selected_category?(category)
-        within(full_modal_selector) { has_select?("Category", selected: category) }
+        has_css?(
+          "#{full_modal_selector} [data-name='category'] .d-button-label",
+          text: category,
+          exact_text: true,
+        )
       end
 
       def has_focused_step?(label)
