@@ -29,14 +29,24 @@ module DiscourseEvents
 
       def event_registrations_export
         return enum_for(__method__) unless block_given?
-        registration_rows.find_each do |row|
-          fields = row.definition.fetch("fields").index_by { |field| field["id"] }
+        identity = registration_identity_columns
+        rows =
+          registration_rows.select(
+            :id,
+            :definition,
+            :answers,
+            :created_at,
+            :occurrence_starts_at,
+            :recurring,
+            *identity,
+          )
+        rows.find_each do |row|
+          fields = row.answer_fields.index_by { |field| field["id"] }
           values =
             registration_columns.keys.map { |id| row.display_answer(fields[id]) if fields[id] }
           yield(
             [
-              row.username,
-              row.email,
+              *row.slice(*identity).values,
               row.created_at.utc.iso8601,
               row.occurrence_starts_at.utc.iso8601,
               row.recurring,
@@ -49,7 +59,7 @@ module DiscourseEvents
       def get_header(entity)
         if entity == "event_registrations"
           return(
-            %w[username email submitted_at occurrence_starts_at recurring] +
+            registration_identity_columns + %w[submitted_at occurrence_starts_at recurring] +
               registration_columns.values.map { |label| safe_registration_cell(label) }
           )
         end
@@ -61,6 +71,10 @@ module DiscourseEvents
       end
 
       private
+
+      def registration_identity_columns
+        current_user.admin? ? %w[username email] : %w[username]
+      end
 
       def registration_rows
         @registration_rows ||=
@@ -78,10 +92,7 @@ module DiscourseEvents
             registration_rows
               .select(:id, :definition)
               .find_each do |row|
-                row
-                  .definition
-                  .fetch("fields")
-                  .each { |field| columns[field["id"]] = field["label"] }
+                row.answer_fields.each { |field| columns[field["id"]] = field["label"] }
               end
             seen = Set.new(%w[username email submitted_at occurrence_starts_at recurring])
             columns.transform_values! do |label|

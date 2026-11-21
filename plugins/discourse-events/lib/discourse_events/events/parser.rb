@@ -26,6 +26,7 @@ module DiscourseEvents
         :image,
         :hosts,
         :"registration-form",
+        :"registration-form-id",
         :recording,
       ]
 

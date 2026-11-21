@@ -85,6 +85,9 @@
             "type": "boolean",
             "description": "Whether the current user can export this event's registration submissions."
           },
+          "registration_form_id": {
+            "type": ["integer", "null"]
+          },
           "registration_revision": {
             "type": "string",
             "description": "The revision to submit with registration answers."
@@ -92,6 +95,7 @@
           "registration_form": {
             "type": "object",
             "properties": {
+              "builtin": { "type": "string", "enum": ["account"] },
               "title": { "type": "string" },
               "description": { "type": ["string", "null"] },
               "fields": {
@@ -101,9 +105,11 @@
                   "properties": {
                     "id": { "type": "string" },
                     "label": { "type": "string" },
+                    "content": { "type": "string" },
+                    "description": { "type": ["string", "null"] },
                     "type": {
                       "type": "string",
-                      "enum": ["text", "textarea", "number", "date", "checkbox", "dropdown", "radio"]
+                      "enum": ["text", "textarea", "number", "date", "checkbox", "dropdown", "radio", "checkboxes", "display_text"]
                     },
                     "required": { "type": "boolean" },
                     "placeholder": { "type": ["string", "null"] },
@@ -119,11 +125,14 @@
                       }
                     }
                   },
-                  "required": ["id", "label", "type", "required"]
+                  "required": ["id", "type"],
+                  "if": { "properties": { "type": { "const": "display_text" } } },
+                  "then": { "required": ["content"] },
+                  "else": { "required": ["label", "required"] }
                 }
               }
             },
-            "required": ["title", "fields"]
+            "required": ["fields"]
           },
           "creator": {
             "type": "object",

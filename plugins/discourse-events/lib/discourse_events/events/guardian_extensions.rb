@@ -19,6 +19,14 @@ module DiscourseEvents
         can_create_discourse_post_event? && can_edit_post?(event.post)
       end
 
+      def can_create_event_registration_form?
+        is_admin? || (SiteSetting.discourse_post_event_enabled && can_create_discourse_post_event?)
+      end
+
+      def can_manage_event_registration_form?(form)
+        is_admin? || (can_create_event_registration_form? && form.created_by_id == user.id)
+      end
+
       def can_see_livestream_event?(event)
         event&.livestream? && event.deleted_at.nil? && can_see?(event.post)
       end

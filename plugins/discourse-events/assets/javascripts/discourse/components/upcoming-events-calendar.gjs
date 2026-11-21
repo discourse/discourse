@@ -8,6 +8,10 @@ import { i18n } from "discourse-i18n";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper.js";
 import formatEventForCalendar from "../lib/format-event-for-calendar.js";
 import openEventComposer from "../lib/open-event-composer.js";
+import {
+  canCreateRegistrationForm,
+  registrationFormManagementUrl,
+} from "../lib/registration-forms.js";
 import FullCalendar from "./full-calendar.gjs";
 
 export default class UpcomingEventsCalendar extends Component {
@@ -196,6 +200,15 @@ export default class UpcomingEventsCalendar extends Component {
 
   <template>
     <div id="upcoming-events-calendar">
+      {{#if
+        (and
+          @mine (canCreateRegistrationForm this.currentUser this.siteSettings)
+        )
+      }}
+        <a href={{registrationFormManagementUrl this.currentUser}}>{{i18n
+            "event_registration.library.manage"
+          }}</a>
+      {{/if}}
       <FullCalendar
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @customButtons={{this.customButtons}}

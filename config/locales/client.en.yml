@@ -2991,15 +2991,26 @@ en:
         one: Enter a number
         other: Enter %{count} numbers
     form_definition:
+      attributes: "Attributes"
+      field_attributes: "Edit attributes for %{label}"
       title: "Form title"
       description: "Description"
-      label: "Field label"
+      label: "Label"
+      text_content: "Text"
+      display_text_excerpt: "Display text “%{excerpt}”"
       placeholder: "Placeholder"
       required: "Required"
+      optional: "Optional"
+      required_response: "Required response for %{label}"
+      make_required: "Make required"
+      make_optional: "Make optional"
       type: "Field type"
-      choice: "Choice"
+      choices: "Choices"
+      choice_number: "Choice %{number}"
       add_choice: "Add choice"
-      add_field: "Add question"
+      add_field: "Add field"
+      field_actions: "Actions for %{label}"
+      delete_field: "Delete field"
       untitled: "Untitled"
       preview: "Preview"
       types:
@@ -3007,9 +3018,11 @@ en:
         textarea: "Text area"
         number: "Number"
         date: "Date"
-        checkbox: "Checkbox"
-        dropdown: "Dropdown"
-        radio: "Radio buttons"
+        checkbox: "Confirmation checkbox"
+        radio: "Choose one (radio buttons)"
+        dropdown: "Choose one (dropdown)"
+        checkboxes: "Choose multiple (checkboxes)"
+        display_text: "Display text"
     form_kit:
       reset: Reset
       optional: optional

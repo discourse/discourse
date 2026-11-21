@@ -40,4 +40,32 @@ RSpec.describe FormDefinition do
     end
     expect(definition("date", placeholder: "Answer")).not_to be_valid
   end
+
+  it "requires nonblank display text and excludes response attributes" do
+    node = { "id" => "note", "type" => "display_text" }
+    form = described_class.new({ "title" => "Survey", "fields" => [node] })
+    node["content"] = " "
+    expect(form).not_to be_valid
+    node["content"] = "a" * 2001
+    expect(form).not_to be_valid
+    node["content"] = "Read this first."
+    expect(form).to be_valid
+    expect(form.invalid_answers({})).to be_empty
+    node["required"] = true
+    expect(form).not_to be_valid
+  end
+
+  it "accepts only distinct listed IDs for a checkbox group" do
+    choices = [{ id: "first", label: "Design" }, { id: "second", label: "Testing" }]
+    required = definition("checkboxes", choices:)
+    expect(required).to be_valid
+    expect(required.invalid_answers("question" => %w[first second])).to be_empty
+    expect(required.invalid_answers("question" => ["second"])).to be_empty
+    [[], "first", %w[first missing], %w[first first]].each do |answer|
+      expect(required.invalid_answers("question" => answer)).not_to be_empty
+    end
+    optional = definition("checkboxes", choices:, required: false)
+    expect(optional.invalid_answers("question" => [])).to be_empty
+    expect(optional.invalid_answers({})).to be_empty
+  end
 end

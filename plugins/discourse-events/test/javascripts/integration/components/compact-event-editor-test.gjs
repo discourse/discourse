@@ -1,5 +1,6 @@
 import {
   fillIn,
+  find,
   findAll,
   render,
   triggerEvent,
@@ -7,6 +8,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import CompactEventEditor from "discourse/plugins/discourse-events/discourse/components/compact-event-editor";
 import { defaultEventState } from "discourse/plugins/discourse-events/discourse/lib/raw-event-helper";
 
@@ -34,6 +36,23 @@ function stateWith(overrides) {
 
 module("Integration | Component | CompactEventEditor", function (hooks) {
   setupRenderingTest(hooks);
+
+  test("selects a saved form directly in the event composer", async function (assert) {
+    pretender.get("/discourse-post-event/registration-forms.json", () =>
+      response({ registration_forms: [{ id: 5, title: "Workshop" }] })
+    );
+    let edited;
+    await renderEditor(stateWith({}), (state) => {
+      edited = state;
+    });
+    const select = find(".event-registration-picker select");
+    select.value = "5";
+    await triggerEvent(select, "input");
+    assert.strictEqual(edited.registrationFormId, 5);
+    select.selectedIndex = 0;
+    await triggerEvent(select, "input");
+    assert.strictEqual(edited.registrationFormId, null);
+  });
 
   test("exposes an existing url so it can be edited", async function (assert) {
     const initialState = stateWith({ url: "https://meet.example.com/legacy" });

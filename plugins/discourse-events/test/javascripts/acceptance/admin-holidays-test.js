@@ -52,7 +52,10 @@ acceptance("Admin - Events - Holidays", function (needs) {
 
     assert
       .dom(".admin-plugin-config-page__top-nav-item")
-      .exists({ count: 2 }, "it renders Settings and Holidays tabs");
+      .exists(
+        { count: 4 },
+        "it renders Settings, Holidays, Registration forms and Submissions tabs"
+      );
     assert
       .dom(".admin-plugin-config-page__top-nav-item.active")
       .hasTextContaining("Holidays", "it lands on the Holidays tab by default");

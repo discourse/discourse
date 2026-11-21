@@ -33,6 +33,7 @@ const CLEARABLE_ATTRS = [
   "closed",
   "hosts",
   "registrationForm",
+  "registrationFormId",
   "recording",
 ];
 

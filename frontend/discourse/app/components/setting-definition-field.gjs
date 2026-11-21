@@ -39,6 +39,7 @@ export default class SettingDefinitionField extends Component {
       @description={{this.description}}
       @disabled={{@disabled}}
       @format={{this.format}}
+      @helpText={{@definition.help_text}}
       @labelFormat={{this.entry.labelFormat}}
       @name={{@definition.key}}
       @placeholder={{@definition.placeholder}}

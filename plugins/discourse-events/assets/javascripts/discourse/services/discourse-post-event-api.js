@@ -1,10 +1,12 @@
 import Service, { service } from "@ember/service";
 import moment from "moment";
 import { ajax } from "discourse/lib/ajax";
+import randomUUID from "discourse/lib/random-uuid";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
 import DiscoursePostEventInvitee from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-invitee";
 import DiscoursePostEventInvitees from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-invitees";
 import EventRegistration from "../components/modal/event-registration.gjs";
+import { ACCOUNT_ONLY } from "../lib/registration-forms.js";
 
 /**
  * Discourse post event API service. Provides methods to interact with the discourse post event API.
@@ -110,22 +112,26 @@ export default class DiscoursePostEventApi extends Service {
       );
     };
 
-    if (payload.status === "going" && event.registrationForm) {
-      const revision = event.registrationRevision;
-      const occurrence = event.isFutureOccurrence
-        ? this.#normalizedOccurrenceStartsAt(event)
-        : null;
-      const result = await this.modal.show(EventRegistration, {
-        model: {
-          definition: event.registrationForm,
-          onSubmit: (answers, key) =>
-            submit(JSON.stringify({ key, revision, occurrence, answers })),
-        },
-      });
-      return Boolean(result?.submitted);
+    if (payload.status !== "going" || !event.registrationForm) {
+      await submit();
+      return true;
     }
-    await submit();
-    return true;
+
+    const key = randomUUID();
+    const revision = event.registrationRevision;
+    const occurrence = event.isFutureOccurrence
+      ? this.#normalizedOccurrenceStartsAt(event)
+      : null;
+    const onSubmit = (answers) =>
+      submit(JSON.stringify({ key, revision, occurrence, answers }));
+    if (event.registrationForm.builtin === ACCOUNT_ONLY) {
+      await onSubmit({});
+      return true;
+    }
+    const result = await this.modal.show(EventRegistration, {
+      model: { definition: event.registrationForm, onSubmit },
+    });
+    return Boolean(result?.submitted);
   }
 
   async updateEventAttendance(event, data = {}) {

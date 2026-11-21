@@ -8,12 +8,10 @@ const CollectionAddMenu = <template>
   <DMenu
     class="btn btn-default workflows-property-engine__add-attrs-btn"
     @inline={{true}}
+    @label={{@label}}
     @modalForwardRecipient={{true}}
   >
-    <:trigger>
-      {{@label}}
-      {{dIcon "chevron-down"}}
-    </:trigger>
+    <:trigger>{{dIcon "chevron-down"}}</:trigger>
     <:content as |menu|>
       <DDropdownMenu as |dropdown|>
         {{#if @addAllLabel}}

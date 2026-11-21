@@ -5,18 +5,51 @@ import {
   fieldTypes,
   hasChoices,
   hasPlaceholder,
+  initialChoices,
   newChoice,
 } from "discourse/lib/form-definition";
-import DReorderableList from "discourse/ui-kit/d-reorderable-list";
 import { i18n } from "discourse-i18n";
-import { itemLabel, remove, reorder } from "./list.js";
+import ChoiceList from "./choice-list.gjs";
+import { itemLabel, limitText } from "./list.js";
+
+const hasAttribute = Object.hasOwn;
 
 export default class FormQuestionEditor extends Component {
   @action
+  toggleTextAttribute(name) {
+    const question = { ...this.args.question };
+    if (hasAttribute(question, name)) {
+      delete question[name];
+    } else {
+      question[name] = "";
+    }
+    this.args.form.set(this.args.path, question);
+  }
+
+  @action
   changeType(question, path, type, { set }) {
-    const next = { ...question, type };
+    if (type === "display_text") {
+      set(path, {
+        id: question.id,
+        type,
+        content: question.content ?? question.label ?? "",
+      });
+      return;
+    }
+    const next =
+      question.type === "display_text"
+        ? {
+            id: question.id,
+            type,
+            label: limitText(
+              question.content.trim().split(/[\r\n\u2028\u2029]/u, 1)[0],
+              255
+            ),
+            required: false,
+          }
+        : { ...question, type };
     if (hasChoices(type)) {
-      next.choices ??= [newChoice()];
+      next.choices ??= initialChoices();
     } else {
       delete next.choices;
     }
@@ -26,26 +59,33 @@ export default class FormQuestionEditor extends Component {
     set(path, next);
   }
 
-  canRemoveChoice(question) {
-    return question.choices.length > 1;
-  }
-
-  @action
-  addChoice(form, path) {
-    form.addItemToCollection(path + ".choices", newChoice());
-  }
-
   <template>
+    {{#if (eq @question.type "display_text")}}
+      <@Header />
+    {{else}}
+      <@Header
+        @onSetRequired={{fn @form.set (concat @path ".required")}}
+        @required={{@question.required}}
+        as |Attribute|
+      >
+        <Attribute
+          data-field-attribute="description"
+          @active={{hasAttribute @question "description"}}
+          @label={{i18n "form_definition.description"}}
+          @onToggle={{fn this.toggleTextAttribute "description"}}
+        />
+        {{#if (hasPlaceholder @question.type)}}
+          <Attribute
+            data-field-attribute="placeholder"
+            @active={{hasAttribute @question "placeholder"}}
+            @label={{i18n "form_definition.placeholder"}}
+            @onToggle={{fn this.toggleTextAttribute "placeholder"}}
+          />
+        {{/if}}
+      </@Header>
+    {{/if}}
     <@editor.Field
-      @name="label"
-      @title={{i18n "form_definition.label"}}
-      @type="input"
-      @validation="required:trim"
-      as |field|
-    >
-      <field.Control maxlength="255" />
-    </@editor.Field>
-    <@editor.Field
+      @format="full"
       @name="type"
       @onSet={{fn this.changeType @question @path}}
       @title={{i18n "form_definition.type"}}
@@ -60,8 +100,47 @@ export default class FormQuestionEditor extends Component {
         {{/each}}
       </field.Control>
     </@editor.Field>
-    {{#if (hasPlaceholder @question.type)}}
+    {{#if (eq @question.type "display_text")}}
       <@editor.Field
+        @format="full"
+        @name="content"
+        @title={{i18n "form_definition.text_content"}}
+        @type="textarea"
+        @validation="required:trim"
+        as |field|
+      >
+        <field.Control maxlength="2000" />
+      </@editor.Field>
+    {{else}}
+      <@editor.Field
+        @format="full"
+        @name="label"
+        @title={{i18n "form_definition.label"}}
+        @type="input"
+        @validation="required:trim|length:1,255"
+        as |field|
+      >
+        <field.Control maxlength="255" />
+      </@editor.Field>
+    {{/if}}
+    {{#if (hasAttribute @question "description")}}
+      <@editor.Field
+        @format="full"
+        @name="description"
+        @title={{i18n "form_definition.description"}}
+        @type="input"
+        as |field|
+      >
+        <field.Control maxlength="2000" />
+      </@editor.Field>
+    {{/if}}
+    {{#if
+      (and
+        (hasPlaceholder @question.type) (hasAttribute @question "placeholder")
+      )
+    }}
+      <@editor.Field
+        @format="full"
         @name="placeholder"
         @title={{i18n "form_definition.placeholder"}}
         @type="input"
@@ -70,49 +149,33 @@ export default class FormQuestionEditor extends Component {
         <field.Control maxlength="255" />
       </@editor.Field>
     {{/if}}
-    <@editor.Field
-      @name="required"
-      @title={{i18n "form_definition.required"}}
-      @type="checkbox"
-      as |control|
-    ><control.Control /></@editor.Field>
     {{#if (hasChoices @question.type)}}
-      <@editor.Object @name="choices" as |choices|>
-        <DReorderableList
-          @items={{@question.choices}}
-          @key="id"
-          @label={{itemLabel}}
-          @onMove={{fn reorder @form.set (concat @path ".choices")}}
-          @onRemove={{fn
-            remove
-            @form.set
-            (concat @path ".choices")
-            @question.choices
-          }}
-          @removable={{fn this.canRemoveChoice @question}}
-        >
-          <:row as |choice choiceRow|>
-            {{#each (array choiceRow.index) as |choiceIndex|}}
-              <choices.Object @name={{concat "" choiceIndex}} as |option|>
-                <option.Field
-                  @name="label"
-                  @title={{i18n "form_definition.choice"}}
-                  @type="input"
-                  @validation="required:trim"
-                  as |field|
-                >
-                  <field.Control maxlength="255" />
-                </option.Field>
-              </choices.Object>
-            {{/each}}
-          </:row>
-        </DReorderableList>
-      </@editor.Object>
-      <@form.Button
-        @action={{fn this.addChoice @form @path}}
-        @disabled={{gte @question.choices.length 100}}
-        @label="form_definition.add_choice"
-      />
+      <ChoiceList
+        @choices={{@question.choices}}
+        @form={{@form}}
+        @key="id"
+        @labelFor={{itemLabel}}
+        @limit={{100}}
+        @minimum={{1}}
+        @newChoice={{newChoice}}
+        @onChange={{fn @form.set (concat @path ".choices")}}
+        @title={{i18n "form_definition.choices"}}
+        as |choice index label|
+      >
+        <@form.Object @name={{concat @path ".choices." index}} as |option|>
+          <option.Field
+            @format="full"
+            @name="label"
+            @showTitle={{false}}
+            @title={{label}}
+            @type="input"
+            @validation="required:trim"
+            as |field|
+          >
+            <field.Control aria-label={{label}} maxlength="255" />
+          </option.Field>
+        </@form.Object>
+      </ChoiceList>
     {{/if}}
   </template>
 }

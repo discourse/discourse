@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import type { TOC } from "@ember/component/template-only";
 import { action } from "@ember/object";
 import type { TrustedHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
@@ -97,6 +98,33 @@ interface DFloatingControlBarSignature {
   };
 }
 
+interface DFloatingControlBarLayoutSignature {
+  Element: HTMLDivElement;
+  Args: Partial<
+    Pick<DFloatingControlBarSignature["Args"], "label" | "widthSource">
+  >;
+  Blocks: {
+    /** The controls to keep visible at the bottom of the viewport. */
+    default: [];
+  };
+}
+
+/** Pins the supplied controls to the bottom of their column, optionally alongside a label. */
+export const DFloatingControlBarLayout: TOC<DFloatingControlBarLayoutSignature> =
+  <template>
+    {{bodyClass "d-floating-control-bar-visible"}}
+    <div
+      class="d-floating-control-bar"
+      ...attributes
+      {{matchWidth @widthSource}}
+    >
+      {{#if @label}}
+        <span class="d-floating-control-bar__label">{{@label}}</span>
+      {{/if}}
+      <div class="d-floating-control-bar__controls">{{yield}}</div>
+    </div>
+  </template>;
+
 /**
  * A bar pinned to the bottom of the page, offering to save or discard changes
  * the user has made but not yet committed.
@@ -135,28 +163,24 @@ export default class DFloatingControlBar extends Component<DFloatingControlBarSi
   }
 
   <template>
-    {{bodyClass "d-floating-control-bar-visible"}}
-    <div
-      class="d-floating-control-bar"
+    <DFloatingControlBarLayout
       ...attributes
-      {{matchWidth @widthSource}}
+      @label={{@label}}
+      @widthSource={{@widthSource}}
     >
-      <span class="d-floating-control-bar__label">{{@label}}</span>
-      <div class="d-floating-control-bar__controls">
-        <DButton
-          class="btn-default btn-small"
-          @action={{@onDiscard}}
-          @disabled={{this.isSaving}}
-          @translatedLabel={{@discardLabel}}
-        />
-        <DButton
-          class="btn-primary btn-small"
-          @action={{this.save}}
-          @id={{@saveButtonId}}
-          @isLoading={{this.isSaving}}
-          @translatedLabel={{@saveLabel}}
-        />
-      </div>
-    </div>
+      <DButton
+        class="btn-default btn-small"
+        @action={{@onDiscard}}
+        @disabled={{this.isSaving}}
+        @translatedLabel={{@discardLabel}}
+      />
+      <DButton
+        class="btn-primary btn-small"
+        @action={{this.save}}
+        @id={{@saveButtonId}}
+        @isLoading={{this.isSaving}}
+        @translatedLabel={{@saveLabel}}
+      />
+    </DFloatingControlBarLayout>
   </template>
 }

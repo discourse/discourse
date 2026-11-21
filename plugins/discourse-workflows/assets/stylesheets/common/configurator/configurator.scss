@@ -85,6 +85,10 @@
     justify-content: center;
   }
 
+  .form-definition-editor__question {
+    padding-block-start: var(--space-9);
+  }
+
   &__setting-toggle {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -283,7 +287,6 @@
   &__add-attrs-btn {
     flex: 1;
     justify-content: center;
-    gap: var(--space-2);
   }
 }
 

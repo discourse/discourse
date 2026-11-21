@@ -3,15 +3,20 @@
 module Jobs
   class ReportEventRegistrations < ::Jobs::Base
     def execute(args)
-      event = DiscourseEvents::Events::Event.find_by(id: args[:event_id])
-      return unless event
-
-      event.with_lock do
+      DiscourseEvents::Events::Event.transaction do
+        event =
+          DiscourseEvents::Events::Event
+            .visible
+            .joins(post: :topic)
+            .lock("FOR UPDATE OF discourse_post_event_events")
+            .find_by(id: args[:event_id])
+        next unless event
         topic = event.sync_registration_topic_recipients
         event
           .registrations
-          .where(report_post_id: nil)
+          .unreported
           .order(:id)
+          .lock
           .each do |submission|
             params = { raw: submission.report_body, skip_validations: true }
             if topic
@@ -25,6 +30,12 @@ module Jobs
               )
             end
             post = PostCreator.create!(Discourse.system_user, params)
+            PostCustomField.create!(
+              post_id: post.id,
+              name: DiscourseEvents::Events::Registration::REPORT_USER_FIELD,
+              value: submission.user_id.to_s,
+              created_at: submission.created_at,
+            )
             unless topic
               topic = post.topic
               event.update_column(:registration_topic_id, topic.id)

@@ -159,9 +159,14 @@ RSpec.describe "events" do
               title: "Workshop signup",
               fields: [
                 {
-                  id: "session",
-                  label: "Session",
-                  type: "dropdown",
+                  id: "intro",
+                  type: "display_text",
+                  content: "Select the sessions you can attend.",
+                },
+                {
+                  id: "sessions",
+                  label: "Sessions",
+                  type: "checkboxes",
                   required: true,
                   choices: [{ id: "morning", label: "Morning" }],
                 },

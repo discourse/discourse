@@ -6,6 +6,7 @@ module DiscourseEvents
     class Event::Action::AttributesFromRaw < Service::ActionBase
       option :raw_event
       option :current_status
+      option :current_event, default: -> { nil }
 
       def call
         {
@@ -33,12 +34,30 @@ module DiscourseEvents
           all_day: all_day?,
           custom_fields: custom_fields,
           host_user_ids: host_user_ids,
-          registration_form: registration_form,
+          registration_form:,
+          registration_form_id:,
         }
       end
 
+      def registration_form_id
+        id = raw_event[:"registration-form-id"]
+        id.to_i if id&.match?(/\A[1-9]\d{0,17}\z/)
+      end
+
       def registration_form
+        if raw_event.key?(:"registration-form-id")
+          return unless registration_form_id
+          if current_event&.registration_form_id == registration_form_id
+            return current_event.registration_form
+          end
+          return RegistrationForm.find_by(id: registration_form_id)&.definition
+        end
         encoded = raw_event[:"registration-form"]
+        if encoded == RegistrationForm::ACCOUNT_ONLY
+          snapshot = current_event&.registration_form
+          return snapshot if snapshot&.dig("builtin") == RegistrationForm::ACCOUNT_ONLY
+          return RegistrationForm.account_only_definition
+        end
         return if encoded.nil?
         return false if encoded.bytesize > 100_000
 

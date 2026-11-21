@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class FormDefinition
-  TYPES = %w[text textarea number date checkbox dropdown radio].freeze
-  CHOICES = %w[dropdown radio].freeze
+  CHOICES = %w[dropdown radio checkboxes].freeze
+  TYPES = (%w[text textarea number date checkbox] + CHOICES).freeze
   PLACEHOLDERS = %w[text textarea number].freeze
   RESERVED_KEYS = %w[
     constructor
@@ -29,23 +29,29 @@ class FormDefinition
   end
 
   def invalid_answers(answers)
-    @definition
-      .fetch("fields")
-      .reject do |field|
-        value = answers[field.fetch("id")]
-        if value.nil? || value == "" || (value.is_a?(String) && value.blank?)
-          !field["required"]
-        else
-          valid_value?(field, value)
-        end
+    answer_fields.reject do |field|
+      value = answers[field.fetch("id")]
+      if value.nil? || value == "" || (value.is_a?(String) && value.blank?)
+        !field["required"]
+      else
+        valid_value?(field, value)
       end
+    end
+  end
+
+  def answer_fields
+    @definition.fetch("fields").reject { |field| field["type"] == "display_text" }
   end
 
   private
 
   def valid_field?(field)
     type = field["type"]
+    if type == "display_text"
+      return field.except("id", "type", "content").empty? && text?(field["content"], 2000)
+    end
     return false unless TYPES.include?(type) && text?(field["label"], 255)
+    return false unless optional_text?(field["description"], 2000)
     return false if [true, false].exclude?(field["required"])
     if field.key?("placeholder") &&
          !(PLACEHOLDERS.include?(type) && optional_text?(field["placeholder"], 255))
@@ -86,7 +92,11 @@ class FormDefinition
       value.is_a?(String) && /\A\d{4}-\d{2}-\d{2}\z/.match?(value) && Date.iso8601(value)
     when "checkbox"
       value == true || (!field["required"] && value == false)
-    when *CHOICES
+    when "checkboxes"
+      return false unless value.is_a?(Array) && value.size <= field["choices"].size
+      return !field["required"] if value.empty?
+      value.uniq == value && (value - field["choices"].pluck("id")).empty?
+    when "dropdown", "radio"
       field["choices"].any? { |choice| choice["id"] == value }
     end
   rescue Date::Error

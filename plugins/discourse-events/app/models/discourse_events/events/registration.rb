@@ -4,12 +4,14 @@ module DiscourseEvents
   module Events
     class Registration < ActiveRecord::Base
       self.table_name = "discourse_event_registrations"
+      REPORT_USER_FIELD = "event_registration_report_user_id"
 
       class InvalidSubmission < StandardError
       end
 
       belongs_to :event
-      after_create_commit { Jobs.enqueue(:report_event_registrations, event_id:) }
+      scope :unreported, -> { where(report_post_id: nil) }
+      after_create_commit :enqueue_report
 
       def self.record_attendance!(event:, user:, acting_user:, params:)
         return yield unless params.status == :going
@@ -32,14 +34,16 @@ module DiscourseEvents
             raise InvalidSubmission, I18n.t("event_registration.changed")
           end
 
-          fields = event.registration_form.fetch("fields")
-          answers = data["answers"].slice(*fields.pluck("id"))
-          invalid = FormDefinition.new(event.registration_form).invalid_answers(answers).first
+          form = FormDefinition.new(event.registration_form)
+          answers = data["answers"].slice(*form.answer_fields.pluck("id"))
+          invalid = form.invalid_answers(answers).first
           if invalid
             raise InvalidSubmission, I18n.t("event_registration.invalid", label: invalid["label"])
           end
 
           raise Discourse::InvalidAccess unless event.can_user_update_attendance?(user)
+          # Serialize the identity snapshot with account deletion and anonymization.
+          user = User.lock("FOR SHARE").find(user.id)
           create!(
             event:,
             user_id: user.id,
@@ -73,7 +77,18 @@ module DiscourseEvents
       def display_answer(field)
         value = answers[field["id"]]
         return value unless field["choices"]
+        if value.is_a?(Array)
+          return(
+            field["choices"]
+              .filter_map { |option| option["label"] if value.include?(option["id"]) }
+              .join(", ")
+          )
+        end
         field["choices"].find { |option| option["id"] == value }&.fetch("label")
+      end
+
+      def answer_fields
+        FormDefinition.new(definition).answer_fields
       end
 
       def report_body
@@ -83,15 +98,25 @@ module DiscourseEvents
             event: event.post.topic.title,
             form: definition["title"],
             username:,
-            email:,
             submitted_at: created_at.utc.iso8601,
             occurrence: occurrence_starts_at.utc.iso8601,
             rsvp_scope:
               I18n.t(recurring ? "event_registration.recurring" : "event_registration.single"),
           )
-        rows =
-          definition.fetch("fields").map { |field| "#{field["label"]}: #{display_answer(field)}" }
+        rows = answer_fields.map { |field| "#{field["label"]}: #{display_answer(field)}" }
         (metadata.lines(chomp: true) + rows).join("\n").lines.map { |line| "    #{line}" }.join
+      end
+
+      private
+
+      def enqueue_report
+        Jobs.enqueue(:report_event_registrations, event_id:)
+      rescue StandardError => e
+        # The RSVP has committed. The scheduled job will retry the pending report.
+        Discourse.warn_exception(
+          e,
+          message: "Could not enqueue the registration report for event #{event_id}",
+        )
       end
     end
   end
@@ -118,4 +143,6 @@ end
 # Indexes
 #
 #  idx_on_event_id_user_id_submission_key_d4b3cd1ae8  (event_id,user_id,submission_key) UNIQUE
+#  idx_unreported_event_registrations                 (event_id) WHERE (report_post_id IS NULL)
+#  index_discourse_event_registrations_on_user_id     (user_id)
 #

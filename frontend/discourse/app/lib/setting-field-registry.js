@@ -1,6 +1,7 @@
 import BoolControl from "discourse/components/setting-field/bool";
 import CategoryControl from "discourse/components/setting-field/category";
 import CategoryListControl from "discourse/components/setting-field/category-list";
+import CheckboxGroupControl from "discourse/components/setting-field/checkbox-group";
 import ColorControl from "discourse/components/setting-field/color";
 import CompactListControl from "discourse/components/setting-field/compact-list";
 import DatetimeControl from "discourse/components/setting-field/datetime";
@@ -95,6 +96,11 @@ registerSettingFieldType("radio-group", {
   ...ROW,
   type: "radio-group",
   renderer: RadioGroupControl,
+});
+registerSettingFieldType("checkbox-group", {
+  ...ROW,
+  type: "custom",
+  renderer: CheckboxGroupControl,
 });
 registerSettingFieldType("enum", {
   ...ROW,
