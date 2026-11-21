@@ -327,13 +327,18 @@
         }
       }
 
-      &:not(.active):hover,
-      &:not(.active):focus-visible {
+      &:not(.active):hover {
         background: none;
 
         .d-icon {
           background-color: var(--d-hover);
         }
+      }
+
+      &:focus-visible {
+        background: none;
+        outline: 2px solid var(--d-input-focused-color);
+        outline-offset: -2px;
       }
     }
   }
