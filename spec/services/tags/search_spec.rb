@@ -44,6 +44,49 @@ RSpec.describe(Tags::Search) do
       end
     end
 
+    context "when searching existing emoji tags" do
+      %w[😊 🔞 🇫🇷 🛠️ 👩‍💻 release-😊].each do |name|
+        context "with #{name}" do
+          fab!(:emoji_tag) { Fabricate(:tag, name: name, public_topic_count: 17) }
+          fab!(:popular_tag) do
+            Fabricate(:tag, name: "release-popular-☀️👨‍💻", public_topic_count: 100)
+          end
+
+          let(:params) { { q: name, filterForInput: true, limit: 1 } }
+
+          it "returns the matching tag and its count instead of a popular unrelated tag" do
+            expect(result).to run_successfully
+            expect(result[:tags]).to contain_exactly(
+              include(id: emoji_tag.id, name: name, count: 17),
+            )
+          end
+        end
+      end
+    end
+
+    context "when normalizing an ordinary search term" do
+      let(:params) { { q: "  #AL\u200B\u202E™PHA  ", filterForInput: true } }
+
+      it "keeps existing case, punctuation, and invisible-character cleanup" do
+        expect(result).to run_successfully
+        expect(result[:tags].map { |tag| tag[:id] }).to eq([tag1.id])
+      end
+    end
+
+    context "when an emoji tag conflicts with a selected tag" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "🔞-restricted") }
+      fab!(:tag_group) { Fabricate(:tag_group, one_per_topic: true, tags: [tag1, restricted_tag]) }
+
+      let(:params) { { q: "🔞", filterForInput: true, selected_tag_ids: [tag1.id] } }
+
+      it "returns a disabled suggestion for its emoji prefix" do
+        expect(result).to run_successfully
+        expect(result[:tags]).to include(
+          include(id: restricted_tag.id, name: restricted_tag.name, disabled: true),
+        )
+      end
+    end
+
     context "with blank query" do
       let(:params) { {} }
 
