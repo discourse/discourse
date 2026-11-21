@@ -474,6 +474,8 @@ class TagsController < ::ApplicationController
     synonyms = Tag.where(id: synonym_tag_ids).or(Tag.where_name(new_synonym_names))
     synonym_tag_ids = DiscourseTagging.editable_synonym_ids(synonyms, guardian)
     new_synonym_names -= synonyms.map(&:name)
+    existing_names = synonyms.pluck("lower(tags.name)")
+    new_synonym_names = new_synonym_names.reject { |name| existing_names.include?(name.downcase) }
 
     value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
     if value.is_a?(Hash)
