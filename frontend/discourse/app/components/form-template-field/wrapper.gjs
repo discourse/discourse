@@ -5,7 +5,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
+import { extractError } from "discourse/lib/ajax-error";
 import FormTemplate from "discourse/models/form-template";
+import DButton from "discourse/ui-kit/d-button";
 import CheckboxField from "./checkbox.gjs";
 import ComposerField from "./composer.gjs";
 import DropdownField from "./dropdown.gjs";
@@ -96,9 +98,15 @@ export default class FormTemplateFieldWrapper extends Component {
   }
 
   async _fetchTemplate(id) {
-    const response = await FormTemplate.findById(id);
-    const templateContent = await response.form_template.template;
-    return this._loadTemplate(templateContent);
+    this.error = null;
+
+    try {
+      const response = await FormTemplate.findById(id);
+      const templateContent = await response.form_template.template;
+      return this._loadTemplate(templateContent);
+    } catch (e) {
+      this.error = extractError(e);
+    }
   }
 
   <template>
@@ -120,6 +128,14 @@ export default class FormTemplateFieldWrapper extends Component {
     {{else if this.error}}
       <div class="alert alert-error">
         {{this.error}}
+        {{#if @id}}
+          <DButton
+            class="btn-default form-template-form__retry"
+            @action={{this.refreshTemplate}}
+            @icon="arrows-rotate"
+            @label="errors.buttons.again"
+          />
+        {{/if}}
       </div>
     {{/if}}
   </template>
