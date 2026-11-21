@@ -243,6 +243,11 @@ export default class MoveToTopic extends Component {
             </label>
           </div>
 
+          <PluginOutlet
+            @name="move-to-topic-after-radio-buttons"
+            @outletArgs={{lazyHash topic=@model.topic}}
+          />
+
           {{#if this.canSplitTopic}}
             {{#if this.newMessage}}
               <p>
@@ -348,7 +353,10 @@ export default class MoveToTopic extends Component {
             {{/if}}
           </div>
 
-          <PluginOutlet @name="move-to-topic-after-radio-buttons" />
+          <PluginOutlet
+            @name="move-to-topic-after-radio-buttons"
+            @outletArgs={{lazyHash topic=@model.topic}}
+          />
 
           {{#if this.existingTopic}}
             <p>
