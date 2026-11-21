@@ -576,3 +576,15 @@ $mobile-avatar-height: 1.532em;
   text-align: center;
   gap: var(--space-2);
 }
+
+// These sit in containers that clip, so the ring is drawn inside them.
+.d-header {
+  .home-logo-wrapper-outlet .title a,
+  .extra-info .topic-link,
+  .extra-info .badge-category__wrapper {
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
+    }
+  }
+}
