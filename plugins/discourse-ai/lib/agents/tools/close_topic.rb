@@ -51,15 +51,15 @@ module DiscourseAi
             return error_response(I18n.t("discourse_ai.ai_bot.close_topic.errors.not_found"))
           end
 
-          if !guardian.can_close_topic?(topic)
+          closed = !!parameters[:closed]
+          allowed = closed ? guardian.can_close_topic?(topic) : guardian.can_open_topic?(topic)
+          if !allowed
             return error_response(I18n.t("discourse_ai.ai_bot.close_topic.errors.not_allowed"))
           end
 
           if reason.blank?
             return error_response(I18n.t("discourse_ai.ai_bot.close_topic.errors.no_reason"))
           end
-
-          closed = !!parameters[:closed]
 
           opts = {}
           opts[:message] = reason if !!parameters[:public_reason]

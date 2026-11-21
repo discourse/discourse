@@ -23,8 +23,10 @@ module Jobs
       end
 
       user = topic_timer.user
+      guardian = user&.guardian || Guardian.new
 
-      if Guardian.new(user).can_set_topic_timer?(topic)
+      if guardian.can_set_topic_timer?(topic) &&
+           (state || !guardian.category_moderator_topic_reopen_restricted?(topic))
         if state == false && topic.auto_close_threshold_reached?
           topic.set_or_create_timer(
             TopicTimer.types[:open],

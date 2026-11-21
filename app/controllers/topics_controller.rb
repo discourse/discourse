@@ -615,7 +615,11 @@ class TopicsController < ApplicationController
 
     case status
     when "closed"
-      guardian.ensure_can_close_topic!(@topic)
+      if enabled
+        guardian.ensure_can_close_topic!(@topic)
+      else
+        guardian.ensure_can_open_topic!(@topic)
+      end
     when "archived"
       guardian.ensure_can_archive_topic!(@topic)
     when "visible"

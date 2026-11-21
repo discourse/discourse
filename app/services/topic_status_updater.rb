@@ -4,6 +4,10 @@ TopicStatusUpdater =
   Struct.new(:topic, :user) do
     def update!(status, enabled, opts = {})
       status = Status.new(status, enabled)
+      if status.opening_topic? && user&.guardian&.category_moderator_topic_reopen_restricted?(topic)
+        raise Discourse::InvalidAccess
+      end
+
       previous_pin = topic.slice(:pinned_at, :pinned_globally, :pinned_until) if status.pinned? ||
         status.pinned_globally?
 

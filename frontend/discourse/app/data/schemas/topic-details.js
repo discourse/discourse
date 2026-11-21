@@ -26,6 +26,7 @@ export const TopicDetailsSchema = withDefaults({
       "can_edit_tags",
       "can_publish_page",
       "can_close_topic",
+      "can_open_topic",
       "can_archive_topic",
       "can_split_merge_topic",
       "can_edit_staff_notes",
