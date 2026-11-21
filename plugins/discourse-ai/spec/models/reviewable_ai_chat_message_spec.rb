@@ -253,6 +253,24 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
     expect(Chat::Message.with_deleted.find_by(id: chat_message_id).deleted_at).to be_present
   end
 
+  it "agree_and_delete destroys the watched thread notifications of the thread the message started" do
+    thread = Fabricate(:chat_thread, channel: chat_channel, original_message: chat_message)
+    watcher = Fabricate(:user)
+    thread.add(watcher, notification_level: :watching)
+    notification =
+      Fabricate(
+        :notification,
+        user: watcher,
+        topic: nil,
+        notification_type: Notification.types[:chat_watched_thread],
+        data: { chat_thread_id: thread.id, description: chat_message.message }.to_json,
+      )
+
+    reviewable.perform(moderator, :agree_and_delete)
+
+    expect(Notification.exists?(notification.id)).to eq(false)
+  end
+
   it "agree_and_restore agrees with the flag and restores the message" do
     chat_message.trash!(user)
     reviewable.perform(moderator, :agree_and_restore)

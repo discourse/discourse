@@ -16,6 +16,7 @@ module Chat
 
           reset_last_read(destroyed_message_ids, destroyed_message_channel_ids)
           delete_flags(destroyed_message_ids)
+          ::Chat::Action::DestroyWatchedThreadNotifications.call(destroyed_message_ids)
         end
     end
 

@@ -104,6 +104,17 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           expect(notification).to be_nil
         end
 
+        it "does not create a core notification when the thread's original message is trashed" do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+          chat_message.trash!
+
+          expect { described_class.new.execute(chat_message_id: thread_message.id) }.not_to change {
+            Notification.where(notification_type: Notification.types[:chat_watched_thread]).count
+          }
+        end
+
         it "does not create a core notification when the channel is muted" do
           thread.membership_for(user1).update!(
             notification_level: Chat::NotificationLevels.all[:watching],

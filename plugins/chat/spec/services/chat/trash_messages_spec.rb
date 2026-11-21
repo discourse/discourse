@@ -87,6 +87,24 @@ RSpec.describe Chat::TrashMessages do
           )
         end
 
+        it "destroys watched thread notifications when a message started the thread" do
+          thread = Fabricate(:chat_thread, original_message: message1)
+          watcher = Fabricate(:user)
+          thread.add(watcher, notification_level: :watching)
+          notification =
+            Fabricate(
+              :notification,
+              user: watcher,
+              topic: nil,
+              notification_type: Notification.types[:chat_watched_thread],
+              data: { chat_thread_id: thread.id, description: message1.message }.to_json,
+            )
+
+          result
+
+          expect(Notification.exists?(notification.id)).to eq(false)
+        end
+
         it "destroys notifications for mentions" do
           mention1 =
             Fabricate(

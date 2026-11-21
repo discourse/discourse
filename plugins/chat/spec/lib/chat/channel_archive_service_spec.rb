@@ -205,6 +205,28 @@ describe Chat::ChannelArchiveService do
         expect(channel_archive.chat_channel.chat_messages.count).to eq(0)
       end
 
+      it "destroys the watched thread notifications of the archived threads" do
+        thread = Fabricate(:chat_thread, channel:)
+        watcher = Fabricate(:user)
+        thread.add(watcher, notification_level: :watching)
+        notification =
+          Fabricate(
+            :notification,
+            user: watcher,
+            topic: nil,
+            notification_type: Notification.types[:chat_watched_thread],
+            data: {
+              chat_thread_id: thread.id,
+              description: thread.original_message.message,
+            }.to_json,
+          )
+        channel_archive
+
+        described_class.new(channel_archive).execute
+
+        expect(Notification.exists?(notification.id)).to eq(false)
+      end
+
       it "does not stop the process if the post length is too high (validations disabled)" do
         create_messages(50)
         channel_archive

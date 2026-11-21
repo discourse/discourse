@@ -98,6 +98,23 @@ describe Jobs::Chat::ChannelDelete do
     expect(new_counts[:reactions]).to eq(initial_counts[:reactions] - 10)
   end
 
+  it "destroys watched thread notifications of the channel's threads" do
+    thread = Fabricate(:chat_thread, channel: chat_channel)
+    thread.add(user1, notification_level: :watching)
+    notification =
+      Fabricate(
+        :notification,
+        user: user1,
+        topic: nil,
+        notification_type: Notification.types[:chat_watched_thread],
+        data: { chat_thread_id: thread.id, description: thread.original_message.message }.to_json,
+      )
+
+    described_class.new.execute(chat_channel_id: chat_channel.id)
+
+    expect(Notification.exists?(notification.id)).to eq(false)
+  end
+
   it "does not error if there are no messages in the channel" do
     other_channel = Fabricate(:chat_channel)
     expect { described_class.new.execute(chat_channel_id: other_channel.id) }.not_to raise_error
