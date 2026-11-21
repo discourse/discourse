@@ -61,7 +61,7 @@ RSpec.describe Migrations::Database do
           expect(connection).to be_a(Migrations::Database::Connection)
           expect(connection.path).to eq(db_path)
 
-          db = connection.db
+          db = connection
           expect(db).not_to be_closed
         end
 
@@ -76,7 +76,7 @@ RSpec.describe Migrations::Database do
 
         expect {
           described_class.connect(db_path) do |connection|
-            db = connection.db
+            db = connection
             expect(db).not_to be_closed
             raise "boom"
           end

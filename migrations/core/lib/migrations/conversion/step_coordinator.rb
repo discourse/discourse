@@ -155,6 +155,10 @@ module Migrations
           chunk_queue&.close # only the workers claim from it now
           pipes.each { |(_reader, writer)| writer.close }
           readers = pipes.map(&:first)
+        rescue Exception
+          chunk_queue&.close
+          pipes&.flatten&.each { |pipe| pipe.close unless pipe.closed? }
+          raise
         end
 
         results = []
