@@ -1341,6 +1341,11 @@ export default class TopicController extends Controller {
   }
 
   @action
+  updateTranslationTitle(title) {
+    this.translationTitle = title;
+  }
+
+  @action
   cancelEditingTopic() {
     this.set("editingTopic", false);
     this.buffered.discardChanges();
