@@ -1,30 +1,26 @@
-/* eslint-disable ember/no-classic-components */
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component, { Input } from "@ember/component";
+import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { trackedArray } from "@ember/reactive/collections";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
+import helperFn from "discourse/helpers/helper-fn";
 import { ajax } from "discourse/lib/ajax";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseDebounce from "discourse/lib/debounce";
-import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress.gjs";
 
-@tagName("")
 export default class RagUploader extends Component {
   @service appEvents;
 
   @tracked term = null;
-  @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @autoTrackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(this, {
     id: "discourse-ai-rag-uploader",
@@ -37,52 +33,110 @@ export default class RagUploader extends Component {
       const newUpload = uploadedFile.upload;
       newUpload.status = "uploaded";
       newUpload.statusText = i18n("discourse_ai.rag.uploads.uploaded");
-      this.ragUploads.push(newUpload);
-      this.debouncedSearch();
+      this.#pendingUploads.push(newUpload);
     },
   });
+
+  setupUploader = modifier((element) => {
+    this.uppyUpload.setup(element);
+  });
+
+  cancelUploadsOnTargetChange = helperFn(() => {
+    const targetKey = `${this.#targetName}:${this.args.target?.id}`;
+
+    if (this.#targetKey !== undefined && this.#targetKey !== targetKey) {
+      // cancelling writes tracked upload state the template already read
+      schedule("afterRender", () => {
+        if (this.uppyUpload.inProgressUploads.length > 0) {
+          this.uppyUpload.cancelAllUploads();
+        }
+      });
+    }
+
+    this.#targetKey = targetKey;
+  });
+
+  loadIndexingStatuses = helperFn(() => {
+    const targetId = this.args.target?.id;
+    const uploadIds = this.#savedUploads.map((upload) => upload.id).join(",");
+    const statusesKey = `${this.#targetName}:${targetId}:${uploadIds}`;
+
+    // @target is replaced on every form change
+    if (statusesKey === this.#statusesKey) {
+      return;
+    }
+    this.#statusesKey = statusesKey;
+
+    if (!uploadIds || !targetId) {
+      return;
+    }
+
+    ajax(
+      `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.#targetName}&target_id=${targetId}`
+    ).then((statuses) => {
+      if (this.#statusesKey === statusesKey && !this.isDestroying) {
+        this.ragIndexingStatuses = statuses;
+      }
+    });
+  });
+
+  // finished uploads not yet handed to @updateUploads
+  #pendingUploads = trackedArray();
+  #statusesKey;
+  #targetKey;
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on(
+      this.#allUploadsCompleteEvent,
+      this,
+      "_updateTargetWithUploads"
+    );
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off(
-      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
+      this.#allUploadsCompleteEvent,
       this,
       "_updateTargetWithUploads"
     );
   }
 
   get acceptedFileTypes() {
-    if (this.args?.allowImages) {
+    if (this.args.allowImages) {
       return ".txt,.md,.png,.jpg,.jpeg";
     } else {
       return ".txt,.md,.pdf";
     }
   }
 
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    if (this.uppyUpload.inProgressUploads?.length > 0) {
-      this.uppyUpload.cancelAllUploads();
+  get filteredUploads() {
+    if (!this.term) {
+      return this.ragUploads;
     }
 
-    this.ragUploads = this.target?.rag_uploads?.slice() || [];
-    this.filteredUploads = this.ragUploads;
+    return this.ragUploads.filter((u) => {
+      return (
+        u.original_filename.toUpperCase().indexOf(this.term.toUpperCase()) > -1
+      );
+    });
+  }
 
-    const targetName = this.targetName || this.target?.constructor?.name;
-    if (this.ragUploads?.length && this.target?.id) {
-      ajax(
-        `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${targetName}&target_id=${this.target.id}`
-      ).then((statuses) => {
-        this.ragIndexingStatuses = statuses;
-      });
-    }
+  get ragUploads() {
+    return [...this.#savedUploads, ...this.#pendingUploads];
+  }
 
-    this.appEvents.on(
-      `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`,
-      this,
-      "_updateTargetWithUploads"
-    );
+  get #allUploadsCompleteEvent() {
+    return `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`;
+  }
+
+  get #savedUploads() {
+    return this.args.target?.rag_uploads ?? [];
+  }
+
+  get #targetName() {
+    return this.args.targetName || this.args.target?.constructor?.name;
   }
 
   @action
@@ -98,38 +152,21 @@ export default class RagUploader extends Component {
   }
 
   @action
-  search() {
-    if (this.term) {
-      this.filteredUploads = this.ragUploads.filter((u) => {
-        return (
-          u.original_filename.toUpperCase().indexOf(this.term.toUpperCase()) >
-          -1
-        );
-      });
-    } else {
-      this.filteredUploads = this.ragUploads;
-    }
-  }
-
-  @action
-  debouncedSearch() {
-    discourseDebounce(this, this.search, 100);
-  }
-
-  @action
   removeUpload(upload) {
-    removeValueFromArray(this.ragUploads, upload);
-    this.onRemove(upload);
-
-    this.debouncedSearch();
+    removeValueFromArray(this.#pendingUploads, upload);
+    this.args.onRemove(upload);
   }
 
   _updateTargetWithUploads() {
-    this.updateUploads(this.ragUploads);
+    this.args.updateUploads(this.ragUploads);
+    this.#pendingUploads.length = 0;
   }
 
   <template>
     <div class="rag-uploader" ...attributes>
+      {{this.cancelUploadsOnTargetChange}}
+      {{this.loadIndexingStatuses}}
+
       {{#if @allowImages}}
         <p>{{i18n "discourse_ai.rag.uploads.description_with_images"}}</p>
       {{else}}
@@ -147,7 +184,6 @@ export default class RagUploader extends Component {
               class="rag-uploader__search-input__input"
               placeholder={{i18n "discourse_ai.rag.uploads.filter"}}
               @value={{this.term}}
-              {{on "keyup" this.debouncedSearch}}
             />
           </div>
         </div>
@@ -204,10 +240,9 @@ export default class RagUploader extends Component {
       <input
         accept={{this.acceptedFileTypes}}
         class="hidden-upload-field"
-        disabled={{this.uploading}}
         multiple="multiple"
         type="file"
-        {{didInsert this.uppyUpload.setup}}
+        {{this.setupUploader}}
       />
       <DButton
         class="btn-default"
