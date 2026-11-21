@@ -22,6 +22,9 @@ ca:
           table_type: "Tipus"
         colors:
           title: "Colors"
+        design_variables:
+          type: "Tipus"
+          default: "Per defecte"
         icons:
           title: "Icones"
         categories:

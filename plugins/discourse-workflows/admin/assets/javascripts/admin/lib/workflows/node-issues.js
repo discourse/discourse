@@ -40,11 +40,11 @@ function applyDefaults(schema, config) {
   return effective;
 }
 
-function walk(schema, config, pathPrefix, issues) {
+function walk(schema, config, pathPrefix, issues, metadata) {
   const effective = applyDefaults(schema, config);
 
   for (const [name, field] of Object.entries(schema)) {
-    if (!fieldDefinitelyVisible(field, effective)) {
+    if (!fieldDefinitelyVisible(field, effective, metadata)) {
       continue;
     }
 
@@ -65,7 +65,7 @@ function walk(schema, config, pathPrefix, issues) {
     ) {
       normalizePropertyOptions(field.options || []).forEach((option) => {
         if (Object.hasOwn(value, option.name)) {
-          walk({ [option.name]: option }, value, path, issues);
+          walk({ [option.name]: option }, value, path, issues, metadata);
         }
       });
     } else if (
@@ -87,7 +87,8 @@ function walk(schema, config, pathPrefix, issues) {
             fixedCollectionItemSchema(group),
             item || {},
             `${path}.${group.name}.${index}`,
-            issues
+            issues,
+            metadata
           );
         });
       });
@@ -109,23 +110,24 @@ function walk(schema, config, pathPrefix, issues) {
           },
           item || {},
           `${path}.assignments.${index}`,
-          issues
+          issues,
+          metadata
         );
       });
     } else if (field.type === "collection" && Array.isArray(value)) {
       const inner = itemSchemaFor(field);
       value.forEach((item, index) => {
-        walk(inner, item || {}, `${path}.${index}`, issues);
+        walk(inner, item || {}, `${path}.${index}`, issues, metadata);
       });
     }
   }
 }
 
-export default function getNodeIssues(configuration, propertySchema) {
+export default function getNodeIssues(configuration, propertySchema, metadata) {
   if (!propertySchema) {
     return [];
   }
   const issues = [];
-  walk(propertySchema, configuration || {}, "", issues);
+  walk(propertySchema, configuration || {}, "", issues, metadata);
   return issues;
 }

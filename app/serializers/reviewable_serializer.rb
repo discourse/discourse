@@ -25,6 +25,11 @@ class ReviewableSerializer < ApplicationSerializer
   )
 
   attribute :status_for_database, key: :status
+  attribute :approval_style
+
+  def approval_style
+    object.class.approval_style?
+  end
 
   attribute :dsa_classification
 
@@ -64,9 +69,12 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def bundled_actions
-    args = {}
-    args[:claimed_by] = claimed_by if @options[:claimed_topics]
-    object.actions_for(scope, args).bundles
+    @bundled_actions ||=
+      begin
+        args = {}
+        args[:claimed_by] = claimed_by if @options[:claimed_topics]
+        object.actions_for(scope, args).bundles
+      end
   end
 
   def editable_fields

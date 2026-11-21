@@ -6,11 +6,11 @@ module JsonApiKit
       module Ordering
         def default_ordering(ordering = current_default_ordering)
           verify_sorts(ordering.keys)
-          ordering.each_value { Pagination::Direction.for(it) }
+          ordering.each_value { Declarations::Sort.verify_direction!(it) }
           ordering.transform_keys(&:to_s).freeze
         end
 
-        def order(ordering) = Pagination::Order.new(sorts.keyset(ordering), type:)
+        def order(ordering) = adapter.order(ordering)
 
         def sortable_by?(ordering:) = (ordering.keys - sort_names).empty?
 
@@ -22,8 +22,8 @@ module JsonApiKit
         end
 
         def no_such_sort(names)
-          "#{self}: there is no sort named #{names.join(", ")}, " \
-            "declare it with `sort` before naming it as the default"
+          "#{self}: default sort uses undeclared sorts: #{names.join(", ")}. " \
+            "Add the missing `sort` declarations."
         end
       end
     end

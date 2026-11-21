@@ -62,10 +62,19 @@ RSpec.describe UserSilencer do
       }.from(true).to(false)
     end
 
-    it "skips sending the email for the silence PM via post alert" do
+    it "sends an account hold notice without emailing the user" do
       NotificationEmailer.enable
       Jobs.run_immediately!
-      UserSilencer.silence(user, admin)
+      hold_text = "Your account is on hold while our team reviews your posts."
+      TranslationOverride.upsert!(
+        :en,
+        "system_messages.silenced_by_staff.text_body_template",
+        hold_text,
+      )
+      UserSilencer.silence(user, Discourse.system_user, message: :silenced_by_staff)
+      notice = Topic.private_messages_for_user(user).sole
+      expect(notice.title).to eq("Account temporarily on hold")
+      expect(notice.first_post.raw).to eq(hold_text)
       expect(ActionMailer::Base.deliveries.size).to eq(0)
     end
 
@@ -143,7 +152,7 @@ RSpec.describe UserSilencer do
 
       context "when the dsa_reporting_enabled site setting is enabled" do
         before do
-          SiteSetting.dsa_reporting_enabled = true
+          enable_dsa_reporting
           SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
         end
 
@@ -183,22 +192,6 @@ RSpec.describe UserSilencer do
         ).count
 
       expect(count).to eq(1)
-    end
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        SiteSetting.dsa_reporting_enabled = true
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions in the unsilence notice" do
-        user.update!(silenced_till: 1.year.from_now)
-
-        UserSilencer.unsilence(user, admin)
-
-        pm = user.topics_allowed.order("topics.id desc").first
-        expect(pm.first_post.raw).to include("To appeal this decision, contact appeals@example.com")
-      end
     end
 
     it "does nothing when the user is not silenced" do

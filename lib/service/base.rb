@@ -274,17 +274,7 @@ module Service
     private
 
     def initialize_params
-      klass =
-        Data.define(*context[:params].keys) do
-          alias to_hash to_h
-
-          delegate :slice, :merge, to: :to_h
-
-          def method_missing(*)
-            nil
-          end
-        end
-      context[:params] = klass.new(*context[:params].values)
+      context[:params] = RawParams.new(context[:params])
     end
   end
 end

@@ -8,11 +8,9 @@ RSpec.describe DiscourseAi::AiBot::ChatToolApproval do
 
   let(:bot_user) { Discourse.system_user }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.chat_enabled = true
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.chat_enabled = true }
 
   fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [admin, target_user]) }
 

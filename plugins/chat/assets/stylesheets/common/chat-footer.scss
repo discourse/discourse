@@ -77,8 +77,7 @@
       }
 
       &:not(.-urgent) {
-        width: 11px;
-        height: 11px;
+        --d-new-indicator-size: 11px;
       }
     }
   }

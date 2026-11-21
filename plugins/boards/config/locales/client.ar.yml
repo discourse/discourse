@@ -42,7 +42,13 @@ ar:
         unassign_from_topic: "إلغاء تعيين @%{username} من الموضوع"
         unassign_from_post: "إلغاء تعيين @%{username} من #%{post_number}"
         edit_assignments: "تعديل المهام المعيَّنة..."
-        created_by: "تم إنشاؤه بواسطة"
+        owners:
+          zero: "المالكون"
+          one: "المالك"
+          two: "المالكون"
+          few: "المالكون"
+          many: "المالكون"
+          other: "المالكون"
       manage:
         name: "الاسم"
         slug: "المسار"

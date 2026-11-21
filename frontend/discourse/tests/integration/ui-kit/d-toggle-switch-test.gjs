@@ -1,4 +1,5 @@
-import { find, render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { find, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -28,27 +29,25 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
 
   test("it renders a label for the button", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
-    this.set("state", true);
+    const label = tracked("test.fooLabel");
+    const translatedLabel = tracked(undefined);
     await render(
       <template>
         <DToggleSwitch
-          @label={{this.label}}
-          @state={{this.state}}
-          @translatedLabel={{this.translatedLabel}}
+          @label={{label.value}}
+          @state={{true}}
+          @translatedLabel={{translatedLabel.value}}
         />
       </template>
     );
-
-    this.set("label", "test.fooLabel");
 
     assert
       .dom(".d-toggle-switch__checkbox-label")
       .hasText(i18n("test.fooLabel"));
 
-    this.setProperties({
-      label: null,
-      translatedLabel: "bar",
-    });
+    label.value = null;
+    translatedLabel.value = "bar";
+    await rerender();
 
     assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
   });
@@ -75,5 +74,18 @@ module("Integration | ui-kit | DToggleSwitch", function (hooks) {
     assert
       .dom(".d-toggle-switch__checkbox")
       .doesNotHaveAttribute("aria-labelledby");
+  });
+
+  test("attributes reach the switch button", async function (assert) {
+    await render(
+      <template>
+        <DToggleSwitch aria-label="Enable" disabled={{true}} @state={{false}} />
+      </template>
+    );
+
+    assert
+      .dom(".d-toggle-switch__checkbox")
+      .isDisabled("the button takes the disabled attribute")
+      .hasAria("label", "Enable", "the button takes the aria-label");
   });
 });

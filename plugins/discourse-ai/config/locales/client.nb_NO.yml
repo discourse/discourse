@@ -44,6 +44,8 @@ nb_NO:
         error: "Feil"
         response: "Svar"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listeelement"
         classify:
           text: "Tekst"
           upload_ids: "Bilder"
@@ -61,22 +63,28 @@ nb_NO:
       llm_selector:
         none: "Ingen"
       features:
-        disabled: "(deaktivert)"
-        groups: "Grupper:"
+        table:
+          status: "Status"
+          enabled: "Aktivert"
+          groups: "Grupper"
+        chatbot:
+          places:
+            personal_messages: "Personlige meldinger"
+            none: "Ikke tilgjengelig"
         no_agent: "Ikke angitt"
         no_groups: "Ingen"
         edit: "Innstillinger"
-        expand_list:
-          one: "(%{count} mer)"
-          other: "(%{count} mer)"
-        collapse_list: "(vis mindre)"
         nav:
           enabled: "Aktivert"
         filters:
-          all: "Alle"
           reset: "Tilbakestill"
+        sentiment:
+          enabled: "Aktivert"
         search:
           name: "Søk"
+        review_queue:
+          setting_groups:
+            settings: "Innstillinger"
         image_caption:
           setting_groups:
             settings: "Innstillinger"
@@ -86,7 +94,18 @@ nb_NO:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
-        category_scope: "Kategorier"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorier"
+          ai_translation_personal_messages:
+            label: "Personlige meldinger"
+            choices:
+              none: "Ingen"
+              all: "Alle"
+          content_localization_language_switcher:
+            choices:
+              none: "Ingen"
+              all: "Alle"
         model_progress:
           detail:
             columns:
@@ -101,6 +120,8 @@ nb_NO:
               title: "Kategorier"
             tag:
               title: "Stikkord"
+        admin_actions:
+          enabled: "Aktivert"
         stats:
           eta_minutes:
             one: "%{count} minutt"
@@ -117,6 +138,8 @@ nb_NO:
             other: "%{count} innlegg"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Ingen"
+        no_decision_model_selected: "Ingen"
         last_seven_days: "Siste 7 dager"
         enable: "Aktiver"
         test_modal:

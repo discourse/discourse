@@ -58,6 +58,7 @@ hu:
 
         Látogassa meg a csatornát a %{channel_url} címen az újrapróbálkozáshoz.
   chat:
+    design_wizard_homepage_name: "Csevegés"
     deleted_chat_username: törölt
     crawler:
       directory_title: "Csevegőcsatornák"

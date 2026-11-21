@@ -82,7 +82,7 @@ body:not(.d-toc-installed) {
 }
 
 .topic-post-badges {
-  .badge-notification {
+  .badge-notification:where(.unread-posts) {
     font-size: var(--font-down-1);
     padding: 0.15em 0.35em;
     border-radius: 1em;

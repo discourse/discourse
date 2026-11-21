@@ -72,7 +72,7 @@ module Jobs
         after_topic_id: after_topic_id,
         max_topic_id: max_topic_id,
         archetype: Archetype.default,
-        batch_size: SiteSetting.nested_replies_backfill_batch_size,
+        batch_size: [SiteSetting.nested_replies_backfill_batch_size, 1].max,
       )
     end
 

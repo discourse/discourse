@@ -62,6 +62,7 @@ tr_TR:
     discourse_workflows:
       nodes:
         "action:ai_agent": "Yapay Zeka Ajanı"
+        "action:ai_tool": "Yapay Zeka Aracı"
     discourse_automation:
       scriptables:
         llm_report:
@@ -238,6 +239,8 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      dsa_classification:
+        suggest: "YZ ile öner"
       copied: "Kopyalandı"
       ai_decoded_transcript:
         thinking: "Düşünme"
@@ -250,6 +253,15 @@ tr_TR:
         ai_agent:
           agent_id: "Ajan"
           mode: "Mod"
+        ai_tool:
+          tool_ref: "Araç"
+          arguments: "Tartışmalar"
+          list_item: "Liste ögesi"
+          add_list_item: "Öge ekle"
+        mcp_tool:
+          mcp_server_id: "MCP sunucusu"
+          tool_name: "Araç"
+          arguments: "Tartışmalar"
         classify:
           text: "Metin"
           upload_ids: "Görüntüler"
@@ -271,25 +283,32 @@ tr_TR:
         none: "Hiçbiri"
       features:
         short_title: "Özellikler"
-        description: "Bunlar, sitenizdeki ziyaretçilerin kullanabileceği yapay zeka özellikleridir. Bu özellikler, belirli ajanlar ve büyü LLM'ler kullanacak şekilde yapılandırılabilir ve gruplara göre erişim kontrolü uygulanabilir."
         back: "AI özelliklerine geri dön"
         settings_save_error: "Bazı ayarlar kaydedilemedi."
-        disabled: "(devre Dışı)"
-        agent:
-          one: "Ajan:"
-          other: "Ajanlar:"
-        groups: "Gruplar:"
-        llm:
-          one: "LLM:"
-          other: "LLM'ler:"
+        table:
+          status: "Durum"
+          enabled: "Etkin mi"
+          feature: "Özellik"
+          agent: "Ajan"
+          llm: "LLM"
+          groups: "Gruplar"
+        who_can_use:
+          no_one: "Hiç kimse"
+        status:
+          "on": "Açık"
+          "off": "Kapalı"
+        chatbot:
+          column: "Sohbet botu"
+          new_agent: "Yeni ajan"
+          places:
+            personal_messages: "Kişisel mesajlar"
+            chat_direct_messages: "Sohbet mesajları"
+            none: "Uygun değil"
+        set_up: "Kur"
         no_llm: "LLM seçilmedi"
         no_agent: "Ayarlanmamış"
         no_groups: "Hiçbiri"
         edit: "Ayarlar"
-        expand_list:
-          one: "(%{count} tane Daha)"
-          other: "(%{count} tane Daha)"
-        collapse_list: "(daha az göster)"
         bot:
           bot: "Sohbet botu"
           name: "Bot"
@@ -302,11 +321,17 @@ tr_TR:
         nav:
           enabled: "Etkin mi"
         filters:
-          all: "Tümü"
-          text: "Arama özellikleri, ajanlar, büyük dil modelleri veya gruplar..."
           no_results: "Filtrelerinizle eşleşen özellik bulunamadı."
           reset: "Sıfırla"
         no_automations: "Henüz otomasyon yok"
+        sentiment:
+          sentiment: "Duyarlılık"
+          emotion: "Duygu"
+          enabled: "Etkin mi"
+          agent: "Ajan"
+          setting_groups:
+            sentiment: "Duyarlılık"
+            emotion: "Duygu"
         summarization:
           name: "Özetler"
           description: "Ziyaretçilerin konuları özetlemesine olanak tanıyan bir özetleme düğmesi sunar"
@@ -326,8 +351,7 @@ tr_TR:
             access_control: "Erişim Kontrolü"
         embeddings:
           name: "Gömmeler"
-          description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
-          hyde: "HyDE"
+          related_topics: "İlgili konular"
           setting_groups:
             model_settings: "Model Ayarları"
             related_topics: "İlgili Konular"
@@ -337,7 +361,6 @@ tr_TR:
             settings: "Temel Ayarlar"
         discord:
           name: "Discord entegrasyonu"
-          description: "Discord kanallarında arama yapma özelliğini ekler"
           search: "Discord araması"
           setting_groups:
             settings: "Temel Ayarlar"
@@ -373,6 +396,9 @@ tr_TR:
             enabled_features: "Etkinleştirilmiş Özellikler"
             automation: "Otomasyon"
             agents: "Ajanlar"
+        review_queue:
+          setting_groups:
+            settings: "Ayarlar"
         image_caption:
           setting_groups:
             settings: "Ayarlar"
@@ -388,10 +414,6 @@ tr_TR:
             one: "%{count} çevrilmemiş gönderi için planlanmış çeviri."
             other: "%{count} çevrilmemiş gönderi için planlanmış çeviri."
           schedule_topic_error: "Çevirilerin planlanması başarısız oldu. Lütfen tekrar deneyin."
-          setting_groups:
-            settings: "Temel Ayarlar"
-            agents: "Ajanlar"
-            backfill_and_limits: "Dolgu ve Sınırlar"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
@@ -410,8 +432,20 @@ tr_TR:
       translations:
         title: "Çeviriler"
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
-        supported_locales: "Desteklenen diller"
-        category_scope: "Kategoriler"
+        sections:
+          advanced: "Gelişmiş"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategoriler"
+          ai_translation_personal_messages:
+            label: "Kişisel mesajlar"
+            choices:
+              none: "Hiçbiri"
+              all: "Tümü"
+          content_localization_language_switcher:
+            choices:
+              none: "Hiç kimse"
+              all: "Herkes"
         cached_results_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
         model_progress:
           detail:
@@ -430,7 +464,7 @@ tr_TR:
             tag:
               title: "Etiketler"
         admin_actions:
-          enable_translations: "Otomatik çevirileri etkinleştir"
+          enabled: "Etkin mi"
         stats:
           title: "Çeviri istatistikleri"
           backfill_disabled: "Dolgu devre dışıdır, yalnızca yeni gönderiler çevrilecektir."
@@ -468,6 +502,8 @@ tr_TR:
         short_title: "İstenmeyen içerik"
         title: "İstenmeyen içerik işlemeyi yapılandırın"
         select_llm: "LLM seç"
+        no_llm_selected: "Hiçbiri"
+        no_decision_model_selected: "Hiçbiri"
         select_agent: "Ajanı seç"
         custom_instructions: "Özel talimatlar"
         custom_instructions_help: "YZ'nin istenmeyen içerikleri tespit etmesine yardımcı olmak için sitenize özel talimatlar, ör. \"İngilizce olmayan gönderileri tarama konusunda daha agresif ol\"."
@@ -844,6 +880,8 @@ tr_TR:
         edit: "Düzenle"
         delete: "Sil"
         test: "Testi çalıştır"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP sunucuları"
         new: "Yeni MCP sunucusu"
@@ -931,6 +969,7 @@ tr_TR:
         type: "Tür"
         provider: "Sağlayıcı"
         edit: "Düzenle"
+        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         select_type: "Seç"
         types:
           embedding: "Gömme"
@@ -1142,7 +1181,6 @@ tr_TR:
         presets: "Ön ayar seçin..."
         configure_manually: "Manuel olarak yapılandırın"
         edit: "Düzenle"
-        seeded_warning: "Bu, sitenizde önceden yapılandırılmış ve düzenlenemez."
         tests:
           title: "Testi çalıştır"
           running: "Test çalıştırılıyor..."
@@ -1174,6 +1212,7 @@ tr_TR:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Özel"
         provider_fields:
@@ -1211,8 +1250,7 @@ tr_TR:
         filter_conversation: "Konuşma"
       ai_bot:
         title: "YZ botu"
-        agent: "Ajan:"
-        llm: "Model:"
+        agent_menu_heading: "Ajan"
         pm_warning: "YZ sohbet robotu mesajları moderatörler tarafından düzenli olarak izlenir."
         cancel_streaming: "Yanıtı durdur"
         try_again: "Tekrar deneyin"
@@ -1275,9 +1313,9 @@ tr_TR:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "YZ"
           header: "Nasıl yardımcı olabilirim?"
           submit: "Soru gönder"
-          disclaimer: "Üretken YZ, hata yapabilir. Önemli bilgileri doğrulayın."
           placeholder: "Soru sorun..."
           new: "Yeni Soru"
           min_input_length_message:
@@ -1293,10 +1331,7 @@ tr_TR:
           scroll_to_bottom: "En alta kaydır"
           editing_post: "Gönderi düzenleniyor"
       sentiments:
-        dashboard:
-          title: "Duyarlılık"
         sidebar:
-          overview: "Duyarlılığa genel bakış"
           analysis: "Duyarlılık analizi"
         sentiment_analysis:
           share_chart: "Bağlantıyı grafiğe kopyala"

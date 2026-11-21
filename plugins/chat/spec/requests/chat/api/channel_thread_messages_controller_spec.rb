@@ -57,6 +57,20 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
           expect(response.status).to eq(404)
           expect(response.parsed_body["error_type"]).to eq("not_found")
         end
+
+        it "returns 404 when the thread original message was purged by retention" do
+          SiteSetting.chat_channel_retention_days = 30
+          thread.original_message.update_columns(created_at: 40.days.ago)
+          thread.original_message.trash!
+          Jobs::Chat::DeleteOldMessages.new.execute({})
+
+          expect(Chat::Message.with_deleted.exists?(thread.original_message_id)).to eq(false)
+
+          get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["error_type"]).to eq("not_found")
+        end
       end
     end
 

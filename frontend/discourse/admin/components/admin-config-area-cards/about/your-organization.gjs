@@ -21,14 +21,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         "company_url",
         this.args.yourOrganization.companyURL
       ),
-      governingLaw: this.#settingValue(
-        "governing_law",
-        this.args.yourOrganization.governingLaw
-      ),
-      cityForDisputes: this.#settingValue(
-        "city_for_disputes",
-        this.args.yourOrganization.cityForDisputes
-      ),
     };
   }
 
@@ -51,8 +43,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
           your_organization: {
             company_name: data.companyName,
             company_url: data.companyURL,
-            governing_law: data.governingLaw,
-            city_for_disputes: data.cityForDisputes,
           },
         },
       });
@@ -94,9 +84,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
           }}
         />
       </form.Field>
-      <form.Alert @type="info">
-        {{i18n "admin.config_areas.about.company_name_warning"}}
-      </form.Alert>
 
       <form.Field
         @format="large"
@@ -108,36 +95,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
         <field.Control
           placeholder={{i18n
             "admin.config_areas.about.company_url_placeholder"
-          }}
-        />
-      </form.Field>
-
-      <form.Field
-        @description={{i18n "admin.config_areas.about.governing_law_help"}}
-        @format="large"
-        @name="governingLaw"
-        @title={{i18n "admin.config_areas.about.governing_law"}}
-        @type="input"
-        as |field|
-      >
-        <field.Control
-          placeholder={{i18n
-            "admin.config_areas.about.governing_law_placeholder"
-          }}
-        />
-      </form.Field>
-
-      <form.Field
-        @description={{i18n "admin.config_areas.about.city_for_disputes_help"}}
-        @format="large"
-        @name="cityForDisputes"
-        @title={{i18n "admin.config_areas.about.city_for_disputes"}}
-        @type="input"
-        as |field|
-      >
-        <field.Control
-          placeholder={{i18n
-            "admin.config_areas.about.city_for_disputes_placeholder"
           }}
         />
       </form.Field>

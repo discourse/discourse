@@ -17,6 +17,10 @@ en:
     discourse_automation:
       title: Automation
       table_title: Automations
+      workflows_notice:
+        title: "Automations is a legacy product; we recommend using Workflows instead."
+        description: "Workflows is our new builder with a visual drag-and-drop canvas for building complex, multi-step automations."
+        action: Go to Workflows
       create: Add automation
       update: Update automation
       back: Back

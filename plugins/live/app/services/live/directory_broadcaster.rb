@@ -22,8 +22,10 @@ module Live
 
     def broadcast
       # Ephemeral rooms never appear in the directory, so clients must not
-      # receive index events that would splice them into it.
-      return if room.ephemeral?
+      # receive index events that would splice them into it. The exception is
+      # `destroyed`: clients learn of an ephemeral room through an invite or
+      # join, and need to be told when it is cleaned up so they can drop it.
+      return if room.ephemeral? && action.to_sym != :destroyed
 
       # MessageBus rejects an empty user_ids target, and there is nobody to
       # notify anyway.
@@ -37,7 +39,7 @@ module Live
             Live::RoomSerializer
               .new(room, scope: Guardian.new(nil), root: false)
               .as_json
-              .except(:can_manage, :can_invite, :membership),
+              .except(:can_manage, :can_delete, :can_invite, :membership),
         },
         **targets,
       )

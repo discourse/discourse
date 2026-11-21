@@ -28,14 +28,20 @@ module Jobs
         }.to_json,
       }
 
-      group
-        .users
-        .where(
+      watching_users =
+        group.users.where(
           "group_users.notification_level in (:levels) AND user_id != :id",
           levels: [NotificationLevels.all[:watching], NotificationLevels.all[:watching_first_post]],
           id: user.id,
         )
-        .find_each { |u| u.notifications.create!(notification_data) }
+
+      comm_screener =
+        UserCommScreener.new(acting_user: user, target_user_ids: watching_users.pluck(:id))
+
+      watching_users.find_each do |u|
+        next if comm_screener.ignoring_or_muting_actor?(u.id)
+        u.notifications.create!(notification_data)
+      end
     end
   end
 end

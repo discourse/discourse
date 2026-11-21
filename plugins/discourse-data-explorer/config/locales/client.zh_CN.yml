@@ -32,6 +32,8 @@ zh_CN:
       default_query_notice: "这是一个默认查询，SQL 无法编辑。要编辑 SQL，请创建一个新查询。"
       view_query: "查看"
       queries: "查询"
+      back_to_queries: "返回查询"
+      query_details: "查询详情"
       query_created: "查询已创建！"
       mode:
         label: "查询创作模式"
@@ -42,6 +44,7 @@ zh_CN:
       hidden_relation: "您无权访问此内容。"
       allow_groups: "允许群组访问此查询"
       title: "数据资源管理器"
+      create: "创建查询"
       new_query: "新查询"
       create_placeholder: "查询名称…"
       description_placeholder: "在此处输入描述"
@@ -60,8 +63,8 @@ zh_CN:
         save_query: "保存查询"
         write_manually: "手动编写 SQL"
         sql_label: "SQL"
-        optional: "可选"
       import:
+        label: "导入查询"
         unparseable_json: "无法解析的 JSON 文件。"
         wrong_json: "错误的 JSON 文件。JSON 文件应包含一个 'query' 对象，该对象至少应具有一个 'sql' 属性。"
       help:
@@ -129,7 +132,7 @@ zh_CN:
         other: "%{count} 个结果。"
       max_result_count:
         other: "显示前 %{count} 个结果。"
-      query_name: "查询"
+      name: "名称"
       query_groups: "群组"
       query_tags: "标签"
       automatic_tag_mandatory: "此标签为自动添加，无法删除。"
@@ -141,6 +144,7 @@ zh_CN:
       column: "第 %{number} 列"
       save_params: "设置默认值"
       reset_params: "重置"
+      search_placeholder: "搜索查询…"
       filter_by_tag: "按标签筛选"
       filter_by_this_tag: "按此标签筛选列表"
       no_search_results: "抱歉，我们找不到任何与您的文本匹配的结果。"

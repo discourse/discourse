@@ -12,8 +12,12 @@ module DiscourseAi
     MAX_RELATED_DISCUSSIONS = 6
     REQUEST_ID_PATTERN =
       /\A[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\z/i
+    ASK_LOG_ID_PATTERN = /\A[1-9]\d*\z/
     PRIVATE_MESSAGE_FILTER =
       /(?:\A|\s)(?:in:(?:messages|personal|personal-direct|all-pms)|(?:group|personal)_messages:\S+)(?=\s|\z)/i
+    # keeps to the search menu's own check for operators and quoted phrases
+    PRECISE_SEARCH =
+      /\A\s*(?:"[^"]+"\s*)+\z|(?:\A|\s)-?(?:in|status|order|before|after|with|category|categories|tags?|user|group|badge|topic|min_\w+|max_\w+):\S|(?:\A|\s)[#@]\S+/i
     BIND_REQUEST_SCRIPT = <<~LUA
       local existing_query = redis.call("GET", KEYS[1])
       if not existing_query then
@@ -48,7 +52,7 @@ module DiscourseAi
 
     # what set off an Ask AI request and why, recorded so the choice of when to
     # answer can be tuned against what readers do with the answers
-    TRIGGERS = %w[enter pause page scope recent].freeze
+    TRIGGERS = %w[enter pause page scope recent refresh].freeze
     TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
     SEARCH_TABS = %w[ask topics context].freeze
     # leaving the answer this soon means it was not what the reader came for
@@ -81,6 +85,10 @@ module DiscourseAi
         request_id.to_s.match?(REQUEST_ID_PATTERN)
       end
 
+      def valid_ask_log_id?(ask_log_id)
+        ask_log_id.to_s.match?(ASK_LOG_ID_PATTERN)
+      end
+
       # A scope is where the question was asked from. It narrows retrieval
       # without being part of the question, so the question can still be
       # rewritten and searched semantically.
@@ -96,6 +104,28 @@ module DiscourseAi
 
       def private_message_query?(query)
         query.to_s.match?(PRIVATE_MESSAGE_FILTER)
+      end
+
+      def precise_search?(query)
+        query.to_s.match?(PRECISE_SEARCH)
+      end
+
+      def answer_deferral_reason(query:, scope:, guardian:)
+        return "url_lookup" if standalone_url?(query)
+        return "precise_search" if precise_search?(query)
+        return "private_search" if private_search?(query:, scope:, guardian:)
+        "exact_user_match" if exact_user_match?(query, guardian)
+      end
+
+      # Whether answering would send the reader's private messages to the model.
+      def private_search?(query:, scope:, guardian:)
+        return true if private_message_query?(query) || private_message_query?(scope_filter(scope))
+
+        topic_id = scope.to_s[/\Atopic:(\d+)\z/, 1]
+        return false if topic_id.nil?
+
+        # a topic they cannot see stays indistinguishable from any other
+        guardian.can_see_topic?(Topic.private_messages.find_by(id: topic_id))
       end
 
       # Asked terms are kept apart from SearchLog rather than logged into it:
@@ -161,27 +191,50 @@ module DiscourseAi
           end
       end
 
+      # Logs a search whose answer waits for the reader to request it.
+      # @return [AskAiLog]
+      def log_deferred_ask(user:, query:, scope: nil, deferral_reason:, **search)
+        create_ask_log(
+          user:,
+          query:,
+          ask_outcome: :skipped,
+          ask_scope: scope.to_s,
+          answer_deferred_reason: deferral_reason,
+          **search,
+        )
+      end
+
       # Queues the answer to a request already bound with `bind_request`.
-      # @return [AskAiLog] the new ask's log
+      # @param deferred_log_id [Integer, nil] the search this answer was requested from
+      # @return [AskAiLog, nil] the ask's log, or nil once that search's answer
+      #   was already requested
       def enqueue_reply(
         user:,
         request_id:,
         query:,
         scope: nil,
+        requested_scope: scope,
+        fresh_answer: false,
         trigger: "",
         trigger_reason: "",
-        intent_heuristic: ""
+        intent_heuristic: "",
+        deferred_log_id: nil
       )
         asked_at = Time.current
-        ask_log =
-          AskAiLog.create!(
-            user:,
-            query:,
-            asked_at:,
-            ask_trigger: trigger,
-            ask_trigger_reason: trigger_reason,
-            ask_intent_heuristic: intent_heuristic,
-          )
+        if deferred_log_id
+          # claimed in one statement, so parallel requests cannot each answer it
+          claimed =
+            AskAiLog.awaiting_answer(id: deferred_log_id, user:, query:).update_all(
+              ask_outcome: nil,
+              answer_requested_at: asked_at,
+              updated_at: asked_at,
+            )
+          return if claimed.zero?
+          ask_log = AskAiLog.find(deferred_log_id)
+        else
+          ask_log =
+            create_ask_log(user:, query:, asked_at:, trigger:, trigger_reason:, intent_heuristic:)
+        end
         settings = result_settings(user)
         Jobs.enqueue(
           :stream_discover_reply,
@@ -193,6 +246,8 @@ module DiscourseAi
           summary_detail: settings[:summary_detail].to_s,
           related_count: settings[:related_count],
           scope:,
+          requested_scope:,
+          fresh_answer:,
         )
         ask_log
       rescue StandardError
@@ -200,15 +255,19 @@ module DiscourseAi
         raise
       end
 
-      # Records which tab the search menu opened an ask on, and the first one the
-      # reader switched to. Each is kept from its first report only.
+      # Records how the reader moved through the search menu's tabs for an ask.
+      # Each event is kept from its first report only.
       def record_tabs(
         user:,
         ask_log_id:,
         opened: nil,
         opened_reason: "",
+        opened_after_ms: 0,
         switched_to: nil,
-        switched_after_ms: 0
+        switched_after_ms: 0,
+        answer_seen_after_ms: nil,
+        clicked_tab: nil,
+        clicked_after_ms: 0
       )
         ask_log = AskAiLog.find_by(id: ask_log_id, user_id: user.id)
         raise Discourse::NotFound if ask_log.nil?
@@ -217,7 +276,11 @@ module DiscourseAi
         if opened.present? && ask_log.ask_tab_opened.blank?
           raise Discourse::InvalidParameters.new(:tab_opened) if SEARCH_TABS.exclude?(opened)
           opened_reason = "" if !opened_reason.to_s.match?(TRIGGER_REASON_PATTERN)
-          updates.merge!(ask_tab_opened: opened, ask_tab_opened_reason: opened_reason.to_s)
+          updates.merge!(
+            ask_tab_opened: opened,
+            ask_tab_opened_reason: opened_reason.to_s,
+            ask_tab_opened_after_ms: reported_ms(opened_after_ms),
+          )
         end
         if switched_to.present? && ask_log.ask_tab_switched_to.blank?
           if SEARCH_TABS.exclude?(switched_to)
@@ -225,7 +288,19 @@ module DiscourseAi
           end
           updates.merge!(
             ask_tab_switched_to: switched_to,
-            ask_tab_switched_after_ms: switched_after_ms.to_i.clamp(0, 1.hour.in_milliseconds),
+            ask_tab_switched_after_ms: reported_ms(switched_after_ms),
+          )
+        end
+        if answer_seen_after_ms.present? && ask_log.ask_answer_seen_after_ms.nil?
+          updates[:ask_answer_seen_after_ms] = reported_ms(answer_seen_after_ms)
+        end
+        if clicked_tab.present? && ask_log.ask_result_clicked_tab.blank?
+          if SEARCH_TABS.exclude?(clicked_tab)
+            raise Discourse::InvalidParameters.new(:result_clicked_tab)
+          end
+          updates.merge!(
+            ask_result_clicked_tab: clicked_tab,
+            ask_result_clicked_after_ms: reported_ms(clicked_after_ms),
           )
         end
         ask_log.update!(updates) if updates.present?
@@ -328,6 +403,60 @@ module DiscourseAi
 
       private
 
+      def standalone_url?(query)
+        return false unless query.match?(%r{\A(?:https?://|www\.[^./?#\s])\S+\z}i)
+
+        uri = UrlHelper.relaxed_parse(query.match?(/\Awww\./i) ? "https://#{query}" : query)
+        uri.is_a?(URI::HTTP) && uri.host.present?
+      end
+
+      def exact_user_match?(query, guardian)
+        return false if query.length > 255 || !query.match?(/[[:alnum:]]/)
+
+        users = UserSearch.new(query, searching_user: guardian.user).scoped_users
+        users = DiscoursePluginRegistry.apply_modifier(:search_user_search, users)
+        users = users.where(guardian.can_see_profile_sql)
+        if !query.match?(/\s/) &&
+             users
+               .joins(:user_stat)
+               .where("user_stats.topic_count > 0 OR user_stats.post_count > 0")
+               .exists?(username_lower: User.normalize_username(query))
+          return true
+        end
+        return false unless SiteSetting.enable_names?
+
+        name_query =
+          Search.ts_query(term: query, ts_config: "simple", weight_filter: "B", prefix_match: false)
+        users
+          .joins(:user_search_data)
+          .where("user_search_data.search_data @@ #{name_query}")
+          .exists?(["LOWER(users.name) = LOWER(?)", query])
+      end
+
+      def create_ask_log(
+        user:,
+        query:,
+        asked_at: Time.current,
+        trigger: "",
+        trigger_reason: "",
+        intent_heuristic: "",
+        **attributes
+      )
+        AskAiLog.create!(
+          user:,
+          query:,
+          asked_at:,
+          ask_trigger: trigger,
+          ask_trigger_reason: trigger_reason,
+          ask_intent_heuristic: intent_heuristic,
+          **attributes,
+        )
+      end
+
+      def reported_ms(milliseconds)
+        milliseconds.to_i.clamp(0, 1.hour.in_milliseconds)
+      end
+
       def leaves_answers?(user)
         opened_on_answer =
           AskAiLog
@@ -345,6 +474,7 @@ module DiscourseAi
 
         returned =
           AskAiLog
+            .asked
             .where(user_id: user.id)
             .where.not(ask_tab_opened: ["", "ask"])
             .order(asked_at: :desc)

@@ -32,7 +32,8 @@ ko:
           other: "%{count} 댓글"
         assign: "할당"
         unassign: "할당 해제"
-        created_by: "작성자"
+        owners:
+          other: "소유자"
       manage:
         name: "그룹명"
         slug: "강타"

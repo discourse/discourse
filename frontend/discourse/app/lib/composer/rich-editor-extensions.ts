@@ -237,6 +237,8 @@ export type DiscourseMarkdownSerializerState = MarkdownSerializerState & {
   inTable?: boolean;
   inAutolink?: boolean;
   linkMarkup?: string;
+  linkifyEnd?: number;
+  out: string;
 };
 
 export type SerializeNodeFn = (

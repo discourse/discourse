@@ -39,6 +39,17 @@ class StaffActionLogger
     )
   end
 
+  def log_bot_creation(user)
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:create_bot],
+        target_user_id: user.id,
+        subject: user.username,
+        details: "trust_level: #{user.trust_level}",
+      ),
+    )
+  end
+
   def log_custom(custom_type, details = nil)
     raise Discourse::InvalidParameters.new(:custom_type) unless custom_type
 
@@ -322,24 +333,11 @@ class StaffActionLogger
   def log_admin_onboarding_step_completed(step, opts = {})
     raise Discourse::InvalidParameters.new(:step) if step.blank?
 
-    topic_option = opts[:topic_option]
-    details = opts[:details]
-    if topic_option.present?
-      details =
-        I18n.t(
-          "staff_action_logs.admin_onboarding_topic_option",
-          option:
-            I18n.t("js.admin_onboarding_banner.start_posting.icebreakers.#{topic_option}.title"),
-          option_id: topic_option,
-        )
-    end
-
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:admin_onboarding_step_completed],
         subject: step,
-        new_value: topic_option,
-        details: details,
+        details: opts[:details],
       ),
     )
   end
@@ -1053,6 +1051,31 @@ class StaffActionLogger
         context: details.join(", "),
         previous_value: old_values&.join(", "),
         new_value: new_values&.join(", "),
+      ),
+    )
+  end
+
+  def log_web_hook_operation(
+    web_hook,
+    action:,
+    destination_origin:,
+    destination_fingerprint:,
+    changed_fields: [],
+    event_id: nil
+  )
+    # Destinations and changed values can contain credentials.
+    details = [
+      "destination_origin: #{destination_origin}",
+      "destination_fingerprint: #{destination_fingerprint}",
+    ]
+    details << "changed_fields: #{changed_fields.join(", ")}" if changed_fields.present?
+    details << "event_id: #{event_id}" if event_id
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[action],
+        admin_only: true,
+        context: "webhook_id: #{web_hook.id}",
+        details: details.join("\n"),
       ),
     )
   end

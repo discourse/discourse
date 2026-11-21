@@ -82,7 +82,7 @@ zh_CN:
           fetch_error: "询问 AI 指标无法加载。"
         emotion:
           title: "情绪"
-          description: "该表格列出了按特定情绪分类的帖子数量。根据所选情绪分类方法，帖子将使用配置的情绪分类模型（“SamLowe/roberta-base-go_emotions”）或配置的情绪分类智能体进行分类。"
+          description: "该表格统计了使用所选情绪分类后端对每种情绪进行分类的帖子数量。"
         reports:
           filters:
             group_by:
@@ -124,12 +124,16 @@ zh_CN:
       node_unavailable:
         requires_ai: "需要启用 AI 插件"
         requires_decision_model: "需要决策模型"
+        requires_ai_translation: "需要配置 AI 翻译"
       nodes:
         "action:ai_agent": "AI 智能体"
+        "action:ai_tool": "AI 工具"
         "action:classify": "分类"
+        "trigger:post_locale_detected": "检测到的帖子"
       node_descriptions:
         "action:ai_agent": "运行 AI 智能体来处理数据或生成内容"
         "action:classify": "针对每个项目，向决策模型提出问题"
+        "trigger:post_locale_detected": "当检测到新帖子或已编辑帖子时触发。"
     discourse_automation:
       scriptables:
         llm_report:
@@ -306,6 +310,11 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "通过 AI 提出建议"
+        suggested_by_ai: "由 AI 建议"
+        updated: "分类已更新"
+        no_suggestion: "人工智能无法给出分类建议。"
       copied: "已复制"
       view_raw: "查看原始数据"
       view_decoded: "查看解码结果"
@@ -344,6 +353,16 @@ zh_CN:
           upload_ids_tooltip: "可选的上传 ID，可附加到提示信息中。所有上传内容都必须到达模型，否则节点将无法正常工作：图像需要在代理和 LLM 上都具有可视性，文档需要在 LLM 上启用其文件类型。"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "选择智能体…"
+        ai_tool:
+          tool_ref: "工具"
+          llm_model_id: "LLM 模型"
+          arguments: "参数"
+          list_item: "列表条目"
+          add_list_item: "添加条目"
+        mcp_tool:
+          mcp_server_id: "MCP 服务器"
+          tool_name: "工具"
+          arguments: "参数"
         classify:
           decision_model_id: "决策模型"
           text: "文本"
@@ -383,22 +402,58 @@ zh_CN:
         saved: "已保存默认语言模型"
       features:
         short_title: "功能"
-        description: "这些是您站点的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的智能体和 LLM，并按群组控制访问权限。"
+        description: "为您的网站配置 AI 功能，包括其代理、模型和访问权限（如果支持）。"
         back: "返回 AI 功能"
         settings_save_error: "某些设置无法保存。"
-        disabled: "（已禁用）"
-        agent:
-          other: "智能体："
-        groups: "群组："
-        llm:
-          other: "LLM："
+        table:
+          module: "模块"
+          status: "状态"
+          enabled: "已启用"
+          feature: "功能"
+          agent: "智能体"
+          llm: "LLM"
+          groups: "群组"
+          who_can_use: "谁可以使用"
+        who_can_use:
+          edit: "编辑谁可以使用 %{name}"
+          no_one: "没有人"
+          no_one_warning: "如果没有群组，任何人都无法使用此功能。"
+          shared: "还会更改谁可以使用： %{features}"
+        status:
+          "on": "开"
+          "off": "关"
+          needs_setup: "需要设置"
+          on_with_features:
+            other: "已启用 · %{enabled} / %{count} 项功能"
+          on_with_languages:
+            other: "已启用 · %{count} 种语言"
+          on_with_chatbot_agents:
+            other: "已启用 · %{count} 个聊天智能体"
+        chatbot:
+          available_in: "可用位置"
+          column: "聊天机器人"
+          toggle: "使用 %{name} 作为聊天机器人"
+          any_llm: "由用户选择"
+          new_agent: "新建智能体"
+          manage_agents: "管理智能体"
+          places:
+            personal_messages: "个人信息"
+            topic_mentions: "话题 @mentions"
+            chat_direct_messages: "聊天消息"
+            chat_channel_mentions: "聊天 @mentions"
+            none: "不可用"
+        toggle: "启用 %{name}"
+        set_up: "设置"
         no_llm: "未选择 LLM"
         no_agent: "未设置"
         no_groups: "无"
+        backends:
+          agent: "LLM代理"
+          decision_model: "决策模型"
+          classification_model: "专用分类端点"
+        not_configured: "未配置"
+        decision_model: "决策模型"
         edit: "设置"
-        expand_list:
-          other: "（其他 %{count} 个）"
-        collapse_list: "（收起）"
         bot:
           bot: "聊天机器人"
           name: "机器人"
@@ -412,11 +467,32 @@ zh_CN:
           enabled: "已启用"
           not_enabled: "未启用"
         filters:
-          all: "所有"
-          text: "搜索功能、智能体、LLM 或群组…"
+          text: "搜索功能、代理、模型或群组……"
           no_results: "找不到符合您的筛选条件的功能。"
           reset: "重置"
         no_automations: "尚无自动化"
+        sentiment:
+          name: "情感与情绪"
+          description: "在后台对帖子中的情感和情绪进行分类。"
+          sentiment: "情绪"
+          emotion: "情绪"
+          backend: "后端"
+          enabled: "已启用"
+          agent: "智能体"
+          decision_model: "决策模型"
+          posts_per_hour: "每小时发帖数"
+          post_age_limit: "发布年龄限制（天数）"
+          posts_per_hour_description: "大致扫描频率。0 表示停止扫描，包括新发布的帖子。已编辑的帖子会单独检查。"
+          background_description: "每 5 分钟检查一次未分类帖子，检查范围在共享限制内。每个已启用的分类器每次处理帖子都可能产生一次请求。拒绝请求后可能会重试。"
+          emotion_scores: "分数分布在 28 种情绪上。"
+          model_change_warning: "更改所选模型不会重新分类现有结果。"
+          dedicated_description: "专用分类端点在站点设置中配置。"
+          configure_dedicated: "配置专用分类端点"
+          manage_decision_models: "管理决策模型"
+          setting_groups:
+            sentiment: "情绪"
+            emotion: "情绪"
+            background_processing: "后台处理"
         summarization:
           name: "总结"
           description: "提供总结按钮，允许访客总结话题"
@@ -438,8 +514,7 @@ zh_CN:
             ask_ai_reports: "询问 AI 报告"
         embeddings:
           name: "嵌入向量"
-          description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
-          hyde: "HyDE"
+          related_topics: "相关话题"
           setting_groups:
             model_settings: "模型设置"
             related_topics: "相关话题"
@@ -452,7 +527,6 @@ zh_CN:
             settings: "基本设置"
         discord:
           name: "Discord 集成"
-          description: "增加了搜索 Discord 频道的功能"
           search: "Discord 搜索"
           setting_groups:
             settings: "基本设置"
@@ -488,6 +562,9 @@ zh_CN:
             enabled_features: "启用的功能"
             automation: "自动化"
             agents: "智能体"
+        review_queue:
+          setting_groups:
+            settings: "设置"
         image_caption:
           name: "图片说明"
           description: "为帖子图片生成 AI 说明，将其提供给读者和辅助阅读技术。"
@@ -506,10 +583,6 @@ zh_CN:
           schedule_topic_success:
             other: "已安排翻译 %{count} 个未翻译的帖子。"
           schedule_topic_error: "无法安排翻译。请重试。"
-          setting_groups:
-            settings: "基本设置"
-            agents: "智能体"
-            backfill_and_limits: "回填与限制"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -528,11 +601,23 @@ zh_CN:
       translations:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
-        supported_locales: "支持的语言"
+        sections:
+          languages: "语言"
+          advanced: "高级"
+        settings:
+          ai_translation_category_scope:
+            label: "类别"
+          ai_translation_personal_messages:
+            label: "个人信息"
+            choices:
+              none: "无"
+              all: "所有"
+          content_localization_language_switcher:
+            choices:
+              none: "没有人"
+              all: "所有人"
         max_locales_reached: "您最多只能选择 %{max} 种语言。"
         locale_count: "%{count}/%{max} 已选择"
-        category_scope: "类别"
-        category_scope_description: "选择自动翻译应用于所有类别、公开类别还是所选类别中的内容。"
         cached_results_notice: "正在显示自 %{relative_time} 起的缓存结果。"
         model_progress:
           loading: "正在加载翻译进度"
@@ -594,12 +679,8 @@ zh_CN:
               all_translated:
                 other: "所有 %{count} 个标签已翻译完毕。"
         admin_actions:
-          translation_settings: "AI 设置"
-          localization_settings: "应用语言设置"
-          enable_translations: "启用自动翻译"
+          enabled: "已启用"
           enable_translations_disabled: "您必须添加受支持的语言才能启用翻译功能。"
-          show_language_switcher: "在标题栏显示语言切换器。"
-          show_language_switcher_description: "让每个人都能选择一种语言，并用这种语言查看您的网站。"
         stats:
           title: "翻译统计"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
@@ -637,6 +718,10 @@ zh_CN:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
         select_llm: "选择 LLM"
+        no_llm_selected: "无"
+        select_decision_model: "选择决策模型"
+        no_decision_model_selected: "无"
+        decision_model_help: "决策模型会在有把握的情况下自行对每个帖子进行评分，并将不确定的帖子留给逻辑逻辑模型 LLM 进行评分。如果没有逻辑逻辑模型，则由决策模型自行决定每个帖子的评分。"
         select_agent: "选择智能体"
         custom_instructions: "自定义指令"
         custom_instructions_help: "特定于您的站点的自定义指令，帮助指导 AI 识别垃圾信息，例如“更积极地扫描非英语帖子”。"
@@ -661,6 +746,8 @@ zh_CN:
           result: "结果"
           reason: "推理"
           llm: "LLM"
+          decision_model: "决策模型"
+          spam_probability: "垃圾邮件概率"
           scan_history: "扫描历史记录"
           sent_message: "发送消息"
           system_prompt: "系统提示"
@@ -825,6 +912,9 @@ zh_CN:
             summary_forever: "有效载荷保留 %{detailed} 天，摘要永久保留"
             finite: "有效载荷保留 %{detailed} 天，摘要保留 %{summary} 天，然后删除"
       ai_agent:
+        new_bot_option:
+          label: "AI 智能体"
+          description: "创建机器人及其语言模型、提示、工具和权限。"
         ai_tools: "工具"
         native_tools_help: "启用“始终使用默认语言模型”且所选默认语言模型支持提供商原生工具时，这些工具（例如网络搜索或页面获取）将显示。"
         mcp_servers: "MCP 服务器"
@@ -1130,7 +1220,7 @@ zh_CN:
           remove: "移除请求头"
         edit: "编辑"
         delete: "删除"
-        confirm_delete: "您确定要删除此决策模型吗？使用该模型的工作流将停止运行。"
+        confirm_delete: "您确定要删除此决策模型吗？使用该模型的功能和工作流程将停止运行。"
         saved: "决策模型已保存"
         test: "运行测试"
         test_success: "决策模型回答了测试问题（是： %{percentage}%）。"
@@ -1138,6 +1228,7 @@ zh_CN:
           system_one: "系统一"
           typesafe: "类型安全"
           open_ai: "OpenAI决策"
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP 服务器"
         new: "新 MCP 服务器"
@@ -1227,6 +1318,7 @@ zh_CN:
         type: "类型"
         provider: "提供商"
         edit: "编辑"
+        seeded_warning: "此内容在您的站点上预先配置，无法编辑。"
         choose_type: "您想添加哪种类型的模型？"
         select_type: "选择"
         types:
@@ -1240,7 +1332,7 @@ zh_CN:
         type_descriptions:
           llm: "为 AI 机器人、摘要和 AI 助手等功能生成文本"
           embedding: "将内容转化为语义搜索和相关主题的向量"
-          decision: "回答有关内容的文本问题（是/否、选择题、评分题），并给出概率，用于工作流程中。"
+          decision: "回答有关内容的文本问题（是/否、选择题、评分），并给出概率，用于人工智能功能和工作流程。"
         type_filters:
           llm: "大型语言模型"
           embedding: "嵌入模型"
@@ -1520,12 +1612,12 @@ zh_CN:
           bge-large-en: "开源的纯英文模型，自托管"
           bge-m3: "适用于较长内容的开源多语言模型，可自行托管"
           multilingual-e5-large: "开源多语言模型，自托管"
+          cohere-embed-v4: "Cohere 的多语言模型托管在 AWS Bedrock 上"
           gemini-embedding-001: "谷歌托管的多语言模型"
           text-embedding-3-large: "OpenAI 最精确的嵌入模型"
           text-embedding-3-small: "OpenAI 更快、更低成本的嵌入模型"
           text-embedding-ada-002: "OpenAI 的上一代模型已被 text-embedding-3-small 取代。"
         edit: "编辑"
-        seeded_warning: "此内容在您的站点上预先配置，无法编辑。"
         tests:
           title: "运行测试"
           running: "正在运行测试…"
@@ -1533,6 +1625,7 @@ zh_CN:
           failure: "尝试生成嵌入向量导致以下错误：%{error}"
         hints:
           dimensions_warning: "保存后，此值将无法更改。"
+          bedrock_api_key: "Bedrock API 密钥，或者当设置了访问密钥 ID 时使用的秘密访问密钥。留空则使用 IAM 角色或服务器的 AWS 凭证。"
           matryoshka_dimensions: "定义用于分层或多层数据表示的嵌套嵌入向量的大小，类似于套娃相互嵌套的方式。"
           embed_prompt: "生成论坛内容嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
           search_prompt: "生成搜索查询嵌入向量时的任务指令前缀。仅适用于需要前缀的嵌入向量模型，例如 nomic-embed 或 stella。大多数模型不需要。"
@@ -1557,10 +1650,15 @@ zh_CN:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "自定义"
         provider_fields:
           model_name: "模型名称"
+          model_id: "模型 ID 或推理配置文件"
+          region: "AWS 区域"
+          access_key_id: "AWS 访问密钥 ID"
+          role_arn: "IAM 角色 ARN"
         semantic_search: "话题（语义）"
         semantic_search_results:
           toggle: "相关结果"
@@ -1611,7 +1709,7 @@ zh_CN:
         expand_view_label: "展开视图"
         collapse_view_label: "退出全屏（按 ESC 或“返回”按钮）"
         click_to_run_label: "运行工件"
-        share: "占比"
+        share: "共享"
         privacy_notice: "任何拥有此链接的人都可以查看此版本。您的对话内容将保持私密。"
         privacy_notice_login_required: "已登录用户可通过链接查看此版本。您的对话内容将保持私密。"
         create_link: "创建链接"
@@ -1650,8 +1748,7 @@ zh_CN:
         unavailable: "此对话链接已失效。您仍然可以撤销它。"
       ai_bot:
         title: "AI 机器人"
-        agent: "智能体："
-        llm: "模型："
+        agent_menu_heading: "智能体"
         pm_warning: "版主会定期监控 AI 聊天机器人消息。"
         cancel_streaming: "停止回复"
         try_again: "重试"
@@ -1718,13 +1815,13 @@ zh_CN:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           homepage_option: "AI 机器人对话"
           preview:
             title: "登录后提问"
             body: "从人工智能获取答案，并将您的对话保存在此处以便日后继续查看。"
           header: "我能帮上什么忙？"
           submit: "提交问题"
-          disclaimer: "生成式 AI 可能会犯错。请验证重要信息。"
           placeholder: "提问…"
           new: "新问题"
           min_input_length_message:
@@ -1745,10 +1842,7 @@ zh_CN:
           streaming_below: "下方新增内容"
           editing_post: "正在编辑帖子"
       sentiments:
-        dashboard:
-          title: "情绪"
         sidebar:
-          overview: "情绪概述"
           analysis: "情绪分析"
         sentiment_analysis:
           share_chart: "复制图表链接"

@@ -2,13 +2,11 @@
 
 RSpec.describe "AI Bot Post Serializer" do
   fab!(:current_user, :user)
-  fab!(:bot_user) { Fabricate(:user, id: DiscourseAi::BotUser.next_id) }
+  fab!(:bot_user) { Fabricate(:user, id: ::BotUser.new(DiscourseAi::PLUGIN_NAME).next_id) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    sign_in(current_user)
-  end
+  include_context "with AI bot enabled"
+
+  before { sign_in(current_user) }
 
   describe "llm_name in post serializer" do
     it "includes llm_name when custom field is set in a PM" do

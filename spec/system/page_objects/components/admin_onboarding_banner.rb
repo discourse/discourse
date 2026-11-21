@@ -23,6 +23,11 @@ module PageObjects
         find("div##{step_id}")
       end
 
+      def has_step?(step_id, title:, description:)
+        has_css?("div##{step_id} .onboarding-step__title", text: title) &&
+          has_css?("div##{step_id} .onboarding-step__description", text: description)
+      end
+
       def step_completed?(step_id)
         has_css?("div##{step_id} .onboarding-step__checkbox > svg.--completed")
       end

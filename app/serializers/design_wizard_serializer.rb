@@ -3,14 +3,29 @@
 class DesignWizardSerializer < ApplicationSerializer
   attributes :current_theme, :base_font, :heading_font, :homepage, :palettes_user_selectable
 
-  has_many :themes, serializer: DesignWizardThemeSerializer, embed: :objects
+  attributes :themes
+  attributes :additional_homepages, :homepage_settings, :restorable_homepages
+
+  def additional_homepages
+    DesignWizard::Homepages.additional_options
+  end
+
+  def homepage_settings
+    DesignWizard::Homepages.current_settings
+  end
+
+  def restorable_homepages
+    DesignWizard::Homepages.restorable_ids
+  end
 
   def themes
-    @options[:themes]
+    @options[:themes].map do |theme|
+      DesignWizardThemeSerializer.new(theme, scope:, root: false).as_json
+    end + DesignWizard::Themes.available_to_install(@options[:themes], guardian: scope)
   end
 
   def current_theme
-    return if object.nil? || Theme::CORE_THEMES.value?(object.id)
+    return if object.nil? || @options[:themes].any? { |theme| theme.id == object.id }
 
     { id: object.id, name: object.name }
   end
@@ -30,14 +45,14 @@ class DesignWizardSerializer < ApplicationSerializer
   def palettes_user_selectable
     offered = ColorScheme.where(theme_id: preselected_theme&.id)
     offered = ColorScheme.where(via_wizard: true) if offered.none?
-    offered.exists? && offered.where(user_selectable: false).none?
+    # a single-mode site keeps the other mode's palettes unselectable
+    offered.where(user_selectable: true).exists?
   end
 
   private
 
-  # The wizard offers Horizon when the current default is not a core theme.
   def preselected_theme
-    return object if Theme::CORE_THEMES.value?(object&.id)
+    return object if @options[:themes].any? { |theme| theme.id == object&.id }
 
     Theme.horizon_theme
   end

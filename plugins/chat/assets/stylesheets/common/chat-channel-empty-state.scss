@@ -1,4 +1,5 @@
-.chat-channel {
+.chat-channel,
+.live-chat {
   &.is-empty .chat-messages-scroller {
     justify-content: center;
   }

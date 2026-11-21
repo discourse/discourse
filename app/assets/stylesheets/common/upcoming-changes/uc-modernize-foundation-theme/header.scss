@@ -23,8 +23,11 @@
     height: 2em;
   }
 
+  .d-header-icons {
+    --d-header-badge-right: -6px;
+  }
+
   .d-header-icons .badge-notification {
-    right: -6px;
     padding: 0.2em 0.4em;
   }
 

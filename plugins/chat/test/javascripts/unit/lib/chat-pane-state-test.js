@@ -43,6 +43,24 @@ module("Unit | Lib | chat-pane-state", function (hooks) {
     paneState.teardown();
   });
 
+  test("holds incoming messages as pending while newer history is unloaded", function (assert) {
+    const paneState = new ChatPaneState(getOwner(this), {
+      contextKey: "channel:1",
+    });
+    const addMessage = sinon.spy();
+
+    paneState.handleIncomingMessage({
+      shouldAutoScroll: true,
+      canLoadMoreFuture: true,
+      addMessage,
+    });
+
+    assert.true(addMessage.notCalled, "does not append past the gap");
+    assert.true(paneState.hasPendingMessages, "counts it as pending");
+
+    paneState.teardown();
+  });
+
   test("active-reader transition runs return callback when focus returns", function (assert) {
     const onUserPresent = sinon.spy();
     const paneState = new ChatPaneState(getOwner(this), {

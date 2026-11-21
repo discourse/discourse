@@ -9,12 +9,6 @@ import DPageHeader from "discourse/ui-kit/d-page-header";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 export default class EditCategoryTabsHorizontalTemplate extends Component {
-  get dynamicCategoryTypeTabs() {
-    return Object.values(this.args.controller.model.categoryTypes ?? {}).filter(
-      (type) => type.id !== "discussion" && type.visible
-    );
-  }
-
   get visiblePrimaryTabs() {
     return registeredEditCategoryTabs.filter(
       (tab) =>
@@ -25,7 +19,7 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   get hasPrimaryTabs() {
     return (
       this.visiblePrimaryTabs.length > 0 ||
-      this.dynamicCategoryTypeTabs.length > 0
+      this.args.controller.dynamicCategoryTypeTabs.length > 0
     );
   }
 
@@ -83,7 +77,7 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               {{/if}}
             {{/if}}
           {{/each}}
-          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+          {{#each @controller.dynamicCategoryTypeTabs as |dynamicTab|}}
             <EditCategoryTab
               @panels={{@controller.panels}}
               @params={{@controller.parentParams}}
@@ -169,7 +163,7 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               @tabTitle={{pluginTab.name}}
             />
           {{/each}}
-          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+          {{#each @controller.dynamicCategoryTypeTabs as |dynamicTab|}}
             <EditCategoryTab
               @panels={{@controller.panels}}
               @params={{@controller.parentParams}}

@@ -10,7 +10,6 @@ sr:
       or: "ili"
       ai:
         generate: "Generiši"
-        optional: "opciono"
       types:
         bool:
           yes: "Da"
@@ -22,6 +21,7 @@ sr:
           bar: "Dijagram"
         tooltip:
           total: "Ukupno: %{count}"
+      name: "Ime foruma"
       query_groups: "Grupe"
       query_tags: "Tagovi"
       query_description: "Opis"

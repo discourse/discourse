@@ -63,7 +63,7 @@ export default class SettingFieldCompactList extends Component {
         @nameProperty={{if this.hasEnumChoices "name"}}
         @onChange={{this.onChange}}
         @onChangeChoices={{this.onChangeChoices}}
-        @options={{hash allowAny=this.allowAny}}
+        @options={{hash allowAny=this.allowAny disabled=@field.disabled}}
         @settingName={{@definition.key}}
         @value={{this.settingValue}}
         @valueProperty={{if this.hasEnumChoices "value"}}

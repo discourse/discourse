@@ -88,6 +88,18 @@ describe Chat::ChannelUnreadsQuery do
         )
       end
 
+      it "counts a broadcasted reply only once while threading is disabled" do
+        Fabricate(:chat_message, chat_channel: channel_1, thread: thread, broadcasted: true)
+        expect(query.first).to eq(
+          {
+            mention_count: 0,
+            unread_count: 3,
+            watched_threads_unread_count: 0,
+            channel_id: channel_1.id,
+          },
+        )
+      end
+
       context "when threading is enabled" do
         before { channel_1.update!(threading_enabled: true) }
 
@@ -98,6 +110,19 @@ describe Chat::ChannelUnreadsQuery do
             {
               mention_count: 0,
               unread_count: 2,
+              watched_threads_unread_count: 0,
+              channel_id: channel_1.id,
+            },
+          )
+        end
+
+        it "includes broadcasted thread replies in the unread count" do
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread, broadcasted: true)
+          expect(query.first).to eq(
+            {
+              mention_count: 0,
+              unread_count: 3,
               watched_threads_unread_count: 0,
               channel_id: channel_1.id,
             },

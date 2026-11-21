@@ -57,6 +57,18 @@ RSpec.describe AiSecret do
       expect(ai_secret.in_use?).to eq(true)
     end
 
+    it "returns true when used as a Bedrock embedding access key ID" do
+      Fabricate(
+        :bedrock_embedding_def,
+        provider_params: {
+          model_id: "cohere.embed-v4:0",
+          region: "us-east-1",
+          access_key_id: ai_secret.id.to_s,
+        },
+      )
+      expect(ai_secret.in_use?).to eq(true)
+    end
+
     it "returns true when referenced in provider_params as numeric" do
       llm = Fabricate(:bedrock_model)
       DB.exec(
@@ -162,6 +174,24 @@ RSpec.describe AiSecret do
 
       expect(tool_usage).to be_present
       expect(tool_usage[:name]).to include("Weather Tool")
+    end
+
+    it "lists an embedding once when it uses this secret as API key and access key ID" do
+      embedding =
+        Fabricate(
+          :bedrock_embedding_def,
+          display_name: "Cohere",
+          ai_secret: ai_secret,
+          provider_params: {
+            model_id: "cohere.embed-v4:0",
+            region: "us-east-1",
+            access_key_id: ai_secret.id.to_s,
+          },
+        )
+
+      expect(ai_secret.used_by).to contain_exactly(
+        { type: "embedding", name: "Cohere", id: embedding.id },
+      )
     end
 
     it "lists decision_models using this secret" do

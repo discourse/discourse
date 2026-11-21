@@ -198,7 +198,11 @@ function artifactBlock(state, startLine, _endLine, silent) {
 }
 
 export function setup(helper) {
-  helper.allowList(["details[class=ai-quote]", "details[class=ai-thinking]"]);
+  helper.allowList([
+    "details[class=ai-quote]",
+    "details[class=ai-thinking]",
+    "details[data-ai-generated=true]",
+  ]);
   helper.allowList([
     "div[class=ai-artifact]",
     "div[data-ai-artifact-id]",

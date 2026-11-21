@@ -4,6 +4,7 @@ class CalendarSubscriptionsController < ApplicationController
   requires_login
 
   CLIENT_ID = "calendar-subscriptions"
+  BOOKMARKS_SCOPE = "bookmarks_calendar"
 
   before_action :rate_limit_create, only: :create
 
@@ -42,19 +43,26 @@ class CalendarSubscriptionsController < ApplicationController
   private
 
   def find_calendar_api_key
+    calendar_api_keys.first
+  end
+
+  # Keys are identified by their scope rather than by their client, because
+  # UserApiKey#update_last_used re-associates a key with whatever client id a
+  # request declares. Revoke/Regenerate must keep finding keys that a feed
+  # request carrying a User-Api-Client-Id header has re-homed.
+  def calendar_api_keys
     UserApiKey
       .active
-      .joins(:client)
-      .where(user_id: current_user.id, user_api_key_clients: { client_id: CLIENT_ID })
-      .first
+      .where(user_id: current_user.id)
+      .where(id: UserApiKeyScope.where(name: BOOKMARKS_SCOPE).select(:user_api_key_id))
   end
 
   def revoke_existing_key!
-    find_calendar_api_key&.update!(revoked_at: Time.zone.now)
+    calendar_api_keys.update_all(revoked_at: Time.zone.now)
   end
 
   def build_scopes
-    scope_names = ["bookmarks_calendar"] + plugin_feeds.map { |f| f[:scope] }
+    scope_names = [BOOKMARKS_SCOPE] + plugin_feeds.map { |f| f[:scope] }
     all_scopes = UserApiKeyScope.all_scopes
     scope_names.uniq.filter_map do |name|
       if all_scopes.key?(name.to_sym)

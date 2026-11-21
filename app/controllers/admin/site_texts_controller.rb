@@ -108,7 +108,13 @@ class Admin::SiteTextsController < Admin::AdminController
         if ThemeTranslationManager::SITE_TEXT_ID_PATTERN.match?(record[:id])
           record
         else
-          serialize_data(record, SiteTextSerializer, root: false, overridden_keys: overridden)
+          serialize_data(
+            record,
+            SiteTextSerializer,
+            root: false,
+            overridden_keys: overridden,
+            include_preview_default: true,
+          )
         end
       end
     render_json_dump({ site_texts: records }, rest_serializer: true, extras:)
@@ -179,7 +185,15 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def dismiss_outdated
     locale = fetch_locale(params[:locale])
-    override = TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+    override =
+      if theme_site_text?
+        text = ThemeTranslationManager.find_site_text(params[:id], locale:)
+        raise Discourse::NotFound unless text
+        guardian.ensure_can_edit_theme!(text.theme)
+        text.db_record
+      else
+        TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+      end
 
     raise Discourse::NotFound if override.blank?
 
@@ -221,6 +235,7 @@ class Admin::SiteTextsController < Admin::AdminController
   def update_theme_text(locale, revert: false)
     text = ThemeTranslationManager.find_site_text(params[:id], locale:)
     raise Discourse::NotFound unless text
+    guardian.ensure_can_edit_theme!(text.theme)
 
     old_value = text.value
     if revert
@@ -236,6 +251,8 @@ class Admin::SiteTextsController < Admin::AdminController
     record = text.site_text
     StaffActionLogger.new(current_user).log_site_text_change(record[:id], record[:value], old_value)
     render_json_dump({ site_text: record }, rest_serializer: true)
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error e, type: :record_invalid, status: :unprocessable_entity
   end
 
   def is_badge_title?(id = "")
@@ -328,7 +345,6 @@ class Admin::SiteTextsController < Admin::AdminController
   def fix_plural_keys(key, value, locale, only_selected_locale = false)
     value = value.with_indifferent_access
     plural_keys = I18n.with_locale(locale) { I18n.t("i18n.plural.keys") }
-    return value if value.keys.size == plural_keys.size && plural_keys.all? { |k| value.key?(k) }
 
     fallback_value = I18n.t(key, locale: :en, default: {})
     plural_keys.map do |k|

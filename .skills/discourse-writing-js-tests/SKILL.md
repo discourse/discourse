@@ -18,7 +18,7 @@ Discourse uses [QUnit](https://qunitjs.com/) with `ember-qunit` and
   and waits-free, synchronous DOM reads. See the [qunit-dom API](https://github.com/mainmatter/qunit-dom/blob/master/API.md).
   When you need the element(s) themselves — for an interaction or a computed value — use
   `find()` / `findAll()` from `@ember/test-helpers` (scoped to the test container), not
-  `document.querySelector` or the deprecated `queryAll()`.
+  `document.querySelector`.
 - **Always `await` interactions** — `render`, `click`, `fillIn`, `visit`, `settled`, etc. are
   async. Forgetting `await` causes flaky tests.
 - **Always pass a description** as the last argument to assertions — it documents intent and
@@ -126,11 +126,17 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
   `{ stubRouter: true }` to stub `service:router`.
 - Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
   the rendered DOM with `find` (first match) / `findAll` (all matches).
+- Don't use `this.set(...)` / `this.setProperties(...)` on the test context. Before render,
+  assign natively (`this.title = "a"`) or use a local constant.
 - To change an argument after render, hold it in a standalone `tracked()` (from
-  `@glimmer/tracking`) instead of a test-only class with `@tracked` fields:
+  `@glimmer/tracking`), not `this.set(...)` or a test-only class with `@tracked` fields:
   `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
-  `await settled()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
-  returns a decorator. Writing an equal value (`Object.is`) does not re-render.
+  `await rerender()` before the next assertion or interaction (`settled()` if the change
+  starts async work). A callback that writes a value back (`@onChange`) assigns it too:
+  `(newTitle) => (title.value = newTitle)`; a value a callback only records for assertions
+  is a plain `let`. Keep a class when it also holds callbacks or untracked state. For
+  `trackedObject` models and the traps (the decorator overload, equal-value writes), see
+  `docs/developer-guides/docs/03-code-internals/33-component-tests.md`.
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 
@@ -199,8 +205,29 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 - **DOM lookup helpers**: `query()`, `exists()`, `count()`, `visible()`, `invisible()`,
   `fixture()`. **Prefer `assert.dom(...)` for assertions and `find()` / `findAll()` for
   elements in new tests** — reach for these only when matching existing style.
-- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead;
-  `discourseModule` — use QUnit's `module` instead.
+
+## Dates and time zones
+
+Tests run in the machine's time zone and CI runs in UTC, so a test that assumes UTC passes in
+CI and fails for developers elsewhere. `fakeTime` and `withFrozenTime` freeze the clock, not
+the zone.
+
+- Build date fixtures the way the production caller builds them. Date ranges are usually local
+  day boundaries, e.g. `moment("2026-04-01").startOf("day").toDate()`. Never use
+  `new Date("2026-04-01")`: it is UTC midnight, which is the previous day west of UTC.
+- `moment.tz` uses bundled zone data that only covers years near the present, and gets DST
+  offsets wrong outside them. A fixture in an old year like 2019 can resolve an hour away from
+  `moment(...)`, so keep fixtures inside that window unless the test is about such dates.
+- Compare instants with `toISOString()` or `valueOf()`, not `format()`. The same instant can
+  format as `Z` or `+00:00` depending on how the moment was built.
+- Run date and time tests in UTC, a zone west of UTC and one east of it before trusting them.
+  Chrome inherits the zone from `bin/qunit`, and DST zones catch the most:
+
+```sh
+TZ=UTC bin/qunit path/to/some-test.gjs
+TZ=America/Sao_Paulo bin/qunit path/to/some-test.gjs
+TZ=Europe/Berlin bin/qunit path/to/some-test.gjs
+```
 
 ## Custom assertions
 

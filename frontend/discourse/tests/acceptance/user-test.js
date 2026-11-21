@@ -10,6 +10,9 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import pretender, {
+  response as jsonResponse,
+} from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
@@ -457,6 +460,29 @@ acceptance("User - Invites - viewing another user", function (needs) {
     server.get("/u/charlie/invited.json", () =>
       helper.response(eviltroutInvites)
     );
+  });
+
+  test("shows redemption counts when a moderator cannot see another user's invite key", async function (assert) {
+    updateCurrentUser({ admin: false, moderator: true });
+    pretender.get("/u/charlie/invited.json", () =>
+      jsonResponse({
+        invites: [{ id: 123, redemption_count: 2, max_redemptions_allowed: 5 }],
+        can_see_invite_details: true,
+        counts: { pending: 1, expired: 0, redeemed: 0, total: 1 },
+      })
+    );
+
+    await visit("/u/charlie/invited/pending");
+
+    assert
+      .dom(".invite-shortkey")
+      .hasText(
+        i18n("user.invited.invited_via_link_without_key", { count: 2, max: 5 }),
+        "shows a persisted invite's redemption counts instead of generating link"
+      );
+    assert
+      .dom(".invite-link-target")
+      .doesNotExist("does not expose an invite link");
   });
 
   test("hides the create invite button when viewing another user's invited page", async function (assert) {

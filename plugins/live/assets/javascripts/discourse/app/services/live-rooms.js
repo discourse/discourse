@@ -7,6 +7,7 @@ import { bind } from "discourse/lib/decorators";
 // a response scoped to the current user supplies fresh values.
 const USER_GATED_ROOM_FIELDS = [
   "can_manage",
+  "can_delete",
   "can_invite",
   "membership",
   "chat_available",
@@ -155,7 +156,11 @@ export default class LiveRoomsService extends Service {
       return;
     }
 
-    if (payload.type === "participants") {
+    if (payload.type === "chat_disabled") {
+      room.chat_available = false;
+      room.chat_channel_id = null;
+      this.rooms = [...this.rooms];
+    } else if (payload.type === "participants") {
       this.#setRoomParticipants(room.id, payload.participants || []);
     } else if (payload.type === "role_change") {
       this.setParticipantRole(payload.room_id, payload.user_id, payload.role);

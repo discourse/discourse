@@ -3,21 +3,32 @@
 module DiscourseWorkflows
   class NodeIssues
     class << self
-      def for_node(node, node_type_class)
+      def for_node(node, node_type_class, guardian: nil)
         return [] unless node_type_class.respond_to?(:property_schema)
         schema = node_type_class.property_schema || {}
         config = NodeData.resolved_parameters(node)
-        walk(schema, config.deep_stringify_keys, "")
+        preloaded_options = nil
+        metadata =
+          Hash.new do |_, collection|
+            preloaded_options ||=
+              PreloadedOptions.for(node_type_class, guardian:, properties: schema)
+            preloaded_options[collection]
+          end
+        walk(schema, config.deep_stringify_keys, "", metadata)
       end
 
       private
 
-      def walk(schema, config, path_prefix)
+      def walk(schema, config, path_prefix, metadata)
         effective = apply_defaults(schema, config)
         issues = []
 
         schema.each do |name, field|
-          next unless field_definitely_visible?(field, effective)
+          if !field[:required] &&
+               %i[collection fixed_collection assignment_collection].exclude?(field[:type])
+            next
+          end
+          next unless field_definitely_visible?(field, effective, metadata)
 
           name_s = name.to_s
           path = path_prefix.empty? ? name_s : "#{path_prefix}.#{name_s}"
@@ -35,13 +46,13 @@ module DiscourseWorkflows
                 next unless value.key?(option_name)
 
                 option_schema = { option_name => option.except(:name, :display_name) }
-                issues.concat(walk(option_schema, value, path))
+                issues.concat(walk(option_schema, value, path, metadata))
               end
             elsif value.is_a?(Array)
               item_schema = (field[:item_schema] || {}).merge(field[:extra_item_schema] || {})
               value.each_with_index do |item, index|
                 item_hash = item.is_a?(Hash) ? item.deep_stringify_keys : {}
-                issues.concat(walk(item_schema, item_hash, "#{path}.#{index}"))
+                issues.concat(walk(item_schema, item_hash, "#{path}.#{index}", metadata))
               end
             end
           when :fixed_collection
@@ -55,7 +66,7 @@ module DiscourseWorkflows
               rows.each_with_index do |item, index|
                 item_hash = item.is_a?(Hash) ? item.deep_stringify_keys : {}
                 issues.concat(
-                  walk(group[:values] || {}, item_hash, "#{path}.#{group_name}.#{index}"),
+                  walk(group[:values] || {}, item_hash, "#{path}.#{group_name}.#{index}", metadata),
                 )
               end
             end
@@ -82,7 +93,9 @@ module DiscourseWorkflows
 
             assignments.each_with_index do |item, index|
               item_hash = item.is_a?(Hash) ? item.deep_stringify_keys : {}
-              issues.concat(walk(assignment_schema, item_hash, "#{path}.assignments.#{index}"))
+              issues.concat(
+                walk(assignment_schema, item_hash, "#{path}.assignments.#{index}", metadata),
+              )
             end
           end
         end
@@ -98,10 +111,10 @@ module DiscourseWorkflows
         result
       end
 
-      def field_definitely_visible?(field, config)
+      def field_definitely_visible?(field, config, metadata)
         return false if (field[:ui] || {})[:hidden]
 
-        Schema.definitely_visible?(field[:display_options] || {}, config)
+        Schema.definitely_visible?(field[:display_options] || {}, config, metadata)
       end
 
       def blank_value?(value)

@@ -5,6 +5,7 @@ import UserFieldConfirm from "./user-fields/confirm.gjs";
 import UserFieldDate from "./user-fields/date.gjs";
 import UserFieldDropdown from "./user-fields/dropdown.gjs";
 import UserFieldMultiselect from "./user-fields/multiselect.gjs";
+import UserFieldNumber from "./user-fields/number.gjs";
 import UserFieldText from "./user-fields/text.gjs";
 import UserFieldTextArea from "./user-fields/textarea.gjs";
 
@@ -17,6 +18,7 @@ export default class UserField extends Component {
       text: UserFieldText,
       textarea: UserFieldTextArea,
       date: UserFieldDate,
+      number: UserFieldNumber,
     });
   }
 

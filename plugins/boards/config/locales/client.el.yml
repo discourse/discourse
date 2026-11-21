@@ -33,7 +33,9 @@ el:
           other: "%{count} απαντήσεις"
         assign: "Ανάθεση"
         unassign: "Ακύρωση ανάθεσης"
-        created_by: "Δημιουργήθηκε από"
+        owners:
+          one: "Ιδιοκτήτης"
+          other: "Ιδιοκτήτες"
       manage:
         name: "Όνομα"
         slug: "Slug"

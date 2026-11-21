@@ -245,6 +245,10 @@ after_initialize do
       agent_klass: DiscourseWorkflows::AiWorkflowAuthor,
       enabled_by_setting: "discourse_workflows_ai_authoring_enabled",
       plugin: self,
+      entry_point: {
+        path: "/admin/plugins/discourse-workflows/workflows/new",
+        label: "discourse_workflows.new_workflow",
+      },
     )
 
     DiscourseAi.register_tools(
@@ -273,6 +277,29 @@ after_initialize do
                         DiscourseWorkflows::WorkflowDependency.cached_post_buttons.present?
                     end do
     DiscourseWorkflows::WorkflowDependency.post_buttons_for(scope.user)
+  end
+
+  add_to_serializer :site,
+                    :composer_paused_workflows,
+                    include_condition: -> do
+                      scope.user.present? &&
+                        DiscourseWorkflows::WorkflowDependency.cached_composer_paused_triggers.present?
+                    end do
+    DiscourseWorkflows::WorkflowDependency.composer_paused_triggers_for(scope.user)
+  end
+
+  add_to_serializer :current_user,
+                    :discourse_workflows_composer_message_last_id,
+                    include_condition: -> do
+                      DiscourseWorkflows::WorkflowDependency.references_node_type?(
+                        DiscourseWorkflows::Nodes::ComposerMessage::V1.identifier,
+                      )
+                    end do
+    MessageBus.last_id(DiscourseWorkflows::Nodes::ComposerMessage::V1.user_channel(object.id))
+  end
+
+  on(:draft_saved) do |user, draft_key, data|
+    DiscourseWorkflows::ComposerPausedDraftListener.handle(user, draft_key, data)
   end
 
   add_to_serializer :current_user,

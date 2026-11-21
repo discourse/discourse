@@ -62,7 +62,7 @@ export default class ChangeOwnerModal extends Component {
 
   @action
   async updateNewOwner(selected) {
-    this.newOwner = selected.firstObject;
+    this.newOwner = selected[0];
   }
 
   <template>

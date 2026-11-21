@@ -41,6 +41,8 @@ be:
         type: "Тып"
         error: "памылка"
       discourse_workflows:
+        ai_tool:
+          list_item: "Элемент спіса"
         classify:
           upload_ids: "Выява"
           name: "Імя"
@@ -57,21 +59,34 @@ be:
       llm_selector:
         none: "Няма"
       features:
-        disabled: "(адключана)"
-        groups: "групы:"
+        table:
+          status: "Статус"
+          groups: "Груп"
         edit: "Налады"
         filters:
-          all: "усе"
           reset: "скінуць"
         search:
           name: "Пошук"
+        review_queue:
+          setting_groups:
+            settings: "Налады"
         image_caption:
           setting_groups:
             settings: "Налады"
         spam:
           name: "Спам"
       translations:
-        category_scope: "катэгорыі"
+        settings:
+          ai_translation_category_scope:
+            label: "катэгорыі"
+          ai_translation_personal_messages:
+            choices:
+              none: "Няма"
+              all: "Усе"
+          content_localization_language_switcher:
+            choices:
+              none: "Ніхто"
+              all: "усе"
         model_progress:
           detail:
             columns:
@@ -110,6 +125,8 @@ be:
             other: "%{count}запісаў"
       spam:
         short_title: "Спам"
+        no_llm_selected: "Няма"
+        no_decision_model_selected: "Няма"
         enable: "Уключыць"
         test_modal:
           spam: "Спам"

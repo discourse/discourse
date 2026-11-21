@@ -15,12 +15,12 @@ export default {
       api.setAdminPluginIcon(PLUGIN_ID, "microphone-lines");
       api.addAdminPluginConfigurationNav(PLUGIN_ID, [
         {
-          label: "live.admin.dashboard_title",
-          route: "adminPlugins.show.live-dashboard",
-        },
-        {
           label: "live.admin.rooms_title",
           route: "adminPlugins.show.live-rooms",
+        },
+        {
+          label: "live.admin.reports_title",
+          route: "adminPlugins.show.live-dashboard",
         },
         {
           label: "live.admin.recordings_title",

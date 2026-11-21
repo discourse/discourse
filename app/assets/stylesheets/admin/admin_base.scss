@@ -358,8 +358,17 @@ $mobile-breakpoint: 700px;
     padding-block: var(--space-5);
     border-bottom: 1px solid var(--content-border-color);
 
-    &__details {
+    &__header {
       grid-column: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-2) var(--space-5);
+      min-width: 0;
+    }
+
+    &__details {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -392,9 +401,40 @@ $mobile-breakpoint: 700px;
       }
     }
 
-    .site-text-value {
+    &__preview {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      display: grid;
+      grid-template-rows: subgrid;
+      gap: var(--space-2);
+
+      .d-tabs__strip {
+        flex: 0 1 auto;
+        min-width: 0;
+      }
+
+      .d-tabs__strip-controls {
+        flex: 0 1 auto;
+      }
+
+      .d-tabs__tab {
+        min-height: var(--space-6);
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--font-down-1);
+      }
+    }
+
+    > .site-text-value {
       grid-column: 1;
       grid-row: 2;
+    }
+
+    .site-text-edit {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .site-text-value {
       color: var(--primary);
       overflow-wrap: anywhere;
       white-space: pre-wrap;
@@ -407,11 +447,6 @@ $mobile-breakpoint: 700px;
       @include viewport.until(sm) {
         padding: var(--space-3);
       }
-    }
-
-    .site-text-edit {
-      grid-column: 2;
-      grid-row: 2;
     }
   }
 
@@ -1112,15 +1147,6 @@ section.details {
     width: 100%;
   }
 
-  .dashboard-left,
-  .dashboard-right {
-    width: 100%;
-  }
-
-  .dashboard-stats {
-    margin: 0;
-  }
-
   .badges {
     .current-badge {
       margin: 70px 0 0 0;
@@ -1142,8 +1168,9 @@ section.details {
     .directory-table__cell {
       &,
       a,
-      a:visited {
-        color: #bbb;
+      a:visited,
+      .directory-table__value {
+        color: var(--primary-low-mid);
       }
     }
   }
@@ -1270,19 +1297,16 @@ table#user-badges {
 
 .secret-value-list {
   .value {
-    flex-flow: row wrap;
     margin-left: -0.25em;
-    margin-top: -0.125em;
 
     .new-value-input {
       flex: 1 0 0px;
       margin-left: 0.25em;
+      min-width: 0;
     }
 
     .value-input,
     .new-value-input {
-      margin-top: 0.125em;
-
       &:last-of-type {
         margin-left: 0.25em;
       }
@@ -1290,31 +1314,13 @@ table#user-badges {
 
     .remove-value-btn {
       margin-left: 0.25em;
-      margin-top: 0.125em;
     }
 
-    .add-value-btn {
+    .add-value-btn,
+    .secret-value-list__reveal {
       margin-left: 0.25em;
-      margin-top: 0.125em;
 
       @include value-btn;
-    }
-  }
-}
-
-.mobile-view .secret-value-list {
-  .add-value-btn {
-    margin-bottom: 9px;
-  }
-
-  .value {
-    .value-input:last-of-type {
-      margin-left: 2.35em;
-    }
-
-    .new-value-input:first-of-type {
-      margin-right: 2.15em;
-      margin-left: 0.25em;
     }
   }
 }

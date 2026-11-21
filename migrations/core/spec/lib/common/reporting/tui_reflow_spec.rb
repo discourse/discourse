@@ -17,7 +17,7 @@ RSpec.describe Migrations::Reporting::Tui do
       io
     end
 
-    %i[truncate reflow].each do |wrap_mode|
+    shared_examples "terminal history during a resize" do |wrap_mode:|
       it "keeps history and the live region uncorrupted on shrink (#{wrap_mode})" do
         time = [0.0]
         io = fake_tty(60)
@@ -58,6 +58,14 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(rows).to(be_none { |row| row.include?("✓") && row.include?("%") })
         expect(rows).to(be_none { |row| row.include?("Categories") && row.include?("Posts") })
       end
+    end
+
+    context "when terminal history is truncated" do
+      include_examples "terminal history during a resize", wrap_mode: :truncate
+    end
+
+    context "when terminal history is reflowed" do
+      include_examples "terminal history during a resize", wrap_mode: :reflow
     end
   end
 end

@@ -207,4 +207,23 @@ module("Unit | Model | site", function (hooks) {
 
     assert.deepEqual(site.categoryTopTags, []);
   });
+
+  test("collectUserFields keeps 0 and replaces missing values with a dash", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const site = store.createRecord("site", {
+      user_fields: [
+        { id: 1, name: "Score" },
+        { id: 2, name: "Nickname" },
+      ],
+    });
+
+    const [score, nickname] = site.collectUserFields({ 1: 0, 2: null });
+
+    assert.strictEqual(score.value, 0, "keeps a number field's 0");
+    assert.strictEqual(
+      nickname.value.toString(),
+      "&mdash;",
+      "replaces a missing value with a dash"
+    );
+  });
 });

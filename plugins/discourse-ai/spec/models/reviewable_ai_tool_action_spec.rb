@@ -29,11 +29,9 @@ RSpec.describe ReviewableAiToolAction do
 
   let(:bot_user) { Discourse.system_user }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    ai_agent.reload
-  end
+  include_context "with AI bot enabled"
+
+  before { ai_agent.reload }
 
   def create_tool_action(tool_name: "close_topic", params: nil, post_id: nil, tool_options: {})
     params ||= { topic_id: topic.id, closed: true, reason: "Off-topic" }
@@ -550,7 +548,7 @@ RSpec.describe ReviewableAiToolAction do
     context "when the dsa_reporting_enabled site setting is enabled" do
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "records a statement when an AI tool reviewable closes a topic" do

@@ -12,6 +12,7 @@ ur:
     errors:
       chat_upload_not_allowed_secure_uploads: "محفوظ اپ لوڈز کی، سائٹ کی ترتیب فعال ہونے پر چیٹ اپ لوڈز کی اجازت نہیں ہے۔"
   chat:
+    design_wizard_homepage_name: "گفتگو"
     deleted_chat_username: حذف کردہ
     crawler:
       directory_title: "گفتگو کے چینلز"

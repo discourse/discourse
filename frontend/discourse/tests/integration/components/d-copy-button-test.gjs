@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render, rerender } from "@ember/test-helpers";
+import { click, find, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -77,5 +77,102 @@ module("Integration | Component | DCopyButton", function (hooks) {
     assert
       .dom(".sr-only[aria-live='polite']")
       .hasText("Copied!", "the confirmation is announced");
+  });
+
+  test("copies the value of an input or the text of an element from @selector", async function (assert) {
+    const writeText = sinon.stub().resolves();
+    sinon.stub(window.navigator, "clipboard").get(() => ({ writeText }));
+
+    await render(
+      <template>
+        <input class="test-input" readonly value="from input" />
+        <p class="test-text">from text</p>
+        <div class="input-button">
+          <DCopyButton @selector="input.test-input" @translatedLabel="Copy" />
+        </div>
+        <div class="text-button">
+          <DCopyButton @selector="p.test-text" @translatedLabel="Copy" />
+        </div>
+      </template>
+    );
+
+    await click(".input-button .copy-button");
+    await click(".text-button .copy-button");
+
+    assert.deepEqual(
+      writeText.args.map(([text]) => text),
+      ["from input", "from text"],
+      "an input gives its value and an element gives its text"
+    );
+  });
+
+  test("a copy shows the confirmation and calls @copied", async function (assert) {
+    const writeText = sinon.stub().resolves();
+    sinon.stub(window.navigator, "clipboard").get(() => ({ writeText }));
+    let copied = false;
+    const onCopied = () => (copied = true);
+
+    await render(
+      <template>
+        <DCopyButton
+          @copied={{onCopied}}
+          @translatedLabel="Copy"
+          @translatedLabelAfterCopy="Copied!"
+          @value="payload"
+        />
+      </template>
+    );
+    // Tests restore the button after 10ms, before `click` settles, so the
+    // confirmation is recorded as it renders.
+    const button = find(".copy-button");
+    const states = new Set();
+    const observer = new MutationObserver(() =>
+      states.add(
+        [
+          button.textContent.trim(),
+          button.classList.contains("btn-primary"),
+          button.classList.contains("ok"),
+          Boolean(button.querySelector(".d-icon-check")),
+        ].join()
+      )
+    );
+    observer.observe(button, {
+      attributes: true,
+      characterData: true,
+      childList: true,
+      subtree: true,
+    });
+
+    await click(".copy-button");
+    observer.disconnect();
+
+    assert.true(copied, "@copied is called");
+    assert.true(
+      states.has("Copied!,true,true,true"),
+      "the button shows the confirmation with a check"
+    );
+    assert
+      .dom(".copy-button")
+      .hasText("Copy", "the button is restored afterwards")
+      .doesNotHaveClass("ok");
+  });
+
+  test("@icon and @copyClass style the button", async function (assert) {
+    await render(
+      <template>
+        <DCopyButton
+          @copyClass="btn-default"
+          @icon="clipboard"
+          @translatedLabel="Copy"
+          @value="payload"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".copy-button")
+      .hasClass("btn-default")
+      .doesNotHaveClass("btn-primary");
+    assert.dom(".copy-button .d-icon-clipboard").exists();
   });
 });

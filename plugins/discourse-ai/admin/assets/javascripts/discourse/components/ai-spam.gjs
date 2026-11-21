@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -36,6 +36,7 @@ export default class AiSpam extends Component {
   };
   @tracked isEnabled = false;
   @tracked selectedLLM = null;
+  @tracked selectedDecisionModelId = null;
   @tracked selectedAgentId = null;
   @tracked customInstructions = "";
   @autoTrackedArray errors;
@@ -57,6 +58,10 @@ export default class AiSpam extends Component {
 
   get availableLLMs() {
     return this.args.model?.available_llms || [];
+  }
+
+  get availableDecisionModels() {
+    return this.args.model?.available_decision_models || [];
   }
 
   get availableAgents() {
@@ -150,13 +155,12 @@ export default class AiSpam extends Component {
     const model = this.args.model;
     this.isEnabled = model.is_enabled;
 
+    this.selectedDecisionModelId = model.decision_model_id;
     if (model.llm_id) {
       this.selectedLLM = model.llm_id;
-    } else {
-      if (this.availableLLMs.length) {
-        this.selectedLLM = this.availableLLMs[0].id;
-        this.autoSelectedLLM = true;
-      }
+    } else if (!model.decision_model_id && this.availableLLMs.length) {
+      this.selectedLLM = this.availableLLMs[0].id;
+      this.autoSelectedLLM = true;
     }
     this.customInstructions = model.custom_instructions;
     this.stats = model.stats;
@@ -193,6 +197,11 @@ export default class AiSpam extends Component {
   }
 
   @action
+  async updateDecisionModel(value) {
+    this.selectedDecisionModelId = value;
+  }
+
+  @action
   async updateAgent(value) {
     this.selectedAgentId = value;
   }
@@ -203,7 +212,8 @@ export default class AiSpam extends Component {
       await ajax("/admin/plugins/discourse-ai/ai-spam.json", {
         type: "PUT",
         data: {
-          llm_model_id: this.llmId,
+          llm_model_id: this.llmId ?? "",
+          decision_model_id: this.selectedDecisionModelId ?? "",
           custom_instructions: this.customInstructions,
           ai_agent_id: this.selectedAgentId,
         },
@@ -223,6 +233,7 @@ export default class AiSpam extends Component {
       model: {
         customInstructions: this.customInstructions,
         llmId: this.llmId,
+        decisionModelId: this.selectedDecisionModelId,
       },
     });
   }
@@ -273,6 +284,7 @@ export default class AiSpam extends Component {
               class="ai-spam__llm-selector"
               @content={{this.availableLLMs}}
               @onChange={{this.updateLLM}}
+              @options={{hash none="discourse_ai.spam.no_llm_selected"}}
               @value={{this.selectedLLM}}
             />
           {{else}}
@@ -284,17 +296,40 @@ export default class AiSpam extends Component {
           {{/if}}
         </div>
 
-        <div class="ai-spam__agent">
-          <label class="ai-spam__agent-label">{{i18n
-              "discourse_ai.spam.select_agent"
-            }}</label>
-          <ComboBox
-            class="ai-spam__agent-selector"
-            @content={{this.availableAgents}}
-            @onChange={{this.updateAgent}}
-            @value={{this.selectedAgentId}}
-          />
-        </div>
+        {{#if this.availableDecisionModels.length}}
+          <div class="ai-spam__decision-model">
+            <label class="ai-spam__decision-model-label">
+              {{i18n "discourse_ai.spam.select_decision_model"}}
+              <DTooltip
+                @content={{i18n "discourse_ai.spam.decision_model_help"}}
+                @icon="circle-question"
+              />
+            </label>
+            <ComboBox
+              class="ai-spam__decision-model-selector"
+              @content={{this.availableDecisionModels}}
+              @onChange={{this.updateDecisionModel}}
+              @options={{hash
+                none="discourse_ai.spam.no_decision_model_selected"
+              }}
+              @value={{this.selectedDecisionModelId}}
+            />
+          </div>
+        {{/if}}
+
+        {{#if this.selectedLLM}}
+          <div class="ai-spam__agent">
+            <label class="ai-spam__agent-label">{{i18n
+                "discourse_ai.spam.select_agent"
+              }}</label>
+            <ComboBox
+              class="ai-spam__agent-selector"
+              @content={{this.availableAgents}}
+              @onChange={{this.updateAgent}}
+              @value={{this.selectedAgentId}}
+            />
+          </div>
+        {{/if}}
 
         <div class="ai-spam__instructions">
           <label class="ai-spam__instructions-label">

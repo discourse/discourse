@@ -12,6 +12,7 @@
     "chat_channel_id": { "type": "number" },
     "last_read_message_id": { "type": ["number", "null"] },
     "muted": { "type": "boolean" },
+    "muted_until": { "type": ["string", "null"] },
     "notification_level": { "type": "string" },
     "following": { "type": "boolean" },
     "starred": { "type": "boolean" },

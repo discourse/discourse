@@ -11,7 +11,11 @@ module Live
     SIGNAL_EVENTS_PER_USER_PER_MINUTE = 5_000
     SIGNAL_EVENTS_PER_ROOM_PER_MINUTE = 100_000
 
-    STATE_FIELDS = %i[muted deafened video screen watching transcribing]
+    # Generous enough for a burst of applause, low enough that one user can't
+    # flood every participant's MessageBus.
+    REACTIONS_PER_USER = 15 # per 10 seconds
+
+    STATE_FIELDS = %i[muted deafened video screen watching transcribing recording_locally]
 
     # Anonymous visitors may browse the directory; the guardian still limits the
     # listing to public rooms, and only when access is open to everyone.
@@ -40,6 +44,7 @@ module Live
                     stop_recording
                     request_to_speak
                     withdraw_request_to_speak
+                    reaction
                   ]
 
     def index
@@ -110,6 +115,7 @@ module Live
       if @room.update(room_params)
         Live::DirectoryBroadcaster.broadcast(action: :updated, room: @room)
         refresh_participant_statuses(@room) if name_changed
+        Live::ParticipantEvictor.evict_unauthorized!(@room)
         render_serialized @room, Live::RoomSerializer, root: :room
       else
         render_json_error @room
@@ -117,7 +123,7 @@ module Live
     end
 
     def destroy
-      guardian.ensure_can_manage_live_room!(@room)
+      guardian.ensure_can_delete_live_room!(@room)
       # Built before the destroy so the broadcast still targets the members
       # whose memberships the destroy cascades away.
       broadcaster = Live::DirectoryBroadcaster.new(@room, :destroyed)
@@ -372,7 +378,7 @@ module Live
         return head :no_content
       end
 
-      session = close_session_for(@room.id, current_user.id)
+      session = Live::ParticipantEvictor.close_session(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
       Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
@@ -482,6 +488,11 @@ module Live
         end
       end
 
+      if params.key?(:recording_locally) && bool.cast(params[:recording_locally]) &&
+           !guardian.can_record_live_locally?
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.local_recording_not_allowed"))
+      end
+
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       previous_metadata = metadata.dup
       metadata[:is_muted] = bool.cast(params[:muted]) if params.key?(:muted)
@@ -490,6 +501,9 @@ module Live
       metadata[:is_screen_sharing] = bool.cast(params[:screen]) if params.key?(:screen)
       metadata[:watching_video] = bool.cast(params[:watching]) if params.key?(:watching)
       metadata[:is_transcribing] = bool.cast(params[:transcribing]) if params.key?(:transcribing)
+      if params.key?(:recording_locally)
+        metadata[:is_recording_locally] = bool.cast(params[:recording_locally])
+      end
 
       # A request that changes nothing must not become a full-roster
       # rebroadcast to every participant.
@@ -528,28 +542,7 @@ module Live
         raise Discourse::InvalidParameters.new(I18n.t("live.errors.cannot_kick_creator"))
       end
 
-      Live::AgentManager.evict!(room: @room, user_id: user_id) if user_id.negative?
-
-      session = close_session_for(@room.id, user_id)
-      Live::ParticipantTracker.mark_left(@room.id, user_id)
-      Live::ParticipantTracker.remove(@room.id, user_id)
-
-      kicked_user = User.find_by(id: user_id)
-      Live::UserStatusManager.clear_live_status(kicked_user) if kicked_user
-
-      Live::BadgeGranterHooks.on_leave(kicked_user, session) if kicked_user
-      Live::RoomBroadcaster.publish_kick(@room, user_id)
-      Live::RoomBroadcaster.publish_participants(@room)
-
-      # The client-side kicked handler already forces a clean leave; this
-      # additionally evicts the media session from the SFU.
-      Live::Livekit::RoomServiceClient.remove_participant(@room, user_id) unless user_id.negative?
-
-      if Live::ParticipantTracker.human_user_ids(@room.id).empty? &&
-           Live::AgentManager.provider_room?(@room.id)
-        Live::AgentManager.evict_agents_in_room!(@room)
-        Live::RoomBroadcaster.publish_participants(@room)
-      end
+      Live::ParticipantEvictor.evict!(@room, user_id)
 
       head :no_content
     end
@@ -630,6 +623,21 @@ module Live
       head :no_content
     end
 
+    def reaction
+      guardian.ensure_can_join_live_room!(@room)
+      ensure_participant_session!
+
+      # Before validation, which may look the emoji up in shared caches.
+      RateLimiter.new(current_user, "live-reactions", REACTIONS_PER_USER, 10.seconds).performed!
+
+      emoji = params.require(:emoji)
+      raise Discourse::InvalidParameters.new(:emoji) if !Live::Reactions.valid?(emoji)
+
+      Live::RoomBroadcaster.publish_reaction(@room, current_user, emoji)
+
+      head :no_content
+    end
+
     def signal
       guardian.ensure_can_join_live_room!(@room)
       # Room eligibility alone is not enough: signaling authority comes from
@@ -704,12 +712,19 @@ module Live
     def chat_message
       ensure_chat_available!
 
-      text = params.require(:message).to_s
+      message_params = params.permit(:message, upload_ids: [])
+      text = message_params[:message].to_s
       # We post through Chat::CreateMessage directly, which bypasses the
       # per-user flood limit + auto-silence that chat enforces in its own
       # controller — apply it here so this endpoint isn't a way around it.
       ::Chat::MessageRateLimiter.run!(current_user)
-      render json: Live::ChatSession.post_message!(@room, current_user, text)
+      render json:
+               Live::ChatSession.post_message!(
+                 @room,
+                 current_user,
+                 text,
+                 upload_ids: message_params[:upload_ids] || [],
+               )
     rescue Live::ChatSession::Error => e
       # The chat plugin rejected the message for a reason worth showing (a
       # duplicate, a too-long message, threading disabled, …) — surface it
@@ -798,15 +813,6 @@ module Live
           next unless Live::UserStatusManager.live_status_active?(user)
           Live::UserStatusManager.set_live_status(user, room)
         end
-    end
-
-    def close_session_for(room_id, user_id)
-      metadata = Live::ParticipantTracker.get_metadata(room_id, user_id)
-      return unless metadata[:session_id]
-
-      session = Live::Session.find_by(id: metadata[:session_id])
-      session&.close!
-      session
     end
 
     def video_publisher_count(room, exclude_user_id: nil)

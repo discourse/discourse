@@ -7,10 +7,7 @@ RSpec.describe DiscourseAi::Agents::Tools::EditCategory do
   fab!(:admin)
   fab!(:category)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
 

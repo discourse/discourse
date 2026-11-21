@@ -130,8 +130,27 @@ module DiscourseAi
           end
         end
 
-        plugin.on(:post_destroyed) do |post|
-          AiSummary.where(target_type: "Topic", target_id: post.topic_id).delete_all
+        plugin.on(:post_destroyed) { |post, _, user| invalidate_summaries(post, actor: user) }
+
+        plugin.on(:post_revision_hidden) do |post_revision|
+          AiSummary.drop_for_post!(post_revision.post_id)
+        end
+
+        plugin.add_model_callback(PostRevision, :after_destroy) do
+          AiSummary.drop_for_post!(post_id)
+        end
+
+        plugin.on(:post_edited) do |post, _, revisor|
+          next if !revisor.post_changes.key?("raw")
+
+          revision = revisor.post_revision
+          next if revision && revision.modifications.dig("raw", 0) == post.raw_before_last_save
+
+          invalidate_summaries(
+            post,
+            actor: revisor.editor,
+            since: revision ? post.created_at : post.last_version_at,
+          )
         end
 
         plugin.on(:posts_moved) do |args|
@@ -155,6 +174,55 @@ module DiscourseAi
       end
 
       private
+
+      SUMMARY_REPLACEMENTS_PER_POST = 3
+
+      # Intended behavior, not an oversight: stale summaries and gists stay visible until
+      # their replacement is stored, even though they may briefly reflect content that was
+      # just removed. Deleting them up front leaves topics without a gist in topic lists,
+      # and without a summary, until the next backfill. Exposure is bounded: the
+      # replacement job drops whatever it can't replace, and rate-limited posts fall back
+      # to dropping immediately. Acting on someone else's post also drops immediately, as
+      # that content is most likely being removed on purpose.
+      def invalidate_summaries(post, actor:, since: nil)
+        AiSummary
+          .drop_since!(post.topic_id, since) { replace_summaries?(post, actor) }
+          .map { |summary| [summary.summary_type, summary.locale] }
+          .uniq
+          .each do |summary_type, locale|
+            Jobs.enqueue(
+              :replace_stale_topic_summary,
+              topic_id: post.topic_id,
+              summary_type:,
+              locale:,
+            )
+          end
+      end
+
+      def replace_summaries?(post, actor)
+        return false if !SiteSetting.discourse_ai_enabled
+        return false if !SiteSetting.ai_summarization_enabled
+        return false if post.topic.blank? || post.topic.trashed?
+        return false if moderating?(post, actor)
+
+        RateLimiter.new(
+          nil,
+          "ai-summary-replacement-#{post.id}",
+          SUMMARY_REPLACEMENTS_PER_POST,
+          1.hour,
+        ).performed!(raise_error: false)
+      end
+
+      # Anyone acting on a post they didn't write is moderating it, whichever permission
+      # allowed them to.
+      def moderating?(post, actor)
+        return true if actor.blank?
+        return false if actor.id == post.user_id
+        # the delayed removal of a post its author already deleted
+        return false if actor.is_system_user? && post.user_deleted?
+
+        true
+      end
 
       def enqueue_gist_jobs(topic, force_regenerate: false, minimum_target_number: nil)
         locales = DiscourseAi::Summarization.gist_locales(topic)

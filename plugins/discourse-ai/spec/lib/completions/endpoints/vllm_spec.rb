@@ -243,8 +243,19 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
     captured_payload
   end
 
+  def capture_payloads
+    payloads = []
+    stub_request(:post, "https://test.dev/v1/chat/completions").to_return do |request|
+      payloads << JSON.parse(request.body)
+      { status: 200, body: completion_response_body }
+    end
+
+    yield
+    payloads
+  end
+
   describe "tool support" do
-    %w[coalesced split].each do |delivery|
+    shared_examples "interleaved tool progress across transport chunks" do |delivery:|
       it "preserves interleaved tool progress with #{delivery} transport chunks" do
         events = [
           {
@@ -320,6 +331,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
           expect(progress).to eq([])
         end
       end
+    end
+
+    context "with multiple events in one transport chunk" do
+      include_examples "interleaved tool progress across transport chunks", delivery: "coalesced"
+    end
+
+    context "with events split across transport chunks" do
+      include_examples "interleaved tool progress across transport chunks", delivery: "split"
     end
 
     it "assigns the provider batch to every tool call in a streamed event" do
@@ -553,19 +572,91 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Vllm do
       expect(payload["chat_template_kwargs"]).to eq("enable_thinking" => true)
     end
 
-    it "suppresses thinking overrides when reasoning is explicitly disabled" do
-      llm_model.update!(
-        provider_params: {
-          "reasoning_parser" => "deepseek_v4",
-          "reasoning_effort" => "high",
-          "thinking_override" => "on",
-        },
-      )
+    let(:parser_flags) do
+      {
+        "qwen3" => "enable_thinking",
+        "gemma4" => "enable_thinking",
+        "deepseek_v4" => "enable_thinking",
+        "granite" => "thinking",
+        "deepseek_v3" => "thinking",
+        "holo2" => "thinking",
+      }
+    end
 
-      payload = capture_payload_for_completion(thinking_effort: "none")
+    def expect_disabled_payloads(payloads)
+      expect(payloads.length).to eq(parser_flags.length)
+      parser_flags.each_with_index do |(parser, flag), index|
+        aggregate_failures("parser #{parser}") do
+          payload = payloads.fetch(index)
+          expect(payload["chat_template_kwargs"]).to eq(flag => false)
+          expect(payload["reasoning_effort"]).to eq("none")
+          expect(payload).not_to have_key("thinking_token_budget")
+        end
+      end
+    end
 
-      expect(payload).not_to have_key("chat_template_kwargs")
-      expect(payload["reasoning_effort"]).to eq("none")
+    it "explicitly disables supported templates for per-call none despite model overrides" do
+      payloads =
+        capture_payloads do
+          parser_flags.each_key do |parser|
+            llm_model.update!(
+              provider_params: {
+                "reasoning_parser" => parser,
+                "reasoning_effort" => "high",
+                "thinking_override" => "on",
+                "enable_thinking" => true,
+                "thinking_token_budget" => "1024",
+              },
+            )
+            llm.generate("say hello", user: Discourse.system_user, thinking_effort: "none")
+          end
+        end
+
+      expect_disabled_payloads(payloads)
+    end
+
+    it "explicitly disables supported templates when model reasoning effort is none" do
+      payloads =
+        capture_payloads do
+          parser_flags.each_key do |parser|
+            llm_model.update!(
+              provider_params: {
+                "reasoning_parser" => parser,
+                "reasoning_effort" => "none",
+                "thinking_token_budget" => "1024",
+              },
+            )
+            llm.generate("say hello", user: Discourse.system_user)
+          end
+        end
+
+      expect_disabled_payloads(payloads)
+    end
+
+    it "keeps template flags unset for none with an unsupported or absent parser" do
+      parsers = [nil, "default", "custom_parser", "deepseek_r1"]
+      payloads =
+        capture_payloads do
+          parsers.each do |parser|
+            llm_model.update!(
+              provider_params: {
+                "reasoning_parser" => parser,
+                "thinking_override" => "on",
+                "enable_thinking" => true,
+              },
+            )
+            llm.generate("say hello", user: Discourse.system_user, thinking_effort: "none")
+          end
+        end
+
+      expect(payloads.length).to eq(parsers.length)
+      parsers.each_with_index do |parser, index|
+        aggregate_failures("parser #{parser.inspect}") do
+          payload = payloads.fetch(index)
+          expect(payload).not_to have_key("chat_template_kwargs")
+          expect(payload["reasoning_effort"]).to eq("none")
+        end
+      end
     end
 
     it "sends thinking for Granite thinking overrides" do

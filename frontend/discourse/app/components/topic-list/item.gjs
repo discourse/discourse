@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { isHTMLSafe, trustHTML } from "@ember/template";
+import { isTrustedHTML, trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import BulkSelectCheckbox from "discourse/components/topic-list/bulk-select-checkbox";
@@ -127,7 +127,7 @@ export default class Item extends Component {
     );
 
     const safeParts = parts.filter(Boolean).filter((part) => {
-      if (isHTMLSafe(part)) {
+      if (isTrustedHTML(part)) {
         return true;
       }
       // eslint-disable-next-line no-console

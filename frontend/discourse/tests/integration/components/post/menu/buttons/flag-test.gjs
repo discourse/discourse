@@ -51,7 +51,7 @@ module("Integration | Component | Post Menu Flag Button", function (hooks) {
       api.registerValueTransformer("flag-button-disabled-state", () => true);
     });
 
-    this.set("postForRender", this.args.post);
+    this.postForRender = this.args.post;
     await render(
       hbs`<Post::Menu::Buttons::Flag @post={{this.postForRender}} />`
     );
@@ -71,7 +71,7 @@ module("Integration | Component | Post Menu Flag Button", function (hooks) {
       );
     });
 
-    this.set("postForRender", this.args.post);
+    this.postForRender = this.args.post;
     await render(
       hbs`<Post::Menu::Buttons::Flag @post={{this.postForRender}} />`
     );

@@ -8,7 +8,7 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("doesn't render if the topic is closed", async function (assert) {
-    this.set("topic", { slow_mode_seconds: 3600, closed: true });
+    this.topic = { slow_mode_seconds: 3600, closed: true };
 
     await render(<template><SlowModeInfo @topic={{this.topic}} /></template>);
 
@@ -16,7 +16,7 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
   });
 
   test("doesn't render if the slow mode is disabled", async function (assert) {
-    this.set("topic", { slow_mode_seconds: 0, closed: false });
+    this.topic = { slow_mode_seconds: 0, closed: false };
 
     await render(<template><SlowModeInfo @topic={{this.topic}} /></template>);
 
@@ -24,7 +24,7 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
   });
 
   test("renders if slow mode is enabled", async function (assert) {
-    this.set("topic", { slow_mode_seconds: 3600, closed: false });
+    this.topic = { slow_mode_seconds: 3600, closed: false };
 
     await render(<template><SlowModeInfo @topic={{this.topic}} /></template>);
 
@@ -33,7 +33,7 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
 
   test("hides the notice once slow mode is turned off", async function (assert) {
     const topic = { slow_mode_seconds: 3600, closed: false };
-    this.set("topic", topic);
+    this.topic = topic;
 
     await render(<template><SlowModeInfo @topic={{this.topic}} /></template>);
 
@@ -48,10 +48,8 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
   });
 
   test("staff and TL4 users can disable slow mode", async function (assert) {
-    this.setProperties({
-      topic: { slow_mode_seconds: 3600, closed: false },
-      user: { canManageTopic: true },
-    });
+    this.topic = { slow_mode_seconds: 3600, closed: false };
+    this.user = { canManageTopic: true };
 
     await render(
       <template>
@@ -63,10 +61,8 @@ module("Integration | Component | SlowModeInfo", function (hooks) {
   });
 
   test("regular users can't disable slow mode", async function (assert) {
-    this.setProperties({
-      topic: { slow_mode_seconds: 3600, closed: false },
-      user: { canManageTopic: false },
-    });
+    this.topic = { slow_mode_seconds: 3600, closed: false };
+    this.user = { canManageTopic: false };
 
     await render(
       <template>

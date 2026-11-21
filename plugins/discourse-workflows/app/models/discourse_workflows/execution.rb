@@ -21,6 +21,7 @@ module DiscourseWorkflows
     enum :execution_mode, { normal: 0, error_mode: 1, manual: 2 }
 
     after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
+    after_save_commit :publish_post_button_feedback, if: :saved_change_to_status?
 
     scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id:) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
@@ -309,8 +310,15 @@ module DiscourseWorkflows
         .positive?
     end
 
+    def publish_post_button_feedback
+      if TERMINAL_STATUSES_FOR_PURGE.include?(status.to_sym)
+        PostButtonFeedback.finish(job_id, status)
+      end
+    end
+
     def notify_failure!(error)
       reload
+      publish_post_button_feedback
       trigger_error_workflow(error)
       DiscourseWorkflows::ExecutionProgressPublisher.publish(self, refresh: true)
       DiscourseWorkflows::WorkflowCallContinuation.child_failed!(self)

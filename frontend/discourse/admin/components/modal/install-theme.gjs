@@ -13,7 +13,6 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse/lib/later";
-import { POPULAR_THEMES } from "discourse/lib/popular-themes";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
@@ -28,6 +27,16 @@ const CREATE_TYPES = [
   { name: i18n("admin.customize.theme.theme"), value: THEMES },
   { name: i18n("admin.customize.theme.component"), value: COMPONENTS },
 ];
+
+const TypeSelect = <template>
+  <div class="label">{{i18n "admin.customize.theme.create_type"}}</div>
+  <ComboBox
+    @content={{CREATE_TYPES}}
+    @onChange={{@onChange}}
+    @value={{@value}}
+    @valueProperty="value"
+  />
+</template>;
 
 export default class InstallThemeModal extends Component {
   @service store;
@@ -44,10 +53,16 @@ export default class InstallThemeModal extends Component {
   @tracked themeCannotBeInstalled;
   @tracked name;
   @tracked loadingTimePassed;
+  @tracked popularThemes = [];
 
   recordType = this.args.model.recordType || "theme";
   keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
   importUrl = this.args.model.importUrl || "/admin/themes/import";
+
+  constructor() {
+    super(...arguments);
+    this.#loadPopularThemes();
+  }
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -121,29 +136,21 @@ export default class InstallThemeModal extends Component {
   }
 
   get themes() {
-    const list = [];
-    POPULAR_THEMES.forEach((popularTheme) => {
-      if (
-        this.args.model.installedThemes.some((installedTheme) =>
-          this.themeHasSameUrl(installedTheme, popularTheme.value)
-        )
-      ) {
-        popularTheme.installed = true;
-      }
-
-      if (this.args.model.showComponentsOnly) {
-        if (popularTheme.component) {
-          list.push(popularTheme);
+    return this.popularThemes
+      .filter((popularTheme) => {
+        if (this.args.model.showComponentsOnly) {
+          return popularTheme.component;
+        } else if (this.args.model.showThemesOnly) {
+          return !popularTheme.component;
         }
-      } else if (this.args.model.showThemesOnly) {
-        if (!popularTheme.component) {
-          list.push(popularTheme);
-        }
-      } else {
-        list.push(popularTheme);
-      }
-    });
-    return list;
+        return true;
+      })
+      .map((popularTheme) => ({
+        ...popularTheme,
+        installed: this.args.model.installedThemes.some((installedTheme) =>
+          this.themeHasSameUrl(installedTheme, popularTheme.remote_url)
+        ),
+      }));
   }
 
   get installingMessage() {
@@ -207,6 +214,18 @@ export default class InstallThemeModal extends Component {
     return this.#installTheme({ placeholder: true });
   }
 
+  async #loadPopularThemes() {
+    try {
+      const result = await ajax("/admin/config/customize/popular-themes.json");
+      if (this.isDestroying) {
+        return;
+      }
+      this.popularThemes = result.popular_themes;
+    } catch (err) {
+      popupAjaxError(err);
+    }
+  }
+
   async #installTheme({ placeholder = false } = {}) {
     if (this.create) {
       return this.#createTheme();
@@ -240,6 +259,7 @@ export default class InstallThemeModal extends Component {
         remote: this.uploadUrl,
         branch: this.branch,
         public_key: this.publicKey,
+        component: this.component,
       };
 
       if (placeholder) {
@@ -384,15 +404,18 @@ export default class InstallThemeModal extends Component {
                       {{else}}
                         <DButton
                           class="btn-primary"
-                          @action={{fn this.installThemeFromList theme.value}}
+                          @action={{fn
+                            this.installThemeFromList
+                            theme.remote_url
+                          }}
                           @disabled={{this.installDisabled}}
                           @icon="upload"
                           @label="admin.customize.theme.install"
                         />
 
-                        {{#if theme.preview}}
+                        {{#if theme.preview_url}}
                           <a
-                            href={{theme.preview}}
+                            href={{theme.preview_url}}
                             rel="noopener noreferrer"
                             target="_blank"
                           >
@@ -488,6 +511,15 @@ export default class InstallThemeModal extends Component {
                       <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
+                  <div class="install-theme-content__placeholder-type">
+                    <TypeSelect
+                      @onChange={{this.updateSelectedType}}
+                      @value={{this.selectedType}}
+                    />
+                    <div class="install-theme-content__placeholder-type-tip">
+                      {{i18n "admin.customize.theme.placeholder_type_tip"}}
+                    </div>
+                  </div>
                 {{/if}}
               </div>
             {{/if}}
@@ -503,14 +535,9 @@ export default class InstallThemeModal extends Component {
                   value={{this.name}}
                   {{on "input" (withEventValue (fn (mut this.name)))}}
                 />
-                <div class="label">{{i18n
-                    "admin.customize.theme.create_type"
-                  }}</div>
-                <ComboBox
-                  @content={{CREATE_TYPES}}
+                <TypeSelect
                   @onChange={{this.updateSelectedType}}
                   @value={{this.selectedType}}
-                  @valueProperty="value"
                 />
               </div>
             {{/if}}

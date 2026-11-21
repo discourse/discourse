@@ -117,6 +117,10 @@ module PageObjects
         within_post(post) { has_css?(".show-more-actions") }
       end
 
+      def has_post_flagged?(post:, type:)
+        within_post(post) { has_text?(I18n.t("js.post.actions.by_you.#{type}")) }
+      end
+
       def has_post_bookmarked?(post, with_reminder: false)
         is_post_bookmarked(post, bookmarked: true, with_reminder: with_reminder)
       end

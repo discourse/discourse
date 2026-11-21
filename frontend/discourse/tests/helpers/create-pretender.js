@@ -524,14 +524,14 @@ export function applyDefaultHandlers() {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "consectetur visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.last_read_post_number = 1;
+      obj.topics[0].last_read_post_number = 1;
       return response(obj);
     } else if (
       request.queryParams.q === "consectetur in:personal" ||
       request.queryParams.q === "consectetur in:messages"
     ) {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
-      obj.topics.firstObject.archetype = "private_message";
+      obj.topics[0].archetype = "private_message";
       return response(obj);
     } else {
       return response({});
@@ -1146,6 +1146,38 @@ export function applyDefaultHandlers() {
     });
   });
 
+  pretender.get("/admin/config/customize/popular-themes.json", () => {
+    return response(200, {
+      popular_themes: [
+        {
+          id: "graceful",
+          name: "Graceful",
+          description: "A light and graceful theme for Discourse.",
+          remote_url: "https://github.com/discourse/graceful",
+          screenshot_url: "/images/graceful-light.png",
+          meta_url: "https://meta.discourse.org/t/graceful-theme/93040",
+          component: false,
+        },
+        {
+          id: "mint",
+          name: "Mint",
+          description: "A minty colored theme.",
+          remote_url: "https://github.com/discourse/discourse-mint-theme",
+          screenshot_url: "/images/mint-light.png",
+          meta_url: "https://meta.discourse.org/t/mint-theme/202822",
+          component: false,
+        },
+        {
+          id: "brand_header",
+          name: "Brand Header",
+          description: "Add an extra top header.",
+          remote_url: "https://github.com/discourse/discourse-brand-header",
+          component: true,
+        },
+      ],
+    });
+  });
+
   pretender.post("/admin/themes/generate_key_pair", () => {
     return response(200, {
       private_key: "privateKey",
@@ -1571,6 +1603,13 @@ export function applyDefaultHandlers() {
 }
 
 export function resetPretender() {
+  // A response still pending here, e.g. to a request sent while the app was torn down,
+  // would land in the next test, possibly before its app has booted
+  for (const { request } of pretender.requestReferences) {
+    // Stops pretender's progress polling without dispatching events
+    request.aborted = true;
+  }
+  pretender.requestReferences = [];
   pretender.handlers = [];
   pretender.handledRequests = [];
   pretender.unhandledRequests = [];

@@ -17,7 +17,7 @@ class PostBookmarkable < BaseBookmarkable
 
   def self.list_query(user, guardian)
     topics = Topic.listable_topics.secured(guardian)
-    pms = Topic.private_messages_for_user(user)
+    pms = Topic.private_messages.allowed_to_user(user)
     post_bookmarks =
       user
         .bookmarks_of_type("Post")
