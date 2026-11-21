@@ -1,23 +1,14 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ChatDrawerRoutesBrowse from "discourse/plugins/chat/discourse/components/chat/drawer-routes/browse";
-import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
-import ChatDrawerRoutesChannelMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-members";
-import ChatDrawerRoutesChannelPins from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-pins";
-import ChatDrawerRoutesChannelPreferences from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-preferences";
-import ChatDrawerRoutesChannelSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-settings";
-import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
-import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
-import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
-import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
-import ChatDrawerRoutesSearch from "discourse/plugins/chat/discourse/components/chat/drawer-routes/search";
-import ChatDrawerRoutesStarredChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/starred-channels";
-import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
+
+// The drawer renders on every page, so its route components load on demand, in one chunk.
+const drawerRoutes = () => import("../lib/chat-drawer-routes.js");
+const loadChannels = async () => (await drawerRoutes()).Channels;
 
 const ROUTES = {
   chat: {
-    name: ChatDrawerRoutesChannels,
+    component: loadChannels,
     redirect: (context) => {
       if (
         context.siteSettings.chat_preferred_index === "my_threads" &&
@@ -39,28 +30,29 @@ const ROUTES = {
     },
   },
   "chat.browse": {
-    name: ChatDrawerRoutesBrowse,
+    component: async () => (await drawerRoutes()).Browse,
     extractParams: () => ({ currentTab: "open" }),
   },
   "chat.browse.open": {
-    name: ChatDrawerRoutesBrowse,
+    component: async () => (await drawerRoutes()).Browse,
     extractParams: (r) => ({ currentTab: r.localName }),
   },
   "chat.browse.archived": {
-    name: ChatDrawerRoutesBrowse,
+    component: async () => (await drawerRoutes()).Browse,
     extractParams: (r) => ({ currentTab: r.localName }),
   },
   "chat.browse.closed": {
-    name: ChatDrawerRoutesBrowse,
+    component: async () => (await drawerRoutes()).Browse,
     extractParams: (r) => ({ currentTab: r.localName }),
   },
   "chat.browse.all": {
-    name: ChatDrawerRoutesBrowse,
+    component: async () => (await drawerRoutes()).Browse,
     extractParams: (r) => ({ currentTab: r.localName }),
   },
-  "chat.channels": { name: ChatDrawerRoutesChannels },
+  "chat.channels": { component: loadChannels },
   "chat.channel": {
-    name: ChatDrawerRoutesChannel,
+    component: async () => (await drawerRoutes()).Channel,
+    showsMessages: true,
 
     async model(params) {
       const channel = await this.chatChannelsManager.find(params.channelId);
@@ -76,7 +68,8 @@ const ROUTES = {
     },
   },
   "chat.channel.thread": {
-    name: ChatDrawerRoutesChannelThread,
+    component: async () => (await drawerRoutes()).ChannelThread,
+    showsMessages: true,
 
     extractParams: (route) => {
       return {
@@ -105,7 +98,8 @@ const ROUTES = {
     },
   },
   "chat.channel.thread.near-message": {
-    name: ChatDrawerRoutesChannelThread,
+    component: async () => (await drawerRoutes()).ChannelThread,
+    showsMessages: true,
 
     extractParams: (route) => {
       return {
@@ -136,7 +130,7 @@ const ROUTES = {
     },
   },
   "chat.channel.threads": {
-    name: ChatDrawerRoutesChannelThreads,
+    component: async () => (await drawerRoutes()).ChannelThreads,
 
     extractParams: (route) => {
       return {
@@ -158,7 +152,7 @@ const ROUTES = {
     },
   },
   "chat.channel.pins": {
-    name: ChatDrawerRoutesChannelPins,
+    component: async () => (await drawerRoutes()).ChannelPins,
 
     extractParams: (route) => {
       return {
@@ -181,10 +175,10 @@ const ROUTES = {
     },
   },
   "chat.direct-messages": {
-    name: ChatDrawerRoutesDirectMessages,
+    component: async () => (await drawerRoutes()).DirectMessages,
   },
   "chat.starred-channels": {
-    name: ChatDrawerRoutesStarredChannels,
+    component: async () => (await drawerRoutes()).StarredChannels,
     redirect: (context) => {
       if (!context.chatChannelsManager.hasStarredChannels) {
         return "/chat/channels";
@@ -192,13 +186,14 @@ const ROUTES = {
     },
   },
   "chat.threads": {
-    name: ChatDrawerRoutesThreads,
+    component: async () => (await drawerRoutes()).Threads,
   },
   "chat.search": {
-    name: ChatDrawerRoutesSearch,
+    component: async () => (await drawerRoutes()).Search,
   },
   "chat.channel.near-message": {
-    name: ChatDrawerRoutesChannel,
+    component: async () => (await drawerRoutes()).Channel,
+    showsMessages: true,
 
     extractParams: (route) => {
       return {
@@ -221,7 +216,8 @@ const ROUTES = {
     },
   },
   "chat.channel.near-message-with-thread": {
-    name: ChatDrawerRoutesChannel,
+    component: async () => (await drawerRoutes()).Channel,
+    showsMessages: true,
 
     extractParams: (route) => {
       return {
@@ -244,7 +240,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.settings": {
-    name: ChatDrawerRoutesChannelSettings,
+    component: async () => (await drawerRoutes()).ChannelSettings,
 
     extractParams: (route) => {
       return {
@@ -265,7 +261,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.members": {
-    name: ChatDrawerRoutesChannelMembers,
+    component: async () => (await drawerRoutes()).ChannelMembers,
 
     extractParams: (route) => {
       return {
@@ -286,7 +282,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.preferences": {
-    name: ChatDrawerRoutesChannelPreferences,
+    component: async () => (await drawerRoutes()).ChannelPreferences,
 
     extractParams: (route) => {
       return {
@@ -359,7 +355,7 @@ export default class ChatDrawerRouter extends Service {
       popupAjaxError(e);
     }
 
-    this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+    this.component = this.drawerRoute?.component || loadChannels;
     this.currentRouteName = route.name;
     this.drawerRoute.activate?.(route);
 

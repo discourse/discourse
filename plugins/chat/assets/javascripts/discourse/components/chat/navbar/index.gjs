@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import noop from "discourse/helpers/noop";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import Actions from "./actions.gjs";
@@ -16,6 +15,13 @@ export default class ChatNavbar extends Component {
 
   get hasSingleView() {
     return this.chat.enabledViewCount <= 1;
+  }
+
+  @action
+  handleClick(event) {
+    if (!event.target.closest("a")) {
+      this.args.onClick?.(event);
+    }
   }
 
   @action
@@ -40,7 +46,7 @@ export default class ChatNavbar extends Component {
         (if @onClick "-clickable")
         (if this.hasSingleView "--single-view")
       }}
-      {{on "click" (if @onClick @onClick (noop))}}
+      {{on "click" this.handleClick}}
       {{dOnResize this.handleResize}}
     >
       <nav class="c-navbar">
