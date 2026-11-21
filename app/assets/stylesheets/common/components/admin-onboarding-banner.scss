@@ -2,28 +2,45 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
+  --admin-onboarding-banner-border: 3px solid var(--primary);
+  --admin-onboarding-banner-shadow-offset: 6px;
   padding-block: var(--d-main-content-gap);
 
+  // keeps the hard shadow from being clipped by the content edge
+  padding-inline-end: var(--admin-onboarding-banner-shadow-offset);
+  padding-block-end: calc(
+    var(--d-main-content-gap) + var(--admin-onboarding-banner-shadow-offset)
+  );
+
   @include viewport.until(sm) {
+    --admin-onboarding-banner-shadow-offset: 4px;
     padding-block: 0;
-    padding-block-end: var(--space-4);
+    padding-block-end: calc(
+      var(--space-4) + var(--admin-onboarding-banner-shadow-offset)
+    );
   }
 
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--content-border-color);
+    border-radius: 0;
+    border: var(--admin-onboarding-banner-border);
+    background: var(--secondary);
+    box-shadow: var(--admin-onboarding-banner-shadow-offset)
+      var(--admin-onboarding-banner-shadow-offset) 0 var(--primary);
     overflow: hidden;
     container: admin-onboarding-banner / inline-size;
   }
 
   &__title {
-    font-weight: 600;
+    font-family: var(--d-font-family--monospace);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   &__title-icon {
-    margin-right: var(--space-2);
+    margin-inline-end: var(--space-2);
     font-size: var(--font-down-1);
   }
 
@@ -32,8 +49,10 @@
     align-items: center;
     justify-content: space-between;
     height: min-content;
+    padding-block: var(--space-1);
     padding-inline-start: var(--space-4);
-    background: var(--background-color, var(--primary-100));
+    background: var(--primary);
+    color: var(--secondary);
   }
 
   &__header-text {
@@ -43,9 +62,35 @@
     align-items: center;
   }
 
+  &__header-actions .btn {
+    --d-button-transparent-icon-color: var(--secondary);
+    border-radius: 0;
+
+    @include hover {
+      background-color: var(--secondary);
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+
+    &:focus-visible {
+      background-color: var(--secondary);
+      outline: 3px solid var(--tertiary);
+      outline-offset: -3px;
+
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
   &__subtitle {
+    font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-2);
-    color: var(--primary-700);
+    text-transform: uppercase;
+    padding: 0 var(--space-2);
+    border: 2px solid var(--secondary);
   }
 
   &__steps {
@@ -56,8 +101,8 @@
   .onboarding-step {
     display: flex;
     flex-direction: row;
-    padding: var(--space-2) var(--space-4);
-    border-bottom: 1px solid var(--content-border-color);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--admin-onboarding-banner-border);
     gap: var(--space-4);
     align-items: center;
     text-align: start;
@@ -66,19 +111,15 @@
     // banner's own width rather than the viewport's
     @container admin-onboarding-banner (width < 48rem) {
       display: grid;
-      gap: 0;
+      gap: var(--space-1) var(--space-2);
       grid-template-columns: 1fr auto;
       grid-template-areas: "text action" "description action";
-      padding: var(--space-2);
+      padding: var(--space-2) var(--space-3);
     }
   }
 
   .onboarding-step:last-child {
     border-bottom: none;
-  }
-
-  .onboarding-step:first-child {
-    border-top: 1px solid var(--content-border-color);
   }
 
   .onboarding-step__checkbox {
@@ -88,13 +129,14 @@
     gap: var(--space-2);
 
     @container admin-onboarding-banner (width < 48rem) {
-      display: block;
+      display: flex;
       justify-self: baseline;
     }
   }
 
   .onboarding-step__checkbox-icon {
     font-size: var(--font-down-1);
+    color: var(--primary);
 
     &.--completed {
       color: var(--success);
@@ -102,8 +144,11 @@
   }
 
   .onboarding-step__title {
-    font-weight: 600;
+    font-family: var(--d-font-family--monospace);
+    font-weight: 800;
     font-size: var(--font-down-1);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 
     @container admin-onboarding-banner (width < 48rem) {
       grid-area: text;
@@ -112,7 +157,7 @@
 
   .onboarding-step__description {
     font-size: var(--font-down-1);
-    color: var(--primary-700);
+    color: var(--primary-high);
 
     @container admin-onboarding-banner (width < 48rem) {
       grid-area: description;
@@ -121,26 +166,56 @@
   }
 
   .onboarding-step__action {
-    margin-left: auto;
+    margin-inline-start: auto;
 
     @container admin-onboarding-banner (width < 48rem) {
       grid-area: action;
-      margin-left: 0;
+      margin-inline-start: 0;
     }
-
-    --d-button-transparent-text-color: var(--tertiary);
   }
 
   .onboarding-step__action .btn-link {
-    font-weight: 600;
+    --d-button-transparent-text-color: var(--primary);
+    padding: var(--space-1) var(--space-3);
+    font-family: var(--d-font-family--monospace);
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 2px solid var(--primary);
+    border-radius: 0;
+    background: var(--secondary);
+    box-shadow: 3px 3px 0 var(--primary);
+
+    @include hover {
+      color: var(--secondary);
+      background-color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    &:focus-visible {
+      color: var(--secondary);
+      background-color: var(--primary);
+      outline: 3px solid var(--tertiary);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      box-shadow: none;
+      transform: translate(3px, 3px);
+    }
 
     &.--completed {
       --d-button-transparent-text-color: var(--primary-medium);
       font-weight: 400;
-    }
+      border-style: dashed;
+      border-color: var(--primary-medium);
+      box-shadow: none;
 
-    &.--completed:hover {
-      --d-button-transparent-text-color--hover: var(--primary-high);
+      @include hover {
+        color: var(--secondary);
+        background-color: var(--primary-high);
+        border: 2px dashed var(--primary-high);
+      }
     }
   }
 }
