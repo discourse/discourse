@@ -730,6 +730,12 @@ export function applyDefaultHandlers() {
     response(fixturesByUrl["/c/11/show.json"])
   );
 
+  pretender.get("/c/testing/11/l/latest.json", () => {
+    const list = cloneJSON(fixturesByUrl["/latest.json"]);
+    list.topic_list.topics = [];
+    return response(list);
+  });
+
   pretender.get("/categories/types", () =>
     response({
       types: [

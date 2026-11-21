@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { TOAST } from "discourse/float-kit/lib/constants";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
@@ -45,6 +46,9 @@ acceptance("New category access for non authorized users", function () {
 
 acceptance("Category New", function (needs) {
   needs.user({ can_create_category: true });
+  needs.hooks.beforeEach(() => {
+    sinon.stub(TOAST.options, "autoClose").value(false);
+  });
 
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
@@ -71,9 +75,30 @@ acceptance("Category New", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/c/testing/edit/general",
-      "it transitions to the category edit route"
+      "/c/testing/11",
+      "it opens the new category"
     );
+    assert
+      .dom(".fk-d-default-toast.-success .fk-d-default-toast__message")
+      .hasText(
+        "Discussion category created successfully",
+        "it confirms creation"
+      );
+
+    const editSettings = ".fk-d-default-toast__actions button:first-child";
+    assert
+      .dom(editSettings)
+      .hasText("Edit settings", "it offers to edit category settings");
+    await click(editSettings);
+
+    assert.strictEqual(
+      currentURL(),
+      "/c/testing/edit/general",
+      "the toast action opens general settings"
+    );
+    assert
+      .dom(".fk-d-default-toast.-success")
+      .doesNotExist("it closes the toast");
 
     await visit("/c/testing/edit/tags");
 
@@ -101,7 +126,29 @@ acceptance("Category New", function (needs) {
       .exists("it can switch to the settings tab");
   });
 
-  test("Keeps the save button busy while redirecting to the edit page", async function (assert) {
+  test("Starts a fresh category when Create another is clicked", async function (assert) {
+    await visit("/new-category");
+    await fillIn("input.category-name", "testing");
+    await click("#save-category");
+
+    const createAnother = ".fk-d-default-toast__actions button:last-child";
+    assert
+      .dom(createAnother)
+      .hasText("Create another", "it offers to create another category");
+    await click(createAnother);
+
+    assert.strictEqual(
+      currentURL(),
+      "/new-category/general",
+      "setup opens the form directly when only one type is available"
+    );
+    assert.dom("input.category-name").hasValue("", "the new form is empty");
+    assert
+      .dom(".fk-d-default-toast.-success")
+      .doesNotExist("it closes the toast");
+  });
+
+  test("Keeps the save button busy while redirecting to the category page", async function (assert) {
     const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
     category.category_types.support = category.available_category_types[0];
     pretender.post("/categories", () => response({ category }));
@@ -113,7 +160,10 @@ acceptance("Category New", function (needs) {
     document.querySelector("#save-category").click();
     await settled();
 
-    assert.true(redirectAbsolute.calledWith("/c/testing/edit"));
+    assert.true(
+      redirectAbsolute.calledWith("/c/testing/11"),
+      "it reloads at the new category"
+    );
     assert.dom("#save-category").isDisabled();
     assert.strictEqual(
       pretender.handledRequests.filter(
@@ -121,6 +171,11 @@ acceptance("Category New", function (needs) {
       ).length,
       1
     );
+
+    await visit("/c/testing/11");
+    assert
+      .dom(".fk-d-default-toast.-success")
+      .exists("the destination displays the pending toast");
   });
 
   test("Specifying a parent category", async function (assert) {
