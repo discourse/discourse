@@ -4674,6 +4674,27 @@ en:
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
+      # Said when focus lands on a topic list row
+      row_label:
+        new: "New"
+        unread_posts:
+          one: "%{count} new reply"
+          other: "%{count} new replies"
+        closed: "Closed"
+        archived: "Archived"
+        warning: "Warning"
+        unlisted: "Unlisted"
+        bookmarked: "Bookmarked"
+        category: "In %{category}"
+        tags: "Tags: %{tags}"
+        posters: "By %{posters}"
+        replies:
+          one: "%{count} reply"
+          other: "%{count} replies"
+        views:
+          one: "%{count} view"
+          other: "%{count} views"
+        activity: "Last activity %{time}"
       create: "New Topic"
       create_shared_draft: "New Shared Draft"
       create_long: "Create a new topic"

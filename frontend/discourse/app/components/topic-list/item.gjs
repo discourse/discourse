@@ -19,6 +19,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { relativeAgeSpoken } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import {
   applyBehaviorTransformer,
@@ -101,6 +102,93 @@ export default class Item extends Component {
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
+  }
+
+  /** What a screen reader says when focus lands on the row. */
+  get accessibleName() {
+    const topic = this.args.topic;
+    const row = (key, options) => i18n(`topic.row_label.${key}`, options);
+    const hasColumn = (key) =>
+      this.useMobileLayout ||
+      this.args.columns?.some((entry) => entry.key === key);
+
+    const parts = [];
+
+    if (topic.unseen) {
+      parts.push(row("new"));
+    }
+    if (topic.unread_posts > 0) {
+      parts.push(row("unread_posts", { count: topic.unread_posts }));
+    }
+
+    parts.push(topic.title);
+
+    if (topic.closed) {
+      parts.push(row("closed"));
+    }
+    if (topic.archived) {
+      parts.push(row("archived"));
+    }
+    if (topic.pinned) {
+      parts.push(
+        i18n(
+          topic.pinned_globally
+            ? "topic_statuses.pinned_globally.title"
+            : "topic_statuses.pinned.title"
+        )
+      );
+    }
+    if (topic.is_warning) {
+      parts.push(row("warning"));
+    }
+    if (topic.invisible) {
+      parts.push(row("unlisted"));
+    }
+    if (topic.bookmarked) {
+      parts.push(row("bookmarked"));
+    }
+
+    if (!this.args.hideCategory && topic.category?.name) {
+      parts.push(row("category", { category: topic.category.name }));
+    }
+
+    const tags = (topic.visibleListTags || []).map((tag) =>
+      typeof tag === "string" ? tag : tag.name
+    );
+    if (tags.length) {
+      parts.push(row("tags", { tags: tags.join(", ") }));
+    }
+
+    if (!this.useMobileLayout && hasColumn("posters")) {
+      const posters = (topic.featuredUsers || [])
+        .map((poster) => poster.user?.username)
+        .filter(Boolean);
+      if (posters.length) {
+        parts.push(row("posters", { posters: posters.join(", ") }));
+      }
+    }
+
+    if (hasColumn("replies")) {
+      parts.push(row("replies", { count: topic.replyCount }));
+    }
+    if (!this.useMobileLayout && hasColumn("views")) {
+      parts.push(row("views", { count: topic.views }));
+    }
+    if (hasColumn("activity") && topic.bumpedAt) {
+      parts.push(row("activity", { time: relativeAgeSpoken(topic.bumpedAt) }));
+    }
+
+    if (this.expandPinned && topic.hasExcerpt) {
+      const excerpt = new DOMParser()
+        .parseFromString(topic.excerpt, "text/html")
+        .body.textContent.replace(/\s+/g, " ")
+        .trim();
+      if (excerpt) {
+        parts.push(excerpt);
+      }
+    }
+
+    return parts.join(", ");
   }
 
   get useMobileLayout() {
@@ -295,6 +383,7 @@ export default class Item extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <tr
+      aria-label={{this.accessibleName}}
       aria-level={{this.ariaLevel}}
       class={{dConcatClass
         "topic-list-item"

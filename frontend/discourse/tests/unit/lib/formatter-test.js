@@ -14,6 +14,7 @@ import {
   prettyJSON,
   relativeAge,
   relativeAgeMediumSpan,
+  relativeAgeSpoken,
   shortDate as formatShortDate,
   shortDateNoYear,
   smartShortDate,
@@ -23,6 +24,7 @@ import {
   updateRelativeAge,
 } from "discourse/lib/formatter";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);
@@ -621,6 +623,53 @@ module("Unit | Utility | formatter | dates", function (hooks) {
       longDateNoYear(new Date(2023, 2, 2, 15, 4)),
       "Mar 2, 2023 3:04 PM"
     );
+  });
+
+  test("relativeAgeSpoken says the tiny format in words", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.relative_date_duration = 14;
+
+    const ago = (minutes) => new Date(Date.now() - minutes * 60 * 1000);
+
+    assert.strictEqual(relativeAgeSpoken(ago(0.5)), "1 min ago");
+    assert.strictEqual(relativeAgeSpoken(ago(2)), "2 mins ago");
+    assert.strictEqual(relativeAgeSpoken(ago(60)), "1 hour ago");
+    assert.strictEqual(relativeAgeSpoken(ago(4 * 60)), "4 hours ago");
+    assert.strictEqual(relativeAgeSpoken(ago(26 * 60)), "1 day ago");
+    assert.strictEqual(relativeAgeSpoken(ago(3 * 1440)), "3 days ago");
+    assert.strictEqual(relativeAgeSpoken(ago(14 * 1440)), "14 days ago");
+    assert.strictEqual(
+      relativeAgeSpoken(ago(20 * 1440)),
+      "May 26",
+      "past the relative window it is a date, with the month in full"
+    );
+    assert.strictEqual(
+      relativeAgeSpoken(new Date(2023, 3, 10)),
+      "April 2023",
+      "an earlier year shows the month and year"
+    );
+
+    siteSettings.relative_date_duration = 0;
+    assert.strictEqual(
+      relativeAgeSpoken(ago(3 * 1440)),
+      "June 12",
+      "a relative_date_duration of 0 shows dates instead of days"
+    );
+  });
+
+  test("relativeAgeSpoken leaves a month that is already in full alone", function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.relative_date_duration = 14;
+
+    const tiny = I18n.translations[I18n.locale].js.dates.tiny;
+    const original = tiny.date_month;
+    tiny.date_month = "D. MMMM";
+
+    try {
+      assert.strictEqual(relativeAgeSpoken(new Date(2024, 4, 26)), "26. May");
+    } finally {
+      tiny.date_month = original;
+    }
   });
 
   test("relativeAgeMediumSpan", function (assert) {
