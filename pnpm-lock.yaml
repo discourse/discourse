@@ -210,7 +210,7 @@ importers:
     devDependencies:
       '@discourse/lint-configs':
         specifier: ^3.10.0
-        version: 3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))(supports-color@10.2.2)
+        version: 3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))(supports-color@10.2.2)
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -219,10 +219,10 @@ importers:
         version: 7.3.1
       '@glint/ember-tsc':
         specifier: ^1.11.6
-        version: 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+        version: 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
       '@glint/tsserver-plugin':
-        specifier: ^2.7.9
-        version: 2.7.9(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
+        specifier: ^2.7.16
+        version: 2.7.16(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
       '@rdil/parallel-prettier':
         specifier: ^3.0.0
         version: 3.0.0(prettier@3.8.1)
@@ -231,7 +231,7 @@ importers:
         version: 10.0.7
       ember-content-mapper:
         specifier: ^0.3.1
-        version: 0.3.1(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+        version: 0.3.1(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
       eslint:
         specifier: 10.6.0
         version: 10.6.0(jiti@2.7.0)(supports-color@10.2.2)
@@ -264,16 +264,16 @@ importers:
         version: 3.8.1
       stylelint:
         specifier: 17.5.0
-        version: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+        version: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
       typescript:
-        specifier: 7.1.0-dev.20260930.4
-        version: 7.1.0-dev.20260930.4
+        specifier: 7.1.0-dev.20261112.1
+        version: 7.1.0-dev.20261112.1
 
   docs/developer-guides:
     devDependencies:
       '@discourse/lint-configs':
         specifier: ^3.10.0
-        version: 3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))(supports-color@10.2.2)
+        version: 3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))(supports-color@10.2.2)
       prettier:
         specifier: 3.8.1
         version: 3.8.1
@@ -477,10 +477,10 @@ importers:
         version: 0.95.0
       '@glint/ember-tsc':
         specifier: ^1.11.6
-        version: 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+        version: 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
       '@glint/template':
-        specifier: ^1.9.0
-        version: 1.9.0
+        specifier: ^1.11.1
+        version: 1.11.1
       '@highlightjs/cdn-assets':
         specifier: 11.12.0
         version: 11.12.0
@@ -501,19 +501,19 @@ importers:
         version: 1.4.12
       '@warp-drive/core':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@warp-drive/ember':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@ember/test-waiters@4.1.2(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@ember/test-waiters@4.1.2(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@warp-drive/json-api':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)
       '@warp-drive/legacy':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(patch_hash=de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(patch_hash=de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
       '@warp-drive/utilities':
         specifier: 5.9.0-alpha.15
-        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)
       ace-builds:
         specifier: ^1.45.2
         version: 1.45.2
@@ -540,7 +540,7 @@ importers:
         version: 0.7.1
       ember-curry-component:
         specifier: ^0.5.0
-        version: 0.5.0(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 0.5.0(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       ember-resolver:
         specifier: ^13.2.0
         version: 13.2.0
@@ -685,22 +685,22 @@ importers:
         version: 4.1.2(supports-color@10.2.2)
       '@embroider/compat':
         specifier: ^4.1.27
-        version: 4.1.27(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 4.1.27(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/config-meta-loader':
         specifier: 1.0.0
         version: 1.0.0
       '@embroider/core':
         specifier: ^4.6.9
-        version: 4.6.9(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 4.6.9(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/macros':
         specifier: ^1.21.3
-        version: 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+        version: 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/router':
         specifier: ^3.0.6
-        version: 3.0.6(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 3.0.6(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)
       '@embroider/vite':
         specifier: ^1.7.15
-        version: 1.7.15(@babel/core@7.29.7(supports-color@10.2.2))(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)(vite@8.2.4(@types/node@26.6.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+        version: 1.7.15(@babel/core@7.29.7(supports-color@10.2.2))(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)(vite@8.2.4(@types/node@26.6.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
       '@floating-ui/dom':
         specifier: ^1.8.0
         version: 1.8.0
@@ -787,7 +787,7 @@ importers:
         version: 7.0.1(@babel/core@7.29.7(supports-color@10.2.2))(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)
       ember-exam:
         specifier: ^10.3.0
-        version: 10.3.0(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2)
+        version: 10.3.0(@glint/template@1.11.1)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2)
       ember-modifier:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
@@ -834,8 +834,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
       typescript:
-        specifier: 7.1.0-dev.20260930.4
-        version: 7.1.0-dev.20260930.4
+        specifier: 7.1.0-dev.20261112.1
+        version: 7.1.0-dev.20261112.1
       util:
         specifier: ^0.12.5
         version: 0.12.5
@@ -885,8 +885,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       typescript:
-        specifier: 7.1.0-dev.20260930.4
-        version: 7.1.0-dev.20260930.4
+        specifier: 7.1.0-dev.20261112.1
+        version: 7.1.0-dev.20261112.1
 
   frontend/playwright-runner:
     dependencies:
@@ -2297,11 +2297,24 @@ packages:
       ember-source:
         optional: true
 
+  '@glint/ember-tsc@1.14.3':
+    resolution: {integrity: sha512-/NHLni6c5o1KsV6l+P6k0qzmijJmVCs3qZ+4Slrxx2ps8/T7NWIB2PUNvCV27A3JcPcLd/Jr5x5LeysoW3YPTA==}
+    hasBin: true
+    peerDependencies:
+      ember-source: '>=3.28.0'
+      typescript: '>=5.6.0'
+    peerDependenciesMeta:
+      ember-source:
+        optional: true
+
+  '@glint/template@1.11.1':
+    resolution: {integrity: sha512-E6jqIzkgeM0wq0dRHstf0UXx68DSmK+xozh0E6JsorHLdcu+1tDW7T+Espun2zeWjBQxnUH0F6Hn7IF3CmmyGg==}
+
   '@glint/template@1.9.0':
     resolution: {integrity: sha512-AoLE/VeDcCI3vroIwP3uTjc33+44JYJbARbswRxe8/Jz7P+dWlhO+ycmigsT2WdVI051+HF9jZLsSwUXv0JxwQ==}
 
-  '@glint/tsserver-plugin@2.7.9':
-    resolution: {integrity: sha512-W8J8ild0o1WV6Fy4SaZzhKOVYr3u0D5hKoTIonNOh3ixKMASzlz+xwNZ6YH30jY7N7GCt6pB4jYD7nUrxjiZxQ==}
+  '@glint/tsserver-plugin@2.7.16':
+    resolution: {integrity: sha512-gp+YE0y9AfP9Ufr7ju1SYzpmQnCwXZnlJ5Q6t/ofuMmceVrHYEPTQkCi2tbn5+DzSiUbDE4C6ZG4r6Hz97iLzA==}
 
   '@handlebars/parser@2.2.2':
     resolution: {integrity: sha512-n/SZW+12rwikx/f8YcSv9JCi5p9vn1Bnts9ZtVvfErG4h0gbjHI1H1ZMhVUnaOC7yzFc6PtsCKIK8XeTnL90Gw==}
@@ -3153,44 +3166,44 @@ packages:
     resolution: {integrity: sha512-4g3BLxfdTMy8iZG0MaBkadnlRrCJ74cQiFbyEVMrkwIoqdyaXXQM22cotDvrl4x28wgIZ9rEJRoM+mmhSJpJ1g==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-/k0in+czN7835T9HwQ7r73/PmhkLn+5yhreiO9zPGpErXkv7P97ksHK9ImSFSAs2/gXboazzPpsOl+mk0zA1iQ==}
+  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-FiNiuonQ6zQkQ98vgi0xCCZrdIcqzpxXoLbwnpslgLaCbZTWZYCTb3UBKB/xXRn6cuvb2UjO9AceEdWG4zccQQ==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [darwin]
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-ITDKKWveMkFtQYPwpWqerAKmYAwh1kGIzzn2NEomufg/LBrbdo0F4LSotLmO2wq0vDQlTFZBMjikNOgQpxU09w==}
+  '@typescript/typescript-darwin-x64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-YIWV9XYUjq5hXlCjQmz5uKGNcbPPiCCaTr9F07tBxpBbGqe/7zj8hJ8dDc5F/lpv3S4sBxblCK9DYZK8DHKqnw==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [darwin]
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-3zBDMDf+XNflm7d7JlL+eCeSq8eb0TtYE5GTs7c8NkA6RxlabvUTYsfH7MEPvEpawODuU89knqE5AsOlpNQxEg==}
+  '@typescript/typescript-linux-arm64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-ICsK4t9okjJ8NxbhVi+buRYy4x9Tk8xgASy7YbrW/h45rHP9hBZZUM+On5D/TA8R3R83Fda0In763j4nOvu/2g==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [linux]
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-0qLPMj5LqB/0dQLIdysmpF/CBoj4JWKaXrCtls7eIy3wRj+zxLJH9xw6EjIznxH3cTw0K/auVzGd11rRa09xaQ==}
+  '@typescript/typescript-linux-arm@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-lK8RZoWGmvxEcTBcNp7m22pGyj24RpmUxgF7F2vKsDHqyfE6Uj7yDjtyryoAeJozhQG09xFbZ+i9QZ17PAcMkw==}
     engines: {node: '>=16.20.0'}
     cpu: [arm]
     os: [linux]
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-nit0a2o1oZLc15Vxx01WmEwxh58mNru+fbdrl2w2ntsrs277G4E5bTVlmjusQTMQrYaoGPQ87dHP4iiGCwGR0w==}
+  '@typescript/typescript-linux-x64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-YY89zQTDF0pY1nGxjecYn1E9U1lRk+16PXdCC+nn4HiDBAP3JhitFZOt33r62XMcDZi0aMvcuOmvj1qsPPQEcg==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [linux]
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-+82D46C7JiTuMEY9R8sbSphs68rJcMZs9QvN0yx+PwQkuFx64OfrC5mQ2XYHKBgmx2y9MYaVsb9/3eZsCOuf6A==}
+  '@typescript/typescript-win32-arm64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-N4Bj7g9mRSF4y45V6hAqPvvUjJq7X8+t2iJeC7Y6T72gsHbqWy2ZP622t9YscxE0Essyk+HMFAtWW/vYf38AqQ==}
     engines: {node: '>=16.20.0'}
     cpu: [arm64]
     os: [win32]
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20260930.4':
-    resolution: {integrity: sha512-bwUDNgcarVhWX6HF5uOFtPStCfOE9tLtDMYO8auDoLMp1GYXWxlet7Lh+SN2x506wtA8170nY1+3IHZwWPwd/w==}
+  '@typescript/typescript-win32-x64@7.1.0-dev.20261112.1':
+    resolution: {integrity: sha512-q5Hk240iUwFWpp6OeHTFsxVjYfAOq1lEG61+PB4yRT5W0AHMsDK96bd2dicFJFYmN8IkTsslgqaNkyypkQpz0w==}
     engines: {node: '>=16.20.0'}
     cpu: [x64]
     os: [win32]
@@ -3243,13 +3256,29 @@ packages:
     peerDependencies:
       typescript: '*'
 
+  '@volar/kit@2.4.31':
+    resolution: {integrity: sha512-pQgvegC28dfdNcs/iDNZVHkMs+dG7rpD9Aj+sNU2hildv1QuH7/MIoff/cSJW/IR25AGOeHWbJXWWFKDXXWtVw==}
+    peerDependencies:
+      typescript: <7
+
   '@volar/language-core@2.4.28':
     resolution: {integrity: sha512-w4qhIJ8ZSitgLAkVay6AbcnC7gP3glYM3fYwKV3srj8m494E3xtrCv6E+bWviiK/8hs6e6t1ij1s2Endql7vzQ==}
+
+  '@volar/language-core@2.4.31':
+    resolution: {integrity: sha512-OM+OZfynHa1/4WlC8klqvwTQVmhYUZuwpAKdfl/rlvK8jaIozMD5qwXsOkxcRJA2tC+TEFsG1K81lNP4s/IAzQ==}
 
   '@volar/language-server@2.4.28':
     resolution: {integrity: sha512-NqcLnE5gERKuS4PUFwlhMxf6vqYo7hXtbMFbViXcbVkbZ905AIVWhnSo0ZNBC2V127H1/2zP7RvVOVnyITFfBw==}
     peerDependencies:
       typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@volar/language-server@2.4.31':
+    resolution: {integrity: sha512-PI/3CLcoHzb3RUNuh3ecWEf3d3doGnJ7/dYTvvE+8Y9dnV2SjVXp6BP7G2S5mdq9L1yFYP5yhoEHXc1OIfmX0A==}
+    peerDependencies:
+      typescript: <7
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -3262,16 +3291,38 @@ packages:
       typescript:
         optional: true
 
+  '@volar/language-service@2.4.31':
+    resolution: {integrity: sha512-LM9HFsBVhHZ7RbFUZK9P23FvamK8XCDcN0kNgOTts02wVgnygo3ReLbmBmUZ3GuYnrYn6HHoQvqk/eHIzzTnrg==}
+    peerDependencies:
+      typescript: <7
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@volar/source-map@2.4.28':
     resolution: {integrity: sha512-yX2BDBqJkRXfKw8my8VarTyjv48QwxdJtvRgUpNE5erCsgEUdI2DsLbpa+rOQVAJYshY99szEcRDmyHbF10ggQ==}
 
+  '@volar/source-map@2.4.31':
+    resolution: {integrity: sha512-odi31S3mKm57aO7Pd5P624FmGIB49U4lUPnYRUKvCDa8WZy5N5Yb+GMp2WJNaeIr4+q0ijNpuHsJLrfEiWvHtA==}
+
   '@volar/test-utils@2.4.28':
     resolution: {integrity: sha512-N7RNiHHDPtqK5B21x4W462XMQj7Z75ynN3isLP+3Rb44hbJjhxxDxzs+QqWB0sjM57EtTJga+SDd9WWy3OjMzA==}
+
+  '@volar/test-utils@2.4.31':
+    resolution: {integrity: sha512-4uZBKevh4GMvPEupIDlmZDCIjFwxNgB96yBDN3NY0JOqPDs3buKilsXbcChTa9Dc7pL/1VqEp3uZc9Jdoe7+Ig==}
 
   '@volar/typescript@2.4.28':
     resolution: {integrity: sha512-Ja6yvWrbis2QtN4ClAKreeUZPVYMARDYZl9LMEv1iQ1QdepB6wn0jTRxA9MftYmYa4DQ4k/DaSZpFPUfxl8giw==}
     peerDependencies:
       typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@volar/typescript@2.4.31':
+    resolution: {integrity: sha512-OBHLLAi03AmaRWqzytdFhgtW2B3HM+2/vXFkvnZAlEKltalUTyu+No7g9aZx7e9efrDLOtHsd/3PgCHSfgVJ/Q==}
+    peerDependencies:
+      typescript: <7
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -7874,8 +7925,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@7.1.0-dev.20260930.4:
-    resolution: {integrity: sha512-SHLXGxB3FtSbkBdHOIPJibBMRJinqsXaYHzcheJO5cKYP6x2Sdmq3c9iU8lnGwEBU7D9KEBsWZiTz7nA1DO4Kw==}
+  typescript@7.1.0-dev.20261112.1:
+    resolution: {integrity: sha512-gY2gGKaWuVsRB4GG9ws8+wlQe8WC/Xp1XUy6v0AjIDv/qNAigy5mziwCvgY0SjJrB5ISHnMkgkFJJRKZQXtrGQ==}
     engines: {node: '>=16.20.0'}
     hasBin: true
 
@@ -9457,7 +9508,7 @@ snapshots:
     dependencies:
       wasm-feature-detect: 1.8.0
 
-  '@discourse/lint-configs@3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))(supports-color@10.2.2)':
+  '@discourse/lint-configs@3.10.0(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(postcss@8.5.32)(prettier@3.8.1)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))(supports-color@10.2.2)':
     dependencies:
       '@babel/core': 8.0.1
       '@babel/eslint-parser': 8.0.1(@babel/core@8.0.1)(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))
@@ -9474,10 +9525,10 @@ snapshots:
       globals: 17.7.0
       prettier: 3.8.1
       prettier-plugin-ember-template-tag: 2.1.7(prettier@3.8.1)(supports-color@10.2.2)
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
-      stylelint-config-standard: 40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
-      stylelint-config-standard-scss: 17.0.0(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
-      stylelint-scss: 7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
+      stylelint-config-standard: 40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
+      stylelint-config-standard-scss: 17.0.0(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
+      stylelint-scss: 7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
       typescript: 5.9.3
       typescript-eslint: 8.62.1(eslint@10.6.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
     transitivePeerDependencies:
@@ -9613,7 +9664,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/compat@4.1.27(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@embroider/compat@4.1.27(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
       '@babel/code-frame': 7.29.7
       '@babel/core': 7.29.7(supports-color@10.2.2)
@@ -9624,8 +9675,8 @@ snapshots:
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
       '@babel/runtime': 7.29.7
       '@babel/traverse': 7.29.8(supports-color@10.2.2)
-      '@embroider/core': 4.6.9(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/core': 4.6.9(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@types/babel__code-frame': 7.27.0
       assert-never: 1.4.0
       babel-import-util: 3.0.1
@@ -9668,12 +9719,12 @@ snapshots:
 
   '@embroider/config-meta-loader@1.0.0': {}
 
-  '@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/parser': 7.29.8
       '@babel/traverse': 7.29.8(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/reverse-exports': 0.2.0
       '@embroider/shared-internals': 3.2.0(supports-color@10.2.2)
       assert-never: 1.4.0
@@ -9710,7 +9761,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/macros@1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@embroider/macros@1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
       '@embroider/shared-internals': 3.2.0(supports-color@10.2.2)
       assert-never: 1.4.0
@@ -9721,7 +9772,7 @@ snapshots:
       resolve: 1.22.12
       semver: 7.8.5
     optionalDependencies:
-      '@glint/template': 1.9.0
+      '@glint/template': 1.11.1
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -9731,12 +9782,12 @@ snapshots:
       mem: 8.1.1
       resolve.exports: 2.0.3
 
-  '@embroider/router@3.0.6(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@embroider/router@3.0.6(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
       '@ember/test-waiters': 4.1.2(supports-color@10.2.2)
       '@embroider/addon-shim': 1.10.3(supports-color@10.2.2)
     optionalDependencies:
-      '@embroider/core': 4.6.9(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/core': 4.6.9(@glint/template@1.11.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
 
@@ -9775,10 +9826,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/vite@1.7.15(@babel/core@7.29.7(supports-color@10.2.2))(@embroider/core@4.6.9(@glint/template@1.9.0)(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)(vite@8.2.4(@types/node@26.6.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))':
+  '@embroider/vite@1.7.15(@babel/core@7.29.7(supports-color@10.2.2))(@embroider/core@4.6.9(@glint/template@1.11.1)(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)(vite@8.2.4(@types/node@26.6.6)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))':
     dependencies:
-      '@embroider/core': 4.6.9(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/core': 4.6.9(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/reverse-exports': 0.2.0
       assert-never: 1.4.0
       browserslist: 4.29.3
@@ -9929,23 +9980,23 @@ snapshots:
     dependencies:
       '@glimmer/interfaces': 0.94.6
 
-  '@glint/ember-tsc@1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
+  '@glint/ember-tsc@1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)':
     dependencies:
       '@glimmer/syntax': 0.95.0
       '@glint/template': 1.9.0
-      '@volar/kit': 2.4.28(typescript@6.0.3)
+      '@volar/kit': 2.4.28(typescript@7.1.0-dev.20261112.1)
       '@volar/language-core': 2.4.28
-      '@volar/language-server': 2.4.28(typescript@6.0.3)
-      '@volar/language-service': 2.4.28(typescript@6.0.3)
+      '@volar/language-server': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20261112.1)
       '@volar/source-map': 2.4.28
-      '@volar/test-utils': 2.4.28(typescript@6.0.3)
-      '@volar/typescript': 2.4.28(typescript@6.0.3)
+      '@volar/test-utils': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20261112.1)
       content-tag: 4.2.1
       ember-estree: 0.8.0
       silent-error: 1.1.1(supports-color@10.2.2)
-      typescript: 6.0.3
-      volar-service-html: 0.0.71(@volar/language-service@2.4.28(typescript@6.0.3))
-      volar-service-typescript: 0.0.71(@volar/language-service@2.4.28(typescript@6.0.3))(typescript@6.0.3)
+      typescript: 7.1.0-dev.20261112.1
+      volar-service-html: 0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20261112.1))
+      volar-service-typescript: 0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20261112.1))(typescript@7.1.0-dev.20261112.1)
       vscode-languageserver-protocol: 3.18.3
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
@@ -9954,23 +10005,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@glint/ember-tsc@1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)':
+  '@glint/ember-tsc@1.14.3(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:
       '@glimmer/syntax': 0.95.0
-      '@glint/template': 1.9.0
-      '@volar/kit': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/language-core': 2.4.28
-      '@volar/language-server': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/source-map': 2.4.28
-      '@volar/test-utils': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20260930.4)
+      '@glint/template': 1.11.1
+      '@volar/kit': 2.4.31(typescript@6.0.3)
+      '@volar/language-core': 2.4.31
+      '@volar/language-server': 2.4.31(typescript@6.0.3)
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
+      '@volar/source-map': 2.4.31
+      '@volar/test-utils': 2.4.31(typescript@6.0.3)
+      '@volar/typescript': 2.4.31(typescript@6.0.3)
       content-tag: 4.2.1
-      ember-estree: 0.8.0
+      ember-estree: 0.9.0
       silent-error: 1.1.1(supports-color@10.2.2)
-      typescript: 7.1.0-dev.20260930.4
-      volar-service-html: 0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20260930.4))
-      volar-service-typescript: 0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20260930.4))(typescript@7.1.0-dev.20260930.4)
+      typescript: 6.0.3
+      volar-service-html: 0.0.71(@volar/language-service@2.4.31(typescript@6.0.3))
+      volar-service-typescript: 0.0.71(@volar/language-service@2.4.31(typescript@6.0.3))(typescript@6.0.3)
       vscode-languageserver-protocol: 3.18.3
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
@@ -9978,14 +10029,16 @@ snapshots:
       ember-source: 7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
+
+  '@glint/template@1.11.1': {}
 
   '@glint/template@1.9.0': {}
 
-  '@glint/tsserver-plugin@2.7.9(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@glint/tsserver-plugin@2.7.16(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
-      '@glint/ember-tsc': 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
-      '@volar/language-core': 2.4.28
-      '@volar/typescript': 2.4.28(typescript@6.0.3)
+      '@glint/ember-tsc': 1.14.3(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
+      '@volar/language-core': 2.4.31
+      '@volar/typescript': 2.4.31(typescript@6.0.3)
       jiti: 2.7.0
       typescript: 6.0.3
     transitivePeerDependencies:
@@ -10831,25 +10884,25 @@ snapshots:
       '@typescript-eslint/types': 8.62.1
       eslint-visitor-keys: 5.0.1
 
-  '@typescript/typescript-darwin-arm64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-darwin-arm64@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-darwin-x64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-darwin-x64@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-linux-arm64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-linux-arm64@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-linux-arm@7.1.0-dev.20260930.4':
+  '@typescript/typescript-linux-arm@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-linux-x64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-linux-x64@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-win32-arm64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-win32-arm64@7.1.0-dev.20261112.1':
     optional: true
 
-  '@typescript/typescript-win32-x64@7.1.0-dev.20260930.4':
+  '@typescript/typescript-win32-x64@7.1.0-dev.20261112.1':
     optional: true
 
   '@uppy/aws-s3@5.1.0(@uppy/core@5.2.0)':
@@ -10905,21 +10958,21 @@ snapshots:
 
   '@vitest/spy@5.1.0': {}
 
-  '@volar/kit@2.4.28(typescript@6.0.3)':
+  '@volar/kit@2.4.28(typescript@7.1.0-dev.20261112.1)':
     dependencies:
-      '@volar/language-service': 2.4.28(typescript@6.0.3)
-      '@volar/typescript': 2.4.28(typescript@6.0.3)
+      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20261112.1)
       typesafe-path: 0.2.2
-      typescript: 6.0.3
+      typescript: 7.1.0-dev.20261112.1
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
 
-  '@volar/kit@2.4.28(typescript@7.1.0-dev.20260930.4)':
+  '@volar/kit@2.4.31(typescript@6.0.3)':
     dependencies:
-      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20260930.4)
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
+      '@volar/typescript': 2.4.31(typescript@6.0.3)
       typesafe-path: 0.2.2
-      typescript: 7.1.0-dev.20260930.4
+      typescript: 6.0.3
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
 
@@ -10927,11 +10980,29 @@ snapshots:
     dependencies:
       '@volar/source-map': 2.4.28
 
-  '@volar/language-server@2.4.28(typescript@6.0.3)':
+  '@volar/language-core@2.4.31':
+    dependencies:
+      '@volar/source-map': 2.4.31
+
+  '@volar/language-server@2.4.28(typescript@7.1.0-dev.20261112.1)':
     dependencies:
       '@volar/language-core': 2.4.28
-      '@volar/language-service': 2.4.28(typescript@6.0.3)
-      '@volar/typescript': 2.4.28(typescript@6.0.3)
+      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      path-browserify: 1.0.1
+      request-light: 0.7.0
+      vscode-languageserver: 9.0.1
+      vscode-languageserver-protocol: 3.18.3
+      vscode-languageserver-textdocument: 1.0.14
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: 7.1.0-dev.20261112.1
+
+  '@volar/language-server@2.4.31(typescript@6.0.3)':
+    dependencies:
+      '@volar/language-core': 2.4.31
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
+      '@volar/typescript': 2.4.31(typescript@6.0.3)
       path-browserify: 1.0.1
       request-light: 0.7.0
       vscode-languageserver: 9.0.1
@@ -10941,80 +11012,69 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  '@volar/language-server@2.4.28(typescript@7.1.0-dev.20260930.4)':
+  '@volar/language-service@2.4.28(typescript@7.1.0-dev.20261112.1)':
     dependencies:
       '@volar/language-core': 2.4.28
-      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      '@volar/typescript': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      path-browserify: 1.0.1
-      request-light: 0.7.0
-      vscode-languageserver: 9.0.1
       vscode-languageserver-protocol: 3.18.3
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     optionalDependencies:
-      typescript: 7.1.0-dev.20260930.4
+      typescript: 7.1.0-dev.20261112.1
 
-  '@volar/language-service@2.4.28(typescript@6.0.3)':
+  '@volar/language-service@2.4.31(typescript@6.0.3)':
     dependencies:
-      '@volar/language-core': 2.4.28
+      '@volar/language-core': 2.4.31
       vscode-languageserver-protocol: 3.18.3
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     optionalDependencies:
       typescript: 6.0.3
-
-  '@volar/language-service@2.4.28(typescript@7.1.0-dev.20260930.4)':
-    dependencies:
-      '@volar/language-core': 2.4.28
-      vscode-languageserver-protocol: 3.18.3
-      vscode-languageserver-textdocument: 1.0.14
-      vscode-uri: 3.2.0
-    optionalDependencies:
-      typescript: 7.1.0-dev.20260930.4
 
   '@volar/source-map@2.4.28': {}
 
-  '@volar/test-utils@2.4.28(typescript@6.0.3)':
+  '@volar/source-map@2.4.31': {}
+
+  '@volar/test-utils@2.4.28(typescript@7.1.0-dev.20261112.1)':
     dependencies:
       '@volar/language-core': 2.4.28
-      '@volar/language-server': 2.4.28(typescript@6.0.3)
+      '@volar/language-server': 2.4.28(typescript@7.1.0-dev.20261112.1)
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     transitivePeerDependencies:
       - typescript
 
-  '@volar/test-utils@2.4.28(typescript@7.1.0-dev.20260930.4)':
+  '@volar/test-utils@2.4.31(typescript@6.0.3)':
     dependencies:
-      '@volar/language-core': 2.4.28
-      '@volar/language-server': 2.4.28(typescript@7.1.0-dev.20260930.4)
+      '@volar/language-core': 2.4.31
+      '@volar/language-server': 2.4.31(typescript@6.0.3)
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     transitivePeerDependencies:
       - typescript
 
-  '@volar/typescript@2.4.28(typescript@6.0.3)':
+  '@volar/typescript@2.4.28(typescript@7.1.0-dev.20261112.1)':
     dependencies:
       '@volar/language-core': 2.4.28
+      path-browserify: 1.0.1
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      typescript: 7.1.0-dev.20261112.1
+
+  '@volar/typescript@2.4.31(typescript@6.0.3)':
+    dependencies:
+      '@volar/language-core': 2.4.31
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
       path-browserify: 1.0.1
       vscode-uri: 3.2.0
     optionalDependencies:
       typescript: 6.0.3
 
-  '@volar/typescript@2.4.28(typescript@7.1.0-dev.20260930.4)':
-    dependencies:
-      '@volar/language-core': 2.4.28
-      path-browserify: 1.0.1
-      vscode-uri: 3.2.0
-    optionalDependencies:
-      typescript: 7.1.0-dev.20260930.4
-
   '@vscode/l10n@0.0.18': {}
 
-  '@warp-drive/build-config@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@warp-drive/build-config@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
       '@embroider/addon-shim': 1.10.3(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       babel-import-util: 2.1.1
       babel-plugin-debug-macros: 2.0.0(@babel/core@7.29.7(supports-color@10.2.2))
       semver: 7.8.5
@@ -11023,29 +11083,29 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/build-config': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/build-config': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/ember@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@ember/test-waiters@4.1.2(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)':
+  '@warp-drive/ember@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@ember/test-waiters@4.1.2(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)':
     dependencies:
       '@ember/test-waiters': 4.1.2(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/json-api@5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@warp-drive/json-api@5.9.0-alpha.15(patch_hash=8a9a8808d6b8632a4fbab8240855ec8a12583f7a48fc8d04c142b89ecc90f4ee)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       fuse.js: 7.1.0
       json-to-ast: 2.1.0
     transitivePeerDependencies:
@@ -11053,20 +11113,20 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/legacy@5.9.0-alpha.15(patch_hash=de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@warp-drive/legacy@5.9.0-alpha.15(patch_hash=de74ff6c540d75d173dcb41244cb6c4f6c86dabdb41908170a9d1c0e47ee099f)(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/utilities': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/utilities': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@glint/template'
       - supports-color
 
-  '@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2))(supports-color@10.2.2)':
+  '@warp-drive/utilities@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(@warp-drive/core@5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2))(supports-color@10.2.2)':
     dependencies:
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
-      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
+      '@warp-drive/core': 5.9.0-alpha.15(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@glint/template'
@@ -12061,14 +12121,14 @@ snapshots:
       object-assign: 4.1.1
       vary: 1.1.2
 
-  cosmiconfig@9.0.2(typescript@7.1.0-dev.20260930.4):
+  cosmiconfig@9.0.2(typescript@7.1.0-dev.20261112.1):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.3.2
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 7.1.0-dev.20260930.4
+      typescript: 7.1.0-dev.20261112.1
 
   crelt@1.0.7: {}
 
@@ -12254,7 +12314,7 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-auto-import@2.13.1(@glint/template@1.9.0)(supports-color@10.2.2):
+  ember-auto-import@2.13.1(@glint/template@1.11.1)(supports-color@10.2.2):
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
@@ -12262,7 +12322,7 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
       '@babel/plugin-transform-class-static-block': 7.29.7(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
       '@babel/preset-env': 7.29.7(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
-      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2)
+      '@embroider/macros': 1.21.3(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2)
       '@embroider/reverse-exports': 0.2.0
       '@embroider/shared-internals': 2.9.2(supports-color@10.2.2)
       babel-loader: 8.4.1(@babel/core@7.29.7(supports-color@10.2.2))
@@ -12535,9 +12595,9 @@ snapshots:
       - walrus
       - whiskers
 
-  ember-content-mapper@0.3.1(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4):
+  ember-content-mapper@0.3.1(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1):
     dependencies:
-      '@glint/ember-tsc': 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+      '@glint/ember-tsc': 1.11.6(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
       tinypool: 2.1.2
       vscode-jsonrpc: 9.0.2
     transitivePeerDependencies:
@@ -12545,12 +12605,12 @@ snapshots:
       - supports-color
       - typescript
 
-  ember-curry-component@0.5.0(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.9.0)(supports-color@10.2.2):
+  ember-curry-component@0.5.0(@babel/core@7.29.7(supports-color@10.2.2))(@glint/template@1.11.1)(supports-color@10.2.2):
     dependencies:
       '@embroider/addon-shim': 1.10.3(supports-color@10.2.2)
       decorator-transforms: 2.4.0(@babel/core@7.29.7(supports-color@10.2.2))
     optionalDependencies:
-      '@glint/template': 1.9.0
+      '@glint/template': 1.11.1
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -12585,13 +12645,13 @@ snapshots:
       content-tag: 4.2.1
       oxc-parser: 0.130.0
 
-  ember-exam@10.3.0(@glint/template@1.9.0)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2):
+  ember-exam@10.3.0(@glint/template@1.11.1)(ember-qunit@9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2))(ember-source@7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2):
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       chalk: 5.6.2
       cli-table3: 0.6.5
       debug: 4.4.3(supports-color@10.2.2)
-      ember-auto-import: 2.13.1(@glint/template@1.9.0)(supports-color@10.2.2)
+      ember-auto-import: 2.13.1(@glint/template@1.11.1)(supports-color@10.2.2)
       ember-cli-babel: 8.3.2(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
       ember-qunit: 9.2.0(@ember/test-helpers@5.4.3(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2))(qunit@3.0.0)(supports-color@10.2.2)
       ember-source: 7.3.0(@glimmer/component@2.2.1(supports-color@10.2.2))(supports-color@10.2.2)
@@ -16096,33 +16156,33 @@ snapshots:
 
   styled_string@0.0.1: {}
 
-  stylelint-config-recommended-scss@17.0.1(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
+  stylelint-config-recommended-scss@17.0.1(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)):
     dependencies:
       postcss-scss: 4.0.9(postcss@8.5.32)
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
-      stylelint-config-recommended: 18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
-      stylelint-scss: 7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
+      stylelint-config-recommended: 18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
+      stylelint-scss: 7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
     optionalDependencies:
       postcss: 8.5.32
 
-  stylelint-config-recommended@18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
+  stylelint-config-recommended@18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)):
     dependencies:
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
 
-  stylelint-config-standard-scss@17.0.0(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
+  stylelint-config-standard-scss@17.0.0(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)):
     dependencies:
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
-      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
-      stylelint-config-standard: 40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
+      stylelint-config-recommended-scss: 17.0.1(postcss@8.5.32)(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
+      stylelint-config-standard: 40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
     optionalDependencies:
       postcss: 8.5.32
 
-  stylelint-config-standard@40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
+  stylelint-config-standard@40.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)):
     dependencies:
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
-      stylelint-config-recommended: 18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4))
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
+      stylelint-config-recommended: 18.0.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1))
 
-  stylelint-scss@7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)):
+  stylelint-scss@7.2.0(stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)):
     dependencies:
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
@@ -16135,9 +16195,9 @@ snapshots:
       postcss-resolve-nested-selector: 0.1.6
       postcss-selector-parser: 7.1.8
       postcss-value-parser: 4.2.0
-      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4)
+      stylelint: 17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1)
 
-  stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20260930.4):
+  stylelint@17.5.0(supports-color@10.2.2)(typescript@7.1.0-dev.20261112.1):
     dependencies:
       '@csstools/css-calc': 3.2.1(@csstools/css-parser-algorithms@4.0.2(@csstools/css-tokenizer@4.0.2))(@csstools/css-tokenizer@4.0.2)
       '@csstools/css-parser-algorithms': 4.0.2(@csstools/css-tokenizer@4.0.2)
@@ -16147,7 +16207,7 @@ snapshots:
       '@csstools/selector-resolve-nested': 4.0.2(postcss-selector-parser@7.1.8)
       '@csstools/selector-specificity': 6.0.1(postcss-selector-parser@7.1.8)
       colord: 2.10.0
-      cosmiconfig: 9.0.2(typescript@7.1.0-dev.20260930.4)
+      cosmiconfig: 9.0.2(typescript@7.1.0-dev.20261112.1)
       css-functions-list: 3.3.3
       css-tree: 3.2.1
       debug: 4.4.3(supports-color@10.2.2)
@@ -16551,15 +16611,15 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typescript@7.1.0-dev.20260930.4:
+  typescript@7.1.0-dev.20261112.1:
     optionalDependencies:
-      '@typescript/typescript-darwin-arm64': 7.1.0-dev.20260930.4
-      '@typescript/typescript-darwin-x64': 7.1.0-dev.20260930.4
-      '@typescript/typescript-linux-arm': 7.1.0-dev.20260930.4
-      '@typescript/typescript-linux-arm64': 7.1.0-dev.20260930.4
-      '@typescript/typescript-linux-x64': 7.1.0-dev.20260930.4
-      '@typescript/typescript-win32-arm64': 7.1.0-dev.20260930.4
-      '@typescript/typescript-win32-x64': 7.1.0-dev.20260930.4
+      '@typescript/typescript-darwin-arm64': 7.1.0-dev.20261112.1
+      '@typescript/typescript-darwin-x64': 7.1.0-dev.20261112.1
+      '@typescript/typescript-linux-arm': 7.1.0-dev.20261112.1
+      '@typescript/typescript-linux-arm64': 7.1.0-dev.20261112.1
+      '@typescript/typescript-linux-x64': 7.1.0-dev.20261112.1
+      '@typescript/typescript-win32-arm64': 7.1.0-dev.20261112.1
+      '@typescript/typescript-win32-x64': 7.1.0-dev.20261112.1
 
   uc.micro@2.1.0: {}
 
@@ -16678,23 +16738,23 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  volar-service-html@0.0.71(@volar/language-service@2.4.28(typescript@6.0.3)):
+  volar-service-html@0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20261112.1)):
     dependencies:
       vscode-html-languageservice: 5.6.2
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     optionalDependencies:
-      '@volar/language-service': 2.4.28(typescript@6.0.3)
+      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20261112.1)
 
-  volar-service-html@0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20260930.4)):
+  volar-service-html@0.0.71(@volar/language-service@2.4.31(typescript@6.0.3)):
     dependencies:
       vscode-html-languageservice: 5.6.2
       vscode-languageserver-textdocument: 1.0.14
       vscode-uri: 3.2.0
     optionalDependencies:
-      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20260930.4)
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
 
-  volar-service-typescript@0.0.71(@volar/language-service@2.4.28(typescript@6.0.3))(typescript@6.0.3):
+  volar-service-typescript@0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20261112.1))(typescript@7.1.0-dev.20261112.1):
     dependencies:
       path-browserify: 1.0.1
       semver: 7.8.5
@@ -16703,20 +16763,20 @@ snapshots:
       vscode-nls: 5.2.0
       vscode-uri: 3.2.0
     optionalDependencies:
-      '@volar/language-service': 2.4.28(typescript@6.0.3)
+      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20261112.1)
+      typescript: 7.1.0-dev.20261112.1
+
+  volar-service-typescript@0.0.71(@volar/language-service@2.4.31(typescript@6.0.3))(typescript@6.0.3):
+    dependencies:
+      path-browserify: 1.0.1
+      semver: 7.8.5
+      typescript-auto-import-cache: 0.3.6
+      vscode-languageserver-textdocument: 1.0.14
+      vscode-nls: 5.2.0
+      vscode-uri: 3.2.0
+    optionalDependencies:
+      '@volar/language-service': 2.4.31(typescript@6.0.3)
       typescript: 6.0.3
-
-  volar-service-typescript@0.0.71(@volar/language-service@2.4.28(typescript@7.1.0-dev.20260930.4))(typescript@7.1.0-dev.20260930.4):
-    dependencies:
-      path-browserify: 1.0.1
-      semver: 7.8.5
-      typescript-auto-import-cache: 0.3.6
-      vscode-languageserver-textdocument: 1.0.14
-      vscode-nls: 5.2.0
-      vscode-uri: 3.2.0
-    optionalDependencies:
-      '@volar/language-service': 2.4.28(typescript@7.1.0-dev.20260930.4)
-      typescript: 7.1.0-dev.20260930.4
 
   vscode-html-languageservice@5.6.2:
     dependencies:
