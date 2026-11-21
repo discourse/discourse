@@ -359,24 +359,24 @@ module PostGuardian
 
     return scope if is_admin?
 
-    scope = scope.where("posts.post_type IN (?)", visible_post_types)
     topics = visible_topic_scope(Topic.unscoped.where("topics.id = posts.topic_id"))
 
-    if !is_moderator?
-      post_rules = visible_post_state_sql
-      if moderated_category_ids.present?
-        moderated_topics =
-          Topic
-            .unscoped
-            .where(category_id: moderated_category_ids)
-            .where("topics.id = posts.topic_id")
-        scope = scope.where("(#{post_rules}) OR EXISTS (#{moderated_topics.select(1).to_sql})")
-      else
-        scope = scope.where(post_rules)
-      end
-    end
+    filter_visible_posts_without_topic_check(scope).where("EXISTS (#{topics.select(1).to_sql})")
+  end
 
-    scope.where("EXISTS (#{topics.select(1).to_sql})")
+  def filter_visible_posts_without_topic_check(scope)
+    return scope if is_admin?
+
+    scope = scope.where("posts.post_type IN (?)", visible_post_types)
+    return scope if is_moderator?
+
+    post_rules = visible_post_state_sql
+    return scope.where(post_rules) if moderated_category_ids.blank?
+
+    moderated_topics =
+      Topic.unscoped.where(category_id: moderated_category_ids).where("topics.id = posts.topic_id")
+
+    scope.where("(#{post_rules}) OR EXISTS (#{moderated_topics.select(1).to_sql})")
   end
 
   def reviewable_post_scope

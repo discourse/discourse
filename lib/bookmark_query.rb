@@ -96,10 +96,11 @@ class BookmarkQuery
   end
 
   def fetch_reminder_notifications(limit)
-    Notification
-      .for_user_menu(@user.id, limit: [limit, 100].min)
-      .unread
-      .where(notification_type: Notification.types[:bookmark_reminder])
+    @user.notification_feed.menu(
+      limit: [limit, 100].min,
+      types: [Notification.types[:bookmark_reminder]],
+      state: :unread,
+    )
   end
 
   def load_deleted_bookmarkables(notifications, bookmarks_by_id)

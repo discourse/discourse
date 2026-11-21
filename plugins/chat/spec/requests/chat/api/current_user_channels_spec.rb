@@ -171,10 +171,14 @@ describe Chat::Api::CurrentUserChannelsController do
 
           category_moderation_queries =
             queries.count do |query|
-              query.include?("category_moderation_groups") && query.include?("group_users")
+              query.start_with?(
+                'SELECT "categories"."id" FROM "categories" INNER JOIN "category_moderation_groups"',
+              )
             end
 
-          expect(category_moderation_queries).to be <= 1
+          request_and_feed_guardians = 2
+
+          expect(category_moderation_queries).to be <= request_and_feed_guardians
         end
       end
     end

@@ -4,7 +4,7 @@ describe Chat::ChannelUnreadsQuery do
   subject(:query) do
     described_class.call(
       channel_ids: channel_ids,
-      user_id: current_user.id,
+      user: current_user,
       include_missing_memberships: include_missing_memberships,
       include_read: include_read,
     ).map(&:to_h)
@@ -23,7 +23,7 @@ describe Chat::ChannelUnreadsQuery do
   end
 
   def counts_for(user)
-    described_class.call(channel_ids: channel_ids, user_id: user.id).first
+    described_class.call(channel_ids: channel_ids, user: user).first
   end
 
   context "with unread message" do

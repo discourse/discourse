@@ -82,36 +82,36 @@ RSpec.describe NotificationsController do
 
         it "marks notifications as viewed" do
           expect(user.reload.unread_notifications).to eq(1)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
 
           get "/notifications.json", params: { recent: true }
 
           expect(response.status).to eq(200)
           expect(user.reload.unread_notifications).to eq(0)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
         end
 
         it "does not mark notifications viewed with the silent parameter" do
           expect(user.reload.unread_notifications).to eq(1)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
 
           get "/notifications.json", params: { recent: true, silent: true }
 
           expect(response.status).to eq(200)
           expect(user.reload.unread_notifications).to eq(1)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
         end
 
         it "does not mark notifications viewed in read-only mode" do
           Discourse.received_redis_readonly!
           expect(user.reload.unread_notifications).to eq(1)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
 
           get "/notifications.json", params: { recent: true, silent: true }
 
           expect(response.status).to eq(200)
           expect(user.reload.unread_notifications).to eq(1)
-          expect(user.reload.total_unread_notifications).to eq(1)
+          expect(user.reload.notifications.unread.count).to eq(1)
         ensure
           Discourse.clear_redis_readonly!
         end
@@ -675,14 +675,14 @@ RSpec.describe NotificationsController do
 
       it "updates the `read` status" do
         expect(user.reload.unread_notifications).to eq(1)
-        expect(user.reload.total_unread_notifications).to eq(1)
+        expect(user.reload.notifications.unread.count).to eq(1)
 
         put "/notifications/mark-read.json"
 
         expect(response.status).to eq(200)
         user.reload
         expect(user.reload.unread_notifications).to eq(0)
-        expect(user.reload.total_unread_notifications).to eq(0)
+        expect(user.reload.notifications.unread.count).to eq(0)
       end
 
       describe "#create" do

@@ -19,20 +19,12 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
-    if notification_types = params[:filter_by_types].to_s.split(",").presence
-      notification_types.map! do |type|
-        Notification.types[type.to_sym] ||
-          (raise Discourse::InvalidParameters.new("invalid notification type: #{type}"))
-      end
-    end
+    notification_types = notification_type_ids(:filter_by_types)
 
     if params[:recent].present?
       limit = fetch_limit_from_params(default: 15, max: INDEX_LIMIT)
 
-      include_reviewables = false
-
-      notifications =
-        Notification.prioritized_list(current_user, count: limit, types: notification_types)
+      notifications = current_user.notification_feed.menu(limit:, types: notification_types)
       # notification_types is blank for the "all notifications" user menu tab
       include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
 
@@ -55,15 +47,6 @@ class NotificationsController < ApplicationController
         end
       end
 
-      notifications =
-        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications =
-        Notification.filter_inaccessible_reviewable_notifications(
-          current_user.guardian,
-          notifications,
-        )
-      notifications = Notification.filter_disabled_badge_notifications(notifications)
-
       notifications = Notification.populate_acting_user(notifications)
 
       json = {
@@ -82,28 +65,17 @@ class NotificationsController < ApplicationController
     else
       limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
       offset = params[:offset].to_i
+      state = Notification::Feed::READ_STATES.keys.find { |name| name.to_s == params[:filter] }
 
       notifications =
-        Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
+        Notification::Feed
+          .new(user, viewer: guardian)
+          .notifications(types: notification_types, state:)
+          .includes(:topic)
+          .order(created_at: :desc)
 
-      if notification_types
-        notifications = notifications.where(notification_type: notification_types)
-      end
-
-      notifications = notifications.where(read: true) if params[:filter] == "read"
-
-      notifications = notifications.where(read: false) if params[:filter] == "unread"
-
-      total_rows = notifications.dup.count
+      total_rows = notifications.count
       notifications = notifications.offset(offset).limit(limit)
-      notifications =
-        Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
-      notifications =
-        Notification.filter_inaccessible_reviewable_notifications(
-          current_user.guardian,
-          notifications,
-        )
-      notifications = Notification.filter_disabled_badge_notifications(notifications)
 
       notifications = Notification.populate_acting_user(notifications)
       render_json_dump(
@@ -126,22 +98,7 @@ class NotificationsController < ApplicationController
     if params.has_key?(:id)
       Notification.read(current_user, [fetch_int_from_params(:id, default: nil)])
     else
-      if params.has_key?(:dismiss_types)
-        types = params[:dismiss_types].to_s.split(",")
-        raise Discourse::InvalidParameters.new(:dismiss_types) if types.blank?
-
-        invalid = []
-        types.map! do |type|
-          type_id = Notification.types[type.to_sym]
-          invalid << type if !type_id
-          type_id
-        end
-        if invalid.size > 0
-          raise Discourse::InvalidParameters.new("invalid notification types: #{invalid.inspect}")
-        end
-      end
-
-      Notification.read_types(current_user, types)
+      Notification.read_types(current_user, notification_type_ids(:dismiss_types))
       current_user.bump_last_seen_notification!
     end
 
@@ -171,6 +128,18 @@ class NotificationsController < ApplicationController
   end
 
   private
+
+  def notification_type_ids(param)
+    return if !params.has_key?(param)
+
+    names = params[param].to_s.split(",")
+    raise Discourse::InvalidParameters.new(param) if names.blank?
+
+    names.map do |name|
+      Notification.types[name.to_sym] ||
+        raise(Discourse::InvalidParameters.new("invalid notification type: #{name}"))
+    end
+  end
 
   def set_notification
     @notification = Notification.find(params[:id])

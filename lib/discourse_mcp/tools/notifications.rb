@@ -12,33 +12,22 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
-        notifications =
-          Notification
-            .where(user_id: request_context.user_id)
-            .visible
-            .includes(:topic)
-            .order(id: :desc)
-            .limit(limit)
-        notifications = filter_chat_notifications_by_scope(notifications, request_context)
-        if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
-          notifications =
-            notifications
-              .where.not(notification_type: Notification.types[:group_message_summary])
-              .left_joins(:topic)
-              .where("topics.id IS NULL OR topics.archetype <> ?", Archetype.private_message)
-        end
-        notifications =
-          Notification.filter_inaccessible_topic_notifications(
-            request_context.guardian,
-            notifications,
-          )
-        notifications =
-          Notification.filter_inaccessible_reviewable_notifications(
-            request_context.guardian,
-            notifications,
-          )
+        page =
+          request_context
+            .guardian
+            .user
+            .notification_feed
+            .page(limit:) do |list|
+              list = filter_chat_notifications_by_scope(list, request_context)
+              next list if request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
+
+              list
+                .where.not(notification_type: Notification.types[:group_message_summary])
+                .left_joins(:topic)
+                .where("topics.id IS NULL OR topics.archetype <> ?", Archetype.private_message)
+            end
+        notifications = page.notifications
         notifications = filter_reviewable_mentions_by_scope(notifications, request_context)
-        notifications = Notification.filter_disabled_badge_notifications(notifications)
         notifications = Notification.populate_acting_user(notifications)
         serialized =
           notifications.map do |notification|

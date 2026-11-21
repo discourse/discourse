@@ -16,7 +16,6 @@ import {
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
 import { currentThemeId } from "discourse/lib/theme-selector";
-import Notification from "discourse/models/notification";
 
 class SubscribeUserNotificationsInit {
   @service appEvents;
@@ -27,7 +26,6 @@ class SubscribeUserNotificationsInit {
   @service router;
   @service site;
   @service siteSettings;
-  @service store;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -177,54 +175,6 @@ class SubscribeUserNotificationsInit {
       ) {
         this.appEvents.trigger("header:update-topic", null, 5000);
       }
-    }
-
-    const stale = this.store.findStale(
-      "notification",
-      {},
-      { cacheKey: "recent-notifications" }
-    );
-    const lastNotification = data.last_notification?.notification;
-
-    if (stale?.hasResults && lastNotification) {
-      const oldNotifications = stale.results.get("content");
-      const staleIndex = oldNotifications.findIndex(
-        (n) => n.id === lastNotification.id
-      );
-
-      if (staleIndex === -1) {
-        let insertPosition = 0;
-
-        // high priority and unread notifications are first
-        if (!lastNotification.high_priority || lastNotification.read) {
-          const nextPosition = oldNotifications.findIndex(
-            (n) => !n.high_priority || n.read
-          );
-
-          if (nextPosition !== -1) {
-            insertPosition = nextPosition;
-          }
-        }
-
-        oldNotifications.splice(
-          insertPosition,
-          0,
-          Notification.create(lastNotification)
-        );
-      }
-
-      // remove stale notifications and update existing ones
-      const read = Object.fromEntries(data.recent);
-      const newNotifications = oldNotifications
-        .map((notification) => {
-          if (read[notification.id] !== undefined) {
-            notification.set("read", read[notification.id]);
-            return notification;
-          }
-        })
-        .filter(Boolean);
-
-      stale.results.set("content", newNotifications);
     }
   }
 

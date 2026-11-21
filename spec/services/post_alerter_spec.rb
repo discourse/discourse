@@ -179,7 +179,7 @@ RSpec.describe PostAlerter do
 
     context "with group inboxes" do
       fab!(:user1, :user)
-      fab!(:user2, :user)
+      fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
       fab!(:group) do
         Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2)
       end
@@ -313,9 +313,7 @@ RSpec.describe PostAlerter do
             .data
 
         expect(Notification.where(user: user2).count).to eq(1)
-        expect(message_data.dig(:last_notification, :notification, :data, :inbox_count)).to eq(
-          starting_count + 1,
-        )
+        expect(Notification.find_by(user: user2).data_hash[:inbox_count]).to eq(starting_count + 1)
         expect(message_data[:unread_notifications]).to eq(1)
       end
 

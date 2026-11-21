@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserNotificationTotalSerializer do
-  fab!(:user) { Fabricate(:user, trust_level: 3) }
+  fab!(:user) { Fabricate(:user, trust_level: 3, refresh_auto_groups: true) }
+  fab!(:group) { Fabricate(:group, name: "Group", users: [user]) }
 
   fab!(:notification) { Fabricate(:notification, user: user, read: false) }
   fab!(:pm_notification) do
@@ -15,13 +16,21 @@ RSpec.describe UserNotificationTotalSerializer do
       :notification,
       user: user,
       notification_type: Notification.types[:group_message_summary],
-      data: { group_id: 1, group_name: "Group", inbox_count: 5 }.to_json,
+      data: { group_id: group.id, group_name: "Group", inbox_count: 5 }.to_json,
     )
   end
   fab!(:reviewable)
 
   let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
   let(:serialized_data) { serializer.as_json }
+
+  it "counts unread regular notifications when personal messages alone reach the limit" do
+    User.max_unread_notifications = 2
+
+    expect(serialized_data[:unread_notifications]).to eq(2)
+  ensure
+    User.max_unread_notifications = nil
+  end
 
   it "includes the user's unread regular notifications count" do
     # notification + group_message_notification - pm_notifications
@@ -41,7 +50,7 @@ RSpec.describe UserNotificationTotalSerializer do
 
   it "includes group inbox notification counts" do
     expect(serialized_data[:group_inboxes]).to contain_exactly(
-      { group_id: 1, group_name: "Group", count: 5 },
+      { group_id: group.id, group_name: "Group", count: 5 },
     )
   end
 

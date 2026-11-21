@@ -19,13 +19,13 @@ RSpec.describe User do
       Fabricate(:notification, user: user, notification_type: Notification.types[:mentioned])
       Fabricate(:notification, notification_type: Notification.types[:replied])
 
-      expect(user.available_notification_types).to contain_exactly(
+      expect(user.reload.available_notification_types).to contain_exactly(
         Notification.types[:liked],
         Notification.types[:mentioned],
       )
 
       like.destroy!
-      expect(user.available_notification_types).to eq([Notification.types[:mentioned]])
+      expect(user.reload.available_notification_types).to eq([Notification.types[:mentioned]])
     end
 
     it "excludes notifications for deleted topics" do
@@ -3191,61 +3191,6 @@ RSpec.describe User do
       expect(messages.size).to eq(1)
     end
 
-    it "omits the last notification when the user can no longer see its topic" do
-      notification = Fabricate(:notification, user:)
-      notification.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
-
-      message =
-        MessageBus
-          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
-          .first
-
-      expect(message.data[:last_notification]).to be_nil
-    end
-
-    it "publishes the message sorted by descending ID" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
-
-      message =
-        MessageBus
-          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
-          .first
-
-      expect(message.data[:recent]).to eq([[notification2.id, true], [notification.id, false]])
-    end
-
-    it "floats the unread high priority notifications to the top" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 =
-        Fabricate(
-          :notification,
-          user: user,
-          notification_type: Notification.types[:private_message],
-        )
-      notification4 =
-        Fabricate(
-          :notification,
-          user: user,
-          notification_type: Notification.types[:bookmark_reminder],
-        )
-
-      message =
-        MessageBus
-          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
-          .first
-
-      expect(message.data[:recent]).to eq(
-        [
-          [notification4.id, false],
-          [notification3.id, false],
-          [notification2.id, true],
-          [notification.id, false],
-        ],
-      )
-    end
-
     it "has the correct counts" do
       _notification = Fabricate(:notification, user: user)
       _notification2 = Fabricate(:notification, user: user, read: true)
@@ -3269,33 +3214,6 @@ RSpec.describe User do
 
       expect(message.data[:unread_notifications]).to eq(1)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
-    end
-
-    it "does not publish a reviewable mention the user can no longer access" do
-      SiteSetting.enable_mentions = true
-      moderator = Fabricate(:moderator, last_seen_at: Time.zone.now)
-      reviewable = Fabricate(:reviewable_flagged_post)
-      ReviewableNote.create!(
-        reviewable:,
-        user: Fabricate(:admin),
-        content: "@#{moderator.username}",
-      )
-      mention = moderator.notifications.find_by!(notification_type: Notification.types[:mentioned])
-
-      publish_last_notification = -> do
-        MessageBus
-          .track_publish("/notification/#{moderator.id}") { moderator.publish_notifications_state }
-          .first
-          .data[
-          :last_notification
-        ]
-      end
-
-      expect(publish_last_notification.call[:notification][:id]).to eq(mention.id)
-
-      reviewable.update!(reviewable_by_moderator: false)
-
-      expect(publish_last_notification.call).to be_nil
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
@@ -3448,6 +3366,7 @@ RSpec.describe User do
       Notification.create!(
         user_id: user.id,
         notification_type: Notification.types[:bookmark_reminder],
+        topic: Fabricate(:topic),
         read: false,
         data: "{}",
       )
@@ -3498,11 +3417,11 @@ RSpec.describe User do
     it "removes all previous notifications during unstaging" do
       Fabricate(:notification, user: user)
       Fabricate(:private_message_notification, user: user)
-      expect(user.total_unread_notifications).to eq(2)
+      expect(user.notifications.unread.count).to eq(2)
 
       user.unstage!
       user.reload
-      expect(user.total_unread_notifications).to eq(0)
+      expect(user.notifications.unread.count).to eq(0)
       expect(user.staged).to eq(false)
     end
 
@@ -4722,7 +4641,7 @@ RSpec.describe User do
       )
 
       user.update!(seen_notification_id: last_seen_id)
-      expect(user.new_personal_messages_notifications_count).to eq(1)
+      expect(user.reload.new_personal_messages_notifications_count).to eq(1)
     end
   end
 

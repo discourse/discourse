@@ -49,8 +49,10 @@ RSpec.describe CurrentUserSerializer do
         notification_type: Notification.types[:liked],
         read: true,
       )
+    user.reload
     expect(serializer.as_json[:available_notification_types]).to eq([Notification.types[:liked]])
     notification.destroy!
+    user.reload
     expect(serializer.as_json[:available_notification_types]).to eq([])
   end
 

@@ -5,7 +5,7 @@ describe Chat::ThreadUnreadsQuery do
     described_class.call(
       channel_ids: channel_ids,
       thread_ids: thread_ids,
-      user_id: current_user.id,
+      user: current_user,
       include_missing_memberships: include_missing_memberships,
       include_read: include_read,
     )
@@ -573,7 +573,7 @@ describe Chat::ThreadUnreadsQuery do
       Fabricate(:chat_message, chat_channel: channel_1, thread: thread_2) # bump newer again
 
       stub_const(Chat::ThreadUnreadsQuery, :MAX_THREADS, 1) do
-        result = Chat::ThreadUnreadsQuery.call(thread_ids: [thread_1.id], user_id: current_user.id)
+        result = Chat::ThreadUnreadsQuery.call(thread_ids: [thread_1.id], user: current_user)
         expect(result.map(&:thread_id)).to contain_exactly(thread_1.id)
       end
     end
@@ -589,7 +589,7 @@ describe Chat::ThreadUnreadsQuery do
         result =
           Chat::ThreadUnreadsQuery.call(
             channel_ids: [channel_1.id],
-            user_id: current_user.id,
+            user: current_user,
             include_missing_memberships: true,
           )
         # Each branch (membership-driven SELECT + missing-memberships UNION)
