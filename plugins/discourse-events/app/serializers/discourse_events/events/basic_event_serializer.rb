@@ -8,6 +8,7 @@ module DiscourseEvents
                  :name,
                  :recurrence,
                  :recurrence_until,
+                 :recurrence_anchor_starts_at,
                  :starts_at,
                  :ends_at,
                  :rrule,
@@ -51,17 +52,24 @@ module DiscourseEvents
         object.recurring?
       end
 
+      def recurrence_anchor_starts_at
+        return nil unless object.recurring?
+
+        anchor = object.recurrence_anchor_starts_at
+        object.all_day ? anchor.utc.strftime("%Y-%m-%d") : format_time(anchor)
+      end
+
       def rrule
         return nil unless include_rrule?
 
-        timezone_starts_at = object.original_starts_at.in_time_zone(object.timezone)
+        timezone_starts_at = object.recurrence_anchor_starts_at.in_time_zone(object.timezone)
         timezone_recurrence_until = object.recurrence_until&.in_time_zone(object.timezone)
 
         DiscourseEvents::Events::RRuleGenerator.generate_string(
           starts_at: timezone_starts_at,
           recurrence: object.recurrence,
           recurrence_until: timezone_recurrence_until,
-          dtstart: timezone_starts_at,
+          dtstart: object.original_starts_at.in_time_zone(object.timezone),
           show_local_time: object.show_local_time,
         )
       end

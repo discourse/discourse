@@ -40,6 +40,29 @@ RSpec.describe DiscourseEvents::Events::Event do
       .allow_nil
   end
 
+  it "reinitializes a stale recurrence anchor when creating a new event" do
+    post = Fabricate(:post)
+    field = described_class::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD
+    previous_anchor = Time.utc(2027, 3, 29, 12, 0)
+    new_start = Time.utc(2027, 5, 3, 12, 0)
+
+    post.topic.custom_fields[field] = previous_anchor.iso8601
+    post.topic.save_custom_fields
+
+    event =
+      Fabricate(
+        :event,
+        post:,
+        recurrence: "every_month",
+        original_starts_at: new_start,
+        original_ends_at: new_start + 1.hour,
+        timezone: "UTC",
+      )
+
+    expect(event.recurrence_anchor_starts_at).to eq_time(new_start)
+    expect(post.topic.reload.custom_fields[field]).to eq(new_start.iso8601)
+  end
+
   describe "#warm_livestream_onebox" do
     let(:livestream_url) { "https://www.youtube.com/live/abc123" }
 
