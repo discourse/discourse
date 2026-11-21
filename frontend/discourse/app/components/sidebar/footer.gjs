@@ -9,6 +9,7 @@ import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class SidebarFooter extends Component {
+  @service capabilities;
   @service currentUser;
   @service modal;
   @service site;
@@ -49,7 +50,7 @@ export default class SidebarFooter extends Component {
             />
           {{/if}}
 
-          {{#if this.site.desktopView}}
+          {{#if (and this.site.desktopView this.capabilities.hasKeyboard)}}
             <DButton
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
               @action={{this.showKeyboardShortcuts}}
