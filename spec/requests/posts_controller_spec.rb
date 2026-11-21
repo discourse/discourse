@@ -5521,6 +5521,66 @@ RSpec.describe PostsController do
     end
   end
 
+  describe "#topic_footer_pin" do
+    fab!(:first_post, :post)
+    fab!(:reply) { Fabricate(:post, topic: first_post.topic, raw: "A reply that is being pinned.") }
+    fab!(:another_reply) { Fabricate(:post, topic: first_post.topic) }
+
+    it "requires the site to opt in" do
+      sign_in(moderator)
+      put "/posts/#{reply.id}/topic_footer_pin.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when enabled" do
+      before { SiteSetting.enable_pin_post_to_topic_footer = true }
+
+      it "requires site staff" do
+        sign_in(user)
+        put "/posts/#{reply.id}/topic_footer_pin.json"
+        expect(response).to be_forbidden
+      end
+
+      it "shows the pinned copy and skips a post that becomes hidden" do
+        sign_in(moderator)
+        put "/posts/#{reply.id}/topic_footer_pin.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["pinned_footer_post"]).to include(
+          "id" => reply.id,
+          "post_number" => reply.post_number,
+          "relative_url" => reply.relative_url,
+        )
+
+        sign_in(user)
+        get "/t/#{reply.topic_id}.json"
+        expect(response.parsed_body.dig("pinned_footer_post", "cooked")).to include(reply.raw)
+
+        reply.update!(hidden: true)
+        get "/t/#{reply.topic_id}.json"
+        expect(response.parsed_body).to include("pinned_footer_post" => nil)
+      end
+
+      it "does not let staff pin a whisper" do
+        reply.update!(post_type: Post.types[:whisper])
+        sign_in(admin)
+        put "/posts/#{reply.id}/topic_footer_pin.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "keeps a newer pin when asked to unpin an older one" do
+        sign_in(moderator)
+        put "/posts/#{reply.id}/topic_footer_pin.json"
+        put "/posts/#{another_reply.id}/topic_footer_pin.json"
+        delete "/posts/#{reply.id}/topic_footer_pin.json"
+        expect(response.parsed_body.dig("pinned_footer_post", "id")).to eq(another_reply.id)
+
+        delete "/posts/#{another_reply.id}/topic_footer_pin.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["pinned_footer_post"]).to be_nil
+      end
+    end
+  end
+
   describe "#notice" do
     it "can create and remove notices as a moderator" do
       sign_in(moderator)

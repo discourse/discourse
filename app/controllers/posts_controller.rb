@@ -681,6 +681,32 @@ class PostsController < ApplicationController
     render_json_dump(locked: post.locked?)
   end
 
+  def topic_footer_pin
+    raise Discourse::NotFound unless SiteSetting.enable_pin_post_to_topic_footer
+    guardian.ensure_is_staff!
+
+    post = find_post_from_params
+    topic = post.topic
+    guardian.ensure_can_see!(post)
+    if topic.private_message? || post.hidden? || post.trashed? ||
+         post.post_type != Post.types[:regular]
+      raise Discourse::NotFound
+    end
+
+    topic.with_lock do
+      field = Topic::PINNED_FOOTER_POST_FIELD
+      if request.put?
+        topic.upsert_custom_fields(field => post.id)
+      elsif topic.custom_fields[field] == post.id
+        topic.upsert_custom_fields(field => 0)
+      end
+    end
+
+    render json: {
+             pinned_footer_post: TopicFooterPinnedPostSerializer.for_topic(topic.reload, guardian),
+           }
+  end
+
   def notice
     post = find_post_from_params
     raise Discourse::NotFound unless guardian.can_edit_staff_notes?(post.topic)

@@ -1,6 +1,9 @@
 {
   "additionalProperties": false,
   "properties": {
+    "pinned_footer_post": {
+      "type": ["object", "null"]
+    },
     "post_stream": {
       "type": "object",
       "additionalProperties": false,
