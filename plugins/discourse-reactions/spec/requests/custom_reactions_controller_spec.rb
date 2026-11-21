@@ -60,6 +60,37 @@ describe DiscourseReactions::CustomReactionsController do
     let(:payload_with_user) { [{ "id" => "hugs", "type" => "emoji", "count" => 1 }] }
     let(:api_key) { Fabricate(:api_key, user: admin, created_by: admin) }
 
+    it "allows removing an existing reaction but blocks new reactions for users outside the allowed groups" do
+      SiteSetting.discourse_reactions_excluded_from_like = "hugs"
+      sign_in(user_1)
+
+      put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/hugs/toggle.json"
+      expect(response).to have_http_status(:ok)
+
+      SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+      put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/laughing/toggle.json"
+      expect(response).to have_http_status(:forbidden)
+      expect(DiscourseReactions::ReactionUser.exists?(user: user_1, post: post_1)).to eq(true)
+
+      put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/hugs/toggle.json"
+      expect(response).to have_http_status(:ok)
+      expect(DiscourseReactions::ReactionUser.exists?(user: user_1, post: post_1)).to eq(false)
+
+      put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/hugs/toggle.json"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "allows removing a plain like from a post for users outside the allowed groups" do
+      PostActionCreator.like(user_1, post_1)
+      SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+      sign_in(user_1)
+
+      put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/heart/toggle.json"
+
+      expect(response).to have_http_status(:ok)
+      expect(post_1.reload.like_count).to eq(0)
+    end
+
     it "toggles reaction" do
       sign_in(user_1)
       expected_payload = [{ "id" => "hugs", "type" => "emoji", "count" => 1 }]

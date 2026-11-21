@@ -128,6 +128,12 @@ RSpec.describe PostGuardian do
           expect(Guardian.new(anon).post_can_act?(post, :like)).to be_truthy
         end
 
+        it "respects the group restriction for anonymous accounts" do
+          SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+
+          expect(anon.guardian.post_can_act?(post, :like)).to eq(false)
+        end
+
         it "cannot perform any other action" do
           expect(Guardian.new(anon).post_can_act?(post, :flag)).to be_falsey
           expect(Guardian.new(anon).post_can_act?(post, :bookmark)).to be_falsey

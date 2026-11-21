@@ -6,6 +6,26 @@ RSpec.describe CurrentUserSerializer do
 
   let(:guardian) { user.guardian }
 
+  describe "#post_likes_restricted" do
+    it "omits the restriction when no groups are configured" do
+      expect(serializer.as_json).not_to have_key(:post_likes_restricted)
+    end
+
+    it "includes the restriction for users outside the allowed groups" do
+      SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+
+      expect(serializer.as_json[:post_likes_restricted]).to eq(true)
+    end
+
+    it "omits the restriction for users in an allowed group" do
+      group = Fabricate(:group)
+      group.add(user)
+      SiteSetting.like_allowed_groups = group.id.to_s
+
+      expect(serializer.as_json).not_to have_key(:post_likes_restricted)
+    end
+  end
+
   describe "#can_use_dsa_account_email" do
     before { enable_dsa_reporting }
 

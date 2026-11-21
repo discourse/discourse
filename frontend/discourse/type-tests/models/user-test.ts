@@ -83,6 +83,7 @@ expectTypeOf(user.can_send_private_messages).toEqualTypeOf<
 >();
 // Sent only when true.
 expectTypeOf(user.can_invite_to_forum).toEqualTypeOf<true | undefined>();
+expectTypeOf(user.post_likes_restricted).toEqualTypeOf<true | undefined>();
 expectTypeOf(user.muted_category_ids).toEqualTypeOf<number[] | undefined>();
 expectTypeOf(user.ignored_users).toEqualTypeOf<string[] | undefined>();
 expectTypeOf(user.dismissed_banner_key).toEqualTypeOf<
