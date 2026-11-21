@@ -14,7 +14,6 @@
   }
 
   .select-kit.single-select.is-expanded .select-kit-header:not(.btn),
-  .select-kit.single-select .select-kit-header:not(.btn):focus,
   .select-kit.single-select .select-kit-header:not(.btn):active {
     background-color: var(--primary-100);
     outline: none;
