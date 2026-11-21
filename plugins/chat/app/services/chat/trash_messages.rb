@@ -74,6 +74,7 @@ module Chat
             .joins(:notifications)
             .select("notifications.id"),
       ).destroy_all
+      Chat::Action::DestroyWatchedThreadNotifications.call(messages.map(&:id))
     end
 
     def update_last_message_ids(messages:)

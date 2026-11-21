@@ -134,6 +134,28 @@ RSpec.describe Chat::TrashMessage do
           expect(message.chat_channel.reload.last_message).to eq(message)
         end
 
+        it "destroys watched thread notifications when the message started the thread" do
+          thread = Fabricate(:chat_thread, original_message: message)
+          watcher = Fabricate(:user)
+          thread.add(watcher, notification_level: :watching)
+          for_thread, for_other_thread =
+            [thread.id, thread.id + 1].map do |chat_thread_id|
+              Fabricate(
+                :notification,
+                user: watcher,
+                topic: nil,
+                notification_type: Notification.types[:chat_watched_thread],
+                data: { chat_thread_id:, description: message.message }.to_json,
+              )
+            end
+
+          result
+
+          expect(Notification.where(id: [for_thread.id, for_other_thread.id])).to contain_exactly(
+            for_other_thread,
+          )
+        end
+
         context "when the message has a thread" do
           fab!(:thread) { Fabricate(:chat_thread, channel: message.chat_channel) }
 
