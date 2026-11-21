@@ -4283,6 +4283,16 @@ RSpec.describe User do
   end
 
   describe "#bump_last_seen_notification!" do
+    it "never moves the marker backward when another request already moved it further" do
+      notification = Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: notification.id + 1)
+
+      in_memory.bump_last_seen_notification!
+
+      expect(user.reload.seen_notification_id).to eq(notification.id + 1)
+    end
+
     it "doesn't error if there are no notifications" do
       Notification.destroy_all
       expect(user.bump_last_seen_notification!).to eq(false)
