@@ -55,8 +55,8 @@ interface ExpectedTopicLink {
 
 /**
  * `TopicViewDetailsSerializer`. Every field is optional because the topic
- * creates its details before they load. Each `can_*` permission is sent only
- * when granted, except `can_edit`, which is always sent.
+ * creates its details before they load. Most permissions are sent only when
+ * granted. `can_edit` is always sent and `can_open_topic` accompanies `can_close_topic`.
  */
 interface ExpectedTopicDetailsFields {
   can_edit?: boolean;
@@ -75,6 +75,7 @@ interface ExpectedTopicDetailsFields {
   can_edit_tags?: boolean;
   can_publish_page?: boolean;
   can_close_topic?: boolean;
+  can_open_topic?: boolean;
   can_archive_topic?: boolean;
   can_split_merge_topic?: boolean;
   can_edit_staff_notes?: boolean;
