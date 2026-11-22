@@ -63,6 +63,12 @@ expectTypeOf(notification.data.revision_number).toEqualTypeOf<
   number | null | undefined
 >();
 expectTypeOf(notification.data.badge_id).toEqualTypeOf<number | undefined>();
+expectTypeOf(notification.data.reviewable_history_id).toEqualTypeOf<
+  number | undefined
+>();
+expectTypeOf(notification.data.outcome).toEqualTypeOf<
+  "approved" | "rejected" | undefined
+>();
 expectTypeOf(notification.data["plugin_key"]).toEqualTypeOf<unknown>();
 notification.read = true;
 expectTypeOf(Notification.initializeNotifications([])).toEqualTypeOf<

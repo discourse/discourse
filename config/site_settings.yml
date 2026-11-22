@@ -3449,6 +3449,18 @@ spam:
     type: enum
     default: low
     enum: "ReviewablePrioritySetting"
+  staff_queued_post_approval_notification_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+    allow_any: false
+    area: "notifications"
+  staff_queued_post_rejection_notification_groups:
+    default: ""
+    type: group_list
+    list_type: compact
+    allow_any: false
+    area: "notifications"
   reviewable_low_priority_threshold:
     default: 0
     min: 0
