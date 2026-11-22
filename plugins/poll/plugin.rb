@@ -165,9 +165,9 @@ after_initialize do
       WHERE user_id = :source_user_id
       AND EXISTS (
         SELECT 1
-        FROM poll_votes
-        WHERE user_id = :target_user_id
-          AND poll_votes.poll_id = poll_votes.poll_id
+        FROM poll_votes target_votes
+        WHERE target_votes.user_id = :target_user_id
+          AND target_votes.poll_id = poll_votes.poll_id
       );
 
       UPDATE poll_votes
