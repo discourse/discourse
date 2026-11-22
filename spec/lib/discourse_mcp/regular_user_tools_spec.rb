@@ -235,6 +235,30 @@ describe DiscourseMcp::Tools do
   end
 
   describe DiscourseMcp::Tools::ListNotifications do
+    it "requires the moderation scope to return staff review note notifications" do
+      Jobs.run_immediately!
+      group = Fabricate(:group)
+      group.add(moderator)
+      SiteSetting.reviewable_note_notification_groups = group.id.to_s
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(reviewable:, user: admin, content: "Needs a second opinion")
+      context = request_context(moderator)
+      allow(context).to receive(:has_scopes?).and_return(true)
+
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result[:notifications].pluck(:notification_type)).to eq(
+        [Notification.types[:staff_reviewable_note]],
+      )
+
+      allow(context).to receive(:has_scopes?).with(
+        DiscourseMcp::Scopes::MODERATION_READ,
+      ).and_return(false)
+      result =
+        described_class.call(arguments: {}, request_context: context).fetch(:structuredContent)
+      expect(result[:notifications]).to be_empty
+    end
+
     it "hides reviewable mentions after moderator access is revoked" do
       SiteSetting.enable_mentions = true
       reviewable = Fabricate(:reviewable_flagged_post)

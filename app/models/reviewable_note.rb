@@ -16,8 +16,15 @@ class ReviewableNote < ActiveRecord::Base
   attr_reader :unnotified_usernames
 
   after_create :notify_mentions
+  after_create_commit :enqueue_staff_notification
 
   private
+
+  def enqueue_staff_notification
+    if SiteSetting.reviewable_note_notification_groups.present?
+      Jobs.enqueue(:notify_staff_reviewable_note, note_id: id)
+    end
+  end
 
   def mentioned_usernames
     if @analyzed_content != content
