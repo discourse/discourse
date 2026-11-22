@@ -711,8 +711,8 @@ importers:
         specifier: ^0.1.7
         version: 0.1.7
       '@rolldown/pluginutils':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.1.1
+        version: 1.1.1
       '@rollup/plugin-babel':
         specifier: ^7.1.0
         version: 7.1.0(@babel/core@7.29.7(supports-color@10.2.2))(supports-color@10.2.2)
@@ -2896,6 +2896,9 @@ packages:
 
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+
+  '@rolldown/pluginutils@1.1.1':
+    resolution: {integrity: sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA==}
 
   '@rollup/browser@4.68.2':
     resolution: {integrity: sha512-T1cftTPbEQqE/7aRsba6/0qwgXAp9JiOC/jS8BhKGdndnnUCZrTozFPLevLuh3Lnv3Nuj6LUSNjTj5fAWGnMhg==}
@@ -10538,6 +10541,8 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
+
+  '@rolldown/pluginutils@1.1.1': {}
 
   '@rollup/browser@4.68.2':
     dependencies:
