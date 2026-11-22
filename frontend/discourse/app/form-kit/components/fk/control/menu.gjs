@@ -41,6 +41,7 @@ export default class FKControlMenu extends FKBaseControl {
       @autofocus={{this.site.mobileView}}
       @contentClass="form-kit__control-menu-content"
       @disabled={{@field.disabled}}
+      @matchTriggerWidth={{eq @field.format "full"}}
       @modalForMobile={{true}}
       @offset={{5}}
       @onRegisterApi={{this.registerMenuApi}}

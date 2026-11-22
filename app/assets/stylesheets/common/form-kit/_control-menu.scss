@@ -26,6 +26,7 @@
 
   &-content {
     .dropdown-menu {
+      flex: 1;
       min-width: 200px;
     }
 
@@ -36,6 +37,7 @@
     }
 
     &.fk-d-menu .fk-d-menu__inner-content {
+      flex: 1;
       max-height: 40dvh;
     }
 

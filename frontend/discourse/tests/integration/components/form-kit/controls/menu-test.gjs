@@ -111,8 +111,9 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
 
     await render(
       <template>
-        <Form @data={{data}} as |form|>
+        <Form style="width: 500px;" @data={{data}} as |form|>
           <form.Field
+            @format="full"
             @helpText="Suggested value"
             @name="foo"
             @title="Foo"
@@ -152,6 +153,12 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
 
     await click(trigger);
 
+    const panel = find(".form-kit__control-menu-content");
+    assert.strictEqual(
+      panel.getBoundingClientRect().width,
+      trigger.getBoundingClientRect().width,
+      "a full width menu matches the trigger width"
+    );
     assert
       .dom('.form-kit__control-menu-item[data-value="item-1"] button')
       .hasAttribute("aria-current", "true", "marks the current option");
