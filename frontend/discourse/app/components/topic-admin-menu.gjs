@@ -93,12 +93,19 @@ export default class TopicAdminMenu extends Component {
     return getURL(`/review?topic_id=${this.args.topic.id}&status=all`);
   }
 
+  get canToggleClosed() {
+    return (
+      this.details?.can_close_topic &&
+      (!this.args.topic.get("closed") || this.details.can_open_topic !== false)
+    );
+  }
+
   get showAdminButton() {
     return (
       this.currentUser?.canManageTopic ||
       this.currentUser?.canSetTopicTimer ||
       this.details?.can_archive_topic ||
-      this.details?.can_close_topic ||
+      this.canToggleClosed ||
       this.details?.can_split_merge_topic
     );
   }
@@ -129,7 +136,7 @@ export default class TopicAdminMenu extends Component {
       this.showTopicManagementSection &&
       (showsMultiSelect ||
         showsDeleteOrRecover ||
-        this.details?.can_close_topic ||
+        this.canToggleClosed ||
         showsPin ||
         showsArchive ||
         this.details?.can_toggle_topic_visibility ||
@@ -248,7 +255,7 @@ export default class TopicAdminMenu extends Component {
               {{/if}}
             {{/if}}
 
-            {{#if this.details.can_close_topic}}
+            {{#if this.canToggleClosed}}
               <dropdown.item
                 class={{if
                   @topic.closed

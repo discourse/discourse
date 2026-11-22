@@ -1425,6 +1425,35 @@ RSpec.describe TopicsController do
   end
 
   describe "#status" do
+    it "lets TL4 close topics while restricting their ability to reopen them" do
+      topic.update!(closed: true)
+      sign_in(trust_level_4)
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload).to be_open
+
+      SiteSetting.tl4_can_reopen_topics = false
+      get "/t/#{topic.id}.json"
+      expect(response.parsed_body["details"]).to include(
+        "can_close_topic" => true,
+        "can_open_topic" => false,
+      )
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: true }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload).to be_closed
+
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+      expect(response).to have_http_status(:forbidden)
+      expect(topic.reload).to be_closed
+
+      sign_in(moderator)
+      put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: false }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload).to be_open
+    end
+
     it "needs you to be logged in" do
       put "/t/1/status.json", params: { status: "visible", enabled: true }
       expect(response.status).to eq(403)
@@ -6668,6 +6697,28 @@ RSpec.describe TopicsController do
   end
 
   describe "#timer" do
+    it "rejects timers that reopen topics when reopening for TL4 is disabled" do
+      Group.refresh_automatic_groups_for_user!(trust_level_4)
+      sign_in(trust_level_4)
+      topic.update!(closed: true)
+
+      post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: "open" }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload.public_topic_timer.status_type).to eq(TopicTimer.types[:open])
+
+      SiteSetting.tl4_can_reopen_topics = false
+      post "/t/#{topic.id}/timer.json", params: { status_type: "open" }
+      expect(response).to have_http_status(:ok)
+      expect(topic.reload.public_topic_timer).to be_nil
+
+      %w[open close].each do |status_type|
+        post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: }
+        expect(response).to have_http_status(:forbidden)
+        expect(topic.reload).to be_closed
+        expect(topic.public_topic_timer).to be_nil
+      end
+    end
+
     context "when a user is not logged in" do
       it "requires authentication" do
         post "/t/#{topic.id}/timer.json", params: { time: "24", status_type: TopicTimer.types[1] }

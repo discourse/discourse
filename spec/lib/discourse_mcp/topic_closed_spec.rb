@@ -62,6 +62,15 @@ RSpec.describe DiscourseMcp::Tools::SetTopicClosed do
       expect(topic.reload.closed).to eq(true)
     end
 
+    it "applies the TL4 reopen restriction to topic status changes" do
+      leader = Fabricate(:trust_level_4)
+      SiteSetting.tl4_can_reopen_topics = false
+
+      expect(invoke(true, actor: leader)[:structuredContent]).to include(closed: true)
+      expect { invoke(false, actor: leader) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload).to be_closed
+    end
+
     it "hides missing and inaccessible topics" do
       private_topic = Fabricate(:private_message_topic)
       [0, private_topic.id].each do |topic_id|

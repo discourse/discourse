@@ -35,6 +35,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     :notification_level,
     :notifications_reason_id,
     *can_attributes,
+    :can_open_topic,
     :can_remove_self_id,
     :participants,
     :allowed_users,
@@ -173,6 +174,11 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   alias include_can_split_merge_topic? can_perform_action_available_to_group_moderators?
   alias include_can_edit_staff_notes? can_perform_action_available_to_group_moderators?
   alias include_can_moderate_category? can_perform_action_available_to_group_moderators?
+  alias include_can_open_topic? include_can_close_topic?
+
+  def can_open_topic
+    scope.can_open_topic?(object.topic)
+  end
 
   def include_can_publish_page?
     scope.can_publish_page?(object.topic)

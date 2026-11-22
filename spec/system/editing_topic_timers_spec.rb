@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 describe "Editing topic timers" do
   fab!(:admin)
+  fab!(:leader, :trust_level_4)
   fab!(:post)
   fab!(:topic) { post.topic }
 
@@ -23,5 +24,19 @@ describe "Editing topic timers" do
     edit_topic_timer_modal.click_save
 
     expect(page).to have_text("This topic will automatically close in 10 hours.")
+  end
+
+  it "hides the reopen action immediately after a TL4 user closes a topic" do
+    SiteSetting.tl4_can_reopen_topics = false
+    sign_in(leader)
+    topic_page.visit_topic(topic)
+
+    topic_page.click_admin_menu_button
+    find(".topic-admin-close button").click
+    topic_page.click_admin_menu_button
+
+    expect(page).to have_css(".topic-admin-archive")
+    expect(page).to have_no_css(".topic-admin-open")
+    expect(topic.reload).to be_closed
   end
 end

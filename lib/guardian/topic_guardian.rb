@@ -343,10 +343,18 @@ module TopicGuardian
   end
   alias can_archive_topic? can_perform_action_available_to_group_moderators?
   alias can_close_topic? can_perform_action_available_to_group_moderators?
-  alias can_open_topic? can_perform_action_available_to_group_moderators?
   alias can_split_merge_topic? can_perform_action_available_to_group_moderators?
   alias can_edit_staff_notes? can_perform_action_available_to_group_moderators?
   alias can_pin_unpin_topic? can_perform_action_available_to_group_moderators?
+
+  def can_open_topic?(topic)
+    !tl4_topic_reopen_restricted? && can_perform_action_available_to_group_moderators?(topic)
+  end
+
+  def tl4_topic_reopen_restricted?
+    !SiteSetting.tl4_can_reopen_topics && authenticated? && !is_staff? &&
+      user.trust_level == TrustLevel[4]
+  end
 
   def can_move_posts?(topic)
     return false if is_silenced?
