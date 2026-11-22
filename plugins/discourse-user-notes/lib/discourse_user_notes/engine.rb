@@ -33,6 +33,7 @@ module DiscourseUserNotes
 
     user.custom_fields[DiscourseUserNotes::COUNT_FIELD] = notes.size
     user.save_custom_fields
+    enqueue_staff_notification(user.id, record[:id])
 
     record
   end
@@ -49,4 +50,13 @@ module DiscourseUserNotes
     user.custom_fields[DiscourseUserNotes::COUNT_FIELD] = notes.size
     user.save_custom_fields
   end
+
+  def self.enqueue_staff_notification(user_id, note_id)
+    return if !SiteSetting.user_notes_enabled? || SiteSetting.user_notes_notification_groups.blank?
+
+    ActiveRecord.after_all_transactions_commit do
+      Jobs.enqueue(:notify_staff_user_note, user_id:, note_id:)
+    end
+  end
+  private_class_method :enqueue_staff_notification
 end

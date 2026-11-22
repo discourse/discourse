@@ -1,5 +1,9 @@
 en:
   js:
+    notifications:
+      staff_user_note: "A user note was added"
+      titles:
+        staff_user_note: "New user note"
     user_notes:
       title: "User notes"
       attach: "Add user note"

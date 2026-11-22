@@ -16,10 +16,16 @@ module DiscourseMcp
           Notification
             .where(user_id: request_context.user_id)
             .visible
+            .visible_to(request_context.guardian)
             .includes(:topic)
             .order(id: :desc)
             .limit(limit)
         notifications = filter_chat_notifications_by_scope(notifications, request_context)
+        if request_context.guardian.is_staff? &&
+             !request_context.has_scopes?(Scopes::MODERATION_READ)
+          notifications =
+            notifications.where.not(notification_type: Notification.types[:staff_user_note])
+        end
         if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
           notifications =
             notifications
