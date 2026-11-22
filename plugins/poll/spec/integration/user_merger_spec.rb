@@ -96,6 +96,7 @@ RSpec.describe UserMerger do
 
   it "moves the source user's votes in polls where the target user has not voted" do
     Fabricate(:poll_vote, poll: poll_regular, user: target_user, poll_option: poll_regular_option1)
+    Fabricate(:poll_vote, poll: poll_regular, user: source_user, poll_option: poll_regular_option2)
     Fabricate(
       :poll_vote,
       poll: poll_multiple,
