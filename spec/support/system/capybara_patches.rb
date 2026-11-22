@@ -211,8 +211,9 @@ module PlaywrightSoftReset
       return false if @context_downloaded
 
       context = contexts.first
-      context.pages.each(&:close)
+      previous_pages = context.pages
       new_page = create_page(context)
+      previous_pages.each(&:close)
       return false if fake_clock_installed?(new_page)
 
       clear_storage(new_page)

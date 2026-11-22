@@ -37,6 +37,19 @@ There are various environment flags that can be used to change how the spec is r
 - `CAPYBARA_DEFAULT_MAX_WAIT_TIME` - Overrides the default wait time when looking for DOM elements in Capybara.
   [/details]
 
+### Browser driver compatibility
+
+Changes to the browser driver need to preserve the behavior that system specs and their tooling use:
+
+- Capybara finders and retries, nested frames and windows, navigation history, and keyboard, pointer, touch, and drag input. Ember pages must finish mounting and settle after navigation. Capybara actions must also wait for the client to settle.
+- Fresh test state between examples, including cookies, site storage, injected scripts, permissions, and browser clock. Specs use both a running clock with a fixed start time and an explicitly advanced clock.
+- Request blocking by default, host exceptions through `allow_network:`, and routes that pause, abort, or fulfill requests. Specs also use downloads, file uploads, dialogs, clipboard permissions, viewport and color scheme emulation, and scripts that run before the page loads.
+- Console and page errors for failure output and deprecation checks, headed debugging with DevTools, screenshots, `.webm` video, and trace archives that open in Playwright Trace Viewer.
+
+Several helpers use Chromium's DevTools Protocol directly. Virtual security keys, timezone overrides, network throttling, and drag interception need equivalent support or an explicit browser requirement when running specs on another engine.
+
+The QUnit runner also uses the Chromium binary installed by Playwright. Check `bin/qunit` before changing browser installation or packaging.
+
 ## Writing system specs
 
 ### Basics
