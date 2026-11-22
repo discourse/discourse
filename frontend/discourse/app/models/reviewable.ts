@@ -97,6 +97,7 @@ export interface ReviewableAction {
   icon: string | null;
   button_class: string | null;
   label: string;
+  confirm_title?: string;
   confirm_message?: string;
   confirm_destructive?: boolean;
   description?: string;

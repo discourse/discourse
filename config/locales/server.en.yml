@@ -6513,6 +6513,7 @@ en:
       delete_and_ignore_replies:
         title: "Delete post and replies, ignore flag"
         description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
+        confirm_title: "Delete post and replies, ignore flag?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -6522,6 +6523,7 @@ en:
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
+        confirm_title: "Delete post and replies?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
@@ -6588,11 +6590,13 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm_title: "Delete @%{username}?"
           confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm_title: "Delete and block @%{username}?"
           confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:
