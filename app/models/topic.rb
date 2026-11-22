@@ -916,7 +916,8 @@ class Topic < ActiveRecord::Base
         candidates:,
       )
 
-    blurb_sql = "LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb"
+    blurb_sql =
+      "CASE WHEN p.hidden THEN NULL ELSE LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) END AS blurb"
     select_fragment = ->(similarity_expr) do
       DB.sql_fragment(
         "topics.*, #{similarity_expr} AS similarity, #{blurb_sql}",
@@ -2060,7 +2061,12 @@ class Topic < ActiveRecord::Base
     TopicConverter.new(self, user).convert_to_private_message
   end
 
+  def first_post_hidden?
+    Post.where(topic_id: id, post_number: 1).pick(:hidden) == true
+  end
+
   def update_excerpt(excerpt)
+    excerpt = nil if excerpt.present? && first_post_hidden?
     update_column(:excerpt, excerpt)
     ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
