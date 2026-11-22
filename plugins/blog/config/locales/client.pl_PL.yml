@@ -25,6 +25,7 @@ pl_PL:
       admin:
         title: Blog
         go_to_editor: Przejdź do edytora
+        view_blog: Zobacz blog
         open_blog: Otwórz blog
         safe_mode: Otwórz bez kodu niestandardowego
         identity: Tożsamość bloga
@@ -56,6 +57,7 @@ pl_PL:
         retry_reference: Załaduj ponownie odniesienie do tworzenia
         working_preview_hint: Podgląd niezapisanych zmian bez ich zapisywania i aktywowania. Zmiana strony lub przykładowego artykułu aktualizuje podgląd.
         preview_article_unavailable: Podgląd artykułu wymaga opublikowanego artykułu.
+        preview_page_unavailable: Podgląd strony wymaga opublikowanej, samodzielnej strony.
         preview_page: Strona do podglądu
         preview_home: Strona główna
         preview_archive: Archiwum
@@ -67,6 +69,7 @@ pl_PL:
         template_layout: Układ witryny
         template_index: Strona główna i archiwum
         template_article: Artykuł
+        template_page: Samodzielna strona
         template_about: O stronie
         template_not_found: Nie znaleziono strony
         code_warning: "Dodawaj tylko kod, któremu ufasz: działa on z uprawnieniami autora bloga i jest publicznie dostępny do pobrania. Nigdy nie działa w uwierzytelnionych podglądach w społeczności."
@@ -74,11 +77,23 @@ pl_PL:
         css_description: Zwykły CSS, do 65 536 bajtów. Ładuje się po arkuszu stylów bazowych.
         js: Niestandardowy JavaScript
         js_description: Zwykły JavaScript, do 65 536 bajtów. Tagi skryptów nie są parsowane — załaduj inny skrypt, dodając element skryptu (document.createElement("script")).
-        save: Zapisz tożsamość
-        saved: Tożsamość bloga została zapisana. Odśwież bloga, aby zobaczyć zmiany.
+        save: Zapisz
+        saved: Ustawienia bloga zostały zapisane. Odśwież bloga, aby zobaczyć zmiany.
         identity_tab: Tożsamość
-        identity_description: Nazwa, wstęp i treść „O mnie” wspólne dla wszystkich motywów blogów.
-        themes_index_description: Wybierz motyw do edycji. Szkice zmian pozostaną prywatne, dopóki ich nie aktywujesz.
+        identity_description: Nazwa, wprowadzenie, Informacje o treści i adresy artykułów udostępniane przez wszystkie tematy bloga.
+        article_urls: Adresy URL artykułów
+        path_format: Format adresu
+        path_format_description: Dotyczy nowych artykułów. Do momentu pierwszej publikacji artykułu, jego adres znajduje się po tytule i dniu publikacji. Opublikowane artykuły zachowują swoje adresy.
+        path_format_sample_slug: mój-artykuł
+        path_formats:
+          slug: Nazwa artykułu
+          year_month_slug: Miesiąc i nazwa
+          year_month_day_slug: Data i nazwa
+          custom: Niestandardowy
+        custom_path_format: Format niestandardowy
+        custom_path_format_description: "Użyj {year}, {month}, {day}, {slug} i {id}, a także uwzględnij {slug} lub {id} , aby każdy adres był unikalny."
+        custom_path_format_invalid: "Zacznij od / i uwzględnij {slug} lub {id}. Można używać tylko {year}, {month}, {day}, {slug} i {id}."
+        themes_index_description: Wybierz projekt, który zobaczą czytelnicy. Dostosuj dołączony motyw lub edytuj swój własny; zmiany pozostaną prywatne, dopóki ich nie aktywujesz.
         thumbnail:
           journal: Dziennik
           headline: Bądź ciekawy.
@@ -89,8 +104,6 @@ pl_PL:
         preview_short: Podgląd szkicu
         new_theme_short: Nowy motyw
         git_source: Źródło Git
-        no_themes: Brak zapisanych motywów
-        no_themes_description: Utwórz motyw na podstawie swojego obecnego projektu lub zaimportuj go z Git.
         themes: Motywy
         themes_description: Zachowaj wiele projektów i iteruj bez wprowadzania zmian w aktywnym blogu. Czytelnicy widzą ostatnią aktywowaną migawkę, a nie Twoje zmiany robocze ani aktualizacje Git.
         theme_name: Nazwa motywu
@@ -99,8 +112,14 @@ pl_PL:
         preview: Podgląd
         theme_actions: Działania związane z motywem
         local_edits_badge: Lokalne edycje
+        preset_description: W zestawie z blogiem
+        customize: Wygląd
+        customized_theme_name: "%{name} (niestandardowe)"
         new_theme_name: Nowy motyw bloga
-        new_theme: Nowy motyw z aktywnego projektu
+        start_from: Zacznij od
+        start_from_included: Dołączone motywy
+        start_from_drafts: Zapisane wersje robocze
+        start_from_confirm: "Zacznij od nowa od %{name}? Zmiany na tej stronie zostaną utracone."
         import: Import
         import_description: "Importuj motyw z repozytorium Git lub pliku ZIP. Importy tworzą nowe wersje robocze bez zmiany aktywnego motywu."
         import_source: Importuj z
@@ -122,7 +141,7 @@ pl_PL:
         save_before_activate: Zapisz zmiany przed aktywacją szkicu.
         activate_theme: Aktywuj zapisany szkic
         activate_confirm: "Aktywuj %{name}? To zastąpi projekt, który widzą czytelnicy. Twoje pozostałe zapisane motywy pozostaną dostępne."
-        activated: Motyw aktywowany. Blog na żywo korzysta teraz z tej zapisanej wersji.
+        activated: Motyw aktywowany. Czytelnicy widzą teraz ten projekt.
         pull_git: Pobierz najnowszą wersję z Git
         pull_confirm: Wyciągnąć ostatnią zatwierdzenie? To zastąpi zapisany szkic, łącznie z lokalnymi edycjami. Aktywny projekt nie ulegnie zmianie.
         local_edits: W tym szkicu wprowadzono lokalne zmiany od czasu ostatniego importu do Gita.
@@ -192,13 +211,19 @@ pl_PL:
           body: treść
           path: ścieżka
           excerpt: fragment
+          meta_description: metaopis
+          canonical_url: kanoniczny adres URL
+          cover: obraz okładki
+          co_authors: współautorzy
           featured: wyróżniona flaga
+          page: samodzielna strona
+          tags: tagi
           published_at: data publikacji
         show_diff: Pokaż różnicę
         hide_diff: Ukryj różnice
         diff_error: Zmiana jest zbyt duża, aby wyświetlić ją jako różnicę. Zamiast tego użyj podglądu.
         settings: Ustawienia artykułu
-        settings_hint: Ścieżka, fragment, data, wyróżnione
+        settings_hint: Ścieżka, fragment, okładka, wyszukiwanie, współautorzy, data, wyróżnione, strona
         feedback:
           none: Brak jeszcze prywatnych opinii
           show: Pokaż opinie
@@ -272,31 +297,46 @@ pl_PL:
       editor_title: Edytor bloga
       editor_description: Szkice pozostają prywatne do momentu ich opublikowania. Edytuj artykuł, aby go opublikować, zaplanować lub poprawić.
       editor_table:
-        article: Artykuł
         edit: Edytuj
         status: Status
         published: Opublikowany
         replies: Odpowiedzi
+        title: Tytuł
         edits_pending: Oczekujące edycje
         edits_need_approval: Edycje wymagają zatwierdzenia
         more_actions: Więcej działań
+        page: Strona
         preview_changes: Podgląd zmian
         view_on_blog: Zobacz na blogu
       new_draft: Nowy szkic
       settings: Konfiguruj ustawienia bloga
-      all: Wszystkie artykuły
+      all: Wszystkie
       drafts: Szkice
       published: Opublikowany
       visit_blog: Odwiedź blog
       public_discussion: Dyskusja publiczna
       not_published: Nie na blogu
+      pages: Strony
       preview: Podgląd
       load_more: Załaduj więcej
       unpublish_confirm: Usunąć ten artykuł z bloga? Temat i odpowiedzi na niego pozostaną publiczne w społeczności. Istniejących kopii w kanałach i wyszukiwarkach nie da się przywrócić.
       path: Ścieżka artykułu
-      path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Stare ścieżki automatycznie przekierowują po zmianie.
+      path_hint: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem. Stare ścieżki automatycznie przekierowują po zmianie.
+      path_hint_dated: Zacznij od / i użyj małych liter, cyfr, myślników oraz opcjonalnych segmentów ścieżki. Do czasu pierwszej publikacji artykułu, ścieżka, której nie edytowałeś, podąża za jego tytułem i datą publikacji. Stare ścieżki automatycznie przekierowują po zmianie.
       excerpt: Fragment
       excerpt_hint: Krótkie wprowadzenie do kart artykułów i podglądów wyszukiwania. Pozostaw puste, aby wygenerować fragment artykułu.
+      cover: Obraz okładki
+      cover_hint: Wyświetlany nad artykułem i używany do podglądu kart i linków. Pozostaw puste, aby użyć pierwszego obrazu w artykule.
+      cover_alt: Tekst alternatywny obrazu okładki
+      cover_alt_hint: Opisuje obraz okładki dla osób, które go nie widzą.
+      page: Samodzielna strona
+      page_hint: Dla stron takich jak „O nas”, „Kontakt” czy „Prywatność”. Pominięte na listach artykułów i w kanale, wyświetlane bez podpisu, daty, tagów i dyskusji.
+      co_authors: Współautorzy
+      co_authors_hint: Podane obok autora w podpisie i wymienione na ich własnych stronach autorskich.
+      meta_description: Metaopis
+      meta_description_hint: Wyświetlane są podsumowania wyszukiwarek i podglądy linków. Pozostaw puste, aby użyć fragmentu.
+      canonical_url: Kanoniczny adres URL
+      canonical_url_hint: W przypadku artykułu opublikowanego po raz pierwszy gdzie indziej należy podać pełny adres URL oryginału, aby wyszukiwarki mogły podać tę stronę. Pozostaw puste pole, aby podać adres URL tego artykułu.
       date: Data publikacji
       date_hint: Pozostaw puste pole, aby użyć daty pierwszej publikacji. W przypadku importowanych artykułów wybierz datę z przeszłości. Daty są podawane w formacie UTC.
       featured: Funkcja na stronie głównej

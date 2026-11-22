@@ -65,6 +65,7 @@ zh_TW:
         requires_ai: "需要啟用 AI 插件"
       nodes:
         "action:ai_agent": "AI 智能體"
+        "action:ai_tool": "AI 工具"
       node_descriptions:
         "action:ai_agent": "運行 AI 智能體來處理資料或生成內容"
     discourse_automation:
@@ -280,6 +281,16 @@ zh_TW:
           upload_ids: "上傳 ID"
           upload_ids_placeholder: "={{ $json.post.upload_ids }}"
           select_agent: "選擇智能體…"
+        ai_tool:
+          tool_ref: "工具"
+          llm_model_id: "LLM 模型"
+          arguments: "參數"
+          list_item: "清單項目"
+          add_list_item: "新增項目"
+        mcp_tool:
+          mcp_server_id: "MCP 服務器"
+          tool_name: "工具"
+          arguments: "參數"
         classify:
           text: "文字"
           upload_ids: "圖像"
@@ -307,20 +318,32 @@ zh_TW:
         short_title: "功能"
         back: "返回 AI 功能"
         settings_save_error: "某些設置無法保存。"
-        disabled: "（已禁用）"
-        agent:
-          other: "代理程式："
-        groups: "群組："
-        llm:
-          other: "大型語言模型："
+        table:
+          status: "狀態"
+          enabled: "已啟用"
+          feature: "功能"
+          agent: "智能體"
+          llm: "LLM"
+          groups: "群組"
+        who_can_use:
+          no_one: "沒有人"
+        status:
+          "on": "開"
+          "off": "關"
+        chatbot:
+          column: "聊天機器人"
+          new_agent: "新建智能體"
+          manage_agents: "管理智能體"
+          places:
+            personal_messages: "個人訊息"
+            chat_direct_messages: "聊天消息"
+            none: "不可使用"
+        toggle: "啟用 %{name}"
+        set_up: "設置"
         no_llm: "未選擇 LLM"
         no_agent: "未設置"
         no_groups: "無"
-        classification_model: "模型："
         edit: "設置"
-        expand_list:
-          other: "（另外 %{count} 個）"
-        collapse_list: "（收起）"
         bot:
           bot: "聊天機器人"
           name: "機器人"
@@ -334,7 +357,6 @@ zh_TW:
           enabled: "已啟用"
           not_enabled: "未啟用"
         filters:
-          all: "所有"
           no_results: "找不到符合您的篩選條件的功能。"
           reset: "重置"
         no_automations: "尚無自動化"
@@ -365,8 +387,7 @@ zh_TW:
             access_control: "訪問控制"
         embeddings:
           name: "嵌入向量"
-          description: "通過生成文本的語義表示來支持“相關主題”和“AI 搜尋”等功能"
-          hyde: "HyDE"
+          related_topics: "相關主題"
           setting_groups:
             model_settings: "模型設置"
             related_topics: "相關主題"
@@ -379,7 +400,6 @@ zh_TW:
             settings: "基本設置"
         discord:
           name: "Discord 集成"
-          description: "增加了搜尋 Discord 頻道的功能"
           search: "Discord 搜尋"
           setting_groups:
             settings: "基本設置"
@@ -415,6 +435,9 @@ zh_TW:
             enabled_features: "啟用的功能"
             automation: "自動化"
             agents: "智能體"
+        review_queue:
+          setting_groups:
+            settings: "設置"
         image_caption:
           name: "圖片說明"
           description: "為貼文圖片生成 AI 說明，將其提供給讀者和輔助閱讀技術。"
@@ -433,10 +456,6 @@ zh_TW:
           schedule_topic_success:
             other: "已排定 %{count} 篇未翻譯貼文的翻譯。"
           schedule_topic_error: "無法安排翻譯。請重試。"
-          setting_groups:
-            settings: "基本設置"
-            agents: "智能體"
-            backfill_and_limits: "回填與限制"
         spam:
           name: "垃圾資訊"
           description: "使用所選 LLM 識別潛在垃圾資訊，并進行標記，使其進入審核隊列，以便網站版主可以進行檢查"
@@ -455,11 +474,22 @@ zh_TW:
       translations:
         title: "翻譯"
         description: "自動將論壇上的所有內容翻譯成使用者的首選語言"
-        supported_locales: "支持的語言"
+        sections:
+          advanced: "進階"
+        settings:
+          ai_translation_category_scope:
+            label: "分類"
+          ai_translation_personal_messages:
+            label: "個人訊息"
+            choices:
+              none: "無"
+              all: "所有"
+          content_localization_language_switcher:
+            choices:
+              none: "沒有人"
+              all: "所有使用者"
         max_locales_reached: "最多只能選擇 %{max} 種語言。"
         locale_count: "已選取 %{count}/%{max}"
-        category_scope: "分類"
-        category_scope_description: "選擇自動翻譯應用于所有分類、公開分類還是所選分類中的內容。"
         cached_results_notice: "正在顯示自 %{relative_time} 起的快取結果。"
         model_progress:
           loading: "正在加載翻譯進度"
@@ -521,12 +551,8 @@ zh_TW:
               all_translated:
                 other: "全部 %{count} 個標籤均已完整翻譯。"
         admin_actions:
-          translation_settings: "AI 設置"
-          localization_settings: "應用語言設置"
-          enable_translations: "啟用自動翻譯"
+          enabled: "已啟用"
           enable_translations_disabled: "您必須添加受支持的語言才能啟用翻譯功能。"
-          show_language_switcher: "在頁首顯示語言切換器"
-          show_language_switcher_description: "讓所有人選擇語言，並以該語言瀏覽您的網站。"
         stats:
           title: "翻譯統計"
           backfill_disabled: "回填功能已禁用，僅翻譯新貼文。"
@@ -561,6 +587,8 @@ zh_TW:
         short_title: "垃圾資訊"
         title: "配置垃圾資訊處理"
         select_llm: "選擇 LLM"
+        no_llm_selected: "無"
+        no_decision_model_selected: "無"
         select_agent: "選擇智能體"
         custom_instructions: "自訂指令"
         custom_instructions_help: "特定于您的網站的自訂指令，幫助指導 AI 識別垃圾資訊，例如“更積極地掃描非英語貼文”。"
@@ -1028,6 +1056,8 @@ zh_TW:
         edit: "編輯"
         delete: "刪除"
         test: "運行測試"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP 服務器"
         new: "新 MCP 服務器"
@@ -1112,6 +1142,7 @@ zh_TW:
         type: "類型"
         provider: "服務提供者"
         edit: "編輯"
+        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         select_type: "選擇"
         types:
           embedding: "嵌入"
@@ -1362,7 +1393,6 @@ zh_TW:
         presets: "選擇一個預設…"
         configure_manually: "手動配置"
         edit: "編輯"
-        seeded_warning: "此內容在您的網站上預先配置，無法編輯。"
         tests:
           title: "運行測試"
           running: "正在運行測試…"
@@ -1394,6 +1424,7 @@ zh_TW:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "自訂"
         provider_fields:
@@ -1429,8 +1460,7 @@ zh_TW:
         filter_standalone: "獨立活動"
       ai_bot:
         title: "AI 機器人"
-        agent: "智能體："
-        llm: "模型："
+        agent_menu_heading: "智能體"
         pm_warning: "版主會定期監控 AI 聊天機器人消息。"
         cancel_streaming: "停止回復"
         try_again: "重試"
@@ -1497,9 +1527,9 @@ zh_TW:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "我能幫上什么忙？"
           submit: "提交問題"
-          disclaimer: "生成式 AI 可能會犯錯。請驗證重要資訊。"
           placeholder: "提問…"
           new: "新問題"
           min_input_length_message:

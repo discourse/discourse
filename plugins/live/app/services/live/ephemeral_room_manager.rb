@@ -76,7 +76,11 @@ module Live
       # never be torn down through the ephemeral lifecycle.
       raise Discourse::InvalidParameters.new(:room) unless room.ephemeral?
 
+      # Built before the destroy so the broadcast still targets the members
+      # whose memberships the destroy cascades away.
+      broadcaster = Live::DirectoryBroadcaster.new(room, :destroyed)
       room.destroy!
+      broadcaster.broadcast
       Live::Livekit::RoomServiceClient.delete_room(room)
       Live::ParticipantTracker.clear(room.id)
     end

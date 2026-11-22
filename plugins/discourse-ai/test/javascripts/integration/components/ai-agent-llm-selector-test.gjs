@@ -9,6 +9,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
 
   hooks.beforeEach(function () {
     this.currentUser = this.owner.lookup("service:current-user");
+    this.currentUser.admin = false;
     this.keyValueStore = this.owner.lookup("service:key-value-store");
     this.keyValueStore.remove("ai_agent_selector_id");
     this.keyValueStore.remove("ai_llm_selector_id");
@@ -46,6 +47,59 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
     this.setTargetRecipient = (username) => (this.targetRecipient = username);
   });
 
+  test("switching agents updates the dropdown label with the same model", async function (assert) {
+    this.currentUser.admin = true;
+    this.currentUser.ai_enabled_agents.push({
+      ...this.currentUser.ai_enabled_agents[0],
+      id: -2,
+      name: "Focused helper",
+      username: "focused_helper",
+    });
+
+    await render(
+      <template>
+        <AiAgentLlmSelector
+          @setAgentId={{this.setAgentId}}
+          @setLlmId={{this.setLlmId}}
+          @setTargetRecipient={{this.setTargetRecipient}}
+          @showMenuHeadings={{true}}
+        />
+      </template>
+    );
+
+    const agentSelector = selectKit(".agent-llm-selector__agent-dropdown");
+    assert.strictEqual(
+      agentSelector.header().label(),
+      "Forum helper",
+      "displays the initial agent"
+    );
+    assert
+      .dom(".agent-llm-selector__menu-heading")
+      .doesNotExist("hides menu headings when the menus are closed");
+
+    await agentSelector.expand();
+    assert
+      .dom(
+        ".agent-llm-selector__agent-dropdown .agent-llm-selector__menu-heading"
+      )
+      .hasText("Agent", "shows the Agent heading inside the open menu");
+    assert
+      .dom(".agent-llm-selector__menu-settings")
+      .hasAttribute(
+        "href",
+        "/admin/plugins/discourse-ai/ai-agents",
+        "lets admins open agent settings"
+      );
+    await agentSelector.selectRowByValue(-2);
+
+    assert.strictEqual(
+      agentSelector.header().label(),
+      "Focused helper",
+      "displays the newly selected agent immediately"
+    );
+    assert.strictEqual(this.llmId, 1, "keeps the selected model");
+  });
+
   test("switching models preserves the agent recipient", async function (assert) {
     await render(
       <template>
@@ -53,7 +107,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -68,6 +122,17 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
     );
 
     await llmSelector.expand();
+    assert
+      .dom(
+        ".agent-llm-selector__llm-dropdown .agent-llm-selector__menu-heading"
+      )
+      .hasText(
+        "Language model",
+        "shows the Language model heading inside the open menu"
+      );
+    assert
+      .dom(".agent-llm-selector__menu-settings")
+      .doesNotExist("hides model settings from non-admins");
     await llmSelector.selectRowByValue(2);
 
     assert.strictEqual(this.llmId, 2, "changes the model by LLM ID");
@@ -92,7 +157,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -114,7 +179,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -147,7 +212,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -173,7 +238,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -198,7 +263,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );
@@ -226,7 +291,7 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
           @setAgentId={{this.setAgentId}}
           @setLlmId={{this.setLlmId}}
           @setTargetRecipient={{this.setTargetRecipient}}
-          @showLabels={{true}}
+          @showMenuHeadings={{true}}
         />
       </template>
     );

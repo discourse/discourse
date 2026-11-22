@@ -61,17 +61,18 @@ RSpec.describe Blog::TemplateRenderer do
     end
   end
 
-  describe ".validate!" do
-    it "rejects includes, render tags, invalid syntax, excessive nesting, and oversized sources" do
+  describe ".syntax_error" do
+    it "explains why includes, render tags, invalid syntax, and excessive nesting are rejected" do
       [
         '{% include "/etc/passwd" %}',
         '{% render "secret" %}',
         "{% if %}",
         "{% if true %}" * 110 + "{% endif %}" * 110,
-        "x" * 65_537,
-      ].each do |source|
-        expect { described_class.validate!(source) }.to raise_error(Discourse::InvalidParameters)
-      end
+      ].each { |source| expect(described_class.syntax_error(source)).to be_present }
+    end
+
+    it "accepts a template that parses" do
+      expect(described_class.syntax_error("<h1>{{ site.title }}</h1>")).to be_nil
     end
   end
 end

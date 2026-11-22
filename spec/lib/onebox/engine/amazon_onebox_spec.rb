@@ -90,7 +90,7 @@ RSpec.describe Onebox::Engine::AmazonOnebox do
     it "renders the product details" do
       expect(html).to include(
         "https://images-na.ssl-images-amazon.com/images/I/51nOF2iBa6L._SX940_.jpg",
-        "Watch Christine online & foobar - Amazon Video",
+        "Watch Christine online &amp; foobar - Amazon Video",
         "CHRISTINE is the story of an aspiring newswoman caught in the midst of a personal and professional life crisis. Between unrequited love, frustration at work, a tumultuous home, and self-doubt; she begins to spiral down a dark path.",
       )
     end

@@ -126,6 +126,24 @@ pl_PL:
           title: "System czcionek"
         colors:
           title: "Kolory"
+        design_variables:
+          title: "Zmienne projektowe"
+          description: "Zmienne projektu definiowane przez rdzeń, odczytywane ze skompilowanego pliku CSS, a także te wpisane w stylach motywu, np. w Asystencie administratora, mogą ulegać zmianom."
+          filter_placeholder: "Filtruj według nazwy, typu lub wartości domyślnej"
+          name: "Zmienna"
+          type: "Typ"
+          default: "Domyślna"
+          theme_styles: "Style motywu"
+          scoped: "Ustaw na %{selectors}"
+          editable: "Można zmienić"
+          length_bounds: "%{min}px do %{max}px"
+          not_editable: "Nie można zmienić: %{reason}"
+          palette_variables:
+            one: "%{count} zmienna palety"
+            few: "%{count} zmienne palety"
+            many: "%{count} zmiennych palety"
+            other: "%{count} zmiennych palety"
+          palette_description: "Pochodzą one z palet kolorów witryny. Style motywów mogą z nich korzystać, ale nigdy ich nie ustawiają."
         dialog:
           title: "Okno dialogowe"
         drag_and_drop:

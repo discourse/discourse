@@ -1,16 +1,9 @@
 # frozen_string_literal: true
 
-desc "run chrome headless smoke tests on current build"
+desc "run headless Chromium smoke tests on current build"
 task "smoke:test" do
-  require "chrome_installed_checker"
-
-  begin
-    ChromeInstalledChecker.run
-  rescue ChromeInstalledChecker::ChromeError => err
-    abort err.message
-  end
-
   system("pnpm install", exception: true)
+  system("pnpm playwright-install", exception: true)
 
   url = ENV["URL"]
   if !url

@@ -341,6 +341,47 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "does not reveal topics that only match non-visible post content" do
+      visible_topic = Fabricate(:topic_with_op, raw: "The public prefix oracle content")
+      whisper_topic = Fabricate(:topic_with_op, raw: "A public topic")
+      hidden_topic = Fabricate(:topic_with_op, raw: "Another public topic")
+      deleted_topic = Fabricate(:topic_with_op, raw: "Yet another public topic")
+
+      whisper_post =
+        Fabricate(
+          :post,
+          topic: whisper_topic,
+          raw: "The staff prefix oracle content",
+          post_type: Post.types[:whisper],
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          raw: "The flagged prefix oracle content",
+          hidden: true,
+        )
+      deleted_post =
+        Fabricate(:post, topic: deleted_topic, raw: "The deleted prefix oracle content")
+
+      with_search_indexer_enabled do
+        [visible_topic, whisper_post, hidden_post, deleted_post].each do |record|
+          SearchIndexer.index(record, force: true)
+        end
+      end
+      deleted_post.trash!
+
+      get "/latest.json", params: { search: "prefix" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to contain_exactly(
+        visible_topic.id,
+      )
+      expect(response.body).not_to include(whisper_post.raw)
+      expect(response.body).not_to include(hidden_post.raw)
+      expect(response.body).not_to include(deleted_post.raw)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
@@ -926,6 +967,33 @@ RSpec.describe ListController do
   end
 
   describe "RSS feeds" do
+    it "does not expose hidden first-post content from relisted topics" do
+      hidden_first_post =
+        Fabricate(:post, topic: topic, user: user, raw: "hidden first post latest RSS secret")
+      hidden_first_post.hide!(PostActionType.types[:off_topic])
+      topic.update_status(
+        "visible",
+        true,
+        Discourse.system_user,
+        visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+      )
+      visible_first_post =
+        Fabricate(
+          :post,
+          topic: Fabricate(:topic, user: user),
+          user: user,
+          raw: "visible first post latest RSS text",
+        )
+
+      get "/latest.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+      expect(response.body).to include(topic.title)
+      expect(response.body).not_to include(hidden_first_post.raw)
+      expect(response.body).to include(visible_first_post.raw)
+    end
+
     it "renders latest RSS" do
       get "/latest.rss"
       expect(response.status).to eq(200)
@@ -1188,6 +1256,58 @@ RSpec.describe ListController do
         get "/top.json"
 
         expect(response.parsed_body["topic_list"]["per_page"]).to eq(32)
+      end
+    end
+  end
+
+  describe "category deleted topics" do
+    fab!(:category)
+    fab!(:child_category) { Fabricate(:category, parent_category: category) }
+    fab!(:moderated_child) { Fabricate(:category, parent_category: category) }
+    fab!(:deleted_parent_topic) { Fabricate(:topic, category:, deleted_at: 1.day.ago) }
+    fab!(:deleted_child_topic) do
+      Fabricate(:topic, category: child_category, deleted_at: 1.day.ago)
+    end
+    fab!(:deleted_moderated_child_topic) do
+      Fabricate(:topic, category: moderated_child, deleted_at: 1.day.ago)
+    end
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      group.add(user)
+      Fabricate(:category_moderation_group, category:, group:)
+      Fabricate(:category_moderation_group, category: moderated_child, group:)
+    end
+
+    it "limits deleted results to explicitly moderated categories" do
+      sign_in(user)
+
+      get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(deleted_child_topic.title)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+      ).to contain_exactly(deleted_parent_topic.id, deleted_moderated_child_topic.id)
+    end
+
+    it "preserves global deleted-topic access" do
+      SiteSetting.delete_all_posts_and_topics_allowed_groups =
+        "#{Group::AUTO_GROUPS[:staff]}|#{group.id}"
+
+      [admin, user].each do |viewer|
+        sign_in(viewer)
+
+        get "/c/#{category.slug}/#{category.id}/l/latest.json", params: { status: "deleted" }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["topic_list"]["topics"].map { |entry| entry["id"] },
+        ).to contain_exactly(
+          deleted_parent_topic.id,
+          deleted_child_topic.id,
+          deleted_moderated_child_topic.id,
+        )
       end
     end
   end
@@ -2127,6 +2247,18 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    it "keeps anonymous repeated negated filters from amplifying SQL" do
+      query = Array.new(8, "-status:closed").join(" ")
+
+      sql_queries = track_sql_queries { get "/filter.json", params: { q: query } }
+
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
+      ).to contain_exactly(topic.id)
+      expect(sql_queries.sum(&:bytesize)).to be < 50_000
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

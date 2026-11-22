@@ -9,13 +9,13 @@ const UpcomingChangeBadge = <template>
   <span
     class={{dConcatClass
       "d-table-badge upcoming-change__badge"
-      "--has-tooltip"
+      (if @hasTooltip "--has-tooltip")
       @badgeClass
     }}
   >
     <span class="d-table-badge__content upcoming-change__badge-content">
       {{dIcon @icon}}
-      {{i18n @badgeLabelKey}}
+      {{if @label @label (i18n @badgeLabelKey)}}
     </span>
     {{yield}}
   </span>
@@ -62,6 +62,7 @@ export default class UpcomingChangeBadges extends Component {
               "admin.upcoming_changes.statuses."
               @upcomingChange.status
             }}
+            @hasTooltip={{true}}
             @icon="flask"
           >
 
@@ -90,6 +91,14 @@ export default class UpcomingChangeBadges extends Component {
         }}
         @icon={{this.impactTypeIcon @upcomingChange.impact_type}}
       />
+
+      {{#if @plugin}}
+        <UpcomingChangeBadge
+          @badgeClass="--plugin upcoming-change__plugin"
+          @icon="plug"
+          @label={{@plugin}}
+        />
+      {{/if}}
     </div>
   </template>
 }

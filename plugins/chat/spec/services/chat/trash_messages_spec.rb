@@ -53,6 +53,40 @@ RSpec.describe Chat::TrashMessages do
           end
         end
 
+        it "removes only deleted messages' pins and publishes the remaining count" do
+          removed_pin =
+            Fabricate(:chat_pinned_message, chat_message: message1, chat_channel: chat_channel)
+          retained_message = Fabricate(:chat_message, chat_channel: chat_channel)
+          retained_pin =
+            Fabricate(
+              :chat_pinned_message,
+              chat_message: retained_message,
+              chat_channel: chat_channel,
+            )
+          other_pin = Fabricate(:chat_pinned_message)
+
+          events = MessageBus.track_publish { result }
+
+          expect(result).to run_successfully
+          expect(
+            Chat::PinnedMessage.where(id: [removed_pin.id, retained_pin.id, other_pin.id]).pluck(
+              :id,
+            ),
+          ).to contain_exactly(retained_pin.id, other_pin.id)
+          unpin_events = events.select { |event| event.data["type"] == "unpin" }
+          expect(unpin_events.map(&:channel)).to eq(["/chat/#{chat_channel.id}"])
+          expect(unpin_events.map(&:data)).to eq(
+            [
+              {
+                "type" => "unpin",
+                "chat_message_id" => message1.id,
+                "unpinned_by_id" => current_user.id,
+                "pinned_message_count" => 1,
+              },
+            ],
+          )
+        end
+
         it "destroys notifications for mentions" do
           mention1 =
             Fabricate(
@@ -167,6 +201,16 @@ RSpec.describe Chat::TrashMessages do
             thread.set_replies_count_cache(5)
             result
             expect(thread.replies_count_cache).to eq(3)
+          end
+
+          it "includes trashed broadcast replies in the channel bulk delete payload" do
+            message2.update!(broadcasted: true)
+
+            publishes = MessageBus.track_publish { result }
+            channel_publish = publishes.find { |p| p.channel == "/chat/#{chat_channel.id}" }
+
+            expect(channel_publish.data["type"]).to eq("bulk_delete")
+            expect(channel_publish.data["deleted_ids"]).to eq([message2.id])
           end
 
           it "updates the tracking to the last non-deleted thread message for users whose last_read_message_id was the trashed message" do

@@ -3,7 +3,7 @@
 module Blog
   module DemoUsers
     def self.admin
-      User.real.where(admin: true).order(:id).first || abort("Create an admin user first")
+      User.active_admins.order(:id).first || abort("Create an admin user first")
     end
 
     def self.members(limit)
@@ -26,22 +26,13 @@ namespace :blog do
   task demo: :environment do
     abort "Demo content is only available in development" unless Rails.env.development?
     admin = Blog::DemoUsers.admin
-    blog = Category.find_by(id: SiteSetting.blog_category) || Category.find_by(slug: "blog")
-    unless blog
-      blog = Category.new(name: "Blog", slug: "blog", user: admin)
-      blog.set_permissions(everyone: :create_post, staff: :full)
-      blog.save!
+    drafts = Blog::EnsureDraftsCategory.call![:category]
+    public_category =
+      Blog::EnsurePublicCategory.call(params: { blog_id: Blog::Instance.default_blog.id })
+    if public_category.failure?
+      abort(Blog::Readiness.new.error || "The blog category could not be created")
     end
-    drafts =
-      Category.find_by(id: SiteSetting.blog_drafts_category) ||
-        Category.find_by(slug: "blog-drafts")
-    unless drafts
-      drafts = Category.new(name: "Blog editorial", slug: "blog-drafts", user: admin)
-      drafts.set_permissions(staff: :full)
-      drafts.save!
-    end
-    SiteSetting.blog_category = blog.id
-    SiteSetting.blog_drafts_category = drafts.id
+    blog = public_category[:category]
     SiteSetting.blog_title = "Fieldnotes"
     SiteSetting.blog_description =
       "Ideas in progress, things we’ve learned, and conversations worth having."
@@ -57,7 +48,7 @@ namespace :blog do
       These sample articles are demo content. Replace them with your own when you are ready.
     MD
     SiteSetting.blog_enabled = true
-    Blog::Configuration.ensure_ready!
+    Blog::Readiness.ensure!
     SiteSetting.embed_full_app = true
     SiteSetting.embed_full_app_signin_flow = true
     blog_uri = URI(Blog::Configuration.origin)
@@ -183,15 +174,20 @@ namespace :blog do
           category: drafts.id,
           skip_rate_limits: true,
         )
-      publication = Blog::Publication.for_topic(post.topic)
-      publication.save_metadata!(
-        admin,
-        path: example[:path],
-        excerpt: example[:excerpt],
-        featured: example[:featured] || false,
-        published_at: index.days.ago,
+      service_args = { params: { topic_id: post.topic_id }, guardian: admin.guardian }
+      Blog::Publication::UpdateMetadata.call!(
+        service_args.deep_merge(
+          params: {
+            metadata: {
+              path: example[:path],
+              excerpt: example[:excerpt],
+              featured: example[:featured] || false,
+              published_at: index.days.ago,
+            },
+          },
+        ),
       )
-      publication.publish!(admin)
+      Blog::Publication::Publish.call!(service_args)
     end
     unless Topic.where(category_id: drafts.id, title: "Draft: what we are building next").exists?
       PostCreator.create!(

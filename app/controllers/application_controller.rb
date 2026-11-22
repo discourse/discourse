@@ -270,6 +270,10 @@ class ApplicationController < ActionController::Base
     )
   end
 
+  rescue_from Discourse::ScopedApiKeyHtmlNotAllowed do
+    render_scoped_api_key_html_not_allowed
+  end
+
   rescue_from Discourse::ReadOnly do
     unless response_body
       respond_to do |format|
@@ -390,9 +394,21 @@ class ApplicationController < ActionController::Base
       end
 
       with_resolved_locale do
-        error_page_opts[:layout] = opts[:include_ember] && @_preloaded ? set_layout : "no_ember"
+        use_application_layout =
+          opts[:include_ember] && @_preloaded &&
+            !Auth::DefaultCurrentUserProvider.html_layout_disallowed?(request.env)
+        error_page_opts[:layout] = use_application_layout ? set_layout : "no_ember"
         render html: build_not_found_page(error_page_opts)
       end
+    end
+  rescue Discourse::ScopedApiKeyHtmlNotAllowed
+    render_scoped_api_key_html_not_allowed
+  end
+
+  def render_scoped_api_key_html_not_allowed
+    with_resolved_locale do
+      response.content_type = "application/json"
+      render_json_error I18n.t("scoped_api_key_html_not_allowed"), status: 406
     end
   end
 
@@ -624,9 +640,8 @@ class ApplicationController < ActionController::Base
   end
 
   def rate_limit_second_factor!(user)
-    return if params[:second_factor_token].blank?
-    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
+    rate_limit_second_factor_by_ip!
+    rate_limit_second_factor_by_account!(user)
   end
 
   def login_method
@@ -635,6 +650,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def rate_limit_second_factor_by_ip!
+    return if params[:second_factor_token].blank?
+    RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
+  end
+
+  def rate_limit_second_factor_by_account!(user)
+    return if params[:second_factor_token].blank? || user.blank?
+    RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed!
+  end
 
   # This method is intended to be a no-op.
   # The only reason this `before_action` callback continues to exist is for backwards compatibility purposes which we cannot easily
@@ -806,7 +831,7 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
-  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.ts`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
@@ -825,13 +850,18 @@ class ApplicationController < ActionController::Base
       server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
-          Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
+          !SiteSetting.invite_only && Discourse.enabled_authenticators.one? &&
+          !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
       redirect_to path("/auth/#{Discourse.enabled_authenticators.first.name}")
     else
-      return if request.path == path("/") && !cookies[:authentication_data]
+      # Only the login landing page is public; other routes at the root still require login.
+      if request.path == path("/") && !cookies[:authentication_data] &&
+           controller_name == "home_page" && action_name == "blank"
+        return
+      end
       # save original URL in a cookie (javascript redirects after login in this case)
       cookies[:destination_url] = destination_url
       redirect_to path("/login")
@@ -847,6 +877,9 @@ class ApplicationController < ActionController::Base
     # - one_time_password scope is allowed
     if !current_user && params.has_key?(:user_api_public_key) && params.has_key?(:auth_redirect)
       begin
+        # OpenSSL::PKey::RSA.new(Integer) generates a keypair of that bit
+        # length instead of parsing one, so reject non-strings before it.
+        raise OpenSSL::PKey::RSAError if !params[:user_api_public_key].is_a?(String)
         OpenSSL::PKey::RSA.new(params[:user_api_public_key])
       rescue OpenSSL::PKey::RSAError
         return render plain: I18n.t("user_api_key.invalid_public_key")
@@ -1031,6 +1064,12 @@ class ApplicationController < ActionController::Base
     DiscoursePluginRegistry.apply_modifier(:topic_noindex, !topic.visible, topic)
   end
 
+  # Sends that decision on a response that reproduces the topic: its page in
+  # any format, or the raw text of its posts.
+  def add_topic_noindex_header(topic)
+    response.headers["X-Robots-Tag"] = noindex_header_value if topic && topic_noindex?(topic)
+  end
+
   # Whether search engines are told not to index a topic list that loads a
   # category: its own pages, `?category=` lists and tag pages within it.
   # Core indexes them all; the `category_noindex` modifier receives `false`
@@ -1119,7 +1158,11 @@ class ApplicationController < ActionController::Base
       links.push(*@asset_preload_links)
     end
 
-    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
+    return if links.blank?
+
+    # The header may already carry other links, such as a Markdown alternate.
+    name = GlobalSetting.early_hint_header_name
+    response.headers[name] = [response.headers[name], *links].compact.join(", ")
   end
 
   def spa_boot_request?

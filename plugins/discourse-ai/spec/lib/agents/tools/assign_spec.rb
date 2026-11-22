@@ -10,11 +10,9 @@ RSpec.describe DiscourseAi::Agents::Tools::Assign do
   fab!(:user, :admin)
   fab!(:group)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.assign_enabled = true
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.assign_enabled = true }
 
   def tool(params = nil, **kwargs)
     params ||= kwargs

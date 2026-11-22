@@ -47,9 +47,21 @@ class ReviewableAiChatMessage < Reviewable
 
     if chat_message.deleted_at?
       build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree)
-      build_action(actions, :agree_and_keep_deleted, icon: "far-eye-slash", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_keep_deleted,
+        icon: "far-eye-slash",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
     else
-      build_action(actions, :agree_and_delete, icon: "trash-can", bundle: agree)
+      build_action(
+        actions,
+        :agree_and_delete,
+        icon: "trash-can",
+        bundle: agree,
+        dsa_classification_required: true,
+      )
       build_action(actions, :agree_and_keep_message, icon: "far-eye", bundle: agree)
     end
 
@@ -60,6 +72,7 @@ class ReviewableAiChatMessage < Reviewable
         icon: "ban",
         bundle: agree,
         client_action: "suspend",
+        dsa_classification_required: true,
       )
       build_action(
         actions,
@@ -67,6 +80,7 @@ class ReviewableAiChatMessage < Reviewable
         icon: "microphone-slash",
         bundle: agree,
         client_action: "silence",
+        dsa_classification_required: true,
       )
     end
 
@@ -86,7 +100,13 @@ class ReviewableAiChatMessage < Reviewable
     build_action(actions, :ignore, icon: "xmark", bundle: disagree_bundle)
 
     unless chat_message.deleted_at?
-      build_action(actions, :delete_and_agree, icon: "trash-can", bundle: disagree_bundle)
+      build_action(
+        actions,
+        :delete_and_agree,
+        icon: "trash-can",
+        bundle: disagree_bundle,
+        dsa_classification_required: true,
+      )
     end
   end
 
@@ -212,9 +232,10 @@ class ReviewableAiChatMessage < Reviewable
     button_class: nil,
     bundle: nil,
     client_action: nil,
-    confirm: false
+    confirm: false,
+    dsa_classification_required: false
   )
-    actions.add(id, bundle: bundle) do |action|
+    actions.add(id, bundle:, dsa_classification_required:) do |action|
       prefix = "reviewables.actions.#{id}"
       action.icon = icon
       action.button_class = button_class

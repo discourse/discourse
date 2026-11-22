@@ -26,6 +26,7 @@ describe "Admin Dashboard Redesign | Reports section" do
   end
 
   it "shows drag controls only once more than one report is enabled" do
+    SiteSetting.enable_new_reordering_controls = false
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
 
     page.visit("/admin")
@@ -38,6 +39,7 @@ describe "Admin Dashboard Redesign | Reports section" do
   end
 
   it "disables the reorder arrows at the ends of the enabled list on mobile", mobile: true do
+    SiteSetting.enable_new_reordering_controls = false
     AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
     AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 
@@ -200,6 +202,7 @@ describe "Admin Dashboard Redesign | Reports section" do
   end
 
   it "keeps report sizes when admins reorder reports on mobile", mobile: true do
+    SiteSetting.enable_new_reordering_controls = false
     Fabricate(:tall_admin_dashboard_report, position: 0)
     Fabricate(:admin_dashboard_report, identifier: "topics", position: 1)
 

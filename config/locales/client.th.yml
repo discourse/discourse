@@ -6,6 +6,13 @@
 
 th:
   js:
+    code_editor:
+      search:
+        next: "ต่อไป"
+        previous: "ก่อนหน้า"
+        close: "ปิด"
+      fold:
+        to: "ถึง"
     user_api_key:
       deny: "ยกเลิก"
       copied: "คัดลอกแล้ว!"
@@ -314,15 +321,9 @@ th:
       pill: "ข้อความที่เกี่ยวข้อง"
     suggested_topics:
       pm_title: "ข้อความแนะนำ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "กลับ"
     design_wizard:
       back: "กลับ"
       next: "ต่อไป"
-      sections:
-        theme: "ธีม"
-        search: "ค้นหา"
       theme:
         selected: "เลือก"
       homepage:
@@ -1508,6 +1509,9 @@ th:
     composer:
       emoji: "อีโมจิ :)"
       options: "ตัวเลือก"
+      ai_content:
+        quote: "อ้างอิง"
+        details: "รายละเอียด"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
@@ -2072,10 +2076,8 @@ th:
           label: "เลือกแล้ว"
           title: "คลิกเพื่อลบโพสต์จากการเลือก"
         select_replies:
-          label: "เลือก + ตอบ"
           title: "เพิ่มโพสต์และคำตอบทั้งหมดไปยังการเลือก"
         select_below:
-          label: "เลือก+ด้านล่าง"
           title: "เพิ่มโพสต์และทุกอย่างหลังจากนั้นไปยังการเลือก"
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
@@ -2575,6 +2577,11 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
+    mobile_tab_bar:
+      create: "สร้าง"
+      more: "อื่น"
+      back: "กลับ"
+      topics: "หัวข้อ"
     trust_levels:
       names:
         member: "สมาชิก"
@@ -2693,9 +2700,9 @@ th:
           title: "ตัวเสริม"
       upcoming_changes:
         name: "ชื่อ"
+        enabled: "เปิดใช้"
+        settings: "การตั้งค่า"
         preview: "แสดงตัวอย่าง"
-        enabled_for_options:
-          everyone: "ทุกคน"
         impact_roles:
           admins: "แอดมิน"
           moderators: "ผู้ดูแลระบบ"
@@ -3444,7 +3451,6 @@ th:
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
-        silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"
@@ -3554,6 +3560,8 @@ th:
           dropdown: "ดร็อปดาวน์"
       site_text:
         search_label: "ค้นหา"
+        preview:
+          default: "ค่าเริ่มต้น"
         theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -3622,7 +3630,7 @@ th:
           modal_title: การจัดกลุ่มเหรียญ
         granted_by: อนุญาตโดย
         granted_at: อนุญาตเมื่อ
-        reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
+        reason_help: ลิงก์ไปยังหัวข้อหรือโพส
         save: บันทึก
         delete: ลบ
         delete_confirm: คุณแน่ใจหรือว่าต้องการลบเหรียญนี้

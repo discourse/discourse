@@ -491,7 +491,7 @@ RSpec.describe SchemaSettingsObjectValidator do
       end
 
       it "returns errors for invalid tag names" do
-        ["string", ["some random tag name", tag_1.name]].each do |value|
+        ["string", [tag_1.id], ["some random tag name", tag_1.name]].each do |value|
           expect(errors_for(schema, { tags_property: value })).to eq(
             "/tags_property" => ["must be an array of valid tag names"],
           )

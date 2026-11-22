@@ -10,6 +10,14 @@ vi:
       choice_title: "Vi phạm pháp luật"
       title: "Báo cáo nội dung bất hợp pháp"
       email: "Địa chỉ email"
+    code_editor:
+      search:
+        replace: "Thay thế"
+        next: "Kế tiếp"
+        previous: "Trước"
+        close: "Đóng lại"
+      fold:
+        to: "tới"
     user_api_key:
       deny: "Hủy"
       copied: "Đã sao chép!"
@@ -423,25 +431,23 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
-      start_posting:
-        back: "Quay lại"
+      create_category:
+        action: "Tạo chuyên mục"
     design_wizard:
       back: "Quay lại"
       next: "Kế tiếp"
       sections:
-        theme: "Giao diện"
         fonts: "Phông chữ"
+        logo: "Logo"
         homepage: "Trang chủ"
-        welcome_banner: "Banner chào mừng"
-        search: "Tìm"
       theme:
         selected: "Đã chọn"
-      colors:
-        light: "Sáng"
-        dark: "Tối"
       fonts:
-        base_font: "Phông chữ cơ bản"
-        heading_font: "Phông chữ tiêu đề"
+        base_font: "Thân"
+        heading_font: "Tiêu đề"
+      logo:
+        description: "Xuất hiện trên thanh điều hướng chính của trang web, cũng như ở phần đầu của thông báo email."
+        help_text: "Kích thước đề xuất là 600x80 pixel."
       homepage:
         topics: "Các chủ đề"
         categories: "Danh mục"
@@ -2336,6 +2342,7 @@ vi:
       no_results: "Không có kết quả"
       search: "Tìm kiếm…"
       label: "Chọn tùy chọn"
+      remove_item: "Xóa %{name}"
     d_otp:
       screen_reader:
         other: Nhập %{count} số
@@ -2727,6 +2734,9 @@ vi:
         size_too_small: "%{provided_file_size} nhỏ hơn mức tối thiểu cho phép %{min_file_size}"
     emoji_picker:
       filter_placeholder: Tìm kiếm emoji
+      search_placeholder: "Tìm theo tên emoji và viết tắt..."
+      no_results: "Không có kết quả"
+      favorites: "Được sử dụng gần đây"
       smileys_&_emotion: Biểu tượng mặt cười và cảm xúc
       people_&_body: Con người và Cơ thể
       animals_&_nature: Động vật và thiên nhiên
@@ -2771,6 +2781,10 @@ vi:
       emoji: "Emoji :)"
       more_emoji: "thêm nữa…"
       options: "Lựa chọn"
+      ai_content:
+        code: "Mã"
+        quote: "Trích dẫn"
+        details: "Chi tiết"
       whisper: "nói chuyện"
       unlist: "không công khai"
       add_warning: "Đây là một cảnh báo chính thức"
@@ -3810,10 +3824,8 @@ vi:
           label: "đã chọn"
           title: "Nhấp để xóa tút khỏi lựa chọn"
         select_replies:
-          label: "chọn + trả lời"
           title: "Thêm tút và tất cả các câu trả lời của nó cho lựa chọn"
         select_below:
-          label: "chọn + bên dưới"
           title: "Thêm tút và tất cả sau đó để lựa chọn"
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
@@ -4846,6 +4858,14 @@ vi:
       forward: "Chuyển tiếp"
       share: "Chia sẻ"
       dismiss: "Hủy bỏ"
+    mobile_tab_bar:
+      new_topic: "Chủ đề mới"
+      create: "Tạo"
+      more: "Thêm"
+      back: "Quay lại"
+      topics: "Các chủ đề"
+      drafts:
+        other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
     theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
@@ -5235,29 +5255,27 @@ vi:
         name: "Tên"
         plugin: "Plugin"
         metadata: "Metadata"
-        enabled: "Đã bật"
-        enabled_for: "Đã bật cho..."
+        enabled: "Kích hoạt"
         show_image: "Hiện hình ảnh"
-        edit_groups: "Chỉnh sửa nhóm chọn tham gia"
+        feedback: "Phản hồi"
         groups_updated: "Các nhóm đã được cập nhật!"
         save_groups: "Lưu các nhóm"
         add_groups_to_enable: "Thêm các nhóm để kích hoạt tính năng này."
         no_changes_to_save: "Không có thay đổi để lưu"
         select_groups: "Chọn nhóm…"
         opt_in_groups: "Nhóm tham gia tự nguyện"
+        settings: "Cài đặt"
         opt_in_groups_instructions: "Nhóm tham gia có thể được sử dụng để cho phép một nhóm người dùng nhất định thử nghiệm một thay đổi trước khi nó được phát hành cho tất cả mọi người. Lưu ý rằng các nhóm này sẽ không còn liên quan sau khi thay đổi tiến tới trạng thái Ổn định."
         enabled_for_throttle: "Bạn đã thay đổi đối tượng áp dụng cho thay đổi này quá nhanh. Vui lòng đợi vài giây trước khi thử lại."
         change_enabled_for_success: "Bạn đã kích hoạt thay đổi này cho %{enabledFor}"
         change_disabled: "Bạn đã chọn không tham gia thay đổi này"
         depends_on_notice: "Thay đổi này yêu cầu phải bật %{dependencyLinks}."
         permanent_notice: "Thay đổi này hiện đã trở thành vĩnh viễn và sẽ sớm bị gỡ bỏ. Bạn không còn có thể từ chối tham gia."
-        permanent_soon_notice: "Thay đổi này sẽ sớm có hiệu lực vĩnh viễn. Bạn sẽ không còn có thể từ chối tham gia nữa."
         permanent_no_group_selection: "Không áp dụng, các thay đổi vĩnh viễn áp dụng cho tất cả các nhóm."
         no_changes: "Hiện tại không có thay đổi nào sắp diễn ra."
         preview: "Xem trước"
         enabled_for_options:
           no_one: "Không ai"
-          everyone: "Mọi người"
           specific_groups: "Các nhóm cụ thể"
           specific_groups_with_group_names:
             other: "Các nhóm %{groupNames}"
@@ -6415,14 +6433,6 @@ vi:
           company_name: "Tên"
           company_url: "Trang web"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Luật áp dụng"
-          governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
-          governing_law_help: |
-            Xác định phạm vi pháp lý áp dụng cho các điều khoản của trang web, thông thường là nơi công ty đăng ký hoặc hoạt động.
-          city_for_disputes: "Thành phố giải quyết tranh chấp"
-          city_for_disputes_placeholder: "Thành phố"
-          city_for_disputes_help: |
-            Hãy nêu rõ thành phố nơi giải quyết các tranh chấp pháp lý liên quan đến diễn đàn này.
           extra_groups:
             heading: "Danh sách nhóm"
             description: "Thêm các nhóm bổ sung để hiển thị trên trang Giới thiệu."
@@ -6632,7 +6642,6 @@ vi:
           uploading: "Đang tải lên…"
           uploading_progress: "Đang tải lên… %{progress}%"
           success: "'%{filename}' đã được tải lên thành công. Tệp hiện đang được xử lý và sẽ mất đến một phút để hiển thị trong danh sách."
-          error: "Có lõi trong quá trình tải lên '%{filename}': %{message}"
         settings: "Cài đặt"
         operations:
           is_running: "Một tác vụ đang chạy…"
@@ -7613,7 +7622,6 @@ vi:
         silence_duration: "Thành viên sẽ bị hạn chế trong bao lâu?"
         silence_reason_title: "Lý do hạn chế"
         silence_reason_placeholder: "Lý do hạn chế"
-        silence_message: "Tin nhắn Email"
         suspended_until: "(đến %{until})"
         suspend_forever: "Đình chỉ vĩnh viễn"
         cant_suspend: "Thành viên này không thể bị đình chỉ."
@@ -7927,6 +7935,8 @@ vi:
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
         search_label: "Tìm"
+        preview:
+          default: "Mặc định"
         theme_disabled: "Vô hiệu hóa"
         filters: "Bộ lọc"
         title: "Văn bản trang web"
@@ -8085,7 +8095,7 @@ vi:
           modal_title: Nhóm huy hiệu
         granted_by: Trao bởi
         granted_at: Đã trao
-        reason_help: (Link của tút hoặc chủ đề)
+        reason_help: Link của tút hoặc chủ đề
         save: Lưu
         delete: Xóa
         delete_confirm: Bạn có chắc chắn muốn xóa huy hiệu này?

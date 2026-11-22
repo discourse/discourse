@@ -7,7 +7,7 @@ RSpec.describe "Blog appearance", type: :request do
 
   def activate_theme(css: "", javascript: "", accent_color: "d64b2a")
     theme =
-      Blog::BlogTheme.save(
+      create_blog_theme(
         {
           "name" => "Spec design",
           "accent_color" => accent_color,
@@ -18,7 +18,7 @@ RSpec.describe "Blog appearance", type: :request do
         },
         user: admin,
       )
-    Blog::BlogTheme.activate(theme["id"], revision: 1, user: admin)
+    activate_blog_theme(theme, user: admin)
     theme
   end
 

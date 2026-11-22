@@ -10,6 +10,14 @@ hr:
       choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Sljedeći"
+        previous: "Prethodni"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"
@@ -475,26 +483,21 @@ hr:
       title: "Nove i nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Natrag"
     design_wizard:
       back: "Natrag"
       next: "Sljedeći"
       sections:
-        theme: "Tema"
         fonts: "Fontovi"
+        logo: "Logo"
         homepage: "Početna stranica"
-        welcome_banner: "Banner dobrodošlice"
-        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
-      colors:
-        light: "Svjetlo"
-        dark: "Tamno"
       fonts:
-        base_font: "Osnovni font"
-        heading_font: "Font zaglavlja"
+        base_font: "Tijelo"
+        heading_font: "Naslovi"
+      logo:
+        description: "Pojavljuje se na gornjoj navigaciji web stranice, kao i na vrhu obavijesti putem e-pošte web stranice."
+        help_text: "Preporučena veličina je 600 x 80 piksela."
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -2866,6 +2869,7 @@ hr:
         size_too_small: "%{provided_file_size} je manje od minimalno dopuštene vrijednosti %{min_file_size}"
     emoji_picker:
       filter_placeholder: Traži emotikone
+      no_results: "Nema rezultata"
       smileys_&_emotion: Smajlići i emotikoni
       people_&_body: Ljudi i tijelo
       animals_&_nature: Životinje i priroda
@@ -2900,6 +2904,10 @@ hr:
       emoji: "Emoji :)"
       more_emoji: "više…"
       options: "Mogućnosti"
+      ai_content:
+        code: "Šifra"
+        quote: "Citat"
+        details: "Detalji"
       whisper: "šapat"
       unlist: "neobjavljeno"
       add_warning: "Ovo je službeno upozorenje."
@@ -4011,10 +4019,8 @@ hr:
           label: "odabran"
           title: "Kliknite da biste uklonili post iz izbora"
         select_replies:
-          label: "odaberi +odgovori"
           title: "Dodajte post i sve njegove odgovore odabiru"
         select_below:
-          label: "odaberite +ispod"
           title: "Dodaj post i sve nakon toga na odabir"
         delete: obriši odabrano
         cancel: odustani od odabranog
@@ -5049,6 +5055,16 @@ hr:
       forward: "Naprijed"
       share: "Dijeli"
       dismiss: "Skloni"
+    mobile_tab_bar:
+      new_topic: "Nova tema"
+      create: "Stvorite"
+      more: "Više"
+      back: "Natrag"
+      topics: "Tema"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
     theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
@@ -5448,13 +5464,12 @@ hr:
           title: "Napredno"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućeno"
+        enabled: "Omogućeno?"
+        feedback: "Povratne informacije"
         select_groups: "Odaberite grupe"
+        settings: "Postavke"
         permanent_notice: "Ova promjena je sada trajna i uskoro će biti uklonjena. Više ne možete odustati."
-        permanent_soon_notice: "Ova će promjena uskoro postati trajna. Više nećete moći odustati."
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svi"
         statuses:
           experimental: "Eksperimentalno"
         impact_roles:
@@ -6314,8 +6329,6 @@ hr:
           company_name: "Ime"
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Mjerodavno pravo i nadležnost"
-          city_for_disputes_placeholder: "Grad"
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
@@ -6463,7 +6476,6 @@ hr:
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
           uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "%{operation} neuspješna. Molimo provjerite zapise."
@@ -7167,7 +7179,6 @@ hr:
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
         silence_reason_placeholder: "Razlog utišavanja"
-        silence_message: "Pošaljite poruku e-mailom"
         suspended_until: "(do %{until})"
         suspend_forever: "Zauvijek suspendirajte"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
@@ -7441,6 +7452,8 @@ hr:
       site_text:
         description: "Možete prilagoditi bilo koji tekst na svom forumu."
         search_label: "Pretraživanje"
+        preview:
+          default: "Zadano"
         theme_disabled: "Onemogućeno"
         filters: "Filteri"
         edit: "Uredi"
@@ -7550,7 +7563,7 @@ hr:
           modal_title: Grupiranja znački
         granted_by: Dodijelio/la
         granted_at: Dodijeljeno pri
-        reason_help: (Poveznica na objavu ili temu)
+        reason_help: Poveznica na objavu ili temu
         save: Spremi
         delete: Obriši
         delete_confirm: Jeste li sigurni da želite izbrisati ovu značku?

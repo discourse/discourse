@@ -27,6 +27,8 @@ module DiscourseAi
                 I18n.t("discourse_ai.ai_bot.discoveries.errors.invalid_request_id"),
                 status: :bad_request,
               )
+            elsif contract.errors.include?(:deferred_ask_log_id)
+              raise Discourse::InvalidParameters.new(:deferred_ask_log_id)
             else
               raise Discourse::InvalidParameters.new(:scope)
             end
@@ -201,11 +203,14 @@ module DiscourseAi
         %w[recent clear_recent record_tabs].include?(action_name) || params[:request_id].present?
       end
 
-      # the search that deferred this answer was already counted
+      # The search that deferred this answer was already counted. The id is
+      # checked as the Ask contract checks it, so an id the contract refuses
+      # cannot skip the limit.
       def requests_deferred_answer?
-        params[:deferred_ask_log_id].present? &&
+        deferred_ask_log_id = params[:deferred_ask_log_id]
+        DiscourseAi::Discoveries.valid_ask_log_id?(deferred_ask_log_id) &&
           AskAiLog.awaiting_answer(
-            id: params[:deferred_ask_log_id],
+            id: deferred_ask_log_id,
             user: current_user,
             query: params[:query],
           ).exists?

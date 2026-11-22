@@ -6,6 +6,14 @@
 
 bs_BA:
   js:
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Iduće"
+        previous: "Previous"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       deny: "Odustani"
       copied: "Kopirano!"
@@ -281,15 +289,11 @@ bs_BA:
       pill: "Povezane Poruke"
     suggested_topics:
       pm_title: "Preporučene Poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Prethodno"
     design_wizard:
       back: "Prethodno"
       next: "Iduće"
-      sections:
-        theme: "Izgled"
-        search: "Pretraži"
+      fonts:
+        base_font: "Tijelo"
       homepage:
         topics: "Topics"
         categories: "Kategorije"
@@ -1740,6 +1744,10 @@ bs_BA:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        code: "Šifra"
+        quote: "Citiraj"
+        details: "Details"
       whisper: "šapat"
       unlist: "nelistan"
       add_warning: "Ovo je zvanično upozorenje."
@@ -2387,10 +2395,8 @@ bs_BA:
           label: "označeno"
           title: "Klikni kako bi odstranio objavu iz označenog"
         select_replies:
-          label: "označi +odgovore"
           title: "Odaberi objavu i sve njene odgovore"
         select_below:
-          label: "označi +ispod"
           title: "Odaberi objavu i sve ispod nje"
         delete: delete selected
         cancel: cancel selecting
@@ -3075,6 +3081,11 @@ bs_BA:
       forward: "Naprijed"
       share: "Podijeli"
       dismiss: "Odpusti"
+    mobile_tab_bar:
+      create: "napravi"
+      more: "Više"
+      back: "Prethodno"
+      topics: "Topics"
     safe_mode:
       enabled: "Bezbedan režim je omogućen, da biste izašli iz bezbednog režima, zatvorite ovaj prozor pregledača"
     image_removed: "(slika uklonjena)"
@@ -3209,10 +3220,9 @@ bs_BA:
           title: "Pluginovi"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućen"
+        enabled: "Omogućen?"
+        settings: "Postavke"
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svatko"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -3805,7 +3815,6 @@ bs_BA:
           label: "Učitavanje"
           title: "Prenesite rezervnu kopiju na ovu instancu"
           success: "'%{filename}' je uspješno otpremljen. Datoteka se sada obrađuje i traje do jednog minuta da se pojavi na listi."
-          error: "There has been an error while uploading '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "The %{operation} failed. Please check the logs."
@@ -4340,7 +4349,6 @@ bs_BA:
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "Email Poruka"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
@@ -4516,6 +4524,8 @@ bs_BA:
           dropdown: "Ispustiti"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Uobičajen"
         theme_disabled: "Neomogućen"
         edit: "Edit"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
@@ -4596,7 +4606,7 @@ bs_BA:
           modal_title: Grupiranje bedževa
         granted_by: Dat od
         granted_at: Dato na
-        reason_help: (Veza do posta ili teme)
+        reason_help: Veza do posta ili teme
         save: Sačuvaj
         delete: Obriši
         delete_confirm: Are you sure you want to delete this badge?

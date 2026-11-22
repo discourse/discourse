@@ -33,6 +33,36 @@ pl_PL:
       any_domain: "CIMD z dowolnej domeny"
     ace_editor:
       resize: "Zmień rozmiar edytora kodu"
+    code_editor:
+      resize: "Zmień rozmiar edytora kodu"
+      load_failed: "Edytor kodu nie mógł się załadować. Odśwież stronę, aby spróbować ponownie."
+      tab_hint: "Naciśnij Escape, a następnie Tab, aby przenieść aktywność poza edytor."
+      completions: "Uzupełnienia"
+      search:
+        find: "Znajdź"
+        replace: "Zamień"
+        next: "Dalej"
+        previous: "Poprzedni"
+        all: "Zaznacz wszystkie dopasowania"
+        match_case: "Dopasuj wielkość liter"
+        regexp: "Wyrażenie regularne"
+        by_word: "Całe słowa"
+        replace_all: "Zamień wszystko"
+        close: "Zamknij"
+        go_to_line: "Przejdź do wiersza"
+        go: "Utwórz"
+        current_match: "Bieżące dopasowanie"
+        on_line: "w wierszu"
+        replaced_match: "Zastąpiono dopasowanie w wierszu %{line}"
+        replaced_all: "Zastąpione dopasowania: %{matches}"
+      fold:
+        fold_line: "Zwijaj wiersz"
+        unfold_line: "Rozwiń wiersz"
+        folded_code: "Zwinięty kod"
+        unfold: "Rozwiń"
+        folded_lines: "Zwinięte wiersze"
+        unfolded_lines: "Rozwinięte wiersze"
+        to: "do"
     user_api_key:
       title: 'Autoryzuj "%{application_name}"'
       authorize: "Autoryzuj"
@@ -643,112 +673,82 @@ pl_PL:
       dismiss: "Odrzuć konfigurację"
       select_theme:
         title: "Dostosuj swoją witrynę"
-        description: "Wybierz kolory, czcionki i układ swojej witryny."
+        description: "Spersonalizuj swoją witrynę za pomocą logo, kolorów i układu."
         action: "Zobacz opcje"
         completed: "Zmień opcje"
         show_light_screenshot: "Pokaż jasny zrzut ekranu"
         show_dark_screenshot: "Pokaż ciemny zrzut ekranu"
+      create_category:
+        title: "Utwórz kategorię"
+        description: "Daj rozmowom miejsce, w którym będą mogły zamieszkać."
+        action: "Utwórz kategorię"
+        completed: "Utwórz inny"
       invite_collaborators:
         title: "Zaproś współpracowników"
         description: "Pierwsi członkowie wcielają ją w życie."
         action: "Utwórz zaproszenie"
         completed: "Zaproś więcej"
-      start_posting:
-        title: "Rozpocznij publikowanie"
-        description: "Daj ludziom temat do dyskusji."
-        action: "Zobacz pomysły"
-        completed: "Zobacz więcej pomysłów"
-        choose_option: "Jak chcesz zacząć?"
-        predefined_topics: "Szablony przełamujące lody"
-        predefined_topics_subtitle: "Daj nowym członkom temat do rozmów, wybierz szablon do edycji i stwórz swój własny."
-        predefined_topics_description: "Wybierz z kolekcji tematów do rozpoczęcia rozmowy, aby rozpocząć dyskusję"
-        use_predefined: "Przeglądaj szablony"
-        back: "Wstecz"
-        category_unavailable: "Ta kategoria nie jest dostępna do publikowania."
-        icebreakers:
-          plan_categories:
-            title: "Od jakich kategorii powinniśmy zacząć?"
-            body: "Zastanówmy się, jak to wszystko zorganizować, zanim zaczniemy! O czym ludzie będą chcieli rozmawiać najbardziej? Możemy zacząć od kilku kategorii, a później dodać więcej."
-          plan_invites:
-            title: "Których członków powinniśmy zaprosić przed startem?"
-            body: "Zawsze miło jest dołączyć do społeczności, w której już są osoby. Kogo powinniśmy zaprosić w pierwszej kolejności? Pomyśl o osobach, które lubią rozmawiać, pomagać innym i chętnie zaangażowałyby się jak najszybciej."
-          introduce_yourself:
-            title: "Przedstaw się"
-            body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
-          write_your_own:
-            title: "Napisz swój własny"
-            body: "Rozpocznij rozmowę na temat dostosowany do Twojej społeczności."
     design_wizard:
       title: "Dostosuj swoją witrynę"
-      subtitle: "Wybierz kolory, czcionki i układ swojej witryny."
       step_label: "Przejdź do kroku %{index}"
       step_progress: "Krok %{current}/%{total}"
       minimize: "Kreator minimalizacji projektu"
       restore: "Kreator przywracania projektu"
+      collapse: "Zwiń kreator projektowania"
+      expand: "Rozszerz kreator projektowania"
       save: "Zapisz i zakończ"
       back: "Wstecz"
       next: "Dalej"
       launch: "Kreator projektowania"
       launch_description: "Przejrzyj jeszcze raz motyw, kolory, czcionki i układ swojej witryny."
-      intro:
-        description: "Ten kreator przeprowadzi Cię przez motyw, kolory, czcionki, układ strony głównej, baner powitalny i styl wyszukiwania Twojej witryny."
-        autosave: "Każdy krok jest zapisywany na bieżąco, więc członkowie od razu widzą zmiany. Możesz przywrócić wszystko, gdy zamkniesz konto."
-        start: "Rozpocznij"
       close:
         message: "Zapisano już pewne zmiany w projekcie witryny. Czy chcesz je utrzymać?"
         message_without_revert: "Zapisano już pewne zmiany w projekcie swojej witryny. Nie można ich stąd cofnąć."
         keep: "Zachowaj zmiany"
         revert: "Cofnij zmiany"
         continue_editing: "Kontynuuj edycję"
+      steps:
+        theme:
+          title: "Wybierz motyw"
+          description: "Wybierz ogólny wygląd swojej witryny. Możesz go dopracować w kolejnych krokach."
+        colors:
+          title: "Uczyń to swoim"
+          description: "Dodaj swoje logo i wybierz kolory swojej witryny."
+        homepage:
+          title: "Wygląd i odczucia"
+          description: "Wybierz czcionki i to, co członkowie zobaczą w pierwszej kolejności."
       sections:
-        theme: "Motyw"
-        colors: "Domyślny kolor"
+        colors: "Tryby kolorów witryny"
         fonts: "Czcionki"
+        logo: "Logo"
         homepage: "Strona główna"
-        welcome_banner: "Baner powitalny"
-        search: "Szukaj"
       theme:
         selected: "Wybrany"
         applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
-        light: "Jasny"
-        dark: "Ciemny"
-        dark_only: "%{name} ma tylko tryb ciemny"
-        both_modes: "Każda paleta zawiera pasujący tryb jasny i ciemny"
-        user_selectable: "Umożliw członkom zmianę palet"
-        user_selectable_description: "Pokaż te palety w menu, z którego członkowie mogą wybierać"
+        description: "Ustaw domyślną paletę dla każdego trybu. Preferencje dotyczące wyglądu członków decydują o tym, którą paletę zobaczą."
+        light_palette: "Jasna paleta"
+        dark_palette: "Ciemna paleta"
+        modes:
+          label: "Tryby kolorów"
+          both: "Jasny i ciemny"
+          light: "Tylko jasny"
+          dark: "Tylko ciemny"
       fonts:
-        base_font: "Czcionka podstawowa"
-        heading_font: "Czcionka nagłówków"
+        base_font: "Treść"
+        heading_font: "Nagłówki"
+      logo:
+        description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
+        help_text: "Zalecany rozmiar to 600 x 80 pikseli."
       homepage:
         topics: "Tematy"
         categories: "Kategorie"
-        topic_page_type: "Typ strony tematu"
-        topic_pages:
-          latest: "Tematy posortowane według ostatniej aktywności, najnowsze na początku."
-          new: "Tematy utworzone w ciągu ostatnich kilku dni, najnowsze na początku."
-          hot: "Tematy, które są obecnie popularne, łącząc ogólną popularność z niedawnym zaangażowaniem."
         category_page_style: "Styl strony kategorii"
         styles:
           boxes: "Pola"
           with_topics: "Kategorie z tematami"
           only: "Tylko kategorie"
-      welcome_banner:
-        enable: "Pokaż baner powitalny"
-        enable_description: "Przywitaj odwiedzających, podając nazwę swojej witryny i pole wyszukiwania"
-        location: "Lokalizacja banera"
-        locations:
-          below_site_header: "Poniżej nagłówka witryny"
-          above_topic_content: "Nad listą tematów"
-      search:
-        experiences:
-          search_icon:
-            title: "Ikona wyszukiwania"
-            description: "Lupa w nagłówku otwierająca wyszukiwanie."
-          search_field:
-            title: "Pole wyszukiwania"
-            description: "Pełne pole wyszukiwania w nagłówku, zawsze widoczne."
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -938,9 +938,9 @@ pl_PL:
           many: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
           other: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
     copy_codeblock:
-      copied: "skopiowane!"
-      copy: "skopiuj kod do schowka"
-      fullscreen: "pokaż kod na pełnym ekranie"
+      copied: "Skopiowano!"
+      copy: "Skopiuj kod do schowka"
+      fullscreen: "Pokaż kod na pełnym ekranie"
       view_code: "Zobacz kod"
     drafts:
       label: "Szkice"
@@ -1046,12 +1046,12 @@ pl_PL:
       none_found: "Nie znaleziono tematów."
       title:
         search: "Wyszukaj temat"
-        placeholder: "tutaj wpisz tytuł tematu, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł tematu, adres URL lub identyfikator"
     choose_message:
       none_found: "Nie znaleziono wiadomości."
       title:
         search: "Wyszukaj wiadomość"
-        placeholder: "tutaj wpisz tytuł wiadomości, adres URL lub id"
+        placeholder: "Wpisz tutaj tytuł wiadomości, adres URL lub identyfikator"
     dsa_statements:
       title: "Klasyfikacja DSA"
       help_title: "O klasyfikacji w ramach ustawy o usługach cyfrowych UE"
@@ -1261,6 +1261,10 @@ pl_PL:
       statuses:
         pending:
           title: "Oczekujące"
+        problem_confirmed:
+          title: "Problem potwierdzony"
+        no_problem_found:
+          title: "Nie znaleziono problemu"
         approved:
           title: "Zaakceptowany"
         approved_flag:
@@ -1293,6 +1297,9 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
+        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
+        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
+        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -1333,6 +1340,7 @@ pl_PL:
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         target_deleted: "Wpis usunięty"
         target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
+        queued_post_deleted_by: "Wpis z kolejki usunięty przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -1341,6 +1349,8 @@ pl_PL:
         reviewed: "Przejrzany"
         approved_by: "Zatwierdzono przez %{username} · %{relativeDate}"
         rejected_by: "Odrzucono przez %{username} · %{relativeDate}"
+        problem_confirmed_by: "Problem potwierdzony przez %{username} · %{relativeDate}"
+        no_problem_found_by: "%{username} nie znalazł żadnego problemu · %{relativeDate}"
         ignored_by: "Zignorowano przez %{username} · %{relativeDate}"
         view_conversation: "zobacz PW"
         note_added: "Uwaga moderatora"
@@ -1804,18 +1814,19 @@ pl_PL:
       "15": "Szkice"
       "17": "Linki"
     categories:
-      categories_label: "kategorie"
-      subcategories_label: "podkategorie"
-      no_subcategories: "brak podkategorii"
-      remove_filter: "usuń filtr"
+      categories_label: "Kategorie"
+      subcategories_label: "Podkategorie"
+      no_subcategories: "Brak podkategorii"
+      remove_filter: "Usuń filtr"
       plus_more_count:
         one: "+%{count} więcej"
         few: "+%{count} więcej"
         many: "+%{count} więcej"
         other: "+%{count} więcej"
-      view_all: "pokaż wszystkie"
+      view_all: "Pokaż wszystkie"
       category: "Kategoria"
       category_list: "Wyświetl listę kategorii"
+      page_layout: "Układ strony kategorii"
       reorder:
         title: "Zmień kolejność kategorii"
         title_long: "Zmień kolejność listy kategorii"
@@ -2701,6 +2712,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        invited_via_link_without_key: "link (użyto %{count} / %{max})"
         generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"
@@ -3042,6 +3054,7 @@ pl_PL:
       no_results: "Brak wyników"
       search: "Szukaj…"
       label: "Wybierz opcje"
+      remove_item: "Usuń %{name}"
     d_otp:
       screen_reader:
         one: Wprowadź liczbę
@@ -3155,7 +3168,6 @@ pl_PL:
         }.
     learn_more: "Dowiedz się więcej…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Informacja zwrotna…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -3307,6 +3319,10 @@ pl_PL:
       username_unavailable: "Ta nazwa użytkownika jest niedostępna. Spróbuj %{suggestion}."
     login:
       header_title: "Witamy ponownie"
+      invitation_gate:
+        title: "Do tej społeczności można dołączyć tylko na zaproszenie"
+        description: "Aby dołączyć, otwórz otrzymany link z zaproszeniem. Jeśli nie masz zaproszenia, skontaktuj się z właścicielem społeczności, aby o nie poprosić."
+        existing_member: "Jesteś już członkiem tej społeczności? Zaloguj się poniżej."
       title: "Zaloguj się"
       username: "Użytkownik"
       password: "Hasło"
@@ -3572,6 +3588,9 @@ pl_PL:
         size_too_small: "%{provided_file_size} jest mniejsze niż minimalna dozwolona wartość %{min_file_size}"
     emoji_picker:
       filter_placeholder: Szukaj emoji
+      search_placeholder: "Szukaj według nazwy emoji i aliasu..."
+      no_results: "Brak wyników"
+      favorites: "Często używane"
       smileys_&_emotion: Buźki i emocje
       people_&_body: Ludzie i ciało
       animals_&_nature: Zwierzęta i przyroda
@@ -3709,6 +3728,12 @@ pl_PL:
       emoji: "Emoji :)"
       more_emoji: "więcej…"
       options: "Opcje"
+      ai_content:
+        menu: "Dodaj treść AI..."
+        code: "Kod"
+        quote: "Cytat"
+        details: "Detale"
+        placeholder: "Treść AI"
       whisper: "szept"
       unlist: "zastrzeżony"
       add_warning: "To jest oficjalne ostrzeżenie."
@@ -4463,6 +4488,7 @@ pl_PL:
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
+      list_options: "Opcje listy"
       bulk:
         select: "Wybór zbiorczy"
         confirm: "Potwierdź"
@@ -5179,19 +5205,19 @@ pl_PL:
       invite_private:
         title: "Zaproś do dyskusji"
         email_or_username: "Adres email lub nazwa użytkownika zapraszanej osoby"
-        email_or_username_placeholder: "adres email lub nazwa użytkownika"
+        email_or_username_placeholder: "Adres e-mail lub nazwa użytkownika"
         action: "Zaproś"
         success: "Wskazany użytkownik został zaproszony do udziału w tej dyskusji."
         success_group: "Zaprosiliśmy tę grupę do uczestnictwa w tej wiadomości"
         error: "Przepraszamy, wystąpił błąd w trakcie zapraszania użytkownika(-czki)."
         not_allowed: "Przepraszamy, ten użytkownik nie może zostać zaproszony."
-        group_name: "nazwa grupy"
+        group_name: "Nazwa grupy"
       controls: "Ustawienia tematu"
       invite_reply:
         title: "Zaproś"
-        username_placeholder: "nazwa użytkownika"
+        username_placeholder: "Nazwa użytkownika"
         action: "Wyślij zaproszenie"
-        help: "zaproś innych do tego tematu e-mailem lub powiadomieniem"
+        help: "Zaproś innych do tego tematu e-mailem lub powiadomieniem"
         to_forum: "Wyślemy krótką wiadomość e-mail umożliwiającą znajomemu natychmiastowe dołączenie poprzez kliknięcie linku."
         discourse_connect_enabled: "Wpisz nazwę użytkownika osoby, którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
@@ -5213,11 +5239,11 @@ pl_PL:
         cancel: "Usuń filtr"
       move_to:
         title: "Przenieś do"
-        action: "przenieś do"
+        action: "Przenieś do"
         error: "Podczas przenoszenia wpisów wystąpił błąd."
       split_topic:
         title: "Przenieś do nowego tematu"
-        action: "przenieś do nowego tematu"
+        action: "Przenieś do nowego tematu"
         topic_name: "Nowy tytuł tematu"
         radio_label: "Nowy temat"
         error: "Wystąpił błąd podczas przenoszenia wpisów do nowego tematu."
@@ -5228,7 +5254,7 @@ pl_PL:
           other: "Masz zamiar utworzyć nowy temat, składający się z <b>%{count}</b> wybranych przez ciebie wpisów."
       merge_topic:
         title: "Przenieś do Istniejącego Tematu"
-        action: "przenieś do istniejącego tematu"
+        action: "Przenieś do istniejącego tematu"
         error: "Wystąpił błąd podczas przenoszenia wpisów do danego tematu."
         radio_label: "Istniejący temat"
         instructions:
@@ -5239,7 +5265,7 @@ pl_PL:
         chronological_order: "zachować porządek chronologiczny po połączeniu"
       move_to_new_message:
         title: "Przejdź do nowej wiadomości"
-        action: "przejdź do nowej wiadomości"
+        action: "Przejdź do nowej wiadomości"
         message_title: "Tytuł nowej wiadomości"
         radio_label: "Nowa wiadomość"
         participants: "Uczestnicy"
@@ -5250,7 +5276,7 @@ pl_PL:
           other: "Za chwilę utworzysz nową wiadomość i wypełnisz ją wybranymi <b>%{count}</b> postami."
       move_to_existing_message:
         title: "Przejdź do istniejącej wiadomości"
-        action: "przejdź do istniejącej wiadomości"
+        action: "Przejdź do istniejącej wiadomości"
         radio_label: "Istniejąca wiadomość"
         participants: "Uczestnicy"
         instructions:
@@ -5260,7 +5286,7 @@ pl_PL:
           other: "Wybierz wiadomość, do której chcesz przenieść te <b>%{count}</b> postów."
       merge_posts:
         title: "Scal wybrane wpisy"
-        action: "scal wybrane wpisy"
+        action: "Scal wybrane wpisy"
         error: "Wystąpił błąd podczas łączenia wybranych wpisów"
       publish_page:
         title: "Publikowanie strony"
@@ -5278,9 +5304,9 @@ pl_PL:
         publishing_settings: "Ustawienia publikowania"
       change_owner:
         title: "Zmiana właściciela"
-        action: "zmień właściciela"
+        action: "Zmiana właściciela"
         error: "Wystąpił błąd podczas zmiany właściciela wpisów."
-        placeholder: "nazwa nowego właściciela"
+        placeholder: "Nazwa użytkownika nowego właściciela"
         instructions:
           one: "Wybierz nowego właściciela posta przez <b>@ %{old_user}</b>"
           few: "Wybierz nowego właściciela postów %{count} autorstwa <b>@ %{old_user}</b>"
@@ -5298,24 +5324,24 @@ pl_PL:
         error: "Wystąpił błąd podczas zmiany znacznika czasu tego tematu."
         instructions: "Wybierz nowy znacznik czasu dla tematu. Wpisy w temacie zostaną zaktualizowane o tę samą różnicę."
       multi_select:
-        select: "wybierz"
-        selected: "wybrano (%{count})"
+        select: "Wybierz"
+        selected: "Wybrano (%{count})"
         select_post:
-          label: "wybierz"
+          label: "Wybierz"
           title: "Dodaj wpis do zaznaczenia"
         selected_post:
-          label: "zaznaczone"
+          label: "Wybrane"
           title: "Kliknij aby usunąć wpis z zaznaczenia"
         select_replies:
-          label: "wybierz +replies"
+          label: "Wybierz i odpowiedzi"
           title: "Dodaj wpis i wszystkie jego odpowiedzi do wyboru"
         select_below:
-          label: "wybierz + poniżej"
+          label: "Wybierz i poniżej"
           title: "Dodaj wpis i wszystko po nim do wyboru"
-        delete: usuń wybrane
-        cancel: anuluj wybieranie
-        select_all: zaznacz wszystkie
-        deselect_all: odznacz wszystkie
+        delete: Usuń wybrane
+        cancel: Anuluj wybieranie
+        select_all: Wybierz wszystkie
+        deselect_all: Usuń wybór wszystkich
         description:
           one: Wybrano <b>%{count}</b> wpis.
           few: "Wybrano <b>%{count}</b> wpisy."
@@ -5343,6 +5369,8 @@ pl_PL:
         actions: "Działania zbiorcze"
     post:
       accessible_heading: "wpis %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "Ta treść została częściowo lub w całości wygenerowana przez sztuczną inteligencję"
       heading_anchor: "Łącze nagłówka"
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -5501,6 +5529,7 @@ pl_PL:
         upload_not_authorized: "Przepraszamy, plik który próbujesz wgrać jest nie dozwolony (dozwolone rozszerzenia: %{authorized_extensions})."
         no_uploads_authorized: "Przepraszamy, żadne pliki nie są upoważnione do przesyłania."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
+        media_upload_not_allowed: "Przepraszamy, nie masz uprawnień do przesyłania obrazów, filmów ani plików audio."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
@@ -5799,6 +5828,7 @@ pl_PL:
         site_settings: "Ustawienia witryny"
       choose_type:
         title: "Wybierz typ kategorii"
+        description: "Każdy typ jest przeznaczony do innego rodzaju konwersacji."
         requires_plugin: "Wymaga wtyczki „%{plugin_name}”"
         unavailable: "Niedostępne"
         ask_admin_to_enable_plugin: "Poproś administratora o włączenie wtyczki „%{plugin_name}”"
@@ -6488,9 +6518,9 @@ pl_PL:
     tagging:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
-      selector_tags: "tagi"
-      selector_no_tags: "brak tagów"
-      selector_remove_filter: "usuń filtr"
+      selector_tags: "Tagi"
+      selector_no_tags: "Brak tagów"
+      selector_remove_filter: "Usuń filtr"
       tags: "Tagi"
       choose_for_topic: "Opcjonalne tagi…"
       choose_for_topic_required:
@@ -6697,6 +6727,27 @@ pl_PL:
       forward: "Do przodu"
       share: "Udostępnij"
       dismiss: "Odrzuć"
+    mobile_tab_bar:
+      label: "Sekcje witryny"
+      new_topic: "Nowy temat"
+      new_personal_message: "Nowa prywatna wiadomość"
+      create: "Utwórz"
+      menu: "Menu"
+      more: "Więcej"
+      edit_topic: "Edytuj tytuł, kategorię i tagi"
+      menu_with_reviewables:
+        one: "Menu, %{count} pozycja do przejrzenia"
+        few: "Menu, %{count} pozycje do przejrzenia"
+        many: "Menu, %{count} pozycji do przejrzenia"
+        other: "Menu, %{count} pozycji do przejrzenia"
+      back: "Poprzednia"
+      topics: "Tematy"
+      drafts:
+        one: "Szkice (%{count})"
+        few: "Szkice (%{count})"
+        many: "Szkice (%{count})"
+        other: "Szkice (%{count})"
+      hub: "Hub"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
@@ -7167,24 +7218,29 @@ pl_PL:
         name: "Nazwa"
         plugin: "Wtyczka"
         metadata: "Metadane"
-        enabled: "Włączona"
-        enabled_for: "Włączone dla..."
+        enabled: "Włączone?"
+        availability: "Dostępność"
         show_image: "Pokaż obraz"
-        edit_groups: "Edytuj grupy opt-in"
+        feedback: "Opinie"
+        toggle: "Włącz %{name}"
+        staff_always_included: "Personel jest zawsze uwzględniony"
+        audience_locked: "Tej zmiany nie można zastosować do innych grup"
+        toggle_instead_of_empty_groups: "Aby wyłączyć tę nadchodzącą zmianę, użyj przełącznika zamiast zmieniać uprawnienia grupy."
         groups_updated: "Grupy zaktualizowane!"
         save_groups: "Zapisz grupy"
         add_groups_to_enable: "Dodaj grupy, aby włączyć tę funkcję"
         no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
-        show_related_settings: "Pokaż powiązane ustawienia..."
+        settings: "Ustawienia"
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
+        change_enabled: "Włączono tę zmianę"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         depends_on_notice: "Aby wprowadzić tę zmianę, konieczne jest włączenie opcji %{dependencyLinks}."
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
-        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
+        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie można z niej zrezygnować."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
@@ -7192,7 +7248,7 @@ pl_PL:
         default_warning_short: "Domyślna wartość tego ustawienia uległa zmianie. Więcej informacji na ten temat znajdziesz na stronie <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>nadchodzące zmiany</a>."
         enabled_for_options:
           no_one: "Nikt"
-          everyone: "Wszyscy"
+          eligible_users: "Uprawnieni użytkownicy"
           staff: "Tylko %{staffGroupName}"
           specific_groups: "Określone grupy"
           specific_groups_with_group_names:
@@ -9033,19 +9089,11 @@ pl_PL:
           site_contact_group_help: |
             Grupa, która zostanie zaproszona do wszystkich automatycznie wysyłanych prywatnych wiadomości.
           your_organization: "Twoja organizacja"
-          your_organization_description: "Szczegóły dotyczące tego, kto zarządza tą witryną i pod jaką jurysdykcją."
+          your_organization_description: "Szczegóły dotyczące osób zarządzających tą witryną."
           company_name: "Nazwa"
           company_name_placeholder: "PrzykładowaSA"
           company_url: "Strona internetowa"
           company_url_placeholder: "https://przykładowa-sa.pl"
-          governing_law: "Obowiązujące prawo"
-          governing_law_placeholder: "Prowincja, stan lub kraj"
-          governing_law_help: |
-            Określ jurysdykcję dla warunków prawnych witryny, zazwyczaj tam, gdzie firma jest zarejestrowana lub działa.
-          city_for_disputes: "Miasto do sporów"
-          city_for_disputes_placeholder: "Miasto"
-          city_for_disputes_help: |
-            Określ miasto rozstrzygania sporów prawnych związanych z tym forum.
           extra_groups:
             heading: "Lista grup"
             description: "Dodatkowe grupy do wyświetlenia na stronie „O nas”."
@@ -9267,7 +9315,6 @@ pl_PL:
           uploading: "Przesyłanie…"
           uploading_progress: "Przesyłanie… %{progress}%"
           success: "Plik „%{filename}” został pomyślnie przesłany. Plik jest teraz przetwarzany i pojawienie się na liście może potrwać do minuty."
-          error: "Podczas przesyłania pliku wystąpił błąd '%{filename}': %{message}"
         settings: "Ustawienia"
         operations:
           is_running: "Aktualnie trwa operacja…"
@@ -9612,6 +9659,7 @@ pl_PL:
           inactive_filter: "Nieaktywny"
           updates_available_filter: "Dostępne aktualizacje"
           theme_setting_saved: "Ustawienia motywu zostały zapisane!"
+          setting_link_label: "Link do ustawienia %{name}"
           theme_site_setting_saved: "Ustawienia motywu witryny zostały zapisane!"
         schema:
           title: "Edytuj ustawienie %{name}"
@@ -9639,6 +9687,7 @@ pl_PL:
                 many: "wymagane jest co najmniej %{count} tagów"
                 other: "wymagane jest co najmniej %{count} tagów"
             string:
+              invalid_translation_identifier: "Można użyć maksymalnie 80 znaków, zaczynając od małej litery i składając się wyłącznie z małych liter, cyfr i podkreśleń."
               too_short:
                 one: "musi zawierać co najmniej %{count} znak"
                 few: "musi zawierać co najmniej %{count} znaki"
@@ -9955,6 +10004,8 @@ pl_PL:
             web_hook_update: "zaktualizuj webhooka"
             web_hook_destroy: "zniszcz webhooka"
             web_hook_deactivate: "deaktywuj webhooka"
+            web_hook_ping: "Ping webhooka"
+            web_hook_redeliver: "Ponowne wysłanie webhooka"
             embeddable_host_create: "utwórz hosta do osadzania"
             embeddable_host_update: "zmodyfikuj hosta do osadzania"
             embeddable_host_destroy: "usuń hosta do osadzania"
@@ -10376,8 +10427,8 @@ pl_PL:
         silence_reason_hidden_label: "Dlaczego wyciszasz? Ten tekst będzie widoczny tylko dla personelu i tego użytkownika. Niech będzie krótki."
         silence_reason_title: "Powód wyciszenia"
         silence_reason_placeholder: "Powód wyciszenia"
-        silence_message: "Wiadomość Email"
-        silence_message_placeholder: "Opcjonalnie podaj więcej informacji na temat tej czynności. Zostaną one dołączone do wiadomości e-mail wysłanej do uciszonego użytkownika."
+        silence_notice_message: "Wiadomość do użytkownika"
+        silence_notice_message_placeholder: "Opcjonalnie możesz dodać szczegóły do wiadomości, którą otrzyma uciszony użytkownik."
         suspended_until: "(do %{until})"
         suspend_forever: "Zawieś na zawsze"
         cant_suspend: "Nie można zawiesić tego użytkownika."
@@ -10433,6 +10484,7 @@ pl_PL:
         grant_admin_confirm: "Wysłaliśmy adres email, aby zweryfikować nowego administratora. Zapoznaj się z instrukcjami w nim zawartymi."
         revoke_moderation: "Odbierz status moderatora"
         grant_moderation: "Przyznaj status moderatora"
+        grant_moderation_confirm: "Czy na pewno chcesz mianować %{username} moderatorem?"
         unsuspend: "Odwieś"
         suspend: "Zawieś"
         show_flags_received: "Pokaż otrzymane flagi"
@@ -10717,9 +10769,15 @@ pl_PL:
         description: "Możesz dostosować dowolny tekst na swoim forum."
         search: "Wyszukaj tekst lub klucze tłumaczeń"
         search_label: "Szukaj"
+        preview:
+          label: "Podgląd tekstu dla %{key}"
+          customized: "Twój tekst"
+          default: "Domyślny"
         theme: "Motyw lub komponent"
         all_themes: "Wszystkie teksty witryny"
         theme_disabled: "Wyłączone"
+        usable_keys: "Klucze tłumaczeniowe"
+        manage_translations: "Zarządzaj tłumaczeniami"
         filters: "Filtry"
         filters_active:
           one: "Filtry (%{count})"
@@ -10728,11 +10786,13 @@ pl_PL:
           other: "Filtry (%{count})"
         edit_title: "Edytuj tekst witryny"
         default_text: "Tekst domyślny"
+        default_text_language: "Tekst domyślny · %{language}"
         value_label: "Twój tekst · %{language}"
         invalid_title: "Nieprawidłowe symbole zastępcze interpolacji"
         invalid_description: "W tym tekście użyto nierozpoznanych symboli zastępczych. Użyj dostępnych poniżej kluczy interpolacji."
         status:
           customized: "Dostosowane"
+          unknown: "Nieznana linia bazowa"
           outdated: "Nieaktualne"
           invalid: "Nieprawidłowe"
         title: "Teksty witryny"
@@ -10752,6 +10812,10 @@ pl_PL:
         interpolation_key_insert: "Kliknij, aby wstawić"
         interpolation_key_used: "Już używane"
         interpolation_key_invalid: "Nieznany klucz — nie będzie interpolowany"
+        unknown:
+          title: "Poprzednia wartość domyślna nie została odnotowana"
+          description: "Ta personalizacja jest starsza niż domyślne śledzenie. Sprawdź aktualne ustawienia domyślne poniżej i potwierdź je, aby śledzić przyszłe zmiany."
+          acknowledge: "Potwierdź bieżące ustawienie domyślne"
         outdated:
           title: "To tłumaczenie jest nieaktualne"
           description: "Domyślne tłumaczenie tego klucza zmieniło się od czasu utworzenia tego zastąpienia. Sprawdź poniżej, czy Twoje tłumaczenie odpowiada wszelkim zmianom wprowadzonym w pierwotnej intencji."
@@ -10807,9 +10871,9 @@ pl_PL:
           many: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
           other: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
         clear_filter: "Wyczyść"
-        add_url: "dodaj URL"
-        add_host: "dodaj host"
-        add_group: "dodaj grupę"
+        add_url: "Dodaj adres URL"
+        add_host: "Dodaj host"
+        add_group: "Dodaj grupę"
         uploaded_image_list:
           label: "Edytuj listę"
           empty: "Nie ma jeszcze zdjęć. Proszę jakieś przesłać."
@@ -10931,7 +10995,7 @@ pl_PL:
           modal_title: Grupy odznak
         granted_by: Przyznana przez
         granted_at: Przyznana
-        reason_help: (Link do wpisu lub tematu)
+        reason_help: Link do wpisu lub tematu
         save: Zapisz
         delete: Usuń
         delete_confirm: Czy na pewno chcesz usunąć tę odznakę?

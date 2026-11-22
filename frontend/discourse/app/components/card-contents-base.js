@@ -41,8 +41,10 @@ export default class CardContentsBase extends Component {
   /** @type {string | null} */
   elementId = null; //click detection added for data-{elementId}
   eventPrefix = "user-card";
+  focusOnShow = true;
   menuIdentifier = "usercard";
   showCardBeforeLoad = true;
+  triggerEvent = "click";
 
   /** @type {string | null} */
   triggeringLinkSelector = null;
@@ -88,7 +90,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        ?.addEventListener("click", this._cardClickHandler);
+        ?.addEventListener(this.triggerEvent, this._cardClickHandler);
     });
 
     this.appEvents.on(
@@ -115,7 +117,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        ?.removeEventListener("click", this._cardClickHandler);
+        ?.removeEventListener(this.triggerEvent, this._cardClickHandler);
     });
 
     this.appEvents.off(
@@ -316,6 +318,10 @@ export default class CardContentsBase extends Component {
     }
 
     this.element.classList.toggle("docked-card", this.isDocked);
+
+    if (!this.focusOnShow) {
+      return;
+    }
 
     // After the card is shown, focus on the first link
     //

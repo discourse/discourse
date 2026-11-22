@@ -9,6 +9,10 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import interceptClick from "discourse/lib/intercept-click";
+import {
+  codeEditorValue,
+  fillInCodeEditor,
+} from "discourse/tests/helpers/code-editor-helper";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -16,7 +20,9 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Blog themes and identity", function (needs) {
   needs.user({ admin: true });
   needs.settings({ blog_enabled: true });
-  needs.site({ blog_base_url: "https://blog.example.com" });
+  needs.site({
+    blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
+  });
 
   let active;
   let draft;
@@ -36,12 +42,12 @@ acceptance("Blog themes and identity", function (needs) {
     pretender.get("/admin/plugins/blog/theme-authoring.json", () =>
       response({
         templates: Object.fromEntries(
-          ["layout", "index", "article", "about", "not_found"].map((name) => [
-            `template_${name}`,
-            "<h1>{{ site.title }}</h1>",
-          ])
+          ["layout", "index", "article", "page", "about", "not_found"].map(
+            (name) => [`template_${name}`, "<h1>{{ site.title }}</h1>"]
+          )
         ),
         articles: [{ id: 1, title: "Published sample" }],
+        has_page: false,
         variables: {
           site: { title: "Example blog" },
           article: {
@@ -127,6 +133,18 @@ acceptance("Blog themes and identity", function (needs) {
     }
   });
 
+  test("links to the editor and the live blog from the header", async function (assert) {
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".d-page-header__actions .btn-primary")
+      .hasText("Go to editor", "the editor is the primary action");
+    assert
+      .dom(".d-page-header__actions a.btn-default")
+      .hasText("View blog")
+      .hasAttribute("href", "https://blog.example.com", "the blog is linked")
+      .hasAttribute("target", "_blank", "the blog opens in a new tab");
+  });
+
   test("saves a draft without activation and blocks activating unsaved edits", async function (assert) {
     pretender.put("/admin/plugins/blog/themes/candidate.json", (request) => {
       const values = new URLSearchParams(request.requestBody);
@@ -196,14 +214,8 @@ acceptance("Blog themes and identity", function (needs) {
       .doesNotHaveAttribute("aria-current");
     await click(".blog-theme-editor__customize");
     const form = formKit(".blog-theme-editor__form");
-    assert
-      .dom('[data-name="template_index"]')
-      .hasClass(
-        "blog-theme-editor__template-field",
-        "the custom editor receives its full-width layout"
-      );
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>{{ site.title }}</h1>"
     );
     assert
@@ -225,18 +237,16 @@ acceptance("Blog themes and identity", function (needs) {
         "the effective default is visible before editing"
       );
     await click(".blog-theme-editor__customize");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "site.title",
-        "customizing starts with visible working source"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes("site.title"),
+      "customizing starts with visible working source"
+    );
     assert
       .dom('[data-name="template_index"]')
       .doesNotExist("other templates are not stacked below it");
 
-    await fillControl(
-      '[data-name="template_layout"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_layout"]',
       "<main>Unsaved author edits</main>"
     );
     const editor = find(".blog-theme-editor__template-control");
@@ -259,18 +269,18 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-variables")
       .doesNotExist("inserting a snippet closes the reference");
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "the inserted snippet is visible in the editor"
-      );
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "Unsaved author edits",
-        "inserting preserves the author's changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "the inserted snippet is visible in the editor"
+    );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "Unsaved author edits"
+      ),
+      "inserting preserves the author's changes"
+    );
     assert.strictEqual(
       find(".blog-theme-editor__template-control"),
       editor,
@@ -279,12 +289,12 @@ acceptance("Blog themes and identity", function (needs) {
 
     await click('[data-authoring-tab="design"]');
     await click('[data-authoring-tab="template_layout"]');
-    assert
-      .dom('[data-name="template_layout"] .ace_content')
-      .includesText(
-        "article.body_html",
-        "FormKit retains the snippet across tab changes"
-      );
+    assert.true(
+      codeEditorValue('[data-name="template_layout"]').includes(
+        "article.body_html"
+      ),
+      "FormKit retains the snippet across tab changes"
+    );
 
     await click(".blog-theme-editor__restore-default");
     await click(".dialog-footer .btn-primary");
@@ -331,8 +341,8 @@ acceptance("Blog themes and identity", function (needs) {
       .fillIn(".blog { color: blue; }");
     await click('[data-authoring-tab="template_index"]');
     await click(".blog-theme-editor__customize");
-    await fillControl(
-      '[data-name="template_index"] textarea',
+    await fillInCodeEditor(
+      '[data-name="template_index"]',
       "<h1>Unsaved preview</h1>"
     );
     await click(".blog-theme-editor__preview-draft");
@@ -372,6 +382,14 @@ acceptance("Blog themes and identity", function (needs) {
         "mobile preview has its own viewport"
       );
 
+    await fillControl('select[aria-label="Page to preview"]', "page");
+    assert
+      .dom(".blog-theme-preview__empty")
+      .hasText(
+        "Page previews need a published standalone page.",
+        "a page preview explains that it needs a published page"
+      );
+
     assert.deepEqual(
       previewedPages,
       ["index", "article"],
@@ -382,9 +400,12 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(".blog-theme-preview")
       .doesNotExist("closing returns to the editor");
-    assert
-      .dom('[data-name="template_index"] .ace_content')
-      .includesText("Unsaved preview", "template edits survive previewing");
+    assert.true(
+      codeEditorValue('[data-name="template_index"]').includes(
+        "Unsaved preview"
+      ),
+      "template edits survive previewing"
+    );
   });
 
   test("explains that article previews need a published article", async function (assert) {
@@ -441,7 +462,7 @@ acceptance("Blog themes and identity", function (needs) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     assert
       .dom(".blog-theme-editor__tabs .nav-pills > li")
-      .exists({ count: 6 }, "design and every template have a tab");
+      .exists({ count: 7 }, "design and every template have a tab");
     assert
       .dom(".blog-theme-editor__state")
       .doesNotExist("the design tab needs no template state");
@@ -659,6 +680,65 @@ acceptance("Blog themes and identity", function (needs) {
     await form.submit();
   });
 
+  test("saves the article URL format with the identity", async function (assert) {
+    const saved = [];
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      const values = new URLSearchParams(request.requestBody);
+      saved.push(values.get("settings[blog_path_format][value]"));
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const today = moment.utc();
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/my-article", "the slug format shows an example")
+      .includesText(
+        `/${today.format("YYYY/MM")}/my-article`,
+        "the monthly format shows today's example"
+      )
+      .includesText(
+        `/${today.format("YYYY/MM/DD")}/my-article`,
+        "the daily format shows today's example"
+      );
+    const form = formKit(".blog-identity__form");
+    assert.form(".blog-identity__form").field("path_format").hasValue("slug");
+    await form.field("path_format").select("year_month_slug");
+    await form.submit();
+
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/news/{slug}");
+    assert
+      .dom(".blog-identity__form")
+      .includesText("/news/my-article", "the custom format shows an example");
+    await form.submit();
+
+    assert.deepEqual(
+      saved,
+      ["/{year}/{month}/{slug}", "/news/{slug}"],
+      "presets and custom formats are saved as templates"
+    );
+  });
+
+  test("rejects a custom URL format without a unique placeholder", async function (assert) {
+    pretender.put("/admin/site_settings/bulk_update.json", () => {
+      assert.step("saved");
+      return response(204);
+    });
+    await visit("/admin/plugins/blog/identity");
+    const form = formKit(".blog-identity__form");
+    await form.field("path_format").select("custom");
+    await form.field("custom_path_format").fillIn("/{year}/{month}");
+    await form.submit();
+
+    assert
+      .form(".blog-identity__form")
+      .field("custom_path_format")
+      .hasError(
+        "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
+      );
+    assert.verifySteps([], "nothing is saved");
+  });
+
   test("warns before leaving a theme with unsaved changes", async function (assert) {
     await visit("/admin/plugins/blog/themes/candidate/edit");
     await formKit(".blog-theme-editor__form")
@@ -811,6 +891,187 @@ acceptance("Blog themes and identity", function (needs) {
     assert
       .dom(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`)
       .exists("the menu belongs to the card it was opened from");
+  });
+
+  test("shows presets as read-only cards that can be customized", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...active,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+      revision: 1,
+      preset: true,
+      description: "Rounded cards on a soft lavender canvas.",
+      accent_color: "795ee8",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [builtIn, bundled, draft], active: builtIn })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+    assert
+      .dom(".theme-card")
+      .exists({ count: 3 }, "presets are listed with saved drafts");
+    assert
+      .dom(`.theme-card[data-theme-id="default"]`)
+      .hasClass("--active", "the built-in design is marked active");
+    assert
+      .dom(`.theme-card[data-theme-id="default"] .theme-card__badge`)
+      .includesText("Active");
+    assert
+      .dom(`.theme-card[data-theme-id="discourse-blog"]`)
+      .includesText(
+        "Rounded cards on a soft lavender canvas.",
+        "a preset shows its own description"
+      );
+    assert
+      .dom(
+        `.theme-card[data-theme-id="discourse-blog"] .theme-card__description`
+      )
+      .doesNotExist("a described preset needs no generic line");
+    assert
+      .dom(`.theme-card[data-theme-id="default"] .theme-card__description`)
+      .includesText(
+        "Included with the blog",
+        "an undescribed preset falls back to a generic line"
+      );
+    assert
+      .dom(`.theme-card[data-theme-id="discourse-blog"] .edit`)
+      .doesNotExist("presets cannot be edited in place");
+
+    await click(
+      `.theme-card[data-theme-id="discourse-blog"] .theme-card__footer-menu`
+    );
+    assert
+      .dom(
+        '[data-identifier="blog-theme-actions-discourse-blog"] .theme-card__button'
+      )
+      .exists({ count: 2 }, "a preset offers only activate and preview");
+    assert
+      .dom('[data-identifier="blog-theme-actions-discourse-blog"] .--danger')
+      .doesNotExist("presets cannot be deleted");
+
+    await click(`.theme-card[data-theme-id="discourse-blog"] .customize`);
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("name")
+      .hasValue(
+        "Discourse Blog (custom)",
+        "the copy is named after the preset"
+      );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("795ee8", "the copy starts from the preset's design");
+  });
+
+  test("New theme starts from Default after customizing another theme", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...builtIn,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [builtIn, bundled], active: builtIn })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+    await click(`.theme-card[data-theme-id="discourse-blog"] .customize`);
+    await click('a[href="/admin/plugins/blog/themes"]');
+    await click(".d-page-subheader .btn-primary");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new",
+      "the previous starting point does not stick"
+    );
+    assert.dom("#blog-theme-start-from").hasValue("default");
+  });
+
+  test("new themes start from a chosen theme, Default unless picked", async function (assert) {
+    const builtIn = {
+      ...active,
+      id: "default",
+      name: "Default",
+      revision: 1,
+      preset: true,
+    };
+    const bundled = {
+      ...builtIn,
+      id: "discourse-blog",
+      name: "Discourse Blog",
+      accent_color: "795ee8",
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({
+        themes: [builtIn, bundled, { ...draft, accent_color: "112233" }],
+        active: draft,
+      })
+    );
+
+    await visit("/admin/plugins/blog/themes/new");
+    assert
+      .dom("#blog-theme-start-from")
+      .hasValue("default", "the built-in design is the default start");
+    assert
+      .dom("#blog-theme-start-from optgroup")
+      .exists({ count: 2 }, "included themes and saved drafts are grouped");
+    assert
+      .form(".blog-theme-editor__form")
+      .field("name")
+      .hasValue("New blog theme");
+
+    await fillControl("#blog-theme-start-from", "discourse-blog");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("795ee8", "the form starts over from the picked theme");
+
+    await formKit(".blog-theme-editor__form").field("name").fillIn("Mine");
+    await fillControl("#blog-theme-start-from", "candidate");
+    assert.dom(".dialog-body").exists("unsaved edits are confirmed first");
+    await click(".dialog-footer .btn-default");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=discourse-blog",
+      "cancelling keeps the current start"
+    );
+    assert
+      .dom("#blog-theme-start-from")
+      .hasValue("discourse-blog", "the picker reverts");
+    assert.form(".blog-theme-editor__form").field("name").hasValue("Mine");
+
+    await fillControl("#blog-theme-start-from", "candidate");
+    await click(".dialog-footer .btn-primary");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/blog/themes/new?from=candidate"
+    );
+    assert
+      .form(".blog-theme-editor__form")
+      .field("accent_color")
+      .hasValue("112233", "a saved draft can be the starting point");
   });
 
   test("activating from a card confirms first and reloads the list", async function (assert) {

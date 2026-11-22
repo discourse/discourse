@@ -11,8 +11,8 @@ module JsonApiKit
         validates :"data.type", json_type: :string, if: :resource_object?
         validates :"data.type", comparison: { equal_to: :expected_type }, if: :string_type?
         validates :"data.attributes", json_type: :object, if: :attributes_supplied?
+        validates :"data.relationships", json_type: :object, if: :relationships_supplied?
 
-        validate :check_id, if: :resource_object?
         validate :check_errors, if: :document_object?
 
         def initialize(document, type:)
@@ -41,9 +41,7 @@ module JsonApiKit
 
         def attributes_supplied? = location(:"data.attributes").supplied?
 
-        def check_id
-          errors.add(:"data.id", :unsupported) if location(:"data.id").supplied?
-        end
+        def relationships_supplied? = location(:"data.relationships").supplied?
 
         def check_errors
           if location(:data).supplied? && location(:errors).supplied?

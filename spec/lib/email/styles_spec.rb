@@ -267,6 +267,14 @@ RSpec.describe Email::Styles do
       expect(style.to_html).to match_html("cry_cry")
     end
 
+    it "inserts emoji title as text" do
+      emoji =
+        "<img title='&lt;span data-injected&gt;x&lt;/span&gt;' src='/images/emoji/twitter/smile.png'>"
+      style = Email::Styles.new(emoji)
+      style.strip_avatars_and_emojis
+      expect(style.to_html).to match_html("&lt;span data-injected&gt;x&lt;/span&gt;")
+    end
+
     it "works if img tag has no attrs" do
       cooked =
         "Create a method for click on image and use ng-click in <img> in your slide box...it is simple"
@@ -283,6 +291,26 @@ RSpec.describe Email::Styles do
           '<aside class="quote"> <div class="title"> <div class="quote-controls"> <i class="fa fa-chevron-down" title="expand/collapse"></i><a href="/t/xyz/123" title="go to the quoted post" class="back"></a> </div> <img alt="" width="20" height="20" src="https://cdn-enterprise.discourse.org/boingboing/user_avatar/bbs.boingboing.net/techapj/40/54379_1.png" class="avatar">techAPJ: </div> <blockquote> <p>lorem ipsum</p> </blockquote> </aside>',
         )
       expect(fragment.to_s.squish).to match(%r{^<blockquote.+</blockquote>$})
+    end
+
+    it "renders nested quotes once, each as a <blockquote>" do
+      fragment =
+        html_fragment(
+          '<aside class="quote"><div class="title">alice:</div><blockquote><p>outer</p><aside class="quote"><div class="title">bob:</div><blockquote><p>inner</p></blockquote></aside></blockquote></aside>',
+        )
+      expect(fragment.css("blockquote").map(&:text)).to eq(%w[alice:outerbob:inner bob:inner])
+    end
+
+    it "sets an explicit text color on quotes and code so it doesn't inherit a client's dark-theme text color" do
+      fragment =
+        html_fragment(
+          '<aside class="quote"><div class="title">techAPJ:</div><blockquote><p>lorem</p></blockquote></aside><blockquote><p>plain</p></blockquote><p><code>inline</code></p><pre><code>block</code></pre>',
+        )
+
+      expect(fragment.css("blockquote").size).to eq(2)
+      fragment
+        .css("blockquote, code")
+        .each { |node| expect(node["style"]).to match(/(\A|;)\s*color:\s*#222222/) }
     end
 
     it "styles user onebox avatar and layout for email" do
@@ -446,6 +474,19 @@ RSpec.describe Email::Styles do
 
       expect(@frag.to_s).not_to include("cid:email/test.png")
       expect(@frag.css("[data-stripped-secure-upload]")).to be_present
+    end
+
+    it "uses the default size when the dimensions are not numbers" do
+      styler = Email::Styles.new(<<~HTML)
+        <div data-stripped-secure-upload="/secure-uploads/original/1X/123456.png" data-width='1" onerror="alert(1)' data-height="1"></div>
+      HTML
+      styler.inline_secure_images(attachments, attachments_index)
+
+      expect(Nokogiri::HTML5.fragment(styler.to_s).at_css("img").to_h).to eq(
+        "src" => "cid:email/test.png",
+        "data-embedded-secure-image" => "true",
+        "style" => "max-width: 50%; max-height: #{Email::Styles::MAX_IMAGE_DIMENSION}px;",
+      )
     end
 
     context "when an optimized image is used instead of the original" do

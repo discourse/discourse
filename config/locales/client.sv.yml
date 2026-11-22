@@ -9,6 +9,14 @@ sv:
     dsa_notice:
       choice_title: "Det är olagligt"
       go_back: "Gå tillbaka"
+    code_editor:
+      search:
+        replace: "Ersätt"
+        next: "Nästa"
+        previous: "Föregående"
+        close: "Stäng"
+      fold:
+        to: "till"
     user_api_key:
       authorize: "Godkänn"
       deny: "Avbryt"
@@ -365,24 +373,16 @@ sv:
       title: "Nya och olästa ämnen"
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tillbaka"
     design_wizard:
       back: "Tillbaka"
       next: "Nästa"
       sections:
-        theme: "Tema"
         fonts: "Typsnitt"
         homepage: "Hemsida"
-        search: "Sök"
       theme:
         selected: "Markerat"
-      colors:
-        light: "Ljust"
-        dark: "Mörkt"
       fonts:
-        heading_font: "Typsnitt för rubrik"
+        base_font: "Huvuddel"
       homepage:
         topics: "Ämnen"
         categories: "Kategorier"
@@ -721,6 +721,7 @@ sv:
         is_this_post: "Är detta %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "eller"
         something_else_wrong: "Är det något fel med denna %{reviewable_type}?"
+        something_wrong_with_post: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -1767,6 +1768,7 @@ sv:
         redeemed_tab_with_count: "Inlöst (%{count})"
         invited_via: "Inbjudan"
         invited_via_link: "länk %{key} (%{count} / %{max} inlösta)"
+        invited_via_link_without_key: "länk (%{count} / %{max} inlöst)"
         groups: "Grupper"
         topic: "Ämne"
         sent: "Skapad/senast skickad"
@@ -2301,6 +2303,8 @@ sv:
         size_too_large: "%{provided_file_size} är större än den högsta tillåtna %{max_file_size}"
     emoji_picker:
       filter_placeholder: Sök efter emoji
+      search_placeholder: "Sök efter emojinamn och alias..."
+      favorites: "Används ofta"
       smileys_&_emotion: Smileys och känslor
       people_&_body: Människor och kropp
       animals_&_nature: Djur och natur
@@ -2332,6 +2336,10 @@ sv:
       emoji: "Emoji :)"
       more_emoji: "mer…"
       options: "Alternativ"
+      ai_content:
+        code: "Kod"
+        quote: "Citat"
+        details: "Detaljer"
       whisper: "viska"
       unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
@@ -3284,10 +3292,8 @@ sv:
           label: "markerad"
           title: "Klicka för att ta bort inlägg från markering"
         select_replies:
-          label: "välj +svar"
           title: "Lägg till inlägg samt alla tillhörande svar till markering"
         select_below:
-          label: "välj +nedanför"
           title: "Lägg till inlägg, samt allting efter det, till markering"
         delete: radera markerade
         cancel: avbryt markering
@@ -4158,6 +4164,14 @@ sv:
       forward: "Framåt"
       share: "Dela"
       dismiss: "Avfärda"
+    mobile_tab_bar:
+      create: "Skapa"
+      more: "Mer"
+      back: "Tillbaka"
+      topics: "Ämnen"
+      drafts:
+        one: "Utkast (%{count})"
+        other: "Utkast (%{count})"
     safe_mode:
       enabled: "Säkert läge är aktiverat och för att lämna säkert läge stänger du detta webbläsarfönster"
     image_removed: "(bild borttagen)"
@@ -4447,11 +4461,11 @@ sv:
           title: "Avancerat"
       upcoming_changes:
         name: "Namn"
-        enabled: "Aktiverad"
+        enabled: "Aktiverad?"
+        feedback: "Feedback"
         select_groups: "Välj grupper…"
+        settings: "Inställningar"
         preview: "Förhandsgranska"
-        enabled_for_options:
-          everyone: "Alla"
         impact_roles:
           admins: "Administratörer"
           moderators: "Moderatorer"
@@ -5146,8 +5160,6 @@ sv:
           company_name: "Namn"
           company_url: "Webbplats"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Gällande lag"
-          city_for_disputes: "Domstol vid tvister"
           extra_groups:
             groups: "Grupper"
           locale_selector:
@@ -5263,7 +5275,6 @@ sv:
           uploading: "Laddar upp…"
           uploading_progress: "Laddar upp… %{progress}%"
           success: "'%{filename}' har laddats upp. Filen bearbetas nu och det kan dröja upp till en minut innan den syns i listan."
-          error: "Ett fel har uppstått vid uppladdning av '%{filename}': %{message}"
         settings: "Inställningar"
         operations:
           is_running: "En åtgärd är just nu igång…"
@@ -6005,7 +6016,6 @@ sv:
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
         silence_reason_placeholder: "Anledning till att tysta"
-        silence_message: "E-postmeddelande"
         suspended_until: "(till %{until})"
         suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."
@@ -6253,6 +6263,8 @@ sv:
           multiselect: "Multival"
       site_text:
         search_label: "Sök"
+        preview:
+          default: "Standard"
         theme_disabled: "Inaktiverad"
         filters: "Filter"
         edit: "Redigera"
@@ -6361,7 +6373,7 @@ sv:
           modal_title: Utmärkelsegrupper
         granted_by: Utfärdad av
         granted_at: Utfärdad vid
-        reason_help: (En länk till ett inlägg eller ämne)
+        reason_help: En länk till ett inlägg eller ämne
         save: Spara
         delete: Ta bort
         delete_confirm: Är du säker på att du vill ta bort den utmärkelsen?

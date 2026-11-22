@@ -82,10 +82,10 @@ class TopicTrackingState
     "/unread/#{user_id}"
   end
 
-  def self.publish_muted(topic)
+  def self.publish_muted(topic, whisper:)
     return unless topic.regular?
 
-    user_ids =
+    scope =
       topic
         .topic_users
         .where(notification_level: NotificationLevels.all[:muted])
@@ -93,7 +93,7 @@ class TopicTrackingState
         .where("users.last_seen_at > ?", 7.days.ago)
         .order("users.last_seen_at DESC")
         .limit(100)
-        .pluck(:user_id)
+    user_ids = restrict_to_audience(scope, :user_id, topic, whisper:).pluck(:user_id)
     return if user_ids.blank?
 
     message = { topic_id: topic.id, message_type: MUTED_MESSAGE_TYPE }
@@ -101,16 +101,16 @@ class TopicTrackingState
     MessageBus.publish(LATEST_MESSAGE_BUS_CHANNEL, message.as_json, user_ids: user_ids)
   end
 
-  def self.publish_unmuted(topic)
+  def self.publish_unmuted(topic, whisper:)
     return unless topic.regular?
 
-    user_ids =
+    scope =
       User
         .watching_topic(topic)
         .where("users.last_seen_at > ?", 7.days.ago)
         .order("users.last_seen_at DESC")
         .limit(100)
-        .pluck(:id)
+    user_ids = restrict_to_audience(scope, :id, topic, whisper:).pluck(:id)
     return if user_ids.blank?
 
     message = { topic_id: topic.id, message_type: UNMUTED_MESSAGE_TYPE }
@@ -135,22 +135,8 @@ class TopicTrackingState
         post,
       )
 
-    group_ids =
-      if post.post_type == Post.types[:whisper]
-        [Group::AUTO_GROUPS[:staff], *SiteSetting.whispers_allowed_groups_map].flatten
-      else
-        post.topic.category && post.topic.category.secure_group_ids
-      end
-
-    if group_ids.present? && !group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
-      scope =
-        scope.joins("INNER JOIN group_users gu ON gu.user_id = topic_users.user_id").where(
-          "gu.group_id IN (?)",
-          group_ids,
-        )
-    end
-
-    user_ids = scope.pluck(:user_id)
+    user_ids =
+      restrict_to_audience(scope, :user_id, post.topic, whisper: post.whisper?).pluck(:user_id)
     return if user_ids.empty?
 
     payload = {
@@ -660,4 +646,20 @@ class TopicTrackingState
     end
   end
   private_class_method :secure_category_group_ids
+
+  # A notification preference stays after the user loses access, so it does not give access.
+  def self.restrict_to_audience(scope, user_id_column, topic, whisper:)
+    scope = scope.where(user_id_column => User.whisperers.select(:id)) if whisper
+
+    group_ids = secure_category_group_ids(topic)
+    return scope if group_ids.nil? || group_ids.include?(Group::AUTO_GROUPS[:logged_in_users])
+
+    scope.where(user_id_column => members_of(group_ids))
+  end
+  private_class_method :restrict_to_audience
+
+  def self.members_of(group_ids)
+    GroupUser.where(group_id: group_ids).select(:user_id)
+  end
+  private_class_method :members_of
 end

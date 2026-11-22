@@ -1,6 +1,6 @@
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
+import CodeEditor from "discourse/components/code-editor";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import Form from "discourse/components/form";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -118,11 +118,12 @@ export default <template>
 
               {{#if (eq @controller.view "sql")}}
                 <div class="query-new__sql-editor">
-                  <AceEditor
-                    @content={{@controller.generatedSql}}
-                    @mode="sql"
+                  <CodeEditor
+                    @language="sql"
+                    @languageOptions={{@controller.sqlLanguageOptions}}
                     @onChange={{@controller.updateSql}}
                     @resizable={{true}}
+                    @value={{@controller.generatedSql}}
                   />
                 </div>
               {{else}}
@@ -295,10 +296,11 @@ export default <template>
               >
                 <div class="panels-flex">
                   <div class="editor-panel">
-                    <AceEditor
-                      @content={{@controller.manualSql}}
-                      @mode="sql"
+                    <CodeEditor
+                      @language="sql"
+                      @languageOptions={{@controller.sqlLanguageOptions}}
                       @onChange={{@controller.updateManualSql}}
+                      @value={{@controller.manualSql}}
                     />
                   </div>
                   <div class="right-panel">

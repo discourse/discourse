@@ -62,6 +62,18 @@ describe "Composer redesign" do
       expect(composer).to be_opened
       expect(composer).to have_footer_toolbar
     end
+
+    it "keeps the toolbar laid out as the composer narrows past the footer breakpoint" do
+      visit("/new-topic")
+
+      expect(composer).to be_opened
+
+      [560, 610, 625, 638, 655, 700].each do |width|
+        resize_window(width: width, height: 900) do
+          expect(composer).to have_uncollapsed_footer_toolbar, "toolbar collapsed at #{width}px"
+        end
+      end
+    end
   end
 
   context "when enable_composer_redesign is disabled" do

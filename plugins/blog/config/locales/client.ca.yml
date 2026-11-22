@@ -14,10 +14,14 @@ ca:
         preview_archive: Arxiva
         desktop: Escriptori
         mobile: Mòbil
+        save: Desa
+        path_formats:
+          custom: Personalitzat
         themes: Aparences
         theme_name: Nom de l'aparença
         edit: Edita
         preview: Previsualitza
+        customize: Personalitza
         import: Importa
         export: Exporta
         active: Actiu
@@ -30,6 +34,7 @@ ca:
         change:
           title: títol
           body: cos
+          tags: etiquetes
       review:
         copy: Còpia
         open: Obre
@@ -43,6 +48,8 @@ ca:
         edit: Edita
         status: Estat
         replies: Respostes
+        title: Títol
+      all: Tots
       drafts: Esborranys
       preview: Previsualitza
       appearance_link: Aparença

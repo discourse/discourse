@@ -8,7 +8,6 @@ RSpec.describe Chat::Api::ChannelPinsController do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_pinned_messages = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(admin)
   end
@@ -22,6 +21,19 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["pinned_messages"].length).to eq(1)
       expect(response.parsed_body["pinned_messages"][0]["chat_message_id"]).to eq(message.id)
+    end
+
+    it "returns pinned messages to users outside the pinning groups" do
+      sign_in(user)
+      Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel)
+
+      get "/chat/api/channels/#{channel.id}/pins"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
+        [message.id],
+      )
+      expect(response.parsed_body["pinned_messages"][0]["message"]["pinned"]).to eq(true)
     end
 
     it "keeps links in the pin excerpt, unlike the message's own excerpt" do
@@ -104,6 +116,50 @@ RSpec.describe Chat::Api::ChannelPinsController do
         expect(response.body).not_to include(message.message)
       end
     end
+
+    context "when a pinned reply's thread original message was trashed" do
+      fab!(:thread_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: thread_channel, message: "thread original secret")
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: thread_channel, original_message: original_message)
+      end
+      fab!(:reply) do
+        Fabricate(
+          :chat_message,
+          chat_channel: thread_channel,
+          thread: thread,
+          message: "thread reply secret",
+        )
+      end
+
+      before do
+        Fabricate(:chat_pinned_message, chat_message: reply, chat_channel: thread_channel)
+        original_message.trash!(admin)
+        sign_in(user)
+      end
+
+      it "does not expose the pinned reply to a regular member" do
+        get "/chat/api/channels/#{thread_channel.id}/pins"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["pinned_messages"]).to be_empty
+        expect(response.body).not_to include("thread reply secret")
+      end
+
+      it "still exposes the pinned reply to a chat moderator" do
+        sign_in(admin)
+
+        get "/chat/api/channels/#{thread_channel.id}/pins"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["pinned_messages"].map { |pin| pin["chat_message_id"] }).to eq(
+          [reply.id],
+        )
+        expect(response.body).to include("thread reply secret")
+      end
+    end
   end
 
   describe "#mark_read" do
@@ -139,6 +195,17 @@ RSpec.describe Chat::Api::ChannelPinsController do
       expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(true)
     end
 
+    it "allows members of the configured pinning groups to pin messages" do
+      sign_in(user)
+      group = Fabricate(:group, users: [user])
+      SiteSetting.chat_pinning_messages_allowed_groups = group.id.to_s
+
+      post "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
+
+      expect(response.status).to eq(200)
+      expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(true)
+    end
+
     context "when user is not staff" do
       before { sign_in(user) }
 
@@ -148,12 +215,48 @@ RSpec.describe Chat::Api::ChannelPinsController do
         expect(response.status).to eq(403)
       end
     end
+
+    context "when the message is a reply whose thread original message was trashed" do
+      fab!(:thread_channel) { Fabricate(:category_channel, threading_enabled: true) }
+      fab!(:original_message) do
+        Fabricate(:chat_message, chat_channel: thread_channel, message: "thread original secret")
+      end
+      fab!(:thread) do
+        Fabricate(:chat_thread, channel: thread_channel, original_message: original_message)
+      end
+      fab!(:reply) { Fabricate(:chat_message, chat_channel: thread_channel, thread: thread) }
+
+      before do
+        original_message.trash!(admin)
+        group = Fabricate(:group, users: [user])
+        SiteSetting.chat_pinning_messages_allowed_groups = group.id.to_s
+        sign_in(user)
+      end
+
+      it "does not let a pinning group member pin the hidden reply" do
+        post "/chat/api/channels/#{thread_channel.id}/messages/#{reply.id}/pin"
+
+        expect(response.status).to eq(403)
+        expect(Chat::PinnedMessage.exists?(chat_message_id: reply.id)).to eq(false)
+      end
+    end
   end
 
   describe "#destroy" do
     fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, chat_channel: channel) }
 
     it "unpins a message" do
+      delete "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
+
+      expect(response.status).to eq(200)
+      expect(Chat::PinnedMessage.exists?(chat_message_id: message.id)).to eq(false)
+    end
+
+    it "allows members of the configured pinning groups to unpin messages" do
+      sign_in(user)
+      group = Fabricate(:group, users: [user])
+      SiteSetting.chat_pinning_messages_allowed_groups = group.id.to_s
+
       delete "/chat/api/channels/#{channel.id}/messages/#{message.id}/pin"
 
       expect(response.status).to eq(200)

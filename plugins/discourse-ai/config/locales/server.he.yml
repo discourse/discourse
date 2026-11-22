@@ -28,12 +28,6 @@ he:
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
         notify_author_pm:
           subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
-          body: |
-            שלום ‎@%{username},
-
-            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
-
-            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
@@ -104,6 +98,11 @@ he:
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
     ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
+    keywords:
+      ai_default_llm_model: "מודל שפה כברירת מחדל"
+      ai_discord_search_enabled: "שילוב מול Discord"
+      ai_summarization_enabled: "סיכומים"
+      ai_summary_gists_enabled: "תקצירים מקוצרים של רשימת הנושאים"
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -194,10 +193,6 @@ he:
           name: "יצירת תמונות…"
         image_generation_custom:
           name: "מותאם"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "ננו בננה"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -572,6 +567,18 @@ he:
       assign:
         errors:
           not_found: "הנושא לא נמצא."
+    appearance_authoring:
+      default_theme: "ערכת עיצוב כברירת מחדל"
+      colors:
+        light:
+          header_background: "כותרת"
+      fonts:
+        base_font: "גופן גוף"
+        heading_font: "גופן כותרת"
+    mcp_theme_access:
+      none: "ללא"
+    mcp_app_setup:
+      none: "ללא"
     reviewables:
       ai_tool_action:
         approve:
@@ -625,6 +632,7 @@ he:
     embeddings:
       delete_failed: "זה המודל שנמצא בשימוש. יש לעדכן את `ai embeddings selected model`."
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
+      missing_provider_param: "%{param} לא יכול להישאר ריק"
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."

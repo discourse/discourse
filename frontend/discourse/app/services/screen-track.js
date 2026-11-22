@@ -161,7 +161,7 @@ export default class ScreenTrack extends Service {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }
 
-    const highestRead = parseInt(Object.keys(timings).lastObject, 10);
+    const highestRead = parseInt(Object.keys(timings).at(-1), 10);
     const cachedHighestRead = this.highestReadFromCache(topicId);
 
     if (!cachedHighestRead || cachedHighestRead < highestRead) {
@@ -220,7 +220,7 @@ export default class ScreenTrack extends Service {
         this._topicController.readPosts(topicId, postNumbers);
 
         const cachedHighestRead = this.highestReadFromCache(topicId);
-        if (cachedHighestRead && cachedHighestRead <= postNumbers.lastObject) {
+        if (cachedHighestRead && cachedHighestRead <= postNumbers.at(-1)) {
           resetHighestReadCache(topicId);
         }
       }
@@ -283,17 +283,17 @@ export default class ScreenTrack extends Service {
       stream && // Sanity check
       stream.hasNoFilters && // The stream is not filtered (by username or summary)
       !stream.canAppendMore && // We are at the end of the stream
-      stream.posts.lastObject && // The last post exists
-      stream.posts.lastObject.read && // The last post is read
+      stream.posts.at(-1) && // The last post exists
+      stream.posts.at(-1).read && // The last post is read
       stream.gaps && // The stream has gaps
-      !!stream.gaps.after[stream.posts.lastObject.id] && // Stream ends with a gap
+      !!stream.gaps.after[stream.posts.at(-1).id] && // Stream ends with a gap
       stream.topic.last_read_post_number !==
-        stream.posts.lastObject.post_number +
-          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`) // The last post in the gap has not been marked read
+        stream.posts.at(-1).post_number +
+          stream.get(`gaps.after.${stream.posts.at(-1).id}.length`) // The last post in the gap has not been marked read
     ) {
       newTimings[
-        stream.posts.lastObject.post_number +
-          stream.get(`gaps.after.${stream.posts.lastObject.id}.length`)
+        stream.posts.at(-1).post_number +
+          stream.get(`gaps.after.${stream.posts.at(-1).id}.length`)
       ] = 1;
     }
 

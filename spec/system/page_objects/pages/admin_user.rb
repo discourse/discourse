@@ -64,6 +64,10 @@ module PageObjects
         find(".btn-danger.unsilence-user").click
       end
 
+      def click_grant_moderation_button
+        find(".btn.grant-moderation").click
+      end
+
       def click_approve_button
         find(".display-row .controls .btn", text: I18n.t("admin_js.admin.user.approve")).click
       end

@@ -59,6 +59,11 @@ pre-commit:
     i18n-lint:
       glob: &i18n_glob "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {staged_files}
+    upcoming-changes-lint:
+      glob: &upcoming_changes_glob
+        - "config/site_settings.yml"
+        - "plugins/*/config/settings.yml"
+      run: bundle exec ruby script/upcoming_changes_lint.rb {staged_files}
     stylelint:
       glob: &stylelint_glob
         - "app/assets/stylesheets/**/*.scss"
@@ -133,6 +138,10 @@ lint-files:
       files: *working_tree_files
       glob: *i18n_glob
       run: bundle exec ruby script/i18n_lint.rb {files}
+    upcoming-changes-lint:
+      files: *working_tree_files
+      glob: *upcoming_changes_glob
+      run: bundle exec ruby script/upcoming_changes_lint.rb {files}
     stylelint:
       files: *working_tree_files
       glob: *stylelint_glob
@@ -209,5 +218,8 @@ lints:
     i18n-lint:
       glob: *i18n_glob
       run: bundle exec ruby script/i18n_lint.rb {all_files}
+    upcoming-changes-lint:
+      glob: *upcoming_changes_glob
+      run: bundle exec ruby script/upcoming_changes_lint.rb {all_files}
     tsc:
       run: pnpm lint:types

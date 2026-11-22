@@ -38,12 +38,6 @@ nl:
         description: "Triageer berichten met behulp van een groot taalmodel"
         notify_author_pm:
           subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
-          body: |
-            Hallo @%{username},
-
-            Je bericht in '%{topic_title}' is tijdelijk verwijderd en in onze beoordelingswachtrij geplaatst zodat een moderator ernaar kan kijken. Als het wordt goedgekeurd, wordt het automatisch hersteld.
-
-            Referentie: %{post_url}
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -129,6 +123,12 @@ nl:
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
+    keywords:
+      ai_default_llm_model: "standaard taalmodel"
+      ai_discord_search_enabled: "discord-integratie"
+      ai_helper_automatic_chat_thread_title: "chatthreadtitels"
+      ai_summarization_enabled: "samenvattingen"
+      ai_summary_gists_enabled: "korte samenvattingen voor topiclijst"
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -223,10 +223,6 @@ nl:
           name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -827,6 +823,22 @@ nl:
         errors:
           not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
           not_found: "Item in de beoordelingswachtrij niet gevonden"
+    appearance_authoring:
+      default_theme: "Standaardthema"
+      colors:
+        light:
+          header_background: "Koptekst"
+      fonts:
+        base_font: "Lettertype inhoud"
+        heading_font: "Lettertype kop"
+    mcp_theme_access:
+      "on": "Aan"
+      "off": "Uit"
+      none: "geen"
+      changes:
+        server: "MCP-server"
+    mcp_app_setup:
+      none: "geen"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"
@@ -886,6 +898,7 @@ nl:
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
       secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"
       secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
+      missing_provider_param: "%{param} mag niet leeg zijn"
       configuration:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."

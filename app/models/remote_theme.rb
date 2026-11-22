@@ -74,6 +74,7 @@ class RemoteTheme < ActiveRecord::Base
     theme_id: nil,
     update_components: nil,
     run_migrations: true,
+    skip_component_failures: false,
     guardian: nil
   )
     update_theme(
@@ -82,6 +83,7 @@ class RemoteTheme < ActiveRecord::Base
       theme_id:,
       update_components:,
       run_migrations:,
+      skip_component_failures:,
       guardian:,
     )
   end
@@ -161,6 +163,7 @@ class RemoteTheme < ActiveRecord::Base
     run_migrations: true,
     allow_out_of_sequence_migration: false,
     before_save: nil,
+    skip_component_failures: false,
     guardian: nil
   )
     importer.import!
@@ -183,8 +186,12 @@ class RemoteTheme < ActiveRecord::Base
     theme.component = theme_info["component"].to_s == "true"
     ensure_can_change_type!(guardian, theme)
     theme.child_components = theme_info["components"].presence || []
-    theme.skip_child_components_update = true if update_components == "none"
-    update_children = existing && update_components.present? && update_components != "none"
+    # partial imports run after commit so a failed child does not roll back the parent
+    theme.skip_child_components_update = true if update_components == "none" ||
+      skip_component_failures
+    update_children =
+      (existing || skip_component_failures) && update_components.present? &&
+        update_components != "none"
     ensure_can_change_components!(guardian, theme, theme.child_components, update_components:)
 
     remote_theme = new
@@ -211,7 +218,11 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    theme.update_child_components if update_children
+    if update_children
+      theme.skip_child_components_update = false
+      theme.skipped_child_components =
+        theme.update_child_components(skip_failures: skip_component_failures)
+    end
     theme
   ensure
     begin
@@ -460,10 +471,16 @@ class RemoteTheme < ActiveRecord::Base
 
     transaction_block = ->(*) do
       field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
+      preserved_locale_fields = []
       theme
         .theme_fields
         .where(id: field_ids_to_destroy)
         .each do |field|
+          if field.target_id == Theme.targets[:translations] && field.name == "en" &&
+               field.value == "en: {}\n"
+            preserved_locale_fields << field
+            next
+          end
           field.mark_for_destruction
           theme.changed_fields << field
         end
@@ -474,19 +491,25 @@ class RemoteTheme < ActiveRecord::Base
 
       before_save&.call(theme)
 
-      if raise_if_theme_save_fails
-        theme.save!
-      else
-        raise ActiveRecord::Rollback if !theme.save
+      theme.with_deferred_object_translations do
+        if raise_if_theme_save_fails
+          theme.save!
+        else
+          raise ActiveRecord::Rollback if !theme.save
+        end
+
+        create_theme_site_settings(theme, theme_info["theme_site_settings"])
+
+        if run_migrations
+          theme.migrate_settings(
+            start_transaction: false,
+            allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+          )
+        end
       end
-
-      create_theme_site_settings(theme, theme_info["theme_site_settings"])
-
-      if run_migrations
-        theme.migrate_settings(
-          start_transaction: false,
-          allow_out_of_sequence_migration: allow_out_of_sequence_migration,
-        )
+      if preserved_locale_fields.present? && theme.object_translation_defaults.empty?
+        preserved_locale_fields.each(&:destroy!)
+        theme.reload.remove_from_cache!
       end
     end
 

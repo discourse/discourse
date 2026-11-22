@@ -44,7 +44,7 @@ module DiscourseAi
           escaped_query = CGI.escape(query)
           uri =
             URI(
-              "https://www.googleapis.com/customsearch/v1?key=#{api_key}&cx=#{cx}&q=#{escaped_query}&num=10",
+              "#{SiteSetting.ai_google_custom_search_url}?key=#{api_key}&cx=#{cx}&q=#{escaped_query}&num=10",
             )
 
           body = Net::HTTP.get(uri)

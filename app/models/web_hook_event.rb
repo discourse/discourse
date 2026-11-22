@@ -6,7 +6,7 @@ class WebHookEvent < ActiveRecord::Base
   scope :not_ping, -> { where("status <> 0") }
   belongs_to :web_hook
 
-  has_one :redelivering_webhook_event, class_name: "RedeliveringWebhookEvent"
+  has_one :redelivering_webhook_event, class_name: "RedeliveringWebhookEvent", dependent: :destroy
 
   after_save :update_web_hook_delivery_status
 

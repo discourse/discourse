@@ -274,7 +274,7 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
-    const isOwnMessage = message.user.id === this.currentUser.id;
+    const isOwnMessage = message.user.id === this.currentUser?.id;
     this.messagesLoader.trackLiveMessage(message);
 
     if (!isOwnMessage) {
@@ -282,6 +282,14 @@ export default class ChatChannel extends Component {
         visible: this.paneState.isDocumentVisible,
         active: this.paneState.isActiveReader,
       });
+    }
+
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
     }
 
     this.paneState.handleIncomingMessage({
@@ -342,6 +350,22 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const messages = this.processMessages(this.args.channel, result);
     if (!messages.length) {
       return;
@@ -390,7 +414,7 @@ export default class ChatChannel extends Component {
 
     const message = this.messagesManager.findFirstMessageOfDay(
       new Date(date),
-      this.currentUser.user_option.timezone
+      this.currentUser?.user_option?.timezone
     );
     if (message.firstOfResults && this.messagesLoader.canLoadMorePast) {
       this.fetchMessages({ target_date: date, direction: FUTURE });

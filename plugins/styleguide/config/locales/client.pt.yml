@@ -34,6 +34,9 @@ pt:
           title: "Sistema de Fontes"
         colors:
           title: "Cores"
+        design_variables:
+          type: "Tipo"
+          default: "Predefinição"
         icons:
           title: "Ícones"
           full_list: "Veja a lista completa dos Ícones do Font Awesome"

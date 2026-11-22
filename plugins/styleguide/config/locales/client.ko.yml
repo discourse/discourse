@@ -34,6 +34,9 @@ ko:
           title: "글꼴 시스템"
         colors:
           title: "색상"
+        design_variables:
+          type: "형식"
+          default: "기본"
         icons:
           title: "아이콘"
           full_list: "Font Awesome Icons의 전체 목록보기"

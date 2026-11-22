@@ -13,11 +13,12 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("default", async function (assert) {
-    this.setProperties({ hours: "14", minutes: "58" });
+    this.hours = "14";
+    this.minutes = "58";
 
     await render(
       <template>
@@ -29,7 +30,8 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    this.setProperties({ hours: "14", minutes: "58" });
+    this.hours = "14";
+    this.minutes = "58";
 
     await render(
       <template>
@@ -43,8 +45,9 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    this.setProperties({ hours: "14", minutes: "58" });
-    this.set("onChange", setTime);
+    this.hours = "14";
+    this.minutes = "58";
+    this.onChange = setTime;
 
     await render(
       <template>
@@ -66,7 +69,8 @@ module("Integration | ui-kit | DTimeInput", function (hooks) {
     I18n.translations[I18n.locale].js.dates.time = "HH:mm";
 
     try {
-      this.setProperties({ hours: "14", minutes: "58" });
+      this.hours = "14";
+      this.minutes = "58";
 
       await render(
         <template>

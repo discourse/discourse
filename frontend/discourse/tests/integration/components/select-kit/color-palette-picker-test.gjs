@@ -81,7 +81,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("with value", async function (assert) {

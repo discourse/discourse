@@ -62,7 +62,7 @@ export default class UploadedImageList extends Component {
         </div>
       </:body>
       <:footer>
-        <DButton @action={{this.close}} @label="close" />
+        <DButton class="btn-primary" @action={{this.close}} @label="close" />
         <ImagesUploader
           class="pull-right"
           @done={{this.uploadDone}}

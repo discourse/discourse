@@ -54,6 +54,52 @@ RSpec.describe PostAlerter do
     )
   end
 
+  describe "unread post visibility" do
+    it "excludes hidden replies from unread counts and first-unread selection" do
+      root = Fabricate(:post, user: user)
+      hidden =
+        Fabricate(:post, topic: root.topic, hidden: true, reply_to_post_number: root.post_number)
+      visible = Fabricate(:post, topic: root.topic, reply_to_post_number: root.post_number)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        last_read_post_number: root.post_number,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      alerter = PostAlerter.new
+
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(visible)
+      expect(alerter.unread_count(user, root.topic)).to eq(1)
+      expect(alerter.first_unread_post(user, root.topic)).to eq(visible)
+      expect(alerter.unread_posts_in_bucket(user, root.topic, root.post_number)).to contain_exactly(
+        visible,
+      )
+      expect(alerter.unread_count_in_bucket(user, root.topic, root.post_number)).to eq(1)
+
+      hidden.update!(user: user)
+      expect(alerter.unread_posts(user, root.topic)).to contain_exactly(hidden, visible)
+    end
+  end
+
+  describe "recipient authorization reuse" do
+    it "builds one recipient permission snapshot for a collapsed notification" do
+      group.add(user)
+      root = Fabricate(:post, topic: Fabricate(:topic, category: private_category))
+      reply = Fabricate(:post, topic: root.topic)
+      TopicUser.create!(
+        user: user,
+        topic: root.topic,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+      queries =
+        track_sql_queries do
+          PostAlerter.new.create_notification(user, Notification.types[:replied], reply)
+        end
+      expect(user.notifications.where(topic_id: root.topic_id).count).to eq(1)
+      expect(queries.grep(/SELECT "categories"\."id" FROM "categories" WHERE/).size).to eq(1)
+    end
+  end
+
   def create_post_with_alerts(args = {})
     post = Fabricate(:post, args)
     PostAlerter.post_created(post)
@@ -1251,6 +1297,51 @@ RSpec.describe PostAlerter do
       }.by(1)
 
       expect(user.notifications.last.data_hash["topic_title"]).to eq(original_title)
+    end
+
+    context "when the original title of a PM is restricted" do
+      def revise_title(title, revised_at: Time.zone.now)
+        post.revise(admin, { title: title }, revised_at: revised_at)
+      end
+
+      it "uses the current title when the title revision is hidden" do
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when an earlier revision is hidden" do
+        post.revise(admin, { raw: "This is the revised post" }, revised_at: Time.zone.now)
+        revise_title("This is the revised title", revised_at: 1.day.from_now)
+        post.revisions.find_by(number: 2).hide!
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "uses the current title when edit history is not visible to the public" do
+        SiteSetting.edit_history_visible_to_public = false
+        revise_title("This is the revised title")
+
+        PostAlerter.new.create_notification(user, type, post)
+
+        expect(user.notifications.last.data_hash["topic_title"]).to eq("This is the revised title")
+      end
+
+      it "keeps the original title for staff" do
+        original_title = topic.title
+        revise_title("This is the revised title")
+        post.revisions.find_by(number: 2).hide!
+        topic.topic_allowed_users.create!(user: admin)
+
+        PostAlerter.new.create_notification(admin, type, post)
+
+        expect(admin.notifications.last.data_hash["topic_title"]).to eq(original_title)
+      end
     end
 
     it "triggers :pre_notification_alert" do

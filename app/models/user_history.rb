@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ipaddr"
+
 # UserHistory stores information about actions that users have taken,
 # like deleting users, changing site settings, dismissing notifications, etc.
 # Use other classes, like StaffActionLogger, to log records to this table.
@@ -14,13 +16,10 @@ class UserHistory < ActiveRecord::Base
 
   # Subjects logged alongside the :admin_onboarding_step_completed action, one
   # per step of the admin onboarding panel.
-  ADMIN_ONBOARDING_STEPS = %w[select_theme start_posting invite_collaborators].freeze
-  ADMIN_ONBOARDING_TOPIC_OPTIONS = %w[
-    plan_categories
-    plan_invites
-    introduce_yourself
-    write_your_own
-  ].freeze
+  ADMIN_ONBOARDING_STEPS = %w[select_theme create_category invite_collaborators].freeze
+  # Steps the panel no longer offers but older sites have already logged, kept
+  # so the onboarding stats still report them.
+  RETIRED_ADMIN_ONBOARDING_STEPS = %w[start_posting].freeze
 
   # Each value in the context should be shorter than this
   MAX_CONTEXT_LENGTH = 50_000
@@ -30,6 +29,12 @@ class UserHistory < ActiveRecord::Base
   MAX_DETAILS_LENGTH = 110_000
 
   MAX_JSON_LENGTH = 300_000
+
+  # Candidates for an address embedded in free-form context text, e.g.
+  # "Same IP address (203.0.113.7) as other users". IPAddr does the final
+  # validation of each candidate.
+  IPV4_CANDIDATE_IN_CONTEXT = /(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?!\d)/
+  ADDRESS_RUN_IN_CONTEXT = /(?<!\w)[\h:.]+(?!\w)/
 
   validates :details, length: { maximum: MAX_DETAILS_LENGTH }
   validates :context, length: { maximum: MAX_CONTEXT_LENGTH }
@@ -189,6 +194,8 @@ class UserHistory < ActiveRecord::Base
         remove_access_control_list_owner: 134,
         assume_access_control_ownership: 135,
         create_bot: 136,
+        web_hook_ping: 137,
+        web_hook_redeliver: 138,
       )
   end
 
@@ -259,6 +266,8 @@ class UserHistory < ActiveRecord::Base
       web_hook_update
       web_hook_destroy
       web_hook_deactivate
+      web_hook_ping
+      web_hook_redeliver
       embeddable_host_create
       embeddable_host_update
       embeddable_host_destroy
@@ -496,6 +505,47 @@ class UserHistory < ActiveRecord::Base
 
   def previous_value_is_json?
     new_value_is_json?
+  end
+
+  def context_with_ips_masked(placeholder)
+    return context if context.blank?
+
+    # IPv6 first, so an IPv4-mapped address is replaced whole.
+    context
+      .gsub(ADDRESS_RUN_IN_CONTEXT) { |run| mask_ipv6_address(run, placeholder) }
+      .gsub(IPV4_CANDIDATE_IN_CONTEXT) do |candidate|
+        valid_ip_address?(candidate) ? placeholder : candidate
+      end
+  end
+
+  private
+
+  def mask_ipv6_address(run, placeholder)
+    return run if run.exclude?(":")
+
+    core = run[/\h(?:.*\h)?/]
+    return run if core.nil?
+
+    # Surrounding punctuation belongs to the address only when it is the "::"
+    # compression marker, e.g. "2001:db8::" but not a sentence-final "::1."
+    leading, _, trailing = run.partition(core)
+    prefixes = leading.end_with?("::") ? ["::", ""] : [""]
+    suffixes = trailing.start_with?("::") ? ["::", ""] : [""]
+
+    address =
+      prefixes
+        .product(suffixes)
+        .map { |prefix, suffix| "#{prefix}#{core}#{suffix}" }
+        .find { |candidate| valid_ip_address?(candidate) }
+
+    address ? run.sub(address) { placeholder } : run
+  end
+
+  def valid_ip_address?(candidate)
+    IPAddr.new(candidate)
+    true
+  rescue IPAddr::Error
+    false
   end
 end
 

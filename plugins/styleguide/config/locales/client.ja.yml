@@ -50,6 +50,9 @@ ja:
           title: "フォントシステム"
         colors:
           title: "色"
+        design_variables:
+          type: "タイプ"
+          default: "デフォルト"
         dialog:
           title: "ダイアログ"
         drag_and_drop:

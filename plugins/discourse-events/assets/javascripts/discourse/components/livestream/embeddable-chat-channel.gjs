@@ -33,12 +33,16 @@ export default class EmbedableChatChannel extends Component {
 
   constructor() {
     super(...arguments);
-    this.messageBus.subscribe(this.messageBusChannel, this.onMessage);
+    if (this.currentUser) {
+      this.messageBus.subscribe(this.messageBusChannel, this.onMessage);
+    }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
+    if (this.currentUser) {
+      this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
+    }
   }
 
   get messageBusChannel() {

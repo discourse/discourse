@@ -16,6 +16,9 @@ uk:
         preview_archive: Архів
         desktop: Десктоп
         mobile: Мобільний
+        save: Зберегти
+        path_formats:
+          custom: Користувацька
         back_to_themes: Назад до тем
         new_theme_short: Нова тема
         themes: Стилі
@@ -23,6 +26,8 @@ uk:
         edit: Редагувати
         activate: Активувати
         preview: Попередній перегляд
+        customize: Customize
+        customized_theme_name: "%{name} (користувацький)"
         import: Імпорт
         export: Експорт
         active: Активний
@@ -36,6 +41,7 @@ uk:
         change:
           title: назва
           body: тіло
+          tags: теґи
       review:
         label: Мітка
         create: Створити посилання
@@ -53,7 +59,11 @@ uk:
         edit: Редагувати
         status: Статус
         replies: Відповіді
+        title: Назва
+        page: Сторінка
+      all: Всі
       drafts: Чернетки
+      pages: Сторінки
       preview: Попередній перегляд
       unpublish: Скасувати публікацію
       appearance_link: Зовнішній вигляд

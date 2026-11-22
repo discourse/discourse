@@ -1607,6 +1607,8 @@ ca:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
         leading_trailing_slash: "L'expressió regular no ha de començar ni acabar amb una barra inclinada."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
+    keywords:
+      company_url: "lloc web"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1846,11 +1848,9 @@ ca:
     post_hidden:
       title: "Publicació amagada"
       subject_template: "Publicació ocultada per banderes de la comunitat"
-      text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que la vostra publicació estava amagada. \n\n<%{base_url}%{url}> \n\n%{flag_reason} \n\nDiversos membres de la comunitat han marcat amb bandera aquesta publicació abans de ser amagada, així que considereu com podeu revisar la publicació per a reflectir els comentaris. **Podeu editar la  publicació després de %{edit_delay} minuts, i deixarà d'estar amagada automàticament.** \n\nNo obstant això, si la comunitat amaga la publicació per segona vegada, romandrà oculta fins que sigui revisada per l'equip responsable.\n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
     post_hidden_again:
       title: "Publicació amagada una altra vegada"
       subject_template: "Publicació amagada per les banderes de la comunitat. S'ha notificat l'equip responsable. "
-      text_body_template: "Bon dia, \n\nAixò és un missatge automàtic de %{site_name} per a fer-vos saber que la vostra publicació ha estat amagada de nou. \n\n<%{base_url}%{url}>\n\n%{flag_reason} \n\nDiversos membres de la comunitat han marcat amb bandera aquesta publicació i ara és amagada. **Atès que la publicació ha estat amagada més d'una vegada, romandrà amagada fins que no sigui revisada per un membre de l'equip responsable.** \n\nPer a obtenir més informació, consulteu les nostres [directrius comunitàries](%{base_url}/guidelines).\n"
     queued_by_staff:
       title: "Cal aprovar la publicació"
     flags_disagreed:
@@ -2352,12 +2352,6 @@ ca:
     account_suspended_forever:
       title: "Compte suspès"
       subject_template: "[%{email_prefix}] El vostre compte ha estat suspès."
-    account_silenced:
-      title: "Compte silenciat"
-      subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
-    account_silenced_forever:
-      title: "Compte silenciat"
-      subject_template: "[%{email_prefix}] El vostre compte ha estat silenciat"
     account_exists:
       title: "El compte ja existeix"
       subject_template: "[%{email_prefix}] El compte ja existeix"
@@ -2785,6 +2779,12 @@ ca:
   design_wizard:
     palette_pairs:
       default: "Per defecte"
+      neutral: "Neutre"
+      shades_of_blue: "Tons blavosos"
+      summer: "Estiu"
+      grey_amber: "Gris ambre"
+      latte: "Latte"
+      dark_rose: "Rosa fosc"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2863,6 +2863,10 @@ ca:
         one: "%{count} segon"
         other: "%{count} segons"
     actions:
+      answer_yes:
+        title: "Sí"
+      answer_no:
+        title: "No"
       agree:
         title: "Sí"
       agree_and_suspend:

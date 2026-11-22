@@ -14,7 +14,10 @@ hy:
     about: Մասին
     community: Համայնք
     preview: Նախադիտում
+    author: Հեղինակ
     search: Որոնում
     replies:
       one: "%{count} պատասխան"
       other: "%{count} պատասխան"
+    themes:
+      default: Լռելյայն

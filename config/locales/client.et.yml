@@ -6,6 +6,13 @@
 
 et:
   js:
+    code_editor:
+      search:
+        next: "Järgmine"
+        previous: "Eelmine"
+        close: "Sulge"
+      fold:
+        to: "kellele"
     user_api_key:
       authorize: "Autoriseeri"
       deny: "Loobu"
@@ -260,19 +267,13 @@ et:
       title: "Uued ja lugemata teemad"
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tagasi"
     design_wizard:
       back: "Tagasi"
       next: "Järgmine"
       sections:
-        theme: "Kujundusteema"
         homepage: "Avaleht"
-        search: "Otsi"
-      colors:
-        light: "Hele"
-        dark: "Tume"
+      fonts:
+        base_font: "Sisu"
       homepage:
         topics: "Teemasid"
         categories: "Liigid"
@@ -1522,6 +1523,10 @@ et:
       emoji: "Emodži :)"
       more_emoji: "rohkem…"
       options: "Suvandid"
+      ai_content:
+        code: "Kood"
+        quote: "Tsitaat"
+        details: "Üksikasjad"
       whisper: "sosista"
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
@@ -2087,10 +2092,8 @@ et:
           label: "valitud"
           title: "Klõpsa postituse valikust eemaldamiseks"
         select_replies:
-          label: "vali +vastused"
           title: "Lisa postitus ja kõik selle vastused valikusse"
         select_below:
-          label: "vali +allpool"
           title: "Lisa postitus ja kõik sellest allpool olev valikusse"
         delete: kustuta valitud
         cancel: tühista valimine
@@ -2673,6 +2676,11 @@ et:
       back: "Tagasi"
       share: "Jaga"
       dismiss: "Ignoreeri"
+    mobile_tab_bar:
+      create: "Loo"
+      more: "Veel"
+      back: "Tagasi"
+      topics: "Teemasid"
     safe_mode:
       enabled: "Kaitstud režiim on aktiivne, väljumiseks sulge see brauseri aken."
     pause_notifications:
@@ -2808,10 +2816,10 @@ et:
           title: "Pistikprogrammid"
       upcoming_changes:
         name: "Nimi"
-        enabled: "Sisse lülitatud"
+        enabled: "Sisse lülitatud?"
+        feedback: "Tagasiside"
+        settings: "Seaded"
         preview: "Eelvaade"
-        enabled_for_options:
-          everyone: "Kõik"
         impact_roles:
           admins: "Adminnid"
           moderators: "Moderaatorid"
@@ -3341,7 +3349,6 @@ et:
           label: "Laadi üles"
           title: "Laadi varukoopia üles sellesse instantsi"
           uploading: "Laadin üles..."
-          error: "Faili '%{filename}' üleslaadimisel tekkis viga: %{message}"
         settings: "Sätted"
         operations:
           failed: "Toiming %{operation} ebaõnnestus. Kontrolli logisid."
@@ -3919,6 +3926,8 @@ et:
           dropdown: "Rippmenüü"
       site_text:
         search_label: "Otsi"
+        preview:
+          default: "Vaikimisi"
         theme_disabled: "Välja lülitatud"
         filters: "Filtrid"
         edit: "Muuda"
@@ -3991,7 +4000,7 @@ et:
           modal_title: Märgiste rühmitamised
         granted_by: Märgistaja
         granted_at: Märgistuse aeg
-        reason_help: (Viide postitusele või teemale)
+        reason_help: Viide postitusele või teemale
         save: Salvesta
         delete: Kustuta
         delete_confirm: Kas oled kindel, et soovid selle märgise kustutada?

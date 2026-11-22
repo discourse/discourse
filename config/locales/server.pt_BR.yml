@@ -517,11 +517,6 @@ pt_BR:
   too_many_mentions_newuser:
     one: "Desculpe, usuários(as) novos(as) podem mencionar apenas um(a) usuário(as) em uma postagem."
     other: "Desculpe, usuários(as) novos(as) podem mencionar apenas %{count} usuários(as) em uma postagem."
-  no_embedded_media_allowed_group: "Desculpe, não é possível incorporar itens de mídia nesta postagem."
-  no_embedded_media_allowed: "Desculpe, novos(as) usuários(as) não podem incorporar itens de mídia em postagens."
-  too_many_embedded_media:
-    one: "Desculpe, novos(as) usuários(as) só podem inserir um item de mídia incorporado em uma postagem."
-    other: "Desculpe, novos(as) usuários(as) só podem inserir %{count} item de mídia incorporado em uma postagem."
   no_attachments_allowed: "Desculpe, novos(as) usuários(as) não podem inserir anexos nas postagens."
   too_many_attachments:
     one: "Desculpe, novos(as) usuários(as) podem inserir apenas %{count} anexo em uma postagem."
@@ -2418,8 +2413,6 @@ pt_BR:
     automatically_clean_unused_tags: "Exclua automaticamente etiquetas que não estão sendo utilizadas em tópicos ou mensagens pessoais todos os dias."
     default_watched_precedence_over_muted: "Notificar os usuários sobre tópicos em categorias ou tags que eles estão acompanhando e que também pertencem a um tópico que eles silenciaram"
     company_name: "Nome da sua empresa ou organização."
-    governing_law: "Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e a Política de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios"
-    city_for_disputes: "Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum."
     shared_drafts_category: "Ative o recurso Rascunhos compartilhados ao designar uma categoria para rascunhos de tópicos. Os tópicos nesta categoria serão bloqueados das listas de tópicos para usuários da equipe."
     shared_drafts_allowed_groups: "Permita que os(as) usuários(as) destes grupos visualizem e editem os Rascunhos compartilhados."
     push_notifications_prompt: "Exiba ao(à) usuário(a) um banner de consentimento para notificações por push. Esta configuração aciona uma janela que solicita aos(às) usuários(as) permissão para o envio de notificações por push. É exibida apenas se as notificações por push não estiverem habilitadas, forem compatíveis com o dispositivo do(a) usuário(a) e este(a) tiver feito uma postagem ou estiver usando um Progressive Web App (PWA). A janela não será exibida novamente se o(a) usuário(a) já a tiver fechado ou concedido/negado permissão."
@@ -2549,10 +2542,29 @@ pt_BR:
       mediaconvert_output_subdirectory_required: "O MediaConvert output subdirectory é obrigatório."
       s3_credentials_required_for_video_conversion: "As credenciais S3 são obrigatórias para a conversão de vídeo. Configure as chaves de acesso S3 ou ative o perfil IAM."
     keywords:
+      about_banner_image: "imagem do banner"
+      about_page_extra_groups: "listagem de grupos"
+      about_page_extra_groups_initial_members: "membros expandidos"
+      about_page_extra_groups_order: "ordem de classificação"
+      about_page_extra_groups_show_description: "incluir descrição"
       clean_up_inactive_users_after_days: "desativados(as)|inativos(as)|não ativados(as)"
+      company_url: "site"
+      default_composition_mode: "rte|rich text|compositor|markdown|editor de rich text"
+      embed_full_app: "modo completo da aplicação"
+      extended_site_description: "descrição da comunidade"
+      large_icon: "ícone quadrado"
+      logo: "logotipo principal"
+      logo_dark: "logotipo primário escuro"
+      logo_small: "logotipo pequeno"
+      logo_small_dark: "logotipo pequeno escuro"
       navigation_menu: "barra lateral|menu suspenso do cabeçalho"
       purge_unactivated_users_grace_period_days: "desativados(as)|inativos(as)|não ativados(as)"
-      default_composition_mode: "rte|rich text|compositor|markdown|editor de rich text"
+      short_site_description: "título da comunidade"
+      site_contact_group_name: "grupo de contato do site"
+      site_contact_username: "nome do contato do site"
+      site_description: "resumo da comunidade"
+      title: "nome da comunidade"
+      welcome_banner_image: "imagem de fundo"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"
@@ -3053,18 +3065,6 @@ pt_BR:
       title: "Postagem oculta"
       preview: "Postagem ocultada devido a denúncias de membros da comunidade."
       subject_template: "Post oculto pelos sinalizadores da comunidade"
-      text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta postagem foi oculta devido às sinalizações da comunidade. Portanto, considere como você pode alterar sua postagem para atender aos seus comentários. **Você pode editar sua postagem após %{edit_delay} minutos e ela será automaticamente exibida.**
-
-        No entanto, se a postagem for oculta pela comunidade outra vez, permanecerá assim até ser tratada pela equipe.
-
-        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Comentários sobre sua postagem"
       subject_template: "Comentários sobre sua postagem em %{topic_title}"
@@ -3075,29 +3075,9 @@ pt_BR:
       title: "Postagem oculta novamente"
       preview: "Postagem ocultada novamente pelos membros da comunidade."
       subject_template: "Postagem oculta por sinalizadores da comunidade, a equipe foi notificada"
-      text_body_template: |
-        Olá, esta é uma mensagem automática de %{site_name} para informar que sua postagem foi oculta outra vez.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A comunidade sinalizou esta postagem e agora está oculta. **Como a postagem foi oculta mais de uma vez, ela permanecerá assim até ser tratada por um membro da equipe.**
-
-        Para obter mais orientações, consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     queued_by_staff:
       title: "A postagem requer aprovação"
       subject_template: "Postagem oculta pela equipe, aguardando aprovaçao"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para avisar que sua postagem foi oculta.
-
-        <%{base_url}%{url}>
-
-        Sua postagem permanecerá oculta até a revisão de um membro da equipe.
-
-        Para mais informações, consulte as nossas [diretrizes da comunidade](%{base_url}/guidelines).
     flags_disagreed:
       title: "Postagem sinalizada restaurada pela equipe"
       subject_template: "Postagem sinalizada restaurada pela equipe"
@@ -3602,16 +3582,6 @@ pt_BR:
     user_automatically_silenced_with_reason:
       title: "Usuário(a) silenciado(a) automaticamente"
       subject_template: "O(a) novo(a) usuário(a) %{username} silenciado(a) devido a denúncias da comunidade"
-      text_body_template: |
-        Esta é uma mensagem automática.
-
-        O(a) novo(a) usuário(a) [%{username}](%{user_url}) foi silenciado(a) automaticamente.
-
-        Razão: %{reason}.
-
-        [Revise as denúncias](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) para não postar, clique no botão de ativar som do(a) usuário(a) na [página de administração do(a) usuário(a)](%{user_url}).
-
-        Este limite pode ser alterado nas configurações do site "silence_new_user".
     spam_post_blocked:
       title: "Postagem de spam bloqueada"
       subject_template: "Postagens de novo(a) usuário(a )%{username} bloqueadas devido a links repetidos"
@@ -3941,12 +3911,6 @@ pt_BR:
     account_suspended_forever:
       title: "Conta suspensa"
       subject_template: "%{email_prefix}, sua conta foi suspensa"
-    account_silenced:
-      title: "Conta silenciada"
-      subject_template: "[%{email_prefix}] Sua conta foi silenciada"
-    account_silenced_forever:
-      title: "Conta silenciada"
-      subject_template: "%{email_prefix}, sua conta foi silenciada"
     account_deleted:
       title: "Conta excluída"
       subject_template: "%{email_prefix}, sua conta foi excluída"
@@ -4134,10 +4098,6 @@ pt_BR:
     signup_after_reject:
       title: "Criar conta após rejeição"
       subject_template: "Você foi rejeitado(a) em %{site_name}"
-      text_body_template: |
-        Um membro da equipe rejeitou a sua conta em %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Criar conta"
       preview: "Confirme sua conta"
@@ -4739,7 +4699,13 @@ pt_BR:
   design_wizard:
     palette_pairs:
       default: "Padrão"
+      neutral: "Neutro"
+      shades_of_blue: "Tons de azul"
+      summer: "Verão"
       dracula: "Drácula"
+      grey_amber: "Âmbar cinzento"
+      latte: "Latte"
+      dark_rose: "Rosa-escuro"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -4910,6 +4876,10 @@ pt_BR:
       no_context:
         watched_word: "Esta postagem incluiu uma palavra acompanhada. Veja %{link} para mais informações."
     actions:
+      answer_yes:
+        title: "Sim"
+      answer_no:
+        title: "Não"
       agree:
         title: "Sim"
       agree_and_keep:

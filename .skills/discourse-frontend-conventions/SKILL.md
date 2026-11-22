@@ -44,8 +44,9 @@ Every class member falls into one of three buckets, in priority order:
    outside the class can call it, it IS public API. Templates and other classes are the API
    surface; nothing they touch gets a `_`.
 3. **`_prefix`**, last-resort fallback, ONLY when all three apply: (a) the member needs a
-   decorator that cannot apply to `#` (`@tracked`, `@action`, `@cached`, ...), (b) it is NOT
-   used from a template, AND (c) it is accessed only from within its own class.
+   decorator that cannot apply to `#` (`@action`, `@cached`, ...; for `@tracked` see
+   "Private reactive state" below), (b) it is NOT used from a template, AND (c) it is
+   accessed only from within its own class.
 
 **Access-scope rule (the deciding test).** A `#` member is reachable *only* inside the class
 that declares it; `this.#x` from any other class is a hard error. So before choosing `#` or
@@ -76,6 +77,27 @@ onClick(e) {
   // ...
 }
 ```
+
+**Private reactive state.** `@tracked` cannot decorate a `#` field, but a `#` field can hold
+a standalone `tracked()` value (from `@glimmer/tracking`). In new code, prefer it over
+`@tracked _x` for state only the class reads, including from getters a template consumes:
+
+```js
+#expanded = tracked(false);
+
+get icon() {
+  return this.#expanded.value ? "chevron-up" : "chevron-down";
+}
+
+@action
+toggle() {
+  this.#expanded.value = !this.#expanded.value;
+}
+```
+
+Don't swap existing `@tracked _x` fields mechanically: unlike `@tracked`, writing an
+`Object.is`-equal value does not invalidate, which breaks code that re-assigns to force an
+update. Traps: `docs/developer-guides/docs/03-code-internals/33-component-tests.md`.
 
 Flag and fix:
 

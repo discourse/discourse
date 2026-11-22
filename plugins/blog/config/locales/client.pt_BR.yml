@@ -16,6 +16,9 @@ pt_BR:
         preview_archive: Arquivo
         desktop: Desktop
         mobile: Dispositivos móveis
+        save: Salvar
+        path_formats:
+          custom: Personalizadas
         back_to_themes: Voltar para os temas
         new_theme_short: Novo tema
         themes: Temas
@@ -23,6 +26,8 @@ pt_BR:
         edit: Editar
         activate: Ativar
         preview: Pré-visualizar
+        customize: Personalizar
+        customized_theme_name: "%{name} (personalizado)"
         import: Importar
         export: Exportar
         active: Ativo(a)
@@ -35,6 +40,7 @@ pt_BR:
         change:
           title: título
           body: corpo
+          tags: tags
       review:
         create: Criar link
         copy: Copiar
@@ -51,7 +57,11 @@ pt_BR:
         edit: Editar
         status: Status
         replies: Respostas
+        title: Título
+        page: Página
+      all: Todas
       drafts: Rascunhos
+      pages: Páginas
       preview: Pré-visualizar
       unpublish: Cancelar postagem
       appearance_link: Aparência

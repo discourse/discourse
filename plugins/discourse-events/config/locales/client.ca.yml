@@ -13,6 +13,10 @@ ca:
             topic_id:
               label: ID de tema
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registre"
       preferences:
         reminders:
           preferences:

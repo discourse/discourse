@@ -38,12 +38,6 @@ es:
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
         notify_author_pm:
           subject: "Tu publicación se ha eliminado temporalmente para revisarse"
-          body: |
-            Hola, @%{username}:
-
-            Tu publicación en «%{topic_title}» se ha eliminado temporalmente y se ha puesto en nuestra cola de revisión para que un moderador la revise. Si se aprueba, se restaurará automáticamente.
-
-            Referencia: %{post_url}
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -129,6 +123,12 @@ es:
     ai_translation_backfill_hourly_rate: "El número de publicaciones y temas para traducir por hora durante las operaciones de relleno. Déjalo en 0 para desactivar el relleno automático de las traducciones para el contenido existente."
     ai_translation_backfill_parallel_jobs: "El número de trabajos paralelos de postlocalización que se deben ejecutar por ciclo de relleno. Los valores más altos aumentan el rendimiento, pero consumen más recursos."
     ai_usage_rollup_after_days: "Número de días que se conservarán las estadísticas de uso de IA por solicitud antes de incluirlas en los agregados diarios. Deja el valor en 0 para desactivar la agregación."
+    keywords:
+      ai_default_llm_model: "modelo lingüístico por defecto"
+      ai_discord_search_enabled: "integración de Discord"
+      ai_helper_automatic_chat_thread_title: "títulos de los hilos de chat"
+      ai_summarization_enabled: "resúmenes"
+      ai_summary_gists_enabled: "resúmenes breves de la lista de temas"
   reviewables:
     reasons:
       flagged_by_toxicity: El plugin de IA lo denunció tras clasificarlo como tóxico.
@@ -223,10 +223,6 @@ es:
           name: "Generación de imagen..."
         image_generation_custom:
           name: "Personalizado"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -827,6 +823,22 @@ es:
         errors:
           not_allowed: "No tienes permiso para acceder a la cola de revisión"
           not_found: "No se ha encontrado el elemento en la cola de revisión"
+    appearance_authoring:
+      default_theme: "Tema predeterminado"
+      colors:
+        light:
+          header_background: "Encabezado"
+      fonts:
+        base_font: "Tipo de letra para textos"
+        heading_font: "Tipo de letra para encabezados"
+    mcp_theme_access:
+      "on": "Activado"
+      "off": "Desactivado"
+      none: "ninguna"
+      changes:
+        server: "Servidor MCP"
+    mcp_app_setup:
+      none: "ninguna"
     reviewables:
       ai_tool_action:
         title: "Acción de herramienta de IA"
@@ -886,6 +898,7 @@ es:
       cannot_edit_builtin: "No puedes editar un modelo integrado."
       secret_required: "Se debe seleccionar una credencial"
       secret_not_found: "La credencial seleccionada no existe"
+      missing_provider_param: "%{param} no puede estar en blanco"
       configuration:
         disable_embeddings: "Tienes que desactivar primero «ai embeddings enabled»."
         choose_model: "Establece primero «ai embeddings selected model»."

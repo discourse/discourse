@@ -7,16 +7,13 @@ RSpec.describe DiscourseEvents::Events::Action::ExpandOccurrences do
     let(:after) { Time.zone.parse("2030-01-01 00:00:00 UTC") }
     let(:before) { nil }
     let(:limit) { described_class::MAX_LIMIT + 1 }
-    let(:event) { instance_double(DiscourseEvents::Events::Event, recurring?: true) }
-
-    before do
-      next_occurrence_starts_at = Time.zone.parse("2030-01-01 09:00:00 UTC")
-
-      allow(event).to receive(:calculate_next_occurrence_from) do
-        starts_at = next_occurrence_starts_at
-        next_occurrence_starts_at += 1.day
-        { starts_at:, ends_at: starts_at + 1.hour }
-      end
+    let(:event) do
+      Fabricate(
+        :event,
+        original_starts_at: Time.zone.parse("2030-01-01 09:00:00 UTC"),
+        original_ends_at: Time.zone.parse("2030-01-01 10:00:00 UTC"),
+        recurrence: "every_day",
+      )
     end
 
     it "caps recurring occurrences at the maximum limit" do

@@ -33,6 +33,9 @@ id:
           title: "Sistem Font"
         colors:
           title: "Warna"
+        design_variables:
+          type: "Tipe"
+          default: "Asal"
         icons:
           title: "Ikon"
           full_list: "Lihat daftar lengkap Font Awesome Icons"

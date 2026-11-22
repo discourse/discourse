@@ -1,5 +1,12 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
+import {
+  click,
+  render,
+  rerender,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { capabilities } from "discourse/services/capabilities";
@@ -50,10 +57,10 @@ module("Integration | ui-kit | DButton", function (hooks) {
   });
 
   test("isLoading button", async function (assert) {
-    this.set("isLoading", true);
+    const isLoading = tracked(true);
 
     await render(
-      <template><DButton @isLoading={{this.isLoading}} /></template>
+      <template><DButton @isLoading={{isLoading.value}} /></template>
     );
 
     assert
@@ -61,7 +68,8 @@ module("Integration | ui-kit | DButton", function (hooks) {
       .exists("has a spinner showing");
     assert.dom("button").isDisabled("while loading the button is disabled");
 
-    this.set("isLoading", false);
+    isLoading.value = false;
+    await rerender();
 
     assert
       .dom("button .loading-icon")
@@ -94,36 +102,37 @@ module("Integration | ui-kit | DButton", function (hooks) {
   });
 
   test("disabled button", async function (assert) {
-    this.set("disabled", true);
+    const disabled = tracked(true);
 
-    await render(<template><DButton @disabled={{this.disabled}} /></template>);
+    await render(<template><DButton @disabled={{disabled.value}} /></template>);
 
     assert.dom("button").isDisabled();
 
-    this.set("disabled", false);
+    disabled.value = false;
+    await rerender();
     assert.dom("button").isEnabled();
   });
 
   test("aria-label", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
 
+    const ariaLabel = tracked("test.fooAriaLabel");
+    const translatedAriaLabel = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @ariaLabel={{this.ariaLabel}}
-          @translatedAriaLabel={{this.translatedAriaLabel}}
+          @ariaLabel={{ariaLabel.value}}
+          @translatedAriaLabel={{translatedAriaLabel.value}}
         />
       </template>
     );
 
-    this.set("ariaLabel", "test.fooAriaLabel");
-
     assert.dom("button").hasAria("label", i18n("test.fooAriaLabel"));
 
-    this.setProperties({
-      ariaLabel: null,
-      translatedAriaLabel: "bar",
-    });
+    ariaLabel.value = null;
+    translatedAriaLabel.value = "bar";
+    await rerender();
 
     assert.dom("button").hasAria("label", "bar");
   });
@@ -131,22 +140,23 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("title", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
 
+    const title = tracked("test.fooTitle");
+    const translatedTitle = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @title={{this.title}}
-          @translatedTitle={{this.translatedTitle}}
+          @title={{title.value}}
+          @translatedTitle={{translatedTitle.value}}
         />
       </template>
     );
 
-    this.set("title", "test.fooTitle");
     assert.dom("button").hasAttribute("title", i18n("test.fooTitle"));
 
-    this.setProperties({
-      title: null,
-      translatedTitle: "bar",
-    });
+    title.value = null;
+    translatedTitle.value = "bar";
+    await rerender();
 
     assert.dom("button").hasAttribute("title", "bar");
   });
@@ -154,104 +164,107 @@ module("Integration | ui-kit | DButton", function (hooks) {
   test("label", async function (assert) {
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
 
+    const label = tracked("test.fooLabel");
+    const translatedLabel = tracked(undefined);
+
     await render(
       <template>
         <DButton
-          @label={{this.label}}
-          @translatedLabel={{this.translatedLabel}}
+          @label={{label.value}}
+          @translatedLabel={{translatedLabel.value}}
         />
       </template>
     );
 
-    this.set("label", "test.fooLabel");
-
     assert.dom("button .d-button-label").hasText(i18n("test.fooLabel"));
 
-    this.setProperties({
-      label: null,
-      translatedLabel: "bar",
-    });
+    label.value = null;
+    translatedLabel.value = "bar";
+    await rerender();
 
     assert.dom("button .d-button-label").hasText("bar");
   });
 
   test("aria-expanded", async function (assert) {
+    const ariaExpanded = tracked(undefined);
+
     await render(
-      <template><DButton @ariaExpanded={{this.ariaExpanded}} /></template>
+      <template><DButton @ariaExpanded={{ariaExpanded.value}} /></template>
     );
 
     assert.dom("button").doesNotHaveAria("expanded");
 
-    this.set("ariaExpanded", true);
+    ariaExpanded.value = true;
+    await rerender();
     assert.dom("button").hasAria("expanded", "true");
 
-    this.set("ariaExpanded", false);
+    ariaExpanded.value = false;
+    await rerender();
     assert.dom("button").hasAria("expanded", "false");
 
-    this.set("ariaExpanded", "false");
+    ariaExpanded.value = "false";
+    await rerender();
     assert.dom("button").doesNotHaveAria("expanded");
 
-    this.set("ariaExpanded", "true");
+    ariaExpanded.value = "true";
+    await rerender();
     assert.dom("button").doesNotHaveAria("expanded");
   });
 
   test("aria-controls", async function (assert) {
-    await render(
-      <template><DButton @ariaControls={{this.ariaControls}} /></template>
-    );
+    await render(<template><DButton @ariaControls="foo-bar" /></template>);
 
-    this.set("ariaControls", "foo-bar");
     assert.dom("button").hasAria("controls", "foo-bar");
   });
 
   test("onKeyDown callback", async function (assert) {
-    this.set("foo", null);
-    this.set("onKeyDown", () => {
-      this.set("foo", "bar");
-    });
-    this.set("action", () => {
-      this.set("foo", "baz");
-    });
+    let foo = null;
+    const onKeyDown = () => {
+      foo = "bar";
+    };
+    const onAction = () => {
+      foo = "baz";
+    };
 
     await render(
       <template>
-        <DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />
+        <DButton @action={{onAction}} @onKeyDown={{onKeyDown}} />
       </template>
     );
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("press Enter", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
-    assert.strictEqual(this.foo, null);
+    assert.strictEqual(foo, null);
 
     await triggerKeyEvent(".btn", "keydown", "Enter");
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   test("@action function is triggered on click", async function (assert) {
-    this.set("foo", null);
-    this.set("action", () => {
-      this.set("foo", "bar");
-    });
+    let foo = null;
+    const onAction = () => {
+      foo = "bar";
+    };
 
-    await render(<template><DButton @action={{this.action}} /></template>);
+    await render(<template><DButton @action={{onAction}} /></template>);
 
     await click(".btn");
 
-    assert.strictEqual(this.foo, "bar");
+    assert.strictEqual(foo, "bar");
   });
 
   module("action dispatch", function (nestedHooks) {

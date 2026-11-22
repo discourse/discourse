@@ -56,6 +56,12 @@ RSpec.describe CategoriesController do
       expect(response).to redirect_to("/c/uncategorized")
     end
 
+    it "encodes characters that are invalid in a URL when redirecting /category paths" do
+      get "/category/lounge%5B/quote%5D"
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/lounge%5B/quote%5D")
+    end
+
     it "respects permalinks before redirecting /category paths to /c paths" do
       _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
@@ -812,6 +818,7 @@ RSpec.describe CategoriesController do
                   "icon" => "memo",
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
+                  "svg_icon" => "comment",
                   "title" => "discussion",
                   "visible" => true,
                 },
@@ -1002,6 +1009,47 @@ RSpec.describe CategoriesController do
       sign_in(admin)
       post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#set_notifications" do
+    subject(:set_notifications) do
+      post "/category/#{category_id}/notifications.json", params: { notification_level: }
+    end
+
+    let(:category_id) { category.id }
+    let(:notification_level) { CategoryUser.notification_levels[:tracking] }
+
+    before { sign_in(user) }
+
+    context "when the user can see the category" do
+      it "sets the notification level" do
+        expect { set_notifications }.to change {
+          CategoryUser.find_by(user:, category:)&.notification_level
+        }.to(notification_level)
+      end
+    end
+
+    context "when the user cannot see the category" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      it "refuses the request" do
+        set_notifications
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "stores no notification level" do
+        expect { set_notifications }.not_to change(CategoryUser, :count)
+      end
+    end
+
+    context "when the category does not exist" do
+      let(:category_id) { -1 }
+
+      it "returns not found" do
+        set_notifications
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 

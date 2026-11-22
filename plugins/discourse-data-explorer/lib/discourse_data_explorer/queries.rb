@@ -306,7 +306,7 @@ module DiscourseDataExplorer
           id: -43,
           name: "Crawler and Bot Traffic Detailed Report",
           description:
-            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, no measured interaction). WARNING: requires scoring (hidden site setting experimental_detect_crawler_pageviews); without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
+            "Row-per-IP breakdown of likely bot pageview activity, with the individual signals that drove the score (automated user agent, known crawler network, velocity, session churn, rapid navigation, bad referrer, distributed traffic, no measured interaction). WARNING: requires the improved_crawler_detection upcoming change to be enabled; without it this report will be empty. Accepts 'hours' and 'min_score' parameters.",
           tags: %w[traffic],
         },
         "suspected-bot-networks": {
@@ -342,6 +342,20 @@ module DiscourseDataExplorer
           name: "Ask AI - What users are asking",
           description:
             "All Ask AI questions between start_date and end_date, inclusive (UTC), with logged answers. Includes groups excluded from generated reports and is not limited by the report sample size. Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-deferred-searches": {
+          id: -49,
+          name: "Ask AI - Deferred searches",
+          description:
+            "Searches where Ask AI waited for the reader to request an answer, grouped by reason. Counts searches that stayed deferred and those where the reader requested an answer. Dates are inclusive (UTC). Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-cache-activity": {
+          id: -50,
+          name: "Ask AI - Cache activity",
+          description:
+            "Cached answers returned and answers evicted by the per-user cache cap. Dates are inclusive (UTC). Requires Discourse AI.",
           tags: %w[ai],
         },
       }.with_indifferent_access
@@ -1617,20 +1631,18 @@ module DiscourseDataExplorer
           e.country_code,
           COUNT(*) AS pageviews,
           MAX(s.automation_ua_score) AS automation_ua,
-          MAX(s.known_asn_score) AS known_asn,
           MAX(s.datacenter_asn_score) AS datacenter_asn,
           MAX(s.single_request_no_referrer_score) AS single_request_no_referrer,
           MAX(s.stale_browser_score) AS stale_browser,
           MAX(s.velocity_score) AS velocity,
           MAX(s.churn_score) AS churn,
           MAX(s.rapid_nav_score) AS rapid_nav,
-          MAX(s.ip_rotation_score) AS ip_rotation,
           MAX(s.referrer_score) AS referrer,
+          MAX(s.distributed_traffic_score) AS distributed_traffic,
           MAX(s.engagement_score) AS no_engagement,
           NULLIF(
               CONCAT_WS(', ',
                   CASE WHEN MAX(s.automation_ua_score) > 0 THEN 'automation UA' END,
-                  CASE WHEN MAX(s.known_asn_score) > 0 THEN 'known crawler ASN' END,
                   CASE WHEN MAX(s.datacenter_asn_score) > 0 THEN 'datacenter ASN' END,
                   CASE
                     WHEN MAX(s.single_request_no_referrer_score) = #{CrawlerScorer::SINGLE_REQUEST_NO_REFERRER_SCORE + CrawlerScorer::SINGLE_REQUEST_LOCALE_PARAM_BONUS}
@@ -1642,8 +1654,8 @@ module DiscourseDataExplorer
                   CASE WHEN MAX(s.velocity_score) > 0 THEN 'high velocity (+' || MAX(s.velocity_score) || ')' END,
                   CASE WHEN MAX(s.churn_score) > 0 THEN 'session churn (+' || MAX(s.churn_score) || ')' END,
                   CASE WHEN MAX(s.rapid_nav_score) > 0 THEN 'rapid navigation' END,
-                  CASE WHEN MAX(s.ip_rotation_score) > 0 THEN 'ip rotation (+' || MAX(s.ip_rotation_score) || ')' END,
                   CASE WHEN MAX(s.referrer_score) > 0 THEN 'bad referrer (+' || MAX(s.referrer_score) || ')' END,
+                  CASE WHEN MAX(s.distributed_traffic_score) > 0 THEN 'distributed traffic (+' || MAX(s.distributed_traffic_score) || ')' END,
                   CASE WHEN MAX(s.engagement_score) > 0 THEN 'no measured interaction (+' || MAX(s.engagement_score) || ')' END
               ),
               ''
@@ -1722,6 +1734,37 @@ module DiscourseDataExplorer
         AND ask_outcome IS DISTINCT FROM 4 -- skipped: the reader never requested an answer
       GROUP BY ask_outcome
       ORDER BY ask_outcome NULLS LAST
+      SQL
+
+      queries["ask-ai-deferred-searches"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        answer_deferred_reason AS reason,
+        COUNT(*) AS deferred_searches,
+        COUNT(*) FILTER (WHERE answer_requested_at IS NULL) AS stayed_deferred,
+        COUNT(*) FILTER (WHERE answer_requested_at IS NOT NULL) AS answers_requested
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+        AND answer_deferred_reason IS NOT NULL
+      GROUP BY answer_deferred_reason
+      ORDER BY deferred_searches DESC, reason
+      SQL
+
+      queries["ask-ai-cache-activity"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        COUNT(*) FILTER (WHERE cache_hit) AS cache_hits,
+        COALESCE(SUM(cache_evictions), 0) AS cache_evictions
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
       SQL
 
       queries["ask-ai-report-questions"]["sql"] = <<~SQL

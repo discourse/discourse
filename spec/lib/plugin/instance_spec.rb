@@ -21,6 +21,45 @@ TEXT
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe "#register_first_admin_bootstrap" do
+    it "filters callbacks by whether their plugin is currently enabled" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      callback = ->(user) { user }
+      plugin_instance.register_first_admin_bootstrap(&callback)
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.first_admin_bootstrap).to contain_exactly(callback)
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.first_admin_bootstrap).to be_empty
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.first_admin_bootstrap).to contain_exactly(callback)
+    end
+  end
+
+  describe "#register_preloaded_data" do
+    it "namespaces keys and filters disabled plugins at lookup time" do
+      plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)
+      plugin_instance.register_preloaded_data("visibility") { |guardian| guardian.authenticated? }
+
+      SiteSetting.discourse_sample_plugin_enabled = true
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks.pluck(:key)).to eq(
+        ["discourse-sample-plugin:visibility"],
+      )
+
+      SiteSetting.discourse_sample_plugin_enabled = false
+      expect(DiscoursePluginRegistry.preloaded_data_callbacks).to eq([])
+    end
+
+    it "requires a block" do
+      expect { plugin_instance.register_preloaded_data("visibility") }.to raise_error(
+        ArgumentError,
+        "register_preloaded_data requires a block",
+      )
+    end
+  end
+
   describe "#register_navigation_destination" do
     it "namespaces destinations and filters disabled plugins at lookup time" do
       plugin_instance.enabled_site_setting(:discourse_sample_plugin_enabled)

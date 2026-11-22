@@ -429,9 +429,16 @@ class TopicView
 
   def summary(opts = {})
     return nil if desired_post.blank?
+    return nil if desired_post.hidden? && !guardian.can_see_hidden_post?(desired_post)
     # TODO, this is actually quite slow, should be cached in the post table
     excerpt = desired_post.excerpt(500, opts.merge(strip_links: true, text_entities: true))
     (excerpt || "").gsub(/\n/, " ").strip
+  end
+
+  def first_post_excerpt
+    first_post = @topic.first_post
+    return nil if first_post&.hidden? && !guardian.can_see_hidden_post?(first_post)
+    @topic.plain_text_excerpt
   end
 
   def read_time

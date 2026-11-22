@@ -48,12 +48,6 @@ de:
         flagged_post_response: "Antwort des Modells: %{llm_response}"
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
-          body: |
-            Hallo @%{username},
-
-            dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
-
-            Referenz: %{post_url}
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
@@ -158,6 +152,12 @@ de:
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
+    keywords:
+      ai_default_llm_model: "standard-Sprachmodell"
+      ai_discord_search_enabled: "discord-Integration"
+      ai_helper_automatic_chat_thread_title: "titel von Chat-Threads"
+      ai_summarization_enabled: "zusammenfassungen"
+      ai_summary_gists_enabled: "kurze Zusammenfassungen der Themenliste"
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
@@ -258,10 +258,6 @@ de:
           name: "Bilderzeugung …"
         image_generation_custom:
           name: "Benutzerdefiniert"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -953,6 +949,22 @@ de:
           hidden: "Die Website-Einstellung '%{setting_name}' ist ausgeblendet und kann hier nicht gelesen werden."
           secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht gelesen werden."
           themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht gelesen werden."
+    appearance_authoring:
+      default_theme: "Standard-Theme"
+      colors:
+        light:
+          header_background: "Kopfzeile"
+      fonts:
+        base_font: "Textkörper-Schriftart"
+        heading_font: "Überschrift-Schriftart"
+    mcp_theme_access:
+      "on": "An"
+      "off": "Aus"
+      none: "keine Erfassung"
+      changes:
+        server: "MCP-Server"
+    mcp_app_setup:
+      none: "keine Erfassung"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -1018,6 +1030,7 @@ de:
       cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
       secret_required: "Es müssen Anmeldedaten gewählt werden"
       secret_not_found: "Die ausgewählten Anmeldedaten existieren nicht"
+      missing_provider_param: "%{param} darf nicht leer sein"
       configuration:
         disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
         choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."

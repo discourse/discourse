@@ -541,11 +541,6 @@ fr:
   too_many_mentions_newuser:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner qu'un utilisateur dans un même message."
     other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent mentionner que %{count} utilisateurs dans un même message."
-  no_embedded_media_allowed_group: "Nous sommes désolés, vous ne pouvez pas inclure des éléments multimédias dans une publication."
-  no_embedded_media_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas inclure de médias dans leurs messages."
-  too_many_embedded_media:
-    one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure qu'un seul média dans leurs messages."
-    other: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent inclure que %{count} médias dans leurs messages."
   no_attachments_allowed: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas ajouter de fichiers dans leurs messages."
   too_many_attachments:
     one: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent ajouter qu'un seul fichier dans leurs messages."
@@ -2628,8 +2623,6 @@ fr:
     default_watched_precedence_over_muted: "Informe les utilisateurs des sujets appartenant à des catégories ou portant des étiquettes qu'ils surveillent, même s'ils appartiennent également à une catégorie ou portent une étiquette qu'ils ont mise en sourdine"
     company_name: "Nom de votre entreprise ou organisation."
     company_url: "URL du site Web de votre entreprise ou organisation. Facultatif."
-    governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
-    city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."
     shared_drafts_category: "Activez la fonction Brouillons partagés en désignant une catégorie pour les brouillons de sujet. Les sujets repris dans cette catégorie ne figureront pas dans les listes de sujets pour les responsables."
     shared_drafts_allowed_groups: "Autorisez les utilisateurs de ces groupes à voir et à modifier les brouillons partagés."
     push_notifications_prompt: "Affichez une bannière de consentement de l'utilisateur pour les notifications push. Ce paramètre déclenche une invite demandant aux utilisateurs l'autorisation de leur envoyer des notifications push. Elle apparaît uniquement lorsque les notifications push ne sont pas déjà activées, sont prises en charge par l'appareil de l'utilisateur et que celui-ci a publié un message ou utilise une Progressive Web App (PWA). L'invite ne sera pas affichée à nouveau si l'utilisateur l'a déjà rejetée ou si l'autorisation a déjà été accordée ou refusée."
@@ -2714,7 +2707,6 @@ fr:
     nested_replies_hot_preload_depth_penalty: "Priorité soustraite à chaque niveau de profondeur lors de la sélection des réponses imbriquées à développer à l'avance dans la vue par popularité."
     nested_replies_default_sort: "Algorithme de tri par défaut pour l'affichage des réponses imbriquées."
     nested_replies_max_depth: "Profondeur visuelle maximale des réponses organisées en fil. Les publications situées au-delà de cette profondeur affichent un lien 'Continuer ce fil'."
-    nested_replies_backfill_batch_size: "Nombre de sujets à traiter dans chaque lot de rattrapage des statistiques sur les réponses imbriquées."
     nested_replies_stats_maintenance_enabled: "Conserve les statistiques sur les réponses imbriquées même lorsque celles-ci sont désactivées."
     nested_replies_cap_nesting_depth: "Limite l'imbrication des réponses à la profondeur visuelle maximale. Lorsque ce paramètre est activé, les réponses au niveau le plus profond sont rattachées comme réponses de même niveau au lieu d'être imbriquées davantage."
     enable_new_defaults_for_trust_level_3_requirements: "Nous avons mis à jour les exigences par défaut du niveau de confiance 3 afin qu'elles soient plus raisonnables pour les membres des communautés importantes et actives. Si vous aviez déjà remplacé ces paramètres par des valeurs personnalisées, cette modification n'aura aucun effet."
@@ -2815,10 +2807,29 @@ fr:
       mediaconvert_output_subdirectory_required: "Le sous-répertoire de sortie de MediaConvert est requis."
       s3_credentials_required_for_video_conversion: "Les identifiants S3 sont requis pour la conversion vidéo. Veuillez configurer les clés d'accès S3 ou activer le profil IAM."
     keywords:
+      about_banner_image: "image de bannière"
+      about_page_extra_groups: "liste des groupes"
+      about_page_extra_groups_initial_members: "liste étendue des membres"
+      about_page_extra_groups_order: "ordre de tri"
+      about_page_extra_groups_show_description: "inclure une description"
       clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
+      company_url: "site Web"
+      default_composition_mode: "rte|texte enrichi|éditeur|markdown|éditeur enrichi"
+      embed_full_app: "mode application complet"
+      extended_site_description: "description de la communauté"
+      large_icon: "icône carrée"
+      logo: "logo principal"
+      logo_dark: "logo principal sombre"
+      logo_small: "petit logo"
+      logo_small_dark: "petit logo sombre"
       navigation_menu: "barre latérale|menu déroulant d'en-tête"
       purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
-      default_composition_mode: "rte|texte enrichi|éditeur|markdown|éditeur enrichi"
+      short_site_description: "titre de la communauté"
+      site_contact_group_name: "groupe de contact du site"
+      site_contact_username: "nom du contact du site"
+      site_description: "résumé de la communauté"
+      title: "nom de la communauté"
+      welcome_banner_image: "image d'arrière-plan"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3425,20 +3436,6 @@ fr:
       title: "Message masqué"
       preview: "Publication masquée à la suite de signalements de membres de la communauté."
       subject_template: "Message masqué suite à des signalements de la communauté"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ce message a été masqué suite à des signalements de la communauté. Nous vous invitons par conséquent à envisager de le modifier en prenant en considération leurs commentaires. **Vous pourrez modifier votre message d'ici %{edit_delay} minutes, et il sera ensuite rendu automatiquement visible à nouveau.**
-
-        Toutefois, si ce message était masqué par la communauté une seconde fois, il le resterait jusqu'à ce qu'il soit examiné par des responsables.
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Vous pouvez modifier votre publication d'origine ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés, ou répondre à ce message si vous avez des questions."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Vous pouvez modifier votre publication d'origine ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés."
     reviewable_queued_post_revise_and_reject_edit_topic: "Vous pouvez modifier la publication initiale de votre sujet ci-dessous et la soumettre à nouveau afin d'apporter les changements suggérés, ou répondre à ce message si vous avez des questions."
@@ -3493,31 +3490,9 @@ fr:
       title: "Message masqué à nouveau"
       preview: "Publication de nouveau masquée à la suite de signalements de membres de la communauté."
       subject_template: "Message masqué suite à des signalements de la communauté, responsables avertis"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué à nouveau.
-
-         <%{base_url}%{url}>
-
-         %{flag_reason}
-
-        La communauté a signalé ce message et il est maintenant masqué. **Ce message ayant été masqué plus d'une fois, il le restera jusqu'à ce qu'un responsable intervienne.**
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     queued_by_staff:
       title: "Message en attente de vérification"
       subject_template: "Message masqué par un responsable, en attente de vérification"
-      text_body_template: |
-        Bonjour,
-
-        Ce message vous est envoyé de manière automatisée par %{site_name} pour vous informer que votre message a été masqué.
-
-        <%{base_url}%{url}>
-
-        Votre message restera masqué jusqu'à ce qu'un responsable en prenne connaissance et l'examine.
-
-        Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
     flags_disagreed:
       title: "Le message signalé a été rétabli par un responsable"
       subject_template: "Le message signalé a été rétabli par un responsable"
@@ -4025,6 +4000,8 @@ fr:
         Par mesure de précaution, votre nouveau compte a été mis en sourdine. Vous ne pourrez pas publier de réponses ni de nouveaux sujets tant qu'un responsable n'aura pas examiné la situation de votre compte. Nous vous prions de nous excuser pour la gêne occasionnée.
 
         Pour obtenir davantage de conseils, nous vous invitons à consulter les [règles de la communauté](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Votre compte a été mis en sourdine"
     silenced_by_staff:
       title: "Mis en sourdine par un responsable"
       preview: "Compte temporairement suspendu."
@@ -4051,16 +4028,6 @@ fr:
     user_automatically_silenced_with_reason:
       title: "Utilisateur automatiquement mis en sourdine"
       subject_template: "Nouvel utilisateur %{username} mis en sourdine suite à des signalements de la communauté"
-      text_body_template: |
-        Ceci est un message automatique.
-
-        Le nouvel utilisateur [%{username}](%{user_url}) a été automatiquement mis en sourdine.
-
-        Motif : %{reason}
-
-        Veuillez [examiner les signalements](%{base_url}/review). Si %{username} a été mis en sourdine par erreur, cliquez sur le bouton permettant de lever la mise en sourdine sur [la page d'administration de cet utilisateur](%{user_url}).
-
-        Ce seuil peut être modifié dans le paramètre de site `silence_new_user`.
     spam_post_blocked:
       title: "Publication de contenu indésirable bloquée"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
@@ -4409,14 +4376,6 @@ fr:
       title: "Compte suspendu"
       subject_template: "[%{email_prefix}] Votre compte a été suspendu"
       subject_template_improved: "Votre compte a été suspendu"
-    account_silenced:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
-    account_silenced_forever:
-      title: "Compte mis en sourdine"
-      subject_template: "[%{email_prefix}] Votre compte a été mis en sourdine"
-      subject_template_improved: "Votre compte a été mis en sourdine"
     account_deleted:
       title: "Compte supprimé"
       subject_template: "[%{email_prefix}] Votre compte a été supprimé"
@@ -4619,10 +4578,6 @@ fr:
     signup_after_reject:
       title: "Inscription suite à un refus"
       subject_template: "Votre inscription à %{site_name} a été rejetée"
-      text_body_template: |
-        Un responsable a refusé votre inscription sur %{site_name}.
-
-        Motif : %{reject_reason}
     signup:
       title: "Inscription"
       preview: "Confirmez votre compte."
@@ -4889,92 +4844,8 @@ fr:
       Ce site est géré par votre [équipe amicale de modérateurs](%{base_path}/about) et *vous*, la communauté. Si vous avez d'autres questions sur la façon dont les choses devraient fonctionner ici, ouvrez un nouveau sujet dans %{feedback_category} et discutons-en ! Si vous rencontrez un problème critique ou urgent qui ne peut pas être traité par un méta-sujet ou un indicateur, [contactez les modérateurs](%{base_path}/about).
   tos_topic:
     title: "Conditions générales d'utilisation"
-    body: "<h2 id=\"heading--change-me\"><a href=\"#heading--change-me\">À modifier</a></h2> \n\nAdministrateur du forum, vous trouverez ci-dessous un exemple de modèle initial de politique de confidentialité à personnaliser en fonction des besoins de votre site.\n\nLes présentes conditions ne régissent pas actuellement l'utilisation du forum Internet accessible à l'adresse <%{base_url}>, mais pourraient le faire à l'avenir. Dans ce cas, pour utiliser le forum, vous devrez accepter les présentes conditions conclues avec %{company_name}, l'entreprise qui exploite le forum.\n\nL'entreprise peut proposer d'autres produits et services soumis à des conditions différentes. Les présentes conditions s'appliquent uniquement à l'utilisation du forum.\n\nAccéder directement aux sections suivantes :\n\n- [Dispositions importantes](#heading--important-terms)\n- [Votre droit d'utiliser le forum](#heading--permission)\n- [Conditions d'utilisation du forum](#heading--conditions)\n- [Utilisation acceptable](#heading--acceptable-use)\n- [Normes relatives au contenu](#heading--content-standards)\n- [Application](#heading--enforcement)\n- [Votre compte](#heading--your-account)\n- [Votre contenu](#heading--your-content)\n- [Votre responsabilité](#heading--responsibility)\n- [Exclusions de garantie](#heading--disclaimers)\n- [Limitation de responsabilité](#heading--liability)\n- [Commentaires](#heading--feedback)\n- [Résiliation](#heading--termination)\n- [Litiges](#heading--disputes)\n- [Dispositions générales](#heading--general)\n- [Contact](#heading--contact)\n- [Modifications](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">Dispositions importantes</a></h2>\n\n***Les présentes conditions comprennent plusieurs dispositions importantes qui ont une incidence sur vos droits et vos responsabilités, notamment les exclusions de garantie figurant dans la section [Exclusions de garantie](#heading--disclaimers), les limitations de la responsabilité de l'entreprise envers vous figurant dans la section [Limitation de responsabilité](#heading--liability), votre engagement à indemniser l'entreprise pour les dommages causés par votre utilisation abusive du forum dans la section [Votre responsabilité](#heading--responsibility), ainsi qu'un accord prévoyant le recours à l'arbitrage pour régler les litiges dans la section [Litiges](#heading--disputes).***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">Votre droit d'utiliser le forum</a></h2>\n\nSous réserve des présentes conditions, l'entreprise vous accorde le droit d'utiliser le forum. Toute personne souhaitant utiliser le forum doit accepter les présentes conditions.\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">Conditions d'utilisation du forum</a></h2>\n\nVotre droit d'utiliser le forum est soumis aux conditions suivantes :\n\n1. Vous devez être âgé d'au moins dix-huit ans.\n\n2. Vous ne pouvez plus utiliser le forum si l'entreprise vous informe directement que vous n'y êtes plus autorisé.\n\n3. Vous devez utiliser le forum conformément aux sections [Utilisation acceptable](#heading--acceptable-use) et [Normes relatives au contenu](#heading--content-standards).\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">Utilisation acceptable</a></h2>\n\n1. Vous ne pouvez pas enfreindre la loi en utilisant le forum.\n\n2. Vous ne pouvez pas utiliser ou tenter d'utiliser le compte d'une autre personne sur le forum sans son autorisation expresse.\n\n3. Vous ne pouvez pas acheter, vendre ou échanger de quelque autre manière que ce soit des noms d'utilisateur ou d'autres identifiants uniques sur le forum.\n\n4. Vous ne pouvez pas envoyer de publicités, de chaînes de lettres ou d'autres sollicitations par l'intermédiaire du forum, ni utiliser le forum pour collecter des adresses ou d'autres données personnelles destinées à des listes de diffusion ou à des bases de données commerciales.\n\n5. Vous ne pouvez pas automatiser l'accès au forum ni surveiller celui-ci à l'aide, par exemple, d'un robot d'exploration Web, d'une extension ou d'un module complémentaire de navigateur, ou de tout autre programme informatique qui n'est pas un navigateur Web. Vous pouvez explorer le forum afin de l'indexer pour un moteur de recherche accessible au public, si vous exploitez un tel moteur.\n\n6. Vous ne pouvez pas utiliser le forum pour envoyer des e-mails à des listes de diffusion, des groupes de discussion ou des alias de messagerie de groupe.\n\n7. Vous ne pouvez pas laisser entendre à tort que vous êtes affilié à l'entreprise ou approuvé par celle-ci.\n\n8. Vous ne pouvez pas créer, sur d'autres pages Web, de liens directs vers des images ou d'autres contenus non hypertextuels hébergés sur le forum.\n\n9. Vous ne pouvez pas supprimer les mentions indiquant la propriété exclusive des éléments que vous téléchargez depuis le forum.\n\n10. Vous ne pouvez pas afficher une quelconque partie du forum sur d'autres sites Web au moyen d'un élément `<iframe>`.\n\n11. Vous ne pouvez pas désactiver, éviter ou contourner les restrictions de sécurité ou d'accès du forum.\n\n12. Vous ne pouvez pas imposer une charge excessive à l'infrastructure du forum au moyen d'un volume déraisonnable de requêtes ou de requêtes conçues pour surcharger de manière déraisonnable les systèmes d'information qui sous-tendent le forum.\n\n13. Vous ne pouvez pas vous faire passer pour une autre personne par l'intermédiaire du forum.\n\n14. Vous ne pouvez pas encourager ou aider quiconque à enfreindre les présentes conditions.\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">Normes relatives au contenu</a></h2>\n\n1. Vous ne pouvez pas soumettre au forum de contenu illégal, offensant ou autrement préjudiciable à autrui. Cela comprend notamment les contenus relevant du harcèlement ou d'un comportement inapproprié, abusif ou haineux.\n\n2. Vous ne pouvez pas soumettre au forum de contenu qui enfreint la loi, porte atteinte aux droits de propriété intellectuelle d'une personne, viole la vie privée d'une personne ou contrevient à des accords conclus avec des tiers.\n\n3. Vous ne pouvez pas soumettre au forum de contenu comportant un code informatique malveillant, tel qu'un virus informatique ou un logiciel espion.\n\n4. Vous ne pouvez pas soumettre de contenu au forum dans le seul but de réserver une adresse, un nom d'utilisateur ou un autre identifiant unique.\n\n5. Vous ne pouvez pas utiliser le forum pour divulguer des informations que vous n'avez pas le droit de communiquer, telles que des informations confidentielles ou personnelles concernant d'autres personnes.\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">Application</a></h2>\n\nL'entreprise peut enquêter sur les violations des présentes conditions et engager des poursuites dans toute la mesure permise par la loi. Elle peut informer les autorités chargées de l'application de la loi et coopérer avec elles dans le cadre de poursuites relatives à des violations de la loi ou des présentes conditions.\n\nL'entreprise se réserve le droit de modifier, d'expurger ou de supprimer du contenu du forum pour quelque motif que ce soit. Si vous estimez qu'une personne a soumis au forum du contenu qui enfreint les présentes conditions, [contactez-nous immédiatement](#heading--contact).\n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">Votre compte</a></h2>\n\nVous devez créer un compte et vous y connecter pour utiliser certaines fonctionnalités du forum.\n\nPour créer un compte, vous devez fournir certaines informations vous concernant. Si vous créez un compte, vous acceptez de fournir au minimum une adresse e-mail valide et de la maintenir à jour. Vous pouvez fermer votre compte à tout moment en envoyant un e-mail à <%{contact_email}>.\n\nVous acceptez d'être responsable de toute action effectuée au moyen de votre compte, qu'elle ait été autorisée par vous ou non, jusqu'à ce que vous fermiez votre compte ou informiez l'entreprise que celui-ci a été compromis. Vous acceptez d'informer immédiatement l'entreprise si vous soupçonnez que votre compte a été compromis. Vous acceptez de choisir un mot de passe sécurisé pour votre compte et de le garder secret.\n\nL'entreprise peut restreindre, suspendre ou fermer votre compte sur le forum conformément à sa politique de traitement des demandes de retrait liées aux droits d'auteur, ou si elle estime raisonnablement que vous avez enfreint l'une des règles énoncées dans les présentes conditions.\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">Votre contenu</a></h2>\n\nAucune disposition des présentes conditions ne confère à l'entreprise un quelconque droit de propriété sur les éléments de propriété intellectuelle que vous partagez avec le forum, tels que les informations de votre compte, vos publications ou tout autre contenu que vous soumettez au forum. De même, aucune disposition des présentes conditions ne vous confère un quelconque droit de propriété sur la propriété intellectuelle de l'entreprise.\n\nDans vos relations avec l'entreprise, vous demeurez seul responsable du contenu que vous soumettez au forum. Vous acceptez de ne pas laisser entendre à tort que le contenu que vous soumettez au forum est parrainé ou approuvé par l'entreprise. Les présentes conditions n'obligent pas l'entreprise à stocker, conserver ou fournir des copies du contenu que vous soumettez, ni à le modifier conformément aux présentes conditions.\n\nLe contenu que vous soumettez au forum vous appartient et vous décidez des permissions que vous accordez à d'autres personnes à son égard. Vous accordez toutefois au minimum à l'entreprise une licence lui permettant de mettre ce contenu à la disposition des autres utilisateurs du forum. Cette licence particulière autorise l'entreprise à copier, publier et analyser le contenu que vous soumettez au forum.\n\nLorsque le contenu que vous avez soumis est supprimé du forum, que ce soit par vous ou par l'entreprise, la licence particulière accordée à l'entreprise prend fin lorsque la dernière copie disparaît de ses sauvegardes, de ses caches et de ses autres systèmes. D'autres licences que vous appliquez au contenu que vous soumettez, telles que les licences [Creative Commons](https://creativecommons.org), peuvent rester en vigueur après la suppression de votre contenu. Ces licences peuvent autoriser d'autres personnes, ou l'entreprise elle-même, à partager de nouveau votre contenu par l'intermédiaire du forum.\n\nLes personnes qui reçoivent le contenu que vous soumettez au forum peuvent enfreindre les conditions de la licence que vous leur accordez. Vous acceptez que l'entreprise ne soit pas responsable envers vous de ces violations ni de leurs conséquences.\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">Votre responsabilité</a></h2>\n\nVous acceptez de garantir l'entreprise contre toute réclamation juridique formulée par des tiers et liée à votre violation des présentes conditions, ou à leur violation par d'autres personnes utilisant votre compte sur le forum. Vous et l'entreprise acceptez de vous informer mutuellement, dans les meilleurs délais, de toute réclamation juridique pour laquelle vous pourriez être tenu d'indemniser l'entreprise. Si l'entreprise tarde à vous informer d'une réclamation juridique, vous ne serez pas tenu de l'indemniser pour les dommages contre lesquels vous auriez pu vous défendre ou que vous auriez pu limiter si vous aviez été informé rapidement. Vous acceptez de laisser l'entreprise contrôler l'enquête, la défense et le règlement des réclamations juridiques pour lesquelles vous seriez tenu de l'indemniser, et de coopérer à ces démarches. L'entreprise accepte de ne conclure aucun règlement reconnaissant une faute de votre part ou vous imposant des obligations sans votre accord préalable.\n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">Exclusions de garantie</a></h2>\n\n***Vous assumez tous les risques liés à l'utilisation du forum et de son contenu. Dans toute la mesure permise par la loi, l'entreprise et ses fournisseurs mettent le forum à disposition en l'état, sans aucune garantie de quelque nature que ce soit.***\n\nLe forum peut contenir des liens vers des forums et services exploités par des tiers et les intégrer. L'entreprise ne fournit aucune garantie concernant les services exploités par des tiers ni le contenu qu'ils peuvent proposer. L'utilisation de services exploités par des tiers peut être régie par d'autres conditions conclues entre vous et l'exploitant du service concerné.\n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">Limitation de responsabilité</a></h2>\n\n***Ni l'entreprise ni ses fournisseurs ne seront responsables envers vous des dommages-intérêts résultant d'une violation contractuelle que leur personnel ne pouvait raisonnablement prévoir au moment où vous avez accepté les présentes conditions.***\n\n***Dans toute la mesure permise par la loi, la responsabilité totale envers vous au titre de toute réclamation liée au forum ou à son contenu sera limitée à 50 USD.***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">Commentaires</a></h2>\n\nL'entreprise accueille volontiers vos commentaires et suggestions concernant le forum. Consultez la section [Contact](#heading--contact) ci-dessous pour savoir comment nous contacter.\n\nVous acceptez que l'entreprise soit libre de donner suite aux commentaires et suggestions que vous lui fournissez, sans être tenue de vous informer de leur utilisation, d'obtenir votre autorisation ni de vous rémunérer. Vous acceptez de ne pas soumettre de commentaires ou de suggestions que vous estimez confidentiels ou exclusifs, qu'ils vous appartiennent ou appartiennent à des tiers.\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">Résiliation</a></h2>\n\nVous ou l'entreprise pouvez mettre fin à tout moment à l'accord décrit dans les présentes conditions. Lorsque notre accord prend fin, votre droit d'utiliser le forum prend également fin.\n\nLes dispositions suivantes demeurent en vigueur après la fin de notre accord : [Votre contenu](#heading--your-content), [Commentaires](#heading--feedback), [Votre responsabilité](#heading--responsibility), [Exclusions de garantie](#heading--disclaimers), [Limitation de responsabilité](#heading--liability) et [Dispositions générales](#heading--general).\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">Litiges</a></h2>\n\nTout litige lié aux présentes conditions ou à votre utilisation du forum sera régi par le droit de %{governing_law}.\n\nVous et l'entreprise acceptez de demander toute injonction liée aux présentes conditions uniquement devant un tribunal d'État ou un tribunal fédéral situé à %{city_for_disputes}. Ni vous ni l'entreprise ne contesterez la compétence, le ressort ou le lieu de ces tribunaux.\n\n***Sauf lorsqu'il s'agit de demander une injonction ou de présenter une réclamation au titre du Computer Fraud and Abuse Act, vous et l'entreprise réglerez tout litige au moyen d'un arbitrage contraignant administré par l'American Arbitration Association. L'arbitrage sera mené conformément aux règles d'arbitrage commercial et aux procédures complémentaires relatives aux litiges de consommation de l'AAA. Il se déroulera à %{city_for_disputes}. Vous réglerez tout litige à titre individuel, et non dans le cadre d'une action collective ou d'une autre procédure représentative, que ce soit en qualité de demandeur ou de membre d'un groupe. Aucun arbitre ne pourra joindre un litige à une autre procédure d'arbitrage sans l'autorisation de l'entreprise.***\n\nToute sentence arbitrale comprendra les frais d'arbitrage, les honoraires raisonnables d'avocat et les frais raisonnables liés aux témoins. Vous et l'entreprise pourrez faire exécuter les sentences arbitrales devant tout tribunal compétent.\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">Dispositions générales</a></h2>\n\nSi une disposition des présentes conditions est inapplicable telle qu'elle est rédigée, mais pourrait le devenir moyennant une modification, elle devra être modifiée dans la mesure minimale nécessaire pour la rendre applicable. Dans le cas contraire, elle devra être supprimée.\n\nVous ne pouvez pas céder votre accord avec l'entreprise. L'entreprise peut céder cet accord à toute société affiliée, à toute autre entreprise qui en prend le contrôle ou à toute autre entreprise qui acquiert des actifs liés au forum. Toute tentative de cession contraire aux présentes conditions est sans effet juridique.\n\nNi l'exercice d'un droit prévu par le présent accord, ni la renonciation à invoquer une violation du présent accord ne constitue une renonciation à invoquer toute autre violation de celui-ci.\n\nLes présentes conditions constituent l'intégralité de l'accord conclu entre vous et l'entreprise concernant l'utilisation du forum. Elles remplacent entièrement tout autre accord, écrit ou non, relatif à votre utilisation du forum.\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">Contact</a></h2>\n\nVous pouvez adresser à l'entreprise toute notification prévue par les présentes conditions, ainsi que toute question, à l'adresse <%{contact_email}>.\n\nL'entreprise peut vous adresser toute notification prévue par les présentes conditions à l'adresse e-mail que vous fournissez pour votre compte sur le forum, ou en publiant un message sur la page d'accueil du forum ou sur la page de votre compte.\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">Modifications</a></h2>\n\nL'entreprise a mis à jour les présentes conditions pour la dernière fois le [INSÉRER ICI LA DATE DE LA DERNIÈRE MISE À JOUR] et pourra les modifier à nouveau. Elle publiera toutes les mises à jour sur le forum. Lorsque les mises à jour comportent des modifications importantes, l'entreprise accepte de vous en informer par e-mail si vous avez créé un compte et fourni une adresse e-mail valide. Elle peut également annoncer les mises à jour au moyen de messages ou d'alertes spécifiques sur le forum.\n\nDès que vous recevez une notification concernant une mise à jour des présentes conditions, vous devez accepter les nouvelles conditions pour continuer à utiliser le forum.\n"
   privacy_topic:
     title: "Politique de confidentialité"
-    body: |
-      ## [Administrateur du forum, vous trouverez ci-dessous un exemple de modèle de départ de politique de confidentialité à personnaliser en fonction de votre site.]
-
-      <a name="collect"></a>
-
-      ## [Quelles informations recueillons-nous ?](#collect)
-
-      Nous recueillons des informations vous concernant lorsque vous vous inscrivez sur notre site et collectons des données lorsque vous participez au forum en lisant, rédigeant et évaluant le contenu qui y est partagé.
-
-      Lors de votre inscription sur notre site, il peut vous être demandé de saisir votre nom et votre adresse e-mail. Vous pouvez toutefois consulter notre site sans vous inscrire. Votre adresse e-mail sera vérifiée au moyen d'un e-mail contenant un lien unique. Si ce lien est consulté, nous savons que vous contrôlez cette adresse e-mail.
-
-      Lorsque vous êtes inscrit et publiez du contenu, nous enregistrons l'adresse IP depuis laquelle la publication a été envoyée. Nous pouvons également conserver des journaux de serveur contenant l'adresse IP associée à chaque requête adressée à notre serveur.
-
-      <a name="use"></a>
-
-      ## [À quelles fins utilisons-nous vos informations ?](#use)
-
-      Les informations que nous recueillons à votre sujet peuvent être utilisées de l'une des manières suivantes :
-
-      * Pour personnaliser votre expérience &mdash; vos informations nous aident à mieux répondre à vos besoins individuels.
-      * Pour améliorer notre site &mdash; nous nous efforçons continuellement d'améliorer les services proposés sur notre site en fonction des informations et des commentaires que nous recevons de votre part.
-      * Pour améliorer le service client &mdash; vos informations nous aident à répondre plus efficacement à vos demandes d'assistance et à vos besoins.
-      * Pour envoyer périodiquement des e-mails &mdash; l'adresse e-mail que vous fournissez peut être utilisée pour vous envoyer des informations, les notifications que vous demandez concernant les modifications apportées aux sujets ou les réponses à votre nom d'utilisateur, répondre à vos demandes, ainsi qu'à d'autres requêtes ou questions.
-
-      <a name="protect"></a>
-
-      ## [Comment protégeons-nous vos informations ?](#protect)
-
-      Nous mettons en œuvre diverses mesures de sécurité afin de préserver la confidentialité de vos informations personnelles lorsque vous les saisissez, les transmettez ou y accédez.
-
-      <a name="data-retention"></a>
-
-      ## [Quelle est notre politique de conservation des données ?](#data-retention)
-
-      Nous nous efforcerons de bonne foi de respecter les principes suivants :
-
-      * Ne pas conserver pendant plus de [NOMBRE DE JOURS] jours les journaux du serveur contenant l'adresse IP de toutes les requêtes adressées à ce serveur.
-
-      <a name="cookies"></a>
-
-      ## [Utilisons-nous des cookies ?](#cookies)
-
-      Oui. Les cookies sont de petits fichiers qu'un site ou son prestataire transfère sur le disque dur de votre ordinateur par l'intermédiaire de votre navigateur Web, si vous l'autorisez. Ces cookies permettent au site de reconnaître votre navigateur et, si vous possédez un compte, de l'associer à celui-ci.
-
-      Nous utilisons des cookies pour comprendre et enregistrer vos préférences en vue de vos prochaines visites, ainsi que pour compiler des données agrégées concernant le trafic et les interactions sur le site, afin de pouvoir proposer à l'avenir de meilleurs services et outils. Nous pouvons faire appel à des prestataires tiers afin de mieux comprendre les visiteurs de notre site. Ces prestataires ne sont pas autorisés à utiliser les informations recueillies pour notre compte, sauf pour nous aider à exercer et à améliorer nos activités.
-
-      <a name="disclose"></a>
-
-      ## [Divulguons-nous des informations à des tiers ?](#disclose)
-
-      Nous ne vendons, n'échangeons ni ne transférons de quelque autre manière que ce soit à des tiers les informations permettant de vous identifier personnellement. Cette disposition ne s'applique pas aux tiers de confiance qui nous aident à exploiter notre site, à exercer nos activités ou à vous fournir des services, sous réserve qu'ils acceptent de préserver la confidentialité de ces informations. Nous pouvons également divulguer vos informations lorsque nous estimons que cette divulgation est nécessaire pour respecter la loi, faire appliquer les politiques de notre site ou protéger nos droits, nos biens ou notre sécurité, ainsi que ceux de tiers. Toutefois, des informations ne permettant pas d'identifier personnellement les visiteurs peuvent être communiquées à d'autres parties à des fins de marketing, de publicité ou à d'autres fins.
-
-      <a name="third-party"></a>
-
-      ## [Liens vers des sites tiers](#third-party)
-
-      Nous pouvons occasionnellement, à notre discrétion, inclure ou proposer sur notre site des produits ou services fournis par des tiers. Ces sites tiers disposent de politiques de confidentialité distinctes et indépendantes. Nous déclinons donc toute responsabilité quant au contenu et aux activités de ces sites liés. Nous nous efforçons néanmoins de préserver l'intégrité de notre site et accueillons volontiers tout commentaire concernant ces sites.
-
-      <a name="coppa"></a>
-
-      ## [Respect de la loi sur la protection de la vie privée des enfants en ligne](#coppa)
-
-      Notre site, nos produits et nos services s'adressent exclusivement aux personnes âgées d'au moins 18 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 18 ans, conformément aux exigences de la COPPA ([Loi sur la protection de la vie privée des enfants en ligne](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
-
-      <a name="online"></a>
-
-      ## [Politique de confidentialité en ligne uniquement](#online)
-
-      La présente politique de confidentialité en ligne s'applique uniquement aux informations recueillies par l'intermédiaire de notre site et non à celles recueillies hors ligne.
-
-      <a name="consent"></a>
-
-      ## [Votre consentement](#consent)
-
-      En utilisant notre site, vous consentez à notre politique de confidentialité en ligne.
-
-      <a name="changes"></a>
-
-      ## [Modifications de notre politique de confidentialité](#changes)
-
-      Si nous décidons de modifier notre politique de confidentialité, nous publierons les modifications sur cette page.
-
-      Ce document est placé sous licence CC-BY-SA. Il a été mis à jour pour la dernière fois le [INSÉRER ICI LA DATE DE LA DERNIÈRE MISE À JOUR].
   badges:
     mass_award:
       errors:
@@ -5329,7 +5200,13 @@ fr:
   design_wizard:
     palette_pairs:
       default: "Par défaut"
+      neutral: "Neutre"
+      shades_of_blue: "Nuances de bleu"
+      summer: "Été"
       dracula: "Dracula"
+      grey_amber: "Gris ambre"
+      latte: "Café crème"
+      dark_rose: "Rose foncé"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5515,6 +5392,10 @@ fr:
       no_context:
         watched_word: "Cet article contient un mot surveillé. Consultez le %{link} pour en savoir plus."
     actions:
+      answer_yes:
+        title: "Oui"
+      answer_no:
+        title: "Non"
       agree:
         title: "Oui"
       agree_and_keep:

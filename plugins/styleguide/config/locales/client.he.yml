@@ -50,6 +50,9 @@ he:
           title: "מערכת גופנים"
         colors:
           title: "צבעים"
+        design_variables:
+          type: "סוג"
+          default: "ברירת מחדל"
         dialog:
           title: "חלונית"
         drag_and_drop:

@@ -6,6 +6,14 @@
 
 sl:
   js:
+    code_editor:
+      search:
+        replace: "Zamenjaj"
+        next: "Naprej"
+        previous: "Prejšnja"
+        close: "Zapri"
+      fold:
+        to: "do"
     user_api_key:
       deny: "Prekliči"
       copied: "Kopirano!"
@@ -320,15 +328,9 @@ sl:
     suggested_topics:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Nazaj"
     design_wizard:
       back: "Nazaj"
       next: "Naprej"
-      sections:
-        theme: "Videz"
-        search: "Išči"
       homepage:
         topics: "Tem"
         categories: "Kategorije"
@@ -2055,6 +2057,10 @@ sl:
     composer:
       emoji: "Emoji :)"
       options: "Možnosti"
+      ai_content:
+        code: "Koda"
+        quote: "Citiraj"
+        details: "Podrobnosti"
       whisper: "šepet"
       unlist: "izločeno"
       add_warning: "To je uradno opozorilo."
@@ -2832,10 +2838,8 @@ sl:
           label: "izbran"
           title: "Kliknite za odstranitev prispevka iz izbranih"
         select_replies:
-          label: "izberi +odgovore"
           title: "Dodaj prispevek in vse njegove odgovore med izbrane"
         select_below:
-          label: "izberi +nadaljnje"
           title: "Dodaj prispevek in vse nadaljnje med izbrane"
         delete: izbriši izbrano
         cancel: prekliči izbiro
@@ -3612,6 +3616,16 @@ sl:
       forward: "Naprej"
       share: "Deli"
       dismiss: "Opusti"
+    mobile_tab_bar:
+      create: "Ustvari"
+      more: "Več"
+      back: "Nazaj"
+      topics: "Tem"
+      drafts:
+        one: "Osnutki (%{count})"
+        two: "Osnutki (%{count})"
+        few: "Osnutki (%{count})"
+        other: "Osnutki (%{count})"
     safe_mode:
       enabled: "Varni način je vklopljen, za izklop varnega načina zaprite okno brskalnika."
     image_removed: "(slika odstranjena)"
@@ -3779,11 +3793,11 @@ sl:
           title: "Vtičniki"
       upcoming_changes:
         name: "Ime"
-        enabled: "Vključeno"
+        enabled: "Vključeno?"
+        feedback: "Povratna informacija"
         select_groups: "Izberi skupine…"
+        settings: "Nastavitve"
         preview: "Predogled"
-        enabled_for_options:
-          everyone: "Vsi"
         impact_roles:
           admins: "Administratorji"
           moderators: "Moderatorji"
@@ -4333,7 +4347,6 @@ sl:
           uploading: "Nalagam..."
           uploading_progress: "Nalagam %{progress}%..."
           success: "'%{filename}' je bila uspešno naložena. Datoteka se procesira, zato bo potrebnih nekaj minut, preden se bo pojavila na seznamu."
-          error: "Prišlo je do napake med prenašanjem '%{filename}': %{message}"
         settings: "Nastavitve"
         operations:
           cancel:
@@ -4704,7 +4717,6 @@ sl:
         silence_modal_title: "Utišaj uporabnika/co"
         silence_duration: "Za kako dolgo bo uporabnik utišan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "E-sporočilo za uporabnika"
         suspended_until: "(do %{until})"
         cant_suspend: "Ta uporabnik ne more biti suspendiran."
         penalty_post_actions: "Kaj bi rad naredil/a z asociiranim prispevkom?"
@@ -4870,6 +4882,8 @@ sl:
           dropdown: "Spustni meni"
       site_text:
         search_label: "Išči"
+        preview:
+          default: "Privzeto"
         theme_disabled: "Onemogočeno"
         filters: "Filtri"
         edit: "Uredi"
@@ -4946,7 +4960,7 @@ sl:
           modal_title: Skupine značk
         granted_by: Podeljeno od
         granted_at: Podeljeno
-        reason_help: (povezava na prispevek ali temo)
+        reason_help: povezava na prispevek ali temo
         save: Shrani
         delete: Izbriši
         delete_confirm: Si prepričan, da želiš odstraniti to značko?

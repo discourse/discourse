@@ -40,6 +40,9 @@ class SessionController < ApplicationController
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
   LOGIN_CODE_SIGNUP_KEY_PREFIX = "login-code-signup-"
   LOGIN_CODE_USERNAME_STEP_KEY = "login-code-username-step"
+  # Only InvitesController#sso may write this key. Nothing else in the session
+  # is proof that the user chose to redeem an invite.
+  DISCOURSE_CONNECT_INVITE_KEY = "discourse-connect-invite-key"
   GENERATED_USERNAME_SIGNUP_KEY_PREFIX = "login-code-generated-username-"
   GENERATED_USERNAME_SIGNUP_INDEX_KEY = "login-code-generated-username-ids"
   GENERATED_USERNAME_ATTEMPTS = 5
@@ -69,6 +72,8 @@ class SessionController < ApplicationController
 
   def sso_provider(payload = nil, confirmed_2fa_during_login = false)
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect_provider
+
+    raise Discourse::InvalidAccess if is_api? || is_user_api?
 
     result =
       run_second_factor!(
@@ -245,8 +250,17 @@ class SessionController < ApplicationController
           return
         end
 
+        # we only want to redeem the invite if
+        # the user has not already redeemed an invite
+        # (covers the same SSO user visiting an invite link) and email
+        # activation is no longer pending (either the account is already
+        # active or the provider is not requiring activation), otherwise
+        # an unverified email could redeem the invite and be signed in
+        can_redeem_invite =
+          invite.present? && user.invited_user.blank? && (user.active? || !sso.require_activation)
+
         if SiteSetting.must_approve_users? && !user.approved?
-          redeem_invitation(invite, sso, user) if invite.present? && user.invited_user.blank?
+          redeem_invitation(invite, sso, user) if can_redeem_invite
 
           if SiteSetting.discourse_connect_not_approved_url.present?
             redirect_to SiteSetting.discourse_connect_not_approved_url, allow_other_host: true
@@ -255,11 +269,7 @@ class SessionController < ApplicationController
           end
 
           return
-
-          # we only want to redeem the invite if
-          # the user has not already redeemed an invite
-          # (covers the same SSO user visiting an invite link)
-        elsif invite.present? && user.invited_user.blank?
+        elsif can_redeem_invite
           redeem_invitation(invite, sso, user)
 
           # we directly call user.activate here instead of going
@@ -358,19 +368,19 @@ class SessionController < ApplicationController
 
   def create
     params.require(:login)
-    params.require(:password)
+    password = params.require(:password)
 
-    return invalid_credentials if params[:password].length > User.max_password_length
+    if !password.is_a?(String) || password.length > User.max_password_length
+      return invalid_credentials
+    end
 
     user = User.find_by_username_or_email(normalized_login_param)
 
     raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
-    rate_limit_second_factor!(user)
+    rate_limit_second_factor_by_ip!
 
     if user.present?
-      password = params[:password]
-
       # If their password is incorrect
       if !user.confirm_password?(password)
         invalid_credentials
@@ -400,6 +410,8 @@ class SessionController < ApplicationController
     if payload = login_error_check(user)
       return render json: payload
     end
+
+    rate_limit_second_factor_by_account!(user)
 
     second_factor_auth_result = authenticate_second_factor(user)
     return render(json: @second_factor_failure_payload) if !second_factor_auth_result.ok
@@ -919,8 +931,8 @@ class SessionController < ApplicationController
   end
 
   def rate_limit_login_code_request
-    RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 6, 1.hour).performed!
-    RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 3, 1.minute).performed!
+    RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 30, 1.hour).performed!
+    RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 6, 1.minute).performed!
 
     invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
     email = (invite&.email.presence || params[:email]).to_s.strip.downcase
@@ -1231,7 +1243,9 @@ class SessionController < ApplicationController
   def process_verified_invite_login_code(matched_user)
     if matched_user
       return render json: login_not_approved if login_not_approved_for?(matched_user)
-      return render json: login_error if (login_error = login_error_check(matched_user))
+      if payload = login_error_check(matched_user)
+        return render json: payload
+      end
     end
 
     if matched_user.nil? && (signup_user_fields_missing? || signup_full_name_missing?)
@@ -1543,12 +1557,16 @@ class SessionController < ApplicationController
   end
 
   # the invite_key will be present if set in InvitesController
-  # when the user visits an /invites/xxxx link; however we do
+  # when the user continues from an /invites/xxxx page; however we do
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
   def validate_invitation!(sso)
-    return unless invite_key = server_session["invite-key"]
+    # the invite key is only good for one attempt, otherwise a failure would
+    # block every later login instead of letting the user retry from the invite page
+    invite_key = server_session[DISCOURSE_CONNECT_INVITE_KEY]
+    return if invite_key.blank?
+    server_session.delete(DISCOURSE_CONNECT_INVITE_KEY)
 
     base_url = Discourse.base_url
     site_name = SiteSetting.title
@@ -1580,8 +1598,6 @@ class SessionController < ApplicationController
       email: sso.email,
       redeeming_user:,
     ).redeem
-
-    server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e

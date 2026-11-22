@@ -14,7 +14,10 @@ gl:
     about: Verbo de
     community: Comunidade
     preview: Visualizar
+    author: Autor
     search: Buscar
     replies:
       one: "%{count} resposta"
       other: "%{count} repostas"
+    themes:
+      default: Predeterminado

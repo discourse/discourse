@@ -66,7 +66,8 @@ RSpec.describe RenameDiscourseBlogToBlog do
 
     described_class.new.up
 
-    expect(relation_names("^blog_", "r")).to match_array(new_names)
+    expect(relation_names("^blog_", "r")).to include(*new_names)
+    expect(relation_names("^discourse_blog_", "r")).to be_empty
     expect(relation_names("^discourse_blog_", "v")).to match_array(old_names)
     expect(relation_names("discourse_blog", "i")).to be_empty
     expect(relation_names("discourse_blog", "S")).to be_empty
@@ -77,7 +78,7 @@ RSpec.describe RenameDiscourseBlogToBlog do
     described_class.new.up
 
     expect(relation_names("^discourse_blog_", "v")).to be_empty
-    expect(relation_names("^blog_", "r")).to match_array(new_names)
+    expect(relation_names("^blog_", "r")).to include(*new_names)
   end
 
   it "renames the settings without overwriting values already saved under the new names" do

@@ -28,12 +28,6 @@ ru:
         description: "Сортировка публикаций с использованием большой языковой модели"
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
-          body: |
-            Привет, @%{username},
-
-            . Ваше сообщение в разделе «%{topic_title}» временно удалено и помещено в очередь на рассмотрение модератору. В случае одобрения оно будет автоматически восстановлено.
-
-            Ссылка: %{post_url}
       llm_report:
         title: Периодический отчет с использованием AI
         description: "Периодический отчет на основе большой языковой модели"
@@ -110,6 +104,12 @@ ru:
     ai_discord_search_agent: "Агент для поиска в Discord."
     ai_discord_allowed_guilds: "Серверы Discord (гильдии), на которых боту разрешено выполнять поиск"
     ai_translation_personal_messages: "Управляет тем, какие личные сообщения будут переводиться. 'none' отключает перевод личных сообщений. 'group' переводит только групповые личные сообщения. 'all' переводит все личные сообщения."
+    keywords:
+      ai_default_llm_model: "языковая модель по умолчанию"
+      ai_discord_search_enabled: "интеграция с Discord"
+      ai_helper_automatic_chat_thread_title: "заголовки тем чата"
+      ai_summarization_enabled: "cводки"
+      ai_summary_gists_enabled: "краткие сводки по списку тем"
   reviewables:
     reasons:
       flagged_by_toxicity: Плагин AI определил этот контент как токсичный и отправил жалобу.
@@ -206,8 +206,6 @@ ru:
           name: "Генерация изображений..."
         image_generation_custom:
           name: "Другое"
-        image_generation_openai:
-          name: "OpenAI"
         empty_tool:
           name: "Начать с нуля..."
       name:
@@ -690,6 +688,20 @@ ru:
           no_reason: "Чтобы пометить или снять отметку с сообщения как решенную, требуется указать причину."
           action_failed: "Не удалось обновить статус \"решено\"."
         success: "Статус \"Решено\" успешно обновлен."
+    appearance_authoring:
+      default_theme: "Тема по умолчанию"
+      colors:
+        light:
+          header_background: "В заголовке"
+      fonts:
+        base_font: "Шрифт текста"
+        heading_font: "Шрифт заголовка"
+    mcp_theme_access:
+      "on": "Включено"
+      "off": "Выключено"
+      none: "нет"
+    mcp_app_setup:
+      none: "нет"
     reviewables:
       ai_tool_action:
         title: "Действие инструмента ИИ"
@@ -755,6 +767,7 @@ ru:
       cannot_edit_builtin: "Встроенную модель редактировать нельзя."
       secret_required: "Необходимо выбрать учетные данные."
       secret_not_found: "Выбранные учетные данные не существуют."
+      missing_provider_param: "Параметр %{param} не может быть пустым"
       configuration:
         disable_embeddings: "Сначала вам необходимо отключить настройку 'ai embeddings enabled'."
         choose_model: "Сначала задайте 'ai embeddings selected model'."

@@ -219,6 +219,16 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_embed_media" do
+    fab!(:group)
+
+    it "is true for users in embedded_media_post_allowed_groups" do
+      SiteSetting.embedded_media_post_allowed_groups = group.id
+      group.add(user)
+      expect(serializer.as_json[:can_embed_media]).to eq(true)
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { user.guardian }
     let(:payload) { serializer.as_json }
@@ -572,7 +582,6 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "remains available when Concord is installed and selected as the default" do
-      SiteSetting.concord_in_wizard = true
       concord =
         Fabricate(
           :theme,
@@ -588,10 +597,6 @@ RSpec.describe CurrentUserSerializer do
       concord.set_default!
 
       expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
-
-      SiteSetting.concord_in_wizard = false
-
-      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
 
     it "is not included once a theme is installed" do

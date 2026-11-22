@@ -658,6 +658,20 @@ RSpec.describe FinalDestination do
       end
     end
 
+    context "with a total_timeout" do
+      let(:fd) { FinalDestination.new("http://wikipedia.com", opts.merge(total_timeout: 5)) }
+
+      it "applies it to the connection" do
+        FinalDestination::HTTP.expects(:start).with(
+          "wikipedia.com",
+          80,
+          has_entries(total_timeout: 5),
+        )
+
+        fd.get {}
+      end
+    end
+
     context "when there is an SSL error" do
       subject(:get) { fd.get {} }
 

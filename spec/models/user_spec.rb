@@ -646,6 +646,21 @@ RSpec.describe User do
     end
   end
 
+  describe "#user_fields" do
+    fab!(:number_field) { Fabricate(:user_field, field_type: "number") }
+
+    it "returns numbers for number fields" do
+      values =
+        %w[42 -2.5 1e3 abc].map do |stored_value|
+          user.set_user_field(number_field.id, stored_value)
+          user.save_custom_fields
+          user.reload.user_fields[number_field.id.to_s]
+        end
+
+      expect(values).to eql([42, -2.5, 1000, nil])
+    end
+  end
+
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
@@ -868,6 +883,28 @@ RSpec.describe User do
       expect(Post.where(id: post_ids)).to be_empty
       expect(Reviewable.where(created_by: user).count).to eq(0)
       expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
+    end
+
+    it "keeps reviewables for posts the user flagged first" do
+      other_flagger = Fabricate(:user)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        user.id,
+        other_flagger.id,
+      )
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -3191,6 +3228,29 @@ RSpec.describe User do
       )
     end
 
+    it "preserves staged data when registration policy excludes the email" do
+      notification = Fabricate(:notification, user: user)
+      SiteSetting.blocked_email_domains = "account.com"
+
+      events =
+        DiscourseEvent.track_events do
+          expect { user.unstage! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(user.reload.staged).to eq(true)
+      expect(user.custom_fields[User::FROM_STAGED]).to be_nil
+      expect(user.notifications).to include(notification)
+      expect(events.map { |event| event[:event_name] }).not_to include(:user_unstaged)
+    end
+
+    it "allows promotion when the domain is allowed" do
+      SiteSetting.allowed_email_domains = "account.com"
+
+      user.unstage!
+
+      expect(user.reload.staged).to eq(false)
+    end
+
     it "correctly unstages a user" do
       user.unstage!
       expect(user.staged).to eq(false)
@@ -3272,6 +3332,30 @@ RSpec.describe User do
     it "filters by username" do
       filter_by(:filter_by_username)
     end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "ignores blank terms" do
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(["", "filter_term_a", nil])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect { User.filter_by_username(Array.new(51) { |i| "filter_term_#{i}" }) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
   end
 
   describe "#filter_by_username_or_email" do
@@ -3286,6 +3370,31 @@ RSpec.describe User do
 
     it "filters by username" do
       filter_by(:filter_by_username_or_email)
+    end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username_or_email(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username_or_email(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username_or_email(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "matches email terms exactly" do
+      user.update!(email: "filter@example.com")
+      Fabricate(:user, email: "not_filter@example.com")
+
+      expect(User.filter_by_username_or_email(%w[filter@example.com])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect {
+        User.filter_by_username_or_email(Array.new(51) { |i| "filter_term_#{i}" })
+      }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -3994,6 +4103,44 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe ".whisperers" do
+    subject(:whisperers) { User.whisperers.where(id: candidates) }
+
+    fab!(:group)
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:member, :user)
+    fab!(:regular_user, :user)
+
+    let(:candidates) { [admin, moderator, member, regular_user] }
+
+    before { group.add(member) }
+
+    context "when a group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = group.id.to_s }
+
+      it "returns administrators and members of the whisper groups" do
+        expect(whisperers).to contain_exactly(admin, member)
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+
+    context "when no group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = "" }
+
+      it "returns no user" do
+        expect(whisperers).to be_empty
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
     end
   end
 

@@ -14,20 +14,18 @@ module("Component | PollInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("public multiple poll with results anytime", async function (assert) {
-    this.setProperties({
-      isMultiple: true,
-      min: 1,
-      max: 2,
-      options: OPTIONS,
-      closesAt: null,
-      closed: false,
-      results: [],
-      showResults: false,
-      postUserId: 59,
-      isPublic: true,
-      hasVoted: true,
-      voters: [],
-    });
+    this.isMultiple = true;
+    this.min = 1;
+    this.max = 2;
+    this.options = OPTIONS;
+    this.closesAt = null;
+    this.closed = false;
+    this.results = [];
+    this.showResults = false;
+    this.postUserId = 59;
+    this.isPublic = true;
+    this.hasVoted = true;
+    this.voters = [];
 
     await render(
       <template>
@@ -64,20 +62,18 @@ module("Component | PollInfo", function (hooks) {
   });
 
   test("public multiple poll with results only shown on vote", async function (assert) {
-    this.setProperties({
-      isMultiple: true,
-      min: 1,
-      max: 2,
-      options: OPTIONS,
-      closesAt: null,
-      closed: false,
-      results: "on_vote",
-      showResults: false,
-      postUserId: 59,
-      isPublic: true,
-      hasVoted: false,
-      voters: [],
-    });
+    this.isMultiple = true;
+    this.min = 1;
+    this.max = 2;
+    this.options = OPTIONS;
+    this.closesAt = null;
+    this.closed = false;
+    this.results = "on_vote";
+    this.showResults = false;
+    this.postUserId = 59;
+    this.isPublic = true;
+    this.hasVoted = false;
+    this.voters = [];
 
     await render(
       <template>
@@ -121,18 +117,16 @@ module("Component | PollInfo", function (hooks) {
   });
 
   test("displays who closed the poll", async function (assert) {
-    this.setProperties({
-      options: OPTIONS,
-      closesAt: null,
-      closed: true,
-      closedBy: { username: "jane" },
-      results: [],
-      showResults: false,
-      postUserId: 59,
-      isPublic: false,
-      hasVoted: false,
-      voters: [],
-    });
+    this.options = OPTIONS;
+    this.closesAt = null;
+    this.closed = true;
+    this.closedBy = { username: "jane" };
+    this.results = [];
+    this.showResults = false;
+    this.postUserId = 59;
+    this.isPublic = false;
+    this.hasVoted = false;
+    this.voters = [];
 
     await render(
       <template>

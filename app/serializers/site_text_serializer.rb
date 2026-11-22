@@ -3,6 +3,8 @@
 class SiteTextSerializer < ApplicationSerializer
   attributes :id,
              :value,
+             :override_value,
+             :preview_default,
              :status,
              :old_default,
              :new_default,
@@ -16,6 +18,18 @@ class SiteTextSerializer < ApplicationSerializer
 
   def value
     object[:value]
+  end
+
+  def override_value
+    override&.value
+  end
+
+  def preview_default
+    I18n.overrides_disabled { I18n.t(object[:id], locale: override.locale) }
+  end
+
+  def include_preview_default?
+    options[:include_preview_default] && override.present?
   end
 
   def status
@@ -51,6 +65,8 @@ class SiteTextSerializer < ApplicationSerializer
   private
 
   def override
-    TranslationOverride.find_by(locale: object[:locale], translation_key: object[:id])
+    return @override if defined?(@override)
+
+    @override = TranslationOverride.find_by(locale: object[:locale], translation_key: object[:id])
   end
 end

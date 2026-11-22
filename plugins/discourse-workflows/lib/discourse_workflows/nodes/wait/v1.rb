@@ -127,6 +127,7 @@ module DiscourseWorkflows
                 },
               }
             end,
+          credentials: Schemas::Webhook::CREDENTIALS,
           capabilities: {
             waits_for_resume: true,
             produces_data: false,

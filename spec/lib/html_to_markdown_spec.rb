@@ -263,6 +263,34 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown("<p>Before<br>\nInside<br>After</p>")).to eq("Before\nInside\nAfter")
   end
 
+  it "splits every inline ancestor around <br>" do
+    expect(html_to_markdown("<div><span><b>a<br>b</b></span></div>")).to eq("**a**\n**b**")
+  end
+
+  it "hoists <br> out of deeply nested inline elements in bounded time" do
+    html = "<div>#{"a<br>b<br>c<br>d<span>" * 300}x#{"</span>" * 300}</div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "hoists many <br> out of a single inline element in linear time" do
+    html = "<div><span>#{"a<br>" * 20_000}</span></div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "hoists many <br> out of deeply nested inline elements in bounded time" do
+    html = "<div>#{"<span>" * 300}#{"<br>" * 20_000}x#{"</span>" * 300}</div>"
+
+    expect { Timeout.timeout(5) { html_to_markdown(html) } }.not_to raise_error
+  end
+
+  it "keeps formatting around every line of a long message in nested inline elements" do
+    html = "<div><b>#{"<span>" * 8}<i>#{"line<br>" * 200}</i>#{"</span>" * 8}</b></div>"
+
+    expect(html_to_markdown(html)).to eq((["__*line*__"] * 200).join("\n"))
+  end
+
   it "converts <hr>" do
     expect(html_to_markdown("Before<hr>Inside<hr>After")).to eq(
       "Before\n\n---\n\nInside\n\n---\n\nAfter",
@@ -446,6 +474,25 @@ RSpec.describe HtmlToMarkdown do
 
   it "separates a nested list from the <li> that follows it" do
     expect(html_to_markdown("<ul><ol><li>🍏</li></ol><li>🍐</li></ul>")).to eq("1. 🍏\n- 🍐")
+  end
+
+  it "indents each nesting level by a single step" do
+    expect(html_to_markdown("<ul><li>A<ul><li>B<ul><li>C</li></ul></li></ul></li></ul>")).to eq(
+      "- A\n  - B\n    - C",
+    )
+
+    expect(
+      html_to_markdown(
+        "<ul><li>A<ul><li>B<ul><li>C<ul><li>D</li></ul></li></ul></li></ul></li></ul>",
+      ),
+    ).to eq("- A\n  - B\n    - C\n      - D")
+  end
+
+  it "does not scale nested-list indentation by the total nesting depth" do
+    depth = 50
+    html = ("<ul><li>x" * depth) + ("</li></ul>" * depth)
+    deepest_indent = html_to_markdown(html).lines.last[/\A */].size
+    expect(deepest_indent).to eq(2 * (depth - 1))
   end
 
   it "supports bare <li>" do

@@ -1,10 +1,67 @@
 import { getOwner } from "@ember/owner";
+import { triggerEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import { AI_CONVERSATIONS_PANEL } from "discourse/plugins/discourse-ai/discourse/services/ai-conversations-sidebar-manager";
 
 module("Unit | Service | ai-conversations-sidebar-manager", function (hooks) {
   setupTest(hooks);
+
+  test("scroll pagination follows the conversation list when its DOM is replaced", async function (assert) {
+    const service = getOwner(this).lookup(
+      "service:ai-conversations-sidebar-manager"
+    );
+    const fetchMessages = sinon.stub(service, "fetchMessages").resolves();
+    const list = document.createElement("div");
+    list.className = "sidebar-sections ai-conversations-panel";
+    document.getElementById("qunit-fixture").append(list);
+
+    service.appEvents.trigger("discourse-ai:conversations-sidebar-updated");
+    await triggerEvent(list, "scroll");
+    assert.true(
+      fetchMessages.calledOnce,
+      "the initial list loads older conversations"
+    );
+    fetchMessages.resetHistory();
+
+    const replacement = document.createElement("div");
+    replacement.className = list.className;
+    list.replaceWith(replacement);
+    service.appEvents.trigger("discourse-ai:conversations-sidebar-updated");
+
+    await triggerEvent(list, "scroll");
+    assert.false(
+      fetchMessages.called,
+      "the detached list no longer loads conversations"
+    );
+
+    await triggerEvent(replacement, "scroll");
+    assert.true(
+      fetchMessages.calledOnce,
+      "the replacement list loads older conversations"
+    );
+  });
+
+  test("removes the scroll listener when the conversation list disappears", async function (assert) {
+    const service = getOwner(this).lookup(
+      "service:ai-conversations-sidebar-manager"
+    );
+    const fetchMessages = sinon.stub(service, "fetchMessages").resolves();
+    const list = document.createElement("div");
+    list.className = "sidebar-sections ai-conversations-panel";
+    document.getElementById("qunit-fixture").append(list);
+    service.appEvents.trigger("discourse-ai:conversations-sidebar-updated");
+
+    list.remove();
+    service.appEvents.trigger("discourse-ai:conversations-sidebar-updated");
+    await triggerEvent(list, "scroll");
+
+    assert.false(
+      fetchMessages.called,
+      "scrolling the removed list does not load conversations"
+    );
+  });
 
   test("unstarred conversations move into newly created date sections", function (assert) {
     const service = getOwner(this).lookup(

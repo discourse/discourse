@@ -9,6 +9,14 @@ da:
     dsa_notice:
       choice_title: "Det er ulovligt"
       email: "E-mail adresse"
+    code_editor:
+      search:
+        replace: "Erstat"
+        next: "Næste"
+        previous: "Forrige"
+        close: "Luk"
+      fold:
+        to: "til"
     user_api_key:
       authorize: "Autoriser"
       deny: "Annuller"
@@ -431,24 +439,20 @@ da:
       title: "Nye og ulæste emner"
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Tilbage"
     design_wizard:
       back: "Tilbage"
       next: "Næste"
       sections:
-        theme: "Tema"
         fonts: "Skrifttyper"
+        logo: "Logo"
         homepage: "Hjemmeside"
-        search: "Søg"
       theme:
         selected: "Valgt"
-      colors:
-        light: "Lys"
-        dark: "Mørk"
       fonts:
-        heading_font: "Overskrifts skrifttype"
+        base_font: "Brødtekst"
+        heading_font: "Overskrifter"
+      logo:
+        help_text: "Anbefalet størrelse er 600 x 80 pixels."
       homepage:
         topics: "Emner"
         categories: "Kategorier"
@@ -813,6 +817,7 @@ da:
           title: "Alting"
       context_question:
         delimiter: "eller"
+        something_wrong_with_post: "Er der noget galt med dette indlæg?"
       types:
         reviewable_flagged_post:
           title: "Markeret indlæg"
@@ -1856,6 +1861,7 @@ da:
         redeemed_tab_with_count: "Indløst (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} indløst)"
+        invited_via_link_without_key: "link (%{count} / %{max} indløst)"
         groups: "Grupper"
         topic: "Emne"
         sent: "Oprettet/Senest Sendt"
@@ -2398,6 +2404,7 @@ da:
       to: Til
     emoji_picker:
       filter_placeholder: Søg efter humørikon
+      no_results: "Ingen resultater"
       smileys_&_emotion: Smilys og følelser
       people_&_body: Mennesker og krop
       animals_&_nature: Dyr og natur
@@ -2431,6 +2438,10 @@ da:
       emoji: "Emoji :)"
       more_emoji: "mere…"
       options: "Indstillinger"
+      ai_content:
+        code: "Kode"
+        quote: "Citér"
+        details: "Detaljer"
       whisper: "hvisken"
       unlist: "Ikke listede"
       add_warning: "Dette er en officiel advarsel."
@@ -3296,10 +3307,8 @@ da:
           label: "valgte"
           title: "Klik for at fjerne indlæg fra valg"
         select_replies:
-          label: "vælg +svar"
           title: "Tilføj indlæg og alle dets svar til valg"
         select_below:
-          label: "vælg + nedenfor"
           title: "Tilføj indlæg og alt efter det til valg"
         delete: slet valgte
         cancel: glem valg
@@ -4139,6 +4148,15 @@ da:
       forward: "Fremad"
       share: "Del"
       dismiss: "Skjul"
+    mobile_tab_bar:
+      new_topic: "Nyt emne"
+      create: "Opret"
+      more: "Flere"
+      back: "Tilbage"
+      topics: "Emner"
+      drafts:
+        one: "Kladder (%{count})"
+        other: "Kladder (%{count})"
     safe_mode:
       enabled: "Sikker tilstand er slået til - for at forlade sikker tilstand, så luk dette browservindue"
     image_removed: "(billede fjernet)"
@@ -4396,11 +4414,11 @@ da:
           title: "Avanceret"
       upcoming_changes:
         name: "Navn"
-        enabled: "Aktiveret"
+        enabled: "Aktiveret?"
+        feedback: "Tilbagemelding"
         select_groups: "Vælg grupper…"
+        settings: "Indstillinger"
         preview: "Forhåndsvisning"
-        enabled_for_options:
-          everyone: "Alle"
         statuses:
           experimental: "Eksperimentel"
         impact_roles:
@@ -5135,10 +5153,6 @@ da:
           your_organization: "Din organisation"
           company_name: "Navn"
           company_url: "Hjemmeside"
-          governing_law: "Gældende lov"
-          governing_law_placeholder: "Provins, stat eller land"
-          city_for_disputes: "By for tvister"
-          city_for_disputes_placeholder: "By"
           extra_groups:
             groups: "Grupper"
           locale_selector:
@@ -5270,7 +5284,6 @@ da:
           uploading: "Overfører…"
           uploading_progress: "Overfører… %{progress}%"
           success: "'%{filename}' er blevet overført. Filen behandles nu og vil tage op til et minut for at blive vist på listen."
-          error: "Der skete en fejl da filen '%{filename}' blev forsøgt overført: %{message}"
         settings: "Indstillinger"
         operations:
           failed: "%{operation} gik galt. Kig venligst i logfilerne."
@@ -5999,7 +6012,6 @@ da:
         silence_modal_title: "Mådehold (silence) Bruger"
         silence_duration: "Hvor længe vil brugeren være mådeholdt (silenced)?"
         silence_reason_placeholder: "Årsag for mådeholdenhed (silence)"
-        silence_message: "Email Besked"
         suspended_until: "(indtil %{until})"
         cant_suspend: "Denne bruger kan ikke suspenderes."
         delete_posts_failed: "Der opstod et problem med at slette indlægene."
@@ -6239,6 +6251,8 @@ da:
           multiselect: "Multivælg"
       site_text:
         search_label: "Søg"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiveret"
         edit: "Rediger"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
@@ -6361,7 +6375,7 @@ da:
           modal_title: Badge grupperinger
         granted_by: Givet af
         granted_at: Givet på
-        reason_help: (Et link til et indlæg eller et emne)
+        reason_help: Et link til et indlæg eller et emne
         save: Gem
         delete: Slet
         delete_confirm: Er du sikker på du vil slette denne badge ?

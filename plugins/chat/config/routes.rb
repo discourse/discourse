@@ -40,6 +40,10 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/pins/read" => "channel_pins#mark_read"
     post "/channels/:channel_id/messages/:message_id/pin" => "channel_pins#create"
     delete "/channels/:channel_id/messages/:message_id/pin" => "channel_pins#destroy"
+    post "/channels/:channel_id/messages/:message_id/broadcast" =>
+           "channel_message_broadcast#create"
+    delete "/channels/:channel_id/messages/:message_id/broadcast" =>
+             "channel_message_broadcast#destroy"
 
     # Category chatables controller hints. Only used by staff members, we don't want to leak category permissions.
     get "/category-chatables/:id/permissions" => "category_chatables#permissions",
@@ -120,7 +124,7 @@ Chat::Engine.routes.draw do
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_c_route}/#{route}" => "chat#respond"
   end
 
@@ -135,7 +139,7 @@ Chat::Engine.routes.draw do
 
   get base_channel_route, to: redirect(redirect_base)
 
-  %w[info info/about info/members info/settings info/search].each do |route|
+  %w[info info/about info/members info/preferences info/settings info/search].each do |route|
     get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
   end
 end

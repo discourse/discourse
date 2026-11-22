@@ -72,13 +72,13 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       response({ logs: [LOG], meta: { has_more: false } })
     );
 
-    this.set("model", {
+    this.model = {
       logs: [LOG],
       meta: { has_more: false },
       models: [],
       features: [],
-    });
-    this.set("queryParams", {});
+    };
+    this.queryParams = {};
   });
 
   test("surfaces new logs in a banner and loads them on click", async function (assert) {
@@ -196,11 +196,11 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       pollQuery = request.queryParams;
       return response({ new_logs_count: 0 });
     });
-    this.set("queryParams", {
+    this.queryParams = {
       period: "hour",
       outcome: "failed",
       search: "topic:424242",
-    });
+    };
 
     await render(
       <template>
@@ -238,12 +238,12 @@ module("Integration | Component | ai-logs new-log banner", function (hooks) {
       pollQuery = request.queryParams;
       return response({ new_logs_count: 0 });
     });
-    this.set("model", {
+    this.model = {
       logs: [],
       meta: { has_more: false, max_id: 987 },
       models: [],
       features: [],
-    });
+    };
 
     await render(
       <template>

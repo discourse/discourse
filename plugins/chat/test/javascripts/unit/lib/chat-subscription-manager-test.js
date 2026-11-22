@@ -152,6 +152,39 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     );
   });
 
+  test("thread manager keeps the thread id of a reconciled staged reply", function (assert) {
+    // Without threadId the author's own reply offers no "Send to #channel" until reload.
+    const channel = this.fabricators.channel({ id: 12 });
+    channel.threadingEnabled = true;
+    const thread = this.fabricators.thread({ id: 223, channel });
+    const manager = new ChatChannelThreadSubscriptionManager(this, thread);
+    manager.currentUser = { id: 1 };
+
+    const stagedMessage = this.fabricators.message({
+      id: "staged-9",
+      channel,
+      thread,
+      staged: true,
+      processed: false,
+      message: "",
+      cooked: "",
+      user: { id: 1, username: "current_user" },
+    });
+    thread.messagesManager.addMessages([stagedMessage]);
+
+    manager.handleSentMessage({
+      type: "sent",
+      staged_id: "staged-9",
+      chat_message: {
+        ...buildChatMessagePayload({ id: 119 }),
+        thread_id: 223,
+      },
+    });
+
+    assert.strictEqual(stagedMessage.id, 119);
+    assert.strictEqual(stagedMessage.threadId, 223);
+  });
+
   test("channel manager moves a confirmed message to its server position", function (assert) {
     const channel = this.fabricators.channel({ id: 15 });
     const manager = new ChatChannelSubscriptionManager(this, channel);
@@ -244,6 +277,32 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.false(message.expanded);
   });
 
+  test("channel manager removes the message from the stream when a broadcast is revoked, even for moderators", function (assert) {
+    const channel = this.fabricators.channel({
+      id: 19,
+      meta: { can_moderate: true },
+    });
+    const message = this.fabricators.message({
+      id: 204,
+      channel,
+      broadcasted: true,
+      user: { id: 2, username: "other_user" },
+    });
+    channel.messagesManager.addMessages([message]);
+
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+    manager.currentUser = { id: 1, staff: false };
+
+    manager.handleDeleteMessage({
+      deleted_id: message.id,
+      deleted_at: null,
+      broadcast_removed: true,
+    });
+
+    assert.strictEqual(channel.messagesManager.messages.length, 0);
+    assert.strictEqual(message.deletedAt, undefined);
+  });
+
   test("thread manager keeps deleted messages visible for category moderators", function (assert) {
     const channel = this.fabricators.channel({
       id: 14,
@@ -270,6 +329,54 @@ module("Unit | Lib | chat subscription managers", function (hooks) {
     assert.strictEqual(message.deletedById, 1);
     assert.strictEqual(message.deletedAt, "2026-03-11T10:00:00.000Z");
     assert.false(message.expanded);
+  });
+
+  test("channel manager refreshes the thread preview carried by the original message", function (assert) {
+    const channel = this.fabricators.channel({ id: 15 });
+    const originalMessage = this.fabricators.message({
+      id: 300,
+      channel,
+      thread: this.fabricators.thread({ id: 224, channel }),
+    });
+    // a broadcasted copy is serialized with thread_id and no thread object
+    const broadcastedReply = this.fabricators.message({
+      id: 301,
+      channel,
+      broadcasted: true,
+      thread_id: 224,
+    });
+    const unrelatedMessage = this.fabricators.message({
+      id: 302,
+      channel,
+      thread: this.fabricators.thread({ id: 225, channel }),
+    });
+    channel.messagesManager.addMessages([
+      originalMessage,
+      broadcastedReply,
+      unrelatedMessage,
+    ]);
+    unrelatedMessage.thread.preview.update({ reply_count: 5 });
+
+    const manager = new ChatChannelSubscriptionManager(this, channel);
+
+    manager.handleThreadOriginalMessageUpdate({
+      type: "update_thread_original_message",
+      channel_id: channel.id,
+      thread_id: 224,
+      original_message_id: originalMessage.id,
+      preview: { reply_count: 8, participant_count: 2, participant_users: [] },
+    });
+
+    assert.strictEqual(
+      originalMessage.thread.preview.replyCount,
+      8,
+      "original message indicator updates"
+    );
+    assert.strictEqual(
+      unrelatedMessage.thread.preview.replyCount,
+      5,
+      "messages of other threads are untouched"
+    );
   });
 
   for (const [label, build] of [

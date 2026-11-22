@@ -172,6 +172,10 @@ task "docker:test" do
           )
         @good &&=
           run_or_fail(
+            "bundle exec ruby script/upcoming_changes_lint.rb plugins/#{ENV["SINGLE_PLUGIN"]}/config/settings.yml",
+          )
+        @good &&=
+          run_or_fail(
             "pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins/#{ENV["SINGLE_PLUGIN"]}",
           )
 
@@ -197,6 +201,14 @@ task "docker:test" do
         @good &&=
           run_or_fail(
             'bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"',
+          ) unless ENV["SKIP_PLUGINS"]
+        @good &&=
+          run_or_fail(
+            "bundle exec ruby script/upcoming_changes_lint.rb config/site_settings.yml",
+          ) unless ENV["SKIP_CORE"]
+        @good &&=
+          run_or_fail(
+            'bundle exec ruby script/upcoming_changes_lint.rb "plugins/*/config/settings.yml"',
           ) unless ENV["SKIP_PLUGINS"]
 
         unless ENV["SKIP_CORE"]

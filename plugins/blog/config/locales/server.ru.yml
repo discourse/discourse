@@ -14,9 +14,12 @@ ru:
     about: Информация
     community: Сообщество
     preview: Предпросмотр
+    author: Автор
     search: Искать
     replies:
       one: "%{count} ответ"
       few: "%{count} ответа"
       many: "%{count} ответов"
       other: "%{count} ответ"
+    themes:
+      default: Домашнюю страницу

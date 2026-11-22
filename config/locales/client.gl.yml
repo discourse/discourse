@@ -6,6 +6,14 @@
 
 gl:
   js:
+    code_editor:
+      search:
+        replace: "Substituír"
+        next: "Seguinte"
+        previous: "Anterior"
+        close: "Pechar"
+      fold:
+        to: "para o"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"
@@ -266,22 +274,14 @@ gl:
       pill: "Mensaxes relacionadas"
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Volver"
     design_wizard:
       back: "Volver"
       next: "Seguinte"
       sections:
-        theme: "Tema"
         fonts: "Tipos de letra"
         homepage: "Páxina de inicio"
-        search: "Buscar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        heading_font: "Tipo de letra de título"
+        base_font: "Mensaxe"
       homepage:
         topics: "Temas"
         categories: "Categorías"
@@ -1439,6 +1439,7 @@ gl:
         redeemed_tab_with_count: "Utilizados (%{count})"
         invited_via: "Convite"
         invited_via_link: "ligazón %{key} (%{count} / %{max} rescatadas)"
+        invited_via_link_without_key: "ligazón (%{count} / %{max} ofrecementos)"
         groups: "Grupos"
         topic: "Tema"
         sent: "Creado/Último envío"
@@ -1868,6 +1869,10 @@ gl:
     composer:
       emoji: "Emoji :)"
       options: "Opcións"
+      ai_content:
+        code: "Código"
+        quote: "Cita"
+        details: "Detalles"
       whisper: "rumor"
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
@@ -2596,10 +2601,8 @@ gl:
           label: "seleccionado"
           title: "Prema para eliminar a publicación da selección"
         select_replies:
-          label: "seleccionar +respostas"
           title: "Engadir a publicación e todas as respostas asociadas á selección"
         select_below:
-          label: "seleccione +seguintes"
           title: "Engadir publicación e todas as posteriores á selección"
         delete: eliminar seleccionados
         cancel: cancelar a selección
@@ -3332,6 +3335,11 @@ gl:
       forward: "Reenviar"
       share: "Compartir"
       dismiss: "Desbotar"
+    mobile_tab_bar:
+      create: "Crear"
+      more: "Máis"
+      back: "Volver"
+      topics: "Temas"
     safe_mode:
       enabled: "O modo seguro está activado; para saír do modo seguro peche esta xanela do navegador"
     image_removed: "(imaxe retirada)"
@@ -3480,10 +3488,9 @@ gl:
           title: "Complementos"
       upcoming_changes:
         name: "Nome"
-        enabled: "Activado"
+        enabled: "Activado?"
+        settings: "Configuración"
         preview: "Visualizar"
-        enabled_for_options:
-          everyone: "Todos"
         impact_roles:
           admins: "Administradores"
           moderators: "Moderadores"
@@ -4128,7 +4135,6 @@ gl:
           label: "Cargar"
           title: "Cargar unha copia de seguranza a esta instancia"
           success: "Cargouse correctamente «%{filename}». O ficheiro está agora sendo procesado e tardará ata un minuto en aparecer na lista."
-          error: "Produciuse un erro durante a carga de «%{filename}»: %{message}"
         settings: "Configuración"
         operations:
           failed: "Produciuse un fallo %{operation} . Revisa os rexistros."
@@ -4751,7 +4757,6 @@ gl:
         silence_modal_title: "Silenciar o usuario"
         silence_duration: "Canto tempo estará silenciado o usuario?"
         silence_reason_placeholder: "Razón do silencio"
-        silence_message: "Mensaxe de correo"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
@@ -4964,6 +4969,8 @@ gl:
           dropdown: "Despregábel"
       site_text:
         search_label: "Buscar"
+        preview:
+          default: "Predeterminado"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         edit: "Editar"
@@ -5052,7 +5059,7 @@ gl:
           modal_title: Grupos de insignias
         granted_by: Concedido por
         granted_at: Concedido
-        reason_help: (Ligazón a unha publicación ou tema)
+        reason_help: Ligazón a unha publicación ou tema
         save: Gardar
         delete: Eliminar
         delete_confirm: Confirma a eliminación desta insignia?

@@ -27,6 +27,10 @@ cs:
               label: ID tématu
     discourse_events:
       title: "Události"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrovat"
       preferences:
         reminders:
           preferences:

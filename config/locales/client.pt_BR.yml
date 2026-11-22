@@ -12,6 +12,15 @@ pt_BR:
       title: "Denunciar conteúdo ilegal"
       email: "Endereço de e-mail"
       resend_email_code: "Reenviar código"
+    code_editor:
+      search:
+        replace: "Substituir"
+        next: "Próximo"
+        previous: "Anterior"
+        close: "Fechar"
+        go: "Ir"
+      fold:
+        to: "para"
     user_api_key:
       title: 'Autorizar "%{application_name}"'
       authorize: "Autorizar"
@@ -501,39 +510,29 @@ pt_BR:
       pm_title: "Mensagens sugeridas"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
+      create_category:
+        action: "Criar categoria"
       invite_collaborators:
         title: "Convidar colaboradores"
         action: "Criar convite"
-      start_posting:
-        title: "Comece a postar"
-        action: "Ver ideias"
-        choose_option: "Como você gostaria de começar?"
-        predefined_topics: "Modelos para quebrar o gelo"
-        predefined_topics_subtitle: "Dê aos novos membros algo sobre o que conversar. Escolha um modelo para editar e crie o seu próprio."
-        predefined_topics_description: "Escolha dentre uma seleção de temas para iniciar conversas e dar início a um diálogo."
-        use_predefined: "Navegar pelos modelos"
-        back: "Voltar"
-        icebreakers:
-          introduce_yourself:
-            title: "Apresente-se"
-            body: "Bem-vindo(a) à comunidade! Vamos nos conhecer. Por favor, apresente-se e compartilhe um pouco sobre seus interesses. Eu começo: sou apaixonado(a) por tecnologia e adoro ensinar!"
     design_wizard:
       back: "Voltar"
       next: "Próximo"
+      steps:
+        theme:
+          title: "Escolha um tema"
       sections:
-        theme: "Tema"
         fonts: "Fontes"
+        logo: "Logotipo"
         homepage: "Página Inicial"
-        welcome_banner: "Banner de boas-vindas"
-        search: "Pesquisar"
       theme:
         selected: "Selecionado(a)"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
       fonts:
-        base_font: "Fonte de base"
-        heading_font: "Fonte do cabeçalho"
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
+      logo:
+        description: "Aparece na navegação superior do site, bem como no topo das notificações de e-mail do site."
+        help_text: "O tamanho recomendado é 600 x 80 pixels."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -988,6 +987,7 @@ pt_BR:
         suspect_user: "Este usuário é spam?"
         approve_post: "Aprovar esta postagem?"
         approve_topic: "Aprovar este tópico?"
+        something_wrong_with_post: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -2539,6 +2539,7 @@ pt_BR:
       no_results: "Nenhum resultado"
       search: "Pesquisar…"
       label: "Selecione as opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Digite um número
@@ -2619,7 +2620,6 @@ pt_BR:
         }.
     learn_more: "Saiba mais…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Saiba mais…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Silenciar
     unmute: Remover silêncio
     last_post: Postado
@@ -2969,6 +2969,9 @@ pt_BR:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido de %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      search_placeholder: "Pesquisar por nome de emoji e codinomes..."
+      no_results: "Nenhum resultado"
+      favorites: "Usado frequentemente"
       smileys_&_emotion: Carinhas e emotion
       people_&_body: Pessoas e corpo
       animals_&_nature: Animais e natureza
@@ -3021,6 +3024,10 @@ pt_BR:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citação"
+        details: "Detalhes"
       whisper: "sussuro"
       unlist: "não listado"
       add_warning: "Esta é uma advertência oficial."
@@ -4147,10 +4154,8 @@ pt_BR:
           label: "selecionado(a)"
           title: "Clique para remover a postagem da seleção"
         select_replies:
-          label: "selecionar +respostas"
           title: "Adicionar postagem e todas as suas respostas à seleção"
         select_below:
-          label: "selecionar +abaixo"
           title: "Adicionar a postagem e todo o conteúdo abaixo à seleção"
         delete: Excluir selecionados(as)
         cancel: cancelar seleção
@@ -4179,6 +4184,7 @@ pt_BR:
         actions: "Ações em massa"
     post:
       accessible_heading: "postagem por #%{username} em %{date}"
+      ai_generated: "IA"
       heading_anchor: "Link do cabeçalho"
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -5262,6 +5268,15 @@ pt_BR:
       forward: "Avançar"
       share: "Compartilhar"
       dismiss: "Descartar"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Voltar"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
     theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
@@ -5665,29 +5680,26 @@ pt_BR:
         name: "Nome"
         plugin: "Plugin"
         metadata: "Metadados"
-        enabled: "Ativado"
-        enabled_for: "Ativado para..."
+        enabled: "Ativado(a)?"
         show_image: "Mostrar imagem"
-        edit_groups: "Editar grupos de adesão"
+        feedback: "Comentário"
         groups_updated: "Grupos atualizados!"
         save_groups: "Salvar grupos"
         add_groups_to_enable: "Adicione grupos para ativar este recurso."
         no_changes_to_save: "Nenhuma alteração para salvar"
         select_groups: "Selecionar grupos…"
         opt_in_groups: "Grupos de adesão voluntária"
-        show_related_settings: "Mostrar configurações relacionadas..."
+        settings: "Definições"
         opt_in_groups_instructions: "Os grupos de adesão voluntária podem ser usados para permitir que um determinado grupo de usuários teste uma alteração antes que ela seja liberada para todos. Observe que esses grupos se tornarão irrelevantes assim que a alteração atingir o status Estável."
         enabled_for_throttle: "Você alterou a pessoa para quem essa alteração está ativada muito rapidamente. Aguarde alguns segundos antes de tentar novamente."
         change_enabled_for_success: "Você ativou essa alteração para %{enabledFor}"
         change_disabled: "Você optou por não participar desta alteração."
         permanent_notice: "Essa alteração agora é permanente e será removida em breve. Você não poderá mais optar por não participar."
-        permanent_soon_notice: "Esta mudança se tornará permanente em breve. Você não poderá mais optar por não participar."
         permanent_no_group_selection: "Não aplicável, alterações permanentes se aplicam a todos os grupos."
         no_changes: "Não há alterações previstas neste momento."
         preview: "Pré-visualizar"
         enabled_for_options:
           no_one: "Ninguém"
-          everyone: "Todos(as)"
           staff: "Apenas %{staffGroupName}"
           specific_groups: "Grupo(s) específico(s)"
           specific_groups_with_group_names:
@@ -6860,14 +6872,6 @@ pt_BR:
           company_name: "Nome"
           company_url: "Site"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Lei aplicável"
-          governing_law_placeholder: "Província, estado ou país"
-          governing_law_help: |
-            Especifique a jurisdição à qual pertencem os termos legais do site, geralmente é onde a empresa está registrada ou atua
-          city_for_disputes: "Cidade para disputas"
-          city_for_disputes_placeholder: "Cidade"
-          city_for_disputes_help: |
-            Especifique a cidade para a solução de disputas legais relacionadas a este fórum.
           extra_groups:
             heading: "Listagem de grupos"
             description: "Grupos extras a serem exibidos na página Sobre."
@@ -7074,7 +7078,6 @@ pt_BR:
           uploading: "Enviando…"
           uploading_progress: "Enviando… %{progress}%"
           success: "'%{filename} foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Houve um erro ao carregar \"%{filename}\": %{message}"
         settings: "Configurações"
         operations:
           is_running: "Uma operação está sendo executada…"
@@ -8071,7 +8074,6 @@ pt_BR:
         silence_duration: "Por quanto tempo o(a) usuário(a) será silenciado(a)?"
         silence_reason_title: "Motivo do silêncio"
         silence_reason_placeholder: "Motivo do silêncio"
-        silence_message: "Mensagem do e-mail"
         suspended_until: "(até %{until})"
         suspend_forever: "Suspender para sempre"
         cant_suspend: "Este(a) usuário(a) não pode ser suspenso(a)."
@@ -8385,6 +8387,8 @@ pt_BR:
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
         search_label: "Pesquisar"
+        preview:
+          default: "Padrão"
         theme_disabled: "Desativados"
         filters: "Filtros"
         status:
@@ -8552,7 +8556,7 @@ pt_BR:
           modal_title: Agrupamentos de emblemas
         granted_by: Concedido por
         granted_at: Concedido em
-        reason_help: (Um link para uma postagem ou tópico)
+        reason_help: Um link para uma postagem ou tópico
         save: Salvar
         delete: Excluir
         delete_confirm: Tem certeza de que deseja excluir este emblema?

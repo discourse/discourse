@@ -14,7 +14,10 @@ it:
     about: Informazioni su
     community: Community
     preview: Anteprima
+    author: Autore
     search: Cerca
     replies:
       one: "%{count} risposta"
       other: "%{count} risposte"
+    themes:
+      default: Predefinito
