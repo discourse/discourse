@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
-import DsaClassificationSelect from "discourse/components/dsa-classification-select";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
@@ -25,16 +24,14 @@ export function defaultClassification(options) {
   };
 }
 
+function selectionLabel(options, value, labelKey, placeholder) {
+  return (
+    options.find((option) => option.id === value)?.[labelKey] ?? placeholder
+  );
+}
+
 export default class DsaModerationDetails extends Component {
   formData = defaultClassification(this.args.options);
-
-  get rules() {
-    return this.args.options.community_rules.map((rule) => ({
-      id: rule.id,
-      name: rule.ground,
-      description: rule.explanation,
-    }));
-  }
 
   <template>
     <Form
@@ -55,16 +52,34 @@ export default class DsaModerationDetails extends Component {
         @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.rule"}}
         @tooltip={{i18n "dsa_statements.rule_help"}}
-        @type="custom"
+        @type="menu"
         @validation="required"
         as |field|
       >
-        <field.Control>
-          <DsaClassificationSelect
-            @field={{field}}
-            @options={{this.rules}}
-            @placeholder={{i18n "dsa_statements.rule_prompt"}}
-          />
+        <field.Control
+          @selection={{selectionLabel
+            @options.community_rules
+            field.value
+            "ground"
+            (i18n "dsa_statements.rule_prompt")
+          }}
+          as |menu|
+        >
+          {{#each @options.community_rules key="id" as |rule|}}
+            <menu.Item
+              class={{if rule.explanation "--with-description"}}
+              @value={{rule.id}}
+            >
+              {{#if rule.explanation}}
+                <span>
+                  <strong>{{rule.ground}}</strong><br />
+                  <small>{{rule.explanation}}</small>
+                </span>
+              {{else}}
+                {{rule.ground}}
+              {{/if}}
+            </menu.Item>
+          {{/each}}
         </field.Control>
       </form.Field>
       <form.Field
@@ -75,16 +90,22 @@ export default class DsaModerationDetails extends Component {
         @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.category"}}
         @tooltip={{component CategoryHelp}}
-        @type="custom"
+        @type="menu"
         @validation="required"
         as |field|
       >
-        <field.Control>
-          <DsaClassificationSelect
-            @field={{field}}
-            @options={{@options.categories}}
-            @placeholder={{i18n "dsa_statements.category_prompt"}}
-          />
+        <field.Control
+          @selection={{selectionLabel
+            @options.categories
+            field.value
+            "name"
+            (i18n "dsa_statements.category_prompt")
+          }}
+          as |menu|
+        >
+          {{#each @options.categories key="id" as |category|}}
+            <menu.Item @value={{category.id}}>{{category.name}}</menu.Item>
+          {{/each}}
         </field.Control>
       </form.Field>
     </Form>

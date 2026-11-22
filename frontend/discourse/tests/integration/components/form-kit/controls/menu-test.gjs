@@ -107,20 +107,56 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
   });
 
   test("@selection", async function (assert) {
+    const data = { foo: "item-1" };
+
     await render(
       <template>
-        <Form as |form|>
-          <form.Field @name="foo" @title="Foo" @type="menu" as |field|>
+        <Form @data={{data}} as |form|>
+          <form.Field
+            @helpText="Suggested value"
+            @name="foo"
+            @title="Foo"
+            @type="menu"
+            as |field|
+          >
             <field.Control @selection="Current item" as |menu|>
-              <menu.Item @value="item-1">Item 1</menu.Item>
+              <menu.Item @value="item-1">Current item</menu.Item>
+              <menu.Item @value="item-2">Another item</menu.Item>
             </field.Control>
           </form.Field>
         </Form>
       </template>
     );
 
+    const trigger = find(".form-kit__control-menu-trigger");
+    const labelIds = [
+      find(".form-kit__container-title").id,
+      find(".form-kit__control-menu-trigger .d-button-label").id,
+    ];
+
+    assert.dom(trigger).hasText("Current item", "shows the current selection");
     assert
-      .dom(".form-kit__control-menu-trigger .d-button-label")
-      .hasText("Current item");
+      .dom(trigger)
+      .hasAttribute(
+        "aria-labelledby",
+        labelIds.join(" "),
+        "names the field and its selection"
+      );
+    assert
+      .dom(trigger)
+      .hasAttribute(
+        "aria-describedby",
+        find(".form-kit__container-help-text").id,
+        "references the field hint"
+      );
+
+    await click(trigger);
+
+    assert
+      .dom('.form-kit__control-menu-item[data-value="item-1"] button')
+      .hasAttribute("aria-current", "true", "marks the current option");
+    assert
+      .dom('.form-kit__control-menu-item[data-value="item-2"] button')
+      .doesNotHaveAttribute("aria-current", "leaves other options unmarked");
   });
 });

@@ -3,6 +3,11 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 
 export default class FKControlMenuItem extends Component {
+  get selected() {
+    const { action: onSelect, field, value } = this.args;
+    return !onSelect && value != null && value === field.value;
+  }
+
   @action
   handleInput() {
     this.args.menuApi.close();
@@ -19,10 +24,12 @@ export default class FKControlMenuItem extends Component {
   <template>
     <@item class="form-kit__control-menu-item" data-value={{@value}}>
       <DButton
+        aria-current={{if this.selected "true"}}
         class="btn-flat"
         ...attributes
         @action={{this.handleInput}}
         @icon={{@icon}}
+        @suffixIcon={{if this.selected "check"}}
       >
         {{yield}}
       </DButton>

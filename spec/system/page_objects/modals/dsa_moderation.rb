@@ -38,7 +38,7 @@ module PageObjects
       end
 
       def has_no_rule_menu?
-        has_no_css?(".dsa-classification-options")
+        has_no_css?(".form-kit__control-menu-content")
       end
 
       def has_rule_option?(ground, explanation:)
@@ -46,7 +46,7 @@ module PageObjects
       end
 
       def has_readable_rule?(ground)
-        has_css?(".dsa-classification-option", text: ground) do |option|
+        has_css?(".form-kit__control-menu-item .btn", text: ground) do |option|
           option.evaluate_script("this.scrollHeight <= this.clientHeight")
         end
       end
@@ -55,11 +55,7 @@ module PageObjects
         within(full_modal_selector) do
           find("[data-name='category'] .form-kit__control-menu-trigger").click
         end
-        find(
-          ".dsa-classification-options .dsa-classification-option",
-          text: category,
-          exact_text: true,
-        ).click
+        find(".form-kit__control-menu-content .btn", text: category, exact_text: true).click
       end
 
       def continue
@@ -137,7 +133,7 @@ module PageObjects
 
       def has_accessible_selection?(field, label)
         has_css?(
-          "#{full_modal_selector} [data-name='#{field}'] .dsa-classification-select",
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger",
         ) do |trigger|
           trigger.evaluate_script("this.ariaLabelledByElements?.at(-1)?.textContent.trim()") ==
             label
