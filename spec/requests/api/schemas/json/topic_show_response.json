@@ -765,6 +765,12 @@
         "can_review_topic": {
           "type": "boolean"
         },
+        "can_set_reply_approval": {
+          "type": "boolean"
+        },
+        "reply_approval_required": {
+          "type": "boolean"
+        },
         "can_close_topic": {
           "type": "boolean"
         },

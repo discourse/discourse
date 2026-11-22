@@ -14,6 +14,7 @@ class TopicsController < ApplicationController
                    destroy
                    recover
                    status
+                   reply_approval
                    invite
                    mute
                    unmute
@@ -582,6 +583,22 @@ class TopicsController < ApplicationController
     end
 
     render json: result
+  end
+
+  def reply_approval
+    enabled = params.require(:enabled).to_s
+    raise Discourse::InvalidParameters.new(:enabled) if %w[true false].exclude?(enabled)
+
+    topic = Topic.find(params[:topic_id])
+    topic.with_lock do
+      guardian.ensure_can_set_topic_reply_approval!(topic)
+      topic.update!(reply_approval_required: enabled == "true")
+      if topic.saved_change_to_reply_approval_required?
+        StaffActionLogger.new(current_user).log_topic_reply_approval(topic)
+      end
+    end
+
+    head :no_content
   end
 
   def status

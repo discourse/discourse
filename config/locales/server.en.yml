@@ -2391,6 +2391,7 @@ en:
     enable_markdown_linkify: "Automatically treat text that looks like a link as a link: www.example.com and https://example.com will be automatically linked"
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
+    enable_topic_reply_approval: "Allow moderators to require approval of new replies in individual topics."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: 'All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the "arrive at topic" invite option)'
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
@@ -6449,6 +6450,7 @@ en:
         other: "This post included Watched Words, the flagged words are: %{words}. Check the %{link} for more."
       staged: "New topics and posts for staged users must be approved by staff. See %{link}."
       category: "Posts in this category require manual approval by staff. See the %{link}."
+      topic_reply_approval: "This topic requires approval of new replies."
       must_approve_users: "All new users must be approved by staff. See %{link}."
       invite_only: "All new users should be invited. See %{link}."
       email_auth_res_enqueue: "This email failed a DMARC check, it most likely isn't from whom it seems to be from. Check the raw email headers for more information."
