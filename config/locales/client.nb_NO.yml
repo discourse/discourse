@@ -5703,6 +5703,8 @@ nb_NO:
           dropdown: "Nedtrekk"
       site_text:
         search_label: "Søk"
+        preview:
+          default: "Forvalg"
         theme_disabled: "Deaktivert"
         filters: "Filter"
         edit: "Endre"
@@ -5780,7 +5782,7 @@ nb_NO:
           modal_title: Merkegrupper
         granted_by: Tildelt av
         granted_at: Tildelt
-        reason_help: (En lenke til et innlegg eller emne)
+        reason_help: En lenke til et innlegg eller emne
         save: Lagre
         delete: Slett
         delete_confirm: Er du sikker på at du vil slette dette merket?

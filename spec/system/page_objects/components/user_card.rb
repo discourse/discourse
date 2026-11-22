@@ -14,6 +14,10 @@ module PageObjects
         has_css?("#{USER_CARD_SELECTOR}.user-card-#{username}")
       end
 
+      def has_public_user_field?(name, value:)
+        has_css?("#{USER_CARD_SELECTOR} .public-user-field", text: "#{name}: #{value}")
+      end
+
       def has_filter_button?
         has_css?(FILTER_BUTTON_SELECTOR)
       end

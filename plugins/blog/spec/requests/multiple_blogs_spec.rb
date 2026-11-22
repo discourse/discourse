@@ -124,4 +124,156 @@ RSpec.describe "Several blogs", type: :request do
       expect(response.status).to eq(404)
     end
   end
+
+  describe "in the editor" do
+    fab!(:writers, :group)
+    fab!(:writer) { Fabricate(:user, groups: [writers], refresh_auto_groups: true) }
+
+    before do
+      SiteSetting.blog_contributor_groups = writers.id.to_s
+      engineering.update!(path_format: "/{year}/{slug}")
+    end
+
+    it "starts a new draft on the blog it was written for" do
+      sign_in(writer)
+
+      post "/posts.json",
+           params: {
+             title: "Notes from the engineering offsite",
+             raw: "What we learned while planning the next quarter together.",
+             category: drafts.id,
+             blog_id: engineering.id,
+           }
+
+      expect(response.status).to eq(200)
+      publication = Blog::Publication.find_by!(topic_id: response.parsed_body["topic_id"])
+      expect(publication).to have_attributes(
+        blog_id: engineering.id,
+        path: "/#{Time.current.year}/notes-from-the-engineering-offsite",
+      )
+    end
+
+    it "moves a draft to another blog until it is published" do
+      topic = Fabricate(:topic, category: drafts, user: admin, title: "A draft that changes blogs")
+      Fabricate(:post, topic:, user: admin)
+      sign_in(admin)
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: engineering.id,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to include(
+        "blog_id" => engineering.id,
+        "can_change_blog" => true,
+      )
+      publication = Blog::Publication.find_by!(topic:)
+      expect(publication.path).to eq("/#{Time.current.year}/a-draft-that-changes-blogs")
+
+      publish_blog_draft(publication, admin)
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: Blog::Instance.default_blog.id,
+            },
+          }
+
+      expect(response.status).to eq(422)
+      expect(publication.reload.blog_id).to eq(engineering.id)
+    end
+
+    it "keeps a topic in a blog's public category on that blog" do
+      topic = Fabricate(:topic, category: engineering_category, user: admin)
+      Fabricate(:post, topic:, user: admin)
+      sign_in(admin)
+
+      get "/blog-editor/publications/#{topic.id}.json"
+      expect(response.parsed_body).to include(
+        "blog_id" => engineering.id,
+        "can_change_blog" => false,
+      )
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: Blog::Instance.default_blog.id,
+            },
+          }
+      expect(response.status).to eq(422)
+      expect(Blog::Publication.where(topic:).pluck(:blog_id)).not_to include(
+        Blog::Instance.default_blog.id,
+      )
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              excerpt: "Still saved on its own blog.",
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(Blog::Publication.find_by!(topic:).blog_id).to eq(engineering.id)
+    end
+
+    it "withdraws the approval and schedule when a draft moves to another blog" do
+      topic = Fabricate(:topic, category: drafts, user: writer, title: "Approved for the main blog")
+      Fabricate(:post, topic:, user: writer)
+      publication = Blog::Publication.for_topic(topic)
+      revision = submit_blog_draft(publication, writer)
+      approve_blog_revision(publication, revision, admin)
+      schedule_blog_revision(publication, revision, admin)
+      token = publication.schedule_token
+      sign_in(writer)
+
+      put "/blog-editor/publications/#{topic.id}.json",
+          params: {
+            publication: {
+              blog_id: engineering.id,
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(publication.reload).to have_attributes(
+        blog_id: engineering.id,
+        submitted_revision_id: nil,
+        approved_revision_id: nil,
+        scheduled_revision_id: nil,
+        scheduled_at: nil,
+        schedule_token: nil,
+      )
+      expect(run_blog_schedule(publication, token).published_revision_id).to be_nil
+    end
+
+    it "gives each listed topic the blog it belongs to, including topics not yet assigned" do
+      engineering_article =
+        publish_article(engineering, path: "/story", raw: "An engineering story.")
+      unassigned = Fabricate(:topic, category: engineering_category, user: admin)
+      Fabricate(:post, topic: unassigned, user: admin)
+      draft = Fabricate(:topic, category: drafts, user: admin)
+      sign_in(admin)
+
+      get "/blog-editor.json"
+
+      blog_ids = response.parsed_body["topics"].to_h { [_1["id"], _1["blog_id"]] }
+      expect(blog_ids).to include(
+        engineering_article.topic_id => engineering.id,
+        unassigned.id => engineering.id,
+        draft.id => Blog::Instance.default_blog.id,
+      )
+    end
+
+    it "lists one blog's work when the editor filters by blog" do
+      article = publish_article(engineering, path: "/story", raw: "An engineering story.")
+      sign_in(admin)
+
+      get "/blog-editor.json", params: { blog: engineering.id }
+      expect(response.parsed_body["topics"].map { _1["id"] }).to contain_exactly(article.topic_id)
+      expect(response.parsed_body["blog_url"]).to eq("#{Discourse.base_url}/blog/engineering")
+
+      get "/blog-editor.json", params: { blog: 0 }
+      expect(response.status).to eq(404)
+    end
+  end
 end

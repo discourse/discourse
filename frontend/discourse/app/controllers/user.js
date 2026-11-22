@@ -274,7 +274,10 @@ export default class UserController extends Controller {
           const value = userFields
             ? userFields[field.get("id").toString()]
             : null;
-          return isEmpty(value) ? null : EmberObject.create({ value, field });
+          // Unchecked confirmations are hidden; 0 in a number field is shown.
+          return isEmpty(value) || value === false
+            ? null
+            : EmberObject.create({ value, field });
         })
         .filter((item) => item != null);
     }

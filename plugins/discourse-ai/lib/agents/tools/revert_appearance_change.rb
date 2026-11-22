@@ -44,7 +44,7 @@ module DiscourseAi
               after: previous_palettes,
             )
           changes += AppearanceAuthoring.font_changes(previous_state["site_settings"])
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             changes << AppearanceAuthoring.default_theme_change(
               from: appearance_change.theme,
               to: previous_default_theme,
@@ -136,7 +136,7 @@ module DiscourseAi
         # The palettes switching back restores: the theme's previous palettes,
         # or the previous default theme's.
         def previous_palettes
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             return AppearanceAuthoring.theme_palettes(previous_default_theme)
           end
 

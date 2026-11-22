@@ -3821,6 +3821,8 @@ sr:
           confirm: "Potvrda"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Подразумевано"
         theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"

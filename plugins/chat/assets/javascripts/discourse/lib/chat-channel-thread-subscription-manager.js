@@ -109,6 +109,7 @@ export default class ChatChannelThreadSubscriptionManager {
     stagedMessage.message = data.chat_message.message;
     stagedMessage.excerpt = data.chat_message.excerpt;
     stagedMessage.channel = channel;
+    stagedMessage.threadId = data.chat_message.thread_id;
     stagedMessage.createdAt = new Date(data.chat_message.created_at);
     stagedMessage.cooked = data.chat_message.cooked;
     stagedMessage.uploads = cloneJSON(data.chat_message.uploads || []);
@@ -148,6 +149,7 @@ export default class ChatChannelThreadSubscriptionManager {
       message.aiLlmName = data.chat_message.ai_llm_name;
       message.blocks = data.chat_message.blocks;
       message.isAction = data.chat_message.is_action;
+      message.broadcasted = data.chat_message.broadcasted ?? false;
     }
   }
 

@@ -7725,6 +7725,8 @@ it:
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
         search_label: "Cerca"
+        preview:
+          default: "Predefinito"
         theme_disabled: "Disabilitati"
         filters: "Filtri"
         status:
@@ -7874,7 +7876,7 @@ it:
           modal_title: Raggruppamento Distintivi
         granted_by: Assegnato da
         granted_at: Assegnata in data
-        reason_help: (Un collegamento a un messaggio o argomento)
+        reason_help: Un collegamento a un messaggio o argomento
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler cancellare questo distintivo?

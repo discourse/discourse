@@ -48,12 +48,6 @@ de:
         flagged_post_response: "Antwort des Modells: %{llm_response}"
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
-          body: |
-            Hallo @%{username},
-
-            dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
-
-            Referenz: %{post_url}
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"

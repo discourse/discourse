@@ -1,5 +1,29 @@
 @use "lib/viewport";
 
+.dsa-moderation-action {
+  .d-modal__title {
+    min-width: 0;
+  }
+
+  .d-modal__title-text {
+    overflow-wrap: anywhere;
+  }
+
+  &__classification {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-3);
+
+    h2 {
+      margin: 0;
+      font-size: var(--font-up-1);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: var(--line-height-medium);
+    }
+  }
+}
+
 .dsa-moderation-action__user {
   white-space: nowrap;
   vertical-align: baseline;

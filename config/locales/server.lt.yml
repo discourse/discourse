@@ -1745,31 +1745,9 @@ lt:
       title: "Įrašas paslėptas"
     post_hidden_again:
       title: "Įrašas vėl paslėptas"
-      text_body_template: |
-        Sveiki,
-
-        Tai automatinis pranešimas nuo %{site_name} skirtas pranešti, kad jūsų įrašas vėl buvo paslėptas.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Bendruomenė pažymėjo šį įrašą ir dabar yra paslėpta. ** Kadangi šis įrašas buvo paslėptas daugiau nei vieną kartą, jūsų įrašas liks paslėptas, kol jo nesutvarkys darbuotojas. **
-
-        Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     queued_by_staff:
       title: "Įrašui reikalingas patvirtinimas"
       subject_template: "Įrašą paslėpė darbuotojai, laukiama patvirtinimo"
-      text_body_template: |
-        Sveiki,
-
-        Tai automatinis pranešimas nuo %{site_name} skirtas pranešti, kad jūsų pranešimas buvo paslėptas.
-
-        <%{base_url}%{url}>
-
-        Jūsų įrašas liks paslėptas, kol darbuotojas jį peržiūrės.
-
-        Jei reikia papildomų nurodymų, skaitykite mūsų [bendruomenės gaires] (%{base_url}/gairės).
     flags_agreed_and_post_deleted_for_responders:
       title: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
       subject_template: "Darbuotojai pašalino atsakymą iš pažymėto įrašo"
@@ -2305,10 +2283,6 @@ lt:
     signup_after_reject:
       title: "Registracija po atmetimo"
       subject_template: "Jūs buvote atmestas %{site_name}"
-      text_body_template: |
-        Administracija atmetė jūsų paskyrą %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registruotis"
       subject_template: "[%{email_prefix}] Patvirtinkite savo naują paskyrą"

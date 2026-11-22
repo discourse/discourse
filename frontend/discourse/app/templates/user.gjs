@@ -371,30 +371,26 @@ export default <template>
                 <div class="public-user-fields">
                   {{#each @controller.publicUserFields as |uf|}}
 
-                    {{#if uf.value}}
-                      <div
-                        class="public-user-field {{uf.field.dasherized_name}}"
-                      >
-                        <span class="user-field-name">{{uf.field.name}}</span>:
-                        <span class="user-field-value">
-                          {{#each uf.value as |v|}}
-                            {{! some values are arrays }}
-                            <span class="user-field-value-list-item">
-                              {{#if uf.field.searchable}}
-                                <LinkTo
-                                  @query={{hash name=v}}
-                                  @route="users"
-                                >{{v}}</LinkTo>
-                              {{else}}
-                                {{v}}
-                              {{/if}}
-                            </span>
-                          {{else}}
-                            {{uf.value}}
-                          {{/each}}
-                        </span>
-                      </div>
-                    {{/if}}
+                    <div class="public-user-field {{uf.field.dasherized_name}}">
+                      <span class="user-field-name">{{uf.field.name}}</span>:
+                      <span class="user-field-value">
+                        {{#each uf.value as |v|}}
+                          {{! some values are arrays }}
+                          <span class="user-field-value-list-item">
+                            {{#if uf.field.searchable}}
+                              <LinkTo
+                                @query={{hash name=v}}
+                                @route="users"
+                              >{{v}}</LinkTo>
+                            {{else}}
+                              {{v}}
+                            {{/if}}
+                          </span>
+                        {{else}}
+                          {{uf.value}}
+                        {{/each}}
+                      </span>
+                    </div>
                   {{/each}}
 
                   <span>

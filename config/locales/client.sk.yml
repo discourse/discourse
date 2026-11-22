@@ -8184,6 +8184,8 @@ sk:
       site_text:
         description: "Môžete si prispôsobiť akýkoľvek text na fóre."
         search_label: "Hľadať"
+        preview:
+          default: "Predvolené"
         theme_disabled: "Vypnuté"
         filters: "Filtre"
         status:
@@ -8343,7 +8345,7 @@ sk:
           modal_title: Zoskupovanie odznakov
         granted_by: Udelené používateľom
         granted_at: Udelené dňa
-        reason_help: (Odkaze na príspevok, alebo tému)
+        reason_help: Odkaze na príspevok, alebo tému
         save: Uložiť
         delete: Odstrániť
         delete_confirm: Ste si istý, že chcete zmazať tento odznak?

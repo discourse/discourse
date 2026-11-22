@@ -50,6 +50,9 @@ fi:
           title: "Fonttijärjestelmä"
         colors:
           title: "Värit"
+        design_variables:
+          type: "Tyyppi"
+          default: "Oletus"
         icons:
           title: "Kuvakkeet"
           full_list: "Katso täydellinen luettelo Font Awesome -kuvakkeista"

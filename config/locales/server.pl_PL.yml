@@ -76,6 +76,7 @@ pl_PL:
   mcp:
     errors:
       author_must_match: "To połączenie działa jako %{username} i nie może tworzyć treści jako inny użytkownik. Pomiń parametr author_username lub użyj parametru %{username}."
+      authoring_guide_unavailable: "Przewodnik niedostępny. Wybierz plik Markdown w katalogu .skills/ lub docs/developer-guides/ w repozytorium tej witryny (maksymalnie 256 KiB)."
       category_create_failed: "Nie można utworzyć kategorii"
       category_delete_confirmation_required: "Usunięcie kategorii musi zostać potwierdzone"
       category_delete_name_mismatch: "Nazwa kategorii nie pasuje"
@@ -155,6 +156,9 @@ pl_PL:
       site_setting_value_forbidden: "Nie podawaj wartości podczas resetowania ustawień witryny"
       site_setting_value_required: "Podaj wartość podczas ustawiania ustawień witryny"
       site_setting_verification_failed: "Nie można zweryfikować aktualizacji ustawień witryny"
+      source_path_unavailable: "Wybierz śledzony plik źródłowy w udokumentowanych katalogach źródłowych. Ścieżki bezwzględne, konfiguracja prywatna i ucieczki dowiązań symbolicznych są niedostępne."
+      source_too_large: "Dane wyjściowe są za duże. Użyj węższego zapytania, mniejszej liczby wierszy lub pliku o rozmiarze maksymalnie 2 MiB."
+      source_unavailable: "Pobranie źródła lub zgłoszone zatwierdzenie jest niedostępne. Nie pobrano najnowszej wersji zapasowej."
       theme_children_must_be_components: "Tylko samodzielne motywy mogą mieć komponenty potomne, a każdy child_theme_id musi identyfikować istniejący komponent. Najpierw przekonwertuj samodzielny motyw potomny za pomocą component:true."
       theme_code_compile_failed: "Kompilacja motywu nie powiodła się; nie zatwierdzono żadnych zmian: %{message}"
       theme_code_js_invalid: "Kompilacja pakietu JavaScript motywu nie powiodła się, prawdopodobnie w innym pliku; nie zatwierdzono żadnych zmian: %{message}"
@@ -4060,17 +4064,15 @@ pl_PL:
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} aby poinformować Cię, że Twój post został ukryty.
-
-        <%{base_url}%{url}>
+        To jest automatyczna wiadomość od %{site_name} informująca, że [Twój wpis](%{base_url}%{url}) został ukryty.
 
         %{flag_reason}
 
-        Ten post został ukryty z powodu flag społeczności, więc zastanów się, jak możesz poprawić swój wpis, aby odzwierciedlić ich opinie. **Możesz edytować swój post po %{edit_delay} minutach, a zostanie on automatycznie przywrócony.**
+        Ten wpis został ukryty z powodu zgłoszeń od społeczności, więc zastanów się, jak możesz zmienić swój wpis, aby odzwierciedlał ich opinię. **Możesz edytować swój wpis po %{edit_delay} minutach, a zostanie on automatycznie odkryty.**
 
-        Jeśli jednak post zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.
+        Jeśli jednak wpis zostanie ukryty przez społeczność po raz drugi, pozostanie ukryty do momentu, aż zajmie się nim personel.
 
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Możesz edytować swój oryginalny wpis poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany."
     reviewable_queued_post_revise_and_reject_edit_topic: "Możesz edytować oryginalny wpis dotyczący Twojego tematu poniżej i przesłać go ponownie, aby wprowadzić sugerowane zmiany, lub odpowiedzieć na tę wiadomość, jeśli masz jakieś pytania."
@@ -4126,28 +4128,24 @@ pl_PL:
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name} informująca, że Twój wpis został ponownie ukryty.
-
-        <%{base_url}%{url}>
+        To automatyczna wiadomość od użytkownika %{site_name} z informacją, że [Twój wpis](%{base_url}%{url}) został ponownie ukryty.
 
         %{flag_reason}
 
-        Społeczność oznaczyła ten post i teraz jest ukryty. **Ponieważ ten wpis był ukrywany więcej niż raz, pozostanie ukryty, dopóki nie zostanie zaakceptowany przez personel.**
+        Społeczność oznaczyła ten wpis jako ukryty i jest on teraz ukryty. **Ponieważ ten wpis był ukrywany więcej niż raz, Twój wpis pozostanie ukryty do momentu, aż zajmie się nim członek personelu.**
 
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     queued_by_staff:
       title: "Post wymaga zatwierdzenia"
       subject_template: "Post ukryty przez personel, oczekujący na zatwierdzenie"
       text_body_template: |
         Witaj!
 
-        To jest automatyczna wiadomość od %{site_name}, aby poinformować Cię, że Twój wpis został ukryty.
+        To automatyczna wiadomość od użytkownika %{site_name} informująca, że [Twój wpis](%{base_url}%{url}) został ukryty.
 
-        <%{base_url}%{url}>
+        Twój wpis pozostanie ukryty, dopóki nie sprawdzi go członek personelu.
 
-        Twój wpis pozostanie ukryty, dopóki pracownik go nie przejrzy.
-
-        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi dla społeczności](%{base_url}/guidelines).
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     flags_disagreed:
       title: "Oflagowany wpis został przywrócony przez personel"
       subject_template: "Oflagowany wpis został przywrócony przez personel"
@@ -4698,11 +4696,11 @@ pl_PL:
       timed: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto do czasu %{silenced_till}."
       indefinite: "To automatyczna wiadomość od użytkownika %{site_name} informująca, że moderator wyciszył Twoje konto na czas nieokreślony."
       text_body_template: |
-        Witaj,
+        Witaj!
 
         %{decision}
 
-        **Powód:** %{reason}
+        Powód: %{reason}
 
         Nadal możesz czytać dyskusje, ale nie możesz brać w nich udziału, dopóki Twoje konto jest wyciszone.
 
@@ -4736,11 +4734,11 @@ pl_PL:
       text_body_template: |
         To jest wiadomość automatyczna.
 
-        Nowy użytkownik [%{username}](%{user_url}) został automatycznie uciszony.
+        Nowy użytkownik [%{username}](%{user_url}) został automatycznie wyciszony.
 
-        Powód - %{reason}
+        Powód: %{reason}
 
-        Proszę [przejrzeć flagi](%{base_url}/review). Jeśli użytkownik %{username} został niesłusznie uciszony i nie może publikować, kliknij przycisk przywracania wyciszenia na [stronie administracyjnej tego użytkownika](%{user_url}).
+        Proszę [sprawdzić flagi](%{base_url}/review). Jeśli użytkownik %{username} został niesłusznie wyciszony i nie może publikować, kliknij przycisk przywracania wyciszenia na [stronie administracyjnej tego użytkownika](%{user_url}).
 
         Próg ten można zmienić w ustawieniach witryny `silence_new_user`.
     spam_post_blocked:
@@ -5104,11 +5102,11 @@ pl_PL:
       subject_template: "[%{email_prefix}] Twoje konto zostało zawieszone"
       subject_template_improved: "Twoje konto zostało zawieszone"
       text_body_template: |
-        Witaj,
+        Witaj!
 
         To automatyczna wiadomość od %{site_name} informująca, że Twoje konto zostało zawieszone do %{suspended_till}.
 
-        Powód - %{reason}
+        Powód: %{reason}
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_suspended_forever:
@@ -5120,7 +5118,7 @@ pl_PL:
 
         To automatyczna wiadomość od użytkownika %{site_name} informująca, że Twoje konto zostało zawieszone.
 
-        Powód — %{reason}
+        Powód: %{reason}
 
         Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     account_deleted:
@@ -5330,10 +5328,13 @@ pl_PL:
     signup_after_reject:
       title: "Zarejestruj się po odrzuceniu"
       subject_template: "Odrzucono Cię na %{site_name}"
+      reason_line: "\n\nPowód: %{reason}"
       text_body_template: |
-        Członek obsługi odrzucił Twoje konto na %{site_name}.
+        Witaj!
 
-        %{reject_reason}
+        To automatyczna wiadomość od %{site_name} informująca, że członek personelu odrzucił Twoją rejestrację.%{reason_line}
+
+        Aby uzyskać dodatkowe wskazówki, zapoznaj się z naszymi [wytycznymi społeczności](%{base_url}/guidelines).
     signup:
       title: "Podpis"
       preview: "Potwierdź swoje konto."
@@ -5403,6 +5404,11 @@ pl_PL:
     welcome_message: "# Witamy na %{title}"
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
+    too_many_short_urls:
+      one: "Nie można wyszukać więcej niż %{count} adresu URL w jednym żądaniu."
+      few: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
+      many: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
+      other: "Nie można wyszukać więcej niż %{count} adresów URL w jednym żądaniu."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Przepraszamy, ale przy tym ustawieniu możesz przesyłać tylko obrazy."
     pasted_image_filename: "Wklejone zdjęcie"
@@ -5467,6 +5473,8 @@ pl_PL:
     group_smtp_disabled_for_group: "smtp został wyłączony dla grupy"
   appearance_changes:
     dark_palette_name: "Ciemny %{name}"
+    draft_name: "%{name} (szkic)"
+    previous_name: "%{name} (poprzedni)"
   color_schemes:
     base_theme_name: "Podstawa"
     light: "Jasny"

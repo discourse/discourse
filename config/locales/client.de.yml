@@ -9202,6 +9202,8 @@ de:
       site_text:
         description: "Du kannst jeden Text in deinem Forum individuell anpassen."
         search_label: "Suche"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiviert"
         filters: "Filter"
         status:
@@ -9381,7 +9383,7 @@ de:
           modal_title: Abzeichen-Gruppierungen
         granted_by: Verliehen von
         granted_at: Verliehen am
-        reason_help: (ein Link zu einem Beitrag oder Thema)
+        reason_help: ein Link zu einem Beitrag oder Thema
         save: Speichern
         delete: Löschen
         delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?

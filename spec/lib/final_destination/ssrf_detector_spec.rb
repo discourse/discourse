@@ -76,6 +76,26 @@ describe FinalDestination::SSRFDetector do
       expect(described_class.ip_allowed?("::ffff:0.0.0.0")).to eq(false)
     end
 
+    it "returns false for the '3fff::/20' documentation range" do
+      expect(described_class.ip_allowed?("3fff::1")).to eq(false)
+      expect(described_class.ip_allowed?("3fff:fff:ffff::1")).to eq(false)
+    end
+
+    it "returns false for the '5f00::/16' SRv6 SID range" do
+      expect(described_class.ip_allowed?("5f00::1")).to eq(false)
+      expect(described_class.ip_allowed?("5f00:ffff:ffff:ffff:ffff:ffff:ffff:ffff")).to eq(false)
+    end
+
+    it "returns false for the '100:0:0:1::/64' dummy range" do
+      expect(described_class.ip_allowed?("100:0:0:1::1")).to eq(false)
+      expect(described_class.ip_allowed?("100:0:0:1:ffff:ffff:ffff:ffff")).to eq(false)
+    end
+
+    it "returns true for an address outside those ranges" do
+      expect(described_class.ip_allowed?("3fff:1000::1")).to eq(true)
+      expect(described_class.ip_allowed?("2606:2800:220:1:248:1893:25c8:1946")).to eq(true)
+    end
+
     it "returns true for public IPv4-mapped IPv6 addresses" do
       expect(described_class.ip_allowed?("::ffff:52.52.167.244")).to eq(true)
     end

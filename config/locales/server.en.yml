@@ -104,6 +104,7 @@ en:
       moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
       moderation_user_not_found: "User not found. Use an exact existing username."
       post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
       filter_required: "A nonblank filter is required for the filtered view"
@@ -6208,6 +6209,32 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  popular_themes:
+    graceful:
+      description: "A light and graceful theme for Discourse."
+    material_design:
+      description: "Inspired by Material Design, this theme comes with several color palettes."
+    mint:
+      description: "A minty colored theme with featured homepage categories and a search banner."
+    simple:
+      description: "Simplified front page design with classic colors and typography."
+    brand_header:
+      description: "Add an extra top header with your logo, navigation links and social icons."
+    custom_header_links:
+      description: "Easily add custom text-based links to the header."
+    category_banners:
+      description: "Show banners on category pages using your existing category details."
+    tag_banners:
+      description: "Show banners on tag pages using your existing tag details."
+    sidebar_theme_toggle:
+      description: "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme."
+    header_submenus:
+      description: "Lets you build a header menu with submenus (dropdowns)."
+    table_of_contents:
+      description: "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer."
+    easy_footer:
+      description: "Add a fully responsive footer without writing any HTML."
+
   design_wizard:
     themes:
       concord:
@@ -6486,6 +6513,7 @@ en:
       delete_and_ignore_replies:
         title: "Delete post and replies, ignore flag"
         description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
+        confirm_title: "Delete post and replies, ignore flag?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -6495,6 +6523,7 @@ en:
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
+        confirm_title: "Delete post and replies?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
@@ -6561,11 +6590,13 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm_title: "Delete @%{username}?"
           confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm_title: "Delete and block @%{username}?"
           confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:

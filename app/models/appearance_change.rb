@@ -7,6 +7,8 @@
 # - existing_palettes: a light and dark palette the site already has, for an
 #   existing theme
 # - theme: a new theme with its own new palettes, and optionally styles
+# - installed_theme: a theme installed from the list of popular themes, with
+#   whatever palettes it comes with
 #
 # A new theme can be a new version of a theme an earlier change created. It is
 # saved as "Name (draft)"; making it live renames the version it replaces to
@@ -25,7 +27,7 @@ class AppearanceChange < ActiveRecord::Base
   # marks previous_state while switching back hasn't finished
   REVERTING_KEY = "reverting"
 
-  enum :kind, { palettes: 0, theme: 1, existing_palettes: 2 }, prefix: true
+  enum :kind, { palettes: 0, theme: 1, existing_palettes: 2, installed_theme: 3 }, prefix: true
 
   belongs_to :theme
   belongs_to :light_color_scheme, class_name: "ColorScheme", optional: true
@@ -99,7 +101,15 @@ class AppearanceChange < ActiveRecord::Base
     theme.theme_fields.all? { |field| generated_styles?(field) } && theme.child_theme_relation.none?
   end
 
+  # Whether the change goes live by making its theme the default, rather
+  # than by giving an existing theme new palettes.
+  def new_default_theme?
+    kind_theme? || kind_installed_theme?
+  end
+
+  # An installed theme uses whatever palettes it comes with, if any.
   def palettes_exist?
+    return true if kind_installed_theme?
     light_color_scheme.present? && dark_color_scheme.present?
   end
 
@@ -110,16 +120,16 @@ class AppearanceChange < ActiveRecord::Base
       return false if previous_state.blank? || activation_pending?
       return false if !site_settings.all? { |name, value| SiteSetting.get(name) == value }
     end
-    return theme.default? if kind_theme?
+    return theme.default? if new_default_theme?
 
     theme.color_scheme_id == light_color_scheme_id &&
       theme.dark_color_scheme_id == dark_color_scheme_id
   end
 
   # The site settings making the change live sets: its fonts and, for a new
-  # theme, the default theme.
+  # or installed theme, the default theme.
   def activation_site_settings
-    return site_settings if !kind_theme?
+    return site_settings if !new_default_theme?
 
     site_settings.merge("default_theme_id" => theme_id)
   end
@@ -143,7 +153,7 @@ class AppearanceChange < ActiveRecord::Base
         replaces_theme_id.to_s => replaces_theme.name,
       }
     end
-    return state if kind_theme?
+    return state if new_default_theme?
 
     state.merge(
       "color_scheme_id" => theme.color_scheme_id,
@@ -191,7 +201,7 @@ class AppearanceChange < ActiveRecord::Base
   def discard!
     transaction do
       destroy!
-      theme.destroy! if kind_theme? && disposable_theme?
+      theme.destroy! if new_default_theme? && disposable_theme?
       created_palettes.each { |palette| palette.destroy! if disposable_palette?(palette) }
     end
   end
@@ -256,9 +266,10 @@ class AppearanceChange < ActiveRecord::Base
       activation_site_settings.all? { |name, value| SiteSetting.get(name).to_s == value.to_s }
   end
 
-  # Palettes the site already had aren't the change's to remove.
+  # Palettes the site already had aren't the change's to remove, and an
+  # installed theme's palettes go with the theme when it's removed.
   def created_palettes
-    kind_existing_palettes? ? [] : palettes
+    kind_existing_palettes? || kind_installed_theme? ? [] : palettes
   end
 
   def only_supported_site_settings
@@ -307,8 +318,8 @@ end
 #  styles                :jsonb            not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  dark_color_scheme_id  :integer          not null
-#  light_color_scheme_id :integer          not null
+#  dark_color_scheme_id  :integer
+#  light_color_scheme_id :integer
 #  replaces_theme_id     :integer
 #  theme_id              :integer          not null
 #  user_id               :integer          not null

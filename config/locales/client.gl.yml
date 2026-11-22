@@ -4969,6 +4969,8 @@ gl:
           dropdown: "Despregábel"
       site_text:
         search_label: "Buscar"
+        preview:
+          default: "Predeterminado"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         edit: "Editar"
@@ -5057,7 +5059,7 @@ gl:
           modal_title: Grupos de insignias
         granted_by: Concedido por
         granted_at: Concedido
-        reason_help: (Ligazón a unha publicación ou tema)
+        reason_help: Ligazón a unha publicación ou tema
         save: Gardar
         delete: Eliminar
         delete_confirm: Confirma a eliminación desta insignia?

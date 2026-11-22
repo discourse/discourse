@@ -1,7 +1,7 @@
 import { schedule } from "@ember/runloop";
 import EmbedMode from "discourse/lib/embed-mode";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import blogOrigin from "discourse/plugins/blog/discourse/lib/blog-origin";
+import { embeddingBlogOrigin } from "discourse/plugins/blog/discourse/lib/blog-origin";
 
 let paletteListener;
 
@@ -29,8 +29,9 @@ export default {
     // An iframe-only reload can lose the server class when its referrer changes.
     root.classList.add(embedClass);
 
-    const parentOrigin = blogOrigin(
-      container.lookup("service:site").blog_base_url
+    const parentOrigin = embeddingBlogOrigin(
+      container.lookup("service:site").blogs,
+      document.referrer
     );
 
     withPluginApi((api) => {

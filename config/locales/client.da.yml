@@ -6251,6 +6251,8 @@ da:
           multiselect: "Multivælg"
       site_text:
         search_label: "Søg"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiveret"
         edit: "Rediger"
         revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
@@ -6373,7 +6375,7 @@ da:
           modal_title: Badge grupperinger
         granted_by: Givet af
         granted_at: Givet på
-        reason_help: (Et link til et indlæg eller et emne)
+        reason_help: Et link til et indlæg eller et emne
         save: Gem
         delete: Slet
         delete_confirm: Er du sikker på du vil slette denne badge ?
