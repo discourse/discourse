@@ -118,6 +118,7 @@ export interface UserOption {
   new_topic_duration_minutes?: number;
   notification_level_when_replying?: number;
   notify_on_linked_posts?: boolean;
+  show_notification_toasts?: boolean;
   oldest_search_log_date?: string | null;
   push_notification_level?: string;
   redirected_to_top?: { reason: string | null; period: string | number } | null;
@@ -590,6 +591,7 @@ let userOptionFields = [
   "new_topic_duration_minutes",
   "notification_level_when_replying",
   "notify_on_linked_posts",
+  "show_notification_toasts",
   "push_notification_level",
   "seen_popups",
   "send_shortcut",

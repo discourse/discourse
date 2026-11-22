@@ -65,7 +65,8 @@ class Notification < ActiveRecord::Base
 
   attr_accessor :skip_send_email
 
-  after_commit :refresh_notification_count, on: %i[create update destroy]
+  after_commit :refresh_notification_count, on: %i[update destroy]
+  after_commit :publish_new_notification, on: :create
   after_commit :send_email, on: :create
 
   after_commit(on: :create) { DiscourseEvent.trigger(:notification_created, self) }
@@ -121,6 +122,10 @@ class Notification < ActiveRecord::Base
                AND t.id = n.topic_id
           )
     SQL
+  end
+
+  def self.toast_type_names
+    types.keys.map(&:to_s)
   end
 
   def self.types
@@ -474,6 +479,10 @@ class Notification < ActiveRecord::Base
     slug_segment = topic.slug.present? ? "/#{topic.slug}" : ""
     bucket_segment = bucket > TOPIC_ROOT_BUCKET ? "/#{bucket}" : ""
     "#{Discourse.base_path}/t#{slug_segment}/#{topic.id}#{bucket_segment}?sort=new&collapse_replies=true"
+  end
+
+  def publish_new_notification
+    User.find_by(id: user_id)&.publish_notifications_state(new_notification_id: id)
   end
 
   def refresh_notification_count

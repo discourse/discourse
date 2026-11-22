@@ -33,6 +33,14 @@ export default <template>
       @checked={{@controller.model.user_option.notify_on_linked_posts}}
       @labelKey="user.notify_on_linked_posts"
     />
+    {{#if @controller.siteSettings.enable_desktop_notification_toasts}}
+      <PreferenceCheckbox
+        class="pref-show-notification-toasts"
+        data-setting-name="user-show-notification-toasts"
+        @checked={{@controller.model.user_option.show_notification_toasts}}
+        @labelKey="notifications.desktop_toast.preference"
+      />
+    {{/if}}
   </div>
 
   {{#unless @controller.capabilities.isAppWebview}}

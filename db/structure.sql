@@ -13748,7 +13748,8 @@ CREATE TABLE public.user_options (
     chat_channel_list_filter_starred integer DEFAULT 0 NOT NULL,
     chat_channel_list_filter_dms integer DEFAULT 0 NOT NULL,
     event_reminder_preference integer DEFAULT 0 NOT NULL,
-    hidden_composer_toolbar_buttons character varying[] DEFAULT '{}'::character varying[] NOT NULL
+    hidden_composer_toolbar_buttons character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    show_notification_toasts boolean DEFAULT false NOT NULL
 );
 
 
@@ -26822,6 +26823,7 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261120183731'),
 ('20261119153028'),
+('20261119001807'),
 ('20261118215054'),
 ('20261118184327'),
 ('20261118184323'),

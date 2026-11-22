@@ -102,6 +102,9 @@ user.status = null;
 /* Options: the current-user and profile serializers send different subsets. */
 
 expectTypeOf(user.user_option).toEqualTypeOf<UserOption | undefined>();
+expectTypeOf(user.user_option?.show_notification_toasts).toEqualTypeOf<
+  boolean | undefined
+>();
 expectTypeOf(user.user_option?.timezone).toEqualTypeOf<
   string | null | undefined
 >();
