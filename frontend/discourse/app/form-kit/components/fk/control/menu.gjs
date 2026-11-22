@@ -33,10 +33,12 @@ export default class FKControlMenu extends FKBaseControl {
       aria-labelledby={{if
         @field.showTitle
         (concat @field.labelId " " this.selectionId)
+        (if @selection this.selectionId)
       }}
       data-value={{@field.value}}
       id={{@field.id}}
       @ariaLabel={{if this.site.mobileView @field.title}}
+      @autofocus={{this.site.mobileView}}
       @contentClass="form-kit__control-menu-content"
       @disabled={{@field.disabled}}
       @modalForMobile={{true}}

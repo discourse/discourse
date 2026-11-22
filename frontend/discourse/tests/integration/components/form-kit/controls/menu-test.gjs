@@ -159,4 +159,47 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
       .dom('.form-kit__control-menu-item[data-value="item-2"] button')
       .doesNotHaveAttribute("aria-current", "leaves other options unmarked");
   });
+
+  test("a mobile menu with a hidden field title names its trigger and dialog", async function (assert) {
+    sinon.stub(this.owner.lookup("service:site"), "mobileView").value(true);
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @showTitle={{false}}
+            @title="Foo"
+            @type="menu"
+            as |field|
+          >
+            <field.Control @selection="Current item" as |menu|>
+              <menu.Item @value="item-1">Current item</menu.Item>
+            </field.Control>
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    const trigger = find(".form-kit__control-menu-trigger");
+    assert
+      .dom(trigger)
+      .hasAttribute(
+        "aria-labelledby",
+        find(".form-kit__control-menu-trigger .d-button-label").id,
+        "names the trigger from the visible selection"
+      );
+
+    await click(trigger);
+    assert
+      .dom(".fk-d-menu-modal")
+      .hasAttribute(
+        "aria-label",
+        "Foo",
+        "names the dialog from the field title"
+      );
+    assert
+      .dom(".fk-d-menu-modal .form-kit__control-menu-item .btn")
+      .isFocused("moves focus into the mobile menu when it opens");
+  });
 });

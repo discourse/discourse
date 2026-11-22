@@ -164,6 +164,16 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       .dom(".outer-modal-content")
       .exists("the containing modal remains open");
     assert.dom(".fk-d-menu-modal").doesNotExist("the menu modal closes");
+
+    await open();
+    await focus(".close-menu");
+    await triggerKeyEvent(".close-menu", "keydown", "Escape");
+
+    assert
+      .dom(".outer-modal-content")
+      .exists("Escape leaves the containing modal open");
+    assert.dom(".fk-d-menu-modal").doesNotExist("Escape closes the menu");
+    assert.dom(".fk-d-menu__trigger").isFocused("focus returns to the trigger");
   });
 
   test("DMenu uses a modal while DTooltip stays inline on mobile", async function (assert) {
