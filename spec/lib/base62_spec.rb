@@ -43,6 +43,15 @@ RSpec.describe Base62 do
       expect(Base62::KEYS_HASH["Z"]).to eq(61)
       expect { Base62.decode("abc!def") }.to raise_error(NoMethodError)
       expect { Base62.decode("abcédef") }.to raise_error(NoMethodError)
+      expect { Base62.decode("0123456789abcdef!ghij") }.to raise_error(NoMethodError)
+    end
+
+    it "decodes all lengths from 1 to 30 characters accurately across chunk boundaries" do
+      (1..30).each do |len|
+        str = ("1" + ("aZ9" * 10))[0, len]
+        expected = str.chars.reduce(0) { |acc, ch| (acc * 62) + Base62::KEYS_HASH[ch] }
+        expect(Base62.decode(str)).to eq(expected)
+      end
     end
   end
 end
