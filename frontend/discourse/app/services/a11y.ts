@@ -76,6 +76,11 @@ export default class A11y extends Service {
     #messages = trackedMap<AnnouncementType, string>();
 
     /**
+     * How many times each region has been written, which picks the slot that holds its message
+     */
+    #writes = trackedMap<AnnouncementType, number>();
+
+    /**
      * Map of announcement clear timers by type
      */
     #timers = trackedMap<AnnouncementType, Timer>();
@@ -134,6 +139,18 @@ export default class A11y extends Service {
     }
 
     /**
+     * Gets the text of a region's two slots: each write moves the message to the other one
+     * @param type - Type of announcement
+     * @returns The two slots' text, one of them always empty
+     */
+    getSlots(type: AnnouncementType): readonly [string, string] {
+      const message = this.#messages.get(type) ?? "";
+      return (this.#writes.get(type) ?? 0) % 2 === 0
+        ? [message, ""]
+        : ["", message];
+    }
+
+    /**
      * Clears all pending announcement timers
      */
     clearTimers(): void {
@@ -168,6 +185,7 @@ export default class A11y extends Service {
      */
     #write(type: AnnouncementType, message: string, clearDelay: number): void {
       this.#messages.set(type, message);
+      this.#writes.set(type, (this.#writes.get(type) ?? 0) + 1);
 
       if (clearAnnouncements) {
         this.#scheduleClear(type, clearDelay);
@@ -269,5 +287,17 @@ export default class A11y extends Service {
 
       this.#state.setMessage(type, trimmed, clearDelay);
     });
+  }
+
+  /**
+   * The text of a live region's two slots, which take turns holding its message. VoiceOver
+   * compares what a region ends up saying with what it said before, so a message written back
+   * into the slot that already held it is silent. Moving each write to the other slot makes an
+   * identical repeat a change from empty, like a first announcement.
+   * @param type - Type of announcement
+   * @returns The two slots' text, one of them always empty
+   */
+  liveRegionSlots(type: AnnouncementType): readonly [string, string] {
+    return this.#state.getSlots(type);
   }
 }
