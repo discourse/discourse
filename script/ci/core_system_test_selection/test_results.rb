@@ -33,6 +33,7 @@ class CoreSystemTestResults
     write(
       id: example.id,
       file: example.metadata.fetch(:rerun_file_path).delete_prefix("./"),
+      location: example.location_rerun_argument,
       status: example.execution_result.status,
       seconds: example.execution_result.run_time,
       finished_ns: Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond),

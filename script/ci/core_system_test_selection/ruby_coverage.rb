@@ -17,7 +17,7 @@ used_files =
         next unless lines.any? { |hits| hits.to_i.positive? }
 
         source = path.delete_prefix(root)
-        if record_boot && source.start_with?("app/") && source.end_with?(".rb")
+        if record_boot && source.start_with?("app/", "lib/") && source.end_with?(".rb")
           boot_lines[source] = lines.each_index.filter_map do |index|
             index + 1 if lines[index].to_i.positive?
           end

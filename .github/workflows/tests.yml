@@ -442,7 +442,7 @@ jobs:
           CORE_SYSTEM_TEST_OUTCOME: ${{ steps.core-system-tests.outcome }}
         run: |
           root=tmp/core-system-selection
-          ruby script/ci/core_system_test_selection/results.rb report "$root/results" "$root/plan.json" "$root/shadow-report.json"
+          ruby script/ci/core_system_test_selection/results.rb report "$root/results" "$root/plan.json" "$root/shadow-report.json" tmp/turbo_rspec_flaky_tests.json
 
       - name: Upload Core system shadow report
         if: ${{ !cancelled() && env.OBSERVE_CORE_SYSTEM == 'true' && hashFiles('tmp/core-system-selection/shadow-report.json') != '' }}

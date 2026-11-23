@@ -187,25 +187,27 @@ module CoreSystemTestSelection
     inputs.each do |path|
       if TEST_FILE.match?(path)
         selected.add(path)
-      elsif DEPENDENCY_FILES.include?(File.basename(path)) ||
-            (
-              boot.include?(path) &&
-                !(
-                  dependencies.key?(path) && boot_lines.key?(path) &&
-                    runtime_body_change?(
-                      path:,
-                      revisions: [revision, base, tested],
-                      boot_lines: boot_lines.fetch(path),
-                    )
-                )
+        next
+      end
+
+      shared = boot.include?(path) || DEPENDENCY_FILES.include?(File.basename(path))
+      if dependencies.key?(path) && path.end_with?(".rb")
+        known_boot_lines = !boot.include?(path) || boot_lines.key?(path)
+        shared =
+          !path.start_with?("app/", "lib/") || !known_boot_lines ||
+            !runtime_body_change?(
+              path:,
+              revisions: [revision, base, tested],
+              boot_lines: boot_lines.fetch(path, []),
             )
-        return decision(files:, reason: "shared_input", drift:, pr:, revision:)
-      elsif dependencies.key?(path)
-        selected.merge(dependencies.fetch(path))
-        selected.merge(unmapped_browser_specs)
-      else
+      end
+      return decision(files:, reason: "shared_input", drift:, pr:, revision:) if shared
+      if !dependencies.key?(path)
         return decision(files:, reason: "unmapped_input", drift:, pr:, revision:)
       end
+
+      selected.merge(dependencies.fetch(path))
+      selected.merge(unmapped_browser_specs)
     end
 
     selected &= files.to_set

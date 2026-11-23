@@ -6,15 +6,14 @@ require_relative "../core_system_test_selection"
 class CoreSystemResults
   def initialize(directory)
     @workers = Set.new
+    @incomplete_journals = false
     @results =
       Dir[File.join(directory, "examples-*.jsonl")]
         .each_with_object({}) do |file, results|
-          examples = File.readlines(file).map { |line| JSON.parse(line) }
-          expected = examples.shift&.fetch("expected_example_ids", nil)
-          completed = examples.pop == { "completed" => true }
-          if !expected || !completed ||
-               examples.map { |example| example.fetch("id") }.sort != expected.sort
-            raise "Incomplete Core system test journal: #{file}"
+          examples = read_journal(file)
+          if !examples
+            @incomplete_journals = true
+            next
           end
           @workers.add(File.basename(file, ".jsonl").delete_prefix("examples-"))
           examples.each do |example|
@@ -29,6 +28,7 @@ class CoreSystemResults
   end
 
   def prepare_mapping(directory:)
+    raise "Incomplete Core system test journal" if @incomplete_journals
     all_files = CoreSystemTestSelection.inventory
     actual_files = @results.map { |example| example.fetch("file") }.uniq
     raise "Incomplete Core system test results" unless (all_files - actual_files).empty?
@@ -49,16 +49,18 @@ class CoreSystemResults
     )
   end
 
-  def report(plan:, output:, outcome:)
-    failures =
-      @results
-        .filter_map { |example| example.fetch("file") if example.fetch("status") == "failed" }
-        .uniq
-        .sort
+  def report(plan:, output:, outcome:, flaky_tests_file:)
+    failed_examples = @results.select { |example| example.fetch("status") == "failed" }
+    failures = failed_examples.map { |example| example.fetch("file") }.uniq.sort
     selected = plan.fetch("selected_files").to_set
     fallback = plan.fetch("full_suite_fallback")
     observed_files = @results.map { |example| example.fetch("file") }.to_set
-    complete = observed_files == CoreSystemTestSelection.inventory.to_set && !observed_files.empty?
+    outcome_matches =
+      outcome == (failures.empty? ? "success" : "failure") &&
+        failures_agree_with_retries?(failed_examples:, flaky_tests_file:)
+    complete =
+      !@incomplete_journals && outcome_matches && !observed_files.empty? &&
+        observed_files == CoreSystemTestSelection.inventory.to_set
     measured_seconds = @results.sum { |example| example.fetch("seconds") }
     selected_seconds =
       @results.sum do |example|
@@ -88,6 +90,33 @@ class CoreSystemResults
 
   private
 
+  def failures_agree_with_retries?(failed_examples:, flaky_tests_file:)
+    return true unless flaky_tests_file && File.file?(flaky_tests_file)
+
+    flaky_tests = JSON.parse(File.read(flaky_tests_file))
+    recovered_locations =
+      flaky_tests.map { |example| example.fetch("location_rerun_argument") }.to_set
+    failed_examples.none? { |example| recovered_locations.include?(example.fetch("location")) }
+  rescue StandardError => error
+    warn "Cannot verify Core system retries: #{error.message}"
+    false
+  end
+
+  def read_journal(file)
+    raise "Expected a regular file" unless File.file?(file)
+    examples = File.readlines(file).map { |line| JSON.parse(line) }
+    expected = examples.shift&.fetch("expected_example_ids", nil)
+    completed = examples.pop == { "completed" => true }
+    if expected && completed && examples.map { |example| example.fetch("id") }.sort == expected.sort
+      return examples
+    end
+    warn "Incomplete Core system test journal: #{file}"
+    nil
+  rescue StandardError => error
+    warn "Cannot read Core system test journal: #{file}: #{error.message}"
+    nil
+  end
+
   def summary(report)
     File.open(ENV.fetch("GITHUB_STEP_SUMMARY"), "a") do |file|
       file.puts "### Core system test selection in shadow"
@@ -113,7 +142,13 @@ class CoreSystemResults
         when false
           "No"
         else
-          "No measurement"
+          if !report.fetch(:measurement_complete)
+            "No measurement"
+          elsif report.fetch("full_suite_fallback")
+            "Full suite fallback"
+          else
+            "No failures"
+          end
         end
       file.puts "| Would select a file that failed? | #{contains_failed_file} |"
     end
@@ -126,11 +161,12 @@ case command
 when "prepare"
   results.prepare_mapping(directory: arguments.fetch(0))
 when "report"
-  plan, output = arguments
+  plan, output, flaky_tests_file = arguments
   results.report(
     plan: JSON.parse(File.read(plan)),
     output:,
     outcome: ENV.fetch("CORE_SYSTEM_TEST_OUTCOME"),
+    flaky_tests_file:,
   )
 else
   abort "Expected prepare or report"

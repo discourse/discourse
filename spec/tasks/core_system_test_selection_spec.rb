@@ -24,6 +24,14 @@ RSpec.describe "Core system test selection in shadow" do
       end
     RUBY
   let(:helper) { "lib/example_helper.rb" }
+  let(:helper_source) { <<~RUBY }
+      module ExampleHelper
+        FORMAT = :original
+        def format
+          :before
+        end
+      end
+    RUBY
 
   around do |example|
     Dir.mktmpdir do |directory|
@@ -31,7 +39,8 @@ RSpec.describe "Core system test selection in shadow" do
       git("init", "--quiet")
       git("config", "user.name", "Discourse CI")
       git("config", "user.email", "ci@ci.invalid")
-      [sidebar, about, unrelated, helper].each { |path| write(path, "base\n") }
+      [sidebar, about, unrelated].each { |path| write(path, "base\n") }
+      write(helper, helper_source)
       write(controller, controller_source)
       @map_sha = commit("collected")
       example.run
@@ -84,11 +93,11 @@ RSpec.describe "Core system test selection in shadow" do
   end
 
   it "combines changes since collection with changes in the tested pull request" do
-    write(controller, "main changed the controller\n")
+    write(controller, controller_source.sub(":before", ":main"))
     new_spec = "spec/system/new_tag_filters_spec.rb"
     write(new_spec, "new test\n")
     base = commit("main changed the code and added a test")
-    write(helper, "the pull request changed the helper\n")
+    write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
     report = selection(dependencies: { controller => [sidebar], helper => [about] }, base:)
@@ -100,7 +109,7 @@ RSpec.describe "Core system test selection in shadow" do
   end
 
   it "keeps the drift selection when a pull request reverts a main change" do
-    write(controller, "main changed the controller\n")
+    write(controller, controller_source.sub(":before", ":main"))
     base = commit("main changed the controller")
     write(controller, controller_source)
     commit("pull request reverted the controller")
@@ -112,9 +121,9 @@ RSpec.describe "Core system test selection in shadow" do
   end
 
   it "falls back to the full suite when a change since collection has no map entry" do
-    write(controller, "main changed the controller\n")
+    write(controller, controller_source.sub(":before", ":main"))
     base = commit("main changed the controller")
-    write(helper, "the pull request changed the helper\n")
+    write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
     report = selection(dependencies: { helper => [about] }, base:)
@@ -124,7 +133,7 @@ RSpec.describe "Core system test selection in shadow" do
   end
 
   it "includes specs with incompletely mapped browser assets for application changes" do
-    write(controller, "the pull request changed the controller\n")
+    write(controller, controller_source.sub(":before", ":after"))
     commit("pull request")
 
     report =
@@ -196,6 +205,16 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [1, 2, 3, 6, 7],
         },
       )
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("shared_input")
+  end
+
+  it "uses the full suite when a declaration changes in a lazily loaded helper" do
+    write(helper, helper_source.sub(":original", ":updated"))
+    commit("pull request changes a lazy declaration")
+
+    report = selection(dependencies: { helper => [about] }, base: @map_sha)
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("shared_input")
