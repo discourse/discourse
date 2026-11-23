@@ -880,5 +880,9 @@ describe DiscourseReactions::CustomReactionsController do
           }
 
     expect(response.status).to eq(403)
+    expect(response.parsed_body).to eq(
+      "errors" => [I18n.t("js.discourse_reactions.picker.cant_remove_reaction")],
+      "error_type" => "invalid_access",
+    )
   end
 end
