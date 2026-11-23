@@ -30,8 +30,8 @@ module Live
       room = Live::Room.find(params[:id])
 
       if room.update(room_params)
-        if room.saved_change_to_room_type?
-          Live::StageRoles.sync_room_type_change!(room)
+        Live::StageRoles.sync_room_type_change!(room) if room.saved_change_to_room_type?
+        if room.saved_change_to_room_type? || room.saved_change_to_speak_requests_enabled?
           Live::DirectoryBroadcaster.broadcast(action: :updated, room: room)
         end
         Live::ParticipantEvictor.evict_unauthorized!(room)

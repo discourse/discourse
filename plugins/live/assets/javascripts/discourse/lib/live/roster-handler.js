@@ -28,7 +28,7 @@ export default class RosterHandler {
   #getRoom;
   #isActiveRoom;
   #isConnectingRoom;
-  #isWatchingRoom;
+  #isShowingRoomPage;
   #isMeshRoom;
   #registerTrack;
   #getRemoteUserIds;
@@ -58,7 +58,7 @@ export default class RosterHandler {
     getRoom,
     isActiveRoom,
     isConnectingRoom,
-    isWatchingRoom = () => false,
+    isShowingRoomPage = () => false,
     isMeshRoom,
     registerTrack,
     getRemoteUserIds = () => [],
@@ -87,7 +87,7 @@ export default class RosterHandler {
     this.#getRoom = getRoom;
     this.#isActiveRoom = isActiveRoom;
     this.#isConnectingRoom = isConnectingRoom;
-    this.#isWatchingRoom = isWatchingRoom;
+    this.#isShowingRoomPage = isShowingRoomPage;
     this.#isMeshRoom = isMeshRoom;
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
@@ -287,10 +287,9 @@ export default class RosterHandler {
       if (this.#isActiveRoom(roomId)) {
         playHandRaisedSound(this.#getChatSound());
       }
-      // On the room page the inline invitation banner already surfaces the
-      // invite with Accept/Decline actions; only toast when listening from
-      // elsewhere (widget or another tab/page).
-      if (this.#isWatchingRoom(roomId)) {
+      // The room page surfaces the invite in an inline banner with the same
+      // actions. The call widget has no banner, so it still needs the toast.
+      if (this.#isShowingRoomPage(roomId)) {
         return;
       }
       this.#toasts.default({
@@ -361,10 +360,20 @@ export default class RosterHandler {
         : "live.stage.room_now_stage";
     }
 
+    // Someone else changed the room, so a listener who can now speak stays
+    // off air: the microphone is only captured once they unmute themselves.
     await this.#reconfigureLocalMediaForRole(roomId, canSpeakNow, {
+      acquireMicrophone: false,
       toastMessage: i18n(toastKey),
       toastType: newRoomType === "open" ? "success" : "default",
     });
+  }
+
+  // Captures and publishes the microphone that a room type change left
+  // unacquired. Resolves to whether the microphone is now available.
+  async acquireDeferredMicrophone(roomId) {
+    await this.#reconfigureLocalMediaForRole(roomId, true);
+    return !!this.#getLocalStream();
   }
 
   #syncRemoteMediaTracks(roomId, participants) {
@@ -466,7 +475,7 @@ export default class RosterHandler {
   async #reconfigureLocalMediaForRole(
     roomId,
     canSpeak,
-    { toastMessage, toastType = "default" } = {}
+    { acquireMicrophone = true, toastMessage, toastType = "default" } = {}
   ) {
     // Block handleParticipants while we reconfigure the local stream,
     // so the subsequent "participants" broadcast doesn't create peers
@@ -485,18 +494,24 @@ export default class RosterHandler {
 
     if (canSpeak) {
       if (!this.#getLocalStream()) {
-        // The acquisition callback owns the user-facing failure feedback
-        // (permission help modal or toast).
-        const acquired = await this.#acquireMicrophone();
-        if (!acquired) {
-          this.#roleChangeInProgress.delete(roomId);
-          return;
-        }
+        if (acquireMicrophone) {
+          // The acquisition callback owns the user-facing failure feedback
+          // (permission help modal or toast).
+          const acquired = await this.#acquireMicrophone();
+          if (!acquired) {
+            this.#roleChangeInProgress.delete(roomId);
+            return;
+          }
 
-        this.#setMicEnabled(!this.#getPttEnabled());
+          this.#setMicEnabled(!this.#getPttEnabled());
+        } else {
+          this.#setMicEnabled(false);
+        }
       }
 
-      this.#ensureLocalAudioMonitor(roomId);
+      if (this.#getLocalStream()) {
+        this.#ensureLocalAudioMonitor(roomId);
+      }
 
       if (toastMessage) {
         this.#toasts[toastType]({

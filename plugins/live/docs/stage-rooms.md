@@ -72,4 +72,5 @@ permissions.
   its tile slots and exposes the speak queue for moderators.
 - **Live room-type transitions**: Switching a room between `open` and `stage`
   while a call is active reconciles participant roles, media permissions, and
-  client audio/video streams live.
+  client audio/video streams live. Listeners who gain the right to speak stay
+  muted: their microphone is only captured once they unmute themselves.

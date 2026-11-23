@@ -176,8 +176,50 @@ module("Live | Unit | Lib | roster-handler", function () {
 
     room.room_type = "open";
     await handler.handleRoomTypeChange(ROOM_ID, "open");
-    assert.true(acquiredMic, "acquires microphone when room switches to open");
-    assert.true(micEnabled, "enables microphone when room switches to open");
+    assert.false(
+      acquiredMic,
+      "does not capture the microphone when the room switches to open"
+    );
+    assert.false(micEnabled, "keeps the listener muted");
     assert.strictEqual(toasts[1].kind, "success");
+
+    assert.true(
+      await handler.acquireDeferredMicrophone(ROOM_ID),
+      "reports the microphone as available"
+    );
+    assert.true(acquiredMic, "captures the microphone on an explicit unmute");
+    assert.true(micEnabled, "enables the microphone on an explicit unmute");
+    assert.strictEqual(toasts.length, 2, "shows no further toast");
+  });
+
+  test("handleSpeakInvitation leaves the invite to the room page banner", function (assert) {
+    const toasts = [];
+    let showingRoomPage = true;
+
+    const handler = new RosterHandler({
+      peerManager: { getRoomPeers: () => new Map(), has: () => false },
+      presencePending: { has: () => false, clear() {} },
+      toasts: { default: (opts) => toasts.push(opts) },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({ id: ROOM_ID, room_type: "stage" }),
+      isActiveRoom: () => false,
+      isConnectingRoom: () => false,
+      isShowingRoomPage: () => showingRoomPage,
+      isMeshRoom: () => true,
+      getLocalVideoKind: () => null,
+    });
+    const invitation = {
+      user_id: CURRENT_USER_ID,
+      invited: true,
+      inviter_username: "mod",
+    };
+
+    handler.handleSpeakInvitation(ROOM_ID, invitation);
+    assert.strictEqual(toasts.length, 0, "no toast on the room page");
+
+    showingRoomPage = false;
+    handler.handleSpeakInvitation(ROOM_ID, invitation);
+    assert.strictEqual(toasts.length, 1, "toasts when only the widget is open");
   });
 });
