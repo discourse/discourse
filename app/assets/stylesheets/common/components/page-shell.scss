@@ -354,8 +354,19 @@ body.has-page-shell {
       grid-area: shell-notices;
     }
 
+    .page-shell__notices,
+    &::before,
+    .page-shell__navigation,
+    .page-shell__context,
+    .page-shell__footer {
+      z-index: 1;
+    }
+
     > #main-outlet.page-shell__main {
       grid-area: content;
+
+      // Keep descendant stacking levels local to Main, including fixed elements.
+      isolation: isolate;
       display: flex;
       flex-direction: column;
       min-inline-size: 0;
