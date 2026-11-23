@@ -49,6 +49,7 @@ module ReviewableActionBuilder
     id,
     icon: nil,
     label: nil,
+    translation_prefix: nil,
     button_class: nil,
     bundle: nil,
     client_action: nil,
@@ -60,10 +61,10 @@ module ReviewableActionBuilder
   )
     actions.add(id, bundle:, secondary:, dsa_classification_required:) do |action|
       source ||= type_source
-      if source == "core"
+      prefix = translation_prefix
+      unless prefix
         prefix = "reviewables.actions.#{id}"
-      else
-        prefix = "#{source.underscore}.reviewables.actions.#{id}"
+        prefix = "#{source.underscore}.#{prefix}" unless source == "core"
       end
 
       action.icon = icon if icon
@@ -90,6 +91,8 @@ module ReviewableActionBuilder
     bundle:,
     silence:,
     suspend:,
+    silence_options: {},
+    suspend_options: {},
     user: target_user,
     dsa_classification_required: false
   )
@@ -103,6 +106,7 @@ module ReviewableActionBuilder
         bundle:,
         client_action: "silence",
         dsa_classification_required:,
+        **silence_options,
       )
     end
 
@@ -114,6 +118,7 @@ module ReviewableActionBuilder
         bundle:,
         client_action: "suspend",
         dsa_classification_required:,
+        **suspend_options,
       )
     end
   end
