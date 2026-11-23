@@ -53,6 +53,54 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "keyword search statement timeout" do
+    let(:timeout_error) { I18n.t("search.keyword_search_timeout") }
+    let(:slow_topics) { Topic.where("(SELECT true FROM pg_sleep(0.3))") }
+
+    it "limits only the keyword filter when reusing a topic query" do
+      query = TopicQuery.new(nil, q: "keyword")
+
+      stub_const(Topic::KeywordSearch, :STATEMENT_TIMEOUT_MS, 50) do
+        slow_topics.scoping do
+          expect { query.list_filter }.to raise_error(Discourse::InvalidParameters, timeout_error)
+          expect { query.list_latest }.not_to raise_error
+        end
+      end
+    end
+
+    it "lets a slow filter without keywords finish" do
+      stub_const(Topic::KeywordSearch, :STATEMENT_TIMEOUT_MS, 50) do
+        slow_topics.scoping { TopicQuery.new(nil, q: "status:open").list_filter }
+      end
+    end
+
+    it "bounds both the topic list and unified New membership inside an existing transaction" do
+      SiteSetting.enable_unified_new = true
+      SearchIndexer.enable
+      post = Fabricate(:post, raw: "cartography")
+      candidates = TopicTrackingState.report(user)
+      TopicTrackingState.stubs(:report).with(user).returns(candidates)
+      DB.exec("SET LOCAL statement_timeout = 0")
+
+      list =
+        Topic
+          .where("current_setting('statement_timeout') <> '0'")
+          .scoping { TopicQuery.new(user, q: "cartography").list_filter }
+
+      expect(list.topics.map(&:id)).to contain_exactly(post.topic_id)
+      expect(list.filter_new_topic_ids).to contain_exactly(post.topic_id)
+      expect(DB.query_single("SHOW statement_timeout")).to eq(["0"])
+    end
+
+    it "keeps a stricter database timeout for keyword searches on the latest list" do
+      DB.exec("SET LOCAL statement_timeout = 100")
+
+      expect {
+        slow_topics.scoping { TopicQuery.new(nil, search: "keyword").list_latest }
+      }.to raise_error(Discourse::InvalidParameters, timeout_error)
+    end
+  end
+
   describe "secure category" do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)

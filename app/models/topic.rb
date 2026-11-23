@@ -368,6 +368,18 @@ class Topic < ActiveRecord::Base
     )
   SQL
 
+  scope :with_post_keywords,
+        ->(keywords, posts) do
+          matches =
+            posts
+              .joins(:post_search_data)
+              .where(hidden: false)
+              .where("post_search_data.search_data @@ #{Search.ts_query(term: keywords.to_s)}")
+          where(id: matches.select(:topic_id))
+        end do
+    include KeywordSearch
+  end
+
   scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
