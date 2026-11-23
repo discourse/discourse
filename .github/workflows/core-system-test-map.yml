@@ -2,7 +2,7 @@ name: Collect Core system test map
 
 on:
   schedule:
-    - cron: "17 3 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
