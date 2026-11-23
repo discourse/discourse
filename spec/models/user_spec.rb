@@ -646,6 +646,21 @@ RSpec.describe User do
     end
   end
 
+  describe "#user_fields" do
+    fab!(:number_field) { Fabricate(:user_field, field_type: "number") }
+
+    it "returns numbers for number fields" do
+      values =
+        %w[42 -2.5 1e3 abc].map do |stored_value|
+          user.set_user_field(number_field.id, stored_value)
+          user.save_custom_fields
+          user.reload.user_fields[number_field.id.to_s]
+        end
+
+      expect(values).to eql([42, -2.5, 1000, nil])
+    end
+  end
+
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
@@ -3211,6 +3226,29 @@ RSpec.describe User do
         username: "staged1",
         name: "Stage Name",
       )
+    end
+
+    it "preserves staged data when registration policy excludes the email" do
+      notification = Fabricate(:notification, user: user)
+      SiteSetting.blocked_email_domains = "account.com"
+
+      events =
+        DiscourseEvent.track_events do
+          expect { user.unstage! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(user.reload.staged).to eq(true)
+      expect(user.custom_fields[User::FROM_STAGED]).to be_nil
+      expect(user.notifications).to include(notification)
+      expect(events.map { |event| event[:event_name] }).not_to include(:user_unstaged)
+    end
+
+    it "allows promotion when the domain is allowed" do
+      SiteSetting.allowed_email_domains = "account.com"
+
+      user.unstage!
+
+      expect(user.reload.staged).to eq(false)
     end
 
     it "correctly unstages a user" do

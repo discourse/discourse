@@ -43,6 +43,8 @@ th:
         type: "ชนิด"
         error: "ผิดพลาด"
       discourse_workflows:
+        ai_tool:
+          list_item: "รายการ"
         classify:
           text: "ข้อความ"
           upload_ids: "รูปภาพ"
@@ -69,6 +71,9 @@ th:
         edit: "การตั้งค่า"
         search:
           name: "ค้นหา"
+        review_queue:
+          setting_groups:
+            settings: "การตั้งค่า"
         image_caption:
           setting_groups:
             settings: "การตั้งค่า"

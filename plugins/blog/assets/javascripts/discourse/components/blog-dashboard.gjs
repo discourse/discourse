@@ -25,6 +25,11 @@ import {
   editorFilters,
   STATUS_OPTIONS,
 } from "discourse/plugins/blog/discourse/lib/blog-editor-filters";
+import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
+
+function blogName(site, topic) {
+  return findBlog(site, topic.blog_id)?.name;
+}
 
 // "Changes pending" is still a live article; the edits are shown as separate pending work.
 function articleState(topic) {
@@ -69,6 +74,7 @@ export default class BlogDashboard extends Component {
   @service site;
   @service siteSettings;
 
+  @tracked blogFilter = "all";
   @tracked filter;
   @tracked loading = false;
   @tracked loadingMore = false;
@@ -81,15 +87,53 @@ export default class BlogDashboard extends Component {
 
   constructor() {
     super(...arguments);
-    const { filter, q } = editorFilters(
-      Object.fromEntries(searchParamsFromPath(this.router.currentURL))
+    const { filter, q, blog } = editorFilters(
+      Object.fromEntries(searchParamsFromPath(this.router.currentURL)),
+      this.site.blogs
     );
     this.filter = filter;
     this.query = q;
+    this.blogFilter = blog || "all";
+  }
+
+  get blogsDefaultFirst() {
+    return [...this.site.blogs].sort((a, b) => b.is_default - a.is_default);
+  }
+
+  get blogOptions() {
+    return [
+      { value: "all", label: i18n("blog.all_blogs") },
+      ...this.site.blogs.map((blog) => ({
+        value: String(blog.id),
+        label: blog.name,
+      })),
+    ];
   }
 
   get data() {
     return this._data || this.args.model;
+  }
+
+  get dropdownOptions() {
+    if (!this.hasSeveralBlogs) {
+      return STATUS_OPTIONS;
+    }
+    return { status: STATUS_OPTIONS, blog: this.blogOptions };
+  }
+
+  get dropdownQueryParams() {
+    return this.hasSeveralBlogs ? { status: "status", blog: "blog" } : null;
+  }
+
+  get dropdownValue() {
+    if (!this.hasSeveralBlogs) {
+      return this.filter;
+    }
+    return { status: this.filter, blog: this.blogFilter };
+  }
+
+  get hasSeveralBlogs() {
+    return (this.site.blogs?.length ?? 0) > 1;
   }
 
   get showEmptyState() {
@@ -107,12 +151,13 @@ export default class BlogDashboard extends Component {
 
   @action
   async newDraft() {
-    const category =
-      Category.findById(this.siteSettings.blog_drafts_category) ||
-      (await this.#ensureDraftsCategory());
-    if (category) {
-      await this.composer.openNewTopic({ category });
-    }
+    await this.#openDraftComposer();
+  }
+
+  @action
+  async newDraftOn(blog, menu) {
+    await menu.close();
+    await this.#openDraftComposer(blog);
   }
 
   @action
@@ -122,13 +167,20 @@ export default class BlogDashboard extends Component {
   }
 
   @action
-  onStatusFilterChange(filter) {
-    this.filter = filter;
+  onDropdownFilterChange(keyOrValue, value) {
+    if (value === undefined) {
+      this.filter = keyOrValue;
+    } else if (keyOrValue === "blog") {
+      this.blogFilter = value;
+    } else {
+      this.filter = value;
+    }
     this.#load();
   }
 
   @action
   async onResetFilters() {
+    this.blogFilter = "all";
     this.filter = "all";
     this.query = "";
     await this.#load();
@@ -143,7 +195,7 @@ export default class BlogDashboard extends Component {
     this.loadingMore = true;
     try {
       const data = await ajax("/blog-editor.json", {
-        data: { page: this.page + 1, filter: this.filter, q: this.query },
+        data: { ...this.#requestFilters(), page: this.page + 1 },
       });
       if (requestId !== this.#requestId) {
         return;
@@ -182,6 +234,23 @@ export default class BlogDashboard extends Component {
     }
   }
 
+  async #openDraftComposer(blog) {
+    const category =
+      Category.findById(this.siteSettings.blog_drafts_category) ||
+      (await this.#ensureDraftsCategory());
+    if (!category) {
+      return;
+    }
+    await this.composer.openNewTopic({ category });
+    const model = this.composer.model;
+    // Declining to discard a draft in progress keeps it open, for its own blog.
+    if (!model || model.anyDirty) {
+      return;
+    }
+    // A draft without a recorded blog belongs to the default blog.
+    model.set("blogId", blog && !blog.is_default ? blog.id : null);
+  }
+
   // The drafts category is created the first time anyone starts a draft.
   async #ensureDraftsCategory() {
     try {
@@ -195,12 +264,20 @@ export default class BlogDashboard extends Component {
     }
   }
 
+  #requestFilters() {
+    return editorFilters({
+      status: this.filter,
+      q: this.query,
+      blog: this.blogFilter,
+    });
+  }
+
   async #load() {
     const requestId = ++this.#requestId;
     this.loading = true;
     try {
       const data = await ajax("/blog-editor.json", {
-        data: { filter: this.filter, q: this.query },
+        data: this.#requestFilters(),
       });
       if (requestId === this.#requestId) {
         this._data = data;
@@ -226,12 +303,39 @@ export default class BlogDashboard extends Component {
         @titleLabel={{i18n "blog.editor_title"}}
       >
         <:actions as |actions|>
-          <actions.Primary
-            @action={{this.newDraft}}
-            @disabled={{this.data.error}}
-            @icon="pen-to-square"
-            @label="blog.new_draft"
-          />
+          {{#if this.hasSeveralBlogs}}
+            <actions.Wrapped>
+              <DMenu
+                @disabled={{this.data.error}}
+                @icon="pen-to-square"
+                @identifier="blog-dashboard-new-draft"
+                @label={{i18n "blog.new_draft"}}
+                @placement="bottom-end"
+                @triggerClass="d-page-action-button btn-small btn-primary blog-dashboard__new-draft"
+              >
+                <:content as |menu|>
+                  <DDropdownMenu as |dropdown|>
+                    {{#each this.blogsDefaultFirst as |blog|}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent blog-dashboard__new-draft-blog"
+                          @action={{fn this.newDraftOn blog menu}}
+                          @translatedLabel={{blog.name}}
+                        />
+                      </dropdown.item>
+                    {{/each}}
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
+            </actions.Wrapped>
+          {{else}}
+            <actions.Primary
+              @action={{this.newDraft}}
+              @disabled={{this.data.error}}
+              @icon="pen-to-square"
+              @label="blog.new_draft"
+            />
+          {{/if}}
           <actions.Wrapped>
             <DMenu
               @icon="ellipsis-vertical"
@@ -277,14 +381,15 @@ export default class BlogDashboard extends Component {
       {{/if}}
       <DFilterControls
         @array={{this.topics}}
-        @dropdownFilterQueryParam="status"
-        @dropdownOptions={{STATUS_OPTIONS}}
-        @dropdownValue={{this.filter}}
+        @dropdownFilterQueryParam={{unless this.hasSeveralBlogs "status"}}
+        @dropdownFilterQueryParams={{this.dropdownQueryParams}}
+        @dropdownOptions={{this.dropdownOptions}}
+        @dropdownValue={{this.dropdownValue}}
         @initialTextFilter={{this.query}}
         @inputPlaceholder={{i18n "blog.editor_search_hint"}}
         @loading={{this.loading}}
         @noResultsMessage={{i18n "blog.editor_no_results"}}
-        @onDropdownFilterChange={{this.onStatusFilterChange}}
+        @onDropdownFilterChange={{this.onDropdownFilterChange}}
         @onResetFilters={{this.onResetFilters}}
         @onTextFilterChange={{this.onQueryChange}}
         @textFilterQueryParam="q"
@@ -303,6 +408,11 @@ export default class BlogDashboard extends Component {
                   <th class="d-table__header-cell">{{i18n
                       "blog.editor_table.title"
                     }}</th>
+                  {{#if this.hasSeveralBlogs}}
+                    <th class="d-table__header-cell">{{i18n
+                        "blog.editor_table.blog"
+                      }}</th>
+                  {{/if}}
                   <th
                     class="d-table__header-cell blog-dashboard__status-column"
                   >{{i18n "blog.editor_table.status"}}</th>
@@ -361,6 +471,14 @@ export default class BlogDashboard extends Component {
                         {{/if}}
                       {{/if}}
                     </td>
+                    {{#if this.hasSeveralBlogs}}
+                      <td class="d-table__cell --detail blog-dashboard__blog">
+                        <div class="d-table__mobile-label">{{i18n
+                            "blog.editor_table.blog"
+                          }}</div>
+                        {{blogName this.site topic}}
+                      </td>
+                    {{/if}}
                     <td
                       class="d-table__cell --detail blog-dashboard__status-column"
                     >

@@ -19,6 +19,10 @@
     "admin": {
       "type": "boolean"
     },
+    "interactive_bot": {
+      "type": "boolean",
+      "description": "Whether the bot is interactive. Only present for bot users."
+    },
     "moderator": {
       "type": "boolean"
     },

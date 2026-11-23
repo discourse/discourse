@@ -7,7 +7,7 @@ class ProblemCheck::BlogNotReady < ProblemCheck
 
   def call
     return no_problem if !blog_in_use?
-    blocker = Blog::Readiness.new.problems.first
+    blocker = Blog::Instance.cached.lazy.filter_map { Blog::Readiness.new(_1).problems.first }.first
     return no_problem if blocker.nil?
     setting = blocker.settings.first
     return problem(override_data: { reason: blocker.message, setting: }) if setting

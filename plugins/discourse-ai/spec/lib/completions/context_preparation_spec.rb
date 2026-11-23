@@ -4,6 +4,10 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
   fab!(:model) { Fabricate(:llm_model, max_prompt_tokens: 16_000, max_output_tokens: 2000) }
   fab!(:user)
 
+  let(:budget_hint) do
+    { type: :user, content: DiscourseAi::Agents::Bot::TOKEN_BUDGET_FINAL_ANSWER_HINT }
+  end
+
   before { enable_current_plugin }
 
   def history_prompt(repetitions: 1600, latest: "What codeword?")
@@ -22,6 +26,15 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         { type: :user, content: latest },
       ],
     )
+  end
+
+  def summary_evidence(prompts)
+    fragments =
+      prompts.map do |request|
+        payload = JSON.parse(request.messages.last[:content].lines.last)
+        payload.fetch("evidence_fragment")
+      end
+    JSON.parse(fragments.join)
   end
 
   def expect_history_dropped(prompt, retained: [])
@@ -90,10 +103,31 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       expect(root.work_budget.used).to eq(200)
     end
 
-    it "compacts a small message count without summarizing the latest request" do
+    it "summarizes adjacent historical replies in order after removing a budget hint" do
+      SiteSetting.authorized_extensions = "jpg|txt"
+      model.update!(vision_enabled: true, allowed_attachment_types: ["txt"])
+      document_text = "The amber item has been checked."
+      document =
+        UploadCreator.new(file_from_contents(document_text, "facts.txt"), "facts.txt").create_for(
+          user.id,
+        )
+      image_file = file_from_fixtures("100x100.jpg", "images", "plugins/discourse-ai/spec/fixtures")
+      image = UploadCreator.new(image_file, "item.jpg").create_for(user.id)
+      image_ref = { upload_id: image.id }
       prompt = history_prompt
+      prompt.messages[1][:content] = [
+        "Remember these attachments",
+        { upload_id: document.id },
+        image_ref,
+      ]
+      private_signature = "opaque provider signature"
+      prompt.messages[4][:provider_data] = { signature: private_signature }
+      final_reply = "The codeword is ready to use."
+      prompt.messages.insert(-2, budget_hint.dup, { type: :model, content: final_reply })
+      prompt.push(type: :model, content: "I can recall it for you.")
       original = prompt.messages.deep_dup
       thinking = DiscourseAi::Completions::Thinking.new(message: "Private reasoning")
+
       DiscourseAi::Completions::Llm.with_prepared_responses(
         [[thinking, "The codeword is ", "QUARTZ-OTTER-731."]],
       ) do |_, _, prompts, options|
@@ -101,17 +135,28 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         result = described_class.new(llm, threshold: 50).prepare!(prompt, user: user)
 
         expect(result).to eq(:compressed)
-        expect(prompt.messages.map { |message| message[:type] }).to eq(%i[system user model user])
-        expect(prompt.messages.last).to eq(original.last)
+        expect(prompt.messages.map { |message| message[:type] }).to eq(
+          %i[system user model user model user model],
+        )
+        expect(prompt.messages[3][:content]).to include(image_ref)
+        expect(prompt.messages.last(2)).to eq(original.last(2))
         expect(prompt.messages[1][:content]).to eq(
           "<compressed_context>The codeword is QUARTZ-OTTER-731.</compressed_context>",
         )
         expect(prompts.first.skip_trim).to eq(true)
         expect(options.first).to include(user: user, feature_name: "context_compression")
         expect(options.first[:max_tokens]).to be_nil
-        evidence = prompts.first.messages.last[:content]
-        expect(evidence).to include(original[1][:content], original[3][:content])
-        expect(evidence).not_to include(original.last[:content])
+        evidence = summary_evidence(prompts)
+        expect(evidence.pluck("type")).to eq(%w[user tool_call tool model model])
+        expect(evidence.last(2).pluck("content")).to eq([original[4][:content], final_reply])
+        expect(evidence.first["content"]).to match(
+          [
+            "Remember these attachments",
+            a_string_including(document_text),
+            "[Retained historical attachment: upload #{image.id}]",
+          ],
+        )
+        expect(evidence.to_json).not_to include(private_signature)
       end
     end
 
@@ -123,10 +168,16 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
         "inflated " * 10_000,
       ].each do |response|
         prompt = history_prompt(repetitions: 600)
+        prompt.messages.insert(
+          -2,
+          budget_hint.dup,
+          { type: :model, content: "The codeword is ready to use." },
+        )
         original = prompt.messages.deep_dup
-        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do |_, _, prompts|
           llm = DiscourseAi::Completions::Llm.proxy(model)
           expect(described_class.new(llm, threshold: 20).prepare!(prompt)).to eq(:skipped)
+          expect(prompts.size).to eq(1)
           expect(prompt.messages).to eq(original)
           expect(prompt.skip_trim).to eq(true)
         end
@@ -226,21 +277,52 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "keeps the newest complete earlier turns that fit when dropping history" do
+    it "keeps the newest complete turns and distinct signed replies when dropping history" do
       prompt = history_prompt(repetitions: 4000)
       # Merged consecutive user messages lose their id but are still turn boundaries.
       recent_turn = [
         { type: :user, content: "Also remember AMBER-FOX-42" },
         { type: :tool_call, id: "recent", name: "read", content: '{"arguments":{}}' },
         { type: :tool, id: "recent", name: "read", content: "AMBER-FOX-42 stored" },
-        { type: :model, content: "Noted." },
+        {
+          type: :model,
+          content: "I stored the new codeword.",
+          thinking: "The read completed.",
+          thinking_provider_info: {
+            anthropic: {
+              signature: "stored-signature",
+            },
+          },
+        },
+        budget_hint,
+        {
+          type: :model,
+          content: "AMBER-FOX-42 is available for later.",
+          thinking: "Confirm the saved codeword.",
+          thinking_provider_info: {
+            anthropic: {
+              signature: "confirmed-signature",
+            },
+          },
+        },
       ]
       prompt.messages.insert(-2, *recent_turn.deep_dup)
-      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+      continuation = {
+        type: :user,
+        content: "Continuation of the assistant response follows.",
+        turn_separator: true,
+      }
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do |canned|
         llm = DiscourseAi::Completions::Llm.proxy(model)
 
         expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
-        expect_history_dropped(prompt, retained: recent_turn)
+        expect(canned.completions).to eq(1)
+        expect_history_dropped(
+          prompt,
+          retained: [*recent_turn[0...-2], continuation, recent_turn.last],
+        )
+        expect(DiscourseAi::Completions::Prompt.new(messages: prompt.messages)).to eq(prompt)
       end
     end
 
@@ -340,6 +422,45 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
+    it "keeps a protected pending call out of the summary when history reused its ID" do
+      prompt = history_prompt(repetitions: 10)
+      prompt.push(
+        type: :tool_call,
+        id: "read",
+        name: "read",
+        content: { arguments: { query: "large argument " * 10_000 } }.to_json,
+      )
+      original = prompt.messages.deep_dup
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(Array.new(8, "Summary")) do |canned|
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect { described_class.new(llm).prepare!(prompt) }.to raise_error(
+          described_class::Error,
+          /hard_overflow/,
+        )
+        expect(canned.completions).to eq(0)
+        expect(prompt.messages).to eq(original)
+      end
+    end
+
+    it "summarizes a completed oversized protected batch that reused a historical ID" do
+      prompt = history_prompt(repetitions: 10)
+      prompt.push(type: :tool_call, id: "read", name: "read", content: '{"arguments":{}}')
+      prompt.push(type: :tool, id: "read", name: "read", content: "Current result " * 10_000)
+      expected_batch = JSON.parse(prompt.messages.last(2).to_json)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(8, "Summary"),
+      ) do |_, _, prompts|
+        llm = DiscourseAi::Completions::Llm.proxy(model)
+
+        expect(described_class.new(llm).prepare!(prompt)).to eq(:compressed)
+        expect(summary_evidence(prompts).last(2)).to eq(expected_batch)
+        expect(prompt.messages.last).to eq(type: :user, content: "What codeword?")
+      end
+    end
+
     it "fails rather than dropping current-turn evidence that cannot fit without history" do
       prompt = history_prompt(repetitions: 10)
       prompt.push(type: :tool_call, id: "large", name: "read", content: '{"arguments":{}}')
@@ -375,7 +496,7 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
 
     it "covers all evidence beyond eight chunks and the former estimated token allowance" do
       prompt = history_prompt(repetitions: 20_000)
-      original_evidence = JSON.parse(model.to_llm.context_evidence(prompt.messages[1...-1]).to_json)
+      original_evidence = prompt.messages[1...-1].as_json
       DiscourseAi::Completions::Llm.with_prepared_responses(
         Array.new(30, "Summary with QUARTZ-OTTER-731."),
       ) do |canned, _, prompts|
@@ -389,16 +510,7 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
             size + output_reserve
           end
         expect(estimated_tokens).to be > 64_000
-        fragments =
-          prompts.map do |request|
-            request.messages.last[:content].split(
-              /(?:Conversation evidence|Continuation of evidence):\n/,
-              2,
-            ).last
-          end
-        evidence =
-          JSON.parse(fragments.map { |fragment| JSON.parse(fragment)["evidence_fragment"] }.join)
-        expect(evidence).to eq(original_evidence)
+        expect(summary_evidence(prompts)).to eq(original_evidence)
         expect(prompt.messages[1][:content]).to eq(
           "<compressed_context>Summary with QUARTZ-OTTER-731.</compressed_context>",
         )
@@ -473,23 +585,68 @@ RSpec.describe DiscourseAi::Completions::ContextPreparation do
       end
     end
 
-    it "summarizes complete oversized current-turn evidence but keeps all current user requests" do
+    it "summarizes oversized completed evidence in order without moving the current requests" do
       prompt = history_prompt(repetitions: 10)
+      protected_index = prompt.messages.length - 1
       prompt.push(type: :user, content: "Additional instructions")
+      prompt.push(type: :model, content: "I'll read the full record now.")
+      prompt.push(type: :model, content: "The next step is a read.")
       prompt.push(type: :tool_call, id: "large", name: "read", content: '{"arguments":{}}')
       prompt.push(type: :tool, id: "large", name: "read", content: "large result " * 7000)
-      protected_index = 5
+      current_evidence =
+        prompt.messages[protected_index..].reject { |message| message[:type] == :user }
+      expected_evidence =
+        JSON.parse((prompt.messages[1...protected_index] + current_evidence).to_json)
+
       DiscourseAi::Completions::Llm.with_prepared_responses(
         Array.new(8, "Summary of the completed read."),
-      ) do
+      ) do |_, _, prompts|
         llm = DiscourseAi::Completions::Llm.proxy(model)
         expect(
           described_class.new(llm).prepare!(prompt, protected_user_index: protected_index),
         ).to eq(:compressed)
+        expect(summary_evidence(prompts)).to eq(expected_evidence)
         expect(DiscourseAi::Completions::Prompt.text_only(prompt.messages.last)).to eq(
           "What codeword?\nAdditional instructions",
         )
         expect(DiscourseAi::Completions::Prompt.new(messages: prompt.messages)).to eq(prompt)
+      end
+    end
+
+    it "protects the latest real request when a saved position is stale or is an internal hint" do
+      hint = { type: :user, content: DiscourseAi::Agents::Bot::COMPLETION_LIMIT_FINAL_ANSWER_HINT }
+      %i[hint out_of_bounds].each do |invalid_index|
+        prompt = history_prompt
+        request = prompt.messages.last.dup
+        prompt.push(**hint)
+        index = invalid_index == :hint ? prompt.messages.length - 1 : prompt.messages.length + 1
+        DiscourseAi::Completions::Llm.with_prepared_responses(["The old codeword is saved."]) do
+          preparation = described_class.new(model.to_llm, threshold: 50)
+          expect(preparation.prepare!(prompt, protected_user_index: index)).to eq(:compressed)
+          expect(prompt.messages[preparation.protected_user_index..]).to eq([request, hint])
+        end
+      end
+    end
+
+    it "protects the latest real request rather than an inserted continuation marker" do
+      prompt = history_prompt
+      # A user can type the same words as a separator; their request is still real.
+      prompt.messages.last[:content] = "Continuation of the assistant response follows."
+      request = prompt.messages.last
+      replies = %w[First Second].map { |text| { type: :model, content: text } }
+      replies.each { |reply| prompt.push(**reply) }
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["The old codeword is saved."]) do
+        preparation = described_class.new(model.to_llm, threshold: 50)
+        expect(preparation.prepare!(prompt)).to eq(:compressed)
+        expect(prompt.messages[preparation.protected_user_index..]).to eq(
+          [
+            request,
+            replies.first,
+            { type: :user, content: request[:content], turn_separator: true },
+            replies.last,
+          ],
+        )
       end
     end
 

@@ -7,11 +7,13 @@ class Blog::BlogTheme::Activate
   params do
     attribute :theme_id, :string
     attribute :revision, :integer
+    attribute :blog_id, :integer
 
     validates :theme_id, :revision, presence: true
   end
 
   policy :can_manage_themes
+  model :blog
 
   lock do
     transaction do
@@ -29,12 +31,20 @@ class Blog::BlogTheme::Activate
     guardian.is_admin?
   end
 
+  # Choosing a theme for each blog comes with the admin pages for blogs. A site
+  # without a default row yet gets one, as activation needs a row to write.
+  def fetch_blog(params:)
+    return Blog::Instance.find_cached(params.blog_id) if params.blog_id
+    blog = Blog::Instance.default_blog
+    blog.persisted? ? blog : Blog::DefaultBlogMirror.sync!
+  end
+
   def fetch_theme(params:)
     Blog::ThemePresets.find(params.theme_id) || Blog::BlogTheme.find_and_lock(params.theme_id)
   end
 
-  def activate_theme(theme:)
-    Blog::BlogTheme.activate(theme)
+  def activate_theme(theme:, blog:)
+    Blog::BlogTheme.activate(theme, blog)
   end
 
   def prune_snapshots

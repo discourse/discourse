@@ -18,6 +18,18 @@ RSpec.describe ProblemCheck::BlogNotReady do
       it { expect(check).to be_chill_about_it }
     end
 
+    context "when a blog other than the default has a private category" do
+      before do
+        Blog::Instance.create!(
+          name: "Engineering",
+          slug: "engineering",
+          category: Fabricate(:private_category, group: Group[:staff]),
+        )
+      end
+
+      it { expect(check).to have_a_problem }
+    end
+
     context "when nobody has used the blog" do
       before do
         SiteSetting.blog_drafts_category = ""

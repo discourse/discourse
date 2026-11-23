@@ -378,6 +378,123 @@ describe DiscourseAi::Discover::DiscoveriesController do
       )
     end
 
+    it "defers a standalone URL and records when the reader requests the answer" do
+      query = "https://example.com/t/password-reset?from=search#instructions"
+      expect do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+               classify_intent: true,
+             }
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+
+      log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+      expect(response.parsed_body).to include("answer_deferred" => true)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(log).to have_attributes(
+        answer_deferred_reason: "url_lookup",
+        ask_outcome: "skipped",
+        answer_requested_at: nil,
+      )
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { ask_ai_log_id: log.id, query: }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id: SecureRandom.uuid,
+               deferred_ask_log_id: log.id,
+             }
+      end
+
+      expect(response.parsed_body).not_to have_key("answer_deferred")
+      expect(log.reload).to have_attributes(
+        answer_deferred_reason: "url_lookup",
+        answer_requested_at: be_present,
+      )
+    end
+
+    it "defers exact visible usernames and display names" do
+      SiteSetting.enable_names = true
+      SearchIndexer.enable
+      account = Fabricate(:user, username: "graceh", name: "Grace Hopper", trust_level: 2)
+      contributor = Fabricate(:user, username: "forumcontributor", trust_level: 2)
+      Fabricate(:post, user: contributor)
+
+      expect do
+        [contributor.username.upcase, account.name.downcase].each do |query|
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 defer_if_precise: true,
+               }
+
+          log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+          expect(log).to have_attributes(
+            answer_deferred_reason: "exact_user_match",
+            ask_outcome: "skipped",
+          )
+        end
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+    end
+
+    it "defers canonically equivalent Unicode usernames of contributors" do
+      SiteSetting.unicode_usernames = true
+      account = Fabricate(:user, username: "Löwe", trust_level: 2)
+      Fabricate(:post, user: account)
+
+      expect do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "LO\u0308WE",
+               request_id:,
+               defer_if_precise: true,
+             }
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+
+      expect(response.parsed_body).to include("answer_deferred" => true)
+      log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+      expect(log.answer_deferred_reason).to eq("exact_user_match")
+    end
+
+    it "queues an answer when a search only matches the username of an account with no posts" do
+      account = Fabricate(:user, username: "docker", trust_level: 2)
+      query = account.username
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { query: }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+             }
+      end
+
+      expect(response.parsed_body).not_to have_key("answer_deferred")
+    end
+
+    it "keeps questions with URLs and queries for hidden profiles eligible for an answer" do
+      SiteSetting.allow_users_to_hide_profile = true
+      account = Fabricate(:user, username: "hiddenaccount", trust_level: 2)
+      Fabricate(:post, user: account)
+      account.user_option.update!(hide_profile: true)
+
+      ["What does https://example.com describe?", account.username].each do |query|
+        expect_enqueued_with(job: :stream_discover_reply, args: { query: }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 defer_if_precise: true,
+               }
+        end
+
+        expect(response.parsed_body).not_to have_key("answer_deferred")
+      end
+    end
+
     it "answers a scoped search from the whole site when the model says it is about the site" do
       topic = Fabricate(:topic, title: "Upgrading to PostgreSQL 18")
 

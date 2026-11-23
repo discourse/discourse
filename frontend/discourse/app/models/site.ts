@@ -188,7 +188,7 @@ export type SiteBanner = EmberObject & {
 /** A user's custom field values, keyed by user field id. */
 export type SiteUserFieldValues = Record<
   string,
-  string | string[] | boolean | null | undefined
+  string | string[] | number | boolean | null | undefined
 >;
 
 /**
@@ -555,7 +555,10 @@ export default class Site extends RestModel {
           | TrustedHTML
           | null
           | undefined = fields ? fields[f.id.toString()] : null;
-        value = value || trustHTML("&mdash;");
+        // Number fields can legitimately hold 0.
+        if (value !== 0) {
+          value = value || trustHTML("&mdash;");
+        }
         return { name: f.name, value };
       });
     }

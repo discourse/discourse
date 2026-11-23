@@ -7,6 +7,14 @@ RSpec.describe User::CreateBot do
 
     it { is_expected.not_to allow_values(nil, -1, 5, "").for(:trust_level) }
 
+    it do
+      is_expected.to allow_values(true, false, 1, 0, "1", "0", "true", "false", "on", "off").for(
+        :interactive_bot,
+      )
+    end
+
+    it { is_expected.not_to allow_values(nil, "garbage", "", [], [true]).for(:interactive_bot) }
+
     it "requires a name when full names are required at signup" do
       SiteSetting.full_name_requirement = "required_at_signup"
 
@@ -27,6 +35,13 @@ RSpec.describe User::CreateBot do
 
         expect(contract).to be_valid
       end
+    end
+
+    it "defaults to non-interactive" do
+      contract = described_class.new(username: "release_helper", name: "Release helper")
+
+      expect(contract).to be_valid
+      expect(contract.interactive_bot).to eq(false)
     end
 
     it "defaults to the site's current trust level" do
@@ -123,6 +138,17 @@ RSpec.describe User::CreateBot do
       end
     end
 
+    context "with an invalid interactivity setting" do
+      before { params[:interactive_bot] = "garbage" }
+
+      it "fails the contract without reserving an ID, creating a bot, or logging an action" do
+        expect { result }.to not_change { PluginStore.get("core", BotUser::FLOOR_KEY) }.and(
+          not_change(User, :count),
+        ).and(not_change(UserHistory, :count))
+        expect(result).to fail_a_contract
+      end
+    end
+
     context "when the actor is anonymous" do
       let(:dependencies) { { guardian: Guardian.new } }
 
@@ -167,6 +193,7 @@ RSpec.describe User::CreateBot do
           trust_level: params[:trust_level],
           admin: false,
           moderator: false,
+          interactive_bot: false,
           active: true,
           approved: true,
           approved_by_id: actor.id,
@@ -305,6 +332,22 @@ RSpec.describe User::CreateBot do
           )
         end
       end
+    end
+
+    it "creates an explicitly interactive bot" do
+      params[:interactive_bot] = true
+
+      expect(result).to run_successfully
+      expect(result.user.reload.interactive_bot).to eq(true)
+      expect(UserHistory.last.details).to eq("trust_level: 2\ninteractive_bot: true")
+    end
+
+    it "creates a non-interactive bot from form-encoded false" do
+      params[:interactive_bot] = "false"
+
+      expect(result).to run_successfully
+      expect(result.user.reload.interactive_bot).to eq(false)
+      expect(UserHistory.last.details).to eq("trust_level: 2\ninteractive_bot: false")
     end
 
     it "honors trust level zero when the site default is four" do

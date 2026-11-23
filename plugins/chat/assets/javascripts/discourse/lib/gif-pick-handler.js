@@ -3,7 +3,7 @@
 //
 // The returned handler:
 //   - Sends the picked GIF as a chat message in the active context (channel or
-//     thread, with inReplyTo when replying in a channel).
+//     thread), forwarding inReplyTo when a reply target is set.
 //   - On a successful send, resets the *correct* draft (thread when in a
 //     thread context, channel otherwise) for the given user.
 //   - On send failure, leaves the draft intact so the user can retry.
@@ -15,7 +15,7 @@ export function buildGifPickHandler({ api, draft, isThread, currentUser }) {
       await api.sendChatMessage(draft.channel.id, {
         message,
         threadId: isThread ? draft.thread?.id : null,
-        inReplyToId: !isThread ? draft.inReplyTo?.id : null,
+        inReplyToId: draft.inReplyTo?.id ?? null,
       });
     } catch {
       return;

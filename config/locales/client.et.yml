@@ -2092,10 +2092,8 @@ et:
           label: "valitud"
           title: "Klõpsa postituse valikust eemaldamiseks"
         select_replies:
-          label: "vali +vastused"
           title: "Lisa postitus ja kõik selle vastused valikusse"
         select_below:
-          label: "vali +allpool"
           title: "Lisa postitus ja kõik sellest allpool olev valikusse"
         delete: kustuta valitud
         cancel: tühista valimine
@@ -3928,6 +3926,8 @@ et:
           dropdown: "Rippmenüü"
       site_text:
         search_label: "Otsi"
+        preview:
+          default: "Vaikimisi"
         theme_disabled: "Välja lülitatud"
         filters: "Filtrid"
         edit: "Muuda"
@@ -4000,7 +4000,7 @@ et:
           modal_title: Märgiste rühmitamised
         granted_by: Märgistaja
         granted_at: Märgistuse aeg
-        reason_help: (Viide postitusele või teemale)
+        reason_help: Viide postitusele või teemale
         save: Salvesta
         delete: Kustuta
         delete_confirm: Kas oled kindel, et soovid selle märgise kustutada?

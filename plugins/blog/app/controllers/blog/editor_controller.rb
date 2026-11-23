@@ -16,11 +16,15 @@ module ::Blog
       respond_to do |format|
         format.html { render "default/empty" }
         format.json do
+          if params[:blog].present?
+            blog = Instance.find_cached(params[:blog].to_i) || raise(Discourse::NotFound)
+          end
           topics =
             EditorQuery.call(
               guardian,
               filter: params[:filter].presence || "all",
               query: params[:q] || "",
+              blog:,
             )
           @page = [params[:page].to_i, 0].max
           selected =
@@ -45,7 +49,7 @@ module ::Blog
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
                    error: Readiness.new.error,
-                   blog_url: Configuration.base_url,
+                   blog_url: Configuration.base_url(blog || Instance.default_blog),
                    more: selected.size > PAGE_SIZE,
                    topics:
                      selected
@@ -303,6 +307,7 @@ module ::Blog
 
     def preview
       @publication = find_editable_publication
+      @blog = @publication.blog
       @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
@@ -318,6 +323,7 @@ module ::Blog
       @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
       @template_variables =
         TemplateVariables.new(
+          blog: @blog,
           title: @page_title,
           article: ArticleVariables.new(@publication, revision:, topic: @topic),
         )
@@ -360,6 +366,7 @@ module ::Blog
           :cover_alt,
           :co_authors,
           :page,
+          :blog_id,
         )
         .to_h
     end

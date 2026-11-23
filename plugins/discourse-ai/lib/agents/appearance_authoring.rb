@@ -11,6 +11,8 @@ module DiscourseAi
       FEATURE = :appearance_authoring
       PALETTE_FEATURE = :palette_authoring
       THEME_FEATURE = :theme_authoring
+      # Styles beyond colors and fonts, which always come in a new theme.
+      STYLE_FEATURE = :style_authoring
 
       # The colors approval cards compare, as [palette, color name].
       KEY_COLORS = [
@@ -38,8 +40,9 @@ module DiscourseAi
       end
 
       # Returns why the user can't change the site's appearance, or nil when
-      # they can. A new theme comes with new palettes.
-      def self.denial(user:, phase:, new_theme: false, new_palettes: false)
+      # they can. A new theme comes with new palettes, and styles come with a
+      # new theme.
+      def self.denial(user:, phase:, new_theme: false, new_palettes: false, styles: false)
         return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
 
         access = access(user:, phase:)
@@ -47,7 +50,9 @@ module DiscourseAi
           return access.message.presence || I18n.t("discourse_ai.appearance_authoring.unavailable")
         end
 
-        refusal = theme_denial(user:, phase:) if new_theme
+        refusal = style_denial(user:, phase:) if styles
+        new_theme ||= styles
+        refusal ||= theme_denial(user:, phase:) if new_theme
         refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
       end
 
@@ -65,6 +70,14 @@ module DiscourseAi
           I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
         end
       end
+
+      def self.style_denial(user:, phase:)
+        access = access(user:, phase:, feature: STYLE_FEATURE)
+        return if access.allowed
+
+        access.message.presence || I18n.t("discourse_ai.appearance_authoring.styles_unavailable")
+      end
+      private_class_method :style_denial
 
       def self.theme_denial(user:, phase:)
         access = access(user:, phase:, feature: THEME_FEATURE)
@@ -102,6 +115,15 @@ module DiscourseAi
           light: palette_colors(appearance_change.light_color_scheme),
           dark: palette_colors(appearance_change.dark_color_scheme),
         }
+      end
+
+      # Every color a palette needs, filling in the ones core derives (hover
+      # and selected) or falls back to.
+      def self.complete_palette(colors)
+        resolved = AppearanceStyles::PaletteColors.new(colors.to_h)
+        AppearanceStyles::PaletteColors::BASE_NAMES.index_with do |name|
+          resolved[AppearanceStyles::PaletteColors::BASE_VARIABLES[name] || "--#{name}"]
+        end
       end
 
       def self.palette_colors(color_scheme)
@@ -142,6 +164,45 @@ module DiscourseAi
             }
           end
       end
+
+      MAX_STYLE_ROWS = 12
+
+      # Approval card rows for a draft's styles, as the policy describes them.
+      # For a new version, only what differs from the styles it replaces,
+      # including the ones it removes.
+      def self.style_changes(styles, palettes:, previous: nil)
+        after = style_values(styles, palettes)
+        before = style_values(previous, palettes)
+
+        rows =
+          after.filter_map do |label, value|
+            next if before[label] == value
+            { label:, before: before[label] || empty_value, after: value }
+          end
+        rows +=
+          before
+            .except(*after.keys)
+            .map { |label, value| { label:, before: value, after: empty_value } }
+
+        if rows.size > MAX_STYLE_ROWS
+          more = {
+            label: I18n.t("discourse_ai.appearance_authoring.more_styles"),
+            before: empty_value,
+            after: (rows.size - MAX_STYLE_ROWS).to_s,
+          }
+          rows = rows.first(MAX_STYLE_ROWS) << more
+        end
+        rows
+      end
+
+      def self.style_values(styles, palettes)
+        return {} if styles.blank?
+        AppearanceStyles::Policy
+          .call(styles, palettes:)
+          .changes
+          .to_h { |change| [change.label, change.value] }
+      end
+      private_class_method :style_values
 
       def self.default_theme_change(from:, to:)
         {

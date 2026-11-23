@@ -56,12 +56,6 @@ zh_TW:
           <b>由 <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> 規則觸發。</b>
         notify_author_pm:
           subject: "你的貼文已暫時移除以供審核"
-          body: |
-            嗨 @%{username}，
-
-            你在「%{topic_title}」中的貼文已暫時移除並放入審核佇列，等待版主查看。核准後，貼文將自動還原。
-
-            參考：%{post_url}
       llm_report:
         title: 定期使用 AI 產生報告
         description: "根據大型語言模型定期產生報告"

@@ -4386,10 +4386,8 @@ he:
           label: "נבחרים"
           title: "הקליקו לביטול בחירת הפוסט"
         select_replies:
-          label: "בחירת +תגובות"
           title: "הוספת פוסט ואת כל התגובות שלו לבחירה"
         select_below:
-          label: "יש לבחור +להלן"
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
@@ -8386,7 +8384,6 @@ he:
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
         silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
-        silence_message: "הודעה בדוא״ל"
         suspended_until: "(עד %{until})"
         suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
@@ -8686,6 +8683,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8853,7 +8852,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

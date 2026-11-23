@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  findAll,
   select,
   visit,
   waitUntil,
@@ -309,6 +310,15 @@ acceptance("Blog editor", function (needs) {
     );
   });
 
+  test("leaves out the blog column with a single blog", async function (assert) {
+    await visit("/blog-editor");
+
+    assert.dom(".blog-dashboard__row").exists("the list has articles");
+    assert
+      .dom(".blog-dashboard__blog")
+      .doesNotExist("one blog needs no column for it");
+  });
+
   test("offers page actions in the header", async function (assert) {
     await visit("/blog-editor");
     assert
@@ -445,6 +455,18 @@ acceptance("Blog composer", function (needs) {
     );
   });
 
+  test("starts a draft in one click with a single blog", async function (assert) {
+    await visit("/blog-editor");
+    await click(".d-page-header__actions .btn-primary");
+
+    assert.dom("#reply-control .d-editor").exists("the composer opens");
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      null,
+      "the draft belongs to the only blog"
+    );
+  });
+
   test("accepts a short title for a page", async function (assert) {
     await visit("/blog-editor");
     await click(".d-page-header__actions .btn-primary");
@@ -515,5 +537,146 @@ acceptance("Blog composer without a drafts category", function (needs) {
     assert
       .dom(".title-input .popup-tip.bad")
       .doesNotExist("the new category accepts a short article title");
+  });
+});
+
+acceptance("Blog editor with several blogs", function (needs) {
+  needs.user({ admin: true, moderator: false });
+  needs.settings({
+    blog_enabled: true,
+    blog_drafts_category: 10,
+  });
+  needs.site({
+    blogs: [
+      {
+        id: 1,
+        name: "The blog",
+        is_default: true,
+        base_url: "https://blog.example.com",
+        category_id: 3,
+        path_format: "/{slug}",
+      },
+      {
+        id: 2,
+        name: "Engineering",
+        is_default: false,
+        base_url: "https://blog.example.com/blog/engineering",
+        category_id: 4,
+        path_format: "/{year}/{slug}",
+      },
+    ],
+  });
+
+  let requests;
+
+  needs.hooks.beforeEach(() => {
+    requests = [];
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/blog-editor.json", (request) => {
+      requests.push({ ...request.queryParams });
+      return helper.response({
+        topics: [
+          {
+            id: 321,
+            blog_id: 2,
+            title: "Notes from the offsite",
+            status: "draft",
+            draft: true,
+            topic_url: "/t/notes-from-the-offsite/321",
+          },
+        ],
+        blog_url: "https://blog.example.com",
+      });
+    });
+  });
+
+  test("filters the list by blog and keeps the choice in the URL", async function (assert) {
+    await visit("/blog-editor?blog=2");
+    assert.strictEqual(
+      requests[0].blog,
+      "2",
+      "the first request uses the blog from the URL"
+    );
+    assert
+      .dom(".d-filter-controls__dropdown--blog")
+      .hasValue("2", "the blog filter is restored");
+
+    await select(".d-filter-controls__dropdown--blog", "1");
+    assert.strictEqual(
+      requests.at(-1).blog,
+      "1",
+      "choosing a blog reloads its articles"
+    );
+    assert.true(
+      currentURL().includes("blog=1"),
+      "the chosen blog is kept in the URL"
+    );
+  });
+
+  test("ignores a blog the site does not have", async function (assert) {
+    await visit("/blog-editor?blog=99");
+    assert.false(
+      "blog" in requests[0],
+      "an unknown blog falls back to all blogs"
+    );
+  });
+
+  test("starts a new draft on the blog chosen from the menu", async function (assert) {
+    await visit("/blog-editor");
+    await click(".blog-dashboard__new-draft");
+
+    assert
+      .dom(".blog-dashboard__new-draft-blog")
+      .exists({ count: 2 }, "every blog is offered");
+    assert
+      .dom(".blog-dashboard__new-draft-blog")
+      .hasText("The blog", "the default blog comes first");
+
+    await click(findAll(".blog-dashboard__new-draft-blog")[1]);
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      2,
+      "the draft is created for the chosen blog"
+    );
+  });
+
+  test("keeps a draft in progress on its blog when a new draft is declined", async function (assert) {
+    await visit("/blog-editor");
+    await click(".blog-dashboard__new-draft");
+    await click(findAll(".blog-dashboard__new-draft-blog")[1]);
+    await fillIn("#reply-title", "An engineering draft in progress");
+    await fillIn(".d-editor-input", "Words that are not saved yet.");
+
+    await click(".blog-dashboard__new-draft");
+    await click(findAll(".blog-dashboard__new-draft-blog")[0]);
+    await click(".discard-draft-modal__cancel-btn");
+
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      2,
+      "the kept draft stays on the blog it was started for"
+    );
+  });
+
+  test("shows each article's blog", async function (assert) {
+    await visit("/blog-editor?blog=2");
+
+    assert
+      .dom(".blog-dashboard__blog")
+      .includesText("Engineering", "the article's blog is named");
+  });
+
+  test("leaves the blog filter out of new drafts", async function (assert) {
+    await visit("/blog-editor?blog=2");
+    await click(".blog-dashboard__new-draft");
+    await click(".blog-dashboard__new-draft-blog");
+
+    assert.strictEqual(
+      this.owner.lookup("service:composer").model.blogId,
+      null,
+      "choosing the default blog records no blog, whatever the filter shows"
+    );
   });
 });

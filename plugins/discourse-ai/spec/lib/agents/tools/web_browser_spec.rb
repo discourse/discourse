@@ -5,10 +5,7 @@ RSpec.describe DiscourseAi::Agents::Tools::WebBrowser do
   fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#invoke" do
     it "can retrieve the content of a webpage and returns the processed text" do

@@ -5282,10 +5282,8 @@ uk:
           label: "обраний"
           title: "Натисніть, щоб видалити допис з вибірки"
         select_replies:
-          label: "select +replies"
           title: "Додати допис та всі відповіді до виділеного"
         select_below:
-          label: "вибрати + все нижче"
           title: "Додати допис та все після нього до виділеного"
         delete: видалити вибрані
         cancel: скасувати вибір
@@ -10289,7 +10287,6 @@ uk:
         silence_duration: "Як довго користувач буде відключений?"
         silence_reason_title: "Причина заморожування"
         silence_reason_placeholder: "Причина відключення"
-        silence_message: "Повідомлення пошти"
         suspended_until: "(Поки не буде %{until})"
         suspend_forever: "Призупинити назавжди"
         cant_suspend: "Цього користувача не можна заморозити."
@@ -10628,6 +10625,8 @@ uk:
       site_text:
         description: "Ви можете налаштувати будь-який текст на вашому форумі."
         search_label: "Пошук"
+        preview:
+          default: "Стандартна"
         theme_disabled: "Вимкнено"
         filters: "Фільтри"
         status:
@@ -10825,7 +10824,7 @@ uk:
           modal_title: Типи Нагороди
         granted_by: Ким видана
         granted_at: Коли видана
-        reason_help: (Посилання на допис, або тему)
+        reason_help: Посилання на допис, або тему
         save: Зберегти
         delete: Видалити
         delete_confirm: Ви впевнені, що хочете видалити цю відзнаку?

@@ -100,9 +100,16 @@ RSpec.describe "Blog under /blog", type: :request do
     expect(response.body).to include(publication.url)
   end
 
-  it "sends the blog's base URL to the client" do
+  it "sends the blogs to the client" do
     get "/site.json"
-    expect(response.parsed_body["blog_base_url"]).to eq("#{Discourse.base_url}/blog")
+    expect(response.parsed_body["blogs"]).to contain_exactly(
+      include(
+        "id" => Blog::Instance.default_blog.id,
+        "base_url" => "#{Discourse.base_url}/blog",
+        "category_id" => category.id,
+        "is_default" => true,
+      ),
+    )
   end
 
   it "serves articles at percent-encoded UTF-8 paths in either hex case" do

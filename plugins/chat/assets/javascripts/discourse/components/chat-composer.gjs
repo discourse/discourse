@@ -79,7 +79,9 @@ export default class ChatComposer extends Component {
   get shouldRenderMessageDetails() {
     return (
       this.draft?.editing ||
-      (this.context === "channel" && this.draft?.inReplyTo)
+      (!!this.draft?.inReplyTo &&
+        (this.siteSettings.chat_thread_improvements ||
+          this.context === "channel"))
     );
   }
 
@@ -125,6 +127,21 @@ export default class ChatComposer extends Component {
   get disabled() {
     return !this.currentUser || this.args.disabled;
   }
+
+  get showBroadcastOption() {
+    return false;
+  }
+
+  get broadcastChecked() {
+    return false;
+  }
+
+  get broadcastOptionLabel() {
+    return "";
+  }
+
+  @action
+  toggleBroadcast() {}
 
   @action
   persistDraft() {}
@@ -872,6 +889,17 @@ export default class ChatComposer extends Component {
             />
           {{/if}}
         </div>
+
+        {{#if this.showBroadcastOption}}
+          <label class="chat-composer__broadcast-option checkbox-label">
+            <input
+              checked={{this.broadcastChecked}}
+              type="checkbox"
+              {{on "change" this.toggleBroadcast}}
+            />
+            <span>{{this.broadcastOptionLabel}}</span>
+          </label>
+        {{/if}}
       </div>
 
       {{#if this.canAttachUploads}}

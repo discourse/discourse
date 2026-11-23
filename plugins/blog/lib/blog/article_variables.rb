@@ -142,7 +142,7 @@ module ::Blog
     end
 
     def url(path)
-      Configuration.url(path, preview_token: @preview_token)
+      Configuration.url(path, blog: @publication.blog, preview_token: @preview_token)
     end
   end
 end

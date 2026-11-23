@@ -112,9 +112,10 @@ class InviteRedeemer
       available_username = UserNameSuggester.suggest(email)
     end
 
-    user = User.where(staged: true).with_email(email.strip.downcase).first
-    user.unstage! if user
-    user ||= User.new
+    signup_email = email.strip.downcase
+    user = User.where(staged: true).with_email(signup_email).first || User.new
+    authenticator = UserAuthenticator.new(user, session, require_password: false)
+    authenticator.unstage!(signup_email:) if user.staged?
 
     user.attributes = {
       email: email,
@@ -131,14 +132,14 @@ class InviteRedeemer
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
-    user_fields = UserField.where(show_on_signup: true)
+    user_fields = UserField.where(show_on_signup: true).includes(:user_field_options)
     if user_custom_fields.present? && user_fields.present?
       field_params = user_custom_fields || {}
       fields = user.custom_fields
 
       user_fields.each do |f|
         field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
-        field_val = field_params[f.id.to_s]
+        field_val = UserCreator.clean_custom_field_values(f, field_params[f.id.to_s])
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length
         ] if field_val.present?
@@ -155,8 +156,6 @@ class InviteRedeemer
       user.password = password
       user.password_required!
     end
-
-    authenticator = UserAuthenticator.new(user, session, require_password: false)
 
     if !authenticator.has_authenticator? && !SiteSetting.enable_local_logins
       raise ActiveRecord::RecordNotSaved.new(I18n.t("login.incorrect_username_email_or_password"))

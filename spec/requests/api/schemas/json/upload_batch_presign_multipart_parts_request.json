@@ -3,7 +3,8 @@
   "properties": {
     "part_numbers": {
       "type": "array",
-      "description": "The part numbers to generate the presigned URLs for, must be between 1 and 10000.",
+      "maxItems": 100,
+      "description": "The part numbers to generate the presigned URLs for. Each part number must be between 1 and 10000. A request can have at most 100 part numbers.",
       "example": [1, 2, 3]
     },
     "unique_identifier": {

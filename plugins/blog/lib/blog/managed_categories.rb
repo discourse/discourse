@@ -43,7 +43,9 @@ module ::Blog
       existing_group_ids(SiteSetting.blog_publisher_groups_map)
     end
 
-    def self.public_category_name
+    # The default blog's category predates blog names, so it keeps its own name.
+    def self.public_category_name(blog)
+      return blog.name if !blog.is_default?
       I18n.t("blog.categories.public", locale: SiteSetting.default_locale)
     end
 
@@ -53,19 +55,19 @@ module ::Blog
 
     # An existing category with the default name is never adopted: it may belong
     # to something else, and adopting it would change who can post there.
-    def self.public_category_name_taken?
-      top_level_name_taken?(public_category_name)
+    def self.public_category_name_taken?(blog)
+      top_level_name_taken?(public_category_name(blog))
     end
 
     # A category the blog also uses for something else is never its drafts category.
     def self.drafts_category
       Category
-        .where.not(id: [SiteSetting.blog_category.to_i, SiteSetting.shared_drafts_category.to_i])
+        .where.not(id: [*Instance.category_ids, SiteSetting.shared_drafts_category.to_i])
         .find_by(id: stored_category_id(:blog_drafts_category))
     end
 
-    def self.public_category
-      Category.find_by(id: SiteSetting.blog_category)
+    def self.public_category(blog)
+      Category.find_by(id: blog.category_id)
     end
 
     # Read from the store rather than this process's copy of the settings, which can

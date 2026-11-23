@@ -58,11 +58,15 @@ module DiscourseAi
             resolved.deep_symbolize_keys
           end
 
-          def resolve_node(node, root)
+          def resolve_node(node, root, resolving = [])
             return node if !node.is_a?(Hash)
 
-            node = resolve_ref(node, root) if node["$ref"]
-            node = resolve_all_of(node, root) if node["allOf"]
+            if (ref = node["$ref"])
+              return node if resolving.include?(ref)
+              resolving = resolving + [ref]
+              node = resolve_ref(node, root)
+            end
+            node = resolve_all_of(node, root, resolving) if node["allOf"]
             node = resolve_any_of(node) if node["anyOf"] || node["oneOf"]
 
             result = {}
@@ -72,9 +76,9 @@ module DiscourseAi
               case value
               when Hash
                 if key == "properties"
-                  result[key] = value.transform_values { |v| resolve_node(v, root) }
+                  result[key] = value.transform_values { |v| resolve_node(v, root, resolving) }
                 elsif key == "items"
-                  result[key] = resolve_node(value, root)
+                  result[key] = resolve_node(value, root, resolving)
                 else
                   result[key] = value
                 end
@@ -97,13 +101,13 @@ module DiscourseAi
             node.except("$ref").merge(target)
           end
 
-          def resolve_all_of(node, root)
+          def resolve_all_of(node, root, resolving)
             variants = node["allOf"]
             return node if !variants.is_a?(Array)
 
             merged = node.except("allOf")
             variants.each do |variant|
-              resolved = resolve_node(variant, root)
+              resolved = resolve_node(variant, root, resolving)
               next if !resolved.is_a?(Hash)
 
               if resolved["properties"] && merged["properties"]

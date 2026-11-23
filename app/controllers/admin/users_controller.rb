@@ -3,7 +3,7 @@
 class Admin::UsersController < Admin::StaffController
   skip_before_action :check_xhr, only: :new_bot
 
-  before_action :ensure_admin, only: %i[new_bot create_bot bot_username_suggestion]
+  before_action :ensure_admin, only: %i[new_bot create_bot bot_username_suggestion interactive_bot]
   before_action :rate_limit_bot_creation, only: :create_bot
 
   before_action :fetch_user,
@@ -76,7 +76,11 @@ class Admin::UsersController < Admin::StaffController
 
   def create_bot
     plugin_param_names = DiscoursePluginRegistry.bot_creation_params.keys
-    bot = params.expect(bot: %i[name username trust_level] + plugin_param_names)
+    bot = params.expect(bot: %i[name username trust_level interactive_bot] + plugin_param_names)
+    # Strong parameters drop non-scalar values; treat them as invalid rather than omitted.
+    if params[:bot].key?(:interactive_bot) && !bot.key?(:interactive_bot)
+      bot[:interactive_bot] = nil
+    end
     plugin_params = bot.extract!(*plugin_param_names).to_h
 
     # Request uses `key`, as `api_key` would be read as an authentication credential.
@@ -109,6 +113,16 @@ class Admin::UsersController < Admin::StaffController
         raise result.exception if result.exception
         raise Discourse::NotFound
       end
+    end
+  end
+
+  def interactive_bot
+    User::UpdateBotInteractivity.call(service_params) do
+      on_success { head :no_content }
+      on_failed_contract { |contract| render_json_error(contract.errors.full_messages) }
+      on_model_not_found(:user) { raise Discourse::NotFound }
+      on_failed_policy(:can_update_bot_interactivity) { raise Discourse::InvalidAccess }
+      on_failed_policy(:site_not_archived) { raise Discourse::SiteArchived }
     end
   end
 

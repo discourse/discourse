@@ -409,6 +409,13 @@ RSpec.describe Statistics do
         expect(described_class.onboarding_steps).to eq(completed: 1)
       end
 
+      it "still counts steps the panel no longer offers" do
+        complete_step("select_theme", at: 9.days.ago)
+        complete_step("start_posting", at: 8.days.ago)
+
+        expect(described_class.onboarding_steps).to eq(completed: 2)
+      end
+
       it "ignores subjects that are not onboarding steps" do
         complete_step("not_a_step", at: 9.days.ago)
 
@@ -450,8 +457,15 @@ RSpec.describe Statistics do
           select_theme: 30,
           invite_collaborators: 2880,
           create_category: 5760,
+          start_posting: nil,
           completed: 5761,
         )
+      end
+
+      it "measures steps the panel no longer offers" do
+        complete_step("start_posting", at: first_admin.created_at + 45.minutes)
+
+        expect(described_class.onboarding_minutes_to[:start_posting]).to eq(45)
       end
 
       it "measures from the first completion when a step is repeated" do
@@ -468,6 +482,7 @@ RSpec.describe Statistics do
           select_theme: 30,
           invite_collaborators: nil,
           create_category: nil,
+          start_posting: nil,
           completed: nil,
         )
       end
@@ -494,6 +509,7 @@ RSpec.describe Statistics do
           select_theme: nil,
           invite_collaborators: nil,
           create_category: nil,
+          start_posting: nil,
           completed: nil,
         )
       end

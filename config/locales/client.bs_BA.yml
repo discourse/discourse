@@ -2395,10 +2395,8 @@ bs_BA:
           label: "označeno"
           title: "Klikni kako bi odstranio objavu iz označenog"
         select_replies:
-          label: "označi +odgovore"
           title: "Odaberi objavu i sve njene odgovore"
         select_below:
-          label: "označi +ispod"
           title: "Odaberi objavu i sve ispod nje"
         delete: delete selected
         cancel: cancel selecting
@@ -4351,7 +4349,6 @@ bs_BA:
         silence_modal_title: "Stišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti ućutkan?"
         silence_reason_placeholder: "Razlog za utišanje"
-        silence_message: "Email Poruka"
         suspended_until: "(do %{until})"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
         delete_posts_failed: "Došlo je do problema prilikom brisanja postova."
@@ -4527,6 +4524,8 @@ bs_BA:
           dropdown: "Ispustiti"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Uobičajen"
         theme_disabled: "Neomogućen"
         edit: "Edit"
         revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
@@ -4607,7 +4606,7 @@ bs_BA:
           modal_title: Grupiranje bedževa
         granted_by: Dat od
         granted_at: Dato na
-        reason_help: (Veza do posta ili teme)
+        reason_help: Veza do posta ili teme
         save: Sačuvaj
         delete: Obriši
         delete_confirm: Are you sure you want to delete this badge?

@@ -43,6 +43,8 @@ bg:
         type: "Тип"
         error: "Грешка"
       discourse_workflows:
+        ai_tool:
+          list_item: "Списък"
         classify:
           text: "Текст"
           upload_ids: "Изображения"
@@ -78,6 +80,9 @@ bg:
           enabled: "Да е включен"
         search:
           name: "Търсене"
+        review_queue:
+          setting_groups:
+            settings: "Настройки"
         image_caption:
           setting_groups:
             settings: "Настройки"

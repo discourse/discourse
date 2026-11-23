@@ -3028,10 +3028,7 @@ ro:
           label: "selectat"
           title: "Apasă pentru a exclude postarea din selecție"
         select_replies:
-          label: "selectează +răspunsuri"
           title: "Adaugă postarea și toate răspunsurile la selecție"
-        select_below:
-          label: "selectează +tot ce urmează"
         delete: șterge selecția
         cancel: anulare selecție
         select_all: selectează tot
@@ -5437,7 +5434,6 @@ ro:
         suspended_by: "Suspendat de"
         silence_reason: "Motiv"
         silence_modal_title: "Suspendă utilizatorul"
-        silence_message: "Mesaj email"
         suspended_until: "(până la %{until})"
         cant_suspend: "Utilizatorul nu poate fi suspendat."
         penalty_post_actions: "Ce dorești să faci cu postarea asociată?"
@@ -5647,6 +5643,8 @@ ro:
       site_text:
         description: "Poți personaliza orice text de pe forumul tău."
         search_label: "Caută"
+        preview:
+          default: "Implicit"
         theme_disabled: "Dezactivate"
         filters: "Filtre"
         title: "Texte site"
@@ -5748,7 +5746,7 @@ ro:
           modal_title: Grupuri ecusoane
         granted_by: Acordat de
         granted_at: Acordat la
-        reason_help: (O legătură către o postare sau un subiect)
+        reason_help: O legătură către o postare sau un subiect
         save: Salvează
         delete: Șterge
         delete_confirm: Ești sigur că vrei să ștergi acest ecuson?

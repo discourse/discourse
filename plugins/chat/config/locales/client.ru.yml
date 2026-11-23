@@ -589,9 +589,6 @@ ru:
         history_label: "История"
         members_label: "Участники"
       admin:
-        bot_discoverability:
-          label: "Показать в чате"
-          description: "Пусть пользователи находят этого бота при начале личного сообщения в чате."
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"

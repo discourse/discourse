@@ -4154,10 +4154,8 @@ pt_BR:
           label: "selecionado(a)"
           title: "Clique para remover a postagem da seleção"
         select_replies:
-          label: "selecionar +respostas"
           title: "Adicionar postagem e todas as suas respostas à seleção"
         select_below:
-          label: "selecionar +abaixo"
           title: "Adicionar a postagem e todo o conteúdo abaixo à seleção"
         delete: Excluir selecionados(as)
         cancel: cancelar seleção
@@ -8076,7 +8074,6 @@ pt_BR:
         silence_duration: "Por quanto tempo o(a) usuário(a) será silenciado(a)?"
         silence_reason_title: "Motivo do silêncio"
         silence_reason_placeholder: "Motivo do silêncio"
-        silence_message: "Mensagem do e-mail"
         suspended_until: "(até %{until})"
         suspend_forever: "Suspender para sempre"
         cant_suspend: "Este(a) usuário(a) não pode ser suspenso(a)."
@@ -8390,6 +8387,8 @@ pt_BR:
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
         search_label: "Pesquisar"
+        preview:
+          default: "Padrão"
         theme_disabled: "Desativados"
         filters: "Filtros"
         status:
@@ -8557,7 +8556,7 @@ pt_BR:
           modal_title: Agrupamentos de emblemas
         granted_by: Concedido por
         granted_at: Concedido em
-        reason_help: (Um link para uma postagem ou tópico)
+        reason_help: Um link para uma postagem ou tópico
         save: Salvar
         delete: Excluir
         delete_confirm: Tem certeza de que deseja excluir este emblema?

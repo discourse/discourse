@@ -7,10 +7,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GrantBadge do
   fab!(:user)
   fab!(:badge) { Fabricate(:badge, name: "Helpful Member") }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(params = nil, **kwargs)
     params ||= kwargs

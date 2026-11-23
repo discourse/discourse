@@ -71,7 +71,10 @@ module ReviewableActionBuilder
       action.label = label || "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action if client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
+      if confirm
+        action.confirm_message = "#{prefix}.confirm"
+        action.confirm_title = "#{prefix}.confirm_title"
+      end
       action.completed_message = "#{prefix}.complete"
       action.require_reject_reason = require_reject_reason
       action.penalty_effect = penalty_effect_for(id)

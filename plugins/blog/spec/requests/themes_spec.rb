@@ -140,7 +140,7 @@ RSpec.describe "Blog themes", type: :request do
           path: "/reference-story",
         )
       Blog::Path.create!(publication: publication, path: publication.path)
-      active = Blog::BlogTheme.active
+      active = Blog::BlogTheme.active_for(Blog::Instance.default_blog)
       token = Blog::ThemePreview.token_for(reference_theme)
 
       {
@@ -161,7 +161,7 @@ RSpec.describe "Blog themes", type: :request do
           expect(document.at_css(".blog-article__body").inner_html).to include(first_post.cooked)
         end
       end
-      expect(Blog::BlogTheme.active).to eq(active)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)).to eq(active)
     end
 
     it "renders an empty listing and carries the preview through archive searches" do
@@ -224,13 +224,13 @@ RSpec.describe "Blog themes", type: :request do
 
       get "https://blog.example.com/blog-theme.css"
       expect(response.body).not_to include(preset["css"])
-      expect(Blog::BlogTheme.active["id"]).to eq("default")
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq("default")
     end
 
     it "falls back to the default when an active preset is no longer shipped" do
       PluginStore.set(Blog::BlogTheme::STORE, "active", { "id" => "retired", "preset" => true })
 
-      expect(Blog::BlogTheme.active["id"]).to eq("default")
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq("default")
     end
 
     it "does not edit or delete presets" do
@@ -448,7 +448,9 @@ RSpec.describe "Blog themes", type: :request do
       expect(response.parsed_body["name"]).to eq(theme["name"])
       expect(response.parsed_body["id"]).not_to eq(theme["id"])
       expect(response.parsed_body["source"]).to be_nil
-      expect(Blog::BlogTheme.active["id"]).to eq(Blog::ThemePresets::DEFAULT_ID)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+        Blog::ThemePresets::DEFAULT_ID,
+      )
     end
 
     it "restricts imports and exports to admins on the discussion host" do

@@ -277,7 +277,7 @@ RSpec.describe NewPostManager do
                   I18n.t("user.new_user_typed_too_fast", locale: :en),
                 ).and change {
                         Topic.where(
-                          "subtype = 'system_message' AND title LIKE '%silenced%' AND excerpt LIKE '%Reason - New user typed too fast%'",
+                          "subtype = 'system_message' AND title LIKE '%silenced%' AND excerpt LIKE '%Reason: New user typed too fast%'",
                         ).count
                       }.by(1)
         end

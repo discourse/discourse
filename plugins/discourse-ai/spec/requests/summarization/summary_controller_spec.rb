@@ -174,7 +174,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         expect(response.status).to eq(404)
       end
 
-      it "only drops a cached summary when a post's content is edited without a revision" do
+      it "only replaces a cached summary when a post's content is edited without a revision" do
         original_raw = post_2.raw
         PostRevisor.new(post_2).revise!(post_2.user, raw: "#{original_raw} with a typo")
         summary = create_cached_summary(topic)
@@ -184,35 +184,55 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         PostRevisor.new(post_1).revise!(post_1.user, title_edit, skip_revision: true)
         PostRevisor.new(post_1).revise!(admin, raw: "This edit keeps a revision")
         PostRevisor.new(post_1).revise!(admin, raw: "This edit updates that revision")
-        expect(AiSummary.exists?(summary.id)).to eq(true)
+        expect(Jobs::ReplaceStaleTopicSummary.jobs).to be_empty
 
-        PostRevisor.new(post_2).revise!(post_2.user, raw: original_raw)
-        expect(AiSummary.exists?(summary.id)).to eq(false)
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) { PostRevisor.new(post_2).revise!(post_2.user, raw: original_raw) }
       end
 
-      it "drops a cached summary when a new revision omits the content it replaces" do
+      it "replaces a cached summary when a new revision omits the content it replaces" do
         PostRevisor.new(post_2).revise!(post_2.user, raw: "#{post_2.raw} with a secret")
         summary = create_cached_summary(topic)
 
-        PostRevisor.new(post_2).revise!(
-          post_2.user,
-          raw: "This edit has a reason",
-          edit_reason: "typo",
-        )
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) do
+          PostRevisor.new(post_2).revise!(
+            post_2.user,
+            raw: "This edit has a reason",
+            edit_reason: "typo",
+          )
+        end
 
         expect(post_2.post_revisions.pluck(:modifications).to_s).not_to include("with a secret")
-        expect(AiSummary.exists?(summary.id)).to eq(false)
       end
 
-      it "drops a cached summary when an edit rewrites the title its revision kept" do
+      it "replaces a cached summary when an edit rewrites the title its revision kept" do
         PostRevisor.new(post_1).revise!(post_1.user, title: "A sensitive title for this topic")
         summary = create_cached_summary(topic)
         edit = { title: "A redacted title for this topic", raw: "#{post_1.raw} and more" }
 
-        PostRevisor.new(post_1).revise!(post_1.user, edit)
+        expect_enqueued_with(
+          job: :replace_stale_topic_summary,
+          args: {
+            topic_id: topic.id,
+            summary_type: "complete",
+            locale: summary.locale,
+          },
+        ) { PostRevisor.new(post_1).revise!(post_1.user, edit) }
 
         expect(post_1.post_revisions.pluck(:modifications).to_s).not_to include("sensitive")
-        expect(AiSummary.exists?(summary.id)).to eq(false)
       end
 
       it "returns a summary" do
