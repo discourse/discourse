@@ -14,10 +14,7 @@ function firstProblem(blog) {
 
 export default <template>
   <section class="blog-blogs">
-    <DPageSubheader
-      @descriptionLabel={{i18n "blog.admin.blogs_description"}}
-      @titleLabel={{i18n "blog.admin.blogs_tab"}}
-    >
+    <DPageSubheader @titleLabel={{i18n "blog.admin.blogs_tab"}}>
       <:actions as |actions|>
         {{#if @model.can_add_blog}}
           <actions.Primary

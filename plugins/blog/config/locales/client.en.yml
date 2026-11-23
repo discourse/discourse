@@ -77,10 +77,8 @@ en:
         save: Save
         saved: Blog settings saved. Reload the blog to see your changes.
         about_tab: About
-        all_blogs_tab: All blogs
         back_to_blogs: Back to blogs
         blogs_tab: Blogs
-        blogs_description: Each blog has its own name, address, discussion category, and theme. Writers and editors work on every blog.
         add_blog: Add blog
         new_blog: New blog
         new_blog_description: The blog starts unpublished, so you can set it up before readers see it.

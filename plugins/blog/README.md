@@ -72,7 +72,7 @@ a deferred, interactive Discourse discussion below each article.
 - A configurable paper/ink/accent palette, graphic covers, and Liquid-based
   designs, with bundled Editorial-style and minimal-reference examples under
   `branding/`.
-- Separate All blogs, Themes, and Settings pages, with a page for each blog (About, Settings, Theme) and focused FormKit editors for named theme drafts, Git imports,
+- Separate Blogs, Themes, and Settings pages, with a page for each blog (About, Settings, Theme) and focused FormKit editors for named theme drafts, Git imports,
   syntax-highlighted CSS/JavaScript editors, expiring blog-origin previews, and explicit
   activation of immutable snapshots. Editing or pulling a draft never changes readers.
 - Automatic light/dark mode, responsive layouts, and a custom-code safe mode.
@@ -85,7 +85,7 @@ By default the blog is served under `/blog` on the community, for example
 can pick it as the site homepage.
 
 A blog can instead have its own hostname, such as `https://blog.example.com`, set
-as **Own domain** on the blog's Settings tab (**Admin → Plugins → Blog → All blogs**).
+as **Own domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
 The hostname needs DNS, TLS and routing set up outside Discourse first. A host that
 offers own domains only on some plans turns off the hidden
 `blog_custom_domains_enabled` setting elsewhere: the field is then hidden and a new
@@ -96,7 +96,7 @@ dropping the hostname later does not leave browsers stuck on the old one.
 
 ### Several blogs
 
-A site can have more than one blog. **Add blog** on **All blogs** asks for a name
+A site can have more than one blog. **Add blog** on the **Blogs** tab asks for a name
 and a slug. The main blog stays at `/blog`; another blog lives at `/blog/<slug>`
 until it is given its own domain. Each blog has its own name, address, discussion
 category, article address format and theme. All blogs share the drafts category
@@ -139,7 +139,7 @@ setting is hidden, so it can only be turned on from the Rails console (step 3).
 3. Enable the blog. The setting is hidden for now, so set it from the Rails
    console: `SiteSetting.blog_enabled = true`. The blog's own admin pages only
    load once it is enabled, so enable first and configure second.
-4. Open **Admin → Plugins → Blog → All blogs** and edit the blog: its name, tagline
+4. Open **Admin → Plugins → Blog → Blogs** and edit the blog: its name, tagline
    and About text on the About tab; its own domain (dedicated hostname only, no
    trailing slash or path), discussion category, articles per page and article
    address format on the Settings tab; its design on the Theme tab.
@@ -242,7 +242,7 @@ during plugin installation or migration.
 ## Appearance and custom code
 
 Open **Admin → Plugins → Blog**. **Themes** lists the included designs, then the
-saved drafts, and badges the one currently shown to readers; **All blogs** lists each blog, whose About tab holds its name, tagline, and About
+saved drafts, and badges the one currently shown to readers; **Blogs** lists each blog, whose About tab holds its name, tagline, and About
 content and whose Theme tab picks its design. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
 

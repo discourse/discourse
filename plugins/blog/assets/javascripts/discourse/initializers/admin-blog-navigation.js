@@ -13,9 +13,8 @@ export default {
       api.registerPluginHeaderActionComponent("blog", BlogAdminPluginActions);
       api.addAdminPluginConfigurationNav("blog", [
         {
-          label: "blog.admin.all_blogs_tab",
+          label: "blog.admin.blogs_tab",
           route: "adminPlugins.show.discourse-blog-blogs",
-          description: "blog.admin.blogs_description",
         },
         {
           label: "blog.admin.themes",
