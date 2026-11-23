@@ -9,8 +9,8 @@ module ::Blog
     WORKING_COPY_EXPIRY = 15.minutes
     MAX_WORKING_COPIES = 3
 
-    def self.url(token, path: "/")
-      "#{Configuration.base_url}#{path}?#{{ blog_theme_preview: token }.to_query}"
+    def self.url(token, path: "/", blog: Instance.default_blog)
+      "#{Configuration.base_url(blog)}#{path}?#{{ blog_theme_preview: token }.to_query}"
     end
 
     def self.token_for(theme)

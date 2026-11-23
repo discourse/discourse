@@ -22,7 +22,6 @@ en:
         view_blog: View blog
         open_blog: Open blog
         safe_mode: Open without custom code
-        identity: Blog identity
         blog_title: Blog name
         tagline: Tagline
         accent: Accent color
@@ -77,8 +76,48 @@ en:
           another script by appending a script element (document.createElement("script")).
         save: Save
         saved: Blog settings saved. Reload the blog to see your changes.
-        identity_tab: Identity
-        identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
+        about_tab: About
+        all_blogs_tab: All blogs
+        back_to_blogs: Back to blogs
+        blogs_tab: Blogs
+        blogs_description: Each blog has its own name, address, discussion category, and theme. Writers and editors work on every blog.
+        add_blog: Add blog
+        new_blog: New blog
+        new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
+        create_blog: Create blog
+        blog_slug: Slug
+        blog_slug_description: "Used in its address on the community: /blog/<slug>."
+        blog_slug_locked: This blog has published articles, so its slug is fixed to keep their addresses working.
+        blog_url: Own domain
+        blog_url_description: Serve the blog from its own HTTPS address, without a path. Point that hostname at this site first, at your DNS, proxy, and certificate. Leave empty to serve it on the community.
+        blog_category: Discussion category
+        blog_category_description: Each published article gets a discussion topic here.
+        blog_category_locked: This blog has published articles, so its discussion category is fixed to keep them public.
+        posts_per_page: Articles per page
+        general_heading: General
+        settings_tab: Settings
+        publishing_description: Where the blog lives, where its discussions go, and how article addresses are built.
+        theme_tab: Theme
+        theme_tab_description: "Choose the design this blog's readers see. Add or edit themes on the <a href='%{themes_url}'>Themes tab</a>."
+        appearance_description: Choose this blog's theme. Create and edit themes on the Themes tab.
+        published_status: Published
+        unpublished_status: Not published
+        publish_blog: Publish blog
+        unpublish_blog: Unpublish blog
+        publish_blog_confirm: Publish “%{name}”? Its pages, feed, and sitemap become public.
+        unpublish_blog_confirm: Unpublish “%{name}”? Readers lose access to its pages, but its articles are kept.
+        delete_blog: Delete blog
+        delete_blog_confirm: Delete “%{name}”? Its discussion category is kept.
+        blog_deleted: Blog deleted.
+        column_name: Name
+        column_address: Address
+        column_category: Category
+        column_status: Status
+        needs_attention: Needs attention
+        ready: Ready
+        select_theme: Select theme
+        update_to_revision: Update to revision %{revision}
+        active_on: Active on %{blogs}
         article_urls: Article URLs
         path_format: Address format
         path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.

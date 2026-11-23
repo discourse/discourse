@@ -64,7 +64,7 @@ RSpec.describe "External draft review", type: :request do
   end
 
   it "keeps a signed-in editor signed in after opening a review link on the forum host" do
-    SiteSetting.blog_url = ""
+    update_default_blog(url: "")
     _review, token = issue_review
 
     get "https://test.localhost/blog/review", params: { review_token: token }

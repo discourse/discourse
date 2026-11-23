@@ -46,6 +46,7 @@ export default class BlogThemeEditor extends Component {
   @service modal;
   @service toasts;
   @service blogThemeActions;
+  @service site;
 
   @tracked busy = false;
   @tracked tab = "design";
@@ -98,6 +99,11 @@ export default class BlogThemeEditor extends Component {
       return !this.catalog?.has_page;
     }
     return this.previewPage === "article" && !this.selectedArticle;
+  }
+
+  // With several blogs, each blog picks its theme on its Theme tab.
+  get canActivate() {
+    return !(this.site.blogs?.length > 1);
   }
 
   get actionsDisabled() {
@@ -652,7 +658,7 @@ export default class BlogThemeEditor extends Component {
               @icon="eye"
               @label="blog.admin.preview_short"
             />
-            {{#if draft.id}}
+            {{#if (and draft.id this.canActivate)}}
               <form.Button
                 class="blog-theme-editor__activate"
                 @action={{this.activate}}

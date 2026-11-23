@@ -192,7 +192,7 @@ RSpec.describe Blog::Publication::UpdateMetadata do
 
       before do
         freeze_time Time.utc(2026, 11, 6)
-        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
       end
 
       it { is_expected.to run_successfully }
@@ -282,7 +282,7 @@ RSpec.describe Blog::Publication::UpdateMetadata do
 
       before do
         freeze_time Time.utc(2026, 11, 6)
-        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
       end
 
       it "moves a draft's generated path to its publication date" do

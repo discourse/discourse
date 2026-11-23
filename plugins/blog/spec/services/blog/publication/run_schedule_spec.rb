@@ -54,6 +54,22 @@ RSpec.describe Blog::Publication::RunSchedule do
       it { is_expected.to fail_a_policy(:schedule_due) }
     end
 
+    context "when the article's blog was unpublished after scheduling" do
+      before do
+        blog = Blog::Instance.create!(name: "Engineering", slug: "engineering", published: false)
+        publication.update_columns(blog_id: blog.id)
+      end
+
+      it "stops the schedule and says why" do
+        expect(result).to run_successfully
+        expect(publication.reload).to have_attributes(
+          published: false,
+          scheduled_at: nil,
+          schedule_error: I18n.t("blog.errors.blog_unpublished", name: "Engineering"),
+        )
+      end
+    end
+
     context "when the scheduler can no longer publish" do
       before { acting_user.update!(suspended_till: 1.day.from_now) }
 
@@ -112,7 +128,7 @@ RSpec.describe Blog::Publication::RunSchedule do
 
     context "with a dated path format scheduled into the next month" do
       let(:publication) do
-        SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+        update_default_blog(path_format: "/{year}/{month}/{slug}")
         freeze_time Time.utc(2026, 10, 31, 22)
         Blog::Publication.for_topic(topic)
       end
