@@ -3003,11 +3003,13 @@ RSpec.describe TopicsController do
             filter_top_level_replies: true,
             print: true,
             preview_theme_id: 9999,
+            preview_color_scheme_id: 1,
+            preview_dark_color_scheme_id: 2,
             include_raw: true,
           }
       expect(response.status).to eq(301)
       expect(response).to redirect_to(
-        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&include_raw=true",
+        "#{topic.relative_url}.json?print=true&filter_top_level_replies=true&preview_theme_id=9999&preview_color_scheme_id=1&preview_dark_color_scheme_id=2&include_raw=true",
       )
 
       get "/t/external_id/asdf.json", params: { page: "0" }
