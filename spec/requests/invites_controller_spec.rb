@@ -1837,18 +1837,37 @@ RSpec.describe InvitesController do
           put "/invites/show/#{invite.invite_key}.json",
               params: {
                 email_token: invite.email_token,
+                timezone: "Australia/Brisbane",
               },
               headers: {
                 "REMOTE_ADDR" => "203.0.113.9",
               }
 
           invited_user = User.find_by_email(developer_email)
-          expect(response.status).to eq(403)
-          expect(response.parsed_body["errors"]).to eq(
-            [I18n.t("login.admin_not_allowed_from_ip_address", username: invited_user.username)],
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["message"]).to eq(
+            I18n.t("login.admin_not_allowed_from_ip_address", username: invited_user.username),
           )
+          expect(response.parsed_body["success"]).to eq("OK")
+          expect(response.parsed_body["redirect_to"]).to be_nil
+          expect(invite.reload.redemption_count).to eq(1)
+          expect(invited_user.user_option.timezone).to eq("Australia/Brisbane")
+          expect(
+            Jobs::InvitePasswordInstructionsEmail.jobs.map { |job| job["args"].first["username"] },
+          ).to include(invited_user.username)
+          expect(
+            invited_user.notifications.where(
+              notification_type: Notification.types[:invited_to_topic],
+              topic_id: topic.id,
+            ),
+          ).to exist
           expect(session[:current_user_id]).to be_blank
           expect(invited_user.admin?).to eq(false)
+          Jobs::InvitePasswordInstructionsEmail.new.execute(username: invited_user.username)
+          expect(ActionMailer::Base.deliveries.last.to).to eq([developer_email])
+          expect(ActionMailer::Base.deliveries.last.subject).to eq(
+            I18n.t("invite_password_instructions.subject_template", site_name: SiteSetting.title),
+          )
         end
 
         it "logs in an invitee promoted from a developer email at an IP inside the allowlist" do

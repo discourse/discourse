@@ -20,14 +20,20 @@ function setupAuthData(data) {
   document.querySelector("head").appendChild(node);
 }
 
-for (const { active, destination, expected } of [
+for (const { active, destination, expected, loginError } of [
   { active: false, destination: "/", expected: "/u/account-created" },
   { active: false, destination: "/login", expected: "/u/account-created" },
   { active: true, destination: "/latest", expected: "/latest" },
+  {
+    active: true,
+    destination: "/latest",
+    expected: "/u/account-created",
+    loginError: "IP denied",
+  },
   { active: true, destination: "/signup", expected: "/u/account-created" },
 ]) {
   acceptance(
-    `Create Account - external auth redirects (active=${active}, destination=${destination})`,
+    `Create Account - external auth redirects (active=${active}, destination=${destination}, loginError=${loginError})`,
     function (needs) {
       needs.hooks.beforeEach(function () {
         setupAuthData({ destination_url: destination });
@@ -48,7 +54,9 @@ for (const { active, destination, expected } of [
       });
 
       test("redirects after signup", async function (assert) {
-        pretender.post("/u", () => response({ success: true, active }));
+        pretender.post("/u", () =>
+          response({ success: true, active, login_error: loginError })
+        );
 
         await visit("/");
         await click(".signup-fullpage .btn-primary");

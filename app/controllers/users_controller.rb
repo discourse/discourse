@@ -856,9 +856,12 @@ class UsersController < ApplicationController
       # add them to the review queue if they need to be approved
       user.activate if user.active?
 
-      render json: { success: true, active: user.active?, message: activation.message }.merge(
-               SiteSetting.hide_email_address_taken ? {} : { user_id: user.id },
-             )
+      render json: {
+               success: true,
+               active: user.active?,
+               message: activation.message,
+               login_error: activation.login_error,
+             }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
     elsif SiteSetting.hide_email_address_taken &&
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
       server_session["user_created_message"] = activation.success_message
@@ -1035,7 +1038,7 @@ class UsersController < ApplicationController
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if !@login_error && Wizard.user_requires_completion?(@user)
 
         render "password_reset"
       end
@@ -1055,7 +1058,9 @@ class UsersController < ApplicationController
                    success: true,
                    message: @success,
                    requires_approval: !Guardian.new(@user).can_access_forum?,
-                   redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil,
+                   login_error: @login_error,
+                   redirect_to:
+                     !@login_error && Wizard.user_requires_completion?(@user) ? wizard_path : nil,
                  }
         end
       end
@@ -1070,14 +1075,15 @@ class UsersController < ApplicationController
 
   def logon_after_password_reset
     message =
-      if Guardian.new(@user).can_access_forum? &&
-           !ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
-        # Log in the user
-        log_on_user(@user, replay_anonymous_action: true)
-        "password_reset.success"
-      else
+      if !Guardian.new(@user).can_access_forum?
         @requires_approval = true
         "password_reset.success_unapproved"
+      elsif ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        @login_error = I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username)
+        "password_reset.success_unapproved"
+      else
+        log_on_user(@user, replay_anonymous_action: true)
+        "password_reset.success"
       end
 
     @success = I18n.t(message)

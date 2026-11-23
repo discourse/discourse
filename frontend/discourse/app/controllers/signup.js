@@ -561,6 +561,7 @@ export default class SignupPageController extends Controller {
 
             if (
               result.active &&
+              !result.login_error &&
               destination_url &&
               destination_url !== "/signup"
             ) {

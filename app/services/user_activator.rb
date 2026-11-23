@@ -10,7 +10,7 @@ class UserActivator
     StaffActionLogger.new(guardian.user).log_user_activate(user, I18n.t("user.activated_by_staff"))
   end
 
-  attr_reader :user, :request, :session, :cookies, :message
+  attr_reader :user, :request, :session, :cookies, :message, :login_error
 
   def initialize(user, request, session, cookies)
     @user = user
@@ -24,7 +24,9 @@ class UserActivator
   end
 
   def finish
-    @message = activator.activate
+    selected_activator = activator
+    @message = selected_activator.activate
+    @login_error = selected_activator.login_error
   end
 
   def success_message
@@ -76,6 +78,11 @@ class LoginActivator < UserActivator
   include CurrentUser
 
   def activate
+    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      @login_error = I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
+      return @login_error
+    end
+
     log_on_user(
       user,
       { authenticated_with_oauth: session[:authenticated_with_oauth] },
