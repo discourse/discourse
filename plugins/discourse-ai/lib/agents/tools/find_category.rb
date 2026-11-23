@@ -46,8 +46,7 @@ module DiscourseAi
         end
 
         # Results can include private categories, so the tool is only offered
-        # to people who manage categories, and only in private conversations
-        # where the reply can't reach anyone else.
+        # to people who manage categories, in conversations nobody else reads.
         def self.available_for_context?(context)
           user = context&.user
           return false if !user || !user.guardian.can_create_category?
@@ -55,13 +54,23 @@ module DiscourseAi
           private_conversation?(context)
         end
 
+        # A private message or chat direct message between the user and bots
+        # only. Other members would see results only the user is allowed to see.
         def self.private_conversation?(context)
-          if context.channel_id.present?
-            defined?(Chat::Channel) &&
-              !!Chat::Channel.find_by(id: context.channel_id)&.direct_message_channel?
-          else
-            !!context.private_message?
-          end
+          member_ids =
+            if context.channel_id.present?
+              return false if !defined?(Chat::Channel)
+              channel = Chat::Channel.find_by(id: context.channel_id)
+              return false if !channel&.direct_message_channel?
+              channel.allowed_user_ids
+            elsif context.private_message? && (topic = Topic.find_by(id: context.topic_id))
+              return false if topic.topic_allowed_groups.exists?
+              topic.topic_allowed_users.pluck(:user_id)
+            else
+              return false
+            end
+
+          member_ids.all? { |id| id == context.user.id || !User.human_user_id?(id) }
         end
 
         def invoke

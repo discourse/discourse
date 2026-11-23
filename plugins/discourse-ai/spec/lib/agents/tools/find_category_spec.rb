@@ -13,8 +13,15 @@ RSpec.describe DiscourseAi::Agents::Tools::FindCategory do
 
   include_context "with AI bot enabled"
 
+  # A private message between the user and the assistant, or a public topic.
   def bot_context(user, private_message:)
-    DiscourseAi::Agents::BotContext.new(user:).tap { |ctx| ctx.private_message = private_message }
+    topic =
+      if private_message
+        Fabricate(:private_message_topic, user:, recipient: Discourse.system_user)
+      else
+        Fabricate(:topic, user:)
+      end
+    DiscourseAi::Agents::BotContext.new(user:, topic:)
   end
 
   def tool(query, context: self.context)
@@ -103,7 +110,7 @@ RSpec.describe DiscourseAi::Agents::Tools::FindCategory do
     end
 
     it "is offered in direct messages but not in chat channels" do
-      dm = Fabricate(:direct_message_channel, users: [admin, bot_user])
+      dm = Fabricate(:direct_message_channel, users: [admin, Discourse.system_user])
       channel = Fabricate(:chat_channel)
 
       dm_context = DiscourseAi::Agents::BotContext.new(user: admin, channel_id: dm.id)
@@ -111,6 +118,34 @@ RSpec.describe DiscourseAi::Agents::Tools::FindCategory do
 
       expect(described_class.available_for_context?(dm_context)).to eq(true)
       expect(described_class.available_for_context?(channel_context)).to eq(false)
+    end
+
+    it "is not offered in private messages that other people can read" do
+      other_user_pm =
+        Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user)).tap do |topic|
+          topic.allowed_users << Discourse.system_user
+        end
+      group_pm =
+        Fabricate(
+          :private_message_topic,
+          user: admin,
+          recipient: Discourse.system_user,
+        ).tap { |topic| topic.allowed_groups << group }
+
+      [other_user_pm, group_pm].each do |topic|
+        pm_context = DiscourseAi::Agents::BotContext.new(user: admin, topic:)
+
+        expect(described_class.available_for_context?(pm_context)).to eq(false)
+        expect(tool("volunteer", context: pm_context).invoke[:status]).to eq("error")
+      end
+    end
+
+    it "is not offered in direct messages that other people can read" do
+      group_dm =
+        Fabricate(:direct_message_channel, users: [admin, Discourse.system_user, Fabricate(:user)])
+      dm_context = DiscourseAi::Agents::BotContext.new(user: admin, channel_id: group_dm.id)
+
+      expect(described_class.available_for_context?(dm_context)).to eq(false)
     end
 
     it "is not offered to people who don't manage categories" do
