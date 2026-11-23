@@ -38,6 +38,19 @@ RSpec.describe UrlHelper do
       Discourse.stubs(:store).returns(store)
       expect(UrlHelper.is_local("/plugins/all.js")).to eq(true)
     end
+
+    it "handles image assets and rejects partial subfolder prefix matches" do
+      store = stub
+      store.stubs(:has_been_uploaded?).returns(false)
+      Discourse.stubs(:store).returns(store)
+
+      expect(UrlHelper.is_local("/images/emoji/twitter/smile.png")).to eq(true)
+
+      set_subfolder "/subpath"
+      expect(UrlHelper.is_local("/subpath/images/emoji/twitter/smile.png")).to eq(true)
+      expect(UrlHelper.is_local("/subpath/plugins/chat/chat.js")).to eq(true)
+      expect(UrlHelper.is_local("/subpath_other/assets/app.js")).to eq(false)
+    end
   end
 
   describe "#absolute" do
