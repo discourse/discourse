@@ -222,6 +222,14 @@ We are always working to maintain and improve the security posture of Discourse.
 
 - Discourse is registered with the [Anthropic OSS Scanner](https://red.anthropic.com/oss-scanner/).
 
+## Two-factor authentication and external sign-in
+
+`enforce_second_factor` controls who must **enroll**. An account with a Discourse authenticator or security key must complete a Discourse factor when signing in with an external provider, even when enrollment is optional or the provider does its own MFA. A verified local passkey sign-in does not require an additional factor.
+
+Before upgrading a site that disabled `enforce_second_factor_on_external_auth`, switched to DiscourseConnect, or turned off local logins, ask enrolled users and administrators to check their authenticator, security key, or backup codes. Previously enrolled factors that were ignored on external login will be required again. If a user has lost every factor, an authorized administrator can reset that user's two-factor authentication after verifying their identity. Keep a recovery path for administrators as well.
+
+Existing sessions stay signed in, but users previously exempt from a `staff` or `all` enrollment requirement will be directed to **Preferences → Security** when they next use the site. A two-factor challenge open during deployment must be restarted.
+
 ## Points of interest
 
 This information may provide useful context when working on Discourse from a security perspective:

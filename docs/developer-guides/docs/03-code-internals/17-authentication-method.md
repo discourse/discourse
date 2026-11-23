@@ -62,6 +62,18 @@ In core, registration takes place in [`discourse.rb`](https://github.com/discour
 
 https://github.com/discourse/discourse-openid-connect/blob/88fdf7b5ab624aba7c207e403665e0393334794a/config/locales/client.en.yml#L1-L7
 
+## Signing in an account with two-factor authentication
+
+An authenticator identifies a user; it does not issue a Discourse session or decide whether a second factor is needed. Return the result to `Users::OmniauthCallbacksController`. Its callbacks and inbound DiscourseConnect use `LoginSecondFactor` before issuing a session. Each keeps its own protocol, eligibility, and destination checks. Password and email sign-in already verify enrolled factors in their own forms.
+
+For an enrolled account, the browser goes to `/session/2fa` with a short-lived nonce. The pending login stays on the server. After the factor succeeds, a CSRF-protected continuation consumes the verified challenge once. It then checks the account and primary identity again before issuing the session. A new challenge replaces the old one; a change of browser login also invalidates it. Provider-directed provisioning and attribute sync can still run before that point; **the guarantee is that the browser is not signed in as the target by the callback alone**. Account linking from an existing session is a separate operation. Managed providers recheck the saved local association. For a custom authenticator that owns its identity records, core checks the enabled authenticator and account; it cannot independently check revocation at the upstream service.
+
+Provider-managed MFA does not substitute for a Discourse factor. A successful local passkey sign-in already verifies the user and does not prompt for another factor. Registering a sign-in passkey does not by itself enroll the account in native 2FA for other sign-in methods. Users can enroll under **Preferences → Security** even on external-only sites. A recent provider sign-in can authorize factor management for five minutes in the same browser session; it does not authorize other sensitive account changes.
+
+**Upgrade:** `enforce_second_factor` (`no`, `staff`, or `all`) controls **who must enroll**, not whether to challenge an enrolled user. The old `enforce_second_factor_on_external_auth` setting and its stored overrides are removed. Sites that disabled it now challenge enrolled users after an external login. Sites that enabled it no longer send them back to password login. Let enrolled users know to have their authenticator, security key, or backup codes available. Existing sessions are not forcibly signed out. A two-factor challenge already in progress at deploy time must be restarted. See the [operator upgrade notes](https://github.com/discourse/discourse/blob/main/docs/SECURITY.md#two-factor-authentication-and-external-sign-in).
+
+When adding a provider, test that an enrolled user stays signed out at the callback, can sign in after verification, and cannot use an expired or already-used challenge. Outbound assertions, API authentication, and administrator recovery are separate contracts; don't issue a fresh session from an authenticator hook to work around the gate.
+
 [details=Additional ManagedAuthenticator notes by @fantasticfears]
 
 ## `ManagedAuthenticator` in details

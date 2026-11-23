@@ -1,5 +1,11 @@
-import { click, currentRouteName, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -72,52 +78,57 @@ acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
   });
 });
 
-acceptance("Enforce second factor for OAuth logins", function (needs) {
-  needs.user();
+acceptance("Required enrollment", function (needs) {
+  needs.user({ moderator: false, admin: false });
+  needs.settings({ enforce_second_factor: "all" });
   needs.pretender((server, helper) => {
-    server.post("/u/second_factors.json", () => {
-      return helper.response({
-        success: "OK",
-        unconfirmed_session: true,
-      });
-    });
-  });
-
-  test("as a user using local login (username + password) when enforce_second_factor_on_external_auth is false", async function (assert) {
-    updateCurrentUser({
-      moderator: false,
-      admin: false,
-      login_method: "local",
-    });
-    this.siteSettings.enforce_second_factor = "all";
-    this.siteSettings.enforce_second_factor_on_external_auth = false;
-
-    await visit("/u/eviltrout/preferences/second-factor");
-    await click(".home-logo-wrapper-outlet a");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.second-factor",
-      "it does not let the user leave the second factor preferences"
+    server.post("/u/second_factors.json", () =>
+      helper.response({ success: "OK", totps: [], security_keys: [] })
     );
   });
 
-  test("as a user using oauth login when enforce_second_factor_on_external_auth is false", async function (assert) {
-    updateCurrentUser({
-      moderator: false,
-      admin: false,
-      login_method: "oauth",
-    });
-    this.siteSettings.enforce_second_factor = "all";
-    this.siteSettings.enforce_second_factor_on_external_auth = false;
+  for (const loginMethod of ["local", "oauth"]) {
+    test(`requires enrollment after ${loginMethod} login`, async function (assert) {
+      updateCurrentUser({ login_method: loginMethod });
+      await visit("/u/eviltrout/preferences/second-factor");
+      await click(".home-logo-wrapper-outlet a");
 
-    await visit("/u/eviltrout/preferences/second-factor");
-    await click(".home-logo-wrapper-outlet a");
+      assert.strictEqual(
+        currentRouteName(),
+        "preferences.second-factor",
+        "requires enrollment before leaving preferences"
+      );
+    });
+  }
+
+  test("a required user is routed to their own enrollment page", async function (assert) {
+    await visit("/u/charlie/preferences/second-factor");
 
     assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/preferences/second-factor",
+      "does not manage the current user's factors under another profile"
+    );
+  });
+
+  test("an enrolled user can leave factor preferences without disabling all factors", async function (assert) {
+    updateCurrentUser({ second_factor_enabled: true });
+    pretender.post("/u/second_factors.json", () =>
+      response({ success: "OK", totps: [{ id: 1 }], security_keys: [] })
+    );
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert.dom(".new-totp").exists("allows managing existing enrollment");
+    assert.dom(".alert-error").doesNotExist("does not ask them to enroll");
+    assert
+      .dom(".pref-second-factor-disable-all")
+      .doesNotExist("cannot disable all factors while enrollment is required");
+
+    await click(".second-factor .cancel");
+    assert.strictEqual(
       currentRouteName(),
-      "discovery.latest",
-      "it does let the user leave the second factor preferences"
+      "preferences.security",
+      "can return to security preferences"
     );
   });
 });

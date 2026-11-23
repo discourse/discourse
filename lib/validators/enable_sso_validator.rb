@@ -9,10 +9,7 @@ class EnableSsoValidator
 
   def valid_value?(val)
     return true if val == "f"
-    if SiteSetting.discourse_connect_url.blank? || secret_too_short? || is_2fa_enforced?
-      return false
-    end
-    true
+    SiteSetting.discourse_connect_url.present? && !secret_too_short?
   end
 
   def error_message
@@ -20,15 +17,7 @@ class EnableSsoValidator
       return I18n.t("site_settings.errors.discourse_connect_url_is_empty")
     end
 
-    return I18n.t("site_settings.errors.discourse_connect_secret_is_too_short") if secret_too_short?
-
-    if is_2fa_enforced?
-      I18n.t("site_settings.errors.discourse_connect_cannot_be_enabled_if_second_factor_enforced")
-    end
-  end
-
-  def is_2fa_enforced?
-    SiteSetting.enforce_second_factor? != "no"
+    I18n.t("site_settings.errors.discourse_connect_secret_is_too_short") if secret_too_short?
   end
 
   private
