@@ -1,3 +1,4 @@
+import type { RpcRequest } from "discourse/data/builders/helpers";
 import {
   createOne,
   deleteOne,
@@ -7,7 +8,6 @@ import {
   normalizeUserBadgeRecordPayload,
   normalizeUserBadgesPayload,
 } from "discourse/data/normalize";
-import type { WarpRequest } from "discourse/data/warp-rest-model";
 import { applyQueryParams } from "discourse/lib/url";
 
 // `/user-badges/:username` (dashed) and `/user_badges` (underscored) are
@@ -26,7 +26,7 @@ export function findUserBadgesByUsername(
 
 export function findUserBadgesByBadgeId(
   badgeId: string | number,
-  opts: { offset?: number; username?: string } = {}
+  opts: { limit?: number; offset?: number; username?: string | null } = {}
 ) {
   const url = applyQueryParams("/user_badges.json", {
     badge_id: badgeId,
@@ -42,7 +42,7 @@ export function findUserBadgesByBadgeIds(
   opts: {
     badgeTypeId?: string | number;
     offset?: number;
-    username?: string;
+    username?: string | null;
     limit?: number;
   } = {}
 ) {
@@ -73,7 +73,7 @@ export function deleteUserBadge(id: string | number) {
 }
 
 // RPC-style: no `op` / `data` / normalizer.
-export function toggleFavoriteUserBadge(id: string | number): WarpRequest {
+export function toggleFavoriteUserBadge(id: string | number): RpcRequest {
   return {
     url: `/user_badges/${encodeURIComponent(id)}/toggle_favorite`,
     method: "PUT",

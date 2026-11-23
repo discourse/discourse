@@ -170,7 +170,7 @@ export default class Bookmark extends RestCompatModel {
   ) {
     return warpStore().request(
       bulkBookmarkOperation(
-        bookmarks.map((b) => b.id),
+        bookmarks.map((b) => b.id!),
         operation
       ) as Parameters<WarpStore["request"]>[0]
     );
@@ -316,7 +316,7 @@ export default class Bookmark extends RestCompatModel {
       return Promise.resolve();
     }
     return warpStore().request(
-      togglePinBookmark(this.id) as Parameters<WarpStore["request"]>[0]
+      togglePinBookmark(this.id!) as Parameters<WarpStore["request"]>[0]
     );
   }
 

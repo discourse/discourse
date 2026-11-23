@@ -236,9 +236,14 @@ export function normalizeTopicDetailsPayload({
   details,
 }: {
   topicId: Value | undefined;
-  details: ObjectValue;
+  details: object;
 }): SingleResourceDocument {
   return {
-    data: resourceFrom("topic-details", TopicDetailsSchema, details, topicId),
+    data: resourceFrom(
+      "topic-details",
+      TopicDetailsSchema,
+      details as ObjectValue,
+      topicId
+    ),
   };
 }

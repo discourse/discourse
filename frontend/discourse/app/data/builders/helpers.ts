@@ -1,5 +1,8 @@
 import type { Normalizer, WarpRequest } from "discourse/data/warp-rest-model";
 
+/** An RPC-style request; the cache applies no operation for it. */
+export type RpcRequest = Omit<WarpRequest, "op" | "data">;
+
 // CRUD shorthands for per-resource builders. RPC-style endpoints (toggles,
 // notification updates, remove-allowed-X) skip these and use plain inline
 // request objects — they don't fit the CRUD shape.

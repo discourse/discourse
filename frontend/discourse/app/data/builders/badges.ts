@@ -27,7 +27,7 @@ export function findBadge(id: string | number) {
 }
 
 export function saveBadge(
-  badge: WarpRestModel,
+  badge: WarpRestModel<unknown>,
   data?: Record<string, unknown>
 ) {
   if (badge.id != null) {

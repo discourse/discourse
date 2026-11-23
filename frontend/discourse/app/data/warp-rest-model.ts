@@ -43,6 +43,11 @@ type IngestResult<C extends WarpRestModelClass, P> = C extends {
       : InstanceType<C>[]
   : InstanceType<C> | InstanceType<C>[];
 
+/** Converts a rooted response payload into a JSON:API document for the cache. */
+export type Normalizer = (
+  payload: RestPayload | null | undefined
+) => JsonApiDocument;
+
 /** A request object built by the helpers in `discourse/data/builders/helpers`. */
 export interface WarpRequest {
   url: string;
@@ -61,7 +66,7 @@ export interface WarpRequest {
     body?: unknown;
 
     /** Converts the rooted response payload into a JSON:API document for the cache. */
-    normalize?: (payload: RestPayload | null | undefined) => JsonApiDocument;
+    normalize?: Normalizer;
   };
 }
 

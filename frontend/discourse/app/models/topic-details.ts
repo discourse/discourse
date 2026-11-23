@@ -313,11 +313,11 @@ export default class TopicDetails extends RestCompatModel {
 
   // Topic's `_details` field initializer runs before Topic.id is assigned, so
   // back-fill lazily from `this.topic.id` on first access.
-  #effectiveTopicId() {
+  #effectiveTopicId(): string {
     if (this.#topicId == null && this.topic?.id != null) {
       this.#topicId = String(this.topic.id);
     }
-    return this.#topicId;
+    return this.#topicId!;
   }
 }
 
