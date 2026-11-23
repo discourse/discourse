@@ -1,3 +1,5 @@
+import { service } from "@ember/service";
+import notificationHistoryTypeFilters from "discourse/lib/notification-history-type-filters";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -9,8 +11,14 @@ export function setNotificationsLimit(newLimit) {
 }
 
 export default class UserNotifications extends DiscourseRoute {
+  @service site;
+  @service siteSettings;
+
   controllerName = "user-notifications";
-  queryParams = { filter: { refreshModel: true } };
+  queryParams = {
+    filter: { refreshModel: true },
+    notificationType: { refreshModel: true },
+  };
 
   model(params) {
     const username = this.modelFor("user").get("username");
@@ -19,11 +27,19 @@ export default class UserNotifications extends DiscourseRoute {
       this.get("currentUser.username") === username ||
       this.get("currentUser.admin")
     ) {
-      return this.store.find("notification", {
-        username,
-        filter: params.filter,
-        limit,
-      });
+      const query = { username, filter: params.filter, limit };
+      if (
+        this.siteSettings.enable_notification_history_type_filter &&
+        params.notificationType
+      ) {
+        const types = notificationHistoryTypeFilters(
+          this.site.notification_types
+        ).get(params.notificationType);
+        if (types) {
+          query.filter_by_types = types.join(",");
+        }
+      }
+      return this.store.find("notification", query);
     }
   }
 

@@ -13,6 +13,7 @@ describe "User notifications" do
   describe "filtering" do
     it "correctly filters all / read / unread notifications" do
       user_notifications_page.visit(user)
+      expect(page).to have_no_css(".user-notifications-type-filter")
       user_notifications_page.filter_dropdown
       expect(user_notifications_page).to have_selected_filter_value("all")
       expect(user_notifications_page).to have_notification(read_notification)
@@ -27,6 +28,44 @@ describe "User notifications" do
 
       expect(user_notifications_page).to have_no_notification(read_notification)
       expect(user_notifications_page).to have_notification(unread_notification)
+    end
+  end
+
+  context "when notification history type filtering is enabled" do
+    fab!(:read_like) do
+      Fabricate(:notification, user:, read: true, notification_type: Notification.types[:liked])
+    end
+    fab!(:unread_like) do
+      Fabricate(:notification, user:, read: false, notification_type: Notification.types[:liked])
+    end
+
+    before { SiteSetting.enable_notification_history_type_filter = true }
+
+    it "combines type with read status and preserves the selection across reloads" do
+      user_notifications_page.visit(user)
+      find(".user-notifications-type-filter").find("option[value='likes']").select_option
+
+      expect(user_notifications_page).to have_notification(read_like)
+      expect(user_notifications_page).to have_notification(unread_like)
+      expect(user_notifications_page).to have_no_notification(read_notification)
+
+      user_notifications_page.set_filter_value("read")
+      expect(user_notifications_page).to have_notification(read_like)
+      expect(user_notifications_page).to have_no_notification(unread_like)
+
+      page.refresh
+      expect(find(".user-notifications-type-filter").value).to eq("likes")
+      expect(user_notifications_page).to have_notification(read_like)
+      expect(user_notifications_page).to have_no_notification(unread_like)
+      expect(user_notifications_page).to have_no_notification(read_notification)
+
+      find(".user-notifications-type-filter").find(
+        "option",
+        text: I18n.t("js.user.user_notifications.type_filters.all"),
+      ).select_option
+      expect(user_notifications_page).to have_notification(read_notification)
+      expect(user_notifications_page).to have_notification(read_like)
+      expect(user_notifications_page).to have_no_notification(unread_like)
     end
   end
 

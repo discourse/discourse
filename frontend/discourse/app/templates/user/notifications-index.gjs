@@ -1,9 +1,11 @@
+import { concat } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import MenuItem from "discourse/components/user-menu/menu-item";
 import lazyHash from "discourse/helpers/lazy-hash";
 import NotificationsFilter from "discourse/select-kit/components/notifications-filter";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DNativeSelect from "discourse/ui-kit/d-native-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
@@ -30,6 +32,22 @@ export default <template>
         @onChange={{@controller.updateFilter}}
         @value={{@controller.filter}}
       />
+      {{#if @controller.siteSettings.enable_notification_history_type_filter}}
+        <DNativeSelect
+          aria-label={{i18n "user.user_notifications.type_filters.label"}}
+          class="user-notifications-type-filter"
+          @nonePlaceholder={{i18n "user.user_notifications.type_filters.all"}}
+          @onChange={{@controller.updateNotificationType}}
+          @value={{@controller.typeFilterValue}}
+          as |select|
+        >
+          {{#each @controller.notificationTypeOptions as |group|}}
+            <select.Option @value={{group}}>
+              {{i18n (concat "user.user_notifications.type_filters." group)}}
+            </select.Option>
+          {{/each}}
+        </DNativeSelect>
+      {{/if}}
       <PluginOutlet
         @name="user-notifications-after-filter"
         @outletArgs={{lazyHash items=@controller.items}}

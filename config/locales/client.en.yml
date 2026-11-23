@@ -1854,6 +1854,20 @@ en:
         enable_available_notifications: "Notify me when an upcoming change becomes available for preview"
 
       user_notifications:
+        type_filters:
+          label: "Filter by notification type"
+          all: "All types"
+          mentions: "Mentions"
+          replies: "Replies"
+          quotes: "Quotes"
+          edits: "Edits"
+          likes: "Likes and reactions"
+          messages: "Personal messages"
+          badges: "Badges"
+          links: "Links"
+          reminders: "Reminders"
+          watching: "Watched topics"
+          other: "Other"
         filters:
           filter_by: "Filter By"
           all: "All"
