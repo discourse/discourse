@@ -3669,6 +3669,12 @@ en:
       results_loaded:
         one: "%{count} result loaded"
         other: "%{count} results loaded"
+      filtered_results: "%{results} for “%{query}”, %{selected}"
+      filtered_results_all: "%{results}, %{selected}"
+      selected_of_results:
+        one: "%{count} of them selected"
+        other: "%{count} of them selected"
+      none_of_results_selected: "none of them selected"
       filter_to_narrow: "Showing the first results only. Keep typing to narrow them down."
       still_loading: "Still loading…"
       loading_more: "Loading more results…"

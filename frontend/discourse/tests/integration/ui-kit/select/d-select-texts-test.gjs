@@ -303,6 +303,9 @@ const SCENARIOS = {
   error: { load: () => Promise.reject(new Error("load failed")) },
   maxLoaded: { load: () => ({ options: ITEMS, total: 30 }), maxLoaded: 3 },
   resultsCount: { variant: "button" },
+  filteredMulti: { multiple: true, value: [2] },
+  filteredOpen: { multiple: true, variant: "button", value: [2] },
+  filteredNone: { multiple: true, variant: "button" },
   resultsLoaded: {
     variant: "button",
     load: () => ({ options: ITEMS, hasMore: true }),
@@ -829,6 +832,28 @@ const USES = [
   spoken("resultsLoaded", "partial result count", "resultsLoaded", {
     open: true,
   }),
+  spoken("filteredResults", "filtered multi-select count", "filteredMulti", {
+    open: true,
+    action: "narrow",
+  }),
+  spoken(
+    "filteredResultsAll",
+    "unfiltered multi-select count",
+    "filteredOpen",
+    { open: true }
+  ),
+  spoken(
+    "selectedOfResults",
+    "selected part of a multi-select count",
+    "filteredOpen",
+    { open: true }
+  ),
+  spoken(
+    "noneOfResultsSelected",
+    "selected part with nothing selected",
+    "filteredNone",
+    { open: true }
+  ),
   drawn("maxLoaded", "narrowing hint", "maxLoaded", ".d-select__narrow", {
     open: true,
   }),
@@ -985,6 +1010,8 @@ async function drive(row, configuration, observe) {
   }
   if (row.action === "empty" || row.action === "create") {
     await fillIn("input[role='combobox']", "Pear");
+  } else if (row.action === "narrow") {
+    await fillIn("input[role='combobox']", "an");
   } else if (row.action === "clear") {
     await click(".d-select__clear");
   } else if (row.action === "add") {
@@ -1067,6 +1094,19 @@ function assertUse(assert, row, expected, announce) {
         optionsRemoved: i18n("d_select.items_removed", { count: 2 }),
         resultsCount: i18n("d_select.results_count", { count: 3 }),
         resultsLoaded: i18n("d_select.results_loaded", { count: 3 }),
+        filteredResults: i18n("d_select.filtered_results", {
+          results: i18n("d_select.results_count", { count: 1 }),
+          query: "an",
+          selected: i18n("d_select.selected_of_results", { count: 1 }),
+        }),
+        filteredResultsAll: i18n("d_select.filtered_results_all", {
+          results: i18n("d_select.results_count", { count: 3 }),
+          selected: i18n("d_select.selected_of_results", { count: 1 }),
+        }),
+        selectedOfResults: i18n("d_select.selected_of_results", {
+          count: 1,
+        }),
+        noneOfResultsSelected: i18n("d_select.none_of_results_selected"),
         maxLoaded: i18n("d_select.filter_to_narrow"),
         stillLoading: i18n("d_select.still_loading"),
         loadingMore: i18n("d_select.loading_more"),
@@ -1271,6 +1311,16 @@ function assertValues(assert, row, calls) {
       unresolvedValue: { value: "404" },
       resultsCount: { count: 3 },
       resultsLoaded: { count: 3 },
+      filteredResults: {
+        results: i18n("d_select.results_count", { count: 1 }),
+        query: "an",
+        selected: i18n("d_select.selected_of_results", { count: 1 }),
+      },
+      filteredResultsAll: {
+        results: i18n("d_select.results_count", { count: 3 }),
+        selected: i18n("d_select.selected_of_results", { count: 1 }),
+      },
+      selectedOfResults: { count: 1 },
       createOption: { label: "Pear" },
       compactCount: { count: 2 },
       moreChips: { count: 2 },

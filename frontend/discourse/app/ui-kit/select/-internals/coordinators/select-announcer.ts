@@ -20,19 +20,29 @@ import SelectEngine, {
 // collision. Client filtering stays un-debounced, so the list itself never lags a keystroke.
 const RESULT_REPORT_DELAY = 1400;
 
-interface PendingCount {
-  timer: ReturnType<typeof discourseLater>;
+/** A count report as last spoken or deliberately swallowed. */
+interface AnnouncedCount {
   query: string;
   message: string;
+  /** What makes two reports the same news; the message itself when absent. */
+  key?: string;
+}
+
+interface PendingCount extends AnnouncedCount {
+  timer: ReturnType<typeof discourseLater>;
   /** Reads the message again when the report fires, for text drawn after it was scheduled. */
   readMessage?: () => string;
   activeKey: string | null;
-  previous: { query: string; message: string } | null;
+  previous: AnnouncedCount | null;
+  /** Speaks whatever the cursor did, for a list whose selection speech displaces the row's. */
+  overridesCursor: boolean;
 }
 
 interface ScheduleReportParams {
   repeatable?: boolean;
   readMessage?: () => string;
+  key?: string;
+  overridesCursor?: boolean;
 }
 
 interface SelectAnnouncerInit {
@@ -43,6 +53,8 @@ interface SelectAnnouncerInit {
   getActiveOptionKey: () => string | null;
   reannounceActive: () => boolean;
   getShouldSuppressEntryCount: () => boolean;
+  /** Whether the list shows selected options as rows, which a multi-select does unless told not to. */
+  listsHeldRows?: () => boolean;
   /**
    * Whether a pending reveal has waited long enough to show its frontier placeholders. The
    * "loading more" report follows the same signal, so it is spoken in the render that draws them.
@@ -67,6 +79,7 @@ export default class SelectAnnouncer {
   #getActiveOptionKey: () => string | null;
   #getShouldSuppressEntryCount: () => boolean;
   #isRevealDue: () => boolean;
+  #listsHeldRows: () => boolean;
   #reannounceActive: () => boolean;
   #speaksSinglePick: () => boolean;
 
@@ -75,7 +88,7 @@ export default class SelectAnnouncer {
   //
   // Scoped to the query as well, because the same count for a *different* query is news: a reader
   // who types on and hears nothing has no way to tell a settled search from a dropped keystroke.
-  #lastAnnouncedCount: { query: string; message: string } | null = null;
+  #lastAnnouncedCount: AnnouncedCount | null = null;
 
   /**
    * The query whose paged set already announced a known total. More pages for it can move that
@@ -113,6 +126,7 @@ export default class SelectAnnouncer {
     reannounceActive,
     getShouldSuppressEntryCount,
     isRevealDue = () => false,
+    listsHeldRows = () => false,
     speaksSinglePick = () => false,
   }: SelectAnnouncerInit) {
     this.#a11y = a11y;
@@ -122,6 +136,7 @@ export default class SelectAnnouncer {
     this.#reannounceActive = reannounceActive;
     this.#getShouldSuppressEntryCount = getShouldSuppressEntryCount;
     this.#isRevealDue = isRevealDue;
+    this.#listsHeldRows = listsHeldRows;
     this.#speaksSinglePick = speaksSinglePick;
     registerDestructor(this, () => this.cancelPending());
   }
@@ -138,11 +153,25 @@ export default class SelectAnnouncer {
    * Reports the set size, matching `aria-setsize`, so a transformer that hides or adds rows
    * changes both together. The source's total only chooses the wording: "results" when it is
    * known, "results loaded" while a cursor source is still paging.
+   *
+   * A list that shows its selected options as rows also says how many of the results are
+   * selected, and for which query: "2 results for “bl”, 1 of them selected". Filtering takes
+   * selected rows out of the listbox, and VoiceOver with Chrome reports that as the selection
+   * itself changing ("selection deleted, 1 item selected"), in place of the row the cursor
+   * moved to. This report says what the list is showing instead, so it is spoken whatever the
+   * cursor did. `selectedCount` counts the selected rows among the loaded results, and `filter`
+   * is the text those results answer.
    */
   @action
   announceCount(
     _element: HTMLElement,
-    [setSize, total, query]: [number, number | undefined, string?]
+    [setSize, total, query, selectedCount = 0, filter = ""]: [
+      number,
+      number | undefined,
+      string?,
+      number?,
+      string?,
+    ]
   ): void {
     if (!this.#canReport()) {
       return;
@@ -161,23 +190,34 @@ export default class SelectAnnouncer {
       }
       this.#knownTotalQuery = total == null ? null : settledQuery;
     }
-    const message =
+    const count =
       total == null
         ? this.#engine.text("resultsLoaded", { count: setSize })
         : this.#engine.text("resultsCount", { count: setSize });
+    const listsHeldRows = this.#listsHeldRows();
+    const report: AnnouncedCount = listsHeldRows
+      ? {
+          query: settledQuery,
+          message: this.#filteredMessage(count, filter, selectedCount),
+          key: `${count}\n${selectedCount}`,
+        }
+      : { query: settledQuery, message: count };
 
     if (this.#suppressNextCount) {
       this.#suppressNextCount = false;
       // Record the suppressed message as last-known, or a later run of the same query would be
       // treated as fresh news and announce what was deliberately swallowed.
-      this.#lastAnnouncedCount = { query: settledQuery, message };
+      this.#lastAnnouncedCount = report;
       return;
     }
 
     // Whether this count is worth saying depends on something that has not happened yet: the
     // roving cursor re-seeds later in this same render, and a cursor that moves takes the voice
     // with it. So hold the message and decide once it has settled.
-    this.#scheduleReport(settledQuery, message);
+    this.#scheduleReport(settledQuery, report.message, {
+      key: report.key,
+      overridesCursor: listsHeldRows,
+    });
   }
 
   /**
@@ -202,7 +242,7 @@ export default class SelectAnnouncer {
   @action
   announceCountOnEntry(
     element: HTMLElement,
-    args: [number, number | undefined, string?]
+    args: [number, number | undefined, string?, number?, string?]
   ): void {
     if (!this.#canReport()) {
       return;
@@ -506,6 +546,16 @@ export default class SelectAnnouncer {
         makeArray(nextValues)
       );
 
+      // Where rows show the selection, the row change it causes re-runs the count. The pick or
+      // removal announces itself, and a count still waiting for its query would land after it
+      // and speak over it. The next query reports the new selected count.
+      if (
+        this.#listsHeldRows() &&
+        (added !== undefined || removed !== undefined)
+      ) {
+        this.suppressCount();
+      }
+
       if (added !== undefined) {
         const record = this.#engine.resolveSingleSync(added);
         this.#say(
@@ -638,6 +688,32 @@ export default class SelectAnnouncer {
   }
 
   /**
+   * The result count with the filter it answers and how many of those results are selected. An
+   * emptied count silences the report as it does anywhere else, and an emptied selected part
+   * leaves the plain count, since the sentence was never meant to be spoken without it.
+   */
+  #filteredMessage(
+    count: string,
+    filter: string,
+    selectedCount: number
+  ): string {
+    const selected =
+      selectedCount === 0
+        ? this.#engine.text("noneOfResultsSelected")
+        : this.#engine.text("selectedOfResults", { count: selectedCount });
+    if (!count.trim() || !selected.trim()) {
+      return count;
+    }
+    return filter === ""
+      ? this.#engine.text("filteredResultsAll", { results: count, selected })
+      : this.#engine.text("filteredResults", {
+          results: count,
+          query: filter,
+          selected,
+        });
+  }
+
+  /**
    * Decides what a held count should do, now that the cursor has settled. Three outcomes, and
    * only one of them is the count.
    *
@@ -657,6 +733,9 @@ export default class SelectAnnouncer {
    * **The count, for the cases with no row to carry it.** No cursor at all (a variant that waits
    * for the reader to move), or more rows arriving under a stationary cursor, where the set grew
    * without the reader's question changing.
+   *
+   * A list that shows its selected options as rows skips the first two: its row speech is
+   * displaced by the selection speech (see {@link announceCount}), so its report is always spoken.
    */
   #resolvePendingCount(): void {
     const pending = this.#pendingCount;
@@ -666,7 +745,16 @@ export default class SelectAnnouncer {
     }
 
     const message = pending.readMessage?.() ?? pending.message;
-    this.#lastAnnouncedCount = { query: pending.query, message };
+    this.#lastAnnouncedCount = {
+      query: pending.query,
+      message,
+      key: pending.key,
+    };
+
+    if (pending.overridesCursor) {
+      this.#say(message);
+      return;
+    }
 
     const activeOptionKey = this.#getActiveOptionKey();
     if (activeOptionKey != null && activeOptionKey !== pending.activeKey) {
@@ -690,14 +778,29 @@ export default class SelectAnnouncer {
   #scheduleReport(
     query: string,
     message: string,
-    { repeatable = false, readMessage }: ScheduleReportParams = {}
+    {
+      repeatable = false,
+      readMessage,
+      key,
+      overridesCursor = false,
+    }: ScheduleReportParams = {}
   ): void {
     // A query that lands on exactly the set it already had is not news, whatever the reader typed
     // to get there — and there is no honest way to say it. Announcing the unchanged count is
     // audible only when the region's clear timer happens to have fired since it was last spoken,
     // so it comes and goes with the reader's typing rhythm, which is the erratic re-announcement
     // this work set out to remove. The typing echo already confirms the keystroke landed.
-    if (!repeatable && this.#lastAnnouncedCount?.message === message) {
+    const last = this.#lastAnnouncedCount;
+    if (
+      !repeatable &&
+      last &&
+      (last.key ?? last.message) === (key ?? message)
+    ) {
+      // A report still waiting for an earlier query describes rows that are gone, and would
+      // otherwise be spoken after this query settled.
+      if (this.#pendingCount?.query !== query) {
+        this.#cancelPendingCount();
+      }
       return;
     }
 
@@ -705,6 +808,8 @@ export default class SelectAnnouncer {
     this.#pendingCount = {
       query,
       message,
+      key,
+      overridesCursor,
       readMessage,
       activeKey: this.#getActiveOptionKey(),
       previous: this.#lastAnnouncedCount,

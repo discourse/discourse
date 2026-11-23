@@ -69,6 +69,8 @@ const VALUES = {
   selected: 1,
   added: "accepted",
   not_added: "held",
+  results: "3 results",
+  query: "b",
 };
 
 /** Captures the same final snapshot a consumer's content customization receives. */
@@ -114,12 +116,16 @@ module("Unit | ui-kit | select | texts", function (hooks) {
         "moreChips",
         "noneLabel",
         "loadingLabel",
+        "filteredResults",
+        "filteredResultsAll",
+        "selectedOfResults",
+        "noneOfResultsSelected",
       ].sort(),
       "no default is missing or accidentally added"
     );
   });
 
-  test("defaults render the documented locale map and four new strings", async function (assert) {
+  test("defaults render the documented locale map and the newer strings", async function (assert) {
     const options = await snapshot(this);
     assert.strictEqual(
       typeof options,
@@ -138,6 +144,10 @@ module("Unit | ui-kit | select | texts", function (hooks) {
       moreChips: "+2",
       noneLabel: "None",
       loadingLabel: "Loading…",
+      filteredResults: "3 results for “b”, 1",
+      filteredResultsAll: "3 results, 1",
+      selectedOfResults: "2 of them selected",
+      noneOfResultsSelected: "none of them selected",
     })) {
       assert.strictEqual(
         renderSelectText(options, key, VALUES),

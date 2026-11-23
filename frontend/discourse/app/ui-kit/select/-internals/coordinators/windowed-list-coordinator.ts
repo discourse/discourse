@@ -389,6 +389,19 @@ export default class WindowedListCoordinator {
     return index === this.stickyCount(rows) - 1;
   }
 
+  /** Counts the selected options among the rows, skipping structural and placeholder rows. */
+  @bind
+  selectedCountOf(rows: readonly ListRow[]): number {
+    return rows.filter((row) => {
+      const option = this.optionRow(row);
+      return (
+        option?.flags.selected &&
+        !option.flags.textBoundary &&
+        !option.flags.divider
+      );
+    }).length;
+  }
+
   /** Reads the complete option set size, skipping structural and placeholder rows. */
   @bind
   setSizeOf(rows: readonly ListRow[]): number {

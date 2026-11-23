@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
@@ -9,6 +10,7 @@ import {
   findAll,
   focus,
   render,
+  rerender,
   settled,
   triggerKeyEvent,
   waitFor,
@@ -27,6 +29,10 @@ import {
   optionWithText,
 } from "discourse/tests/helpers/d-select-hosts";
 import { setupLegacyBridgeCallbacks } from "discourse/tests/helpers/legacy-bridge-helpers";
+import {
+  disableVirtualization,
+  enableVirtualization,
+} from "discourse/ui-kit/-internals/windowing/virtualizer";
 import DSelect from "discourse/ui-kit/select/d-select";
 import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
@@ -2545,6 +2551,344 @@ module(
           "Remove Banana",
           "the other chip still does"
         );
+    });
+  }
+);
+
+const BERRIES = [
+  { id: 1, name: "Apple" },
+  { id: 2, name: "Banana" },
+  { id: 3, name: "Blueberry" },
+  { id: 4, name: "Blackberry" },
+  { id: 5, name: "Bilberry" },
+  { id: 6, name: "Bitter orange" },
+  { id: 7, name: "Cherry" },
+];
+const HELD_BERRIES = [2, 3, 6, 7];
+
+// Long enough that, in a bounded viewport, the last row is not mounted.
+const MANY_ITEMS = [
+  ...Array.from({ length: 40 }, (_, index) => ({
+    id: index,
+    name: `Item ${index}`,
+  })),
+  { id: 999, name: "Zebra" },
+];
+
+// A multi-select that lists its selected rows loses them from the listbox as a query filters them
+// out, and VoiceOver with Chrome reports that as the selection itself shrinking ("selection
+// deleted, 1 item selected"). The select says what it is showing instead: the matches, and how
+// many of those are selected. The cursor seeds the first unselected match, so the cases below
+// cover it moving, staying put, and having no row to land on.
+module(
+  "Integration | ui-kit | select | DSelect (filtered multi-select announcements)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.announce = sinon.spy(
+        getOwner(this).lookup("service:a11y"),
+        "announce"
+      );
+    });
+
+    /** The polite count reports since the last reset, in order. */
+    function countReports(announce) {
+      return announce
+        .getCalls()
+        .filter(
+          (call) =>
+            call.args[1] === "polite" && /\bresults?\b/.test(call.args[0])
+        )
+        .map((call) => call.args[0]);
+    }
+
+    async function renderBerries({
+      value = HELD_BERRIES,
+      hideSelected = false,
+      multiple = true,
+      options = BERRIES,
+      texts,
+      bounded = false,
+    } = {}) {
+      const held = tracked(value);
+      const onChange = (next) => (held.value = next);
+      await render(
+        <template>
+          {{#if bounded}}
+            {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+            <style>
+              .d-virtual-list {
+                height: 200px;
+                overflow-y: auto;
+              }
+            </style>
+          {{/if}}
+          <DSelect
+            @hideSelected={{hideSelected}}
+            @multiple={{multiple}}
+            @onChange={{onChange}}
+            @options={{options}}
+            @texts={{texts}}
+            @value={{held.value}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+      return held;
+    }
+
+    test("the first query after opening says how many matches are selected", async function (assert) {
+      await renderBerries();
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "b");
+
+      assert.deepEqual(countReports(this.announce), [
+        "5 results for “b”, 3 of them selected",
+      ]);
+    });
+
+    test("narrowing that moves the cursor still says it", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "b");
+      assert.dom("[role='option'].--active").hasText("Blackberry");
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "bi");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Bilberry", "the cursor moved to the first unselected match");
+      assert.deepEqual(countReports(this.announce), [
+        "2 results for “bi”, 1 of them selected",
+      ]);
+    });
+
+    test("narrowing that keeps the cursor says it instead of re-reading the row", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "b");
+      this.announce.resetHistory();
+
+      const input = find("[role='combobox']");
+      let cursorDropped = 0;
+      const observer = new MutationObserver((records) => {
+        cursorDropped += records.filter((r) => r.oldValue === null).length;
+      });
+      observer.observe(input, {
+        attributes: true,
+        attributeOldValue: true,
+        attributeFilter: ["aria-activedescendant"],
+      });
+
+      await fillIn("[role='combobox']", "bl");
+      observer.disconnect();
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Blackberry", "the cursor stayed on its row");
+      assert.strictEqual(cursorDropped, 0, "the row is not read again");
+      assert.deepEqual(countReports(this.announce), [
+        "2 results for “bl”, 1 of them selected",
+      ]);
+    });
+
+    test("matches that are all selected, with no row for the cursor, say so", async function (assert) {
+      await renderBerries();
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "blu");
+
+      assert
+        .dom("[role='option'].--active")
+        .doesNotExist("the only match is selected, so nothing is seeded");
+      assert.deepEqual(countReports(this.announce), [
+        "1 result for “blu”, 1 of them selected",
+      ]);
+    });
+
+    test("matches with nothing selected say none of them are", async function (assert) {
+      await renderBerries();
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "bla");
+
+      assert.deepEqual(countReports(this.announce), [
+        "1 result for “bla”, none of them selected",
+      ]);
+    });
+
+    test("a new query with the same matches and selection says nothing", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "bla");
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "blac");
+
+      assert.deepEqual(countReports(this.announce), []);
+    });
+
+    // Typing faster than the report delay leaves an earlier query's report waiting. A later query
+    // that lands on what was last spoken is not news, but it still replaces the earlier one, whose
+    // rows are gone.
+    test("a report still waiting for an earlier query is dropped when a later one settles", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "bl");
+      this.announce.resetHistory();
+
+      const input = find("[role='combobox']");
+      for (const query of ["b", "bi"]) {
+        input.value = query;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        await rerender();
+      }
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Bilberry", "the list already shows the last query");
+      await settled();
+
+      assert.deepEqual(
+        countReports(this.announce),
+        [],
+        "nothing is said about “b”, and “bi” matches what was last spoken"
+      );
+    });
+
+    test("clearing the query says how many of the whole list are selected", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "b");
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "");
+
+      assert.deepEqual(countReports(this.announce), [
+        "7 results, 4 of them selected",
+      ]);
+    });
+
+    test("a pick says only what was added, and the next query counts it", async function (assert) {
+      await renderBerries();
+      await fillIn("[role='combobox']", "b");
+      this.announce.resetHistory();
+
+      await click(optionWithText("Blackberry"));
+
+      assert.true(
+        this.announce.calledWith(
+          i18n("d_select.item_added", { item: "Blackberry" }),
+          "polite"
+        ),
+        "the pick is announced"
+      );
+      assert.deepEqual(
+        countReports(this.announce),
+        [],
+        "the pick reports no count"
+      );
+
+      this.announce.resetHistory();
+      await fillIn("[role='combobox']", "b");
+
+      assert.deepEqual(countReports(this.announce), [
+        "5 results for “b”, 4 of them selected",
+      ]);
+    });
+
+    test("a pick with no query reports no count", async function (assert) {
+      await renderBerries();
+      this.announce.resetHistory();
+
+      await click(optionWithText("Blackberry"));
+
+      assert.true(
+        this.announce.calledWith(
+          i18n("d_select.item_added", { item: "Blackberry" }),
+          "polite"
+        ),
+        "the pick is announced"
+      );
+      assert.deepEqual(countReports(this.announce), []);
+    });
+
+    module("windowed", function (windowedHooks) {
+      windowedHooks.beforeEach(function () {
+        enableVirtualization();
+      });
+
+      windowedHooks.afterEach(function () {
+        disableVirtualization();
+      });
+
+      test("held rows off the rendered window still count", async function (assert) {
+        await renderBerries({
+          bounded: true,
+          options: MANY_ITEMS,
+          value: [0, 39],
+        });
+        this.announce.resetHistory();
+
+        await fillIn("[role='combobox']", "Item");
+
+        assert
+          .dom("[role='option'][aria-selected='true']")
+          .exists({ count: 1 }, "the tail's selected row is not rendered");
+        assert.deepEqual(countReports(this.announce), [
+          "40 results for “Item”, 2 of them selected",
+        ]);
+      });
+    });
+
+    test("@texts rewords the selected part", async function (assert) {
+      await renderBerries({
+        texts: {
+          selectedOfResults: ({ count }) => `${count} picked`,
+        },
+      });
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "b");
+
+      assert.deepEqual(countReports(this.announce), [
+        "5 results for “b”, 3 picked",
+      ]);
+    });
+
+    test("@texts emptying the selected part leaves the plain count", async function (assert) {
+      await renderBerries({ texts: { selectedOfResults: "" } });
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "b");
+
+      assert.deepEqual(countReports(this.announce), ["5 results"]);
+    });
+
+    test("with @hideSelected the count keeps today's behaviour", async function (assert) {
+      await renderBerries({ hideSelected: true });
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "b");
+
+      assert
+        .dom("[role='option'].--active")
+        .hasText("Blackberry", "the cursor moved to the first match");
+      assert.deepEqual(
+        countReports(this.announce),
+        [],
+        "the row speaks for the narrowed list, as for any select"
+      );
+    });
+
+    test("a single select keeps today's behaviour", async function (assert) {
+      await renderBerries({ multiple: false, value: 2 });
+      this.announce.resetHistory();
+
+      await fillIn("[role='combobox']", "b");
+
+      assert.deepEqual(
+        countReports(this.announce),
+        [],
+        "the row speaks for the narrowed list"
+      );
     });
   }
 );

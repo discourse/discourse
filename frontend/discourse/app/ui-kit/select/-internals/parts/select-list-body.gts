@@ -39,11 +39,11 @@ type ListLifecycleModifier<Args extends unknown[]> = ModifierLike<{
 const listRelease: ListLifecycleModifier<[]> = willDestroy;
 const recordOnEntry: ListLifecycleModifier<[number]> = didInsert;
 const record: ListLifecycleModifier<[number]> = didUpdate;
-const countOnEntry: ListLifecycleModifier<
-  [number, number | undefined, string?]
-> = didInsert;
-const count: ListLifecycleModifier<[number, number | undefined, string?]> =
-  didUpdate;
+/** Set size, total, query key, selected rows among the results, and the filter text. */
+type CountArgs = [number, number | undefined, string?, number?, string?];
+
+const countOnEntry: ListLifecycleModifier<CountArgs> = didInsert;
+const count: ListLifecycleModifier<CountArgs> = didUpdate;
 
 /** Registers only a rendered listbox, independently of loading and empty states. */
 const registerListbox = createModifier(
@@ -307,6 +307,8 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
                   (@listbox.setSizeOf items)
                   @engine.total
                   content.query
+                  (@listbox.selectedCountOf items)
+                  content.filter
                 )
                 (modifier
                   count
@@ -314,6 +316,8 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
                   (@listbox.setSizeOf items)
                   @engine.total
                   content.query
+                  (@listbox.selectedCountOf items)
+                  content.filter
                 )
                 (modifier
                   dRovingFocus

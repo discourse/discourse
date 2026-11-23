@@ -277,6 +277,8 @@ export default class SelectHost {
       getActiveOptionKey: () => this.listbox.activeOptionKey,
       reannounceActive: () => this.listbox.reannounceActive(),
       getShouldSuppressEntryCount: () => this.#init.shouldSuppressEntryCount(),
+      listsHeldRows: () =>
+        this.engine.multiple && !this.#init.getArgs().hideSelected,
       isRevealDue: () => this.feedback.showRevealPlaceholder,
       speaksSinglePick: this.#init.speaksSinglePick,
     });
