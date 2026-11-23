@@ -112,4 +112,22 @@ RSpec.describe ScreenedEmail do
       include_examples "when a ScreenedEmail record matches"
     end
   end
+
+  describe ".levenshtein" do
+    it "computes exact edit distance for empty, identical, and asymmetric ASCII strings" do
+      expect(ScreenedEmail.levenshtein("", "")).to eq(0)
+      expect(ScreenedEmail.levenshtein("abc", "")).to eq(3)
+      expect(ScreenedEmail.levenshtein("", "abcd")).to eq(4)
+      expect(ScreenedEmail.levenshtein("kitten", "sitting")).to eq(3)
+      expect(ScreenedEmail.levenshtein("sitting", "kitten")).to eq(3)
+      expect(
+        ScreenedEmail.levenshtein("prefix_middle_one_suffix", "prefix_middle_two_suffix"),
+      ).to eq(3)
+    end
+
+    it "computes character-level edit distance for multi-byte UTF-8 strings" do
+      expect(ScreenedEmail.levenshtein("こんにちは世界", "こんばんは世界")).to eq(2)
+      expect(ScreenedEmail.levenshtein("test🚀!", "test🔥!")).to eq(1)
+    end
+  end
 end
