@@ -1,8 +1,22 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import getURL from "discourse/lib/get-url";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
+
+const Friend = <template>
+  <figure class="rewind-fbff__person">
+    <div class="rewind-frame">
+      {{dBoundAvatarTemplate
+        @friend.avatar_template
+        "huge"
+        (hash extraClasses="rewind-avatar" title=@friend.username)
+      }}
+    </div>
+    <figcaption class="rewind-fbff__name">
+      @{{@friend.username}}
+    </figcaption>
+  </figure>
+</template>;
 
 export default class FBFF extends Component {
   get titleText() {
@@ -15,34 +29,13 @@ export default class FBFF extends Component {
 
   <template>
     <div class="rewind-report-page --fbff">
-      <h2 class="rewind-report-title">
-        {{this.titleText}}
-      </h2>
-      <div class="rewind-report-container">
-        <div class="rewind-card">
-          <div class="fbff-avatar-container">
-            {{dBoundAvatarTemplate
-              @report.data.fbff.avatar_template
-              "huge"
-              (hash title=@report.data.fbff.username)
-            }}
-            <p class="fbff-avatar-name">@{{@report.data.fbff.username}}</p>
-          </div>
-          <div class="fbff-gif-container">
-            <img
-              class="fbff-gif"
-              src={{getURL "/plugins/discourse-rewind/images/fbff.gif"}}
-            />
-          </div>
-          <div class="fbff-avatar-container">
-            {{dBoundAvatarTemplate
-              @report.data.yourself.avatar_template
-              "huge"
-              (hash title=@report.data.yourself.username)
-            }}
-            <p class="fbff-avatar-name">@{{@report.data.yourself.username}}</p>
-          </div>
+      <h2 class="rewind-report-title">{{this.titleText}}</h2>
+      <div class="rewind-fbff">
+        <Friend @friend={{@report.data.fbff}} />
+        <div class="rewind-fbff__middle">
+          <span class="rewind-fbff__heart"></span>
         </div>
+        <Friend @friend={{@report.data.yourself}} />
       </div>
     </div>
   </template>

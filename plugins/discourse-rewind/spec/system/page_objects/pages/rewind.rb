@@ -109,7 +109,7 @@ module PageObjects
 
       def has_tag_in_report?(tag)
         has_css?(
-          "a.folder-wrapper[href='/tag/#{tag.slug}/#{tag.id}'] .most-viewed-tags__tag",
+          "a.rewind-tags__tag[href='/tag/#{tag.slug}/#{tag.id}'] .rewind-tags__name",
           text: "##{tag.name}",
         )
       end

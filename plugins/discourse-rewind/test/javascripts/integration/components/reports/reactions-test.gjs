@@ -17,11 +17,9 @@ module("Integration | Component | Reports | Reactions", function (hooks) {
 
     await render(<template><Reactions @report={{report}} /></template>);
 
+    assert.dom(".rewind-reactions__used").exists("the used reactions render");
     assert
-      .dom(".rewind-report-page.--post-used-reactions")
-      .exists("the used reactions render");
-    assert
-      .dom(".rewind-report-page.--post-received-reactions")
+      .dom(".rewind-reactions__received")
       .doesNotExist("the received reactions are not rendered");
   });
 
@@ -37,10 +35,10 @@ module("Integration | Component | Reports | Reactions", function (hooks) {
     await render(<template><Reactions @report={{report}} /></template>);
 
     assert
-      .dom(".rewind-report-page.--post-used-reactions")
+      .dom(".rewind-reactions__used")
       .doesNotExist("the used reactions are not rendered");
     assert
-      .dom(".rewind-report-page.--post-received-reactions")
+      .dom(".rewind-reactions__received")
       .exists("the received reactions render");
   });
 });

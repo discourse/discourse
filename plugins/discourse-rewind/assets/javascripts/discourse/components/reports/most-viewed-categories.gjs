@@ -5,13 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import getURL from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
-/**
- * Component displaying most viewed categories in rewind report
- * @component
- * @param {Object} report - Report data containing category view counts
- */
 export default class MostViewedCategories extends Component {
   @tracked openedCategoryId = null;
 
@@ -43,27 +39,28 @@ export default class MostViewedCategories extends Component {
 
   <template>
     <div class="rewind-report-page --most-viewed-categories">
-      <h2 class="rewind-report-title">
-        {{this.titleText}}
-      </h2>
-      <div class="rewind-report-container">
-        {{#each @report.data as |data|}}
-          <a
-            class={{dConcatClass
-              "folder-wrapper"
-              (if (eq this.openedCategoryId data.category_id) "--opened" "")
-            }}
-            href={{getURL (concat "/c/-/" data.category_id)}}
-            {{on "click" (fn this.handleFolderClick data.category_id)}}
-          >
-            <span class="folder-tab"></span>
-            <div class="rewind-card">
-              <p class="most-viewed-categories__category">#{{data.name}}</p>
-            </div>
-            <span class="folder-bg"></span>
-          </a>
-        {{/each}}
-      </div>
+      <h2 class="rewind-report-title">{{this.titleText}}</h2>
+      <RewindWindow>
+        <ol class="rewind-categories">
+          {{#each @report.data as |data index|}}
+            <li>
+              <a
+                class={{dConcatClass
+                  "rewind-categories__category"
+                  (if (eq this.openedCategoryId data.category_id) "--opened")
+                }}
+                data-pattern={{index}}
+                href={{getURL (concat "/c/-/" data.category_id)}}
+                {{on "click" (fn this.handleFolderClick data.category_id)}}
+              >
+                <span class="rewind-categories__thumb">
+                  <span class="rewind-categories__name">#{{data.name}}</span>
+                </span>
+              </a>
+            </li>
+          {{/each}}
+        </ol>
+      </RewindWindow>
     </div>
   </template>
 }

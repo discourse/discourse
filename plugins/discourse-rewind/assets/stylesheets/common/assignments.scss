@@ -1,107 +1,76 @@
-.--assignments {
-  .sticky-board {
+@use "lib/viewport";
+
+.rewind-todo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+
+  &__boxes {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin: 1em 0;
-    z-index: 9; // above the scanlines
+    gap: 6px;
   }
 
-  .sticky-note {
-    width: 180px;
-    height: 180px;
-    box-shadow: 3px 3px 8px rgb(0 0 0 / 0.2);
+  &__box {
     position: relative;
-    font-family: "Brush Script MT", cursive, sans-serif;
-    transition: transform 0.2s ease;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
 
-    &::before {
+    &.--done::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 30px;
-      background: linear-gradient(to bottom, rgb(0 0 0 / 0.05), transparent);
-      z-index: 1;
-    }
-
-    &.--yellow {
-      background: linear-gradient(to bottom, #fef9c3 0%, #fde68a 100%);
-    }
-
-    &.--pink {
-      background: linear-gradient(to bottom, #fecaca 0%, #fca5a5 100%);
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 0 0 20px 20px;
-        border-color: transparent transparent #000 transparent;
-        box-shadow: -2px 2px 4px rgb(0 0 0 / 0.2);
-      }
-    }
-
-    &.--blue {
-      background: linear-gradient(to bottom, #bfdbfe 0%, #93c5fd 100%);
-    }
-
-    &.--green {
-      background: linear-gradient(to bottom, #bbf7d0 0%, #86efac 100%);
-    }
-
-    &.--orange {
-      background: linear-gradient(to bottom, #fed7aa 0%, #fdba74 100%);
-    }
-
-    &.--rotate-left {
-      transform: rotate(-4deg);
-    }
-
-    &.--rotate-right {
-      transform: rotate(3deg);
-    }
-
-    &.--rotate-left-small {
-      transform: rotate(-2deg);
-    }
-
-    &.--rotate-right-small {
-      transform: rotate(6deg);
+      inset: 0 auto auto 0;
+      width: 2px;
+      height: 2px;
+      color: var(--rewind-ink);
+      background: currentcolor;
+      box-shadow:
+        2px 2px,
+        4px 4px,
+        6px 6px,
+        8px 8px,
+        10px 10px,
+        12px 12px,
+        14px 14px,
+        14px 0,
+        12px 2px,
+        10px 4px,
+        8px 6px,
+        6px 8px,
+        4px 10px,
+        2px 12px,
+        0 14px;
     }
   }
 
-  .sticky-note__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    text-align: center;
+  &__stats {
+    display: grid;
+    gap: 14px;
   }
 
-  .sticky-note__title {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 12px;
-    line-height: 1;
-    padding: 0 5em;
+  &__meter {
+    position: relative;
+    height: 24px;
+    margin-top: 6px;
+    border: 2px solid var(--rewind-ink);
   }
 
-  .sticky-note__value {
-    font-size: 36px;
-    font-weight: bold;
-    color: #1a1a1a;
+  &__meter-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-inline-end: 2px solid var(--rewind-ink);
+    background: one-bit-tile(("XXXX", ".X.X", "XXXX", ".X.X"));
+  }
 
-    .number {
-      font-family: inherit;
-    }
+  .rewind-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include viewport.until(md) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

@@ -1,137 +1,93 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { modifier } from "ember-modifier";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
+import { barsFor } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-bars";
+
+const RankedBars = <template>
+  <section class="rewind-ai__list">
+    <h3 class="rewind-ai__heading">{{@title}}</h3>
+    {{#each @entries as |entry|}}
+      <div class="rewind-bar">
+        <span class="rewind-ai__name">{{entry.label}}</span>
+        <span class="rewind-bar__track">
+          <span
+            class="rewind-bar__fill"
+            data-density={{entry.density}}
+            style={{entry.style}}
+          ></span>
+        </span>
+        <span class="rewind-bar__value">{{entry.count}}</span>
+      </div>
+    {{/each}}
+  </section>
+</template>;
 
 export default class AiUsage extends Component {
-  matrixRain = modifier((canvas) => {
-    if (prefersReducedMotion()) {
-      return;
-    }
+  get features() {
+    return barsFor(
+      this.args.report.data.feature_usage.map((entry) => ({
+        ...entry,
+        label: entry.name.replace(/_/g, " "),
+      }))
+    );
+  }
 
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-
-    const characters =
-      "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン";
-    const fontSize = 14;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = Array(columns).fill(1);
-
-    const draw = () => {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "#0f0";
-      ctx.font = `${fontSize}px monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const char = characters[Math.floor(Math.random() * characters.length)];
-        const x = i * fontSize;
-        const y = drops[i] * fontSize;
-
-        ctx.fillText(char, x, y);
-
-        if (y > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-
-        drops[i]++;
-      }
-    };
-
-    const interval = setInterval(draw, 33);
-    return () => clearInterval(interval);
-  });
-
-  @action
-  formatFeatureName(featureName) {
-    return featureName.replace(/_/g, " ");
+  get models() {
+    return barsFor(
+      this.args.report.data.model_usage.map((entry) => ({
+        ...entry,
+        label: entry.name,
+      }))
+    );
   }
 
   <template>
     <div class="rewind-report-page --ai-usage">
-      <div class="matrix-container">
-        <canvas class="matrix-rain" {{this.matrixRain}}></canvas>
+      <h2 class="rewind-report-title">{{i18n
+          "discourse_rewind.reports.ai_usage.system_title"
+        }}</h2>
+      <p class="rewind-report-page__lede">{{i18n
+          "discourse_rewind.reports.ai_usage.wake_up"
+          username=@user.username
+        }}</p>
 
-        <div class="matrix-content">
-          <h2 class="matrix-title">
-            <div class="matrix-subhead">
-              {{i18n
-                "discourse_rewind.reports.ai_usage.wake_up"
-                username=@user.username
+      <div class="rewind-ai">
+        <RewindWindow class="rewind-ai__calculator">
+          <p class="rewind-ai__display">
+            <span class="rewind-ai__number">{{dNumber
+                @report.data.total_requests
+              }}</span>
+            <span class="rewind-ai__unit">{{i18n
+                "discourse_rewind.reports.ai_usage.total_requests"
+              }}</span>
+          </p>
+          <dl class="rewind-ai__registers">
+            <div>
+              <dt>{{i18n "discourse_rewind.reports.ai_usage.total_tokens"}}</dt>
+              <dd>{{dNumber @report.data.total_tokens}}</dd>
+            </div>
+            <div>
+              <dt>{{i18n "discourse_rewind.reports.ai_usage.success_rate"}}</dt>
+              <dd>{{@report.data.success_rate}}%</dd>
+            </div>
+          </dl>
+        </RewindWindow>
+
+        <div class="rewind-ai__lists">
+          {{#if this.features.length}}
+            <RankedBars
+              @entries={{this.features}}
+              @title={{i18n
+                "discourse_rewind.reports.ai_usage.section_features"
               }}
-            </div>
-            {{i18n "discourse_rewind.reports.ai_usage.system_title"}}
-          </h2>
-
-          <div class="matrix-stats">
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.total_requests"}}
-              </div>
-              <div class="matrix-stat__value">
-                {{dNumber @report.data.total_requests}}
-              </div>
-            </div>
-
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.total_tokens"}}
-              </div>
-              <div class="matrix-stat__value">{{dNumber
-                  @report.data.total_tokens
-                }}</div>
-            </div>
-
-            <div class="matrix-stat">
-              <div class="matrix-stat__label">
-                {{i18n "discourse_rewind.reports.ai_usage.success_rate"}}
-              </div>
-              <div class="matrix-stat__value">
-                <span class="number">
-                  {{@report.data.success_rate}}%
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {{#if @report.data.feature_usage.length}}
-            <div class="matrix-section">
-              <div class="matrix-section__title">&gt;
-                {{i18n "discourse_rewind.reports.ai_usage.section_features"}}
-              </div>
-              <div class="matrix-list">
-                {{#each @report.data.feature_usage as |entry|}}
-                  <div class="matrix-list__item">
-                    <span class="matrix-list__name">
-                      {{this.formatFeatureName entry.name}}
-                    </span>
-                    <span class="matrix-list__count">{{entry.count}}</span>
-                  </div>
-                {{/each}}
-              </div>
-            </div>
+            />
           {{/if}}
-
-          {{#if @report.data.model_usage.length}}
-            <div class="matrix-section">
-              <div class="matrix-section__title">&gt;
-                {{i18n "discourse_rewind.reports.ai_usage.section_models"}}
-              </div>
-              <div class="matrix-list">
-                {{#each @report.data.model_usage as |entry|}}
-                  <div class="matrix-list__item">
-                    <span class="matrix-list__name">{{entry.name}}</span>
-                    <span class="matrix-list__count">{{entry.count}}</span>
-                  </div>
-                {{/each}}
-              </div>
-            </div>
+          {{#if this.models.length}}
+            <RankedBars
+              @entries={{this.models}}
+              @title={{i18n "discourse_rewind.reports.ai_usage.section_models"}}
+            />
           {{/if}}
         </div>
       </div>

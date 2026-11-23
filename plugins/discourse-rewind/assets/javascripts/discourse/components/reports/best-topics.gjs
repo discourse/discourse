@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 export default class BestTopics extends Component {
@@ -19,37 +19,37 @@ export default class BestTopics extends Component {
     );
   }
 
-  rankClass(idx) {
-    return `rank-${idx + 1}`;
+  rank(index) {
+    return index + 1;
   }
 
   <template>
     <div class="rewind-report-page --best-topics">
-      <h2 class="rewind-report-title">
-        {{this.titleText}}
-      </h2>
-      <div class="rewind-report-container">
-        <div class="rewind-card">
-          {{#each @report.data as |topic idx|}}
-            <div
-              class={{dConcatClass "best-topics__topic" (this.rankClass idx)}}
-            >
-              <span class="best-topics --rank"></span>
-              <span class="best-topics --rank"></span>
-              <h2 class="best-topics__header">{{dReplaceEmoji topic.title}}</h2>
-              <span class="best-topics__excerpt">
+      <h2 class="rewind-report-title">{{this.titleText}}</h2>
+      <ol class="rewind-topics">
+        {{#each @report.data as |topic index|}}
+          <li>
+            <RewindWindow class="rewind-topics__topic">
+              <span
+                aria-hidden="true"
+                class="rewind-medal --rank-{{this.rank index}}"
+              ></span>
+              <h3 class="rewind-topics__title">{{dReplaceEmoji
+                  topic.title
+                }}</h3>
+              <div class="rewind-field">
                 {{dReplaceEmoji (trustHTML topic.excerpt)}}
-              </span>
-
-              <div class="best-topics__metadata">
-                <a href={{getURL (concat "/t/-/" topic.topic_id)}}>
-                  {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
-                </a>
               </div>
-            </div>
-          {{/each}}
-        </div>
-      </div>
+              <a
+                class="rewind-link-btn"
+                href={{getURL (concat "/t/-/" topic.topic_id)}}
+              >
+                {{i18n "discourse_rewind.reports.best_topics.view_topic"}}
+              </a>
+            </RewindWindow>
+          </li>
+        {{/each}}
+      </ol>
     </div>
   </template>
 }

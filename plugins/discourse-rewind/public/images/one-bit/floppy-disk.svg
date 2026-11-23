@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" shape-rendering="crispEdges">
+  <defs>
+    <pattern id="dither" width="2" height="2" patternUnits="userSpaceOnUse">
+      <path fill="#fff" d="M0 0h1v1H0zM1 1h1v1H1z"/>
+    </pattern>
+  </defs>
+  <path d="M2 1h17v1h1v1h1v1h1v18h-1v1H2v-1H1V2h1z"/>
+  <path fill="url(#dither)" d="M2 2h17v1h1v1h1v18H2z"/>
+  <path d="M5 1h13v9H5zM4 12h15v11H4z"/>
+  <path fill="#fff" d="M6 2h11v7H6zM5 13h13v9H5z"/>
+  <path d="M13 3h3v5h-3zM7 15h9v1H7zM7 17h7v1H7zM7 19h5v1H7z"/>
+</svg>

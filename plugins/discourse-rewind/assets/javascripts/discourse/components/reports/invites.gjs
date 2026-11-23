@@ -5,6 +5,8 @@ import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
+const ENVELOPE_LIMIT = 36;
+
 export default class Invites extends Component {
   get mostActiveInvitee() {
     return this.args.report.data.most_active_invitee;
@@ -18,107 +20,102 @@ export default class Invites extends Component {
     );
   }
 
+  /**
+   * One envelope per invite, opened when the invite was accepted.
+   */
+  get envelopes() {
+    const { total_invites: total, redeemed_count: redeemed } =
+      this.args.report.data;
+    const shown = Math.min(total, ENVELOPE_LIMIT);
+    const opened = Math.round((redeemed / Math.max(total, 1)) * shown);
+    return Array.from({ length: shown }, (_, index) => index < opened);
+  }
+
   <template>
     <div class="rewind-report-page --invites">
-      <div class="guest-book">
-        <div class="guest-book__cover">
-          <div class="guest-book__title">
-            {{i18n "discourse_rewind.reports.invites.guest_book_title"}}
-          </div>
-          <div class="guest-book__subtitle">
-            {{this.subtitleText}}
-          </div>
-        </div>
+      <h2 class="rewind-report-title">{{i18n
+          "discourse_rewind.reports.invites.guest_book_title"
+        }}</h2>
+      <p class="rewind-report-page__lede">{{this.subtitleText}}</p>
 
-        <div class="guest-book__page">
-          <div class="guest-book__entry">
-            <div class="guest-book__entry-label">
+      <div class="rewind-invites">
+        <div class="rewind-invites__card">
+          <ul aria-hidden="true" class="rewind-invites__envelopes">
+            {{#each this.envelopes as |opened|}}
+              <li class="rewind-invites__envelope {{if opened '--open'}}"></li>
+            {{/each}}
+          </ul>
+          <div class="rewind-leaders">
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_invitations_sent"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{dNumber @report.data.total_invites}}
-            </div>
-          </div>
-
-          <div class="guest-book__entry">
-            <div class="guest-book__entry-label">
+              <span class="rewind-leaders__value">{{dNumber
+                  @report.data.total_invites
+                }}</span>
+            </p>
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_guests_joined"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{dNumber @report.data.redeemed_count}}
-            </div>
-          </div>
-
-          <div class="guest-book__entry">
-            <div class="guest-book__entry-label">
+              <span class="rewind-leaders__value">{{dNumber
+                  @report.data.redeemed_count
+                }}</span>
+            </p>
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_acceptance_rate"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{@report.data.redemption_rate}}%
-            </div>
+              <span
+                class="rewind-leaders__value"
+              >{{@report.data.redemption_rate}}%</span>
+            </p>
           </div>
-
-          <div class="guest-book__divider"></div>
-
-          <div class="guest-book__section-title">
-            {{i18n "discourse_rewind.reports.invites.section_contributions"}}
-          </div>
-
-          <div class="guest-book__entry --small">
-            <div class="guest-book__entry-label">
+          <h3 class="rewind-invites__section">{{i18n
+              "discourse_rewind.reports.invites.section_contributions"
+            }}</h3>
+          <div class="rewind-leaders">
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_posts_written"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{dNumber @report.data.invitee_post_count}}
-            </div>
-          </div>
-
-          <div class="guest-book__entry --small">
-            <div class="guest-book__entry-label">
+              <span class="rewind-leaders__value">{{dNumber
+                  @report.data.invitee_post_count
+                }}</span>
+            </p>
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_topics_started"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{dNumber @report.data.invitee_topic_count}}
-            </div>
-          </div>
-
-          <div class="guest-book__entry --small">
-            <div class="guest-book__entry-label">
+              <span class="rewind-leaders__value">{{dNumber
+                  @report.data.invitee_topic_count
+                }}</span>
+            </p>
+            <p class="rewind-leaders__row">
               {{i18n "discourse_rewind.reports.invites.label_likes_given"}}
-            </div>
-            <div class="guest-book__entry-value">
-              {{dNumber @report.data.invitee_like_count}}
-            </div>
+              <span class="rewind-leaders__value">{{dNumber
+                  @report.data.invitee_like_count
+                }}</span>
+            </p>
           </div>
-
-          <div class="guest-book__divider"></div>
-
-          <div class="guest-book__section-title">
-            {{i18n "discourse_rewind.reports.invites.section_most_active"}}
-          </div>
-
-          <a
-            class="guest-book__signature"
-            href={{userPath this.mostActiveInvitee.username}}
-          >
-            {{dBoundAvatarTemplate
-              this.mostActiveInvitee.avatar_template
-              "large"
-              username=this.mostActiveInvitee.username
-              name=this.mostActiveInvitee.name
-            }}
-            <div class="guest-book__signature-info">
-              <span class="guest-book__signature-name">
-                {{this.mostActiveInvitee.username}}
-              </span>
-              {{#if this.mostActiveInvitee.name}}
-                <span class="guest-book__signature-realname">
-                  {{this.mostActiveInvitee.name}}
-                </span>
-              {{/if}}
-            </div>
-          </a>
         </div>
+
+        {{#if this.mostActiveInvitee}}
+          <figure class="rewind-invites__guest">
+            <figcaption class="rewind-invites__section">{{i18n
+                "discourse_rewind.reports.invites.section_most_active"
+              }}</figcaption>
+            <a
+              aria-label={{this.mostActiveInvitee.username}}
+              class="rewind-frame"
+              href={{userPath this.mostActiveInvitee.username}}
+            >
+              {{dBoundAvatarTemplate
+                this.mostActiveInvitee.avatar_template
+                "huge"
+                extraClasses="rewind-avatar"
+                username=this.mostActiveInvitee.username
+                name=this.mostActiveInvitee.name
+              }}
+            </a>
+            <p class="rewind-invites__name">
+              <b>{{this.mostActiveInvitee.username}}</b>
+              {{#if this.mostActiveInvitee.name}}
+                <span>{{this.mostActiveInvitee.name}}</span>
+              {{/if}}
+            </p>
+          </figure>
+        {{/if}}
       </div>
     </div>
   </template>

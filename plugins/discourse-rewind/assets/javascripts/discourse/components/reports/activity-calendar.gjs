@@ -1,32 +1,79 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 const ROWS = 7;
-const COLS = 53;
+const MONTH_SPANS = [
+  [5, 4, 4, 5],
+  [4, 4, 5, 4],
+  [5, 4, 4, 5],
+];
+const MEDIUM_MIN_POSTS = 10;
+const HIGH_MIN_POSTS = 20;
 
 export default class ActivityCalendar extends Component {
-  get rowsArray() {
-    const data = this.args.report.data;
-    let rowsArray = [];
+  get legend() {
+    const rangeKey = "discourse_rewind.reports.activity_calendar.legend.range";
 
-    for (let r = 0; r < ROWS; r++) {
-      let rowData = [];
-      for (let c = 0; c < COLS; c++) {
-        const index = c * ROWS + r;
-        rowData.push(data[index] ? data[index] : "");
-      }
-      rowsArray.push(rowData);
-    }
-
-    return rowsArray;
+    return [
+      {
+        modifier: "--empty",
+        label: i18n(
+          "discourse_rewind.reports.activity_calendar.legend.no_posts"
+        ),
+      },
+      {
+        modifier: "--low",
+        label: i18n(rangeKey, { min: 1, max: MEDIUM_MIN_POSTS - 1 }),
+      },
+      {
+        modifier: "--medium",
+        label: i18n(rangeKey, {
+          min: MEDIUM_MIN_POSTS,
+          max: HIGH_MIN_POSTS - 1,
+        }),
+      },
+      {
+        modifier: "--high",
+        label: i18n(
+          "discourse_rewind.reports.activity_calendar.legend.and_up",
+          {
+            min: HIGH_MIN_POSTS,
+          }
+        ),
+      },
+    ];
   }
 
-  @action
-  getAbbreviatedMonth(monthIndex) {
-    return moment().month(monthIndex).format("MMM");
+  get sections() {
+    const data = this.args.report.data;
+    let firstColumn = 0;
+    let monthIndex = 0;
+
+    return MONTH_SPANS.map((spans) => {
+      const columns = spans.reduce((total, span) => total + span, 0);
+      const months = spans.map((span) => ({
+        span,
+        label: moment().month(monthIndex++).format("MMM"),
+      }));
+      const rows = Array.from({ length: ROWS }, (_row, row) =>
+        Array.from(
+          { length: columns },
+          (_column, column) => data[(firstColumn + column) * ROWS + row]
+        )
+      );
+      firstColumn += columns;
+
+      return {
+        months,
+        rows,
+        style: trustHTML(`--rewind-calendar-weeks: ${columns}`),
+      };
+    });
   }
 
   @action
@@ -63,9 +110,9 @@ export default class ActivityCalendar extends Component {
   computeClass(count) {
     if (!count) {
       return "--empty";
-    } else if (count < 10) {
+    } else if (count < MEDIUM_MIN_POSTS) {
       return "--low";
-    } else if (count < 20) {
+    } else if (count < HIGH_MIN_POSTS) {
       return "--medium";
     } else {
       return "--high";
@@ -78,78 +125,57 @@ export default class ActivityCalendar extends Component {
           "discourse_rewind.reports.activity_calendar.title"
         }}</h2>
 
-      <div class="rewind-card">
-        <table class="rewind-calendar">
-          <thead>
-            <tr>
-              <td
-                class="activity-header-cell"
-                colspan="5"
-              >{{this.getAbbreviatedMonth 0}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 1}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 2}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="5"
-              >{{this.getAbbreviatedMonth 3}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 4}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 5}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="5"
-              >{{this.getAbbreviatedMonth 6}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 7}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="5"
-              >{{this.getAbbreviatedMonth 8}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 9}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 10}}</td>
-              <td
-                class="activity-header-cell"
-                colspan="4"
-              >{{this.getAbbreviatedMonth 11}}</td>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each this.rowsArray as |row|}}
-              <tr>
-                {{#each row as |cell|}}
-                  <td
-                    class={{dConcatClass
-                      "rewind-calendar-cell"
-                      (this.computeClass cell.post_count)
-                    }}
-                    data-date={{cell.date}}
-                    title={{this.computeCellTitle cell}}
-                  ></td>
-                {{/each}}
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+      <RewindWindow>
+        <div class="rewind-calendar">
+          {{#each this.sections as |section|}}
+            <div class="rewind-calendar__section" style={{section.style}}>
+              <table class="rewind-calendar__grid">
+                <thead>
+                  <tr>
+                    {{#each section.months as |month|}}
+                      <th
+                        class="rewind-calendar__month"
+                        colspan={{month.span}}
+                      >{{month.label}}</th>
+                    {{/each}}
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each section.rows as |row|}}
+                    <tr>
+                      {{#each row as |cell|}}
+                        <td
+                          class={{dConcatClass
+                            "rewind-calendar-cell"
+                            (this.computeClass cell.post_count)
+                          }}
+                          data-date={{cell.date}}
+                          title={{this.computeCellTitle cell}}
+                        ></td>
+                      {{/each}}
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </div>
+          {{/each}}
+        </div>
+
+        <ul class="rewind-calendar-legend">
+          {{#each this.legend as |item|}}
+            <li class="rewind-calendar-legend__item">
+              <span
+                aria-hidden="true"
+                class={{dConcatClass
+                  "rewind-calendar-cell rewind-calendar-legend__swatch"
+                  item.modifier
+                }}
+              ></span>
+              {{item.label}}
+            </li>
+          {{/each}}
+        </ul>
+      </RewindWindow>
     </div>
   </template>
 }

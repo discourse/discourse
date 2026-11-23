@@ -15,7 +15,6 @@ import DButton from "discourse/ui-kit/d-button";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 import ActivityCalendar from "discourse/plugins/discourse-rewind/discourse/components/reports/activity-calendar";
 import AiUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/ai-usage";
@@ -24,7 +23,6 @@ import BestPosts from "discourse/plugins/discourse-rewind/discourse/components/r
 import BestTopics from "discourse/plugins/discourse-rewind/discourse/components/reports/best-topics";
 import ChatUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/chat-usage";
 import FBFF from "discourse/plugins/discourse-rewind/discourse/components/reports/fbff";
-import RewindHeader from "discourse/plugins/discourse-rewind/discourse/components/reports/header";
 import Invites from "discourse/plugins/discourse-rewind/discourse/components/reports/invites";
 import LiveUsage from "discourse/plugins/discourse-rewind/discourse/components/reports/live-usage";
 import MostViewedCategories from "discourse/plugins/discourse-rewind/discourse/components/reports/most-viewed-categories";
@@ -59,6 +57,7 @@ const REPORT_COMPONENTS = {
 export default class Rewind extends Component {
   @service currentUser;
   @service dialog;
+  @service rewind;
   @service toasts;
 
   @tracked cannotViewRewind = false;
@@ -66,7 +65,7 @@ export default class Rewind extends Component {
   @tracked isLoadingMore = false;
   @tracked loadingRewind = false;
   @tracked nextOffset = 0;
-  @tracked rewind = [];
+  @tracked reports = [];
   @tracked scrollWrapper = null;
   @tracked totalAvailable = 0;
 
@@ -175,7 +174,7 @@ export default class Rewind extends Component {
     const response = await ajax("/rewinds.json", {
       data: { ...this.#userParams, offset: this.nextOffset },
     });
-    this.rewind = [...this.rewind, ...response.reports.filter(Boolean)];
+    this.reports = [...this.reports, ...response.reports.filter(Boolean)];
     this.totalAvailable = response.total_available;
     this.nextOffset += response.reports.length;
   }
@@ -208,112 +207,139 @@ export default class Rewind extends Component {
       {{on "click" this.handleBackdropClick}}
     >
       <div class="rewind">
-        <RewindHeader />
-        {{#if this.loadingRewind}}
-          <div class="rewind-loader">
-            {{dLoadingSpinner size="small"}}
-            <div class="rewind-loader__text">
-              {{i18n "discourse_rewind.loading"}}
-            </div>
-          </div>
-        {{else}}
-          <div class="rewind__header-buttons">
-            {{#if this.isOwnRewind}}
-              <div class="rewind__share-toggle-wrapper">
-                {{i18n "discourse_rewind.share.toggle_label.private"}}
-
-                <DToggleSwitch
-                  class="rewind__share-toggle"
-                  @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
-                  {{on "click" this.toggleShareRewind}}
-                />
-                {{i18n "discourse_rewind.share.toggle_label.public"}}
-              </div>
-
-              {{#if
-                this.currentUser.user_option.discourse_rewind_share_publicly
-              }}
-                <DButton
-                  class="btn-default rewind__copy-link-btn --special-kbd"
-                  @action={{this.copyRewindLink}}
-                  @icon="link"
-                  @title="composer.link_toolbar.copy"
-                />
-              {{/if}}
-            {{/if}}
-            <DButton
-              class="btn-default rewind__exit-fullscreen-btn --special-kbd"
-              @action={{this.toggleFullScreen}}
-              @icon={{if
-                this.fullScreen
-                "discourse-compress"
-                "discourse-expand"
-              }}
-            />
-
-          </div>
-
-          <div class="rewind__scroll-wrapper" {{this.registerScrollWrapper}}>
-            {{#unless this.isOwnRewind}}
-              <p class="rewind-other-user">{{trustHTML
-                  (i18n
-                    "discourse_rewind.viewing_other_user"
-                    username=@user.username
-                  )
-                }}</p>
+        <div class="rewind__window">
+          <div class="rewind__titlebar">
+            <span class="rewind__title">{{i18n "discourse_rewind.title"}}
+              {{this.rewind.fetchRewindYear}}</span>
+            {{#unless this.loadingRewind}}
+              <DButton
+                class={{dConcatClass
+                  "rewind__zoom-box rewind__exit-fullscreen-btn"
+                  (if this.fullScreen "--zoomed")
+                }}
+                @action={{this.toggleFullScreen}}
+                @icon={{if
+                  this.fullScreen
+                  "discourse-compress"
+                  "discourse-expand"
+                }}
+              />
             {{/unless}}
-
-            {{#if this.cannotViewRewind}}
-              <div class="rewind-error">
-                <div class="rewind-gibberish">
-                  <p class="rewind-gibberish__title">[ACCESS DENIED::REWIND
-                    MAINFRAME SUBROUTINE FAILURE]</p>
-                  <p>Bootstrapping anomaly log...</p>
-
-                  <p><span class="rewind-gibberish__code-line">>> quantum buffer
-                      underrun ⧛</span><br />
-                    <span class="rewind-gibberish__code-line">>> cross-node
-                      parity drift (Δ=004.33)</span><br />
-                    <span class="rewind-gibberish__code-line">>> packet ϟ
-                      fragment at offset ∇47</span><br />
-                    <span class="rewind-gibberish__code-line">>> flux conduit
-                      handshake TIMED OUT</span><br /></p>
-                </div>
-                {{trustHTML (i18n "discourse_rewind.cannot_view_rewind")}}
-              </div>
-            {{/if}}
-
-            {{#each this.rewind as |report|}}
-              {{#let
-                (get REPORT_COMPONENTS report.identifier)
-                as |ReportComponent|
-              }}
-                {{#if ReportComponent}}
-                  <div class={{dConcatClass "rewind-report" report.identifier}}>
-                    <ReportComponent
-                      @isOwnRewind={{this.isOwnRewind}}
-                      @report={{report}}
-                      @user={{@user}}
-                    />
-                  </div>
-                {{/if}}
-              {{/let}}
-            {{/each}}
-
-            <DLoadMore
-              @action={{this.loadMoreReports}}
-              @enabled={{this.hasMoreReports}}
-              @isLoading={{this.isLoadingMore}}
-              @root={{this.scrollWrapper}}
-            />
-
-            {{#if this.isLoadingMore}}
-              <div class="rewind-loader --more">
-                {{dLoadingSpinner size="small"}}
-              </div>
-            {{/if}}
           </div>
-        {{/if}}
+
+          {{#if this.loadingRewind}}
+            <div class="rewind-loader" role="status">
+              <div class="rewind-loader__dialog">
+                <span class="rewind-loader__watch"></span>
+                <span class="rewind-loader__text">
+                  {{i18n "discourse_rewind.loading"}}
+                </span>
+                <span class="rewind-loader__progress"></span>
+              </div>
+            </div>
+          {{else}}
+            {{#if this.isOwnRewind}}
+              <div class="rewind__toolbar">
+                <div class="rewind__share-toggle-wrapper">
+                  <span class="rewind__share-label">
+                    {{i18n "discourse_rewind.share.toggle_label.private"}}
+                  </span>
+                  <DToggleSwitch
+                    class="rewind__share-toggle"
+                    @state={{this.currentUser.user_option.discourse_rewind_share_publicly}}
+                    {{on "click" this.toggleShareRewind}}
+                  />
+                  <span class="rewind__share-label --public">
+                    {{i18n "discourse_rewind.share.toggle_label.public"}}
+                  </span>
+                </div>
+
+                {{#if
+                  this.currentUser.user_option.discourse_rewind_share_publicly
+                }}
+                  <DButton
+                    class="rewind-btn rewind__copy-link-btn"
+                    @action={{this.copyRewindLink}}
+                    @icon="link"
+                    @title="composer.link_toolbar.copy"
+                  />
+                {{/if}}
+              </div>
+            {{/if}}
+
+            <div class="rewind__scroll-wrapper" {{this.registerScrollWrapper}}>
+              {{#unless this.isOwnRewind}}
+                <p class="rewind-other-user">{{trustHTML
+                    (i18n
+                      "discourse_rewind.viewing_other_user"
+                      username=@user.username
+                    )
+                  }}</p>
+              {{/unless}}
+
+              {{#if this.cannotViewRewind}}
+                <div class="rewind-error" role="alert">
+                  <div>
+                    <div class="rewind-gibberish">
+                      <p class="rewind-error__title">[ACCESS DENIED::REWIND
+                        MAINFRAME SUBROUTINE FAILURE]</p>
+                      <p>Bootstrapping anomaly log...</p>
+
+                      <p><span class="rewind-gibberish__code-line">>> quantum
+                          buffer underrun ⧛</span><br />
+                        <span class="rewind-gibberish__code-line">>> cross-node
+                          parity drift (Δ=004.33)</span><br />
+                        <span class="rewind-gibberish__code-line">>> packet ϟ
+                          fragment at offset ∇47</span><br />
+                        <span class="rewind-gibberish__code-line">>> flux
+                          conduit handshake TIMED OUT</span><br /></p>
+                    </div>
+                    {{trustHTML (i18n "discourse_rewind.cannot_view_rewind")}}
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#each this.reports as |report|}}
+                {{#let
+                  (get REPORT_COMPONENTS report.identifier)
+                  as |ReportComponent|
+                }}
+                  {{#if ReportComponent}}
+                    <section
+                      class={{dConcatClass
+                        "rewind-card rewind-report"
+                        report.identifier
+                      }}
+                      data-identifier={{report.identifier}}
+                    >
+                      <ReportComponent
+                        @isOwnRewind={{this.isOwnRewind}}
+                        @report={{report}}
+                        @user={{@user}}
+                      />
+                    </section>
+                  {{/if}}
+                {{/let}}
+              {{/each}}
+
+              <DLoadMore
+                @action={{this.loadMoreReports}}
+                @enabled={{this.hasMoreReports}}
+                @isLoading={{this.isLoadingMore}}
+                @root={{this.scrollWrapper}}
+              />
+
+              {{#if this.isLoadingMore}}
+                <div class="rewind-loader --more" role="status">
+                  <span class="rewind-loader__watch"></span>
+                  <span class="sr-only">{{i18n
+                      "discourse_rewind.loading"
+                    }}</span>
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
       </div>
     </div>
   </template>

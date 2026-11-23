@@ -15,7 +15,6 @@ register_svg_icon "volume-high"
 register_svg_icon "volume-xmark"
 
 register_asset "stylesheets/common/_index.scss"
-register_asset "stylesheets/mobile/_index.scss", :mobile
 
 module ::DiscourseRewind
   PLUGIN_NAME = "discourse-rewind"

@@ -4,13 +4,16 @@ import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import { i18n } from "discourse-i18n";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 function airtime(seconds) {
   const hours = Math.floor(seconds / 3600);
+
   if (hours > 0) {
     return i18n("discourse_rewind.reports.live_usage.hours", { count: hours });
   }
+
   return i18n("discourse_rewind.reports.live_usage.minutes", {
     count: Math.floor(seconds / 60),
   });
@@ -33,79 +36,74 @@ export default class LiveUsage extends Component {
 
   <template>
     <div class="rewind-report-page --live-usage">
-      <div class="phone-bill">
-        <div class="phone-bill__header">
-          <div class="phone-bill__title">
-            {{i18n "discourse_rewind.reports.live_usage.title"}}
-          </div>
-          <div class="phone-bill__subtitle">{{this.subtitleText}}</div>
-        </div>
+      <h2 class="rewind-report-title">
+        {{i18n "discourse_rewind.reports.live_usage.title"}}
+      </h2>
+      <p class="rewind-report-page__lede">{{this.subtitleText}}</p>
 
-        <div class="phone-bill__total">
-          <div class="phone-bill__total-label">
-            {{i18n "discourse_rewind.reports.live_usage.total_airtime"}}
-          </div>
-          <div class="phone-bill__total-value">
-            {{airtime @report.data.total_seconds}}
-          </div>
-          <div class="phone-bill__total-calls">{{this.callCountText}}</div>
-        </div>
+      <div class="rewind-calls">
+        <RewindWindow class="rewind-calls__phone">
+          <p class="rewind-calls__display">
+            <span class="rewind-calls__label">{{i18n
+                "discourse_rewind.reports.live_usage.total_airtime"
+              }}</span>
+            <span class="rewind-calls__total">{{airtime
+                @report.data.total_seconds
+              }}</span>
+            <span>{{this.callCountText}}</span>
+          </p>
+        </RewindWindow>
 
-        {{#if @report.data.top_contacts.length}}
-          <div class="phone-bill__section">
-            <div class="phone-bill__section-title">
-              {{i18n "discourse_rewind.reports.live_usage.top_contacts"}}
-            </div>
-            <ol class="phone-bill__items">
-              {{#each @report.data.top_contacts as |contact|}}
-                <li class="phone-bill__item">
-                  <a
-                    class="phone-bill__item-name"
-                    href={{userPath contact.user.username}}
-                  >
-                    {{dBoundAvatarTemplate
-                      contact.user.avatar_template
-                      "tiny"
-                      (hash title=contact.user.username)
-                    }}
-                    @{{contact.user.username}}
-                  </a>
-                  <span class="phone-bill__item-leader"></span>
-                  <span class="phone-bill__item-value">
-                    {{airtime contact.seconds}}
-                  </span>
-                </li>
-              {{/each}}
-            </ol>
-          </div>
-        {{/if}}
+        <div class="rewind-calls__logs">
+          {{#if @report.data.top_contacts.length}}
+            <RewindWindow
+              @title={{i18n "discourse_rewind.reports.live_usage.top_contacts"}}
+            >
+              <ol class="rewind-calls__list">
+                {{#each @report.data.top_contacts as |contact|}}
+                  <li class="rewind-calls__entry">
+                    <a
+                      class="rewind-calls__name"
+                      href={{userPath contact.user.username}}
+                    >
+                      {{dBoundAvatarTemplate
+                        contact.user.avatar_template
+                        "medium"
+                        (hash
+                          extraClasses="rewind-avatar"
+                          title=contact.user.username
+                        )
+                      }}
+                      @{{contact.user.username}}
+                    </a>
+                    <span>{{airtime contact.seconds}}</span>
+                  </li>
+                {{/each}}
+              </ol>
+            </RewindWindow>
+          {{/if}}
 
-        {{#if @report.data.top_rooms.length}}
-          <div class="phone-bill__section">
-            <div class="phone-bill__section-title">
-              {{i18n "discourse_rewind.reports.live_usage.top_rooms"}}
-            </div>
-            <ol class="phone-bill__items">
-              {{#each @report.data.top_rooms as |room|}}
-                <li class="phone-bill__item">
-                  <a
-                    class="phone-bill__item-name"
-                    href={{getURL (concat "/live/r/" room.slug)}}
-                  >
-                    {{room.name}}
-                  </a>
-                  <span class="phone-bill__item-leader"></span>
-                  <span class="phone-bill__item-value">
-                    {{airtime room.seconds}}
-                  </span>
-                </li>
-              {{/each}}
-            </ol>
-          </div>
-        {{/if}}
+          {{#if @report.data.top_rooms.length}}
+            <RewindWindow
+              @title={{i18n "discourse_rewind.reports.live_usage.top_rooms"}}
+            >
+              <ol class="rewind-calls__list">
+                {{#each @report.data.top_rooms as |room|}}
+                  <li class="rewind-calls__entry">
+                    <a
+                      class="rewind-calls__name --room"
+                      href={{getURL (concat "/live/r/" room.slug)}}
+                    >{{room.name}}</a>
+                    <span>{{airtime room.seconds}}</span>
+                  </li>
+                {{/each}}
+              </ol>
+            </RewindWindow>
+          {{/if}}
 
-        <div class="phone-bill__footer">
-          {{i18n "discourse_rewind.reports.live_usage.amount_due"}}
+          <p class="rewind-calls__receipt">
+            {{i18n "discourse_rewind.reports.live_usage.amount_due"}}
+          </p>
         </div>
       </div>
     </div>

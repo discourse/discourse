@@ -1,51 +1,55 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dNumber from "discourse/ui-kit/helpers/d-number";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import I18n, { i18n } from "discourse-i18n";
+import RewindWindow from "discourse/plugins/discourse-rewind/discourse/components/rewind-window";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 const BotMessage = <template>
-  <div class="chat-message__avatar">🤖</div>
-  <div class="chat-message__bubble">
-    <div class="chat-message__author">
-      {{i18n "discourse_rewind.reports.chat_usage.bot_name"}}
+  <li class="rewind-chat__message --bot">
+    <span aria-hidden="true" class="rewind-chat__who"></span>
+    <div class="rewind-balloon">
+      <p class="rewind-chat__author">{{i18n
+          "discourse_rewind.reports.chat_usage.bot_name"
+        }}</p>
+      {{#if @message}}{{dReplaceEmoji (trustHTML @message)}}{{/if}}
+      {{yield}}
     </div>
-    {{#if @message}}
-      <div class="chat-message__text">
-        {{trustHTML @message}}
-      </div>
-    {{/if}}
-    {{yield}}
-  </div>
+  </li>
 </template>;
 
 const UserMessage = <template>
-  <div class="chat-message__bubble">
-    <div class="chat-message__author">
-      {{@authorText}}
+  <li class="rewind-chat__message --user">
+    <span class="rewind-chat__who">
+      {{dAvatar @user imageSize="medium" extraClasses="rewind-avatar"}}
+    </span>
+    <div class="rewind-balloon --inverse">
+      <p class="rewind-chat__author">{{@author}}</p>
+      {{@text}}
     </div>
-    {{#if @replyKey}}
-      <div class="chat-message__text">
-        {{i18n (concat "discourse_rewind.reports.chat_usage." @replyKey)}}
-      </div>
-    {{/if}}
-    {{yield}}
-  </div>
-  <div class="chat-message__avatar">
-    {{dAvatar @user imageSize="small"}}
-  </div>
+  </li>
 </template>;
 
 export default class ChatUsage extends Component {
+  @service currentUser;
+
   get authorText() {
     return i18nForOwner(
       "discourse_rewind.reports.chat_usage.author",
       this.args.isOwnRewind,
       { username: this.args.user?.username }
     );
+  }
+
+  get avatarUser() {
+    return this.args.isOwnRewind && this.currentUser
+      ? this.currentUser
+      : this.args.user;
   }
 
   get message1Text() {
@@ -81,99 +85,54 @@ export default class ChatUsage extends Component {
       <h2 class="rewind-report-title">{{i18n
           "discourse_rewind.reports.chat_usage.title"
         }}</h2>
-
-      <div class="chat-window">
-        <div class="chat-window__header">
-          <span class="chat-window__title">
-            {{i18n "discourse_rewind.reports.chat_usage.channel_title"}}
-          </span>
-          <span class="chat-window__status">
-            {{i18n "discourse_rewind.reports.chat_usage.status_online"}}
-          </span>
-        </div>
-
-        <div class="chat-window__messages">
-          <div class="chat-message --left">
-            <BotMessage @message={{this.message1Text}} />
-          </div>
-
-          <div class="chat-message --right">
-            <UserMessage
-              @authorText={{this.authorText}}
-              @replyKey="reply_1"
-              @user={{@user}}
-            />
-          </div>
-
-          <div class="chat-message --left">
-            <BotMessage @message={{this.message2Text}} />
-          </div>
-
-          <div class="chat-message --right">
-            <UserMessage
-              @authorText={{this.authorText}}
-              @replyKey="reply_2"
-              @user={{@user}}
-            />
-          </div>
-
-          <div class="chat-message --left">
-            <BotMessage @message={{this.message3Text}} />
-          </div>
-
-          <div class="chat-message --right">
-            <UserMessage
-              @authorText={{this.authorText}}
-              @replyKey="reply_3"
-              @user={{@user}}
-            />
-          </div>
-
-          <div class="chat-message --left">
-            <BotMessage @message={{this.message4Text}} />
-          </div>
-
+      <RewindWindow
+        class="rewind-chat"
+        @title={{i18n "discourse_rewind.reports.chat_usage.channel_title"}}
+      >
+        <p class="rewind-chat__status">{{i18n
+            "discourse_rewind.reports.chat_usage.status_online"
+          }}</p>
+        <ol class="rewind-chat__thread">
+          <BotMessage @message={{this.message1Text}} />
+          <UserMessage
+            @author={{this.authorText}}
+            @text={{i18n "discourse_rewind.reports.chat_usage.reply_1"}}
+            @user={{this.avatarUser}}
+          />
+          <BotMessage @message={{this.message2Text}} />
+          <UserMessage
+            @author={{this.authorText}}
+            @text={{i18n "discourse_rewind.reports.chat_usage.reply_2"}}
+            @user={{this.avatarUser}}
+          />
+          <BotMessage @message={{this.message3Text}} />
+          <UserMessage
+            @author={{this.authorText}}
+            @text={{i18n "discourse_rewind.reports.chat_usage.reply_3"}}
+            @user={{this.avatarUser}}
+          />
+          <BotMessage @message={{this.message4Text}} />
           {{#if @report.data.favorite_channels.length}}
-            <div class="chat-message --left">
-              <BotMessage
-                @message={{i18n
-                  "discourse_rewind.reports.chat_usage.message_5"
-                }}
-              >
-                <div class="chat-message__channels">
-                  {{#each @report.data.favorite_channels as |channel|}}
+            <BotMessage
+              @message={{i18n "discourse_rewind.reports.chat_usage.message_5"}}
+            >
+              <ol class="rewind-chat__channels">
+                {{#each @report.data.favorite_channels as |channel|}}
+                  <li>
                     <a
-                      class="chat-channel-link"
+                      class="rewind-chat__channel"
                       href={{getURL (concat "/chat/c/-/" channel.channel_id)}}
                     >
-                      <span
-                        class="chat-channel-link__name"
-                      >#{{channel.channel_slug}}</span>
-                      <span class="chat-channel-link__count">
-                        {{dNumber channel.message_count}}
-                      </span>
+                      <span>#{{channel.channel_slug}}</span>
+                      <span>{{dNumber channel.message_count}}</span>
                     </a>
-                  {{/each}}
-                </div>
-              </BotMessage>
-            </div>
+                  </li>
+                {{/each}}
+              </ol>
+            </BotMessage>
           {{/if}}
-
-          <div class="chat-message --right">
-            <UserMessage @authorText={{this.authorText}} @user={{@user}}>
-              <img
-                alt={{i18n
-                  "discourse_rewind.reports.chat_usage.dancing_baby_alt"
-                }}
-                class="chat-message__gif"
-                src={{getURL
-                  "/plugins/discourse-rewind/images/dancing_baby.gif"
-                }}
-              />
-            </UserMessage>
-          </div>
-        </div>
-      </div>
+        </ol>
+      </RewindWindow>
     </div>
   </template>
 }

@@ -3,24 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
+import { barsFor } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-bars";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 const PEAK_WINDOW = 0.2;
 const BIT_CRUSH_STEPS = 5;
 const LAST_HOUR = 23;
-const SVG_WIDTH = 1200;
-const SVG_HEIGHT = 200;
-const SVG_PADDING = 40;
-const PLOT = {
-  left: SVG_PADDING,
-  right: SVG_WIDTH - SVG_PADDING,
-  top: SVG_PADDING,
-  bottom: SVG_HEIGHT - SVG_PADDING,
-  labelY: SVG_HEIGHT - SVG_PADDING / 2,
-  width: SVG_WIDTH - SVG_PADDING * 2,
-  height: SVG_HEIGHT - SVG_PADDING * 2,
-};
 
 function triangleWave(frequency, time) {
   return (2 / Math.PI) * Math.asin(Math.sin(2 * Math.PI * frequency * time));
@@ -36,14 +26,12 @@ function activityAt(activityByHour, fractionalHour) {
 export default class TimeOfDayActivity extends Component {
   @tracked isPlaying = false;
   @tracked playbackProgress = 0;
-  @tracked isGlitching = false;
 
   audioContext = null;
   audioSource = null;
   playbackTimeout = null;
   stereoPanner = null;
   animationFrame = null;
-  hasGlitched = false;
 
   get activityByHour() {
     return this.args.report.data.activity_by_hour;
@@ -98,55 +86,25 @@ export default class TimeOfDayActivity extends Component {
     };
   }
 
-  get waveformPath() {
-    const points = Array.from({ length: 24 }, (_, hour) => this.pointAt(hour));
+  /**
+   * One column per hour. Height and dither density both follow that hour's activity.
+   */
+  get hours() {
+    const playing = this.isPlaying
+      ? Math.min(LAST_HOUR, Math.floor(this.playbackProgress * 24))
+      : -1;
+    const bars = barsFor(
+      this.activityByHour.map((value, hour) => ({ value, hour })),
+      "value"
+    );
 
-    const tension = 0.3;
-    let path = `M ${points[0].x} ${points[0].y}`;
-
-    for (let i = 0; i < points.length - 1; i++) {
-      const p0 = points[Math.max(i - 1, 0)];
-      const p1 = points[i];
-      const p2 = points[i + 1];
-      const p3 = points[Math.min(i + 2, points.length - 1)];
-
-      const cp1x = p1.x + ((p2.x - p0.x) / 6) * tension;
-      const cp1y = p1.y + ((p2.y - p0.y) / 6) * tension;
-      const cp2x = p2.x - ((p3.x - p1.x) / 6) * tension;
-      const cp2y = p2.y - ((p3.y - p1.y) / 6) * tension;
-
-      path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
-    }
-
-    return path;
-  }
-
-  get waveformPoints() {
-    return Array.from({ length: 24 }, (_, hour) => {
-      const { x, y } = this.pointAt(hour);
-      const isActive = hour === this.mostActiveHour;
-      return {
-        x,
-        y,
-        hour,
-        radius: isActive ? 6 : 2.5,
-        class: isActive ? "oscilloscope__dot active" : "oscilloscope__dot",
-        showLabel: hour % 3 === 0,
-      };
-    });
-  }
-
-  get gridLines() {
-    return Array.from({ length: 5 }, (_, i) => ({
-      y: PLOT.top + (i * PLOT.height) / 4,
-      style: trustHTML(`opacity: ${i === 0 || i === 4 ? 0.3 : 0.15}`),
+    return bars.map((bar) => ({
+      ...bar,
+      height: trustHTML(`height: ${(bar.share * 100).toFixed(2)}%`),
+      isPeak: bar.hour === this.mostActiveHour,
+      isPlaying: bar.hour === playing,
+      label: bar.hour % 3 === 0 ? this.formatHour(bar.hour) : null,
     }));
-  }
-
-  get playbackPosition() {
-    return this.isPlaying
-      ? this.pointAt(this.playbackProgress * LAST_HOUR)
-      : null;
   }
 
   get playButtonText() {
@@ -155,14 +113,6 @@ export default class TimeOfDayActivity extends Component {
       this.args.isOwnRewind,
       { username: this.args.user?.username }
     );
-  }
-
-  pointAt(fractionalHour) {
-    const activity = activityAt(this.activityByHour, fractionalHour);
-    return {
-      x: PLOT.left + (fractionalHour / LAST_HOUR) * PLOT.width,
-      y: PLOT.bottom - (activity / this.maxActivity) * PLOT.height,
-    };
   }
 
   formatHour(hour) {
@@ -187,8 +137,6 @@ export default class TimeOfDayActivity extends Component {
     }
     this.isPlaying = false;
     this.playbackProgress = 0;
-    this.isGlitching = false;
-    this.hasGlitched = false;
     this.audioContext = null;
     this.audioSource = null;
     this.playbackTimeout = null;
@@ -312,20 +260,6 @@ export default class TimeOfDayActivity extends Component {
           this.stereoPanner.pan.value = -1 + this.playbackProgress * 2;
         }
 
-        // Trigger visual glitch when hitting peak hour
-        const peakHourProgress = this.mostActiveHour / LAST_HOUR;
-        if (
-          !this.hasGlitched &&
-          this.playbackProgress >= peakHourProgress &&
-          this.playbackProgress < peakHourProgress + 0.05
-        ) {
-          this.isGlitching = true;
-          this.hasGlitched = true;
-          setTimeout(() => {
-            this.isGlitching = false;
-          }, 200);
-        }
-
         if (this.playbackProgress < 1) {
           this.animationFrame = requestAnimationFrame(animate);
         }
@@ -347,96 +281,42 @@ export default class TimeOfDayActivity extends Component {
     <div class="rewind-report-page --time-of-day-activity">
       <h2 class="rewind-report-title">{{i18n
           "discourse_rewind.reports.time_of_day_activity.title"
-        }}
-      </h2>
+        }}</h2>
 
-      <div class="rewind-card">
-        <div
-          class="time-of-day__oscilloscope
-            {{if this.isGlitching '--glitching'}}"
-        >
-          <DButton
-            class="oscilloscope__play-btn {{if this.isPlaying '--playing'}}"
-            title={{if
-              this.isPlaying
-              (i18n "discourse_rewind.reports.time_of_day_activity.stop_button")
-              this.playButtonText
+      <ol class="rewind-rhythm">
+        {{#each this.hours as |hour|}}
+          <li
+            class={{dConcatClass
+              "rewind-rhythm__hour"
+              (if hour.isPeak "is-peak")
+              (if hour.isPlaying "is-playing")
             }}
-            @action={{this.playWaveform}}
-            @icon={{if this.isPlaying "volume-xmark" "volume-high"}}
-          />
-          <svg
-            class="oscilloscope__svg"
-            viewBox="0 0 {{SVG_WIDTH}} {{SVG_HEIGHT}}"
           >
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur result="coloredBlur" stdDeviation="2" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <filter id="glow-strong">
-                <feGaussianBlur result="coloredBlur" stdDeviation="4" />
-                <feMerge>
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="coloredBlur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {{#each this.gridLines as |gridLine|}}
-              <line
-                class="oscilloscope__grid-line"
-                style={{gridLine.style}}
-                x1={{PLOT.left}}
-                x2={{PLOT.right}}
-                y1={{gridLine.y}}
-                y2={{gridLine.y}}
-              />
-            {{/each}}
-
-            {{#each this.waveformPoints as |point|}}
-              {{#if point.showLabel}}
-                <line
-                  class="oscilloscope__grid-line --vertical"
-                  x1={{point.x}}
-                  x2={{point.x}}
-                  y1={{PLOT.top}}
-                  y2={{PLOT.bottom}}
-                />
-                <text
-                  class="oscilloscope__time-label"
-                  x={{point.x}}
-                  y={{PLOT.labelY}}
-                >{{this.formatHour point.hour}}</text>
-              {{/if}}
-            {{/each}}
-
-            <path class="oscilloscope__waveform" d={{this.waveformPath}} />
-
-            {{#each this.waveformPoints as |point|}}
-              <circle
-                class={{point.class}}
-                cx={{point.x}}
-                cy={{point.y}}
-                r={{point.radius}}
-              />
-            {{/each}}
-
-            {{#if this.playbackPosition}}
-              <circle
-                class="oscilloscope__playback-dot"
-                cx={{this.playbackPosition.x}}
-                cy={{this.playbackPosition.y}}
-                r="12"
-              />
+            <span
+              class="rewind-rhythm__bar"
+              data-density={{hour.density}}
+              style={{hour.height}}
+            ></span>
+            {{#if hour.label}}
+              <span class="rewind-rhythm__label">{{hour.label}}</span>
             {{/if}}
-          </svg>
-        </div>
-      </div>
+          </li>
+        {{/each}}
+      </ol>
+
+      <DButton
+        class={{dConcatClass
+          "rewind-btn --default rewind-rhythm__play"
+          (if this.isPlaying "is-playing")
+        }}
+        @action={{this.playWaveform}}
+        @icon={{if this.isPlaying "volume-xmark" "volume-high"}}
+        @translatedTitle={{if
+          this.isPlaying
+          (i18n "discourse_rewind.reports.time_of_day_activity.stop_button")
+          this.playButtonText
+        }}
+      />
     </div>
   </template>
 }

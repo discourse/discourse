@@ -1,27 +1,90 @@
-.--most-viewed-categories {
-  .rewind-report-container {
-    display: flex;
-    gap: 0.5em;
-    flex-wrap: wrap;
-  }
+@use "sass:list";
+@use "lib/viewport";
 
-  .rewind-report-title {
-    margin-left: 0;
-    width: 100%;
-    text-align: center;
-    box-sizing: border-box;
-    border: none;
-    margin-bottom: 1em;
-  }
+$rewind-category-patterns: (
+  $one-bit-50,
+  $one-bit-diagonal,
+  $one-bit-bricks,
+  $one-bit-lattice
+);
 
-  .rewind-card {
-    @include rewind-border;
-    width: max-content;
-    flex-grow: 1;
+.rewind-categories {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  padding: 12px 10px 4px;
+
+  &__category {
     position: relative;
-  }
-}
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-decoration: none;
 
-.most-viewed-categories__category {
-  font-family: var(--pixel-text);
+    &:hover::after,
+    &:focus-visible::after,
+    &.--opened::after {
+      @include one-bit-marching-ants;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &.--opened .rewind-categories__name {
+      color: var(--rewind-paper);
+      background: var(--rewind-ink);
+    }
+  }
+
+  &__thumb {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    padding: 18px 8px 8px;
+    border: 2px solid var(--rewind-ink);
+    background-color: var(--rewind-paper);
+    box-shadow: var(--rewind-shadow);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 14px;
+      border-bottom: 2px solid var(--rewind-ink);
+      background: var(--rewind-paper) $one-bit-stripes;
+    }
+  }
+
+  @for $i from 1 through 4 {
+    &__category[data-pattern="#{$i - 1}"] .rewind-categories__thumb {
+      background-image: list.nth($rewind-category-patterns, $i);
+    }
+  }
+
+  &__name {
+    max-width: 100%;
+    padding: 4px 8px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
+    font: 400 20px/24px var(--rewind-font-ui);
+    text-align: center;
+    overflow-wrap: break-word;
+  }
+
+  @include viewport.until(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+
+    &__thumb {
+      aspect-ratio: 1;
+    }
+
+    &__name {
+      padding: 2px 4px;
+      font: 400 16px/20px var(--rewind-font-body);
+    }
+  }
 }

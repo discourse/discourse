@@ -1,116 +1,89 @@
-.--ai-usage {
-  .rewind-report-title {
-    display: none;
+@use "lib/viewport";
+
+.rewind-ai {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  align-items: start;
+  gap: 36px;
+
+  &__display {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
+    padding: 12px 14px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper) $one-bit-12;
   }
 
-  .matrix-container {
-    position: relative;
-    min-height: 600px;
-    background: var(--rewind-black);
-    overflow: hidden;
-    border-radius: 0;
-    outline: inset 1px solid var(--rewind-green);
-    outline-offset: 5px;
-    border: 2px solid var(--rewind-green);
-    box-shadow: 0 0 20px 10px rgb(0 255 0 / 0.2);
+  &__number,
+  &__unit {
+    max-width: 100%;
+    padding: 0 6px;
+    background: var(--rewind-paper);
+    overflow-wrap: anywhere;
   }
 
-  .matrix-rain {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.3;
+  &__number {
+    font: 700 40px/40px var(--rewind-font-ui);
+  }
 
-    @media (prefers-reduced-motion: reduce) {
-      display: none;
+  &__registers {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 10px;
+      border-style: solid;
+      border-color: transparent;
+      border-width: 6px 8px 8px 6px;
+      border-image: one-bit-image("nine-key") 6 8 8 6 fill / 6px 8px 8px 6px
+        stretch;
+    }
+
+    dd {
+      margin: 0;
+      font: 700 20px/20px var(--rewind-font-ui);
     }
   }
 
-  .matrix-content {
-    position: relative;
-    z-index: 1;
-    padding: 3em 1em 1em;
-    color: var(--rewind-green);
-    font-family: "Courier New", monospace;
+  &__lists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
   }
 
-  .matrix-title {
-    font-size: 32px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 2em;
-    letter-spacing: 4px;
-    text-shadow: 0 0 5px var(--rewind-green);
+  &__list {
+    display: grid;
+    gap: 8px;
 
-    .matrix-subhead {
-      font-size: var(--font-down-5);
-      font-weight: normal;
+    .rewind-bar {
+      grid-template-columns: minmax(0, 1fr) 90px auto;
+    }
+
+    .rewind-bar__track {
+      height: 20px;
     }
   }
 
-  .matrix-stats {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 3em;
-    flex-wrap: wrap;
-    gap: 2em;
-  }
-
-  .matrix-stat {
-    text-align: center;
-    flex: 1;
-    min-width: 150px;
-  }
-
-  .matrix-stat__label {
-    font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 0.5em;
-    opacity: 0.8;
-  }
-
-  .matrix-stat__value {
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 0 5px var(--rewind-green);
-  }
-
-  .matrix-section {
-    margin-bottom: 2em;
-  }
-
-  .matrix-section__title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 1em;
-    letter-spacing: 2px;
-    text-shadow: 0 0 5px var(--rewind-green);
-  }
-
-  .matrix-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75em;
-  }
-
-  .matrix-list__item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.75em 1em;
-    background: rgb(0, 255, 0, 0.05);
-    border: 1px solid rgb(0, 255, 0, 0.3);
-    border-radius: 4px;
-  }
-
-  .matrix-list__name {
+  &__heading {
+    margin-bottom: 4px;
+    font: 400 8px/8px var(--rewind-font-label);
     text-transform: uppercase;
-    letter-spacing: 1px;
   }
 
-  .matrix-list__count {
-    font-weight: bold;
-    text-shadow: 0 0 5px var(--rewind-green);
+  &__name::first-letter {
+    text-transform: uppercase;
+  }
+
+  @include viewport.until(lg) {
+    grid-template-columns: minmax(0, 1fr);
+
+    &__lists {
+      grid-template-columns: minmax(0, 1fr);
+    }
   }
 }

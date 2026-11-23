@@ -3,19 +3,19 @@ import WordCard from "discourse/plugins/discourse-rewind/discourse/components/re
 
 export default <template>
   <div class="rewind-report-page --top-words">
-    <div class="rewind-report-container">
-      <h2 class="rewind-report-title">{{i18n
-          "discourse_rewind.reports.top_words.title"
-        }}</h2>
-      <div class="cards-container">
-        {{#each @report.data as |entry index|}}
+    <h2 class="rewind-report-title">{{i18n
+        "discourse_rewind.reports.top_words.title"
+      }}</h2>
+    <ol class="rewind-words">
+      {{#each @report.data as |entry index|}}
+        <li class="rewind-words__slot">
           <WordCard
             @count={{entry.score}}
             @index={{index}}
             @word={{entry.word}}
           />
-        {{/each}}
-      </div>
-    </div>
+        </li>
+      {{/each}}
+    </ol>
   </div>
 </template>

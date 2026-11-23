@@ -1,0 +1,252 @@
+@use "sass:list";
+@use "sass:string";
+
+// Rewind is drawn in 1-bit, independent of the site's color scheme: every grey is a tile of
+// black and white pixels. Sizes are px on purpose and stay on a 2px grid (one art pixel),
+// because the pixel art and pixel fonts only render without anti-aliasing at whole multiples.
+
+// A tile from rows of "X" (ink) and "." (paper), scaled so one art pixel is 2px.
+@function one-bit-tile($rows, $opaque: true) {
+  $height: list.length($rows);
+  $width: string.length(list.nth($rows, 1));
+  $ink: "";
+
+  @for $y from 1 through $height {
+    $row: list.nth($rows, $y);
+
+    @for $x from 1 through $width {
+      @if string.slice($row, $x, $x) == "X" {
+        $ink: $ink + "<rect x='#{$x - 1}' y='#{$y - 1}' width='1' height='1'/>";
+      }
+    }
+  }
+
+  $paper: if(
+    $opaque,
+    "<rect width='#{$width}' height='#{$height}' fill='%23fff'/>",
+    ""
+  );
+
+  @return url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='#{$width * 2}' height='#{$height * 2}' viewBox='0 0 #{$width} #{$height}' shape-rendering='crispEdges'>#{$paper}#{$ink}</svg>");
+}
+
+@function one-bit-image($name) {
+  @return absolute-image-url(
+    "/plugins/discourse-rewind/images/one-bit/#{$name}.svg"
+  );
+}
+
+// Ordered (Bayer) dither steps, lightest to darkest.
+$one-bit-density: (
+  1: (
+    "X...",
+    "....",
+    "..X.",
+    "....",
+  ),
+  2: (
+    "X.X.",
+    "....",
+    "X.X.",
+    "....",
+  ),
+  3: (
+    "X.X.",
+    ".X..",
+    "X.X.",
+    "...X",
+  ),
+  4: (
+    "X.",
+    ".X",
+  ),
+  5: (
+    "XXX.",
+    ".X.X",
+    "X.XX",
+    ".X.X",
+  ),
+  6: (
+    "XXXX",
+    ".X.X",
+    "XXXX",
+    ".X.X",
+  ),
+  7: (
+    "XXXX",
+    "XX.X",
+    "XXXX",
+    ".XXX",
+  ),
+);
+$one-bit-50: one-bit-tile(("X.", ".X"));
+$one-bit-50-clear: one-bit-tile(("X.", ".X"), false);
+$one-bit-25: one-bit-tile(("X.X.", "....", "X.X.", "...."));
+$one-bit-12: one-bit-tile(("X...", "....", "..X.", "...."));
+$one-bit-dots: one-bit-tile(("X...", "....", "....", "...."));
+$one-bit-diagonal: one-bit-tile(("X...", "...X", "..X.", ".X.."));
+$one-bit-stripes: one-bit-tile(("X", "."));
+$one-bit-leader: one-bit-tile(("X..."), false);
+$one-bit-lattice: one-bit-tile(
+  (
+    "X.......",
+    ".X.....X",
+    "..X...X.",
+    "...X.X..",
+    "....X...",
+    "...X.X..",
+    "..X...X.",
+    ".X.....X"
+  )
+);
+$one-bit-bricks: one-bit-tile(
+  (
+    "XXXXXXXX",
+    "X.......",
+    "X.......",
+    "X.......",
+    "XXXXXXXX",
+    "....X...",
+    "....X...",
+    "....X..."
+  )
+);
+$one-bit-ruler: one-bit-tile(
+  (
+    "X...............................",
+    "X...............................",
+    "X...............X...............",
+    "X...............X...............",
+    "X...X...X...X...X...X...X...X...",
+    "X...X...X...X...X...X...X...X..."
+  ),
+  false
+);
+$one-bit-ants-x: one-bit-tile(("XXXX...."), false);
+$one-bit-ants-y: one-bit-tile(("X", "X", "X", "X", ".", ".", ".", "."), false);
+
+@mixin one-bit-surface {
+  background: var(--rewind-paper);
+  border: 2px solid var(--rewind-ink);
+  box-shadow: var(--rewind-shadow);
+}
+
+// Rounded 1-bit button: a 9-slice image whose corners and drop shadow stay pixel-exact.
+// The border is restated for every state because core button states reset the shorthand.
+@mixin one-bit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 6px;
+  border-radius: 0;
+  box-shadow: none;
+  font: 700 20px/20px var(--rewind-font-ui);
+  text-decoration: none;
+  white-space: nowrap;
+  image-rendering: pixelated;
+
+  &,
+  &:hover,
+  &:focus-visible,
+  &:visited {
+    border-style: solid;
+    border-color: transparent;
+    border-width: 10px 12px 12px 10px;
+    border-image: one-bit-image("nine-btn") 10 12 12 10 fill / 10px 12px 12px
+      10px stretch;
+    background: none;
+    color: var(--rewind-ink);
+  }
+
+  &:active {
+    border-image-source: one-bit-image("nine-btn-inv");
+    color: var(--rewind-paper);
+
+    img,
+    &::before {
+      filter: invert(1);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--rewind-ink);
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &[disabled] {
+    opacity: 1;
+    mask-image: $one-bit-50-clear;
+  }
+}
+
+// The thick ring of the default button.
+@mixin one-bit-default-button {
+  min-height: 56px;
+  padding: 0 4px;
+
+  &,
+  &:hover,
+  &:focus-visible {
+    border-width: 18px;
+    border-image: one-bit-image("nine-def") 18 fill / 18px stretch;
+  }
+
+  &:active {
+    border-image-source: one-bit-image("nine-def-inv");
+  }
+}
+
+// Outline plus a stepped drop shadow, crisp because the pixel font is.
+@mixin one-bit-big-type($shadow: true) {
+  $outline: (
+    2px 0 var(--rewind-ink),
+    -2px 0 var(--rewind-ink),
+    0 2px var(--rewind-ink),
+    0 -2px var(--rewind-ink),
+    2px 2px var(--rewind-ink),
+    -2px -2px var(--rewind-ink),
+    2px -2px var(--rewind-ink),
+    -2px 2px var(--rewind-ink)
+  );
+  $drop: (
+    4px 4px var(--rewind-ink),
+    6px 6px var(--rewind-ink),
+    8px 8px var(--rewind-ink)
+  );
+  color: var(--rewind-paper);
+  font-family: var(--rewind-font-ui);
+  font-weight: 700;
+  text-shadow: if($shadow, list.join($outline, $drop, comma), $outline);
+}
+
+@mixin one-bit-marching-ants($inset: -6px) {
+  content: "";
+  position: absolute;
+  inset: $inset;
+  pointer-events: none;
+  background-image:
+    $one-bit-ants-x, $one-bit-ants-x, $one-bit-ants-y, $one-bit-ants-y;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-position:
+    0 0,
+    0 100%,
+    0 0,
+    100% 0;
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: rewind-ants 0.8s steps(8) infinite;
+  }
+}
+
+@keyframes rewind-ants {
+  to {
+    background-position:
+      16px 0,
+      -16px 100%,
+      0 -16px,
+      100% 16px;
+  }
+}

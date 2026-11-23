@@ -1,106 +1,69 @@
 @use "lib/viewport";
 
-.--writing-analysis {
-  .writing-analysis {
-    border: 2px solid var(--rewind-green);
-    width: 100%;
-    color: var(--rewind-green);
-    font-size: 0.6em;
-    font-family: "Pixelify Sans", sans-serif;
-  }
+.rewind-writing {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+  color: var(--rewind-ink);
 
-  .rewind-report-title {
-    margin-bottom: 0;
-  }
-
-  .writing-analysis__menubar {
-    background: var(--rewind-green);
-    color: #000;
-    padding: 4px 10px 6px;
-    display: flex;
-    gap: 30px;
-  }
-
-  .writing-analysis__menu-item--right {
-    margin-left: auto;
-  }
-
-  .writing-analysis__frame {
+  &__document .rewind-window__body {
+    gap: 0;
     padding: 0;
   }
 
-  .writing-analysis__header-row {
+  &__menu {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    padding: 6px 12px;
+    border-bottom: 2px solid var(--rewind-ink);
+    font: 400 20px/20px var(--rewind-font-ui);
   }
 
-  .writing-analysis__helpbox {
-    border: 2px solid var(--rewind-green);
-    margin-left: 10px;
-    margin-top: 10px;
-    padding: 10px;
-    width: 180px;
-    text-align: center;
-    height: 20px;
+  &__ruler {
+    height: 22px;
+    border-bottom: 2px solid var(--rewind-ink);
+    background: $one-bit-ruler repeat-x 12px 100%;
+  }
 
-    @include viewport.until(sm) {
-      height: auto;
+  &__page {
+    padding: 20px 24px 28px;
+  }
+
+  &__score {
+    font: 700 80px/80px var(--rewind-font-ui);
+
+    small {
+      font: 700 20px/20px var(--rewind-font-ui);
     }
   }
 
-  .writing-analysis__release {
-    text-align: center;
-    margin-top: 10px;
-    width: 250px;
+  &__meter {
+    position: relative;
+    height: 24px;
+    border: 2px solid var(--rewind-ink);
   }
 
-  .writing-analysis__release-name {
-    font-weight: bold;
-    margin-bottom: 6px;
+  &__meter-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    border-inline-end: 2px solid var(--rewind-ink);
+    background: $one-bit-50;
   }
 
-  .writing-analysis__release-meta {
-    font-size: 14px;
+  &__author {
+    font: 700 30px/32px var(--rewind-font-ui);
+    overflow-wrap: anywhere;
   }
 
-  .writing-analysis__stats {
-    border-top: 14px solid var(--rewind-green);
-    padding: 0 20px;
-    display: flex;
-    gap: 20px;
+  @include viewport.until(md) {
+    grid-template-columns: minmax(0, 1fr);
 
-    @include viewport.until(sm) {
-      flex-direction: column;
-      border-top: none;
-      border-bottom: 14px solid var(--rewind-green);
-      padding: 20px 0;
-      gap: 10px;
+    &__score {
+      font-size: 60px;
+      line-height: 60px;
     }
-  }
-
-  .writing-analysis__stats-col {
-    padding-top: 10px;
-    width: 140px;
-    border-right: 10px solid var(--rewind-green);
-
-    &:last-of-type {
-      border-right: none;
-    }
-
-    @include viewport.until(sm) {
-      border-right: none;
-      border-top: 10px solid var(--rewind-green);
-      padding: 10px 10px 0 10px;
-      width: auto;
-    }
-  }
-
-  .writing-analysis__stats-label {
-    font-weight: bold;
-  }
-
-  .writing-analysis__stats-value {
-    margin-bottom: 15px;
   }
 }

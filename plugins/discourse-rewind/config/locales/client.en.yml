@@ -31,6 +31,10 @@ en:
       reports:
         activity_calendar:
           title: Activity Calendar
+          legend:
+            no_posts: "No posts"
+            range: "%{min}–%{max} posts"
+            and_up: "%{min}+ posts"
           cell_title:
             visited_no_posts: "You visited and lurked on %{date}, but made no posts."
             visited_no_posts_others: "%{username} visited and lurked on %{date}, but made no posts."
@@ -128,7 +132,6 @@ en:
           reply_3: "r0fl rAwr 8-)"
           message_4: "Your average message length was <strong>%{length}</strong> characters"
           message_5: "Your favorite channels:"
-          dancing_baby_alt: "Dancing baby"
         live_usage:
           title: Phone bill
           subtitle: Your voice call statement

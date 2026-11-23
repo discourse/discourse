@@ -1,11 +1,17 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
+import ditherImage from "discourse/plugins/discourse-rewind/discourse/modifiers/dither-image";
 
 export default class ReadingTime extends Component {
+  get coverUrl() {
+    return getURL(
+      `/plugins/discourse-rewind/images/books/${this.args.report.data.isbn}.jpg`
+    );
+  }
+
   get readTimeString() {
     let totalMinutes = Math.floor(this.args.report.data.reading_time / 60);
     let leftOverMinutes = totalMinutes % 60;
@@ -36,27 +42,19 @@ export default class ReadingTime extends Component {
       <h2 class="rewind-report-title">
         {{i18n "discourse_rewind.reports.reading_time.title"}}
       </h2>
-      <div class="rewind-card">
-        <p class="reading-time__text">
+      <div class="rewind-reading">
+        <p class="rewind-field">
           {{trustHTML this.bookComparisonText}}
         </p>
-        <div class="reading-time__book">
-          <div class="book">
-            <img
-              alt=""
-              src={{getURL
-                (concat
-                  "/plugins/discourse-rewind/images/books/"
-                  @report.data.isbn
-                  ".jpg"
-                )
-              }}
-            />
+        <div class="rewind-reading__book">
+          <div
+            class="rewind-frame rewind-dither-frame"
+            {{ditherImage this.coverUrl}}
+          >
+            <img alt="" src={{this.coverUrl}} />
           </div>
           {{#if @report.data.series}}
-            <div class="book-series one"></div>
-            <div class="book-series two"></div>
-            <div class="book-series three"></div>
+            <span aria-hidden="true" class="rewind-reading__volume"></span>
           {{/if}}
         </div>
       </div>

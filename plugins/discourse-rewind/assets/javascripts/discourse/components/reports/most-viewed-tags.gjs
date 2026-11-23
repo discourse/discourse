@@ -39,26 +39,23 @@ export default class MostViewedTags extends Component {
   <template>
     <div class="rewind-report-page --most-viewed-tags">
       <h2 class="rewind-report-title">{{this.titleText}}</h2>
-      <div class="rewind-report-container">
-        {{#each @report.data as |data|}}
-          <a
-            class={{dConcatClass
-              "folder-wrapper"
-              (if (eq this.openedTag data.name) "--opened" "")
-            }}
-            href={{getURL (concat "/tag/" data.slug "/" data.tag_id)}}
-            {{on "click" (fn this.handleFolderClick data.name)}}
-          >
-            <span class="folder-tab"></span>
-            <div class="rewind-card">
-              <p class="most-viewed-tags__tag">
-                #{{data.name}}
-              </p>
-            </div>
-            <span class="folder-bg"></span>
-          </a>
+      <ol class="rewind-tags">
+        {{#each @report.data as |data index|}}
+          <li>
+            <a
+              class={{dConcatClass
+                "rewind-tags__tag"
+                (if (eq this.openedTag data.name) "--opened")
+              }}
+              data-pile={{index}}
+              href={{getURL (concat "/tag/" data.slug "/" data.tag_id)}}
+              {{on "click" (fn this.handleFolderClick data.name)}}
+            >
+              <span class="rewind-tags__name">#{{data.name}}</span>
+            </a>
+          </li>
         {{/each}}
-      </div>
+      </ol>
     </div>
   </template>
 }

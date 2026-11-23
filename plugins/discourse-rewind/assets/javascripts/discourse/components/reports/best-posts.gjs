@@ -2,8 +2,6 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import getURL from "discourse/lib/get-url";
-import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
@@ -19,41 +17,46 @@ export default class BestPosts extends Component {
     );
   }
 
-  rankClass(idx) {
-    return `rank-${idx + 1}`;
+  rank(index) {
+    return index + 1;
   }
 
   <template>
     <div class="rewind-report-page --best-posts">
-      <h2 class="rewind-report-title">
-        {{this.titleText}}
-      </h2>
-      <div class="rewind-report-container">
-        {{#each @report.data as |post idx|}}
-          <div class={{dConcatClass "rewind-card" (this.rankClass idx)}}>
-            <span class="best-posts --rank"></span>
-            <span class="best-posts --rank"></span>
-            <div class="best-posts__post">
-              <p>{{trustHTML post.excerpt}}</p>
-            </div>
-            <div class="best-posts__metadata">
-              <span class="best-posts__likes">
-                {{dIcon "heart"}}{{post.like_count}}
-              </span>
-              <span class="best-posts__replies">
-                {{dIcon "comment"}}{{post.reply_count}}
-              </span>
+      <h2 class="rewind-report-title">{{this.titleText}}</h2>
+      <ol class="rewind-pads">
+        {{#each @report.data as |post index|}}
+          <li class="rewind-pads__item">
+            <article class="rewind-pads__page">
+              <p class="rewind-pads__rank">
+                <span
+                  aria-hidden="true"
+                  class="rewind-medal --rank-{{this.rank index}}"
+                ></span>
+              </p>
+              <div class="rewind-pads__excerpt">
+                <p>{{trustHTML post.excerpt}}</p>
+              </div>
+              <p class="rewind-pads__meta">
+                <span class="rewind-pads__likes">
+                  {{post.like_count}}
+                </span>
+                <span class="rewind-pads__replies">
+                  {{post.reply_count}}
+                </span>
+              </p>
               <a
+                class="rewind-link-btn"
                 href={{getURL
                   (concat "/t/" post.topic_id "/" post.post_number)
                 }}
               >
                 {{i18n "discourse_rewind.reports.best_posts.view_post"}}
               </a>
-            </div>
-          </div>
+            </article>
+          </li>
         {{/each}}
-      </div>
+      </ol>
     </div>
   </template>
 }

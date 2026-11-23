@@ -1,13 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { trustHTML } from "@ember/template";
-import discourseLater from "discourse/lib/later";
+import getURL from "discourse/lib/get-url";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 
-const MYSTERY_EMOJIS = [
+const MYSTERY_ICONS = [
   "floppy_disk",
   "videocassette",
   "computer_disk",
@@ -15,93 +13,69 @@ const MYSTERY_EMOJIS = [
   "fax",
 ];
 
-const BACKGROUND_COLORS = [
-  [
-    "251, 245, 175",
-    "40, 171, 226",
-    "12, 166, 78",
-    "240, 121, 74",
-    "232, 74, 81",
-  ],
-  [
-    "197, 193, 140",
-    "39, 137, 178",
-    "17, 138, 68",
-    "188, 105, 65",
-    "183, 64, 70",
-  ],
-];
-
 export default class WordCard extends Component {
-  get randomStyle() {
-    return `--rand: ${Math.random()}`;
+  @tracked isFlipped = false;
+
+  get mysteryIcon() {
+    const name = MYSTERY_ICONS[this.args.index];
+    if (name) {
+      return {
+        name,
+        url: getURL(
+          `/plugins/discourse-rewind/images/one-bit/${name.replaceAll("_", "-")}.svg`
+        ),
+      };
+    }
   }
 
-  get mysteryData() {
-    return {
-      emoji: MYSTERY_EMOJIS[this.args.index],
-      color: `--mystery-color-light: ${
-        BACKGROUND_COLORS[0][this.args.index]
-      }; --mystery-color-dark: ${BACKGROUND_COLORS[1][this.args.index]};`,
-    };
-  }
-
-  get longWord() {
-    return this.args.word.length >= 5;
-  }
-
-  get cardStyle() {
-    return trustHTML(`${this.randomStyle}; ${this.mysteryData.color};`);
-  }
-
-  @action
-  registerCardContainer(element) {
-    this.cardContainer = element;
-  }
-
-  @action
-  handleClick() {
-    this.cardContainer.classList.toggle("flipped");
+  /**
+   * Long words step down a size so they fit the card, keeping the pixel font on its grid.
+   */
+  get lengthModifier() {
+    const length = this.args.word.length;
+    if (length > 9) {
+      return "--longer";
+    }
+    return length > 6 ? "--long" : null;
   }
 
   @action
-  handleLeave() {
-    const cardContainer = this.cardContainer;
-    cardContainer.classList.toggle("mouseleave");
-    discourseLater(() => {
-      cardContainer.classList.remove("mouseleave");
-    }, 100);
+  flip() {
+    this.isFlipped = !this.isFlipped;
   }
 
   <template>
-    <div
-      class={{dConcatClass
-        "rewind-card__wrapper"
-        (if this.longWord "--long-word")
-      }}
-      role="button"
-      style={{this.cardStyle}}
-      {{on "click" this.handleClick}}
-      {{on "mouseleave" this.handleLeave}}
-      {{didInsert this.registerCardContainer}}
+    <button
+      aria-pressed={{if this.isFlipped "true" "false"}}
+      class={{dConcatClass "rewind-word-card" (if this.isFlipped "is-flipped")}}
+      type="button"
+      {{on "click" this.flip}}
     >
-      <div class="rewind-card__inner">
-        <div class="rewind-card --front">
-          <span class="rewind-card__image tl">
-            {{dEmoji this.mysteryData.emoji}}
+      {{#if this.isFlipped}}
+        <span class="rewind-word-card__front">
+          <span
+            class={{dConcatClass "rewind-word-card__word" this.lengthModifier}}
+          >{{@word}}</span>
+          <span class="rewind-word-card__count">{{@count}}x</span>
+        </span>
+      {{else}}
+        <span class="rewind-word-card__back">
+          <span class="rewind-word-card__plate">
+            {{#let this.mysteryIcon as |icon|}}
+              {{#if icon}}
+                <img
+                  alt={{icon.name}}
+                  class="rewind-word-card__icon"
+                  height="48"
+                  src={{icon.url}}
+                  title={{icon.name}}
+                  width="48"
+                />
+              {{/if}}
+            {{/let}}
           </span>
-          <span class="rewind-card__image cr">
-            {{dEmoji this.mysteryData.emoji}}
-          </span>
-          <span class="rewind-card__image br">
-            {{dEmoji this.mysteryData.emoji}}
-          </span>
-        </div>
-        <div class="rewind-card --back">
-          <span class="rewind-card__title">{{@word}}</span>
-          <span class="rewind-card__data">{{@count}}x</span>
-        </div>
-      </div>
-    </div>
+        </span>
+      {{/if}}
+    </button>
   </template>
 }

@@ -1,20 +1,58 @@
-.--most-viewed-tags {
-  .rewind-report-title {
-    box-sizing: border-box;
-    border: none;
-    width: 100%;
-    margin: 0;
+.rewind-tags {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 28px 20px;
+  padding-block: 24px;
+
+  &__tag {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-decoration: none;
+
+    &::before {
+      content: "";
+      width: 96px;
+      height: 96px;
+      background: no-repeat 0 0 / 96px 96px;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      .rewind-tags__name {
+        outline: 2px solid var(--rewind-ink);
+        outline-offset: 2px;
+      }
+    }
+
+    &:hover,
+    &:focus-visible,
+    &.--opened {
+      &::before {
+        filter: invert(1);
+      }
+
+      .rewind-tags__name {
+        background: var(--rewind-ink);
+        color: var(--rewind-paper);
+      }
+    }
+
+    &.--opened::before {
+      transform: translateY(-6px);
+    }
+  }
+
+  @for $i from 0 through 3 {
+    &__tag[data-pile="#{$i}"]::before {
+      background-image: one-bit-image("tag-pile-#{$i}");
+    }
+  }
+
+  &__name {
+    padding: 2px 6px;
     text-align: center;
-    margin-bottom: 0.5em;
+    overflow-wrap: anywhere;
   }
-
-  .rewind-report-container {
-    display: flex;
-    gap: 0.5em;
-    flex-wrap: wrap;
-  }
-}
-
-.most-viewed-tags__tag {
-  font-family: var(--pixel-text);
 }

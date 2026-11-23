@@ -1,40 +1,303 @@
-.rewind-report-page {
-  display: flex;
-  justify-content: center;
-  padding: 1em;
-  box-sizing: border-box;
-  font-size: var(--font-up-2);
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  flex-direction: column;
+@use "sass:map";
+@use "lib/viewport";
 
-  @media (width <= 768px) {
-    padding: 0.75em;
+$rewind-report-icons: (
+  "top-words": "words",
+  "reading-time": "reading",
+  "writing-analysis": "writing",
+  "reactions": "reactions",
+  "fbff": "fbff",
+  "most-viewed-tags": "tags",
+  "most-viewed-categories": "categories",
+  "best-topics": "topics",
+  "best-posts": "posts",
+  "activity-calendar": "calendar",
+  "time-of-day-activity": "rhythm",
+  "new-user-interactions": "newcomers",
+  "chat-usage": "chat",
+  "live-usage": "calls",
+  "ai-usage": "ai",
+  "assignments": "todo",
+  "invites": "guests",
+);
+
+@each $identifier, $icon in $rewind-report-icons {
+  .rewind-report[data-identifier="#{$identifier}"] {
+    --rewind-report-icon: #{one-bit-image($icon)};
   }
 }
 
-.rewind-report {
+.rewind-report-page {
   display: flex;
+  flex: 1;
   flex-direction: column;
-}
-
-.rewind-report-container {
-  display: flex;
-  max-width: 100%;
+  gap: 24px;
+  min-width: 0;
+  padding: 16px var(--rewind-card-pad) 32px;
 }
 
 .rewind-report-title {
-  align-self: start;
-  padding: 0.25em 1em 0.25em;
-  margin-bottom: -2px;
-  background: var(--rewind-black);
-  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 4px calc(-1 * var(--rewind-card-pad)) 8px;
+  padding: 0 var(--rewind-card-pad) 16px;
+  border-bottom: 2px solid var(--rewind-ink);
+  font: 700 40px/40px var(--rewind-font-ui);
+  overflow-wrap: anywhere;
+
+  &::before {
+    content: "";
+    flex: none;
+    align-self: flex-start;
+    width: 64px;
+    height: 64px;
+    background: var(--rewind-report-icon) no-repeat center / 64px 64px;
+  }
+
+  @include viewport.until(sm) {
+    font-size: 30px;
+    line-height: 32px;
+
+    &::before {
+      width: 48px;
+      height: 48px;
+      background-size: 48px 48px;
+    }
+  }
+}
+
+.rewind-report-page__lede {
+  max-width: 60ch;
+}
+
+.rewind-window {
+  min-width: 0;
+
+  @include one-bit-surface;
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: 6px;
+    border-bottom: 2px solid var(--rewind-ink);
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1 1 0;
+      min-width: 8px;
+      height: 14px;
+      background: $one-bit-stripes;
+    }
+  }
+
+  &__close {
+    order: -1;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin-inline-end: 6px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
+    box-shadow: 0 0 0 4px var(--rewind-paper);
+  }
+
+  &__title {
+    max-width: 75%;
+    padding-inline: 10px;
+    overflow: hidden;
+    font: 700 20px/20px var(--rewind-font-ui);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__body {
+    display: grid;
+    gap: 14px;
+    padding: 16px 18px 18px;
+  }
+}
+
+.rewind-frame {
+  display: inline-block;
+  padding: 10px;
+  background: var(--rewind-paper) $one-bit-diagonal;
+
+  @include one-bit-surface;
+
+  > img,
+  > canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
+  }
+}
+
+.rewind-dither-frame {
+  display: inline-grid;
+
+  > img,
+  > canvas {
+    grid-area: 1 / 1;
+  }
+}
+
+.rewind-container .rewind-avatar {
+  border-radius: 0;
+}
+
+.rewind-field {
+  padding: 8px 12px;
+  border: 2px solid var(--rewind-ink);
+  background: var(--rewind-paper);
+}
+
+.rewind-link-btn {
+  @include one-bit-button;
+  align-self: flex-start;
+}
+
+.rewind-stat {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 2px solid var(--rewind-ink);
+  background: var(--rewind-paper);
+
+  &__label {
+    font: 400 16px/16px var(--rewind-font-body);
+  }
+
+  &__value {
+    font: 700 30px/30px var(--rewind-font-ui);
+    overflow-wrap: anywhere;
+  }
+}
+
+.rewind-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.rewind-bar {
+  display: grid;
+  grid-template-columns:
+    minmax(0, var(--rewind-bar-label, 48px)) minmax(0, 1fr)
+    auto;
+  align-items: center;
+  gap: 12px;
+
+  &__track {
+    position: relative;
+    height: 24px;
+  }
+
+  &__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    min-width: 6px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
+  }
+
+  &__value {
+    min-width: 3ch;
+    font: 700 20px/20px var(--rewind-font-ui);
+    text-align: end;
+  }
+}
+
+@each $level, $rows in $one-bit-density {
+  .rewind-container [data-density="#{$level}"] {
+    background-image: one-bit-tile($rows);
+  }
+}
+
+.rewind-container [data-density="8"] {
+  background: var(--rewind-ink);
+}
+
+.rewind-medal {
+  display: inline-block;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--rewind-ink);
+  background: var(--rewind-paper);
+
+  &.--rank-1 {
+    background: var(--rewind-ink);
+  }
+
+  &.--rank-2 {
+    background: $one-bit-50;
+  }
+
+  &.--rank-3 {
+    background: $one-bit-25;
+  }
+}
+
+.rewind-balloon {
   position: relative;
-  font-size: var(--font-down-1);
-  text-align: left;
-  border-radius: 4px 4px 0 0;
-  border-top: 2px solid var(--rewind-green);
-  border-left: 2px solid var(--rewind-green);
-  border-right: 2px solid var(--rewind-green);
+  display: inline-block;
+  max-width: 100%;
+  padding: 2px 6px;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 12px;
+  border-image: one-bit-image("nine-balloon") 12 fill / 12px stretch;
+
+  &.--inverse {
+    border-image-source: one-bit-image("nine-balloon-inv");
+    color: var(--rewind-paper);
+
+    strong {
+      background: var(--rewind-paper);
+      color: var(--rewind-ink);
+    }
+  }
+}
+
+.rewind-big {
+  @include one-bit-big-type;
+  font-size: 80px;
+  line-height: 88px;
+  overflow-wrap: anywhere;
+
+  @include viewport.until(sm) {
+    font-size: 60px;
+    line-height: 64px;
+  }
+}
+
+.rewind-leaders {
+  display: grid;
+  gap: 8px;
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+
+    &::after {
+      content: "";
+      order: 1;
+      flex: 1;
+      min-width: 16px;
+      height: 4px;
+      background: $one-bit-leader repeat-x;
+    }
+  }
+
+  &__value {
+    order: 2;
+    font: 700 20px/20px var(--rewind-font-ui);
+  }
 }

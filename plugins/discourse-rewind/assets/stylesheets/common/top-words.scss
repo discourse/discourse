@@ -1,279 +1,166 @@
-.--top-words .rewind-report-container {
-  border: none;
-  background-color: transparent;
-  width: 100%;
-  flex-direction: column;
-  margin-bottom: 1em;
+@use "lib/viewport";
 
-  .rewind-report-title {
-    box-sizing: border-box;
-    width: 100%;
-    text-align: center;
-    margin-left: 0;
-    border: none !important;
-    margin-bottom: 1em;
-  }
-}
-
-.cards-container {
+.rewind-words {
   display: flex;
+  justify-content: center;
+  padding-bottom: 24px;
 
-  @media (width <= 525px) {
-    display: grid;
-    grid-template:
-      ".  .  .  .  w  w  .  .  .  . " auto
-      ".  .  .  .  w  w  .  .  .  . " auto
-      ".  .  a  a  w  w  z  z  .  . " auto
-      ".  .  a  a  w  w  z  z  .  . " auto
-      ".  .  a  a  .  .  z  z  .  . " auto
-      ".  .  a  a  .  .  z  z  .  . " auto
-      ".  .  .  d  d  c  c  .  .  . " auto
-      ".  .  .  d  d  c  c  .  .  . " auto
-      ".  .  .  d  d  c  c  .  .  . " auto
-      ".  .  .  d  d  c  c  .  .  . " auto
-      / auto auto auto auto auto auto auto auto;
+  &__slot {
+    flex: 0 1 180px;
+    min-width: 0;
+    margin-inline-start: -16px;
 
-    .rewind-card__wrapper:nth-child(1) {
-      grid-area: w;
+    &:first-child {
+      margin-inline-start: 0;
     }
 
-    .rewind-card__wrapper:nth-child(2) {
-      grid-area: a;
+    @include viewport.from(md) {
+      &:nth-child(1),
+      &:nth-child(5) {
+        transform: translateY(24px);
+      }
+
+      &:nth-child(2),
+      &:nth-child(4) {
+        transform: translateY(10px);
+      }
     }
 
-    .rewind-card__wrapper:nth-child(3) {
-      grid-area: z;
+    &:focus-within,
+    &:hover {
+      z-index: 1;
     }
+  }
 
-    .rewind-card__wrapper:nth-child(4) {
-      grid-area: d;
-    }
+  @include viewport.until(md) {
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 0;
 
-    .rewind-card__wrapper:nth-child(5) {
-      grid-area: c;
+    &__slot {
+      flex-basis: auto;
+      margin: 0;
     }
   }
 }
 
-.rewind-card__wrapper {
-  width: 150px;
-  height: 175px;
-  perspective: 1000px;
-  will-change: transform;
-  transform-style: preserve-3d;
-  border-radius: var(--rewind-border-radius);
+.rewind-word-card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 232px;
+  padding: 0;
+  border: 2px solid var(--rewind-ink);
+  background: var(--rewind-paper);
+  box-shadow: var(--rewind-shadow);
+  color: var(--rewind-ink);
+  font: inherit;
+  text-align: start;
   cursor: pointer;
-  animation-name: ambientMovement;
-  animation-duration: 4000ms;
-  animation-delay: calc(-4000ms * var(--rand));
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  transform: rotateZ(calc(var(--ambientAmount) * 10deg));
-  z-index: 1;
 
-  @media screen and (width <= 625px) {
-    width: 115px;
+  &__back {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background: $one-bit-bricks;
   }
 
-  @media screen and (width <= 475px) {
-    width: 100px;
-    height: 125px;
-  }
-
-  @media screen and (width <= 350px) {
-    width: 80px;
-    height: 125px;
-  }
-
-  .rewind-card {
-    box-shadow: 0 0 0 4px rgb(var(--mystery-color-light), 1);
-    border: none;
-  }
-
-  .rewind-card__inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transform-style: preserve-3d;
-    transition: transform, box-shadow;
-    transition-duration: 0.35s;
-    transition-timing-function: cubic-bezier(0.73, 0.42, 0.03, 0.78);
-    box-shadow: 0 0 6px 2px rgb(var(--primary-rgb), 0.25);
-
-    @if is-dark-color-scheme() {
-      box-shadow: 0 0 6px 2px rgb(var(--secondary-rgb), 0.9);
-    }
-  }
-
-  &.mouseleave {
-    animation: flip-shrink 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s
-      forwards;
-    z-index: 999;
-  }
-
-  &.flipped .rewind-card__inner {
-    transform: rotateY(180deg);
-  }
-
-  &:hover {
-    animation: flip-zoom 0.35s cubic-bezier(0.73, 0.42, 0.03, 0.78) 0s forwards;
-    z-index: 999;
-  }
-
-  &:hover .rewind-card__inner {
-    box-shadow: 0 3px 8px 2px rgb(var(--primary-rgb), 0.25);
-
-    @if is-dark-color-scheme() {
-      box-shadow: 0 3px 8px 2px rgb(var(--primary-rgb), 0.25);
-    }
-  }
-
-  .rewind-card.--front {
-    padding: 0.5em;
+  &__plate {
     display: grid;
-    grid-template:
-      "tl .  . " 1fr
-      ".  .  . " 1fr
-      ".  cr . " 3fr
-      ".  .  . " 1fr
-      ".  .  br" 1fr
-      / 1fr 3fr 1fr;
-    background:
-      radial-gradient(
-          circle at 4px 4px,
-          rgb(0 0 0 / 0.05) 1px,
-          var(--rewind-white) 1px,
-          var(--rewind-white) 6px
-        )
-        0 0 / 6px 6px,
-      var(--rewind-white);
+    justify-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    border: 2px solid var(--rewind-ink);
+    background: var(--rewind-paper);
   }
 
-  .rewind-card.--back {
-    transform: rotateY(180deg);
-    background-color: var(--rewind-white);
-    color: var(--rewind-black);
+  &__icon {
+    width: 48px;
+    height: 48px;
   }
 
-  .rewind-card.--front,
-  .rewind-card.--back {
-    position: absolute;
-    width: 100%;
-    height: 100%; /* Safari */
-    backface-visibility: hidden;
-  }
+  &__front {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    padding: 12px 14px 14px;
 
-  &.--long-word .rewind-card__title {
-    font-size: var(--font-0);
-  }
-
-  &.--long-word .rewind-card {
-    padding: 2px;
-  }
-
-  .rewind-card__title {
-    overflow-wrap: anywhere;
-    hyphens: auto;
-    line-height: 1;
-  }
-
-  .rewind-card__data {
-    margin-top: 0.5em;
-  }
-
-  .rewind-card__image {
-    image-rendering: pixelated;
-  }
-
-  .rewind-card__image.tl {
-    grid-area: tl;
-
-    img {
-      width: 20px;
-      height: 20px;
-
-      @media screen and (width <= 475px) {
-        height: 15px;
-        width: 15px;
-      }
+    @media (prefers-reduced-motion: no-preference) {
+      animation: rewind-develop 0.3s steps(1);
     }
   }
 
-  .rewind-card__image.cr {
-    grid-area: cr;
+  &__word {
+    margin-top: auto;
+    overflow: hidden;
+    font: 700 40px/1 var(--rewind-font-ui);
+    white-space: nowrap;
 
-    img {
-      width: 50px;
-      height: 50px;
+    &.--long {
+      font-size: 30px;
+    }
 
-      @media screen and (width <= 475px) {
-        height: 30px;
-        width: 30px;
-      }
+    &.--longer {
+      font-size: 20px;
     }
   }
 
-  .rewind-card__image.br {
-    grid-area: br;
+  &__count {
+    margin-top: 10px;
+  }
 
-    img {
-      width: 20px;
-      height: 20px;
-      transform: rotate(180deg);
+  @include viewport.until(md) {
+    height: 76px;
 
-      @media screen and (width <= 475px) {
-        height: 15px;
-        width: 15px;
-      }
+    &__back {
+      justify-content: flex-start;
+      padding-inline: 12px;
+    }
+
+    &__plate {
+      grid-auto-flow: column;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 12px;
+    }
+
+    &__icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    &__front {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+    }
+
+    &__word {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    &__count {
+      margin: 0;
+      margin-inline-start: auto;
     }
   }
 }
 
-@keyframes flip-zoom {
+// Reveals a card through coarser and finer dither masks, like a dissolve.
+@keyframes rewind-develop {
   0% {
-    transform: scale(1);
+    mask-image: one-bit-tile(("X.X.", "....", "X.X.", "...."), false);
   }
 
-  50% {
-    transform: scale(0.9);
+  33% {
+    mask-image: one-bit-tile(("X.", ".X"), false);
   }
 
-  100% {
-    transform: scale(1.25);
+  66% {
+    mask-image: one-bit-tile(("XXXX", ".X.X", "XXXX", ".X.X"), false);
   }
-}
-
-@keyframes flip-shrink {
-  0% {
-    transform: scale(1.25);
-  }
-
-  50% {
-    transform: scale(0.9);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes ambientMovement {
-  0% {
-    --ambientAmount: 0.1;
-  }
-
-  50% {
-    --ambientAmount: -0.1;
-  }
-
-  100% {
-    --ambientAmount: 0.1;
-  }
-}
-
-@property --ambientAmount {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0.1;
 }

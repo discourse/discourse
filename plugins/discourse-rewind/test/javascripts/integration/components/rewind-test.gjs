@@ -21,6 +21,47 @@ module("Integration | Component | Rewind", function (hooks) {
     disableLoadMoreObserver();
   });
 
+  test("renders the custom SVGs on the five word cards", async function (assert) {
+    pretender.get("/rewinds.json", () =>
+      response({
+        reports: [
+          {
+            identifier: "top-words",
+            data: [
+              { word: "pumpkin", score: 7 },
+              { word: "pepper", score: 6 },
+              { word: "carrot", score: 5 },
+              { word: "tomato", score: 4 },
+              { word: "cucumber", score: 3 },
+            ],
+          },
+        ],
+        total_available: 1,
+      })
+    );
+
+    await render(<template><Rewind @user={{this.currentUser}} /></template>);
+
+    const icons = [
+      "floppy-disk",
+      "videocassette",
+      "computer-disk",
+      "pager",
+      "fax",
+    ];
+    for (const [index, icon] of icons.entries()) {
+      assert
+        .dom(
+          `.rewind-words__slot:nth-child(${index + 1}) .rewind-word-card__icon`
+        )
+        .hasAttribute(
+          "src",
+          new RegExp(`/plugins/discourse-rewind/images/one-bit/${icon}\\.svg$`),
+          `card ${index + 1} has a URL for the ${icon} SVG`
+        );
+    }
+  });
+
   test("pages through the reports, skipping missing ones", async function (assert) {
     const topWords = {
       identifier: "top-words",
