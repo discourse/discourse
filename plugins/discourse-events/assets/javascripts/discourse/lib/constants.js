@@ -2,3 +2,4 @@
 // Update it by running `rake javascript:update_constants`
 
 export const MAX_HOSTS = 10;
+export const MAX_REMINDERS = 5;
