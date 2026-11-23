@@ -239,6 +239,46 @@ module(
       assert.strictEqual(oneboxPluginKey.getState(state).find().length, 0);
     });
 
+    // A leading space before a URL alone on its line cooks to an inline
+    // onebox, so the rich editor must match and keep the space.
+    test("a lone link with a leading space stays an inline onebox", async function (assert) {
+      const markdown = ` ${URL}\n\nHey`;
+      const [editor] = await setupRichEditor(assert, markdown);
+      moveCursorTo(editor.view, lastParagraphStart(editor.view.state.doc));
+      await settled();
+
+      assert.dom("a.inline-onebox").exists("renders an inline onebox");
+      assert
+        .dom(".onebox-wrapper")
+        .doesNotExist("does not render a full onebox");
+      assert.strictEqual(editor.value, markdown, "keeps the leading space");
+    });
+
+    test("editing elsewhere keeps the leading space before a lone link", async function (assert) {
+      const [editor] = await setupRichEditor(assert, ` ${URL}\n\nHey`);
+      const { view } = editor;
+
+      view.dispatch(
+        view.state.tr.insertText("!", view.state.doc.content.size - 1)
+      );
+      await settled();
+
+      assert.strictEqual(editor.value, ` ${URL}\n\nHey!`);
+    });
+
+    test("a lone link with a leading space after a line break stays an inline onebox", async function (assert) {
+      const markdown = `Hey\n ${URL}\n\nThere`;
+      const [editor] = await setupRichEditor(assert, markdown);
+      moveCursorTo(editor.view, lastParagraphStart(editor.view.state.doc));
+      await settled();
+
+      assert.dom("a.inline-onebox").exists("renders an inline onebox");
+      assert
+        .dom(".onebox-wrapper")
+        .doesNotExist("does not render a full onebox");
+      assert.strictEqual(editor.value, markdown, "keeps the leading space");
+    });
+
     test("holds a lone link inline while the cursor is on its line", async function (assert) {
       const [editor] = await setupRichEditor(assert, "a\n\nb");
       const { view } = editor;
