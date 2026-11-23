@@ -1,12 +1,12 @@
-import { attrs, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, withDefaults } from "./helpers.ts";
 
 // Sub-resource owned by a Topic; identity = parent topic's id. Ships embedded
 // in the topic-view payload, not fetched standalone.
 //
 // `created_by`, `last_poster`, `participants`, `links`, `allowed_users`,
 // `allowed_groups` are opaque attributes — their target models aren't migrated.
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const TopicDetailsSchema = withDefaults({
+export const TopicDetailsSchema: LegacyResourceSchema = withDefaults({
   type: "topic-details",
   fields: [
     ...attrs(

@@ -1,7 +1,7 @@
-import { attrs, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, withDefaults } from "./helpers.ts";
 
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const TagSettingsSchema = withDefaults({
+export const TagSettingsSchema: LegacyResourceSchema = withDefaults({
   type: "tag-settings",
   fields: [
     ...attrs(

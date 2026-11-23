@@ -1,10 +1,10 @@
-import { attrs, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, withDefaults } from "./helpers.ts";
 
 // Tag stays on the legacy `Store` + `RestAdapter` path; this schema only
 // powers the wrapper's field forwarders. `target_tag` / `localizations` are
 // opaque (their target models aren't migrated).
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const TagSchema = withDefaults({
+export const TagSchema: LegacyResourceSchema = withDefaults({
   type: "tag",
   fields: [
     ...attrs(

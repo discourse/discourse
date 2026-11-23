@@ -1,4 +1,5 @@
-import { attrs, withDefaults } from "./helpers.js";
+import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
+import { attrs, withDefaults } from "./helpers.ts";
 
 // `user` is opaque — wrapped as a `User` instance in `Bookmark.create` rather
 // than treated as a relationship (User isn't migrated yet).
@@ -6,8 +7,7 @@ import { attrs, withDefaults } from "./helpers.js";
 // `currentUser` and `topicStatus` are not schema fields — they're set as own
 // properties on the wrapper by `Bookmark.create` and the user-activity
 // controller's `transform`, respectively.
-/** @type {import("@warp-drive/core/types/schema/fields").LegacyResourceSchema} */
-export const BookmarkSchema = withDefaults({
+export const BookmarkSchema: LegacyResourceSchema = withDefaults({
   type: "bookmark",
   fields: [
     ...attrs(
