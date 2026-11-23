@@ -269,6 +269,13 @@ module DiscourseAi
           preview_theme_id:
             component ? appearance_change.parent_theme_id : appearance_change.theme_id,
           preview_component_ids: (appearance_change.theme_id if component),
+          # what making it live turns off, such as the version it replaces
+          preview_hide_component_ids:
+            (
+              if component
+                appearance_change.enabled_sibling_components.pluck(:id).join(",").presence
+              end
+            ),
           preview_color_scheme_id: light,
           preview_dark_color_scheme_id: dark,
           preview_base_font: appearance_change.site_settings["base_font"],

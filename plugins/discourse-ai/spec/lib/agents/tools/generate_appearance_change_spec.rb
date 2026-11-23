@@ -696,6 +696,57 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
     end
 
+    it "keeps editing the live component after a later change gave Horizon other colors" do
+      palettes = ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c")
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            light_colors: palettes.light,
+            dark_colors: palettes.dark,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+      other = ColorSchemes::Action::BuildFromBrand.call(brand: "0a7d4f")
+      colors =
+        AppearanceChange::DraftPalettes.call(
+          params: {
+            name: "Green",
+            theme_id: horizon.id,
+            light_colors: other.light,
+            dark_colors: other.dark,
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: colors.id,
+        },
+        guardian: admin.guardian,
+      )
+      expect(live.reload).not_to be_applied
+
+      result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+      expect(draft(result)).to include(kind: "component", replaces_theme_id: live.theme_id)
+    end
+
     it "drafts a new version of the live component the assistant added" do
       live =
         AppearanceChange::DraftComponent.call(

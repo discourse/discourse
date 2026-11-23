@@ -21,6 +21,7 @@ class AppearanceChange::Activate
   only_if(:component) do
     policy :can_edit_parent_theme
     policy :attached_to_parent
+    policy :can_edit_replaced_components
   end
   policy :not_applied
   policy :palettes_exist
@@ -73,6 +74,11 @@ class AppearanceChange::Activate
 
   def attached_to_parent(appearance_change:)
     appearance_change.attached_to_parent?
+  end
+
+  # making it live turns them off
+  def can_edit_replaced_components(guardian:, appearance_change:)
+    appearance_change.enabled_sibling_components.all? { guardian.can_edit_theme?(it) }
   end
 
   # The earlier components it replaces are disabled, not removed, so

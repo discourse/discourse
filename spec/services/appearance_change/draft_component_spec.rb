@@ -175,6 +175,40 @@ RSpec.describe AppearanceChange::DraftComponent do
       expect(result).to fail_a_policy(:replaceable_component)
     end
 
+    it "does not turn other components off or on when the administrator can't edit them" do
+      first = activate(draft)
+      second = draft(name: "Other")
+      Guardian.any_instance.stubs(:can_edit_theme?).returns(true)
+      Guardian.any_instance.stubs(:can_edit_theme?).with(first.theme).returns(false)
+
+      expect(
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: second.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to fail_a_policy(:can_edit_replaced_components)
+      expect(first.theme.reload.enabled).to eq(true)
+      expect(second.theme.reload.enabled).to eq(false)
+
+      Guardian.any_instance.unstub(:can_edit_theme?)
+      activate(second)
+      Guardian.any_instance.stubs(:can_edit_theme?).returns(true)
+      Guardian.any_instance.stubs(:can_edit_theme?).with(first.theme).returns(false)
+
+      expect(
+        AppearanceChange::Revert.call(
+          params: {
+            appearance_change_id: second.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to fail_a_policy(:can_edit_restored_components)
+      expect(second.theme.reload.enabled).to eq(true)
+      expect(first.theme.reload.enabled).to eq(false)
+    end
+
     it "does not make a component live once it's no longer attached to the theme" do
       change = draft
       horizon.child_themes.delete(change.theme)

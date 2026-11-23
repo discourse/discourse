@@ -1502,6 +1502,7 @@ class TopicsController < ApplicationController
           preview_base_font
           preview_heading_font
           preview_component_ids
+          preview_hide_component_ids
           include_raw
         ],
         Discourse::LOCALE_PARAM,

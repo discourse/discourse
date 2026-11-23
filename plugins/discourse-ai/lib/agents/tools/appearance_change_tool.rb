@@ -15,6 +15,8 @@ module DiscourseAi
           can_create_needed_palettes: "palettes_unavailable",
           can_edit_theme: "theme_not_editable",
           can_edit_parent_theme: "theme_not_editable",
+          can_edit_replaced_components: "theme_not_editable",
+          can_edit_restored_components: "theme_not_editable",
           supported_parent_theme: "theme_not_editable",
           not_applied: "already_live",
           applied: "not_live",

@@ -296,8 +296,9 @@ module DiscourseAi
             end
         end
 
-        # The live component an earlier change added to Horizon, when nobody
-        # has changed it since.
+        # The component an earlier change added to Horizon that's turned on
+        # now, when nobody has changed it since. Its palettes or fonts may
+        # have changed since; only its styles carry over.
         def edited_component
           AppearanceChange
             .kind_component
@@ -305,7 +306,7 @@ module DiscourseAi
             .includes(:theme)
             .order(:id)
             .select do |change|
-              change.applied? && change.theme_unchanged? && !change.theme.user_selectable? &&
+              change.theme.enabled? && change.theme_unchanged? && !change.theme.user_selectable? &&
                 context.user.guardian.can_edit_theme?(change.theme)
             end
             .last

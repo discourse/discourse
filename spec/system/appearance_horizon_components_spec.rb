@@ -64,4 +64,41 @@ describe "Appearance styles on Horizon" do
     expect(page).to have_no_css("#global-notice-theme-preview")
     expect(button_radius).to eq("20px")
   end
+
+  it "previews a new version without the live one it replaces" do
+    AppearanceChange::Activate.call(
+      params: {
+        appearance_change_id: change.id,
+      },
+      guardian: admin.guardian,
+    )
+    version =
+      AppearanceChange::DraftComponent.call(
+        params: {
+          name: "Rounded",
+          parent_theme_id: horizon.id,
+          replaces_theme_id: change.theme_id,
+          styles: {
+            variables: {
+              "--d-border-radius" => "14px",
+            },
+          },
+        },
+        guardian: admin.guardian,
+      )[
+        :appearance_change
+      ]
+
+    visit(
+      "/latest?preview_component_ids=#{version.theme_id}&preview_hide_component_ids=#{change.theme_id}",
+    )
+
+    expect(page).to have_css("#global-notice-theme-preview")
+    expect(button_radius).not_to eq("20px")
+    expect(
+      page.evaluate_script(
+        "getComputedStyle(document.documentElement).getPropertyValue('--d-border-radius').trim()",
+      ),
+    ).to eq("14px")
+  end
 end

@@ -115,6 +115,22 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     expect(change.theme.reload.enabled).to eq(false)
   end
 
+  it "previews a new version without the version it replaces" do
+    approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: token)
+    first = AppearanceChange.last
+    approve(DiscourseAi::Agents::Tools::ActivateAppearanceChange, appearance_change_id: first.id)
+    draft_attributes[:replaces_theme_id] = first.theme_id
+    second_token = authoring::Draft.sign(draft_attributes, user: admin)
+
+    saved = approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: second_token)
+
+    query = Rack::Utils.parse_query(URI(saved[:preview_url]).query)
+    expect(query).to include(
+      "preview_component_ids" => AppearanceChange.last.theme_id.to_s,
+      "preview_hide_component_ids" => first.theme_id.to_s,
+    )
+  end
+
   it "does not make a component live once someone has edited it" do
     approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: token)
     change = AppearanceChange.last
