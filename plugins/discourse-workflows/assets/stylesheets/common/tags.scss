@@ -11,6 +11,13 @@
     min-height: 0;
   }
 
+  // Shares the row with the done button instead of filling it.
+  .d-select {
+    flex: 1 1 16em;
+    width: auto;
+    min-width: 0;
+  }
+
   .list-setting {
     min-width: 16em;
 

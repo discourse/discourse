@@ -131,10 +131,14 @@ export default class QueriesEdit extends Component {
                 </div>
 
                 <div class="query-edit__metadata-field">
-                  <span class="query-edit__metadata-label">
+                  <span
+                    class="query-edit__metadata-label"
+                    id="query-edit-tags-label"
+                  >
                     {{i18n "explorer.query_tags"}}
                   </span>
                   <QueryTagChooser
+                    @ariaLabelledBy="query-edit-tags-label"
                     @automaticTags={{@controller.model.automatic_tags}}
                     @availableTags={{@controller.availableTags}}
                     @onChange={{@controller.updateTags}}

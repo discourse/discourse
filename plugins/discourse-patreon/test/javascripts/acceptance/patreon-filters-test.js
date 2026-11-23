@@ -1,8 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 acceptance("Discourse Patreon | filters", function (needs) {
   let savedRule;
@@ -98,3 +100,82 @@ acceptance("Discourse Patreon | filters", function (needs) {
       .hasText("$5 - Bronze,$10 - Silver", "lists the picked rewards");
   });
 });
+
+acceptance(
+  "Discourse Patreon | filters with the new select controls",
+  function (needs) {
+    let savedRule;
+
+    needs.user({ admin: true });
+    needs.settings({
+      patreon_enabled: true,
+      enable_new_select_controls: true,
+    });
+
+    needs.hooks.beforeEach(() => {
+      savedRule = null;
+    });
+
+    needs.pretender((server, helper) => {
+      server.get("/admin/plugins/discourse-patreon.json", () =>
+        helper.response({
+          id: "discourse-patreon",
+          name: "discourse-patreon",
+          about: "Test plugin",
+          version: "1.0.0",
+          enabled: true,
+        })
+      );
+
+      server.get("/patreon/list.json", () =>
+        helper.response({
+          filters: {},
+          rewards: {
+            0: { id: "0", amount_cents: 0, title: "All patrons" },
+            4: { id: "4", amount_cents: 500, title: "Bronze" },
+            7: { id: "7", amount_cents: 1000, title: "Silver" },
+          },
+          last_sync_at: null,
+        })
+      );
+
+      server.get("/groups/search.json", () =>
+        helper.response([
+          { id: 41, name: "patrons" },
+          { id: 42, name: "supporters" },
+        ])
+      );
+
+      server.post("/patreon/list.json", (request) => {
+        savedRule = parsePostData(request.requestBody);
+        return helper.response({});
+      });
+    });
+
+    test("saving a filter sends the rewards picked in the new filter row", async function (assert) {
+      await visit("/admin/plugins/discourse-patreon/filters");
+
+      const rewards = dSelect("#patreon .new-filter .rewards");
+      assert
+        .dom("#patreon .new-filter .rewards [role='combobox']")
+        .hasAria("label", i18n("patreon.rewards"));
+
+      await rewards.open();
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map((option) =>
+          option.textContent.trim()
+        ),
+        ["$0 - All patrons", "$5 - Bronze", "$10 - Silver"]
+      );
+      await rewards.select("$5 - Bronze");
+      await rewards.select("$10 - Silver");
+      await click("#patreon .new-filter .save");
+
+      assert.deepEqual(
+        savedRule?.["rewards_ids[]"],
+        ["4", "7"],
+        "sends the ids of the picked rewards"
+      );
+    });
+  }
+);

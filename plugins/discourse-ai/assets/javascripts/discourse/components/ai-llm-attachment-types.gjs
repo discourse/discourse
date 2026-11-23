@@ -2,8 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import ListSetting from "discourse/select-kit/components/list-setting";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const DEFAULT_CHOICES = [
@@ -21,13 +23,31 @@ const DEFAULT_CHOICES = [
   "md",
 ];
 
+/** A type as the picker's record, typed ones in lowercase. */
+function typeRecord(type) {
+  const name = type.toLowerCase().trim();
+  return { id: name, name };
+}
+
+/** Whether a typed type can be stored: a separator would split it in two. */
+function isStorableType(type) {
+  return !type.includes("|");
+}
+
 /**
  * @component ai-llm-attachment-types
  * @param {string[]} [this.args.value]
  * @param {Function} [this.args.onChange]
+ * @param {string} [this.args.id] the id of the field, so its label names the picker
  */
 export default class AiLlmAttachmentTypes extends Component {
+  @service siteSettings;
+
   @tracked currentValue = this.args.value || [];
+
+  get options() {
+    return this.settingChoices.map(typeRecord);
+  }
 
   get settingChoices() {
     return uniqueItemsFromArray([
@@ -46,15 +66,31 @@ export default class AiLlmAttachmentTypes extends Component {
   }
 
   <template>
-    <ListSetting
-      @allowAny={{true}}
-      @choices={{this.settingChoices}}
-      @onChange={{this.handleChange}}
-      @options={{hash
-        noneLabel=(i18n "discourse_ai.llms.attachment_types_placeholder")
-      }}
-      @settingName="allowed_attachment_types"
-      @value={{this.currentValue}}
-    />
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <DSelect
+        @allowCreate={{isStorableType}}
+        @createOption={{typeRecord}}
+        @id={{@id}}
+        @multiple={{true}}
+        @onChange={{this.handleChange}}
+        @options={{this.options}}
+        @texts={{hash
+          placeholder=(i18n "discourse_ai.llms.attachment_types_placeholder")
+        }}
+        @value={{this.currentValue}}
+      />
+    {{else}}
+      <ListSetting
+        @allowAny={{true}}
+        @choices={{this.settingChoices}}
+        @onChange={{this.handleChange}}
+        @options={{hash
+          noneLabel=(i18n "discourse_ai.llms.attachment_types_placeholder")
+        }}
+        @settingName="allowed_attachment_types"
+        @value={{this.currentValue}}
+      />
+    {{/if}}
   </template>
 }
