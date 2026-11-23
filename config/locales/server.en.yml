@@ -3010,7 +3010,8 @@ en:
 
     permalink_normalizations: "Apply the following regex before matching permalinks, for example: /(topic.*)\\?.*/\\1 will strip query strings from topic routes. Format is regex+string use \\1 etc. to access captures"
 
-    global_notice: "Display an URGENT, EMERGENCY, non-dismissible global banner notice to all visitors, change to blank to hide it (HTML allowed)."
+    global_notice: "Display a global banner notice to all visitors (HTML allowed). Leave blank to hide it."
+    global_notice_dismissible: "Let visitors dismiss the global notice until its content changes. Keep this disabled for emergency notices."
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when {{setting:download_remote_images_to_local}} is active."
 

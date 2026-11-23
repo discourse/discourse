@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isDevelopment } from "discourse/lib/environment";
+import { hashString } from "discourse/lib/hash";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import {
@@ -41,6 +42,7 @@ function exitThemePreviewLink() {
  * @property {string | null} [html]
  * @property {string} [level]
  * @property {boolean} [persistentDismiss]
+ * @property {string | null} [dismissalVersion]
  * @property {((notice: Notice) => void) | null} [onDismiss]
  * @property {((notice: Notice) => boolean) | null} [visibility]
  * @property {import("moment").Duration | null} [dismissDuration]
@@ -68,6 +70,7 @@ class Notice extends EmberObject {
       level: "info",
       // should the banner be permanently hidden?
       persistentDismiss: true,
+      dismissalVersion: null,
       // callback function when dismissing a banner
       onDismiss: null,
       // show/hide banner function, will take precedence over everything
@@ -212,10 +215,15 @@ export default class GlobalNotice extends Component {
     }
 
     if (this.siteSettings.global_notice?.length > 0) {
+      const text = this.siteSettings.global_notice;
       notices.push(
         Notice.create({
-          text: this.siteSettings.global_notice,
+          text,
           id: "alert-global-notice",
+          options: {
+            dismissable: this.siteSettings.global_notice_dismissible,
+            dismissalVersion: JSON.stringify([hashString(text), text]),
+          },
         })
       );
     }
@@ -243,6 +251,13 @@ export default class GlobalNotice extends Component {
       const key = `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`;
       const value = this.keyValueStore.get(key);
 
+      if (notice.options.dismissalVersion !== null) {
+        return (
+          !notice.options.dismissable ||
+          value !== notice.options.dismissalVersion
+        );
+      }
+
       // banner has never been dismissed
       if (!value) {
         return true;
@@ -269,7 +284,7 @@ export default class GlobalNotice extends Component {
     if (notice.options.persistentDismiss) {
       this.keyValueStore.set({
         key: `${GLOBAL_NOTICE_DISMISSED_PROMPT_KEY}-${notice.id}`,
-        value: moment().toISOString(true),
+        value: notice.options.dismissalVersion ?? moment().toISOString(true),
       });
     }
 
@@ -298,6 +313,7 @@ export default class GlobalNotice extends Component {
                 <DButton
                   class="btn-transparent close"
                   @action={{fn this.dismissNotice notice}}
+                  @ariaLabel="modal.close"
                   @icon="xmark"
                 />
               {{/if}}
