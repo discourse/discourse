@@ -61,6 +61,12 @@ ug:
       discourse_workflows:
         ai_agent:
           mode: "ھالەت"
+        ai_tool:
+          arguments: "ئۆزگەرگۈچى"
+          list_item: "تىزىم تۈرى"
+          add_list_item: "تۈر قوش"
+        mcp_tool:
+          arguments: "ئۆزگەرگۈچى"
         classify:
           text: "تېكىست"
           upload_ids: "سۈرەت"
@@ -107,6 +113,9 @@ ug:
         ai_helper:
           setting_groups:
             automation: "ئاپتوماتلاشتۇرۇش"
+        review_queue:
+          setting_groups:
+            settings: "تەڭشەك"
         image_caption:
           setting_groups:
             settings: "تەڭشەك"

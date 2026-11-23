@@ -9,8 +9,8 @@ module ::Blog
     UNIQUE_TOKENS = %w[slug id].freeze
     MAX_LENGTH = 100
 
-    def self.current
-      new(SiteSetting.blog_path_format)
+    def self.for_blog(blog)
+      new(blog.path_format)
     end
 
     def initialize(template)
@@ -25,6 +25,30 @@ module ::Blog
       sample = render(slug: "article", id: 1, date: Time.utc(2026, 1, 1))
       sample.match?(Publication::PATH_PATTERN) && Publication.decodable_path?(sample) &&
         !Publication.reserved_path?(sample) && !Publication.traversal_path?(sample)
+    end
+
+    # Whether this format can put the segment first in a path without help from
+    # {slug}, so no change to an article's slug moves the article off it.
+    def fixed_first_segment?(segment)
+      first = @template.delete_prefix("/").split("/").first.to_s
+      return false if first.include?("{slug}")
+      pattern =
+        first
+          .split(/(\{\w+\})/)
+          .map do |part|
+            case part
+            when "{year}"
+              "\\d{4}"
+            when "{month}", "{day}"
+              "\\d{2}"
+            when "{id}"
+              "\\d+"
+            else
+              Regexp.escape(part)
+            end
+          end
+          .join
+      segment.match?(/\A#{pattern}\z/i)
     end
 
     # A slug longer than max_length allows is shortened, sharing the room between

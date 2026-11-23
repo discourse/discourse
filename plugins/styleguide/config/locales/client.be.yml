@@ -19,6 +19,9 @@ be:
           table_type: "Тып"
         colors:
           title: "<......"
+        design_variables:
+          type: "Тып"
+          default: "Прадвызначаная"
         icons:
           title: "абразкі"
         categories:

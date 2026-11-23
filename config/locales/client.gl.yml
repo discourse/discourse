@@ -2601,10 +2601,8 @@ gl:
           label: "seleccionado"
           title: "Prema para eliminar a publicación da selección"
         select_replies:
-          label: "seleccionar +respostas"
           title: "Engadir a publicación e todas as respostas asociadas á selección"
         select_below:
-          label: "seleccione +seguintes"
           title: "Engadir publicación e todas as posteriores á selección"
         delete: eliminar seleccionados
         cancel: cancelar a selección
@@ -4759,7 +4757,6 @@ gl:
         silence_modal_title: "Silenciar o usuario"
         silence_duration: "Canto tempo estará silenciado o usuario?"
         silence_reason_placeholder: "Razón do silencio"
-        silence_message: "Mensaxe de correo"
         suspended_until: "(ata %{until})"
         cant_suspend: "Este usuario non pode estar suspendido."
         delete_posts_failed: "Produciuse un erro ao eliminar as publicacións."
@@ -4972,6 +4969,8 @@ gl:
           dropdown: "Despregábel"
       site_text:
         search_label: "Buscar"
+        preview:
+          default: "Predeterminado"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         edit: "Editar"
@@ -5060,7 +5059,7 @@ gl:
           modal_title: Grupos de insignias
         granted_by: Concedido por
         granted_at: Concedido
-        reason_help: (Ligazón a unha publicación ou tema)
+        reason_help: Ligazón a unha publicación ou tema
         save: Gardar
         delete: Eliminar
         delete_confirm: Confirma a eliminación desta insignia?

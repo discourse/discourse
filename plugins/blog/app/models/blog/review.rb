@@ -48,9 +48,14 @@ module ::Blog
     end
     private_class_method :publication_for_reviewed_topic
 
+    # A draft without a publication yet will be published to the default blog.
+    def self.blog_for_topic(topic_id)
+      publication_for_reviewed_topic(topic_id)&.blog || Instance.default_blog
+    end
+
     # The link only reaches editors, who can already read the draft and issue more links.
-    def url
-      "#{Configuration.review_url}?#{{ review_token: token }.to_query}"
+    def url(blog = self.class.blog_for_topic(topic_id))
+      "#{Configuration.review_url(blog)}?#{{ review_token: token }.to_query}"
     end
 
     def self.eligible_topic?(topic)

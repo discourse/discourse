@@ -48,3 +48,22 @@ acl_* @martin-brennan
 **/ui-kit/ @megothss
 *ui-kit* @megothss
 /frontend/discourse/app/ui-kit/d-access-control* @martin-brennan @megothss
+
+# JSON:API Kit
+/lib/json_api_kit/ @Flink
+/app/controllers/json_api_kit/ @Flink
+/config/initializers/json_api_kit.rb @Flink
+/config/api_changes/ @Flink
+/spec/lib/json_api_kit/ @Flink
+/spec/integration/json_api_kit/ @Flink
+/spec/fixtures/json_api_kit/ @Flink
+/spec/support/matchers/json_api_kit/ @Flink
+/spec/support/matchers/json_api_kit_matchers.rb @Flink
+/spec/support/shared_examples/json_api_kit/ @Flink
+
+# Ruby service framework
+/lib/service.rb @Flink
+/lib/service/ @Flink
+/spec/lib/service_spec.rb @Flink
+/spec/lib/service/ @Flink
+/spec/support/matchers/service_matchers.rb @Flink

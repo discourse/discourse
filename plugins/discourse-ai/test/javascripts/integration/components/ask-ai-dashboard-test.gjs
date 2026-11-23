@@ -66,6 +66,7 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
       ],
       questions: 12,
       askers: 4,
+      cache_hits: 3,
       average_first_answer_ms: 1500,
       outcomes: [
         { outcome: "answered", count: 8 },
@@ -77,7 +78,10 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
     };
     await render(<template><AskAiDashboard @data={{data}} /></template>);
 
-    assert.dom(".ask-ai-dashboard__metric").exists({ count: 3 });
+    assert.dom(".ask-ai-dashboard__metric").exists({ count: 4 });
+    assert
+      .dom('[data-metric="cache-hits"] .db-section__metric-number')
+      .hasText("3", "cached answers returned are counted separately");
     assert
       .dom(".ask-ai-dashboard__activity h3 a")
       .doesNotExist("keeps headings unlinked without Data Explorer");

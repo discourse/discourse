@@ -9,7 +9,7 @@ RSpec.describe NotificationEmailer do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
-  let(:notification_user) { Fabricate(:user) }
+  fab!(:notification_user, :user)
   let(:notification) do
     Notification.create(
       data: "{\"a\": 1}",
@@ -21,248 +21,207 @@ RSpec.describe NotificationEmailer do
     )
   end
 
-  shared_examples "enqueue" do
-    it "enqueues a job for the email" do
+  it "does not email interactive bots for notifications created outside PostAlerter" do
+    bot = Fabricate(:bot, interactive_bot: true)
+    bot.user_option.update!(email_level: UserOption.email_level_types[:always])
+    notice =
+      Fabricate(
+        :notification,
+        user: bot,
+        topic:,
+        post_number: post.post_number,
+        notification_type: Notification.types[:invited_to_private_message],
+        skip_send_email: true,
+      )
+
+    expect_not_enqueued_with(job: :user_email, args: { user_id: bot.id }) do
+      NotificationEmailer.process_notification(notice, no_delay: true)
+    end
+  end
+
+  describe ".process_notification" do
+    let(:notification_kind) { :replied }
+
+    shared_examples "an email notification" do |kind, job_type, personal: false|
+      let(:notification_kind) { kind }
+
+      it "enqueues the corresponding email with and without a delay" do
+        delay =
+          if personal
+            SiteSetting.personal_email_time_window_seconds.seconds
+          else
+            SiteSetting.email_time_window_mins.minutes
+          end
+        args = {
+          type: job_type.to_s,
+          notification_id: notification.id,
+          user_id: notification_user.id,
+        }
+
+        expect_enqueued_with(job: :user_email, args:, at: Time.zone.now + delay) do
+          described_class.process_notification(notification)
+        end
+        expect_enqueued_with(job: :user_email, args:, at: Time.zone.now) do
+          described_class.process_notification(notification, no_delay: true)
+        end
+      end
+    end
+
+    context "with a mention" do
+      include_examples "an email notification", :mentioned, :user_mentioned
+    end
+
+    context "with a reply" do
+      include_examples "an email notification", :replied, :user_replied
+    end
+
+    context "with a quote" do
+      include_examples "an email notification", :quoted, :user_quoted
+    end
+
+    context "with a link" do
+      include_examples "an email notification", :linked, :user_linked
+    end
+
+    context "with a new post" do
+      include_examples "an email notification", :posted, :user_posted
+    end
+
+    context "with a watched category or tag" do
+      include_examples "an email notification", :watching_category_or_tag, :user_posted
+    end
+
+    context "with an invitation to a private message" do
+      include_examples "an email notification",
+                       :invited_to_private_message,
+                       :user_invited_to_private_message,
+                       personal: true
+    end
+
+    context "with an invitation to a topic" do
+      include_examples "an email notification",
+                       :invited_to_topic,
+                       :user_invited_to_topic,
+                       personal: true
+    end
+
+    context "with a watched first post" do
+      include_examples "an email notification", :watching_first_post, :user_watching_first_post
+    end
+
+    context "with an approved post" do
+      include_examples "an email notification", :post_approved, :post_approved
+    end
+
+    it "delays a mention email for an online user" do
+      notice = Fabricate(:notification, user: notification_user, post: post, skip_send_email: true)
+      notification_user.last_seen_at = 1.minute.ago
+
       expect_enqueued_with(
         job: :user_email,
-        args: NotificationEmailer::EmailUser.notification_params(notification, type),
-        at: no_delay ? Time.zone.now : Time.zone.now + delay,
-      ) { NotificationEmailer.process_notification(notification, no_delay: no_delay) }
+        args: {
+          notification_id: notice.id,
+        },
+        at: Time.zone.now + SiteSetting.email_time_window_mins.minutes,
+      ) { described_class.process_notification(notice) }
     end
 
-    context "with an inactive user" do
-      before { notification.user.active = false }
+    it "does not email inactive users" do
+      notification_user.active = false
 
-      it "doesn't enqueue a job" do
-        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification, no_delay: no_delay)
-        end
-      end
-
-      it "enqueues a job if the user is staged for non-linked and non-quoted types" do
-        notification.user.staged = true
-
-        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
-             type == :group_mentioned
-          expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-            NotificationEmailer.process_notification(notification, no_delay: no_delay)
-          end
-        else
-          expect_enqueued_with(
-            job: :user_email,
-            args: NotificationEmailer::EmailUser.notification_params(notification, type),
-            at: no_delay ? Time.zone.now : Time.zone.now + delay,
-          ) { NotificationEmailer.process_notification(notification, no_delay: no_delay) }
-        end
-      end
-
-      it "enqueues a job if the user is staged even if site requires user approval for non-linked and non-quoted typed" do
-        notification.user.staged = true
-        SiteSetting.must_approve_users = true
-
-        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
-             type == :group_mentioned
-          expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-            NotificationEmailer.process_notification(notification, no_delay: no_delay)
-          end
-        else
-          expect_enqueued_with(
-            job: :user_email,
-            args: NotificationEmailer::EmailUser.notification_params(notification, type),
-            at: no_delay ? Time.zone.now : Time.zone.now + delay,
-          ) { NotificationEmailer.process_notification(notification, no_delay: no_delay) }
-        end
+      expect_not_enqueued_with(job: :user_email) do
+        described_class.process_notification(notification)
       end
     end
 
-    context "with an active but unapproved user" do
+    it "does not email unapproved users when approval is required" do
+      SiteSetting.must_approve_users = true
+      notification_user.approved = false
+
+      expect_not_enqueued_with(job: :user_email) do
+        described_class.process_notification(notification)
+      end
+    end
+
+    context "with a staged user" do
       before do
+        notification_user.active = false
+        notification_user.approved = false
+        notification_user.staged = true
         SiteSetting.must_approve_users = true
-        notification.user.approved = false
-        notification.user.active = true
       end
 
-      it "doesn't enqueue a job" do
-        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification, no_delay: no_delay)
+      it "sends reply emails even when approval is required" do
+        expect_enqueued_with(job: :user_email, args: { notification_id: notification.id }) do
+          described_class.process_notification(notification)
+        end
+      end
+
+      it "does not send linked or quoted emails" do
+        %i[linked quoted].each do |kind|
+          notice =
+            Fabricate(
+              :notification,
+              user: notification_user,
+              post: post,
+              notification_type: Notification.types[kind],
+              skip_send_email: true,
+            )
+          expect_not_enqueued_with(job: :user_email) do
+            described_class.process_notification(notice)
+          end
         end
       end
     end
 
-    context "with a moderator action post" do
-      it "enqueues a job" do
-        Post.any_instance.expects(:post_type).returns(Post.types[:moderator_action])
+    it "respects the user's public email preference" do
+      notification_user.user_option.update!(email_level: UserOption.email_level_types[:never])
 
-        expect_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification, no_delay: no_delay)
+      expect_not_enqueued_with(job: :user_email) do
+        described_class.process_notification(notification)
+      end
+    end
+
+    context "with a private message" do
+      include_examples "an email notification",
+                       :private_message,
+                       :user_private_message,
+                       personal: true
+
+      it "respects the user's private message email preference" do
+        notification_user.user_option.update!(
+          email_messages_level: UserOption.email_level_types[:never],
+        )
+
+        expect_not_enqueued_with(job: :user_email) do
+          described_class.process_notification(notification)
         end
       end
-    end
 
-    context "with a small action" do
-      it "doesn't enqueue a job" do
-        Post.any_instance.expects(:post_type).returns(Post.types[:small_action])
-
-        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification, no_delay: no_delay)
-        end
-      end
-    end
-  end
-
-  shared_examples "enqueue_public" do
-    include_examples "enqueue"
-
-    it "doesn't enqueue a job if the user has mention emails disabled" do
-      notification.user.user_option.update_columns(
-        email_level: UserOption.email_level_types[:never],
-      )
-
-      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-        NotificationEmailer.process_notification(notification, no_delay: no_delay)
-      end
-    end
-  end
-
-  shared_examples "enqueue_private" do
-    include_examples "enqueue"
-
-    it "doesn't enqueue a job if the user has private message emails disabled" do
-      notification.user.user_option.update_columns(
-        email_messages_level: UserOption.email_level_types[:never],
-      )
-
-      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-        NotificationEmailer.process_notification(notification)
-      end
-    end
-  end
-
-  shared_examples "delivering notification emails" do |no_delay:|
-    context "with user_mentioned" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_mentioned }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :mentioned }
-
-      include_examples "enqueue_public"
-
-      it "enqueue a delayed job for users that are online" do
-        notification.user.last_seen_at = 1.minute.ago
-
-        expect_enqueued_with(
-          job: :user_email,
-          args: NotificationEmailer::EmailUser.notification_params(notification, type),
-          at: Time.zone.now + delay,
-        ) { NotificationEmailer.process_notification(notification) }
-      end
-    end
-
-    context "with user_replied" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_replied }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :replied }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with user_quoted" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_quoted }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :quoted }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with user_linked" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_linked }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :linked }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with user_posted" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_posted }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :posted }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with user_watching_category_or_tag" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_posted }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :watching_category_or_tag }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with user_private_message" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_private_message }
-      let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let(:notification_kind) { :private_message }
-
-      include_examples "enqueue_private"
-
-      it "doesn't enqueue a job for a small action" do
+      it "uses the original post type to suppress small action emails" do
         notification.data_hash["original_post_type"] = Post.types[:small_action]
 
-        expect_not_enqueued_with(job: :user_email, args: { type: type }) do
-          NotificationEmailer.process_notification(notification)
+        expect_not_enqueued_with(job: :user_email) do
+          described_class.process_notification(notification)
         end
       end
     end
 
-    context "with user_invited_to_private_message" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_invited_to_private_message }
-      let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let(:notification_kind) { :invited_to_private_message }
+    it "emails notifications about moderator actions" do
+      post.update!(post_type: Post.types[:moderator_action])
 
-      include_examples "enqueue_public"
+      expect_enqueued_with(job: :user_email, args: { notification_id: notification.id }) do
+        described_class.process_notification(notification)
+      end
     end
 
-    context "with user_invited_to_topic" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_invited_to_topic }
-      let(:delay) { SiteSetting.personal_email_time_window_seconds }
-      let(:notification_kind) { :invited_to_topic }
+    it "does not email notifications about small actions" do
+      post.update!(post_type: Post.types[:small_action])
 
-      include_examples "enqueue_public"
+      expect_not_enqueued_with(job: :user_email) do
+        described_class.process_notification(notification)
+      end
     end
-
-    context "when watching the first post" do
-      let(:no_delay) { no_delay }
-      let(:type) { :user_watching_first_post }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :watching_first_post }
-
-      include_examples "enqueue_public"
-    end
-
-    context "with post_approved" do
-      let(:no_delay) { no_delay }
-      let(:type) { :post_approved }
-      let(:delay) { SiteSetting.email_time_window_mins.minutes }
-      let(:notification_kind) { :post_approved }
-
-      include_examples "enqueue_public"
-    end
-  end
-
-  context "when sending without delay" do
-    include_examples "delivering notification emails", no_delay: true
-  end
-
-  context "when sending after the notification delay" do
-    include_examples "delivering notification emails", no_delay: false
   end
 
   it "has translations for each sendable notification type" do

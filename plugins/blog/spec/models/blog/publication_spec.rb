@@ -133,6 +133,75 @@ RSpec.describe Blog::Publication do
     end
   end
 
+  describe "blogs" do
+    fab!(:other_blog) do
+      Blog::Instance.create!(
+        name: "Engineering",
+        slug: "engineering",
+        url: "https://engineering.example.com",
+      )
+    end
+
+    it "belongs to the default blog unless another is chosen" do
+      expect(described_class.for_topic(topic).blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "lets each blog hold an article at the same path" do
+      first = described_class.create!(topic: Fabricate(:topic), path: "/shared-story")
+      first.paths.create!(path: "/shared-story")
+      other =
+        described_class.create!(topic: Fabricate(:topic), path: "/shared-story", blog: other_blog)
+      other.paths.create!(path: "/shared-story")
+
+      expect(described_class.new(topic: Fabricate(:topic), path: "/shared-story")).not_to be_valid
+      expect(other.paths.sole.blog_id).to eq(other_blog.id)
+    end
+
+    it "starts a topic in a blog's public category on that blog" do
+      engineering_category = Fabricate(:category)
+      other_blog.update!(category: engineering_category)
+
+      expect(
+        described_class.for_topic(Fabricate(:topic, category: engineering_category)).blog,
+      ).to eq(other_blog)
+    end
+
+    it "never matches a blog without a category to a topic without one" do
+      SiteSetting.blog_category = Fabricate(:category).id
+      message = Fabricate(:private_message_topic)
+
+      expect(other_blog.category_id).to be_nil
+      expect(described_class.for_topic(message).blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "falls back to the default blog when none is recorded" do
+      publication = described_class.new(topic:, path: "/story")
+      publication.blog_id = nil
+
+      expect(publication.blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "keeps the main blog's articles off paths that start with another blog's slug" do
+      publication = described_class.new(topic:, path: "/engineering/story")
+
+      expect(publication).not_to be_valid
+      expect(publication.errors[:path]).to eq([I18n.t("blog.errors.path_taken")])
+      expect(described_class.new(topic:, path: "/engineering/story", blog: other_blog)).to be_valid
+
+      clashing_topic = Fabricate(:topic)
+      clashing_topic.update_columns(slug: "engineering")
+      expect(described_class.default_path(clashing_topic)).to eq(
+        "/engineering-#{clashing_topic.id}",
+      )
+    end
+
+    it "builds its URL from its own blog" do
+      publication = described_class.new(topic:, path: "/story", blog: other_blog)
+
+      expect(publication.url).to eq("https://engineering.example.com/story")
+    end
+  end
+
   describe ".for_topic" do
     it "suffixes the topic id when the topic's slug is reserved" do
       reserved_topic = Fabricate(:topic)

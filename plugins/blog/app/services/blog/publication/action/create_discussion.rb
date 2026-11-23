@@ -26,6 +26,6 @@ class Blog::Publication::Action::CreateDiscussion < Service::ActionBase
   private
 
   def blog_category_id
-    SiteSetting.blog_category.to_i
+    publication.blog.category_id
   end
 end

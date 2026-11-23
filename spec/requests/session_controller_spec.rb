@@ -767,9 +767,23 @@ RSpec.describe SessionController do
       before { RateLimiter.enable }
 
       it "rate limits requests per IP per minute" do
-        3.times do |i|
-          post "/session/login-code.json", params: { email: "user#{i}@example.com" }
+        6.times do |index|
+          post "/session/login-code.json", params: { email: "user#{index}@example.com" }
           expect(response.status).to eq(200)
+        end
+
+        post "/session/login-code.json", params: { email: "another@example.com" }
+
+        expect(response.status).to eq(429)
+      end
+
+      it "rate limits requests per IP per hour" do
+        freeze_time
+
+        30.times do |index|
+          post "/session/login-code.json", params: { email: "user#{index}@example.com" }
+          expect(response.status).to eq(200)
+          freeze_time 1.minute.from_now
         end
 
         post "/session/login-code.json", params: { email: "another@example.com" }
@@ -2172,8 +2186,6 @@ RSpec.describe SessionController do
       SiteSetting.discourse_connect_url = @sso_url
       SiteSetting.discourse_connect_secret = @sso_secret
       SiteSetting.enable_discourse_connect = true
-
-      Fabricate(:admin)
     end
 
     let(:headers) { { host: Discourse.current_hostname } }
@@ -2712,7 +2724,7 @@ RSpec.describe SessionController do
     end
 
     context "when an invitation is used" do
-      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: Fabricate(:admin)) }
+      let(:invite) { Fabricate(:invite, email: invite_email, invited_by: admin) }
       let(:invite_email) { nil }
 
       def login_with_sso(email: "bob@bob.com")
@@ -3362,6 +3374,54 @@ RSpec.describe SessionController do
         expect(sso2.card_background_url).to start_with(Discourse.base_url)
         expect(sso2.confirmed_2fa).to eq(nil)
         expect(sso2.no_2fa_methods).to eq(nil)
+      end
+
+      it "does not mint a login assertion for a read-scoped admin API key" do
+        scope = ApiKeyScope.new(resource: "global", action: "read")
+        api_key = Fabricate(:api_key, user: @user, api_key_scopes: [scope])
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "Api-Key" => api_key.key,
+              "Api-Username" => @user.username,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+      end
+
+      it "does not mint a login assertion for a read-scoped user API key" do
+        SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        user_api_key =
+          UserApiKey.create!(user_id: @user.id, scopes: [UserApiKeyScope.new(name: "read")])
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "User-Api-Key" => user_api_key.key,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+      end
+
+      it "does not log the user out or clear push subscriptions for a read-scoped user API key" do
+        SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        user_api_key =
+          UserApiKey.create!(user_id: @user.id, scopes: [UserApiKeyScope.new(name: "read")])
+        Fabricate(:push_subscription, user: @user)
+        @sso.logout = true
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow")),
+            headers: {
+              "User-Api-Key" => user_api_key.key,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+        expect(@user.push_subscriptions.reload).to be_present
       end
 
       it "fails with a nice error message if `prompt` parameter has an invalid value" do

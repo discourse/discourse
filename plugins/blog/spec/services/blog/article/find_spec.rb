@@ -2,6 +2,7 @@
 
 RSpec.describe Blog::Article::Find do
   describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:blog_id) }
     it { is_expected.to validate_presence_of(:path) }
   end
 
@@ -12,7 +13,8 @@ RSpec.describe Blog::Article::Find do
 
     fab!(:publication) { publish_blog_article(path: "/current-story") }
 
-    let(:params) { { path: } }
+    let(:params) { { blog_id: blog.id, path: } }
+    let(:blog) { Blog::Instance.default_blog }
     let(:dependencies) { { guardian: Guardian.new } }
     let(:path) { publication.path }
 
@@ -24,6 +26,12 @@ RSpec.describe Blog::Article::Find do
 
     context "when no article was ever published at the path" do
       let(:path) { "/unknown-story" }
+
+      it { is_expected.to fail_to_find_a_model(:stored_path) }
+    end
+
+    context "when the path belongs to another blog" do
+      let(:blog) { Blog::Instance.create!(name: "Engineering", slug: "engineering") }
 
       it { is_expected.to fail_to_find_a_model(:stored_path) }
     end

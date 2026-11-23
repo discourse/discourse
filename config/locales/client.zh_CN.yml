@@ -35,6 +35,7 @@ zh_CN:
       resize: "调整代码编辑器大小"
     code_editor:
       resize: "调整代码编辑器大小"
+      load_failed: "无法加载代码编辑器。请刷新页面后重试。"
       tab_hint: "按下 Esc 键，然后按 Tab 键将焦点移出编辑器。"
       completions: "完成"
       search:
@@ -1586,6 +1587,7 @@ zh_CN:
       view_all: "查看全部"
       category: "类别"
       category_list: "显示类别列表"
+      page_layout: "类别页面布局"
       reorder:
         title: "对类别重新排序"
         title_long: "重新组织类别列表"
@@ -2891,6 +2893,10 @@ zh_CN:
       username_unavailable: "该用户名不可用。试试 %{suggestion}。"
     login:
       header_title: "欢迎回来"
+      invitation_gate:
+        title: "本社区仅限受邀者加入。"
+        description: "若要加入，请打开您收到的邀请链接。如果您没有邀请，请联系社区所有者。"
+        existing_member: "已经是这个社区的成员了吗？请在下方登录。"
       title: "登录"
       username: "用户"
       password: "密码"
@@ -3273,9 +3279,11 @@ zh_CN:
       more_emoji: "更多…"
       options: "选项"
       ai_content:
+        menu: "添加 AI 生成内容..."
         code: "代码"
         quote: "引用"
         details: "详细信息"
+        placeholder: "AI 生成内容"
       whisper: "密语"
       unlist: "取消公开"
       add_warning: "这是一个官方警告。"
@@ -4586,10 +4594,8 @@ zh_CN:
           label: "已选择"
           title: "点击以将帖子从选择中移除"
         select_replies:
-          label: "选择 +回复"
           title: "将帖子及其所有回复添加到选择中"
         select_below:
-          label: "选择 +之后"
           title: "将帖子和之后的所有内容添加到选择中"
         delete: 删除所选项
         cancel: 取消选择
@@ -4733,6 +4739,7 @@ zh_CN:
         upload_not_authorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
         no_uploads_authorized: "抱歉，未授权上传任何文件。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
+        media_upload_not_allowed: "抱歉，您无法上传图片、视频或音频。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
@@ -9267,8 +9274,6 @@ zh_CN:
         silence_reason_hidden_label: "你为什么要静音？这个文本只会对员工和这个用户可见。请保持简短。"
         silence_reason_title: "禁言原因"
         silence_reason_placeholder: "禁言原因"
-        silence_message: "电子邮件消息"
-        silence_message_placeholder: "（可选）提供有关此操作的更多信息，这些信息将包含在发送给被禁言用户的电子邮件中。"
         suspended_until: "（直到 %{until}）"
         suspend_forever: "永久封禁"
         cant_suspend: "无法封禁此用户。"
@@ -9575,6 +9580,10 @@ zh_CN:
         description: "您可以自定义论坛上的任何文本。"
         search: "搜索文本或翻译键"
         search_label: "搜索"
+        preview:
+          label: "文本预览： %{key}"
+          customized: "您的文本"
+          default: "默认"
         theme: "主题或组件"
         all_themes: "所有站点文本"
         theme_disabled: "已禁用"
@@ -9771,7 +9780,6 @@ zh_CN:
           modal_title: 徽章组
         granted_by: 授予人
         granted_at: 授予时间
-        reason_help: '（帖子或话题的链接）'
         save: 保存
         delete: 删除
         delete_confirm: 确定要删除此徽章吗？

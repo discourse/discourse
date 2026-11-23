@@ -58,6 +58,7 @@ module DiscourseWorkflows
 
     KNOWN_UI_KEYS = %i[
       control
+      description_key
       dynamic_value
       expression
       filter
@@ -91,10 +92,12 @@ module DiscourseWorkflows
       option_format
       set_from_option
       resets
+      signature_parameters
       value_property
     ].freeze
 
     KNOWN_UI_CONTROLS = %i[
+      ai_tool_arguments
       color
       access_control
       actor
@@ -306,9 +309,46 @@ module DiscourseWorkflows
             add_error(rule_path, "references unknown sibling field: #{ref.inspect}")
           end
 
-          next if expected.is_a?(Array)
-          add_error(rule_path + [ref], "expected Array, got #{expected.class}")
+          unless expected.is_a?(Array)
+            add_error(rule_path + [ref], "expected Array, got #{expected.class}")
+            next
+          end
+
+          expected.each_with_index do |entry, index|
+            next unless entry.is_a?(Hash)
+            entry = entry.symbolize_keys
+            next unless entry.key?(:condition)
+
+            validate_visibility_condition(
+              entry[:condition],
+              path: rule_path + [ref, index, :condition],
+            )
+          end
         end
+      end
+    end
+
+    def validate_visibility_condition(condition, path:)
+      unless condition.is_a?(Hash)
+        add_error(path, "expected Hash, got #{condition.class}")
+        return
+      end
+
+      condition = condition.symbolize_keys
+      unless condition.size == 1 && (condition.keys - %i[not exists metadata_flag]).empty?
+        add_error(
+          path,
+          "expected one operator (not, exists, metadata_flag), got #{condition.keys.inspect}",
+        )
+        return
+      end
+
+      return unless condition.key?(:metadata_flag)
+
+      metadata_flag = condition[:metadata_flag]
+      if !metadata_flag.is_a?(Hash) || metadata_flag.keys.map(&:to_s).sort != %w[collection flag] ||
+           !metadata_flag.values.all? { |value| value.is_a?(String) && value.present? }
+        add_error(path + [:metadata_flag], "expected non-blank collection and flag strings")
       end
     end
 

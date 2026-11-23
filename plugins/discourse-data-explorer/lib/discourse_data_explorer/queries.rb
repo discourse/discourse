@@ -344,6 +344,20 @@ module DiscourseDataExplorer
             "All Ask AI questions between start_date and end_date, inclusive (UTC), with logged answers. Includes groups excluded from generated reports and is not limited by the report sample size. Requires Discourse AI.",
           tags: %w[ai],
         },
+        "ask-ai-deferred-searches": {
+          id: -49,
+          name: "Ask AI - Deferred searches",
+          description:
+            "Searches where Ask AI waited for the reader to request an answer, grouped by reason. Counts searches that stayed deferred and those where the reader requested an answer. Dates are inclusive (UTC). Requires Discourse AI.",
+          tags: %w[ai],
+        },
+        "ask-ai-cache-activity": {
+          id: -50,
+          name: "Ask AI - Cache activity",
+          description:
+            "Cached answers returned and answers evicted by the per-user cache cap. Dates are inclusive (UTC). Requires Discourse AI.",
+          tags: %w[ai],
+        },
       }.with_indifferent_access
 
       queries["most-common-likers"]["sql"] = <<~SQL
@@ -1720,6 +1734,37 @@ module DiscourseDataExplorer
         AND ask_outcome IS DISTINCT FROM 4 -- skipped: the reader never requested an answer
       GROUP BY ask_outcome
       ORDER BY ask_outcome NULLS LAST
+      SQL
+
+      queries["ask-ai-deferred-searches"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        answer_deferred_reason AS reason,
+        COUNT(*) AS deferred_searches,
+        COUNT(*) FILTER (WHERE answer_requested_at IS NULL) AS stayed_deferred,
+        COUNT(*) FILTER (WHERE answer_requested_at IS NOT NULL) AS answers_requested
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
+        AND answer_deferred_reason IS NOT NULL
+      GROUP BY answer_deferred_reason
+      ORDER BY deferred_searches DESC, reason
+      SQL
+
+      queries["ask-ai-cache-activity"]["sql"] = <<~SQL
+      -- [params]
+      -- date :start_date
+      -- date :end_date
+
+      SELECT
+        COUNT(*) FILTER (WHERE cache_hit) AS cache_hits,
+        COALESCE(SUM(cache_evictions), 0) AS cache_evictions
+      FROM ask_ai_logs
+      WHERE asked_at >= :start_date::date
+        AND asked_at < :end_date::date + INTERVAL '1 day'
       SQL
 
       queries["ask-ai-report-questions"]["sql"] = <<~SQL

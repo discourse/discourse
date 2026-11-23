@@ -35,12 +35,6 @@ pt_BR:
         description: "Postagens de triagem usando um modelo de linguagem grande"
         notify_author_pm:
           subject: "Sua postagem foi temporariamente removida para análise"
-          body: |
-            Olá @%{username},
-
-            Sua postagem em “%{topic_title}” foi temporariamente removida e colocada em nossa fila de revisão para ser analisada por um moderador. Se aprovada, ela será restaurada automaticamente.
-
-            Referência: %{post_url}
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"

@@ -6,11 +6,9 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateTag do
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.tagging_enabled = true }
 
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
 

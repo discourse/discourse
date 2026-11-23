@@ -38,12 +38,6 @@ nl:
         description: "Triageer berichten met behulp van een groot taalmodel"
         notify_author_pm:
           subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
-          body: |
-            Hallo @%{username},
-
-            Je bericht in '%{topic_title}' is tijdelijk verwijderd en in onze beoordelingswachtrij geplaatst zodat een moderator ernaar kan kijken. Als het wordt goedgekeurd, wordt het automatisch hersteld.
-
-            Referentie: %{post_url}
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"

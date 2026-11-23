@@ -1660,6 +1660,10 @@ be:
         public: "Публічная"
       change_timestamp:
         action: "змяніць пазнаку часу"
+      multi_select:
+        select: "Выбраць"
+        select_post:
+          label: "Выбраць"
     post_list:
       title: "Апошнія паведамленні"
     post:
@@ -2958,6 +2962,8 @@ be:
           dropdown: "Выпадаючы спіс"
       site_text:
         search_label: "Пошук"
+        preview:
+          default: "Прадвызначаная"
         theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"

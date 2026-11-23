@@ -11,6 +11,8 @@ module DiscourseAi
         CACHE_LIFETIME = 1.day
         MAX_CANDIDATES = 4
         CONFIDENCE_LEVELS = %w[high medium low].freeze
+        # Buttons at least this round count as fully rounded (pills).
+        PILL_RADIUS = 100
 
         Font = Data.define(:key, :exact)
         Result =
@@ -24,6 +26,7 @@ module DiscourseAi
             :candidates,
             :body_font,
             :heading_font,
+            :button_radius,
           )
 
         # Returns a Result, or nil when the page can't be read, there's no
@@ -32,7 +35,7 @@ module DiscourseAi
         def self.read(url, llm:, user:, feature_name:)
           return if llm.nil?
 
-          cache_key = "admin-assistant-website-design:#{Digest::SHA256.hexdigest(url)}"
+          cache_key = "admin-assistant-website-design:v2:#{Digest::SHA256.hexdigest(url)}"
           cached = Discourse.cache.read(cache_key)
           return cached if cached.is_a?(Result)
 
@@ -94,6 +97,7 @@ module DiscourseAi
             - dark: whether the site uses a dark background.
             - confidence: high when the evidence clearly points at the brand color, medium when it's likely, low when it's a guess.
             - body_font and heading_font: the key of the Discourse font closest to the site's text and heading fonts, or an empty string when the evidence doesn't say. Set body_font_exact or heading_font_exact to true only when the site uses that same font.
+            - button_radius: the corner radius of its primary buttons in pixels, as a whole number such as 8; #{PILL_RADIUS} or more for fully rounded buttons. Use an empty string when the evidence doesn't say.
 
             Discourse fonts: #{fonts}
           PROMPT
@@ -135,6 +139,9 @@ module DiscourseAi
             heading_font_exact: {
               type: "boolean",
             },
+            button_radius: {
+              type: "string",
+            },
           }
 
           {
@@ -170,6 +177,7 @@ module DiscourseAi
             candidates:,
             body_font: font(answer["body_font"], answer["body_font_exact"]),
             heading_font: font(answer["heading_font"], answer["heading_font_exact"]),
+            button_radius: answer["button_radius"].to_s.strip[/\A\d{1,4}\z/]&.to_i,
           )
         end
 

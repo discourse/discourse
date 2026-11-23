@@ -670,9 +670,6 @@ pl_PL:
         history_label: "Historia"
         members_label: "Członkowie"
       admin:
-        bot_discoverability:
-          label: "Pokaż na czacie"
-          description: "Umożliw użytkownikom znalezienie tego bota podczas rozpoczynania bezpośredniej wiadomości na czacie"
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"

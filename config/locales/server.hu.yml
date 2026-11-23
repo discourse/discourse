@@ -3062,20 +3062,6 @@ hu:
       title: "Rejtett bejegyzés"
       preview: "A bejegyzés elrejtve a közösségi tagok általi megjelölés miatt."
       subject_template: "A bejegyzést a közösségi megjelölések rejtik el"
-      text_body_template: |
-        Üdv!
-
-        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését elrejtették.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Ezt a bejegyzést a közösség jelzései miatt rejtettük el, ezért fontolja meg, hogyan módosíthatná úgy a bejegyzését, hogy megfeleljen a közösség visszajelzésének. **A bejegyzését %{edit_delay} perc múlva szerkesztheti, és utána automatikusan fel lesz fedve.**
-
-        Ha azonban a közösség másodszor is elrejti a bejegyzést, akkor rejtve marad, amíg a stáb nem kezeli.
-
-        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Visszajelzés a bejegyzéséről"
       subject_template: "Visszajelzés a bejegyzéséről itt: %{topic_title}"
@@ -3086,31 +3072,9 @@ hu:
       title: "Bejegyzés újra elrejtve"
       preview: "A bejegyzést ismét elrejtették a közösség tagjai."
       subject_template: "A bejegyzés a közösség megjelölései által elrejtve, stábtagok értesítve."
-      text_body_template: |
-        Üdv!
-
-        Ez egy automatikus üzenet a(z) %{site_name} oldaltól, hogy tudassa Önnel, hogy a bejegyzését ismét elrejtették.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        A közösség jelentette ezt a bejegyzést, és most el van rejtve. **Mivel ez a bejegyzés már egynél többször lett jelentve, így a bejegyzés most már addig rejtve marad, amíg valamelyik stábtag nem kezeli.**
-
-        További útmutatásért olvassa el a [közösségi irányelveket](%{base_url}/guidelines).
     queued_by_staff:
       title: "A bejegyzés jóváhagyásra vár."
       subject_template: "A bejegyzést a stábtag elrejtette, jóváhagyásra vár"
-      text_body_template: |
-        Üdvözöljük!
-
-        Ez egy automatikus üzenet a %{site_name} feladótól, amely tudatja Önnel, hogy bejegyzése el van rejtve.
-
-        <%{base_url}%{url}>
-
-        A bejegyzés rejtve marad mindaddig, amíg egy stábtag át nem tekinti.
-
-        További útmutatásért tekintse meg [közösségi irányelveinket] (%{base_url}/guidelines).
     flags_disagreed:
       title: "A megjelölt bejegyzést egy stábtag visszaállította"
       subject_template: "A megjelölt bejegyzést egy stábtag visszaállította"
@@ -3547,7 +3511,6 @@ hu:
     user_automatically_silenced_with_reason:
       title: "A felhasználó automatikusan elnémítva"
       subject_template: "Az új felhasználó %{username} közösségi megjelölések által elnémítva"
-      text_body_template: "Ez egy automatikus üzenet.\n\nA(z) %{username}(%{user_url}) nevű új felhasználó automatikusan elnémításra került. \n\nIndok: %{reason}\n\nKérjük, tekintse át a jelentéseket(%{base_url}/review). Ha %{username} elnémítása tévedésből történt, kattintson az elnémítás feloldása gombra a felhasználó adminisztrációs oldalán(%{user_url}).\n\nEz a határérték a silence_new_user webhelybeállításnál módosítható.\n"
     spam_post_blocked:
       title: "Spam bejegyzés blokkolva"
       subject_template: "Új felhasználó %{username} bejegyzései blokkolva az ismétlődő linkek miatt"
@@ -3892,12 +3855,6 @@ hu:
     account_suspended_forever:
       title: "Fiók felfüggesztve"
       subject_template: "[%{email_prefix}] Fiókja fel lett függesztve"
-    account_silenced:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
-    account_silenced_forever:
-      title: "Fiók elnémítva"
-      subject_template: "[%{email_prefix}] Fiókja el lett némítva"
     account_deleted:
       title: "Fiók törölve"
       subject_template: "[%{email_prefix}] A fiókját törölték"
@@ -4082,10 +4039,6 @@ hu:
     signup_after_reject:
       title: "Regisztráció elutasítás után"
       subject_template: "A jelentkezésedet visszautasítottuk a %{site_name} oldalon."
-      text_body_template: |
-        Egy stábtag elutasította a fiókját a(z) %{site_name} oldalon.
-
-        %{reject_reason}
     signup:
       title: "Feliratkozás"
       preview: "Erősítse meg fiókját."

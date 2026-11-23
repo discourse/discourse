@@ -41,9 +41,12 @@ class FinalDestination
       IPAddr.new("::/128"),
       IPAddr.new("64:ff9b:1::/48"),
       IPAddr.new("100::/64"),
+      IPAddr.new("100:0:0:1::/64"),
       IPAddr.new("2001::/23"),
       IPAddr.new("2001:2::/48"),
       IPAddr.new("2001:db8::/32"),
+      IPAddr.new("3fff::/20"),
+      IPAddr.new("5f00::/16"),
       IPAddr.new("fc00::/7"),
       IPAddr.new("fe80::/10"),
     ]

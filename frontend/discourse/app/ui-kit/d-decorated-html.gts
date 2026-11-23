@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { untrack } from "@glimmer/validator";
 import { trackedArray } from "@ember/reactive/collections";
 import { cancel, next } from "@ember/runloop";
-import { isHTMLSafe, type TrustedHTML, trustHTML } from "@ember/template";
+import { isTrustedHTML, type TrustedHTML, trustHTML } from "@ember/template";
 import type { ComponentLike, HelperLike } from "@glint/template";
 import helperFn from "discourse/helpers/helper-fn";
 import {
@@ -256,7 +256,7 @@ export default class DDecoratedHtml extends Component<DDecoratedHtmlSignature> {
 
   get elementToDecorate() {
     const cooked = this.args.html || trustHTML("");
-    if (!isHTMLSafe(cooked)) {
+    if (!isTrustedHTML(cooked)) {
       throw "@html must be an htmlSafe string";
     }
     const cookedDiv = detachedDocument.createElement("div");

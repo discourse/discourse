@@ -52,7 +52,7 @@ module DiscourseAi
 
     # what set off an Ask AI request and why, recorded so the choice of when to
     # answer can be tuned against what readers do with the answers
-    TRIGGERS = %w[enter pause page scope recent].freeze
+    TRIGGERS = %w[enter pause page scope recent refresh].freeze
     TRIGGER_REASON_PATTERN = /\A[a-z_:]{0,60}\z/
     SEARCH_TABS = %w[ask topics context].freeze
     # leaving the answer this soon means it was not what the reader came for
@@ -108,6 +108,13 @@ module DiscourseAi
 
       def precise_search?(query)
         query.to_s.match?(PRECISE_SEARCH)
+      end
+
+      def answer_deferral_reason(query:, scope:, guardian:)
+        return "url_lookup" if standalone_url?(query)
+        return "precise_search" if precise_search?(query)
+        return "private_search" if private_search?(query:, scope:, guardian:)
+        "exact_user_match" if exact_user_match?(query, guardian)
       end
 
       # Whether answering would send the reader's private messages to the model.
@@ -186,8 +193,15 @@ module DiscourseAi
 
       # Logs a search whose answer waits for the reader to request it.
       # @return [AskAiLog]
-      def log_deferred_ask(user:, query:, scope: nil, **search)
-        create_ask_log(user:, query:, ask_outcome: :skipped, ask_scope: scope.to_s, **search)
+      def log_deferred_ask(user:, query:, scope: nil, deferral_reason:, **search)
+        create_ask_log(
+          user:,
+          query:,
+          ask_outcome: :skipped,
+          ask_scope: scope.to_s,
+          answer_deferred_reason: deferral_reason,
+          **search,
+        )
       end
 
       # Queues the answer to a request already bound with `bind_request`.
@@ -199,6 +213,8 @@ module DiscourseAi
         request_id:,
         query:,
         scope: nil,
+        requested_scope: scope,
+        fresh_answer: false,
         trigger: "",
         trigger_reason: "",
         intent_heuristic: "",
@@ -230,6 +246,8 @@ module DiscourseAi
           summary_detail: settings[:summary_detail].to_s,
           related_count: settings[:related_count],
           scope:,
+          requested_scope:,
+          fresh_answer:,
         )
         ask_log
       rescue StandardError
@@ -384,6 +402,36 @@ module DiscourseAi
       end
 
       private
+
+      def standalone_url?(query)
+        return false unless query.match?(%r{\A(?:https?://|www\.[^./?#\s])\S+\z}i)
+
+        uri = UrlHelper.relaxed_parse(query.match?(/\Awww\./i) ? "https://#{query}" : query)
+        uri.is_a?(URI::HTTP) && uri.host.present?
+      end
+
+      def exact_user_match?(query, guardian)
+        return false if query.length > 255 || !query.match?(/[[:alnum:]]/)
+
+        users = UserSearch.new(query, searching_user: guardian.user).scoped_users
+        users = DiscoursePluginRegistry.apply_modifier(:search_user_search, users)
+        users = users.where(guardian.can_see_profile_sql)
+        if !query.match?(/\s/) &&
+             users
+               .joins(:user_stat)
+               .where("user_stats.topic_count > 0 OR user_stats.post_count > 0")
+               .exists?(username_lower: User.normalize_username(query))
+          return true
+        end
+        return false unless SiteSetting.enable_names?
+
+        name_query =
+          Search.ts_query(term: query, ts_config: "simple", weight_filter: "B", prefix_match: false)
+        users
+          .joins(:user_search_data)
+          .where("user_search_data.search_data @@ #{name_query}")
+          .exists?(["LOWER(users.name) = LOWER(?)", query])
+      end
 
       def create_ask_log(
         user:,

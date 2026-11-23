@@ -48,6 +48,7 @@ class Reviewable < ActiveRecord::Base
                     :button_class,
                     :label,
                     :description,
+                    :confirm_title,
                     :confirm_message,
                     :confirm_message_args,
                     :confirm_destructive,

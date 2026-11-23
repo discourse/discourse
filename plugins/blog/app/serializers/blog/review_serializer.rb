@@ -8,8 +8,10 @@ module ::Blog
       @options[:active_review_ids].include?(object.id)
     end
 
+    # Every review in a list is for the same draft, so the caller passes its blog.
     def url
-      object.url if active
+      return if !active
+      @options[:blog] ? object.url(@options[:blog]) : object.url
     end
 
     def include_feedback_count?

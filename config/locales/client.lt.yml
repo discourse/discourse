@@ -5249,10 +5249,8 @@ lt:
           label: "pasirinktas"
           title: "Spustelėkite, kad pašalintumėte įrašą iš pasirinkimo"
         select_replies:
-          label: "pasirink +atsakyti"
           title: "Prie pasirinkimo pridėkite įrašą ir visus jo atsakymus"
         select_below:
-          label: "pasirink +žemiau"
           title: "Pridėti įrašą ir viską po jo prie pasirinkimo"
         delete: ištrinti pasirinktus
         cancel: atšaukti pasirinkimus
@@ -9351,7 +9349,6 @@ lt:
         silence_duration: "Kiek laiko vartotojas bus nutildytas?"
         silence_reason_title: "Nutildymo priežastis"
         silence_reason_placeholder: "Tylos priežastis"
-        silence_message: "E-pašto žinutė"
         suspended_until: "(iki %{until})"
         cant_suspend: "Šis narys negali būti suspenduotas"
         delete_posts_failed: "Įvyko klaida ištrinant įrašus"
@@ -9558,6 +9555,8 @@ lt:
       site_text:
         search: "Ieškoti teksto arba vertimo raktų"
         search_label: "Paieška"
+        preview:
+          default: "Numatytasis"
         theme: "Tema arba komponentas"
         all_themes: "Visi svetainės tekstai"
         theme_disabled: "Neleidžiama"
@@ -9667,7 +9666,7 @@ lt:
           modal_title: Ženklelių grupavimas
         granted_by: Suteiktas nuo
         granted_at: Suteiktas
-        reason_help: (nuoroda į įrašą ar temą)
+        reason_help: nuoroda į įrašą ar temą
         save: Išsaugoti
         delete: Ištrinti
         delete_confirm: Ar tikrai norite ištrinti šitą ženklelį?

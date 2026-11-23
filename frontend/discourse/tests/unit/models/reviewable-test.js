@@ -24,6 +24,22 @@ module("Unit | Model | reviewable", function (hooks) {
         });
   });
 
+  test("flaggedReviewableContextQuestion excludes the approval requirement from flag reasons", function (assert) {
+    const approval = {
+      score_type: { type: "needs_approval", title: "Needs Approval" },
+    };
+    const spam = { score_type: { type: "spam", title: "Spam" } };
+    const question = (...scores) =>
+      this.build({ type: "ReviewableFlaggedPost", reviewable_scores: scores })
+        .flaggedReviewableContextQuestion;
+
+    assert.strictEqual(question(approval, spam), "Is this post spam?");
+    assert.strictEqual(
+      question(approval),
+      "Is there something wrong with this post?"
+    );
+  });
+
   test("userReviewableContextQuestion asks whether approval-style items have a problem", function (assert) {
     assert.strictEqual(
       this.build({ type: "ReviewableQueuedPost", topic: { id: 1 } })

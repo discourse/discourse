@@ -44,6 +44,8 @@ nb_NO:
         error: "Feil"
         response: "Svar"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listeelement"
         classify:
           text: "Tekst"
           upload_ids: "Bilder"
@@ -80,6 +82,9 @@ nb_NO:
           enabled: "Aktivert"
         search:
           name: "Søk"
+        review_queue:
+          setting_groups:
+            settings: "Innstillinger"
         image_caption:
           setting_groups:
             settings: "Innstillinger"

@@ -76,6 +76,9 @@ uk:
           title: "Шрифти"
         colors:
           title: "Кольори"
+        design_variables:
+          type: "Тип"
+          default: "Стандартна"
         dialog:
           title: "Діалог"
         drag_and_drop:
