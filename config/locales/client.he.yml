@@ -22,6 +22,14 @@ he:
       verification_code: "קוד אימות"
     mcp_oauth_client_id_metadata_policy:
       disabled: "רישום מנהלים בלבד"
+    code_editor:
+      search:
+        replace: "החלפה"
+        next: "הבא"
+        previous: "הקודם"
+        close: "סגירה"
+      fold:
+        to: "עד"
     user_api_key:
       title: 'אישור של „%{application_name}”'
       authorize: "אישור"
@@ -549,18 +557,11 @@ he:
         completed: "שינוי האפשרויות"
         show_light_screenshot: "הצגת צילום מסך בהיר"
         show_dark_screenshot: "הצגת צילום מסך כהה"
+      create_category:
+        action: "יצירת קטגוריה"
       invite_collaborators:
         title: "הזמנת משתפי פעולה"
         action: "יצירת הזמנה"
-      start_posting:
-        action: "הצגת רעיונות"
-        completed: "הצגת רעיונות נוספים"
-        choose_option: "איך בא לך להתחיל?"
-        predefined_topics: "תבניות שוברות קרח"
-        predefined_topics_subtitle: "לספק לחברים חדשים נושא לשיחה, נא לבחור תבנית לעריכה וליצור תבנית משלך."
-        predefined_topics_description: "אפשר לבחור מתוך אוסף של פותחי שיחה כדי להניע את השיח"
-        use_predefined: "עיון בתבניות"
-        back: "חזרה"
     design_wizard:
       title: "התאמת האתר שלך"
       step_label: "מעבר לשלב %{index}"
@@ -568,21 +569,23 @@ he:
       back: "חזרה"
       next: "הבא"
       launch: "אשף עיצוב"
+      steps:
+        theme:
+          title: "בחירת ערכת עיצוב"
+        homepage:
+          title: "מראה ותחושה"
       sections:
-        theme: "ערכת עיצוב"
-        colors: "צבע ברירת מחדל"
         fonts: "גופנים"
+        logo: "לוגו"
         homepage: "דף הבית"
-        welcome_banner: "כרזת קבלת פנים"
-        search: "חיפוש"
       theme:
         selected: "נבחרים"
-      colors:
-        light: "בהיר"
-        dark: "כהה"
       fonts:
-        base_font: "גופן בסיס"
-        heading_font: "גופן כותרת"
+        base_font: "Body"
+        heading_font: "כותרות"
+      logo:
+        description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
+        help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
       homepage:
         topics: "נושאים"
         categories: "קטגוריות"
@@ -590,20 +593,6 @@ he:
           boxes: "תיבות"
           with_topics: "קטגוריות עם נושאים"
           only: "קטגוריות בלבד"
-      welcome_banner:
-        enable: "הצגת כרזת קבלת פנים"
-        location: "מקום כרזה"
-        locations:
-          below_site_header: "מתחת לכותרת האתר"
-          above_topic_content: "מעל לרשימת הנושאים"
-      search:
-        experiences:
-          search_icon:
-            title: "סמל חיפוש"
-            description: "זכוכית מגדלת בכותרת שפותחת את החיפוש."
-          search_field:
-            title: "שדה חיפוש"
-            description: "שדה חיפוש מלא בכותרת, תמיד זמין."
     about:
       edit: "עריכת העמוד הזה"
       simple_title: "על אודות"
@@ -1082,6 +1071,7 @@ he:
         suspect_user: "האם זה משתמש ספאם?"
         approve_post: "לאשר את הפוסט הזה?"
         approve_topic: "לאשר את הנושא הזה?"
+        something_wrong_with_post: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שסומן"
@@ -2381,6 +2371,7 @@ he:
         redeemed_tab_with_count: "נוצלו (%{count})"
         invited_via: "הזמנה"
         invited_via_link: "קישור %{key}‏ (%{count} / %{max} נוצלו)"
+        invited_via_link_without_key: "קישור (%{count} / %{max} נוצלו)"
         groups: "קבוצות"
         topic: "נושא"
         sent: "נוצרו/נשלחו לאחרונה"
@@ -2687,6 +2678,7 @@ he:
       no_results: "אין תוצאות"
       search: "חיפוש…"
       label: "בחירת אפשרויות"
+      remove_item: "הסרת %{name}"
     d_otp:
       screen_reader:
         one: נא למלא מספר
@@ -2779,7 +2771,6 @@ he:
         }.
     learn_more: "מידע נוסף…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>משוב…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -3119,6 +3110,7 @@ he:
         size_too_small: "%{provided_file_size} קטן מהגודל המזערי המותר %{min_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
+      no_results: "אין תוצאות"
       smileys_&_emotion: חייכנים ורגש
       people_&_body: אנשים וגוף
       animals_&_nature: חיות וטבע
@@ -3166,6 +3158,10 @@ he:
       emoji: "אמוג׳י :)"
       more_emoji: "עוד…"
       options: "אפשרויות"
+      ai_content:
+        code: "קוד"
+        quote: "ציטוט"
+        details: "פרטים"
       whisper: "לחישה"
       unlist: "לא-רשום"
       add_warning: "זוהי אזהרה רשמית."
@@ -4390,10 +4386,8 @@ he:
           label: "נבחרים"
           title: "הקליקו לביטול בחירת הפוסט"
         select_replies:
-          label: "בחירת +תגובות"
           title: "הוספת פוסט ואת כל התגובות שלו לבחירה"
         select_below:
-          label: "יש לבחור +להלן"
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
@@ -4423,6 +4417,7 @@ he:
         actions: "פעולות במרוכז"
     post:
       accessible_heading: "פוסט מאת %{username} %{date}"
+      ai_generated: "בינה מלאכותית"
       heading_anchor: "קישור כותרת"
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
@@ -5561,9 +5556,18 @@ he:
       forward: "העברה"
       share: "לשתף"
       dismiss: "דחייה"
+    mobile_tab_bar:
+      new_topic: "נושא חדש"
+      create: "יצירה"
+      more: "עוד"
+      back: "חזרה"
+      topics: "נושאים"
+      drafts:
+        one: "טיוטות (%{count})"
+        two: "טיוטות (%{count})"
+        other: "טיוטות (%{count})"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
-    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
@@ -5977,17 +5981,16 @@ he:
         name: "שם"
         plugin: "תוסף"
         metadata: "נתוני על"
-        enabled: "פעיל"
-        enabled_for: "פעיל עבור…"
+        enabled: "מאופשר?"
         show_image: "הצגת תמונה"
-        edit_groups: "עריכת קבוצות הסכמה"
+        feedback: "משוב"
         groups_updated: "הקבוצות עודכנו!"
         save_groups: "שמירת קבוצות"
         add_groups_to_enable: "יש להוסיף קבוצות כדי להפעיל את היכולת הזאת"
         no_changes_to_save: "אין שינויים לשמירה"
         select_groups: "בחירת קבוצות…"
         opt_in_groups: "קבוצות הסכמה"
-        show_related_settings: "הצגת הגדרות קשורות…"
+        settings: "הגדרות"
         change_enabled_for_success: "הפעלת את השינוי הזה עבור %{enabledFor}"
         change_disabled: "סירבת לשינוי הזה"
         permanent_notice: "השינוי הזה קבוע ויוסר בקרוב. אי אפשר לסרב לו."
@@ -5996,7 +5999,6 @@ he:
         preview: "תצוגה מקדימה"
         enabled_for_options:
           no_one: "אף אחד"
-          everyone: "כולם"
           staff: "%{staffGroupName} בלבד"
           specific_groups: "קבוצה או קבוצות מסוימות"
           specific_groups_with_group_names:
@@ -7172,14 +7174,6 @@ he:
           company_name: "שם"
           company_url: "אתר"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "החוק המחייב"
-          governing_law_placeholder: "מחוז, מדינה או ארץ"
-          governing_law_help: |
-            נא לציין את תחום השיפוט להליכים המשפטיים, בפרט איפה שהחברה רשומה ומתנהלת.
-          city_for_disputes: "עיר המחלוקת"
-          city_for_disputes_placeholder: "עיר"
-          city_for_disputes_help: |
-            נא לציין את העיר ליישוב סכסוכים משפטיים שקשורים בפורום הזה.
           extra_groups:
             heading: "רשימת קבוצות"
             description: "קבוצות נוספות להצגה בעמוד ‚על אודות’."
@@ -7387,7 +7381,6 @@ he:
           uploading: "בהליכי העלאה…"
           uploading_progress: "מתבצעת העלאה… %{progress}%"
           success: "ההעלאה של ‚%{filename}’ הושלמה בהצלחה. הקובץ עובר עיבוד כרגע ותחלוף עד דקה עד שיופיע ברשימה."
-          error: "הייתה שגיאה במהלך העלאת '%{filename}': %{message}"
         settings: "הגדרות"
         operations:
           is_running: "פעולה רצה כעת…"
@@ -8390,7 +8383,6 @@ he:
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
         silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
-        silence_message: "הודעה בדוא״ל"
         suspended_until: "(עד %{until})"
         suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
@@ -8690,6 +8682,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8857,7 +8851,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

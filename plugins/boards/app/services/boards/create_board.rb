@@ -10,7 +10,7 @@ module Boards
       validates :name, presence: true
     end
 
-    policy :can_manage
+    policy :can_create_board, class_name: Boards::Policy::CanCreateBoard
 
     transaction do
       model :board, :create_board
@@ -20,10 +20,6 @@ module Boards
     end
 
     private
-
-    def can_manage(guardian:)
-      guardian.can_create_board?
-    end
 
     def create_board(guardian:)
       raw = context[:raw_board_params]&.dup || {}

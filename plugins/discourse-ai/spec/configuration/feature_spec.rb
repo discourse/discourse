@@ -221,10 +221,18 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
 
     it "returns only agents with at least one bot permission enabled" do
-      expected_ids = [chat_agent.id, dm_agent.id, topic_agent.id, pm_agent.id]
-      AiAgent.where.not(id: expected_ids).update_all(enabled: false)
-      expect(bot_feature.agent_ids).to match_array(expected_ids)
+      expected = [chat_agent, dm_agent, topic_agent, pm_agent]
+      expected.each(&:ensure_user!)
+      inactive_agent.ensure_user!
+      AiAgent.where.not(id: expected.map(&:id)).update_all(enabled: false)
+      expect(bot_feature.agent_ids).to match_array(expected.map(&:id))
       expect(bot_feature.agent_ids).not_to include(inactive_agent.id)
+    end
+
+    it "only returns agents people can talk to, which need a bot user" do
+      pm_agent.update_columns(user_id: nil)
+
+      expect(bot_feature.agent_ids).not_to include(pm_agent.id)
     end
 
     it "includes agents with multiple permissions enabled" do
@@ -238,6 +246,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
           allow_topic_mentions: true,
           allow_personal_messages: true,
         )
+      multi_permission_agent.ensure_user!
 
       expect(bot_feature.agent_ids).to include(multi_permission_agent.id)
     end

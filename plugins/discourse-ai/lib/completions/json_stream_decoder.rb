@@ -6,7 +6,7 @@ module DiscourseAi
     class JsonStreamDecoder
       attr_reader :buffer
 
-      LINE_REGEX = /data: ({.*})\s*$/
+      LINE_REGEX = /data:\s*({.*})\s*$/
 
       def initialize(symbolize_keys: true, line_regex: LINE_REGEX)
         @symbolize_keys = symbolize_keys

@@ -37,16 +37,8 @@ RSpec.describe TranslationOverride do
         end
 
         context "when custom interpolation keys are included" do
-          %w[
-            user_notifications.user_did_something
-            user_notifications.only_reply_by_email
-            user_notifications.only_reply_by_email_pm
-            user_notifications.reply_by_email
-            user_notifications.reply_by_email_pm
-            user_notifications.visit_link_to_respond
-            user_notifications.visit_link_to_respond_pm
-          ].each do |i18n_key|
-            it "validates keys for #{i18n_key}" do
+          shared_examples "validating custom notification interpolation" do |translation_key:|
+            it "reports interpolation keys outside the permitted set" do
               interpolation_key_names =
                 described_class.custom_interpolation_keys("user_notifications.user_")
 
@@ -56,7 +48,7 @@ RSpec.describe TranslationOverride do
               translation_override =
                 TranslationOverride.upsert!(
                   I18n.locale,
-                  i18n_key,
+                  translation_key,
                   "#{string_with_interpolation_keys} %{something}",
                 )
 
@@ -68,6 +60,41 @@ RSpec.describe TranslationOverride do
                 ),
               )
             end
+          end
+
+          context "with the user_did_something translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.user_did_something"
+          end
+
+          context "with the only_reply_by_email translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.only_reply_by_email"
+          end
+
+          context "with the only_reply_by_email_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.only_reply_by_email_pm"
+          end
+
+          context "with the reply_by_email translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.reply_by_email"
+          end
+
+          context "with the reply_by_email_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.reply_by_email_pm"
+          end
+
+          context "with the visit_link_to_respond translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.visit_link_to_respond"
+          end
+
+          context "with the visit_link_to_respond_pm translation" do
+            include_examples "validating custom notification interpolation",
+                             translation_key: "user_notifications.visit_link_to_respond_pm"
           end
 
           it "validates keys reserved for user_notifications" do

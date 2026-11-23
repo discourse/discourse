@@ -30,8 +30,8 @@ module("Integration | Component | WatchedWordUploader", function (hooks) {
     sinon.stub(dialog, "alert");
 
     const done = assert.async();
-    this.set("actionNameKey", "flag");
-    this.set("doneUpload", () => {
+    this.actionNameKey = "flag";
+    this.doneUpload = () => {
       assert.strictEqual(
         uploadedActionKey,
         "flag",
@@ -44,7 +44,7 @@ module("Integration | Component | WatchedWordUploader", function (hooks) {
         "alert shown"
       );
       done();
-    });
+    };
 
     await render(
       <template>

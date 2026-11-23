@@ -12,14 +12,14 @@ class TwitterApi
     ]
 
     def prettify_tweet(tweet)
-      text = tweet[:data][:text].dup.to_s
+      # the API returns text with & < > already escaped
+      text = CGI.escapeHTML(CGI.unescapeHTML(tweet[:data][:text].to_s))
       if (entities = tweet[:data][:entities]) && (urls = entities[:urls])
         urls.each do |url|
           if !url[:display_url].start_with?("pic.twitter.com")
-            text.gsub!(
-              url[:url],
-              "<a target='_blank' href='#{url[:expanded_url]}'>#{url[:display_url]}</a>",
-            )
+            link =
+              "<a target='_blank' href='#{Onebox::Helpers.normalize_url_for_output(url[:expanded_url])}'>#{CGI.escapeHTML(url[:display_url])}</a>"
+            text.gsub!(url[:url]) { link }
           else
             text.gsub!(url[:url], "")
           end
@@ -31,7 +31,7 @@ class TwitterApi
       if tweet[:includes] && media = tweet[:includes][:media]
         media.each do |m|
           if m[:type] == "photo"
-            result << "<div class='tweet-images'><img class='tweet-image' src='#{m[:url]}' width='#{m[:width]}' height='#{m[:height]}'></div>"
+            result << "<div class='tweet-images'><img class='tweet-image' src='#{Onebox::Helpers.normalize_url_for_output(m[:url])}' width='#{m[:width].to_i}' height='#{m[:height].to_i}'></div>"
           elsif m[:type] == "video" || m[:type] == "animated_gif"
             video_to_display =
               m[:variants]
@@ -40,8 +40,8 @@ class TwitterApi
                 .last # choose highest bitrate
 
             if video_to_display && url = video_to_display[:url]
-              width = m[:width]
-              height = m[:height]
+              width = m[:width].to_i
+              height = m[:height].to_i
 
               attributes =
                 if m[:type] == "animated_gif"
@@ -56,8 +56,8 @@ class TwitterApi
                     <video class='tweet-video' #{attributes}
                       width='#{width}'
                       height='#{height}'
-                      poster='#{m[:preview_image_url]}'>
-                      <source src='#{url}' type="video/mp4">
+                      poster='#{Onebox::Helpers.normalize_url_for_output(m[:preview_image_url])}'>
+                      <source src='#{Onebox::Helpers.normalize_url_for_output(url)}' type="video/mp4">
                     </video>
                   </div>
                 </div>

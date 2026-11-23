@@ -14,7 +14,10 @@ es:
     about: Acerca de
     community: Comunidad
     preview: Vista previa
+    author: Autor
     search: Buscar
     replies:
       one: "%{count} respuesta"
       other: "%{count} respuestas"
+    themes:
+      default: Por defecto

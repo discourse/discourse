@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import {
+  clearRender,
   click,
   render,
   settled,
@@ -71,6 +72,10 @@ class LiveWebrtcStub extends Service {
     return "connected";
   }
 
+  canDiagnoseConnection() {
+    return false;
+  }
+
   isTranscribingRoom() {
     return false;
   }
@@ -81,6 +86,11 @@ class LiveWebrtcStub extends Service {
 
   remoteStreamFor(roomId, userId) {
     return this.videoStreams.get(`${roomId}:${userId}`);
+  }
+
+  acquireVideoWatch(roomId, { keepVideo } = {}) {
+    this.setWatching(roomId, true);
+    return () => this.setWatching(roomId, false, { keepVideo });
   }
 
   setWatching(roomId, watching, options = {}) {
@@ -153,14 +163,7 @@ module("Integration | Component | live/call-widget", function (hooks) {
   });
 
   test("keeps video watching and participant tiles live in widget mode", async function (assert) {
-    this.set("renderWidget", true);
-    await render(
-      <template>
-        {{#if this.renderWidget}}
-          <LiveCallWidget />
-        {{/if}}
-      </template>
-    );
+    await render(<template><LiveCallWidget /></template>);
 
     assert.deepEqual(
       this.liveWebrtc.watchingCalls.at(-1),
@@ -198,8 +201,7 @@ module("Integration | Component | live/call-widget", function (hooks) {
       .dom(".live-call-widget .live-video-tile[data-user-id='2']")
       .doesNotExist("removes the participant tile while the widget is docked");
 
-    this.set("renderWidget", false);
-    await settled();
+    await clearRender();
 
     assert.deepEqual(
       this.liveWebrtc.watchingCalls.at(-1),
@@ -225,6 +227,11 @@ module("Integration | Component | live/call-widget", function (hooks) {
       .dom(".live-call-widget")
       .doesNotExist("hides on the room's own page, regardless of query params");
 
+    assert.false(
+      this.liveWebrtc.watchingCalls.at(-1).watching,
+      "releases the widget lease when returning to the active room page"
+    );
+
     router.currentRoute = { name: "discovery.latest", params: {} };
     await settled();
 
@@ -244,12 +251,58 @@ module("Integration | Component | live/call-widget", function (hooks) {
       .dom(".live-call-widget")
       .doesNotExist("hides while the preference is on");
 
+    assert.false(
+      this.liveWebrtc.watchingCalls.at(-1).watching,
+      "hidden widget does not keep subscribing"
+    );
+
     this.liveWebrtc.callWidgetHidden = false;
     await settled();
+    assert.true(
+      this.liveWebrtc.watchingCalls.at(-1).watching,
+      "showing the widget reacquires its watch"
+    );
 
     assert
       .dom(".live-call-widget")
       .exists("shows again once the preference is turned off");
+  });
+
+  test("releases the old room when the active widget room changes", async function (assert) {
+    const secondRoom = {
+      ...this.liveRooms.rooms[0],
+      id: 2,
+      slug: "second-room",
+    };
+    this.liveRooms.rooms = [...this.liveRooms.rooms, secondRoom];
+    await render(<template><LiveCallWidget /></template>);
+
+    this.liveWebrtc.activeRoomId = 2;
+    await settled();
+
+    assert.deepEqual(
+      this.liveWebrtc.watchingCalls.slice(-2),
+      [
+        { roomId: 1, watching: false, options: { keepVideo: true } },
+        { roomId: 2, watching: true, options: {} },
+      ],
+      "releases the captured old room and acquires the new one"
+    );
+    assert.dom(".live-call-widget").hasAttribute("data-room-id", "2");
+  });
+
+  test("a different room page does not hide or release the active widget", async function (assert) {
+    await render(<template><LiveCallWidget /></template>);
+    const calls = this.liveWebrtc.watchingCalls.length;
+    this.owner.lookup("service:router").currentRoute = {
+      name: "live-room",
+      params: { slug: "another-room" },
+    };
+    await settled();
+
+    assert.dom(".live-call-widget").exists();
+    assert.strictEqual(this.liveWebrtc.watchingCalls.length, calls);
+    assert.true(this.liveWebrtc.watchingCalls.at(-1).watching);
   });
 
   test("collapses a crowd into a +N overflow tile", async function (assert) {
@@ -414,7 +467,17 @@ module("Integration | Component | live/call-widget", function (hooks) {
       "keeps the extra minimized widget pinned to the bottom-right corner"
     );
 
+    assert.false(
+      this.liveWebrtc.watchingCalls.at(-1).watching,
+      "extra minimized widget has no video tiles and releases its watch"
+    );
+
     await click(".live-call-widget__expand");
+
+    assert.true(
+      this.liveWebrtc.watchingCalls.at(-1).watching,
+      "expanding reacquires video watching"
+    );
 
     assert
       .dom(".live-call-widget")

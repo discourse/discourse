@@ -13,20 +13,34 @@ module DiscourseMcp
       McpGroupScope.ensure_admins! if eligible_users.any?(&:admin?)
       return scopes_by_user_id if eligible_users.blank?
 
-      rows =
+      mcp_group_scopes =
         McpGroupScope
           .joins("INNER JOIN group_users ON group_users.group_id = mcp_group_scopes.group_id")
           .where(group_users: { user_id: eligible_users.map(&:id) })
           .where(scope: DiscourseMcp.registry.scopes)
           .distinct
           .pluck("group_users.user_id", "mcp_group_scopes.scope")
-      rows.each { |user_id, scope| scopes_by_user_id[user_id] << scope }
+
+      logged_in_users_pseudogroup_scopes =
+        McpGroupScope
+          .where(group_id: Group::AUTO_GROUPS[:logged_in_users])
+          .where(scope: DiscourseMcp.registry.scopes)
+          .pluck("mcp_group_scopes.scope")
+
+      mcp_group_scopes.each { |user_id, scope| scopes_by_user_id[user_id] << scope }
+
+      logged_in_users_pseudogroup_scopes.each do |scope|
+        eligible_users.each { |user| scopes_by_user_id[user.id] << scope }
+      end
+
       scopes_by_user_id.each_value do |scopes|
         if scopes.present? && !scopes.include?(DiscourseMcp::INITIAL_SCOPE)
           scopes << DiscourseMcp::INITIAL_SCOPE
         end
+        scopes.uniq!
         scopes.sort!
       end
+
       scopes_by_user_id
     end
 

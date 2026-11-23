@@ -3,7 +3,6 @@ import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
-import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
@@ -230,25 +229,14 @@ export default class NavItem extends EmberObject {
 
   static buildList(
     category: Category | undefined,
-    args?: NavItemOptions
+    args: NavItemOptions & Required<Pick<NavItemOptions, "siteSettings">>
   ): NavItem[] {
-    args = args || {};
-
     if (category) {
       args.category = category;
     }
 
-    if (!args.siteSettings) {
-      deprecated("You must supply `buildList` with a `siteSettings` object", {
-        since: "2.6.0",
-        id: "discourse.nav-item.built-list-site-settings",
-      });
-      args.siteSettings = getOwnerWithFallback(this).lookup(
-        "service:site-settings"
-      );
-    }
     let items: (string | NavItem | null)[] =
-      args.siteSettings!.top_menu.split("|");
+      args.siteSettings.top_menu.split("|");
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.unified_new_enabled) {
@@ -391,26 +379,46 @@ export default class NavItem extends EmberObject {
       return this._displayName;
     }
 
-    let count = this.count || 0;
-
-    if (
-      this.name === "latest" &&
-      (Site.currentProp("desktopView") || this.tag !== undefined)
-    ) {
-      count = 0;
-    }
-
-    // eslint-disable-next-line prefer-const -- Preserve the original declaration in this types-only port.
-    let extra = { count };
+    const count = this.displayCount;
     const titleKey = count === 0 ? ".title" : ".title_with_count";
 
     return emojiUnescape(
-      i18n(`filters.${this.name.replace("/", ".") + titleKey}`, extra)
+      i18n(`filters.${this.name.replace("/", ".") + titleKey}`, { count })
     );
   }
 
   set displayName(value: string) {
     this._displayName = value;
+  }
+
+  /**
+   * The count shown with the name, or 0 where none is.
+   */
+  @dependentKeyCompat
+  get displayCount(): number {
+    if (this._displayName) {
+      return 0;
+    }
+
+    if (
+      this.name === "latest" &&
+      (Site.currentProp("desktopView") || this.tag !== undefined)
+    ) {
+      return 0;
+    }
+
+    return this.count || 0;
+  }
+
+  /**
+   * The name without its count, for showing the count apart from it.
+   */
+  @dependentKeyCompat
+  get displayNameWithoutCount(): string {
+    return (
+      this._displayName ||
+      emojiUnescape(i18n(`filters.${this.name.replace("/", ".")}.title`))
+    );
   }
 
   @computed("filterType", "category", "noSubcategories", "tag")

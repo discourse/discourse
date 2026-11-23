@@ -1,4 +1,4 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, find, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -66,6 +66,67 @@ acceptance("Admin - Site Texts", function (needs) {
     assert.dom(".revert-site-text").doesNotExist();
   });
 
+  test("keeps preview tabs above the text and Edit beside it", async function (assert) {
+    pretender.get("/admin/customize/site_texts", () =>
+      response({
+        site_texts: [
+          {
+            id: "sample.customized",
+            value: "Default text",
+            override_value: "Custom text 猫",
+            preview_default: "Default text",
+            overridden: true,
+            status: "up_to_date",
+          },
+        ],
+        extras: {},
+      })
+    );
+
+    await visit("/admin/customize/site_texts");
+
+    assert
+      .dom(".site-text__header .site-text-id")
+      .hasText("sample.customized", "the key is in the header");
+    assert
+      .dom('.site-text__header [role="tablist"]')
+      .exists("the tabs are in the header");
+    function assertPreviewAlignment() {
+      const header = find(".site-text__header").getBoundingClientRect();
+      const preview = find(".site-text-value").getBoundingClientRect();
+      const edit = find(".site-text-edit").getBoundingClientRect();
+
+      assert.true(
+        Math.abs(header.right - preview.right) < 1,
+        "the header ends at the text box edge, not the Edit column"
+      );
+      assert.true(
+        Math.abs(edit.top - preview.top) < 1,
+        "Edit aligns with the top of the text box"
+      );
+    }
+
+    assertPreviewAlignment();
+    assert
+      .dom(".site-text-value")
+      .hasText("Custom text 猫", "the customized text is shown first");
+
+    await click('.site-text [role="tab"]:last-child');
+
+    assert
+      .dom(".site-text-value")
+      .hasText("Default text", "the default text replaces the customized text");
+    assertPreviewAlignment();
+
+    await click(".site-text-edit");
+
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/site_texts/sample.customized?locale=en",
+      "Edit opens the same string"
+    );
+  });
+
   test("save button disabled state", async function (assert) {
     await visit("/admin/customize/site_texts");
 
@@ -114,6 +175,53 @@ acceptance("Admin - Site Texts - baseline", function (needs) {
       }
       return helper.response({ site_texts: texts, extras: {} });
     });
+  });
+
+  test("theme locale-file runtime arguments do not show invalid placeholder warnings", async function (assert) {
+    const id = "js.theme_translations.7.greeting";
+    pretender.get(`/admin/customize/site_texts/${id}`, () =>
+      response({
+        site_text: {
+          id,
+          value: "Welcome %{name}",
+          status: "up_to_date",
+          overridden: true,
+          default_text: "Welcome",
+          interpolation_keys: null,
+        },
+      })
+    );
+
+    await visit(`/admin/customize/site_texts/${id}?locale=en`);
+    await fillIn(".site-text-value", "Hello %{name}");
+
+    assert.dom(".interpolation-keys").doesNotExist();
+    assert.dom(".save-changes").isEnabled();
+  });
+
+  test("acknowledging an unknown baseline preserves the customized text", async function (assert) {
+    pretender.get("/admin/customize/site_texts/sample.legacy", () =>
+      response({
+        site_text: {
+          id: "sample.legacy",
+          value: "Custom text",
+          status: "unknown",
+          overridden: true,
+          default_text: "Original text",
+          interpolation_keys: [],
+        },
+      })
+    );
+    pretender.put(
+      "/admin/customize/site_texts/sample.legacy/dismiss_outdated",
+      () => response({})
+    );
+    await visit("/admin/customize/site_texts/sample.legacy?locale=en");
+    assert.dom(".edit-site-text__unknown").exists();
+    assert.dom(".edit-site-text__default p").hasText("Original text");
+    await click(".edit-site-text__unknown button");
+    assert.dom(".edit-site-text__unknown").doesNotExist();
+    assert.dom(".site-text-value").hasValue("Custom text");
   });
 
   test("reverting invalid text clears its warning and restores the default preview", async function (assert) {

@@ -427,9 +427,9 @@ export default class EmojiPicker extends Component {
       let sectionElement;
 
       if (this.scrollDirection === "up" || this.prevYPosition < 50) {
-        sectionElement = visibleSections.firstObject;
+        sectionElement = visibleSections.at(0);
       } else {
-        sectionElement = visibleSections.lastObject;
+        sectionElement = visibleSections.at(-1);
       }
 
       this.lastVisibleSection = sectionElement.dataset.section;
@@ -506,7 +506,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <DFilterInput
-            placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
+            placeholder={{i18n "emoji_picker.search_placeholder"}}
             @containerClass="emoji-picker__filter"
             @filterAction={{withEventValue this.didInputFilter}}
             @icons={{hash left="magnifying-glass"}}
@@ -597,7 +597,7 @@ export default class EmojiPicker extends Component {
                       </div>
                     {{else}}
                       <p class="emoji-picker__no-results">
-                        {{i18n "chat.emoji_picker.no_results"}}
+                        {{i18n "emoji_picker.no_results"}}
                         {{dReplaceEmoji ":crying_cat_face:"}}
                       </p>
                     {{/if}}
@@ -608,7 +608,7 @@ export default class EmojiPicker extends Component {
                   {{#if emojis}}
                     <div
                       aria-label={{i18n
-                        (concat "chat.emoji_picker." section)
+                        (concat "emoji_picker." section)
                         translatedFallback=section
                       }}
                       class={{dConcatClass
@@ -622,7 +622,7 @@ export default class EmojiPicker extends Component {
                         {{! eslint-disable-next-line ember/template-no-heading-inside-button }}
                         <h2 class="emoji-picker__section-title">
                           {{i18n
-                            (concat "chat.emoji_picker." section)
+                            (concat "emoji_picker." section)
                             translatedFallback=section
                           }}
                         </h2>

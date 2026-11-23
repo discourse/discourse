@@ -4,7 +4,7 @@ require "liquid"
 
 module ::Blog
   class TemplateRenderer
-    PAGES = %w[layout index article about not_found].freeze
+    PAGES = %w[layout index article page about not_found].freeze
     MAX_TEMPLATE_BYTES = 65_536
     TEMPLATE_ROOT = File.expand_path("../../templates", __dir__)
 
@@ -51,18 +51,12 @@ module ::Blog
         }
       end
 
-    def self.validate!(source, page: nil)
-      unless source.is_a?(String) && source.valid_encoding? && source.bytesize <= MAX_TEMPLATE_BYTES
-        raise Discourse::InvalidParameters.new(I18n.t("blog.themes.template_invalid"))
-      end
+    # @return [String, nil] the Liquid error message, or nil when the source parses
+    def self.syntax_error(source)
       parse(source)
+      nil
     rescue Liquid::Error => error
-      raise Discourse::InvalidParameters.new(
-              I18n.t(
-                "blog.themes.template_parse_error",
-                error: [page, error.message].compact.join(": "),
-              ),
-            )
+      error.message
     end
 
     def self.render(page, assigns, theme:, custom: true, diagnostics: false)

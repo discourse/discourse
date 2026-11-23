@@ -65,6 +65,12 @@ module Chat
               .where("chat_threads.replies_count > 0")
           end
 
+    # A thread is only surfaced as a thread when the channel enables threading or the
+    # thread was forced. Otherwise its replies stay in the channel timeline.
+    def effective?
+      force || channel.threading_enabled
+    end
+
     # Since the `replies` for the thread can all be deleted, to avoid errors
     # in lists and previews of the thread, we can consider the original message
     # as the last message in this case as a fallback.

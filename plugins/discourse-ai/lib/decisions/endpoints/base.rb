@@ -15,6 +15,8 @@ module DiscourseAi
             Typesafe.new(model)
           when "open_ai"
             OpenAi.new(model)
+          when "gemini"
+            Gemini.new(model)
           else
             raise InvalidRequest, "Unknown decision model provider #{model.provider.inspect}"
           end

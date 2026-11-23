@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -121,6 +122,10 @@ class FakeRTCPeerConnection {
 
   constructor() {
     FakeRTCPeerConnection.created++;
+  }
+
+  createDataChannel() {
+    return { readyState: "open", close() {} };
   }
 
   addTrack() {
@@ -1743,5 +1748,237 @@ module("Live | Unit | Service | live-webrtc-livekit", function (hooks) {
       this.cameraTrack,
       "the same capture track is republished"
     );
+  });
+
+  module("acquireVideoWatch ownership", function (nested) {
+    nested.beforeEach(async function () {
+      await this.subject.join(this.room);
+      await wait(50);
+
+      const lkRoom = this.FakeLivekitRoom.instances[0];
+      this.mic = createFakeRemotePublication("microphone", "audio");
+      this.camera = createFakeRemotePublication("camera", "video");
+      this.screen = createFakeRemotePublication("screen_share", "video");
+      this.screenAudio = createFakeRemotePublication(
+        "screen_share_audio",
+        "audio"
+      );
+      lkRoom.remoteParticipants.set("2", {
+        identity: "2",
+        trackPublications: new Map([
+          ["mic-sid", this.mic],
+          ["camera-sid", this.camera],
+          ["screen-sid", this.screen],
+          ["screen-audio-sid", this.screenAudio],
+        ]),
+      });
+
+      // Let the join-time watch bookkeeping finish before counting anything.
+      await wait(20);
+      this.stateBaseline = this.stateRequests.length;
+      this.watchPosts = () =>
+        this.stateRequests
+          .slice(this.stateBaseline)
+          .map((request) => request.watching);
+      this.assertNotUnsubscribed = (assert, message) => {
+        assert.false(
+          this.camera.subscribedCalls.includes(false),
+          `${message}: camera stays subscribed`
+        );
+        assert.false(
+          this.screen.subscribedCalls.includes(false),
+          `${message}: screen video stays subscribed`
+        );
+        assert.false(
+          this.screenAudio.subscribedCalls.includes(false),
+          `${message}: screen audio stays subscribed`
+        );
+        assert.deepEqual(
+          this.mic.subscribedCalls,
+          [],
+          `${message}: microphone is never gated`
+        );
+      };
+    });
+
+    test("page to widget handoff with late page teardown keeps the subscription", async function (assert) {
+      const releasePage = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      assert.deepEqual(this.camera.subscribedCalls, [true], "page subscribes");
+      assert.deepEqual(this.screenAudio.subscribedCalls, [true]);
+      assert.deepEqual(this.watchPosts(), ["true"], "one watching POST");
+
+      // The widget renders before the page tears down.
+      const releaseWidget = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      releasePage();
+      await wait(20);
+
+      assert.true(this.subject.isWatchingRoom(1), "still watching");
+      assert.strictEqual(this.subject.watchingRoomId, 1);
+      this.assertNotUnsubscribed(assert, "after late page teardown");
+      assert.false(
+        this.watchPosts().includes("false"),
+        "no false watching POST while the widget owns the watch"
+      );
+
+      releaseWidget();
+      await wait(20);
+
+      assert.deepEqual(
+        this.camera.subscribedCalls,
+        [true, false],
+        "the last release unsubscribes the camera"
+      );
+      assert.deepEqual(
+        this.screenAudio.subscribedCalls,
+        [true, false],
+        "the last release unsubscribes screen audio"
+      );
+      assert.deepEqual(this.screen.subscribedCalls, [true, false]);
+      assert.deepEqual(this.mic.subscribedCalls, [], "microphone unaffected");
+      assert.strictEqual(this.watchPosts().at(-1), "false", "final POST");
+      assert.strictEqual(this.subject.watchingRoomId, null);
+    });
+
+    test("widget to page handoff with late widget teardown keeps the subscription", async function (assert) {
+      const releaseWidget = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      const releasePage = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      releaseWidget();
+      await wait(20);
+
+      assert.true(this.subject.isWatchingRoom(1));
+      this.assertNotUnsubscribed(assert, "after late widget teardown");
+      assert.false(this.watchPosts().includes("false"), "no false POST");
+
+      releasePage();
+      await wait(20);
+
+      assert.deepEqual(this.camera.subscribedCalls, [true, false]);
+      assert.deepEqual(this.screenAudio.subscribedCalls, [true, false]);
+      assert.deepEqual(this.screen.subscribedCalls, [true, false]);
+      assert.deepEqual(this.mic.subscribedCalls, []);
+      assert.strictEqual(this.watchPosts().at(-1), "false");
+    });
+
+    test("release before acquire in the same turn coalesces to no change", async function (assert) {
+      const releasePage = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      const postsBefore = this.watchPosts().length;
+
+      releasePage();
+      const releaseWidget = this.subject.acquireVideoWatch(1);
+      await wait(20);
+
+      assert.strictEqual(
+        this.watchPosts().length,
+        postsBefore + 1,
+        "only the coalesced watching=true update is sent"
+      );
+      assert.strictEqual(this.watchPosts().at(-1), "true");
+      this.assertNotUnsubscribed(assert, "release-before-acquire");
+      assert.true(this.subject.isWatchingRoom(1));
+
+      releaseWidget();
+      await wait(20);
+      assert.false(this.camera.subscribedCalls.at(-1));
+    });
+
+    test("release functions are idempotent and cannot release another owner", async function (assert) {
+      const releasePage = this.subject.acquireVideoWatch(1);
+      const releaseWidget = this.subject.acquireVideoWatch(1);
+      await wait(20);
+
+      releasePage();
+      releasePage();
+      releasePage();
+      await wait(20);
+
+      assert.true(this.subject.isWatchingRoom(1), "widget still owns it");
+      this.assertNotUnsubscribed(assert, "after repeated page release");
+      assert.false(this.watchPosts().includes("false"));
+
+      releaseWidget();
+      releaseWidget();
+      await wait(20);
+
+      assert.deepEqual(this.camera.subscribedCalls, [true, false]);
+      assert.strictEqual(
+        this.watchPosts().filter((value) => value === "false").length,
+        1,
+        "exactly one false POST"
+      );
+    });
+
+    test("a release in another room does not affect this room and falls back for watchingRoomId", async function (assert) {
+      // Room 2 is not joined: its ownership bookkeeping must still be
+      // independent and never touch room 1's SFU subscriptions.
+      const releaseRoom1 = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      const releaseRoom2 = this.subject.acquireVideoWatch(2);
+      await wait(20);
+      assert.strictEqual(this.subject.watchingRoomId, 2, "latest acquire");
+
+      releaseRoom2();
+      await wait(20);
+
+      assert.true(this.subject.isWatchingRoom(1), "room 1 still watched");
+      assert.false(this.subject.isWatchingRoom(2), "room 2 released");
+      assert.strictEqual(
+        this.subject.watchingRoomId,
+        1,
+        "watchingRoomId falls back to the remaining watched room"
+      );
+      this.assertNotUnsubscribed(assert, "after releasing room 2");
+      assert.false(this.watchPosts().includes("false"), "no room 1 POST");
+
+      releaseRoom1();
+      await wait(20);
+
+      assert.strictEqual(this.subject.watchingRoomId, null);
+      assert.deepEqual(this.camera.subscribedCalls, [true, false]);
+    });
+
+    test("releasing the older room keeps watchingRoomId on the current one", async function (assert) {
+      const releaseRoom1 = this.subject.acquireVideoWatch(1);
+      this.subject.acquireVideoWatch(2);
+      await wait(20);
+
+      releaseRoom1();
+      await wait(20);
+
+      assert.strictEqual(this.subject.watchingRoomId, 2);
+      assert.false(this.subject.isWatchingRoom(1));
+      assert.false(
+        this.camera.subscribedCalls.at(-1),
+        "room 1 had its own last owner released"
+      );
+    });
+
+    test("destroying the service cancels a pending watch update", async function (assert) {
+      const release = this.subject.acquireVideoWatch(1);
+      await wait(20);
+      release();
+
+      const subject = this.subject;
+      this.subject = null;
+      run(() => subject.destroy());
+      const postsAfterDestroy = this.stateRequests.length;
+      const cameraCallsAfterDestroy = [...this.camera.subscribedCalls];
+      await wait(30);
+
+      assert.strictEqual(
+        this.stateRequests.length,
+        postsAfterDestroy,
+        "no watch POST is sent after destruction"
+      );
+      assert.deepEqual(
+        this.camera.subscribedCalls,
+        cameraCallsAfterDestroy,
+        "no subscription change after destruction"
+      );
+    });
   });
 });

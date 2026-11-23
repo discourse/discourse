@@ -43,7 +43,7 @@ RSpec.describe RemoveLegacyBlogAppearanceSettings do
 
     described_class.new.up
 
-    theme = Blog::BlogTheme.active
+    theme = PluginStore.get(Blog::BlogTheme::STORE, "active")
     expect(theme["accent_color"]).to eq("bc4327")
     expect(theme["css"]).to eq(".blog { color: red; }")
     expect(theme["javascript"]).to eq("window.blogDemo = true;")
@@ -67,7 +67,7 @@ RSpec.describe RemoveLegacyBlogAppearanceSettings do
   it "leaves a site that already has themes untouched" do
     allow(Migration::Helpers).to receive(:existing_site?).and_return(true)
     saved =
-      Blog::BlogTheme.save(
+      create_blog_theme(
         {
           "name" => "Saved design",
           "accent_color" => "16634e",
@@ -78,13 +78,13 @@ RSpec.describe RemoveLegacyBlogAppearanceSettings do
         },
         user: admin,
       )
-    Blog::BlogTheme.activate(saved["id"], revision: 1, user: admin)
+    activate_blog_theme(saved, user: admin)
     set_legacy("discourse_blog_custom_css", ".blog { color: red; }")
 
     described_class.new.up
 
     expect(Blog::BlogTheme.all.size).to eq(1)
-    expect(Blog::BlogTheme.active["accent_color"]).to eq("16634e")
+    expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["accent_color"]).to eq("16634e")
     expect(legacy_rows).to eq(0)
   end
 

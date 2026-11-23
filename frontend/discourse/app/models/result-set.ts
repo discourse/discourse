@@ -23,10 +23,6 @@ export default class ResultSet<T = unknown> extends LegacyArrayLikeObject<T> {
   store: StoreService | null = null;
   __type: string | undefined;
 
-  get warnContext() {
-    return "__type: " + this.__type;
-  }
-
   @dependentKeyCompat
   get canLoadMore() {
     return this.content.length < this.totalRows;

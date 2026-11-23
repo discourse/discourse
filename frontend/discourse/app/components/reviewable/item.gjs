@@ -10,6 +10,7 @@ import { classify, dasherize } from "@ember/string";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
 import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableHelpResources from "discourse/components/reviewable/help-resources";
 import ReviewableInsights from "discourse/components/reviewable/insights";
@@ -23,6 +24,7 @@ import ReviewableFieldTags from "discourse/components/reviewable-field-tags";
 import ReviewableFieldText from "discourse/components/reviewable-field-text";
 import ReviewableFieldTextarea from "discourse/components/reviewable-field-textarea";
 import editableValue from "discourse/helpers/editable-value";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -808,7 +810,12 @@ export default class ReviewableItem extends Component {
                 {{dIcon "link"}}
               </button>
 
-              {{newReviewableStatus @reviewable.status @reviewable.type}}
+              {{newReviewableStatus
+                @reviewable.status
+                @reviewable.type
+                @reviewable.approval_style
+                @reviewable.answersProblem
+              }}
 
               <span class="reviewable-created-date">
                 {{dFormatDate @reviewable.created_at format="tiny"}}
@@ -933,6 +940,14 @@ export default class ReviewableItem extends Component {
                     @label="review.cancel"
                   />
                 {{else}}
+                  <PluginOutlet
+                    @name="reviewable-before-actions"
+                    @outletArgs={{lazyHash
+                      reviewable=@reviewable
+                      performAction=this.perform
+                      disabled=this.disabled
+                    }}
+                  />
                   {{#each this.primaryBundles as |bundle|}}
                     <ReviewableBundledAction
                       @authorPenalties={{@reviewable.author_penalties}}

@@ -10,6 +10,7 @@ html.composer-open:not(.has-full-page-chat) {
 :root {
   --composer-max-width--hide-preview: 740px;
   --composer-popup-background: var(--secondary);
+  --composer-collapsed-height: 45px;
 }
 
 .grippie {
@@ -47,11 +48,13 @@ html.composer-open:not(.has-full-page-chat) {
   display: flex;
   flex-direction: column;
   bottom: 0;
-  right: 0;
+  right: var(--d-page-inset-inline-end, 0);
   left: 0;
   margin-inline: auto;
   max-width: $reply-area-max-width;
-  width: 100%;
+
+  // a 100% width would over-constrain the box and drop the right inset
+  width: auto;
   height: 0;
   min-height: 0;
   z-index: z("composer", "content");
@@ -142,7 +145,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.draft,
   &.saving {
-    height: 45px !important;
+    height: var(--composer-collapsed-height) !important;
     align-items: center;
     background: var(--tertiary);
     color: var(--secondary);
@@ -1132,7 +1135,7 @@ html.composer-open:not(.has-full-page-chat) {
   --topic-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
   );
-  width: 100%;
+  width: auto;
   max-width: calc(var(--topic-width) + var(--topic-avatar-width));
 }
 

@@ -14,7 +14,10 @@ nl:
     about: Over
     community: Community
     preview: Voorbeeld
+    author: Auteur
     search: Zoeken
     replies:
       one: "%{count} antwoord"
       other: "%{count} antwoorden"
+    themes:
+      default: Standaard

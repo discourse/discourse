@@ -4,6 +4,12 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const Disclaimer = <template>
+  <p class="ai-disclaimer">
+    {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
+  </p>
+</template>;
+
 export default <template>
   <div class="ai-bot-conversations" ...attributes>
     {{bodyClass "ai-bot-conversations-page"}}
@@ -19,11 +25,17 @@ export default <template>
       />
       <div class="ai-bot-conversations__input-container">
         {{yield}}
+        {{#if (has-block "controls")}}
+          <div class="ai-bot-conversations__controls">
+            {{yield to="controls"}}
+            <Disclaimer />
+          </div>
+        {{/if}}
       </div>
 
-      <p class="ai-disclaimer">
-        {{i18n "discourse_ai.ai_bot.conversations.disclaimer"}}
-      </p>
+      {{#unless (has-block "controls")}}
+        <Disclaimer />
+      {{/unless}}
 
       {{yield to="footer"}}
     </div>

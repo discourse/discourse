@@ -27,17 +27,16 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
     ]
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.ai_bot_allowed_groups = "10"
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.ai_bot_allowed_groups = "10" }
 
   def build_session(
     query: "test question",
     resume_token: nil,
     tool_results: nil,
     topic: nil,
+    current_user: admin,
     custom_tools: self.custom_tools
   )
     described_class.new(
@@ -47,7 +46,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       topic: topic,
       query: query,
       custom_instructions: nil,
-      current_user: admin,
+      current_user: current_user,
       custom_tools: custom_tools,
       resume_token: resume_token,
       tool_results: tool_results,
@@ -61,6 +60,219 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
   end
 
   describe "custom tool resume" do
+    it "accepts a corrected result batch on the same token and debits each result once" do
+      read_call, confirm_call, next_call =
+        %w[read confirm next].map do |id|
+          DiscourseAi::Completions::ToolCall.new(id: id, name: "client_tool", parameters: {})
+        end
+      read_result = { tool_call_id: read_call.id, content: "Inventory read" }
+      confirm_result = { tool_call_id: confirm_call.id, content: "Inventory confirmed" }
+      answer = "The inventory is ready."
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [[read_call, confirm_call], next_call, answer, "Inventory"],
+      ) do |canned, _, prompts|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        key = described_class.redis_key(token)
+        original_state = Discourse.redis.get(key)
+        initial_work = JSON.parse(original_state).dig("work_budget", "used")
+        topic = Topic.find(events.find { |type, _| type == :context }.last[:topic_id])
+        Discourse.redis.expire(key, 2.minutes.to_i)
+        ttl_before_rejection = Discourse.redis.pttl(key)
+
+        invalid_batches = [
+          [read_result, confirm_result.merge(tool_call_id: "comfirm")],
+          [read_result, confirm_result.except(:content)],
+        ]
+        invalid_batches.each do |batch|
+          expect {
+            collect_events(build_session(resume_token: token, tool_results: batch))
+          }.to raise_error(described_class::InvalidToolResults)
+          expect(Discourse.redis.get(key)).to eq(original_state)
+          expect(Discourse.redis.pttl(key)).to be_between(1, ttl_before_rejection)
+          expect(canned.completions).to eq(1)
+          expect(topic.posts.count).to eq(1)
+        end
+
+        events =
+          collect_events(
+            build_session(resume_token: token, tool_results: [read_result, confirm_result]),
+          )
+        next_token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        expect(next_token).not_to eq(token)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+        expect(canned.completions).to eq(2)
+        expect(prompts.last.messages.select { |message| message[:type] == :tool }).to match(
+          [
+            a_hash_including(id: read_call.id, content: read_result[:content]),
+            a_hash_including(id: confirm_call.id, content: confirm_result[:content]),
+          ],
+        )
+        tokenizer = llm.to_llm.tokenizer
+        output = DiscourseAi::Completions::GeneratedOutput.new
+        output << next_call
+        work =
+          JSON.parse(Discourse.redis.get(described_class.redis_key(next_token))).fetch(
+            "work_budget",
+          )
+        expect(work["used"]).to eq(
+          initial_work + tokenizer.size(read_result[:content]) +
+            tokenizer.size(confirm_result[:content]) + output.size(tokenizer),
+        )
+
+        final_results = [{ tool_call_id: next_call.id, content: "Next check completed" }]
+        collect_events(build_session(resume_token: next_token, tool_results: final_results))
+        expect {
+          collect_events(build_session(resume_token: next_token, tool_results: final_results))
+        }.to raise_error(described_class::ResumeTokenNotFound)
+        expect(topic.posts.order(:post_number).pluck(:raw)).to eq(["test question", answer])
+        expect(canned.completions).to eq(4)
+      end
+    end
+
+    it "rejects duplicate result IDs without replacing or consuming the pending batch" do
+      call = DiscourseAi::Completions::ToolCall.new(id: "read", name: "client_tool", parameters: {})
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [call, "Inventory is ready", "Inventory"],
+      ) do |canned|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        key = described_class.redis_key(token)
+        original_state = Discourse.redis.get(key)
+
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [
+                { tool_call_id: call.id, content: "First outcome" },
+                { id: call.id, content: "Conflicting outcome" },
+              ],
+            ),
+          )
+        }.to raise_error(described_class::InvalidToolResults)
+        expect(Discourse.redis.get(key)).to eq(original_state)
+        expect(canned.completions).to eq(1)
+
+        # Redis uses its own clock, so expire the token without waiting for its deadline.
+        Discourse.redis.expire(key, 0)
+        expect {
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: "Corrected outcome" }],
+            ),
+          )
+        }.to raise_error(described_class::ResumeTokenNotFound)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+        expect(canned.completions).to eq(1)
+      end
+    end
+
+    it "rejects both queued and late results for a previous round even when a call ID is reused" do
+      first_call, second_call =
+        %w[first second].map do |input|
+          DiscourseAi::Completions::ToolCall.new(
+            id: "read",
+            name: "client_tool",
+            parameters: {
+              input: input,
+            },
+          )
+        end
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [first_call, second_call, "Inventory is ready", "Inventory"],
+      ) do |canned|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        first_results = [{ tool_call_id: first_call.id, content: "First outcome" }]
+        winner = build_session(resume_token: token, tool_results: first_results)
+        winner_events = nil
+        allow(DiscourseAi::AiBot::ReplyLock).to receive(
+          :synchronize,
+        ).and_wrap_original do |lock, key, &block|
+          if winner_events.nil?
+            # Let the competing request finish round one before the queued request enters the lock.
+            winner_events = []
+            winner_events = collect_events(winner)
+          end
+          lock.call(key, &block)
+        end
+
+        expect {
+          collect_events(build_session(resume_token: token, tool_results: first_results))
+        }.to raise_error(described_class::ResumeTokenNotFound)
+        next_token = winner_events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        expect(next_token).not_to eq(token)
+        expect {
+          collect_events(build_session(resume_token: token, tool_results: first_results))
+        }.to raise_error(described_class::ResumeTokenNotFound)
+        expect(canned.completions).to eq(2)
+
+        second_results = [{ tool_call_id: second_call.id, content: "Second outcome" }]
+        collect_events(build_session(resume_token: next_token, tool_results: second_results))
+        expect(canned.completions).to eq(4)
+        expect(described_class.resume_state_exists?(next_token)).to eq(false)
+      end
+    end
+
+    it "leaves the pending batch available to its owner after a different admin submits results" do
+      other_admin = Fabricate(:admin)
+      call = DiscourseAi::Completions::ToolCall.new(id: "read", name: "client_tool", parameters: {})
+      DiscourseAi::Completions::Llm.with_prepared_responses([call, "Answer", "Title"]) do |canned|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        key = described_class.redis_key(token)
+        original_state = Discourse.redis.get(key)
+        Discourse.redis.expire(key, 2.minutes.to_i)
+        ttl_before_rejection = Discourse.redis.pttl(key)
+
+        expect {
+          collect_events(
+            build_session(
+              current_user: other_admin,
+              resume_token: token,
+              tool_results: [{ tool_call_id: "typo", content: "Unexpected result" }],
+            ),
+          )
+        }.to raise_error(described_class::ResumeTokenNotFound)
+        expect(Discourse.redis.get(key)).to eq(original_state)
+        expect(Discourse.redis.pttl(key)).to be_between(1, ttl_before_rejection)
+        expect(canned.completions).to eq(1)
+
+        results = [{ tool_call_id: call.id, content: "Owner's result" }]
+        collect_events(build_session(resume_token: token, tool_results: results))
+        expect(canned.completions).to eq(3)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+      end
+    end
+
+    it "leaves a replaced state untouched if it changes after preflight" do
+      call = DiscourseAi::Completions::ToolCall.new(id: "read", name: "client_tool", parameters: {})
+      DiscourseAi::Completions::Llm.with_prepared_responses([call, "Answer", "Title"]) do |canned|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+        key = described_class.redis_key(token)
+        replacement = Discourse.redis.get(key) + "\n"
+        results = [{ tool_call_id: call.id, content: "Checked" }]
+        session = build_session(resume_token: token, tool_results: results)
+        allow(session).to receive(:preflight_tool_results!).and_wrap_original do |preflight|
+          preflight.call.tap do
+            # Another writer replaces the saved bytes before this session can claim them.
+            Discourse.redis.set(key, replacement, xx: true, keepttl: true)
+          end
+        end
+
+        expect { collect_events(session) }.to raise_error(described_class::ResumeTokenNotFound)
+        expect(Discourse.redis.get(key)).to eq(replacement)
+        expect(canned.completions).to eq(1)
+
+        collect_events(build_session(resume_token: token, tool_results: results))
+        expect(canned.completions).to eq(3)
+      end
+    end
+
     describe "failed multi-round resume" do
       fab!(:permission_group) { Fabricate(:group).tap { |group| group.add(admin) } }
 
@@ -83,78 +295,103 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         post
       end
 
-      [false, true].each do |with_checkpoint|
-        it "preserves both caller rounds and current model turns after failed resume #{with_checkpoint ? "with" : "without"} a checkpoint" do
-          topic = history.topic
-          calls =
-            2.times.map do |index|
-              DiscourseAi::Completions::ToolCall.new(
-                name: "client_tool",
-                parameters: {
-                  input: "round #{index}",
-                },
-                id: "multi-round-#{index}",
-              )
-            end
-          model_turns = ["Current round one reasoning", "Current round two reasoning"]
-          results = ["Completed first caller result", "Completed second caller result"]
-          token = nil
-          DiscourseAi::Completions::Llm.with_prepared_responses(
-            [[model_turns[0], calls[0]], [model_turns[1], calls[1]]],
-          ) do
-            events = collect_events(build_session(topic: topic, query: "Current request"))
-            token = events.find { |type, _| type == :tool_calls }[1][:resume_token]
-            events =
-              collect_events(
-                build_session(
-                  resume_token: token,
-                  tool_results: [{ tool_call_id: calls[0].id, content: results[0] }],
-                ),
-              )
-            token = events.find { |type, _| type == :tool_calls }[1][:resume_token]
-          end
-          key = described_class.redis_key(token)
-          state = JSON.parse(Discourse.redis.get(key))
-          if with_checkpoint
-            messages = state["prompt"]["messages"]
-            state["prompt"]["messages"] = [
-              messages.first,
-              {
-                type: "user",
-                content: "<compressed_context>Old historical summary</compressed_context>",
-              },
-              {
-                type: "model",
-                content: DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
-              },
-              *messages.drop(state["protected_user_index"]),
-            ]
-            state["protected_user_index"] = 3
-            Discourse.redis.set(key, state.to_json)
-          end
-          permission_group.remove(admin)
-          original = history.raw
-          history.update!(raw: "Corrected historical source")
+      let(:model_turns) { ["Current round one reasoning", "Current round two reasoning"] }
+      let(:caller_results) do
+        [
+          { tool_call_id: "multi-round-0", content: "Completed first caller result" },
+          { tool_call_id: "multi-round-1", content: "Completed second caller result" },
+        ]
+      end
 
-          DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
-            expect {
-              collect_events(
-                build_session(
-                  resume_token: token,
-                  tool_results: [{ tool_call_id: calls[1].id, content: results[1] }],
-                ),
-              )
-            }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
-            expect(canned.completions).to eq(0)
+      def suspend_in_second_caller_round
+        calls =
+          caller_results.map.with_index do |result, index|
+            DiscourseAi::Completions::ToolCall.new(
+              name: "client_tool",
+              parameters: {
+                input: "round #{index}",
+              },
+              id: result[:tool_call_id],
+            )
           end
-          reply = topic.posts.order(:post_number).last
-          saved = PostCustomPrompt.find_by!(post_id: reply.id).custom_prompt
-          expect(saved.select { |entry| entry[2] == "tool" }.map(&:first)).to eq(results)
-          expect(saved.select { |entry| entry[2] == "model" }.map(&:first)).to eq(model_turns)
-          expect(saved.map { |entry| entry[7] }.uniq).to eq([state["evidence_scope"]])
-          expect(saved.to_s).not_to include(original, history.raw, "<compressed_context>")
-          expect(Discourse.redis.get(key)).to be_nil
+        DiscourseAi::Completions::Llm.with_prepared_responses(model_turns.zip(calls)) do
+          events = collect_events(build_session(topic: history.topic, query: "Current request"))
+          token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
+          events =
+            collect_events(build_session(resume_token: token, tool_results: [caller_results.first]))
+          events.find { |type, _| type == :tool_calls }.last[:resume_token]
         end
+      end
+
+      it "preserves both caller rounds and current model turns after a failed resume without a checkpoint" do
+        token = suspend_in_second_caller_round
+        key = described_class.redis_key(token)
+        state = JSON.parse(Discourse.redis.get(key))
+        permission_group.remove(admin)
+        original = history.raw
+        history.update!(raw: "Corrected historical source")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
+          expect {
+            collect_events(build_session(resume_token: token, tool_results: [caller_results.last]))
+          }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
+          expect(canned.completions).to eq(0)
+        end
+
+        saved = history.topic.posts.order(:post_number).last.post_custom_prompt.custom_prompt
+        expect(saved.select { |entry| entry[2] == "tool" }.map(&:first)).to eq(
+          caller_results.pluck(:content),
+        )
+        expect(saved.select { |entry| entry[2] == "model" }.map(&:first)).to eq(model_turns)
+        expect(saved.map { |entry| entry[7] }.uniq).to eq([state["evidence_scope"]])
+        expect(saved.to_s).not_to include(original, history.raw, "<compressed_context>")
+        expect(Discourse.redis.get(key)).to be_nil
+      end
+
+      it "preserves both caller rounds and current model turns but drops a stale checkpoint" do
+        token = suspend_in_second_caller_round
+        key = described_class.redis_key(token)
+        state = JSON.parse(Discourse.redis.get(key))
+        messages = state["prompt"]["messages"]
+        checkpoint_summary = "Old historical summary"
+        state["prompt"]["messages"] = [
+          messages.first,
+          {
+            type: "user",
+            content: "<compressed_context>#{checkpoint_summary}</compressed_context>",
+          },
+          {
+            type: "model",
+            content: DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK,
+          },
+          *messages.drop(state["protected_user_index"]),
+        ]
+        state["protected_user_index"] = 3
+        Discourse.redis.set(key, state.to_json)
+        permission_group.remove(admin)
+        original = history.raw
+        history.update!(raw: "Corrected historical source")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
+          expect {
+            collect_events(build_session(resume_token: token, tool_results: [caller_results.last]))
+          }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
+          expect(canned.completions).to eq(0)
+        end
+
+        saved = history.topic.posts.order(:post_number).last.post_custom_prompt.custom_prompt
+        expect(saved.select { |entry| entry[2] == "tool" }.map(&:first)).to eq(
+          caller_results.pluck(:content),
+        )
+        expect(saved.select { |entry| entry[2] == "model" }.map(&:first)).to eq(model_turns)
+        expect(saved.map { |entry| entry[7] }.uniq).to eq([state["evidence_scope"]])
+        expect(saved.to_s).not_to include(
+          original,
+          history.raw,
+          checkpoint_summary,
+          "<compressed_context>",
+        )
+        expect(Discourse.redis.get(key)).to be_nil
       end
     end
 
@@ -197,64 +434,57 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(Discourse.redis.get(described_class.redis_key(token))).to be_nil
     end
 
-    %i[missing extra].each do |invalid_ids|
-      it "restores consumed resume state when #{invalid_ids} caller IDs compound a history change" do
-        call =
-          DiscourseAi::Completions::ToolCall.new(
-            id: "compound-read",
-            name: "client_tool",
-            parameters: {
-            },
-          )
-        token = nil
-        DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
-          token =
-            collect_events(build_session).find { |type, _| type == :tool_calls }[1][:resume_token]
-        end
+    it "preserves the resume deadline for missing and unexpected results after topic access is revoked" do
+      call =
+        DiscourseAi::Completions::ToolCall.new(
+          id: "compound-read",
+          name: "client_tool",
+          parameters: {
+          },
+        )
+      valid_results = [{ tool_call_id: call.id, content: "Completed result" }]
+      unexpected_result = { tool_call_id: "unexpected", content: "Unaccepted result" }
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [call, "Recovered answer", "Title"],
+      ) do |canned, _, prompts|
+        events = collect_events(build_session)
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
         key = described_class.redis_key(token)
-        state = JSON.parse(Discourse.redis.get(key))
-        topic = Topic.find(state["topic_id"])
+        original_state = Discourse.redis.get(key)
+        topic = Topic.find(JSON.parse(original_state).fetch("topic_id"))
         admin.update!(admin: false, moderator: false)
         topic.topic_allowed_users.where(user_id: admin.id).delete_all
-        valid_results = [{ tool_call_id: call.id, content: "Completed result" }]
-        invalid_results =
-          (
-            if invalid_ids == :missing
-              []
-            else
-              valid_results + [{ tool_call_id: "unexpected", content: "Unaccepted result" }]
-            end
-          )
-        DiscourseAi::Completions::Llm.with_prepared_responses([]) do |canned|
-          2.times do
-            expect {
-              collect_events(build_session(resume_token: token, tool_results: invalid_results))
-            }.to raise_error(
-              described_class::InvalidToolResults,
-              I18n.t(
-                "discourse_ai.errors.#{invalid_ids == :missing ? "missing" : "unexpected"}_tool_results",
-                ids: invalid_ids == :missing ? call.id : "unexpected",
-              ),
-            )
-            expect(JSON.parse(Discourse.redis.get(key))).to eq(state)
-            expect(topic.posts.count).to eq(1)
-          end
-          expect(canned.completions).to eq(0)
+        # Age the state using Redis's clock so an accidental SETEX refresh is observable.
+        Discourse.redis.expire(key, 2.minutes.to_i)
+        ttl_before_rejection = Discourse.redis.pttl(key)
+
+        invalid_batches = [
+          [[], I18n.t("discourse_ai.errors.missing_tool_results", ids: call.id)],
+          [
+            valid_results + [unexpected_result],
+            I18n.t(
+              "discourse_ai.errors.unexpected_tool_results",
+              ids: unexpected_result[:tool_call_id],
+            ),
+          ],
+        ]
+        invalid_batches.each do |batch, message|
+          expect {
+            collect_events(build_session(resume_token: token, tool_results: batch))
+          }.to raise_error(described_class::InvalidToolResults, message)
+          expect(Discourse.redis.get(key)).to eq(original_state)
+          expect(Discourse.redis.pttl(key)).to be_between(1, ttl_before_rejection)
+          expect(canned.completions).to eq(1)
+          expect(topic.posts.count).to eq(1)
         end
+
         admin.update!(admin: true)
         topic.topic_allowed_users.create!(user_id: admin.id)
-        DiscourseAi::Completions::Llm.with_prepared_responses(
-          ["Recovered answer", "Title"],
-        ) do |_, _, prompts|
-          collect_events(build_session(resume_token: token, tool_results: valid_results))
-          expect(
-            prompts
-              .first
-              .messages
-              .select { |message| message[:type] == :tool }
-              .map { |message| message[:content] },
-          ).to eq([valid_results.first[:content]])
-        end
+        collect_events(build_session(resume_token: token, tool_results: valid_results))
+
+        tool_messages = prompts[1].messages.select { |message| message[:type] == :tool }
+        expect(tool_messages.pluck(:content)).to eq(valid_results.pluck(:content))
         expect(described_class.resume_state_exists?(token)).to eq(false)
       end
     end
@@ -476,6 +706,106 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(inherited.first[6]["source_id"]).to eq(topic.posts.find_by!(raw: "Continue again").id)
     end
 
+    it "keeps the current request and reply evidence boundaries when normalizing saved history" do
+      topic = Fabricate(:private_message_post, user: admin, recipient: ai_agent.user).topic
+      query = "Continue with the current inventory check."
+      first_call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "inventory")
+      second_call =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", parameters: {}, id: "confirm")
+      first_result = "Inventory checked"
+      second_result = "Inventory confirmed"
+      answer = "The inventory is ready."
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [first_call, second_call, answer],
+      ) do |canned|
+        events = collect_events(build_session(topic: topic, query: query))
+        token = events.find { |type, _| type == :tool_calls }[1][:resume_token]
+        key = described_class.redis_key(token)
+        state = JSON.parse(Discourse.redis.get(key))
+        history = [
+          { type: "model", content: "Old inventory reply" },
+          { type: "system", content: "Private old system instructions" },
+          { type: "model", content: "Old inventory follow-up" },
+        ]
+        state["prompt"]["messages"].insert(1, *history)
+        state["initial_prompt_message_count"] += history.size
+        state["protected_user_index"] += history.size
+        Discourse.redis.set(key, state.to_json)
+
+        events =
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: first_call.id, content: first_result }],
+            ),
+          )
+        tool_event = events.find { |type, _| type == :tool_calls }.last
+        expect(tool_event[:tool_calls].pluck(:id)).to eq([second_call.id])
+        token = tool_event[:resume_token]
+        resumed_state = JSON.parse(Discourse.redis.get(described_class.redis_key(token)))
+        request = resumed_state["prompt"]["messages"].fetch(resumed_state["protected_user_index"])
+        expect(request).to include("type" => "user", "content" => a_string_including(query))
+
+        collect_events(
+          build_session(
+            resume_token: token,
+            tool_results: [{ tool_call_id: second_call.id, content: second_result }],
+          ),
+        )
+
+        reply = topic.posts.order(:post_number).last
+        expect(reply).to have_attributes(user: ai_agent.user, raw: answer)
+        evidence = reply.post_custom_prompt.custom_prompt
+        expect(evidence.map { |entry| entry.values_at(2, 1, 0) }).to match(
+          [
+            ["tool_call", first_call.id, a_kind_of(String)],
+            ["tool", first_call.id, first_result],
+            ["tool_call", second_call.id, a_kind_of(String)],
+            ["tool", second_call.id, second_result],
+            ["model", nil, answer],
+          ],
+        )
+        expect(canned.completions).to eq(3)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+      end
+    end
+
+    it "protects the real request instead of a trailing budget hint when restoring an unindexed session" do
+      # A user can quote a marker verbatim; only the unattributed copy is the bot's hint.
+      query = DiscourseAi::Agents::Bot::LEGACY_BUDGET_EXHAUSTED_HINT
+      first =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", id: "read", parameters: {})
+      second =
+        DiscourseAi::Completions::ToolCall.new(name: "client_tool", id: "confirm", parameters: {})
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([first, second]) do
+        events = collect_events(build_session(query: query))
+        token = events.find { |type, _| type == :tool_calls }.last.fetch(:resume_token)
+        key = described_class.redis_key(token)
+        state = JSON.parse(Discourse.redis.get(key))
+        request =
+          state.fetch("prompt").fetch("messages").fetch(state.delete("protected_user_index"))
+        expect(request).to include("content" => query, "id" => admin.username)
+        state.fetch("prompt").fetch("messages") << { type: "user", content: query }
+        Discourse.redis.setex(key, described_class::RESUME_STATE_TTL_SECONDS, state.to_json)
+
+        events =
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: first.id, content: "Read once" }],
+            ),
+          )
+        next_token = events.find { |type, _| type == :tool_calls }.last.fetch(:resume_token)
+        resumed = JSON.parse(Discourse.redis.get(described_class.redis_key(next_token)))
+        expect(
+          resumed.fetch("prompt").fetch("messages").fetch(resumed.fetch("protected_user_index")),
+        ).to eq(request)
+      end
+    end
+
     it "protects the source request and additional current instructions while preparing a resumed result" do
       llm.update!(max_prompt_tokens: 16_000)
       call =
@@ -577,6 +907,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         "preparation_tokens" => 123,
       )
       Discourse.redis.set(key, state.to_json)
+      next_token = nil
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["First summary", "Complete summary", call],
       ) do |_, _, _, options|
@@ -587,12 +918,12 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
               tool_results: [{ tool_call_id: call.id, content: "Oversized result " * 6000 }],
             ),
           )
-        expect(events.find { |type, _| type == :tool_calls }).to be_present
+        next_token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
         expect(options.map { |option| option[:feature_name] }).to eq(
           %w[context_compression context_compression bot],
         )
       end
-      resumed_state = JSON.parse(Discourse.redis.get(key))
+      resumed_state = JSON.parse(Discourse.redis.get(described_class.redis_key(next_token)))
       expect(resumed_state["completion_count"]).to eq(4)
       expect(resumed_state["preparation_tokens"]).to eq(123)
       expect(
@@ -618,16 +949,18 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["First summary", "Complete summary", call],
       ) do
-        collect_events(
-          build_session(
-            resume_token: token,
-            tool_results: [{ tool_call_id: call.id, content: "Oversized result " * 6000 }],
-          ),
-        )
+        events =
+          collect_events(
+            build_session(
+              resume_token: token,
+              tool_results: [{ tool_call_id: call.id, content: "Oversized result " * 6000 }],
+            ),
+          )
+        token = events.find { |type, _| type == :tool_calls }.last[:resume_token]
       end
-      expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(
-        DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1,
-      )
+      expect(
+        JSON.parse(Discourse.redis.get(described_class.redis_key(token)))["completion_count"],
+      ).to eq(DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1)
 
       DiscourseAi::Completions::Llm.with_prepared_responses(
         ["Final answer at the execution limit", "Test title"],
@@ -738,8 +1071,11 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
       expect(described_class.resume_state_exists?(token)).to eq(false)
     end
 
-    %w[maintenance final_reply].each do |failure_stage|
-      it "persists consumed completions when #{failure_stage} fails after access is revoked" do
+    context "when topic access is revoked during maintenance" do
+      let(:tool_result) { { tool_call_id: "failed-final", content: "Completed evidence " * 2000 } }
+      let(:credit_error) { LlmCreditAllocation::CreditLimitExceeded.new("credits exhausted") }
+
+      def suspend_before_last_ordinary_completion
         llm.update!(max_prompt_tokens: 16_000)
         ai_agent.update!(max_turn_tokens: 200_000)
         call =
@@ -747,25 +1083,21 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
             name: "client_tool",
             parameters: {
             },
-            id: "failed-final",
+            id: tool_result[:tool_call_id],
           )
-        token = nil
-        DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
-          token =
-            collect_events(build_session(query: "request " * 11_000)).find do |type, _|
-              type == :tool_calls
-            end[
-              1
-            ][
-              :resume_token
-            ]
-        end
+        token =
+          DiscourseAi::Completions::Llm.with_prepared_responses([call]) do
+            events = collect_events(build_session(query: "request " * 11_000))
+            events.find { |type, _| type == :tool_calls }.last[:resume_token]
+          end
         key = described_class.redis_key(token)
         state = JSON.parse(Discourse.redis.get(key))
         state["completion_count"] = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 2
         Discourse.redis.set(key, state.to_json)
-        topic = Topic.find(state["topic_id"])
-        result = "Completed evidence " * 2000
+        token
+      end
+
+      def revoke_access_during_compression(topic)
         allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
           :generate,
         ).and_wrap_original do |generate, *args, **options, &block|
@@ -775,32 +1107,52 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           end
           generate.call(*args, **options, &block)
         end
-        responses = [LlmCreditAllocation::CreditLimitExceeded.new("credits exhausted")]
-        responses.unshift("Completed caller evidence summarized.") if failure_stage == "final_reply"
-        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+      end
+
+      it "persists the spent maintenance completion and leaves the reserved final unspent" do
+        token = suspend_before_last_ordinary_completion
+        key = described_class.redis_key(token)
+        topic = Topic.find(JSON.parse(Discourse.redis.get(key)).fetch("topic_id"))
+        revoke_access_during_compression(topic)
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([credit_error]) do
           expect {
-            collect_events(
-              build_session(
-                resume_token: token,
-                tool_results: [{ tool_call_id: call.id, content: result }],
-              ),
-            )
+            collect_events(build_session(resume_token: token, tool_results: [tool_result]))
           }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
         end
-        failed_state = JSON.parse(Discourse.redis.get(key))
-        completion_count = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
-        completion_count -= 1 if failure_stage == "maintenance"
-        expect(failed_state["completion_count"]).to eq(completion_count)
-        expect(failed_state["failed_tool_results"]).to eq(
-          [{ "tool_call_id" => call.id, "content" => result }],
+
+        completion_count = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS - 1
+        expect(JSON.parse(Discourse.redis.get(key))).to include(
+          "completion_count" => completion_count,
+          "failed_tool_results" => [tool_result.stringify_keys],
         )
         expect {
-          collect_events(
-            build_session(
-              resume_token: token,
-              tool_results: [{ tool_call_id: call.id, content: result }],
-            ),
-          )
+          collect_events(build_session(resume_token: token, tool_results: [tool_result]))
+        }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
+        expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(completion_count)
+      end
+
+      it "persists both spent completions when maintenance succeeds but the reserved final fails" do
+        token = suspend_before_last_ordinary_completion
+        key = described_class.redis_key(token)
+        topic = Topic.find(JSON.parse(Discourse.redis.get(key)).fetch("topic_id"))
+        revoke_access_during_compression(topic)
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(
+          ["Completed caller evidence summarized.", credit_error],
+        ) do
+          expect {
+            collect_events(build_session(resume_token: token, tool_results: [tool_result]))
+          }.to raise_error(LlmCreditAllocation::CreditLimitExceeded)
+        end
+
+        completion_count = DiscourseAi::Agents::SubagentExecutionState::MAX_COMPLETIONS
+        expect(JSON.parse(Discourse.redis.get(key))).to include(
+          "completion_count" => completion_count,
+          "failed_tool_results" => [tool_result.stringify_keys],
+        )
+        expect {
+          collect_events(build_session(resume_token: token, tool_results: [tool_result]))
         }.to raise_error(DiscourseAi::Completions::ContextPreparation::Error, /history_changed/)
         expect(JSON.parse(Discourse.redis.get(key))["completion_count"]).to eq(completion_count)
       end
@@ -1048,9 +1400,9 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
   end
 
   describe "token budget enforcement" do
-    it "hands a batch of 50 caller tools out for execution" do
+    it "hands out and resumes the largest caller batch the HTTP API accepts" do
       calls =
-        50.times.map do |index|
+        20.times.map do |index|
           DiscourseAi::Completions::ToolCall.new(
             id: "batch-#{index}",
             name: "client_tool",
@@ -1060,18 +1412,24 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
           )
         end
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([calls]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [calls, "Batch summary", "Title"],
+      ) do |canned|
         events = collect_events(build_session)
         payload = events.find { |type, _| type == :tool_calls }.last
+        token = payload.fetch(:resume_token)
+        expect(payload.fetch(:tool_calls).pluck(:id)).to eq(calls.map(&:id))
 
-        expect(payload[:tool_calls].map { |call| call[:id] }).to eq(calls.map(&:id))
-        expect(described_class.resume_state_exists?(payload[:resume_token])).to eq(true)
+        results = calls.map { |call| { tool_call_id: call.id, content: "Done" } }
+        collect_events(build_session(resume_token: token, tool_results: results))
+        expect(canned.completions).to eq(3)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
       end
     end
 
-    it "rejects a surplus caller batch with one bounded set of wrappers and one final answer" do
+    it "does not offer more caller tools than can be submitted in one HTTP resume" do
       calls =
-        52.times.map do |index|
+        21.times.map do |index|
           DiscourseAi::Completions::ToolCall.new(
             id: "surplus-#{index}",
             name: "client_tool",
@@ -1087,7 +1445,7 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         expect(events.map(&:first)).not_to include(:tool_calls)
         final = prompts[1]
         wrappers = final.messages.select { |message| message[:type] == :tool }
-        expect(wrappers.size).to eq(52)
+        expect(wrappers.size).to eq(calls.size)
         expect(wrappers.map { |message| JSON.parse(message[:content])["error"] }.uniq).to eq(
           ["Not executed — work allowance or tool batch limit reached."],
         )
@@ -1206,7 +1564,10 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
               tool_results: [{ tool_call_id: "reused-id", content: result }],
             ),
           ).find { |type, _| type == :tool_calls }
-        second = JSON.parse(Discourse.redis.get(described_class.redis_key(token)))
+        next_token = event[1][:resume_token]
+        expect(next_token).not_to eq(token)
+        expect(described_class.resume_state_exists?(token)).to eq(false)
+        second = JSON.parse(Discourse.redis.get(described_class.redis_key(next_token)))
         output = DiscourseAi::Completions::GeneratedOutput.new
         output << calls.second
         expect(second["work_budget"]["limit"]).to eq(5000)
@@ -1217,11 +1578,11 @@ RSpec.describe DiscourseAi::AiBot::StreamReplyCustomToolsSession do
         expect(second["work_budget"]["event_ids"]).to include("client_tool:1:reused-id")
         collect_events(
           build_session(
-            resume_token: event[1][:resume_token],
+            resume_token: next_token,
             tool_results: [{ tool_call_id: "reused-id", content: result }],
           ),
         )
-        expect(described_class.resume_state_exists?(token)).to eq(false)
+        expect(described_class.resume_state_exists?(next_token)).to eq(false)
       end
     end
 

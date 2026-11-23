@@ -11,6 +11,15 @@ el:
       go_back: "Μετάβαση πίσω"
       title: "Αναφορά παράνομου περιεχομένου"
       email: "Διεύθυνση email"
+    code_editor:
+      search:
+        replace: "Αντικατάσταση"
+        next: "Επόμενο"
+        previous: "Προηγούμενο"
+        close: "Κλείσιμο"
+        go: "Εμπρός"
+      fold:
+        to: "προς"
     user_api_key:
       title: 'Εξουσιοδότηση "%{application_name}"'
       authorize: "Εξουσιοδότηση"
@@ -505,40 +514,29 @@ el:
         title: "Προσαρμόστε τον ιστότοπό σας"
         show_light_screenshot: "Εμφάνιση φωτεινού στιγμιότυπου οθόνης"
         show_dark_screenshot: "Εμφάνιση σκοτεινού στιγμιότυπου οθόνης"
+      create_category:
+        action: "Δημιουργία κατηγορίας"
       invite_collaborators:
         title: "Προσκαλέστε συνεργάτες"
         action: "Δημιουργία πρόσκλησης"
-      start_posting:
-        title: "Ξεκινήστε να αναρτάτε"
-        action: "Δείτε ιδέες"
-        choose_option: "Πώς θα θέλατε να ξεκινήσετε;"
-        predefined_topics: "Πρότυπα για το σπάσιμο του πάγου"
-        predefined_topics_subtitle: "Δώστε στα νέα μέλη κάτι για να συζητήσουν, επιλέξτε ένα πρότυπο για επεξεργασία και δημιουργήστε το δικό σας."
-        predefined_topics_description: "Διαλέξτε από μια συλλογή από αφορμές για συζήτηση για να ξεκινήσουν οι συζητήσεις"
-        use_predefined: "Περιήγηση προτύπων"
-        back: "Πίσω"
-        icebreakers:
-          introduce_yourself:
-            title: "Συστηθείτε"
-            body: "Καλώς ορίσατε στην κοινότητα! Ας γνωριστούμε. Συστηθείτε μας και μοιραστείτε μαζί μας λίγα πράγματα για τα ενδιαφέροντά σας. Θα ξεκινήσω πρώτος: Είμαι παθιασμένος με την τεχνολογία και μου αρέσει να διδάσκω άλλους!"
     design_wizard:
       title: "Προσαρμόστε τον ιστότοπό σας"
       back: "Πίσω"
       next: "Επόμενο"
+      steps:
+        theme:
+          title: "Επιλέξτε ένα θέμα"
       sections:
-        theme: "Θέμα"
         fonts: "Γραμματοσειρές"
+        logo: "Λογότυπο"
         homepage: "Αρχική Σελίδα"
-        welcome_banner: "Banner καλωσορίσματος"
-        search: "Αναζήτηση"
       theme:
         selected: "Επιλεγμένο"
-      colors:
-        light: "Φωτεινή"
-        dark: "Σκοτεινή"
       fonts:
-        base_font: "Βασική γραμματοσειρά"
-        heading_font: "Γραμματοσειρά επικεφαλίδας"
+        base_font: "Κύριο μέρος"
+        heading_font: "Επικεφαλίδες"
+      logo:
+        help_text: "Το συνιστώμενο μέγεθος είναι 600 x 80 pixel."
       homepage:
         topics: "Θέματα"
         categories: "Κατηγορίες"
@@ -2511,6 +2509,7 @@ el:
       no_results: "Δεν υπάρχουν αποτελέσματα"
       search: "Αναζήτηση…"
       label: "Επιλέξτε επιλογές"
+      remove_item: "Αφαίρεση %{name}"
     d_otp:
       screen_reader:
         one: Εισάγετε έναν αριθμό
@@ -2587,7 +2586,6 @@ el:
         }.
     learn_more: "Μάθετε περισσότερα…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Μάθετε περισσότερα…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Ανατροφοδότηση…</a>"
     mute: Σίγαση
     unmute: Άρση σίγασης
     last_post: Ανάρτησε
@@ -2916,6 +2914,8 @@ el:
         size_too_small: "%{provided_file_size} είναι μικρότερο από το ελάχιστο επιτρεπόμενο %{min_file_size}"
     emoji_picker:
       filter_placeholder: Αναζήτησε για emoji
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      favorites: "Συχνά χρησιμοποιούμενα"
       smileys_&_emotion: Χαμόγελα και συγκίνηση
       people_&_body: Άνθρωποι και Σώμα
       animals_&_nature: Ζώα και Φύση
@@ -2973,6 +2973,10 @@ el:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα…"
       options: "Επιλογές"
+      ai_content:
+        code: "Κωδικός"
+        quote: "Παράθεση"
+        details: "Λεπτομέρειες"
       whisper: "ψιθύρισμα"
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
@@ -4232,10 +4236,8 @@ el:
           label: "επιλεγμένη"
           title: "Κάντε κλικ για να αφαιρέσετε την ανάρτηση από την επιλογή"
         select_replies:
-          label: "επίλεξε +απαντήσεις"
           title: "Προσθέστε την ανάρτηση και όλες τις απαντήσεις της στην επιλογή"
         select_below:
-          label: "επιλέξτε + παρακάτω"
           title: "Προσθέστε την ανάρτηση και όλες μετά από αυτήν στην επιλογή"
         delete: διαγραφή επιλεγμένων
         cancel: ακύρωση επιλογής
@@ -5381,6 +5383,15 @@ el:
       forward: "Μπροστά"
       share: "Κοινοποίηση"
       dismiss: "Παράβλεψη"
+    mobile_tab_bar:
+      new_topic: "Νέο θέμα"
+      create: "Δημιουργία"
+      more: "Περισσότερα"
+      back: "Πίσω"
+      topics: "Θέματα"
+      drafts:
+        one: "Πρόχειρα (%{count})"
+        other: "Πρόχειρα (%{count})"
     safe_mode:
       enabled: "Η ασφαλής λειτουργία είναι ενεργοποιημένη, για να εξέλθετε από την ασφαλή λειτουργία κλείστε αυτό το παράθυρο περίηγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
@@ -5772,25 +5783,24 @@ el:
         name: "Όνομα"
         plugin: "Πρόσθετο"
         metadata: "Μεταδεδομένα"
-        enabled: "Ενεργοποιημένα"
-        enabled_for: "Ενεργοποιημένο για..."
+        enabled: "Ενεργοποιημένο;"
         show_image: "Εμφάνιση εικόνας"
+        feedback: "Ανατροφοδότηση"
+        toggle: "Ενεργοποίηση %{name}"
         groups_updated: "Οι ομάδες ενημερώθηκαν!"
         save_groups: "Αποθήκευση ομάδων"
         add_groups_to_enable: "Προσθέστε ομάδες για να ενεργοποιήσετε αυτήν τη λειτουργία"
         no_changes_to_save: "Δεν υπάρχουν αλλαγές για αποθήκευση"
         select_groups: "Επιλέξτε ομάδες…"
-        show_related_settings: "Εμφάνιση σχετικών ρυθμίσεων..."
+        settings: "Ρυθμίσεις"
         change_enabled_for_success: "Έχετε ενεργοποιήσει αυτήν την αλλαγή για %{enabledFor}"
         change_disabled: "Έχετε εξαιρεθεί από αυτήν την αλλαγή"
         permanent_notice: "Αυτή η αλλαγή είναι πλέον μόνιμη και σύντομα θα καταργηθεί. Δεν μπορείτε πλέον να εξαιρεθείτε."
-        permanent_soon_notice: "Αυτή η αλλαγή θα γίνει σύντομα μόνιμη. Δεν θα μπορείτε πλέον να εξαιρεθείτε."
         permanent_no_group_selection: "Κ/Α, οι μόνιμες αλλαγές ισχύουν για όλες τις ομάδες."
         no_changes: "Δεν υπάρχουν επερχόμενες αλλαγές αυτήν τη στιγμή."
         preview: "Προεπισκόπηση"
         enabled_for_options:
           no_one: "Κανέναν"
-          everyone: "Όλοι"
           staff: "%{staffGroupName} μόνο"
           specific_groups: "Συγκεκριμένη/ες ομάδα/ες"
           specific_groups_with_group_names:
@@ -6934,14 +6944,6 @@ el:
           company_name: "Όνομα"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Εφαρμοστέο δίκαιο"
-          governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
-          governing_law_help: |
-            Προσδιορίστε τη δικαιοδοσία για τους νομικούς όρους του ιστότοπου, συνήθως εκεί όπου είναι εγγεγραμμένη ή λειτουργεί η εταιρεία.
-          city_for_disputes: "Πόλη για διαφορές"
-          city_for_disputes_placeholder: "Πόλη"
-          city_for_disputes_help: |
-            Ορίστε την πόλη για την επίλυση νομικών διαφορών που σχετίζονται με αυτό το φόρουμ.
           extra_groups:
             heading: "Κατάλογος ομάδων"
             description: "Επιπλέον ομάδες που θα εμφανίζονται στη σελίδα Σχετικά."
@@ -7132,7 +7134,6 @@ el:
           uploading: "Μεταφορτώνεται…"
           uploading_progress: "Μεταφορτώνεται… %{progress}%"
           success: "Το «%{filename}» επιφορτώθηκε με επιτυχία. Το αρχείο βρίσκεται υπό επεξεργασία και θα χρειαστεί έως και ένα λεπτό για να εμφανιστεί στη λίστα."
-          error: "Παρουσιάστηκε ένα σφάλμα κατά το ανέβασμα του '%{filename}': %{message}"
         settings: "Ρυθμίσεις"
         operations:
           is_running: "Αυτή τη στιγμή εκτελείται μια λειτουργία…"
@@ -8003,7 +8004,6 @@ el:
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
         silence_reason_placeholder: "Αιτία σιώπησης"
-        silence_message: "Μήνυμα email"
         suspended_until: "(έως %{until})"
         suspend_forever: "Αναστολή για πάντα"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
@@ -8312,6 +8312,8 @@ el:
       site_text:
         description: "Μπορείτε να προσαρμόσετε οποιοδήποτε κείμενο στο φόρουμ σας."
         search_label: "Αναζήτηση"
+        preview:
+          default: "Προεπιλογή"
         theme_disabled: "Απενεργοποιημένος"
         filters: "Φίλτρα"
         title: "Κείμενα ιστότοπου"
@@ -8462,7 +8464,7 @@ el:
           modal_title: Ομαδοποίηση Παράσημων
         granted_by: Απονεμήθηκε από
         granted_at: Απονεμήθηκε στις
-        reason_help: (Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα)
+        reason_help: Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα
         save: Αποθήκευση
         delete: Διαγραφή
         delete_confirm: Σίγουρα θέλετε να διαγράψετε αυτό το παράσημο;

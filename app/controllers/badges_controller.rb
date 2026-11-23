@@ -70,7 +70,10 @@ class BadgesController < ApplicationController
         serialize_data(@badge, BadgeSerializer, root: "badge", include_long_description: true),
       )
     respond_to do |format|
-      format.rss { @rss_description = @badge.long_description }
+      format.rss do
+        @rss_description = @badge.long_description
+        @user_badges = @badge.user_badges.with_visible_profiles(guardian).last(50).reverse
+      end
       format.html { store_preloaded "badge", serialized }
       format.json { render json: serialized }
     end

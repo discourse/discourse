@@ -1,0 +1,45 @@
+.ai-tool-arguments {
+  &__compound {
+    .form-kit__container-content,
+    .form-kit__control-custom {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .workflows-property-engine__control-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .workflows-property-engine__mode-control {
+      position: static;
+      transform: none;
+      align-self: flex-end;
+      order: -1;
+    }
+
+    .expanding-text-area > textarea {
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      font-family: var(--d-font-family--monospace);
+    }
+  }
+
+  &__list {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  &__list-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  &__add-item {
+    justify-self: start;
+  }
+}

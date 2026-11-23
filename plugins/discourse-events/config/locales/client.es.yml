@@ -33,6 +33,10 @@ es:
               label: ID del tema
     discourse_events:
       title: "Eventos"
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrarse"
       preferences:
         reminders:
           preferences:

@@ -4,6 +4,9 @@ module DiscourseWorkflows
   module Nodes
     module PostCreated
       class V1 < NodeType
+        POST_TYPE_OPTIONS = %w[regular whisper].freeze
+        DEFAULT_POST_TYPE = "regular"
+
         description(
           name: "trigger:post_created",
           version: "1.0",
@@ -46,6 +49,12 @@ module DiscourseWorkflows
                 none: "discourse_workflows.post_created.group_inbox_id_placeholder",
               },
             },
+            post_type: {
+              type: :options,
+              required: true,
+              default: DEFAULT_POST_TYPE,
+              options: POST_TYPE_OPTIONS,
+            },
             **TOPIC_SCOPE_FILTER_PROPERTIES,
           },
         )
@@ -68,8 +77,11 @@ module DiscourseWorkflows
         end
 
         def valid?
-          @post.present? && @post.topic.present? && @post.post_type == ::Post.types[:regular] &&
-            !@opts&.dig(:skip_workflows)
+          return false if @post.blank?
+          return false if @post.topic.blank?
+          return false if @opts&.dig(:skip_workflows)
+
+          POST_TYPE_OPTIONS.include?(post_type_name)
         end
 
         def output
@@ -82,11 +94,19 @@ module DiscourseWorkflows
 
         def matches?(trigger_ctx)
           topic = @post.topic
+          post_type = trigger_ctx.get_node_parameter("post_type").presence || DEFAULT_POST_TYPE
 
+          return false if post_type != post_type_name
           return false if !matches_topic_type?(topic, trigger_ctx.get_node_parameter("topic_type"))
           return false if !matches_topic_filters?(topic, trigger_ctx)
 
           matches_group_inbox?(topic, trigger_ctx.get_node_parameter("group_inbox_id"))
+        end
+
+        private
+
+        def post_type_name
+          ::Post.types.key(@post.post_type).to_s
         end
       end
     end

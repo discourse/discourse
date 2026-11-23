@@ -8,6 +8,13 @@ pt:
   js:
     dsa_notice:
       go_back: "Anterior"
+    code_editor:
+      search:
+        next: "Próximo"
+        previous: "Anterior"
+        close: "Fechar"
+      fold:
+        to: "para"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"
@@ -439,30 +446,17 @@ pt:
       title: "Tópicos Novos e Não Lidos"
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Anterior"
-        category_unavailable: "Esta categoria não está disponível para publicação."
-        icebreakers:
-          plan_categories:
-            title: "Por que categorias devemos começar?"
-            body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
-          plan_invites:
-            title: "Que membros devemos convidar antes do lançamento?"
-            body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
-          write_your_own:
-            title: "Escreva o seu próprio"
-            body: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"
       sections:
-        theme: "Tema"
+        logo: "Logótipo"
         homepage: "Página de início"
-        search: "Procurar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
+      fonts:
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
+      logo:
+        help_text: "O tamanho recomendado é 600 x 80 píxeis."
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -881,6 +875,7 @@ pt:
         is_this_post: "Isto é %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algum problema com este %{reviewable_type}?"
+        something_wrong_with_post: "Existe algo de errado com esta publicação?"
       types:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
@@ -2067,6 +2062,7 @@ pt:
         redeemed_tab_with_count: "Resgatados (%{count})"
         invited_via: "Convite"
         invited_via_link: "link %{key} (%{count} / %{max} resgatado)"
+        invited_via_link_without_key: "link (%{count} / %{max} resgatados)"
         groups: "Grupos"
         topic: "Tópico"
         sent: "Criado/Último Enviado"
@@ -2351,6 +2347,7 @@ pt:
       no_results: "Sem resultados"
       search: "Pesquisar…"
       label: "Selecionar opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Insira um número
@@ -2752,6 +2749,7 @@ pt:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      no_results: "Sem resultados"
       smileys_&_emotion: Smileys e Emojis
       people_&_body: Pessoas e Corpo
       animals_&_nature: Animais e Natureza
@@ -2786,6 +2784,10 @@ pt:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citar"
+        details: "Detalhes"
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
@@ -3685,10 +3687,8 @@ pt:
           label: "selecionado"
           title: "Clique para desseleccionar a mensagem"
         select_replies:
-          label: "selecione +respostas"
           title: "Adicionar o post e todas as suas respostas à seleção"
         select_below:
-          label: "Selecione +abaixo"
           title: "Adicionar a postagem e tudo após ela à seleção"
         delete: eliminar selecionados
         cancel: cancelar seleção
@@ -3706,6 +3706,7 @@ pt:
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
     post:
+      ai_generated: "IA"
       confirm_delete: "Tem a certeza que deseja eliminar esta publicação?"
       quote_reply: "Citar"
       quote_reply_shortcut: "Citar (ou pressione q)"
@@ -4483,6 +4484,15 @@ pt:
       forward: "Avançar"
       share: "Partilhar"
       dismiss: "Marcar como visto"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Anterior"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
@@ -4637,10 +4647,10 @@ pt:
           title: "Avançado"
       upcoming_changes:
         name: "Nome"
-        enabled: "Ativado"
+        enabled: "Ativado?"
+        feedback: "Opinião"
+        settings: "Configurações"
         preview: "Pré-visualização"
-        enabled_for_options:
-          everyone: "Todos"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -5337,7 +5347,6 @@ pt:
           title: "Carregar uma cópia de segurança para esta instância"
           uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
         settings: "Configurações"
         operations:
           failed: "A %{operation} falhou. Por favor verifique o registo dos logs."
@@ -6016,6 +6025,8 @@ pt:
           dropdown: "Lista pendente"
       site_text:
         search_label: "Procurar"
+        preview:
+          default: "Predefinição"
         theme_disabled: "Desativado"
         filters: "Filtros"
         edit: "Editar"
@@ -6090,7 +6101,7 @@ pt:
           modal_title: Grupos de Crachás
         granted_by: Concedido Por
         granted_at: Concedido Em
-        reason_help: (Uma ligação para uma publicação ou tópico)
+        reason_help: Uma ligação para uma publicação ou tópico
         save: Guardar
         delete: Apagar
         delete_confirm: Tem a certeza que quer eliminar este crachá?

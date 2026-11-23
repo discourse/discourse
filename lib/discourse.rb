@@ -296,6 +296,10 @@ module Discourse
     end
   end
 
+  # When scoped API credentials ask for the HTML application layout
+  class ScopedApiKeyHtmlNotAllowed < StandardError
+  end
+
   # When something they want is not found
   class NotFound < StandardError
     attr_reader :status

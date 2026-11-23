@@ -8,6 +8,7 @@ module DiscourseWorkflows
                :topic_slug,
                :post_number,
                :post_type,
+               :action_code,
                :reply_to_post_number,
                :reply_to_post_id,
                :reply_to_username,
@@ -26,6 +27,7 @@ module DiscourseWorkflows
                :category_slug,
                :tags,
                :upload_ids,
+               :image_uploads,
                :locale,
                :raw,
                :cooked
@@ -102,6 +104,19 @@ module DiscourseWorkflows
 
     def upload_ids
       object.upload_ids
+    end
+
+    def image_uploads
+      object.uploads.filter_map do |upload|
+        next if !FileHelper.is_inline_image?(upload.original_filename)
+        next if !scope.can_see_upload?(upload)
+
+        { id: upload.id, short_url: upload.short_url }
+      end
+    end
+
+    def include_image_uploads?
+      @include_cooked
     end
 
     def include_raw?

@@ -51,6 +51,9 @@ vi:
           title: "Hệ thống phông chữ"
         colors:
           title: "Màu sắc"
+        design_variables:
+          type: "Loại"
+          default: "Mặc định"
         dialog:
           title: "Hộp thoại thông báo"
         drag_and_drop:

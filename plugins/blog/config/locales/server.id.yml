@@ -12,6 +12,9 @@ id:
     time_ago: "%{time} yang lalu"
     archive: Arsip
     about: Tentang
+    author: Pengarang
     search: Cari
     replies:
       other: "%{count} balasan"
+    themes:
+      default: Asal

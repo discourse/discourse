@@ -9,13 +9,17 @@ module DiscourseAi
         historical_bot_user_ids
       end
 
-      def self.historical_bot_user_ids(topic: nil)
+      def self.historical_bot_user_ids(topic: nil, user_ids: nil)
+        sources = [
+          AiAgent.with_user,
+          LlmModel.with_user,
+          UserCustomField.where(name: HISTORICAL_AI_USER_CUSTOM_FIELD),
+        ]
         ids =
-          AiAgent
-            .with_user
-            .pluck(:user_id)
-            .concat(LlmModel.with_user.pluck(:user_id))
-            .concat(UserCustomField.where(name: HISTORICAL_AI_USER_CUSTOM_FIELD).pluck(:user_id))
+          sources.flat_map do |source|
+            source = source.where(user_id: user_ids) if user_ids
+            source.pluck(:user_id)
+          end
         if topic
           ids.concat(
             topic
@@ -245,17 +249,19 @@ module DiscourseAi
         end
 
         plugin.register_modifier(:chat_allowed_bot_user_ids) do |user_ids, guardian|
-          if guardian.user
-            allowed_chat =
-              AiAgent.allowed_modalities(
-                user: guardian.user,
-                allow_chat_direct_messages: true,
-                allow_chat_channel_mentions: true,
-              )
-            allowed_bot_ids = allowed_chat.map { |info| info[:user_id] }
-            user_ids.concat(allowed_bot_ids)
+          # Interactive does not override an AI bot's group or modality settings.
+          if user_ids.present?
+            user_ids -= DiscourseAi::AiBot::EntryPoint.historical_bot_user_ids(user_ids: user_ids)
           end
-          user_ids
+          next user_ids if !guardian.user
+
+          allowed_chat =
+            AiAgent.allowed_modalities(
+              user: guardian.user,
+              allow_chat_direct_messages: true,
+              allow_chat_channel_mentions: true,
+            )
+          user_ids | allowed_chat.pluck(:user_id)
         end
 
         Oneboxer.register_local_handler(

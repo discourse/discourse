@@ -739,6 +739,22 @@ RSpec.describe Boards::Api::BoardsController do
       post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
 
       expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([I18n.t("boards.errors.board_create_forbidden")])
+    end
+
+    it "returns the creation policy's custom failure reason" do
+      sign_in(manager)
+      reason = "The account has reached its board limit."
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:call).returns(false)
+      Boards::Policy::CanCreateBoard.any_instance.stubs(:reason).returns(reason)
+
+      expect do
+        post "/boards/api/boards.json", params: { board: { name: "Nope", slug: "nope" } }
+      end.not_to change { Boards::Board.count }
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to eq([reason])
+      expect(response.parsed_body["skip_error_prefix"]).to eq(true)
     end
   end
 
@@ -949,6 +965,141 @@ RSpec.describe Boards::Api::BoardsController do
       put "/boards/api/boards/#{board.id}.json", params: { board: { name: "Hacked" } }
 
       expect(response.status).to eq(403)
+    end
+
+    context "when the constraints exclude a card that the user cannot see" do
+      subject(:update_response) do
+        put "/boards/api/boards/#{board.id}.json",
+            params: {
+              board: {
+                category_ids: [category.id],
+              },
+            }
+        response.parsed_body
+      end
+
+      fab!(:board) do
+        Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+      end
+      fab!(:column) { Fabricate(:boards_column, board:) }
+      fab!(:hidden_card) do
+        Fabricate(
+          :boards_topic_card,
+          board:,
+          column:,
+          topic:
+            Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group))),
+        )
+      end
+
+      before { sign_in(manager) }
+
+      context "when the constraints exclude a visible card too" do
+        fab!(:visible_card) do
+          Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:topic))
+        end
+
+        it "returns the count of the visible cards" do
+          expect(update_response["cards_removed_count"]).to eq(1)
+        end
+      end
+
+      it "returns no count" do
+        expect(update_response.keys).to contain_exactly("board")
+      end
+    end
+  end
+
+  describe "POST /boards/api/boards/:id/constraint-preview" do
+    subject(:preview) do
+      post "/boards/api/boards/#{board.id}/constraint-preview.json", params: constraints
+      response
+    end
+
+    fab!(:other_category, :category)
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:public_tag, :tag)
+    fab!(:staff_tag, :tag)
+    fab!(:board) do
+      Fabricate(:boards_board, created_by: admin, additional_manage_groups: [manage_group])
+    end
+    fab!(:column) { Fabricate(:boards_column, board:) }
+    fab!(:matching_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category:, tags: [public_tag]),
+      )
+    end
+    fab!(:visible_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: other_category),
+      )
+    end
+    fab!(:hidden_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: private_category, tags: [staff_tag]),
+      )
+    end
+
+    let(:constraints) { { category_ids: [category.id] } }
+    let(:cards_to_remove) { preview.parsed_body["cards_to_remove"] }
+
+    before { Fabricate(:tag_group, permissions: { "staff" => 1 }, tags: [staff_tag]) }
+
+    context "when the user cannot manage the board" do
+      before { sign_in(writer) }
+
+      it "denies access" do
+        expect(preview).to have_http_status(:forbidden)
+      end
+    end
+
+    context "when the user can see all cards of the board" do
+      before { sign_in(admin) }
+
+      it "counts all cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(2)
+      end
+    end
+
+    context "when the user cannot see a card of the board" do
+      before { sign_in(manager) }
+
+      context "when the constraints have a category that the user cannot see" do
+        let(:constraints) { { category_ids: [private_category.id] } }
+
+        it "counts the visible cards" do
+          expect(cards_to_remove).to eq(2)
+        end
+      end
+
+      context "when the constraints have a tag that the user can see" do
+        let(:constraints) { { tag_names: [public_tag.name] } }
+
+        it "counts the visible cards without the tag" do
+          expect(cards_to_remove).to eq(1)
+        end
+      end
+
+      context "when the constraints have a tag that the user cannot see" do
+        let(:constraints) { { tag_names: [staff_tag.name] } }
+
+        it "ignores the tag" do
+          expect(cards_to_remove).to eq(0)
+        end
+      end
+
+      it "counts only the visible cards that the constraints exclude" do
+        expect(cards_to_remove).to eq(1)
+      end
     end
   end
 

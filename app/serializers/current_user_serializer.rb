@@ -22,6 +22,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_send_private_email_messages,
              :can_send_private_messages,
              :can_upload_avatar,
+             :can_embed_media,
              :can_edit,
              :can_invite_to_forum,
              :can_create_admin_invite,
@@ -186,10 +187,12 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_send_private_messages?
   end
 
+  # Themes saved as appearance changes only hold palettes, which the wizard can
+  # replace, and generated styles, so they don't stop it from being offered.
   def include_can_run_design_wizard?
     return false if !object.admin?
 
-    theme_ids = DesignWizard::Themes.ids
+    theme_ids = DesignWizard::Themes.ids + AppearanceChange.managed_theme_ids
     theme_ids.include?(SiteSetting.default_theme_id) && !Theme.where.not(id: theme_ids).exists?
   end
 
@@ -241,6 +244,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_upload_avatar
     !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
+  end
+
+  def can_embed_media
+    scope.can_embed_media?
   end
 
   def can_edit

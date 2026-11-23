@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, uniqueId } from "@ember/helper";
+import { fn, hash, uniqueId } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
@@ -11,6 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import EmbedMode from "discourse/lib/embed-mode";
 import { longDate } from "discourse/lib/formatter";
 import DiscourseURL from "discourse/lib/url";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DComboButton from "discourse/ui-kit/d-combo-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -19,6 +20,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 import BlogReviews from "./modal/blog-reviews.gjs";
 import BlogSchedule from "./modal/blog-schedule.gjs";
 
@@ -48,6 +50,7 @@ export default class BlogPublicationPanel extends Component {
   @service appEvents;
   @service dialog;
   @service modal;
+  @service site;
   @service toasts;
 
   @tracked busy = false;
@@ -95,6 +98,12 @@ export default class BlogPublicationPanel extends Component {
     return this.publication.role === "discussion";
   }
 
+  // The topic's owner is already credited as the author.
+  get coAuthorExclusions() {
+    const owner = this.args.outletArgs.model.details?.created_by?.username;
+    return owner ? [owner] : [];
+  }
+
   get status() {
     return this.publication.status;
   }
@@ -127,6 +136,13 @@ export default class BlogPublicationPanel extends Component {
       : `${url.host}${url.pathname}`;
   }
 
+  get pathHint() {
+    const blog = findBlog(this.site, this.publication.blog_id);
+    return /\{(year|month|day)\}/.test(blog?.path_format)
+      ? i18n("blog.path_hint_dated")
+      : i18n("blog.path_hint");
+  }
+
   // Always relative ("6 days ago"); the exact time is in the tooltip.
   get lastUpdatedAgo() {
     return moment(this.publication.draft_updated_at).fromNow();
@@ -155,6 +171,10 @@ export default class BlogPublicationPanel extends Component {
 
   get hasPendingChanges() {
     return this.publication.published && this.publication.changes.length > 0;
+  }
+
+  get canPickBlog() {
+    return this.site.blogs?.length > 1 && this.publication.can_change_blog;
   }
 
   get canShowDiff() {
@@ -341,13 +361,24 @@ export default class BlogPublicationPanel extends Component {
   }
 
   @action
+  setCover(upload, { set }) {
+    set("cover_upload_id", upload?.id ?? "");
+    set("cover_url", upload?.url ?? "");
+  }
+
+  @action
   async saveSettings(data) {
     const current = this.publication.published_at;
+    // The URL only previews the upload; the server stores its id.
+    const settings = { ...data };
+    delete settings.cover_url;
     const result = await this.#mutate(
       "",
       {
         publication: {
-          ...data,
+          ...settings,
+          // Form encoding drops empty arrays, so clearing the list needs a string.
+          co_authors: (data.co_authors || []).join(","),
           published_at:
             data.published_at === current?.slice(0, 10)
               ? current
@@ -468,9 +499,17 @@ export default class BlogPublicationPanel extends Component {
 
   #settingsSnapshot() {
     return {
+      blog_id: this.publication?.blog_id,
       path: this.publication?.path,
       excerpt: this.publication?.excerpt || "",
+      meta_description: this.publication?.meta_description || "",
+      canonical_url: this.publication?.canonical_url || "",
+      cover_upload_id: this.publication?.cover_upload_id || "",
+      cover_url: this.publication?.cover_url || "",
+      cover_alt: this.publication?.cover_alt || "",
+      co_authors: this.publication?.co_authors || [],
       featured: this.publication?.featured,
+      page: this.publication?.page,
       published_at: this.publication?.published_at?.slice(0, 10) || "",
     };
   }
@@ -976,8 +1015,26 @@ export default class BlogPublicationPanel extends Component {
                   @onSubmit={{this.saveSettings}}
                   as |form|
                 >
+                  {{#if this.canPickBlog}}
+                    <form.Field
+                      @description={{i18n "blog.blog_field_hint"}}
+                      @format="full"
+                      @name="blog_id"
+                      @title={{i18n "blog.blog_field"}}
+                      @type="select"
+                      as |field|
+                    >
+                      <field.Control @includeNone={{false}} as |select|>
+                        {{#each this.site.blogs as |blog|}}
+                          <select.Option
+                            @value={{blog.id}}
+                          >{{blog.name}}</select.Option>
+                        {{/each}}
+                      </field.Control>
+                    </form.Field>
+                  {{/if}}
                   <form.Field
-                    @description={{i18n "blog.path_hint"}}
+                    @description={{this.pathHint}}
                     @format="full"
                     @name="path"
                     @title={{i18n "blog.path"}}
@@ -994,6 +1051,62 @@ export default class BlogPublicationPanel extends Component {
                     as |field|
                   ><field.Control maxlength="1000" @rows={{3}} /></form.Field>
                   <form.Field
+                    @description={{i18n "blog.cover_hint"}}
+                    @format="full"
+                    @name="cover_url"
+                    @onSet={{this.setCover}}
+                    @title={{i18n "blog.cover"}}
+                    @type="image"
+                    as |field|
+                  ><field.Control @type="blog_cover" /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.cover_alt_hint"}}
+                    @format="full"
+                    @name="cover_alt"
+                    @title={{i18n "blog.cover_alt"}}
+                    @type="input"
+                    as |field|
+                  ><field.Control maxlength="500" /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.meta_description_hint"}}
+                    @format="full"
+                    @name="meta_description"
+                    @title={{i18n "blog.meta_description"}}
+                    @type="textarea"
+                    as |field|
+                  ><field.Control maxlength="500" @rows={{2}} /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.canonical_url_hint"}}
+                    @format="full"
+                    @name="canonical_url"
+                    @title={{i18n "blog.canonical_url"}}
+                    @type="input"
+                    as |field|
+                  ><field.Control
+                      maxlength="1000"
+                      placeholder={{this.publication.url}}
+                      @type="url"
+                    /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.co_authors_hint"}}
+                    @format="full"
+                    @name="co_authors"
+                    @title={{i18n "blog.co_authors"}}
+                    @type="custom"
+                    as |field|
+                  >
+                    <field.Control>
+                      <UserChooser
+                        @onChange={{field.set}}
+                        @options={{hash
+                          maximum=10
+                          excludedUsernames=this.coAuthorExclusions
+                        }}
+                        @value={{field.value}}
+                      />
+                    </field.Control>
+                  </form.Field>
+                  <form.Field
                     @description={{i18n "blog.date_hint"}}
                     @name="published_at"
                     @title={{i18n "blog.date"}}
@@ -1003,6 +1116,13 @@ export default class BlogPublicationPanel extends Component {
                   <form.Field
                     @name="featured"
                     @title={{i18n "blog.featured"}}
+                    @type="checkbox"
+                    as |field|
+                  ><field.Control /></form.Field>
+                  <form.Field
+                    @description={{i18n "blog.page_hint"}}
+                    @name="page"
+                    @title={{i18n "blog.page"}}
                     @type="checkbox"
                     as |field|
                   ><field.Control /></form.Field>

@@ -238,6 +238,114 @@ RSpec.describe ComposerController do
       end
     end
 
+    context "with an existing private message to a group" do
+      fab!(:member, :user)
+      fab!(:muted_member, :user)
+      fab!(:admin_member, :admin)
+      fab!(:recipient_group) do
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [member, muted_member, admin_member],
+        )
+      end
+      fab!(:topic) { Fabricate(:group_private_message_topic, user: current_user, recipient_group:) }
+
+      it "gives members and outsiders the same reason when the members are hidden" do
+        TopicUser.change(
+          muted_member.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+
+        get "/composer/mentions.json",
+            params: {
+              names: [member.username, muted_member.username, user.username],
+              topic_id: topic.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          member.username_lower => "private",
+          muted_member.username_lower => "private",
+          user.username_lower => "private",
+        )
+      end
+
+      it "gives staff the same reason for members and outsiders when the members are hidden" do
+        moderator = Fabricate(:moderator)
+        admin_outsider = Fabricate(:admin)
+        Fabricate(:topic_allowed_user, topic:, user: moderator)
+        sign_in(moderator)
+
+        get "/composer/mentions.json",
+            params: {
+              names: [admin_member.username, admin_outsider.username],
+              topic_id: topic.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          admin_member.username_lower => "private",
+          admin_outsider.username_lower => "private",
+        )
+      end
+
+      it "ignores allowed_names for an existing topic" do
+        get "/composer/mentions.json",
+            params: {
+              names: [member.username, user.username],
+              topic_id: topic.id,
+              allowed_names: [member.username, user.username],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(
+          member.username_lower => "private",
+          user.username_lower => "private",
+        )
+      end
+
+      it "warns that a mentioned group is not invited when its overlap with the recipients is hidden" do
+        mentioned_group =
+          Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone], users: [member])
+
+        get "/composer/mentions.json", params: { names: [mentioned_group.name], topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["group_reasons"]).to eq(mentioned_group.name => "not_allowed")
+      end
+
+      it "gives members and outsiders the same reason when the group itself is hidden" do
+        recipient_group.update!(
+          visibility_level: Group.visibility_levels[:owners],
+          members_visibility_level: Group.visibility_levels[:public],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+        )
+        names = [member.username, user.username]
+        hidden = { member.username_lower => "private", user.username_lower => "private" }
+
+        get "/composer/mentions.json", params: { names:, topic_id: topic.id }
+        expect(response.parsed_body["user_reasons"]).to eq(hidden)
+
+        get "/composer/mentions.json", params: { names:, allowed_names: [recipient_group.name] }
+        expect(response.parsed_body["user_reasons"]).to eq(hidden)
+      end
+
+      it "warns only about outsiders when the members are visible" do
+        recipient_group.update!(members_visibility_level: Group.visibility_levels[:public])
+
+        get "/composer/mentions.json",
+            params: {
+              names: [member.username, user.username],
+              topic_id: topic.id,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_reasons"]).to eq(user.username_lower => "private")
+      end
+    end
+
     context "with a group with hidden members" do
       fab!(:hidden_members_group) do
         Fabricate(

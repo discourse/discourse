@@ -46,6 +46,17 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:suspend_user)).to eq(false)
     end
 
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable.actions_for(Guardian.new(moderator))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve_user reviewables.actions.answer_no.title]])
+    end
+
     context "when the user was flagged as a possible spammer" do
       fab!(:reviewable, :suspect_user_reviewable)
 
@@ -273,7 +284,7 @@ RSpec.describe ReviewableUser, type: :model do
     fab!(:reviewable)
 
     it "rejects a registration without creating a statement when classification is supplied" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       reviewable = Fabricate(:reviewable_user, target: Fabricate(:user, approved: false))
 
       result =
@@ -296,7 +307,7 @@ RSpec.describe ReviewableUser, type: :model do
     end
 
     it "classifies avatar removal while leaving the account review pending" do
-      SiteSetting.dsa_reporting_enabled = true
+      enable_dsa_reporting
       user = Fabricate(:user, uploaded_avatar: Fabricate(:upload))
       reviewable = Fabricate(:suspect_user_reviewable, target: user)
 
@@ -564,7 +575,7 @@ RSpec.describe ReviewableUser, type: :model do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_user handles the user reviewable" do

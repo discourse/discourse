@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ::Blog
+  # Where the public blog lives and whether a request belongs to it.
   module Configuration
     ASSET_PREFIXES = %w[
       plugins
@@ -20,127 +21,89 @@ module ::Blog
     end
 
     # Without a custom domain the blog lives under PATH_PREFIX on the forum.
-    def self.custom_domain?
-      SiteSetting.blog_url.present? && URI(SiteSetting.blog_url).host != Discourse.current_hostname
+    def self.custom_domain?(blog = Instance.default_blog)
+      blog.url.present? && URI(blog.url).host != Discourse.current_hostname
     rescue URI::InvalidURIError
       false
     end
 
-    def self.origin
-      custom_domain? ? SiteSetting.blog_url : Discourse.base_url_no_prefix
+    def self.origin(blog = Instance.default_blog)
+      custom_domain?(blog) ? blog.url : Discourse.base_url_no_prefix
     end
 
-    def self.base_url
-      custom_domain? ? SiteSetting.blog_url : "#{Discourse.base_url}#{PATH_PREFIX}"
+    def self.base_url(blog = Instance.default_blog)
+      custom_domain?(blog) ? blog.url : "#{Discourse.base_url}#{path_prefix(blog)}"
+    end
+
+    # Other blogs without a custom domain live under the default blog's prefix,
+    # at their slug, which is why slugs are reserved segments.
+    def self.path_prefix(blog)
+      blog.is_default? ? PATH_PREFIX : "#{PATH_PREFIX}/#{blog.slug}"
+    end
+
+    def self.url(path = "", blog: Instance.default_blog, preview_token: nil)
+      url = "#{base_url(blog)}#{path}"
+      return url if preview_token.blank?
+      "#{url}#{path.include?("?") ? "&" : "?"}#{{ blog_theme_preview: preview_token }.to_query}"
     end
 
     # The reader keeps the prefix on a custom domain too, so one client route serves both modes.
-    def self.review_url
-      "#{custom_domain? ? origin : Discourse.base_url}#{PATH_PREFIX}/review"
+    def self.review_url(blog = Instance.default_blog)
+      "#{custom_domain?(blog) ? origin(blog) : Discourse.base_url}#{PATH_PREFIX}/review"
+    end
+
+    # Runs on every request to the site, so it reads only the cached blog list.
+    def self.blog_for_host(host)
+      Instance.cached.find { |blog| custom_domain?(blog) && URI(blog.url).host == host }
     end
 
     def self.blog_host?(request)
-      UpcomingChanges.enabled?(:blog_enabled) && custom_domain? && request.host == URI(origin).host
+      UpcomingChanges.enabled?(:blog_enabled) && blog_for_host(request.host).present?
     end
 
-    # Whether a public blog page may be served for this request in the current mode.
-    def self.blog_request?(request)
-      public_enabled? && (!custom_domain? || blog_host?(request))
+    # The blog a forum path belongs to, whether or not that blog is served there.
+    def self.blog_for_path(path)
+      return if !path.match?(%r{\A#{PATH_PREFIX}(?:/|\z)})
+      segment = path.delete_prefix(PATH_PREFIX).split("/")[1]
+      Instance.cached.find { |blog| !blog.is_default? && blog.slug == segment } ||
+        Instance.default_blog
+    end
+
+    # The blog a request is for: by host on a custom domain, otherwise by path.
+    def self.blog_for(request)
+      return if !UpcomingChanges.enabled?(:blog_enabled)
+      blog_for_host(request.host) || blog_for_path(request.path_info)
+    end
+
+    # Whether a public blog page may be served for this request. A blog with a
+    # custom domain is only served there; its forum path redirects instead.
+    def self.blog_request?(request, blog = blog_for(request))
+      return false if !public_enabled?
+      return false if blog.nil?
+      custom_domain?(blog) ? blog_host?(request) : !blog_host?(request)
+    end
+
+    # The review reader is not tied to one blog: its link carries a token.
+    def self.review_request?(request)
+      return false if !public_enabled?
+      blog_host?(request) || Instance.cached.any? { |blog| !custom_domain?(blog) }
+    end
+
+    # The origin pages are served from for this request, for same-origin checks.
+    def self.request_origin(request)
+      blog = blog_for_host(request.host)
+      blog ? origin(blog) : Discourse.base_url_no_prefix
     end
 
     # The request path relative to the blog root, matching stored article paths.
-    def self.relative_path(request)
-      return request.path_info if custom_domain?
-      request.path_info.delete_prefix(PATH_PREFIX).presence || "/"
+    def self.relative_path(request, blog)
+      return request.path_info if custom_domain?(blog)
+      request.path_info.delete_prefix(path_prefix(blog)).presence || "/"
     end
 
     def self.public_enabled?
       UpcomingChanges.enabled?(:blog_enabled) && !SiteSetting.login_required &&
         !SiteSetting.secure_uploads && !SiteSetting.prevent_anons_from_downloading_files
-    end
-
-    def self.error
-      if SiteSetting.login_required || SiteSetting.secure_uploads
-        return I18n.t("blog.errors.private_site")
-      elsif SiteSetting.prevent_anons_from_downloading_files
-        return I18n.t("blog.errors.anonymous_uploads")
-      end
-
-      category = Category.find_by(id: SiteSetting.blog_category)
-      drafts = Category.find_by(id: SiteSetting.blog_drafts_category)
-
-      return I18n.t("blog.errors.category") if !category || category.read_restricted?
-
-      if !drafts || !drafts.read_restricted? || category.id == drafts.id ||
-           drafts.id == SiteSetting.shared_drafts_category.to_i ||
-           drafts.category_groups.where.not(group_id: editorial_group_ids).exists?
-        return I18n.t("blog.errors.drafts_category")
-      end
-      nil
-    end
-
-    def self.ensure_ready!
-      raise Discourse::InvalidParameters.new(error) if error
-    end
-
-    def self.publisher?(user)
-      role_user?(user) &&
-        (user.admin? || in_role_groups?(user, SiteSetting.blog_publisher_groups_map))
-    end
-
-    def self.editor?(user)
-      publisher?(user) ||
-        (role_user?(user) && in_role_groups?(user, SiteSetting.blog_editor_groups_map))
-    end
-
-    def self.contributor?(user)
-      editor?(user) ||
-        (role_user?(user) && in_role_groups?(user, SiteSetting.blog_contributor_groups_map))
-    end
-
-    def self.in_role_groups?(user, groups)
-      return true if groups.include?(Group::AUTO_GROUPS[:staff]) && user.staff?
-      return true if groups.include?(Group::AUTO_GROUPS[:admins]) && user.admin?
-      return true if groups.include?(Group::AUTO_GROUPS[:moderators]) && user.moderator?
-      user.in_any_groups?(
-        groups -
-          [
-            Group::AUTO_GROUPS[:staff],
-            Group::AUTO_GROUPS[:admins],
-            Group::AUTO_GROUPS[:moderators],
-          ],
-      )
-    end
-    private_class_method :in_role_groups?
-
-    def self.editorial_group_ids
-      (
-        [Group::AUTO_GROUPS[:admins], Group::AUTO_GROUPS[:moderators], Group::AUTO_GROUPS[:staff]] +
-          SiteSetting.blog_contributor_groups_map + SiteSetting.blog_editor_groups_map +
-          SiteSetting.blog_publisher_groups_map
-      ).uniq
-    end
-
-    def self.role_user?(user)
-      UpcomingChanges.enabled?(:blog_enabled) && user&.active? && !user.suspended? &&
-        !user.silenced?
-    end
-    private_class_method :role_user?
-
-    def self.ensure_publisher!(user, topic)
-      raise Discourse::InvalidAccess unless publisher?(user)
-      ensure_editor!(user, topic)
-    end
-
-    def self.ensure_editor!(user, topic)
-      raise Discourse::InvalidAccess unless contributor?(user)
-      user.guardian.ensure_can_see!(topic)
-      raise Discourse::InvalidAccess unless editor?(user) || topic.user_id == user.id
-      categories = [SiteSetting.blog_category.to_i, SiteSetting.blog_drafts_category.to_i]
-      if topic.private_message? || topic.shared_draft? || !categories.include?(topic.category_id) ||
-           topic.category&.topic_id == topic.id || topic.deleted_at || !topic.visible
-        raise Discourse::InvalidAccess
-      end
     end
   end
 end

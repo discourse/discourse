@@ -300,6 +300,36 @@ RSpec.describe InviteRedeemer do
       InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
     end
 
+    context "with an invite link and a staged user whose domain is now blocked" do
+      fab!(:staged) { Fabricate(:staged, email: "invitee@account.com") }
+      fab!(:invite) { Fabricate(:invite, email: nil) }
+
+      before { SiteSetting.blocked_email_domains = "account.com" }
+
+      it "redeems the invite when the provider grants an override for the verified email" do
+        session = {
+          authentication: {
+            email: staged.email,
+            email_valid: true,
+            skip_email_validation: true,
+          },
+        }
+        redeemer = described_class.new(invite:, email: staged.email, session:)
+
+        expect(redeemer.redeem).to eq(staged)
+        expect(staged.reload).not_to be_staged
+        expect(invite.reload).to be_redeemed
+      end
+
+      it "leaves the invite and staged user unchanged without an override" do
+        redeemer = described_class.new(invite:, email: staged.email)
+
+        expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(staged.reload).to be_staged
+        expect(invite.reload).not_to be_redeemed
+      end
+    end
+
     it "rejects an unverified supplied email when the user's primary email does not match the invite" do
       invite = Fabricate(:invite, email: "invited@example.com")
       user = Fabricate(:user, email: "other@example.com")
@@ -428,6 +458,52 @@ RSpec.describe InviteRedeemer do
         expect(user).to be_present
         expect(user.custom_fields["user_field_#{required_field.id}"]).to eq("value1")
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
+      end
+
+      it "stores numbers and discards values that aren't numbers for number fields" do
+        age_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        score_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: {
+              age_field.id.to_s => " 42 ",
+              score_field.id.to_s => "abc",
+            },
+          ).redeem
+
+        expect(user.custom_fields["user_field_#{age_field.id}"]).to eq("42")
+        expect(user.custom_fields["user_field_#{score_field.id}"]).to be_nil
+      end
+
+      it "assigns signup fields while preserving hidden staged fields" do
+        visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
+        hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
+        staged_user = Fabricate(:staged, email: invite.email)
+        staged_user.custom_fields["user_field_#{hidden_field.id}"] = "provisioned"
+        staged_user.save_custom_fields
+
+        user =
+          described_class.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            password: password,
+            user_custom_fields: {
+              visible_field.id.to_s => "visible",
+              hidden_field.id.to_s => "replacement",
+            },
+          ).redeem
+
+        expect(user.id).to eq(staged_user.id)
+        expect(user.reload.user_fields).to eq(
+          visible_field.id.to_s => "visible",
+          hidden_field.id.to_s => "provisioned",
+        )
       end
 
       it "can set custom fields with field_type confirm properly" do
@@ -796,6 +872,33 @@ RSpec.describe InviteRedeemer do
       end
     end
 
+    context "with an invite that grants admin and moderator" do
+      fab!(:invite) do
+        Fabricate(
+          :invite,
+          email: "future-admin@example.com",
+          admin: true,
+          moderator: true,
+          invited_by: admin,
+        )
+      end
+
+      before { SiteSetting.enable_invite_modal_with_roles = true }
+
+      it "logs the grant_moderation staff action only once" do
+        expect {
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: "futureadmin",
+            name: "Future Admin",
+          ).redeem
+        }.to change { UserHistory.where(action: UserHistory.actions[:grant_moderation]).count }.by(
+          1,
+        )
+      end
+    end
+
     context "with a moderator invite" do
       fab!(:invite) do
         Fabricate(:invite, email: "future-mod@example.com", moderator: true, invited_by: admin)
@@ -830,6 +933,34 @@ RSpec.describe InviteRedeemer do
         expect(AdminConfirmation.exists_for?(existing_user.id)).to eq(false)
       end
 
+      it "logs the grant_moderation staff action" do
+        user = redeem
+
+        log =
+          UserHistory.find_by(
+            action: UserHistory.actions[:grant_moderation],
+            target_user_id: user.id,
+          )
+
+        expect(log).to be_present
+        expect(log.acting_user_id).to eq(admin.id)
+      end
+
+      it "logs the grant_moderation staff action when an existing user redeems" do
+        existing_user = Fabricate(:user, email: invite.email)
+
+        InviteRedeemer.new(invite: invite, redeeming_user: existing_user).redeem
+
+        log =
+          UserHistory.find_by(
+            action: UserHistory.actions[:grant_moderation],
+            target_user_id: existing_user.id,
+          )
+
+        expect(log).to be_present
+        expect(log.acting_user_id).to eq(admin.id)
+      end
+
       it "does not grant moderator when the inviter is no longer staff" do
         invite.invited_by.update!(admin: false, moderator: false)
 
@@ -837,6 +968,14 @@ RSpec.describe InviteRedeemer do
 
         expect(user.moderator).to eq(false)
         expect(user.admin).to eq(false)
+      end
+
+      it "does not log the grant_moderation staff action when the inviter is no longer staff" do
+        invite.invited_by.update!(admin: false, moderator: false)
+
+        expect { redeem }.not_to change {
+          UserHistory.where(action: UserHistory.actions[:grant_moderation]).count
+        }
       end
     end
   end

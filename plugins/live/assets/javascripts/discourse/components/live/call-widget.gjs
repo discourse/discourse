@@ -4,7 +4,6 @@ import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -18,7 +17,9 @@ import {
   computeWidgetGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
+import watchRoom from "../../lib/live/watch-room.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
@@ -99,7 +100,6 @@ export default class LiveCallWidget extends Component {
     this.#removeResizeListeners();
     this.#removeDragListeners();
     window.clearTimeout(this.dragHoldTimer);
-    this.stopWatchingWidgetRoom();
   }
 
   get room() {
@@ -310,6 +310,10 @@ export default class LiveCallWidget extends Component {
     }
 
     return parts.length ? trustHTML(parts.join(" ")) : null;
+  }
+
+  get canDiagnoseConnection() {
+    return this.liveWebrtc.canDiagnoseConnection(this.room?.id);
   }
 
   @action
@@ -533,6 +537,14 @@ export default class LiveCallWidget extends Component {
   }
 
   @action
+  openConnectionDiagnostics(closeMenu) {
+    closeMenu?.();
+    this.modal.show(LiveConnectionDiagnosticsModal, {
+      model: { room: this.room },
+    });
+  }
+
+  @action
   openRoomInfo(closeMenu) {
     closeMenu?.();
     this.modal.show(LiveRoomInfoModal, { model: { room: this.room } });
@@ -557,30 +569,6 @@ export default class LiveCallWidget extends Component {
   @action
   registerWidget(element) {
     this.widgetElement = element;
-    this.watchWidgetRoom();
-  }
-
-  @action
-  watchWidgetRoom() {
-    const roomId = this.room?.id;
-    if (!roomId) {
-      return;
-    }
-
-    next(this, () => {
-      if (this.isDestroying || this.room?.id !== roomId) {
-        return;
-      }
-
-      this.liveWebrtc.setWatching(roomId, true);
-    });
-  }
-
-  stopWatchingWidgetRoom() {
-    const roomId = this.room?.id;
-    if (roomId) {
-      this.liveWebrtc.setWatching(roomId, false, { keepVideo: true });
-    }
   }
 
   #loadSize() {
@@ -695,7 +683,12 @@ export default class LiveCallWidget extends Component {
         data-room-id={{this.room.id}}
         style={{this.widgetStyle}}
         {{didInsert this.registerWidget}}
-        {{didInsert this.watchWidgetRoom this.room.id}}
+        {{watchRoom
+          this.liveWebrtc
+          this.room.id
+          disabled=this.extraMinimized
+          keepVideo=true
+        }}
         {{on "pointermove" this.dragWidget}}
         {{on "pointerup" this.stopDrag}}
         {{on "pointercancel" this.stopDrag}}
@@ -817,6 +810,19 @@ export default class LiveCallWidget extends Component {
                         @action={{fn this.openInviteModal roomMenu.close}}
                         @icon="user-plus"
                         @label="live.invite.menu"
+                      />
+                    </dropdown.item>
+                  {{/if}}
+                  {{#if this.canDiagnoseConnection}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent live-connection-diagnostics-trigger"
+                        @action={{fn
+                          this.openConnectionDiagnostics
+                          roomMenu.close
+                        }}
+                        @icon="stethoscope"
+                        @label="live.connection_diagnostics.menu"
                       />
                     </dropdown.item>
                   {{/if}}

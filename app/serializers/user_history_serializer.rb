@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 class UserHistorySerializer < ApplicationSerializer
+  # Names are logged unescaped. The author is always the third line, and each name ends at the
+  # first label of the field the logger writes next, so post content can't move either boundary.
+  FIELD_AFTER_USER_NAME =
+    {
+      delete_post: "topic",
+      post_rejected: "topic",
+      delete_topic: "title",
+      recover_topic: "title",
+      recover_post: "raw",
+    }.transform_keys { |action| UserHistory.actions[action] }.freeze
+
   attributes :action_name,
              :details,
              :context,
@@ -28,11 +39,16 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def details
-    redact_content? ? redacted_content : object.details
+    return redacted_content if redact_content?
+
+    redact_user_names(object.details)
   end
 
   def context
-    redact_content? ? nil : object.context
+    return nil if redact_content?
+    return object.context_with_ips_masked(redacted_content) if mask_context_ips?
+
+    object.context
   end
 
   def expires_at
@@ -40,7 +56,7 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def new_value
-    return nil if redact_content?
+    return nil if redact_content? || redact_name_change?
     if object.new_value
       object.new_value_is_json? ? ::JSON.parse(object.new_value) : object.new_value
     else
@@ -49,7 +65,7 @@ class UserHistorySerializer < ApplicationSerializer
   end
 
   def previous_value
-    return nil if redact_content?
+    return nil if redact_content? || redact_name_change?
     if object.previous_value
       object.previous_value_is_json? ? ::JSON.parse(object.previous_value) : object.previous_value
     else
@@ -68,9 +84,35 @@ class UserHistorySerializer < ApplicationSerializer
 
   private
 
+  def redact_user_names(value)
+    return value if value.blank? || !redact_user_names?
+
+    if object.action == UserHistory.actions[:delete_user]
+      value.sub(/^name: .*\n(?=created_at: )/m, "")
+    elsif (field = FIELD_AFTER_USER_NAME[object.action])
+      value.sub(/\A((?:[^\n]*\n){2}user: \S+) \(.*?\)(?=\n#{field}: )/m, "\\1")
+    else
+      value
+    end
+  end
+
+  def redact_name_change?
+    redact_user_names? && object.action == UserHistory.actions[:change_name]
+  end
+
+  def redact_user_names?
+    !SiteSetting.enable_names? && !scope.is_admin?
+  end
+
   def redact_content?
     return @redact_content if defined?(@redact_content)
     @redact_content = !scope.can_see_staff_action_log_content?(object)
+  end
+
+  # The same-IP deletion reason is the only writer that embeds an address in
+  # context.
+  def mask_context_ips?
+    !scope.can_see_ip? && object.action == UserHistory.actions[:delete_user]
   end
 
   def redacted_content

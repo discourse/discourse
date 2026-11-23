@@ -186,7 +186,7 @@ module DiscourseWorkflows
           clear_waiting!
           route_downstream(waiting_node, handled_outputs)
         else
-          step&.fail!(error.message)
+          step&.fail!(error.message, error_html: error.is_a?(NodeError) ? error.html : nil)
           @store.publish_progress(step:) if step
           raise error
         end
@@ -337,7 +337,7 @@ module DiscourseWorkflows
         return(handle_pinned_node(node, input_items, input_groups, input_sources, pinned))
       end
 
-      issues = NodeIssues.for_node(node, node_type_class)
+      issues = NodeIssues.for_node(node, node_type_class, guardian: @options.user&.guardian)
       return handle_node_issues(node, input_items, issues) if issues.any?
 
       step = record_step(node, input_items)
@@ -445,7 +445,7 @@ module DiscourseWorkflows
           attach_step_log(step, collect_step_log(exec_ctx, resolver))
         end
 
-        step.fail!(e.message) unless step.error?
+        step.fail!(e.message, error_html: e.is_a?(NodeError) ? e.html : nil) unless step.error?
         raise
       ensure
         resolver&.dispose

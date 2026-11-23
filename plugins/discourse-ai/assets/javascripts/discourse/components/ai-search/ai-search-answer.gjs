@@ -10,6 +10,7 @@ import DCookText from "discourse/ui-kit/d-cook-text";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 import { openTopicFromQuery } from "../../lib/open-topic-from-query.js";
 import AiSearchTopicRow from "./ai-search-topic-row.gjs";
@@ -170,6 +171,27 @@ export default class AiSearchAnswer extends Component {
               }}
               @rawText={{this.discoveries.streamedText}}
             />
+            {{#if this.discoveries.cachedAnswerAt}}
+              <div class="ai-search-answer__cached">
+                <DInterpolatedTranslation
+                  @key="discourse_ai.ai_search.cached_answer"
+                  as |Placeholder|
+                >
+                  <Placeholder @name="age">
+                    {{dFormatDate
+                      this.discoveries.cachedAnswerAt
+                      format="tiny"
+                      leaveAgo="true"
+                    }}
+                  </Placeholder>
+                </DInterpolatedTranslation>
+                <DButton
+                  class="btn-link btn-small"
+                  @action={{this.session.refreshAnswer}}
+                  @label="discourse_ai.ai_search.refresh_answer"
+                />
+              </div>
+            {{/if}}
           {{/if}}
         </div>
       </div>

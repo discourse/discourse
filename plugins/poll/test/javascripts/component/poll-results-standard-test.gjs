@@ -37,17 +37,15 @@ module("Component | PollResultsStandard", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the standard results Component correctly", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS,
-      pollName: "Two Choice Poll",
-      pollType: "single",
-      isPublic: true,
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "single";
+    this.isPublic = true;
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -71,17 +69,15 @@ module("Component | PollResultsStandard", function (hooks) {
   });
 
   test("Omits voters for private polls", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS,
-      pollName: "Two Choice Poll",
-      pollType: "single",
-      isPublic: false,
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "single";
+    this.isPublic = false;
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -103,16 +99,14 @@ module("Component | PollResultsStandard", function (hooks) {
   });
 
   test("options in ascending order", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS_REVERSED,
-      pollName: "Two Choice Poll",
-      pollType: "single",
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS_REVERSED;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "single";
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -134,16 +128,14 @@ module("Component | PollResultsStandard", function (hooks) {
   });
 
   test("options in ascending order", async function (assert) {
-    this.setProperties({
-      options: FIVE_OPTIONS,
-      pollName: "Five Multi Option Poll",
-      pollType: "multiple",
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 12,
-      fetchVoters: () => {},
-    });
+    this.options = FIVE_OPTIONS;
+    this.pollName = "Five Multi Option Poll";
+    this.pollType = "multiple";
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 12;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -172,17 +164,15 @@ module("Component | PollResultsStandard", function (hooks) {
   });
 
   test("options in ascending order, showing absolute vote number", async function (assert) {
-    this.setProperties({
-      options: FIVE_OPTIONS,
-      pollName: "Five Multi Option Poll",
-      pollType: "multiple",
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 12,
-      fetchVoters: () => {},
-      showTally: true,
-    });
+    this.options = FIVE_OPTIONS;
+    this.pollName = "Five Multi Option Poll";
+    this.pollType = "multiple";
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 12;
+    this.fetchVoters = () => {};
+    this.showTally = true;
 
     await render(
       <template>

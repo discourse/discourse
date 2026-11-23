@@ -11,7 +11,7 @@ export default class DsaModerationAction extends Component {
   @tracked saving = false;
 
   get buttonClass() {
-    return this.hasActionDetails && !this.#editing
+    return this.confirmationMessage && !this.#editing
       ? "btn-danger"
       : "btn-primary";
   }
@@ -20,13 +20,17 @@ export default class DsaModerationAction extends Component {
     if (this.#editing) {
       return i18n("review.continue_to_editor");
     }
-    return this.hasActionDetails
+    return this.confirmationMessage
       ? this.args.model.action.label
       : i18n("dsa_statements.save");
   }
 
-  get hasActionDetails() {
-    return Boolean(this.args.model.action.confirm_message);
+  get confirmationMessage() {
+    return this.args.model.action.confirm_message;
+  }
+
+  get confirmationTitle() {
+    return this.args.model.action.confirm_title;
   }
 
   get nextStepLabel() {
@@ -34,7 +38,10 @@ export default class DsaModerationAction extends Component {
   }
 
   get title() {
-    return this.hasActionDetails || this.#editing
+    if (this.confirmationMessage) {
+      return this.confirmationTitle ?? this.args.model.action.label;
+    }
+    return this.#editing
       ? this.args.model.action.label
       : i18n("dsa_statements.title");
   }
@@ -62,11 +69,11 @@ export default class DsaModerationAction extends Component {
 
   <template>
     <DsaModeration
-      @actionStepLabel={{i18n "review.moderation_steps.confirm"}}
-      @hasActionDetails={{this.hasActionDetails}}
+      @hasActionDetails={{false}}
       @nextStepLabel={{this.nextStepLabel}}
       @onSubmit={{this.submit}}
       @options={{@model.options}}
+      @reviewableId={{@model.reviewable.id}}
       as |flow|
     >
       <DModal
@@ -78,7 +85,7 @@ export default class DsaModerationAction extends Component {
         @title={{this.title}}
       >
         <:headerBelowTitle>
-          {{#if flow.showTitleHelp}}
+          {{#if (and flow.showTitleHelp (not this.confirmationMessage))}}
             <flow.Help class="dsa-moderation-title-help" />
           {{/if}}
         </:headerBelowTitle>
@@ -86,16 +93,24 @@ export default class DsaModerationAction extends Component {
           <flow.Steps @disabled={{this.saving}} />
         </:belowHeader>
         <:body>
-          <flow.Body>
-            <p>{{@model.action.confirm_message}}</p>
-          </flow.Body>
+          {{#if this.confirmationMessage}}
+            {{#unless this.confirmationTitle}}
+              <p>{{this.confirmationMessage}}</p>
+            {{/unless}}
+            <div class="dsa-moderation-action__classification">
+              <h2>{{i18n "dsa_statements.title"}}</h2>
+              <flow.Help />
+            </div>
+          {{/if}}
+          <flow.Body />
         </:body>
         <:footer>
           <flow.Footer
-            @cancel={{if @model.action.confirm_message @closeModal}}
+            @cancel={{if this.confirmationMessage @closeModal}}
             @cancelDisabled={{this.saving}}
             @disabled={{this.saving}}
             @isLoading={{this.saving}}
+            @requireCompleteClassification={{this.confirmationMessage}}
             @submitClass={{this.buttonClass}}
             @submitLabel={{this.buttonLabel}}
           />

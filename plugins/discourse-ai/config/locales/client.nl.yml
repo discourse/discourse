@@ -62,6 +62,7 @@ nl:
     discourse_workflows:
       nodes:
         "action:ai_agent": "AI-agent"
+        "action:ai_tool": "AI-tool"
     discourse_automation:
       scriptables:
         llm_report:
@@ -238,6 +239,8 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Voorstellen met AI"
       copied: "Gekopieerd"
       ai_decoded_transcript:
         thinking: "Denken"
@@ -250,6 +253,15 @@ nl:
         ai_agent:
           agent_id: "Agent"
           mode: "Modus"
+        ai_tool:
+          tool_ref: "Tool"
+          arguments: "Argumenten"
+          list_item: "Lijstitem"
+          add_list_item: "Item toevoegen"
+        mcp_tool:
+          mcp_server_id: "MCP-server"
+          tool_name: "Tool"
+          arguments: "Argumenten"
         classify:
           text: "Tekst"
           upload_ids: "Afbeeldingen"
@@ -273,23 +285,30 @@ nl:
         short_title: "Functies"
         back: "Terug naar AI-functies"
         settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
-        disabled: "(uitgeschakeld)"
-        agent:
-          one: "Agent:"
-          other: "Agenten:"
-        groups: "Groepen:"
-        llm:
-          one: "LLM:"
-          other: "LLM's:"
+        table:
+          status: "Status"
+          enabled: "Ingeschakeld"
+          feature: "Functie"
+          agent: "Agent"
+          llm: "LLM"
+          groups: "Groepen"
+        who_can_use:
+          no_one: "Niemand"
+        status:
+          "on": "Aan"
+          "off": "Uit"
+        chatbot:
+          column: "Chatbot"
+          new_agent: "Nieuwe agent"
+          places:
+            personal_messages: "Persoonlijke berichten"
+            chat_direct_messages: "Chatberichten"
+            none: "Niet beschikbaar"
+        set_up: "Instellen"
         no_llm: "Geen LLM geselecteerd"
         no_agent: "Niet ingesteld"
         no_groups: "Geen"
-        classification_model: "Model:"
         edit: "Instellingen"
-        expand_list:
-          one: "(Nog %{count})"
-          other: "(Nog %{count})"
-        collapse_list: "(minder weergeven)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -302,7 +321,6 @@ nl:
         nav:
           enabled: "Ingeschakeld"
         filters:
-          all: "Alles"
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
@@ -333,8 +351,7 @@ nl:
             access_control: "Toegangsbeheer"
         embeddings:
           name: "Insluitingen"
-          description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
-          hyde: "HyDE"
+          related_topics: "Gerelateerde topics"
           setting_groups:
             model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
@@ -344,7 +361,6 @@ nl:
             settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
-          description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
           search: "Discord-zoeken"
           setting_groups:
             settings: "Basisinstellingen"
@@ -380,6 +396,9 @@ nl:
             enabled_features: "Ingeschakelde functies"
             automation: "Automatisering"
             agents: "Agenten"
+        review_queue:
+          setting_groups:
+            settings: "Instellingen"
         image_caption:
           setting_groups:
             settings: "Instellingen"
@@ -395,10 +414,6 @@ nl:
             one: "Geplande vertaling voor %{count} onvertaald bericht."
             other: "Geplande vertaling voor %{count} onvertaalde berichten."
           schedule_topic_error: "Vertalingen plannnen mislukt. Probeer het opnieuw."
-          setting_groups:
-            settings: "Basisinstellingen"
-            agents: "Agenten"
-            backfill_and_limits: "Aanvullen en limieten"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -417,8 +432,20 @@ nl:
       translations:
         title: "Vertalingen"
         description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
-        supported_locales: "Ondersteunde talen"
-        category_scope: "Categorieën"
+        sections:
+          advanced: "Geavanceerd"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorieën"
+          ai_translation_personal_messages:
+            label: "Persoonlijke berichten"
+            choices:
+              none: "Geen"
+              all: "Alles"
+          content_localization_language_switcher:
+            choices:
+              none: "Niemand"
+              all: "Iedereen"
         cached_results_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
         model_progress:
           detail:
@@ -437,7 +464,7 @@ nl:
             tag:
               title: "Tags"
         admin_actions:
-          enable_translations: "Automatische vertalingen inschakelen"
+          enabled: "Ingeschakeld"
         stats:
           title: "Vertaalstatistieken"
           backfill_disabled: "Aanvullen is uitgeschakeld, alleen nieuwe berichten worden vertaald."
@@ -475,6 +502,8 @@ nl:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
         select_llm: "Selecteer LLM"
+        no_llm_selected: "Geen"
+        no_decision_model_selected: "Geen"
         select_agent: "Selecteer agent"
         custom_instructions: "Aangepaste instructies"
         custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
@@ -851,6 +880,8 @@ nl:
         edit: "Bewerken"
         delete: "Verwijderen"
         test: "Test uitvoeren"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "MCP-servers"
         new: "Nieuwe MCP-server"
@@ -938,6 +969,7 @@ nl:
         type: "Type"
         provider: "Provider"
         edit: "Bewerken"
+        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         select_type: "Selecteren"
         types:
           embedding: "Insluiting"
@@ -1149,7 +1181,6 @@ nl:
         presets: "Selecteer een preset..."
         configure_manually: "Handmatig configureren"
         edit: "Bewerken"
-        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
         tests:
           title: "Test uitvoeren"
           running: "Test uitvoeren..."
@@ -1181,6 +1212,7 @@ nl:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Aangepast"
         provider_fields:
@@ -1218,8 +1250,7 @@ nl:
         filter_conversation: "Conversatie"
       ai_bot:
         title: "AI-bot"
-        agent: "Agent:"
-        llm: "Model:"
+        agent_menu_heading: "Agent"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
         try_again: "Opnieuw proberen"
@@ -1282,9 +1313,9 @@ nl:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "Waarmee kan ik helpen?"
           submit: "Vraag verzenden"
-          disclaimer: "Generatieve AI kan fouten maken. Verifieer belangrijke informatie."
           placeholder: "Stel een vraag..."
           new: "Nieuwe vraag"
           min_input_length_message:

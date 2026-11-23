@@ -5,9 +5,6 @@ import loaderShim from "discourse/lib/loader-shim";
 loaderShim("discourse-common/helpers/base-path", () =>
   importSync("discourse/ui-kit/helpers/d-base-path")
 );
-loaderShim("discourse-common/helpers/base-url", () =>
-  importSync("discourse/helpers/base-url")
-);
 loaderShim("discourse-common/helpers/bound-i18n", () =>
   importSync("discourse/helpers/bound-i18n")
 );
@@ -19,9 +16,6 @@ loaderShim("discourse-common/helpers/component-for-row", () =>
 );
 loaderShim("discourse-common/helpers/d-icon", () =>
   importSync("discourse/ui-kit/helpers/d-icon")
-);
-loaderShim("discourse-common/helpers/fa-icon", () =>
-  importSync("discourse/helpers/fa-icon")
 );
 loaderShim("discourse-common/helpers/get-url", () =>
   importSync("discourse/lib/get-url")
@@ -78,9 +72,6 @@ loaderShim("discourse-common/lib/loader-shim", () =>
 loaderShim("discourse-common/lib/object", () =>
   importSync("discourse/lib/object")
 );
-loaderShim("discourse-common/lib/popular-themes", () =>
-  importSync("discourse/lib/popular-themes")
-);
 loaderShim("discourse-common/lib/suffix-trie", () =>
   importSync("discourse/lib/suffix-trie")
 );
@@ -105,9 +96,6 @@ loaderShim("discourse-common/utils/handle-descriptor", () =>
 );
 loaderShim("discourse-common/utils/is-descriptor", () =>
   importSync("discourse/lib/is-descriptor")
-);
-loaderShim("discourse-common/utils/macro-alias", () =>
-  importSync("discourse/lib/macro-alias")
 );
 loaderShim("discourse-common/utils/multi-cache", () =>
   importSync("discourse/lib/multi-cache")

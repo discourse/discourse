@@ -8,6 +8,7 @@ export type UserFieldKind =
   | "text"
   | "textarea"
   | "date"
+  | "number"
   | "confirm"
   | "dropdown"
   | "multiselect";
@@ -35,6 +36,7 @@ export default class UserField extends RestModel {
         UserFieldType.create({ id: "text" }),
         UserFieldType.create({ id: "textarea" }),
         UserFieldType.create({ id: "date" }),
+        UserFieldType.create({ id: "number" }),
         UserFieldType.create({ id: "confirm" }),
         UserFieldType.create({ id: "dropdown", hasOptions: true }),
         UserFieldType.create({ id: "multiselect", hasOptions: true }),

@@ -6,7 +6,20 @@ module DiscourseAi
       RESUME_STATE_PREFIX = "discourse_ai:stream_reply:custom_tools:"
       RESUME_STATE_TTL_SECONDS = 15.minutes.to_i
       MAX_RESUME_ROUNDS = 10
+      # Clients must be able to submit every result in a single resume request.
+      MAX_TOOL_RESULTS = [20, DiscourseAi::Agents::Bot::MAX_TOOL_CALLS_PER_COMPLETION].min
       MAX_REDIS_STATE_BYTES = 500 * 1024
+
+      UPDATE_RESUME_STATE = <<~LUA
+        if redis.call("GET", KEYS[1]) ~= ARGV[1] then
+          return 0
+        end
+        if ARGV[2] then
+          return redis.call("SET", KEYS[1], ARGV[2], "XX", "KEEPTTL") and 1 or 0
+        end
+        return redis.call("DEL", KEYS[1])
+      LUA
+      private_constant :UPDATE_RESUME_STATE
 
       class ProtocolError < StandardError
       end
@@ -19,11 +32,21 @@ module DiscourseAi
 
       def self.resume_state_exists?(resume_token)
         return false if resume_token.blank?
-        Discourse.redis.exists?(redis_key(resume_token))
+
+        # Pending state is a JSON object; in-flight claims are not resumable.
+        Discourse.redis.getrange(redis_key(resume_token), 0, 0) == "{"
       end
 
       def self.redis_key(resume_token)
         "#{RESUME_STATE_PREFIX}#{resume_token}"
+      end
+
+      def self.tool_result_id(result)
+        call_id = result["tool_call_id"].presence&.to_s
+        alias_id = result["id"].presence&.to_s
+        return if call_id && alias_id && call_id != alias_id
+
+        call_id || alias_id
       end
 
       def initialize(
@@ -47,7 +70,7 @@ module DiscourseAi
         @current_user = current_user
         @custom_tools = custom_tools || []
         @resume_token = resume_token
-        @tool_results = Array(tool_results).map(&:stringify_keys)
+        @tool_results = Array(tool_results)
         @accumulated_reply = +""
         @round_count = 0
         @accumulated_tokens = 0
@@ -56,11 +79,22 @@ module DiscourseAi
       end
 
       def run(&event_blk)
-        raw = Discourse.redis.get(self.class.redis_key(@resume_token)) if resuming?
-        payload = parse_resume_payload(raw) if raw.present?
-        topic_id = resuming? ? payload&.dig("topic_id") : @topic&.id
+        if resuming?
+          key = self.class.redis_key(@resume_token)
+          raw = Discourse.redis.get(key)
+          payload = parse_resume_payload(raw) if raw.present?
+          topic_id = payload&.dig("topic_id")
+          if topic_id.blank? || @current_user.nil? || @current_user.id != payload["current_user_id"]
+            raise_invalid_resume_token!
+          end
+        else
+          topic_id = @topic&.id
+        end
+
         if topic_id
-          ReplyLock.synchronize("discourse_ai:reply:topic:#{topic_id}") { run_locked(&event_blk) }
+          ReplyLock.synchronize("discourse_ai:reply:topic:#{topic_id}") do
+            run_locked(raw, payload, &event_blk)
+          end
         else
           run_locked(&event_blk)
         end
@@ -68,10 +102,9 @@ module DiscourseAi
 
       private
 
-      def run_locked(&event_blk)
+      def run_locked(raw = nil, payload = nil, &event_blk)
         if resuming?
-          load_resume_state!
-          apply_tool_results!
+          resume_round!(raw, payload)
         else
           setup_initial_request!
         end
@@ -94,40 +127,19 @@ module DiscourseAi
         preserve_failure =
           error.is_a?(DiscourseAi::Completions::ContextPreparation::Error) || @round_count > 0 ||
             @accumulated_reply.present?
-        resumable_failure = resuming? && @bot && @loaded_resume_payload
-        if (@source_post || resumable_failure) && @prompt && !cancelled && preserve_failure
-          if resuming? && !@tool_results_applied
-            @resume_validation_failed = true
-            begin
-              apply_tool_results!
-            rescue InvalidToolResults
-              store_resume_payload!(@resume_token, @loaded_resume_payload)
-              raise
-            end
-          end
+        resumable_failure = resuming? && @resume_claim
+        if (@source_post || resumable_failure) && @prompt && !cancelled && preserve_failure &&
+             (!resuming? || resumable_failure)
           if !@source_post || !@user.guardian.can_see?(@topic)
-            payload = @loaded_resume_payload
-            # Keep the consumed state if storing accepted results exceeds the size limit.
-            store_resume_payload!(@resume_token, payload)
-            store_resume_payload!(
-              @resume_token,
-              payload.merge(
-                "failed_tool_results" => @tool_results,
-                "work_budget" => @work_budget.snapshot,
-                "accumulated_request_tokens" => @accumulated_request_tokens,
-                "accumulated_response_tokens" => @accumulated_response_tokens,
-                "accumulated_tokens" => @accumulated_tokens,
-                "preparation_tokens" => @preparation_tokens,
-                "completion_count" => @completion_count,
-              ),
-            )
+            preserve_failed_resume! if resumable_failure
             raise
           end
           @accumulated_reply << "\n\n#{error.message}"
           persist_reply_post!(preparation_failed: true)
-          clear_resume_state!
         end
         raise
+      ensure
+        update_resume_state(@resume_claim) if @resume_claim
       end
 
       def resuming?
@@ -202,27 +214,48 @@ module DiscourseAi
             DiscourseAi::Completions::ToolDefinition.from_hash(tool.deep_symbolize_keys)
           end
         @initial_prompt_message_count = @prompt.messages.length
-        @protected_user_index = @prompt.messages.rindex { |entry| entry[:type] == :user }
+        @protected_user_index = @prompt.user_request_index
         @temperature = @bot.agent.temperature
         @top_p = @bot.agent.top_p
       end
 
-      def load_resume_state!
-        payload = resume_payload
+      def resume_round!(raw, payload)
+        if Discourse.redis.get(self.class.redis_key(@resume_token)) != raw
+          raise_invalid_resume_token!
+        end
+
+        load_resume_state!(payload)
+        result_costs = preflight_tool_results!
+        history_error = resume_history_error(payload)
+
+        # The topic lock serializes normal replies, but expiry or another claimant can
+        # still invalidate the exact state we preflighted. Keep its deadline on the claim.
+        claim = "claimed:#{SecureRandom.hex(32)}"
+        raise_invalid_resume_token! if !update_resume_state(raw, claim)
+        @resume_claim = claim
         @loaded_resume_payload = payload
-        if payload.blank?
-          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
+        @original_resume_state = raw
+
+        apply_tool_results!(result_costs)
+        if history_error
+          @resume_validation_failed = true
+          raise history_error
+        end
+      rescue InvalidToolResults
+        if Discourse.redis.get(self.class.redis_key(@resume_token)) != raw
+          raise_invalid_resume_token!
+        end
+        raise
+      end
+
+      def load_resume_state!(payload)
+        if @current_user.nil? || @current_user.id != payload["current_user_id"]
+          raise_invalid_resume_token!
         end
 
         if payload["version"] != 3 || payload["history_snapshot"].blank? ||
              payload["work_budget"].blank?
           raise DiscourseAi::Completions::ContextPreparation::Error.new("unsupported_resume_state")
-        end
-
-        saved_current_user_id = payload["current_user_id"]
-        if saved_current_user_id.blank? || @current_user.blank? ||
-             @current_user.id != saved_current_user_id
-          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
         end
 
         @user = User.find(payload["user_id"])
@@ -239,9 +272,7 @@ module DiscourseAi
             selection_source: :snapshot,
             allow_general_fallback: false,
           )
-        if saved_reply_user_id.to_i != route.speaker.id
-          raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
-        end
+        raise_invalid_resume_token! if saved_reply_user_id.to_i != route.speaker.id
         @agent = route.agent_record
         @llm_model = route.model
         @reply_user = route.speaker
@@ -266,10 +297,10 @@ module DiscourseAi
         @bot =
           DiscourseAi::Agents::Bot.as(@reply_user, agent: route.agent_class.new, model: @llm_model)
         @source_post = @topic.posts.find_by(post_number: @source_post_number)
-        @initial_prompt_message_count = payload["initial_prompt_message_count"].to_i
+        @initial_prompt_message_count =
+          @prompt.normalized_message_offset(payload["initial_prompt_message_count"].to_i)
         @protected_user_index =
-          payload["protected_user_index"] ||
-            @prompt.messages.rindex { |entry| entry[:type] == :user }
+          @prompt.normalized_user_request_index(payload["protected_user_index"])
         # Resume rounds provide a lower bound when a payload lacks an execution count.
         @completion_count = payload.fetch("completion_count", @round_count).to_i
         @preparation_tokens = payload["preparation_tokens"].to_i
@@ -284,6 +315,11 @@ module DiscourseAi
         @resume_evidence_scope = payload["evidence_scope"]
         # A failed accepted round is immutable: retries cannot replace evidence under its event IDs.
         @tool_results = payload["failed_tool_results"] if payload["failed_tool_results"]
+      rescue ActiveRecord::RecordNotFound, ConversationRoute::Error
+        raise_invalid_resume_token!
+      end
+
+      def resume_history_error(payload)
         if !@source_post || !@topic.topic_allowed_users.exists?(user_id: @user.id)
           raise DiscourseAi::Completions::ContextPreparation::Error.new("history_changed")
         end
@@ -293,12 +329,13 @@ module DiscourseAi
             guardian: @user.guardian,
             bot_usernames: available_bot_usernames,
           )
-        if payload["history_snapshot"] &&
-             !@history_snapshot.validate_checkpoint!(payload["history_snapshot"])
+        if !@history_snapshot.validate_checkpoint!(payload["history_snapshot"])
           raise DiscourseAi::Completions::ContextPreparation::Error.new("history_changed")
         end
-      rescue ActiveRecord::RecordNotFound, ConversationRoute::Error
-        raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
+        nil
+      rescue DiscourseAi::Completions::ContextPreparation::Error => error
+        # A valid submitted batch remains evidence even if history prevents generation.
+        error
       end
 
       def run_single_completion_round!
@@ -361,7 +398,6 @@ module DiscourseAi
           @prompt.push_model_response(result)
 
           persist_reply_post!
-          clear_resume_state!
           return
         end
 
@@ -409,10 +445,9 @@ module DiscourseAi
         end
 
         if tool_calls.present?
-          if @work_budget.remaining <= 0 ||
-               tool_calls.size > DiscourseAi::Agents::Bot::MAX_TOOL_CALLS_PER_COMPLETION
-            # Budget exhausted — can't hand tools to client. Push synthetic
-            # "not executed" results and give the model one final text-only call.
+          if @work_budget.remaining <= 0 || tool_calls.size > MAX_TOOL_RESULTS
+            # Don't hand out a batch the client cannot submit. Explain the skipped calls
+            # to the model before its final text-only completion.
             tool_calls.each do |call|
               @prompt.push(
                 type: :tool_call,
@@ -457,7 +492,6 @@ module DiscourseAi
             @prompt.push_model_response(result)
 
             persist_reply_post!
-            clear_resume_state!
             return
           end
 
@@ -474,7 +508,6 @@ module DiscourseAi
         end
 
         persist_reply_post!
-        clear_resume_state!
       end
 
       def generate_with_work_budget!(execution_context, options, final: false, &block)
@@ -613,48 +646,76 @@ module DiscourseAi
         end
       end
 
-      def apply_tool_results!
-        expected = @expected_tool_calls || []
-        if expected.blank?
+      def validate_tool_results!
+        if @expected_tool_calls.blank?
           raise InvalidToolResults, I18n.t("discourse_ai.errors.no_pending_tool_calls")
         end
 
-        supplied =
-          @tool_results.index_by do |result|
-            result["tool_call_id"].presence || result["id"].presence
+        expected_ids = @expected_tool_calls.map { |call| call["id"].to_s }
+        if expected_ids.any?(&:blank?) || expected_ids.uniq.size != expected_ids.size
+          raise_invalid_resume_token!
+        end
+
+        supplied = {}
+        duplicate_ids = Set.new
+        @tool_results.each do |result|
+          if !result.is_a?(Hash)
+            raise InvalidToolResults, I18n.t("discourse_ai.errors.expected_object")
           end
 
-        supplied_ids = supplied.keys.compact.map(&:to_s)
-        expected_ids = expected.map { |call| call["id"].to_s }
+          result = result.stringify_keys
+          id = self.class.tool_result_id(result)
+          if id.nil?
+            raise InvalidToolResults,
+                  I18n.t("discourse_ai.errors.invalid_tool_results", details: "tool_call_id")
+          end
+          duplicate_ids.add(id) if supplied.key?(id)
+          supplied[id] = result
+        end
+        if duplicate_ids.present?
+          raise InvalidToolResults,
+                I18n.t(
+                  "discourse_ai.errors.duplicate_tool_results",
+                  ids: duplicate_ids.to_a.join(", "),
+                )
+        end
 
-        missing_ids = expected_ids - supplied_ids
+        missing_ids = expected_ids - supplied.keys
         if missing_ids.present?
           raise InvalidToolResults,
                 I18n.t("discourse_ai.errors.missing_tool_results", ids: missing_ids.join(", "))
         end
 
-        extra_ids = supplied_ids - expected_ids
+        extra_ids = supplied.keys - expected_ids
         if extra_ids.present?
           raise InvalidToolResults,
                 I18n.t("discourse_ai.errors.unexpected_tool_results", ids: extra_ids.join(", "))
         end
 
-        expected.each do |tool_call|
+        @expected_tool_calls.map do |tool_call|
           id = tool_call["id"].to_s
-          result = supplied[id]
-          has_content = result.key?("content")
-          content = result["content"]
-
-          if !has_content || content.nil?
+          content = supplied.fetch(id)["content"]
+          if content.nil?
             raise InvalidToolResults,
                   I18n.t("discourse_ai.errors.invalid_tool_result_content", id: id)
           end
+          [tool_call, content.is_a?(String) ? content : content.to_json]
+        rescue JSON::GeneratorError
+          raise InvalidToolResults,
+                I18n.t("discourse_ai.errors.invalid_tool_result_content", id: id)
+        end
+      end
 
-          content = content.to_json if !content.is_a?(String)
-          @work_budget.debit(
-            @bot.llm.tokenizer.size(content),
-            event_id: "client_tool:#{@round_count}:#{id}",
-          )
+      def preflight_tool_results!
+        results = validate_tool_results!
+        tokenizer = @bot.llm.tokenizer
+        results.map { |tool_call, content| [tool_call, content, tokenizer.size(content)] }
+      end
+
+      def apply_tool_results!(results)
+        results.each do |tool_call, content, size|
+          id = tool_call["id"].to_s
+          @work_budget.debit(size, event_id: "client_tool:#{@round_count}:#{id}")
 
           provider_data = deep_symbolize(tool_call["provider_data"])
           @prompt.push(
@@ -674,7 +735,6 @@ module DiscourseAi
             provider_data: provider_data,
           )
         end
-        @tool_results_applied = true
       end
 
       def persist_state!(tool_calls:)
@@ -687,7 +747,8 @@ module DiscourseAi
                 )
         end
 
-        token = @resume_token.presence || SecureRandom.hex(32)
+        # A delayed delivery must not match a later round even if the model reuses its call IDs.
+        token = SecureRandom.hex(32)
         payload = {
           version: 3,
           work_budget: @work_budget.snapshot,
@@ -722,13 +783,42 @@ module DiscourseAi
           accumulated_response_tokens: @accumulated_response_tokens,
         }
 
-        store_resume_payload!(token, payload)
-        @resume_token = token
+        key = self.class.redis_key(token)
+        if !Discourse.redis.set(
+             key,
+             serialize_resume_payload(payload),
+             ex: RESUME_STATE_TTL_SECONDS,
+             nx: true,
+           )
+          raise_invalid_resume_token!
+        end
         @round_count = next_round_count
         token
       end
 
-      def store_resume_payload!(token, payload)
+      def preserve_failed_resume!
+        payload =
+          @loaded_resume_payload.merge(
+            "failed_tool_results" => @tool_results,
+            "work_budget" => @work_budget.snapshot,
+            "accumulated_request_tokens" => @accumulated_request_tokens,
+            "accumulated_response_tokens" => @accumulated_response_tokens,
+            "accumulated_tokens" => @accumulated_tokens,
+            "preparation_tokens" => @preparation_tokens,
+            "completion_count" => @completion_count,
+          )
+        update_resume_state(@resume_claim, serialize_resume_payload(payload))
+      rescue ProtocolError
+        # The original state is a safe size-limit fallback only before any model work
+        # and before the batch has been locked in as accepted evidence.
+        previous_count = @loaded_resume_payload.fetch("completion_count", @round_count).to_i
+        if @completion_count == previous_count
+          update_resume_state(@resume_claim, @original_resume_state)
+        end
+        raise
+      end
+
+      def serialize_resume_payload(payload)
         payload_json = payload.to_json
         if payload_json.bytesize > MAX_REDIS_STATE_BYTES
           raise ProtocolError,
@@ -737,22 +827,19 @@ module DiscourseAi
                   max: MAX_REDIS_STATE_BYTES,
                 )
         end
-        Discourse.redis.setex(self.class.redis_key(token), RESUME_STATE_TTL_SECONDS, payload_json)
+        payload_json
       end
 
-      def clear_resume_state!
-        return if @resume_token.blank?
-
-        Discourse.redis.del(self.class.redis_key(@resume_token))
+      def update_resume_state(expected, replacement = nil)
+        redis = Discourse.redis
+        key = redis.namespace_key(self.class.redis_key(@resume_token))
+        argv = [expected]
+        argv << replacement if replacement
+        redis.eval(UPDATE_RESUME_STATE, keys: [key], argv: argv) == 1
       end
 
-      def resume_payload
-        return if @resume_token.blank?
-
-        raw = Discourse.redis.getdel(self.class.redis_key(@resume_token))
-        return if raw.blank?
-
-        parse_resume_payload(raw)
+      def raise_invalid_resume_token!
+        raise ResumeTokenNotFound, I18n.t("discourse_ai.errors.invalid_stream_resume_token")
       end
 
       def parse_resume_payload(raw)

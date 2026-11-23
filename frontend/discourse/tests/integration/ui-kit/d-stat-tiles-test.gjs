@@ -81,4 +81,19 @@ module("Integration | ui-kit | DStatTiles", function (hooks) {
 
     assert.dom(".d-stat-tiles.--compact").exists();
   });
+
+  test("shows @formattedValue instead of formatting @value", async function (assert) {
+    await render(
+      <template>
+        <DStatTiles as |tiles|>
+          <tiles.Tile @formattedValue="1h 30m" @label={{label}} @value="5400" />
+        </DStatTiles>
+      </template>
+    );
+
+    assert
+      .dom(".d-stat-tile__value")
+      .hasText("1h 30m", "the preformatted value is shown")
+      .hasAttribute("title", "5400", "the raw value stays the title");
+  });
 });

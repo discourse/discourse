@@ -13,6 +13,10 @@ nb_NO:
             topic_id:
               label: Emne-ID
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registrer"
       preferences:
         reminders:
           preferences:

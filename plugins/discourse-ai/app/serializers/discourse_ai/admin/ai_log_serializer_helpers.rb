@@ -17,6 +17,7 @@ module DiscourseAi
         AiApiAuditLog::Provider::BedrockConverse => "Amazon Bedrock",
         AiApiAuditLog::Provider::SystemOne => "System One",
         AiApiAuditLog::Provider::OpenAiDecisions => "OpenAI Decisions",
+        AiApiAuditLog::Provider::GeminiDecisions => "Gemini Decisions",
       }.freeze
 
       def self.outcome(log)

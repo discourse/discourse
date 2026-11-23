@@ -6,14 +6,19 @@ import RestModel from "discourse/models/rest";
 export interface SiteTextFields {
   id: string;
   value: string;
+  override_value: string | null;
+  preview_default?: string | null;
   status:
+    | "unknown"
     | "up_to_date"
     | "outdated"
     | "invalid_interpolation_keys"
     | "deprecated";
   old_default: string | null;
   new_default: string | null;
-  interpolation_keys: string[];
+  default_text?: string | null;
+  default_locale?: string | null;
+  interpolation_keys: string[] | null;
   overridden: boolean;
   can_revert: boolean;
 }
@@ -29,11 +34,15 @@ export default class SiteText extends RestModel {
     Pick<
       SiteText,
       | "value"
+      | "override_value"
+      | "preview_default"
       | "can_revert"
       | "overridden"
       | "status"
       | "old_default"
       | "new_default"
+      | "default_text"
+      | "default_locale"
       | "interpolation_keys"
     >
   > {
@@ -43,11 +52,15 @@ export default class SiteText extends RestModel {
       getProperties(
         result.site_text,
         "value",
+        "override_value",
+        "preview_default",
         "can_revert",
         "overridden",
         "status",
         "old_default",
         "new_default",
+        "default_text",
+        "default_locale",
         "interpolation_keys"
       )
     );

@@ -43,6 +43,17 @@ RSpec.describe ReviewablePost do
       expect(reviewable_actions(Guardian.new(admin)).has?(:reject_and_delete)).to eq(true)
     end
 
+    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+
+      actions = reviewable_actions(Guardian.new(admin))
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(
+        actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
+      ).to eq([%w[approve reviewables.actions.answer_no.title]])
+    end
+
     it "includes the approve post and unhide action if the post is hidden" do
       post.hidden = true
 
@@ -200,7 +211,7 @@ RSpec.describe ReviewablePost do
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve handles the post reviewable" do

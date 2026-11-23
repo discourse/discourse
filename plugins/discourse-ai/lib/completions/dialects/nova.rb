@@ -162,7 +162,7 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          { role: "assistant", content: msg[:content] }
+          { role: "assistant", content: Prompt.text_only(msg) }
         end
 
         def tool_msg(msg)

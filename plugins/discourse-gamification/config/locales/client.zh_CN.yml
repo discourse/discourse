@@ -7,6 +7,13 @@
 zh_CN:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            gamification:
+              read_score_events: "阅读游戏化评分事件。"
+              create_score_events: "创建游戏化积分事件，以奖励或扣除积分。"
+              update_score_events: "更新现有的游戏化评分事件。"
       site_settings:
         categories:
           discourse_gamification: "Discourse Gamification"

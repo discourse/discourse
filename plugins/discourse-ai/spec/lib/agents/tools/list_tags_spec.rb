@@ -5,11 +5,9 @@ RSpec.describe DiscourseAi::Agents::Tools::ListTags do
   fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-    SiteSetting.tagging_enabled = true
-  end
+  include_context "with AI bot enabled"
+
+  before { SiteSetting.tagging_enabled = true }
 
   describe "#process" do
     it "can generate correct info" do

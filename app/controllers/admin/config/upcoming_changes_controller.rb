@@ -13,7 +13,31 @@ class Admin::Config::UpcomingChangesController < Admin::AdminController
   end
 
   def update_groups
+    if UpcomingChanges.group_setting_name(params[:setting].to_s)
+      UpcomingChanges::UpdateGroups.call(service_params) do
+        on_success do |groups:, group_setting:|
+          render(json: success_json.merge(groups:, group_setting:))
+        end
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_failed_contract do |contract|
+          render(
+            json: failed_json.merge(errors: contract.errors.full_messages),
+            status: :bad_request,
+          )
+        end
+        on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+        on_model_not_found(:group_setting) { raise Discourse::NotFound }
+        on_model_not_found(:group_ids) { raise Discourse::NotFound }
+        on_failed_step(:update_setting) do |step|
+          render(json: failed_json.merge(errors: [step.error]), status: :unprocessable_entity)
+        end
+      end
+
+      return
+    end
+
     SiteSetting::UpsertGroups.call(service_params) do |result|
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_success { render(json: success_json) }
       on_model_not_found(:group_ids) { raise Discourse::NotFound }
       on_failed_contract do |contract|

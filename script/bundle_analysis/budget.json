@@ -1,0 +1,5 @@
+{
+  "initialLoad": { "percent": 1, "kib": 10, "combine": "or" },
+  "bundles": { "percent": 3, "kib": 2, "combine": "and" },
+  "movedIntoInitialLoad": { "kib": 1 }
+}

@@ -16,6 +16,15 @@ ur:
       disabled: "صرف انتظامی رجسٹریشن"
     ace_editor:
       resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+    code_editor:
+      resize: "کوڈ ایڈیٹر کا سائز تبدیل کریں"
+      search:
+        replace: "بدلیں"
+        next: "اگلا"
+        previous: "پچھلی"
+        close: "بند کریں"
+      fold:
+        to: "کیلئے"
     user_api_key:
       title: '"%{application_name} " کو مجاز بنائیں'
       authorize: "مجاز بنائیں"
@@ -549,106 +558,54 @@ ur:
       dismiss: "سیٹ اپ منسوخ کریں"
       select_theme:
         title: "اپنی سائٹ کو تخصیص کریں"
-        description: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
         action: "اختیارات دیکھیں"
         completed: "اختیارات تبدیل کریں"
         show_light_screenshot: "لائٹ اسکرین شاٹ دکھائیں"
         show_dark_screenshot: "ڈارک اسکرین شاٹ دکھائیں"
+      create_category:
+        action: "زمرہ بنائیں"
       invite_collaborators:
         title: "شراکت داروں کو مدعو کریں"
         description: "ابتدائی صارفین اسے زندگی بخشیں گے۔"
         action: "دعوت نامہ بنائیں"
         completed: "مزید مدعو کریں"
-      start_posting:
-        title: "دھاگے بنائیں"
-        description: "لوگوں کو بحث کرنے کے لیے موضوع دیں۔"
-        action: "خیالات دیکھیں"
-        completed: "مزید خیالات دیکھیں"
-        choose_option: "آپ کیسے شروع کرنا چاہیں گے؟"
-        predefined_topics: "بحث کے موضوع کے سانچے"
-        predefined_topics_subtitle: "نئے اراکین کو بات کرنے کے لیے موضوع دیں، کسی ایک سانچے کو چنیں ترمیم کریں اور اپنا بنائیں۔"
-        predefined_topics_description: "بحث کو آگے بڑھانے کے لیے گفتگو شروع کرنے والے موضوعات میں سے انتخاب کریں"
-        use_predefined: "سانچے پرکھیں"
-        back: "واپس"
-        category_unavailable: "اس زمرے میں پوسٹ کرنا ممکن نہیں ہے۔"
-        icebreakers:
-          plan_categories:
-            title: "ہمیں کون سی زمروں سے آغاز کرنا چاہیے؟"
-            body: "آئیے لانچ کرنے سے پہلے چیزوں کو منظم کرنے کا طریقہ طے کریں! لوگ سب سے زیادہ کس موضوع پر بات کرنا چاہیں گے؟ ہم صرف چند زمروں سے آغاز کر سکتے ہیں اور بعد میں مزید شامل کر سکتے ہیں۔"
-          plan_invites:
-            title: "شروعات سے پہلے ہمیں کون سے ارکان کو مدعو کرنا چاہیے؟"
-            body: "ایک ایسی کمیونٹی میں شامل ہونا ہمیشہ بہتر ہوتا ہے جس میں پہلے ہی کچھ لوگ موجود ہوں۔ ہمیں سب سے پہلے کسے مدعو کرنا چاہیے؟ ایسے لوگوں کے بارے میں سوچیں جو بات چیت کرنا پسند کرتے ہیں، دوسروں کی مدد کرتے ہیں، اور جلد شامل ہونے کے لیے پرجوش ہوں۔"
-          introduce_yourself:
-            title: "اپنا تعارف کروائیں"
-            body: "کمیونٹی میں خوش آمدید! آئیے ایک دوسرے کو جانیں۔ براہِ کرم اپنا تعارف کروائیں اور اپنی دلچسپیوں کو رقم کریں۔ میں پہل کرتا ہوں: مجھے ٹیکنالوجی کا بہت شوق ہے اور دوسروں کو سکھانا پسند ہے!"
-          write_your_own:
-            title: "اپنی طرف سے لکھیں"
-            body: "اپنی کمیونٹی کے مطابق بنائے گئے موضوع کے ساتھ بات چیت شروع کریں۔"
     design_wizard:
       title: "اپنی سائٹ کو تخصیص کریں"
-      subtitle: "رنگ، خط اور آپ کے فورم کی ترتیب کا انتخاب کریں۔"
       step_label: "%{index} مرحلے پر جائیں"
       save: "محفوظ اور ختم کریں"
       back: "واپس"
       next: "اگلا"
       launch: "ڈیزائن وزرڈ"
       launch_description: "اپنے فورم کے تھیم، رنگوں، خطوط اور لے آؤٹ کو دوبارہ دیکھیں۔"
-      intro:
-        description: "یہ وزرڈ آپ کو آپ کی سائٹ کے تھیم، رنگوں، فونٹس، ہوم پیج لے آؤٹ، خوش آمدید بینر، اور تلاش کے انداز سے آگاہ کرتا ہے۔"
-        autosave: "آپ کا ہر قدم محفوظ ہوتا جاتا ہے، لہذا صارفین کو تبدیلیاں فوری طور پر دیکھن کو ملتی ہیں۔ اگر یہ بند بھی ہوجائے تو آپ سب کچھ واپس لا سکتے ہیں۔"
-        start: "شروعات"
       close:
         message: "آپ نے فورم کے ڈیزائن میں کچھ تبدیلیاں پہلے ہی محفوظ کیں۔ کیا آپ انہیں رکھنا چاہتے ہیں؟"
         keep: "تبدیلیاں برقرار رکھیں"
         continue_editing: "ترمیم جاری رکھیں"
+      steps:
+        theme:
+          title: "ایک تھیم منتخب کریں"
       sections:
-        theme: "تھیم"
-        colors: "ڈیفالٹ رنگ"
         fonts: "خطوط"
+        logo: "لوگو"
         homepage: "پہلا صفحہ"
-        welcome_banner: "استقبالیہ بینر"
-        search: "تلاش"
       theme:
         selected: "منتخب"
         applying: "لاگو ہو رہا ہے…"
         custom_theme_notice: "آپ کا فورم فی الحال بطور ڈیفالٹ تھیم %{name} کا استعمال کر رہا ہے۔ نیچے سے کسی تھیم کا انتخاب کریں اور اسے دیکھیں۔ محفوظ کرنے سے آپ کا موجودہ تھیم بدل جائے گا۔"
-      colors:
-        light: "لائٹ"
-        dark: "ڈارک"
-        dark_only: "%{name} صرف ڈارک موڈ میں ہے"
-        both_modes: "ہر تختی میں ایک مماثل لائٹ اور ڈارک موڈ ہوتا ہے"
-        user_selectable: "صارفین کو تختی تبدیل کرنے دیں"
-        user_selectable_description: "ان تختیوں کو مینو میں دکھائیں جنہیں صارفین منتخب کر سکتے ہوں"
       fonts:
-        base_font: "بنیادی خط"
-        heading_font: "سرخی والا خط"
+        base_font: "متن"
+        heading_font: "سرخیاں"
+      logo:
+        description: "سائٹ کی ٹاپ نیویگیشن کے ساتھ ساتھ سائٹ کی ای میل اطلاعات کے اوپری حصے پر ظاہر ہوتا ہے۔"
+        help_text: "تجویز کردہ سائز 600 x 80 پکسلز ہے۔"
       homepage:
         topics: "موضوعات"
         categories: "زمرہ جات"
-        topic_page_type: "موضوع کے صفحے کی قسم"
-        topic_pages:
-          latest: "موضوعات کو ان کی تازہ ترین سرگرمی کے اعتبار سے ترتیب دیا گیا ہے، نئے سب سے پہلے۔"
-          new: "گزشتہ چند دنوں میں بنائے گئے موضوعات، نئے سب سے پہلے۔"
-          hot: "فی الحال رجحان ساز موضوعات، جو مجموعی مقبولیت کو حالیہ مصروفیت کے ساتھ ملا کر پیشِ خدمت ہیں۔"
         category_page_style: "زمرہ کے صفحہ کا انداز"
         styles:
           boxes: "خانے"
           with_topics: "موضوعات کے ساتھ زمرہ جات"
           only: "صرف زمرہ جات"
-      welcome_banner:
-        enable: "استقبالیہ بینر دکھائیں"
-        location: "بینر کی جگہ"
-        locations:
-          below_site_header: "فورم ہیڈر کے نیچے"
-          above_topic_content: "موضوعوں کی فہرست کے اوپر"
-      search:
-        experiences:
-          search_icon:
-            title: "تلاش کا آئیکن"
-            description: "ہیڈر میں ایک محدب شیشہ جو تلاش شروع کرتا ہے۔"
-          search_field:
-            title: "تلاش کا حلقہ"
-            description: "ہیڈر میں ایک مکمل تلاش کا حلقہ، جو ہمیشہ نظر آتا ہے۔"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -2695,6 +2652,7 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+      remove_item: "%{name} ہٹائیں"
     d_otp:
       screen_reader:
         one: نمبر درج کریں
@@ -2780,7 +2738,6 @@ ur:
         }.
     learn_more: "مزید جانیں۔۔۔"
     learn_more_with_link: "<a href='%{url}' target='_blank'>مزید جانیں۔۔۔</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>آراءٔ…</a>"
     mute: خاموش کریں
     unmute: آواز چالو کریں
     last_post: پوسٹ کیا
@@ -3164,6 +3121,7 @@ ur:
         size_too_small: "%{provided_file_size} اجازت دی گئی کم مقدار %{min_file_size}سےکم ہے"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
+      no_results: "کوئی نتائج نہیں"
       smileys_&_emotion: سمائیلیاں اور جذبات
       people_&_body: لوگ اور جسم
       animals_&_nature: جانور اور قدرت
@@ -3237,6 +3195,10 @@ ur:
       emoji: "اِیمَوجی :)"
       more_emoji: "مزید۔۔۔"
       options: "اختیارات"
+      ai_content:
+        code: "کوڈ"
+        quote: "اقتباس کریں"
+        details: "تفصیلات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
@@ -4539,10 +4501,8 @@ ur:
           label: "انتخاب"
           title: "انتخاب سے دھاگہ ہٹانے کے لیے کلک کریں"
         select_replies:
-          label: "منتخب +جوابات"
           title: "انتخاب میں دھاگہ اور اس کے تمام جوابات شامل کریں"
         select_below:
-          label: "منتخب+ذیل میں"
           title: "انتخاب میں دھاگہ اور اس کے بعد سب شامل کریں۔"
         delete: منتخب کو حذف کریں
         cancel: انتخاب کو منسوخ کریں
@@ -4571,6 +4531,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      ai_generated: "مصنوعی ذہانت"
       heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
@@ -5688,9 +5649,17 @@ ur:
       forward: "آگے"
       share: "شیئر"
       dismiss: "بر خاست کریں"
+    mobile_tab_bar:
+      new_topic: "نیا موضوع"
+      create: "بنائیں"
+      more: "مزید "
+      back: "واپس"
+      topics: "موضوعات"
+      drafts:
+        one: "مسودات (%{count})"
+        other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
-    theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
     theme_preview_failed: "تھیم دکھانے میں ناکام رہا کیونکہ یہ موجود نہیں یا آپ کے پاس اس تک رسائی کی اجازت نہیں۔"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
@@ -6098,23 +6067,22 @@ ur:
         name: "نام"
         plugin: "اضافی سہولتیں"
         metadata: "میٹا ڈیٹا"
-        enabled: "فعال شدہ"
-        enabled_for: "کے لئے فعال..."
+        enabled: "فعال؟"
         show_image: "تصویر دکھائیں"
-        edit_groups: "حصہ دار گروپس کو ترمیم کریں"
+        feedback: "آراء"
+        toggle: "%{name} فعال ہے"
         groups_updated: "گروپس اپ ڈیٹ ہو گئے!"
         save_groups: "گروپ محفوظ کریں"
         add_groups_to_enable: "اس فیچر کو فعال کرنے کے لیے گروپس شامل کریں"
         no_changes_to_save: "محفوظ کرنے کے لیے کوئی تبدیلیاں نہیں"
         select_groups: "گروپس کا انتخاب"
         opt_in_groups: "شامل ہونے والے گروپس"
-        show_related_settings: "متعلقہ ترتیبات دیکھیں..."
+        settings: "سیٹِنگ"
         opt_in_groups_instructions: "آپٹ ان گروپس مخصوص صارفین کے ایک گروپ کو تبدیلی کو سب کے لیے جاری کرنے سے پہلے آزمانے کی اجازت دینے کے لیے استعمال کیے جا سکتے ہیں۔ نوٹ کریں کہ جب تبدیلی مستحکم حیثیت میں پہنچ جائے گی تو یہ گروپس غیر متعلقہ ہو جائیں گے۔"
         depends_on_notice: "اس تبدیلی کے لیے %{dependencyLinks} کا فعال ہونا ضروری ہے۔"
         preview: "جھلک دیکھیں"
         enabled_for_options:
           no_one: "کوئی نہیں"
-          everyone: "ہر کوئی"
           specific_groups: "مخصوص گروپ(گروپس)"
         statuses:
           experimental: "تجرباتی"
@@ -7419,14 +7387,6 @@ ur:
           company_name: "نام"
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "گورنمنٹ قانون"
-          governing_law_placeholder: "صوبہ، ریاست یا ملک"
-          governing_law_help: |
-            سائٹ کی قانونی شرائط کے لیے دائرہ اختیار کی وضاحت کریں، عام طور پر جہاں کمپنی رجسٹرڈ ہے یا کام کرتی ہے۔
-          city_for_disputes: "تنازعات کے لئے شہر"
-          city_for_disputes_placeholder: "شہر"
-          city_for_disputes_help: |
-            اس فورم سے متعلق قانونی تنازعات کے حل کے لیے شہر کی وضاحت کریں۔
           extra_groups:
             heading: "گروپ کی فہرست"
             description: "بارے میں صفحہ پر دکھانے کے لیے اضافی گروپس۔"
@@ -7622,7 +7582,6 @@ ur:
           uploading: "اپ لوڈ ہو رہا۔۔۔"
           uploading_progress: "اپ لوڈ ہو رہا… %{progress}%"
           success: "'%{filename}' کامیابی سے اَپ لوڈ کردی گئی ہے۔ فائل پر اب کام جا ری ہے اور فہرست میں ظاہر ہونے کیلئے ایک منٹ تک لگ سکتا ہے۔"
-          error: "اَپ لوڈ کرتے وقت ایک خرابی کا سامنا کرنا پڑا '%{filename}': %{message}"
         settings: "ترتیبات"
         operations:
           is_running: "فی الحال ایک آپریشن چل رہا…"
@@ -8498,7 +8457,6 @@ ur:
         silence_duration: "صارف کب تک خاموش رہے گا؟"
         silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
-        silence_message: "ای میل پیغام"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
@@ -8755,6 +8713,8 @@ ur:
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
         search_label: "تلاش"
+        preview:
+          default: "ڈِیفالٹ"
         theme_disabled: "غیر فعال"
         filters: "فِلٹر"
         title: "سائٹ کے متون"
@@ -8896,7 +8856,7 @@ ur:
           modal_title: تمغات کے گروپ
         granted_by: کی طرف سے عطا کیا گیا
         granted_at: جس وقت پر عطا کیا گیا
-        reason_help: (کسی دھاگے یا موضوع کا ایک رابطہ)
+        reason_help: کسی دھاگے یا موضوع کا ایک رابطہ
         save: محفوظ کریں
         delete: حذف کریں
         delete_confirm: کیا آپ واقعی اس تمغہ کو حذف کرنا چاہتے ہیں؟

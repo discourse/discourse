@@ -1,8 +1,61 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
+  describe ".site_logo_dimensions" do
+    it "exposes upload dimensions by URL and refreshes them when a logo changes" do
+      logo = Fabricate(:upload, width: 600, height: 200)
+      dark_logo = Fabricate(:upload, width: 500, height: 150)
+      SiteSetting.logo = logo
+      SiteSetting.logo_dark = dark_logo
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 600, "height" => 200)
+      expect(dimensions[SiteSetting.site_logo_dark_url]).to eq("width" => 500, "height" => 150)
+
+      SiteSetting.logo = Fabricate(:upload, width: 400, height: 100)
+
+      dimensions = JSON.parse(SiteSetting.client_settings_json)["site_logo_dimensions"]
+      expect(dimensions[SiteSetting.site_logo_url]).to eq("width" => 400, "height" => 100)
+      expect(dimensions).not_to have_key(SiteSetting.full_cdn_url(logo.url))
+    end
+  end
+
+  describe ".dsa_reporting_enabled=" do
+    it "requires a community rule before enabling reporting" do
+      expect { SiteSetting.dsa_reporting_enabled = true }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_required"),
+      )
+      expect(SiteSetting.dsa_reporting_enabled).to eq(false)
+
+      SiteSetting.dsa_community_rules = [
+        { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." },
+      ].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect(SiteSetting.dsa_reporting_enabled).to eq(true)
+    end
+  end
+
   describe ".dsa_community_rules=" do
     let(:rule) { { ground: "Terms, section 3", explanation: "Personal attacks are prohibited." } }
+
+    it "requires reporting to be disabled before removing the last community rule" do
+      SiteSetting.dsa_community_rules = [rule].to_json
+      SiteSetting.dsa_reporting_enabled = true
+
+      expect { SiteSetting.dsa_community_rules = "[]" }.to raise_error(
+        Discourse::InvalidParameters,
+        I18n.t("errors.site_settings.dsa_community_rules_in_use"),
+      )
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([rule.stringify_keys])
+
+      SiteSetting.dsa_reporting_enabled = false
+      SiteSetting.dsa_community_rules = "[]"
+
+      expect(JSON.parse(SiteSetting.dsa_community_rules)).to eq([])
+    end
 
     it "accepts a 500 character contractual ground and rejects 501 characters" do
       rule[:ground] = "é" * 500
@@ -18,8 +71,8 @@ RSpec.describe SiteSetting do
       )
     end
 
-    it "accepts a 2000 character explanation and rejects 2001 characters" do
-      rule[:explanation] = "é" * 2000
+    it "accepts a 500 character explanation and rejects 501 characters" do
+      rule[:explanation] = "é" * 500
 
       SiteSetting.dsa_community_rules = [rule].to_json
 
@@ -359,7 +412,7 @@ RSpec.describe SiteSetting do
     end
 
     it "includes only settings for the specified category" do
-      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(13)
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(11)
     end
   end
 
@@ -736,6 +789,30 @@ RSpec.describe SiteSetting do
         SiteSetting.defaults[:uncategorized_category_id],
       )
       expect(SiteSetting.allow_uncategorized_topics).to eq(false)
+    end
+  end
+
+  describe ".should_download_images?" do
+    before { SiteSetting.disabled_image_download_domains = "evil.com" }
+
+    it "skips downloads for an exactly disabled host" do
+      expect(SiteSetting.should_download_images?("http://evil.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested with different casing" do
+      expect(SiteSetting.should_download_images?("http://EVIL.com/a.png")).to eq(false)
+    end
+
+    it "skips downloads for a disabled host requested as a trailing-dot FQDN" do
+      expect(SiteSetting.should_download_images?("http://evil.com./a.png")).to eq(false)
+    end
+
+    it "downloads images from a subdomain of a disabled host" do
+      expect(SiteSetting.should_download_images?("http://cdn.evil.com/a.png")).to eq(true)
+    end
+
+    it "downloads images from a host that only shares a suffix" do
+      expect(SiteSetting.should_download_images?("http://notevil.com/a.png")).to eq(true)
     end
   end
 end

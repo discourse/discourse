@@ -14,11 +14,15 @@ pt:
         preview_archive: Arquivo
         desktop: Desktop
         mobile: Móvel
+        save: Guardar
+        path_formats:
+          custom: Personalizar
         themes: Temas
         theme_name: Nome do tema
         edit: Editar
         activate: Ativar
         preview: Pré-visualização
+        customize: Personalizar
         import: Importar
         export: Exportar
         active: Ativo
@@ -31,6 +35,7 @@ pt:
         change:
           title: título
           body: corpo
+          tags: etiquetas
       review:
         create: Criar ligação
         copy: Copiar
@@ -47,6 +52,8 @@ pt:
         edit: Editar
         status: Estado
         replies: Respostas
+        title: Título
+      all: Todos
       drafts: Rascunhos
       preview: Pré-visualização
       unpublish: Anular a publicação

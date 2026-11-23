@@ -14,9 +14,13 @@ sw:
         preview_archive: Nyaraka
         desktop: Eneo kazi la Kompyuta
         mobile: Kifaa cha kiganjani
+        save: Hifadhi
+        path_formats:
+          custom: Binafsi
         themes: Mandhari
         edit: Hariri
         preview: Kihakiki
+        customize: Geuza Kukufaa
         import: Imeingizwa kutoka sehemu nyingine
         export: Hamisha
         active: Amilifu
@@ -29,6 +33,7 @@ sw:
         change:
           title: kichwa cha Habari
           body: mwili
+          tags: lebo
       review:
         copy: Nakili
         open: Fungua
@@ -40,4 +45,6 @@ sw:
       editor_table:
         edit: Hariri
         replies: Majibu
+        title: Kichwa cha Habari
+      all: Yote
       preview: Kihakiki

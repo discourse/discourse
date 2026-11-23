@@ -162,25 +162,28 @@ module DiscourseAi
         end
 
         def thinking_template_kwargs
-          return {} if thinking_config&.explicit_none?
+          return thinking_template_flag(false) if thinking_config&.explicit_none?
 
           override = active_custom_param("thinking_override")
 
           if override
             return {} if !%w[on off].include?(override)
 
-            parser = active_custom_param("reasoning_parser")
-            thinking_enabled = override == "on"
-
-            if ENABLE_THINKING_PARSERS.include?(parser)
-              { enable_thinking: thinking_enabled }
-            elsif THINKING_PARSERS.include?(parser)
-              { thinking: thinking_enabled }
-            else
-              {}
-            end
+            thinking_template_flag(override == "on")
           elsif llm_model.lookup_custom_param("enable_thinking")
             { enable_thinking: true }
+          else
+            {}
+          end
+        end
+
+        def thinking_template_flag(enabled)
+          parser = active_custom_param("reasoning_parser")
+
+          if ENABLE_THINKING_PARSERS.include?(parser)
+            { enable_thinking: enabled }
+          elsif THINKING_PARSERS.include?(parser)
+            { thinking: enabled }
           else
             {}
           end

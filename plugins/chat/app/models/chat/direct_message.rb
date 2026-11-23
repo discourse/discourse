@@ -62,6 +62,12 @@ module Chat
       # all users deleted
       return chat_channel.id if !users.first
 
+      # A bot has no person behind its username, so a DM with one shows its name.
+      if SiteSetting.enable_names && users.size == 1 && users.first.bot? &&
+           users.first.name.present?
+        return users.first.name
+      end
+
       formatted_names =
         (
           if prefers_name

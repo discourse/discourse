@@ -64,6 +64,7 @@ ru:
         requires_ai: "Для этого нужно включить плагин ИИ"
       nodes:
         "action:ai_agent": "ИИ Агент"
+        "action:ai_tool": "Инструмент искусственного интеллекта"
       node_descriptions:
         "action:ai_agent": "Запустите агента искусственного интеллекта для обработки данных или генерации контента."
     discourse_automation:
@@ -233,6 +234,8 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      dsa_classification:
+        suggest: "Подсказки от AI"
       copied: "Скопировано"
       ai_decoded_transcript:
         tool: "Инструмент"
@@ -245,6 +248,14 @@ ru:
           agent_id: "Агент"
           mode: "Режим"
           select_agent: "Выберите агента..."
+        ai_tool:
+          tool_ref: "Инструмент"
+          arguments: "Аргументы"
+          list_item: "Элемент списка"
+          add_list_item: "Добавить элемент"
+        mcp_tool:
+          tool_name: "Инструмент"
+          arguments: "Аргументы"
         classify:
           text: "Текст"
           upload_ids: "Изображения"
@@ -268,29 +279,29 @@ ru:
         short_title: "Функции"
         back: "Вернуться к функциям ИИ"
         settings_save_error: "Некоторые настройки не удалось сохранить."
-        disabled: "(отключено)"
-        agent:
-          one: "Агент:"
-          few: "Агентов:"
-          many: "Агентов:"
-          other: "Агенты:"
-        groups: "Группы:"
-        llm:
-          one: "Большая языковая модель:"
-          few: "Большие языковые модели:"
-          many: "Большие языковые модели:"
-          other: "Большие языковые модели:"
+        table:
+          status: "Статус"
+          enabled: "Включено"
+          feature: "Функция"
+          agent: "Агент"
+          llm: "Большая языковая модель"
+          groups: "Группы"
+        who_can_use:
+          no_one: "Никто"
+        status:
+          "on": "Включено"
+          "off": "Выключено"
+        chatbot:
+          column: "Чат-бот"
+          places:
+            personal_messages: "Личные сообщения"
+            chat_direct_messages: "Сообщения чата"
+            none: "Недоступно"
+        set_up: "Настроить"
         no_llm: "LLM не выбрана"
         no_agent: "Не установлено"
         no_groups: "Отсутствует"
-        classification_model: "Модель:"
         edit: "Настроек"
-        expand_list:
-          one: "(еще %{count})"
-          few: "(еще %{count})"
-          many: "(еще %{count})"
-          other: "(еще %{count})"
-        collapse_list: "(свернуть)"
         bot:
           bot: "Чат-бот"
           name: "Бот"
@@ -303,7 +314,6 @@ ru:
         nav:
           enabled: "Включено"
         filters:
-          all: "Все"
           no_results: "Не найдено функций, соответствующих вашим фильтрам."
           reset: "Сбросить"
         no_automations: "Автоматизации пока нет."
@@ -332,7 +342,7 @@ ru:
             access_control: "Контроль доступа"
         embeddings:
           name: "Встраивания"
-          description: "Обеспечивает работу функций, таких как «Связанные темы» и «AI-поиск», создавая семантические представления текста"
+          related_topics: "Связанные темы"
           setting_groups:
             model_settings: "Настройки модели"
             related_topics: "Связанные темы"
@@ -344,7 +354,6 @@ ru:
             settings: "Основные настройки"
         discord:
           name: "Интеграция с Discord"
-          description: "Добавляет возможность поиска по каналам Discord"
           search: "Поиск в Discord"
           setting_groups:
             settings: "Основные настройки"
@@ -378,6 +387,9 @@ ru:
             enabled_features: "Включенные функции"
             automation: "Автоматизация"
             agents: "Агенты"
+        review_queue:
+          setting_groups:
+            settings: "Настроек"
         image_caption:
           setting_groups:
             settings: "Настроек"
@@ -390,9 +402,6 @@ ru:
           short_text_translator: "Переводчик коротких текстов"
           schedule_untranslated: "Расписание переводов"
           schedule_topic_error: "Не удалось запланировать перевод. Пожалуйста, попробуйте еще раз."
-          setting_groups:
-            settings: "Основные настройки"
-            agents: "Агенты"
         spam:
           name: "Спам"
           description: "С помощью выбранной LLM определяет потенциальный спам и отправляет его модераторам сайта в очередь проверки"
@@ -411,8 +420,20 @@ ru:
       translations:
         title: "Переводы"
         description: "Автоматически переводить весь контент вашего форума на предпочитаемый пользователем язык"
-        supported_locales: "Поддерживаемые языки"
-        category_scope: "Категории"
+        sections:
+          advanced: "Дополнительно"
+        settings:
+          ai_translation_category_scope:
+            label: "Категории"
+          ai_translation_personal_messages:
+            label: "Личные сообщения"
+            choices:
+              none: "Нет"
+              all: "Все"
+          content_localization_language_switcher:
+            choices:
+              none: "Никто"
+              all: "Все"
         cached_results_notice: "Отображение кэшированных результатов из %{relative_time}."
         model_progress:
           detail:
@@ -431,7 +452,7 @@ ru:
             tag:
               title: "Теги"
         admin_actions:
-          enable_translations: "Включить автоматический перевод"
+          enabled: "Включено"
         stats:
           title: "Статистика переводов"
           eta_minutes:
@@ -471,6 +492,8 @@ ru:
         short_title: "Спам"
         title: "Настройте обработку спама"
         select_llm: "Выберите LLM"
+        no_llm_selected: "Нет"
+        no_decision_model_selected: "Нет"
         select_agent: "Выберите агента"
         custom_instructions: "Пользовательские инструкции"
         custom_instructions_help: "Пользовательские инструкции для вашего сайта помогут AI выявить спам, например, «Более придирчиво проверяй публикации не на английском языке»."
@@ -772,6 +795,8 @@ ru:
         edit: "Изменить"
         delete: "Удалить"
         test: "Выполнить тест"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         short_title: "Серверы MCP"
         name: "Название"
@@ -800,6 +825,7 @@ ru:
         type: "Тип"
         provider: "Поставщик"
         edit: "Изменить"
+        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         select_type: "Выбрать"
         types:
           embedding: "Встраивание"
@@ -1002,7 +1028,6 @@ ru:
         presets: "Выберите пресет..."
         configure_manually: "Настроить вручную"
         edit: "Изменить"
-        seeded_warning: "Данный параметр уже настроен на вашем сайте и не подлежит изменению."
         tests:
           title: "Выполнить тест"
           running: "Запуск теста..."
@@ -1034,6 +1059,7 @@ ru:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Другое"
         provider_fields:
@@ -1063,8 +1089,7 @@ ru:
         filter_standalone: "Обособленное"
       ai_bot:
         title: "AI-бот"
-        agent: "Агент:"
-        llm: "Модель:"
+        agent_menu_heading: "Агент"
         pm_warning: "Сообщения чат-бота с AI регулярно отслеживаются модераторами."
         cancel_streaming: "Прекратить отвечать"
         try_again: "Попробовать снова"
@@ -1121,9 +1146,9 @@ ru:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "Чем я могу помочь?"
           submit: "Задать вопрос"
-          disclaimer: "Генеративный AI может ошибаться. Проверяйте важную информацию."
           placeholder: "Задайте вопрос..."
           new: "Новый вопрос"
           min_input_length_message:

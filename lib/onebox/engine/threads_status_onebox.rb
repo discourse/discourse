@@ -34,7 +34,7 @@ module Onebox
 
       def description
         text = @og[:description].split(". ").drop(1).join(". ")
-        linkify_mentions(text)
+        linkify_mentions(ERB::Util.html_escape(text))
       end
 
       def title

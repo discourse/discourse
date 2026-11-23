@@ -11,6 +11,15 @@ nl:
       go_back: "Terug"
       title: "Illegale content melden"
       email: "E-mailadres"
+    code_editor:
+      search:
+        replace: "Vervangen"
+        next: "Volgende"
+        previous: "Vorige"
+        close: "Sluiten"
+        go: "Gaan"
+      fold:
+        to: "tot"
     user_api_key:
       title: '''%{application_name}'' autoriseren'
       authorize: "Autoriseren"
@@ -488,39 +497,26 @@ nl:
       pm_title: "Voorgestelde berichten"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Gefeliciteerd met het voltooien van het onboardingproces!"
+      create_category:
+        action: "Categorie maken"
       invite_collaborators:
         title: "Deelnemers uitnodigen"
         action: "Uitnodiging maken"
-      start_posting:
-        title: "Begin met plaatsen"
-        action: "Ideeën bekijken"
-        choose_option: "Hoe wil je starten?"
-        predefined_topics: "IJsbrekersjablonen"
-        predefined_topics_subtitle: "Geef nieuwe leden iets om over te praten, kies een sjabloon om te bewerken en maak je eigen."
-        predefined_topics_description: "Kies uit een verzameling conversatiestarters om discussies op gang te brengen"
-        use_predefined: "Sjablonen bekijken"
-        back: "Terug"
-        icebreakers:
-          introduce_yourself:
-            title: "Stel jezelf voor"
-            body: "Welkom bij de community! Laten we elkaar leren kennen. Stel jezelf alsjeblieft voor en vertel iets over je interesses. Ik begin: ik hou van technologie en vind het heerlijk om les te geven!"
     design_wizard:
       back: "Terug"
       next: "Volgende"
       sections:
-        theme: "Thema"
         fonts: "Lettertypen"
+        logo: "Logo"
         homepage: "Startpagina"
-        welcome_banner: "Welkomstbanner"
-        search: "Zoeken"
       theme:
         selected: "Geselecteerd"
-      colors:
-        light: "Licht"
-        dark: "Donker"
       fonts:
-        base_font: "Basislettertype"
-        heading_font: "Lettertype kop"
+        base_font: "Inhoud"
+        heading_font: "Koppen"
+      logo:
+        description: "Wordt weergegeven in de bovenste navigatiebalk van de site en bovenaan de e-mailmeldingen van de site."
+        help_text: "De aanbevolen grootte is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categorieën"
@@ -979,6 +975,7 @@ nl:
         suspect_user: "Is deze gebruiker een spammer?"
         approve_post: "Dit bericht goedkeuren?"
         approve_topic: "Dit topic goedkeuren?"
+        something_wrong_with_post: "Is er iets mis met dit bericht?"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -2526,6 +2523,7 @@ nl:
       no_results: "Geen resultaten"
       search: "Zoeken…"
       label: "Selecteer opties"
+      remove_item: "%{name} verwijderen"
     d_otp:
       screen_reader:
         one: Vul een getal in
@@ -2606,7 +2604,6 @@ nl:
         }.
     learn_more: "Meer informatie…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Meer informatie…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Dempen
     unmute: Dempen opheffen
     last_post: Geplaatst
@@ -2938,6 +2935,9 @@ nl:
         size_too_small: "%{provided_file_size} is kleiner dan de minimaal vereiste %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji zoeken
+      search_placeholder: "Zoek op emojinaam en -alias..."
+      no_results: "Geen resultaten"
+      favorites: "Veel gebruikt"
       smileys_&_emotion: Smileys en emoji's
       people_&_body: Mensen en lichaam
       animals_&_nature: Dieren en natuur
@@ -2990,6 +2990,10 @@ nl:
       emoji: "Emoji :)"
       more_emoji: "meer…"
       options: "Opties"
+      ai_content:
+        code: "Code"
+        quote: "Citeren"
+        details: "Details"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
@@ -4215,10 +4219,8 @@ nl:
           label: "geselecteerd"
           title: "Klik om bericht te verwijderen uit selectie"
         select_replies:
-          label: "selecteer +antwoorden"
           title: "Bericht en alle antwoorden erop toevoegen aan selectie"
         select_below:
-          label: "selecteer +hieronder"
           title: "Bericht en alle erna toevoegen aan selectie"
         delete: geselecteerde verwijderen
         cancel: selectie annuleren
@@ -4247,6 +4249,7 @@ nl:
         actions: "Bulkacties"
     post:
       accessible_heading: "geplaatst door %{username} %{date}"
+      ai_generated: "AI"
       heading_anchor: "Koptekstlink"
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -5357,9 +5360,17 @@ nl:
       forward: "Volgende"
       share: "Delen"
       dismiss: "Sluiten"
+    mobile_tab_bar:
+      new_topic: "Nieuw topic"
+      create: "Maken"
+      more: "Meer"
+      back: "Terug"
+      topics: "Topics"
+      drafts:
+        one: "Concepten (%{count})"
+        other: "Concepten (%{count})"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
-    theme_preview_notice: "Je bekijkt momenteel een themavoorbeeld. Sluit dit browsertabblad of -venster om terug te gaan naar je normale siteconfiguratie."
     theme_preview_failed: "Het voorbeeld van het thema bekijken is mislukt, omdat het niet bestaat of omdat je geen toestemming hebt om het te openen."
     image_removed: "(afbeelding verwijderd)"
     pause_notifications:
@@ -5760,23 +5771,21 @@ nl:
         name: "Naam"
         plugin: "Plug-in"
         metadata: "Metagegevens"
-        enabled: "Ingeschakeld"
-        enabled_for: "Ingeschakeld voor..."
+        enabled: "Ingeschakeld?"
         show_image: "Afbeelding weergeven"
-        edit_groups: "Aanmeldgroepen bewerken"
+        feedback: "Feedback"
         groups_updated: "Groepen bijgewerkt!"
         save_groups: "Groepen opslaan"
         add_groups_to_enable: "Voeg groepen toe om deze functie in te schakelen"
         no_changes_to_save: "Geen wijzigingen om op te slaan"
         select_groups: "Selecteer groepen…"
         opt_in_groups: "Aanmeldingsgroepen"
-        show_related_settings: "Gerelateerde instellingen weergeven..."
+        settings: "Instellingen"
         opt_in_groups_instructions: "Aanmeldingsgroepen kunnen worden gebruikt om een bepaalde groep gebruikers een wijziging te laten testen voordat deze voor wordt uitgebracht. Deze groepen worden irrelevant zodra een wijziging de status stabiel krijgt."
         enabled_for_throttle: "Je hebt te snel gewijzigd voor wie deze wijziging is ingeschakeld. Wacht een paar seconden voordat je het opnieuw probeert."
         change_enabled_for_success: "Je hebt deze wijziging ingeschakeld voor %{enabledFor}"
         change_disabled: "Je hebt je afgemeld voor deze wijziging"
         permanent_notice: "Deze wijziging is nu permanent en wordt binnenkort verwijderd. Je kunt je niet meer afmelden."
-        permanent_soon_notice: "Deze wijziging wordt binnenkort permanent. Je kunt je niet meer afmelden."
         permanent_no_group_selection: "N.v.t., permanente wijzigingen gelden voor alle groepen."
         no_changes: "Er zijn op dit moment geen aankomende wijzigingen."
         preview: "Voorbeeld"
@@ -5784,7 +5793,6 @@ nl:
         default_warning_short: "De standaard voor deze instelling is gewijzigd, lees meer hierover op de pagina <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>aankomende wijzigingen</a>."
         enabled_for_options:
           no_one: "Niemand"
-          everyone: "Iedereen"
           staff: "Alleen %{staffGroupName}"
           specific_groups: "Specifieke groep(en)"
           specific_groups_with_group_names:
@@ -6965,14 +6973,6 @@ nl:
           company_name: "Naam"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Toepasselijk recht"
-          governing_law_placeholder: "Provincie, staat of land"
-          governing_law_help: |
-            Geef aan onder welk rechtsgebied de juridische voorwaarden van de site vallen. Dit is doorgaans het rechtsgebied waar het bedrijf is gevestigd of actief is.
-          city_for_disputes: "Plaats voor geschillen"
-          city_for_disputes_placeholder: "Plaats"
-          city_for_disputes_help: |
-            Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
           extra_groups:
             heading: "Groepsvermelding"
             description: "Extra groepen om weer te geven op de Over-pagina."
@@ -7179,7 +7179,6 @@ nl:
           uploading: "Uploaden…"
           uploading_progress: "Uploaden… %{progress}%"
           success: "'%{filename}' is geüpload. Het bestand wordt nu verwerkt, het kan tot een minuut duren voordat het in de lijst wordt weergegeven."
-          error: "Er is een fout opgetreden bij het uploaden van '%{filename}': %{message}"
         settings: "Instellingen"
         operations:
           is_running: "Er wordt momenteel een bewerking uitgevoerd…"
@@ -8178,7 +8177,6 @@ nl:
         silence_duration: "Hoelang wordt de gebruiker gedempt?"
         silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
-        silence_message: "E-mailbericht"
         suspended_until: "(tot %{until})"
         suspend_forever: "Voor altijd schorsen"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
@@ -8492,6 +8490,8 @@ nl:
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
         search_label: "Zoeken"
+        preview:
+          default: "Standaard"
         theme_disabled: "Uitgeschakeld"
         filters: "Filters"
         status:
@@ -8665,7 +8665,7 @@ nl:
           modal_title: Badgegroeperingen
         granted_by: Toegekend door
         granted_at: Toegekend op
-        reason_help: (Een link naar een bericht of topic)
+        reason_help: Een link naar een bericht of topic
         save: Opslaan
         delete: Verwijderen
         delete_confirm: Weet je zeker dat je deze badge wilt verwijderen?

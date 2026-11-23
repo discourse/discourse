@@ -16,6 +16,9 @@ ar:
         preview_archive: أرشفة
         desktop: سطح المكتب
         mobile: الجوَّال
+        save: حفظ
+        path_formats:
+          custom: مخصَّصة
         back_to_themes: الرجوع إلى قائمة السمات
         new_theme_short: سمة جديدة
         themes: السمتان
@@ -23,6 +26,8 @@ ar:
         edit: تعديل
         activate: التنشيط
         preview: معاينة
+        customize: تخصيص
+        customized_theme_name: "%{name} (custom)"
         import: استيراد
         export: تصدير
         active: نشطة
@@ -35,6 +40,7 @@ ar:
         change:
           title: العنوان
           body: النص الأساسي
+          tags: الوسوم
       review:
         create: إنشاء رابط
         copy: نسخ
@@ -51,7 +57,11 @@ ar:
         edit: تعديل
         status: الحالة
         replies: الردود
+        title: العنوان
+        page: صفحة
+      all: الكل
       drafts: المسودات
+      pages: صفحتان
       preview: معاينة
       unpublish: إلغاء النشر
       appearance_link: المظهر

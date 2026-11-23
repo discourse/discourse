@@ -17,11 +17,11 @@ RSpec.describe "Blog article summaries", type: :request do
   before do
     enable_blog!(category: category, drafts: drafts)
     @publication = Blog::Publication.for_topic(topic)
-    @publication.save_metadata!(admin, path: "/workflow", excerpt: "An editorial summary.")
+    update_blog_metadata(@publication, admin, path: "/workflow", excerpt: "An editorial summary.")
   end
 
   it "provides an excerpt and blog link without replacing the full cooked post" do
-    @publication.publish!(admin)
+    publish_blog_draft(@publication, admin)
     get "/t/#{@publication.discussion_topic_id}.json"
 
     expect(response.status).to eq(200)
@@ -36,7 +36,7 @@ RSpec.describe "Blog article summaries", type: :request do
 
   it "leaves short published posts uncompressed" do
     first_post.revise(admin, raw: "A short announcement that should remain fully visible.")
-    @publication.publish!(admin)
+    publish_blog_draft(@publication, admin)
     get "/t/#{@publication.discussion_topic_id}.json"
 
     expect(response.parsed_body["post_stream"]["posts"].first["blog_article"]).to be_nil
@@ -51,8 +51,8 @@ RSpec.describe "Blog article summaries", type: :request do
   end
 
   it "removes summary metadata when an article is unpublished" do
-    @publication.publish!(admin)
-    @publication.unpublish!(admin)
+    publish_blog_draft(@publication, admin)
+    unpublish_blog_article(@publication, admin)
     get "/t/#{@publication.discussion_topic_id}.json"
 
     expect(response.status).to eq(200)

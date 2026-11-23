@@ -1,5 +1,7 @@
 en:
   site_settings:
+    live_file_transfer_max_size_mb: "Maximum size per live-room file in MiB (1 MiB = 1,048,576 bytes), from 1 to 102400 (100 GiB). Default: 100 MiB. Temporary receive disk reservations are limited to twice this value, including files awaiting deletion; browser storage quotas still apply. The streaming window remains 256 KiB. Requires {{setting:live_enabled}} and sender access through {{setting:live_file_transfer_allowed_groups}}."
+    live_file_transfer_allowed_groups: "Groups that can send files in peer-to-peer live rooms, up to {{setting:live_file_transfer_max_size_mb}}. Empty disables all file transfers. Senders also need access through {{setting:live_allowed_groups}}; anyone in the same mesh room can receive files. Recipients must accept and explicitly save files. Files are encrypted in transit (TURN may relay traffic), are not uploaded to Discourse, and are not scanned for viruses. Not available in LiveKit rooms."
     live_verbose_logging: "Log Live diagnostic information and warnings in server logs and browser consoles. Disabled by default. Logs exclude credentials, transcripts, signaling payloads, and raw error details."
     live_enabled: "Live brings integrated voice and video rooms to Discourse, with screen sharing, background blur, noise suppression, live subtitles, direct calls, room chat, and group-based permissions. Members can keep browsing while they talk, with no external app required."
     live_allowed_groups: "Groups that can access live rooms."
@@ -29,7 +31,7 @@ en:
     live_max_camera_quality: "Highest camera quality participants may choose in their video settings. Standard captures at 720p; high captures at 1080p; maximum additionally stops automatic quality reduction as viewer count grows on peer-to-peer rooms, which multiplies the sender's upload bandwidth and CPU use."
     live_max_screen_share_quality: "Highest screen share quality participants may choose in their video settings. Standard targets 15 fps at a modest bitrate; high allows 30 fps at a higher bitrate; maximum allows 60 fps at a very high bitrate ceiling, letting fast connections share high-resolution screens at full quality."
     live_chat_enabled: "Allow live rooms to be linked to a chat channel. Each chat session opens a thread in that channel; messages are real chat messages, so participants can also follow along in the chat UI."
-    live_stun_servers: "STUN server URIs (stun:host:port), separated by |, used by peer-to-peer live rooms for NAT traversal. Can be left empty when {{setting:live_turn_secret_servers}} is configured — clients then discover their public address through the TURN server itself."
+    live_stun_servers: "STUN server URIs (stun:host:port), separated by |, used by peer-to-peer live rooms for NAT traversal. Can be left empty when {{setting:live_turn_secret_servers}} is configured, as long as that TURN server also answers unauthenticated STUN Binding requests; some browsers only discover their public address that way."
     live_turn_servers: "TURN server URIs (turn:host:port or turns:host:port), separated by |, used to relay call traffic when a direct connection cannot be established. Authenticated with {{setting:live_turn_username}} and {{setting:live_turn_credential}}; for servers supporting short-lived credentials, use {{setting:live_turn_secret_servers}} instead."
     live_turn_username: "Static username for the TURN servers in {{setting:live_turn_servers}}."
     live_turn_credential: "Static password for the TURN servers in {{setting:live_turn_servers}}."
@@ -67,6 +69,7 @@ en:
       watercooler_description: "Join for casual drop-in voice chats with other community members."
     chat:
       default_thread_title: "Voice chat in %{room}"
+      default_attachment_opener: "In %{room}"
       default_thread_opener: "In %{room} - %{message}"
     onebox:
       inline_to_room: "Live: %{room_name}"

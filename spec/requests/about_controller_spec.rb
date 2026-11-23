@@ -247,6 +247,31 @@ RSpec.describe AboutController do
           Fabricate(:category_moderation_group, category: category, group: group)
         end
 
+        it "does not expose members of hidden category moderation groups to anonymous users" do
+          SiteSetting.enable_category_group_moderation = true
+          hidden_category_mod = Fabricate(:user)
+          hidden_group =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:owners],
+              members_visibility_level: Group.visibility_levels[:owners],
+            )
+          hidden_group.add(hidden_category_mod)
+          Fabricate(:category_moderation_group, category: category, group: hidden_group)
+
+          get "/groups/#{hidden_group.name}/members.json"
+          expect(response.status).to eq(404)
+
+          get "/about.json"
+
+          expect(response.status).to eq(200)
+          moderator_ids =
+            response.parsed_body["about"]["category_moderators"].flat_map do |category_moderators|
+              category_moderators["moderator_ids"]
+            end
+          expect(moderator_ids).not_to include(hidden_category_mod.id)
+        end
+
         it "does not expose category moderators to anonymous users when hide_user_profiles_from_public is enabled" do
           SiteSetting.hide_user_profiles_from_public = true
           get "/about.json"

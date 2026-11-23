@@ -50,23 +50,31 @@ class EmailController < ApplicationController
 
     if updated
       cache_key = "unsub_#{SecureRandom.hex}"
-      Discourse.cache.write cache_key, user.email, expires_in: 1.hour
+      Discourse.cache.write(
+        cache_key,
+        { email: user.email, topic_id: key.associated_topic&.id },
+        expires_in: 1.hour,
+      )
 
-      url = path("/email/unsubscribed?key=#{cache_key}")
-      url += "&topic_id=#{key.associated_topic.id}" if key.associated_topic
-
-      redirect_to url
+      redirect_to path("/email/unsubscribed?key=#{cache_key}")
     else
       redirect_back fallback_location: path("/")
     end
   end
 
   def unsubscribed
-    @email = Discourse.cache.read(params[:key])
+    confirmation = Discourse.cache.read(params[:key])
+
+    if confirmation.is_a?(Hash)
+      @email = confirmation[:email]
+      @topic_id = confirmation[:topic_id]
+    else
+      @email = confirmation
+    end
 
     raise Discourse::NotFound unless User.find_by_email(@email)
 
-    if @topic_id = params[:topic_id]
+    if @topic_id
       topic = Topic.find_by(id: @topic_id)
       @topic = topic if topic && Guardian.new.can_see?(topic)
     end

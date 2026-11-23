@@ -161,9 +161,6 @@ loaderShim("discourse/components/load-more", () =>
 loaderShim("discourse/components/nav-item", () =>
   importSync("discourse/ui-kit/d-nav-item")
 );
-loaderShim("discourse/components/number-field", () =>
-  importSync("discourse/ui-kit/d-number-field")
-);
 loaderShim("discourse/components/password-field", () =>
   importSync("discourse/ui-kit/d-password-field")
 );

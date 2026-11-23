@@ -10,6 +10,8 @@ class User::CreateBot
     attribute :name, :string
     attribute :username, :string
     attribute :trust_level, :integer, default: -> { SiteSetting.default_trust_level }
+    attribute :interactive_bot, :boolean, default: false
+    attribute :plugin_params, default: -> { {} }
     attribute :api_key, :hash do
       attribute :description, :string
       attribute :scope_mode, :string
@@ -24,6 +26,13 @@ class User::CreateBot
               if: -> { SiteSetting.full_name_requirement == "required_at_signup" }
     validates :username, presence: true
     validates :trust_level, inclusion: { in: TrustLevel.valid_range }
+
+    validate do
+      value = raw_attributes["interactive_bot"]
+      unless [true, false, 1, 0, *%w[1 0 true false on off]].any? { |allowed| allowed.eql?(value) }
+        errors.add(:interactive_bot, :inclusion)
+      end
+    end
   end
 
   # Commit the reservation before the creation transaction can hide it from other requests.
@@ -32,6 +41,7 @@ class User::CreateBot
   transaction do
     model :user, :create_bot
     step :log_creation
+    step :apply_plugin_params
     only_if(:api_key_requested) do
       model :api_key, :create_api_key
       step :log_api_key_creation
@@ -58,6 +68,7 @@ class User::CreateBot
       name: params.name,
       username: params.username,
       trust_level: params.trust_level,
+      interactive_bot: params.interactive_bot,
       email: "#{SecureRandom.hex}@does-not-exist.invalid",
       active: true,
       approved: true,
@@ -73,6 +84,14 @@ class User::CreateBot
 
   def log_creation(user:, guardian:)
     StaffActionLogger.new(guardian.user).log_bot_creation(user)
+  end
+
+  def apply_plugin_params(params:, user:)
+    params.plugin_params.each do |name, value|
+      registration = DiscoursePluginRegistry.bot_creation_params[name.to_sym]
+      next unless registration && registration[:plugin].enabled?
+      registration[:callback].call(user, value)
+    end
   end
 
   def api_key_requested(params:)

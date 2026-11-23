@@ -94,6 +94,31 @@ RSpec.describe Admin::StaffActionLogsController do
 
       include_examples "staff action logs accessible"
 
+      it "shows the matched IP in same-IP deletion contexts alongside the last-seen IP" do
+        matched_ip = "42.42.42.42"
+        last_seen_ip = "198.51.100.7"
+        target_user = Fabricate(:user, registration_ip_address: matched_ip)
+        Fabricate(:user, ip_address: last_seen_ip, registration_ip_address: matched_ip)
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 ip_type: "registration",
+               }
+        expect(response.status).to eq(200)
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first).to include(
+          "ip_address" => last_seen_ip,
+          "context" => I18n.t("user.destroy_reasons.same_ip_address", ip_address: matched_ip),
+        )
+      end
+
       it "filters bot creation as a native staff action" do
         bot = Fabricate(:user, id: -1234)
         creation = StaffActionLogger.new(admin).log_bot_creation(bot)
@@ -111,6 +136,28 @@ RSpec.describe Admin::StaffActionLogsController do
         expect(response.parsed_body["extras"]["user_history_actions"]).to include(
           "id" => "create_bot",
           "action_id" => UserHistory.actions[:create_bot],
+        )
+      end
+
+      it "retains stored full names for administrators when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        expect(logs_by_action["delete_user"]["details"]).to include(user.name)
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => "Previous Private Name",
+          "new_value" => "New Private Name",
         )
       end
 
@@ -202,6 +249,173 @@ RSpec.describe Admin::StaffActionLogsController do
       before { sign_in(moderator) }
 
       include_examples "staff action logs accessible"
+
+      it "masks the matched IP in same-IP deletion contexts without IP viewing permission" do
+        SiteSetting.moderators_view_ips = false
+        matched_ip = "42.42.42.42"
+        last_seen_ip = "198.51.100.7"
+        target_user = Fabricate(:user, registration_ip_address: matched_ip)
+        Fabricate(:user, ip_address: last_seen_ip, registration_ip_address: matched_ip)
+
+        sign_in(admin)
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 ip_type: "registration",
+               }
+        expect(response.status).to eq(200)
+
+        sign_in(moderator)
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first).to include(
+          "ip_address" => nil,
+          "context" =>
+            I18n.t(
+              "user.destroy_reasons.same_ip_address",
+              ip_address: I18n.t("staff_action_logs.redacted"),
+            ),
+        )
+        expect(response.body).not_to include(matched_ip)
+        expect(response.body).not_to include(last_seen_ip)
+      end
+
+      it "masks IPv6 addresses in same-IP deletion contexts without IP viewing permission" do
+        SiteSetting.moderators_view_ips = false
+        redacted = I18n.t("staff_action_logs.redacted")
+        addresses = %w[2001:db8::1 2001:db8:1234:: ::1]
+        addresses.each do |address|
+          StaffActionLogger.new(admin).log_user_deletion(
+            Fabricate(:user, ip_address: address),
+            context: I18n.t("user.destroy_reasons.same_ip_address", ip_address: address),
+          )
+        end
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].pluck("context")).to all(
+          eq(I18n.t("user.destroy_reasons.same_ip_address", ip_address: redacted)),
+        )
+        addresses.each { |address| expect(response.body).not_to include(address) }
+      end
+
+      it "keeps deletion contexts that only contain address-shaped text" do
+        SiteSetting.moderators_view_ips = false
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Same IP address as keeper",
+        )
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Deleted while reviewing Jobs::Base failures",
+        )
+        StaffActionLogger.new(admin).log_user_deletion(
+          Fabricate(:user),
+          context: "Deleted while reviewing Service::Base failures",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:delete_user],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].pluck("context")).to contain_exactly(
+          "Same IP address as keeper",
+          "Deleted while reviewing Jobs::Base failures",
+          "Deleted while reviewing Service::Base failures",
+        )
+      end
+
+      it "keeps IP-shaped contexts on actions that never embedded an address" do
+        SiteSetting.moderators_view_ips = false
+        StaffActionLogger.new(admin).log_username_change(
+          user,
+          "old username",
+          "new username",
+          context: "Moved off 203.0.113.9",
+        )
+
+        get "/admin/logs/staff_action_logs.json",
+            params: {
+              action_id: UserHistory.actions[:change_username],
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].first["context"]).to eq(
+          "Moved off 203.0.113.9",
+        )
+      end
+
+      it "hides stored full names when names are disabled" do
+        SiteSetting.enable_names = false
+        user.update!(name: "Current Private\nFull Name")
+        StaffActionLogger.new(admin).log_user_deletion(user)
+        topic = Fabricate(:topic, user: user, title: "Welcome to the community (2026 edition)")
+        post =
+          Fabricate(
+            :post,
+            user: user,
+            topic: topic,
+            raw: "Quoting the old log (below)\ntopic: Forged title",
+          )
+        StaffActionLogger.new(admin).log_post_deletion(post)
+        StaffActionLogger.new(admin).log_topic_delete_recover(topic)
+        StaffActionLogger.new(admin).log_name_change(
+          user.id,
+          "Previous Private Name",
+          "New Private Name",
+        )
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.body).not_to include("Previous Private Name", "New Private Name")
+
+        logs_by_action =
+          response.parsed_body["staff_action_logs"].index_by { |log| log["action_name"] }
+        name_details =
+          logs_by_action
+            .values_at("delete_user", "delete_post", "delete_topic")
+            .pluck("details")
+            .join
+        expect(name_details).not_to include(*user.name.lines(chomp: true))
+        expect(logs_by_action["delete_topic"]["details"]).to include("title: #{topic.title}\n")
+        expect(logs_by_action["delete_user"]["details"]).to include("username: #{user.username}")
+        expect(logs_by_action["delete_post"]["details"]).to include(
+          "user: #{user.username}\ntopic: #{topic.title}\npost_number: #{post.post_number}\n",
+        )
+        expect(logs_by_action["change_name"]).to include(
+          "previous_value" => nil,
+          "new_value" => nil,
+        )
+      end
+
+      it "keeps post content that quotes an author line when the author was deleted" do
+        SiteSetting.enable_names = false
+        post =
+          Fabricate(
+            :post,
+            raw: "Copied from the log:\nuser: someone (quoted in the post)\nraw: more text",
+          )
+        post.update_columns(user_id: nil)
+        StaffActionLogger.new(admin).log_post_recover(post.reload)
+
+        get "/admin/logs/staff_action_logs.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["staff_action_logs"].sole["details"]).to include(
+          "user: (deleted user)\nraw: #{post.raw}",
+        )
+      end
 
       it "does not see admin-only actions" do
         StaffActionLogger.new(admin).log_site_setting_change("title", "old", "new")

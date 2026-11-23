@@ -163,6 +163,8 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      dsa_classification:
+        suggest: "Suggerisci con l'IA"
       copied: "Copiato"
       ai_decoded_transcript:
         tool: "Strumento"
@@ -172,6 +174,12 @@ it:
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
+        ai_tool:
+          tool_ref: "Strumento"
+          list_item: "Elemento lista"
+          add_list_item: "Aggiungi elemento"
+        mcp_tool:
+          tool_name: "Strumento"
         classify:
           text: "Testo"
           upload_ids: "Immagini"
@@ -192,20 +200,26 @@ it:
         none: "Nessuna"
       features:
         short_title: "Funzionalità"
-        disabled: "(disabilitati)"
-        groups: "Gruppi:"
-        llm:
-          one: "LLM:"
-          other: "LLM:"
+        table:
+          status: "Stato"
+          enabled: "Abilitato"
+          feature: "Funzionalità"
+          llm: "LLM"
+          groups: "Gruppi"
+        status:
+          "on": "On"
+          "off": "Off"
+        chatbot:
+          column: "Chatbot"
+          places:
+            personal_messages: "Messaggi personali"
+            chat_direct_messages: "Messaggi di chat"
+            none: "Non disponibile"
+        set_up: "Configura"
         no_llm: "Nessun LLM selezionato"
         no_agent: "Non impostato"
         no_groups: "Nessuna"
-        classification_model: "Modello:"
         edit: "Impostazioni"
-        expand_list:
-          one: "(%{count} altro)"
-          other: "(altri %{count})"
-        collapse_list: "(mostra meno)"
         bot:
           bot: "Chatbot"
           name: "Bot"
@@ -213,7 +227,6 @@ it:
         nav:
           enabled: "Abilitato"
         filters:
-          all: "Tutte"
           no_results: "Nessuna funzionalità trovata per i filtri impostati."
           reset: "Annulla"
         no_automations: "Non ci sono ancora automazioni"
@@ -235,13 +248,11 @@ it:
           ask_ai: "Chiedi all'IA"
         embeddings:
           name: "Integrazioni"
-          description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
-          hyde: "HyDE"
+          related_topics: "Argomenti correlati"
           setting_groups:
             related_topics: "Argomenti correlati"
         discord:
           name: "Integrazione Discord"
-          description: "Aggiunge l'opzione di cercare tra i canali di Discord"
           search: "Ricerca Discord"
         inference:
           name: "Concetti dedotti"
@@ -263,6 +274,9 @@ it:
           post_illustrator: "Assistente messaggi illustrati"
           setting_groups:
             automation: "Automazione"
+        review_queue:
+          setting_groups:
+            settings: "Impostazioni"
         image_caption:
           setting_groups:
             settings: "Impostazioni"
@@ -290,7 +304,20 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
-        category_scope: "Categorie"
+        sections:
+          advanced: "Avanzato"
+        settings:
+          ai_translation_category_scope:
+            label: "Categorie"
+          ai_translation_personal_messages:
+            label: "Messaggi personali"
+            choices:
+              none: "Nessuna"
+              all: "Tutte"
+          content_localization_language_switcher:
+            choices:
+              none: "Nessuno"
+              all: "Chiunque"
         model_progress:
           detail:
             retry: "Riprova"
@@ -307,6 +334,8 @@ it:
               title: "Categorie"
             tag:
               title: "Etichette"
+        admin_actions:
+          enabled: "Abilitato"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -328,6 +357,8 @@ it:
         short_title: "Spam"
         title: "Configura la gestione dello spam"
         select_llm: "Seleziona LLM"
+        no_llm_selected: "Nessuna"
+        no_decision_model_selected: "Nessuna"
         custom_instructions: "Istruzioni personalizzate"
         custom_instructions_help: "Istruzioni personalizzate specifiche per il tuo sito per aiutare l'intelligenza artificiale a identificare lo spam, ad esempio \"Sii più aggressivo nell'analizzare i post in una lingua diversa dall'italiano\"."
         last_seven_days: "Ultimi 7 giorni"
@@ -595,6 +626,8 @@ it:
         edit: "Modifica"
         delete: "Elimina"
         test: "Esegui test"
+        providers:
+          CDCK: "CDCK"
       mcp_servers:
         name: "Nome"
         description: "Descrizione"
@@ -618,6 +651,7 @@ it:
         type: "Tipo"
         provider: "Fornitore"
         edit: "Modifica"
+        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         select_type: "Seleziona"
         types:
           embedding: "Integrazione"
@@ -794,7 +828,6 @@ it:
         presets: "Seleziona una preimpostazione..."
         configure_manually: "Configura manualmente"
         edit: "Modifica"
-        seeded_warning: "Questo elemento è preconfigurato sul tuo sito e non può essere modificato."
         tests:
           title: "Esegui test"
           running: "Esecuzione del test..."
@@ -826,6 +859,7 @@ it:
           open_ai: "OpenAI"
           google: "Google"
           cloudflare: "Cloudflare"
+          aws_bedrock: "AWS Bedrock"
           CDCK: "CDCK"
           fake: "Personalizzato"
         provider_fields:
@@ -855,7 +889,6 @@ it:
         filter_standalone: "Evento autonomo"
       ai_bot:
         title: "Bot IA"
-        llm: "Modello:"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
         try_again: "Riprova"
@@ -912,9 +945,9 @@ it:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "Come posso aiutarti?"
           submit: "Invia domanda"
-          disclaimer: "L'IA generativa può sbagliarsi. Verifica sempre le informazioni importanti."
           placeholder: "Fai una domanda..."
           new: "Nuova domanda"
           min_input_length_message:

@@ -1,9 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
+import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import Draft from "discourse/models/draft";
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
@@ -11,6 +13,16 @@ import { confirmMeshPrivacy } from "../../components/modal/live-mesh-privacy-war
 import { reportMicAcquisitionFailure } from "../../components/modal/live-mic-permission.gjs";
 import AudioMonitor from "../../lib/live/audio-monitor.js";
 import { RING_SECONDS } from "../../lib/live/call-constants.js";
+import {
+  collectLocalInfo,
+  collectPeers,
+  probeIceServers,
+} from "../../lib/live/connection-diagnostics.js";
+import {
+  fileTransferMaxSize,
+  isAuthorizedFileName,
+} from "../../lib/live/file-transfer-limits.js";
+import FileTransferManager from "../../lib/live/file-transfer-manager.js";
 import HeartbeatManager from "../../lib/live/heartbeat-manager.js";
 import IdleTracker, { idleThresholds } from "../../lib/live/idle-tracker.js";
 import { consumePendingInviteRef } from "../../lib/live/invite-ref.js";
@@ -67,12 +79,25 @@ import { applyVoiceQuality } from "../../lib/live/video-quality.js";
 // Pre-rename key, kept so saved preferences survive.
 const CAMERA_ENABLED_KEY_PREFIX = "voice-camera-enabled";
 
+function offerSenderIds(signalPayloads) {
+  return new Set(
+    signalPayloads
+      .filter((payload) =>
+        (payload.events ?? [payload.data]).some(
+          (event) => event?.type === "offer"
+        )
+      )
+      .map((payload) => Number(payload.sender_id))
+  );
+}
+
 export default class LiveWebrtcService extends Service {
   @service currentUser;
   @service keyValueStore;
   @service messageBus;
   @service modal;
   @service siteSettings;
+  @service site;
   @service("live-reactions") liveReactions;
   @service("live-rooms") liveRooms;
   @service toasts;
@@ -124,6 +149,7 @@ export default class LiveWebrtcService extends Service {
 
   #signaling;
   #peerManager;
+  #fileTransfers;
   #meshSignals;
   #audioMonitor;
   #idleTracker;
@@ -139,6 +165,9 @@ export default class LiveWebrtcService extends Service {
   #roster;
   #transcription;
   #localRecording;
+
+  #videoWatchers = new Map();
+  #watchUpdates = new Map();
 
   constructor() {
     super(...arguments);
@@ -159,7 +188,27 @@ export default class LiveWebrtcService extends Service {
       getParticipantSessionId: (roomId) => this.#roomSessions.get(roomId),
     });
 
+    this.#fileTransfers = new FileTransferManager({
+      getMaxFileSize: () => this.maxFileTransferSize,
+      isEligible: (roomId, userId) =>
+        this.#fileTransferEligible(roomId, userId),
+      isSendAllowed: (roomId, userId) =>
+        this.#canInitiateFileTransfer(roomId, userId),
+      isReceiveAllowed: (roomId, userId) => this.canReceiveFile(roomId, userId),
+      isFileTypeAllowed: (name, { roomId, userId, direction }) =>
+        direction === "outgoing"
+          ? this.canSendFileType(name)
+          : isAuthorizedFileName(
+              name,
+              this.#participant(roomId, userId)?.can_send_staff_file_types ===
+                true,
+              this.siteSettings
+            ),
+    });
+
     this.#peerManager = new PeerManager({
+      onFileChannel: (roomId, userId, channel, getMaxMessageSize) =>
+        this.#fileTransfers.attach(roomId, userId, channel, getMaxMessageSize),
       getIceServers: () => this.iceServers,
       getIceTransportPolicy: () => this.iceTransportPolicy,
       getLocalStream: () => this.localStream,
@@ -176,7 +225,10 @@ export default class LiveWebrtcService extends Service {
         this.#registerRemoteTrack(roomId, uid, track, streams),
       clearSignalQueue: (roomId, uid) =>
         this.#signaling.clearForPeer(roomId, uid),
-      onPeerDestroyed: (roomId, uid) => this.#removeRemoteStream(roomId, uid),
+      onPeerDestroyed: (roomId, uid) => {
+        this.#fileTransfers.disconnect(roomId, uid);
+        this.#removeRemoteStream(roomId, uid);
+      },
       onPeerConnected: (roomId, uid, pc) => {
         const tier = this.effectiveVoiceQuality(roomId);
         if (tier !== QUALITY_STANDARD) {
@@ -461,10 +513,14 @@ export default class LiveWebrtcService extends Service {
     this.#pttManager.destroy();
     this.#idleTracker.stop();
     this.#audioMonitor.destroyAll();
+    this.#fileTransfers.destroy();
     this.#peerManager.destroyAll();
     this.#livekit.destroy();
     this.#signaling.destroy();
 
+    this.#watchUpdates.forEach((timer) => cancel(timer));
+    this.#watchUpdates.clear();
+    this.#videoWatchers.clear();
     this.watchingRoomId = null;
     this.#cameraRestorePromise = null;
     this.#queuedCameraRestoreRoomId = null;
@@ -647,6 +703,16 @@ export default class LiveWebrtcService extends Service {
     return this.#localRecording.busy;
   }
 
+  get maxFileTransferSize() {
+    return fileTransferMaxSize(
+      this.siteSettings.live_file_transfer_max_size_mb
+    );
+  }
+
+  get fileTransfers() {
+    return this.#fileTransfers.transfers;
+  }
+
   setNoiseSuppressionMode(mode) {
     return this.#localAudio.setNoiseSuppressionMode(mode);
   }
@@ -737,6 +803,98 @@ export default class LiveWebrtcService extends Service {
 
   isLivekitRoom(roomId) {
     return this.#roomTransports.get(roomId) === "livekit";
+  }
+
+  canSendFile(roomId, userId) {
+    return (
+      this.#canInitiateFileTransfer(roomId, userId) &&
+      this.#fileTransfers.canSend(roomId, userId)
+    );
+  }
+
+  canSendFileType(name) {
+    return isAuthorizedFileName(
+      name,
+      !!this.currentUser?.staff,
+      this.siteSettings
+    );
+  }
+
+  canReceiveFile(roomId, userId) {
+    return !!(
+      this.#fileTransferEligible(roomId, userId) &&
+      this.liveRooms
+        ?.roomById(roomId)
+        ?.active_participants?.some(
+          (participant) =>
+            Number(participant.id) === Number(userId) &&
+            participant.can_send_files === true
+        )
+    );
+  }
+
+  sendFile(roomId, userId, file) {
+    if (!this.#canInitiateFileTransfer(roomId, userId)) {
+      throw new Error("File transfer unavailable");
+    }
+    return this.#fileTransfers.send(roomId, userId, file);
+  }
+
+  getReceivedFile(id) {
+    return this.#fileTransfers.getReceivedFile(id);
+  }
+
+  acceptFileTransfer(id) {
+    this.#fileTransfers.accept(id);
+  }
+
+  rejectFileTransfer(id) {
+    this.#fileTransfers.reject(id);
+  }
+
+  cancelFileTransfer(id) {
+    this.#fileTransfers.cancel(id);
+  }
+
+  dismissFileTransfer(id) {
+    this.#fileTransfers.dismiss(id);
+  }
+
+  dismissFinishedFileTransfers() {
+    this.#fileTransfers.dismissFinished();
+  }
+
+  // Peer-level diagnostics only exist for mesh rooms; in SFU rooms the single
+  // server connection is owned by the SFU client library.
+  canDiagnoseConnection(roomId) {
+    return (
+      this.connectionStateFor(roomId) === "connected" &&
+      this.#isMeshRoom(roomId)
+    );
+  }
+
+  async connectionDiagnostics(roomId) {
+    const room = this.liveRooms.roomById(roomId);
+    return {
+      room,
+      transport: this.#roomTransports.get(roomId) ?? "mesh",
+      iceTransportPolicy: this.iceTransportPolicy,
+      local: collectLocalInfo(this.localStream),
+      peers: await collectPeers({
+        room,
+        currentUserId: this.currentUser?.id,
+        peerManager: this.#peerManager,
+        shouldMaintainPeer: (userId) =>
+          this.#meshSignals.shouldMaintainPeerConnection(roomId, userId),
+        playbackFor: (userId) =>
+          this.#participantAudio.playbackFor(roomId, userId),
+      }),
+      collectedAt: Date.now(),
+    };
+  }
+
+  probeIceServers() {
+    return probeIceServers(this.iceServers);
   }
 
   async join(room) {
@@ -918,14 +1076,16 @@ export default class LiveWebrtcService extends Service {
       response?.room?.active_participants;
     this.#connectingParticipantSnapshots.delete(room.id);
 
-    if (latestParticipants) {
-      await this.#roster.handleParticipants(room.id, {
-        participants: latestParticipants,
-      });
-    }
-
     const queuedSignals = this.#connectingSignalQueue.get(room.id) || [];
     this.#connectingSignalQueue.delete(room.id);
+
+    if (latestParticipants) {
+      await this.#roster.handleParticipants(
+        room.id,
+        { participants: latestParticipants },
+        { offeringPeerIds: offerSenderIds(queuedSignals) }
+      );
+    }
 
     if (this.#isMeshRoom(room.id)) {
       for (const payload of queuedSignals) {
@@ -940,7 +1100,7 @@ export default class LiveWebrtcService extends Service {
       this.#pttManager.startListening();
     }
 
-    if (this.watchingRoomId === room.id) {
+    if (this.isWatchingRoom(room.id)) {
       this.setWatching(room.id, true);
     }
 
@@ -968,6 +1128,7 @@ export default class LiveWebrtcService extends Service {
       return;
     }
 
+    this.#fileTransfers.leave(room.id);
     const keepLocalStream = options.keepLocalStream === true;
     // Local-only teardown: everything below runs except DELETE /leave. Used
     // when the server must not close the presence/session that now belongs
@@ -1316,11 +1477,45 @@ export default class LiveWebrtcService extends Service {
     return this.#localVideo.setInputDevice(deviceId);
   }
 
+  // A page and a widget can overlap during route transitions. Neither owns the
+  // other surface's subscription: only the last release may stop watching.
+  acquireVideoWatch(roomId, { keepVideo } = {}) {
+    const token = {};
+    let watchers = this.#videoWatchers.get(roomId);
+    if (!watchers) {
+      watchers = new Set();
+      this.#videoWatchers.set(roomId, watchers);
+    }
+    watchers.add(token);
+    if (watchers.size === 1) {
+      this.#scheduleWatchUpdate(roomId);
+    }
+
+    return () => {
+      if (!watchers.delete(token)) {
+        return;
+      }
+      if (!watchers.size) {
+        this.#scheduleWatchUpdate(roomId, keepVideo);
+      }
+    };
+  }
+
+  isWatchingRoom(roomId) {
+    return (
+      this.#videoWatchers.get(roomId)?.size > 0 ||
+      this.watchingRoomId === roomId
+    );
+  }
+
   setWatching(roomId, watching, options = {}) {
     if (watching) {
       this.watchingRoomId = roomId;
     } else if (this.watchingRoomId === roomId) {
-      this.watchingRoomId = null;
+      this.watchingRoomId =
+        [...this.#videoWatchers].findLast(
+          ([, watchers]) => watchers.size
+        )?.[0] ?? null;
     }
 
     if (!this.#activeRoomIds.has(roomId)) {
@@ -1461,6 +1656,27 @@ export default class LiveWebrtcService extends Service {
     }
   }
 
+  #scheduleWatchUpdate(roomId, keepVideo) {
+    cancel(this.#watchUpdates.get(roomId));
+    if (this.isDestroying) {
+      return;
+    }
+    // Coalesce render/teardown in either order, outside tracked rendering.
+    this.#watchUpdates.set(
+      roomId,
+      next(() => {
+        this.#watchUpdates.delete(roomId);
+        const watching = this.#videoWatchers.get(roomId)?.size > 0;
+        if (!watching) {
+          this.#videoWatchers.delete(roomId);
+        }
+        this.setWatching(roomId, watching, {
+          keepVideo: keepVideo ?? this.isActiveRoom(roomId),
+        });
+      })
+    );
+  }
+
   #setActiveRoomId(roomId) {
     this.activeRoomId = roomId ?? null;
   }
@@ -1503,6 +1719,48 @@ export default class LiveWebrtcService extends Service {
     return (
       this.videoPublisherCount(roomId) <
       this.siteSettings.live_video_max_publishers
+    );
+  }
+
+  // The serialized flag is fixed at page load, but rosters are re-broadcast at
+  // least every minute, so a revocation reaches the sender without a reload.
+  #canInitiateFileTransfer(roomId, userId) {
+    const self = this.liveRooms
+      ?.roomById(roomId)
+      ?.active_participants?.find(
+        (participant) => Number(participant.id) === Number(this.currentUser?.id)
+      );
+    return !!(
+      this.currentUser?.live_can_send_files &&
+      self?.can_send_files !== false &&
+      authorizesOneOrMoreExtensions(
+        !!this.currentUser.staff,
+        this.siteSettings
+      ) &&
+      this.#fileTransferEligible(roomId, userId)
+    );
+  }
+
+  #participant(roomId, userId) {
+    return this.liveRooms
+      ?.roomById(roomId)
+      ?.active_participants?.find(
+        (participant) => Number(participant.id) === Number(userId)
+      );
+  }
+
+  #fileTransferEligible(roomId, userId) {
+    return !!(
+      this.site.live_file_transfers_available &&
+      this.currentUser?.id &&
+      this.#activeRoomIds.has(roomId) &&
+      this.#isMeshRoom(roomId) &&
+      Number(userId) !== Number(this.currentUser?.id) &&
+      this.liveRooms
+        ?.roomById(roomId)
+        ?.active_participants?.some(
+          (participant) => Number(participant.id) === Number(userId)
+        )
     );
   }
 
@@ -1709,6 +1967,7 @@ export default class LiveWebrtcService extends Service {
   }
 
   #teardownRoom(roomId) {
+    this.#fileTransfers.leave(roomId);
     this.#connectingParticipantSnapshots.delete(roomId);
     this.#connectingSignalQueue.delete(roomId);
     this.#roomTransports.delete(roomId);
@@ -1808,6 +2067,11 @@ export default class LiveWebrtcService extends Service {
       );
     } else if (payload.type === "kicked") {
       this.#handleKicked(roomId);
+    } else if (payload.type === "chat_disabled") {
+      this.toasts.default({
+        duration: 8000,
+        data: { message: i18n("live.chat.disabled_for_group_call") },
+      });
     } else if (payload.type === "room_updated") {
       this.#handleRoomUpdated(roomId);
     } else if (payload.type === "recording") {
@@ -1876,7 +2140,7 @@ export default class LiveWebrtcService extends Service {
     participant.is_deafened = this.deafened;
     participant.is_video_on = this.localVideoKind === "camera";
     participant.is_screen_sharing = this.localVideoKind === "screen";
-    participant.watching_video = this.watchingRoomId === roomId;
+    participant.watching_video = this.isWatchingRoom(roomId);
 
     const room = this.liveRooms?.roomById(roomId);
     if (room?.membership?.role_name) {

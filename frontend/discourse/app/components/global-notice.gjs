@@ -7,6 +7,11 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isDevelopment } from "discourse/lib/environment";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
+import {
+  applyQueryParams,
+  THEME_PREVIEW_QUERY_PARAMS,
+} from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -17,6 +22,18 @@ export function addGlobalNotice(text, id, options = {}) {
 }
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
+
+// The current page without the preview params. Some browsers hide the query
+// string, so the notice offers a way out. `raw-link` makes the browser load
+// the page again, which is when the server stops applying the preview.
+function exitThemePreviewLink() {
+  const { pathname, search, hash } = window.location;
+  const href = applyQueryParams(
+    `${pathname}${search}${hash}`,
+    Object.fromEntries(THEME_PREVIEW_QUERY_PARAMS.map((name) => [name, null]))
+  );
+  return `<a href="${escapeExpression(href)}" class="raw-link exit-theme-preview">${escapeExpression(i18n("exit_theme_preview"))}</a>`;
+}
 
 /**
  * @typedef {object} NoticeOptions
@@ -151,14 +168,14 @@ export default class GlobalNotice extends Component {
       if (currentThemeId() === parseInt(previewThemeId, 10)) {
         notices.push(
           Notice.create({
-            text: i18n("theme_preview_notice"),
+            text: `${i18n("theme_preview_notice")} ${exitThemePreviewLink()}`,
             id: "theme-preview",
           })
         );
       } else {
         notices.push(
           Notice.create({
-            text: i18n("theme_preview_failed"),
+            text: `${i18n("theme_preview_failed")} ${exitThemePreviewLink()}`,
             id: "theme-preview-failed",
             options: {
               level: "error",

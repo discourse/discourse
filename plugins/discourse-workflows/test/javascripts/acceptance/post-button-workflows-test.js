@@ -1,6 +1,22 @@
-import { click, visit } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  settled,
+  visit,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import sinon from "sinon";
+import pretender from "discourse/tests/helpers/create-pretender";
+import {
+  acceptance,
+  loggedInUser,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
+
+const postButton = "#post_1 .post-controls .workflow-post-button-1";
 
 acceptance("Discourse Workflows | Post button", function (needs) {
   needs.user();
@@ -85,8 +101,16 @@ acceptance("Discourse Workflows | Post button", function (needs) {
 
   needs.hooks.beforeEach(() => (lastRequestBody = null));
 
+  function feedbackChannel() {
+    return `/discourse-workflows/post-button/${loggedInUser().id}/${new URLSearchParams(lastRequestBody).get("request_id")}`;
+  }
+
   test("renders the button at the configured position and triggers the workflow", async function (assert) {
     await visit("/t/internationalization-localization/280");
+
+    const toasts = this.owner.lookup("service:toasts");
+    const startingToast = sinon.spy(toasts.info);
+    sinon.replaceGetter(toasts, "info", () => startingToast);
 
     assert
       .dom("#post_1 .post-controls .actions > :first-child")
@@ -95,7 +119,7 @@ acceptance("Discourse Workflows | Post button", function (needs) {
         "the first-position button renders first in the actions row"
       );
 
-    await click("#post_1 .post-controls .workflow-post-button-1");
+    await click(postButton);
 
     const params = new URLSearchParams(lastRequestBody);
     assert.strictEqual(
@@ -112,7 +136,163 @@ acceptance("Discourse Workflows | Post button", function (needs) {
       Number(params.get("post_id")) > 0,
       "submits the clicked post's id"
     );
+    assert.strictEqual(
+      params.get("client_id"),
+      this.owner.lookup("service:message-bus").clientId,
+      "submits the MessageBus client ID of this tab"
+    );
+    assert.strictEqual(
+      startingToast.firstCall?.args[0].data.message,
+      i18n("discourse_workflows.post_button.starting"),
+      "acknowledges the click"
+    );
   });
+
+  test("starts the workflow without feedback when randomUUID is unavailable", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    sinon.stub(crypto, "randomUUID").value(undefined);
+
+    await click(postButton);
+
+    const params = new URLSearchParams(lastRequestBody);
+    assert.strictEqual(
+      params.get("workflow_id"),
+      "1",
+      "the workflow is still triggered"
+    );
+    assert.false(params.has("request_id"), "no feedback channel is requested");
+  });
+
+  test("prevents repeated clicks while submitting and then re-enables the button", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    const requests = [];
+    const path = "/discourse-workflows/trigger-post-button";
+    pretender.post(
+      path,
+      (request) => {
+        requests.push(request);
+        return [204, {}, ""];
+      },
+      true
+    );
+
+    find(postButton).click();
+    find(postButton).click();
+
+    try {
+      await waitFor(`${postButton}[disabled]`);
+      await waitUntil(() => requests.length > 0);
+      assert
+        .dom(postButton)
+        .hasClass("is-loading", "shows the pending request");
+      assert.strictEqual(
+        requests.length,
+        1,
+        "the second click does not submit"
+      );
+    } finally {
+      requests.forEach((request) => pretender.resolve(request));
+    }
+
+    await settled();
+    assert
+      .dom(postButton)
+      .isNotDisabled("can run again after the request finishes");
+  });
+
+  test("keeps each run subscribed until its own terminal event", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    const messageBus = this.owner.lookup("service:message-bus");
+    const unsubscribe = sinon.spy(messageBus, "unsubscribe");
+    await click(postButton);
+    const first = feedbackChannel();
+    await click(postButton);
+    const second = feedbackChannel();
+    assert.notStrictEqual(first, second, "each click has a separate channel");
+
+    await publishToMessageBus(first, { status: "waiting" });
+    assert.false(
+      unsubscribe.calledWith(first),
+      "an approval pause is not terminal"
+    );
+    await publishToMessageBus(first, { status: "success" });
+    assert.true(
+      unsubscribe.calledWith(first),
+      "success unsubscribes the first run"
+    );
+    assert.false(
+      unsubscribe.calledWith(second),
+      "the other run is still listening"
+    );
+    await publishToMessageBus(second, { status: "skipped" });
+    assert.true(
+      unsubscribe.calledWith(second),
+      "a skipped run also unsubscribes"
+    );
+  });
+
+  test("cleans up feedback if the request fails", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    const messageBus = this.owner.lookup("service:message-bus");
+    const unsubscribe = sinon.spy(messageBus, "unsubscribe");
+    pretender.post("/discourse-workflows/trigger-post-button", (request) => {
+      lastRequestBody = request.requestBody;
+      return [
+        422,
+        { "Content-Type": "application/json" },
+        '{"errors":["Could not start the workflow"]}',
+      ];
+    });
+
+    await click(postButton);
+
+    assert.true(
+      unsubscribe.calledWith(feedbackChannel()),
+      "a failed POST removes its listener"
+    );
+    assert.dom(postButton).isNotDisabled("the button is available to retry");
+  });
+
+  test("cleans up feedback if no terminal event arrives before the timeout", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    const messageBus = this.owner.lookup("service:message-bus");
+    const unsubscribe = sinon.spy(messageBus, "unsubscribe");
+    const timeout = sinon
+      .stub(window, "setTimeout")
+      .callThrough()
+      .withArgs(sinon.match.func, 60 * 60 * 1000)
+      .returns(-1);
+
+    await click(postButton);
+    assert.false(
+      unsubscribe.calledWith(feedbackChannel()),
+      "the run is still listening"
+    );
+    timeout.firstCall.args[0]();
+
+    assert.true(
+      unsubscribe.calledWith(feedbackChannel()),
+      "the timeout removes its listener"
+    );
+  });
+
+  for (const status of ["rate_limited", "error"]) {
+    test(`shows an asynchronous ${status} toast`, async function (assert) {
+      await visit("/t/internationalization-localization/280");
+      const toasts = this.owner.lookup("service:toasts");
+      const errorToast = sinon.spy(toasts.error);
+      sinon.replaceGetter(toasts, "error", () => errorToast);
+      await click(postButton);
+      await publishToMessageBus(feedbackChannel(), { status });
+
+      assert.strictEqual(
+        errorToast.firstCall?.args[0].data.message,
+        i18n(`discourse_workflows.post_button.${status}`),
+        "shows the localized failure feedback"
+      );
+    });
+  }
 
   test("relative positions render immediately next to their anchor", async function (assert) {
     await visit("/t/internationalization-localization/280");

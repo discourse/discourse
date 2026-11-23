@@ -14,9 +14,12 @@ lt:
     about: Apie
     community: Bendruomenė
     preview: Peržiūrėti
+    author: Autorius
     search: Paieška
     replies:
       one: "%{count} atsakymas"
       few: "%{count} atsakymai"
       many: "%{count} atsakymai"
       other: "%{count} atsakymai"
+    themes:
+      default: Numatytasis

@@ -18,3 +18,5 @@ bg:
     replies:
       one: "%{count} отговор"
       other: "%{count} отговора"
+    themes:
+      default: По подразбиране

@@ -50,7 +50,11 @@ import {
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
-import { resetSettings } from "discourse/tests/helpers/site-settings";
+import {
+  currentSettings,
+  resetSettings,
+} from "discourse/tests/helpers/site-settings";
+import setupNavigationGuard from "discourse/tests/navigation-guard";
 import {
   disableLoadMoreObserver,
   enableLoadMoreObserver,
@@ -60,11 +64,10 @@ import {
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
 
-const REPORT_MEMORY = false;
 let cancelled = false;
 let started = false;
 
-function createApplication(config, settings) {
+function createApplication(config) {
   const app = Application.create(config);
 
   setApplication(app);
@@ -76,8 +79,6 @@ function createApplication(config, settings) {
   app.__container__ = instance.__container__;
   app.buildInstance = () => instance;
   setDefaultOwner(app.__container__);
-
-  SiteSettingService.create = () => settings;
 
   if (!started) {
     app.instanceInitializer({
@@ -166,9 +167,6 @@ function setupToolbar() {
 }
 
 function reportMemoryUsageAfterTests() {
-  if (!REPORT_MEMORY) {
-    return;
-  }
   QUnit.done(() => {
     const usageBytes = performance.memory?.usedJSHeapSize;
     let result;
@@ -210,19 +208,9 @@ export default async function setupTests(config) {
   // Stop the message bus so we don't get ajax calls
   window.MessageBus.stop();
 
-  // disable logster error reporting
-  if (window.Logster) {
-    window.Logster.enabled = false;
-  } else {
-    window.Logster = { enabled: false };
-  }
-
-  let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
-  if (setupDataElement) {
-    setupData = setupDataElement.dataset;
-    setupDataElement.remove();
-  }
+  const setupData = setupDataElement.dataset;
+  setupDataElement.remove();
 
   await loadSprites(setupData.svgSpritePath, "fontawesome");
 
@@ -233,61 +221,74 @@ export default async function setupTests(config) {
 
   const headlessTestem =
     window.Testem && navigator.userAgent.includes("HeadlessChrome");
+
+  // In the browser UI, toolbar changes and manual reloads navigate on purpose
+  if (window.Testem) {
+    setupNavigationGuard({
+      qunit: QUnit,
+      navigation: window.navigation,
+      storage: window.sessionStorage,
+    });
+  }
+
   const preexistingObserved = new Set([
     ...ASYNC_OBSERVERS.keys(),
     ...SYNC_OBSERVERS.keys(),
   ]);
 
+  // Tests change settings through currentSettings(), so the service must be that object
+  SiteSettingService.create = currentSettings;
+
+  const reportRequests = getUrlParameter("report_requests") === "1";
+
+  pretender.prepareBody = function (body) {
+    if (typeof body === "object") {
+      return JSON.stringify(body);
+    }
+    return body;
+  };
+
+  if (reportRequests) {
+    pretender.handledRequest = function (verb, path) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path);
+    };
+  }
+
+  pretender.unhandledRequest = function (verb, path) {
+    if (reportRequests) {
+      // eslint-disable-next-line no-console
+      console.log("REQ: " + verb + " " + path + " missing");
+    }
+
+    const error =
+      "Unhandled request in test environment: " + path + " (" + verb + ")";
+
+    // eslint-disable-next-line no-console
+    console.error(error);
+    throw new Error(error);
+  };
+
+  pretender.checkPassthrough = (request) =>
+    request.requestHeaders["Discourse-Script"];
+
   let app;
   QUnit.testStart(async function (ctx) {
-    let settings = resetSettings();
-
+    resetSettings();
     resetThemeSettings();
 
-    app = createApplication(config, settings);
+    app = createApplication(config);
 
-    const cdn = setupData ? setupData.cdn : null;
-    const baseUri = setupData ? setupData.baseUri : "";
-    setupURL(cdn, "http://localhost:3000", baseUri, { snapshot: true });
-    if (setupData && setupData.s3BaseUrl) {
+    setupURL(setupData.cdn, "http://localhost:3000", setupData.baseUri, {
+      snapshot: true,
+    });
+    if (setupData.s3BaseUrl) {
       setupS3CDN(setupData.s3BaseUrl, setupData.s3Cdn, { snapshot: true });
     } else {
       setupS3CDN(null, null, { snapshot: true });
     }
 
     applyDefaultHandlers();
-
-    pretender.prepareBody = function (body) {
-      if (typeof body === "object") {
-        return JSON.stringify(body);
-      }
-      return body;
-    };
-
-    if (QUnit.config.logAllRequests) {
-      pretender.handledRequest = function (verb, path) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path);
-      };
-    }
-
-    pretender.unhandledRequest = function (verb, path) {
-      if (QUnit.config.logAllRequests) {
-        // eslint-disable-next-line no-console
-        console.log("REQ: " + verb + " " + path + " missing");
-      }
-
-      const error =
-        "Unhandled request in test environment: " + path + " (" + verb + ")";
-
-      // eslint-disable-next-line no-console
-      console.error(error);
-      throw new Error(error);
-    };
-
-    pretender.checkPassthrough = (request) =>
-      request.requestHeaders["Discourse-Script"];
-
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
     Session.resetCurrent();
@@ -384,6 +385,9 @@ export default async function setupTests(config) {
     removeCookie("forced_color_mode", { path: "/" });
     removeCookie("color_scheme_id", { path: "/" });
     removeCookie("dark_scheme_id", { path: "/" });
+    // Entering the login or signup route stores the test page URL here, and a
+    // later profile save would navigate to it
+    removeCookie("destination_url");
     enableLoadMoreObserver();
     enableVirtualization();
 
@@ -399,8 +403,6 @@ export default async function setupTests(config) {
       }
     });
   }
-
-  handleLegacyParameters();
 
   const hasPluginJs = !!document.querySelector(
     "link[rel=modulepreload][data-plugin-name], script[data-plugin-name]"
@@ -418,7 +420,9 @@ export default async function setupTests(config) {
   } else {
     setupToolbar();
   }
-  reportMemoryUsageAfterTests();
+  if (getUrlParameter("report_memory") === "1") {
+    reportMemoryUsageAfterTests();
+  }
   patchFailedAssertion();
 
   setLoadedFaker(FakerModule);
@@ -462,20 +466,4 @@ function patchFailedAssertion() {
 
     oldPushResult.call(this, resultInfo);
   };
-}
-
-function handleLegacyParameters() {
-  for (const param of [
-    "qunit_single_plugin",
-    "qunit_skip_core",
-    "qunit_skip_plugins",
-  ]) {
-    if (getUrlParameter(param)) {
-      QUnit.begin(() => {
-        throw new Error(
-          `${param} is no longer supported. Use the 'target' parameter instead`
-        );
-      });
-    }
-  }
 }

@@ -673,7 +673,25 @@ after_initialize do
   register_hashtag_type_priority_for_context("channel", "topic-composer", 10)
 
   register_post_stripper do |nokogiri_fragment|
-    nokogiri_fragment.css(".chat-transcript .mention").remove
+    # A descendant selector rescans every nested transcript's subtree. Carry
+    # transcript state through a single walk instead.
+    removals = []
+    stack = nokogiri_fragment.element_children.map { |child| [child, false] }
+
+    until stack.empty?
+      node, in_transcript = stack.pop
+      classes = node["class"].to_s.split
+
+      if in_transcript && classes.include?("mention")
+        removals << node
+        next
+      end
+
+      below_transcript = in_transcript || classes.include?("chat-transcript")
+      node.element_children.each { |child| stack << [child, below_transcript] }
+    end
+
+    removals.each(&:remove)
   end
 
   Site.markdown_additional_options["chat"] = {
@@ -699,6 +717,11 @@ after_initialize do
 
   if Rails.env.local?
     DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewableMessage
+  end
+
+  register_first_admin_bootstrap do |user|
+    # Don't want to greet new admins with the ugly channel retention reminder
+    user.user_option.update!(dismissed_channel_retention_reminder: true)
   end
 end
 

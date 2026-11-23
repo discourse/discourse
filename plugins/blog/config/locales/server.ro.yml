@@ -14,8 +14,11 @@ ro:
     about: Despre
     community: Comunitate
     preview: Previzualizează
+    author: Autor
     search: Caută
     replies:
       one: "%{count} răspuns"
       few: "%{count} de răspunsuri"
       other: "%{count} răspunsuri"
+    themes:
+      default: Implicit

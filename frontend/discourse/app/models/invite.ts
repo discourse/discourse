@@ -26,8 +26,7 @@ export interface InviteFields {
   expired?: boolean;
   grants_admin?: boolean;
   grants_moderator?: boolean;
-  /** Server arrays do not supply firstObject; legacy client collections can. */
-  topics?: InviteTopic[] & { firstObject?: InviteTopic };
+  topics?: InviteTopic[];
   groups?: { id: number; name: string }[];
   redeemed_at?: string;
   invite_source?: "link" | "email";
@@ -112,22 +111,22 @@ export default class Invite extends EmberObject {
     });
   }
 
-  @computed("topics.firstObject.id")
+  @computed("topics.@each.id")
   get topicId() {
-    return this.topics?.firstObject?.id;
+    return this.topics?.[0]?.id;
   }
 
   set topicId(value: number | undefined) {
-    set(this, "topics.firstObject.id", value);
+    set(this, "topics.0.id", value);
   }
 
-  @computed("topics.firstObject.title")
+  @computed("topics.@each.title")
   get topicTitle() {
-    return this.topics?.firstObject?.title;
+    return this.topics?.[0]?.title;
   }
 
   set topicTitle(value: string | undefined) {
-    set(this, "topics.firstObject.title", value);
+    set(this, "topics.0.title", value);
   }
 
   @computed("invite_key")
@@ -141,11 +140,9 @@ export default class Invite extends EmberObject {
     return this.groups ? this.groups.map((group) => group.id) : [];
   }
 
-  @computed("topics.firstObject")
+  @computed("topics.[]")
   get topic() {
-    return this.topics?.firstObject
-      ? Topic.create(this.topics?.firstObject)
-      : null;
+    return this.topics?.[0] ? Topic.create(this.topics[0]) : null;
   }
 
   @computed("email", "domain")

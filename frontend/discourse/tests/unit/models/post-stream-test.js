@@ -1288,7 +1288,7 @@ module("Unit | Model | post-stream", function (hooks) {
     );
   });
 
-  test("triggerNewPostInStream for ignored posts", async function (assert) {
+  test("triggerNewPostsInStream for ignored posts", async function (assert) {
     const postStream = buildStream.call(this, 280, [1]);
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", {

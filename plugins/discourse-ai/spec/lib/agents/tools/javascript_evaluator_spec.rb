@@ -6,10 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::JavascriptEvaluator do
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   let(:progress_blk) { Proc.new {} }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#invoke" do
     it "successfully evaluates a simple JavaScript expression" do

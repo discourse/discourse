@@ -11,6 +11,24 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
 
   before { enable_current_plugin }
 
+  describe ".option" do
+    it "resolves the current option class for a tool retained across namespace reloads" do
+      retained_tool = Class.new(described_class)
+      current_option_class = Class.new(DiscourseAi::Agents::Tools::Option)
+      current_tools = Module.new
+
+      stub_const(current_tools, :Option, current_option_class) do
+        stub_const(DiscourseAi::Agents, :Tools, current_tools) do
+          option = retained_tool.option(:allowed_tables, type: :string, default: "events")
+          expect(option).to be_an_instance_of(current_option_class)
+          expect(option.tool).to eq(retained_tool)
+          expect(option.name).to eq("allowed_tables")
+          expect(option.default).to eq("events")
+        end
+      end
+    end
+  end
+
   describe "#read_response_body" do
     class FakeResponse
       def initialize(chunk)
@@ -41,6 +59,42 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
       expect(result.valid_encoding?).to eq(true)
 
       expect(result).to eq("abcabcabca")
+    end
+  end
+
+  describe "#compact_approval_details" do
+    fab!(:admin)
+
+    let(:notice) { I18n.t("discourse_ai.ai_bot.chat_tool_approval.details_shortened") }
+    let(:tool) do
+      Class
+        .new(described_class) do
+          def self.name
+            "long_details"
+          end
+
+          def approval_details
+            "#{"a" * 200}\n\n#{"b" * 200}"
+          end
+        end
+        .new(
+          {},
+          bot_user: admin,
+          llm: nil,
+          context: DiscourseAi::Agents::BotContext.new(user: admin, messages: []),
+        )
+    end
+
+    it "keeps the start of the details after a notice and fits the limit" do
+      details = tool.compact_approval_details(max_length: 120)
+
+      expect(details.length).to be <= 120
+      expect(details).to start_with("#{notice}\n\naaa")
+      expect(details).not_to include("b")
+    end
+
+    it "returns only the notice when there is no room for the details" do
+      expect(tool.compact_approval_details(max_length: 20)).to eq(notice.truncate(20))
     end
   end
 end

@@ -32,6 +32,9 @@ const BlogThemePreview = <template>
             <select.Option @value="article">{{i18n
                 "blog.admin.preview_article"
               }}</select.Option>
+            <select.Option @value="page">{{i18n
+                "blog.admin.template_page"
+              }}</select.Option>
             <select.Option @value="about">{{i18n
                 "blog.admin.template_about"
               }}</select.Option>
@@ -73,8 +76,10 @@ const BlogThemePreview = <template>
           />
         </div>
         {{#if editor.previewUnavailable}}
-          <p class="blog-theme-preview__empty">{{i18n
-              "blog.admin.preview_article_unavailable"
+          <p class="blog-theme-preview__empty">{{if
+              (eq editor.previewPage "page")
+              (i18n "blog.admin.preview_page_unavailable")
+              (i18n "blog.admin.preview_article_unavailable")
             }}</p>
         {{else}}
           {{#if editor.previewUrl}}

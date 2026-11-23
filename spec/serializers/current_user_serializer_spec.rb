@@ -7,7 +7,7 @@ RSpec.describe CurrentUserSerializer do
   let(:guardian) { user.guardian }
 
   describe "#can_use_dsa_account_email" do
-    before { SiteSetting.dsa_reporting_enabled = true }
+    before { enable_dsa_reporting }
 
     it "allows a reporter to use their confirmed account email" do
       user.activate
@@ -216,6 +216,16 @@ RSpec.describe CurrentUserSerializer do
       SiteSetting.enable_invite_modal_with_roles = true
 
       expect(payload).not_to have_key(:can_create_admin_invite)
+    end
+  end
+
+  describe "#can_embed_media" do
+    fab!(:group)
+
+    it "is true for users in embedded_media_post_allowed_groups" do
+      SiteSetting.embedded_media_post_allowed_groups = group.id
+      group.add(user)
+      expect(serializer.as_json[:can_embed_media]).to eq(true)
     end
   end
 
@@ -572,7 +582,6 @@ RSpec.describe CurrentUserSerializer do
     end
 
     it "remains available when Concord is installed and selected as the default" do
-      SiteSetting.concord_in_wizard = true
       concord =
         Fabricate(
           :theme,
@@ -588,10 +597,6 @@ RSpec.describe CurrentUserSerializer do
       concord.set_default!
 
       expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
-
-      SiteSetting.concord_in_wizard = false
-
-      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
 
     it "is not included once a theme is installed" do
@@ -607,6 +612,20 @@ RSpec.describe CurrentUserSerializer do
     it "is not included when the default theme is not a core theme" do
       custom_theme = Fabricate(:theme)
       custom_theme.set_default!
+      expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
+    end
+
+    it "is true while the only other theme is an appearance change's palette theme" do
+      Fabricate(:theme_appearance_change).theme.set_default!
+
+      expect(admin_serializer.as_json[:can_run_design_wizard]).to eq(true)
+    end
+
+    it "is not included once files are added to an appearance change's theme" do
+      theme = Fabricate(:theme_appearance_change).theme
+      theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+      theme.save!
+
       expect(admin_serializer.as_json).not_to have_key(:can_run_design_wizard)
     end
   end

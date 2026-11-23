@@ -1,5 +1,29 @@
 @use "lib/viewport";
 
+.dsa-moderation-action {
+  .d-modal__title {
+    min-width: 0;
+  }
+
+  .d-modal__title-text {
+    overflow-wrap: anywhere;
+  }
+
+  &__classification {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-3);
+
+    h2 {
+      margin: 0;
+      font-size: var(--font-up-1);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: var(--line-height-medium);
+    }
+  }
+}
+
 .dsa-moderation-action__user {
   white-space: nowrap;
   vertical-align: baseline;
@@ -65,4 +89,62 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
 
 .dsa-moderation-title-help {
   margin-inline: var(--space-2) auto;
+}
+
+.dsa-moderation-details .form-kit__control-menu-trigger.btn {
+  width: 100%;
+  justify-content: space-between;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+
+  &[aria-expanded="true"] {
+    anchor-name: --dsa-classification-trigger;
+  }
+}
+
+.form-kit__control-menu-content:has(.dsa-classification-option) {
+  .dropdown-menu__item > .dsa-classification-option.btn {
+    height: auto;
+    min-height: var(--d-sidebar-row-height);
+    white-space: normal;
+    text-align: start;
+    overflow-wrap: anywhere;
+  }
+
+  &.fk-d-menu {
+    z-index: z("modal", "popover");
+
+    @supports (width: anchor-size(width)) and (top: anchor(bottom)) {
+      // The trigger is inside a fixed dialog while the menu is portaled.
+      position: fixed;
+      position-anchor: --dsa-classification-trigger;
+      width: anchor-size(width, 400px);
+      max-width: calc(100dvw - 2 * var(--space-2)) !important;
+      left: anchor(left) !important;
+      top: calc(anchor(bottom) + 5px) !important;
+
+      &[data-placement^="top"] {
+        top: auto !important;
+        bottom: calc(anchor(top) + 5px);
+      }
+    }
+
+    .dropdown-menu {
+      flex: 1;
+      min-inline-size: 0;
+    }
+
+    .fk-d-menu__inner-content {
+      flex: 1;
+      max-height: 40dvh;
+    }
+  }
+}
+
+.dsa-classification-footer:not([hidden]) {
+  display: contents;
 }

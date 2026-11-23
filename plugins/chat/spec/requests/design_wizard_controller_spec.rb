@@ -9,7 +9,6 @@ RSpec.describe Admin::Config::DesignWizardController do
   fab!(:other_channel) { Fabricate(:category_channel, name: "General") }
 
   before do
-    SiteSetting.concord_in_wizard = true
     SiteSetting.chat_enabled = true
     SiteSetting.enable_public_channels = true
     SiteSetting.general_category_id = general_category.id
@@ -68,14 +67,6 @@ RSpec.describe Admin::Config::DesignWizardController do
 
     it "does not substitute another channel named General when the General category has no channel" do
       general_channel.destroy!
-
-      get "/admin/config/design-wizard.json"
-
-      expect(response.parsed_body["additional_homepages"]).to eq([])
-    end
-
-    it "hides chat when the wizard setting is disabled" do
-      SiteSetting.concord_in_wizard = false
 
       get "/admin/config/design-wizard.json"
 
@@ -165,8 +156,8 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(SiteSetting.chat_homepage_channel).to eq(general_channel.id.to_s)
     end
 
-    %w[chat categories].each do |original_homepage|
-      it "restores the original #{original_homepage} homepage and channel settings after a preview" do
+    shared_examples "restoring homepage settings after a preview" do |original_homepage:|
+      it "restores the original homepage and channel settings" do
         SiteSetting.default_homepage = original_homepage
         SiteSetting.chat_homepage_channel = other_channel.id
 
@@ -186,6 +177,15 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.default_homepage).to eq(original_homepage)
         expect(SiteSetting.chat_homepage_channel).to eq(other_channel.id.to_s)
       end
+    end
+
+    context "with the chat homepage" do
+      include_examples "restoring homepage settings after a preview", original_homepage: "chat"
+    end
+
+    context "with the categories homepage" do
+      include_examples "restoring homepage settings after a preview",
+                       original_homepage: "categories"
     end
 
     it "rejects settings that are not registered homepage settings" do
@@ -208,21 +208,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       expect(response.parsed_body["errors"]).to be_present
     end
 
-    it "rejects channel overrides when the wizard setting is disabled" do
-      SiteSetting.concord_in_wizard = false
-
-      put "/admin/config/design-wizard.json",
-          params:
-            params.merge(
-              homepage: "categories",
-              homepage_settings: {
-                chat_homepage_channel: general_channel.id.to_s,
-              },
-            )
-
-      expect(response.status).to eq(400)
-    end
-
     shared_examples "an unavailable chat homepage" do
       it "rejects the selection without updating homepage settings" do
         expect do put "/admin/config/design-wizard.json", params: end.not_to change {
@@ -232,12 +217,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
       end
-    end
-
-    context "when the wizard setting is disabled" do
-      before { SiteSetting.concord_in_wizard = false }
-
-      include_examples "an unavailable chat homepage"
     end
 
     context "when public channels are disabled" do

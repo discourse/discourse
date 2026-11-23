@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { array, concat } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -8,6 +8,7 @@ import ThemeCardPreview from "discourse/components/theme-card-preview";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BlogThemeThumbnail from "./blog-theme-thumbnail.gjs";
@@ -43,7 +44,11 @@ export default class BlogThemeCard extends Component {
 
   <template>
     <AdminConfigAreaCard
-      class="theme-card blog-theme-card"
+      class={{dConcatClass
+        "theme-card blog-theme-card"
+        (if this.isActive "--active")
+        (if @theme.preset "--preset")
+      }}
       data-theme-id={{@theme.id}}
     >
       <:content>
@@ -53,17 +58,32 @@ export default class BlogThemeCard extends Component {
           </:placeholder>
 
           <:title>
-            <LinkTo
-              class="theme-card__title"
-              @model={{@theme.id}}
-              @route="adminPlugins.show.discourse-blog-themes.edit"
-            >{{@theme.name}}</LinkTo>
-            <p class="theme-card__description">{{i18n "blog.admin.revision"}}
-              {{@theme.revision}}</p>
-            {{#if (or this.isActive @theme.locally_modified)}}
+            {{#if @theme.preset}}
+              <span class="theme-card__title">{{@theme.name}}</span>
+              {{! ThemeCardPreview renders @theme.description itself. }}
+              {{#unless @theme.description}}
+                <p class="theme-card__description">{{i18n
+                    "blog.admin.preset_description"
+                  }}</p>
+              {{/unless}}
+            {{else}}
+              <LinkTo
+                class="theme-card__title"
+                @model={{@theme.id}}
+                @route="adminPlugins.show.discourse-blog-themes.edit"
+              >{{@theme.name}}</LinkTo>
+              <p class="theme-card__description">{{i18n "blog.admin.revision"}}
+                {{@theme.revision}}</p>
+            {{/if}}
+          </:title>
+
+          <:footer>
+            <div class="theme-card__footer">
               <div class="theme-card__badges">
                 {{#if this.isActive}}
-                  <span class="theme-card__badge">{{dIcon "circle-check"}}
+                  <span class="theme-card__badge --active">{{dIcon
+                      "circle-check"
+                    }}
                     {{i18n "blog.admin.active"}}</span>
                 {{/if}}
                 {{#if @theme.locally_modified}}
@@ -71,19 +91,23 @@ export default class BlogThemeCard extends Component {
                     {{i18n "blog.admin.local_edits_badge"}}</span>
                 {{/if}}
               </div>
-            {{/if}}
-          </:title>
 
-          <:footer>
-            <div class="theme-card__footer">
               <div class="theme-card__controls">
-                <DButton
-                  class="btn-default theme-card__button edit"
-                  @preventFocus={{true}}
-                  @route="adminPlugins.show.discourse-blog-themes.edit"
-                  @routeModels={{array @theme.id}}
-                  @translatedLabel={{i18n "blog.admin.edit"}}
-                />
+                {{#if @theme.preset}}
+                  <LinkTo
+                    class="btn btn-default btn-text theme-card__button customize"
+                    @query={{hash from=@theme.id}}
+                    @route="adminPlugins.show.discourse-blog-themes.new"
+                  >{{i18n "blog.admin.customize"}}</LinkTo>
+                {{else}}
+                  <DButton
+                    class="btn-default theme-card__button edit"
+                    @preventFocus={{true}}
+                    @route="adminPlugins.show.discourse-blog-themes.edit"
+                    @routeModels={{array @theme.id}}
+                    @translatedLabel={{i18n "blog.admin.edit"}}
+                  />
+                {{/if}}
 
                 <div class="theme-card__footer-actions">
                   <DMenu
@@ -97,7 +121,7 @@ export default class BlogThemeCard extends Component {
                       <DDropdownMenu as |dropdown|>
                         <dropdown.item>
                           <DButton
-                            class="theme-card__button btn-transparent"
+                            class="theme-card__button btn-transparent activate"
                             @action={{this.activate}}
                             @disabled={{this.isActive}}
                             @icon="play"
@@ -128,16 +152,20 @@ export default class BlogThemeCard extends Component {
                             {{i18n "blog.admin.preview"}}</a>
                         </dropdown.item>
 
-                        <dropdown.item>
-                          <DButton
-                            class="theme-card__button btn-transparent --danger"
-                            @action={{this.remove}}
-                            @disabled={{this.isActive}}
-                            @icon="trash-can"
-                            @preventFocus={{true}}
-                            @translatedLabel={{i18n "blog.admin.delete_theme"}}
-                          />
-                        </dropdown.item>
+                        {{#unless @theme.preset}}
+                          <dropdown.item>
+                            <DButton
+                              class="theme-card__button btn-transparent --danger"
+                              @action={{this.remove}}
+                              @disabled={{this.isActive}}
+                              @icon="trash-can"
+                              @preventFocus={{true}}
+                              @translatedLabel={{i18n
+                                "blog.admin.delete_theme"
+                              }}
+                            />
+                          </dropdown.item>
+                        {{/unless}}
                       </DDropdownMenu>
                     </:content>
                   </DMenu>

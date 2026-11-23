@@ -90,18 +90,38 @@ RSpec.describe DiscourseEvents::Livestream::ChatTranscript do
       end
       let(:opening_tag) { "[chat][wrap=x]" }
 
-      %w[[chat] [CHAT\ quote="bob;1;2026-10-08T19:00:00Z"] [wrap] [wrap=other]].each do |tag|
-        context "with #{tag}" do
-          let(:opening_tag) { tag }
+      shared_examples "containing opening tags in a quoted transcript" do
+        it "keeps the remaining message inside one quote" do
+          cooked = PrettyText.cook(transcript.raw)
 
-          it "keeps the rest of the message inside the quote" do
-            cooked = PrettyText.cook(transcript.raw)
-
-            expect(cooked).not_to include('class="poll"')
-            expect(cooked).to include(tag[/\A\[\w+/])
-            expect(cooked.scan("d-wrap").size).to eq(1)
-          end
+          expect(cooked).not_to include('class="poll"')
+          expect(cooked).to include(opening_tag[/\A\[\w+/])
+          expect(cooked.scan("d-wrap").size).to eq(1)
         end
+      end
+
+      context "with [chat]" do
+        let(:opening_tag) { "[chat]" }
+
+        include_examples "containing opening tags in a quoted transcript"
+      end
+
+      context "with [CHAT quote=\"bob;1;2026-10-08T19:00:00Z\"]" do
+        let(:opening_tag) { "[CHAT quote=\"bob;1;2026-10-08T19:00:00Z\"]" }
+
+        include_examples "containing opening tags in a quoted transcript"
+      end
+
+      context "with [wrap]" do
+        let(:opening_tag) { "[wrap]" }
+
+        include_examples "containing opening tags in a quoted transcript"
+      end
+
+      context "with [wrap=other]" do
+        let(:opening_tag) { "[wrap=other]" }
+
+        include_examples "containing opening tags in a quoted transcript"
       end
 
       it "escapes each opening tag once however many renders fitting takes" do
