@@ -23,6 +23,9 @@ permissions:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      actions: read
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
@@ -121,11 +124,50 @@ jobs:
       - uses: actions/checkout@v7
         timeout-minutes: 5
         with:
-          fetch-depth: 1
+          fetch-depth: ${{ vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.build_type == 'system' && matrix.target == 'core' && github.event_name == 'pull_request' && '0' || '1' }}
+          filter: ${{ vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.build_type == 'system' && matrix.target == 'core' && github.event_name == 'pull_request' && 'blob:none' || '' }}
         env:
           # Fail stalled fetches so checkout retries them
           GIT_HTTP_LOW_SPEED_LIMIT: 1000
           GIT_HTTP_LOW_SPEED_TIME: 30
+
+      - name: Check whether to collect a Core system map
+        id: core-map-due
+        if: vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.build_type == 'system' && matrix.target == 'core' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ruby script/ci/core_system_test_selection.rb due
+
+      - name: Find a Core system map for the tested base
+        id: core-map
+        if: vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.build_type == 'system' && matrix.target == 'core' && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CORE_SYSTEM_PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: ruby script/ci/core_system_test_selection.rb find
+
+      - name: Download the Core system map
+        if: steps.core-map.outputs.artifact_id != ''
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{ steps.core-map.outputs.artifact_id }}
+          merge-multiple: true
+          run-id: ${{ steps.core-map.outputs.run_id }}
+          github-token: ${{ github.token }}
+          path: tmp/core-system-selection/baseline
+
+      - name: Plan Core system test selection in shadow
+        if: vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.build_type == 'system' && matrix.target == 'core' && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          CORE_SYSTEM_PR_BASE: ${{ github.event.pull_request.base.sha }}
+          CORE_SYSTEM_MAP_SHA: ${{ steps.core-map.outputs.revision }}
+        run: |
+          mkdir -p tmp/core-system-selection
+          ruby script/ci/core_system_test_selection.rb plan tmp/core-system-selection/baseline/mapping.json tmp/core-system-selection/plan.json
 
       - name: Log Ruby version and YJIT status
         run: |
@@ -296,6 +338,14 @@ jobs:
           echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
           echo "NODE_PATH=$PWD/tmp/playwright/node_modules${NODE_PATH:+:$NODE_PATH}" >> $GITHUB_ENV
 
+      - name: Keep the source map reader for coverage
+        id: core-map-reader
+        if: steps.core-map-due.outputs.due == 'true'
+        continue-on-error: true
+        run: |
+          mkdir -p tmp/core-system-selection
+          cp -RL frontend/asset-processor/node_modules/source-map-js tmp/core-system-selection/
+
       # Drop node_modules to match production
       - name: Remove node_modules
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
@@ -342,10 +392,68 @@ jobs:
           path: ./frontend/discourse/test-execution-*.json
 
       - name: Core System Tests
+        id: core-system-tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+          OBSERVE_CORE_SYSTEM: ${{ vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && github.event_name == 'pull_request' }}
+          COLLECT_CORE_SYSTEM_MAP: ${{ steps.core-map-due.outputs.due == 'true' && steps.core-map-reader.outcome == 'success' }}
+        run: |
+          scripts="$PWD/script/ci/core_system_test_selection"
+          root="$PWD/tmp/core-system-selection"
+          if [[ "$OBSERVE_CORE_SYSTEM" == true || "$COLLECT_CORE_SYSTEM_MAP" == true ]]; then
+            export CORE_SYSTEM_TEST_RESULTS_DIRECTORY="$root/results"
+            mkdir -p "$CORE_SYSTEM_TEST_RESULTS_DIRECTORY"
+            export SPEC_OPTS="${SPEC_OPTS:-} --require $scripts/test_results.rb"
+          fi
+          if [[ "$COLLECT_CORE_SYSTEM_MAP" == true ]]; then
+            export SYSTEM_COVERAGE_DIRECTORY="$root/coverage"
+            mkdir -p "$SYSTEM_COVERAGE_DIRECTORY"
+            export SYSTEM_JS_COVERAGE=1 SYSTEM_CSS_COVERAGE=1
+            export RUBYOPT="${RUBYOPT:-} -r$scripts/start_ruby_coverage.rb"
+            export SPEC_OPTS="$SPEC_OPTS --require $scripts/ruby_coverage.rb --require $scripts/browser_coverage.rb"
+          fi
+          LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
+
+      - name: Build Core system test map
+        id: core-system-build-map
+        if: steps.core-map-due.outputs.due == 'true' && steps.core-map-reader.outcome == 'success'
+        continue-on-error: true
+        run: |
+          scripts=script/ci/core_system_test_selection
+          root=tmp/core-system-selection
+          ruby "$scripts/results.rb" prepare "$root/results" "$root/coverage"
+          SYSTEM_COVERAGE_ACTIVE_ATTEMPTS="$root/coverage/active-attempts.json" node "$scripts/resolve_browser_coverage.cjs" "$root/coverage" > "$root/browser.json"
+          ruby "$scripts/build_map.rb" "$root/coverage" "$root/browser.json" "$root/mapping.json"
+
+      - name: Publish Core system test map
+        if: steps.core-system-build-map.outcome == 'success'
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: core-system-test-map-v1
+          overwrite: true
+          path: tmp/core-system-selection/mapping.json
+          retention-days: 14
+
+      - name: Compare shadow selection with the full Core system run
+        if: ${{ !cancelled() && vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.target == 'core' && matrix.build_type == 'system' && github.event_name == 'pull_request' && steps.core-system-tests.outcome != 'skipped' && hashFiles('tmp/core-system-selection/plan.json') != '' }}
+        continue-on-error: true
+        env:
+          CORE_SYSTEM_TEST_OUTCOME: ${{ steps.core-system-tests.outcome }}
+        run: |
+          root=tmp/core-system-selection
+          ruby script/ci/core_system_test_selection/results.rb report "$root/results" "$root/plan.json" "$root/shadow-report.json"
+
+      - name: Upload Core system shadow report
+        if: ${{ !cancelled() && vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && matrix.target == 'core' && matrix.build_type == 'system' && github.event_name == 'pull_request' && hashFiles('tmp/core-system-selection/shadow-report.json') != '' }}
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: core-system-test-selection-shadow
+          overwrite: true
+          path: tmp/core-system-selection/shadow-report.json
+          retention-days: 14
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
