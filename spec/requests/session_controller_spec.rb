@@ -3376,6 +3376,21 @@ RSpec.describe SessionController do
         expect(sso2.no_2fa_methods).to eq(nil)
       end
 
+      it "does not sign an external login assertion for an anonymous shadow" do
+        SiteSetting.allow_anonymous_mode = true
+        SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+        sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+        post "/u/toggle-anon.json"
+        expect(response.status).to eq(200)
+        SiteSetting.allow_anonymous_mode = false
+
+        get "/session/sso_provider",
+            params: Rack::Utils.parse_query(@sso.payload("secretForOverRainbow"))
+
+        expect(response.status).to eq(403)
+        expect(response.location).to be_nil
+      end
+
       it "does not mint a login assertion for a read-scoped admin API key" do
         scope = ApiKeyScope.new(resource: "global", action: "read")
         api_key = Fabricate(:api_key, user: @user, api_key_scopes: [scope])
@@ -5247,8 +5262,9 @@ RSpec.describe SessionController do
       end
 
       it "stops authenticating when the master account is suspended", :aggregate_failures do
-        shadow_user = AnonymousShadowCreator.get(master_user)
-        sign_in(shadow_user)
+        sign_in(master_user)
+        post "/u/toggle-anon.json"
+        expect(response.status).to eq(200)
 
         get "/session/current.json"
         expect(response.status).to eq(200)
@@ -5267,8 +5283,9 @@ RSpec.describe SessionController do
       end
 
       it "stops authenticating when the master account is deactivated", :aggregate_failures do
-        shadow_user = AnonymousShadowCreator.get(master_user)
-        sign_in(shadow_user)
+        sign_in(master_user)
+        post "/u/toggle-anon.json"
+        expect(response.status).to eq(200)
 
         get "/session/current.json"
         expect(response.status).to eq(200)

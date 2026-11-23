@@ -40,6 +40,8 @@ class Auth::DefaultCurrentUserProvider
   PATH_INFO = "PATH_INFO"
   COOKIE_ATTEMPTS_PER_MIN = 10
   BAD_TOKEN = "_DISCOURSE_BAD_TOKEN"
+  REPLACED_COOKIE = "_DISCOURSE_REPLACED_COOKIE"
+  REPLACED_COOKIE_TTL = 1.minute
   DECRYPTED_AUTH_COOKIE = "_DISCOURSE_DECRYPTED_AUTH_COOKIE"
 
   TOKEN_SIZE = 32
@@ -51,12 +53,45 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def self.shared_session_redis_key(key)
-    "shared_session_user_auth_token_id:#{key}"
+    "shared_session_principal_v2:#{key}"
   end
 
-  def self.store_shared_session_key(key, token_id)
-    Discourse.redis.setex(shared_session_redis_key(key), 7.days, token_id)
+  def self.store_shared_session_key(token, user, previous_key: nil)
+    principal = token.user
+    return unless principal == user
+
+    binding = shared_session_binding(token, principal)
+    redis = Discourse.redis
+    if previous_key
+      redis_key = shared_session_redis_key(previous_key)
+      return previous_key if redis.get(redis_key) == binding && redis.expire(redis_key, 7.days)
+    end
+
+    # Never recreate a missing session-supplied key: it may have belonged to another principal.
+    key = "v2_#{SecureRandom.hex}"
+    key if redis.set(shared_session_redis_key(key), binding, nx: true, ex: 7.days)
   end
+
+  def self.read_shared_session_key(key)
+    return unless key.is_a?(String) && key.ascii_only? && /\Av2_[0-9a-f]{32}\z/.match?(key)
+
+    binding = Discourse.redis.get(shared_session_redis_key(key))
+    return unless binding
+
+    token_id = binding.partition(":").first
+    return unless /\A\d+\z/.match?(token_id)
+
+    token = UserAuthToken.unexpired.find_by(id: token_id)
+    user = token&.user
+    if user && binding == shared_session_binding(token, user) && user.active? && !user.suspended?
+      user
+    end
+  end
+
+  def self.shared_session_binding(token, principal)
+    "#{token.id}:#{principal.id}:#{principal.is_impersonating ? 1 : 0}"
+  end
+  private_class_method :shared_session_binding
 
   PARAMETER_API_PATTERNS = [
     RouteMatcher.new(
@@ -115,15 +150,7 @@ class Auth::DefaultCurrentUserProvider
 
     # bypass if we have the shared session header
     if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
-      token_id = Discourse.redis.get(self.class.shared_session_redis_key(shared_key))
-      user = nil
-      if token_id
-        token = UserAuthToken.unexpired.find_by(id: token_id)
-        user = token&.user
-        user = nil if user && (user.suspended? || !user.active)
-      end
-      @env[CURRENT_USER_KEY] = user
-      return user
+      return @env[CURRENT_USER_KEY] = self.class.read_shared_session_key(shared_key)
     end
 
     request = @request
@@ -162,11 +189,15 @@ class Auth::DefaultCurrentUserProvider
       end
 
       if !current_user
-        @env[BAD_TOKEN] = true
-        begin
-          limiter.performed!
-        rescue RateLimiter::LimitExceeded
-          raise Discourse::InvalidAccess.new("Invalid Access", nil, delete_cookie: TOKEN_COOKIE)
+        if Discourse.redis.exists?(replaced_cookie_key(UserAuthToken.hash_token(auth_token)))
+          @env[REPLACED_COOKIE] = true
+        else
+          @env[BAD_TOKEN] = true
+          begin
+            limiter.performed!
+          rescue RateLimiter::LimitExceeded
+            raise Discourse::InvalidAccess.new("Invalid Access", nil, delete_cookie: TOKEN_COOKIE)
+          end
         end
       end
     elsif @env["HTTP_DISCOURSE_LOGGED_IN"]
@@ -278,13 +309,39 @@ class Auth::DefaultCurrentUserProvider
       end
     end
 
-    cookie_jar.delete(TOKEN_COOKIE) if !user && cookie_jar.key?(TOKEN_COOKIE)
+    if !user && cookie_jar.key?(TOKEN_COOKIE) && !@env[REPLACED_COOKIE]
+      cookie_jar.delete(TOKEN_COOKIE)
+    end
+  end
+
+  # A scoped or delegated credential cannot be exchanged for a browser session.
+  # Read the presented token again without repeating request accounting or using
+  # results cached before the caller acquired the identity lock.
+  def authenticated_session_user
+    return if is_api? || is_user_api? || @env["HTTP_X_SHARED_SESSION_KEY"]
+    return unless token = find_auth_token
+    return unless @user_token && @user_token.user_id == current_user&.id
+
+    UserAuthToken.uncached do
+      session =
+        UserAuthToken
+          .matching_token_hash(UserAuthToken.hash_token(token))
+          .lock
+          .find_by(id: @user_token.id)
+      user = session&.user
+      if user&.active? && !user.suspended? && !user.is_impersonating
+        @user_token = session
+        user
+      end
+    end
   end
 
   def log_on_user(user, session, cookie_jar, opts = {})
+    raise Discourse::InvalidAccess if !opts[:anonymous_mode_exchange] && user.anonymous_shadow?
+
     user.unstage!
 
-    @env[USER_TOKEN_KEY] = @user_token =
+    token =
       UserAuthToken.generate!(
         user_id: user.id,
         user_agent: @env["HTTP_USER_AGENT"],
@@ -294,8 +351,9 @@ class Auth::DefaultCurrentUserProvider
         impersonate: opts[:impersonate],
         authenticated_with_oauth: opts[:authenticated_with_oauth],
       )
-
-    set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
+    retire_exchanged_session! if opts[:anonymous_mode_exchange]
+    @env[USER_TOKEN_KEY] = @user_token = token
+    DB.after_commit { set_auth_cookie!(token.unhashed_auth_token, user, cookie_jar) }
 
     make_developer_admin(user)
     bootstrap_first_admin(user)
@@ -371,14 +429,13 @@ class Auth::DefaultCurrentUserProvider
     user = current_user
 
     if SiteSetting.log_out_strict && user
-      user.user_auth_tokens.destroy_all
+      user.revoke_all_credentials!
 
       if user.admin && defined?(Rack::MiniProfiler)
         # clear the profiling cookie to keep stuff tidy
         cookie_jar.delete("__profilin")
       end
 
-      PushNotificationPusher.clear_subscriptions(user)
       user.logged_out
     elsif user && @user_token
       @user_token.destroy
@@ -511,14 +568,27 @@ class Auth::DefaultCurrentUserProvider
       )
   end
 
-  def find_auth_token
-    return @auth_token if defined?(@auth_token)
+  def replaced_cookie_key(token_hash)
+    "replaced_browser_cookie:#{token_hash}"
+  end
 
-    @auth_token =
-      if v0 = self.class.find_v0_auth_cookie(@request)
-        v0
-      elsif v1 = self.class.find_v1_auth_cookie(@env)
-        v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
+  def retire_exchanged_session!
+    # A late response with either old cookie must not clear the replacement.
+    # Mark before commit to avoid a gap. Marks are checked only on a failed login:
+    # they never authenticate a request and do not change a rolled-back session.
+    Discourse.redis.pipelined do |redis|
+      [@user_token.auth_token, @user_token.prev_auth_token].uniq.each do |token_hash|
+        redis.setex(replaced_cookie_key(token_hash), REPLACED_COOKIE_TTL.to_i, "1")
       end
+    end
+    @user_token.destroy!
+  end
+
+  def find_auth_token
+    if v0 = self.class.find_v0_auth_cookie(@request)
+      v0
+    elsif v1 = self.class.find_v1_auth_cookie(@env)
+      v1[:token] if v1[:issued_at] >= SiteSetting.maximum_session_age.hours.ago.to_i
+    end
   end
 end

@@ -1582,11 +1582,21 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
       end
 
-      it "binds the stored value to the auth token" do
+      it "reuses a live credential but does not resurrect an expired one" do
+        helper.session["shared_session_key"] = SecureRandom.hex
         key = helper.shared_session_key
-        expect(
-          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
-        ).to eq(auth_token.id.to_s)
+        expect(key).to be_present
+        expect(key).not_to eq(helper.session["shared_session_key"])
+        expect(helper.shared_session_key).to eq(key)
+
+        helper.request.env.delete("shared_session_key_v2")
+        expect(helper.shared_session_key).to eq(key)
+
+        Discourse.redis.del(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key))
+        helper.request.env.delete("shared_session_key_v2")
+        replacement = helper.shared_session_key
+        expect(replacement).to be_present
+        expect(replacement).not_to eq(key)
       end
     end
 
@@ -1621,11 +1631,9 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
       end
 
-      it "binds the stored value to the impersonating token" do
+      it "issues a key for the impersonated user, not the actor" do
         key = helper.shared_session_key
-        expect(
-          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
-        ).to eq(auth_token.id.to_s)
+        expect(Auth::DefaultCurrentUserProvider.read_shared_session_key(key)).to eq(user)
       end
     end
 

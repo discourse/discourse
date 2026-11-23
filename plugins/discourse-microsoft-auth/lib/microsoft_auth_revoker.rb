@@ -33,10 +33,9 @@ class MicrosoftAuthRevoker
   end
 
   def self.log_out_users
-    DB.exec <<~SQL
-        DELETE FROM user_auth_tokens
-        WHERE user_id IN (#{microsoft_user_associated_accounts_sql})
-        SQL
+    User.where("id IN (#{microsoft_user_associated_accounts_sql})").find_each(
+      &:revoke_all_credentials!
+    )
   end
 
   def self.microsoft_user_associated_accounts_sql

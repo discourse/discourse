@@ -995,7 +995,6 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
-        @user.user_auth_tokens.destroy_all
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1150,11 +1149,18 @@ class UsersController < ApplicationController
   end
 
   def toggle_anon
-    user =
-      AnonymousShadowCreator.get_master(current_user) || AnonymousShadowCreator.get(current_user)
+    return render json: failed_json, status: :forbidden unless SiteSetting.allow_anonymous_mode
 
-    if user
-      log_on_user(user)
+    target =
+      with_authenticated_session do |identity|
+        user = identity == current_user ? AnonymousShadowCreator.get(identity) : identity
+        next unless user&.active? && !user.suspended?
+
+        log_on_user(user, { anonymous_mode_exchange: true })
+        user
+      end
+
+    if target
       render json: success_json
     else
       render json: failed_json, status: :forbidden
@@ -1958,10 +1964,7 @@ class UsersController < ApplicationController
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.transaction do
-        UserAuthToken.where(user_id: user.id).each(&:destroy!)
-        PushNotificationPusher.clear_subscriptions(user)
-      end
+      user.revoke_all_credentials!
     end
 
     render json: success_json

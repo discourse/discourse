@@ -20249,6 +20249,13 @@ CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summ
 
 
 --
+-- Name: idx_anonymous_users_all_shadows_by_master; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_anonymous_users_all_shadows_by_master ON public.anonymous_users USING btree (master_user_id);
+
+
+--
 -- Name: idx_blog_publications_on_blog_id_published_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24505,6 +24512,13 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 
 
 --
+-- Name: index_push_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_id ON public.push_subscriptions USING btree (user_id);
+
+
+--
 -- Name: index_quoted_posts_on_post_id_and_quoted_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26772,6 +26786,9 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261123103548'),
 ('20261123030923'),
+('20261123011249'),
+('20261123011248'),
+('20261122235552'),
 ('20261121231304'),
 ('20261120183731'),
 ('20261120090013'),

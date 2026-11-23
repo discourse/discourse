@@ -57,10 +57,7 @@ class DiscourseId::Revoke
     user = associated_account.user
     return if user.nil?
 
-    UserAuthToken.transaction do
-      UserAuthToken.where(user_id: user.id).destroy_all
-      PushNotificationPusher.clear_subscriptions(user)
-    end
+    user.revoke_all_credentials!
   end
 
   def log_revocation(associated_account:, params:)

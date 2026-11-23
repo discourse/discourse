@@ -140,27 +140,30 @@ class PushNotificationPusher
         PushSubscription.create!(user: user, data: data)
       end
 
-    prune_subscriptions(user) if new_subscription
+    return unless new_subscription
 
-    if send_confirmation == "true"
-      message = {
-        title:
-          I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
-        body: I18n.t("discourse_push_notifications.popup.confirm_body"),
-        icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-        badge: get_badge,
-        tag: "#{Discourse.current_hostname}-subscription",
-      }
+    prune_subscriptions(user)
+    DB.after_commit { confirm_subscription(user, new_subscription) } if send_confirmation == "true"
+  end
 
-      if trusted?(new_subscription)
-        send_notification(user, new_subscription, message)
-      else
-        Jobs::DeliverUntrustedPushNotifications.add(
-          user_id: user.id,
-          message: message,
-          subscription_id: new_subscription.id,
-        )
-      end
+  def self.confirm_subscription(user, subscription)
+    message = {
+      title:
+        I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
+      body: I18n.t("discourse_push_notifications.popup.confirm_body"),
+      icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+      badge: get_badge,
+      tag: "#{Discourse.current_hostname}-subscription",
+    }
+
+    if trusted?(subscription)
+      send_notification(user, subscription, message)
+    else
+      Jobs::DeliverUntrustedPushNotifications.add(
+        user_id: user.id,
+        message: message,
+        subscription_id: subscription.id,
+      )
     end
   end
 
@@ -295,6 +298,7 @@ class PushNotificationPusher
     end
   end
 
+  private_class_method :confirm_subscription
   private_class_method :send_notification
   private_class_method :handle_generic_error
   private_class_method :record_error

@@ -844,6 +844,137 @@ RSpec.describe User do
       expect(messages[0].user_ids).to eq([shadow_user.id])
       expect(messages[0].data).to eq(shadow_user.id)
     end
+
+    def historical_shadow
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: master_user, active: false)
+      shadow
+    end
+
+    it "identifies historical and orphaned shadows independently of anonymous posting eligibility" do
+      shadow = Fabricate(:user, trust_level: TrustLevel[0])
+      expect(shadow.anonymous_user_master).to be_nil
+      AnonymousUser.create!(user_id: shadow.id, master_user_id: master_user.id, active: false)
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      SiteSetting.allow_anonymous_mode = false
+
+      expect(master_user.anonymous_shadow?).to eq(false)
+      expect(shadow.anonymous_shadow?).to eq(true)
+
+      master_user.destroy!
+
+      expect(shadow.reload.anonymous_shadow?).to eq(true)
+    end
+
+    it "revokes family sessions and only unrevoked shadow keys using current membership" do
+      freeze_time(Time.zone.now.change(usec: 0))
+      shadow = AnonymousShadowCreator.get(master_user)
+      master_user.anonymous_user_shadows.load
+      previous_shadow = historical_shadow
+      outsider = Fabricate(:user)
+      users = [master_user, shadow, previous_shadow, outsider]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      master_key, shadow_key, previous_shadow_key, outsider_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+      revoked_key = Fabricate(:user_api_key, user: previous_shadow, revoked_at: 1.day.ago)
+
+      master_user.revoke_all_credentials!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        outsider.id,
+      )
+      expect(
+        PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id),
+      ).to contain_exactly(outsider.id)
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(outsider_key.reload.revoked_at).to be_nil
+      expect(shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(previous_shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(revoked_key.reload.revoked_at).to eq_time(1.day.ago)
+    end
+
+    it "revokes the family when a historical shadow explicitly revokes credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      previous_shadow = historical_shadow
+      master_key = Fabricate(:user_api_key, user: master_user)
+      sibling_key = Fabricate(:user_api_key, user: shadow)
+      users = [master_user, shadow, previous_shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+
+      previous_shadow.revoke_all_credentials!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(sibling_key.reload.revoked_at).to be_present
+      expect(master_key.reload.revoked_at).to be_nil
+    end
+
+    it "revokes only the historical shadow's credentials when its password changes" do
+      sibling = AnonymousShadowCreator.get(master_user)
+      shadow = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      keys = users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.update!(password: SecureRandom.hex)
+
+      remaining = [master_user.id, sibling.id]
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to match_array(remaining)
+      expect(PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id)).to match_array(
+        remaining,
+      )
+      expect(UserApiKey.where(id: keys.map(&:id), revoked_at: nil).pluck(:user_id)).to match_array(
+        remaining,
+      )
+    end
+
+    it "revokes both current and historical shadow credentials when the master is destroyed" do
+      shadows = [AnonymousShadowCreator.get(master_user), historical_shadow]
+      tokens = shadows.map { |shadow| UserAuthToken.generate!(user_id: shadow.id) }
+      keys = shadows.map { |shadow| Fabricate(:user_api_key, user: shadow) }
+
+      master_user.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(keys.map { |key| key.reload.revoked_at }).to all(be_present)
+    end
+
+    it "removes a single shadow without revoking master or sibling credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      master_key, sibling_key, shadow_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        master_user.id,
+        sibling.id,
+      )
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(sibling_key.reload.revoked_at).to be_nil
+      expect(UserApiKey.exists?(shadow_key.id)).to eq(false)
+    end
+
+    it "cleans up only the calling shadow's credentials when its master is missing" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      master_user.destroy!
+      shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+      sibling_token = UserAuthToken.generate!(user_id: sibling.id)
+      shadow_key = Fabricate(:user_api_key, user: shadow)
+      sibling_key = Fabricate(:user_api_key, user: sibling)
+
+      shadow.revoke_all_credentials!
+
+      expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+      expect(UserAuthToken.exists?(sibling_token.id)).to eq(true)
+      expect(shadow_key.reload.revoked_at).to be_present
+      expect(sibling_key.reload.revoked_at).to be_nil
+    end
   end
 
   describe "delete posts in batches" do
@@ -1610,6 +1741,16 @@ RSpec.describe User do
 
   describe "passwords" do
     let(:user) { Fabricate.build(:user, active: false) }
+
+    it "does not lock a credential identity or sweep credentials on creation" do
+      queries = track_sql_queries { user.save! }
+
+      expect(queries.grep(/FROM "anonymous_users"|FROM "users".*FOR UPDATE/i)).to be_empty
+      expect(
+        queries.grep(/(?:FROM|UPDATE) "(?:user_auth_tokens|user_api_keys|push_subscriptions)"/i),
+      ).to be_empty
+      expect(user.email_tokens.where(expired: false)).to exist
+    end
 
     it "keeps the account inactive despite a valid password" do
       user.password = "ilovepasta"

@@ -389,6 +389,21 @@ RSpec.describe PushNotificationPusher do
         expect(endpoints).to match_array(untrusted.last(2) + trusted.last(8))
       end
 
+      it "confirms a new trusted subscription only after commit and only once" do
+        endpoint = "https://fcm.googleapis.com/fcm/send/new"
+        delivered = []
+        WebPush.stubs(:payload_send).with { |args| delivered << args[:endpoint] }
+
+        PushSubscription.transaction(requires_new: true) do
+          subscribe(endpoint, send_confirmation: "true")
+          expect(delivered).to be_empty
+        end
+        expect(delivered).to contain_exactly(endpoint)
+
+        subscribe(endpoint, send_confirmation: "true")
+        expect(delivered).to contain_exactly(endpoint)
+      end
+
       it "ignores revoked endpoints on the .invalid TLD" do
         subscribe("https://permanently-removed.invalid/fcm/send/abc", send_confirmation: "true")
 

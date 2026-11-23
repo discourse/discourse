@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PushNotificationController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
 
   context "when logged out" do
     it "does not allow subscribing" do
@@ -43,9 +43,55 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions.count).to eq(1)
     end
 
+    it "registers the shadow, not the master, when browsing anonymously" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      post "/push_notifications/subscribe.json",
+           params: {
+             subscription: {
+               endpoint: "endpoint",
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth",
+               },
+             },
+           }
+
+      expect(response.status).to eq(200)
+      expect(user.shadow_user.push_subscriptions.count).to eq(1)
+      expect(user.push_subscriptions).to be_empty
+    end
+
+    it "does not register new push subscriptions using an external polling credential" do
+      token = user.user_auth_tokens.sole
+      key = Auth::DefaultCurrentUserProvider.store_shared_session_key(token, user)
+      reset!
+      headers = { "HTTP_X_SHARED_SESSION_KEY" => key }
+      get "/session/current.json", headers: headers
+      expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+
+      post "/push_notifications/subscribe.json",
+           headers: headers,
+           params: {
+             subscription: {
+               endpoint: "endpoint",
+               keys: {
+                 p256dh: "256dh",
+                 auth: "auth",
+               },
+             },
+           }
+
+      expect(response.status).to eq(403)
+      expect(user.push_subscriptions).to be_empty
+    end
+
     it "repairs duplicate subscriptions" do
       subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
-      PushSubscription.create user: user, data: subscription.to_json
+      2.times { PushSubscription.create!(user: user, data: subscription.to_json) }
       post "/push_notifications/subscribe.json",
            params: {
              username: user.username,

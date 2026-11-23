@@ -142,12 +142,15 @@ class UserAuthToken < ActiveRecord::Base
     user_auth_token
   end
 
+  def self.matching_token_hash(token_hash)
+    unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token_hash)
+  end
+
   def self.lookup(unhashed_token, opts = nil)
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)
-
-    user_token = unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token)
+    user_token = matching_token_hash(token)
 
     if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
       user_token = user_token.annotate("path:#{path}")

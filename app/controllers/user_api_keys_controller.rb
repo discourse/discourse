@@ -77,7 +77,7 @@ class UserApiKeysController < ApplicationController
     validate_params
     validate_auth_redirect
 
-    raise Discourse::InvalidAccess unless meets_tl?
+    raise Discourse::InvalidAccess unless can_authorize_key?
 
     scopes = params[:scopes].split(",").uniq
     expires_at = requested_expires_at(parse_expires_in_seconds!)
@@ -235,13 +235,13 @@ class UserApiKeysController < ApplicationController
 
     @device_auth = result.grant
 
-    unless meets_tl?
+    unless can_authorize_key?
       render_device_activation(
         device_authorization_model(
           state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
           no_trust_level: true,
         ),
-        debug_reason: "insufficient_trust_level",
+        debug_reason: "user_not_eligible",
       )
       return
     end
@@ -265,8 +265,8 @@ class UserApiKeysController < ApplicationController
   end
 
   def authorize_device_request
-    unless meets_tl?
-      trace_device_auth("device_auth.authorize.failed", reason: "insufficient_trust_level")
+    unless can_authorize_key?
+      trace_device_auth("device_auth.authorize.failed", reason: "user_not_eligible")
       raise Discourse::InvalidAccess
     end
 
@@ -422,7 +422,7 @@ class UserApiKeysController < ApplicationController
     validate_params_otp
     validate_auth_redirect
 
-    raise Discourse::InvalidAccess unless meets_tl?
+    raise Discourse::InvalidAccess unless can_authorize_key?
 
     otp_payload = one_time_password(parsed_public_key, current_user.username)
     uri = URI.parse(params[:auth_redirect])
@@ -449,7 +449,12 @@ class UserApiKeysController < ApplicationController
   end
 
   def undo_revoke
-    find_key.update_columns(revoked_at: nil)
+    key = find_key
+    guardian.ensure_can_issue_independent_credentials!
+    owner = key.user
+    raise Discourse::InvalidAccess if !owner || owner.anonymous_shadow?
+
+    key.update_columns(revoked_at: nil)
     render json: success_json
   end
 
@@ -500,7 +505,7 @@ class UserApiKeysController < ApplicationController
     scopes = params[:scopes]
     expires_at = requested_expires_at(expires_in_seconds)
 
-    if !meets_tl?
+    if !can_authorize_key?
       return(
         {
           state: UserApiKey::DeviceAuth::AUTHORIZATION_STATE_NO_TRUST_LEVEL,
@@ -561,7 +566,7 @@ class UserApiKeysController < ApplicationController
     device_authorization_model(
       state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_AUTHORIZE,
       request_token: params[:request],
-      no_trust_level: !meets_tl?,
+      no_trust_level: !can_authorize_key?,
     )
   end
 
@@ -689,8 +694,12 @@ class UserApiKeysController < ApplicationController
     UserApiKey::DeviceAuth::Crypto.parse_public_key!(value)
   end
 
-  def meets_tl?
-    current_user.staff? || current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
+  def can_authorize_key?
+    guardian.can_issue_independent_credentials? &&
+      (
+        current_user.staff? ||
+          current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
+      )
   end
 
   # `create` and `create_otp` are the only callers, and both respond in JSON

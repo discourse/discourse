@@ -14,7 +14,16 @@ class Auth::CurrentUserProvider
     raise NotImplementedError
   end
 
-  # log on a user and set cookies and session etc.
+  # Optional: under the credential lock, re-read the incoming browser session
+  # and return its directly authenticated user. Never return a cached identity.
+  # Providers that cannot revalidate a browser session cannot switch anonymous
+  # mode or register browser push subscriptions.
+  def authenticated_session_user
+    nil
+  end
+
+  # For anonymous_mode_exchange, replace the previously validated browser session
+  # atomically; do not leave its cookie or derived credentials usable.
   def log_on_user(user, session, cookie_jar, opts = {})
     raise NotImplementedError
   end

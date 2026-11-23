@@ -6,7 +6,9 @@ class PushNotificationController < ApplicationController
   skip_before_action :preload_json
 
   def subscribe
-    PushNotificationPusher.subscribe(current_user, push_params, params[:send_confirmation])
+    with_authenticated_session do
+      PushNotificationPusher.subscribe(current_user, push_params, params[:send_confirmation])
+    end
     render json: success_json
   end
 

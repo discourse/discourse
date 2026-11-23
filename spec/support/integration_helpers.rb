@@ -27,7 +27,8 @@ module IntegrationHelpers
   end
 
   def sign_in(user)
-    get "/session/#{user.encoded_username}/become"
+    get "/session/#{user.encoded_username}/become", params: { redirect: "false" }
+    raise "Could not sign in #{user.username} (HTTP #{response.status})" unless response.successful?
     user
   end
 
