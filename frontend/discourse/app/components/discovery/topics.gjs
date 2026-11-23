@@ -13,6 +13,7 @@ import List from "discourse/components/topic-list/list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isEmptyCategoryList } from "discourse/lib/empty-category";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
@@ -105,21 +106,12 @@ export default class DiscoveryTopics extends Component {
     return !this.new || this.currentUser?.unified_new_enabled;
   }
 
-  // The category's own "About" topic and system-generated topics don't count
-  // as conversations.
   get showEmptyCategory() {
-    const category = this.args.category;
-
-    if (!category || this.args.tag || !this.latest || !this.allLoaded) {
-      return false;
-    }
-
-    const aboutTopicId = Number(category.topic_url?.split("/").pop());
-
-    // System and bot accounts have ids <= 0.
-    return (this.args.model.topics ?? []).every(
-      (topic) => topic.id === aboutTopicId || topic.creator?.id <= 0
-    );
+    return isEmptyCategoryList({
+      category: this.args.category,
+      tag: this.args.tag,
+      list: this.args.model,
+    });
   }
 
   get showEmptyFilterEducationInFooter() {
