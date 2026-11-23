@@ -893,17 +893,6 @@ use a constrained, scrollable content area for results that may grow.
 
 The text to show on the trigger.
 
-### @selectionMode
-
-Pass `@selectionMode={{true}}` when a menu sets a field value. The trigger names
-the current selection, and the menu marks the selected item. On mobile, opening
-the menu moves focus into its dialog. With `@format="full"`, the panel matches
-the trigger width.
-
-### @contentClass
-
-Adds a class to the panel for styles specific to the caller.
-
 ### yielded parameters
 
 #### Item

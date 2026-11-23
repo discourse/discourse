@@ -1,16 +1,9 @@
-import {
-  click,
-  find,
-  render,
-  triggerKeyEvent,
-  waitUntil,
-} from "@ember/test-helpers";
+import { click, find, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import DModal from "discourse/ui-kit/d-modal";
 
 module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -113,130 +106,21 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
   });
 
-  test("selection mode exposes the current value and matches a full format field", async function (assert) {
-    const data = { foo: "item-1" };
-
+  test("@selection", async function (assert) {
     await render(
       <template>
-        <Form @data={{data}} as |form|>
-          <form.Field
-            @format="full"
-            @helpText="Suggested value"
-            @name="foo"
-            @title="Foo"
-            @type="menu"
-            as |field|
-          >
-            <field.Control
-              @selection="Current item"
-              @selectionMode={{true}}
-              as |menu|
-            >
-              <menu.Item @value="item-1">Current item</menu.Item>
-              <menu.Item @value="item-2">Another item</menu.Item>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @type="menu" as |field|>
+            <field.Control @selection="Current item" as |menu|>
+              <menu.Item @value="item-1">Item 1</menu.Item>
             </field.Control>
           </form.Field>
         </Form>
       </template>
     );
 
-    const trigger = find(".form-kit__control-menu-trigger");
-    trigger.style.width = "500px";
-    const labelIds = [
-      find(".form-kit__container-title").id,
-      find(".form-kit__control-menu-trigger .d-button-label").id,
-    ];
-
-    assert.dom(trigger).hasText("Current item", "shows the current selection");
     assert
-      .dom(trigger)
-      .hasAttribute(
-        "aria-labelledby",
-        labelIds.join(" "),
-        "names the field and its selection"
-      );
-    assert
-      .dom(trigger)
-      .hasAttribute(
-        "aria-describedby",
-        find(".form-kit__container-help-text").id,
-        "references the field hint"
-      );
-
-    await click(trigger);
-
-    const panel = find(".form-kit__control-menu-content");
-    assert.strictEqual(
-      panel.getBoundingClientRect().width,
-      trigger.getBoundingClientRect().width,
-      "a full width menu matches the trigger width"
-    );
-    assert
-      .dom('.form-kit__control-menu-item[data-value="item-1"] button')
-      .hasAttribute("aria-current", "true", "marks the current option");
-    assert
-      .dom('.form-kit__control-menu-item[data-value="item-2"] button')
-      .doesNotHaveAttribute("aria-current", "leaves other options unmarked");
-  });
-
-  test("a mobile selection menu keeps the containing dialog open", async function (assert) {
-    sinon.stub(this.owner.lookup("service:site"), "mobileView").value(true);
-    const closeModal = sinon.spy();
-
-    await render(
-      <template>
-        <DModal @closeModal={{closeModal}} @inline={{true}}>
-          <:body>
-            <Form as |form|>
-              <form.Field
-                @name="foo"
-                @showTitle={{false}}
-                @title="Foo"
-                @type="menu"
-                as |field|
-              >
-                <field.Control
-                  @selection="Current item"
-                  @selectionMode={{true}}
-                  as |menu|
-                >
-                  <menu.Item @value="item-1">Current item</menu.Item>
-                </field.Control>
-              </form.Field>
-            </Form>
-          </:body>
-        </DModal>
-      </template>
-    );
-
-    const trigger = find(".form-kit__control-menu-trigger");
-    assert
-      .dom(trigger)
-      .hasAttribute(
-        "aria-labelledby",
-        find(".form-kit__control-menu-trigger .d-button-label").id,
-        "names the trigger from the visible selection"
-      );
-
-    await click(trigger);
-    assert
-      .dom(".fk-d-menu-modal")
-      .hasAttribute(
-        "aria-label",
-        "Foo",
-        "names the dialog from the field title"
-      );
-    assert
-      .dom(".fk-d-menu-modal .form-kit__control-menu-item .btn")
-      .isFocused("moves focus into the mobile menu when it opens");
-
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
-
-    assert.dom(".fk-d-menu-modal").doesNotExist("Escape closes the menu");
-    assert.true(
-      closeModal.notCalled,
-      "Escape keeps the containing dialog open"
-    );
-    assert.dom(trigger).isFocused("returns focus to the field");
+      .dom(".form-kit__control-menu-trigger .d-button-label")
+      .hasText("Current item");
   });
 });
