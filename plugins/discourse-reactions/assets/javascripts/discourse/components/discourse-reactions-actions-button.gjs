@@ -9,7 +9,10 @@ export default class ReactionsActionButton extends Component {
       return false;
     }
 
-    const show = args.post.showLike || args.post.likeCount > 0;
+    const show =
+      args.post.showLike ||
+      args.post.likeCount > 0 ||
+      (args.post.likesDisabledInCategory && !!args.post.current_user_reaction);
     return applyValueTransformer("like-button-render-decision", show, {
       post: args.post,
     });

@@ -27,6 +27,13 @@ describe "Anonymous user liking a post" do
 
   include_examples "replays the like after login"
 
+  it "hides the like action in categories that disable new likes" do
+    SiteSetting.disable_likes_in_categories = topic.category_id.to_s
+    topic_page.visit_topic(topic)
+
+    expect(topic_page).to have_no_post_action_button(post, :like)
+  end
+
   context "when the topic is closed" do
     before { topic.update!(closed: true) }
 

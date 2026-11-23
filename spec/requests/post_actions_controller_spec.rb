@@ -98,6 +98,28 @@ RSpec.describe PostActionsController do
   end
 
   describe "#create" do
+    it "blocks new likes in selected categories while allowing users to undo old likes" do
+      category = Fabricate(:category)
+      target = Fabricate(:post, topic: Fabricate(:topic, category:))
+      other_post = Fabricate(:post)
+      like_action = PostActionType.types[:like]
+      sign_in(user)
+
+      post "/post_actions.json", params: { id: target.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+
+      SiteSetting.disable_likes_in_categories = category.id.to_s
+      delete "/post_actions/#{target.id}.json", params: { post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+
+      post "/post_actions.json", params: { id: target.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:forbidden)
+      expect(target.reload.like_count).to eq(0)
+
+      post "/post_actions.json", params: { id: other_post.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+    end
+
     it "requires you to be logged in" do
       post "/post_actions.json"
       expect(response.status).to eq(403)
