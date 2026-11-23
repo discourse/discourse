@@ -167,6 +167,7 @@ async function main() {
     }
   }
   const examples = new Set();
+  const unmappedBrowserSpecs = new Set();
   const gzipFiles = fs
     .readdirSync(directory)
     .filter((name) => /^browser-.*\.jsonl\.gz$/.test(name));
@@ -192,6 +193,7 @@ async function main() {
       const test = row.id.split("[")[0].replace(/^\.\//, "");
       if (!trackedSet.has(test)) throw new Error("Unknown spec " + test);
       examples.add(row.id);
+      if (row.loaded_assets_only) unmappedBrowserSpecs.add(test);
 
       const javascript =
         row.javascript ||
@@ -288,7 +290,10 @@ async function main() {
               .readFileSync(sourceFile, "utf8")
               .slice(-1024)
               .match(/sourceMappingURL=([^\s*]+)/)?.[1];
-          if (!annotation) return [];
+          if (!annotation) {
+            unmappedBrowserSpecs.add(test);
+            return [];
+          }
           return [
             [
               filename,
@@ -341,6 +346,7 @@ async function main() {
     JSON.stringify({
       tests_by_source: testsBySource,
       observed_example_ids: [...examples].sort(),
+      unmapped_browser_specs: [...unmappedBrowserSpecs].sort(),
       missing_asset_maps: [...unresolved].sort(),
     })
   );

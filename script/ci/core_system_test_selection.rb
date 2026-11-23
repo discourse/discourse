@@ -64,6 +64,30 @@ module CoreSystemTestSelection
       .reverse
   end
 
+  def self.find_artifact
+    write_outputs(started_at: Process.clock_gettime(Process::CLOCK_MONOTONIC))
+    candidates = artifact_candidates
+    return if candidates.empty?
+
+    if git("rev-parse", "--is-shallow-repository").strip == "true"
+      tested = git("rev-parse", "HEAD").strip
+      git("fetch", "--no-tags", "--filter=blob:none", "--unshallow", "origin", tested)
+    end
+    base = ci_base
+    artifact =
+      candidates.find do |candidate|
+        ancestor?(candidate.fetch("workflow_run").fetch("head_sha"), base)
+      end
+    return if !artifact
+
+    run = artifact.fetch("workflow_run")
+    write_outputs(
+      artifact_id: Integer(artifact.fetch("id")),
+      revision: run.fetch("head_sha"),
+      run_id: Integer(run.fetch("id")),
+    )
+  end
+
   def self.ci_base
     ENV
       .fetch("CORE_SYSTEM_PR_BASE")
@@ -91,6 +115,7 @@ module CoreSystemTestSelection
     dependencies = map.fetch("tests_by_source")
     boot = map.fetch("boot_sources").to_set
     selected = Set.new
+    unmapped_browser_specs = map.fetch("unmapped_browser_specs")
 
     if (files.to_set - map_files - paths).any?
       return decision(files:, reason: "inventory_discrepancy", drift:, pr:, revision:)
@@ -108,6 +133,7 @@ module CoreSystemTestSelection
         return decision(files:, reason: "shared_input", drift:, pr:, revision:)
       elsif dependencies.key?(path)
         selected.merge(dependencies.fetch(path))
+        selected.merge(unmapped_browser_specs)
       else
         return decision(files:, reason: "unmapped_input", drift:, pr:, revision:)
       end
@@ -133,7 +159,9 @@ module CoreSystemTestSelection
   end
 
   def self.plan(map_file:, output:)
-    start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    start =
+      Float(ENV["CORE_SYSTEM_SELECTION_STARTED_AT"], exception: false) ||
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
     files = inventory
     result =
       begin
@@ -154,19 +182,7 @@ end
 if $PROGRAM_NAME == __FILE__
   case ARGV.shift
   when "find"
-    base = CoreSystemTestSelection.ci_base
-    artifact =
-      CoreSystemTestSelection.artifact_candidates.find do |candidate|
-        CoreSystemTestSelection.ancestor?(candidate.fetch("workflow_run").fetch("head_sha"), base)
-      end
-    if artifact
-      run = artifact.fetch("workflow_run")
-      CoreSystemTestSelection.write_outputs(
-        artifact_id: Integer(artifact.fetch("id")),
-        revision: run.fetch("head_sha"),
-        run_id: Integer(run.fetch("id")),
-      )
-    end
+    CoreSystemTestSelection.find_artifact
   when "plan"
     CoreSystemTestSelection.plan(map_file: ARGV.fetch(0), output: ARGV.fetch(1))
   else

@@ -44,13 +44,14 @@ RSpec.describe "Core system test selection in shadow" do
     git("rev-parse", "HEAD")
   end
 
-  def selection(dependencies:, base:)
+  def selection(dependencies:, base:, unmapped_browser_specs: [])
     payload = {
       version: 1,
       revision: @map_sha,
       spec_files: [sidebar, about, unrelated],
       boot_sources: [],
       tests_by_source: dependencies,
+      unmapped_browser_specs:,
     }
     map_path = File.join(@repo, ".git/mapping.json")
     report_path = File.join(@repo, ".git/shadow.json")
@@ -107,5 +108,22 @@ RSpec.describe "Core system test selection in shadow" do
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("unmapped_input")
+  end
+
+  it "includes specs with incompletely mapped browser assets for application changes" do
+    write(controller, "the pull request changed the controller\n")
+    commit("pull request")
+
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+        },
+        base: @map_sha,
+        unmapped_browser_specs: [about],
+      )
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about)
+    expect(report.fetch("full_suite_fallback")).to be_nil
   end
 end

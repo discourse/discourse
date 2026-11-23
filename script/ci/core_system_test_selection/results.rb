@@ -30,8 +30,14 @@ class CoreSystemResults
 
     passed = @results.select { |example| example.fetch("status") == "passed" }
     attempts = passed.to_h { |example| [example.fetch("id"), example.fetch("pid")] }
-    File.write(File.join(directory, "passed-examples.json"), JSON.generate(attempts.keys))
     File.write(File.join(directory, "active-attempts.json"), JSON.generate(attempts))
+    passed_by_worker = passed.group_by { |example| example.fetch("pid") }
+    File.write(
+      File.join(directory, "passed-specs-by-worker.json"),
+      JSON.generate(
+        passed_by_worker.transform_values { |rows| rows.map { |row| row.fetch("file") }.uniq },
+      ),
+    )
   end
 
   def report(plan:, output:, outcome:)
@@ -78,7 +84,7 @@ class CoreSystemResults
       file.puts "| Map commit | #{report.fetch("map_revision") || "Unavailable"} |"
       file.puts "| Paths changed since collection | #{report.fetch("main_drift").size} |"
       file.puts "| Full suite fallback | #{report.fetch("full_suite_fallback")&.tr("_", " ") || "None"} |"
-      file.puts "| Selector time | #{report.fetch("selector_seconds")} s |"
+      file.puts "| Time to decide | #{report.fetch("selector_seconds")} s |"
       file.puts "| Full suite outcome | #{report.fetch(:full_ci_outcome)} |"
       file.puts "| Failing files omitted | #{report.fetch(:omitted_failed_files).size} of #{report.fetch(:failed_files).size} |"
       would_block =

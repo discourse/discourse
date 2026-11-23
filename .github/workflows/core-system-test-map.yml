@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   collect:
-    if: vars.CORE_SYSTEM_TEST_SELECTION_SHADOW == 'true' && github.ref == 'refs/heads/main' && github.repository != 'discourse/discourse-private-mirror'
+    if: github.ref == 'refs/heads/main' && github.repository != 'discourse/discourse-private-mirror'
     uses: ./.github/workflows/tests.yml
     with:
       collect_core_system_map: true
