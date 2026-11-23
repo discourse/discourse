@@ -3,7 +3,6 @@
 require "json"
 require "net/http"
 require "open3"
-require "time"
 require "uri"
 
 module CoreSystemTestSelection
@@ -154,10 +153,6 @@ end
 
 if $PROGRAM_NAME == __FILE__
   case ARGV.shift
-  when "due"
-    latest = CoreSystemTestSelection.artifact_candidates.first
-    due = latest.nil? || Time.now - Time.iso8601(latest.fetch("created_at")) >= 86_400
-    CoreSystemTestSelection.write_outputs(due:)
   when "find"
     base = CoreSystemTestSelection.ci_base
     artifact =
@@ -175,6 +170,6 @@ if $PROGRAM_NAME == __FILE__
   when "plan"
     CoreSystemTestSelection.plan(map_file: ARGV.fetch(0), output: ARGV.fetch(1))
   else
-    abort "Expected due, find or plan"
+    abort "Expected find or plan"
   end
 end
