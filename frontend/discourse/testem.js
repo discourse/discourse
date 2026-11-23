@@ -297,6 +297,9 @@ module.exports = {
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096 --no-enable-lazy-source-positions",
       "--disable-background-networking",
+      // Without it, macOS asks for the login keychain password whenever Chromium needs its
+      // storage encryption key, and Playwright passes it for the same reason.
+      "--use-mock-keychain",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
