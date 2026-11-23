@@ -102,6 +102,30 @@ describe DiscourseReactions::CustomReactionsController do
       expect(response.parsed_body["reactions"]).to eq([])
     end
 
+    shared_examples "an expired reaction" do |reaction|
+      it "explains why an expired #{reaction} reaction cannot be changed" do
+        freeze_time
+        SiteSetting.post_undo_action_window_mins = 10
+        SiteSetting.discourse_reactions_excluded_from_like = "angry"
+        sign_in(user_1)
+        put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/#{reaction}/toggle.json"
+        expect(response.status).to eq(200)
+
+        freeze_time(11.minutes.from_now)
+        put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/cry/toggle.json"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body).to eq(
+          "errors" => ["The time limit for changing this reaction has passed."],
+          "error_type" => "invalid_access",
+        )
+      end
+    end
+
+    include_examples "an expired reaction", "heart"
+    include_examples "an expired reaction", "hugs"
+    include_examples "an expired reaction", "angry"
+
     it "publishes MessageBus messages" do
       sign_in(user_1)
 
