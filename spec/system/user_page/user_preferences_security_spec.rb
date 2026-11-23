@@ -131,20 +131,15 @@ describe "User preferences | Security" do
 
       visit("/")
 
-      expect(page).to have_selector(
-        ".alert-error",
-        text: "You are required to enable two-factor authentication before accessing this site.",
-      )
+      expect(page).to have_text(I18n.t("js.user.second_factor.enforced_notice"))
+      expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
 
-      expect(page).to have_css(".user-preferences .totp")
-      expect(page).to have_css(".user-preferences .security-key")
+      user_preferences_security_page.click_confirm_2fa_access.submit_password(password)
 
-      find(".user-preferences .totp .btn.new-totp").click
+      expect(user_preferences_security_page).to have_security_key_enrollment
+      user_preferences_security_page.click_add_authenticator
 
-      find(".dialog-body input#password").fill_in(with: password)
-      find(".confirm-session .btn-primary").click
-
-      expect(page).to have_css(".qr-code")
+      expect(user_preferences_security_page).to have_authenticator_qr_code
     end
   end
 

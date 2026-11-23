@@ -1663,6 +1663,7 @@ class SessionController < ApplicationController
     return if user.id == current_user&.id
 
     log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
+    Auth::SecondFactorEnrollment.mark_external_login!(request, user)
   end
 
   def sso_login_return_path(return_path)

@@ -3759,6 +3759,7 @@ en:
     auto_deleted_by_merge: "Automatically deleted by merge."
 
   login:
+    second_factor_external_login_required: "Sign out and sign in again with your external account to manage two-factor authentication."
     invalid_second_factor_method: "The selected two-factor method is invalid."
     not_enabled_second_factor_method: "The selected two-factor method is not enabled for your account."
     security_key_description: "When you have your physical security key prepared press the Authenticate with Security Key button below."

@@ -2498,6 +2498,8 @@ RSpec.describe SessionController do
         verify_sso_factor(nonce)
         expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
         expect(invite.reload).to be_redeemed
+        post "/u/second_factors.json"
+        expect(response.parsed_body).to include("external_login_required" => true)
       end
 
       it "redeems the invite only after verification and redirects to its topic" do

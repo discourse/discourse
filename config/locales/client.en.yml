@@ -2323,6 +2323,7 @@ en:
           Two-factor authentication adds a verification step when you sign in, including when you use an external account. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         use: "Use Authenticator app"
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
+        external_login_required: "Sign out and sign in again with your external account to manage two-factor authentication."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
         delete: "Delete"

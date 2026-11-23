@@ -5,6 +5,7 @@ import type RestModel from "discourse/models/rest";
 import type Topic from "discourse/models/topic";
 import User, {
   SECOND_FACTOR_METHODS,
+  type SecondFactorManagementResponse,
   type UserCreateAttrs,
   type UserFindDetailsOptions,
   type UserGroup,
@@ -162,6 +163,11 @@ user.setPrimaryGroup(null);
 user.setPrimaryGroup(1);
 user.save();
 user.save(["name", "title"]);
+expectTypeOf(user.requiresSecondFactor).toEqualTypeOf<boolean>();
+expectTypeOf(user.enforcedSecondFactor).toEqualTypeOf<boolean>();
+expectTypeOf(
+  user.loadSecondFactorCodes()
+).resolves.toEqualTypeOf<SecondFactorManagementResponse>();
 user.updateSecondFactor(0, "", true, SECOND_FACTOR_METHODS.BACKUP_CODE);
 user.pickAvatar(1, "custom");
 

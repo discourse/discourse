@@ -303,6 +303,83 @@ RSpec.describe Users::OmniauthCallbacksController do
 
       before { mock_auth(email, username, name) }
 
+      def signup_challenge_params
+        get "/session/hp.json"
+        honeypot, challenge = response.parsed_body.values_at("value", "challenge")
+        { password_confirmation: honeypot, challenge: challenge.reverse }
+      end
+
+      it "allows immediate enrollment after verified signup until the callback proof expires" do
+        SiteSetting.enable_local_logins = false
+        freeze_time
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to have_http_status(:found)
+
+        freeze_time 4.minutes.from_now
+        post "/u.json", params: { email:, username:, name:, **signup_challenge_params }
+        expect(response.parsed_body).to include("success" => true, "active" => true)
+
+        post "/u/create_second_factor_totp.json"
+        expect(response).to have_http_status(:ok)
+        secret = response.parsed_body.fetch("key").delete(" ")
+        post "/u/enable_second_factor_totp.json",
+             params: {
+               name: "Authenticator",
+               second_factor_token: ROTP::TOTP.new(secret).now,
+             }
+        expect(response).to have_http_status(:ok)
+        expect(User.find_by_email(email).totps.pluck(:name)).to eq(["Authenticator"])
+
+        freeze_time 1.minute.from_now
+        post "/u/create_second_factor_totp.json"
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+      end
+
+      it "requires another provider login when signup completes after the callback proof expires" do
+        SiteSetting.enable_local_logins = false
+        freeze_time
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to have_http_status(:found)
+
+        freeze_time 6.minutes.from_now
+        post "/u.json", params: { email:, username:, name:, **signup_challenge_params }
+        expect(response.parsed_body).to include("success" => true, "active" => true)
+
+        post "/u/create_second_factor_totp.json"
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+      end
+
+      it "rejects signup for an email other than the one verified by the provider" do
+        SiteSetting.enable_local_logins = false
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to have_http_status(:found)
+
+        other_email = "other@example.com"
+        post "/u.json", params: { email: other_email, username:, name:, **signup_challenge_params }
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(User.find_by_email(other_email)).to be_nil
+      end
+
+      it "requires a provider login after activating an unverified signup by email" do
+        SiteSetting.enable_local_logins = false
+        OmniAuth.config.mock_auth[:google_oauth2][:extra][:raw_info][:email_verified] = false
+        get "/auth/google_oauth2/callback.json"
+        expect(response).to have_http_status(:found)
+
+        post "/u.json", params: { email:, username:, name:, **signup_challenge_params }
+        expect(response.parsed_body).to include("success" => true, "active" => false)
+        signup_email = Jobs::CriticalUserEmail.jobs.last.fetch("args").first
+        put "/u/activate-account/#{signup_email.fetch("email_token")}.json",
+            params: signup_challenge_params
+        expect(response).to have_http_status(:ok)
+
+        post "/u/create_second_factor_totp.json"
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+      end
+
       it "redirects with authentication details for the new user" do
         destination_url = "/somepath"
         Rails.application.env_config["omniauth.origin"] = destination_url

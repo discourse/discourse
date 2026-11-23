@@ -1,33 +1,37 @@
-import { service } from "@ember/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default class PreferencesSecondFactor extends RestrictedUserRoute {
-  @service router;
-
   model() {
     return this.modelFor("user");
   }
 
-  setupController(controller, model) {
-    controller.setProperties({ model, newUsername: model.username });
-    controller.set("loading", true);
+  afterModel(user) {
+    if (!this.isCurrentUser(user)) {
+      if (
+        this.currentUser?.enforcedSecondFactor &&
+        !this.currentUser.is_anonymous
+      ) {
+        this.router.replaceWith("preferences.second-factor", this.currentUser);
+      } else {
+        this.router.replaceWith("userActivity");
+      }
+    } else if (user.is_anonymous) {
+      this.router.replaceWith("userActivity");
+    }
+  }
 
-    model
-      .loadSecondFactorCodes()
-      .then((response) => {
-        if (response.error) {
-          controller.set("errorMessage", response.error);
-        } else if (response.unconfirmed_session) {
-          this.router.transitionTo("preferences.security");
-        } else {
-          controller.setProperties({
-            errorMessage: null,
-            totps: response.totps,
-            security_keys: response.security_keys,
-          });
-        }
-      })
-      .catch(controller.popupAjaxError)
-      .finally(() => controller.set("loading", false));
+  setupController(controller, model, transition) {
+    super.setupController(controller, model, transition);
+    controller.markDirty();
+    controller.loadSecondFactors({
+      onEntry: true,
+      confirmOnEntry: transition.data.confirmSecondFactorSession,
+    });
+  }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.resetFactorLoad();
+    }
   }
 }

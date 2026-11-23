@@ -7987,7 +7987,10 @@ RSpec.describe UsersController do
 
             post "/users/create_second_factor_totp.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -7999,7 +8002,10 @@ RSpec.describe UsersController do
 
             post "/users/create_second_factor_totp.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8296,7 +8302,10 @@ RSpec.describe UsersController do
 
             put "/users/second_factors_backup.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8308,7 +8317,10 @@ RSpec.describe UsersController do
 
             put "/users/second_factors_backup.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8660,6 +8672,15 @@ RSpec.describe UsersController do
         sign_in(user1)
       end
 
+      it "does not modify a first-factor passkey" do
+        passkey = Fabricate(:passkey_with_random_credential, user: user1, name: "Original name")
+
+        put "/u/security_key.json", params: { id: passkey.id, name: "new name", disable: "true" }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(passkey.reload).to have_attributes(name: "Original name", enabled: true)
+      end
+
       it "returns 400 for an invalid security key id" do
         put "/u/security_key.json", params: { id: 0, disable: "true" }
         expect(response.status).to eq(400)
@@ -8970,18 +8991,20 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = true
       end
 
-      it "does not allow access" do
+      it "requires a recent external login" do
         post "/u/second_factors.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["external_login_required"]).to eq(true)
       end
     end
 
     context "when local logins are not enabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "does not allow access" do
+      it "requires a recent external login" do
         post "/u/second_factors.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["external_login_required"]).to eq(true)
       end
     end
 

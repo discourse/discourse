@@ -66,26 +66,27 @@ export default <template>
       <UserPasskeys @model={{@model}} />
     {{/if}}
 
-    {{#if @controller.isCurrentUser}}
-      <div
-        class="control-group pref-second-factor"
-        data-setting-name="user-second-factor"
-      >
-        <label class="control-label">{{i18n "user.second_factor.title"}}</label>
-        <div class="instructions">
-          {{i18n "user.second_factor.short_description"}}
-        </div>
+  {{/if}}
 
-        <div class="controls pref-second-factor">
-          <DButton
-            class="btn-default btn-second-factor"
-            @action={{@controller.manage2FA}}
-            @icon="lock"
-            @label="user.second_factor.enable"
-          />
-        </div>
+  {{#if @controller.canManageSecondFactors}}
+    <div
+      class="control-group pref-second-factor"
+      data-setting-name="user-second-factor"
+    >
+      <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+      <div class="instructions">
+        {{i18n "user.second_factor.short_description"}}
       </div>
-    {{/if}}
+
+      <div class="controls pref-second-factor">
+        <DButton
+          class="btn-default btn-second-factor"
+          @action={{@controller.manage2FA}}
+          @icon="lock"
+          @label="user.second_factor.enable"
+        />
+      </div>
+    </div>
   {{/if}}
 
   <PluginOutlet @name="user-preferences-security-after-password" />

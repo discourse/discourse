@@ -97,7 +97,12 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif invite_required?
       @auth_result.requires_invite = true
     else
-      server_session[:authentication] = @auth_result.session_data
+      signup_authentication = @auth_result.session_data
+      if @auth_result.email_valid
+        expires_at = Auth::SecondFactorEnrollment::PROOF_LIFETIME.from_now.to_i
+        signup_authentication[:enrollment_proof_expires_at] = expires_at
+      end
+      server_session[:authentication] = signup_authentication
     end
 
     return render_auth_result_failure if @auth_result.failed?
@@ -286,6 +291,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
 
     log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
+    Auth::SecondFactorEnrollment.mark_external_login!(request, user)
     Invite.invalidate_for_email(user.email)
     server_session.delete(:authentication)
     @auth_result.authenticated = true
