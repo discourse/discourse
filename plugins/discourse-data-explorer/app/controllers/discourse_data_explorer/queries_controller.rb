@@ -21,5 +21,19 @@ module DiscourseDataExplorer
         on_failure { render_service_failure(result) }
       end
     end
+
+    def update
+      UpdateQuery.call(service_params) do |result|
+        on_success { |query:| render_document(query) }
+        on_failed_policy(:can_update_query) { raise Discourse::InvalidAccess }
+        on_model_not_found(:query) { raise Discourse::NotFound }
+        on_failed_contract { |contract| render_validation_errors(contract.errors) }
+        on_failed_policy(:requested_groups_exist) { raise Discourse::NotFound }
+        on_exceptions(ActiveRecord::RecordInvalid) do |error|
+          render_validation_errors(error.record.errors)
+        end
+        on_failure { render_service_failure(result) }
+      end
+    end
   end
 end

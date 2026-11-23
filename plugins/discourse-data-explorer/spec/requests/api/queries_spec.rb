@@ -236,6 +236,76 @@ RSpec.describe "JSON:API queries", type: :request do
     end
   end
 
+  describe "#update" do
+    subject(:update_query) do
+      patch "/api/data-explorer/queries/#{query.id}", params: document.to_json, headers:
+    end
+
+    fab!(:query) { Fabricate(:query, name: "Before", sql: "SELECT 42") }
+    fab!(:previous_group, :group)
+
+    let(:headers) { super().merge("CONTENT_TYPE" => JsonApiKit::MediaType::JSON_API) }
+    let(:document) { { "data" => primary } }
+    let(:primary) do
+      {
+        "type" => "queries",
+        "id" => query.id.to_s,
+        "attributes" => attributes,
+        "relationships" => relationships,
+      }
+    end
+    let(:attributes) { { "name" => "After" } }
+    let(:relationships) do
+      { "groups" => { "data" => [{ "type" => "groups", "id" => analysts.id.to_s }] } }
+    end
+    let(:stored_query) { DiscourseDataExplorer::Query.find_by(id: query.id) }
+
+    before do
+      query.groups = [previous_group]
+      DiscourseDataExplorer::QueryTag.sync!(query:, names: ["staff"])
+    end
+
+    it "updates the query with the supplied fields", :aggregate_failures do
+      update_query
+
+      expect(response).to have_http_status(:ok)
+      expect(parsed_body.dig("data", "attributes", "name")).to eq("After")
+      expect(query.reload).to have_attributes(name: "After", sql: "SELECT 42")
+      expect(query.group_ids).to contain_exactly(analysts.id)
+      expect(query.tags.pluck(:name)).to contain_exactly("staff")
+    end
+
+    context "when the query is a persisted default" do
+      let(:stored_definition) do
+        { "name" => "Stored report", "description" => "Stored description", "sql" => "SELECT 17" }
+      end
+      let(:query) { Fabricate(:query, id: -1, **stored_definition.symbolize_keys) }
+      let(:attributes) do
+        {
+          "name" => "",
+          "description" => "Submitted description",
+          "sql" => nil,
+          "tags" => ["Monthly"],
+        }
+      end
+
+      it "preserves the stored definition", :aggregate_failures do
+        update_query
+
+        expect(response).to have_http_status(:ok)
+        expect(parsed_body.dig("data", "attributes")).to include(stored_definition)
+        expect(stored_query.attributes).to include(stored_definition)
+      end
+
+      it "updates group access and tags", :aggregate_failures do
+        update_query
+
+        expect(stored_query.groups).to contain_exactly(analysts)
+        expect(stored_query.tag_names).to contain_exactly("default", "users", "monthly")
+      end
+    end
+  end
+
   describe "GET /index" do
     include_context "with existing queries"
 

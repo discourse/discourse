@@ -24,6 +24,39 @@ RSpec.describe DiscourseDataExplorer::Query do
     end
   end
 
+  describe ".visible" do
+    subject(:queries) { described_class.visible }
+
+    fab!(:visible_query, :query)
+    fab!(:hidden_query) { Fabricate(:query, hidden: true) }
+
+    it "returns only visible queries" do
+      expect(queries).to contain_exactly(visible_query)
+    end
+  end
+
+  describe "#default?" do
+    subject(:query) { described_class.new(id:) }
+
+    context "when the ID is negative" do
+      let(:id) { -1 }
+
+      it { is_expected.to be_default }
+    end
+
+    context "when the ID is positive" do
+      let(:id) { 1 }
+
+      it { is_expected.not_to be_default }
+    end
+
+    context "when the ID is nil" do
+      let(:id) { nil }
+
+      it { is_expected.not_to be_default }
+    end
+  end
+
   describe "#tag_names" do
     it "includes automatic tags for bundled queries" do
       expect(DiscourseDataExplorer::Query.find(-42).tag_names).to eq(%w[default traffic])

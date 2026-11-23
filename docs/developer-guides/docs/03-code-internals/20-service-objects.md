@@ -330,7 +330,7 @@ This matcher expects the service to succeed.
 **Arguments**
 
 - _name_: the name of the contract, in the case there is more than one. Defaults to `default`.
-- _default_values_from_: name of a model to use to pre-fill the contract values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
+- _default_values_from_: context key for the model or hash that supplies default values. This is useful when you want some values of a model to be updated through a contract while applying other default values. A real-world example is available in the [`Chat::UpdateChannel`](https://github.com/discourse/discourse/blob/main/plugins/chat/app/services/chat/update_channel.rb#L39) service.
 - _base_class_: the base class to use for the contract. This is particularly useful for reusing an existing contract (for example, you could have very similar contracts between a `Create` and a `Update` service). Defaults to `Service::ContractBase`.
 - _from_resource_: a resource whose writable attributes and relationships define the contract parameters.
 - _only_: parameter names to import. Accepts strings or symbols. An empty array imports nothing.
@@ -363,6 +363,8 @@ The contract also defines `user_provided?` and `groups_provided?`. These use [`p
 ID types come from the related resource's adapter, including the type of each array element. A supplied ID that casts to `nil` is invalid unless the caller supplied `nil` explicitly. ID arrays reject `nil` elements.
 
 The service must still check that related records exist, authorize access, and update the associations.
+
+With `params(default_values_from: :user)`, `model` returns the original `user` model or hash from the service context. A validation can compare a submitted value with the original, for example `email != model.email`. Request parameters cannot set `model`. Contracts without `default_values_from:` and nested contracts return `nil` from `model`.
 
 With `default_values_from`, nested hashes are merged recursively. Supplied values override model values, including `nil`, `false`, and `0`. An empty hash keeps the defaults at that level. A supplied array replaces the whole model array; an empty array clears it.
 
