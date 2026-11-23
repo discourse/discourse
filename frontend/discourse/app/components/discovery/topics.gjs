@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import EmptyCategory from "discourse/components/discovery/empty-category";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
@@ -102,6 +103,23 @@ export default class DiscoveryTopics extends Component {
 
   get showTopicPostBadges() {
     return !this.new || this.currentUser?.unified_new_enabled;
+  }
+
+  // The category's own "About" topic and system-generated topics don't count
+  // as conversations.
+  get showEmptyCategory() {
+    const category = this.args.category;
+
+    if (!category || this.args.tag || !this.latest || !this.allLoaded) {
+      return false;
+    }
+
+    const aboutTopicId = Number(category.topic_url?.split("/").pop());
+
+    // System and bot accounts have ids <= 0.
+    return (this.args.model.topics ?? []).every(
+      (topic) => topic.id === aboutTopicId || topic.creator?.id <= 0
+    );
   }
 
   get showEmptyFilterEducationInFooter() {
@@ -256,6 +274,14 @@ export default class DiscoveryTopics extends Component {
           @outletArgs={{lazyHash category=@category tag=@tag}}
         />
       </span>
+
+      {{#if this.showEmptyCategory}}
+        <EmptyCategory
+          @category={{@category}}
+          @createTopic={{@createTopic}}
+          @createTopicDisabled={{@createTopicDisabled}}
+        />
+      {{/if}}
 
       {{#if this.hasTopics}}
         <List
