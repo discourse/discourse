@@ -1,24 +1,13 @@
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import ReviewIndex from "discourse/components/reviewable/index";
+import ReviewableNav from "discourse/components/reviewable/nav";
 import DButton from "discourse/ui-kit/d-button";
-import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
-import DNavItem from "discourse/ui-kit/d-nav-item";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  <DHorizontalOverflowNav class="reviewable-title" @ariaLabel="Review">
-    <DNavItem @label="review.view_all" @route="review.index" />
-    <DNavItem @label="review.grouped_by_topic" @route="review.topics" />
-    {{#if @controller.currentUser.admin}}
-      <DNavItem
-        @icon="wrench"
-        @label="review.settings.title"
-        @route="review.settings"
-      />
-    {{/if}}
-  </DHorizontalOverflowNav>
+  <ReviewableNav />
   {{#if @controller.displayUnknownReviewableTypesWarning}}
     <div class="alert alert-info unknown-reviewables">
       <span class="text">{{i18n
