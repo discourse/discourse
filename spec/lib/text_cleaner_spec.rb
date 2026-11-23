@@ -189,6 +189,8 @@ RSpec.describe TextCleaner do
 
       it "capitalizes first letter" do
         expect(TextCleaner.clean_title("hello there")).to eq("Hello there")
+        expect(TextCleaner.clean_title("Hello there")).to eq("Hello there")
+        expect(TextCleaner.clean_title("hELLO there")).to eq("hELLO there")
       end
 
       it "removes unnecessary period at the end" do
