@@ -2,7 +2,6 @@
 
 class AdminUserSerializer < AdminUserListSerializer
   attributes :name,
-             :interactive_bot,
              :associated_accounts,
              :can_send_activation_email,
              :can_activate,

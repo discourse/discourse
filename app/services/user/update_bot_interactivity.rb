@@ -3,8 +3,9 @@
 class User::UpdateBotInteractivity
   include Service::Base
 
-  params(base_class: User::BotInteractivityContract) do
+  params do
     attribute :user_id, :integer
+    attribute :interactive_bot, :boolean, default: false
 
     validates :user_id, presence: true
   end
@@ -38,7 +39,7 @@ class User::UpdateBotInteractivity
   end
 
   def update_interactivity(params:, user:)
-    user.update!(interactive_bot: params.interactive_bot_enabled?)
+    user.update!(interactive_bot: params.interactive_bot)
   end
 
   def interactivity_changed(user:)
