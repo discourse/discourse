@@ -1275,12 +1275,12 @@ class User < ActiveRecord::Base
   end
 
   def self.username_hash(username)
-    username
-      .each_char
-      .reduce(0) do |result, char|
-        [((result << 5) - result) + char.ord].pack("L").unpack("l").first
-      end
-      .abs
+    result = 0
+    username.each_codepoint do |cp|
+      result = (((result << 5) - result) + cp) & 0xFFFFFFFF
+      result -= 0x100000000 if result >= 0x80000000
+    end
+    result.abs
   end
 
   def self.default_template(username)
@@ -1317,6 +1317,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  LETTER_AVATAR_HEX_COLORS =
+    LetterAvatar::COLORS.map { |r, g, b| format("%02x%02x%02x", r, g, b) }.freeze
+  private_constant :LETTER_AVATAR_HEX_COLORS
+
   def self.letter_avatar_color(username)
     username ||= ""
     if SiteSetting.restrict_letter_avatar_colors.present?
@@ -1327,13 +1331,12 @@ class User < ActiveRecord::Base
       index = (num * hex_length) + num
       colors[index, hex_length]
     else
-      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
-      color.map { |c| c.to_s(16).rjust(2, "0") }.join
+      LETTER_AVATAR_HEX_COLORS[color_index(username, LETTER_AVATAR_HEX_COLORS.length)]
     end
   end
 
   def self.color_index(username, length)
-    Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
+    (Digest::MD5.digest(username).unpack1("Q>") >> 4) % length
   end
 
   def is_system_user?
