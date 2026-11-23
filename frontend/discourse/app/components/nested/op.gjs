@@ -85,7 +85,7 @@ export default class NestedOp extends Component {
   async toggleLike() {
     const post = this.args.post;
     const likeAction = post.likeAction;
-    if (likeAction?.canToggle) {
+    if (post.canToggleLike) {
       try {
         await likeAction.togglePromise(post);
       } catch (e) {

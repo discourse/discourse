@@ -438,6 +438,19 @@ describe "Post menu" do
   end
 
   describe "like" do
+    it "lets a user outside the allowed groups remove an existing like" do
+      liked_post = Fabricate(:post, topic:)
+      PostActionCreator.like(user, liked_post)
+      SiteSetting.like_allowed_groups = Fabricate(:group).id.to_s
+      sign_in(user)
+      topic_page.visit_topic(liked_post.topic)
+
+      topic_page.click_post_action_button(liked_post, :like)
+
+      expect(topic_page).to have_no_post_action_button(liked_post, :like)
+      expect(liked_post.reload.like_count).to eq(0)
+    end
+
     it "toggles liking a post" do
       unliked_post = Fabricate(:post, topic: topic, like_count: 0)
 

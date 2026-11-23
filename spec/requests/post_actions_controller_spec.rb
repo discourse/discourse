@@ -98,6 +98,28 @@ RSpec.describe PostActionsController do
   end
 
   describe "#create" do
+    it "restricts new likes to allowed groups while keeping old likes removable" do
+      group = Fabricate(:group)
+      target = Fabricate(:post)
+      like_action = PostActionType.types[:like]
+      sign_in(user)
+
+      post "/post_actions.json", params: { id: target.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+
+      SiteSetting.like_allowed_groups = group.id.to_s
+      delete "/post_actions/#{target.id}.json", params: { post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+
+      post "/post_actions.json", params: { id: target.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:forbidden)
+      expect(target.reload.like_count).to eq(0)
+
+      group.add(user)
+      post "/post_actions.json", params: { id: target.id, post_action_type_id: like_action }
+      expect(response).to have_http_status(:ok)
+    end
+
     it "requires you to be logged in" do
       post "/post_actions.json"
       expect(response.status).to eq(403)

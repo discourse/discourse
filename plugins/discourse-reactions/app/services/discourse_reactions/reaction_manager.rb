@@ -26,21 +26,31 @@ module DiscourseReactions
     end
 
     def toggle!
-      raise Discourse::InvalidAccess unless @user.guardian.can_use_reactions?(@post)
+      guardian = @user.guardian
+      removal_only = guardian.post_likes_restricted?
+      if removal_only
+        raise Discourse::InvalidAccess unless can_remove_existing_reaction?(guardian)
+      else
+        raise Discourse::InvalidAccess unless guardian.can_use_reactions?(@post)
+      end
 
-      if (@like && !@user.guardian.can_delete_post_action?(@like)) ||
-           (reaction_user && !@user.guardian.can_delete_reaction_user?(reaction_user))
+      if (@like && !guardian.can_delete_post_action?(@like)) ||
+           (reaction_user && !guardian.can_delete_reaction_user?(reaction_user))
         raise Discourse::InvalidAccess
       end
 
       ActiveRecord::Base
         .transaction do
-          @reaction = reaction_scope&.first_or_create
-          @reaction_user = reaction_user_scope
-          if @reaction_value == DiscourseReactions::Reaction.main_reaction_id
-            toggle_like
+          if removal_only
+            remove_existing_reaction
           else
-            toggle_reaction
+            @reaction = reaction_scope.first_or_create
+            @reaction_user = reaction_user_scope
+            if @reaction_value == DiscourseReactions::Reaction.main_reaction_id
+              toggle_like
+            else
+              toggle_reaction
+            end
           end
         end
         .tap do
@@ -49,6 +59,24 @@ module DiscourseReactions
     end
 
     private
+
+    def can_remove_existing_reaction?(guardian)
+      @previous_reaction_value.present? && @previous_reaction_value == @reaction_value &&
+        guardian.can_see?(@post) && !@post.trashed? && !@post.topic&.archived? &&
+        !guardian.is_silenced? &&
+        (!guardian.is_anonymous? || SiteSetting.allow_likes_in_anonymous_mode?)
+    end
+
+    def remove_existing_reaction
+      @reaction = reaction_scope.first
+      @reaction_user = reaction_user
+      if @reaction_user
+        remove_reaction if @reaction_user.reaction_id == @reaction&.id
+      elsif @like && @reaction_value == DiscourseReactions::Reaction.main_reaction_id
+        @reaction ||= reaction_scope.new
+        remove_shadow_like
+      end
+    end
 
     def toggle_like
       if reaction_user.present?

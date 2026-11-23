@@ -298,7 +298,7 @@ export default class Post extends Component {
     const post = this.args.post;
     const likeAction = post.likeAction;
 
-    if (likeAction?.canToggle) {
+    if (post.canToggleLike) {
       const result = await likeAction.togglePromise(post);
 
       this.appEvents.trigger("page:like-toggled", post, likeAction);

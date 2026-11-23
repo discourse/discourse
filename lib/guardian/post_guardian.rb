@@ -58,6 +58,8 @@ module PostGuardian
     result =
       if authenticated? && post
         topic = post_topic_including_deleted(post)
+        return false if action_key == :like && post_likes_restricted?
+
         # Allow anonymous users to like if feature is enabled and short-circuit otherwise
         if @user.anonymous?
           return SiteSetting.allow_likes_in_anonymous_mode? && (action_key == :like)
@@ -119,6 +121,11 @@ module PostGuardian
       end
 
     !!result
+  end
+
+  def post_likes_restricted?
+    group_ids = SiteSetting.like_allowed_groups_map
+    group_ids.present? && (!authenticated? || !@user.in_any_groups?(group_ids))
   end
 
   def can_lock_post?(post)
