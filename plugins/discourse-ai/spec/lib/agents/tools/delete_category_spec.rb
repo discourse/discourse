@@ -7,13 +7,45 @@ RSpec.describe DiscourseAi::Agents::Tools::DeleteCategory do
   fab!(:category)
 
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
-  let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
+  let(:conversation) do
+    Fabricate(:private_message_topic, user: admin, recipient: Discourse.system_user)
+  end
+  let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, topic: conversation) }
 
   include_context "with AI bot enabled"
 
   def tool(params = nil, **kwargs)
     params ||= kwargs
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
+  end
+
+  it "rejects shared conversations without disclosing private categories" do
+    category.set_permissions(staff: :full)
+    category.save!
+    shared_dm = Fabricate(:direct_message_channel, users: [admin, Fabricate(:user)])
+    shared_pm = Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user))
+    contexts = [
+      DiscourseAi::Agents::BotContext.new(user: admin, channel_id: Fabricate(:chat_channel).id),
+      DiscourseAi::Agents::BotContext.new(user: admin, channel_id: shared_dm.id),
+      DiscourseAi::Agents::BotContext.new(user: admin, topic: shared_pm),
+      DiscourseAi::Agents::BotContext.new(user: admin, topic: Fabricate(:topic)),
+    ]
+
+    contexts.each do |shared_context|
+      category_tool =
+        described_class.new(
+          { category_id: category.id, reason: "Unused" },
+          bot_user:,
+          llm:,
+          context: shared_context,
+        )
+
+      expect(described_class.available_for_context?(shared_context)).to eq(false)
+      expect(category_tool.invoke[:status]).to eq("error")
+      expect(category_tool.approval_title).not_to include(category.name)
+      expect(category_tool.approval_details).not_to include(category.name)
+    end
+    expect(Category.exists?(category.id)).to eq(true)
   end
 
   it "deletes an empty category and logs it as the context user" do
@@ -96,7 +128,9 @@ RSpec.describe DiscourseAi::Agents::Tools::DeleteCategory do
   end
 
   it "returns an error when the context user cannot edit the category" do
-    context = DiscourseAi::Agents::BotContext.new(user: Fabricate(:user))
+    user = Fabricate(:user)
+    topic = Fabricate(:private_message_topic, user:, recipient: Discourse.system_user)
+    context = DiscourseAi::Agents::BotContext.new(user:, topic:)
     result =
       described_class.new(
         { category_id: category.id, reason: "Nope" },

@@ -30,6 +30,10 @@ module DiscourseAi
           "delete_category"
         end
 
+        def self.available_for_context?(context)
+          FindCategory.available_for_context?(context)
+        end
+
         def self.requires_approval?
           true
         end
@@ -46,6 +50,14 @@ module DiscourseAi
         end
 
         def validation_error
+          if !safe_conversation?
+            return(
+              error_response(
+                I18n.t("discourse_ai.ai_bot.delete_category.errors.private_conversation_required"),
+              )
+            )
+          end
+
           if category.blank? || !guardian.can_see_category?(category)
             return error_response(I18n.t("discourse_ai.ai_bot.delete_category.errors.not_found"))
           end
@@ -69,7 +81,7 @@ module DiscourseAi
           {
             category_name:
               (
-                if category
+                if safe_conversation? && previewable?(category)
                   DiscourseAi::AiBot::ChatToolApproval.format_category(category)
                 else
                   parameters[:category_id]
@@ -79,7 +91,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if !previewable?(category)
+          return super if !safe_conversation? || !previewable?(category)
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.delete_category_title",
@@ -88,7 +100,7 @@ module DiscourseAi
         end
 
         def approval_details
-          return super if !previewable?(category)
+          return super if !safe_conversation? || !previewable?(category)
 
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.delete_category_details")
         end
@@ -102,6 +114,12 @@ module DiscourseAi
         end
 
         private
+
+        def safe_conversation?
+          # Approval replay is authorized separately and has no conversation context.
+          context.reviewable_id.present? ||
+            (context.user.present? && FindCategory.private_conversation?(context))
+        end
 
         def category
           @category ||= Category.find_by(id: parameters[:category_id])

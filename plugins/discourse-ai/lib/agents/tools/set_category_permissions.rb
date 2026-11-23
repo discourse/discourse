@@ -60,6 +60,10 @@ module DiscourseAi
           "set_category_permissions"
         end
 
+        def self.available_for_context?(context)
+          FindCategory.available_for_context?(context)
+        end
+
         def self.requires_approval?
           true
         end
@@ -76,6 +80,16 @@ module DiscourseAi
         end
 
         def validation_error
+          if !safe_conversation?
+            return(
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.set_category_permissions.errors.private_conversation_required",
+                ),
+              )
+            )
+          end
+
           access =
             AdminAssistantAccess.check(feature: FEATURE, user: context.user, phase: execution_phase)
           if !access.allowed
@@ -172,7 +186,7 @@ module DiscourseAi
           {
             category_name:
               (
-                if category
+                if safe_conversation? && previewable?(category)
                   DiscourseAi::AiBot::ChatToolApproval.format_category(category)
                 else
                   parameters[:category_id]
@@ -182,7 +196,7 @@ module DiscourseAi
         end
 
         def approval_title
-          return super if !previewable?(category)
+          return super if !safe_conversation? || !previewable?(category)
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.category_title",
@@ -242,8 +256,15 @@ module DiscourseAi
           @category ||= Category.find_by(id: parameters[:category_id])
         end
 
+        def safe_conversation?
+          # Approval replay is authorized separately and has no conversation context.
+          context.reviewable_id.present? ||
+            (context.user.present? && FindCategory.private_conversation?(context))
+        end
+
         def previewable_change?
-          previewable?(category) && requested_group_names.present? && missing_group_names.empty?
+          safe_conversation? && previewable?(category) && requested_group_names.present? &&
+            missing_group_names.empty?
         end
 
         # [group name, permission type before, permission type after] for each
@@ -323,8 +344,17 @@ module DiscourseAi
             end
         end
 
+        def resolved_permissions
+          @resolved_permissions ||=
+            Category.resolve_permissions(
+              requested_groups.to_h do |name, level|
+                [group_ids_by_name[name.downcase].last, CategoryGroup.permission_types[level]]
+              end,
+            )
+        end
+
         def new_permissions
-          Category.resolve_permissions(permissions).last
+          resolved_permissions.last
         end
 
         def current_permissions
@@ -332,7 +362,7 @@ module DiscourseAi
         end
 
         def new_read_restricted
-          Category.resolve_permissions(permissions).first
+          resolved_permissions.first
         end
 
         def changed?

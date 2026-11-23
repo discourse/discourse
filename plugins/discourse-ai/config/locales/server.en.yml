@@ -1348,6 +1348,7 @@ en:
       set_category_permissions:
         errors:
           unavailable: "Changing category permissions is not available on this site."
+          private_conversation_required: "Category permissions can only be changed in a private conversation with the assistant."
           not_found: "Category not found."
           not_allowed: "You are not allowed to change this category's permissions."
           uncategorized: "The uncategorized category's permissions cannot be changed."
@@ -1362,6 +1363,7 @@ en:
         errors:
           not_found: "Category not found."
           not_allowed: "You are not allowed to delete this category."
+          private_conversation_required: "Categories can only be deleted in a private conversation with the assistant."
           no_reason: "A reason is required to delete a category."
           uncategorized: "The uncategorized category cannot be deleted."
           has_subcategories: "'%{name}' has subcategories, so it cannot be deleted. Delete or move its subcategories first, then delete it from its settings: %{url}"

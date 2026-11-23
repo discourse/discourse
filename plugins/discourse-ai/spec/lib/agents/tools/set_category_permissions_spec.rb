@@ -8,7 +8,10 @@ RSpec.describe DiscourseAi::Agents::Tools::SetCategoryPermissions do
   fab!(:group) { Fabricate(:group, name: "volunteers") }
 
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
-  let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
+  let(:conversation) do
+    Fabricate(:private_message_topic, user: admin, recipient: Discourse.system_user)
+  end
+  let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, topic: conversation) }
   let(:full) { CategoryGroup.permission_types[:full] }
   let(:readonly) { CategoryGroup.permission_types[:readonly] }
   let(:create_post) { CategoryGroup.permission_types[:create_post] }
@@ -18,6 +21,36 @@ RSpec.describe DiscourseAi::Agents::Tools::SetCategoryPermissions do
   def tool(params = nil, **kwargs)
     params ||= kwargs
     described_class.new(params, bot_user: bot_user, llm: llm, context: context)
+  end
+
+  it "rejects shared conversations without disclosing private category permissions" do
+    category.set_permissions(volunteers: :full)
+    category.save!
+    shared_dm = Fabricate(:direct_message_channel, users: [admin, Fabricate(:user)])
+    shared_pm = Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user))
+    contexts = [
+      DiscourseAi::Agents::BotContext.new(user: admin, channel_id: Fabricate(:chat_channel).id),
+      DiscourseAi::Agents::BotContext.new(user: admin, channel_id: shared_dm.id),
+      DiscourseAi::Agents::BotContext.new(user: admin, topic: shared_pm),
+      DiscourseAi::Agents::BotContext.new(user: admin, topic: Fabricate(:topic)),
+    ]
+
+    contexts.each do |shared_context|
+      category_tool =
+        described_class.new(
+          { category_id: category.id, see_groups: ["staff"], reason: "Restrict" },
+          bot_user:,
+          llm:,
+          context: shared_context,
+        )
+
+      expect(described_class.available_for_context?(shared_context)).to eq(false)
+      expect(category_tool.invoke[:status]).to eq("error")
+      expect(category_tool.approval_changes).to eq([])
+      expect(category_tool.approval_title).not_to include(category.name)
+      expect(category_tool.approval_details).not_to include(category.name, group.name)
+    end
+    expect(category.reload.category_groups.pluck(:group_id)).to eq([group.id])
   end
 
   it "makes a public category private to the given groups" do
@@ -110,6 +143,22 @@ RSpec.describe DiscourseAi::Agents::Tools::SetCategoryPermissions do
     expect(link.text).to eq("Board *room*")
   end
 
+  it "previews additional groups without additional queries" do
+    groups = Fabricate.times(5, :group)
+    single_group_tool = tool(category_id: category.id, see_groups: [group.name], reason: "Restrict")
+    many_groups_tool =
+      tool(
+        category_id: category.id,
+        see_groups: [group.name, *groups.map(&:name)],
+        reason: "Restrict",
+      )
+
+    single_group_queries = track_sql_queries { single_group_tool.approval_changes }
+    many_groups_queries = track_sql_queries { many_groups_tool.approval_changes }
+
+    expect(many_groups_queries.size).to eq(single_group_queries.size)
+  end
+
   it "only lists groups whose access changes" do
     category.set_permissions(volunteers: :full, staff: :full)
     category.save!
@@ -160,7 +209,10 @@ RSpec.describe DiscourseAi::Agents::Tools::SetCategoryPermissions do
       Fabricate(:group, name: "board", visibility_level: Group.visibility_levels[:owners])
     end
 
-    let(:context) { DiscourseAi::Agents::BotContext.new(user: moderator) }
+    let(:conversation) do
+      Fabricate(:private_message_topic, user: moderator, recipient: Discourse.system_user)
+    end
+    let(:context) { DiscourseAi::Agents::BotContext.new(user: moderator, topic: conversation) }
 
     before { SiteSetting.moderators_manage_categories = true }
 
@@ -265,7 +317,9 @@ RSpec.describe DiscourseAi::Agents::Tools::SetCategoryPermissions do
   end
 
   it "returns an error when the context user cannot edit the category" do
-    context = DiscourseAi::Agents::BotContext.new(user: Fabricate(:user))
+    user = Fabricate(:user)
+    topic = Fabricate(:private_message_topic, user:, recipient: Discourse.system_user)
+    context = DiscourseAi::Agents::BotContext.new(user:, topic:)
     result =
       described_class.new(
         { category_id: category.id, see_groups: ["staff"], reason: "Nope" },
