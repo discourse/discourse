@@ -895,7 +895,13 @@ class User < ActiveRecord::Base
     query = notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
     if max_notification_id = query.maximum(:id)
-      update!(seen_notification_id: max_notification_id)
+      self
+        .class
+        .where(id:)
+        .where("seen_notification_id < ?", max_notification_id)
+        .update_all(seen_notification_id: max_notification_id)
+      self.seen_notification_id = max_notification_id
+      clear_attribute_changes([:seen_notification_id])
       true
     else
       false
