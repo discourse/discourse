@@ -13,6 +13,10 @@ module SecondFactor::Actions
       @opts = ActiveSupport::HashWithIndifferentAccess.new(opts)
     end
 
+    def challenge_scope
+      nil
+    end
+
     def skip_second_factor_auth?(params)
       false
     end

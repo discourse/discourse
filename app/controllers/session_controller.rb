@@ -80,6 +80,8 @@ class SessionController < ApplicationController
     result =
       run_second_factor!(
         SecondFactor::Actions::DiscourseConnectProvider,
+        # A provider request resumed by login starts its own action.
+        nonce: payload ? nil : params[:second_factor_nonce].presence,
         action_data: {
           payload: payload,
           confirmed_2fa_during_login: confirmed_2fa_during_login,
@@ -600,7 +602,8 @@ class SessionController < ApplicationController
         SecondFactor::AuthManager.find_second_factor_challenge(
           nonce: nonce,
           server_session:,
-          target_user: current_user,
+          request:,
+          current_user:,
         )
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
@@ -615,7 +618,9 @@ class SessionController < ApplicationController
         backup_enabled: user.backup_codes_enabled?,
         allowed_methods: challenge[:allowed_methods],
       )
-      passkeys_for_2fa = user.passkeys_available_as_second_factor?
+      passkeys_for_2fa =
+        challenge[:allowed_methods].include?(UserSecondFactor.methods[:passkey]) &&
+          user.passkeys_available_as_second_factor?
       if user.security_keys_enabled? || passkeys_for_2fa
         DiscourseWebauthn.stage_challenge(user, server_session)
         json.merge!(
@@ -648,67 +653,33 @@ class SessionController < ApplicationController
 
   def second_factor_auth_perform
     nonce = params.require(:nonce)
-    challenge = nil
-    error_key = nil
-    user = nil
-    status_code = 200
-    begin
-      challenge =
-        SecondFactor::AuthManager.find_second_factor_challenge(
-          nonce: nonce,
-          server_session:,
-          target_user: current_user,
-        )
-      user = User.find(challenge[:target_user_id])
-    rescue SecondFactor::BadChallenge => exception
-      error_key = exception.error_translation_key
-      status_code = exception.status_code
-    end
+    challenge =
+      SecondFactor::AuthManager.find_second_factor_challenge(
+        nonce:,
+        server_session:,
+        request:,
+        current_user:,
+      )
+    user = User.find(challenge.fetch(:target_user_id))
 
-    if error_key
-      json =
-        failed_json.merge(
-          ok: false,
-          error: I18n.t(error_key),
-          reason: "challenge_not_found_or_expired",
-        )
-      render json: failed_json.merge(json), status: status_code
-      return
-    end
-
-    # no proper error messages for these cases because the only way they can
-    # happen is if someone is messing with us.
-    # the first one can only happen if someone disables a 2FA method after
-    # they're redirected to the 2fa page and then uses the same method they've
-    # disabled.
     second_factor_method = params[:second_factor_method].to_i
-    if !user.valid_second_factor_method_for_user?(second_factor_method)
-      raise Discourse::InvalidAccess.new
-    end
-    # and this happens if someone tries to use a 2FA method that's not accepted
-    # for the action they're trying to perform. e.g. using backup codes to
-    # grant someone admin status.
-    if !challenge[:allowed_methods].include?(second_factor_method)
-      raise Discourse::InvalidAccess.new
+    raise Discourse::InvalidAccess if challenge[:allowed_methods].exclude?(second_factor_method)
+    unless user.valid_second_factor_method_for_user?(second_factor_method)
+      raise Discourse::InvalidAccess
     end
 
     if !challenge[:successful]
       rate_limit_second_factor!(user)
       second_factor_auth_result = user.authenticate_second_factor(params, server_session)
-      if second_factor_auth_result.ok
-        challenge[:successful] = true
-        challenge[:generated_at] += 1.minute.to_i
-        server_session["current_second_factor_auth_challenge"] = challenge.to_json
-      else
-        error_json =
-          second_factor_auth_result
-            .to_h
-            .deep_symbolize_keys
-            .slice(:ok, :error, :reason)
-            .merge(failed_json)
-        render json: error_json, status: :bad_request
-        return
+      unless second_factor_auth_result.ok
+        error = second_factor_auth_result.to_h.slice(:ok, :error, :reason)
+        return render json: failed_json.merge(error), status: :bad_request
       end
+      # A no-factor login also returns OK. It isn't proof for a pending challenge.
+      unless second_factor_auth_result.used_2fa_method == second_factor_method
+        raise Discourse::InvalidAccess
+      end
+      SecondFactor::AuthManager.mark_challenge_successful!(challenge, server_session:)
     end
     render json: {
              ok: true,
@@ -717,6 +688,14 @@ class SessionController < ApplicationController
              redirect_url: challenge[:redirect_url],
            },
            status: :ok
+  rescue SecondFactor::BadChallenge => error
+    render json:
+             failed_json.merge(
+               ok: false,
+               error: I18n.t(error.error_translation_key),
+               reason: "challenge_not_found_or_expired",
+             ),
+           status: error.status_code
   end
 
   def forgot_password

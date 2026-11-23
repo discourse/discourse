@@ -16,6 +16,17 @@ class ServerSession
     end
   end
 
+  COMPARE_AND_SET = DiscourseRedis::EvalHelper.new <<~LUA
+    if redis.call('GET', KEYS[1]) ~= ARGV[1] then return 0 end
+    if ARGV[2] then
+      redis.call('SET', KEYS[1], ARGV[2], 'KEEPTTL')
+    else
+      redis.call('DEL', KEYS[1])
+    end
+    return 1
+  LUA
+  private_constant :COMPARE_AND_SET
+
   def initialize(prefix)
     @prefix = prefix
   end
@@ -32,6 +43,16 @@ class ServerSession
       ActiveSupport::MessagePack.load(raw)
     rescue StandardError
       raw
+    end
+  end
+
+  # Replace a previously read value without extending its lifetime. A nil replacement deletes it.
+  def compare_and_set(key, expected:, replacement:)
+    redis = Discourse.redis
+    args = [ActiveSupport::MessagePack.dump(expected)]
+    args << ActiveSupport::MessagePack.dump(replacement) unless replacement.nil?
+    DiscourseRedis.ignore_readonly do
+      COMPARE_AND_SET.eval(redis, [redis.namespace_key(prefixed_key(key))], args) == 1
     end
   end
 
