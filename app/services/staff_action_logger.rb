@@ -45,7 +45,21 @@ class StaffActionLogger
         action: UserHistory.actions[:create_bot],
         target_user_id: user.id,
         subject: user.username,
-        details: "trust_level: #{user.trust_level}",
+        details: "trust_level: #{user.trust_level}\ninteractive_bot: #{user.interactive_bot}",
+      ),
+    )
+  end
+
+  def log_bot_interactivity_change(user)
+    previous_value, new_value = user.saved_change_to_interactive_bot
+
+    UserHistory.create!(
+      params.merge(
+        action: UserHistory.actions[:change_bot_interactivity],
+        target_user_id: user.id,
+        subject: user.username,
+        previous_value: previous_value.to_s,
+        new_value: new_value.to_s,
       ),
     )
   end

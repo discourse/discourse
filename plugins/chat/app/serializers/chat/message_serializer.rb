@@ -32,6 +32,7 @@ module Chat
             thread_title
             pinned
             is_action
+            broadcasted
           ]
       ),
     )
@@ -145,7 +146,10 @@ module Chat
     end
 
     def include_in_reply_to?
-      object.in_reply_to_id.presence
+      return false if object.in_reply_to_id.blank?
+      return true if object.thread_id.blank?
+      return true if scope&.can_moderate_chat?(channel_object.chatable)
+      object.thread&.original_message.present? && !object.thread.original_message.trashed?
     end
 
     def reviewable_id
@@ -220,11 +224,19 @@ module Chat
     end
 
     def include_thread?
-      include_thread_id? && object.thread_om? && object.thread.present?
+      return false if !include_thread_id? || !object.thread_om? || object.thread.blank?
+
+      # The thread carries its title and a preview of the last reply, which stay
+      # hidden while the original message is trashed.
+      !object.trashed? || scope.can_moderate_chat?(channel_object.chatable)
     end
 
     def include_thread_title?
       include_thread_id? && !object.thread_om? && object.thread.present?
+    end
+
+    def include_broadcasted?
+      object.broadcasted?
     end
 
     def thread_title

@@ -32,14 +32,6 @@ function sortParticipants(participants) {
   });
 }
 
-// Speaking flips several times per utterance, so it lives outside the room
-// payloads: mutating one tracked flag re-renders only the bindings that read
-// it, instead of invalidating `rooms` and rebuilding every sidebar link and
-// tile on each flip.
-class ParticipantSpeakingState {
-  @tracked speaking = false;
-}
-
 export default class LiveRoomsService extends Service {
   @service currentUser;
   @service messageBus;
@@ -53,6 +45,10 @@ export default class LiveRoomsService extends Service {
   #roomsBySlug = new Map();
   #roomSubscriptions = new Map();
   #roomHandlers = new Map();
+  // Speaking flips several times per utterance, so it lives outside the room
+  // payloads: flipping one tracked flag re-renders only the bindings that read
+  // it, instead of invalidating `rooms` and rebuilding every sidebar link and
+  // tile on each flip.
   #speakingByKey = new Map();
 
   constructor() {
@@ -247,14 +243,11 @@ export default class LiveRoomsService extends Service {
   }
 
   isParticipantSpeaking(roomId, userId) {
-    return this.#speakingState(roomId, userId).speaking;
+    return this.#speakingState(roomId, userId).value;
   }
 
   setParticipantSpeaking(roomId, userId, speaking) {
-    const state = this.#speakingState(roomId, userId);
-    if (state.speaking !== !!speaking) {
-      state.speaking = !!speaking;
-    }
+    this.#speakingState(roomId, userId).value = !!speaking;
   }
 
   setParticipantMuted(roomId, userId, muted) {
@@ -584,7 +577,7 @@ export default class LiveRoomsService extends Service {
     const key = `${roomId}:${Number(userId)}`;
     let state = this.#speakingByKey.get(key);
     if (!state) {
-      state = new ParticipantSpeakingState();
+      state = tracked(false);
       this.#speakingByKey.set(key, state);
     }
     return state;

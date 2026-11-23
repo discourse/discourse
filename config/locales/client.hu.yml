@@ -5201,7 +5201,6 @@ hu:
         other: "Vázlatok (%{count})"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, a biztonságos módból való kilépéshez zárja be ezt a keresési lapot"
-    theme_preview_notice: "Épp egy téma előnézetét nézi, zárba be a böngészőlapot vagy ablakot, hogy visszatérjen a webhelykonfigurációhoz."
     theme_preview_failed: "Nem sikerült megtekinteni a témát, mert nem létezik, vagy nincs hozzáférési jogosultsága."
     image_removed: "(kép eltávolítva)"
     pause_notifications:
@@ -8284,6 +8283,8 @@ hu:
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
         search_label: "Keresés"
+        preview:
+          default: "Alapértelmezett"
         theme_disabled: "Kikapcsolva"
         filters: "Szűrők"
         status:
@@ -8450,7 +8451,7 @@ hu:
           modal_title: Jelvénycsoportok
         granted_by: Megadta
         granted_at: Megadta
-        reason_help: (Hivatkozás egy bejegyzéshez vagy témához)
+        reason_help: Hivatkozás egy bejegyzéshez vagy témához
         save: Mentés
         delete: Törlés
         delete_confirm: Biztos, hogy törli ezt a jelvényt?

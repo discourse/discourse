@@ -62,11 +62,9 @@ pl_PL:
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
           body: |
-            Cześć @%{username},
+            Cześć, @%{username},
 
-            Twój post w „%{topic_title}” został tymczasowo usunięty i umieszczony w kolejce do sprawdzenia przez moderatora. Po zatwierdzeniu zostanie automatycznie przywrócony.
-
-            Źródło: %{post_url}
+            Twój wpis w „%{topic_title}” został tymczasowo usunięty i umieszczony w kolejce do sprawdzenia przez moderatora. Po zatwierdzeniu zostanie automatycznie przywrócony i będziesz mógł ponownie [wyświetlić swój wpis](%{base_url}%{post_url}).
       llm_report:
         title: Raport okresowy z wykorzystaniem AI
         description: "Okresowy raport oparty na dużym modelu językowym"
@@ -368,6 +366,7 @@ pl_PL:
           invalid_arguments: "Argumenty narzędzia AI są nieprawidłowe"
           invalid_schema: "Narzędzie zwróciło schemat argumentów, którego nie można rozwiązać."
           llm_not_found: "Wybrany model języka nie został znaleziony."
+          failed: "Narzędzie AI zawiodło."
       ai_agent:
         errors:
           invalid_mode: "„%{mode}” nie jest obsługiwanym trybem wykonywania agenta AI."
@@ -667,6 +666,9 @@ pl_PL:
         revert_appearance_title: "Przełącz z powrotem z: %{name}"
         revert_appearance_details: "Przywraca wygląd witryny sprzed uruchomienia %{name}."
         revert_appearance_question: "Czy chcesz powrócić do poprzedniej wersji?"
+        install_theme_title: "Zainstaluj motyw: %{name}"
+        install_theme_details: "%{description} Instaluje go z %{remote_url}, który jest utrzymywany przez Discourse, bez ustawiania go jako domyślnego motywu, dzięki czemu można go najpierw podejrzeć. Uruchamia własny kod i ma własny układ oraz palety barw."
+        install_theme_question: "Czy chcesz zainstalować ten motyw?"
         topic_status_label: "Zmiana statusu:"
         topic_visibility_label: "Zmiana widoczności:"
         topic_solution_label: "Zmiana rozwiązania:"
@@ -959,6 +961,7 @@ pl_PL:
           help: "Umożliwia modelowi pisanie i uruchamianie kodu Python w piaskownicy dostawcy, gdy agent jest wymuszony do obsługiwanego Gemini LLM."
       tool_summary:
         theme_app_handoff: "Sprawdzanie, jak tworzyć motywy za pomocą aplikacji AI"
+        install_popular_theme: "Zainstaluj motyw"
         enable_mcp_theme_access: "Pozwól aplikacjom AI tworzyć motywy"
         load_discourse_website_page: "Załaduj stronę internetową Discourse"
         read_artifact: "Przeczytaj artefakt sieciowy"
@@ -1027,6 +1030,7 @@ pl_PL:
         researcher_dry_run: "Przygotowywanie badań"
       tool_help:
         theme_app_handoff: "Wyjaśnij, jak tworzyć motywy za pomocą aplikacji AI za pośrednictwem serwera MCP"
+        install_popular_theme: "Zainstaluj gotowy motyw obsługiwany przez Discourse bez jego udostępniania"
         enable_mcp_theme_access: "Pozwól aplikacjom AI tworzyć motywy za pośrednictwem serwera MCP"
         load_discourse_website_page: "Załaduj nazwaną stronę z oficjalnej witryny Discourse"
         read_artifact: "Odczytaj artefakt sieciowy za pomocą bota AI"
@@ -1425,6 +1429,12 @@ pl_PL:
       not_allowed: "Tylko administratorzy mogą zmieniać wygląd witryny."
       unavailable: "Zmiana wyglądu witryny nie jest tutaj dostępna."
       themes_unavailable: "Tworzenie nowych motywów nie jest dostępne na tej stronie. Zamiast tego mogę zmienić kolory i czcionki bieżącego motywu."
+      styles_unavailable: "Style inne niż kolory i czcionki nie są dostępne na tej stronie. Zamiast tego mogę zmienić kolory i czcionki bieżącego motywu."
+      styles_failed: "Nie udało mi się napisać stylów, które przeszłyby testy bezpieczeństwa motywu. Poproś administratora o inny opis zmiany lub zaproponuj stworzenie jej za pomocą własnej aplikacji AI."
+      more_styles: "Więcej zmian stylu"
+      theme_changed: "Ten motyw został zmieniony od czasu zapisania, więc nie mogę go udostępnić. Ustaw go jako domyślny w Administracja > Wygląd > Motywy albo poproś mnie o nową wersję."
+      new_version_target: "Nowa wersja %{name}, zapisana jako wersja robocza do momentu publikacji. Aktualna wersja jest zachowywana, więc możesz do niej wrócić."
+      styles_unsupported: "Te style nie mogą wprowadzić tej zmiany: %{requests}. Zamiast tego zaproponuj zbudowanie jej przy użyciu własnej aplikacji AI administratora."
       name_required: "Nadaj paletom lub motywom krótką nazwę."
       brand_color_required: "Podaj kolor marki lub adres strony internetowej, z której mają zostać pobrane kolory."
       invalid_color: "Użyj kolorów szesnastkowych, takich jak #635bff. Te kolory są nieprawidłowe: %{colors}"
@@ -1445,6 +1455,12 @@ pl_PL:
       not_live: "Ta zmiana wyglądu nie jest zmianą na żywo."
       cannot_restore: "To, co zostało zastąpione tą zmianą, już nie istnieje, więc witryna nie może do tego powrócić."
       failed: "Zmiany nie udało się wprowadzić."
+      installed: "Zainstalowano bez ustawiania go jako motywu domyślnego. Udostępnij link do podglądu, a następnie zapytaj, czy chcesz go udostępnić."
+      install_failed: "Nie udało się zainstalować motywu. Spróbuj ponownie później lub zainstaluj go w sekcji Administracja > Wygląd > Motywy."
+      not_popular: "To nie jest gotowy motyw, który mogę zainstalować."
+      already_installed: "%{name} jest już zainstalowany. Można go ustawić jako domyślny motyw w Administracja > Wygląd > Motywy."
+      theme_already_installed: "Ten motyw jest już zainstalowany. Można go ustawić jako domyślny w sekcji Administracja > Wygląd > Motywy."
+      theme_repo_not_allowed: "Ta witryna nie może zainstalować tego motywu."
       saved: "Zapisano bez zmiany strony. Udostępnij link do podglądu, a następnie zapytaj, czy chcesz go udostępnić. Czcionki zmieniają się po udostępnieniu."
       live: "%{name} jest aktywny. Poproś administratora o odświeżenie strony, aby go zobaczyć, ponieważ strony już otwarte zachowują stary wygląd, dopóki się nie załadują."
       switched_back: "Powrócono do %{name}. Poproś administratora o odświeżenie strony, aby ją zobaczyć, ponieważ strony już otwarte zachowują stary wygląd, dopóki nie zostaną ponownie załadowane."
@@ -1701,6 +1717,7 @@ pl_PL:
       no_pending_tool_calls: Nie ma żadnych oczekujących wywołań narzędzi dla tego tokena CV.
       missing_tool_results: "Brak wyników wyszukiwania dla identyfikatorów wywołań narzędzi: %{ids}"
       unexpected_tool_results: "Nieoczekiwane wyniki narzędzia dla identyfikatorów wywołań narzędzia: %{ids}"
+      duplicate_tool_results: "Duplikaty wyników narzędzia dla identyfikatorów wywołań narzędzia: %{ids}"
       invalid_tool_result_content: "Wynik narzędzia dla %{id} musi zawierać treść"
       tool_result_content_too_large: "Każdy ładunek zawartości wyniku narzędzia musi mieć maksymalnie %{max} bajtów."
       stream_reply_max_resume_rounds_reached: Osiągnięto maksymalną liczbę rund wznawiania używania niestandardowych narzędzi (%{max}).

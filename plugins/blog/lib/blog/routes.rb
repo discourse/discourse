@@ -8,11 +8,21 @@ module Blog
     ON_BLOG_HOST = ->(request) do
       Configuration.blog_host?(request) && !Configuration.asset_path?(request.path)
     end
-    ON_PATH_PREFIX = ->(_) do
-      UpcomingChanges.enabled?(:blog_enabled) && !Configuration.custom_domain?
+    ON_DEFAULT_BLOG_PATH = ->(request) do
+      blog = Routes.blog_on_forum_path(request)
+      blog&.is_default? && !Configuration.custom_domain?(blog)
     end
-    MOVED_TO_CUSTOM_DOMAIN = ->(_) do
-      UpcomingChanges.enabled?(:blog_enabled) && Configuration.custom_domain?
+    ON_OTHER_BLOG_PATH = ->(request) do
+      blog = Routes.blog_on_forum_path(request)
+      blog.present? && !blog.is_default? && !Configuration.custom_domain?(blog)
+    end
+    MOVED_TO_CUSTOM_DOMAIN = ->(request) do
+      blog = Routes.blog_on_forum_path(request)
+      blog.present? && Configuration.custom_domain?(blog)
+    end
+    REVIEW_ON_FORUM = ->(_) do
+      UpcomingChanges.enabled?(:blog_enabled) &&
+        Instance.cached.any? { |blog| !Configuration.custom_domain?(blog) }
     end
 
     # Article paths share their first segment with the routes below in both hosting modes
@@ -69,15 +79,17 @@ module Blog
             get "/review" =>
                   redirect { |_, request| request.fullpath.sub("/review", "/blog/review") },
                 :format => false
-            get "/posts" => redirect { "#{Configuration.base_url}/" }, :format => false
+            get "/posts" => redirect { |_, request| "#{Routes.host_base_url(request)}/" },
+                :format => false
             # Feed and pagination URLs that other blog engines publish, kept for readers and links.
             %w[/posts.rss /posts.atom /rss /feed].each do |path|
-              get path => redirect { "#{Configuration.base_url}/feed.xml" }, :format => false
+              get path => redirect { |_, request| "#{Routes.host_base_url(request)}/feed.xml" },
+                  :format => false
             end
             get "/page/:page" =>
-                  redirect { |params, _|
+                  redirect { |params, request|
                     page = params[:page].to_i
-                    "#{Configuration.base_url}/#{"?page=#{page}" if page > 1}"
+                    "#{Routes.host_base_url(request)}/#{"?page=#{page}" if page > 1}"
                   },
                 :constraints => {
                   page: /\d+/,
@@ -92,11 +104,19 @@ module Blog
           end
 
           scope Configuration::PATH_PREFIX do
-            constraints(ON_PATH_PREFIX) do
+            constraints(REVIEW_ON_FORUM) do
               get "/review" => "review_reader#show"
               post "/review/feedback" => "review_reader#feedback"
-              instance_exec(&ARTICLES)
             end
+
+            # Drawn before the default blog's routes, whose article catch-all
+            # would otherwise take these paths, including its redirect when the
+            # default blog has moved to a custom domain.
+            scope "/:blog_slug" do
+              constraints(ON_OTHER_BLOG_PATH) { instance_exec(&ARTICLES) }
+            end
+
+            constraints(ON_DEFAULT_BLOG_PATH) { instance_exec(&ARTICLES) }
 
             # Temporary, since a site can drop its custom domain and browsers cache 301s.
             constraints(MOVED_TO_CUSTOM_DOMAIN) do
@@ -119,12 +139,27 @@ module Blog
         mount Engine, at: "/"
       end
 
-    private_constant :ON_BLOG_HOST, :ON_PATH_PREFIX, :MOVED_TO_CUSTOM_DOMAIN, :ARTICLES
+    private_constant :ON_BLOG_HOST,
+                     :ON_DEFAULT_BLOG_PATH,
+                     :ON_OTHER_BLOG_PATH,
+                     :MOVED_TO_CUSTOM_DOMAIN,
+                     :REVIEW_ON_FORUM,
+                     :ARTICLES
+
+    def self.host_base_url(request)
+      Configuration.base_url(Configuration.blog_for_host(request.host))
+    end
+
+    def self.blog_on_forum_path(request)
+      return if !UpcomingChanges.enabled?(:blog_enabled)
+      Configuration.blog_for_path(request.path_info)
+    end
 
     def self.custom_domain_url(request)
-      path = request.path_info.delete_prefix(Configuration::PATH_PREFIX).presence || "/"
+      blog = Configuration.blog_for_path(request.path_info)
+      path = request.path_info.delete_prefix(Configuration.path_prefix(blog)).presence || "/"
       path += "?#{request.query_string}" if request.query_string.present?
-      "#{Configuration.base_url}#{path}"
+      "#{Configuration.base_url(blog)}#{path}"
     end
   end
 end

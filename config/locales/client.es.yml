@@ -5311,7 +5311,6 @@ es:
         other: "Borradores (%{count})"
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
-    theme_preview_notice: "En este momento estás previsualizando un tema, cierra esta pestaña o ventana del navegador para volver a la configuración normal de tu sitio."
     theme_preview_failed: "No se ha podido crear la vista previa del tema porque no existe o no tienes permiso para acceder a él."
     image_removed: "(imagen eliminada)"
     pause_notifications:
@@ -8418,6 +8417,8 @@ es:
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
         search_label: "Buscar"
+        preview:
+          default: "Por defecto"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         status:
@@ -8584,7 +8585,7 @@ es:
           modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
-        reason_help: (Enlace a una publicación o tema)
+        reason_help: Enlace a una publicación o tema
         save: Guardar
         delete: Eliminar
         delete_confirm: '¿Seguro que quieres eliminar esta medalla?'

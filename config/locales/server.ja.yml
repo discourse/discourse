@@ -2919,20 +2919,6 @@ ja:
       title: "非表示の投稿"
       preview: "コミュニティーメンバーによる通報により投稿は非表示になりました。"
       subject_template: "コミュニティー通報によって非表示にされた投稿"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になっていることをお知らせします。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        この投稿は、コミュニティーからの通報により非表示にされました。そのため、コミュニティーからのフィードバックを反映するようにあなたの投稿を書き直すことを検討してください。**%{edit_delay} 分後に編集を開始できます。編集が終わると、自動的に非表示状態が解除されます。**
-
-        ただし、投稿が再びコミュニティーによって非表示にされると、スタッフが処理するまで非表示のママとなります。
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     reviewable_queued_post_revise_and_reject:
       title: "あなたの投稿に対するフィードバック"
       subject_template: "%{topic_title} のあなたの投稿に対するフィードバック"
@@ -2943,31 +2929,9 @@ ja:
       title: "再度非表示"
       preview: "コミュニティーメンバーによって投稿は再度非表示になりました。"
       subject_template: "コミュニティー通報によって非表示にされた投稿、スタッフ通知済み"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が再び非表示になったことをお知らせします。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        コミュニティーがこの投稿を通報したため、非表示になっています。**この投稿は 2 回以上非表示となったため、スタッフメンバーが処理するまで非表示のままとなります。**
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     queued_by_staff:
       title: "承認待ちの投稿"
       subject_template: "スタッフが投稿を非表示にしました。承認待ち"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になったことをお知らせします。
-
-        <%{base_url}%{url}>
-
-        あなたの投稿は、スタッフがレビューするまで非表示のままとなります。
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     flags_disagreed:
       title: "通報された投稿をスタッフが復元しました"
       subject_template: "通報された投稿をスタッフが復元しました"
@@ -3471,16 +3435,6 @@ ja:
     user_automatically_silenced_with_reason:
       title: "ユーザーは自動的に投稿禁止にされました"
       subject_template: "新規ユーザー %{username} はコミュニティー通報により投稿禁止になりました"
-      text_body_template: |
-        これは自動メッセージです。
-
-        新規ユーザー [%{username}](%{user_url}) は自動的に投稿禁止になりました。
-
-        理由 - %{reason}
-
-        [通報をレビュー](%{base_url}/review)してください。%{username} が誤って投稿禁止になっている場合は、[このユーザーの管理者ページ](%{user_url})で投稿禁止を解除ボタンをクリックしてください。
-
-        このしきい値は、`silence_new_user` サイト設定で変更できます。
     spam_post_blocked:
       title: "迷惑投稿はブロックされました"
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
@@ -3975,10 +3929,6 @@ ja:
     signup_after_reject:
       title: "登録 - 拒否後"
       subject_template: "%{site_name} での承認が拒否されました"
-      text_body_template: |
-        スタッフメンバーは %{site_name} のあなたのアカウントを拒否しました。
-
-        %{reject_reason}
     signup:
       title: "登録"
       preview: "アカウントを確認してください。"
@@ -4784,6 +4734,7 @@ ja:
       delete_and_ignore_replies:
         title: "投稿と返信を削除して通報を無視する"
         description: "キューから削除すると、投稿とそのすべての返信を削除して通報を無視します。最初の投稿である場合、トピックも削除されます"
+        confirm_title: "投稿と返信を削除して通報を無視する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4793,6 +4744,7 @@ ja:
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
+        confirm_title: "投稿と返信を削除する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:

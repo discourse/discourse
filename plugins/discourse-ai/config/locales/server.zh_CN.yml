@@ -57,12 +57,6 @@ zh_CN:
           <b>由 <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
-          body: |
-            @%{username}，您好！
-
-            您在“%{topic_title}”中的帖子已被暂时移除并放入我们的审核队列中供版主查看。如果获得批准，它将自动恢复。
-
-            参考：%{post_url}
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
@@ -1599,6 +1593,7 @@ zh_CN:
       no_pending_tool_calls: 此恢复令牌没有待处理的工具调用。
       missing_tool_results: "tool_call_id (s) 缺少工具结果：%{ids}"
       unexpected_tool_results: "tool_call_id (s) 的意外工具结果：%{ids}"
+      duplicate_tool_results: "tool_call_id (s) 的重复工具结果：%{ids}"
       invalid_tool_result_content: "%{id} 的工具结果必须包含内容"
       tool_result_content_too_large: "每个工具结果内容有效负载最多为 %{max} 字节。"
       stream_reply_max_resume_rounds_reached: 已达到自定义工具恢复轮数上限 (%{max})。

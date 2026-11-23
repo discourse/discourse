@@ -16,7 +16,6 @@ blog:
   blog_category:
     type: category
     default: ""
-    client: true
   blog_drafts_category:
     type: category
     default: ""
@@ -32,7 +31,6 @@ blog:
     textarea: true
   blog_path_format:
     default: "/{slug}"
-    client: true
     validator: "Blog::PathFormatValidator"
   blog_posts_per_page:
     default: 10

@@ -22,7 +22,7 @@ RSpec.describe Blog::BlogHelper, type: :helper do
 
   describe "#blog_theme" do
     it "defaults to the active theme" do
-      expect(helper.blog_theme).to eq(Blog::BlogTheme.active)
+      expect(helper.blog_theme).to eq(Blog::BlogTheme.active_for(Blog::Instance.default_blog))
     end
   end
 

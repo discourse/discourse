@@ -50,6 +50,9 @@ hu:
           title: "Betűtípus rendszer"
         colors:
           title: "Színek"
+        design_variables:
+          type: "Típus"
+          default: "Alapértelmezett"
         dialog:
           title: "Párbeszéd"
         drag_and_drop:

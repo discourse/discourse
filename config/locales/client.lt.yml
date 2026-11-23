@@ -6657,7 +6657,6 @@ lt:
         other: "Juodraščiai (%{count})"
     safe_mode:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
-    theme_preview_notice: "Šiuo metu peržiūrite temą, uždarykite šį naršyklės skirtuką arba langą, kad grįžtumėte į įprastą svetainės konfigūraciją."
     theme_preview_failed: "Nepavyko peržiūrėti temos, nes jos nėra arba neturite leidimo jos pasiekti."
     image_removed: "(vaizdas pašalintas)"
     pause_notifications:
@@ -9555,6 +9554,8 @@ lt:
       site_text:
         search: "Ieškoti teksto arba vertimo raktų"
         search_label: "Paieška"
+        preview:
+          default: "Numatytasis"
         theme: "Tema arba komponentas"
         all_themes: "Visi svetainės tekstai"
         theme_disabled: "Neleidžiama"
@@ -9664,7 +9665,7 @@ lt:
           modal_title: Ženklelių grupavimas
         granted_by: Suteiktas nuo
         granted_at: Suteiktas
-        reason_help: (nuoroda į įrašą ar temą)
+        reason_help: nuoroda į įrašą ar temą
         save: Išsaugoti
         delete: Ištrinti
         delete_confirm: Ar tikrai norite ištrinti šitą ženklelį?

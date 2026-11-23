@@ -3361,20 +3361,6 @@ zh_TW:
       title: "貼文被隱藏"
       preview: "貼文因社群成員檢舉而隱藏。"
       subject_template: "貼文因社群檢舉而被隱藏"
-      text_body_template: |
-        您好，
-
-        這是來自 %{site_name} 的自動訊息，通知您貼文已被隱藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        此貼文因社群檢舉而被隱藏，請考慮如何修改貼文以反映他們的意見。**您可以在 %{edit_delay} 分鐘後編輯貼文，之後系統會自動取消隱藏。**
-
-        不過，若此貼文第二次被社群隱藏，將保持隱藏直到工作人員處理。
-
-        如需更多指引，請參閱我們的[社群準則](%{base_url}/guidelines)。
     reviewable_queued_post_revise_and_reject_edit_post: "您可以在下方編輯原始貼文並重新提交以進行建議的變更；若有任何問題，也可以回覆此訊息。"
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "您可以在下方編輯原始貼文並重新提交以進行建議的變更。"
     reviewable_queued_post_revise_and_reject_edit_topic: "您可以在下方編輯主題的原始貼文並重新提交以進行建議的變更；若有任何問題，也可以回覆此訊息。"
@@ -3427,31 +3413,9 @@ zh_TW:
       title: "貼文被再次隱藏"
       preview: "貼文再次被社群成員隱藏。"
       subject_template: "貼文因社群檢舉而被隱藏，已通知管理人員"
-      text_body_template: |
-        您好，
-
-        這是來自 %{site_name} 的自動訊息，通知您貼文再次被隱藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        社群檢舉了此貼文，現在它已被隱藏。**由於此貼文已被隱藏多次，在工作人員處理前將保持隱藏。**
-
-        如需更多指引，請參閱我們的[社群準則](%{base_url}/guidelines)。
     queued_by_staff:
       title: "貼文需要審批"
       subject_template: "貼文被工作人員隱藏，等待核准"
-      text_body_template: |
-        您好，
-
-        這是來自 %{site_name} 的自動訊息，通知您貼文已被隱藏。
-
-        <%{base_url}%{url}>
-
-        在工作人員審核前，您的貼文將保持隱藏。
-
-        如需更多指引，請參閱我們的[社群準則](%{base_url}/guidelines)。
     flags_disagreed:
       title: "遭檢舉貼文已由工作人員還原"
       subject_template: "遭檢舉貼文已由工作人員還原"
@@ -4002,16 +3966,6 @@ zh_TW:
     user_automatically_silenced_with_reason:
       title: "使用者已被自動禁言"
       subject_template: "新使用者 %{username} 因社群檢舉而被禁言"
-      text_body_template: |
-        這是一則自動訊息。
-
-        新使用者 [%{username}](%{user_url}) 已被自動禁言。
-
-        原因－%{reason}
-
-        請[審核檢舉](%{base_url}/review)。若 %{username} 遭到誤判禁言，請在[此使用者的管理員頁面](%{user_url})按一下解除禁言按鈕。
-
-        可透過 `silence_new_user` 網站設定變更此門檻。
     spam_post_blocked:
       title: "垃圾資訊貼文被屏蔽"
       subject_template: "新使用者 %{username} 的貼文因重復連結被屏蔽"
@@ -4553,10 +4507,6 @@ zh_TW:
     signup_after_reject:
       title: "遭拒後註冊"
       subject_template: "您在 %{site_name} 的註冊遭拒"
-      text_body_template: |
-        %{site_name} 的工作人員拒絕了您的帳號。
-
-        %{reject_reason}
     signup:
       title: "注冊"
       preview: "確認您的帳號。"
@@ -5410,6 +5360,7 @@ zh_TW:
       delete_and_ignore_replies:
         title: "刪除貼文與回復，并忽略檢舉"
         description: "刪除貼文及其所有回復，忽略檢舉，并將其從隊列中移除；如果是第一個貼文，同時刪除主題"
+        confirm_title: "刪除貼文與回復，并忽略檢舉?"
         confirm: "您確定也要刪除此貼文的回覆嗎？"
         complete: "貼文及回覆已刪除。"
       delete_and_agree:
@@ -5419,6 +5370,7 @@ zh_TW:
       delete_and_agree_replies:
         title: "刪除貼文和回復"
         description: "同意檢舉并刪除此貼文及其所有回復；如果是第一個貼文，同時刪除主題。"
+        confirm_title: "刪除貼文和回復?"
         confirm: "您確定也要刪除此貼文的回覆嗎？"
         complete: "貼文及回覆已刪除。"
       disagree_and_restore:

@@ -43,7 +43,7 @@ RSpec.describe RemoveLegacyBlogAppearanceSettings do
 
     described_class.new.up
 
-    theme = Blog::BlogTheme.active
+    theme = PluginStore.get(Blog::BlogTheme::STORE, "active")
     expect(theme["accent_color"]).to eq("bc4327")
     expect(theme["css"]).to eq(".blog { color: red; }")
     expect(theme["javascript"]).to eq("window.blogDemo = true;")
@@ -84,7 +84,7 @@ RSpec.describe RemoveLegacyBlogAppearanceSettings do
     described_class.new.up
 
     expect(Blog::BlogTheme.all.size).to eq(1)
-    expect(Blog::BlogTheme.active["accent_color"]).to eq("16634e")
+    expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["accent_color"]).to eq("16634e")
     expect(legacy_rows).to eq(0)
   end
 

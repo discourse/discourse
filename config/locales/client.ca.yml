@@ -4492,6 +4492,8 @@ ca:
           dropdown: "Desplega"
       site_text:
         search_label: "Cerca"
+        preview:
+          default: "Per defecte"
         theme_disabled: "Desactivat"
         filters: "Filtres"
         edit: "Edita"
@@ -4575,7 +4577,7 @@ ca:
           modal_title: Agrupacions d'insígnies
         granted_by: Concedit per
         granted_at: Concedida el
-        reason_help: (Un enllaç a una publicació o a un tema)
+        reason_help: Un enllaç a una publicació o a un tema
         save: Desa
         delete: Suprimeix
         delete_confirm: Esteu segur que voleu suprimir aquesta insígnia?

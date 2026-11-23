@@ -5617,7 +5617,6 @@ cs:
         other: "Koncepty (%{count})"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
-    theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
     theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
@@ -8781,6 +8780,8 @@ cs:
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
         search_label: "Vyhledat"
+        preview:
+          default: "Výchozí"
         theme_disabled: "Vypnuto"
         filters: "Filtry"
         title: "Texty"
@@ -8952,7 +8953,7 @@ cs:
           modal_title: Skupiny odznaků
         granted_by: Uděleno
         granted_at: Uděleno v
-        reason_help: (Odkaz na příspěvek nebo téma)
+        reason_help: Odkaz na příspěvek nebo téma
         save: Uložit
         delete: Smazat
         delete_confirm: Určitě chcete tento oznak smazat?

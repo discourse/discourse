@@ -19,7 +19,7 @@ class NotificationsController < ApplicationController
 
     guardian.ensure_can_see_notifications!(user)
 
-    if notification_types = params[:filter_by_types]&.split(",").presence
+    if notification_types = params[:filter_by_types].to_s.split(",").presence
       notification_types.map! do |type|
         Notification.types[type.to_sym] ||
           (raise Discourse::InvalidParameters.new("invalid notification type: #{type}"))
@@ -86,6 +86,10 @@ class NotificationsController < ApplicationController
       notifications =
         Notification.where(user_id: user.id).visible.includes(:topic).order(created_at: :desc)
 
+      if notification_types
+        notifications = notifications.where(notification_type: notification_types)
+      end
+
       notifications = notifications.where(read: true) if params[:filter] == "read"
 
       notifications = notifications.where(read: false) if params[:filter] == "unread"
@@ -112,6 +116,7 @@ class NotificationsController < ApplicationController
             offset: offset + limit,
             limit: limit,
             filter: params[:filter],
+            filter_by_types: params[:filter_by_types].presence,
           ),
       )
     end

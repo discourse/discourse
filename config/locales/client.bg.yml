@@ -4551,6 +4551,8 @@ bg:
           dropdown: "Падащо"
       site_text:
         search_label: "Търсене"
+        preview:
+          default: "По подразбиране"
         theme_disabled: "Деактивирани"
         edit: "Редактирай"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
@@ -4622,7 +4624,7 @@ bg:
           modal_title: Групи значки
         granted_by: Присъдена от
         granted_at: Присъдена на
-        reason_help: (Връзка към публикация или тема)
+        reason_help: Връзка към публикация или тема
         save: Запази
         delete: Изтрий
         delete_confirm: Искате ли да изтриете тази значка?

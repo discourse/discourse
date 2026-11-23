@@ -1492,7 +1492,15 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id include_raw],
+        *%i[
+          page
+          print
+          filter_top_level_replies
+          preview_theme_id
+          preview_color_scheme_id
+          preview_dark_color_scheme_id
+          include_raw
+        ],
         Discourse::LOCALE_PARAM,
         *additional_allowed_query_parameters,
       )

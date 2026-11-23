@@ -317,7 +317,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_gravatar_avatar_upload_id?
-    object.user_avatar&.gravatar_upload_id
+    can_edit && object.user_avatar&.gravatar_upload_id
   end
 
   def gravatar_avatar_upload_id
@@ -333,7 +333,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_custom_avatar_upload_id?
-    object.user_avatar&.custom_upload_id
+    can_edit && object.user_avatar&.custom_upload_id
   end
 
   def custom_avatar_upload_id

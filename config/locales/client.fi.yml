@@ -4833,7 +4833,6 @@ fi:
         other: "Luonnokset (%{count})"
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
-    theme_preview_notice: "Esikatselet parhaillaan teemaa, sulje tämä selaimen välilehti tai ikkuna palataksesi normaaliin sivuston määritykseen."
     image_removed: "(kuva poistettu)"
     pause_notifications:
       title: "Keskeytä ilmoitukset…"
@@ -7733,6 +7732,8 @@ fi:
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
         search_label: "Haku"
+        preview:
+          default: "Oletus"
         theme_disabled: "Pois käytöstä"
         filters: "Suodattimet"
         status:
@@ -7882,7 +7883,7 @@ fi:
           modal_title: Kunniamerkkien ryhmittely
         granted_by: Myöntäjä
         granted_at: Myönnetty
-        reason_help: (Linkki viestiin tai ketjuun)
+        reason_help: Linkki viestiin tai ketjuun
         save: Tallenna
         delete: Poista
         delete_confirm: Oletko varma, että haluat poistaa tämän kunniamerkin?

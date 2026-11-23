@@ -2958,20 +2958,6 @@ fi:
     post_hidden:
       title: "Viesti piilotettu"
       subject_template: "Yhteisön piiloon merkitsemä viesti"
-      text_body_template: |
-        Hello,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että viestisi piilotettiin.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Viesti piilotettiin yhteisön liputusten vuoksi, joten harkitse miten voisit muokata viestiä palautteen pohjalta. **Voit muokata viestiä %{edit_delay} minuutin kuluttua, mikä palauttaa automaattisesti sen näkyville.**
-
-        Jos viesti kuitenkin piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen.
-
-        Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Palaute viestistäsi"
       subject_template: "Palaute viestiisi ketjussa %{topic_title}"
@@ -2981,31 +2967,9 @@ fi:
     post_hidden_again:
       title: "Viesti piilotettiin jälleen"
       subject_template: "Yhteisön merkinnät piilottivat viestin, henkilökunnalle ilmoitettiin"
-      text_body_template: |
-        Hei,
-
-        Tämä automaattinen viesti lähetettiin sivustolta %{site_name} kertoaksemme, että viestisi piilotettiin uudelleen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Yhteisö liputti viestin, ja se on nyt piilotettu. **Koska viestisi on piilotettu useammin kuin kerran, se pysyy piilotettuna, kunnes henkilökunnan jäsen selvittää tilanteen.**
-
-        Saat lisätietoa [yhteisön säännöistä](%{base_url}/guidelines).
     queued_by_staff:
       title: "Viesti odottaa hyväksyntää"
       subject_template: "Henkilökunnan piilottama viesti odottaa hyväksyntää"
-      text_body_template: |
-        Hei,
-
-        Tämä on automaattinen viesti sivustolta %{site_name}, joka ilmoittaa sinulle, että viestisi on piilotettu.
-
-        <%{base_url}%{url}>
-
-        Viestisi pysyy piilossa, kunnes henkilökunnan jäsen tarkistaa sen.
-
-        Lisätietoja on [yhteisön ohjeissa](%{base_url}/guidelines).
     flags_disagreed:
       title: "Henkilökunta palautti merkityn viestin"
       subject_template: "Henkilökunta palautti merkityn viestin"
@@ -3983,10 +3947,6 @@ fi:
     signup_after_reject:
       title: "Rekisteröityminen hylkäyksen jälkeen"
       subject_template: "Sinut on hylätty palveluta %{site_name}"
-      text_body_template: |
-        Palvelun %{site_name} ylläpitäjät ovat hylänneet tilisi.
-
-        %{reject_reason}
     signup:
       title: "Rekisteröityminen"
       subject_template: "[%{email_prefix}] Vahvista uusi tilisi"
@@ -4669,6 +4629,7 @@ fi:
       delete_and_agree_replies:
         title: "Poista viesti ja vastaukset"
         description: "Hyväksy liputus ja poista tämä viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju."
+        confirm_title: "Poista viesti ja vastaukset?"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       disagree_and_restore:

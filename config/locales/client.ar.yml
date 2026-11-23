@@ -6916,7 +6916,6 @@ ar:
         other: "المسودات (%{count})"
     safe_mode:
       enabled: "تم تفعيل الوضع الآمن، أغلق نافذة المتصفح هذه للخروج منه"
-    theme_preview_notice: "أنت تقوم حاليًا بمعاينة إحدى السمات، أغلق علامة تبويب أو نافذة هذا المتصفح للرجوع إلى التكوين الطبيعي للموقع."
     theme_preview_failed: "فشل معاينة السمة لأنها غير موجودة، أو ليس لديك الإذن للوصول إليها."
     image_removed: "(تمت إزالة الصورة)"
     pause_notifications:
@@ -10565,6 +10564,8 @@ ar:
       site_text:
         description: "يمكنك تخصيص أي نص في المنتدى الخاص بك."
         search_label: "البحث"
+        preview:
+          default: "افتراضي"
         theme_disabled: "متوقفة"
         filters: "المرشحات"
         status:
@@ -10772,7 +10773,7 @@ ar:
           modal_title: تجميعات الشارات
         granted_by: منحها
         granted_at: تاريخ المنح
-        reason_help: (رابط إلى منشور أو موضوع)
+        reason_help: رابط إلى منشور أو موضوع
         save: حفظ
         delete: حذف
         delete_confirm: هل تريد بالتأكيد حذف هذه الشارة؟

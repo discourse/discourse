@@ -4828,7 +4828,6 @@ ja:
         other: "下書き (%{count})"
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
-    theme_preview_notice: "現在、テーマをプレビューしています。通常のサイト構成に戻るには、このブラウザタブまたはウィンドウを閉じてください。"
     theme_preview_failed: "テーマをプレビューできませんでした。テーマが存在しないか、テーマにアクセスする権限がありません。"
     image_removed: "(画像は削除されました)"
     pause_notifications:
@@ -7845,6 +7844,8 @@ ja:
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
         search_label: "検索"
+        preview:
+          default: "デフォルト"
         theme_disabled: "無効"
         filters: "フィルター"
         status:
@@ -8003,7 +8004,7 @@ ja:
           modal_title: バッジのグループ
         granted_by: 付与者
         granted_at: 付与日
-        reason_help: (投稿またはトピックへのリンク)
+        reason_help: 投稿またはトピックへのリンク
         save: 保存
         delete: 削除
         delete_confirm: このバッジを削除してもよろしいですか？

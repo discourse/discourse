@@ -337,7 +337,7 @@ module DiscourseWorkflows
         return(handle_pinned_node(node, input_items, input_groups, input_sources, pinned))
       end
 
-      issues = NodeIssues.for_node(node, node_type_class)
+      issues = NodeIssues.for_node(node, node_type_class, guardian: @options.user&.guardian)
       return handle_node_issues(node, input_items, issues) if issues.any?
 
       step = record_step(node, input_items)

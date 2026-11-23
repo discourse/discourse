@@ -126,6 +126,11 @@ en:
       category_unavailable: The public blog category could not be created. Try again, or choose one in the blog settings.
       drafts_category_unavailable: The private drafts category could not be prepared. Try again.
       drafts_category_public: The blog drafts category is open to everyone, so editorial work is paused. Remove the “everyone” group in that category's security settings.
+      blog_fixed: An article stays on the blog it was published on.
+      path_format_blog_slug: "Every article address would start with “%{slug}”, which is the address of another blog. Choose a different format."
+      blog_slug_reserved: That address is used by the blog itself. Choose another one.
+      blog_slug_taken: An article on the main blog already starts with that address. Choose another one.
+      blog_url_forum_host: A blog's own domain must differ from the community's.
       category_name_taken: "A category named “%{name}” already exists, so the blog cannot create its own. Choose the public blog category in the blog settings."
       published_page:
         Unpublish this topic from page publishing before publishing

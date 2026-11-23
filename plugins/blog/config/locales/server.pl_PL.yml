@@ -109,6 +109,11 @@ pl_PL:
       category_unavailable: Nie udało się utworzyć publicznej kategorii bloga. Spróbuj ponownie lub wybierz kategorię w ustawieniach bloga.
       drafts_category_unavailable: Nie udało się przygotować kategorii prywatnych szkiców. Spróbuj ponownie.
       drafts_category_public: Kategoria „Szkice bloga” jest otwarta dla wszystkich, więc prace redakcyjne są wstrzymane. Usuń grupę „wszyscy” w ustawieniach bezpieczeństwa tej kategorii.
+      blog_fixed: Artykuł pozostaje na blogu, na którym został opublikowany.
+      path_format_blog_slug: "Adres każdego artykułu zaczynałby się od „%{slug}”, co jest adresem innego bloga. Wybierz inny format."
+      blog_slug_reserved: Ten adres jest używany przez samego bloga. Wybierz inny.
+      blog_slug_taken: Artykuł na blogu głównym zaczyna się już od tego adresu. Wybierz inny.
+      blog_url_forum_host: Domena bloga musi różnić się od domeny społeczności.
       category_name_taken: "Kategoria o nazwie „%{name}” już istnieje, więc blog nie może utworzyć własnej. Wybierz publiczną kategorię bloga w ustawieniach bloga."
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
       path_taken: jest zarezerwowany lub należy już do innego artykułu

@@ -3139,20 +3139,6 @@ nl:
       title: "Bericht verborgen"
       preview: "Bericht verborgen vanwege markeringen door communityleden."
       subject_template: "Bericht verborgen door communitymarkeringen"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je bericht is verborgen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Dit bericht is verborgen vanwege communitymarkeringen, dus bedenk hoe je je bericht zou kunnen herzien om hun feedback te weerspiegelen. **Je kunt je bericht na %{edit_delay} minuten bewerken, waarna het automatisch zichtbaar wordt gemaakt.**
-
-        Als het bericht echter voor de tweede keer door de community wordt verborgen, blijft het verborgen totdat het door een medewerker is afgehandeld.
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
     reviewable_queued_post_revise_and_reject_edit_post: "Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen of dit bericht beantwoorden als je vragen hebt."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Je kunt je oorspronkelijke bericht hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen."
     reviewable_queued_post_revise_and_reject_edit_topic: "Je kunt het oorspronkelijke bericht van je topic hieronder bewerken en opnieuw verzenden om de voorgestelde wijzigingen aan te brengen of dit bericht beantwoorden als je vragen hebt."
@@ -3205,31 +3191,9 @@ nl:
       title: "Bericht opnieuw verborgen"
       preview: "Bericht opnieuw verborgen door communityleden."
       subject_template: "Bericht verborgen door communitymarkeringen, medewerkers geïnformeerd"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je post opnieuw is verborgen.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        De community heeft dit bericht gemarkeerd en nu is het verborgen. **Omdat dit bericht meer dan eens is verborgen, blijft je bericht nu verborgen totdat het wordt behandeld door een medewerker.**
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer informatie.
     queued_by_staff:
       title: "Bericht vereist goedkeuring"
       subject_template: "Bericht verborgen door medewerker, wacht op goedkeuring"
-      text_body_template: |
-        Hallo,
-
-        Dit is een automatisch bericht van %{site_name} om je te laten weten dat je bericht is verborgen.
-
-        <%{base_url}%{url}>
-
-        Je bericht blijft verborgen totdat een medewerker het heeft beoordeeld.
-
-        Zie onze [communityrichtlijnen](%{base_url}/richtlijnen) voor meer advies.
     flags_disagreed:
       title: "Gemarkeerd bericht teruggezet door medewerker"
       subject_template: "Gemarkeerd bericht teruggezet door medewerker"
@@ -3762,16 +3726,6 @@ nl:
     user_automatically_silenced_with_reason:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt.
-
-        Reden - %{reason}
-
-        [Beoordeel de markeringen](%{base_url}/review). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de site-instellingen 'silence_new_user'.
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -4319,10 +4273,6 @@ nl:
     signup_after_reject:
       title: "Registratie na afwijzen"
       subject_template: "Je bent afgewezen op %{site_name}"
-      text_body_template: |
-        Een medewerker heeft je account op %{site_name} afgewezen.
-
-        %{reject_reason}
     signup:
       title: "Registratie"
       preview: "Bevestig je account."
@@ -5147,6 +5097,7 @@ nl:
       delete_and_ignore_replies:
         title: "Bericht en antwoorden verwijderen, markering negeren"
         description: "Verwijder het bericht en alle antwoorden, negeer vervolgens de markering door het uit de wachtrij te verwijderen Als het het eerste bericht is, verwijder dan ook het topic."
+        confirm_title: "Bericht en antwoorden verwijderen, markering negeren?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5156,6 +5107,7 @@ nl:
       delete_and_agree_replies:
         title: "Bericht en antwoorden verwijderen"
         description: "Ga akkoord met de markering en verwijder dit bericht en alle antwoorden. Als dit het eerste bericht is, wordt ook het topic verwijderd."
+        confirm_title: "Bericht en antwoorden verwijderen?"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:

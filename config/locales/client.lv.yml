@@ -3958,6 +3958,8 @@ lv:
           dropdown: "Nolaižams izvēļu saraksts"
       site_text:
         search_label: "Meklēt"
+        preview:
+          default: "Noklusējums"
         theme_disabled: "Atslēgt"
         edit: "Rediģēt"
         revert_confirm: "Vai tiešām vēlies atsaukt izmaiņas?"
@@ -4030,7 +4032,7 @@ lv:
           modal_title: Žetonu Grupa
         granted_by: Piešķīra
         granted_at: Piešķirta
-        reason_help: (Saite uz ierakstu vai tēmu)
+        reason_help: Saite uz ierakstu vai tēmu
         save: Saglabāt
         delete: Dzēst
         delete_confirm: Vai tiešām vēlies dzēst šo žetonu?

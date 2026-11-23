@@ -23,6 +23,10 @@ pl_PL:
     discourse_automation:
       title: Automatyzacja
       table_title: Automatyzacje
+      workflows_notice:
+        title: "Automatyzacja to starszy produkt; zamiast niego zalecamy korzystanie z przepływów pracy."
+        description: "Workflows to nasz nowy kreator przepływów pracy z wizualną funkcją „przeciągnij i upuść” do tworzenia złożonych, wieloetapowych automatyzacji."
+        action: Przejdź do przepływów pracy
       create: Dodaj automatyzację
       update: Aktualizuj automatyzację
       back: Poprzednia

@@ -350,6 +350,25 @@ RSpec.describe Live::RoomsController do
       expect(remove_stub).to have_been_requested.once
     end
 
+    it "evicts a non-member LiveKit still lists after the transport pin expired" do
+      configure_livekit!
+      stub_request(
+        :post,
+        "https://livekit.example.com/twirp/livekit.RoomService/ListParticipants",
+      ).to_return(status: 200, body: { participants: [{ identity: other_user.id.to_s }] }.to_json)
+      remove_stub =
+        stub_request(
+          :post,
+          "https://livekit.example.com/twirp/livekit.RoomService/RemoveParticipant",
+        ).with(body: { identity: other_user.id.to_s, room: Live::Livekit.room_name(room) }.to_json)
+      sign_in(admin)
+
+      put "/live/rooms/#{room.id}.json", params: { room: { public: false } }
+
+      expect(response.status).to eq(200)
+      expect(remove_stub).to have_been_requested.once
+    end
+
     it "removes a dispatched agent when the room is made private" do
       configure_livekit!
       SiteSetting.live_livekit_url = "wss://test.livekit.cloud"

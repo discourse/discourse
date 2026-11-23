@@ -1446,7 +1446,8 @@
 .control-group[data-setting-name="user-user-fields"] {
   .user-field.text,
   .user-field.textarea,
-  .user-field.date {
+  .user-field.date,
+  .user-field.number {
     .controls {
       display: flex;
       flex-direction: column;

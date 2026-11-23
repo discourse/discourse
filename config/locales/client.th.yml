@@ -3560,6 +3560,8 @@ th:
           dropdown: "ดร็อปดาวน์"
       site_text:
         search_label: "ค้นหา"
+        preview:
+          default: "ค่าเริ่มต้น"
         theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -3628,7 +3630,7 @@ th:
           modal_title: การจัดกลุ่มเหรียญ
         granted_by: อนุญาตโดย
         granted_at: อนุญาตเมื่อ
-        reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
+        reason_help: ลิงก์ไปยังหัวข้อหรือโพส
         save: บันทึก
         delete: ลบ
         delete_confirm: คุณแน่ใจหรือว่าต้องการลบเหรียญนี้

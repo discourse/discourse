@@ -161,7 +161,7 @@ module ::Blog
     end
 
     def blog_path
-      @blog_path ||= Configuration.relative_path(request)
+      @blog_path ||= Configuration.relative_path(request, @blog)
     end
 
     def template_variables(**variables)
@@ -193,17 +193,17 @@ module ::Blog
       elsif %w[theme_css theme_js].include?(action_name) && params[:blog_theme_snapshot].present?
         @blog_theme = BlogTheme.snapshot(params[:blog_theme_snapshot])
       else
-        @blog_theme = BlogTheme.active
+        @blog_theme = BlogTheme.active_for(@blog)
       end
     end
 
-    # Several blogs are told apart by host and path in a later change.
+    # The forum homepage can show the default blog, outside its path.
     def load_blog
-      @blog = Instance.default_blog
+      @blog = Configuration.blog_for(request) || Instance.default_blog
     end
 
     def ensure_public_blog
-      raise Discourse::NotFound unless Configuration.blog_request?(request)
+      raise Discourse::NotFound unless Configuration.blog_request?(request, @blog)
       # Revoked visibility must take effect on the next request, including feeds and previews.
       response.headers["Cache-Control"] = "private, no-store"
     end

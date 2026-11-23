@@ -6137,6 +6137,8 @@ te:
           multiselect: "బహుళ ఎంపిక"
       site_text:
         search_label: "వెతుకు"
+        preview:
+          default: "అప్రమేయ"
         theme_disabled: "నిలిపివేయబడింది"
         edit: "సవరించండి"
         revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
@@ -6244,7 +6246,6 @@ te:
           modal_title: బ్యాడ్జ్ సమూహాలు
         granted_by: ద్వారా మంజూరు చేయబడింది
         granted_at: వద్ద మంజూరు చేయబడింది
-        reason_help: (పోస్ట్ లేదా విషయానికి లింక్)
         save: సేవ్ చేయండి
         delete: తొలగించండి
         delete_confirm: మీరు ఖచ్చితంగా ఈ బ్యాడ్జ్‌ని తొలగించాలనుకుంటున్నారా?

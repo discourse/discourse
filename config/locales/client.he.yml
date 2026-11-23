@@ -5568,7 +5568,6 @@ he:
         other: "טיוטות (%{count})"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
-    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
@@ -8683,6 +8682,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8850,7 +8851,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

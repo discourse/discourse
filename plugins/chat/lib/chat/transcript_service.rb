@@ -176,6 +176,8 @@ module Chat
     end
 
     def generate_markdown
+      return "" if messages.empty?
+
       previous_message = nil
       rendered_markdown = []
       rendered_thread_markdown = []
@@ -306,7 +308,14 @@ module Chat
         Chat::Message
           .includes(:user, upload_references: :upload)
           .where(id: @message_ids, chat_channel_id: @channel.id)
+          .then { |relation| filter_deleted_threads(relation) }
           .order(:created_at)
+    end
+
+    def filter_deleted_threads(relation)
+      return relation if @acting_user&.guardian&.can_moderate_chat?(@channel.chatable)
+
+      relation.excluding_deleted_threads
     end
 
     ##

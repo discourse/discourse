@@ -3774,7 +3774,6 @@ ro:
         other: "Ciorne (%{count})"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
-    theme_preview_notice: "Momentan previzualizezi o temă, închide această filă sau fereastră de navigator pentru a reveni la configurația normală a site-ului."
     theme_preview_failed: "Previzualizarea temei a eșuat pentru că nu există, sau nu ai permisiunea de a o accesa."
     pause_notifications:
       options:
@@ -5643,6 +5642,8 @@ ro:
       site_text:
         description: "Poți personaliza orice text de pe forumul tău."
         search_label: "Caută"
+        preview:
+          default: "Implicit"
         theme_disabled: "Dezactivate"
         filters: "Filtre"
         title: "Texte site"
@@ -5744,7 +5745,7 @@ ro:
           modal_title: Grupuri ecusoane
         granted_by: Acordat de
         granted_at: Acordat la
-        reason_help: (O legătură către o postare sau un subiect)
+        reason_help: O legătură către o postare sau un subiect
         save: Salvează
         delete: Șterge
         delete_confirm: Ești sigur că vrei să ștergi acest ecuson?

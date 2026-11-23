@@ -36,6 +36,9 @@ hr:
           title: "Sustav fonta"
         colors:
           title: "Boje"
+        design_variables:
+          type: "Tip"
+          default: "Zadano"
         icons:
           title: "Ikone"
           full_list: "Pogledajte cijeli popis ikona Font Awesome"

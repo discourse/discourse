@@ -31,6 +31,7 @@ module ::Blog
                    reviews,
                    ReviewSerializer,
                    active_review_ids: Review.accessible_ids(reviews, @topic),
+                   blog: Review.blog_for_topic(@topic.id),
                    feedback_counts: ReviewFeedback.where(review: reviews).group(:review_id).count,
                  ),
                more: records.length > REVIEWS_PER_PAGE,
@@ -46,6 +47,7 @@ module ::Blog
                        review,
                        root: false,
                        active_review_ids: Review.accessible_ids([review], topic),
+                       blog: Review.blog_for_topic(topic.id),
                      ).as_json,
                  },
                  status: :created

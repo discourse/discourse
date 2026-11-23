@@ -39,6 +39,7 @@ class UserCreator
   end
 
   def self.clean_custom_field_values(field, field_values)
+    return clean_number_field_value(field_values) if field.field_type == "number"
     return field_values if field_values.nil? || field_values.empty?
 
     if field.field_type == "dropdown"
@@ -51,6 +52,14 @@ class UserCreator
       field_values
     end
   end
+
+  # JSON API clients can send numbers rather than strings.
+  def self.clean_number_field_value(field_value)
+    value = field_value.is_a?(Numeric) ? field_value.to_s : field_value
+    value = value.strip if value.is_a?(String)
+    value if !UserField.cast_number(value).nil?
+  end
+  private_class_method :clean_number_field_value
 
   def initialize(guardian, attributes)
     @guardian = guardian

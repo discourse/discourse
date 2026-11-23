@@ -5279,7 +5279,6 @@ pt_BR:
         other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
-    theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
     theme_preview_failed: "Não foi possível visualizar o tema porque ele não existe ou você não tem permissão para acessá-lo."
     image_removed: "(imagem removida)"
     pause_notifications:
@@ -8387,6 +8386,8 @@ pt_BR:
       site_text:
         description: "Você pode personalizar qualquer texto no seu fórum."
         search_label: "Pesquisar"
+        preview:
+          default: "Padrão"
         theme_disabled: "Desativados"
         filters: "Filtros"
         status:
@@ -8554,7 +8555,7 @@ pt_BR:
           modal_title: Agrupamentos de emblemas
         granted_by: Concedido por
         granted_at: Concedido em
-        reason_help: (Um link para uma postagem ou tópico)
+        reason_help: Um link para uma postagem ou tópico
         save: Salvar
         delete: Excluir
         delete_confirm: Tem certeza de que deseja excluir este emblema?

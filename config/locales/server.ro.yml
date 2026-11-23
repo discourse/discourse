@@ -1729,16 +1729,6 @@ ro:
     user_automatically_silenced_with_reason:
       title: "Utilizator redus automat la tăcere"
       subject_template: "Noul utilizator %{username} a fost redus la tăcere de semnalările comunității"
-      text_body_template: |
-        Acesta este un mesaj automat.
-
-        Noul utilizator [%{username}](%{user_url}) a fost redus automat la tăcere.
-
-        Motiv: %{reason}
-
-        Te rog să [revizuiești semnalările](%{base_url}/review). Dacă %{username} a fost redus la tăcere pe nedrept pentru a nu mai posta, dă clic pe butonul de reactivare de pe [pagina de administrare pentru acest utilizator](%{user_url}).
-
-        Acest prag poate fi modificat prin intermediul setărilor `silence_new_user` ale site-ului.
     spam_post_blocked:
       subject_template: "Utilizatorul nou %{username} are postările blocate datorită adreselor repetate"
     unsilenced:

@@ -54,6 +54,33 @@ RSpec.describe Admin::Config::CustomizeController do
     end
   end
 
+  describe "#popular_themes" do
+    it "lists the popular themes and components" do
+      get "/admin/config/customize/popular-themes.json"
+
+      expect(response.status).to eq(200)
+      popular = response.parsed_body["popular_themes"]
+      expect(popular.map { |entry| entry["name"] }).to include(
+        "Graceful",
+        "Concord",
+        "Brand Header",
+      )
+      expect(popular.find { |entry| entry["id"] == "graceful" }).to include(
+        "remote_url" => "https://github.com/discourse/graceful",
+        "description" => I18n.t("popular_themes.graceful.description"),
+        "component" => false,
+      )
+    end
+
+    it "is only for administrators" do
+      sign_in(Fabricate(:moderator))
+
+      get "/admin/config/customize/popular-themes.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#components" do
     fab!(:parent_theme_1, :theme)
     fab!(:parent_theme_2, :theme)

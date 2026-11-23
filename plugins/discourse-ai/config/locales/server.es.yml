@@ -38,12 +38,6 @@ es:
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
         notify_author_pm:
           subject: "Tu publicación se ha eliminado temporalmente para revisarse"
-          body: |
-            Hola, @%{username}:
-
-            Tu publicación en «%{topic_title}» se ha eliminado temporalmente y se ha puesto en nuestra cola de revisión para que un moderador la revise. Si se aprueba, se restaurará automáticamente.
-
-            Referencia: %{post_url}
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"

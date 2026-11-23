@@ -17,7 +17,9 @@ module Live
       Live::RoomBroadcaster.publish_kick(room, user_id)
       Live::RoomBroadcaster.publish_participants(room)
 
-      Live::Livekit::RoomServiceClient.remove_participant(room, user_id) unless user_id.negative?
+      if user_id.positive? && Live::ParticipantTracker.pinned_transport(room.id) != "mesh"
+        Live::Livekit::RoomServiceClient.expel(Live::Livekit.room_name(room), user_id.to_s)
+      end
 
       Live::StageRoles.clear_session_speakers!(room) if Live::ParticipantTracker.vacant?(room.id)
 

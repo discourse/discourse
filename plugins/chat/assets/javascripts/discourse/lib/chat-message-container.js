@@ -1,4 +1,4 @@
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export const MESSAGE_CONTEXT_PINNED = "pinned";
 

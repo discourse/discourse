@@ -5783,7 +5783,6 @@ fr:
         other: "Brouillons (%{count})"
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
-    theme_preview_notice: "Vous prévisualisez actuellement un thème. Fermez cet onglet ou cette fenêtre de navigateur pour revenir à la configuration normale de votre site."
     theme_preview_failed: "Impossible de prévisualiser le thème, car il n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
     image_removed: "(image supprimée)"
     pause_notifications:
@@ -9181,6 +9180,8 @@ fr:
       site_text:
         description: "Vous pouvez personnaliser n'importe quel texte de votre forum."
         search_label: "Recherche"
+        preview:
+          default: "Par défaut"
         theme_disabled: "Désactivées"
         filters: "Filtres"
         status:
@@ -9360,7 +9361,7 @@ fr:
           modal_title: Groupes de badges
         granted_by: Attribué par
         granted_at: Attribué à
-        reason_help: (Lien vers un message ou un sujet)
+        reason_help: Lien vers un message ou un sujet
         save: Enregistrer
         delete: Supprimer
         delete_confirm: Voulez-vous vraiment supprimer ce badge ?
