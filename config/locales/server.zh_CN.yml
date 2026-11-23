@@ -101,6 +101,7 @@ zh_CN:
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
       post_not_found: "帖子未找到"
+      post_not_created: "无法发布该帖子"
       user_directory_disabled: "用户目录已禁用"
       filter_only_for_filtered_view: "筛选功能仅在已筛选视图中受支持。"
       filter_required: "筛选视图需要一个非空白的筛选器。"
