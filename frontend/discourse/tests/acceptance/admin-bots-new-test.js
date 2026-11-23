@@ -237,8 +237,8 @@ acceptance("Admin - New bot", function (needs) {
     assert
       .dom(`${FORM} [data-name]`)
       .exists(
-        { count: 4 },
-        "only name, username, trust level and the API key toggle are editable"
+        { count: 5 },
+        "name, username, trust level, interactivity and the API key toggle are editable"
       );
   });
 
@@ -260,6 +260,7 @@ acceptance("Admin - New bot", function (needs) {
             name: "Release helper",
             username: "release_helper",
             trust_level: 2,
+            interactive_bot: false,
           },
         },
       ],
@@ -285,6 +286,23 @@ acceptance("Admin - New bot", function (needs) {
         currentUser().username,
         "a manual bot identifies its creator in Source"
       );
+  });
+
+  test("interactivity is an opt-in checkbox submitted as a boolean", async function (assert) {
+    await visit("/admin/users/bots/new");
+    const form = formKit(FORM);
+
+    assert
+      .dom(`${FORM} [data-name="interactive_bot"] input`)
+      .hasAttribute("type", "checkbox", "uses a checkbox");
+    assert
+      .dom(`${FORM} [data-name="interactive_bot"] input`)
+      .isNotChecked("bots are non-interactive by default");
+    await form.field("username").fillIn("interactive_helper");
+    await form.field("interactive_bot").toggle();
+    await form.submit();
+
+    assert.true(payloads[0].bot.interactive_bot, "submits a boolean opt-in");
   });
 
   test("plugins can add values to the bot payload", async function (assert) {
@@ -426,7 +444,16 @@ acceptance("Admin - New bot", function (needs) {
 
     assert.deepEqual(
       payloads,
-      [{ bot: { name: "", username: "custom_bot", trust_level: 0 } }],
+      [
+        {
+          bot: {
+            name: "",
+            username: "custom_bot",
+            trust_level: 0,
+            interactive_bot: false,
+          },
+        },
+      ],
       "the explicit trust level is sent without extra fields"
     );
   });

@@ -33,6 +33,7 @@ end
 #  first_seen_at             :datetime
 #  flag_level                :integer          default(0), not null
 #  group_locked_trust_level  :integer
+#  interactive_bot           :boolean          default(FALSE), not null
 #  ip_address                :inet
 #  last_emailed_at           :datetime
 #  last_posted_at            :datetime

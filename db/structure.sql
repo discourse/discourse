@@ -3560,37 +3560,6 @@ ALTER SEQUENCE public.chat_channels_id_seq OWNED BY public.chat_channels.id;
 
 
 --
--- Name: chat_discoverable_bots; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.chat_discoverable_bots (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.chat_discoverable_bots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.chat_discoverable_bots_id_seq OWNED BY public.chat_discoverable_bots.id;
-
-
---
 -- Name: chat_drafts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -14194,7 +14163,8 @@ CREATE TABLE public.users (
     flair_group_id integer,
     last_seen_reviewable_id integer,
     required_fields_version integer,
-    seen_notification_id bigint DEFAULT 0 NOT NULL
+    seen_notification_id bigint DEFAULT 0 NOT NULL,
+    interactive_bot boolean DEFAULT false NOT NULL
 );
 
 
@@ -15013,13 +14983,6 @@ ALTER TABLE ONLY public.chat_channel_custom_fields ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.chat_channels ALTER COLUMN id SET DEFAULT nextval('public.chat_channels_id_seq'::regclass);
-
-
---
--- Name: chat_discoverable_bots id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.chat_discoverable_bots ALTER COLUMN id SET DEFAULT nextval('public.chat_discoverable_bots_id_seq'::regclass);
 
 
 --
@@ -17713,14 +17676,6 @@ ALTER TABLE ONLY public.chat_channel_custom_fields
 
 ALTER TABLE ONLY public.chat_channels
     ADD CONSTRAINT chat_channels_pkey PRIMARY KEY (id);
-
-
---
--- Name: chat_discoverable_bots chat_discoverable_bots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.chat_discoverable_bots
-    ADD CONSTRAINT chat_discoverable_bots_pkey PRIMARY KEY (id);
 
 
 --
@@ -22294,13 +22249,6 @@ CREATE INDEX index_chat_channels_on_status ON public.chat_channels USING btree (
 
 
 --
--- Name: index_chat_discoverable_bots_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_chat_discoverable_bots_on_user_id ON public.chat_discoverable_bots USING btree (user_id);
-
-
---
 -- Name: index_chat_mention_notifications_on_chat_mention_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26820,6 +26768,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261123030923'),
+('20261121231304'),
 ('20261120183731'),
 ('20261119153028'),
 ('20261118215054'),

@@ -305,6 +305,8 @@ class User < ActiveRecord::Base
         end
 
   scope :bot_users, -> { where("users.id <= 0") }
+  scope :interactive_bots,
+        -> { bot_users.where(interactive_bot: true).where.not(id: Discourse::SYSTEM_USER_ID) }
 
   scope :human_users,
         ->(allowed_bot_user_ids: nil) do
@@ -527,6 +529,10 @@ class User < ActiveRecord::Base
 
   def bot?
     !human?
+  end
+
+  def interactive_bot?
+    bot? && !is_system_user? && super
   end
 
   def effective_locale
@@ -922,10 +928,10 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
-    return if !allow_live_notifications?
+    return if !interactive_bot? && !allow_live_notifications?
 
     # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order("notifications.created_at desc").first
+    notification = notifications.visible.order(created_at: :desc, id: :desc).first
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = <<~SQL
@@ -2501,6 +2507,7 @@ end
 #  first_seen_at             :datetime
 #  flag_level                :integer          default(0), not null
 #  group_locked_trust_level  :integer
+#  interactive_bot           :boolean          default(FALSE), not null
 #  ip_address                :inet
 #  last_emailed_at           :datetime
 #  last_posted_at            :datetime

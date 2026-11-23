@@ -28,7 +28,8 @@ class AdminUserListSerializer < BasicUserSerializer
              :can_be_suspended,
              :silence_reason,
              :suspend_reason,
-             :bot_creator
+             :bot_creator,
+             :interactive_bot
 
   %i[days_visited posts_read_count topics_entered post_count].each do |sym|
     attributes sym
@@ -156,5 +157,9 @@ class AdminUserListSerializer < BasicUserSerializer
 
   def include_bot_creator?
     scope.is_admin? && object.bot? && @options[:bot_creators]&.key?(object.id)
+  end
+
+  def include_interactive_bot?
+    object.bot?
   end
 end

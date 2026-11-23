@@ -196,6 +196,7 @@ class UserHistory < ActiveRecord::Base
         create_bot: 136,
         web_hook_ping: 137,
         web_hook_redeliver: 138,
+        change_bot_interactivity: 139,
       )
   end
 
@@ -204,6 +205,7 @@ class UserHistory < ActiveRecord::Base
     @staff_actions ||= %i[
       delete_user
       create_bot
+      change_bot_interactivity
       change_trust_level
       change_site_setting
       change_theme
