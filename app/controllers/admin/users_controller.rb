@@ -77,6 +77,10 @@ class Admin::UsersController < Admin::StaffController
   def create_bot
     plugin_param_names = DiscoursePluginRegistry.bot_creation_params.keys
     bot = params.expect(bot: %i[name username trust_level interactive_bot] + plugin_param_names)
+    # Strong parameters drop non-scalar values; treat them as invalid rather than omitted.
+    if params[:bot].key?(:interactive_bot) && !bot.key?(:interactive_bot)
+      bot[:interactive_bot] = nil
+    end
     plugin_params = bot.extract!(*plugin_param_names).to_h
 
     # Request uses `key`, as `api_key` would be read as an authentication credential.
