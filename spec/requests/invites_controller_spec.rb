@@ -1817,6 +1817,55 @@ RSpec.describe InvitesController do
           end
         end
       end
+
+      context "when the admin IP allowlist is enabled" do
+        let(:developer_email) { "dev-invite@example.com" }
+        let(:invite) { Invite.generate(topic.user, email: developer_email, topic: topic) }
+
+        before do
+          Rails.configuration.stubs(:developer_emails).returns([developer_email])
+          SiteSetting.use_admin_ip_allowlist = true
+          ScreenedIpAddress.all.destroy_all
+          Fabricate(
+            :screened_ip_address,
+            ip_address: "198.51.100.7",
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
+        end
+
+        it "does not log in an invitee that login promotes from a developer email" do
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email_token: invite.email_token,
+              },
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          invited_user = User.find_by_email(developer_email)
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("login.admin_not_allowed_from_ip_address", username: invited_user.username)],
+          )
+          expect(session[:current_user_id]).to be_blank
+          expect(invited_user.admin?).to eq(false)
+        end
+
+        it "logs in an invitee promoted from a developer email at an IP inside the allowlist" do
+          put "/invites/show/#{invite.invite_key}.json",
+              params: {
+                email_token: invite.email_token,
+              },
+              headers: {
+                "REMOTE_ADDR" => "198.51.100.7",
+              }
+
+          invited_user = User.find_by_email(developer_email)
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(invited_user.id)
+          expect(invited_user.admin?).to eq(true)
+        end
+      end
     end
 
     context "with a domain invite" do

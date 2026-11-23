@@ -1070,7 +1070,8 @@ class UsersController < ApplicationController
 
   def logon_after_password_reset
     message =
-      if Guardian.new(@user).can_access_forum?
+      if Guardian.new(@user).can_access_forum? &&
+           !ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
         # Log in the user
         log_on_user(@user, replay_anonymous_action: true)
         "password_reset.success"
@@ -1209,6 +1210,15 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
+      if ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        return(
+          render_json_error(
+            I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username),
+            status: 403,
+          )
+        )
+      end
+
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true

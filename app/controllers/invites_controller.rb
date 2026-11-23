@@ -445,6 +445,15 @@ class InvitesController < ApplicationController
       end
 
       if !redeeming_user && user.active? && user.guardian.can_access_forum?
+        if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+          return(
+            render_json_error(
+              I18n.t("login.admin_not_allowed_from_ip_address", username: user.username),
+              status: 403,
+            )
+          )
+        end
+
         log_on_user(user, replay_anonymous_action: true)
       end
 
