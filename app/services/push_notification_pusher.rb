@@ -10,18 +10,23 @@ class PushNotificationPusher
   MAX_UNTRUSTED_ERRORS = 2
   SUBSCRIBE_RATE_LIMIT_PER_HOUR = 10
 
+  def self.push_icon_exists?(notification_icon_name)
+    @push_icon_exists ||= {}
+    @push_icon_exists.fetch(notification_icon_name) do
+      @push_icon_exists[notification_icon_name] = File.exist?(
+        File.expand_path(
+          "../../app/assets/images/push-notifications/#{notification_icon_name}.png",
+          __dir__,
+        ),
+      )
+    end
+  end
+
   def self.push(user, payload)
     message = nil
     I18n.with_locale(user.effective_locale) do
       notification_icon_name = Notification.types[payload[:notification_type]]
-      if !File.exist?(
-           File.expand_path(
-             "../../app/assets/images/push-notifications/#{notification_icon_name}.png",
-             __dir__,
-           ),
-         )
-        notification_icon_name = "discourse"
-      end
+      notification_icon_name = "discourse" unless push_icon_exists?(notification_icon_name)
       notification_icon =
         ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
 
@@ -32,7 +37,7 @@ class PushNotificationPusher
         icon: notification_icon,
         tag: payload[:tag] || "#{Discourse.current_hostname}-#{payload[:topic_id]}",
         base_url: Discourse.base_url,
-        url: payload[:post_url]&.sub(/\A#{Discourse.base_path}/, ""),
+        url: payload[:post_url]&.delete_prefix(Discourse.base_path),
       }
 
       message[:actions] = payload[:actions] if payload[:actions].present?
