@@ -1248,16 +1248,20 @@ RSpec.describe DiscourseEvents::Events::Event do
       expect(event.parsed_reminders).to eq([{ type: "notification", value: 60, unit: "minutes" }])
     end
 
-    it "never returns more than MAX_REMINDERS" do
-      reminders =
-        Array
-          .new(DiscourseEvents::Events::Event::MAX_REMINDERS + 1) do |i|
-            "notification.#{i}.minutes"
-          end
-          .join(",")
-      event = event_with_reminders(reminders)
+    it "keeps at most the allowed number of reminders per type" do
+      event =
+        event_with_reminders(
+          "notification.1.minutes,notification.2.minutes,notification.3.minutes," \
+            "bumpTopic.1.hours,bumpTopic.2.hours",
+        )
 
-      expect(event.parsed_reminders.length).to eq(DiscourseEvents::Events::Event::MAX_REMINDERS)
+      expect(event.parsed_reminders).to eq(
+        [
+          { type: "notification", value: 1, unit: "minutes" },
+          { type: "notification", value: 2, unit: "minutes" },
+          { type: "bumpTopic", value: 1, unit: "hours" },
+        ],
+      )
     end
   end
 

@@ -107,15 +107,18 @@ module DiscourseEvents
         end
 
         if extracted_event[:reminders].present?
-          split_reminders = extracted_event[:reminders].split(",")
+          valid_reminders, invalid_reminders =
+            extracted_event[:reminders].split(",").partition { |r| Event.valid_reminder?(r) }
 
-          if split_reminders.length > Event::MAX_REMINDERS
-            add_error("too_many_reminders", maximum: Event::MAX_REMINDERS)
-          end
-
-          invalid_reminders = split_reminders.reject { |r| Event.valid_reminder?(r) }
           if invalid_reminders.any?
             add_error("invalid_reminders", reminders: invalid_reminders.join(", "))
+          end
+
+          reminder_counts = valid_reminders.map { |r| Event.reminder_type(r) }.tally
+          Event::MAX_REMINDERS_PER_TYPE.each do |type, maximum|
+            if reminder_counts.fetch(type, 0) > maximum
+              add_error("too_many_reminders.#{type.underscore}", count: maximum)
+            end
           end
         end
 

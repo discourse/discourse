@@ -277,7 +277,7 @@ describe Post do
             post =
               create_post_with_event(
                 user,
-                'reminders="notification.1.minute,bumpTopic.-1.day,1.week,notification.1.hour"',
+                'reminders="notification.1.minute,bumpTopic.-1.day,1.week"',
               ).reload
 
             expect(post.event.parsed_reminders).to eq(
@@ -285,7 +285,6 @@ describe Post do
                 { type: "notification", value: 1, unit: "minutes" },
                 { type: "bumpTopic", value: -1, unit: "days" },
                 { type: "notification", value: 1, unit: "weeks" },
-                { type: "notification", value: 1, unit: "hours" },
               ],
             )
           end
@@ -568,21 +567,50 @@ describe Post do
           end
         end
 
-        context "when too many reminders are added which exceed MAX_REMINDERS" do
+        context "when there are too many notification reminders" do
           it "raises an error" do
-            reminders =
-              Array
-                .new(DiscourseEvents::Events::Event::MAX_REMINDERS + 1) do |i|
-                  "notification.#{i}.minutes"
-                end
-                .join(",")
+            reminders = "notification.1.minutes,notification.2.minutes,notification.3.minutes"
 
             expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
               I18n.t(
-                "discourse_post_event.errors.models.event.too_many_reminders",
-                maximum: DiscourseEvents::Events::Event::MAX_REMINDERS,
+                "discourse_post_event.errors.models.event.too_many_reminders.notification",
+                count: 2,
               ),
             )
+          end
+
+          it "counts reminders without a type as notification reminders" do
+            reminders = "1.minutes,2.minutes,notification.3.minutes"
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.notification",
+                count: 2,
+              ),
+            )
+          end
+        end
+
+        context "when there are too many topic bump reminders" do
+          it "raises an error" do
+            reminders = "bumpTopic.1.hours,bumpTopic.2.hours"
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.bump_topic",
+                count: 1,
+              ),
+            )
+          end
+        end
+
+        context "when each reminder type is at its limit" do
+          it "creates the event" do
+            reminders = "notification.1.minutes,notification.2.minutes,bumpTopic.1.hours"
+
+            post = create_post_with_event(user, "reminders=\"#{reminders}\"").reload
+
+            expect(post.event.reminders).to eq(reminders)
           end
         end
 
