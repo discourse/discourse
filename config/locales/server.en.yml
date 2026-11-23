@@ -3489,6 +3489,7 @@ en:
 
   search:
     extreme_load_error: "Site is under extreme load, search is disabled, try again later"
+    keyword_search_timeout: "The search took too long. Try more specific keywords."
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"

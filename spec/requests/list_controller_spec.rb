@@ -341,6 +341,15 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "leaves a search shorter than the minimum length unlimited" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      2.times { get "/latest.json", params: { search: "ke" } }
+
+      expect(response).to have_http_status(:ok)
+    end
+
     it "does not reveal topics that only match non-visible post content" do
       visible_topic = Fabricate(:topic_with_op, raw: "The public prefix oracle content")
       whisper_topic = Fabricate(:topic_with_op, raw: "A public topic")
@@ -999,6 +1008,17 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "charges a keyword feed once against the search limit" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      get "/latest.rss", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:too_many_requests)
     end
 
     it "localizes latest RSS from Accept-Language for clients classified as crawlers" do
@@ -2247,6 +2267,42 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    context "when rate limited" do
+      before do
+        RateLimiter.enable
+        SiteSetting.rate_limit_search_anon_user_per_minute = 1
+      end
+
+      it "charges a keyword filter once against the shared search limit" do
+        get "/filter.json", params: { q: "keyword", search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/latest.json", params: { search: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "shares the user's search limit only with lists that search posts" do
+        SiteSetting.enable_unified_new = true
+        SiteSetting.rate_limit_search_user = 1
+        sign_in(user)
+
+        get "/topics/private-messages/#{user.username}.json", params: { search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/filter.json", params: { q: "keyword" }
+        expect(response).to have_http_status(:ok)
+
+        get "/search/query.json", params: { term: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "leaves filters without keywords unlimited" do
+        2.times { get "/filter.json", params: { q: "status:open" } }
+
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     it "keeps anonymous repeated negated filters from amplifying SQL" do
