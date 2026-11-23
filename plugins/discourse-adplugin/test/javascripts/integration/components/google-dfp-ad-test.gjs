@@ -32,12 +32,15 @@ module("Integration | Component | GoogleDfpAd", function (hooks) {
     this.slots = [];
     this.refreshes = [];
     this.destroyed = [];
+    this.displayed = [];
+    this.activeSlots = new Set();
     const pubads = { refresh: (slots) => this.refreshes.push(...slots) };
     window.googletag = {
       cmd: { push: (callback) => callback() },
-      defineSlot: (adUnitPath) => {
+      defineSlot: (adUnitPath, sizes, divId) => {
         const slot = {
           adUnitPath,
+          divId,
           targeting: {},
           setConfig({ targeting }) {
             Object.assign(this.targeting, targeting);
@@ -52,11 +55,15 @@ module("Integration | Component | GoogleDfpAd", function (hooks) {
           addService() {},
         };
         this.slots.push(slot);
+        this.activeSlots.add(slot);
         return slot;
       },
       pubads: () => pubads,
-      display() {},
-      destroySlots: (slots) => this.destroyed.push(...slots),
+      display: (divId) => this.displayed.push(divId),
+      destroySlots: (slots) => {
+        this.destroyed.push(...slots);
+        slots.forEach((slot) => this.activeSlots.delete(slot));
+      },
     };
   });
 
@@ -158,6 +165,123 @@ module("Integration | Component | GoogleDfpAd", function (hooks) {
       "the changed slot ID gets a GPT slot"
     );
     assert.strictEqual(this.refreshes.length, 2, "the new slot requests an ad");
+    assert.deepEqual(
+      this.destroyed,
+      [this.slots[0]],
+      "the old slot is destroyed"
+    );
+    assert.deepEqual(
+      this.displayed,
+      this.slots.map((slot) => slot.divId),
+      "each replacement is displayed"
+    );
+
+    await clearRender();
+
+    assert.strictEqual(
+      this.activeSlots.size,
+      0,
+      "teardown leaves no registered slots"
+    );
+  });
+
+  test("replaces the slot when an ad is hidden and shown again", async function (assert) {
+    this.siteSettings.no_ads_for_restricted_categories = true;
+    await render(
+      <template><TestGoogleDfpAd @placement="above-site-header" /></template>
+    );
+    const router = this.owner.lookup("service:router");
+    const originalRoute = router.currentRoute;
+    router.currentRoute = {
+      attributes: {
+        category: {
+          ...originalRoute.attributes.category,
+          read_restricted: true,
+        },
+      },
+    };
+    await settled();
+
+    assert.dom(".dfp-ad-unit").doesNotExist("the ad element is removed");
+    assert.strictEqual(
+      this.activeSlots.size,
+      0,
+      "the hidden slot is destroyed"
+    );
+
+    router.currentRoute = originalRoute;
+    await settled();
+
+    assert.dom(".dfp-ad-unit").exists("the ad element is restored");
+    assert.strictEqual(this.slots.length, 2, "a fresh slot is defined");
+    assert.deepEqual(
+      this.displayed,
+      [this.slots[0].divId, this.slots[0].divId],
+      "the replacement element is displayed again"
+    );
+    assert.strictEqual(
+      this.refreshes.length,
+      2,
+      "the replacement requests an ad"
+    );
+
+    await clearRender();
+
+    assert.strictEqual(
+      this.activeSlots.size,
+      0,
+      "teardown leaves no registered slots"
+    );
+  });
+
+  test("discards a queued definition when the ad is hidden", async function (assert) {
+    this.siteSettings.no_ads_for_restricted_categories = true;
+    const commands = [];
+    window.googletag.cmd = commands;
+    await render(
+      <template><TestGoogleDfpAd @placement="above-site-header" /></template>
+    );
+    const router = this.owner.lookup("service:router");
+    const originalRoute = router.currentRoute;
+    router.currentRoute = {
+      attributes: {
+        category: {
+          ...originalRoute.attributes.category,
+          read_restricted: true,
+        },
+      },
+    };
+    await settled();
+    commands.splice(0).forEach((callback) => callback());
+
+    assert.strictEqual(
+      this.slots.length,
+      0,
+      "the hidden ad never defines a slot"
+    );
+
+    router.currentRoute = originalRoute;
+    await settled();
+    commands.splice(0).forEach((callback) => callback());
+
+    assert.strictEqual(
+      this.slots.length,
+      1,
+      "the visible ad defines a fresh slot"
+    );
+    assert.deepEqual(
+      this.displayed,
+      [this.slots[0].divId],
+      "the visible slot is displayed"
+    );
+
+    await clearRender();
+
+    assert.strictEqual(
+      this.activeSlots.size,
+      0,
+      "teardown leaves no registered slots"
+    );
   });
 
   test("cancels a pending refresh when the component is removed", async function (assert) {

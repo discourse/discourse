@@ -343,6 +343,7 @@ export default class GoogleDfpAd extends AdComponent {
   lastAdRefresh = null;
 
   #refreshTimer = null;
+  #slotId = null;
 
   @computed("size.width")
   get width() {
@@ -466,23 +467,25 @@ export default class GoogleDfpAd extends AdComponent {
 
   @action
   updated() {
-    if (
-      this.isDestroying ||
-      this.isDestroyed ||
-      !this.get("showAd") ||
-      !this.get("loadedGoogletag")
-    ) {
+    if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    // A prior instance can be torn down by route churn before it defines its
-    // slot; a still-mounted component defines it here so the ad is not lost.
-    if (!ads[this.get("divId")]?.ad) {
+    const divId = this.get("divId");
+    if (!this.get("showAd") || (this.#slotId && this.#slotId !== divId)) {
+      this.cleanup();
+    }
+
+    if (!this.get("showAd") || !this.get("loadedGoogletag")) {
+      return;
+    }
+
+    if (!ads[this.#slotId]?.ad) {
       this.#defineSlot();
       return;
     }
 
-    const slot = ads[this.get("divId")];
+    const slot = ads[this.#slotId];
     const config = dfpConfig(
       this.get("placement"),
       this.siteSettings,
@@ -514,14 +517,21 @@ export default class GoogleDfpAd extends AdComponent {
     this.set("lastAdRefresh", new Date());
 
     window.googletag.cmd.push(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        !this.get("showAd") ||
+        this.get("divId") !== divId ||
+        this.#slotId !== divId ||
+        ads[divId] !== slot
+      ) {
         return;
       }
 
       if (config.adUnitPath !== slot.adUnitPath) {
-        destroySlot(this.get("divId"));
+        destroySlot(divId);
         const redefined = defineSlot(
-          this.get("divId"),
+          divId,
           this.get("placement"),
           this.siteSettings,
           this.site.mobileView,
@@ -529,7 +539,7 @@ export default class GoogleDfpAd extends AdComponent {
           slot.height,
           this.#buildDfpContext()
         );
-        window.googletag.display(this.get("divId"));
+        window.googletag.display(divId);
         window.googletag.pubads().refresh([redefined.ad]);
       } else {
         for (const key of slot.targetingKeys) {
@@ -566,7 +576,9 @@ export default class GoogleDfpAd extends AdComponent {
   @on("willDestroyElement")
   cleanup() {
     cancel(this.#refreshTimer);
-    destroySlot(this.get("divId"));
+    this.#refreshTimer = null;
+    destroySlot(this.#slotId);
+    this.#slotId = null;
   }
 
   #buildDfpContext() {
@@ -584,16 +596,23 @@ export default class GoogleDfpAd extends AdComponent {
       return;
     }
 
+    const divId = this.get("divId");
     this.set("loadedGoogletag", true);
     this.set("lastAdRefresh", new Date());
 
     window.googletag.cmd.push(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (
+        this.isDestroying ||
+        this.isDestroyed ||
+        !this.get("showAd") ||
+        this.get("divId") !== divId ||
+        ads[divId]
+      ) {
         return;
       }
 
       const slot = defineSlot(
-        this.get("divId"),
+        divId,
         this.get("placement"),
         this.siteSettings,
         this.site.mobileView,
@@ -602,9 +621,10 @@ export default class GoogleDfpAd extends AdComponent {
         this.#buildDfpContext()
       );
       if (slot && slot.ad) {
+        this.#slotId = divId;
         // Display has to be called before refresh
         // and after the slot div is in the page.
-        window.googletag.display(this.get("divId"));
+        window.googletag.display(divId);
         window.googletag.pubads().refresh([slot.ad]);
       }
     });
@@ -633,7 +653,7 @@ export default class GoogleDfpAd extends AdComponent {
         this.currentCategoryId
         this.currentCategorySlug
         this.currentRouteName
-        this.postNumber
+        this.divId
         this.showAd
         this.site.mobileView
       }}
