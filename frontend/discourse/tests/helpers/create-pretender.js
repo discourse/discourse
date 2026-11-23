@@ -170,6 +170,16 @@ export function applyDefaultHandlers() {
     return response(json);
   });
 
+  pretender.get("/filter/options.json", () =>
+    response({
+      options: [
+        { name: "category:", type: "category", priority: 1 },
+        { name: "tag:", type: "tag", priority: 1 },
+        { name: "status:", priority: 1 },
+      ],
+    })
+  );
+
   pretender.get("/c/bug/1/l/latest.json", () => {
     const json = cloneJSON(fixturesByUrl["/c/bug/1/l/latest.json"]);
 

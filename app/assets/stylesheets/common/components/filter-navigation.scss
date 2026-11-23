@@ -13,6 +13,88 @@
   }
 }
 
+.fk-d-menu[data-identifier="filter-navigation-token-editor"] {
+  .fk-d-menu__inner-content {
+    flex-direction: column;
+    min-width: 16em;
+    max-height: 300px;
+  }
+
+  .dropdown-menu {
+    overflow-y: auto;
+  }
+}
+
+// the calendar needs more room than a list of values
+.fk-d-menu[data-identifier="filter-navigation-token-editor"],
+.fk-d-menu[data-identifier="filter-navigation-builder-add"] {
+  &:has(.filter-navigation-token__editor.--date) .fk-d-menu__inner-content {
+    max-height: min(40em, 85vh);
+  }
+}
+
+.filter-navigation-token__editor {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  &-heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3) 0;
+
+    &:has(.filter-navigation-token__editor-back) {
+      padding-inline-start: var(--space-1);
+    }
+  }
+
+  .filter-navigation-token__editor-back {
+    padding: var(--space-1);
+  }
+
+  .dropdown-menu {
+    overflow-y: auto;
+  }
+
+  &-title {
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  &.--date {
+    overflow-y: auto;
+    padding-bottom: var(--space-2);
+  }
+
+  // scoped to outrank the global bold label rule
+  label.filter-navigation-token__custom-days {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0 var(--space-3);
+    font-weight: normal;
+    color: var(--primary);
+
+    input.filter-navigation-token__custom-days-input {
+      width: 6em;
+      margin: 0;
+    }
+  }
+
+  .filter-navigation-token__days-hint {
+    padding: var(--space-1) var(--space-3) 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  input.filter-navigation-token__editor-input {
+    width: auto;
+    margin: var(--space-2);
+  }
+}
+
 .filter-navigation {
   &__tip-item {
     padding: var(--space-2) var(--space-4);
@@ -35,7 +117,140 @@
     color: var(--primary-high);
   }
 
+  &__tip-item.--stacked {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+
+    .filter-navigation__tip-description {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__tip-item.--level-1 {
+    padding-inline-start: calc(var(--space-4) + 1.25em);
+  }
+
+  &__tip-item.--level-2 {
+    padding-inline-start: calc(var(--space-4) + 2.5em);
+  }
+
+  // mirrors a category badge (swatch, gap, type) so the rows line up
+  &__exclude-subcategories {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.33em;
+    font-size: var(--font-0);
+    color: var(--primary-high);
+
+    .d-icon {
+      flex: 0 0 auto;
+      width: var(--category-badge-size);
+      height: var(--category-badge-size);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__tip-count {
+    margin-inline-start: var(--space-1);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
   &__tip-item .badge-category__wrapper {
     font-size: var(--font-0);
+  }
+}
+
+.filter-navigation-builder {
+  display: flex;
+  flex-wrap: wrap;
+
+  // an icon-only button is shorter than a text line; match the chips
+  align-items: stretch;
+  gap: var(--space-2);
+  flex: 1 1 auto;
+  min-width: 0;
+
+  // same box as .btn so chips and the add button share a height
+  .filter-navigation-token {
+    min-height: 0;
+    font-size: var(--font-0);
+    line-height: normal;
+
+    .filter-navigation-token__value.btn,
+    .filter-navigation-token__text,
+    .filter-navigation-token__remove.btn {
+      padding-block: $vpad;
+      line-height: normal;
+      border: 0;
+    }
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    input.filter-navigation-builder__menu-search {
+      width: auto;
+      margin: var(--space-2);
+    }
+
+    .dropdown-menu {
+      overflow-y: auto;
+    }
+  }
+}
+
+.fk-d-menu[data-identifier="filter-navigation-builder-add"] {
+  .fk-d-menu__inner-content {
+    flex-direction: column;
+    min-width: 18em;
+    max-height: 360px;
+  }
+}
+
+.filter-navigation-token__value-placeholder {
+  color: var(--primary-medium);
+}
+
+.filter-navigation-token {
+  &__date-section {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--space-2);
+
+    + .filter-navigation-token__date-section {
+      border-top: 1px solid var(--primary-low);
+      margin-top: var(--space-2);
+    }
+  }
+
+  &__date-heading {
+    margin: 0;
+    padding: 0 var(--space-3) var(--space-1);
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    color: var(--primary-medium);
+  }
+
+  input.filter-navigation-token__date-input:not(.sr-only) {
+    width: auto;
+    margin: 0 var(--space-3);
+  }
+
+  &__calendar {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-2) var(--space-3) 0;
+
+    // pikaday floats by default; this one is inline in the menu
+    .pika-single {
+      position: relative !important;
+      border: none;
+      box-shadow: none;
+    }
   }
 }

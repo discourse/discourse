@@ -8,9 +8,15 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import FilterNavigationToken from "discourse/components/discovery/filter-navigation-token";
 import { VISIBILITY_OPTIMIZERS } from "discourse/float-kit/lib/constants";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseDebounce from "discourse/lib/debounce";
+import {
+  isCompleteSegment,
+  splitCommittedSegments,
+  splitFilterQuery,
+} from "discourse/lib/filter-query-tokens";
 import FilterSuggestions from "discourse/lib/filter-suggestions";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -66,7 +72,11 @@ export default class FilterNavigationMenu extends Component {
   @service menu;
   @service site;
 
-  @tracked currentInputValue = this.args.initialInputValue || "";
+  /** Segments the user has finished typing, rendered as chips. */
+  @tracked tokens = splitFilterQuery(this.args.initialInputValue);
+
+  /** The segment still being typed in the input. */
+  @tracked currentInputValue = "";
 
   /** @type {FilterSuggestion[]} */
   @tracked suggestions = [];
@@ -90,6 +100,9 @@ export default class FilterNavigationMenu extends Component {
   /** @type {HTMLInputElement | null} */
   inputElement = null;
 
+  /** @type {HTMLElement | null} */
+  containerElement = null;
+
   /** @type {import("discourse/float-kit/lib/d-menu-instance").default | null | undefined} */
   dMenuInstance = null;
   _selectedIndex = -1;
@@ -108,7 +121,20 @@ export default class FilterNavigationMenu extends Component {
   }
 
   get placeholder() {
+    if (this.tokens.length) {
+      return i18n("filter.add_placeholder");
+    }
     return this.args.placeholder || i18n("filter.placeholder");
+  }
+
+  get queryString() {
+    return [...this.tokens, this.currentInputValue.trim()]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  get hasValue() {
+    return this.tokens.length > 0 || !!this.currentInputValue;
   }
 
   clearSelection() {
@@ -118,6 +144,39 @@ export default class FilterNavigationMenu extends Component {
   @action
   storeInputElement(element) {
     this.inputElement = element;
+  }
+
+  @action
+  storeContainerElement(element) {
+    this.containerElement = element;
+  }
+
+  @action
+  focusInputFromContainer(event) {
+    if (event.target === this.containerElement) {
+      this.inputElement?.focus();
+    }
+  }
+
+  @action
+  removeToken(index) {
+    this.tokens = this.tokens.filter((_, i) => i !== index);
+    this.#submitTokens();
+    this.inputElement?.focus();
+  }
+
+  @action
+  replaceToken(index, raw) {
+    this.tokens = this.tokens.map((token, i) => (i === index ? raw : token));
+    this.#submitTokens();
+  }
+
+  @action
+  async editToken(index) {
+    const raw = this.tokens[index];
+    this.tokens = this.tokens.filter((_, i) => i !== index);
+    await this.updateInput(raw);
+    this.inputElement?.focus();
   }
 
   @action
@@ -187,11 +246,8 @@ export default class FilterNavigationMenu extends Component {
       words[words.length - 1] = item.name;
       newValue = words.join(" ");
 
-      // Add space unless it's a filter that takes delimiters
-      if (
-        !newValue.endsWith(":") &&
-        (!item.delimiters || item.delimiters.length < 2)
-      ) {
+      // a chosen value becomes a token; more values are added from its editor
+      if (isCompleteSegment(item.name)) {
         newValue += " ";
       }
     } else {
@@ -211,24 +267,26 @@ export default class FilterNavigationMenu extends Component {
   }
 
   @action
-  async updateInput(value, submitQuery = false) {
-    value ??= "";
-    this.currentInputValue = value;
+  async updateInput(value) {
+    const { committed, draft } = splitCommittedSegments(value);
+
+    if (committed.length) {
+      this.tokens = [...this.tokens, ...committed];
+    }
+    this.currentInputValue = draft;
     this.clearSelection();
 
-    if (submitQuery) {
-      // Cancel pending searches before submitting
-      cancel(this.searchTimer);
-      this.args.onChange(value, true);
-    } else {
-      this.args.onChange(value, false);
-      await this.updateSuggestions();
-    }
+    this.args.onChange(this.queryString, false);
+    await this.updateSuggestions();
   }
 
   @action
   async clearInput() {
-    await this.updateInput("", true);
+    cancel(this.searchTimer);
+    this.tokens = [];
+    this.currentInputValue = "";
+    this.clearSelection();
+    this.args.onChange("", true);
     await this.ensureFreshSuggestions();
     this.inputElement?.focus();
   }
@@ -242,7 +300,7 @@ export default class FilterNavigationMenu extends Component {
 
     await this.fetchSuggestions();
 
-    this.dMenuInstance = await this.menu.show(this.inputElement, {
+    this.dMenuInstance = await this.menu.show(this.containerElement, {
       identifier: "filter-navigation-menu-list",
       component: FilterNavigationMenuList,
       data: this.trackedMenuListData,
@@ -305,6 +363,17 @@ export default class FilterNavigationMenu extends Component {
       case "Escape":
         this.dMenuInstance?.close();
         break;
+
+      case "Backspace":
+        if (
+          this.tokens.length &&
+          this.inputElement?.selectionStart === 0 &&
+          this.inputElement?.selectionEnd === 0
+        ) {
+          event.preventDefault();
+          await this.editToken(this.tokens.length - 1);
+        }
+        break;
     }
   }
 
@@ -342,19 +411,57 @@ export default class FilterNavigationMenu extends Component {
       await this.dMenuInstance.close();
     }
 
-    this.args.onChange(this.currentInputValue, true);
+    const draft = this.currentInputValue.trim();
+    if (draft && isCompleteSegment(draft)) {
+      this.tokens = [...this.tokens, ...splitFilterQuery(draft)];
+      this.currentInputValue = "";
+    }
+
+    this.args.onChange(this.queryString, true);
   }
 
   @action
   syncFromInitialValue() {
-    if (this.currentInputValue !== this.args.initialInputValue) {
-      this.currentInputValue = this.args.initialInputValue || "";
+    const incoming = splitFilterQuery(this.args.initialInputValue).join(" ");
+
+    if (incoming !== this.queryString) {
+      this.tokens = splitFilterQuery(incoming);
+      this.currentInputValue = "";
     }
   }
 
+  @action
+  closeFilterMenu() {
+    cancel(this.searchTimer);
+    this.dMenuInstance?.close();
+  }
+
+  #submitTokens() {
+    cancel(this.searchTimer);
+    this.args.onChange(this.queryString, true);
+  }
+
   <template>
-    <div class="topic-query-filter__input">
+    {{! eslint-disable ember/template-no-invalid-interactive }}
+    <div
+      class="topic-query-filter__input"
+      {{didInsert this.storeContainerElement}}
+      {{on "click" this.focusInputFromContainer}}
+    >
       {{dIcon "filter" class="topic-query-filter__icon btn-flat"}}
+
+      {{#each this.tokens as |raw index|}}
+        <FilterNavigationToken
+          @index={{index}}
+          @onEdit={{fn this.editToken index}}
+          @onEditorShow={{this.closeFilterMenu}}
+          @onRemove={{fn this.removeToken index}}
+          @onReplace={{fn this.replaceToken index}}
+          @raw={{raw}}
+          @tips={{@tips}}
+          @tokens={{this.tokens}}
+        />
+      {{/each}}
 
       <input
         autocapitalize="none"
@@ -373,7 +480,7 @@ export default class FilterNavigationMenu extends Component {
         {{didUpdate this.syncFromInitialValue @initialInputValue}}
       />
 
-      {{#if this.currentInputValue}}
+      {{#if this.hasValue}}
         <DButton
           class="topic-query-filter__clear-btn btn-flat"
           @action={{this.clearInput}}

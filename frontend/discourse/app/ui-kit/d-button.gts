@@ -128,7 +128,8 @@ export default class DButton<P = undefined> extends Component<
     return this.args?.display === "link";
   }
 
-  @computed("computedLabel")
+  // not @computed: `computedLabel` is a plain getter, so a dependent key on it
+  // would never invalidate when the label changes
   get noText() {
     return isEmpty(this.computedLabel);
   }

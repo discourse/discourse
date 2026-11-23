@@ -1,6 +1,7 @@
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import { removeAccents } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
@@ -216,6 +217,18 @@ function parseLastSegment(text) {
   };
 }
 
+function categoryAncestors(category, byId) {
+  const ancestors = [];
+  let parent = byId.get(category.parent_category_id);
+
+  while (parent && !ancestors.includes(parent)) {
+    ancestors.unshift(parent);
+    parent = byId.get(parent.parent_category_id);
+  }
+
+  return ancestors;
+}
+
 class FilterTypeValueSuggester {
   constructor(tip, segment, context) {
     this.tip = tip;
@@ -285,27 +298,38 @@ class FilterTypeValueSuggester {
 
   async getCategorySuggestions() {
     const categories = this.context.site?.categories || [];
+    const byId = new Map(categories.map((cat) => [cat.id, cat]));
     const normalize = (str) => removeAccents(str.toLowerCase());
     const searchNormalized = normalize(this.searchTerm);
 
-    return categories
-      .filter((cat) => {
-        const name = normalize(cat.name);
-        const slug = normalize(cat.slug);
-        return (
+    const matches = (cat) =>
+      normalize(cat.name).includes(searchNormalized) ||
+      normalize(cat.slug).includes(searchNormalized);
+
+    // subcategories follow their parent so the hierarchy reads top-down, and
+    // a matching parent brings its subcategories along
+    return Category.sortCategories(categories)
+      .filter(
+        (cat) =>
           !searchNormalized ||
-          name.includes(searchNormalized) ||
-          slug.includes(searchNormalized)
-        );
-      })
-      .slice(0, 10)
-      .map((cat) => ({
-        name: this.buildSuggestionName(cat.slug),
-        description: cat.name,
-        term: cat.slug,
-        category: cat,
-        isSuggestion: true,
-      }));
+          matches(cat) ||
+          categoryAncestors(cat, byId).some(matches)
+      )
+      .slice(0, MAX_RESULTS)
+      .map((cat) => {
+        const ancestors = categoryAncestors(cat, byId);
+        // a full `parent:child` path stays unambiguous when child slugs repeat
+        const term = [...ancestors, cat].map((c) => c.slug).join(":");
+
+        return {
+          name: this.buildSuggestionName(term),
+          description: cat.name,
+          term,
+          category: cat,
+          level: ancestors.length,
+          isSuggestion: true,
+        };
+      });
   }
 
   async getTagSuggestions() {
@@ -317,6 +341,8 @@ class FilterTypeValueSuggester {
       let results = response.results.map((tag) => ({
         name: this.buildSuggestionName(tag.name),
         description: `${tag.count}`,
+        // a string so a zero count still renders
+        count: `${tag.count}`,
         term: tag.name,
         isSuggestion: true,
       }));

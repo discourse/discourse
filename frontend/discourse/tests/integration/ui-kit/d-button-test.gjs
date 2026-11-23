@@ -185,6 +185,29 @@ module("Integration | ui-kit | DButton", function (hooks) {
     assert.dom("button .d-button-label").hasText("bar");
   });
 
+  test("no-text follows the label as it comes and goes", async function (assert) {
+    const translatedLabel = tracked("Add");
+
+    await render(
+      <template>
+        <DButton @icon="plus" @translatedLabel={{translatedLabel.value}} />
+      </template>
+    );
+
+    assert.dom("button").doesNotHaveClass("no-text");
+
+    translatedLabel.value = null;
+    await rerender();
+    assert.dom("button").hasClass("no-text").hasClass("btn-icon");
+
+    translatedLabel.value = "Add";
+    await rerender();
+    assert
+      .dom("button")
+      .doesNotHaveClass("no-text", "the label coming back clears no-text")
+      .hasClass("btn-icon-text");
+  });
+
   test("aria-expanded", async function (assert) {
     const ariaExpanded = tracked(undefined);
 

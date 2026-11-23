@@ -1526,6 +1526,7 @@ Discourse::Application.routes.draw do
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
     get "filter" => "list#filter"
+    get "filter/options" => "list#filter_options"
 
     get "search/query" => "search#query"
     get "search" => "search#show"

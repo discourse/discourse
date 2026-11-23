@@ -2218,6 +2218,26 @@ RSpec.describe ListController do
     end
   end
 
+  describe "#filter_options" do
+    it "lists the filters an anonymous user can use" do
+      get "/filter/options.json"
+
+      expect(response.status).to eq(200)
+      names = response.parsed_body["options"].map { |option| option["name"] }
+      expect(names).to include("category:", "status:")
+      expect(names).not_to include("in:")
+    end
+
+    it "includes the filters that need a user when signed in" do
+      sign_in(user)
+
+      get "/filter/options.json"
+
+      names = response.parsed_body["options"].map { |option| option["name"] }
+      expect(names).to include("in:", "bookmarked-after:")
+    end
+  end
+
   describe "#filter" do
     fab!(:category) { Fabricate(:category, slug: "category-slug") }
     fab!(:tag) { Fabricate(:tag, name: "tag1") }

@@ -28,11 +28,11 @@ describe "Filtering topics" do
 
     sidebar.click_section_link("filter tags")
 
-    expect(topic_query_filter).to have_input_text("tag:tag1")
+    expect(topic_query_filter).to have_query("tag:tag1")
 
     sidebar.click_section_link("filter categories")
 
-    expect(topic_query_filter).to have_input_text("category:category1")
+    expect(topic_query_filter).to have_query("category:category1")
   end
 
   describe "when filtering by status" do
@@ -72,6 +72,13 @@ describe "Filtering topics" do
 
       expect(topic_list).to have_no_topic(topic)
       expect(topic_list).to have_topic(closed_topic)
+      expect(topic_query_filter).to have_token("status", text: "closed")
+
+      topic_query_filter.remove_token("status")
+
+      expect(topic_list).to have_topic(topic)
+      expect(topic_list).to have_topic(closed_topic)
+      expect(page).to have_current_path("/filter")
     end
   end
 
@@ -81,6 +88,17 @@ describe "Filtering topics" do
     fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
     fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
     fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
+
+    it "adds a tag filter from the filter button" do
+      sign_in(user)
+
+      visit("/filter")
+      topic_query_filter.add_filter("tag", "tag2")
+
+      expect(topic_query_filter).to have_token("tag", text: "tag2")
+      expect(topic_list).to have_topics(count: 2)
+      expect(topic_list).to have_no_topic(topic_with_tag)
+    end
 
     it "displays matching topics for a tag query-string filter" do
       sign_in(user)

@@ -49,6 +49,7 @@ class ListController < ApplicationController
                   TopTopic.periods.map { |p| :"category_none_top_#{p}" },
                   :group_topics,
                   :filter,
+                  :filter_options,
                 ].flatten
 
   rescue_from ActionController::Redirecting::UnsafeRedirectError do
@@ -146,6 +147,10 @@ class ListController < ApplicationController
     list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
 
     respond_with_list(list)
+  end
+
+  def filter_options
+    render json: { options: TopicsFilter.option_info(guardian) }
   end
 
   def category_default

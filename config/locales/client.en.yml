@@ -6833,6 +6833,93 @@ en:
 
     filter:
       placeholder: "Filter topics by category, tag, or other criteria"
+      add_placeholder: "Add filter…"
+      remove_token: "Remove %{token}"
+      edit_token: "Change %{name}"
+      edit_token_placeholder: "Search %{name}…"
+      add_filter: "Add filter"
+      search_filters: "Search filters…"
+      edit_as_text: "Edit as text"
+      back_to_filters: "Back to filters"
+      use_builder: "Back to filter buttons"
+      category_token:
+        exclude_subcategories: "Exclude subcategories"
+        only: "%{categories} only"
+      date_editor:
+        relative: "Relative"
+        custom_days: "Days ago"
+        specific_date: "Specific date"
+      token_label:
+        likes_min:
+          one: "At least %{count} like"
+          other: "At least %{count} likes"
+        likes_max:
+          one: "At most %{count} like"
+          other: "At most %{count} likes"
+        likes_op_min:
+          one: "At least %{count} like on the first post"
+          other: "At least %{count} likes on the first post"
+        likes_op_max:
+          one: "At most %{count} like on the first post"
+          other: "At most %{count} likes on the first post"
+        posts_min:
+          one: "At least %{count} post"
+          other: "At least %{count} posts"
+        posts_max:
+          one: "At most %{count} post"
+          other: "At most %{count} posts"
+        posters_min:
+          one: "At least %{count} participant"
+          other: "At least %{count} participants"
+        posters_max:
+          one: "At most %{count} participant"
+          other: "At most %{count} participants"
+        views_min:
+          one: "At least %{count} view"
+          other: "At least %{count} views"
+        views_max:
+          one: "At most %{count} view"
+          other: "At most %{count} views"
+        created_after_days:
+          one: "Created in the last day"
+          other: "Created in the last %{count} days"
+        created_before_days:
+          one: "Created more than a day ago"
+          other: "Created more than %{count} days ago"
+        created_after_today: "Created today"
+        created_before_today: "Created before today"
+        created_after_date: "Created since %{date}"
+        created_before_date: "Created before %{date}"
+        activity_after_days:
+          one: "Active in the last day"
+          other: "Active in the last %{count} days"
+        activity_before_days:
+          one: "No activity in the last day"
+          other: "No activity in the last %{count} days"
+        activity_after_today: "Active today"
+        activity_before_today: "No activity today"
+        activity_after_date: "Active since %{date}"
+        activity_before_date: "No activity since %{date}"
+        latest_post_after_days:
+          one: "Posted in the last day"
+          other: "Posted in the last %{count} days"
+        latest_post_before_days:
+          one: "No posts in the last day"
+          other: "No posts in the last %{count} days"
+        latest_post_after_today: "Posted today"
+        latest_post_before_today: "No posts today"
+        latest_post_after_date: "Posted since %{date}"
+        latest_post_before_date: "No posts since %{date}"
+        bookmarked_after_days:
+          one: "Bookmarked in the last day"
+          other: "Bookmarked in the last %{count} days"
+        bookmarked_before_days:
+          one: "Bookmarked more than a day ago"
+          other: "Bookmarked more than %{count} days ago"
+        bookmarked_after_today: "Bookmarked today"
+        bookmarked_before_today: "Bookmarked before today"
+        bookmarked_after_date: "Bookmarked since %{date}"
+        bookmarked_before_date: "Bookmarked before %{date}"
       description:
         yesterday: "Yesterday"
         last_week: "Last week"

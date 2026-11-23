@@ -5,10 +5,10 @@ import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
 import CreateTopicButton from "discourse/components/create-topic-button";
+import DiscoveryFilterBar from "discourse/components/discovery/filter-bar";
 import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import NavigationBar from "discourse/components/navigation-bar";
 import NavigationOptionsMenu from "discourse/components/navigation-options-menu";
@@ -333,10 +333,10 @@ export default class DNavigation extends Component {
 
   <template>
     {{#if this.showBreadCrumbs}}
-      <BreadCrumbs
+      <DiscoveryFilterBar
         @additionalTags={{this.additionalTags}}
-        @categories={{this.categories}}
         @category={{this.category}}
+        @filterType={{this.filterType}}
         @noSubcategories={{this.noSubcategories}}
         @tag={{this.tag}}
       />

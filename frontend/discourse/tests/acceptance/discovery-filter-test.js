@@ -56,8 +56,8 @@ acceptance("Discovery filter", function (needs) {
       .dom(".topic-query-filter__query")
       .doesNotExist("reset removes the query label");
     assert
-      .dom(".topic-query-filter__filter-term")
-      .hasValue("", "reset restores an empty filter input");
+      .dom(".filter-navigation-builder .filter-navigation-token")
+      .doesNotExist("reset restores an empty filter");
     assert.strictEqual(
       queries.at(-1),
       "",
@@ -69,8 +69,8 @@ acceptance("Discovery filter", function (needs) {
     await visit("/filter?q=topic%3A11557");
 
     assert
-      .dom(".topic-query-filter__filter-term")
-      .hasValue("topic:11557", "ordinary filters remain editable");
+      .dom(".filter-navigation-token[data-filter='topic']")
+      .includesText("11557", "ordinary filters remain editable");
     assert
       .dom(".topic-query-filter__query")
       .doesNotExist("ordinary filters have no query label");
@@ -80,8 +80,8 @@ acceptance("Discovery filter", function (needs) {
     await visit("/filter?q=topic%3A11557&query_label=%20%20");
 
     assert
-      .dom(".topic-query-filter__filter-term")
-      .hasValue("topic:11557", "whitespace does not hide the filter");
+      .dom(".filter-navigation-token[data-filter='topic']")
+      .includesText("11557", "whitespace does not hide the filter");
     assert
       .dom(".topic-query-filter__reset")
       .doesNotExist("there is no query label to reset");

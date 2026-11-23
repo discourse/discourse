@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DNavigation from "discourse/components/d-navigation";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -18,13 +18,15 @@ module("Integration | Component | DNavigation", function (hooks) {
     );
   });
 
-  test("filters indirectly muted categories", async function (assert) {
-    await render(<template><DNavigation @filterMode="categories" /></template>);
-    await click(".category-drop .select-kit-header-wrapper");
+  test("shows the category as a filter token", async function (assert) {
+    const category = this.site.categories[0];
+
+    await render(<template><DNavigation @category={{category}} /></template>);
 
     assert
-      .dom(".category-row")
-      .exists({ count: 1 }, "displays only categories that are not muted");
-    assert.dom(".category-row .badge-category span").hasText("dev");
+      .dom(
+        `.discovery-filter-bar .filter-navigation-token[data-token='category:${category.slug}']`
+      )
+      .exists();
   });
 });

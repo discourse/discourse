@@ -46,13 +46,13 @@ acceptance("Tags intersection", function (needs) {
           tags: [
             {
               id: 10,
-              name: "My Tag Name",
+              name: "My-Tag-Name",
               slug: "my-slug",
               topic_count: 1,
             },
             {
               id: 11,
-              name: "Other Tag Name",
+              name: "Other-Tag-Name",
               slug: "other-slug",
               topic_count: 1,
             },
@@ -64,11 +64,10 @@ acceptance("Tags intersection", function (needs) {
     await visit("/tags/intersection/my-slug/other-slug");
 
     assert
-      .dom(".tags-intersection-chooser .formatted-selection")
-      .hasText(
-        "My Tag Name, Other Tag Name",
-        "displays API tag names, not URL slugs"
-      );
+      .dom(
+        ".discovery-filter-bar .filter-navigation-token[data-token='tag:My-Tag-Name+Other-Tag-Name']"
+      )
+      .exists("displays API tag names, not URL slugs");
   });
 
   test("correctly passes the category filter", async function (assert) {
