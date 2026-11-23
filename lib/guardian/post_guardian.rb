@@ -527,7 +527,14 @@ module PostGuardian
 
   def topic_memoize_key(topic)
     # Milliseconds precision on Topic#updated_at so that we don't use memoized results after topic has been updated.
-    "#{topic.id}-#{(topic.updated_at.to_f * 1000).to_i}"
+    updated_at_ms = (topic.updated_at.to_f * 1000).to_i
+    if @last_memoized_topic_id == topic.id && @last_memoized_topic_ms == updated_at_ms
+      return @last_memoized_topic_key
+    end
+
+    @last_memoized_topic_id = topic.id
+    @last_memoized_topic_ms = updated_at_ms
+    @last_memoized_topic_key = -"#{topic.id}-#{updated_at_ms}"
   end
 
   def visible_post_state_sql

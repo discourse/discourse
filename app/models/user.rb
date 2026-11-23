@@ -610,19 +610,20 @@ class User < ActiveRecord::Base
 
     return true if everyone_shortcut || logged_in_shortcut
 
+    # Array#intersect? avoids allocating an intersection; it only accepts Arrays.
+    group_ids = group_ids.to_a unless group_ids.is_a?(Array)
+
     # Sometimes the system user doesn't have their auto groups
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (
-             Group.auto_groups_between(:admins, :trust_level_4) -
-               [Group::AUTO_GROUPS[:anonymous_users]]
-           ) & group_ids
-         ).any?
+           Group.auto_groups_between(:admins, :trust_level_4) -
+             [Group::AUTO_GROUPS[:anonymous_users]]
+         ).intersect?(group_ids)
       return true
     end
 
-    (group_ids & belonging_to_group_ids).any?
+    group_ids.intersect?(belonging_to_group_ids)
   end
 
   def belonging_to_group_ids

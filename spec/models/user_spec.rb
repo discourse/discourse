@@ -101,9 +101,11 @@ RSpec.describe User do
 
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
+      expect(user.in_any_groups?(Set[group.id])).to eq(false)
       group.add(user)
       user.reload
       expect(user.in_any_groups?([group.id])).to eq(true)
+      expect(user.in_any_groups?(Set[group.id])).to eq(true)
     end
 
     it "always returns true for system user for automated groups" do
