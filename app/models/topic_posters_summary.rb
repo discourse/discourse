@@ -23,7 +23,7 @@ class TopicPostersSummary
   end
 
   def summary
-    sorted_top_posters.compact.map(&method(:new_topic_poster_for))
+    sorted_top_posters.compact.map { |user| new_topic_poster_for(user) }
   end
 
   private
@@ -47,25 +47,25 @@ class TopicPostersSummary
         result = {}
         ids = ids || user_ids
 
-        if id = ids.shift
+        if id = ids[0]
           result[id] ||= []
           result[id] << @translations[:original_poster]
         end
 
-        if id = ids.shift
+        if id = ids[1]
           result[id] ||= []
           result[id] << @translations[:most_recent_poster]
         end
 
-        while id = ids.shift
-          result[id] ||= []
+        ids[2..].each do |remaining_id|
+          result[remaining_id] ||= []
           description =
-            if recent_poster_user_ids.include?(id)
+            if recent_poster_user_ids.include?(remaining_id)
               @translations[:recent_poster]
             else
               @translations[:frequent_poster]
             end
-          result[id] << description
+          result[remaining_id] << description
         end
 
         result
@@ -97,7 +97,7 @@ class TopicPostersSummary
   end
 
   def user_ids
-    [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
+    @user_ids ||= [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
   end
 
   def recent_poster_user_ids
