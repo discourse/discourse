@@ -69,6 +69,7 @@ export default class Nested extends Component {
   #nextTimer = null;
   #retryTimer = null;
   #highlightTimer = null;
+  #highlightedPost = null;
   #lastScrollKey = null;
   #lastRestoredScrollY = null;
   #activeScrollAnchorKey = null;
@@ -156,7 +157,7 @@ export default class Nested extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     this.#cancelScrollRestoration();
-    clearTimeout(this.#highlightTimer);
+    this.#clearTargetHighlight();
     this.persistScrollAnchor();
     window.removeEventListener("popstate", this.#onPopstate);
     window.removeEventListener("scroll", this.#onScroll);
@@ -747,6 +748,13 @@ export default class Nested extends Component {
     return current === target;
   }
 
+  #clearTargetHighlight() {
+    clearTimeout(this.#highlightTimer);
+    this.#highlightTimer = null;
+    this.#highlightedPost?.removeAttribute("data-highlighted");
+    this.#highlightedPost = null;
+  }
+
   #scheduleTargetScroll({ force = false } = {}) {
     if (!this.args.targetPostNumber || this.isMobileFocused) {
       return;
@@ -760,7 +768,7 @@ export default class Nested extends Component {
     this.#lastScrollKey = scrollKey;
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
-    clearTimeout(this.#highlightTimer);
+    this.#clearTargetHighlight();
     this.#scrollAttempts = 0;
     this.#nextTimer = next(this, this.#scrollToTarget);
   }
@@ -776,11 +784,15 @@ export default class Nested extends Component {
     );
 
     if (target) {
+      // Flush highlight removal so reusing this element starts a new animation.
+      const rect = target.getBoundingClientRect();
       const postEl = target.closest(".nested-post");
       if (postEl) {
-        postEl.classList.add("nested-post--highlighted");
+        // Glimmer owns the wrapper class and can overwrite it during rerenders.
+        postEl.setAttribute("data-highlighted", "");
+        this.#highlightedPost = postEl;
         this.#highlightTimer = setTimeout(
-          () => postEl.classList.remove("nested-post--highlighted"),
+          () => this.#clearTargetHighlight(),
           2000
         );
       }
@@ -791,7 +803,6 @@ export default class Nested extends Component {
       const banner = document.querySelector(
         ".nested-context-view > .nested-context-view__banner"
       );
-      const rect = target.getBoundingClientRect();
       window.scrollTo({
         top:
           window.scrollY +
