@@ -2155,6 +2155,28 @@ RSpec.describe User do
     end
   end
 
+  describe ".username_hash and default .letter_avatar_color" do
+    it "computes 32-bit signed wraparound hashes identically across ASCII and Unicode usernames" do
+      %w[a alice super_long_moderator_username_2026 日本語ユーザー].each do |name|
+        reference =
+          name
+            .each_char
+            .reduce(0) { |res, ch| [((res << 5) - res) + ch.ord].pack("L").unpack("l").first }
+            .abs
+        expect(User.username_hash(name)).to eq(reference)
+      end
+    end
+
+    it "formats default LetterAvatar::COLORS hex strings accurately" do
+      SiteSetting.restrict_letter_avatar_colors = ""
+      %w[system alice codinghorror 日本語].each do |name|
+        idx = Digest::MD5.hexdigest(name)[0...15].to_i(16) % LetterAvatar::COLORS.length
+        expected = LetterAvatar::COLORS[idx].map { |c| c.to_s(16).rjust(2, "0") }.join
+        expect(User.letter_avatar_color(name)).to eq(expected)
+      end
+    end
+  end
+
   describe ".small_avatar_url" do
     let(:user) { build(:user, username: "Sam") }
 
