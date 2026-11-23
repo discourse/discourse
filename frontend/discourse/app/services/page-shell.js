@@ -46,8 +46,7 @@ function parsePanelPreference(name, stored, fallbackMode = "open") {
 }
 
 // Temporary layout controls. This is deliberately not the route/panel API.
-// Shell width and footer placement are site policy, so only panel
-// preferences persist.
+// Only panel visibility and size persist.
 export default class PageShell extends Service {
   @service keyValueStore;
   @service router;
@@ -57,6 +56,7 @@ export default class PageShell extends Service {
   @tracked resize = "content";
   @tracked navigation;
   @tracked context;
+  @tracked contextPosition = "start";
   @tracked footer = "content";
   @tracked navigationWidth;
   @tracked contextWidth;
@@ -108,6 +108,7 @@ export default class PageShell extends Service {
     const choices = {
       width: ["centered", "full"],
       resize: ["content", "grow"],
+      contextPosition: ["start", "end"],
       footer: ["content", "row", "off"],
     };
 

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MobileTabBarBackButton from "discourse/components/mobile-tab-bar/back-button";
+import ContextToggle from "discourse/components/page-shell/context-toggle";
 import PageShellRegion from "discourse/components/page-shell/region";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
@@ -84,8 +85,19 @@ export default class Contents extends Component {
     }
   }
 
+  get showEdgeContextToggle() {
+    return (
+      this.pageShell.enabled &&
+      this.pageShell.hasContextPanel &&
+      this.pageShell.contextPosition === "end" &&
+      !this.site.mobileView
+    );
+  }
+
   <template>
-    <div class="contents">
+    <div
+      class="contents {{if this.showEdgeContextToggle 'has-context-toggle'}}"
+    >
       <PluginOutlet
         @deprecatedArgs={{lazyHash
           topic=(deprecatedOutletArgument
@@ -191,6 +203,16 @@ export default class Contents extends Component {
         class="panel"
         role="navigation"
       >{{yield}}</div>
+      {{#if this.showEdgeContextToggle}}
+        <ul class="d-header-icons page-shell__context-toggle --edge">
+          <li>
+            <ContextToggle
+              @expanded={{eq this.pageShell.context "open"}}
+              @toggle={{this.pageShell.toggleContext}}
+            />
+          </li>
+        </ul>
+      {{/if}}
       <div class="after-header-panel-outlet">
         <PluginOutlet
           @deprecatedArgs={{lazyHash

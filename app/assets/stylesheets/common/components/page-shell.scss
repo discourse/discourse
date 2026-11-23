@@ -49,6 +49,9 @@ body.has-page-shell {
       --_page-shell-context-default-width
     );
     --_page-shell-composer-track-width: 0px;
+    --_page-shell-header-main-column: 3;
+    --_page-shell-header-main-end-column: 5;
+    --_page-shell-header-context-column: 2;
     --_page-shell-main-track: minmax(
       0,
       calc(
@@ -112,6 +115,36 @@ body.has-page-shell {
       --_page-shell-inline-offset: 0px;
       --_page-shell-main-track: minmax(0, 1fr);
       --_page-shell-end-track: 0px;
+    }
+
+    &[data-context-position="end"] {
+      --_page-shell-grid-columns: var(--_page-shell-inline-offset)
+        var(--_page-shell-navigation-track-width) var(--_page-shell-main-track)
+        var(--_page-shell-context-track-width)
+        var(--_page-shell-composer-track-width) var(--_page-shell-end-track);
+      --_page-shell-header-main-column: 2;
+      --_page-shell-header-main-end-column: 3;
+      --_page-shell-header-context-column: 3;
+      grid-template-areas:
+        "shell-header shell-header shell-header shell-header shell-header shell-header"
+        ". shell-notices shell-notices shell-notices shell-notices ."
+        ". sidebar content shell-context composer ."
+        ". sidebar shell-footer shell-context composer .";
+
+      .page-shell__header-context,
+      .page-shell__context {
+        border-inline-end: 0;
+        border-inline-start: 1px solid var(--d-comp-PageShell-color-border);
+      }
+
+      .page-shell__separator--context {
+        inset-inline: 0 auto;
+        justify-self: start;
+
+        &::after {
+          inset-inline: 0 auto;
+        }
+      }
     }
 
     &[data-navigation="rail"] {
@@ -277,6 +310,8 @@ body.has-page-shell {
       }
 
       .page-shell__header-start > .header-sidebar-toggle {
+        // The absolute toggle uses the header box even when a theme assigns it a grid area.
+        grid-area: auto;
         position: absolute;
         z-index: 1;
         inset-block-start: 50%;
@@ -287,7 +322,7 @@ body.has-page-shell {
 
     &[data-navigation="rail"],
     &[data-navigation="hidden"] {
-      --_page-shell-header-start-column: 3;
+      --_page-shell-header-start-column: var(--_page-shell-header-main-column);
       --_page-shell-header-start-inset: var(
         --_page-shell-header-start-width,
         0px
@@ -300,7 +335,7 @@ body.has-page-shell {
     }
 
     .page-shell__header-context {
-      grid-column: 2;
+      grid-column: var(--_page-shell-header-context-column);
       grid-row: 1;
       display: flex;
       align-items: center;
@@ -320,7 +355,8 @@ body.has-page-shell {
     }
 
     .page-shell__header-main {
-      grid-column: 3 / 5;
+      grid-column: var(--_page-shell-header-main-column) /
+        var(--_page-shell-header-main-end-column);
       grid-row: 1;
       display: flex;
       align-items: center;
@@ -341,13 +377,32 @@ body.has-page-shell {
 
     .d-header .contents > .panel {
       grid-area: auto;
-      grid-column: 3 / 5;
+      grid-column: var(--_page-shell-header-main-column) /
+        var(--_page-shell-header-main-end-column);
       grid-row: 1;
       justify-self: end;
       margin: 0;
       padding-inline-end: var(--space-2);
       inline-size: max-content;
       max-inline-size: calc(100vw - 48px);
+    }
+
+    .page-shell__context-toggle.--edge {
+      grid-column: 2 / -1;
+      grid-row: 1;
+      justify-self: end;
+      z-index: 1;
+      margin: 0 var(--space-1);
+    }
+
+    @media (width >= 1100px) {
+      &[data-context-position="end"][data-context="hidden"]:not(
+          [data-cannot-open-context]
+        ) {
+        .d-header .contents.has-context-toggle > .panel {
+          padding-inline-end: var(--_page-shell-panel-rail-width);
+        }
+      }
     }
 
     .page-shell__notices {
@@ -608,7 +663,7 @@ body.has-page-shell {
         background: var(--d-comp-PageShell-color-background-raised);
 
         > * {
-          grid-column: 3;
+          grid-column: var(--_page-shell-header-main-column);
         }
       }
     }
@@ -694,7 +749,7 @@ body.has-page-shell {
       --_page-shell-navigation-track-width: 0px;
       --_page-shell-navigation-reference-width: 0px;
       --d-comp-PageShell-space-padding-inline: var(--space-3);
-      --_page-shell-header-start-column: 3;
+      --_page-shell-header-start-column: var(--_page-shell-header-main-column);
       --_page-shell-header-start-inset: var(
         --_page-shell-header-start-width,
         0px

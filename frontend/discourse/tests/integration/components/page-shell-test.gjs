@@ -474,18 +474,25 @@ module("Integration | Component | page shell", function (hooks) {
       { width: "centered", resize: "content", contextWidth: 1000 },
       { width: "centered", resize: "content", navigation: "rail" },
       { width: "full", resize: "content", context: "hidden" },
+      { width: "full", contextPosition: "end" },
+      { width: "centered", resize: "content", contextPosition: "end" },
     ]) {
       Object.assign(this.shell, {
         navigation: "open",
         context: "open",
+        contextPosition: "start",
         navigationWidth: 260,
         contextWidth: 300,
         ...state,
       });
       await frame();
-      const predicted = Object.values(
-        shellTracks(readShellGeometry(shellElement, this.shell))
+      const { offset, navigation, context, main, composer, end } = shellTracks(
+        readShellGeometry(shellElement, this.shell)
       );
+      const predicted =
+        this.shell.contextPosition === "end"
+          ? [offset, navigation, main, context, composer, end]
+          : [offset, navigation, context, main, composer, end];
       const rendered = getComputedStyle(shellElement)
         .gridTemplateColumns.split(" ")
         .map(parseFloat);
@@ -499,6 +506,7 @@ module("Integration | Component | page shell", function (hooks) {
   });
 
   test("keyboard resizing steps the width directly and saves on release", async function (assert) {
+    this.shell.contextPosition = "end";
     await render(
       <template>
         <div style="width: 2000px;">
@@ -513,12 +521,12 @@ module("Integration | Component | page shell", function (hooks) {
     assert.dom(separator).hasAttribute("aria-valuenow", "300");
 
     // Context sits at the inline end, so ArrowLeft grows it in LTR.
-    await triggerKeyEvent(separator, "keydown", "ArrowRight");
-    await triggerKeyEvent(separator, "keydown", "ArrowRight");
+    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
+    await triggerKeyEvent(separator, "keydown", "ArrowLeft");
     assert.strictEqual(this.shell.contextWidth, 332);
     assert.dom(separator).hasAttribute("aria-valuenow", "332");
 
-    await triggerKeyEvent(separator, "keyup", "ArrowRight");
+    await triggerKeyEvent(separator, "keyup", "ArrowLeft");
     const store = this.owner.lookup("service:key-value-store");
     assert.strictEqual(store.getObject("page-shell-panels").context.width, 332);
 

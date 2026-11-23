@@ -1,4 +1,10 @@
-import { click, findAll, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  findAll,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -97,6 +103,30 @@ acceptance("Page shell | regions", function (needs) {
       .dom(toggle)
       .hasAttribute("aria-expanded", "true", "The button reports open");
     assert.dom("#page-shell-context").exists("The panel reopens");
+  });
+
+  test("moving Context after Main moves its header toggle", async function (assert) {
+    await visit("/");
+    await click(".page-shell-controls summary");
+    await fillIn('.page-shell-controls select[name="contextPosition"]', "end");
+
+    const toggle = ".page-shell__context-toggle.--edge #toggle-context-panel";
+    assert
+      .dom("#toggle-context-panel")
+      .exists({ count: 1 }, "One toggle renders");
+    assert
+      .dom(toggle)
+      .hasAttribute(
+        "aria-controls",
+        "page-shell-context",
+        "The edge toggle controls Context"
+      );
+
+    await click(toggle);
+    assert.dom(toggle).hasAttribute("aria-expanded", "false", "Context closes");
+
+    await click(toggle);
+    assert.dom(toggle).hasAttribute("aria-expanded", "true", "Context reopens");
   });
 
   test("the Navigation toggle collapses to actionable sidebar icons", async function (assert) {

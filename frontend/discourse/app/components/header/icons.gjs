@@ -4,12 +4,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import InterfaceColorSelector from "discourse/components/interface-color-selector";
 import LanguageSwitcher from "discourse/components/language-switcher";
+import ContextToggle from "discourse/components/page-shell/context-toggle";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import { languageSwitcherEnabled } from "discourse/lib/content-localization";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse/lib/get-url";
-import DButton from "discourse/ui-kit/d-button";
-import { i18n } from "discourse-i18n";
 import Dropdown from "./dropdown.gjs";
 import UserDropdown from "./user-dropdown.gjs";
 
@@ -49,14 +48,11 @@ export default class Icons extends Component {
   @service mobileTabBar;
   @service pageShell;
 
-  get isContextOpen() {
-    return this.pageShell.context === "open";
-  }
-
   get showContextToggle() {
     return (
       this.pageShell.enabled &&
       this.pageShell.hasContextPanel &&
+      this.pageShell.contextPosition === "start" &&
       !this.site.mobileView
     );
   }
@@ -163,22 +159,9 @@ export default class Icons extends Component {
         {{else if (eq entry.key "context-panel")}}
           {{#if this.showContextToggle}}
             <li class="page-shell__context-toggle">
-              <DButton
-                aria-controls={{unless
-                  (eq this.pageShell.context "hidden")
-                  "page-shell-context"
-                }}
-                aria-expanded={{if this.isContextOpen "true" "false"}}
-                aria-label={{i18n "page_shell.context"}}
-                class="icon btn-flat"
-                id="toggle-context-panel"
-                @action={{this.pageShell.toggleContext}}
-                @icon="table-columns"
-                @title={{if
-                  this.isContextOpen
-                  "page_shell.hide_context"
-                  "page_shell.expand_context"
-                }}
+              <ContextToggle
+                @expanded={{eq this.pageShell.context "open"}}
+                @toggle={{this.pageShell.toggleContext}}
               />
             </li>
           {{/if}}

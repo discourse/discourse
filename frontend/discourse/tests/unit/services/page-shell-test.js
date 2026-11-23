@@ -98,6 +98,7 @@ module("Unit | Service | page shell", function (hooks) {
 
   test("site policy controls are not saved", function (assert) {
     this.input("width", "centered");
+    this.input("contextPosition", "end");
     this.input("footer", "row");
     assert.strictEqual(this.stored(), undefined);
   });
