@@ -64,13 +64,7 @@ class OptimizedImage < ActiveRecord::Base
 
     store = Discourse.store
 
-    # create the thumbnail otherwise
-    original_path = store.path_for(upload)
-
-    if original_path.blank?
-      # download is protected with a DistributedMutex
-      original_path = store.download(upload)
-    end
+    original_path = store.download(upload)
 
     if extension == ".svg" && upload.extension != "svg"
       if opts[:raise_on_error]
@@ -170,13 +164,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def calculate_filesize
-    path =
-      if local?
-        Discourse.store.path_for(self)
-      else
-        Discourse.store.download!(self)
-      end
-    File.size(path)
+    File.size(Discourse.store.download!(self))
   end
 
   def filesize
