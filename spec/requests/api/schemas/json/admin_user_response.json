@@ -20,7 +20,8 @@
       "type": "boolean"
     },
     "interactive_bot": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Whether the bot is interactive. Only present for bot users."
     },
     "moderator": {
       "type": "boolean"
@@ -549,7 +550,6 @@
     "avatar_template",
     "active",
     "admin",
-    "interactive_bot",
     "moderator",
     "last_seen_at",
     "last_emailed_at",

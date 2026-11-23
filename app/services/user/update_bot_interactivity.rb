@@ -5,9 +5,16 @@ class User::UpdateBotInteractivity
 
   params do
     attribute :user_id, :integer
-    attribute :interactive_bot, :boolean, default: false
+    attribute :interactive_bot, :boolean
 
     validates :user_id, presence: true
+
+    validate do
+      value = raw_attributes["interactive_bot"]
+      unless [true, false, 1, 0, *%w[1 0 true false on off]].any? { |allowed| allowed.eql?(value) }
+        errors.add(:interactive_bot, :inclusion)
+      end
+    end
   end
 
   model :user

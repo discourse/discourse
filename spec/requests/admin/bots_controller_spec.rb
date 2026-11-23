@@ -164,6 +164,7 @@ RSpec.describe Admin::UsersController do
 
     it "requires a boolean and rejects missing or malformed values" do
       sign_in(admin)
+      bot.update!(interactive_bot: true)
 
       [
         {},
@@ -294,6 +295,21 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(201)
         expect(response.parsed_body.dig("user", "interactive_bot")).to eq(false)
+      end
+
+      it "rejects explicitly malformed interactivity values without creating a user" do
+        [nil, "invalid", [true], { enabled: true }].each do |value|
+          expect do
+            post "/admin/users/bots.json",
+                 params: {
+                   bot: bot_params.merge(interactive_bot: value),
+                 },
+                 as: :json
+          end.not_to change(User, :count)
+
+          expect(response.status).to eq(422),
+          "Expected interactive_bot=#{value.inspect} to be rejected: #{response.body}"
+        end
       end
 
       it "returns the created admin-user representation and a Location header" do
