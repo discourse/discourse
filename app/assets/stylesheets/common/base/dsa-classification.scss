@@ -100,10 +100,14 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     @include ellipsis;
     min-width: 0;
   }
+
+  &[aria-expanded="true"] {
+    anchor-name: --dsa-classification-trigger;
+  }
 }
 
-.dsa-classification-options {
-  .dropdown-menu__item > .btn {
+.form-kit__control-menu-content:has(.dsa-classification-option) {
+  .dropdown-menu__item > .dsa-classification-option.btn {
     height: auto;
     min-height: var(--d-sidebar-row-height);
     white-space: normal;
@@ -113,6 +117,21 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
 
   &.fk-d-menu {
     z-index: z("modal", "popover");
+
+    @supports (width: anchor-size(width)) and (top: anchor(bottom)) {
+      // The trigger is inside a fixed dialog while the menu is portaled.
+      position: fixed;
+      position-anchor: --dsa-classification-trigger;
+      width: anchor-size(width, 400px);
+      max-width: calc(100dvw - 2 * var(--space-2)) !important;
+      left: anchor(left) !important;
+      top: calc(anchor(bottom) + 5px) !important;
+
+      &[data-placement^="top"] {
+        top: auto !important;
+        bottom: calc(anchor(top) + 5px);
+      }
+    }
 
     .dropdown-menu {
       flex: 1;

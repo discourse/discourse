@@ -38,11 +38,11 @@ module PageObjects
 
       def select_rule(ground)
         open_rule_menu
-        find(".dsa-classification-options .btn", text: ground).click
+        find(".dsa-classification-option", text: ground).click
       end
 
       def has_no_classification_menu?
-        has_no_css?(".dsa-classification-options")
+        has_no_css?(".dsa-classification-option")
       end
 
       def has_rule_option?(ground, explanation:)
@@ -53,7 +53,7 @@ module PageObjects
         within(full_modal_selector) do
           find("[data-name='category'] .form-kit__control-menu-trigger").click
         end
-        find(".dsa-classification-options .btn", text: category, exact_text: true).click
+        find(".dsa-classification-option", text: category, exact_text: true).click
       end
 
       def continue
@@ -133,8 +133,9 @@ module PageObjects
         has_css?(
           "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger",
         ) do |trigger|
-          trigger.evaluate_script("this.ariaLabelledByElements?.at(-1)?.textContent.trim()") ==
-            label
+          trigger.evaluate_script(
+            "this.labels[0]?.querySelector('.dsa-classification-selected-label')?.textContent.trim()",
+          ) == label
         end
       end
 
