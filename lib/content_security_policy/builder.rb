@@ -55,7 +55,8 @@ class ContentSecurityPolicy
     private
 
     def normalize_directive(directive)
-      directive.to_s.gsub("-", "_").to_sym
+      return directive if directive.is_a?(Symbol) && !directive.name.include?("-")
+      directive.to_s.tr("-", "_").to_sym
     end
 
     def normalize_source(source)
@@ -75,7 +76,7 @@ class ContentSecurityPolicy
 
       sources = Array(sources).map { |s| normalize_source(s) }
 
-      if %w[script_src worker_src].include?(directive.to_s)
+      if directive == :script_src || directive == :worker_src
         # Strip any sources which are ignored under strict-dynamic
         # If/when we make strict-dynamic the only option, we could print deprecation warnings
         # asking plugin/theme authors to remove the unnecessary config
@@ -85,7 +86,7 @@ class ContentSecurityPolicy
 
       sources.each do |source|
         # mirrors validation check in ActionDispatch::ContentSecurityPolicy https://github.com/rails/rails/blob/5558e72f22fc69c1c407b31ac5fb3b4ce087b542/actionpack/lib/action_dispatch/http/content_security_policy.rb#L337
-        if source.include?(";") || source != source.gsub(/[[:space:]]/, "")
+        if source.match?(/[[:space:];]/)
           Rails.logger.warn(<<~MSG.squish)
             Skipping invalid Content Security Policy #{directive}: "#{source}".
             Directive values must not contain whitespace or semicolons.
@@ -96,7 +97,7 @@ class ContentSecurityPolicy
         @directives[directive] << source
       end
 
-      @directives[directive].delete(:none) if @directives[directive].count > 1
+      @directives[directive].delete(:none) if @directives[directive].length > 1
     end
 
     def extendable?(directive)
