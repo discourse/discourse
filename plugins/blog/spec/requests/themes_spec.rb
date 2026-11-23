@@ -141,7 +141,7 @@ RSpec.describe "Blog themes", type: :request do
         )
       Blog::Path.create!(publication: publication, path: publication.path)
       active = Blog::BlogTheme.active_for(Blog::Instance.default_blog)
-      token = Blog::ThemePreview.token_for(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
 
       {
         "/" => 200,
@@ -167,7 +167,7 @@ RSpec.describe "Blog themes", type: :request do
     end
 
     it "renders an empty listing and carries the preview through archive searches" do
-      token = Blog::ThemePreview.token_for(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
       get "https://blog.example.com/archive",
           params: {
             blog_theme_preview: token,

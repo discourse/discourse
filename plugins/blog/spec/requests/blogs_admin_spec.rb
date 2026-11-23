@@ -158,5 +158,32 @@ RSpec.describe "Blogs admin", type: :request do
       get "/blog/engineering"
       expect(response.status).to eq(200)
     end
+
+    it "stays hidden from a theme preview link made for another blog" do
+      engineering.update!(description: "Secret tagline", about: "Secret plans")
+      theme = Blog::ThemePresets.find(Blog::ThemePresets::DEFAULT_ID)
+      token = Blog::ThemePreview.token_for(theme, blog: Blog::Instance.default_blog)
+
+      get "/blog/engineering/about", params: { blog_theme_preview: token }
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(engineering.name)
+      expect(response.body).not_to include("Secret")
+
+      get "/blog/engineering/about",
+          params: {
+            blog_theme_preview: Blog::ThemePreview.token_for(theme, blog: engineering),
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Secret plans")
+    end
+
+    it "stays hidden from a made-up preview token" do
+      get "/blog/engineering/about", params: { blog_theme_preview: "made-up" }
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(engineering.name)
+    end
   end
 end

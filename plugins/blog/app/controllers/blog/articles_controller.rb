@@ -214,8 +214,10 @@ module ::Blog
 
     def ensure_public_blog
       raise Discourse::NotFound unless Configuration.blog_request?(request, @blog)
-      # A blog is themed before it is published, through preview links.
-      hide_unpublished_blog if !@blog.published? && params[:blog_theme_preview].blank?
+      # A blog is themed before it is published, through preview links made for it.
+      if !@blog.published? && !ThemePreview.for_blog?(params[:blog_theme_preview], @blog)
+        hide_unpublished_blog
+      end
       # Revoked visibility must take effect on the next request, including feeds and previews.
       response.headers["Cache-Control"] = "private, no-store"
     end
