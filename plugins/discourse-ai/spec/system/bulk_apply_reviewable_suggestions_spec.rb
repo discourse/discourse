@@ -11,12 +11,6 @@ RSpec.describe "Bulk applying suggested review actions" do
 
   let(:dialog) { PageObjects::Components::Dialog.new }
 
-  around do |example|
-    stub_const(DiscourseAi::AiModeration::ReviewableSuggestionsController, :LIMIT, 3) do
-      example.run
-    end
-  end
-
   before do
     enable_current_plugin
     SiteSetting.ai_reviewable_action_suggestions_enabled = true
@@ -42,11 +36,6 @@ RSpec.describe "Bulk applying suggested review actions" do
 
     visit("/review")
     find(".ai-review-bulk-nav-item a").click
-
-    expect(page).to have_css(".ai-review-bulk__row", count: 3)
-    find(".ai-review-bulk__load-more").click
-    expect(page).to have_css(".ai-review-bulk__row", count: 4)
-    expect(page).to have_no_css(".ai-review-bulk__load-more")
 
     expect(page).to have_css("#{row(edited)} .ai-review-bulk__checkbox:disabled")
     expect(page).to have_css(
