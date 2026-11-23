@@ -8102,7 +8102,8 @@ CREATE TABLE public.live_rooms (
     livekit_enabled boolean DEFAULT false NOT NULL,
     max_quality_profile integer,
     ephemeral boolean DEFAULT false NOT NULL,
-    last_occupied_at timestamp(6) without time zone
+    last_occupied_at timestamp(6) without time zone,
+    speak_requests_enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -26774,6 +26775,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261121231304'),
 ('20261120183731'),
 ('20261120090013'),
+('20261119190450'),
 ('20261119153028'),
 ('20261118215054'),
 ('20261118184327'),

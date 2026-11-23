@@ -4,6 +4,7 @@ import { getOwner } from "@ember/owner";
 import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { manuallyTrack } from "discourse/lib/tracked-tools";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import Draft from "discourse/models/draft";
@@ -96,6 +97,7 @@ export default class LiveWebrtcService extends Service {
   @service keyValueStore;
   @service messageBus;
   @service modal;
+  @service router;
   @service siteSettings;
   @service site;
   @service("live-reactions") liveReactions;
@@ -141,6 +143,7 @@ export default class LiveWebrtcService extends Service {
   // and a room only becomes active after its join response arrives, so this
   // is always populated before it is read.
   #iceConfig = null;
+  #acquiringDeferredMicrophone = false;
   #roomHandlerCallbacks = new Map();
   #deferredTeardownTimers = new Set();
   #pendingPlaybackElements = new WeakSet();
@@ -168,6 +171,7 @@ export default class LiveWebrtcService extends Service {
 
   #videoWatchers = new Map();
   #watchUpdates = new Map();
+  #roomTypes = new Map();
 
   constructor() {
     super(...arguments);
@@ -465,6 +469,7 @@ export default class LiveWebrtcService extends Service {
       getRoom: (roomId) => this.liveRooms?.roomById(roomId),
       isActiveRoom: (roomId) => this.#activeRoomIds.has(roomId),
       isConnectingRoom: (roomId) => this.#connectingRoomIds.has(roomId),
+      isShowingRoomPage: (roomId) => this.#isShowingRoomPage(roomId),
       isMeshRoom: (roomId) => this.#isMeshRoom(roomId),
       registerTrack: (roomId, userId, track) =>
         this.#registerRemoteTrack(roomId, userId, track),
@@ -481,6 +486,7 @@ export default class LiveWebrtcService extends Service {
       getLocalStream: () => this.localStream,
       acquireMicrophone: () => this.#acquireMicrophoneWithFeedback(),
       setMicEnabled: (enabled) => this.#setMicEnabled(enabled),
+      getPttEnabled: () => this.pttEnabled,
       stopLocalAudio: () => this.#localAudio.stop(),
       ensureLocalAudioMonitor: (roomId) =>
         this.#audioMonitor.ensure(
@@ -489,6 +495,8 @@ export default class LiveWebrtcService extends Service {
           this.localStream,
           true
         ),
+      acceptSpeakInvitation: (roomId) => this.acceptSpeakInvitation(roomId),
+      declineSpeakInvitation: (roomId) => this.declineSpeakInvitation(roomId),
     });
 
     try {
@@ -711,6 +719,16 @@ export default class LiveWebrtcService extends Service {
 
   get fileTransfers() {
     return this.#fileTransfers.transfers;
+  }
+
+  // A room type change can leave the user allowed to speak without a captured
+  // microphone (see RosterHandler#handleRoomTypeChange).
+  get #microphoneDeferred() {
+    return (
+      !!this.activeRoomId &&
+      !this.localStream &&
+      this.#canPublishMediaIn(this.activeRoomId)
+    );
   }
 
   setNoiseSuppressionMode(mode) {
@@ -1035,7 +1053,10 @@ export default class LiveWebrtcService extends Service {
       return;
     }
 
-    if (this.localStream) {
+    this.#roomTypes.set(room.id, joinedRoom?.room_type || "open");
+    if (isStageListener) {
+      this.#setMicEnabled(false);
+    } else if (this.localStream) {
       this.#setMicEnabled(!this.pttEnabled);
     }
 
@@ -1267,12 +1288,21 @@ export default class LiveWebrtcService extends Service {
     return this.#participantAudio.isMuted(roomId, userId);
   }
 
-  toggleMute() {
+  async toggleMute() {
     if (this.pttEnabled) {
       return;
     }
+    if (this.activeRoomId && !this.#canPublishMediaIn(this.activeRoomId)) {
+      return;
+    }
 
-    this.#setMicEnabled(!this.audioEnabled);
+    if (this.#microphoneDeferred) {
+      if (!(await this.#acquireDeferredMicrophone())) {
+        return;
+      }
+    } else {
+      this.#setMicEnabled(!this.audioEnabled);
+    }
 
     if (this.audioEnabled) {
       playUnmuteSound(this.currentUser?.chat_sound);
@@ -1300,13 +1330,49 @@ export default class LiveWebrtcService extends Service {
 
     if (this.deafened) {
       this.#setMicEnabled(false);
-    } else {
+    } else if (
+      !this.activeRoomId ||
+      this.#canPublishMediaIn(this.activeRoomId)
+    ) {
       this.#setMicEnabled(!this.pttEnabled);
     }
 
     this.#participantAudio.applyAll();
 
     this.#broadcastMuteState();
+  }
+
+  async acceptSpeakInvitation(roomId) {
+    try {
+      await ajax(`/live/rooms/${roomId}/accept_speak_invitation`, {
+        type: "POST",
+        data: { participant_session_id: this.#roomSessions.get(roomId) },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  async declineSpeakInvitation(roomId) {
+    try {
+      await ajax(`/live/rooms/${roomId}/invite_to_speak`, {
+        type: "DELETE",
+        data: { participant_session_id: this.#roomSessions.get(roomId) },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  }
+
+  async stepDownFromStage(roomId) {
+    try {
+      await ajax(`/live/rooms/${roomId}/step_down`, {
+        type: "POST",
+        data: { participant_session_id: this.#roomSessions.get(roomId) },
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   // --- Quality tiers ---
@@ -1612,7 +1678,9 @@ export default class LiveWebrtcService extends Service {
     this.pttEnabled = false;
     this.pttActive = false;
 
-    this.#setMicEnabled(true);
+    if (!this.activeRoomId || this.#canPublishMediaIn(this.activeRoomId)) {
+      this.#setMicEnabled(true);
+    }
     this.#broadcastMuteState();
   }
 
@@ -1859,10 +1927,39 @@ export default class LiveWebrtcService extends Service {
   }
 
   #setMicEnabled(enabled) {
+    // Nothing to enable while capture is deferred; only an explicit unmute
+    // acquires the microphone.
+    enabled &&= !this.#microphoneDeferred;
     this.audioEnabled = enabled;
     for (const track of this.localStream?.getAudioTracks() || []) {
       track.enabled = enabled;
     }
+    if (enabled) {
+      this.#livekit.unmuteMicrophone();
+    }
+  }
+
+  async #acquireDeferredMicrophone() {
+    if (this.#acquiringDeferredMicrophone) {
+      return false;
+    }
+
+    this.#acquiringDeferredMicrophone = true;
+    try {
+      return await this.#roster.acquireDeferredMicrophone(this.activeRoomId);
+    } finally {
+      this.#acquiringDeferredMicrophone = false;
+    }
+  }
+
+  #isShowingRoomPage(roomId) {
+    const slug = this.liveRooms?.roomById(roomId)?.slug;
+    const currentRoute = this.router.currentRoute;
+    return (
+      !!slug &&
+      currentRoute?.name === "live-room" &&
+      currentRoute?.params?.slug === slug
+    );
   }
 
   #roomQualityCap(roomId) {
@@ -1911,17 +2008,29 @@ export default class LiveWebrtcService extends Service {
   }
 
   #handleRoomUpdated(roomId) {
+    const room = this.liveRooms?.roomById(roomId);
+    if (!room) {
+      return;
+    }
+
+    const previousType = this.#roomTypes.get(roomId);
+    const nextType = room.room_type || "open";
+    if (previousType && previousType !== nextType) {
+      this.#roomTypes.set(roomId, nextType);
+      this.#roster.handleRoomTypeChange(roomId, nextType);
+      return;
+    }
+
     if (!this.localVideoKind) {
       return;
     }
 
-    const room = this.liveRooms?.roomById(roomId);
     const stillAllowed =
       this.localVideoKind === "screen"
         ? this.screenShareAllowedIn(room)
         : this.videoAllowedIn(room);
 
-    if (room && !stillAllowed) {
+    if (!stillAllowed) {
       this.#localVideo.stop().catch(() => {});
       this.toasts.default({
         duration: 5000,
@@ -1930,15 +2039,27 @@ export default class LiveWebrtcService extends Service {
     }
   }
 
+  #handleForceMute(roomId, payload) {
+    if (Number(payload.user_id) !== this.currentUser?.id) {
+      return;
+    }
+
+    this.#setMicEnabled(false);
+    playMuteSound(this.currentUser?.chat_sound);
+    this.liveRooms?.setParticipantMuted(roomId, this.currentUser?.id, true);
+    this.toasts.default({
+      duration: 5000,
+      data: { message: i18n("live.stage.muted_by_moderator") },
+    });
+  }
+
   // --- Private orchestration ---
 
   #broadcastMuteState() {
     for (const roomId of this.#activeRoomIds) {
-      this.liveRooms?.setParticipantMuted(
-        roomId,
-        this.currentUser?.id,
-        !this.audioEnabled
-      );
+      const canPublish = this.#canPublishMediaIn(roomId);
+      const muted = !canPublish || !this.audioEnabled;
+      this.liveRooms?.setParticipantMuted(roomId, this.currentUser?.id, muted);
       this.liveRooms?.setParticipantDeafened(
         roomId,
         this.currentUser?.id,
@@ -1948,7 +2069,7 @@ export default class LiveWebrtcService extends Service {
       ajax(`/live/rooms/${roomId}/toggle_mute`, {
         type: "POST",
         data: {
-          muted: !this.audioEnabled,
+          muted,
           deafened: this.deafened,
           participant_session_id: this.#roomSessions.get(roomId),
         },
@@ -1971,6 +2092,7 @@ export default class LiveWebrtcService extends Service {
     this.#connectingParticipantSnapshots.delete(roomId);
     this.#connectingSignalQueue.delete(roomId);
     this.#roomTransports.delete(roomId);
+    this.#roomTypes.delete(roomId);
     this.#roomSessions.delete(roomId);
     this.#presencePending.clearAll(roomId);
     this.#livekit.disconnectRoom(roomId);
@@ -2053,8 +2175,22 @@ export default class LiveWebrtcService extends Service {
       await this.#roster.handleParticipants(roomId, payload);
     } else if (payload.type === "role_change") {
       await this.#roster.handleRoleChange(roomId, payload);
+      if (Number(payload.user_id) === this.currentUser?.id) {
+        // The server resets the roster's mute flag on a role change; push to
+        // talk or a mic that never started can leave it out of step.
+        this.liveRooms?.setParticipantRole(
+          roomId,
+          payload.user_id,
+          payload.role
+        );
+        this.#broadcastMuteState();
+      }
     } else if (payload.type === "hand_raise") {
       this.#roster.handleHandRaise(roomId, payload);
+    } else if (payload.type === "speak_invitation") {
+      this.#roster.handleSpeakInvitation(roomId, payload);
+    } else if (payload.type === "force_mute") {
+      this.#handleForceMute(roomId, payload);
     } else if (payload.type === "reaction") {
       this.liveReactions.receive(roomId, payload);
       // Recorded from the broadcast, our own included, so the transcript holds
@@ -2365,6 +2501,15 @@ export default class LiveWebrtcService extends Service {
   // --- Push-to-Talk ---
 
   #handlePttPress() {
+    if (this.activeRoomId && !this.#canPublishMediaIn(this.activeRoomId)) {
+      return;
+    }
+    if (this.#microphoneDeferred) {
+      // The first press only captures; the key was likely released by the
+      // time the microphone is ready.
+      this.#acquireDeferredMicrophone();
+      return;
+    }
     this.pttActive = true;
     this.#setMicEnabled(true);
     this.#broadcastMuteState();

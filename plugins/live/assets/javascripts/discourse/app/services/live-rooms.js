@@ -166,6 +166,20 @@ export default class LiveRoomsService extends Service {
         payload.user_id,
         payload.raised ? payload.raised_at : null
       );
+    } else if (payload.type === "speak_invitation") {
+      this.setParticipantSpeakInvitation(
+        payload.room_id,
+        payload.user_id,
+        payload.invited
+          ? {
+              invited_at: payload.invited_at,
+              inviter_username: payload.inviter_username,
+              inviter_id: payload.inviter_id,
+            }
+          : null
+      );
+    } else if (payload.type === "force_mute") {
+      this.setParticipantMuted(payload.room_id, payload.user_id, true);
     } else if (payload.type === "recording") {
       this.setRoomRecording(payload.room_id, payload.recording);
     } else if (payload.type === "ringing") {
@@ -403,6 +417,43 @@ export default class LiveRoomsService extends Service {
         updated.hand_raised_at = raisedAt;
       } else {
         delete updated.hand_raised_at;
+      }
+      return updated;
+    });
+
+    if (changed) {
+      this.rooms = [...this.rooms];
+    }
+  }
+
+  setParticipantSpeakInvitation(roomId, userId, invitation) {
+    const targetId = Number(userId);
+    if (!targetId) {
+      return;
+    }
+
+    const room = this.#roomsById.get(roomId);
+    if (!room || !Array.isArray(room.active_participants)) {
+      return;
+    }
+
+    let changed = false;
+    room.active_participants = room.active_participants.map((participant) => {
+      const participantId = Number(participant?.id);
+      if (!participantId || participantId !== targetId) {
+        return participant;
+      }
+
+      changed = true;
+      const updated = { ...participant };
+      if (invitation) {
+        updated.speak_invited_at = invitation.invited_at;
+        updated.speak_invited_by = invitation.inviter_username;
+        updated.speak_invited_by_id = invitation.inviter_id;
+      } else {
+        delete updated.speak_invited_at;
+        delete updated.speak_invited_by;
+        delete updated.speak_invited_by_id;
       }
       return updated;
     });

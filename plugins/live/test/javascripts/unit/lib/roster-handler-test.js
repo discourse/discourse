@@ -52,4 +52,174 @@ module("Live | Unit | Lib | roster-handler", function () {
 
     assert.deepEqual(destroyed, [20]);
   });
+
+  test("handleSpeakInvitation surfaces actionable toast for invited listener and withdrawn/declined notices", function (assert) {
+    const toasts = [];
+    const accepted = [];
+    const declined = [];
+    const room = {
+      id: ROOM_ID,
+      room_type: "stage",
+      can_manage: true,
+      active_participants: [{ id: 20, username: "bob", role: "participant" }],
+    };
+
+    const handler = new RosterHandler({
+      peerManager: { getRoomPeers: () => new Map(), has: () => false },
+      presencePending: { has: () => false, clear() {} },
+      toasts: {
+        default: (opts) => toasts.push({ kind: "default", ...opts }),
+        success: (opts) => toasts.push({ kind: "success", ...opts }),
+      },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => room,
+      isActiveRoom: () => false,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      getLocalVideoKind: () => null,
+      acceptSpeakInvitation: (id) => accepted.push(id),
+      declineSpeakInvitation: (id) => declined.push(id),
+    });
+
+    handler.handleSpeakInvitation(ROOM_ID, {
+      user_id: CURRENT_USER_ID,
+      invited: true,
+      inviter_username: "mod",
+    });
+
+    assert.strictEqual(toasts.length, 1, "shows invitation toast");
+    assert.strictEqual(
+      toasts[0].data.actions.length,
+      2,
+      "offers Join the stage and Decline actions"
+    );
+    toasts[0].data.actions[0].action();
+    toasts[0].data.actions[1].action();
+    assert.deepEqual(accepted, [ROOM_ID]);
+    assert.deepEqual(declined, [ROOM_ID]);
+
+    handler.handleSpeakInvitation(ROOM_ID, {
+      user_id: CURRENT_USER_ID,
+      invited: false,
+      reason: "withdrawn",
+    });
+    assert.strictEqual(toasts.length, 2, "notifies listener on withdrawal");
+
+    handler.handleSpeakInvitation(ROOM_ID, {
+      user_id: 20,
+      invited: false,
+      reason: "declined",
+    });
+    assert.strictEqual(
+      toasts.length,
+      3,
+      "notifies moderator when listener declines"
+    );
+  });
+
+  test("handleRoomTypeChange reconfigures local media for stage <-> open transitions", async function (assert) {
+    const toasts = [];
+    let micEnabled = true;
+    let audioStopped = false;
+    let acquiredMic = false;
+    const room = {
+      id: ROOM_ID,
+      room_type: "stage",
+      active_participants: [
+        { id: CURRENT_USER_ID, username: "alice", role: "participant" },
+      ],
+    };
+
+    const handler = new RosterHandler({
+      peerManager: {
+        getRoomPeers: () => new Map(),
+        has: () => false,
+        destroyRoom() {},
+      },
+      signaling: { clearForRoom() {}, clearHttpQueue() {} },
+      presencePending: { has: () => false, clear() {} },
+      toasts: {
+        default: (opts) => toasts.push({ kind: "default", ...opts }),
+        success: (opts) => toasts.push({ kind: "success", ...opts }),
+      },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => room,
+      isActiveRoom: () => true,
+      isConnectingRoom: () => false,
+      isMeshRoom: () => true,
+      removeAllRemoteStreams() {},
+      getLocalVideoKind: () => null,
+      stopLocalVideo: async () => {},
+      getLocalStream: () => (acquiredMic ? {} : null),
+      acquireMicrophone: async () => {
+        acquiredMic = true;
+        return true;
+      },
+      setMicEnabled: (enabled) => {
+        micEnabled = enabled;
+      },
+      stopLocalAudio: () => {
+        audioStopped = true;
+      },
+      ensureLocalAudioMonitor() {},
+    });
+
+    await handler.handleRoomTypeChange(ROOM_ID, "stage");
+    assert.true(
+      audioStopped,
+      "stops local audio when becoming a stage listener"
+    );
+    assert.false(micEnabled, "disables mic when becoming a stage listener");
+    assert.strictEqual(toasts[0].kind, "default");
+
+    room.room_type = "open";
+    await handler.handleRoomTypeChange(ROOM_ID, "open");
+    assert.false(
+      acquiredMic,
+      "does not capture the microphone when the room switches to open"
+    );
+    assert.false(micEnabled, "keeps the listener muted");
+    assert.strictEqual(toasts[1].kind, "success");
+
+    assert.true(
+      await handler.acquireDeferredMicrophone(ROOM_ID),
+      "reports the microphone as available"
+    );
+    assert.true(acquiredMic, "captures the microphone on an explicit unmute");
+    assert.true(micEnabled, "enables the microphone on an explicit unmute");
+    assert.strictEqual(toasts.length, 2, "shows no further toast");
+  });
+
+  test("handleSpeakInvitation leaves the invite to the room page banner", function (assert) {
+    const toasts = [];
+    let showingRoomPage = true;
+
+    const handler = new RosterHandler({
+      peerManager: { getRoomPeers: () => new Map(), has: () => false },
+      presencePending: { has: () => false, clear() {} },
+      toasts: { default: (opts) => toasts.push(opts) },
+      getCurrentUserId: () => CURRENT_USER_ID,
+      getChatSound: () => null,
+      getRoom: () => ({ id: ROOM_ID, room_type: "stage" }),
+      isActiveRoom: () => false,
+      isConnectingRoom: () => false,
+      isShowingRoomPage: () => showingRoomPage,
+      isMeshRoom: () => true,
+      getLocalVideoKind: () => null,
+    });
+    const invitation = {
+      user_id: CURRENT_USER_ID,
+      invited: true,
+      inviter_username: "mod",
+    };
+
+    handler.handleSpeakInvitation(ROOM_ID, invitation);
+    assert.strictEqual(toasts.length, 0, "no toast on the room page");
+
+    showingRoomPage = false;
+    handler.handleSpeakInvitation(ROOM_ID, invitation);
+    assert.strictEqual(toasts.length, 1, "toasts when only the widget is open");
+  });
 });

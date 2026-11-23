@@ -2,13 +2,17 @@ import RestModel from "discourse/models/rest";
 
 const SAVED_PROPERTIES = [
   "name",
+  "slug",
   "description",
   "public",
+  "room_type",
+  "speak_requests_enabled",
   "max_participants",
   "video_enabled",
   "livekit_enabled",
   "chat_channel_id",
   "chat_idle_minutes",
+  "max_quality_profile",
 ];
 
 // A cleared FormKit <field.Control @type="select"> reports `undefined`

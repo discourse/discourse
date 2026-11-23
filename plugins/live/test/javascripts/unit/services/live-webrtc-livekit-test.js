@@ -754,6 +754,38 @@ module("Live | Unit | Service | live-webrtc-livekit", function (hooks) {
     );
   });
 
+  test("unmuting undoes a mute applied to the publication by the SFU", async function (assert) {
+    await this.subject.join(this.room);
+    await wait(50);
+
+    const publication =
+      this.FakeLivekitRoom.instances[0].localParticipant.published[0];
+    let unmuteCalls = 0;
+    publication.isMuted = false;
+    publication.unmute = async () => {
+      unmuteCalls++;
+      publication.isMuted = false;
+    };
+
+    this.subject.toggleMute();
+    publication.isMuted = true;
+    this.subject.toggleMute();
+    await wait(0);
+
+    assert.true(this.subject.audioEnabled, "the local microphone is on");
+    assert.strictEqual(unmuteCalls, 1, "unmutes the publication once");
+
+    this.subject.toggleMute();
+    this.subject.toggleMute();
+    await wait(0);
+
+    assert.strictEqual(
+      unmuteCalls,
+      1,
+      "leaves a publication that is not muted alone"
+    );
+  });
+
   test("subscribed tracks land in the remote registry under numeric user ids", async function (assert) {
     await this.subject.join(this.room);
     await wait(50);

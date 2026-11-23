@@ -1,3 +1,32 @@
+export function isStageSpeaker(participant) {
+  const role = participant?.role;
+  return role === "moderator" || role === "speaker";
+}
+
+// Raised hands come first in FIFO order, then pending invitations, then the
+// rest of the audience in canonical roster order.
+export function sortStageAudience(listeners) {
+  return [...(listeners || [])].sort((a, b) => {
+    const handA = a?.hand_raised_at ? Number(a.hand_raised_at) : Infinity;
+    const handB = b?.hand_raised_at ? Number(b.hand_raised_at) : Infinity;
+    if (handA !== handB) {
+      return handA - handB;
+    }
+
+    const invitedA = a?.speak_invited_at
+      ? Number(a.speak_invited_at)
+      : Infinity;
+    const invitedB = b?.speak_invited_at
+      ? Number(b.speak_invited_at)
+      : Infinity;
+    if (invitedA !== invitedB) {
+      return invitedA - invitedB;
+    }
+
+    return 0;
+  });
+}
+
 export function participantCanSpeak(room, userId) {
   if (room.room_type !== "stage" && Number(userId) > 0) {
     return true;
@@ -6,8 +35,7 @@ export function participantCanSpeak(room, userId) {
   const participant = (room.active_participants || []).find(
     (p) => Number(p?.id) === Number(userId)
   );
-  const role = participant?.role;
-  return role === "moderator" || role === "speaker";
+  return isStageSpeaker(participant);
 }
 
 // Receive-side media policy. Remote client state (muted, role shown in the
