@@ -124,29 +124,35 @@ module I18n
     class MissingTranslation
     end
 
-    def translate_no_override(key, options)
+    def translate_no_override(key, options, locale = nil)
       # note we skip cache for :format and :count
       should_raise = false
-      locale = nil
 
-      dup_options = nil
-      if options
-        dup_options = options.dup
-        should_raise =
-          dup_options.delete(:raise) || Rails.application.config.i18n.raise_on_missing_translations
-        locale = dup_options.delete(:locale)
+      if options && !options.empty?
+        if options.size == 1 && options.key?(:locale)
+          locale ||= options[:locale]
+          should_raise = Rails.application.config.i18n[:raise_on_missing_translations]
+        else
+          dup_options = options.dup
+          should_raise =
+            dup_options.delete(:raise) ||
+              Rails.application.config.i18n[:raise_on_missing_translations]
+          opt_locale = dup_options.delete(:locale)
+          locale ||= opt_locale
+          return translate_no_cache(key, **options) if !dup_options.empty?
+        end
+      else
+        should_raise = Rails.application.config.i18n[:raise_on_missing_translations]
       end
 
-      return translate_no_cache(key, **options) if dup_options.present?
+      locale = (locale || config.locale).to_sym
 
-      locale ||= config.locale
-      locale = locale.to_sym
-
-      @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-      k = "#{key}#{locale}#{config.backend.object_id}"
+      @caches_by_backend ||= {}
+      by_locale = (@caches_by_backend[config.backend.object_id] ||= {})
+      lru = (by_locale[locale] ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE))
 
       val =
-        @cache.getset(k) do
+        lru.getset(key) do
           translate_no_cache(key, locale: locale, raise: true).freeze
         rescue I18n::MissingTranslationData
           MissingTranslation
@@ -162,77 +168,58 @@ module I18n
     end
 
     def overrides_by_locale(locale)
-      return {} unless @overrides_enabled
-      return {} if GlobalSetting.skip_db?
-      locale = locale.to_sym
-
-      execute_reload if @requires_reload
-
-      site = RailsMultisite::ConnectionManagement.current_db
-
-      by_site = @overrides_by_site[site]
-      by_site ||= {}
-
-      if !by_site.has_key?(locale)
-        # Load overrides
-        translations_overrides =
-          TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
-
-        if translations_overrides.empty?
-          by_site[locale] = {}
-        else
-          translations_overrides.each do |tuple|
-            by_locale = by_site[locale] ||= {}
-            by_locale[tuple[0]] = tuple[1]
-          end
-        end
-
-        @overrides_by_site[site] = by_site
-      end
-
-      by_site[locale].with_indifferent_access
-    rescue ActiveRecord::StatementInvalid => e
-      if PG::UndefinedTable === e.cause || PG::UndefinedColumn === e.cause
-        {}
-      else
-        raise
-      end
+      raw = raw_overrides_by_locale(locale)
+      raw ? raw.with_indifferent_access : {}
     end
 
-    def translate(*args)
+    def translate(key = nil, *args)
       execute_reload if @requires_reload
 
-      options = args.last.is_a?(Hash) ? args.pop.dup : {}
-      key = args.shift
-      locale = (options[:locale] || config.locale).to_sym
+      if args.empty?
+        options = nil
+        locale = config.locale.to_sym
+      else
+        options = args.last.is_a?(Hash) ? args.pop : nil
+        locale = (options ? (options[:locale] || config.locale) : config.locale).to_sym
+      end
 
       load_locale(locale) if @loaded_locales.exclude?(locale)
 
-      if @overrides_enabled
-        overrides = {}
-        has_count = options.has_key?(:count)
+      if @overrides_enabled && !GlobalSetting.skip_db?
+        has_count = options ? options.has_key?(:count) : false
+        key_str = nil
+        overrides = nil
 
         I18n.fallbacks[locale].each do |l|
-          overrides_for_locale = overrides_by_locale(l)
-          overrides[l] = overrides_for_locale if has_count || overrides_for_locale.key?(key)
+          raw = raw_overrides_by_locale(l)
+          next if !raw || raw.empty?
+
+          key_str ||= key.is_a?(Symbol) ? key.name : key.to_s
+          if has_count || raw.key?(key_str)
+            overrides ||= {}
+            overrides[l] = raw.with_indifferent_access
+          end
         end
 
-        if overrides.present?
-          no_options = options.empty? || (options.size == 1 && options.has_key?(:locale))
+        if overrides
+          no_options =
+            !options || options.empty? || (options.size == 1 && options.has_key?(:locale))
+          key_str ||= key.is_a?(Symbol) ? key.name : key.to_s
 
           # Shortcut if the current locale has an override and there are no options.
-          if no_options && (override = overrides.dig(locale, key))
+          if no_options && (override = overrides.dig(locale, key_str))
             return override
           end
 
-          options[:overrides] = overrides
+          opts_with_overrides = options ? options.dup : {}
+          opts_with_overrides[:overrides] = overrides
 
           # I18n likes to use throw...
-          catch(:exception) { return backend.translate(locale, key, options) }
+          catch(:exception) { return backend.translate(locale, key, opts_with_overrides) }
         end
       end
 
-      translate_no_override(key, options)
+      translate_no_override(key, options, locale)
     end
 
     alias_method :t, :translate
@@ -254,6 +241,37 @@ module I18n
 
     private
 
+    def raw_overrides_by_locale(locale)
+      return nil if !@overrides_enabled || GlobalSetting.skip_db?
+      locale = locale.to_sym
+
+      execute_reload if @requires_reload
+
+      site = RailsMultisite::ConnectionManagement.current_db
+      by_site = @overrides_by_site[site]
+      return by_site[locale] if by_site && by_site.has_key?(locale)
+
+      by_site ||= {}
+      translations_overrides =
+        TranslationOverride.where(locale: locale).pluck(:translation_key, :value)
+
+      if translations_overrides.empty?
+        by_site[locale] = {}
+      else
+        by_locale = (by_site[locale] = {})
+        translations_overrides.each { |tuple| by_locale[tuple[0]] = tuple[1] }
+      end
+
+      @overrides_by_site[site] = by_site
+      by_site[locale]
+    rescue ActiveRecord::StatementInvalid => e
+      if PG::UndefinedTable === e.cause || PG::UndefinedColumn === e.cause
+        nil
+      else
+        raise
+      end
+    end
+
     RELOAD_MUTEX = Mutex.new
 
     def execute_reload
@@ -262,6 +280,7 @@ module I18n
 
         @loaded_locales = []
         @cache = nil
+        @caches_by_backend = nil
         @overrides_by_site = {}
 
         reload_no_cache!
