@@ -3,8 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { next, run } from "@ember/runloop";
 import { service } from "@ember/service";
-import { find, render, settled } from "@ember/test-helpers";
+import { find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -65,14 +66,12 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       assert
         .dom(selector)
         .doesNotHaveAttribute("aria-live", "the wrapper is not a live region");
-      assert.dom(`${selector} > [aria-live]`).exists({ count: 2 });
-      for (const slot of find(selector).querySelectorAll(":scope > *")) {
-        assert
-          .dom(slot)
-          .hasAttribute("role", role)
-          .hasAttribute("aria-live", live)
-          .hasAttribute("aria-atomic", "true");
-      }
+      assert
+        .dom(`${selector} > *`)
+        .exists({ count: 1 })
+        .hasAttribute("role", role)
+        .hasAttribute("aria-live", live)
+        .hasAttribute("aria-atomic", "true");
     }
   });
 
@@ -312,15 +311,37 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       );
   });
 
-  // VoiceOver compares what a region ends up saying with what it said before, so an identical
-  // repeat written back into the same element is silent even when it is blanked in between. Each
-  // region therefore has two slots that take turns: a repeat lands in the slot that was empty,
-  // which is the same change as a first announcement. An idle slot holds nothing at all. An idle
-  // character would be read aloud ("space") whenever a message clears.
+  // VoiceOver remembers the last text each live element said and stays silent when the same text
+  // comes back, even after the element was emptied in between. So every announcement goes into a
+  // new element. That element has to be in the page before its text arrives, because text that
+  // arrives with the element is not reliably read. An idle element holds nothing at all: an idle
+  // character is read aloud ("space") whenever a message clears.
   //
   // "Nothing" is measured with the template's own newlines and indentation removed, but not a
   // non-breaking space, since that is the character a reader can hear.
   const spoken = (text) => text.replace(/[\t\n\r ]+/g, "");
+
+  /**
+   * Records each live element added to a region with the text it held when it arrived.
+   */
+  function watchNewElements(selector) {
+    const region = find(selector);
+    const added = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            added.push({ element: node, text: spoken(node.textContent) });
+          }
+        }
+      }
+    });
+
+    observer.observe(region, { childList: true });
+    observers.push(observer);
+
+    return added;
+  }
 
   REGIONS.forEach(({ type, selector }) => {
     test(`an idle ${type} region holds nothing a reader could hear`, async function (assert) {
@@ -342,98 +363,84 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       );
     });
 
-    test(`an identical ${type} repeat lands in a slot that was empty`, async function (assert) {
+    test(`every ${type} announcement lands in a new element that arrived empty`, async function (assert) {
       disableClearA11yAnnouncementsInTests();
       await render(<template><A11yLiveRegions /></template>);
 
-      const slots = [...find(selector).querySelectorAll("[aria-live]")];
-      assert.strictEqual(slots.length, 2, "the region has two slots");
-
+      const added = watchNewElements(selector);
       const a11y = getOwner(this).lookup("service:a11y");
-      a11y.announce("no results", type);
-      await settled();
+      const steps = [
+        ["no results", "a first message"],
+        ["no results", "an identical repeat"],
+        ["1 result", "a different message"],
+        ["", null],
+        ["1 result", "a repeat after the region cleared"],
+      ];
 
-      const first = slots.findIndex((slot) =>
-        slot.textContent.includes("no results")
-      );
-      assert.notStrictEqual(first, -1, "the first message is in a slot");
-      const other = slots[1 - first];
-      assert.strictEqual(spoken(other.textContent), "", "the other is empty");
+      for (const [message, label] of steps) {
+        const before = added.length;
+        a11y.announce(message, type);
+        await settled();
 
-      a11y.announce("no results", type);
-      await settled();
+        if (!label) {
+          continue;
+        }
 
-      assert
-        .dom(other)
-        .hasText("no results", "the repeat is written into the empty slot");
-      assert.strictEqual(
-        spoken(slots[first].textContent),
-        "",
-        "and the slot that held it empties"
-      );
+        assert.strictEqual(
+          added.length,
+          before + 1,
+          `${label} gets a new element`
+        );
+        const { element, text } = added.at(-1);
+        assert.strictEqual(text, "", `${label}: the element arrives empty`);
+        assert
+          .dom(element)
+          .hasText(message, `${label}: and then holds the message`);
+        assert
+          .dom(`${selector} > *`)
+          .exists({ count: 1 }, `${label}: and replaces the previous element`);
+      }
     });
   });
 
-  test("a repeat already in flight is never spoken once a newer announcement arrives", async function (assert) {
-    disableClearA11yAnnouncementsInTests();
+  // A run-loop timer fires late whenever the page is busy, and Backburner then runs every timer
+  // that is due in one go, in deadline order. A message written a moment before the previous
+  // message's clear falls due is followed straight away by that clear. The clock is moved instead
+  // of waited on, which Backburner reads through `Date.now`.
+  test("a clear that falls due together with a newer write leaves that write alone", async function (assert) {
     await render(<template><A11yLiveRegions /></template>);
-
     const a11y = getOwner(this).lookup("service:a11y");
 
     a11y.announce("1 result", "polite");
-    await settled();
-
-    const mutations = watchTextMutations("#a11y-announcements-polite");
-
-    // Advance one tick so the repeat has cleared the region but has not restored it yet.
-    // A newer announcement arriving in that window has to win outright: asserting only the
-    // final text would miss the region speaking the stale message on the way there.
-    // Asserted as the absence of the message rather than as an empty region: a cleared region
-    // idles on a non-breaking space rather than on nothing — see `A11yLiveRegions`.
-    a11y.announce("1 result", "polite");
     await new Promise((resolve) => next(resolve));
-    assert
-      .dom("#a11y-announcements-polite")
-      .doesNotIncludeText(
-        "1 result",
-        "the repeat clears the region before restoring it"
-      );
 
     a11y.announce("2 results", "polite");
-    await settled();
-
-    assert.false(
-      mutations.texts.includes("1 result"),
-      "the superseded message is never put back into the region"
-    );
-    assert
-      .dom("#a11y-announcements-polite")
-      .hasText(
+    sinon.stub(Date, "now").returns(Date.now() + 15);
+    try {
+      await waitUntil(() => a11y.liveRegionWriteCount("polite") === 2);
+      assert.strictEqual(
+        a11y.politeMessage,
         "2 results",
-        "the newest announcement is what the region ends on"
+        "the earlier message's clear does not erase the newer one"
       );
+    } finally {
+      Date.now.restore();
+    }
+    await settled();
   });
 
-  test("a pending repeat does not write to a destroyed service", async function (assert) {
+  test("an announcement still pending at teardown is dropped", async function (assert) {
     disableClearA11yAnnouncementsInTests();
 
     const a11y = getOwner(this).lookup("service:a11y");
-
     a11y.announce("1 result", "polite");
-    await settled();
-
-    // Advance a single tick so the repeat has blanked the region and scheduled its
-    // restore, but the restore has not run yet.
-    a11y.announce("1 result", "polite");
-    await new Promise((resolve) => next(resolve));
-
     run(() => a11y.destroy());
     await settled();
 
     assert.strictEqual(
       a11y.politeMessage,
       undefined,
-      "teardown cancels the pending restore instead of letting it write and re-arm a timer"
+      "teardown keeps the pending write from landing"
     );
   });
 
@@ -441,8 +448,8 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
   // the calls it contains. Text alone cannot do that once same-tick calls are combined.
   module("announcementHistory", function () {
     function snapshot(record) {
-      const { type, text, delivered, dropped, superseded } = record;
-      return { type, text, delivered, dropped, superseded };
+      const { type, text, delivered, dropped } = record;
+      return { type, text, delivered, dropped };
     }
 
     test("announce returns increasing call ids, and a call that throws gets none", async function (assert) {
@@ -472,7 +479,6 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
         text: "Saved",
         delivered: [id],
         dropped: [],
-        superseded: false,
       });
     });
 
@@ -491,7 +497,6 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
           text: "Added Foo. 12 results",
           delivered: [added, count],
           dropped: [],
-          superseded: false,
         },
       ]);
     });
@@ -529,7 +534,6 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
         text: "Added Foo",
         delivered: [added],
         dropped: [{ call: restated, reason: "restated" }],
-        superseded: false,
       });
     });
 
@@ -548,37 +552,8 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
           text: "",
           delivered: [clear],
           dropped: [{ call: stale, reason: "cleared" }],
-          superseded: false,
         },
       ]);
-    });
-
-    test("a repeat cancelled by a newer announcement is marked superseded", async function (assert) {
-      disableClearA11yAnnouncementsInTests();
-      await render(<template><A11yLiveRegions /></template>);
-      const a11y = getOwner(this).lookup("service:a11y");
-
-      a11y.announce("1 result", "polite");
-      await settled();
-
-      // Same timing as the repeat test above: one tick in, the repeat has cleared the region
-      // and is waiting to write it back.
-      a11y.announce("1 result", "polite");
-      await new Promise((resolve) => next(resolve));
-      a11y.announce("2 results", "polite");
-      await settled();
-
-      assert.deepEqual(
-        a11y.announcementHistory.map((record) => [
-          record.text,
-          record.superseded,
-        ]),
-        [
-          ["1 result", false],
-          ["1 result", true],
-          ["2 results", false],
-        ]
-      );
     });
 
     test("the history keeps only the newest 50 records", async function (assert) {

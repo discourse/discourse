@@ -1408,9 +1408,8 @@ module(
       const load = () => pending;
       const a11y = this.owner.lookup("service:a11y");
       const reports = () =>
-        a11y.announcementHistory.filter(
-          (record) =>
-            record.text.includes("Still loading") && !record.superseded
+        a11y.announcementHistory.filter((record) =>
+          record.text.includes("Still loading")
         );
       await render(
         <template><A11yLiveRegions /><DSelect @load={{load}} /></template>
@@ -1419,7 +1418,14 @@ module(
       try {
         await waitUntil(() => find(".d-select__panel input"));
         press("Enter", ".d-select__panel input");
-        await waitUntil(() => reports().length === 1);
+        // The region shows a message a run-loop turn after the write is recorded.
+        await waitUntil(
+          () =>
+            reports().length === 1 &&
+            find("#a11y-announcements-polite").textContent.includes(
+              "Still loading"
+            )
+        );
         assert.dom("#a11y-announcements-polite").includesText("Still loading");
         press("Enter", ".d-select__panel input");
         await waitUntil(
