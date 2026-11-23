@@ -1341,6 +1341,7 @@ pl_PL:
         target_deleted: "Wpis usunięty"
         target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
         queued_post_deleted_by: "Wpis z kolejki usunięty przez %{username} · %{relativeDate}"
+        queued_for_approval_by: "Oczekuje na zatwierdzenie przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -6750,7 +6751,8 @@ pl_PL:
       hub: "Hub"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
-    theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
+    theme_preview_notice: "Obecnie przeglądasz motyw."
+    exit_theme_preview: "Wyjdź z podglądu"
     theme_preview_failed: "Nie można wyświetlić podglądu motywu, ponieważ motyw nie istnieje lub nie masz uprawnień dostępu do niego."
     image_removed: "(obraz usunięty)"
     pause_notifications:
@@ -10762,6 +10764,7 @@ pl_PL:
           text: "Tekst"
           textarea: "Obszar tekstowy"
           date: "Data"
+          number: "Liczba"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"

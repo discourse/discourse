@@ -4734,6 +4734,7 @@ ja:
       delete_and_ignore_replies:
         title: "投稿と返信を削除して通報を無視する"
         description: "キューから削除すると、投稿とそのすべての返信を削除して通報を無視します。最初の投稿である場合、トピックも削除されます"
+        confirm_title: "投稿と返信を削除して通報を無視する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4743,6 +4744,7 @@ ja:
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
+        confirm_title: "投稿と返信を削除する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:

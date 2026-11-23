@@ -4833,7 +4833,6 @@ fi:
         other: "Luonnokset (%{count})"
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
-    theme_preview_notice: "Esikatselet parhaillaan teemaa, sulje tämä selaimen välilehti tai ikkuna palataksesi normaaliin sivuston määritykseen."
     image_removed: "(kuva poistettu)"
     pause_notifications:
       title: "Keskeytä ilmoitukset…"

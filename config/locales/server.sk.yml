@@ -4950,6 +4950,7 @@ sk:
       delete_and_agree_replies:
         title: "Odstrániť príspevok a odpovede"
         description: "Súhlasiť s označením a vymazať tento príspevok a všetky jeho odpovede; ak je prvý príspevok, vymazať aj tému."
+        confirm_title: "Odstrániť príspevok a odpovede?"
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:

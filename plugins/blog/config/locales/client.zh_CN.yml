@@ -268,6 +268,7 @@ zh_CN:
       editor_title: 博客编辑器
       editor_description: 草稿在您发布之前始终保持私密状态。您可以编辑文章以发布、安排发布时间或进行更正。
       editor_table:
+        blog: 博客
         edit: 编辑
         status: 状态
         published: 已发布
@@ -290,6 +291,7 @@ zh_CN:
       preview: 预览
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
+      blog_field: 博客
       path: 文章路径
       excerpt: 摘录
       excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。
