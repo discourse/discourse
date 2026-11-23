@@ -18,12 +18,20 @@ module PageObjects
         has_css?("[role='tooltip']", text: text)
       end
 
+      def has_no_classification_help?(text)
+        has_no_css?("[role='tooltip']", text: text)
+      end
+
       def has_dsa_learn_more_link?(url)
         has_css?("[role='tooltip'] a[href='#{url}'][target='_blank']", text: "Learn more…")
       end
 
       def click_category_help
         within(full_modal_selector) { find("[data-name='category'] .form-kit__tooltip").click }
+      end
+
+      def hover_category_help
+        within(full_modal_selector) { find("[data-name='category'] .form-kit__tooltip").hover }
       end
 
       def open_rule_menu
@@ -151,8 +159,16 @@ module PageObjects
         has_css?("#{full_modal_selector} [aria-current='step']:focus", text: label)
       end
 
-      def has_required_errors?
-        has_css?("#{full_modal_selector} .form-kit__errors", text: "Required")
+      def has_accessible_field_description?(field, text, invalid: false)
+        invalid_selector = invalid ? "[aria-invalid='true']" : ":not([aria-invalid='true'])"
+        has_css?(
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger#{invalid_selector}",
+        ) do |trigger|
+          trigger.evaluate_script(
+            "this.ariaDescribedByElements?.some((element) => element.textContent.trim() === arguments[0])",
+            text,
+          )
+        end
       end
     end
   end
