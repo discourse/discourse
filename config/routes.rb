@@ -676,6 +676,8 @@ Discourse::Application.routes.draw do
 
     get "session/sso" => "session#sso"
     get "session/sso_login" => "session#sso_login"
+    post "session/sso_login/second-factor" => "session#sso_login_second_factor",
+         :as => :session_sso_login_second_factor
     get "session/sso_provider" => "session#sso_provider"
     get "session/current" => "session#current"
     get "session/csrf" => "session#csrf"
