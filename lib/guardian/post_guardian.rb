@@ -41,7 +41,7 @@ module PostGuardian
       return false
     end
 
-    taken = opts[:taken_actions].try(:keys).to_a
+    taken_actions = opts[:taken_actions]
     post_action_type_view = opts[:post_action_type_view] || PostActionTypeView.new
     is_flag =
       if opts[:notify_flag_types] && opts[:additional_message_types]
@@ -50,10 +50,14 @@ module PostGuardian
         post_action_type_view.notify_flag_types[action_key] ||
           post_action_type_view.additional_message_types[action_key]
       end
-    already_taken_this_action =
-      taken.any? && taken.include?(post_action_type_view.types[action_key])
-    already_did_flagging =
-      taken.any? && (taken & post_action_type_view.notify_flag_types.values).any?
+    if taken_actions.present?
+      taken = taken_actions.keys
+      already_taken_this_action = taken.include?(post_action_type_view.types[action_key])
+      already_did_flagging = taken.intersect?(post_action_type_view.notify_flag_type_ids)
+    else
+      already_taken_this_action = false
+      already_did_flagging = false
+    end
 
     result =
       if authenticated? && post
