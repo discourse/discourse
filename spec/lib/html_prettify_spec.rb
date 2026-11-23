@@ -31,4 +31,13 @@ RSpec.describe HtmlPrettify do
     t ERB::Util.html_escape('<img src="test.png"> yay'),
       "&lt;img src=&ldquo;test.png&rdquo;&gt; yay"
   end
+
+  it "preserves code/pre sections, single-character quote context, and plain titles" do
+    t "", ""
+    t "Plain ASCII title without punctuation", "Plain ASCII title without punctuation"
+    t "<p><code>'raw' -- 1/2</code> and \"smart\"</p>",
+      "<p><code>'raw' -- 1/2</code> and &ldquo;smart&rdquo;</p>"
+    t "<b>'</b>Hello<b>'</b>", "<b>&lsquo;</b>Hello<b>&rsquo;</b>"
+    t "``backticks'' and the '80s . . .", "&ldquo;backticks&rdquo; and the &rsquo;80s &hellip;"
+  end
 end
