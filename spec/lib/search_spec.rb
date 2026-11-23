@@ -70,6 +70,11 @@ RSpec.describe Search do
       expect(Search.need_segmenting?("https://example.com/path with spaces")).to eq(true)
     end
 
+    it "returns true for URLs with non-ASCII characters in the query string" do
+      expect(Search.need_segmenting?("https://example.com/t/x?title=日本語")).to eq(true)
+      expect(Search.need_segmenting?("/search?q=日本語")).to eq(true)
+    end
+
     it "keeps treating whitespace inside a query string as a URI path" do
       expect(Search.need_segmenting?("/search?q=hello world")).to eq(false)
       expect(Search.need_segmenting?("https://example.com/a?b=c d")).to eq(false)
