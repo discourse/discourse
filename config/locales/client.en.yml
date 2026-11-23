@@ -3614,6 +3614,7 @@ en:
       add_placeholder: "Add…"
       search_placeholder: "Search…"
       no_results: "No results found"
+      no_results_for: "No results for “%{query}”"
       label: "Options"
       label_with_value: "%{label}, %{value}"
       label_with_count:

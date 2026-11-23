@@ -802,11 +802,25 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasText("Apple", "the current value's option is aria-selected");
   });
 
-  test("shows an empty status and never a role=alert for no matches", async function (assert) {
+  // The empty state's text names the query, so it changes on every keystroke that still matches
+  // nothing. A live region there would speak each change itself, cut off by the next keystroke,
+  // ahead of the announcement that reports the settled query.
+  test("the empty state is not a live region, and never a role=alert", async function (assert) {
     await render(<template><Host /></template>);
     await fillIn("[role='combobox']", "zzzz");
 
-    assert.dom(".d-select__empty[role='status']").exists("polite empty status");
+    assert
+      .dom(".d-select__empty")
+      .exists("the empty state is shown")
+      .doesNotHaveAttribute("role", "it has no live role")
+      .doesNotHaveAttribute("aria-live", "and is not a live region");
+    assert.strictEqual(
+      find(".d-select__empty").closest(
+        "[aria-live], [role='status'], [role='alert'], [role='log']"
+      ),
+      null,
+      "nor inside one"
+    );
     assert
       .dom("[role='alert']")
       .doesNotExist("counts/empties are announced politely, never assertively");
@@ -1018,7 +1032,10 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     await fillIn("[role='combobox']", "zzzz");
 
     assert.strictEqual(
-      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      announce.withArgs(
+        i18n("d_select.no_results_for", { query: "zzzz" }),
+        "polite"
+      ).callCount,
       1,
       "landing on no matches announces through the a11y service"
     );
@@ -1043,7 +1060,10 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
 
     await fillIn("[role='combobox']", "zzzz");
     assert.strictEqual(
-      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
+      announce.withArgs(
+        i18n("d_select.no_results_for", { query: "zzzz" }),
+        "polite"
+      ).callCount,
       2,
       "re-entering the empty state announces again"
     );
@@ -1071,11 +1091,59 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       emptyNode,
       "the empty node is the same element across both queries (no remount to ride on)"
     );
-    assert.strictEqual(
-      announce.withArgs(i18n("d_select.no_results"), "polite").callCount,
-      2,
+    assert.deepEqual(
+      ["zzzz", "yyyy"].map(
+        (query) =>
+          announce.withArgs(
+            i18n("d_select.no_results_for", { query }),
+            "polite"
+          ).callCount
+      ),
+      [1, 1],
       "each empty query announces its own result"
     );
+  });
+
+  test("the empty state names the query it found nothing for", async function (assert) {
+    const announce = sinon.spy(
+      getOwner(this).lookup("service:a11y"),
+      "announce"
+    );
+
+    await render(<template><Host /></template>);
+    await fillIn("[role='combobox']", "zzzz");
+
+    const message = i18n("d_select.no_results_for", { query: "zzzz" });
+    assert
+      .dom(".d-select__empty")
+      .hasText(message, "the drawn text names the query");
+    assert.strictEqual(
+      announce.withArgs(message, "polite").callCount,
+      1,
+      "and so does the announcement"
+    );
+  });
+
+  test("the empty state without a query says only that nothing was found", async function (assert) {
+    const options = [];
+
+    await render(<template><DSelect @options={{options}} /></template>);
+    await dSelect(".d-select").open();
+
+    assert.dom(".d-select__empty").hasText(i18n("d_select.no_results"));
+  });
+
+  test("a noResults text function receives the query", async function (assert) {
+    const noResults = ({ query }) => `Nothing like ${query}`;
+
+    await render(
+      <template>
+        <DSelect @options={{ITEMS}} @texts={{hash noResults=noResults}} />
+      </template>
+    );
+    await fillIn("[role='combobox']", "zzzz");
+
+    assert.dom(".d-select__empty").hasText("Nothing like zzzz");
   });
 
   test("mid-composition input does not open or filter (IME)", async function (assert) {
@@ -2595,7 +2663,7 @@ module(
         );
     });
 
-    test("a consumer :empty block replaces the default text but keeps the status live-region", async function (assert) {
+    test("a consumer :empty block replaces the default text and is not a live region either", async function (assert) {
       await render(
         <template>
           <DSelect @identifier="test-select" @options={{ITEMS}}>
@@ -2609,13 +2677,17 @@ module(
       assert
         .dom(".custom-empty")
         .exists("the consumer empty block renders for no matches");
-      assert
-        .dom("[role='status'] .custom-empty")
-        .exists("the custom empty content stays inside a live-region status");
+      assert.strictEqual(
+        find(".custom-empty").closest(
+          "[aria-live], [role='status'], [role='alert'], [role='log']"
+        ),
+        null,
+        "the custom empty content is spoken by the announcement alone"
+      );
       assert
         .dom(".d-select__empty")
         .doesNotContainText(
-          "No results found",
+          "No results",
           "the default no-results text is replaced by the consumer content"
         );
     });
@@ -2663,7 +2735,7 @@ module(
         "the block's message is spoken once"
       );
       assert.false(
-        announce.calledWith(i18n("d_select.no_results")),
+        announce.calledWith(i18n("d_select.no_results_for", { query: "zzzz" })),
         "the default message, which isn't drawn, is not spoken"
       );
     });

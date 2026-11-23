@@ -20,7 +20,6 @@ const LOCALES = {
   placeholder: "placeholder",
   addMorePlaceholder: "add_placeholder",
   searchPlaceholder: "search_placeholder",
-  noResults: "no_results",
   ariaLabel: "label",
   labelWithValue: "label_with_value",
   labelWithCount: "label_with_count",
@@ -112,6 +111,7 @@ module("Unit | ui-kit | select | texts", function (hooks) {
       Object.keys(DEFAULT_SELECT_TEXTS).sort(),
       [
         ...Object.keys(LOCALES),
+        "noResults",
         "compactCount",
         "moreChips",
         "noneLabel",
@@ -148,6 +148,7 @@ module("Unit | ui-kit | select | texts", function (hooks) {
       filteredResultsAll: "3 results, 1",
       selectedOfResults: "2 of them selected",
       noneOfResultsSelected: "none of them selected",
+      noResults: "No results for “b”",
     })) {
       assert.strictEqual(
         renderSelectText(options, key, VALUES),
@@ -155,6 +156,23 @@ module("Unit | ui-kit | select | texts", function (hooks) {
         `${key} has its contracted default`
       );
     }
+  });
+
+  test("the default noResults text names a query only when there is one", async function (assert) {
+    const options = await snapshot(this);
+
+    for (const values of [{}, { query: "" }, { query: "   " }]) {
+      assert.strictEqual(
+        renderSelectText(options, "noResults", values),
+        "No results found",
+        `no query in ${JSON.stringify(values)}`
+      );
+    }
+    assert.strictEqual(
+      renderSelectText(options, "noResults", { query: " kiwi " }),
+      "No results for “kiwi”",
+      "the query is trimmed"
+    );
   });
 
   test("the multiple default placeholder uses add_placeholder", async function (assert) {
@@ -188,6 +206,7 @@ module("Unit | ui-kit | select | texts", function (hooks) {
     test(`every engine key accepts the ${form} form`, async function (assert) {
       const keys = [
         ...Object.keys(LOCALES),
+        "noResults",
         "compactCount",
         "moreChips",
         "noneLabel",

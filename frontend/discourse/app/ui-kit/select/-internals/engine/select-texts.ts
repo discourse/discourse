@@ -75,7 +75,6 @@ export function kindTextLayers(
 const LOCALE_KEYS = {
   addMorePlaceholder: "add_placeholder",
   searchPlaceholder: "search_placeholder",
-  noResults: "no_results",
   ariaLabel: "label",
   labelWithValue: "label_with_value",
   labelWithCount: "label_with_count",
@@ -125,7 +124,10 @@ const LOCALE_KEYS = {
 } as const;
 
 /** The engine's own text keys. */
-export type SelectCoreTextKey = keyof typeof LOCALE_KEYS | "placeholder";
+export type SelectCoreTextKey =
+  | keyof typeof LOCALE_KEYS
+  | "placeholder"
+  | "noResults";
 
 /** The texts a call site can set on a select: the engine's own. */
 export type SelectCoreTexts = SelectTexts<SelectCoreTextKey>;
@@ -138,6 +140,12 @@ export const DEFAULT_SELECT_TEXTS: Readonly<
     i18n(
       context.multiple ? "d_select.add_placeholder" : "d_select.placeholder"
     ),
+  noResults: (values: SelectTextValues) => {
+    const query = typeof values.query === "string" ? values.query.trim() : "";
+    return query
+      ? i18n("d_select.no_results_for", { query })
+      : i18n("d_select.no_results");
+  },
   ...(Object.fromEntries(
     Object.entries(LOCALE_KEYS).map(([name, key]) => [
       name,

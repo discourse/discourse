@@ -1074,7 +1074,7 @@ function assertUse(assert, row, expected, announce) {
         "empty text never reaches a11y.announce"
       );
       const original = {
-        noResults: i18n("d_select.no_results"),
+        noResults: i18n("d_select.no_results_for", { query: "Pear" }),
         selectionCleared: i18n("d_select.selection_cleared"),
         minChars: i18n("d_select.min_chars", { count: 3 }),
         maximum: i18n("d_select.max_reached", { count: 2 }),
@@ -1321,6 +1321,7 @@ function assertValues(assert, row, calls) {
         selected: i18n("d_select.selected_of_results", { count: 1 }),
       },
       selectedOfResults: { count: 1 },
+      noResults: { query: "Pear" },
       createOption: { label: "Pear" },
       compactCount: { count: 2 },
       moreChips: { count: 2 },
@@ -2124,7 +2125,9 @@ module("Integration | ui-kit | select | texts", function (hooks) {
         "empty does not clear the a11y queue"
       );
       assert.false(
-        this.announce.calledWith(i18n("d_select.no_results")),
+        this.announce.calledWith(
+          i18n("d_select.no_results_for", { query: "Pear" })
+        ),
         "the default empty message is not restored"
       );
     });

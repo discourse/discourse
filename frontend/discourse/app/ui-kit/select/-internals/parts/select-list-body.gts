@@ -390,18 +390,16 @@ const SelectListBody: TemplateOnlyComponent<SelectListBodySignature> =
             Keyed on the resolved query, never the engine query, which advances on
             a keystroke or reload. That would report an empty result for a query still in
             flight, over rows that still belong to the previous one. }}
-              {{! An empty text keeps the element, without a role, because it still
-            records the row count and replaces a held result count. }}
-              {{#let (@engine.text "noResults") as |noResults|}}
+              {{! Not a live region: the text names the query, so a live role would speak
+            every keystroke's change ahead of the announcement, which reports the settled
+            query. An empty text keeps the element, because it still records the row count
+            and replaces a held result count. }}
+              {{#let
+                (@engine.text "noResults" (hash query=content.filter))
+                as |noResults|
+              }}
                 <div
                   class="d-select__empty"
-                  role={{if
-                    (and
-                      (not (eq @reportsActive false))
-                      (or @hasEmptyBlock noResults)
-                    )
-                    "status"
-                  }}
                   {{didInsert @feedback.recordRowCount 0}}
                   {{didInsert @announcer.announceNoResults content.query}}
                   {{didUpdate @announcer.announceNoResults content.query}}

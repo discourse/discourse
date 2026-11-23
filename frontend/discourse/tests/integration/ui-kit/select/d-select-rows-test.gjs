@@ -302,9 +302,9 @@ module("Integration | ui-kit | DSelect (none row)", function (hooks) {
       .dom("[role='option']")
       .doesNotExist("the unmatched query has no activatable option");
     assert
-      .dom(".d-select__empty[role='status']")
+      .dom(".d-select__empty")
       .hasText(
-        "No results found",
+        i18n("d_select.no_results_for", { query: "zzzz" }),
         "the ordinary no-results state remains visible"
       );
 

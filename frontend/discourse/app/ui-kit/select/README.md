@@ -584,7 +584,7 @@ unknown key silently.
 | `placeholder` | `d_select.placeholder` "Select…", or `d_select.add_placeholder` "Add…" when multiple | | Trigger and input with nothing held, unless a none option shows instead |
 | `addMorePlaceholder` | `d_select.add_placeholder` "Add…" | `selected`, `minimum`, `maximum` | Multi-select input after the chips, while another value can be added |
 | `searchPlaceholder` | `d_select.search_placeholder` "Search…" | | Panel and modal search field |
-| `noResults` | `d_select.no_results` | | Empty state, drawn and announced |
+| `noResults` | `d_select.no_results_for` "No results for “…”" while a query is typed, or `d_select.no_results` "No results found" | `query` | Empty state, drawn and announced |
 | `minChars` | `d_select.min_chars` | `count` | Drawn and announced below `@minChars` |
 | `maximum` | `d_select.max_reached` | `count` | Limit line at `@maximum`, announced |
 | `minimum` | `d_select.min_not_reached` | `count`, `selected` | Limit line below `@minimum`, announced |
@@ -674,7 +674,7 @@ neutral: it costs behaviour (see `:selection` below) and it costs the reader a r
 
 Every block lands **inside** markup the component keeps, so you supply content, not structure:
 the option's `role`, its selected and disabled state, its ARIA position, the group header's
-label id, the empty state's `role="status"` and the error state's `role="alert"` are all still
+label id, the empty state's announcement and the error state's `role="alert"` are all still
 handled for you.
 
 `:error` is yielded a `retry` action alongside the error, so a block that wants its own recovery control
