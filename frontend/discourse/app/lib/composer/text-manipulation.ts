@@ -37,8 +37,10 @@ export interface SelectedText {
   start: number;
   /** End offset of the selection. */
   end: number;
-  /** Selected text. */
+  /** Selected Markdown. */
   value: string;
+  /** Plain text of the selection when it differs from the editor’s Markdown representation. */
+  plainText?: string;
   /** Text before the selection. */
   pre: string;
   /** Text after the selection. */
@@ -171,8 +173,8 @@ export interface TextManipulation {
   ): void;
   /** Handles pasted content. */
   paste(event?: ClipboardEvent): void | Promise<void>;
-  /** Inserts a standalone block. */
-  insertBlock(block: string): void;
+  /** Inserts a standalone block in place of the supplied or current selection. */
+  insertBlock(block: string, selected?: SelectedText): void;
   /** Inserts text at the current selection. */
   insertText(text: string, options?: AddTextOptions): void;
   /** Surrounds the current selection with formatting text. */

@@ -40,6 +40,8 @@ export interface ToolbarEvent {
   formatCode(): boolean | void;
   /** Adds text at the captured selection. */
   addText(text: string): void;
+  /** Inserts a standalone block in place of the captured selection. */
+  insertBlock(block: string): void;
   /** Applies a link to the captured selection. */
   applyLink(url: string): void;
   /** Toggles the editor's text direction. */

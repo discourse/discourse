@@ -155,8 +155,8 @@ export default class TextareaTextManipulation implements TextManipulation {
     this.textarea.focus({ preventScroll: true });
   }
 
-  insertBlock(text: string): void {
-    this._addBlock(this.getSelected(), text);
+  insertBlock(text: string, selected = this.getSelected()): void {
+    this._addBlock(selected, text);
   }
 
   insertText(text: string, options?: AddTextOptions): void {

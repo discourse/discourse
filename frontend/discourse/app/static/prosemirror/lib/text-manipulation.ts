@@ -248,6 +248,11 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
       end: to,
       pre,
       value,
+      plainText: state.doc.textBetween(from, to, "\n\n", (node) =>
+        node.type === this.schema.nodes.hard_break
+          ? "\n"
+          : (node.type.spec.leafText?.(node) ?? "")
+      ),
       post,
     };
   }
@@ -349,7 +354,10 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     this.focus();
   }
 
-  insertBlock(block: string): void {
+  insertBlock(block: string, selected?: SelectedText): void {
+    if (selected) {
+      this.#restoreSelection(selected);
+    }
     const doc = this.convertFromMarkdown(block);
 
     const tr = this.view.state.tr.replaceSelection(
