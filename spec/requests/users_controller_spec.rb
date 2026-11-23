@@ -1041,6 +1041,24 @@ RSpec.describe UsersController do
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
     end
+
+    it "does not promote a developer email account switching back from an IP outside the admin IP allowlist" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.use_admin_ip_allowlist = true
+      Fabricate(
+        :screened_ip_address,
+        ip_address: "198.51.100.7",
+        action_type: ScreenedIpAddress.actions[:allow_admin],
+      )
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      Rails.configuration.stubs(:developer_emails).returns([user.email])
+
+      2.times { post "/u/toggle-anon.json", headers: { "REMOTE_ADDR" => "203.0.113.9" } }
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(user.id)
+      expect(user.reload.admin?).to eq(false)
+    end
   end
 
   describe "#create" do

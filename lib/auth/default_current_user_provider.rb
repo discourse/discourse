@@ -351,7 +351,9 @@ class Auth::DefaultCurrentUserProvider
   # for signup flow, since all admin emails are stored in
   # DISCOURSE_DEVELOPER_EMAILS for self-hosters.
   def make_developer_admin(user)
-    if user.active? && !user.admin && Developer.configured_email?(user.email)
+    # Not every caller checks the admin IP allowlist before logging a user on.
+    if user.active? && !user.admin && Developer.configured_email?(user.email) &&
+         !ScreenedIpAddress.block_admin_login?(user, @request.ip)
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
