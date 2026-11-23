@@ -53,7 +53,7 @@ export default class PageShell extends Service {
   @service router;
   @service siteSettings;
 
-  @tracked width = "centered";
+  @tracked width = "full";
   @tracked resize = "content";
   @tracked navigation;
   @tracked context;

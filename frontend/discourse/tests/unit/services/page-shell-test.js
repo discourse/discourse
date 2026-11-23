@@ -18,6 +18,7 @@ module("Unit | Service | page shell", function (hooks) {
   test("uses defaults without saved preferences", function (assert) {
     const shell = this.shell();
 
+    assert.strictEqual(shell.width, "full", "the shell starts at full width");
     assert.strictEqual(shell.navigation, "open");
     assert.strictEqual(shell.context, "open");
     assert.strictEqual(shell.navigationWidth, 260);
@@ -96,7 +97,7 @@ module("Unit | Service | page shell", function (hooks) {
   });
 
   test("site policy controls are not saved", function (assert) {
-    this.input("width", "full");
+    this.input("width", "centered");
     this.input("footer", "row");
     assert.strictEqual(this.stored(), undefined);
   });
