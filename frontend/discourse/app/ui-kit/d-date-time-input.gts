@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
-import DTimeInput from "discourse/ui-kit/d-time-input";
+import DTimeInput, { type DTimeInputDate } from "discourse/ui-kit/d-time-input";
 
 /** Legacy global supplied by the application, without introducing a module import. */
 declare const moment: typeof import("moment");
@@ -11,12 +11,10 @@ declare const moment: typeof import("moment");
  * A date as a moment, typed by shape so that the published declarations don't import
  * the moment types: a plugin that infers a moment from them could not name its type.
  */
-export interface DDateTimeInputDate {
+export interface DDateTimeInputDate extends DTimeInputDate {
   year(): number;
   month(): number;
   date(): number;
-  hours(): number;
-  minutes(): number;
 }
 
 /** The fields of a wall-clock date and time. */

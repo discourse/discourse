@@ -1,8 +1,5 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import categoryListSubcategories, {
   hasGrandchildren,
 } from "discourse/helpers/category-list-subcategories";
@@ -13,15 +10,18 @@ const LIST_TYPE = {
   MUTED: "muted",
 };
 
-@tagName("")
 export default class CategoryListItem extends Component {
   @service discovery;
 
-  /** @type {import("discourse/models/category").default | null} */
-  category = null;
-  listType = LIST_TYPE.NORMAL;
+  /** @returns {import("discourse/models/category").default | null | undefined} */
+  get category() {
+    return this.args.category;
+  }
 
-  @computed("category.isHidden", "category.hasMuted", "listType")
+  get listType() {
+    return this.args.listType ?? LIST_TYPE.NORMAL;
+  }
+
   get isHidden() {
     return (
       (this.category?.isHidden && this.listType === LIST_TYPE.NORMAL) ||
@@ -29,7 +29,6 @@ export default class CategoryListItem extends Component {
     );
   }
 
-  @computed("category.isMuted", "listType")
   get isMuted() {
     return (
       (this.category?.isMuted && this.listType === LIST_TYPE.NORMAL) ||
@@ -45,13 +44,12 @@ export default class CategoryListItem extends Component {
     return this.category.newTopicsCount;
   }
 
-  @computed("category.path")
   get slugPath() {
     return this.category?.path?.substring("/c/".length);
   }
 
   get page() {
-    return this.categoryListPage ?? this.discovery.categoryListPage;
+    return this.args.categoryListPage ?? this.discovery.categoryListPage;
   }
 
   get displayedSubcategories() {

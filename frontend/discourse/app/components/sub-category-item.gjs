@@ -1,3 +1,4 @@
+import { service } from "@ember/service";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 import CategoryUnread from "discourse/components/category-unread";
@@ -6,13 +7,15 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
 
 export default class SubCategoryItem extends CategoryListItem {
+  @service site;
+
   <template>
     <PluginOutlet
       @name="sub-category-item"
       @outletArgs={{lazyHash
         category=this.category
         isMuted=this.isMuted
-        hideUnread=this.hideUnread
+        hideUnread=@hideUnread
         unreadTopicsCount=this.unreadTopicsCount
         newTopicsCount=this.newTopicsCount
       }}
@@ -24,7 +27,7 @@ export default class SubCategoryItem extends CategoryListItem {
           <span class="subcategory">
             <CategoryTitleBefore @category={{this.category}} />
             {{dCategoryLink this.category hideParent="true"}}
-            {{#unless this.hideUnread}}
+            {{#unless @hideUnread}}
               <CategoryUnread
                 @category={{this.category}}
                 @newTopicsCount={{this.newTopicsCount}}

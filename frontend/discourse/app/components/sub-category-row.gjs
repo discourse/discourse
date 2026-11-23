@@ -1,3 +1,4 @@
+import { service } from "@ember/service";
 import CategoryListItem from "discourse/components/category-list-item";
 import CategoryTitleLink from "discourse/components/category-title-link";
 import SubCategoryItem from "discourse/components/sub-category-item";
@@ -6,6 +7,8 @@ import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import dDirSpan from "discourse/ui-kit/helpers/d-dir-span";
 
 export default class SubCategoryRow extends CategoryListItem {
+  @service site;
+
   <template>
     {{#unless this.isHidden}}
       {{#if this.site.mobileView}}

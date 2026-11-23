@@ -309,12 +309,14 @@ export default class Reviewable extends RestModel {
   @tracked target_id?: ReviewableFields["target_id"];
   @tracked target_type!: ReviewableFields["target_type"];
   @tracked target_url?: ReviewableFields["target_url"];
+  @tracked target_user?: ReviewableFields["target_user"];
   @tracked topic?: ReviewableFields["topic"];
   @tracked topic_id?: ReviewableFields["topic_id"];
   @tracked topic_tags?: ReviewableFields["topic_tags"];
   @tracked topic_url?: ReviewableFields["topic_url"];
   @tracked type!: ReviewableFields["type"];
   @tracked type_source!: ReviewableFields["type_source"];
+  @tracked user_fields?: ReviewableFields["user_fields"];
   @tracked version!: ReviewableFields["version"];
   @autoTrackedArray reviewable_notes: ReviewableNote[] = [];
 
