@@ -12,6 +12,7 @@ import {
   findAll,
   focus,
   render,
+  rerender,
   settled,
   setupOnerror,
   triggerEvent,
@@ -2482,7 +2483,7 @@ module(
       await fillIn(".fk-d-menu-modal .d-select__filter", "ap");
 
       assert
-        .dom(".fk-d-menu-modal .d-select__min-chars[role='status']")
+        .dom(".fk-d-menu-modal .d-select__min-chars")
         .hasText(
           "Keep typing 1 more character…",
           "the mobile modal contains the visible status hint"
@@ -2619,6 +2620,89 @@ module(
         2,
         "leaving and re-entering the below-threshold state re-announces the hint"
       );
+    });
+
+    // A screen reader's typing echo cuts off anything spoken while the user is still typing, and
+    // the next keystroke changes the count anyway. The hint waits for typing to settle, like the
+    // result count, and reads what is current then.
+    module("keep-typing hint while typing", function (nestedHooks) {
+      let announce;
+
+      nestedHooks.beforeEach(function () {
+        announce = sinon.spy(getOwner(this).lookup("service:a11y"), "announce");
+      });
+
+      const hints = () =>
+        announce
+          .getCalls()
+          .map((call) => call.args[0])
+          .filter((message) => message.startsWith("Keep typing"));
+
+      function typeNow(value) {
+        const input = find("[role='combobox']");
+        input.value = value;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
+      test("is spoken once typing settles, with the count it settled on", async function (assert) {
+        await render(
+          <template><DSelect @minChars={{4}} @options={{ITEMS}} /></template>
+        );
+
+        typeNow("a");
+        await rerender();
+        typeNow("ab");
+        await settled();
+
+        assert.deepEqual(hints(), ["Keep typing 2 more characters…"]);
+      });
+
+      test("is never spoken once the query reaches the minimum before it settles", async function (assert) {
+        await render(
+          <template><DSelect @minChars={{3}} @options={{ITEMS}} /></template>
+        );
+
+        typeNow("a");
+        await rerender();
+        typeNow("app");
+        await settled();
+
+        assert.deepEqual(hints(), []);
+      });
+
+      test("is never spoken once the panel closes before it settles", async function (assert) {
+        await render(
+          <template><DSelect @minChars={{3}} @options={{ITEMS}} /></template>
+        );
+
+        typeNow("a");
+        await rerender();
+        assert.dom(".d-select__min-chars").exists("the hint is showing");
+        await dSelect(".d-select").close();
+
+        assert.dom(".d-select__min-chars").doesNotExist("the panel closed");
+        assert.deepEqual(hints(), []);
+      });
+
+      test("is not a live region, so its changing text is spoken only by the announcement", async function (assert) {
+        await render(
+          <template><DSelect @minChars={{3}} @options={{ITEMS}} /></template>
+        );
+
+        await fillIn("[role='combobox']", "a");
+
+        assert
+          .dom(".d-select__min-chars")
+          .doesNotHaveAttribute("role")
+          .doesNotHaveAttribute("aria-live");
+        assert.strictEqual(
+          find(".d-select__min-chars").closest(
+            "[aria-live], [role='status'], [role='alert'], [role='log']"
+          ),
+          null,
+          "nor inside one"
+        );
+      });
     });
   }
 );

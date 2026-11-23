@@ -114,6 +114,9 @@ export default class SelectAnnouncer {
   // The last keep-typing "characters remaining" announced, so a repeat isn't re-read.
   #lastAnnouncedRemaining: number | null = null;
 
+  /** The keep-typing hint waiting for typing to settle. */
+  #minCharsTimer?: ReturnType<typeof discourseLater>;
+
   // Keyed on the query, not a flag: the hint unmounts and remounts as the window grows, and
   // only a new query should re-read it.
   #narrowAnnouncedFor: string | null = null;
@@ -359,24 +362,31 @@ export default class SelectAnnouncer {
   }
 
   /**
-   * Politely announces the keep-typing hint as the query grows below `@minChars`. Routed through
-   * the shared `a11y` service (like the count) rather than the visible `role="status"` node,
-   * which a freshly-mounted live region announces unreliably. Deduped on the remaining count.
+   * Politely announces the keep-typing hint as the query changes below `@minChars`, once typing
+   * settles: like the result count, anything spoken while the reader is still typing is cut off
+   * by the echo, and the next keystroke changes the count anyway. Reads the count current when it
+   * fires, says nothing if the hint has gone by then, and is deduped on the remaining count.
    */
   @action
-  announceMinChars(
-    _element: HTMLElement,
-    [remaining]: [number, ...dependencies: unknown[]]
-  ): void {
+  announceMinChars(element: HTMLElement): void {
+    this.#cancelMinChars();
     if (!this.#canReport()) {
       return;
     }
 
-    if (remaining === this.#lastAnnouncedRemaining) {
-      return;
-    }
-    this.#lastAnnouncedRemaining = remaining;
-    this.#say(this.#engine.text("minChars", { count: remaining }));
+    this.#minCharsTimer = discourseLater(() => {
+      this.#minCharsTimer = undefined;
+      if (!element.isConnected || !this.#canReport()) {
+        return;
+      }
+
+      const remaining = this.#engine.remainingMinChars;
+      if (remaining === this.#lastAnnouncedRemaining) {
+        return;
+      }
+      this.#lastAnnouncedRemaining = remaining;
+      this.#say(this.#engine.text("minChars", { count: remaining }));
+    }, RESULT_REPORT_DELAY);
   }
 
   /**
@@ -386,13 +396,13 @@ export default class SelectAnnouncer {
    * hint stays mounted keep deduping through {@link announceMinChars}.
    */
   @action
-  announceMinCharsOnEntry(element: HTMLElement, args: [number]): void {
+  announceMinCharsOnEntry(element: HTMLElement): void {
     if (!this.#canReport()) {
       return;
     }
 
     this.#lastAnnouncedRemaining = null;
-    this.announceMinChars(element, args);
+    this.announceMinChars(element);
   }
 
   /**
@@ -600,6 +610,7 @@ export default class SelectAnnouncer {
   cancelPending(): void {
     this.#cancelPendingCount();
     this.#cancelReveal();
+    this.#cancelMinChars();
     cancel(this.#updateTimer);
     this.#updateTimer = undefined;
     for (const timer of this.#suppressionTimers) {
@@ -678,6 +689,11 @@ export default class SelectAnnouncer {
       this.#suppressNextCount = false;
     });
     this.#suppressionTimers.add(timer);
+  }
+
+  #cancelMinChars(): void {
+    cancel(this.#minCharsTimer);
+    this.#minCharsTimer = undefined;
   }
 
   #cancelPendingCount(): void {

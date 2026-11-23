@@ -77,7 +77,7 @@ interface SelectPanelSignature<State> {
     limitMessage?: string;
     /** Stable id for the selection-limit hint. */
     limitId: string;
-    /** Live-region role for the limit and minimum-query hints; omitted while they should stay quiet. */
+    /** Live-region role for the selection-limit hint; omitted while it should stay quiet. */
     hintRole?: "status";
     /** Whether to render held items above the results. */
     showSelectionStrip?: boolean;
@@ -275,7 +275,8 @@ export default class SelectPanel<State> extends Component<
     {{#if @engine.belowMinChars}}
       {{! Below the minimum query length: no source call (no request, no skeleton flash), and
         the truthy-empty-array routing and stray create-row are sidestepped by not rendering the
-        list at all. Announced through the a11y service, like the limit. }}
+        list at all. Not a live region: its count changes as the reader types, and the a11y
+        service announces it once typing settles. }}
       {{#let
         (@engine.text "minChars" (hash count=@engine.remainingMinChars))
         as |hint|
@@ -283,7 +284,6 @@ export default class SelectPanel<State> extends Component<
         {{#if hint}}
           <div
             class="d-select__min-chars"
-            role={{@hintRole}}
             {{didInsert
               @announcer.announceMinCharsOnEntry
               @engine.remainingMinChars

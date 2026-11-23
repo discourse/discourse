@@ -1276,9 +1276,8 @@ module(
         );
       assert
         .dom(".d-select__min-chars")
-        .hasAttribute(
-          "role",
-          "status",
+        .hasText(
+          "Keep typing 2 more characters…",
           "the min-chars hint remains visible as the relevant status"
         );
     });
