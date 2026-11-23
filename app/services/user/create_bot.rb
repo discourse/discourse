@@ -6,10 +6,11 @@ class User::CreateBot
   policy :can_create_bot
   policy :site_not_archived
 
-  params do
+  params(base_class: User::BotInteractivityContract) do
     attribute :name, :string
     attribute :username, :string
     attribute :trust_level, :integer, default: -> { SiteSetting.default_trust_level }
+    attribute :interactive_bot, default: false
     attribute :plugin_params, default: -> { {} }
     attribute :api_key, :hash do
       attribute :description, :string
@@ -60,6 +61,7 @@ class User::CreateBot
       name: params.name,
       username: params.username,
       trust_level: params.trust_level,
+      interactive_bot: params.interactive_bot_enabled?,
       email: "#{SecureRandom.hex}@does-not-exist.invalid",
       active: true,
       approved: true,
