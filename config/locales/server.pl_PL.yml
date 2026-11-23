@@ -107,6 +107,7 @@ pl_PL:
       invalid_directory_period: "Nieprawidłowy okres katalogu"
       invalid_reply_mode: "Nieprawidłowy tryb odpowiedzi"
       post_not_found: "Nie znaleziono wpisu"
+      post_not_created: "Nie udało się utworzyć wpisu"
       user_directory_disabled: "Katalog użytkowników jest wyłączony"
       filter_only_for_filtered_view: "Filtr jest obsługiwany tylko przez widok filtrowany"
       filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
