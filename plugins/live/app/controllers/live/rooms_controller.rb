@@ -423,6 +423,9 @@ module Live
 
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       metadata[:last_heartbeat_at] = Time.now.to_f
+      if admission == :added
+        Live::StageRoles.reconcile_resumed_metadata!(@room, current_user, metadata)
+      end
 
       if params.key?(:idle_state)
         idle_state = params[:idle_state].to_s
@@ -710,7 +713,8 @@ module Live
       ensure_participant_session!
       raise Discourse::InvalidParameters.new(:room_type) unless @room.stage?
 
-      if Live::ParticipantTracker.speak_invitation(@room.id, current_user.id).blank?
+      if Live::ParticipantTracker.user_ids(@room.id).exclude?(current_user.id) ||
+           Live::ParticipantTracker.speak_invitation(@room.id, current_user.id).blank?
         raise Discourse::InvalidAccess.new(
                 :live_no_speak_invitation,
                 nil,

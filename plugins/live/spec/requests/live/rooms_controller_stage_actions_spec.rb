@@ -69,6 +69,58 @@ RSpec.describe Live::RoomsController do
       expect(room.room_memberships.find_by(user: listener)).to be_nil
     end
 
+    context "when the invited listener's presence has lapsed" do
+      before do
+        Live::ParticipantTracker.set_speak_invitation(room.id, listener.id, inviter: room_owner)
+        Live::ParticipantTracker.expire_presence(room.id, listener.id)
+        sign_in(listener)
+      end
+
+      it "rejects the invitation" do
+        post "/live/rooms/#{room.id}/accept_speak_invitation.json",
+             params: {
+               participant_session_id: @listener_session_id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(Live::ParticipantTracker.session_speaker?(room.id, listener.id)).to eq(false)
+      end
+
+      it "drops the invitation when a heartbeat resumes presence" do
+        post "/live/rooms/#{room.id}/heartbeat.json",
+             params: {
+               participant_session_id: @listener_session_id,
+             }
+        expect(response.status).to eq(204)
+
+        post "/live/rooms/#{room.id}/accept_speak_invitation.json",
+             params: {
+               participant_session_id: @listener_session_id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(Live::ParticipantTracker.session_speaker?(room.id, listener.id)).to eq(false)
+      end
+    end
+
+    it "resumes a session speaker demoted while their presence had lapsed as a listener" do
+      Live::StageRoles.grant_session_speaker!(room, listener)
+      Live::ParticipantTracker.expire_presence(room.id, listener.id)
+      Live::StageRoles.assign_role!(room, listener, role: Live::RoomMembership::ROLE_PARTICIPANT)
+      expect(Live::ParticipantTracker.get_metadata(room.id, listener.id)[:role]).to eq("speaker")
+
+      sign_in(listener)
+      post "/live/rooms/#{room.id}/heartbeat.json",
+           params: {
+             participant_session_id: @listener_session_id,
+           }
+
+      expect(response.status).to eq(204)
+      metadata = Live::ParticipantTracker.get_metadata(room.id, listener.id)
+      expect(metadata[:role]).to eq("participant")
+      expect(metadata[:is_muted]).to eq(true)
+    end
+
     it "lets the listener decline their own invitation" do
       Live::ParticipantTracker.set_speak_invitation(room.id, listener.id, inviter: room_owner)
       sign_in(listener)

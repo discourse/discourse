@@ -161,6 +161,23 @@ module Live
         Live::RoomBroadcaster.publish_participants(room)
       end
 
+      # Role changes, room type changes and the end of a call only reach
+      # participants who are present. Someone whose presence lapsed keeps their
+      # metadata while the participant session is resumable, so it is brought
+      # back in line before they reappear in the roster.
+      def reconcile_resumed_metadata!(room, user, metadata)
+        metadata[:role] = effective_role(room, user)
+        metadata.except!(:speak_invited_at, :speak_invited_by, :speak_invited_by_id)
+
+        if room.stage? && !user.guardian.can_speak_in_live_room?(room)
+          metadata[:is_muted] = true
+          metadata[:is_video_on] = false
+          metadata[:is_screen_sharing] = false
+        end
+
+        Live::Livekit::RoomServiceClient.update_participant(room, user)
+      end
+
       def sync_present_participant!(room, user, effective_role:)
         return if Live::ParticipantTracker.user_ids(room.id).exclude?(user.id)
 
