@@ -22,6 +22,7 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -1926,6 +1927,81 @@ module(
           "aria-activedescendant",
           "focus mode does not use the out-of-modal trigger as a controller"
         );
+    });
+  }
+);
+
+module(
+  "Integration | ui-kit | select | DSelect (viewport change while open)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    for (const multiple of [false, true]) {
+      const kind = multiple ? "multi-select" : "single select";
+
+      test(`an open ${kind} keeps one panel as the viewport crosses the breakpoint`, async function (assert) {
+        const narrow = tracked(false);
+        sinon
+          .stub(getOwner(this).lookup("service:site"), "mobileView")
+          .get(() => narrow.value);
+
+        await render(
+          <template><DefaultHost @multiple={{multiple}} /></template>
+        );
+        await click(".d-select__trigger");
+        assert.dom(".fk-d-menu").exists({ count: 1 }, "wide, the panel floats");
+
+        narrow.value = true;
+        await settled();
+        assert
+          .dom(".fk-d-menu-modal")
+          .exists({ count: 1 }, "narrow, the panel is one modal");
+        assert
+          .dom(".fk-d-menu")
+          .doesNotExist("narrow, no floating panel is left");
+
+        narrow.value = false;
+        await settled();
+        assert
+          .dom(".fk-d-menu")
+          .exists({ count: 1 }, "wide again, the panel is one floating panel");
+        assert
+          .dom(".fk-d-menu-modal")
+          .doesNotExist("wide again, no modal is left");
+        assert
+          .dom("[role='listbox']")
+          .exists({ count: 1 }, "wide again, there is one list");
+      });
+    }
+
+    test("an open select beside a tooltip keeps one panel as the viewport crosses the breakpoint", async function (assert) {
+      const narrow = tracked(false);
+      sinon
+        .stub(getOwner(this).lookup("service:site"), "mobileView")
+        .get(() => narrow.value);
+
+      await render(
+        <template>
+          <DTooltip @content="Tip" @identifier="beside" @inline={{true}} />
+          <DefaultHost @multiple={{true}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      narrow.value = true;
+      await settled();
+      assert
+        .dom(".fk-d-menu")
+        .doesNotExist("narrow, no floating panel is left");
+
+      narrow.value = false;
+      await settled();
+      assert
+        .dom(".fk-d-menu")
+        .exists({ count: 1 }, "wide again, the panel is one floating panel");
+      assert
+        .dom(".fk-d-menu-modal")
+        .doesNotExist("wide again, no modal is left");
     });
   }
 );
