@@ -1195,69 +1195,89 @@ RSpec.describe ApplicationHelper do
 
   describe "previewing components" do
     fab!(:theme)
-    fab!(:component) do
+    fab!(:moderator)
+
+    def styled_component(scss: "body { margin: 1px; }")
       Fabricate(:theme, component: true, enabled: false).tap do |component|
-        component.set_field(target: :common, name: :scss, value: "body { margin: 1px; }")
-        component.save!
-      end
-    end
-    fab!(:component_with_js) do
-      Fabricate(:theme, component: true).tap do |component|
-        component.set_field(target: :common, name: :scss, value: "body { margin: 2px; }")
-        component.set_field(
-          target: :extra_js,
-          name: "discourse/api-initializers/x.js",
-          value: "export default {};",
-        )
+        component.set_field(target: :common, name: :scss, value: scss)
+        yield component if block_given?
         component.save!
       end
     end
 
-    def component_ids_in_stylesheets
-      helper
-        .discourse_stylesheet_link_tag(:common_theme)
-        .scan(/data-theme-id="(\d+)"/)
-        .flatten
-        .map(&:to_i)
+    fab!(:component) { styled_component }
+
+    def preview(*components, as: moderator)
+      helper.stubs(:current_user).returns(as)
+      controller.params[:preview_component_ids] = components.map(&:id).join(",")
     end
 
-    before do
-      helper.request.env[:resolved_theme_id] = theme.id
-      controller.params[:preview_component_ids] = "#{component.id},#{component_with_js.id}"
+    before { helper.request.env[:resolved_theme_id] = theme.id }
+
+    it "puts the styles of a disabled component inline for staff, without caching them" do
+      preview(component)
+
+      tags = helper.preview_component_style_tags
+      expect(tags).to include(%[data-preview-component-id="#{component.id}"], "margin:1px")
+      expect(tags).not_to include("sourceMappingURL")
+      expect(helper.theme_preview_status).to eq("active")
+      expect(StylesheetCache.where("target LIKE ?", "%_theme_#{component.id}%")).to be_empty
+      expect(helper.discourse_stylesheet_link_tag(:common_theme)).not_to include(
+        %[data-theme-id="#{component.id}"],
+      )
     end
 
-    it "adds the styles of components that only hold styles, for staff, even when disabled" do
-      helper.stubs(:current_user).returns(Fabricate(:moderator))
+    it "includes partials the component's stylesheets import" do
+      partial_component =
+        styled_component(scss: "@import \"sizes\"; body { margin: $preview-margin; }") do |c|
+          c.set_field(target: :extra_scss, name: "sizes", value: "$preview-margin: 3px;")
+        end
+      preview(partial_component)
 
-      expect(component_ids_in_stylesheets).to include(component.id)
-      expect(component_ids_in_stylesheets).not_to include(component_with_js.id)
+      expect(helper.preview_component_style_tags).to include("margin:3px")
     end
 
-    it "ignores them for everyone else" do
-      helper.stubs(:current_user).returns(Fabricate(:user))
+    it "previews nothing for everyone else, and says the preview failed" do
+      preview(component, as: Fabricate(:user))
 
-      expect(component_ids_in_stylesheets).not_to include(component.id)
+      expect(helper.preview_component_style_tags).to be_blank
+      expect(helper.theme_preview_status).to eq("failed")
     end
 
-    it "ignores them in safe mode" do
-      helper.stubs(:current_user).returns(Fabricate(:moderator))
+    it "previews nothing in safe mode" do
+      preview(component)
       helper.request.env[ApplicationController::NO_THEMES] = true
 
-      expect(helper.preview_component_ids).to eq([])
+      expect(helper.preview_component_styles).to eq({})
     end
 
-    it "ignores everything when one of them isn't a theme or component" do
-      helper.stubs(:current_user).returns(Fabricate(:moderator))
-      controller.params[:preview_component_ids] = "#{component.id},-99999"
+    it "previews nothing when a component has more than stylesheets" do
+      with_js =
+        styled_component do |c|
+          c.set_field(
+            target: :extra_js,
+            name: "discourse/api-initializers/x.js",
+            value: "export default {};",
+          )
+        end
+      with_modifier = styled_component { |c| c.theme_modifier_set.serialize_topic_excerpts = true }
+      with_palette = styled_component.tap { Fabricate(:color_scheme, theme: it) }
 
-      expect(helper.preview_component_ids).to eq([])
+      [with_js, with_modifier, with_palette].each do |unsupported|
+        preview(component, unsupported)
+        if helper.instance_variable_defined?(:@preview_component_styles)
+          helper.remove_instance_variable(:@preview_component_styles)
+        end
+
+        expect(helper.preview_component_styles).to eq({})
+        expect(helper.theme_preview_status).to eq("failed")
+      end
     end
 
-    it "ignores themes that aren't components" do
-      helper.stubs(:current_user).returns(Fabricate(:moderator))
-      controller.params[:preview_component_ids] = "#{theme.id},#{component.id}"
+    it "previews nothing when one of the IDs isn't a component" do
+      preview(component, theme)
 
-      expect(helper.preview_component_ids).to eq([component.id])
+      expect(helper.preview_component_styles).to eq({})
     end
   end
 

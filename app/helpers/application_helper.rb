@@ -680,39 +680,121 @@ module ApplicationHelper
     end
   end
 
-  MAX_PREVIEW_COMPONENTS = 5
-
   def stylesheet_manager
     return @stylesheet_manager if defined?(@stylesheet_manager)
-    @stylesheet_manager = Stylesheet::Manager.new(theme_id:, preview_component_ids:)
+    @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
+  end
+
+  MAX_PREVIEW_COMPONENTS = 5
+  PREVIEW_COMPONENT_MEDIA = {
+    common: "all",
+    mobile: "(width < 40rem)",
+    desktop: "(width >= 40rem)",
+  }.freeze
+
+  def requested_preview_component_ids
+    @requested_preview_component_ids ||=
+      params[:preview_component_ids]
+        .to_s
+        .split(",")
+        .filter_map { Integer(it, exception: false) }
+        .uniq
+        .first(MAX_PREVIEW_COMPONENTS)
   end
 
   # Staff can try out components that only hold styles, including disabled
   # ones or ones no theme includes yet, by passing their IDs in the URL, the
-  # same way `preview_theme_id` previews a theme. Only their stylesheets are
-  # added: components with JavaScript, settings or other files are ignored,
-  # since those parts can't be previewed this way.
-  def preview_component_ids
-    return @preview_component_ids if defined?(@preview_component_ids)
+  # same way `preview_theme_id` previews a theme. Their styles are compiled
+  # for this page only and put inline, so the stylesheet cache, which anyone
+  # can read, never holds them. Components with anything a stylesheet can't
+  # show (JavaScript, settings, modifiers, palettes) aren't previewed, and
+  # neither are the others when one of them can't be.
+  #
+  # Returns { component id => [[media, css], ...] }.
+  def preview_component_styles
+    return @preview_component_styles if defined?(@preview_component_styles)
 
-    ids =
-      params[:preview_component_ids].to_s.split(",").filter_map { Integer(it, exception: false) }
-    @preview_component_ids =
+    ids = requested_preview_component_ids
+    @preview_component_styles =
       if ids.empty? || !guardian.is_staff? || customization_disabled? ||
            !guardian.allow_themes?(ids, include_preview: true)
-        []
+        {}
       else
-        Theme
-          .where(id: ids.first(MAX_PREVIEW_COMPONENTS), component: true)
-          .includes(:theme_fields)
-          .select do |component|
-            # color definitions aren't added this way, only stylesheets
-            component.theme_fields.all? do |field|
-              field.basic_scss_field? && field.name != "color_definitions"
-            end
-          end
-          .map(&:id)
+        components =
+          Theme
+            .where(id: ids, component: true)
+            .includes(:theme_fields, :theme_modifier_set, :color_schemes)
+            .index_by(&:id)
+        if components.size == ids.size && components.each_value.all? { previewable_component?(it) }
+          ids.index_with { |id| compile_preview_component(components[id]) }
+        else
+          {}
+        end
       end
+    @preview_component_styles = {} if @preview_component_styles.value?(nil)
+    @preview_component_styles
+  end
+
+  def preview_component_style_tags
+    preview_component_styles
+      .flat_map do |id, styles|
+        styles.map do |media, css|
+          # the CSS can't end the style element early
+          content_tag(
+            :style,
+            css.gsub("</", "<\\/").html_safe,
+            media:,
+            "data-preview-component-id" => id,
+          )
+        end
+      end
+      .join("\n")
+      .html_safe
+  end
+
+  # "active" or "failed" while a page previews a theme or components, so the
+  # client can tell, even after navigating away from the preview's URL.
+  def theme_preview_status
+    preview_theme_id = params[:preview_theme_id].presence
+    preview_components = params[:preview_component_ids].present?
+    return if !preview_theme_id && !preview_components
+
+    theme_ok = !preview_theme_id || theme_id == preview_theme_id.to_i
+    components_ok = !preview_components || preview_component_styles.present?
+    theme_ok && components_ok ? "active" : "failed"
+  end
+
+  def previewable_component?(component)
+    # only stylesheet files and the partials they import
+    component.theme_fields.all? do |field|
+      field.extra_scss_field? || (field.basic_scss_field? && field.name == "scss")
+    end &&
+      ThemeModifierSet.modifiers.keys.none? do |modifier|
+        component.theme_modifier_set&.public_send(modifier).present?
+      end && component.color_schemes.empty?
+  end
+
+  # [[media, css], ...] for a component's stylesheets, or nil when they don't
+  # compile.
+  def compile_preview_component(component)
+    PREVIEW_COMPONENT_MEDIA.filter_map do |target, media|
+      next if component.theme_fields.none? { it.target_id == Theme.targets[target] }
+
+      css, _source_map =
+        component.with_scss_load_paths do |load_paths|
+          Stylesheet::Compiler.compile_asset(
+            :"#{target}_theme",
+            rtl: rtl?,
+            theme_id: component.id,
+            theme_variables: component.scss_variables.to_s,
+            load_paths:,
+          )
+        end
+      # no source map is served for inline styles
+      [media, css.gsub(%r{/\*# sourceMappingURL=.*?\*/}, "").strip]
+    end
+  rescue SassC::SyntaxError, SassC::NotRenderedError, AssetProcessor::TranspileError
+    nil
   end
 
   def user_scheme_id

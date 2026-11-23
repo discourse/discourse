@@ -228,11 +228,9 @@ class Stylesheet::Manager
 
   attr_reader :theme_ids
 
-  # preview_component_ids: components whose stylesheets are added on top of
-  # the theme's, for a staff preview (see ApplicationHelper#preview_component_ids).
-  def initialize(theme_id: nil, preview_component_ids: [])
+  def initialize(theme_id: nil)
     @theme_id = theme_id
-    @theme_ids = (Theme.transform_ids(@theme_id) + preview_component_ids).uniq
+    @theme_ids = Theme.transform_ids(@theme_id)
     @themes_cache = {}
   end
 
