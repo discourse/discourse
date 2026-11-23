@@ -111,6 +111,8 @@ module DiscourseAi
       end
 
       def self.change_palettes(appearance_change)
+        return theme_palettes(appearance_change.theme) if uses_theme_palettes?(appearance_change)
+
         {
           light: palette_colors(appearance_change.light_color_scheme),
           dark: palette_colors(appearance_change.dark_color_scheme),
@@ -247,15 +249,22 @@ module DiscourseAi
       # Lets staff see a saved change before it goes live. The link fixes the
       # theme, both palettes and the change's fonts, so an administrator's own
       # theme or palette choice can't change what the preview shows.
+      def self.uses_theme_palettes?(change)
+        change.kind_existing_theme? || change.kind_installed_theme?
+      end
+      private_class_method :uses_theme_palettes?
+
       def self.preview_url(appearance_change)
         query = {
           preview_theme_id: appearance_change.theme_id,
-          preview_color_scheme_id: appearance_change.light_color_scheme_id,
-          preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
           preview_base_font: appearance_change.site_settings["base_font"],
           preview_heading_font: appearance_change.site_settings["heading_font"],
         }.compact
-        "#{Discourse.base_url}/?#{query.to_query}"
+        unless uses_theme_palettes?(appearance_change)
+          query[:preview_color_scheme_id] = appearance_change.light_color_scheme_id
+          query[:preview_dark_color_scheme_id] = appearance_change.dark_color_scheme_id
+        end
+        "#{Discourse.base_url}/?#{query.compact.to_query}"
       end
 
       def self.safe_mode_url

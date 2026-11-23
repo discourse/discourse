@@ -13,12 +13,14 @@ class AppearanceChange::InstallTheme
 
   params do
     attribute :remote_url, :string
+    attribute :approved_target, :string
 
     validates :remote_url, presence: true
   end
 
   model :popular_theme
   model :installed_theme, optional: true
+  policy :approved_target_matches
 
   only_if(:needs_install) do
     policy :can_create_theme
@@ -47,6 +49,11 @@ class AppearanceChange::InstallTheme
       .where("lower(remote_themes.remote_url) IN (?)", [url, "#{url}.git"])
       .order(:id)
       .first
+  end
+
+  def approved_target_matches(params:, installed_theme:)
+    params.approved_target.nil? ||
+      params.approved_target == (installed_theme&.id&.to_s || "install")
   end
 
   def needs_install(installed_theme:)
@@ -83,23 +90,28 @@ class AppearanceChange::InstallTheme
   end
 
   def find_or_create_appearance_change(guardian:, installed_theme:)
-    existing =
-      AppearanceChange
-        .where(kind: %i[installed_theme existing_theme], theme: installed_theme)
-        .drafts
-        .order(:id)
-        .last
-    return existing if existing
+    installed_theme.with_lock do
+      existing =
+        AppearanceChange
+          .where(kind: %i[installed_theme existing_theme], theme: installed_theme)
+          .drafts
+          .order(:id)
+          .last
+      if existing
+        existing.touch
+        next existing
+      end
 
-    AppearanceChange.create(
-      kind: context[:imported] ? :installed_theme : :existing_theme,
-      name: installed_theme.name,
-      theme: installed_theme,
-      light_color_scheme_id: installed_theme.color_scheme_id,
-      dark_color_scheme_id: installed_theme.dark_color_scheme_id,
-      site_settings: {
-      },
-      user: guardian.user,
-    )
+      AppearanceChange.create(
+        kind: context[:imported] ? :installed_theme : :existing_theme,
+        name: installed_theme.name,
+        theme: installed_theme,
+        light_color_scheme_id: installed_theme.color_scheme_id,
+        dark_color_scheme_id: installed_theme.dark_color_scheme_id,
+        site_settings: {
+        },
+        user: guardian.user,
+      )
+    end
   end
 end

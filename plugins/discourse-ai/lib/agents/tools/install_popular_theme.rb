@@ -44,6 +44,10 @@ module DiscourseAi
           TEXT
         end
 
+        def parameters_for_approval
+          parameters.merge(approved_target: installed_theme&.id&.to_s || "install")
+        end
+
         def approval_title
           return I18n.t("discourse_ai.appearance_authoring.not_popular") if popular_theme.nil?
 
@@ -108,12 +112,13 @@ module DiscourseAi
             return error
           end
 
-          with_approval do
-            existing = installed_theme.present?
+          with_approval do |reviewable|
+            approved_target = reviewable.target.tool_parameters.fetch("approved_target")
             result =
               AppearanceChange::InstallTheme.call(
                 params: {
                   remote_url: popular_theme[:remote_url],
+                  approved_target:,
                 },
                 guardian: context.user.guardian,
               )
@@ -127,7 +132,7 @@ module DiscourseAi
               preview_url: AppearanceAuthoring.preview_url(appearance_change),
               message:
                 I18n.t(
-                  "discourse_ai.appearance_authoring.#{existing ? "saved_existing_theme" : "installed"}",
+                  "discourse_ai.appearance_authoring.#{approved_target == "install" ? "installed" : "saved_existing_theme"}",
                 ),
             }
           end
@@ -146,6 +151,7 @@ module DiscourseAi
         # The site's copy of the theme, when it already has one.
         def installed_theme
           return @installed_theme if defined?(@installed_theme)
+          return if popular_theme.nil?
           url = popular_theme[:remote_url].downcase
           @installed_theme =
             Theme
@@ -161,7 +167,8 @@ module DiscourseAi
         end
 
         def approved_parameters?(tool_parameters)
-          tool_parameters["theme"].to_s == popular_theme&.dig(:id)
+          tool_parameters["theme"].to_s == popular_theme&.dig(:id) &&
+            tool_parameters["approved_target"].present?
         end
       end
     end

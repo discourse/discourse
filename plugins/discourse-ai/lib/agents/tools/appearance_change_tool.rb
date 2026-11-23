@@ -20,6 +20,7 @@ module DiscourseAi
           palettes_available_to_theme: "palettes_missing",
           restorable: "cannot_restore",
           allowed_theme_repo: "theme_repo_not_allowed",
+          approved_target_matches: "approval_required",
           not_default: "theme_already_default",
         }.freeze
 

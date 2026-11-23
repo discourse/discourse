@@ -42,7 +42,7 @@ class AppearanceChange < ActiveRecord::Base
   validate :only_supported_site_settings
 
   scope :drafts, -> { where(activated_at: nil) }
-  scope :abandoned_drafts, -> { drafts.where(created_at: ...DRAFT_LIFETIME.ago) }
+  scope :abandoned_drafts, -> { drafts.where(updated_at: ...DRAFT_LIFETIME.ago) }
 
   def self.dark_palette_name(name)
     I18n.t("appearance_changes.dark_palette_name", name:, locale: SiteSetting.default_locale)

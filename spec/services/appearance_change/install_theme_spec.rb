@@ -94,9 +94,11 @@ RSpec.describe AppearanceChange::InstallTheme do
 
       it "reuses a change already saved for it that isn't live" do
         first = described_class.call(params:, **dependencies)[:appearance_change]
+        first.update_columns(created_at: 8.days.ago, updated_at: 8.days.ago)
 
         expect { result }.not_to change { AppearanceChange.count }
         expect(result[:appearance_change]).to eq(first)
+        expect(AppearanceChange.abandoned_drafts).not_to include(first)
       end
 
       context "when the user can't create new themes" do

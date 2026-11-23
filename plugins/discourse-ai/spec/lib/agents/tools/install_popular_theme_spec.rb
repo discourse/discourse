@@ -25,9 +25,7 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
     action =
       AiToolAction.create!(
         tool_name: described_class.name,
-        tool_parameters: {
-          theme:,
-        },
+        tool_parameters: build_tool(theme).parameters_for_approval,
         ai_agent:,
         bot_user_id: Discourse.system_user.id,
       )
@@ -140,6 +138,30 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
         status: "success",
         appearance_change_id: appearance_change.id,
         message: I18n.t("discourse_ai.appearance_authoring.saved_existing_theme"),
+      )
+    end
+
+    it "requires fresh approval instead of installing a removed theme" do
+      reviewable = build_reviewable
+      existing_theme.destroy!
+
+      expect(approve_as(other_admin, reviewable)).to eq(error(:approval_required))
+      expect(RemoteTheme).not_to have_received(:import_theme)
+    end
+
+    it "previews the theme's current palette when reusing a draft" do
+      existing_theme.update!(color_scheme: Fabricate(:color_scheme))
+      approve_as(other_admin, build_reviewable)
+      existing_theme.update!(color_scheme: Fabricate(:color_scheme))
+
+      result = approve_as(other_admin, build_reviewable)
+
+      expect(result[:preview_url]).to eq(
+        "#{Discourse.base_url}/?preview_theme_id=#{existing_theme.id}",
+      )
+      authoring = DiscourseAi::Agents::AppearanceAuthoring
+      expect(authoring.change_palettes(AppearanceChange.last)).to eq(
+        authoring.theme_palettes(existing_theme),
       )
     end
 
