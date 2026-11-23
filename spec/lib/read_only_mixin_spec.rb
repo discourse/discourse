@@ -54,8 +54,11 @@ describe ReadOnlyMixin do
       [SessionController, :create_login_code],
       # Allows staff to log in via an emailed one-time code (part 2/2)
       [SessionController, :verify_login_code],
-      # Allows staff to log in via OAuth
+      # Allows signed-out staff to verify a second factor for sign-in
+      [SessionController, :second_factor_auth_perform],
+      # Allows staff to log in via OAuth and complete any second-factor step
       [Users::OmniauthCallbacksController, :complete],
+      [Users::OmniauthCallbacksController, :complete_second_factor],
       # Allows staff to log in via email link
       [UsersController, :email_login],
       # Allows staff to reset their password (part 2/2)

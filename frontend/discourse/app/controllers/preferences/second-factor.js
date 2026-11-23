@@ -11,14 +11,12 @@ import SecondFactorEditSecurityKey from "discourse/components/modal/second-facto
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
-  @service siteSettings;
 
   loading = false;
   dirty = false;
@@ -44,37 +42,6 @@ export default class SecondFactorController extends Controller {
 
   get isCurrentUser() {
     return this.currentUser?.id === this.model.id;
-  }
-
-  @computed
-  get hasOAuth() {
-    return findAll().length > 0;
-  }
-
-  @computed
-  get displayOAuthWarning() {
-    return (
-      this.hasOAuth && this.siteSettings.enforce_second_factor_on_external_auth
-    );
-  }
-
-  @computed("currentUser")
-  get showEnforcedWithOAuthNotice() {
-    return (
-      this.currentUser &&
-      this.currentUser.enforcedSecondFactor &&
-      this.hasOAuth &&
-      !this.siteSettings.enforce_second_factor_on_external_auth
-    );
-  }
-
-  @computed("currentUser")
-  get showEnforcedNotice() {
-    return (
-      this.currentUser &&
-      this.currentUser.enforcedSecondFactor &&
-      this.siteSettings.enforce_second_factor_on_external_auth
-    );
   }
 
   @computed("totps", "security_keys")

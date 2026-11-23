@@ -18,22 +18,10 @@ export default <template>
     >
       <DConditionalLoadingSpinner @condition={{@controller.loading}}>
         <form class="form-vertical">
-          {{#if @controller.showEnforcedNotice}}
+          {{#if @controller.currentUser.enforcedSecondFactor}}
             <div class="alert alert-error">
               {{i18n "user.second_factor.enforced_notice"}}
             </div>
-          {{/if}}
-
-          {{#if @controller.showEnforcedWithOAuthNotice}}
-            <div class="alert alert-error">
-              {{i18n "user.second_factor.enforced_with_oauth_notice"}}
-            </div>
-          {{/if}}
-
-          {{#if @controller.displayOAuthWarning}}
-            <div class="alert alert-warning">{{i18n
-                "user.second_factor.oauth_enabled_warning"
-              }}</div>
           {{/if}}
 
           {{#if @controller.errorMessage}}
@@ -158,7 +146,7 @@ export default <template>
           </div>
 
           {{#if @controller.hasSecondFactors}}
-            {{#unless @controller.showEnforcedNotice}}
+            {{#unless @controller.currentUser.enforcedSecondFactor}}
               <div class="control-group pref-second-factor-disable-all">
                 <div class="controls -actions">
                   <DButton

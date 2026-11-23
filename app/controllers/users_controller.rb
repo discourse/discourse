@@ -1218,7 +1218,7 @@ class UsersController < ApplicationController
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true
-      elsif @user.totp_or_backup_codes_enabled? || @user.security_keys_enabled?
+      elsif @user.requires_second_factor_for_login?
         @redirect_to = path("/login")
       else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message

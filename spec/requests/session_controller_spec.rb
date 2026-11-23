@@ -91,6 +91,17 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
       end
 
+      it "offers the recovery code when it is the only remaining factor" do
+        Fabricate(:user_second_factor_backup, user:)
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.parsed_body).to include(
+          "second_factor_required" => true,
+          "backup_codes_enabled" => true,
+          "totp_enabled" => false,
+        )
+        expect(user.user_auth_tokens).to be_empty
+      end
+
       context "when user has 2-factor logins" do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }

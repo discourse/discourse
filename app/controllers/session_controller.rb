@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
+  include LoginSecondFactor
+
   before_action :check_local_login_allowed,
                 only: %i[
                   create
@@ -27,7 +29,8 @@ class SessionController < ApplicationController
                                   :forgot_password,
                                   :redeem_password_reset_code,
                                   :create_login_code,
-                                  :verify_login_code
+                                  :verify_login_code,
+                                  :second_factor_auth_perform
 
   # Every SessionController action is part of auth. An archived site permits
   # all of them so existing users can log in, log out, and reset passwords.
@@ -475,7 +478,7 @@ class SessionController < ApplicationController
       response = { can_login: true, token: token, token_email: matched_token.email }
 
       matched_user = matched_token.user
-      if matched_user&.totp_enabled?
+      if matched_user&.totp_or_backup_codes_enabled?
         response.merge!(
           second_factor_required: true,
           backup_codes_enabled: matched_user&.backup_codes_enabled?,
@@ -661,6 +664,11 @@ class SessionController < ApplicationController
         current_user:,
       )
     user = User.find(challenge.fetch(:target_user_id))
+    if @staff_writes_only_mode && !current_user&.staff?
+      unless user.staff? && challenge[:action] == SecondFactor::Actions::Login.name
+        raise Discourse::ReadOnly
+      end
+    end
 
     second_factor_method = params[:second_factor_method].to_i
     raise Discourse::InvalidAccess if challenge[:allowed_methods].exclude?(second_factor_method)
@@ -945,8 +953,7 @@ class SessionController < ApplicationController
     # is what actually surfaces the 503 archive response.
     raise Discourse::SiteArchived if SiteSetting.site_archived && matched_user.nil?
 
-    if matched_user &&
-         (matched_user.totp_or_backup_codes_enabled? || matched_user.security_keys_enabled?)
+    if matched_user&.requires_second_factor_for_login?
       if missing_second_factor_params?
         return render json: login_code_second_factor_info(matched_user)
       end

@@ -2320,10 +2320,8 @@ en:
         short_description: |
           Protect your account with one-time use security codes or physical security keys.
         extended_description: |
-          Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
-        oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
+          Two-factor authentication adds a verification step when you sign in, including when you use an external account. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         use: "Use Authenticator app"
-        enforced_with_oauth_notice: "You are required to enable two-factor authentication. You will only be prompted to use this when logging in with a password, not with external authentication or social login methods."
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
@@ -3301,7 +3299,6 @@ en:
       not_allowed_from_ip_address: "You can't log in from that IP address."
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
-      omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
       works_with: "Works with"
 
       activate_account: "Activate Account"

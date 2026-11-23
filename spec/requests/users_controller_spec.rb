@@ -139,6 +139,18 @@ RSpec.describe UsersController do
           expect(user_deferred.reload.active).to eq(true)
         end
 
+        it "still requires a fresh login on an external-only site" do
+          SiteSetting.enable_local_logins = false
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          expect { put "/u/activate-account/#{email_token.token}" }.not_to change(
+            UserAuthToken,
+            :count,
+          )
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(user_deferred.reload.active?).to eq(true)
+        end
+
         it "activates the account without logging in a user with only backup codes" do
           Fabricate(:user_second_factor_backup, user: user_deferred)
 

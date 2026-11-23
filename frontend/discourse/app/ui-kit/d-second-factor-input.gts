@@ -40,7 +40,6 @@ export default class DSecondFactorInput extends Component<DSecondFactorInputSign
         autofocus="autofocus"
         class="second-factor-token-input"
         maxlength="32"
-        pattern="[a-z0-9]{16}"
         type="text"
         ...attributes
         {{on "input" (withEventValue @onChange)}}

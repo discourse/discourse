@@ -138,23 +138,24 @@ RSpec.describe SecondFactorManager do
         expect(user.totp_enabled?).to eq(true)
       end
     end
+  end
 
-    describe "when SSO is enabled" do
-      it "returns false" do
-        SiteSetting.discourse_connect_url = "http://someurl.com"
-        SiteSetting.discourse_connect_secret = "x" * 10
-        SiteSetting.enable_discourse_connect = true
+  describe "enrolled methods on external-only sites" do
+    it "retains authenticators, security keys and recovery codes without password login" do
+      SiteSetting.enable_local_logins = false
 
-        expect(user.totp_enabled?).to eq(false)
-      end
+      expect(user.totp_enabled?).to eq(true)
+      expect(user.security_keys_enabled?).to eq(true)
+      expect(user_backup.backup_codes_enabled?).to eq(true)
     end
 
-    describe "when local login is disabled" do
-      it "returns false" do
-        SiteSetting.enable_local_logins = false
+    it "retains enrolled factors when switching to DiscourseConnect" do
+      SiteSetting.discourse_connect_url = "https://id.example.com/login"
+      SiteSetting.discourse_connect_secret = "x" * 32
+      SiteSetting.enable_discourse_connect = true
 
-        expect(user.totp_enabled?).to eq(false)
-      end
+      expect(user.has_any_second_factor_methods_enabled?).to eq(true)
+      expect(user_backup.backup_codes_enabled?).to eq(true)
     end
   end
 
@@ -211,6 +212,18 @@ RSpec.describe SecondFactorManager do
 
     it "is false when allow_passkeys_for_2fa is off" do
       SiteSetting.allow_passkeys_for_2fa = false
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
+    end
+
+    it "is false when local logins are disabled" do
+      SiteSetting.enable_local_logins = false
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
+    end
+
+    it "is false when DiscourseConnect is enabled" do
+      SiteSetting.discourse_connect_url = "https://id.example.com/login"
+      SiteSetting.discourse_connect_secret = "x" * 32
+      SiteSetting.enable_discourse_connect = true
       expect(user.passkeys_available_as_second_factor?).to eq(false)
     end
 
@@ -652,24 +665,6 @@ RSpec.describe SecondFactorManager do
       describe "when user's second factor code is available" do
         it "returns true" do
           expect(user_backup.backup_codes_enabled?).to eq(true)
-        end
-      end
-
-      describe "when SSO is enabled" do
-        it "returns false" do
-          SiteSetting.discourse_connect_url = "http://someurl.com"
-          SiteSetting.discourse_connect_secret = "x" * 10
-          SiteSetting.enable_discourse_connect = true
-
-          expect(user_backup.backup_codes_enabled?).to eq(false)
-        end
-      end
-
-      describe "when local login is disabled" do
-        it "returns false" do
-          SiteSetting.enable_local_logins = false
-
-          expect(user_backup.backup_codes_enabled?).to eq(false)
         end
       end
     end

@@ -7,8 +7,12 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import pretender, {
   parsePostData,
+  response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -71,6 +75,33 @@ acceptance("Signing In - clearing password errors", function (needs) {
 
 acceptance("Signing In", function (needs) {
   needs.settings({ enable_local_logins_via_code: false });
+
+  test("email-link sign-in selects a backup code when it is the only remaining factor", async function (assert) {
+    const path = "/session/email-login/example";
+    pretender.get(`${path}.json`, () =>
+      response({
+        can_login: true,
+        token: "example",
+        second_factor_required: true,
+        backup_codes_enabled: true,
+        totp_enabled: false,
+      })
+    );
+    pretender.post(path, (request) => {
+      assert.strictEqual(
+        Number(parsePostData(request.requestBody).second_factor_method),
+        SECOND_FACTOR_METHODS.BACKUP_CODE
+      );
+      return response({ success: true });
+    });
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+    await visit(path);
+    const input = find(".email-login input.second-factor-token-input");
+    await fillIn(input, "a".repeat(32));
+    assert.true(input.checkValidity(), "accepts a full-length recovery code");
+    await click(".email-login button[type='submit']");
+    assert.true(redirect.calledOnceWithExactly("/"));
+  });
 
   test("submits username credentials with the login button", async function (assert) {
     await visit("/login");

@@ -65,32 +65,31 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps.any?
+    totps.any?
   end
 
   def backup_codes_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      user_second_factors&.backup_codes&.exists?
+    user_second_factors&.backup_codes&.exists?
   end
 
   def security_keys_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      security_key_factor_enabled?(UserSecurityKey.factor_types[:second_factor])
+    security_key_factor_enabled?(UserSecurityKey.factor_types[:second_factor])
   end
 
   def passkeys_available_as_second_factor?
     SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
-      !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      SiteSetting.enable_local_logins && !SiteSetting.enable_discourse_connect &&
       security_key_factor_enabled?(UserSecurityKey.factor_types[:first_factor])
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
 
-  # Passkey-as-2FA (`passkeys_available_as_second_factor?`) is intentionally
-  # excluded: it only satisfies `/session/2fa`. Password login, email login,
-  # and password reset have no passkey UI yet, so counting passkeys here would
-  # make those flows skip 2FA for passkey-only users.
+  # A sign-in passkey isn't enrollment. Backup codes are recovery, not a durable primary 2FA method.
   def has_any_second_factor_methods_enabled?
     totp_enabled? || security_keys_enabled?
+  end
+
+  def requires_second_factor_for_login?
+    has_any_second_factor_methods_enabled? || backup_codes_enabled?
   end
 
   def has_multiple_second_factor_methods?
@@ -115,7 +114,7 @@ module SecondFactorManager
 
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
-    if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
+    if !requires_second_factor_for_login? &&
          (!passkeys_available_as_second_factor? || params[:second_factor_method].blank?)
       return ok_result
     end

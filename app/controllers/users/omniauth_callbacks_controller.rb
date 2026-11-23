@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
+  include LoginSecondFactor
+
   skip_before_action :redirect_to_login_if_required, :redirect_to_profile_if_required
 
   layout "no_ember"
 
   # need to be able to call this
-  skip_before_action :check_xhr
+  skip_before_action :check_xhr, except: :complete_second_factor
 
   # this is the only spot where we allow CSRF, our openid / oauth redirect
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
   # These are usually GET requests but some providers use POST requests
-  allow_in_staff_writes_only_mode :complete
-  allow_when_archived :complete
+  allow_in_staff_writes_only_mode :complete, :complete_second_factor
+  allow_when_archived :complete, :complete_second_factor
+
+  SECOND_FACTOR_FLOW = "omniauth"
 
   def confirm_request
     self.class.find_authenticator(params[:provider])
@@ -74,19 +78,33 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     raise Discourse::ReadOnly if @staff_writes_only_mode && !@auth_result.user&.staff?
 
-    complete_response_data
+    if user = @auth_result.user
+      unless login_blocked_message(user)
+        start_login_second_factor!(
+          flow: SECOND_FACTOR_FLOW,
+          target_user: user,
+          callback_path: omniauth_second_factor_path,
+        ) do
+          {
+            auth_result: @auth_result.session_data,
+            origin: @origin,
+            account_snapshot: login_account_snapshot(user),
+            provider_identity: provider_identity(authenticator, auth, user),
+          }
+        end
+        finish_login(user)
+      end
+    elsif invite_required?
+      @auth_result.requires_invite = true
+    else
+      server_session[:authentication] = @auth_result.session_data
+    end
 
     return render_auth_result_failure if @auth_result.failed?
 
-    client_hash = @auth_result.to_client_hash
-    if authenticator.can_connect_existing_user? &&
-         (SiteSetting.enable_local_logins || Discourse.enabled_authenticators.count > 1)
-      # There is more than one login method, and users are allowed to manage associations themselves
-      client_hash[:associate_url] = persist_auth_token(auth)
-    end
-
-    cookies["_bypass_cache"] = true
-    cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
+    association_auth = auth.except(:session) if !@auth_result.user &&
+      self_managed_association?(authenticator)
+    set_authentication_data(association_auth)
 
     # If the user account doesn't already exist, and this signup is part of a user-api-key request, direct
     # the user to the homepage first so that signup can be completed. They'll be redirected to the user-api-key
@@ -98,9 +116,39 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
   end
 
+  def complete_second_factor
+    user, payload = complete_login_second_factor!(flow: SECOND_FACTOR_FLOW)
+    raise Discourse::NotFound if user.staged?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
+
+    @auth_result = Auth::Result.from_session_data(payload.fetch(:auth_result), user:)
+    @origin = @auth_result.destination_url = payload.fetch(:origin)
+    # The provider may have been disabled since the first request.
+    self.class.find_authenticator(@auth_result.authenticator_name)
+
+    if message = login_blocked_message(user)
+      return render_json_error(message, status: :forbidden)
+    end
+
+    if login_account_snapshot(user) != payload[:account_snapshot] ||
+         !valid_provider_identity?(user, payload[:provider_identity])
+      raise Discourse::InvalidAccess
+    end
+
+    finish_login(user)
+    return render_json_error(@auth_result.failed_reason) if @auth_result.failed?
+    raise Discourse::InvalidAccess unless @auth_result.authenticated
+
+    set_authentication_data
+    render json: { redirect_url: @origin, reload: true }
+  end
+
   def valid_origin?(uri)
     return false if uri.nil?
     return false if uri.host.present? && uri.host != Discourse.current_hostname
+    if !uri.path&.start_with?("/") || uri.path.start_with?("//") || uri.path.include?("\\")
+      return false
+    end
     return false if uri.path.start_with?("#{Discourse.base_path}/auth/")
     return false if uri.path.start_with?("#{Discourse.base_path}/login")
     true
@@ -145,16 +193,6 @@ class Users::OmniauthCallbacksController < ApplicationController
     render "failure"
   end
 
-  def complete_response_data
-    if @auth_result.user
-      user_found(@auth_result.user)
-    elsif invite_required?
-      @auth_result.requires_invite = true
-    else
-      server_session[:authentication] = @auth_result.session_data
-    end
-  end
-
   def invite_required?
     if SiteSetting.invite_only?
       path = Discourse.route_for(@origin)
@@ -164,19 +202,59 @@ class Users::OmniauthCallbacksController < ApplicationController
     end
   end
 
-  def user_found(user)
-    if user.has_any_second_factor_methods_enabled? &&
-         SiteSetting.enforce_second_factor_on_external_auth
-      @auth_result.omniauth_disallow_totp = true
-      @auth_result.email = user.email
-      return
+  # The provider callback uses these flags for the login page; the JSON continuation uses the message.
+  def login_blocked_message(user)
+    if user.suspended?
+      user.suspended_message
+    elsif ScreenedIpAddress.should_block?(request.remote_ip)
+      @auth_result.not_allowed_from_ip_address = true
+      I18n.t("login.not_allowed_from_ip_address", username: user.username)
+    elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      @auth_result.admin_not_allowed_from_ip_address = true
+      I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
+    elsif !user.guardian.can_access_forum?
+      @auth_result.awaiting_approval = true
+      I18n.t("login.not_approved")
+    elsif !user.active? && !provider_verified_email?(user)
+      @auth_result.awaiting_activation = true
+      I18n.t("login.not_activated")
     end
-    handle_account_activation(user)
   end
 
-  def handle_account_activation(user)
+  def login_account_snapshot(user)
+    {
+      "email" => user.email,
+      "active" => user.active?,
+      "password_updated_at" => user.user_password&.updated_at&.iso8601(6),
+    }
+  end
+
+  def provider_identity(authenticator, auth, user)
+    return unless authenticator.is_a?(Auth::ManagedAuthenticator)
+
+    association =
+      UserAssociatedAccount.find_by!(
+        provider_name: auth[:provider],
+        provider_uid: auth[:uid],
+        user_id: user.id,
+      )
+    # Reject stale provider claims, including a later login that changed group membership.
+    association.slice(:id, :provider_name, :provider_uid).merge(
+      updated_at: association.updated_at.iso8601(6),
+    )
+  end
+
+  def valid_provider_identity?(user, identity)
+    !identity || UserAssociatedAccount.exists?(identity.merge(user_id: user.id))
+  end
+
+  def provider_verified_email?(user)
+    @auth_result.email_valid && @auth_result.email == user.email
+  end
+
+  def finish_login(user)
     # automatically activate any account if a provider marked the email valid
-    if @auth_result.email_valid && @auth_result.email == user.email
+    if provider_verified_email?(user)
       if !user.active || !user.email_confirmed?
         user.update!(password: SecureRandom.hex)
 
@@ -193,31 +271,37 @@ class Users::OmniauthCallbacksController < ApplicationController
       end
     end
 
-    if ScreenedIpAddress.should_block?(request.remote_ip)
-      @auth_result.not_allowed_from_ip_address = true
-    elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-      @auth_result.admin_not_allowed_from_ip_address = true
-    elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
-      begin
-        user.save! if @auth_result.apply_user_attributes!
-        @auth_result.apply_associated_attributes!
-      rescue ActiveRecord::RecordInvalid => e
-        @auth_result.failed = true
-        @auth_result.failed_reason = e.record.errors.full_messages.join(", ")
-        return
-      end
-
-      log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
-      Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
-      server_session.delete(:authentication) # don't carry around old auth info
-      @auth_result.authenticated = true
-    else
-      if SiteSetting.must_approve_users? && !user.approved?
-        @auth_result.awaiting_approval = true
-      else
-        @auth_result.awaiting_activation = true
-      end
+    unless user.active?
+      @auth_result.awaiting_activation = true
+      return
     end
+
+    begin
+      user.save! if @auth_result.apply_user_attributes!
+      @auth_result.apply_associated_attributes!
+    rescue ActiveRecord::RecordInvalid => e
+      @auth_result.failed = true
+      @auth_result.failed_reason = e.record.errors.full_messages.join(", ")
+      return
+    end
+
+    log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
+    Invite.invalidate_for_email(user.email)
+    server_session.delete(:authentication)
+    @auth_result.authenticated = true
+  end
+
+  def self_managed_association?(authenticator)
+    authenticator.can_connect_existing_user? &&
+      (SiteSetting.enable_local_logins || Discourse.enabled_authenticators.count > 1)
+  end
+
+  def set_authentication_data(association_auth = nil)
+    client_hash = @auth_result.to_client_hash
+    client_hash[:associate_url] = persist_auth_token(association_auth) if association_auth
+
+    cookies["_bypass_cache"] = true
+    cookies[:authentication_data] = { value: client_hash.to_json, path: Discourse.base_path("/") }
   end
 
   def persist_auth_token(auth)
