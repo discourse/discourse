@@ -349,16 +349,20 @@ export default class Reviewable extends RestModel {
   get flaggedReviewableContextQuestion(): string {
     // TODO(typescript-pending): uniqueItemsFromArray loses its element type; remove this assertion when generic.
     const uniqueReviewableScores = uniqueItemsFromArray(
-      this.reviewable_scores,
+      this.reviewable_scores.filter(
+        (score) => score.score_type!.type !== "needs_approval"
+      ),
       "score_type.type"
     ) as ReviewableScore[];
 
-    if (uniqueReviewableScores.length === 1) {
-      if (uniqueReviewableScores[0].score_type!.type === "notify_moderators") {
-        return i18n("review.context_question.something_else_wrong", {
-          reviewable_type: this.humanNoun,
-        });
-      }
+    if (
+      uniqueReviewableScores.length === 0 ||
+      (uniqueReviewableScores.length === 1 &&
+        uniqueReviewableScores[0].score_type!.type === "notify_moderators")
+    ) {
+      return i18n("review.context_question.something_else_wrong", {
+        reviewable_type: this.humanNoun,
+      });
     }
 
     const listOfQuestions = I18n.listJoiner(
