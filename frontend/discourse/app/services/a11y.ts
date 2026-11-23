@@ -76,7 +76,7 @@ export default class A11y extends Service {
     #messages = trackedMap<AnnouncementType, string>();
 
     /**
-     * How many times each region has been written, which picks the slot that holds its message
+     * How many times each region has been written, identical repeats included
      */
     #writes = trackedMap<AnnouncementType, number>();
 
@@ -84,11 +84,6 @@ export default class A11y extends Service {
      * Map of announcement clear timers by type
      */
     #timers = trackedMap<AnnouncementType, Timer>();
-
-    /**
-     * Map of pending repeat-restore timers by type
-     */
-    #restores = new Map<AnnouncementType, Timer>();
 
     /**
      * Sets an announcement message with auto-clearing
@@ -101,28 +96,9 @@ export default class A11y extends Service {
       message: string,
       clearDelay: number
     ): void {
-      // Two announcements in one tick can queue a restore between this call being scheduled
-      // and it running, so the request-time cancel in `announce` cannot be the only one.
-      this.cancelRestore(type);
-
       if (message === "") {
         this.#messages.delete(type);
         this.#scheduleClear(type, 0);
-        return;
-      }
-
-      // A live region only speaks when its text changes, so writing the same string back is
-      // a DOM no-op that no screen reader picks up. Blank the region and restore it a render
-      // later to give it a change it can act on.
-      if (this.#messages.get(type) === message) {
-        this.#messages.delete(type);
-        this.#restores.set(
-          type,
-          next(() => {
-            this.#restores.delete(type);
-            this.#write(type, message, clearDelay);
-          })
-        );
         return;
       }
 
@@ -139,15 +115,12 @@ export default class A11y extends Service {
     }
 
     /**
-     * Gets the text of a region's two slots: each write moves the message to the other one
+     * Gets how many times a region has been written
      * @param type - Type of announcement
-     * @returns The two slots' text, one of them always empty
+     * @returns The number of writes, identical repeats included
      */
-    getSlots(type: AnnouncementType): readonly [string, string] {
-      const message = this.#messages.get(type) ?? "";
-      return (this.#writes.get(type) ?? 0) % 2 === 0
-        ? [message, ""]
-        : ["", message];
+    getWriteCount(type: AnnouncementType): number {
+      return this.#writes.get(type) ?? 0;
     }
 
     /**
@@ -160,21 +133,6 @@ export default class A11y extends Service {
         }
       });
       this.#timers.clear();
-
-      this.#restores.forEach((timer) => cancel(timer));
-      this.#restores.clear();
-    }
-
-    /**
-     * Cancels the pending repeat-restore for a type, if there is one
-     * @param type - Type of announcement
-     */
-    cancelRestore(type: AnnouncementType): void {
-      const pendingRestore = this.#restores.get(type);
-      if (pendingRestore) {
-        cancel(pendingRestore);
-        this.#restores.delete(type);
-      }
     }
 
     /**
@@ -205,13 +163,17 @@ export default class A11y extends Service {
       }
 
       if (clearDelay > 0) {
-        this.#timers.set(
-          type,
-          discourseLater(() => {
-            this.#messages.delete(type);
-            this.#timers.delete(type);
-          }, clearDelay)
-        );
+        const timer = discourseLater(() => {
+          // A clear that falls due in the same flush as a newer write runs after it even
+          // though the write cancelled it, because Backburner queues every due timer first.
+          if (this.#timers.get(type) !== timer) {
+            return;
+          }
+
+          this.#messages.delete(type);
+          this.#timers.delete(type);
+        }, clearDelay);
+        this.#timers.set(type, timer);
       }
     }
   })();
@@ -268,12 +230,6 @@ export default class A11y extends Service {
 
     const trimmed = message.trim();
 
-    // Drop a pending repeat-restore as soon as a newer message is requested rather than a
-    // tick later when the write below runs, because the restore is already queued ahead of
-    // that write and would otherwise put the older message back first. Restores are held
-    // outside tracked state, so cancelling one here is safe during render.
-    this.#state.cancelRestore(type);
-
     // Defer the tracked-state write out of the current render. `announce` is often
     // called from a render-driven data load (e.g. an async content resolution), and
     // writing tracked state synchronously during render trips Ember's
@@ -290,14 +246,13 @@ export default class A11y extends Service {
   }
 
   /**
-   * The text of a live region's two slots, which take turns holding its message. VoiceOver
-   * compares what a region ends up saying with what it said before, so a message written back
-   * into the slot that already held it is silent. Moving each write to the other slot makes an
-   * identical repeat a change from empty, like a first announcement.
+   * How many times a live region has been written, identical repeats included. The live
+   * regions render each write in a new element, because VoiceOver stays silent when an
+   * element is given the text it last said, even if it was emptied in between.
    * @param type - Type of announcement
-   * @returns The two slots' text, one of them always empty
+   * @returns The number of writes
    */
-  liveRegionSlots(type: AnnouncementType): readonly [string, string] {
-    return this.#state.getSlots(type);
+  liveRegionWriteCount(type: AnnouncementType): number {
+    return this.#state.getWriteCount(type);
   }
 }
