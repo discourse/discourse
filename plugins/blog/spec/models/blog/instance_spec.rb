@@ -92,10 +92,6 @@ RSpec.describe Blog::Instance do
       expect(default_blog.errors[:path_format]).to eq(
         [I18n.t("blog.errors.path_format_blog_slug", slug: "news")],
       )
-      expect { SiteSetting.blog_path_format = "/news/{slug}" }.to raise_error(
-        Discourse::InvalidParameters,
-        /#{I18n.t("blog.errors.path_format_blog_slug", slug: "news")}/,
-      )
 
       default_blog.path_format = "/{slug}"
       expect(default_blog).to be_valid
@@ -108,6 +104,88 @@ RSpec.describe Blog::Instance do
 
       expect(blog).not_to be_valid
       expect(blog.errors[:url]).to eq([I18n.t("blog.errors.blog_url_forum_host")])
+    end
+
+    context "when the site cannot use own domains" do
+      before { SiteSetting.blog_custom_domains_enabled = false }
+
+      it "refuses a new own domain" do
+        blog.url = "https://engineering.example.com"
+
+        expect(blog).not_to be_valid
+        expect(blog.errors[:url]).to eq([I18n.t("blog.errors.blog_url_unavailable")])
+      end
+
+      it "keeps an own domain the blog already has, and lets it be cleared" do
+        saved = described_class.create!(name: "Engineering", slug: "engineering")
+        saved.update_columns(url: "https://engineering.example.com")
+        saved.name = "Renamed"
+        expect(saved).to be_valid
+
+        saved.url = ""
+        expect(saved).to be_valid
+      end
+    end
+
+    it "refuses the drafts category, on create and on update" do
+      drafts = Fabricate(:private_category, group: Group[:staff])
+      SiteSetting.blog_drafts_category = drafts.id
+
+      blog.category = drafts
+      expect(blog).not_to be_valid
+      expect(blog.errors[:category_id]).to eq([I18n.t("blog.errors.blog_category_is_drafts")])
+
+      blog.category = nil
+      blog.save!
+      expect(blog.update(category: drafts)).to eq(false)
+    end
+
+    it "keeps the slug once the blog has published articles" do
+      blog.save!
+      topic = Fabricate(:topic)
+      publication = Blog::Publication.create!(topic:, blog:, path: "/story")
+      expect(blog.update(slug: "renamed")).to eq(true)
+
+      revision = publication.revisions.create!(source_topic: topic, creator: topic.user, data: {})
+      publication.update_columns(published_revision_id: revision.id)
+      expect(blog.update(slug: "engineering")).to eq(false)
+      expect(blog.errors[:slug]).to eq([I18n.t("blog.errors.blog_slug_locked")])
+    end
+
+    it "keeps the discussion category once the blog has published articles" do
+      category = Fabricate(:category)
+      other_category = Fabricate(:category)
+      blog.category = category
+      blog.save!
+      topic = Fabricate(:topic)
+      publication = Blog::Publication.create!(topic:, blog:, path: "/story")
+      expect(blog.update(category: other_category)).to eq(true)
+
+      revision = publication.revisions.create!(source_topic: topic, creator: topic.user, data: {})
+      publication.update_columns(published_revision_id: revision.id)
+      expect(blog.update(category:)).to eq(false)
+      expect(blog.errors[:category_id]).to eq([I18n.t("blog.errors.blog_category_locked")])
+    end
+
+    it "lets a deleted discussion category be replaced" do
+      category = Fabricate(:category)
+      blog.category = category
+      blog.save!
+      topic = Fabricate(:topic)
+      publication = Blog::Publication.create!(topic:, blog:, path: "/story")
+      revision = publication.revisions.create!(source_topic: topic, creator: topic.user, data: {})
+      publication.update_columns(published_revision_id: revision.id)
+      category.destroy!
+
+      expect(blog.reload.update(category: Fabricate(:category))).to eq(true)
+    end
+
+    it "keeps the default blog published" do
+      default_blog = described_class.find_by(is_default: true)
+      default_blog.published = false
+
+      expect(default_blog).not_to be_valid
+      expect(default_blog.errors[:published]).to eq([I18n.t("blog.errors.default_blog_published")])
     end
 
     it "allows only one default blog" do
@@ -141,6 +219,26 @@ RSpec.describe Blog::Instance do
       )
 
       expect(described_class.category_ids).to contain_exactly(first_category.id, second_category.id)
+    end
+  end
+
+  describe ".ensure_default!" do
+    it "leaves an existing default blog alone" do
+      described_class.find_by(is_default: true).update!(name: "Kept")
+
+      expect { described_class.ensure_default! }.not_to change {
+        described_class.find_by(is_default: true).attributes
+      }
+    end
+  end
+
+  describe ".addable?" do
+    it "allows another blog until the site's limit is reached" do
+      SiteSetting.blog_max_instances = 2
+      expect(described_class).to be_addable
+
+      described_class.create!(name: "Engineering", slug: "engineering")
+      expect(described_class).not_to be_addable
     end
   end
 end

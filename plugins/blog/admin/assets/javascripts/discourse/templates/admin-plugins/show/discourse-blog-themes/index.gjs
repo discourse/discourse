@@ -3,6 +3,20 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 import BlogThemeCard from "../../../../components/blog-theme-card.gjs";
 
+// With several blogs, each blog picks its theme on its Theme tab.
+function severalBlogs(blogs) {
+  return blogs?.length > 1;
+}
+
+function activeOn(blogs, theme) {
+  if (!severalBlogs(blogs)) {
+    return null;
+  }
+  return blogs
+    .filter((blog) => blog.active_theme_id === theme.id)
+    .map((blog) => blog.name);
+}
+
 export default <template>
   <section class="blog-themes">
     <DBreadcrumbsItem
@@ -26,7 +40,12 @@ export default <template>
     </DPageSubheader>
     <div class="themes-cards-container">
       {{#each @model.themes key="id" as |theme|}}
-        <BlogThemeCard @activeThemeId={{@model.active.id}} @theme={{theme}} />
+        <BlogThemeCard
+          @activeOn={{activeOn @model.blogs theme}}
+          @activeThemeId={{@model.active.id}}
+          @hideActivate={{severalBlogs @model.blogs}}
+          @theme={{theme}}
+        />
       {{/each}}
     </div>
   </section>

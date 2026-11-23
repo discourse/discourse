@@ -29,7 +29,7 @@ RSpec.describe "Blog article summaries", type: :request do
     expect(post["blog_article"]).to eq(
       "url" => @publication.url,
       "excerpt" => @publication.excerpt,
-      "blog_name" => SiteSetting.blog_title,
+      "blog_name" => Blog::Instance.default_blog.name,
     )
     expect(post["cooked"]).to eq(first_post.reload.cooked)
   end

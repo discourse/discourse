@@ -166,29 +166,11 @@ class DiscourseDiff
     text.scan(/[^\r\n]+[\r\n]*/)
   end
 
+  MARKDOWN_TOKEN_REGEXP = /\w+[ \t]*|\W/
+  private_constant :MARKDOWN_TOKEN_REGEXP
+
   def tokenize_markdown(text)
-    t, tokens = [], []
-    i = 0
-    while i < text.size
-      if text[i] =~ /\w/
-        t << text[i]
-      elsif text[i] =~ /[ \t]/ && t.join =~ /\A\w+\z/
-        begin
-          t << text[i]
-          i += 1
-        end while i < text.size && text[i] =~ /[ \t]/
-        i -= 1
-        tokens << t.join
-        t = []
-      else
-        tokens << t.join if t.size > 0
-        tokens << text[i]
-        t = []
-      end
-      i += 1
-    end
-    tokens << t.join if t.size > 0
-    tokens
+    text.scan(MARKDOWN_TOKEN_REGEXP)
   end
 
   def tokenize_html_blocks(html)

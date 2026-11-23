@@ -42,6 +42,11 @@ class FileHelper
     filename.match?(supported_playable_media_regexp)
   end
 
+  def self.contained_path(path, *directories)
+    path = File.expand_path(path)
+    path if path.start_with?(*directories.map { File.join(File.expand_path(it), "") })
+  end
+
   # https://guides.rubyonrails.org/security.html#file-uploads
   def self.sanitize_filename(filename)
     filename.strip.tap do |name|

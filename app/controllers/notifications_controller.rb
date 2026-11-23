@@ -123,10 +123,13 @@ class NotificationsController < ApplicationController
   end
 
   def mark_read
-    if params[:id]
-      Notification.read(current_user, [params[:id].to_i])
+    if params.has_key?(:id)
+      Notification.read(current_user, [fetch_int_from_params(:id, default: nil)])
     else
-      if types = params[:dismiss_types]&.split(",").presence
+      if params.has_key?(:dismiss_types)
+        types = params[:dismiss_types].to_s.split(",")
+        raise Discourse::InvalidParameters.new(:dismiss_types) if types.blank?
+
         invalid = []
         types.map! do |type|
           type_id = Notification.types[type.to_sym]

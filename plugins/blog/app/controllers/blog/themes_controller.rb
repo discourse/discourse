@@ -57,8 +57,19 @@ module ::Blog
                  ActiveModel::ArraySerializer.new(
                    ThemePresets.all + BlogTheme.all,
                    each_serializer: BlogThemeSerializer,
+                   blog: Instance.find_by(id: params[:blog_id]),
                  ).as_json,
                active: BlogTheme.active_for(Instance.default_blog),
+               blogs:
+                 Instance.ordered.map do |blog|
+                   active = BlogTheme.active_for(blog)
+                   {
+                     id: blog.id,
+                     name: blog.name,
+                     active_theme_id: active["id"],
+                     active_revision: active["revision"],
+                   }
+                 end,
              }
     end
 

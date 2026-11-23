@@ -141,7 +141,7 @@ RSpec.describe "Blog themes", type: :request do
         )
       Blog::Path.create!(publication: publication, path: publication.path)
       active = Blog::BlogTheme.active_for(Blog::Instance.default_blog)
-      token = Blog::ThemePreview.token_for(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
 
       {
         "/" => 200,
@@ -154,7 +154,9 @@ RSpec.describe "Blog themes", type: :request do
         expect(response.status).to eq(status)
         document = Nokogiri.HTML5(response.body)
         expect(document.css(".#{block} #main").size).to eq(1)
-        expect(document.at_css(".#{block}__brand").text).to include(SiteSetting.blog_title)
+        expect(document.at_css(".#{block}__brand").text).to include(
+          Blog::Instance.default_blog.name,
+        )
         expect(document.css("[data-template-diagnostic]")).to be_empty
         if path == publication.path
           expect(document.css("#discussion").size).to eq(1)
@@ -165,7 +167,7 @@ RSpec.describe "Blog themes", type: :request do
     end
 
     it "renders an empty listing and carries the preview through archive searches" do
-      token = Blog::ThemePreview.token_for(reference_theme)
+      token = Blog::ThemePreview.token_for(reference_theme, blog: Blog::Instance.default_blog)
       get "https://blog.example.com/archive",
           params: {
             blog_theme_preview: token,
@@ -292,6 +294,25 @@ RSpec.describe "Blog themes", type: :request do
       get "https://test.localhost/session/#{moderator.encoded_username}/become"
       get "https://test.localhost/admin/plugins/blog/themes/#{draft["id"]}.json"
       expect(response.status).to eq(403)
+    end
+
+    it "previews a theme on the blog the list is shown for" do
+      engineering =
+        Blog::Instance.create!(name: "Engineering", slug: "engineering", published: false)
+      get "https://test.localhost/session/#{admin.encoded_username}/become"
+
+      get "https://test.localhost/admin/plugins/blog/themes.json",
+          params: {
+            blog_id: engineering.id,
+          }
+      preview_url = response.parsed_body["themes"].first["preview_url"]
+
+      expect(preview_url).to start_with(
+        "#{Discourse.base_url}/blog/engineering/?blog_theme_preview=",
+      )
+      get preview_url
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Engineering")
     end
 
     it "saves multiple drafts without changing readers, then explicitly activates a snapshot" do

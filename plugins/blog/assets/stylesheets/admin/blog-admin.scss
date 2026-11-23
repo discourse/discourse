@@ -1,15 +1,39 @@
 @use "lib/viewport";
 
-.blog-identity {
+.blog-about {
   &__links {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5em;
-    margin-bottom: 1.5em;
+    justify-content: flex-end;
+    gap: 0.25em;
+
+    .btn,
+    .btn .d-icon {
+      color: var(--tertiary);
+    }
+
+    // The icon trails the label, so its gap goes on the other side.
+    .btn .d-icon {
+      margin: 0 0 0 0.35em;
+      font-size: var(--font-down-1);
+    }
   }
 
   &__form > .admin-config-area-card {
     align-self: stretch;
+  }
+}
+
+.blog-settings {
+  // FormKit lines its children up at the start, which would shrink the cards.
+  > .admin-config-area-card {
+    align-self: stretch;
+  }
+
+  // The blog's address prefixes the custom format and reads as one piece.
+  .form-kit__before-input {
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   // Core's radio cards are tuned for two short centred labels; these hold
@@ -22,7 +46,10 @@
       width: 100%;
     }
 
+    // Longer examples wrap, so each card fills its grid row to stay even.
     .form-kit__control-radio-label {
+      box-sizing: border-box;
+      height: 100%;
       justify-content: flex-start;
       padding: var(--space-3) var(--space-4);
     }
@@ -46,6 +73,11 @@
 }
 
 .blog-theme-card {
+  // Without buttons below, the badge sits in the corner like the card padding.
+  .theme-card__badges:last-child {
+    min-height: 0;
+  }
+
   &.--active {
     border-color: var(--tertiary-medium);
     box-shadow: 0 0 0 3px var(--tertiary-low);
@@ -364,4 +396,27 @@
   .d-modal__container {
     max-width: 800px;
   }
+}
+
+.blog-edit__title {
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.blog-edit__tab {
+  margin-top: var(--space-4);
+}
+
+.blog-edit__top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em 1em;
+  margin-bottom: 0.5em;
+}
+
+.blog-edit__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
 }

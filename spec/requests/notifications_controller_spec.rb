@@ -723,6 +723,21 @@ RSpec.describe NotificationsController do
           end
         end
 
+        it "rejects a malformed id or types instead of marking everything as read" do
+          [
+            { id: false },
+            { id: [notification.id] },
+            { dismiss_types: "," },
+            { dismiss_types: %w[liked] },
+          ].each do |params|
+            put "/notifications/mark-read.json", params:, as: :json
+
+            expect(response.status).to eq(400)
+          end
+
+          expect(notification.reload.read).to eq(false)
+        end
+
         context "when targeting notifications by type" do
           it "can mark notifications as read" do
             replied1 = notification

@@ -47,6 +47,10 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   def store_working_copy(params:, guardian:)
-    Blog::ThemePreview.store_working_copy(params.theme_attributes, user: guardian.user)
+    Blog::ThemePreview.store_working_copy(
+      params.theme_attributes,
+      user: guardian.user,
+      blog: Blog::Instance.default_blog,
+    )
   end
 end
