@@ -92,11 +92,11 @@ module CoreSystemTestSelection
   end
 
   def self.ci_base
-    ENV
-      .fetch("CORE_SYSTEM_PR_BASE")
-      .tap do |base|
-        raise "Unknown CI base" unless SHA.match?(base) && git("rev-parse", "HEAD^1").strip == base
-      end
+    merge, base, pull_request_head = git("rev-parse", "HEAD", "HEAD^1", "HEAD^2").split
+    unless merge == ENV.fetch("GITHUB_SHA") && pull_request_head == ENV.fetch("CORE_SYSTEM_PR_HEAD")
+      raise "Unknown CI merge commit"
+    end
+    base
   end
 
   def self.write_outputs(**values)

@@ -65,7 +65,18 @@ RSpec.describe "Core system test selection in shadow" do
     git("rev-parse", "HEAD")
   end
 
-  def selection(base:, dependencies: nil, unmapped_browser_specs: [], setup_lines: {})
+  def selection(
+    dependencies: nil,
+    unmapped_browser_specs: [],
+    setup_lines: {},
+    github_sha: nil,
+    pull_request_head: nil
+  )
+    head = git("rev-parse", "HEAD")
+    base = git("rev-parse", "HEAD^")
+    tree = git("rev-parse", "HEAD^{tree}")
+    merge = git("commit-tree", tree, "-p", base, "-p", head, "-m", "Tested merge")
+    git("update-ref", "HEAD", merge, head)
     payload = {
       version: 2,
       revision: @map_sha,
@@ -80,7 +91,12 @@ RSpec.describe "Core system test selection in shadow" do
     File.write(map_path, JSON.generate(payload)) if dependencies
     _, stderr, status =
       Open3.capture3(
-        { "CORE_SYSTEM_PR_BASE" => base, "CORE_SYSTEM_MAP_SHA" => @map_sha },
+        {
+          "GITHUB_SHA" => github_sha || merge,
+          "CORE_SYSTEM_PR_BASE" => @map_sha,
+          "CORE_SYSTEM_PR_HEAD" => pull_request_head || head,
+          "CORE_SYSTEM_MAP_SHA" => @map_sha,
+        },
         RbConfig.ruby,
         selector,
         "plan",
@@ -90,14 +106,18 @@ RSpec.describe "Core system test selection in shadow" do
       )
     raise stderr unless status.success?
     JSON.parse(File.read(report_path))
+  ensure
+    git("update-ref", "HEAD", head, merge) if merge
   end
 
-  it "proposes zero Core system files for a backend library spec change without a map" do
+  it "proposes zero Core system files for backend library specs when the event base is stale" do
+    write(helper, helper_source.sub(":before", ":main"))
+    commit("main changes application code")
     backend_spec = "spec/lib/example_helper_spec.rb"
     write(backend_spec, "new backend example\n")
     commit("pull request adds a backend example")
 
-    report = selection(base: @map_sha)
+    report = selection
 
     expect(report).to include(
       "selected_files" => [],
@@ -111,19 +131,27 @@ RSpec.describe "Core system test selection in shadow" do
     write(helper, helper_source.sub(":before", ":after"))
     commit("pull request changes the helper and its backend spec")
 
-    report = selection(base: @map_sha)
+    report = selection
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("no_compatible_map")
   end
 
-  it "uses the full suite for a backend spec change with an unverified merge parent" do
-    write("docs/example.md", "main advanced\n")
-    commit("main advanced")
+  it "uses the full suite when the merge head differs from the event pull request head" do
     write("spec/lib/example_helper_spec.rb", "new backend example\n")
     commit("pull request adds a backend example")
 
-    report = selection(base: @map_sha)
+    report = selection(pull_request_head: @map_sha)
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("selection_error")
+  end
+
+  it "uses the full suite when the checkout differs from the event merge commit" do
+    write("spec/lib/example_helper_spec.rb", "new backend example\n")
+    commit("pull request adds a backend example")
+
+    report = selection(github_sha: @map_sha)
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("selection_error")
@@ -133,7 +161,7 @@ RSpec.describe "Core system test selection in shadow" do
     write(controller, controller_source.sub(":before", ":main"))
     new_spec = "spec/system/new_tag_filters_spec.rb"
     write(new_spec, "new test\n")
-    base = commit("main changed the code and added a test")
+    commit("main changed the code and added a test")
     write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
@@ -143,7 +171,6 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
           helper => [about],
         },
-        base:,
         setup_lines: {
           controller => [1, 2, 3],
           helper => [1, 2, 3],
@@ -158,20 +185,12 @@ RSpec.describe "Core system test selection in shadow" do
 
   it "keeps the drift selection when a pull request reverts a main change" do
     write(controller, controller_source.sub(":before", ":main"))
-    base = commit("main changed the controller")
+    commit("main changed the controller")
     write(controller, controller_source)
     commit("pull request reverted the controller")
 
     report =
-      selection(
-        dependencies: {
-          controller => [sidebar],
-        },
-        base:,
-        setup_lines: {
-          controller => [1, 2, 3],
-        },
-      )
+      selection(dependencies: { controller => [sidebar] }, setup_lines: { controller => [1, 2, 3] })
 
     expect(report.fetch("selected_files")).to eq([sidebar])
     expect(report.fetch("full_suite_fallback")).to be_nil
@@ -179,12 +198,11 @@ RSpec.describe "Core system test selection in shadow" do
 
   it "falls back to the full suite when a change since collection has no map entry" do
     write(controller, controller_source.sub(":before", ":main"))
-    base = commit("main changed the controller")
+    commit("main changed the controller")
     write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
-    report =
-      selection(dependencies: { helper => [about] }, base:, setup_lines: { helper => [1, 2, 3] })
+    report = selection(dependencies: { helper => [about] }, setup_lines: { helper => [1, 2, 3] })
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("unmapped_input")
@@ -199,7 +217,6 @@ RSpec.describe "Core system test selection in shadow" do
         dependencies: {
           controller => [sidebar],
         },
-        base: @map_sha,
         setup_lines: {
           controller => [1, 2, 3],
         },
@@ -212,7 +229,7 @@ RSpec.describe "Core system test selection in shadow" do
 
   it "uses runtime consumers for method edits within an eager loaded file" do
     write(controller, controller_source.sub(":before", ":during_main\n    :main"))
-    base = commit("main method change")
+    commit("main method change")
     write(controller, controller_source.sub(":before", ":after"))
     commit("pull request method change")
 
@@ -221,7 +238,6 @@ RSpec.describe "Core system test selection in shadow" do
         dependencies: {
           controller => [sidebar],
         },
-        base:,
         setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
@@ -240,7 +256,6 @@ RSpec.describe "Core system test selection in shadow" do
         dependencies: {
           controller => [sidebar],
         },
-        base: @map_sha,
         setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
@@ -252,7 +267,7 @@ RSpec.describe "Core system test selection in shadow" do
 
   it "uses the full suite when a pull request reverts a class declaration change on main" do
     write(controller, controller_source.sub("require_login", "ensure_tags_enabled"))
-    base = commit("main changes callback registration")
+    commit("main changes callback registration")
     write(controller, controller_source)
     commit("pull request reverts callback registration")
 
@@ -261,7 +276,6 @@ RSpec.describe "Core system test selection in shadow" do
         dependencies: {
           controller => [sidebar],
         },
-        base:,
         setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
@@ -275,7 +289,7 @@ RSpec.describe "Core system test selection in shadow" do
     write(helper, helper_source.sub(":original", ":updated"))
     commit("pull request changes a lazy declaration")
 
-    report = selection(dependencies: { helper => [about] }, base: @map_sha)
+    report = selection(dependencies: { helper => [about] })
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("shared_input")
@@ -285,7 +299,7 @@ RSpec.describe "Core system test selection in shadow" do
     write(helper, helper_source.sub(":before", ":updated"))
     commit("pull request changes a helper body")
 
-    report = selection(dependencies: { helper => [about] }, base: @map_sha)
+    report = selection(dependencies: { helper => [about] })
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("shared_input")
