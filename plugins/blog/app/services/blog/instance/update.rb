@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Saves the fields an admin changed on one of a blog's tabs.
 class Blog::Instance::Update
   include Service::Base
 

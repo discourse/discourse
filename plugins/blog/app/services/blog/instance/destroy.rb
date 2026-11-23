@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Deletes a blog that holds no articles. Its category stays: it belongs to the admin.
+# A deleted blog's category stays: it belongs to the admin.
 class Blog::Instance::Destroy
   include Service::Base
 

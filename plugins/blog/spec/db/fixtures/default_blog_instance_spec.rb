@@ -14,6 +14,7 @@ RSpec.describe Blog::Instance do
       name: described_class::DEFAULT_NAME,
       slug: "blog",
       is_default: true,
+      published: true,
     )
   end
 end

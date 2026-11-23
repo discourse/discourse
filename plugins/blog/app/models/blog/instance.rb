@@ -87,16 +87,20 @@ module ::Blog
       cached.filter_map(&:category_id)
     end
 
+    def published_articles?
+      Publication.where(blog_id: id).where.not(published_revision_id: nil).exists?
+    end
+
     # Articles keep their addresses, so a blog's slug stays once they are public.
     def slug_locked?
-      Publication.where(blog_id: id).where.not(published_revision_id: nil).exists?
+      published_articles?
     end
 
     # An article is public only while its discussion sits in a blog's category, so
     # moving the blog to another category would take its articles offline. A
     # category that no longer exists can still be replaced.
     def category_locked?
-      slug_locked? && Category.exists?(id: category_id_in_database)
+      published_articles? && Category.exists?(id: category_id_in_database)
     end
 
     private

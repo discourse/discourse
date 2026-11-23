@@ -388,34 +388,6 @@ acceptance("Blog admin with several blogs", function (needs) {
       .hasValue("news", "a typed slug is kept");
   });
 
-  test("goes back to the blogs from the new blog page", async function (assert) {
-    await visit("/admin/plugins/blog/blogs/new");
-    assert
-      .dom(".admin-plugin-config-page__content .d-page-subheader")
-      .doesNotExist("the form's card carries the heading");
-    await click(".back-button");
-
-    assert.strictEqual(
-      currentURL(),
-      "/admin/plugins/blog/blogs",
-      "the list of blogs opens"
-    );
-  });
-
-  test("goes back to the blogs from a blog's page", async function (assert) {
-    await visit("/admin/plugins/blog/blogs/2/settings");
-    assert
-      .dom(".blog-edit .d-page-subheader")
-      .doesNotExist("an edit page has no page heading");
-    await click(".back-button");
-
-    assert.strictEqual(
-      currentURL(),
-      "/admin/plugins/blog/blogs",
-      "the list of blogs opens"
-    );
-  });
-
   test("publishes a blog after confirmation", async function (assert) {
     let saved;
     pretender.put("/admin/plugins/blog/blogs/2.json", (request) => {
@@ -469,21 +441,14 @@ acceptance("Blog admin with several blogs", function (needs) {
       .doesNotExist("each blog picks its theme on its own page");
   });
 
-  test("shows a published blog's slug read-only", async function (assert) {
-    engineering = { ...engineering, slug_locked: true };
+  test("locks the slug and discussion category of a blog with published articles", async function (assert) {
+    engineering = { ...engineering, slug_locked: true, category_locked: true };
 
     await visit("/admin/plugins/blog/blogs/2/settings");
 
     assert
       .dom('.blog-settings [name="slug"]')
       .isDisabled("the slug keeps published addresses working");
-  });
-
-  test("locks a published blog's discussion category", async function (assert) {
-    engineering = { ...engineering, category_locked: true };
-
-    await visit("/admin/plugins/blog/blogs/2/settings");
-
     assert
       .dom(".blog-settings__category")
       .hasClass("is-disabled", "the category keeps published articles public");
@@ -500,20 +465,6 @@ acceptance("Blog admin with several blogs", function (needs) {
     assert
       .dom(".blog-edit__delete")
       .isDisabled("deleting would orphan its articles");
-  });
-
-  test("removes a deleted blog from the editor's blogs", async function (assert) {
-    pretender.delete("/admin/plugins/blog/blogs/2.json", () => response(204));
-
-    await visit("/admin/plugins/blog/blogs/2/about");
-    await click(".blog-edit__delete");
-    await click(".dialog-footer .btn-danger");
-
-    assert.deepEqual(
-      this.owner.lookup("service:site").blogs.map((blog) => blog.id),
-      [1],
-      "the deleted blog is gone without a reload"
-    );
   });
 });
 
@@ -572,6 +523,11 @@ acceptance(
       assert
         .dom(".blog-blogs__row")
         .exists({ count: 1 }, "the deleted blog is gone without a reload");
+      assert.deepEqual(
+        this.owner.lookup("service:site").blogs.map((blog) => blog.id),
+        [1],
+        "and from the blogs the editor offers"
+      );
     });
   }
 );

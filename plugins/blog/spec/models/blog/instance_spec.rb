@@ -223,19 +223,6 @@ RSpec.describe Blog::Instance do
   end
 
   describe ".ensure_default!" do
-    it "adds the default blog to a site without one" do
-      described_class.delete_all
-
-      described_class.ensure_default!
-
-      expect(described_class.sole).to have_attributes(
-        name: described_class::DEFAULT_NAME,
-        slug: "blog",
-        is_default: true,
-        published: true,
-      )
-    end
-
     it "leaves an existing default blog alone" do
       described_class.find_by(is_default: true).update!(name: "Kept")
 

@@ -23,7 +23,6 @@ blog:
     type: integer
     default: 10
     min: 1
-    client: true
     hidden: true
   blog_contributor_groups:
     type: group_list

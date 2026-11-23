@@ -2,7 +2,7 @@ import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 import { defaultBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 
-// The identity page became each blog's About tab; old links open the main blog's..
+// Keeps links to the old identity page working.
 export default class BlogIdentityRoute extends DiscourseRoute {
   @service router;
   @service site;

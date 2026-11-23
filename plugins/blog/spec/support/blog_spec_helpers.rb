@@ -19,8 +19,7 @@ module BlogSpecHelpers
     SiteSetting.blog_drafts_category = drafts.id if drafts
   end
 
-  # Saved without validation, as the old settings were, so specs can set values
-  # the admin form would refuse.
+  # Saved without validation, so specs can set values the admin form would refuse.
   def update_default_blog(**attributes)
     blog = Blog::Instance.find_by!(is_default: true)
     blog.assign_attributes(attributes)

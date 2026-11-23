@@ -98,8 +98,6 @@ export default class BlogEditPage extends Component {
                 "blog.admin.publish_blog"
               }}
             />
-          {{/unless}}
-          {{#unless this.blog.is_default}}
             <DButton
               class="btn-danger blog-edit__delete"
               @action={{this.destroy}}

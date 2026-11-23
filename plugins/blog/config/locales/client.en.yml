@@ -96,10 +96,8 @@ en:
         posts_per_page: Articles per page
         general_heading: General
         settings_tab: Settings
-        publishing_description: Where the blog lives, where its discussions go, and how article addresses are built.
         theme_tab: Theme
         theme_tab_description: "Choose the design this blog's readers see. Add or edit themes on the <a href='%{themes_url}'>Themes tab</a>."
-        appearance_description: Choose this blog's theme. Create and edit themes on the Themes tab.
         published_status: Published
         unpublished_status: Not published
         publish_blog: Publish blog
@@ -114,7 +112,6 @@ en:
         column_category: Category
         column_status: Status
         needs_attention: Needs attention
-        ready: Ready
         select_theme: Select theme
         update_to_revision: Update to revision %{revision}
         active_on: Active on %{blogs}
