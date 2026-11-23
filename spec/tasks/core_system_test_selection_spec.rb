@@ -12,6 +12,17 @@ RSpec.describe "Core system test selection in shadow" do
   let(:about) { "spec/system/about_page_spec.rb" }
   let(:unrelated) { "spec/system/some_other_spec.rb" }
   let(:controller) { "app/controllers/tags_controller.rb" }
+  let(:controller_source) { <<~RUBY }
+      class TagsController
+        before_action :require_login
+        def list
+          :before
+        end
+        def warm
+          :booted
+        end
+      end
+    RUBY
   let(:helper) { "lib/example_helper.rb" }
 
   around do |example|
@@ -20,7 +31,8 @@ RSpec.describe "Core system test selection in shadow" do
       git("init", "--quiet")
       git("config", "user.name", "Discourse CI")
       git("config", "user.email", "ci@ci.invalid")
-      [sidebar, about, unrelated, controller, helper].each { |path| write(path, "base\n") }
+      [sidebar, about, unrelated, helper].each { |path| write(path, "base\n") }
+      write(controller, controller_source)
       @map_sha = commit("collected")
       example.run
     end
@@ -44,12 +56,13 @@ RSpec.describe "Core system test selection in shadow" do
     git("rev-parse", "HEAD")
   end
 
-  def selection(dependencies:, base:, unmapped_browser_specs: [])
+  def selection(dependencies:, base:, unmapped_browser_specs: [], boot_lines: {})
     payload = {
-      version: 1,
+      version: 2,
       revision: @map_sha,
       spec_files: [sidebar, about, unrelated],
-      boot_sources: [],
+      boot_sources: boot_lines.keys,
+      boot_lines:,
       tests_by_source: dependencies,
       unmapped_browser_specs:,
     }
@@ -89,7 +102,7 @@ RSpec.describe "Core system test selection in shadow" do
   it "keeps the drift selection when a pull request reverts a main change" do
     write(controller, "main changed the controller\n")
     base = commit("main changed the controller")
-    write(controller, "base\n")
+    write(controller, controller_source)
     commit("pull request reverted the controller")
 
     report = selection(dependencies: { controller => [sidebar] }, base:)
@@ -125,5 +138,66 @@ RSpec.describe "Core system test selection in shadow" do
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about)
     expect(report.fetch("full_suite_fallback")).to be_nil
+  end
+
+  it "uses runtime consumers for method edits within an eager loaded file" do
+    write(controller, controller_source.sub(":before", ":during_main\n    :main"))
+    base = commit("main method change")
+    write(controller, controller_source.sub(":before", ":after"))
+    commit("pull request method change")
+
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+        },
+        base:,
+        boot_lines: {
+          controller => [1, 2, 3, 6, 7],
+        },
+      )
+
+    expect(report.fetch("selected_files")).to eq([sidebar])
+    expect(report.fetch("full_suite_fallback")).to be_nil
+  end
+
+  it "uses the full suite when a method that ran at boot changes" do
+    write(controller, controller_source.sub(":booted", ":different"))
+    commit("pull request changes boot behavior")
+
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+        },
+        base: @map_sha,
+        boot_lines: {
+          controller => [1, 2, 3, 6, 7],
+        },
+      )
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("shared_input")
+  end
+
+  it "uses the full suite when a pull request reverts a class declaration change on main" do
+    write(controller, controller_source.sub("require_login", "ensure_tags_enabled"))
+    base = commit("main changes callback registration")
+    write(controller, controller_source)
+    commit("pull request reverts callback registration")
+
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+        },
+        base:,
+        boot_lines: {
+          controller => [1, 2, 3, 6, 7],
+        },
+      )
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("shared_input")
   end
 end

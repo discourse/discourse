@@ -5,11 +5,19 @@ require_relative "../core_system_test_selection"
 
 class CoreSystemResults
   def initialize(directory)
+    @workers = Set.new
     @results =
       Dir[File.join(directory, "examples-*.jsonl")]
         .each_with_object({}) do |file, results|
-          File.foreach(file) do |line|
-            example = JSON.parse(line)
+          examples = File.readlines(file).map { |line| JSON.parse(line) }
+          expected = examples.shift&.fetch("expected_example_ids", nil)
+          completed = examples.pop == { "completed" => true }
+          if !expected || !completed ||
+               examples.map { |example| example.fetch("id") }.sort != expected.sort
+            raise "Incomplete Core system test journal: #{file}"
+          end
+          @workers.add(File.basename(file, ".jsonl").delete_prefix("examples-"))
+          examples.each do |example|
             id = example.fetch("id")
             previous = results[id]
             if !previous || previous.fetch("finished_ns") < example.fetch("finished_ns")
@@ -32,6 +40,7 @@ class CoreSystemResults
     attempts = passed.to_h { |example| [example.fetch("id"), example.fetch("pid")] }
     File.write(File.join(directory, "active-attempts.json"), JSON.generate(attempts))
     passed_by_worker = passed.group_by { |example| example.fetch("pid") }
+    File.write(File.join(directory, "recorded-workers.json"), JSON.generate(@workers.to_a))
     File.write(
       File.join(directory, "passed-specs-by-worker.json"),
       JSON.generate(
@@ -49,6 +58,7 @@ class CoreSystemResults
     selected = plan.fetch("selected_files").to_set
     fallback = plan.fetch("full_suite_fallback")
     observed_files = @results.map { |example| example.fetch("file") }.to_set
+    complete = observed_files == CoreSystemTestSelection.inventory.to_set && !observed_files.empty?
     measured_seconds = @results.sum { |example| example.fetch("seconds") }
     selected_seconds =
       @results.sum do |example|
@@ -58,10 +68,17 @@ class CoreSystemResults
       plan.merge(
         full_ci_outcome: outcome,
         observed_files: observed_files.size,
+        measurement_complete: complete,
         failed_files: failures,
-        omitted_failed_files: failures.reject { |file| selected.include?(file) },
-        would_block:
-          fallback || failures.empty? ? nil : failures.any? { |file| selected.include?(file) },
+        omitted_failed_files: complete ? failures.reject { |file| selected.include?(file) } : nil,
+        contains_failed_file:
+          (
+            if complete && !fallback && failures.any?
+              failures.any? { |file| selected.include?(file) }
+            else
+              nil
+            end
+          ),
         observed_example_seconds: measured_seconds.round(3),
         selected_example_seconds: selected_seconds.round(3),
       )
@@ -86,9 +103,11 @@ class CoreSystemResults
       file.puts "| Full suite fallback | #{report.fetch("full_suite_fallback")&.tr("_", " ") || "None"} |"
       file.puts "| Time to decide | #{report.fetch("selector_seconds")} s |"
       file.puts "| Full suite outcome | #{report.fetch(:full_ci_outcome)} |"
-      file.puts "| Failing files omitted | #{report.fetch(:omitted_failed_files).size} of #{report.fetch(:failed_files).size} |"
-      would_block =
-        case report.fetch(:would_block)
+      file.puts "| Complete test results | #{report.fetch(:measurement_complete) ? "Yes" : "No"} |"
+      omitted = report.fetch(:omitted_failed_files)
+      file.puts "| Failing files omitted | #{omitted ? "#{omitted.size} of #{report.fetch(:failed_files).size}" : "No measurement"} |"
+      contains_failed_file =
+        case report.fetch(:contains_failed_file)
         when true
           "Yes"
         when false
@@ -96,7 +115,7 @@ class CoreSystemResults
         else
           "No measurement"
         end
-      file.puts "| Would the subset block the PR? | #{would_block} |"
+      file.puts "| Would select a file that failed? | #{contains_failed_file} |"
     end
   end
 end

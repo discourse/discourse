@@ -156,6 +156,7 @@ jobs:
       - name: Plan Core system test selection in shadow
         if: env.OBSERVE_CORE_SYSTEM == 'true'
         continue-on-error: true
+        timeout-minutes: 2
         env:
           CORE_SYSTEM_PR_BASE: ${{ github.event.pull_request.base.sha }}
           CORE_SYSTEM_MAP_SHA: ${{ steps.core-map.outputs.revision }}
@@ -428,7 +429,7 @@ jobs:
         if: steps.core-system-build-map.outcome == 'success'
         uses: actions/upload-artifact@v7
         with:
-          name: core-system-test-map-v1
+          name: core-system-test-map-v2
           overwrite: true
           path: tmp/core-system-selection/mapping.json
           if-no-files-found: error

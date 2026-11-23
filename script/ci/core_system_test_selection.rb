@@ -3,11 +3,12 @@
 require "json"
 require "net/http"
 require "open3"
+require "prism"
 require "uri"
 
 module CoreSystemTestSelection
-  ARTIFACT = "core-system-test-map-v1"
-  MAP_VERSION = 1
+  ARTIFACT = "core-system-test-map-v2"
+  MAP_VERSION = 2
   SHA = /\A[0-9a-f]{40}\z/
   TEST_FILE = %r{\Aspec/system/.+_spec\.rb\z}
   DEPENDENCY_FILES = %w[Gemfile Gemfile.lock package.json pnpm-lock.yaml pnpm-workspace.yaml].freeze
@@ -102,6 +103,62 @@ module CoreSystemTestSelection
     end
   end
 
+  def self.method_bodies(source)
+    parsed = Prism.parse(source)
+    return unless parsed.success?
+
+    bodies = []
+    nodes = [parsed.value]
+    until nodes.empty?
+      node = nodes.pop
+      if node.is_a?(Prism::DefNode)
+        bodies << node.body&.location
+      else
+        nodes.concat(node.compact_child_nodes.reverse)
+      end
+    end
+    bodies
+  end
+
+  def self.outside_method_bodies(source:, bodies:, indexes:)
+    offset = 0
+    parts =
+      indexes.map do |index|
+        body = bodies.fetch(index)
+        part = source.byteslice(offset...body.start_offset)
+        offset = body.end_offset
+        part
+      end
+    parts << source.byteslice(offset..)
+  end
+
+  def self.runtime_body_change?(path:, revisions:, boot_lines:)
+    snapshots = revisions.uniq.map { |commit| git("show", "#{commit}:#{path}") }
+    bodies_by_revision = snapshots.map { |source| method_bodies(source) }
+    return false if bodies_by_revision.any?(&:nil?)
+
+    original_bodies = bodies_by_revision.first
+    return false unless bodies_by_revision.all? { |bodies| bodies.size == original_bodies.size }
+
+    executed_at_boot = boot_lines.to_set
+    indexes =
+      original_bodies.each_index.select do |index|
+        body = original_bodies[index]
+        body && (body.start_line..body.end_line).none? { |line| executed_at_boot.include?(line) } &&
+          bodies_by_revision.all? { |bodies| bodies[index] }
+      end
+    return false if indexes.empty?
+
+    snapshots
+      .zip(bodies_by_revision)
+      .map { |source, bodies| outside_method_bodies(source:, bodies:, indexes:) }
+      .uniq
+      .one?
+  rescue RuntimeError
+    false
+  end
+  private_class_method :method_bodies, :outside_method_bodies, :runtime_body_change?
+
   def self.select(files:, map:, base:, tested:)
     revision = map.fetch("revision")
     raise "Map schema differs" unless map.fetch("version") == MAP_VERSION
@@ -114,6 +171,7 @@ module CoreSystemTestSelection
     map_files = map.fetch("spec_files").to_set
     dependencies = map.fetch("tests_by_source")
     boot = map.fetch("boot_sources").to_set
+    boot_lines = map.fetch("boot_lines")
     selected = Set.new
     unmapped_browser_specs = map.fetch("unmapped_browser_specs")
 
@@ -129,7 +187,18 @@ module CoreSystemTestSelection
     inputs.each do |path|
       if TEST_FILE.match?(path)
         selected.add(path)
-      elsif boot.include?(path) || DEPENDENCY_FILES.include?(File.basename(path))
+      elsif DEPENDENCY_FILES.include?(File.basename(path)) ||
+            (
+              boot.include?(path) &&
+                !(
+                  dependencies.key?(path) && boot_lines.key?(path) &&
+                    runtime_body_change?(
+                      path:,
+                      revisions: [revision, base, tested],
+                      boot_lines: boot_lines.fetch(path),
+                    )
+                )
+            )
         return decision(files:, reason: "shared_input", drift:, pr:, revision:)
       elsif dependencies.key?(path)
         selected.merge(dependencies.fetch(path))

@@ -198,6 +198,8 @@ async function main() {
       const javascript =
         row.javascript ||
         (row.javascript_entries || []).flatMap((entry) => {
+          const ranges = entry.functions.flatMap((fn) => fn.ranges);
+          if (!ranges.some((range) => range.count > 0)) return [];
           const directMetadata = scriptMetadata.get(
             [row.id, row.page, entry.scriptId].join("\0")
           );
@@ -233,16 +235,20 @@ async function main() {
               throw new Error("Unverified encoded script: " + filename);
           }
           if (!map) {
-            if (!metadata) unresolved.add("script-metadata:" + entry.scriptId);
+            const logical = filename.replace(/-[a-f0-9]{8}\.js$/, ".js");
+            const standalone = "frontend/discourse/scripts/js/" + logical;
+            if (
+              trackedSet.has(standalone) &&
+              !fs.existsSync(scriptPath(filename))
+            ) {
+              if (!index.has(standalone)) index.set(standalone, new Set());
+              index.get(standalone).add(test);
+            } else {
+              unmappedBrowserSpecs.add(test);
+            }
             return [];
           }
-          return [
-            [
-              filename,
-              path.basename(map.split("?")[0]),
-              entry.functions.flatMap((fn) => fn.ranges),
-            ],
-          ];
+          return [[filename, path.basename(map.split("?")[0]), ranges]];
         });
       const css =
         row.css ||

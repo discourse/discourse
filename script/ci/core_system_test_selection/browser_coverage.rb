@@ -262,7 +262,7 @@ class SystemPageCoverage
   end
 
   def application_script?(url)
-    url.include?("/assets/js/") || url.match?(%r{/assets/chunk\.[^/?#]+\.js(?:[?#]|\z)})
+    url.match?(%r{/assets/(?:js|br)/}) || url.match?(%r{/assets/chunk\.[^/?#]+\.js(?:[?#]|\z)})
   end
 
   def save_css(rules, phase:)
