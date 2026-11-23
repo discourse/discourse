@@ -19,6 +19,10 @@ blog:
     default: true
     client: true
     hidden: true
+  blog_custom_themes_enabled:
+    default: true
+    client: true
+    hidden: true
   blog_max_instances:
     type: integer
     default: 10

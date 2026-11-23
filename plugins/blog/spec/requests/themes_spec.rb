@@ -442,6 +442,91 @@ RSpec.describe "Blog themes", type: :request do
     end
   end
 
+  describe "when the site may not use custom themes" do
+    let!(:in_use) do
+      theme = create_blog_theme(attributes.stringify_keys, user: admin)
+      activate_blog_theme(theme, user: admin)
+      theme
+    end
+    let!(:spare) do
+      create_blog_theme(attributes.merge(name: "Spare draft").stringify_keys, user: admin)
+    end
+    let(:refusal) { [I18n.t("blog.themes.custom_unavailable")] }
+
+    before do
+      SiteSetting.blog_custom_themes_enabled = false
+      get "https://test.localhost/session/#{admin.encoded_username}/become"
+    end
+
+    it "refuses every way of making or changing a theme" do
+      requests = {
+        "/themes.json" => {
+          theme: attributes,
+        },
+        "/themes/import.json" => {
+          repository: "https://github.com/example/theme",
+        },
+        "/themes/#{spare["id"]}/pull.json" => {
+          revision: spare["revision"],
+        },
+        "/themes/#{spare["id"]}/activate.json" => {
+          revision: spare["revision"],
+        },
+        "/theme-authoring/preview.json" => {
+          theme: attributes,
+          page: "index",
+        },
+      }
+      requests.each do |path, params|
+        post "https://test.localhost/admin/plugins/blog#{path}", params: params
+        expect(response.status).to eq(403), path
+        expect(response.parsed_body["errors"]).to eq(refusal), path
+      end
+
+      put "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}.json",
+          params: {
+            theme: attributes.merge(css: ".blog { color: red; }"),
+            revision: spare["revision"],
+          }
+      expect(response.status).to eq(403)
+
+      get "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}/export"
+      Tempfile.create(%w[blog-theme .zip]) do |file|
+        file.binmode
+        file.write(response.body)
+        file.flush
+        post "https://test.localhost/admin/plugins/blog/themes/import.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(file.path, "application/zip"),
+             }
+      end
+      expect(response.status).to eq(403)
+      expect(Blog::BlogTheme.all.map { _1["id"] }).to contain_exactly(in_use["id"], spare["id"])
+    end
+
+    it "keeps the theme in use, the built-in designs, and exporting and deleting" do
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(in_use["id"])
+
+      get "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}/export"
+      expect(response.status).to eq(200)
+
+      delete "https://test.localhost/admin/plugins/blog/themes/#{spare["id"]}.json",
+             params: {
+               revision: spare["revision"],
+             }
+      expect(response.status).to eq(204)
+
+      post "https://test.localhost/admin/plugins/blog/themes/#{Blog::ThemePresets::DEFAULT_ID}/activate.json",
+           params: {
+             revision: 1,
+           }
+      expect(response.status).to eq(200)
+      expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+        Blog::ThemePresets::DEFAULT_ID,
+      )
+    end
+  end
+
   describe "ZIP endpoints" do
     it "exports the saved draft and imports the download as a new inactive draft" do
       get "https://test.localhost/session/#{admin.encoded_username}/become"
