@@ -1,37 +1,18 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { service } from "@ember/service";
+import SvgEmptyTopicList from "discourse/components/svg/empty-topic-list";
+import categoryColorVariable from "discourse/helpers/category-color-variable";
 import { getEditCategoryUrl } from "discourse/lib/url";
 import DEmptyState from "discourse/ui-kit/d-empty-state";
-import dEmoji from "discourse/ui-kit/helpers/d-emoji";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-
-const DISCUSSION_TYPE = { id: "discussion", svg_icon: "comment" };
-
-const CategoryTypeTile = <template>
-  <span
-    class="empty-category__type-tile {{concat '--category-type-' @type.id}}"
-  >
-    {{#if @type.svg_icon}}
-      {{dIcon @type.svg_icon}}
-    {{else}}
-      {{dEmoji @type.icon alt="" skipTitle=true}}
-    {{/if}}
-  </span>
-</template>;
 
 export default class EmptyCategory extends Component {
   @service currentUser;
 
-  // Prefers a specialised type (e.g. events) over the implicit discussion type.
-  get categoryType() {
-    const types = Object.values(this.args.category.category_types ?? {});
-    return (
-      types.find((type) => type.id !== DISCUSSION_TYPE.id) ??
-      types[0] ??
-      DISCUSSION_TYPE
-    );
+  get body() {
+    return i18n("category.empty_state.body", {
+      categoryName: this.args.category.displayName,
+    });
   }
 
   get createTopicLabel() {
@@ -48,12 +29,13 @@ export default class EmptyCategory extends Component {
 
   <template>
     <DEmptyState
-      @body={{i18n "category.empty_state.body"}}
+      style={{categoryColorVariable @category.color}}
+      @body={{this.body}}
       @ctaAction={{@createTopic}}
       @ctaIcon="plus"
       @ctaLabel={{this.createTopicLabel}}
       @identifier="empty-category"
-      @svgContent={{component CategoryTypeTile type=this.categoryType}}
+      @svgContent={{SvgEmptyTopicList}}
       @title={{i18n "category.empty_state.title"}}
     >
       <:actions>

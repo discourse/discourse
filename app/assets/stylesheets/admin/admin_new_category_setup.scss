@@ -15,6 +15,8 @@
   }
 
   &__card {
+    // Category types can override the accent to tint their icon tile.
+    --category-type-accent: var(--tertiary);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -65,12 +67,10 @@
       width: 2.75rem;
       aspect-ratio: 1;
       border-radius: var(--d-border-radius);
-
-      // Category types set `--category-type-accent` on `.--category-type-<id>`.
-      color: var(--category-type-accent, var(--tertiary));
+      color: var(--category-type-accent);
       background: color-mix(
         in srgb,
-        var(--category-type-accent, var(--tertiary)) 12%,
+        var(--category-type-accent) 12%,
         var(--secondary)
       );
       font-size: var(--font-up-2);
