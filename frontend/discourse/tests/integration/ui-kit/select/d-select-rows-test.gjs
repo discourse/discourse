@@ -15,9 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import SelectLiveRegions, {
-  IDLE_ANNOUNCEMENT,
-} from "discourse/components/a11y/live-regions";
+import SelectLiveRegions from "discourse/components/a11y/live-regions";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi as withSelectPluginApi } from "discourse/lib/plugin-api";
 import { disableClearA11yAnnouncementsInTests as retainA11yAnnouncements } from "discourse/services/a11y";
@@ -3704,8 +3702,7 @@ module(
         .doesNotExist("no chip survives the refused paste");
       assert
         .dom("#a11y-announcements-polite")
-        .hasText(
-          IDLE_ANNOUNCEMENT,
+        .hasNoText(
           "a fully refused paste announces neither an addition nor a held or capped input"
         );
     });

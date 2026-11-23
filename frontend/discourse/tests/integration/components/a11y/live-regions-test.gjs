@@ -58,21 +58,22 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       .dom("#a11y-announcements-assertive")
       .exists("assertive announcements element exists");
 
-    assert.dom("#a11y-announcements-polite").hasAttribute("role", "status");
-    assert
-      .dom("#a11y-announcements-polite")
-      .hasAttribute("aria-live", "polite");
-    assert
-      .dom("#a11y-announcements-polite")
-      .hasAttribute("aria-atomic", "true");
-
-    assert.dom("#a11y-announcements-assertive").hasAttribute("role", "alert");
-    assert
-      .dom("#a11y-announcements-assertive")
-      .hasAttribute("aria-live", "assertive");
-    assert
-      .dom("#a11y-announcements-assertive")
-      .hasAttribute("aria-atomic", "true");
+    for (const [selector, live, role] of [
+      ["#a11y-announcements-polite", "polite", "status"],
+      ["#a11y-announcements-assertive", "assertive", "alert"],
+    ]) {
+      assert
+        .dom(selector)
+        .doesNotHaveAttribute("aria-live", "the wrapper is not a live region");
+      assert.dom(`${selector} > [aria-live]`).exists({ count: 2 });
+      for (const slot of find(selector).querySelectorAll(":scope > *")) {
+        assert
+          .dom(slot)
+          .hasAttribute("role", role)
+          .hasAttribute("aria-live", live)
+          .hasAttribute("aria-atomic", "true");
+      }
+    }
   });
 
   test("displays assertive messages", async function (assert) {
@@ -311,54 +312,64 @@ module("Integration | Component | A11y | LiveRegions", function (hooks) {
       );
   });
 
-  // The reason the regions idle on a non-breaking space instead of on nothing. Blanking and
-  // rewriting is enough for the DOM to record a change, but not for VoiceOver to speak one: it
-  // compares what the region ends up saying with what it said before, and an empty middle state
-  // leaves those identical. Idling on a character makes the middle state a real text — so a
-  // reader who keeps typing a query that keeps matching nothing is told each time.
+  // VoiceOver compares what a region ends up saying with what it said before, so an identical
+  // repeat written back into the same element is silent even when it is blanked in between. Each
+  // region therefore has two slots that take turns: a repeat lands in the slot that was empty,
+  // which is the same change as a first announcement. An idle slot holds nothing at all. An idle
+  // character would be read aloud ("space") whenever a message clears.
   //
-  // The measure is "not whitespace-only", never "not empty". A region's text always carries the
-  // template's own newlines and indentation, so an emptiness check passes whatever the component
-  // renders — the first draft of this test did exactly that, and stayed green against a build
-  // with no idle character at all. Ordinary whitespace collapses to nothing for a reader; a
-  // non-breaking space is what survives, which is the whole reason it is the character chosen.
+  // "Nothing" is measured with the template's own newlines and indentation removed, but not a
+  // non-breaking space, since that is the character a reader can hear.
+  const spoken = (text) => text.replace(/[\t\n\r ]+/g, "");
+
   REGIONS.forEach(({ type, selector }) => {
-    test(`the ${type} region never falls silent, so an identical repeat is a change`, async function (assert) {
+    test(`an idle ${type} region holds nothing a reader could hear`, async function (assert) {
       disableClearA11yAnnouncementsInTests();
       await render(<template><A11yLiveRegions /></template>);
 
-      const spoken = (text) => text.replace(/[\t\n\r ]+/g, "");
-      const element = find(selector);
-      assert.notStrictEqual(
-        spoken(element.textContent),
-        "",
-        "a region with nothing to say still holds something a reader can notice leaving"
-      );
+      assert.strictEqual(spoken(find(selector).textContent), "", "at rest");
 
       const a11y = getOwner(this).lookup("service:a11y");
-      const seen = [];
-      const observer = new MutationObserver(() =>
-        seen.push(element.textContent)
+      a11y.announce("no results", type);
+      await settled();
+      a11y.announce("", type);
+      await settled();
+
+      assert.strictEqual(
+        spoken(find(selector).textContent),
+        "",
+        "and once a message clears"
       );
-      observer.observe(element, {
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-      observers.push(observer);
+    });
+
+    test(`an identical ${type} repeat lands in a slot that was empty`, async function (assert) {
+      disableClearA11yAnnouncementsInTests();
+      await render(<template><A11yLiveRegions /></template>);
+
+      const slots = [...find(selector).querySelectorAll("[aria-live]")];
+      assert.strictEqual(slots.length, 2, "the region has two slots");
+
+      const a11y = getOwner(this).lookup("service:a11y");
+      a11y.announce("no results", type);
+      await settled();
+
+      const first = slots.findIndex((slot) =>
+        slot.textContent.includes("no results")
+      );
+      assert.notStrictEqual(first, -1, "the first message is in a slot");
+      const other = slots[1 - first];
+      assert.strictEqual(spoken(other.textContent), "", "the other is empty");
 
       a11y.announce("no results", type);
       await settled();
-      a11y.announce("no results", type);
-      await settled();
 
-      assert.true(
-        seen.every((text) => spoken(text) !== ""),
-        "and never falls silent on its way between two identical messages"
-      );
-      assert.true(
-        seen.filter((text) => text.includes("no results")).length > 1,
-        "so the second one is a text change rather than a rewrite of what was already there"
+      assert
+        .dom(other)
+        .hasText("no results", "the repeat is written into the empty slot");
+      assert.strictEqual(
+        spoken(slots[first].textContent),
+        "",
+        "and the slot that held it empties"
       );
     });
   });
