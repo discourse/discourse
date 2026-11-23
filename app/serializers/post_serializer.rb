@@ -347,8 +347,17 @@ class PostSerializer < BasicPostSerializer
     @post_action_type_view =
       @topic_view ? @topic_view.post_action_type_view : PostActionTypeView.new
 
-    public_flag_types = @post_action_type_view.public_types
+    public_flag_type_ids = @post_action_type_view.public_types.values
     ignored_like_count = ignored_like_count_for_viewer
+    post_actions = actions
+    has_actions = post_actions.present?
+    is_staff = scope.is_staff?
+    can_act_opts = {
+      taken_actions: post_actions,
+      notify_flag_types: @post_action_type_view.notify_flag_types,
+      additional_message_types: @post_action_type_view.additional_message_types,
+      post_action_type_view: @post_action_type_view,
+    }
 
     @post_action_type_view.types.each do |sym, id|
       count_col = :"#{sym}_count"
@@ -357,17 +366,7 @@ class PostSerializer < BasicPostSerializer
       count = [count.to_i - ignored_like_count, 0].max if count && sym == :like
       summary = { id: id, count: count }
 
-      if scope.post_can_act?(
-           object,
-           sym,
-           opts: {
-             taken_actions: actions,
-             notify_flag_types: @post_action_type_view.notify_flag_types,
-             additional_message_types: @post_action_type_view.additional_message_types,
-             post_action_type_view: @post_action_type_view,
-           },
-           can_see_post: can_see_post,
-         )
+      if scope.post_can_act?(object, sym, opts: can_act_opts, can_see_post: can_see_post)
         summary[:can_act] = true
       end
 
@@ -379,21 +378,19 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
-      if actions.present? && SiteSetting.allow_likes_in_anonymous_mode && sym == :like &&
-           !scope.can_delete_post_action?(actions[id])
+      if has_actions && SiteSetting.allow_likes_in_anonymous_mode && sym == :like &&
+           !scope.can_delete_post_action?(post_actions[id])
         summary.delete(:can_act)
       end
 
-      if actions.present? && actions.has_key?(id)
+      if has_actions && post_actions.has_key?(id)
         summary[:acted] = true
 
-        summary[:can_undo] = true if scope.can_delete?(actions[id])
+        summary[:can_undo] = true if scope.can_delete?(post_actions[id])
       end
 
       # only show public data
-      unless scope.is_staff? || public_flag_types.values.include?(id)
-        summary[:count] = summary[:acted] ? 1 : 0
-      end
+      summary[:count] = summary[:acted] ? 1 : 0 unless is_staff || public_flag_type_ids.include?(id)
 
       summary.delete(:count) if summary[:count].to_i.zero?
 
