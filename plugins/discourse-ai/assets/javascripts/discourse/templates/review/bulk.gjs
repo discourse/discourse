@@ -3,5 +3,8 @@ import AiReviewBulk from "../../components/ai-review-bulk.gjs";
 
 export default <template>
   <ReviewableNav />
-  <AiReviewBulk @suggestions={{@model.suggestions}} @total={{@model.total}} />
+  <AiReviewBulk
+    @nextOffset={{@model.next_offset}}
+    @suggestions={{@model.suggestions}}
+  />
 </template>

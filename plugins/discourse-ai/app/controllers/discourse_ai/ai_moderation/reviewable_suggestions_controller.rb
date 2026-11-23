@@ -12,9 +12,12 @@ module DiscourseAi
       before_action :ensure_can_see_suggestions
 
       def index
+        offset = params[:offset].to_i.clamp(0..)
         relation =
           Reviewable.list_for(current_user, status: :pending).joins(:ai_reviewable_suggestion)
-        reviewables = relation.limit(LIMIT).to_a
+        reviewables = relation.offset(offset).limit(LIMIT + 1).to_a
+        next_offset = offset + LIMIT if reviewables.size > LIMIT
+        reviewables = reviewables.first(LIMIT)
         claimed_user_ids = claimed_user_ids_for(reviewables)
 
         suggestions =
@@ -29,7 +32,7 @@ module DiscourseAi
             serializer.as_json if serializer.suggested_action
           end
 
-        render json: { suggestions:, total: relation.count }
+        render json: { suggestions:, next_offset: }
       end
 
       private

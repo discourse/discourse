@@ -84,6 +84,10 @@
     }
   }
 
+  &__load-more {
+    margin-top: var(--space-3);
+  }
+
   &__empty .d-icon {
     margin-right: var(--space-1);
   }

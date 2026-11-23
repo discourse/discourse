@@ -54,7 +54,7 @@ RSpec.describe DiscourseAi::AiModeration::ReviewableSuggestionsController do
       get "/review/bulk.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body["total"]).to eq(1)
+      expect(response.parsed_body["next_offset"]).to be_nil
       expect(response.parsed_body["suggestions"]).to contain_exactly(
         a_hash_including(
           "id" => reviewable.id,
@@ -83,6 +83,25 @@ RSpec.describe DiscourseAi::AiModeration::ReviewableSuggestionsController do
       get "/review/bulk.json"
 
       expect(response.parsed_body["suggestions"]).to be_empty
+    end
+
+    it "pages past the first batch with an offset" do
+      later = Fabricate(:reviewable_flagged_post, score: reviewable.score - 1)
+      suggest("post-agree_and_hide")
+      suggest("post-agree_and_hide", target: later)
+      sign_in(moderator)
+
+      stub_const(described_class, :LIMIT, 1) do
+        get "/review/bulk.json"
+
+        expect(response.parsed_body["suggestions"].map { |row| row["id"] }).to eq([reviewable.id])
+        expect(response.parsed_body["next_offset"]).to eq(1)
+
+        get "/review/bulk.json", params: { offset: 1 }
+
+        expect(response.parsed_body["suggestions"].map { |row| row["id"] }).to eq([later.id])
+        expect(response.parsed_body["next_offset"]).to be_nil
+      end
     end
 
     it "blocks actions that need input from the moderator" do

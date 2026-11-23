@@ -319,9 +319,7 @@ en:
       review_bulk:
         title: "AI Suggestions"
         description: "These items have an action suggested by AI. Deselect any you disagree with, then apply the rest together."
-        more_pending:
-          one: "%{count} more suggestion will appear after these are handled."
-          other: "%{count} more suggestions will appear after these are handled."
+        load_more: "Load more suggestions"
         apply:
           one: "Apply %{count} suggestion"
           other: "Apply %{count} suggestions"

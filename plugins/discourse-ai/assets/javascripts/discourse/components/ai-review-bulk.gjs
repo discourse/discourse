@@ -9,7 +9,7 @@ import { underscore } from "@ember/string";
 import { actionModalClassMap } from "discourse/components/reviewable/item";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
+import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import DButton from "discourse/ui-kit/d-button";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -82,10 +82,22 @@ export default class AiReviewBulk extends Component {
   @service router;
 
   @tracked applying = false;
+  @tracked loadingMore = false;
+  @tracked more;
 
   @cached
-  get rows() {
+  get initialRows() {
     return this.args.suggestions.map((suggestion) => new Row(suggestion));
+  }
+
+  get rows() {
+    return this.more
+      ? [...this.initialRows, ...this.more.rows]
+      : this.initialRows;
+  }
+
+  get nextOffset() {
+    return this.more ? this.more.nextOffset : this.args.nextOffset;
   }
 
   get selectableRows() {
@@ -107,8 +119,8 @@ export default class AiReviewBulk extends Component {
     return this.applying || this.selectedRows.length === 0;
   }
 
-  get hiddenCount() {
-    return this.args.total - this.args.suggestions.length;
+  get busy() {
+    return this.applying || this.loadingMore;
   }
 
   @action
@@ -147,7 +159,36 @@ export default class AiReviewBulk extends Component {
 
   @action
   refresh() {
+    this.more = null;
     this.router.refresh("review.bulk");
+  }
+
+  @action
+  async loadMore() {
+    this.loadingMore = true;
+
+    try {
+      // Applied and handled rows have left the pending list the offset counts.
+      const resolved = this.rows.filter((row) =>
+        [APPLIED, HANDLED].includes(row.status)
+      ).length;
+      const result = await ajax("/review/bulk.json", {
+        data: { offset: Math.max(this.nextOffset - resolved, 0) },
+      });
+      const known = new Set(this.rows.map((row) => row.suggestion.id));
+      const rows = result.suggestions
+        .filter((suggestion) => !known.has(suggestion.id))
+        .map((suggestion) => new Row(suggestion));
+
+      this.more = {
+        rows: [...(this.more?.rows || []), ...rows],
+        nextOffset: result.next_offset && result.next_offset + resolved,
+      };
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loadingMore = false;
+    }
   }
 
   async #apply(rows) {
@@ -209,18 +250,12 @@ export default class AiReviewBulk extends Component {
         <div class="ai-review-bulk__header">
           <p class="ai-review-bulk__description">
             {{i18n "discourse_ai.review_bulk.description"}}
-            {{#if this.hiddenCount}}
-              {{i18n
-                "discourse_ai.review_bulk.more_pending"
-                count=this.hiddenCount
-              }}
-            {{/if}}
           </p>
           <div class="ai-review-bulk__controls">
             <DButton
               class="btn-default ai-review-bulk__refresh"
               @action={{this.refresh}}
-              @disabled={{this.applying}}
+              @disabled={{this.busy}}
               @icon="arrows-rotate"
               @label="discourse_ai.review_bulk.refresh"
             />
@@ -356,6 +391,16 @@ export default class AiReviewBulk extends Component {
             {{/each}}
           </tbody>
         </table>
+
+        {{#if this.nextOffset}}
+          <DButton
+            class="btn-default ai-review-bulk__load-more"
+            @action={{this.loadMore}}
+            @disabled={{this.busy}}
+            @isLoading={{this.loadingMore}}
+            @label="discourse_ai.review_bulk.load_more"
+          />
+        {{/if}}
       {{else}}
         <div class="no-review ai-review-bulk__empty">
           {{dIcon "discourse-sparkles"}}
