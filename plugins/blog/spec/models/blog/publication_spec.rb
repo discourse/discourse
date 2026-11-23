@@ -394,6 +394,18 @@ RSpec.describe Blog::Publication do
     end
   end
 
+  describe "cover uploads" do
+    include_context "with a public blog"
+
+    fab!(:cover, :upload)
+
+    it "retains the cover of an article published on creation" do
+      publication = publish_blog_article(cover_upload_id: cover.id)
+
+      expect(UploadReference.where(target: publication).pluck(:upload_id)).to eq([cover.id])
+    end
+  end
+
   describe "search metadata" do
     it "accepts an absolute http or https canonical URL, without surrounding spaces" do
       publication =

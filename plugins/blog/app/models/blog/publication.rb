@@ -517,6 +517,8 @@ module ::Blog
           data: Revision.capture(self, topic),
         )
       update!(published_revision: revision, last_published_at: updated_at)
+      # That save replaced this one's changes, so the after_save no longer sees the cover.
+      retain_cover_uploads
     end
 
     def available_path
