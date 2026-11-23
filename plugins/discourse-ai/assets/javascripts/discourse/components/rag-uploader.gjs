@@ -3,13 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { trackedArray } from "@ember/reactive/collections";
-import { schedule } from "@ember/runloop";
-import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import helperFn from "discourse/helpers/helper-fn";
 import { ajax } from "discourse/lib/ajax";
-import { removeValueFromArray } from "discourse/lib/array-tools";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -17,8 +14,6 @@ import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress.gjs";
 
 export default class RagUploader extends Component {
-  @service appEvents;
-
   @tracked term = null;
   @tracked ragIndexingStatuses = null;
 
@@ -33,7 +28,7 @@ export default class RagUploader extends Component {
       const newUpload = uploadedFile.upload;
       newUpload.status = "uploaded";
       newUpload.statusText = i18n("discourse_ai.rag.uploads.uploaded");
-      this.#pendingUploads.push(newUpload);
+      this.args.updateUploads([...this.ragUploads, newUpload]);
     },
   });
 
@@ -41,24 +36,9 @@ export default class RagUploader extends Component {
     this.uppyUpload.setup(element);
   });
 
-  cancelUploadsOnTargetChange = helperFn(() => {
-    const targetKey = `${this.#targetName}:${this.args.target?.id}`;
-
-    if (this.#targetKey !== undefined && this.#targetKey !== targetKey) {
-      // cancelling writes tracked upload state the template already read
-      schedule("afterRender", () => {
-        if (this.uppyUpload.inProgressUploads.length > 0) {
-          this.uppyUpload.cancelAllUploads();
-        }
-      });
-    }
-
-    this.#targetKey = targetKey;
-  });
-
   loadIndexingStatuses = helperFn(() => {
     const targetId = this.args.target?.id;
-    const uploadIds = this.#savedUploads.map((upload) => upload.id).join(",");
+    const uploadIds = this.ragUploads.map((upload) => upload.id).join(",");
     const statusesKey = `${this.#targetName}:${targetId}:${uploadIds}`;
 
     // @target is replaced on every form change
@@ -73,35 +53,16 @@ export default class RagUploader extends Component {
 
     ajax(
       `/admin/plugins/discourse-ai/rag-document-fragments/files/status.json?target_type=${this.#targetName}&target_id=${targetId}`
-    ).then((statuses) => {
-      if (this.#statusesKey === statusesKey && !this.isDestroying) {
-        this.ragIndexingStatuses = statuses;
-      }
-    });
+    )
+      .then((statuses) => {
+        if (this.#statusesKey === statusesKey && !this.isDestroying) {
+          this.ragIndexingStatuses = statuses;
+        }
+      })
+      .catch(popupAjaxError);
   });
 
-  // finished uploads not yet handed to @updateUploads
-  #pendingUploads = trackedArray();
   #statusesKey;
-  #targetKey;
-
-  constructor() {
-    super(...arguments);
-    this.appEvents.on(
-      this.#allUploadsCompleteEvent,
-      this,
-      "_updateTargetWithUploads"
-    );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off(
-      this.#allUploadsCompleteEvent,
-      this,
-      "_updateTargetWithUploads"
-    );
-  }
 
   get acceptedFileTypes() {
     if (this.args.allowImages) {
@@ -124,14 +85,6 @@ export default class RagUploader extends Component {
   }
 
   get ragUploads() {
-    return [...this.#savedUploads, ...this.#pendingUploads];
-  }
-
-  get #allUploadsCompleteEvent() {
-    return `upload-mixin:${this.uppyUpload.config.id}:all-uploads-complete`;
-  }
-
-  get #savedUploads() {
     return this.args.target?.rag_uploads ?? [];
   }
 
@@ -151,20 +104,8 @@ export default class RagUploader extends Component {
     });
   }
 
-  @action
-  removeUpload(upload) {
-    removeValueFromArray(this.#pendingUploads, upload);
-    this.args.onRemove(upload);
-  }
-
-  _updateTargetWithUploads() {
-    this.args.updateUploads(this.ragUploads);
-    this.#pendingUploads.length = 0;
-  }
-
   <template>
     <div class="rag-uploader" ...attributes>
-      {{this.cancelUploadsOnTargetChange}}
       {{this.loadIndexingStatuses}}
 
       {{#if @allowImages}}
@@ -191,7 +132,7 @@ export default class RagUploader extends Component {
 
       <table class="rag-uploader__uploads-list">
         <tbody>
-          {{#each this.filteredUploads as |upload|}}
+          {{#each this.filteredUploads key="id" as |upload|}}
             <tr>
               <td>
                 <span class="rag-uploader__rag-file-icon">{{dIcon
@@ -206,7 +147,7 @@ export default class RagUploader extends Component {
               <td class="rag-uploader__remove-file">
                 <DButton
                   class="btn-flat"
-                  @action={{fn this.removeUpload upload}}
+                  @action={{fn @onRemove upload}}
                   @icon="xmark"
                   @title="discourse_ai.rag.uploads.remove"
                 />
@@ -218,11 +159,11 @@ export default class RagUploader extends Component {
               <td><span class="rag-uploader__rag-file-icon">{{dIcon
                     "file"
                   }}</span>
-                {{upload.original_filename}}</td>
+                {{upload.fileName}}</td>
               <td class="rag-uploader__upload-status">
                 <div class="spinner small"></div>
                 <span>{{i18n "discourse_ai.rag.uploads.uploading"}}
-                  {{upload.uploadProgress}}%</span>
+                  {{upload.progress}}%</span>
               </td>
               <td class="rag-uploader__remove-file">
                 <DButton

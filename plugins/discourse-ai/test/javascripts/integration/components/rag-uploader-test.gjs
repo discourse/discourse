@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import {
   click,
+  find,
   render,
   rerender,
   settled,
@@ -10,16 +11,18 @@ import {
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import {
+  createFile,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
 import RagUploader from "discourse/plugins/discourse-ai/discourse/components/rag-uploader";
 
 const STATUS_PATH =
   "/admin/plugins/discourse-ai/rag-document-fragments/files/status.json";
 const UPLOAD_PATH =
   "/admin/plugins/discourse-ai/rag-document-fragments/files/upload.json";
-const ALL_UPLOADS_COMPLETE =
-  "upload-mixin:discourse-ai-rag-uploader:all-uploads-complete";
 const ADD_FILES = "upload-mixin:discourse-ai-rag-uploader:add-files";
+const ROWS = ".rag-uploader__uploads-list tr";
 
 const first = { id: 1, original_filename: "first.txt" };
 const second = { id: 2, original_filename: "second.md" };
@@ -168,7 +171,61 @@ module("Integration | Component | RagUploader", function (hooks) {
       .exists({ count: 2 }, "renders each upload once");
   });
 
-  test("cancels in-progress uploads only when the target changes", async function (assert) {
+  test("hands over a finished upload when another one is cancelled", async function (assert) {
+    let release;
+    const held = new Promise((resolve) => (release = resolve));
+    pretender.post(UPLOAD_PATH, async (request) => {
+      if (request.requestBody.get("file").name === "slow.txt") {
+        await held;
+      }
+      return response({ upload: { id: 3, original_filename: "fast.txt" } });
+    });
+
+    const target = tracked({ rag_uploads: [first] });
+    const updateUploads = (uploads) => {
+      target.value = { rag_uploads: uploads.slice() };
+    };
+
+    await render(
+      <template>
+        <RagUploader
+          @target={{target.value}}
+          @updateUploads={{updateUploads}}
+        />
+      </template>
+    );
+
+    getOwner(this)
+      .lookup("service:app-events")
+      .trigger(ADD_FILES, [
+        createFile("fast.txt", "text/plain"),
+        createFile("slow.txt", "text/plain"),
+      ]);
+
+    try {
+      await waitUntil(() => target.value.rag_uploads.length === 2);
+
+      assert
+        .dom(".rag-uploader__upload-status:has(.spinner)")
+        .exists({ count: 1 }, "keeps uploading the slow file");
+      assert
+        .dom(`${ROWS}:has(.spinner)`)
+        .hasText(/slow\.txt/, "names the file being uploaded");
+
+      await click(`${ROWS}:has(.spinner) .btn-flat`);
+    } finally {
+      release();
+    }
+
+    assert.deepEqual(
+      target.value.rag_uploads.map((upload) => upload.id),
+      [1, 3],
+      "keeps the finished upload on the target"
+    );
+    assert.dom(ROWS).exists({ count: 2 }, "renders the finished uploads");
+  });
+
+  test("keeps uploading when @target is replaced", async function (assert) {
     let release;
     const held = new Promise((resolve) => (release = resolve));
     pretender.post(UPLOAD_PATH, async () => {
@@ -187,49 +244,45 @@ module("Integration | Component | RagUploader", function (hooks) {
     getOwner(this)
       .lookup("service:app-events")
       .trigger(ADD_FILES, [createFile("third.txt", "text/plain")]);
-    await waitUntil(() => document.querySelector(".rag-uploader .spinner"));
 
     try {
+      await waitUntil(() => document.querySelector(".rag-uploader .spinner"));
+
       target.value = { ...target.value, name: "renamed" };
       await rerender();
 
       assert
         .dom(".rag-uploader .spinner")
-        .exists("keeps uploading when the same target is replaced");
-
-      target.value = { id: 8, rag_uploads: [] };
-      await rerender();
-
-      assert
-        .dom(".rag-uploader .spinner")
-        .doesNotExist("cancels uploads when the target changes");
+        .exists("keeps uploading when the target is replaced");
     } finally {
       release();
     }
   });
 
-  test("stops listening for finished uploads on teardown", async function (assert) {
-    const appEvents = getOwner(this).lookup("service:app-events");
-    const show = tracked(true);
-    const target = { rag_uploads: [] };
-    let calls = 0;
-    const updateUploads = () => calls++;
+  test("keeps tracking indexing when the uploads are replaced with copies", async function (assert) {
+    const target = tracked({ id: 7, rag_uploads: [{ ...first }] });
 
     await render(
       <template>
-        {{#if show.value}}
-          <RagUploader @target={{target}} @updateUploads={{updateUploads}} />
-        {{/if}}
+        <RagUploader @target={{target.value}} @targetName="AiAgent" />
       </template>
     );
 
-    appEvents.trigger(ALL_UPLOADS_COMPLETE);
-    assert.strictEqual(calls, 1, "handles the event while rendered");
+    const row = find(ROWS);
 
-    show.value = false;
+    target.value = { ...target.value, rag_uploads: [{ ...first }] };
     await rerender();
 
-    appEvents.trigger(ALL_UPLOADS_COMPLETE);
-    assert.strictEqual(calls, 1, "ignores the event after teardown");
+    assert.strictEqual(find(ROWS), row, "keeps the row");
+
+    await publishToMessageBus("/discourse-ai/rag/1", {
+      total: 2,
+      indexed: 1,
+      left: 1,
+    });
+
+    assert
+      .dom(`${ROWS} .indexing`)
+      .includesText("50%", "renders indexing updates");
   });
 });
