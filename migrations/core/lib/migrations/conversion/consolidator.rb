@@ -41,7 +41,13 @@ module Migrations
       # uses this to write a step's reduced log entries once its workers finish.
       # @return the block's value
       def with_writer(&block)
-        @fork_mutex.synchronize { Database::IntermediateDB.with_connection(@connection, &block) }
+        @fork_mutex.synchronize do
+          Database::IntermediateDB.with_connection(@connection) do
+            block.call
+          ensure
+            @connection.commit_transaction
+          end
+        end
       end
 
       # Waits for every enqueued shard to be merged, then returns the merge errors.

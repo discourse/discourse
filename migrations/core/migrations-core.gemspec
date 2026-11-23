@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency "i18n"
   s.add_dependency "json"
   s.add_dependency "lru_redux"
+  s.add_dependency "pg"
   s.add_dependency "samovar"
   s.add_dependency "unicode-display_width"
   s.add_dependency "zeitwerk"
