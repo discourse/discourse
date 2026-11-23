@@ -131,6 +131,11 @@ function and asserts it was called with the new value.
 - A mutation that removes `@tracked` from a field written through `(mut this.x)` still
   passes: `mut` writes with `set()`, which notifies the template on any field. Only plain
   assignments (`this.x = v`) need the decorator to update the DOM.
+- A test category takes its subcategories from the site fixtures by id:
+  `Category#subcategories` reads `site.categoriesByParentId`, so
+  `store.createRecord("category", { id: 2, ... })` got fixture category 2's children, its
+  `isHidden` was false, and a muted-list test failed on the classic file as well. Use
+  childless fixture ids (3, 4); an id the site does not know breaks the category helpers.
 - `settled()` does not wait for an Uppy upload to complete. Hold the upload request in
   pretender to assert the in-flight state, then `waitUntil` the finished state.
 - `discourseLater` runs as soon as the test settles, so a delayed side effect fires inside

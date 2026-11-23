@@ -25,6 +25,9 @@ ROOTS = ["frontend/discourse", "plugins"]
 BLOCKED = {
     "frontend/discourse/app/components/anonymous-topic-footer-buttons.gjs": "passes `this` to getTopicFooterButtons, which calls context.get(); needs the plugin API reworked",
     "frontend/discourse/app/components/discourse-root.js": "root element owning event dispatch; glimmerified once and reverted (27408c7e14b)",
+    "frontend/discourse/app/components/topic-footer-buttons.gjs": "passes `this` to getTopicFooterButtons/getTopicFooterDropdowns, which call context.get(); needs the plugin API reworked (as anonymous-topic-footer-buttons)",
+    "frontend/discourse/app/components/tag-groups-form.gjs": "discourse-multilingual's ContentTagGroupsForm extends it with this.set/this.model, rendered by its live tag-groups-edit.hbs override; needs a ship-or-wait decision",
+    "frontend/discourse/app/ui-kit/d-future-date-input.gjs": "re-derives selection/_date/_time from @input only while it is set, so a picked 'custom' survives a cleared input; needs its own PR",
     "frontend/discourse/admin/components/edit-category-localizations.gjs": "built by buildCategoryPanel() in edit-category-panel.gjs; convert the factory and every tab built from it together",
     "frontend/discourse/admin/components/edit-category-topic-template.gjs": "built by buildCategoryPanel() in edit-category-panel.gjs; convert the factory and every tab built from it together",
     "frontend/discourse/app/components/avatar-uploader.gjs": "writes uploadedAvatarId/uploadedAvatarTemplate back into callers, three external plugins included; needs @done(upload) and coordinated external updates",
