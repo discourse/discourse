@@ -20,7 +20,7 @@
     "@rollup/plugin-babel": "^7.0.0",
     "autoprefixer": "^10.6.2",
     "babel-plugin-ember-template-compilation": "^4.0.1",
-    "content-tag": "^4.2.1",
+    "content-tag": "^4.3.0",
     "core-js": "^3.51.0",
     "decorator-transforms": "^2.4.0",
     "discourse": "workspace:0.0.0",
