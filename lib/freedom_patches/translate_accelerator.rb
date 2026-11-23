@@ -20,6 +20,8 @@ module I18n
 
     LRU_CACHE_SIZE = 400
 
+    EMPTY_OVERRIDES_HWIA = ActiveSupport::HashWithIndifferentAccess.new.freeze
+
     def init_accelerator!(overrides_enabled: true)
       @overrides_enabled = overrides_enabled
       reserve_key(:overrides)
@@ -162,8 +164,8 @@ module I18n
     end
 
     def overrides_by_locale(locale)
-      return {} unless @overrides_enabled
-      return {} if GlobalSetting.skip_db?
+      return EMPTY_OVERRIDES_HWIA unless @overrides_enabled
+      return EMPTY_OVERRIDES_HWIA if GlobalSetting.skip_db?
       locale = locale.to_sym
 
       execute_reload if @requires_reload
@@ -190,10 +192,15 @@ module I18n
         @overrides_by_site[site] = by_site
       end
 
-      by_site[locale].with_indifferent_access
+      plain = by_site[locale]
+      return EMPTY_OVERRIDES_HWIA if plain.empty?
+
+      @overrides_hwia_by_site ||= {}
+      hwia_by_site = @overrides_hwia_by_site[site] ||= {}
+      hwia_by_site[locale] ||= plain.with_indifferent_access.freeze
     rescue ActiveRecord::StatementInvalid => e
       if PG::UndefinedTable === e.cause || PG::UndefinedColumn === e.cause
-        {}
+        EMPTY_OVERRIDES_HWIA
       else
         raise
       end
@@ -214,6 +221,7 @@ module I18n
 
         I18n.fallbacks[locale].each do |l|
           overrides_for_locale = overrides_by_locale(l)
+          next if overrides_for_locale.empty?
           overrides[l] = overrides_for_locale if has_count || overrides_for_locale.key?(key)
         end
 
@@ -263,6 +271,7 @@ module I18n
         @loaded_locales = []
         @cache = nil
         @overrides_by_site = {}
+        @overrides_hwia_by_site = {}
 
         reload_no_cache!
         ensure_all_loaded!

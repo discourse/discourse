@@ -102,14 +102,22 @@ module I18n
                   Hash[[[key, existing_translations]]]
                 end
 
-              result = {}
+              result = nil
 
-              remapped_translations
-                .merge(overrides)
-                .each do |k, v|
-                  result[k.split(".").last.to_sym] = v if k != key && k.start_with?(key)
+              remapped_translations.each do |k, v|
+                if k != key && k.start_with?(key)
+                  result ||= {}
+                  result[k.split(".").last.to_sym] = v
                 end
-              return result if result.size > 0
+              end
+
+              overrides.each do |k, v|
+                if k != key && k.start_with?(key)
+                  result ||= {}
+                  result[k.split(".").last.to_sym] = v
+                end
+              end
+              return result if result && result.size > 0
             end
           end
 
