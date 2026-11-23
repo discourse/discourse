@@ -3893,6 +3893,7 @@ sv:
       delete_and_agree_replies:
         title: "Radera inlägg och svar"
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
+        confirm_title: "Radera inlägg och svar?"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
         title: "Återställ inlägg"

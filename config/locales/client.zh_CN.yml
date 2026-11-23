@@ -3921,6 +3921,7 @@ zh_CN:
         default_item: "可审核条目 #%{reviewable_id}"
     topics:
       new_messages_marker: "上次访问"
+      list_options: "列表选项"
       bulk:
         select: "批量选择"
         confirm: "确认"
@@ -4594,8 +4595,10 @@ zh_CN:
           label: "已选择"
           title: "点击以将帖子从选择中移除"
         select_replies:
+          label: "选择 & 回复"
           title: "将帖子及其所有回复添加到选择中"
         select_below:
+          label: "选择 & 之后"
           title: "将帖子和之后的所有内容添加到选择中"
         delete: 删除所选项
         cancel: 取消选择
@@ -4623,6 +4626,7 @@ zh_CN:
     post:
       accessible_heading: "由 %{username} 于 %{date} 发布"
       ai_generated: "AI"
+      ai_generated_title: "这些内容部分或全部由 AI 生成"
       heading_anchor: "标题链接"
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -5811,16 +5815,23 @@ zh_CN:
       share: "分享"
       dismiss: "忽略"
     mobile_tab_bar:
+      label: "站点分区"
       new_topic: "新建话题"
+      new_personal_message: "新个人消息"
       create: "创建"
+      menu: "菜单"
       more: "更多"
+      edit_topic: "编辑标题、类别和标签"
+      menu_with_reviewables:
+        other: "菜单， %{count} 项待审核"
       back: "返回"
       topics: "话题"
       drafts:
         other: "草稿 (%{count})"
+      hub: "Hub"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
-    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
+    exit_theme_preview: "退出预览"
     theme_preview_failed: "无法预览主题，因为它不存在，或者您没有访问它的权限。"
     image_removed: "（图片被移除）"
     pause_notifications:

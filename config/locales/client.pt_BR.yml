@@ -5279,7 +5279,6 @@ pt_BR:
         other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo seguro está ativado. Para sair do modo seguro, feche a janela do navegador"
-    theme_preview_notice: "Atualmente, você está pré-visualizando um tema, feche esta aba ou janela do navegador para voltar para a configuração normal do site."
     theme_preview_failed: "Não foi possível visualizar o tema porque ele não existe ou você não tem permissão para acessá-lo."
     image_removed: "(imagem removida)"
     pause_notifications:

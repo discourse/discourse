@@ -5397,7 +5397,6 @@ tr_TR:
         other: "Taslaklar (%{count})"
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
-    theme_preview_notice: "Şu anda bir temayı ön izliyorsunuz, normal site yapılandırmanıza dönmek için bu tarayıcı sekmesini veya penceresini kapatın."
     theme_preview_failed: "Tema mevcut olmadığı veya erişim izniniz olmadığı için önizleme yapılamadı."
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:

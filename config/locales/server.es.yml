@@ -5003,6 +5003,7 @@ es:
       delete_and_ignore_replies:
         title: "Eliminar publicación y respuestas, ignorar denuncia"
         description: "Elimina la publicación y todas sus respuestas, luego ignora la denuncia eliminándola de la cola; si es la primera publicación, elimina también el tema"
+        confirm_title: "Eliminar publicación y respuestas, ignorar denuncia?"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       delete_and_agree:
@@ -5012,6 +5013,7 @@ es:
       delete_and_agree_replies:
         title: "Eliminar publicación y respuestas"
         description: "Aceptar la denuncia y eliminar esta publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema."
+        confirm_title: "Eliminar publicación y respuestas?"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       disagree_and_restore:

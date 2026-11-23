@@ -4629,6 +4629,7 @@ fi:
       delete_and_agree_replies:
         title: "Poista viesti ja vastaukset"
         description: "Hyväksy liputus ja poista tämä viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju."
+        confirm_title: "Poista viesti ja vastaukset?"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       disagree_and_restore:

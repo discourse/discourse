@@ -4582,6 +4582,7 @@ it:
       delete_and_agree_replies:
         title: "Elimina messaggio e risposte"
         description: "Accetta segnalazione ed elimina questo messaggio; se è i primo messaggio, elimina anche l'argomento."
+        confirm_title: "Elimina il messaggio e le risposte?"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       disagree_and_restore:
