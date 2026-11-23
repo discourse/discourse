@@ -52,7 +52,7 @@ class ApiKeyScope < ActiveRecord::Base
           },
           read_lists: {
             actions: list_actions,
-            params: %i[category_id],
+            path_params: %i[category_id],
             aliases: {
               category_id: :category_slug_path_with_id,
             },
@@ -79,6 +79,9 @@ class ApiKeyScope < ActiveRecord::Base
           recover: {
             actions: %w[posts#recover],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           list: {
             actions: %w[posts#latest],
@@ -88,6 +91,9 @@ class ApiKeyScope < ActiveRecord::Base
           read: {
             actions: %w[posts#latest_revision posts#revisions],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           modify: {
             actions: %w[
@@ -98,10 +104,16 @@ class ApiKeyScope < ActiveRecord::Base
               posts#revert
             ],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
           permanently_delete: {
             actions: %w[posts#permanently_delete_revisions],
             path_params: %i[post_id],
+            aliases: {
+              post_id: :id,
+            },
           },
         },
         tags: {
@@ -366,7 +378,7 @@ class ApiKeyScope < ActiveRecord::Base
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, "")
             api_supported_path =
               path.end_with?(".rss") || !route.path.requirements[:format] ||
-                route.path.requirements[:format].match?("json")
+                Array(route.path.requirements[:format]).any? { |format| format.match?("json") }
             excluded_paths = %w[/new-topic /new-message /exception]
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)

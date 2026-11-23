@@ -11,6 +11,15 @@ ja:
       go_back: "戻る"
       title: "違法コンテンツの報告"
       email: "メールアドレス"
+    code_editor:
+      search:
+        replace: "置換"
+        next: "次へ"
+        previous: "変更前"
+        close: "閉じる"
+        go: "開始"
+      fold:
+        to: "終了:"
     user_api_key:
       title: '「%{application_name}」の承認'
       authorize: "承認"
@@ -427,26 +436,21 @@ ja:
       title: "新規と未読のトピック"
       pill: "提案"
       pm_title: "推奨メッセージ"
-    admin_onboarding_banner:
-      start_posting:
-        back: "戻る"
     design_wizard:
       back: "戻る"
       next: "次へ"
       sections:
-        theme: "テーマ"
         fonts: "フォント"
+        logo: "ロゴ"
         homepage: "ホームページ"
-        welcome_banner: "ウェルカムバナー"
-        search: "検索"
       theme:
         selected: "選択済み"
-      colors:
-        light: "ライト"
-        dark: "ダーク"
       fonts:
-        base_font: "ベースフォント"
-        heading_font: "見出しのフォント"
+        base_font: "本文"
+        heading_font: "見出し"
+      logo:
+        description: "サイトのトップナビゲーションと、サイトのメール通知の上部に表示されます。"
+        help_text: "推奨サイズは 600 x 80 ピクセルです。"
       homepage:
         topics: "トピック"
         categories: "カテゴリ"
@@ -848,6 +852,7 @@ ja:
         suspect_user: "これは迷惑ユーザーですか？"
         approve_post: "この投稿を承認しますか？"
         approve_topic: "このトピックを承認しますか？"
+        something_wrong_with_post: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -2324,6 +2329,7 @@ ja:
       no_results: "結果がありません"
       search: "検索…"
       label: "オプションを選択"
+      remove_item: "%{name} を削除"
     d_otp:
       screen_reader:
         other: '%{count} 桁の数字を入力してください'
@@ -2702,6 +2708,9 @@ ja:
         size_too_small: "%{provided_file_size} は最低許容サイズの %{min_file_size} を下回っています"
     emoji_picker:
       filter_placeholder: 絵文字を探す
+      search_placeholder: "絵文字名とエイリアスで検索..."
+      no_results: "結果がありません"
+      favorites: "よく使用される絵文字"
       smileys_&_emotion: スマイルと感情
       people_&_body: 人と体
       animals_&_nature: 動物と自然
@@ -2743,6 +2752,10 @@ ja:
       emoji: "絵文字 :)"
       more_emoji: "もっと…"
       options: "オプション"
+      ai_content:
+        code: "コード"
+        quote: "引用"
+        details: "詳細"
       whisper: "ささやき"
       unlist: "非表示"
       add_warning: "これは運営スタッフからの警告です。"
@@ -3778,10 +3791,8 @@ ja:
           label: "選択済み"
           title: "クリックして選択から投稿を削除する"
         select_replies:
-          label: "複数の返信を選択"
           title: "投稿とすべての返信を選択に追加する"
         select_below:
-          label: "+下を選択"
           title: "投稿とその後のすべてを選択に追加する"
         delete: 選択済みを削除
         cancel: 選択をキャンセル
@@ -3808,6 +3819,7 @@ ja:
         actions: "一括操作"
     post:
       accessible_heading: "%{username} の投稿 %{date}"
+      ai_generated: "AI"
       heading_anchor: "見出しのリンク"
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -4806,9 +4818,16 @@ ja:
       forward: "転送"
       share: "共有"
       dismiss: "閉じる"
+    mobile_tab_bar:
+      new_topic: "新規トピック"
+      create: "作成"
+      more: "もっと"
+      back: "戻る"
+      topics: "トピック"
+      drafts:
+        other: "下書き (%{count})"
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
-    theme_preview_notice: "現在、テーマをプレビューしています。通常のサイト構成に戻るには、このブラウザタブまたはウィンドウを閉じてください。"
     theme_preview_failed: "テーマをプレビューできませんでした。テーマが存在しないか、テーマにアクセスする権限がありません。"
     image_removed: "(画像は削除されました)"
     pause_notifications:
@@ -5193,16 +5212,16 @@ ja:
         name: "名前"
         plugin: "プラグイン"
         metadata: "メタデータ"
-        enabled: "有効"
-        enabled_for: "次を対象に有効化..."
+        enabled: "有効ですか？"
         show_image: "画像を表示"
-        edit_groups: "オプトイングループを編集"
+        feedback: "フィードバック"
         groups_updated: "グループが更新されました！"
         save_groups: "グループを保存"
         add_groups_to_enable: "この機能を有効にするグループを追加する"
         no_changes_to_save: "保存する変更はありません"
         select_groups: "グループを選択…"
         opt_in_groups: "オプトイングループ"
+        settings: "設定"
         opt_in_groups_instructions: "オプトイングループを使用すると、全ユーザーを対象に変更がリリースされる前に特定のユーザーグループがその変更をテストできるようになります。ただし、変更が安定ステータスに進むとこのグループは無効になります。"
         enabled_for_throttle: "この変更を有効にする対象ユーザーの変更が早すぎます。数秒待ってからもう一度お試しください。"
         change_enabled_for_success: "この変更を %{enabledFor} に対して有効にしました"
@@ -5213,7 +5232,6 @@ ja:
         preview: "プレビュー"
         enabled_for_options:
           no_one: "対象者なし"
-          everyone: "全員"
           specific_groups: "特定のグループ"
           specific_groups_with_group_names:
             other: "グループ %{groupNames}"
@@ -6346,14 +6364,6 @@ ja:
           company_name: "名前"
           company_url: "ウェブサイト"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "準拠法"
-          governing_law_placeholder: "都道府県または国"
-          governing_law_help: |
-            サイトの法的条件の管轄を指定します。通常、会社が登録または運営されている場所です。
-          city_for_disputes: "紛争都市"
-          city_for_disputes_placeholder: "都市"
-          city_for_disputes_help: |
-            このフォーラムに関連する法的紛争を解決するための都市を指定します。
           extra_groups:
             heading: "グループのリスト"
             description: "情報ページに表示される追加グループ。"
@@ -6559,7 +6569,6 @@ ja:
           uploading: "アップロード中…"
           uploading_progress: "アップロード中… %{progress}%"
           success: "'%{filename}' のアップロードに成功しました。このファイルは現在処理中で、リストに表示されるまでに数分程度かかることがあります。"
-          error: "ファイル '%{filename}' のアップロード中にエラーが発生しました: %{message}"
         settings: "設定"
         operations:
           is_running: "バックアップ作業を実行中…"
@@ -7532,7 +7541,6 @@ ja:
         silence_duration: "ユーザーをどれくらいの期間、投稿禁止にしますか？"
         silence_reason_title: "投稿禁止の理由"
         silence_reason_placeholder: "投稿禁止の理由"
-        silence_message: "メールメッセージ"
         suspended_until: "(%{until} まで)"
         suspend_forever: "永久に凍結する"
         cant_suspend: "このユーザーを凍結できません。"
@@ -7836,6 +7844,8 @@ ja:
       site_text:
         description: "フォーラム内のテキストをカスタマイズできます。"
         search_label: "検索"
+        preview:
+          default: "デフォルト"
         theme_disabled: "無効"
         filters: "フィルター"
         status:
@@ -7994,7 +8004,7 @@ ja:
           modal_title: バッジのグループ
         granted_by: 付与者
         granted_at: 付与日
-        reason_help: (投稿またはトピックへのリンク)
+        reason_help: 投稿またはトピックへのリンク
         save: 保存
         delete: 削除
         delete_confirm: このバッジを削除してもよろしいですか？

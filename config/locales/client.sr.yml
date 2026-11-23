@@ -6,6 +6,13 @@
 
 sr:
   js:
+    code_editor:
+      search:
+        next: "Dalje"
+        previous: "Prethodno"
+        close: "Zatvori"
+      fold:
+        to: "ka"
     user_api_key:
       deny: "Odustani"
       write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
@@ -365,14 +372,13 @@ sr:
         title: "Prilagodite svoj sajt"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
-      start_posting:
-        back: "Nazad"
     design_wizard:
       title: "Prilagodite svoj sajt"
       back: "Nazad"
       next: "Dalje"
-      sections:
-        search: "Pretraži"
+      steps:
+        theme:
+          title: "Izaberite temu"
       homepage:
         topics: "Teme"
         categories: "Kategorije"
@@ -1836,6 +1842,8 @@ sr:
     composer:
       emoji: "Emotikoni :)"
       options: "Opcije"
+      ai_content:
+        details: "Detalji"
       add_warning: "Ovo je službeno upozorenje."
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
@@ -2247,8 +2255,6 @@ sr:
         selected: "odabrano (%{count})"
         select_post:
           label: "odaberi"
-        select_replies:
-          label: "odaberi +odgovori"
         delete: obriši odabrano
         cancel: odustani od odabranog
         select_all: odaberi sve
@@ -2667,6 +2673,7 @@ sr:
     download_calendar:
       download: "Preuzmi"
     tagging:
+      selector_tags: "Tagovi"
       selector_remove_filter: "uklonite filter"
       synonym_hint: "→ %{tag_name}"
       add_synonyms: "Dodaj"
@@ -2712,6 +2719,15 @@ sr:
       back: "Nazad"
       share: "Podeli"
       dismiss: "Odbaci"
+    mobile_tab_bar:
+      create: "Kreiraj"
+      more: "Više"
+      back: "Nazad"
+      topics: "Teme"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     pause_notifications:
       title: "Pauzirajte obaveštenja za..."
     trust_levels:
@@ -2846,9 +2862,9 @@ sr:
           title: "Dodaci"
       upcoming_changes:
         name: "Ime foruma"
-        enabled: "Omogućeno"
-        enabled_for_options:
-          everyone: "Svi"
+        enabled: "Omgućeno"
+        feedback: "Povratne informacije"
+        settings: "Podešavanje"
         impact_roles:
           admins: "Admini"
           moderators: "Moderatori"
@@ -3371,7 +3387,6 @@ sr:
           size: "Veličina"
         upload:
           label: "Učitaj"
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Podešavanja"
         operations:
           failed: "%{operation} neuspješna. Molimo proverite logove."
@@ -3806,6 +3821,8 @@ sr:
           confirm: "Potvrda"
       site_text:
         search_label: "Pretraži"
+        preview:
+          default: "Подразумевано"
         theme_disabled: "Isključeno"
         edit: "Izmeni"
         show_overriden: "Pokazuj samo promenjeno"

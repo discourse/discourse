@@ -91,6 +91,7 @@ module DiscourseWorkflows
         "cooked_original_length": { "type": "integer", "x-optional": true },
         "post_number": { "type": "integer" },
         "post_type": { "type": "integer" },
+        "action_code": { "type": ["string", "null"] },
         "reply_to_post_number": { "type": ["integer", "null"] },
         "reply_to_post_id": { "type": ["integer", "null"] },
         "reply_to_username": { "type": ["string", "null"] },
@@ -112,6 +113,18 @@ module DiscourseWorkflows
         "score": { "type": ["number", "null"] },
         "tags": { "type": "array", "items": { "type": "string" } },
         "upload_ids": { "type": "array", "items": { "type": "integer" } },
+        "image_uploads": {
+          "type": "array",
+          "x-optional": true,
+          "description": "Visible image uploads, included with cooked content",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "integer" },
+              "short_url": { "type": "string" }
+            }
+          }
+        },
         "locale": { "type": ["string", "null"], "description": "Content locale, null until set by the author or detected" }
       }
     JSON
@@ -530,7 +543,7 @@ module DiscourseWorkflows
 
       # :indeterminate means a rule is anchored to an expression-valued parameter,
       # so the target must neither be dropped nor have its requirements enforced.
-      def display_state(display_options, configuration)
+      def display_state(display_options, configuration, metadata = {})
         display_options = normalize_options(display_options)
         show_rules = display_options["show"]
         hide_rules = display_options["hide"]
@@ -540,13 +553,13 @@ module DiscourseWorkflows
         indeterminate = false
 
         if show_rules.present?
-          outcome = rules_outcome(show_rules, configuration)
+          outcome = rules_outcome(show_rules, configuration, metadata)
           return :hidden if outcome == false
           indeterminate ||= outcome == :unknown
         end
 
         if hide_rules.present?
-          outcome = rules_outcome(hide_rules, configuration)
+          outcome = rules_outcome(hide_rules, configuration, metadata)
           return :hidden if outcome == true
           indeterminate ||= outcome == :unknown
         end
@@ -554,12 +567,12 @@ module DiscourseWorkflows
         indeterminate ? :indeterminate : :visible
       end
 
-      def visible?(display_options, configuration)
-        display_state(display_options, configuration) != :hidden
+      def visible?(display_options, configuration, metadata = {})
+        display_state(display_options, configuration, metadata) != :hidden
       end
 
-      def definitely_visible?(display_options, configuration)
-        display_state(display_options, configuration) == :visible
+      def definitely_visible?(display_options, configuration, metadata = {})
+        display_state(display_options, configuration, metadata) == :visible
       end
 
       private
@@ -665,7 +678,7 @@ module DiscourseWorkflows
         configuration.to_h.stringify_keys
       end
 
-      def rules_outcome(rules, configuration)
+      def rules_outcome(rules, configuration, metadata)
         unknown = false
 
         rules.each do |field_name, expected|
@@ -675,18 +688,18 @@ module DiscourseWorkflows
             next
           end
 
-          return false unless matches_rule?(expected, value)
+          return false unless matches_rule?(expected, value, metadata)
         end
 
         unknown ? :unknown : true
       end
 
-      def matches_rule?(expected, value)
+      def matches_rule?(expected, value, metadata)
         conditions = expected.is_a?(Array) ? expected : [expected]
-        conditions.any? { |condition| matches_condition?(condition, value) }
+        conditions.any? { |condition| matches_condition?(condition, value, metadata) }
       end
 
-      def matches_condition?(condition, value)
+      def matches_condition?(condition, value, metadata)
         operator = condition.is_a?(Hash) ? condition["condition"] : nil
         if operator.blank?
           return value.include?(condition) if value.is_a?(Array) && !condition.is_a?(Array)
@@ -696,6 +709,17 @@ module DiscourseWorkflows
 
         if operator.key?("exists")
           return operator["exists"] ? !empty_value?(value) : empty_value?(value)
+        end
+        if (metadata_flag = operator["metadata_flag"])
+          return false if value.nil?
+
+          collection, flag = metadata_flag.values_at("collection", "flag")
+          return(
+            Array(metadata[collection]).any? do |option|
+              option = option.with_indifferent_access
+              option[:id].to_s == value.to_s && option[flag] == true
+            end
+          )
         end
 
         false

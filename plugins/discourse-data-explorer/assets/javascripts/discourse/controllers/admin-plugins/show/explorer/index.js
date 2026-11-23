@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
@@ -16,6 +17,7 @@ export default class PluginsExplorerController extends Controller {
   @service dialog;
   @service router;
   @service store;
+  @service toasts;
   @service warpStore;
 
   @tracked sortByProperty = "last_run_at";
@@ -26,6 +28,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked tags = "";
   @tracked pages = [];
   @tracked loadingMore = false;
+  @tracked deletedQueryIds = [];
 
   queryParams = ["id", "tags"];
   acceptedImportFileTypes = ["application/json"];
@@ -42,7 +45,9 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get queries() {
-    return this.pages.flatMap((page) => page.data);
+    return this.pages
+      .flatMap((page) => page.data)
+      .filter((query) => !this.deletedQueryIds.includes(query.id));
   }
 
   get canLoadMore() {
@@ -99,6 +104,54 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
+  }
+
+  @action
+  async toggleDashboard(query, closeMenu) {
+    await closeMenu();
+
+    const mounted = query.dashboardMounted;
+    try {
+      await ajax("/admin/dashboard/reports/mount", {
+        type: mounted ? "DELETE" : "POST",
+        data: { source: "data_explorer_query", identifier: String(query.id) },
+      });
+      query.dashboardMounted = !mounted;
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n(
+            mounted ? "explorer.dashboard.removed" : "explorer.dashboard.added"
+          ),
+        },
+      });
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
+  @action
+  async deleteQuery(query, closeMenu) {
+    await closeMenu();
+
+    this.dialog.deleteConfirm({
+      message: i18n("explorer.delete_confirm"),
+      didConfirm: async () => {
+        try {
+          await ajax(
+            `/admin/plugins/discourse-data-explorer/queries/${query.id}`,
+            { type: "DELETE" }
+          );
+          this.deletedQueryIds = [...this.deletedQueryIds, query.id];
+          this.toasts.success({
+            duration: "short",
+            data: { message: i18n("explorer.delete_success") },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+        }
+      },
+    });
   }
 
   @action

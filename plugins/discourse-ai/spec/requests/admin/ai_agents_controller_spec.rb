@@ -15,6 +15,28 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "GET #index" do
+    it "reports tools loaded automatically by the post illustrator" do
+      image_tool =
+        Fabricate(
+          :ai_tool,
+          name: "Image generator",
+          parameters: [{ name: "prompt", type: "string", description: "Prompt" }],
+          script: "function invoke() { upload.create(); chain.setCustomRaw(); }",
+        )
+      Fabricate(:ai_tool, name: "Disabled image tool", enabled: false)
+      Fabricate(:ai_tool, name: "Ordinary tool")
+
+      get "/admin/plugins/discourse-ai/ai-agents.json"
+
+      illustrator_id =
+        DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::PostIllustrator]
+      agents = response.parsed_body["ai_agents"].index_by { |agent| agent["id"] }
+      expect(agents[illustrator_id]["automatic_image_tools"]).to eq(
+        [{ "id" => image_tool.id, "name" => image_tool.name }],
+      )
+      expect(agents[ai_agent.id]).not_to have_key("automatic_image_tools")
+    end
+
     it "offers uploaded document search in the tool catalog" do
       get "/admin/plugins/discourse-ai/ai-agents.json"
 
@@ -492,6 +514,79 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
   end
 
   describe "PUT #update" do
+    it "preserves RAG uploads and indexed content when changing priority" do
+      upload = Fabricate(:upload)
+      RagDocumentFragment.link_target_and_uploads(ai_agent, [upload.id])
+      fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+      expect_not_enqueued_with(job: :digest_rag_upload) do
+        put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+            params: {
+              ai_agent: {
+                priority: true,
+              },
+            },
+            as: :json
+      end
+
+      expect(response).to have_http_status(:ok)
+      expect(ai_agent.reload.priority).to eq(true)
+      expect(ai_agent.uploads.pluck(:id)).to eq([upload.id])
+      expect(RagDocumentFragment.exists?(fragment.id)).to eq(true)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads").map { |item| item["id"] }).to eq(
+        [upload.id],
+      )
+    end
+
+    it "reindexes retained RAG uploads when changing chunk settings without an upload list" do
+      upload = Fabricate(:upload)
+      UploadReference.ensure_exist!(target: ai_agent, upload_ids: [upload.id])
+
+      %i[rag_chunk_tokens rag_chunk_overlap_tokens].each do |setting|
+        fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+        expect_enqueued_with(
+          job: :digest_rag_upload,
+          args: {
+            target_id: ai_agent.id,
+            target_type: "AiAgent",
+            upload_id: upload.id,
+          },
+        ) do
+          put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+              params: {
+                ai_agent: {
+                  setting => ai_agent.public_send(setting) + 1,
+                },
+              },
+              as: :json
+        end
+
+        expect(response).to have_http_status(:ok)
+        expect(ai_agent.reload.uploads.pluck(:id)).to eq([upload.id])
+        expect(RagDocumentFragment.exists?(fragment.id)).to eq(false)
+      end
+    end
+
+    it "removes RAG uploads and indexed content when the upload list is explicitly cleared" do
+      upload = Fabricate(:upload)
+      RagDocumentFragment.link_target_and_uploads(ai_agent, [upload.id])
+      fragment = Fabricate(:rag_document_fragment, target: ai_agent, upload:)
+
+      put "/admin/plugins/discourse-ai/ai-agents/#{ai_agent.id}.json",
+          params: {
+            ai_agent: {
+              rag_uploads: [],
+            },
+          },
+          as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(ai_agent.reload.uploads).to be_empty
+      expect(RagDocumentFragment.exists?(fragment.id)).to eq(false)
+      expect(response.parsed_body.dig("ai_agent", "rag_uploads")).to eq([])
+    end
+
     it "synchronizes the bot account activation when saving the enabled toggle" do
       bot = ai_agent.create_user!
 
@@ -1212,21 +1307,34 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
       }
     end
 
-    [false, true].each do |bot_enabled|
-      it "imports a conversational agent with automatic provisioning #{bot_enabled ? "enabled" : "disabled"}" do
-        SiteSetting.ai_bot_enabled = bot_enabled
+    it "imports a conversational agent without a user when the bot is disabled" do
+      SiteSetting.ai_bot_enabled = false
 
-        expect do
-          post "/admin/plugins/discourse-ai/ai-agents/import.json",
-               params: valid_import_data,
-               as: :json
-        end.to change(User, :count).by(bot_enabled ? 1 : 0)
+      expect {
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      }.not_to change(User, :count)
 
-        expect(response).to have_http_status(:created)
-        agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
-        expect(agent.allow_personal_messages).to eq(true)
-        expect(agent.user.present?).to eq(bot_enabled)
-      end
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user).to be_nil
+    end
+
+    it "provisions a user when importing a conversational agent with the bot enabled" do
+      SiteSetting.ai_bot_enabled = true
+
+      expect {
+        post "/admin/plugins/discourse-ai/ai-agents/import.json",
+             params: valid_import_data,
+             as: :json
+      }.to change(User, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      agent = AiAgent.find(response.parsed_body.dig("ai_agent", "id"))
+      expect(agent.allow_personal_messages).to eq(true)
+      expect(agent.user).to be_present
     end
 
     it "imports a new agent successfully" do
@@ -1994,6 +2102,19 @@ RSpec.describe DiscourseAi::Admin::AiAgentsController do
 
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.parsed_body["errors"].join).to include("either tool_results or tool_result")
+    end
+
+    it "rejects conflicting ID aliases in a tool result" do
+      post "/admin/plugins/discourse-ai/ai-agents/stream-reply.json",
+           params: {
+             resume_token: "not-used-during-input-validation",
+             tool_results: [
+               { tool_call_id: "pending", id: "another", content: "Ambiguous outcome" },
+             ],
+           }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body.fetch("errors").join).to include("tool_call_id")
     end
 
     it "rejects oversized tool result content" do

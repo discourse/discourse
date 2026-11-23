@@ -13,9 +13,9 @@ RSpec.describe DiscourseAi::AiBot::ConversationRoute do
     ).tap(&:ensure_user!)
   end
 
+  include_context "with AI bot enabled"
+
   before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
     SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     SiteSetting.ai_bot_enabled_llms = [first_model.id, second_model.id].join("|")
   end

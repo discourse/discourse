@@ -5,7 +5,7 @@ plugins:
     hidden: true
     upcoming_change:
       status: "beta"
-      impact: "feature,admins"
+      impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/407100"
       allow_enabled_for:
         - everyone

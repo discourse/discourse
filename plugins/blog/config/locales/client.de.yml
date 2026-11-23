@@ -16,6 +16,9 @@ de:
         preview_archive: Archiv
         desktop: Desktop
         mobile: Mobil
+        save: Speichern
+        path_formats:
+          custom: Benutzerdefiniert
         back_to_themes: Zurück zu Themes
         new_theme_short: Neues Theme
         themes: Themes
@@ -23,6 +26,8 @@ de:
         edit: Bearbeiten
         activate: Aktivieren
         preview: Vorschau
+        customize: Anpassen
+        customized_theme_name: "%{name} (benutzerdefiniert)"
         import: Importieren
         export: Exportieren
         active: Aktiv
@@ -35,6 +40,7 @@ de:
         change:
           title: titel
           body: body
+          tags: Schlagwörter
       review:
         create: Link erstellen
         copy: Kopieren
@@ -51,7 +57,11 @@ de:
         edit: Bearbeiten
         status: Status
         replies: Antworten
+        title: Titel
+        page: Seite
+      all: Alle
       drafts: Entwürfe
+      pages: Seiten
       preview: Vorschau
       unpublish: Veröffentlichung aufheben
       appearance_link: Erscheinungsbild

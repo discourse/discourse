@@ -15,6 +15,9 @@ it:
         preview_archive: Archiviati
         desktop: Desktop
         mobile: Mobile
+        save: Salva
+        path_formats:
+          custom: Personalizzato
         back_to_themes: Torna ai temi
         new_theme_short: Nuovo tema
         themes: Temi
@@ -22,6 +25,8 @@ it:
         edit: Modifica
         activate: Attiva
         preview: Anteprima
+        customize: Personalizza
+        customized_theme_name: "%{name} (personalizzato)"
         import: Importa
         export: Esporta
         active: Attivi
@@ -34,6 +39,7 @@ it:
         change:
           title: titolo
           body: corpo
+          tags: etichette
       review:
         create: Crea link
         copy: Copia
@@ -50,7 +56,11 @@ it:
         edit: Modifica
         status: Stato
         replies: Risposte
+        title: Titolo
+        page: Pagina
+      all: Tutte
       drafts: Bozze
+      pages: Pagine
       preview: Anteprima
       unpublish: Annulla pubblicazione
       appearance_link: Aspetto

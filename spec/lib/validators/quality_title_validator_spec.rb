@@ -84,6 +84,21 @@ RSpec.describe QualityTitleValidator do
     expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_quiet"))
   end
 
+  it "scales the minimum entropy to the min_topic_title_length modifier, keeping the other checks" do
+    plugin = Plugin::Instance.new
+    modifier = Proc.new { 1 }
+    DiscoursePluginRegistry.register_modifier(plugin, :min_topic_title_length, &modifier)
+
+    topic.title = "Contact"
+    expect(topic).to be_valid
+
+    topic.title = "CONTACT"
+    expect(topic).not_to be_valid
+    expect(topic.errors.full_messages.first).to include(I18n.t("errors.messages.is_invalid_quiet"))
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :min_topic_title_length, &modifier)
+  end
+
   it "bypasses all checks for static docs if the acting user is admin" do
     SiteSetting.tos_topic_id = topic.id
     topic.acting_user = Fabricate(:admin)

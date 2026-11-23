@@ -245,6 +245,18 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  # Adds per-request data to PreloadStore under "<plugin name>:<key>".
+  # The block receives the request's guardian and returns a JSON-serializable
+  # value, or nil to omit the entry. Disabled plugins are skipped.
+  def register_preloaded_data(key, &block)
+    raise ArgumentError, "register_preloaded_data requires a block" if !block
+
+    DiscoursePluginRegistry.register_preloaded_data_callback(
+      { key: "#{name}:#{key}", callback: block },
+      self,
+    )
+  end
+
   # Register a handler for an action initiated by an anonymous user, to be
   # replayed against their account after they authenticate. See AnonymousAction.
   def register_anonymous_action(type, &block)
@@ -445,6 +457,14 @@ class Plugin::Instance
         plugin: plugin,
         callback: callback,
       }
+    end
+  end
+
+  # Accept a scalar bot[<param_name>] when admins create a bot. The callback receives the bot
+  # and the value inside the creation transaction; raising rolls the creation back.
+  def register_bot_creation_param(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.bot_creation_params[param_name] = { plugin:, callback: }
     end
   end
 
@@ -915,6 +935,11 @@ class Plugin::Instance
 
   def register_seed_data(key, value)
     seed_data[key] = value
+  end
+
+  # The callback receives the first admin after moderation has been granted.
+  def register_first_admin_bootstrap(&block)
+    DiscoursePluginRegistry.register_first_admin_bootstrap(block, self)
   end
 
   def register_seed_path_builder(&block)

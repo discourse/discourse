@@ -29,6 +29,31 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(403)
     end
 
+    it "omits another author's hidden post when selecting the latest debug log" do
+      debug_group = Fabricate(:group, users: [user])
+      SiteSetting.ai_bot_debugging_allowed_groups = debug_group.id.to_s
+      visible_post = Fabricate(:post, user: debug_bot_user)
+      hidden_post = Fabricate(:post, topic: visible_post.topic, user: debug_bot_user, hidden: true)
+      later_post = Fabricate(:post, topic: visible_post.topic, user: user)
+      visible_log =
+        AiApiAuditLog.create!(
+          post_id: visible_post.id,
+          topic_id: visible_post.topic_id,
+          provider_id: 1,
+          feature_name: "ai_bot",
+          created_at: 1.minute.ago,
+        )
+      AiApiAuditLog.create!(
+        post_id: hidden_post.id,
+        topic_id: hidden_post.topic_id,
+        provider_id: 1,
+        feature_name: "ai_bot",
+      )
+      get "/discourse-ai/ai-bot/post/#{later_post.id}/show-debug-info"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq(visible_log.id)
+    end
+
     it "does not disclose hidden whisper audit logs" do
       debug_group = Fabricate(:group)
       debug_group.add(user)
@@ -677,6 +702,114 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         expect(prompt_content).to include("[Image unavailable]")
         expect(prompt_content).not_to include("upload_id #{secure_upload.id}")
       end
+    end
+
+    it "uses the retrying user's permissions when reading private topics" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      private_topic = Fabricate(:private_message_topic, user: moderator)
+      private_post =
+        Fabricate(:post, topic: private_topic, user: moderator, raw: "Confidential moderator notes")
+      user_private_topic = Fabricate(:private_message_topic, user: user)
+      user_private_post =
+        Fabricate(:post, topic: user_private_topic, user: user, raw: "Personal notes for 猫")
+      topic = Fabricate(:topic, user: moderator)
+      trigger_post =
+        Fabricate(:post, topic: topic, user: moderator, raw: "Hello @#{bot_user.username}")
+
+      expect(user.guardian.can_see?(private_topic)).to eq(false)
+
+      ai_agent.update!(tools: [["Read", { "read_private" => true }, false]])
+      AiAgent.agent_cache.flush!
+      bot =
+        DiscourseAi::Agents::Bot.as(bot_user, agent: ai_agent.class_instance.new, model: llm_model)
+
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          id: "call-1",
+          parameters: {
+            topic_id: private_topic.id,
+          },
+        )
+
+      reply_post = nil
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, ["Initial response"]],
+      ) do |_, _, prompts|
+        reply_post = DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+
+        expect(prompts.flat_map(&:messages).map { |message| message[:content] }.join).to include(
+          private_post.raw,
+        )
+      end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+      expect(response.status).to eq(200)
+
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      user_tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read",
+          id: "call-2",
+          parameters: {
+            topic_id: user_private_topic.id,
+          },
+        )
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, user_tool_call, ["Retry response"]],
+      ) do |_, _, prompts|
+        Jobs::CreateAiReply.new.execute(job_args)
+
+        tool_output = prompts.flat_map(&:messages).map { |message| message[:content] }.join
+        expect(tool_output).not_to include(private_post.raw)
+        expect(tool_output).to include("Topic not found")
+        expect(tool_output).to include(user_private_post.raw)
+      end
+
+      expect(reply_post.reload.raw).to eq("Retry response")
+    end
+
+    it "uses the retrying user's permissions when importing private artifacts" do
+      moderator = Fabricate(:moderator, refresh_auto_groups: true)
+      private_topic = Fabricate(:private_message_topic, user: moderator)
+      private_post = Fabricate(:post, topic: private_topic, user: moderator)
+      artifact = Fabricate(:ai_artifact, post: private_post, user: moderator)
+      topic = Fabricate(:topic, user: moderator)
+      trigger_post = Fabricate(:post, topic: topic, user: moderator)
+
+      expect(moderator.guardian.can_see?(private_post)).to eq(true)
+      expect(user.guardian.can_see?(private_post)).to eq(false)
+
+      ai_agent.update!(tools: [["ReadArtifact", {}, false]])
+      AiAgent.agent_cache.flush!
+
+      reply_post =
+        DiscourseAi::Completions::Llm.with_prepared_responses(["Initial response"]) do
+          DiscourseAi::AiBot::Playground.new(bot).reply_to(trigger_post)
+        end
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+      expect(response.status).to eq(200)
+
+      tool_call =
+        DiscourseAi::Completions::ToolCall.new(
+          name: "read_artifact",
+          id: "call-1",
+          parameters: {
+            url: "#{Discourse.base_url}/discourse-ai/ai-bot/artifacts/#{artifact.id}",
+          },
+        )
+      job_args = Jobs::CreateAiReply.jobs.last["args"].first.symbolize_keys
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        [tool_call, ["Retry response"]],
+      ) do |_, _, prompts|
+        expect { Jobs::CreateAiReply.new.execute(job_args) }.not_to change(AiArtifact, :count)
+        expect(prompts.flat_map(&:messages).map { |message| message[:content] }.join).to include(
+          "Access denied",
+        )
+      end
+
+      expect(reply_post.reload.raw).to eq("Retry response")
     end
 
     it "allows retrying if LLM model has a negative id (seeded)" do

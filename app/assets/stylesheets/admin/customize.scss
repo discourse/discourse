@@ -26,21 +26,8 @@
   }
 }
 
-.settings-editor {
-  .ace-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-  }
+.settings-editor .code-editor {
+  height: 300px;
 }
 
 .theme-settings-editor-dialog {
@@ -423,9 +410,8 @@
       flex-direction: column;
     }
 
-    .ace-wrapper {
-      position: relative;
-      min-height: unset;
+    .code-editor {
+      min-height: 0;
       flex: 1 1 0;
       border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
     }
@@ -481,15 +467,7 @@
       }
     }
 
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-
-    .ace_placeholder {
+    .cm-placeholder {
       font-family: inherit;
       font-size: var(--font-up-1);
       color: var(--primary-high);
@@ -892,21 +870,9 @@
   }
 }
 
-.admin-customize-email-style {
-  .ace-wrapper {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 480px);
-    min-height: 200px;
-
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-  }
+.admin-customize-email-style .code-editor {
+  height: calc(100vh - 480px);
+  min-height: 200px;
 }
 
 .form-templates {
@@ -927,28 +893,15 @@
       width: 300px;
     }
 
-    .ace-wrapper {
-      position: relative;
+    .code-editor {
       height: calc(100vh - 450px);
       min-height: 200px;
-      width: 100%;
       box-shadow: var(--shadow-footer-nav);
       border-radius: 4px;
     }
 
-    .ace_editor {
+    .cm-editor {
       border-radius: 4px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-    }
-
-    .ace_placeholder {
-      font-family: inherit;
-      font-size: var(--font-up-1);
-      color: var(--primary-high);
     }
 
     .footer-buttons {

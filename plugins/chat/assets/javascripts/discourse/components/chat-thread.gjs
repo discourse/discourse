@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -95,6 +96,7 @@ export default class ChatThread extends Component {
     this.messagesManager.clear();
     if (this.currentUser) {
       this.args.thread.draft =
+        this.args.initialDraft ||
         this.chatDraftsManager.get(
           this.args.thread.channel?.id,
           this.args.thread.id
@@ -106,6 +108,13 @@ export default class ChatThread extends Component {
       this.chatThreadComposer.focus();
     }
     this.loadMessages();
+  }
+
+  @action
+  onTargetMessageIdChange() {
+    if (this.args.targetMessageId) {
+      this.highlightOrFetchMessage(this.args.targetMessageId);
+    }
   }
 
   @action
@@ -292,6 +301,22 @@ export default class ChatThread extends Component {
       return;
     }
 
+    // messages held while newer history was unloaded are part of this page
+    if (direction === FUTURE && !this.messagesLoader.canLoadMoreFuture) {
+      this.paneState.clearPendingMessages();
+    }
+
+    this.paneState.updatePendingContentFromScrollerPosition({
+      scroller: this.scroller,
+      fetchedOnce: this.messagesLoader.fetchedOnce,
+      canLoadMoreFuture: this.messagesLoader.canLoadMoreFuture,
+    });
+
+    // a request for newer messages made while this page loaded was dropped
+    if (direction === PAST && this.paneState.isAtLiveEdge) {
+      this.fetchMoreMessages({ direction: FUTURE });
+    }
+
     const [messages, meta] = this.processMessages(this.args.thread, result);
     if (!messages?.length) {
       return;
@@ -373,6 +398,14 @@ export default class ChatThread extends Component {
         visible: this.paneState.isDocumentVisible,
         active: this.paneState.isActiveReader,
       });
+    }
+
+    // the load in flight, or the one that already ran, brings it in
+    if (
+      !this.messagesLoader.fetchedOnce ||
+      this.messagesManager.findMessage(message.id)
+    ) {
+      return;
     }
 
     this.paneState.handleIncomingMessage({
@@ -501,10 +534,7 @@ export default class ChatThread extends Component {
     this.chatApi
       .sendMessage(this.args.thread.channel.id, {
         cooked: stagedMessage.cooked,
-        message: stagedMessage.message,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        staged_id: stagedMessage.id,
-        thread_id: this.args.thread.id,
+        ...this.#sendMessagePayload(stagedMessage),
       })
       .catch((error) => {
         stagedMessage.setSendError(error);
@@ -512,6 +542,17 @@ export default class ChatThread extends Component {
       .finally(() => {
         this.chatThreadPane.sending = false;
       });
+  }
+
+  #sendMessagePayload(message) {
+    return {
+      message: message.message,
+      in_reply_to_id: message.inReplyTo?.id ?? null,
+      upload_ids: message.uploads.map((upload) => upload.id),
+      staged_id: message.id,
+      thread_id: this.args.thread.id,
+      broadcast: message.broadcasted,
+    };
   }
 
   async #sendNewMessage(message) {
@@ -532,11 +573,7 @@ export default class ChatThread extends Component {
       const response = await this.chatApi.sendMessage(
         this.args.thread.channel.id,
         {
-          message: message.message,
-          in_reply_to_id: null,
-          staged_id: message.id,
-          upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.id,
+          ...this.#sendMessagePayload(message),
           ...extractCurrentTopicInfo(this),
         }
       );
@@ -609,6 +646,7 @@ export default class ChatThread extends Component {
       }}
       data-id={{@thread.id}}
       {{didInsert this.setup}}
+      {{didUpdate this.onTargetMessageIdChange @targetMessageId}}
       {{willDestroy this.teardown}}
     >
       <ChatMessagesScroller

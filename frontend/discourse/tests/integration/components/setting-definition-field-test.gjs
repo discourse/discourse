@@ -589,6 +589,73 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
       .hasClass("disabled");
   });
 
+  test("host_list adds typed hosts and ignores wildcards", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_hosts="a.com"}} as |form data|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_hosts"
+              type="host_list"
+              label="My hosts"
+            }}
+            @form={{form}}
+          />
+          <span class="value-probe">{{data.my_hosts}}</span>
+        </Form>
+      </template>
+    );
+
+    const hosts = selectKit("[data-name='my_hosts'] .list-setting");
+    await hosts.expand();
+    await hosts.fillInFilter("b.com");
+    await hosts.keyboard("Enter");
+
+    assert.dom(".value-probe").hasText("a.com|b.com");
+
+    await hosts.fillInFilter("*.c.com");
+    await hosts.keyboard("Enter");
+
+    assert.dom(".value-probe").hasText("a.com|b.com", "ignores wildcard hosts");
+  });
+
+  for (const [type, extra] of [
+    ["group_list", {}],
+    ["category_list", {}],
+    ["compact_list", {}],
+    ["font_list", { choices: [{ value: "arial", name: "Arial" }] }],
+    ["topic", {}],
+    ["host_list", {}],
+    ["group", {}],
+    ["category", {}],
+    ["tag_group_list", {}],
+  ]) {
+    test(`${type} is disabled with its field`, async function (assert) {
+      const definition = {
+        key: "my_setting",
+        type,
+        label: "My setting",
+        ...extra,
+      };
+
+      await render(
+        <template>
+          <Form @data={{hash my_setting=""}} as |form|>
+            <SettingDefinitionField
+              @definition={{definition}}
+              @disabled={{true}}
+              @form={{form}}
+            />
+          </Form>
+        </template>
+      );
+
+      assert
+        .dom("[data-name='my_setting'] .select-kit")
+        .hasClass("is-disabled");
+    });
+  }
+
   test("category_list clears every selection", async function (assert) {
     const categoryId = Site.current().categories[0].id;
 

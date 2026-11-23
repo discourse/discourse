@@ -287,9 +287,10 @@ RSpec.describe Category do
   end
 
   describe "resolve_permissions" do
-    [false, true].each do |enabled|
-      it "keeps logged-in-only access restricted with granular permissions #{enabled}" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+    shared_examples "resolving logged in category restrictions" do |granular_permissions_enabled:|
+      it "keeps logged in access restricted and resolves its grant" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
 
         read_restricted, resolved = Category.resolve_permissions(logged_in_users: :full)
 
@@ -298,6 +299,16 @@ RSpec.describe Category do
           [[Group::AUTO_GROUPS[:logged_in_users], CategoryGroup.permission_types[:full]]],
         )
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "resolving logged in category restrictions",
+                       granular_permissions_enabled: true
     end
 
     it "can determine read_restricted" do
@@ -311,7 +322,7 @@ RSpec.describe Category do
   describe "pseudogroup permission validation" do
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "rejecting anonymous category grants" do |enabled:|
       it "rejects anonymous grants on creation and updates with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
         permissions = { anonymous_users: :readonly, logged_in_users: :full }
@@ -327,6 +338,14 @@ RSpec.describe Category do
         )
         expect(category.reload.category_groups).to be_empty
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "rejecting anonymous category grants", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "rejecting anonymous category grants", enabled: true
     end
   end
 
@@ -362,7 +381,7 @@ RSpec.describe Category do
     fab!(:user)
     fab!(:category)
 
-    [false, true].each do |enabled|
+    shared_examples "enforcing logged in posting permissions" do |enabled:|
       it "honors permission levels with granular permissions #{enabled}" do
         SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
 
@@ -378,6 +397,14 @@ RSpec.describe Category do
           expect(Category.post_create_allowed(Guardian.new).exists?(id: category.id)).to eq(false)
         end
       end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "enforcing logged in posting permissions", enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "enforcing logged in posting permissions", enabled: true
     end
   end
 
@@ -495,6 +522,29 @@ RSpec.describe Category do
 
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
+    end
+
+    it "excludes restricted categories that no longer have any access groups" do
+      restricted_category = Fabricate(:category_with_definition)
+      access_group = Fabricate(:group)
+      restricted_category.set_permissions(access_group => :full)
+      restricted_category.save!
+      access_group.destroy!
+
+      expect(restricted_category.reload.read_restricted).to eq(true)
+      expect(restricted_category.category_groups).to be_empty
+      expect(Category.secured(user_guardian)).not_to include(restricted_category)
+      expect(Category.post_create_allowed(user_guardian)).not_to include(restricted_category)
+      expect(Category.topic_create_allowed(user_guardian)).not_to include(restricted_category)
+    end
+
+    it "still allows posting in a public category without any access group records" do
+      public_category = Fabricate(:category_with_definition)
+
+      expect(public_category.read_restricted).to eq(false)
+      expect(public_category.category_groups).to be_empty
+      expect(Category.post_create_allowed(user_guardian)).to include(public_category)
+      expect(Category.topic_create_allowed(user_guardian)).to include(public_category)
     end
   end
 

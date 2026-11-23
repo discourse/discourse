@@ -781,12 +781,14 @@ RSpec.describe PostAction do
   # flags are already being tested
   all_types_except_flags =
     PostActionType.types.except(*PostActionType.flag_types_without_additional_message.keys)
+  # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
   all_types_except_flags.values.each do |action|
-    it "prevents user to act twice at the same time" do
+    it "prevents concurrent duplicate #{PostActionType.types.key(action)} actions" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end
   end
+  # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
 
   describe "messages" do
     it "does not create a message when there is no message" do
@@ -815,18 +817,30 @@ RSpec.describe PostAction do
       flag_without_message.destroy!
     end
 
-    %i[notify_moderators notify_user spam].each do |post_action_type|
-      it "creates a message for #{post_action_type}" do
+    shared_examples "creating a related flag message" do |action_type:|
+      it "creates the action and its related message" do
         result =
           PostActionCreator.new(
             Discourse.system_user,
             post,
-            PostActionType.types[post_action_type],
+            PostActionType.types[action_type],
             message: "WAT",
           ).perform
         expect(result).to be_success
         expect(result.post_action.related_post_id).to be_present
       end
+    end
+
+    context "with the notify_moderators action" do
+      include_examples "creating a related flag message", action_type: :notify_moderators
+    end
+
+    context "with the notify_user action" do
+      include_examples "creating a related flag message", action_type: :notify_user
+    end
+
+    context "with the spam action" do
+      include_examples "creating a related flag message", action_type: :spam
     end
 
     it "creates a message for custom flags when message is required" do
@@ -906,8 +920,8 @@ RSpec.describe PostAction do
       expect(user_notifications.last.topic).to eq(topic)
     end
 
-    %i[agree_and_keep disagree ignore_and_do_nothing].each do |disposition|
-      it "bumps the topic when performing #{disposition}" do
+    shared_examples "bumping a flag message topic after review" do |disposition:|
+      it "bumps the topic after the disposition is performed" do
         SiteSetting.auto_respond_to_flag_actions = true
         user = Fabricate(:user, refresh_auto_groups: true)
         result = PostActionCreator.create(user, post, :spam, message: "WAT")
@@ -921,6 +935,19 @@ RSpec.describe PostAction do
 
         expect(topic.reload.bumped_at).to be > original_bumped_at
       end
+    end
+
+    context "when performing agree_and_keep" do
+      include_examples "bumping a flag message topic after review", disposition: :agree_and_keep
+    end
+
+    context "when performing disagree" do
+      include_examples "bumping a flag message topic after review", disposition: :disagree
+    end
+
+    context "when performing ignore_and_do_nothing" do
+      include_examples "bumping a flag message topic after review",
+                       disposition: :ignore_and_do_nothing
     end
 
     it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do

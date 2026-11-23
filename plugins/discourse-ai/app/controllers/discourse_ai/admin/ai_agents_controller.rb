@@ -116,7 +116,10 @@ module DiscourseAi
           if mcp_server_ids
             sync_mcp_server_assignments(@ai_agent, mcp_server_ids, mcp_server_tool_names)
           end
-          RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
+          if params.key?(:rag_uploads) || params.key?(:rag_chunk_tokens) ||
+               params.key?(:rag_chunk_overlap_tokens)
+            RagDocumentFragment.update_target_uploads(@ai_agent, attached_upload_ids(@ai_agent))
+          end
           log_ai_agent_update(@ai_agent, initial_attributes)
           log_ai_spam_model_update(initial_spam_settings)
 
@@ -303,7 +306,8 @@ module DiscourseAi
 
       AI_STREAM_CONVERSATION_UNIQUE_ID = "ai-stream-conversation-unique-id"
       MAX_STREAM_REPLY_CUSTOM_TOOLS = 20
-      MAX_STREAM_REPLY_TOOL_RESULTS = 20
+      MAX_STREAM_REPLY_TOOL_RESULTS =
+        DiscourseAi::AiBot::StreamReplyCustomToolsSession::MAX_TOOL_RESULTS
       MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
       MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
 
@@ -409,8 +413,8 @@ module DiscourseAi
 
         raw_results.map do |tool_result|
           hash = normalize_hash_param(tool_result, key: :tool_results)
-          id = hash["tool_call_id"].presence || hash["id"].presence
-          if id.blank?
+          id = DiscourseAi::AiBot::StreamReplyCustomToolsSession.tool_result_id(hash)
+          if id.nil?
             raise ArgumentError,
                   I18n.t("discourse_ai.errors.invalid_tool_results", details: "tool_call_id")
           end
@@ -435,7 +439,7 @@ module DiscourseAi
                   )
           end
 
-          { "tool_call_id" => id.to_s, "content" => content }
+          { "tool_call_id" => id, "content" => content }
         rescue JSON::GeneratorError
           raise ArgumentError,
                 I18n.t("discourse_ai.errors.invalid_tool_results", details: "content")
@@ -463,6 +467,8 @@ module DiscourseAi
       end
 
       def attached_upload_ids(agent)
+        return agent.uploads.pluck(:id) unless ai_agent_params.key?(:rag_uploads)
+
         manual_upload_ids = ai_agent_params[:rag_uploads].to_a.map { |upload| upload[:id] }
         source_upload_ids = agent.rag_document_sources.where.not(upload_id: nil).pluck(:upload_id)
 

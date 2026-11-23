@@ -53,4 +53,20 @@ RSpec.describe ComponentIndexSerializer do
   it "includes the component description" do
     expect(json[:description]).to eq("Description of my component")
   end
+
+  it "describes a popular component that doesn't describe itself" do
+    popular =
+      Fabricate(
+        :theme,
+        component: true,
+        remote_theme:
+          RemoteTheme.create!(
+            remote_url: "https://github.com/discourse/discourse-brand-header.git",
+          ),
+      )
+
+    expect(described_class.new(popular, root: false).as_json[:description]).to eq(
+      I18n.t("popular_themes.brand_header.description"),
+    )
+  end
 end

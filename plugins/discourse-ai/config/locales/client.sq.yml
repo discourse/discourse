@@ -42,6 +42,8 @@ sq:
         type: "Lloji"
         error: "Gabim"
       discourse_workflows:
+        ai_tool:
+          list_item: "Element liste"
         classify:
           text: "Tekst"
           upload_ids: "Imazhet"
@@ -59,24 +61,29 @@ sq:
       llm_selector:
         none: "Asnjë"
       features:
-        disabled: "(e çaktivizuar)"
-        groups: "Grupet:"
+        table:
+          status: "Status"
+          enabled: "Aktivizuar"
+          groups: "Grupet"
+        chatbot:
+          places:
+            personal_messages: "Mesazhe personale"
+            chat_direct_messages: "Mesazhet e bisedës"
+            none: "I padisponueshëm"
         no_agent: "Nuk është vendosur"
         no_groups: "Asnjë"
         edit: "Rregullimet"
-        expand_list:
-          one: "(%{count} tjetër)"
-          other: "(%{count} të tjera)"
-        collapse_list: "(shfaq më pak)"
         nav:
           enabled: "Aktivizuar"
         filters:
-          all: "Të gjitha"
           reset: "Rivendosni"
         sentiment:
           enabled: "Aktivizuar"
         search:
           name: "Kërko"
+        review_queue:
+          setting_groups:
+            settings: "Rregullimet"
         image_caption:
           setting_groups:
             settings: "Rregullimet"
@@ -85,7 +92,18 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            label: "Mesazhe personale"
+            choices:
+              none: "Asnjë"
+              all: "Të gjitha"
+          content_localization_language_switcher:
+            choices:
+              none: "Asnjëri"
+              all: "Të gjithë"
         model_progress:
           detail:
             columns:
@@ -100,6 +118,8 @@ sq:
               title: "Categories"
             tag:
               title: "Etiketat"
+        admin_actions:
+          enabled: "Aktivizuar"
         stats:
           eta_minutes:
             one: "%{count} minutë"
@@ -116,6 +136,8 @@ sq:
             other: "%{count} postime"
       spam:
         short_title: "Spam"
+        no_llm_selected: "Asnjë"
+        no_decision_model_selected: "Asnjë"
         enable: "Aktivizo"
         test_modal:
           spam: "Spam"

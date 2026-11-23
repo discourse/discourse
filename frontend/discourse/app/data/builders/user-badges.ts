@@ -30,6 +30,7 @@ export function findUserBadgesByBadgeId(
 ) {
   const url = applyQueryParams("/user_badges.json", {
     badge_id: badgeId,
+    limit: opts.limit,
     offset: opts.offset,
     username: opts.username,
   });

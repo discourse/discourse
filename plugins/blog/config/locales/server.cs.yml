@@ -14,9 +14,12 @@ cs:
     about: O tomto webu
     community: Komunita
     preview: Náhled
+    author: Autor
     search: Vyhledat
     replies:
       one: "%{count} odpověď"
       few: "%{count} odpovědí"
       many: "%{count} odpovědí"
       other: "%{count} odpovědí"
+    themes:
+      default: Výchozí

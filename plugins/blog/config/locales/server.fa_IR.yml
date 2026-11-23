@@ -14,7 +14,10 @@ fa_IR:
     about: درباره
     community: انجمن
     preview: پیش‌نمایش
+    author: نویسنده
     search: جستجو
     replies:
       one: "%{count} پاسخ"
       other: "%{count} پاسخ"
+    themes:
+      default: پیش‌فرض

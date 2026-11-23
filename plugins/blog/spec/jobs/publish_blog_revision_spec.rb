@@ -20,9 +20,9 @@ RSpec.describe Jobs::PublishBlogRevision do
     it "keeps a due schedule while the plugin is disabled and publishes it once re-enabled" do
       freeze_time
       publication = Blog::Publication.for_topic(topic)
-      revision = publication.submit!(admin)
-      publication.approve!(admin, revision.id)
-      publication.schedule!(admin, revision_id: revision.id, at: 1.hour.from_now.iso8601)
+      revision = submit_blog_draft(publication, admin)
+      approve_blog_revision(publication, revision, admin)
+      schedule_blog_revision(publication, revision, admin, at: 1.hour.from_now)
       token = publication.schedule_token
       freeze_time 2.hours.from_now
       SiteSetting.blog_enabled = false

@@ -9,7 +9,7 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("selecting a tag reports the tag name", async function (assert) {
@@ -36,7 +36,7 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
   });
 
   test("displays pre-selected tags from pipe-delimited value", async function (assert) {
-    this.set("value", "foo|bar|baz");
+    this.value = "foo|bar|baz";
 
     await render(<template><TagList @value={{this.value}} /></template>);
 
@@ -57,7 +57,7 @@ module("Integration | Component | SiteSettings | TagList", function (hooks) {
   });
 
   test("displays no tags when value is empty", async function (assert) {
-    this.set("value", "");
+    this.value = "";
 
     await render(<template><TagList @value={{this.value}} /></template>);
 

@@ -22,6 +22,8 @@ export default class GroupIndexController extends Controller {
 
   /** @type {string | null} */
   order = null;
+
+  /** @type {boolean} */
   asc = true;
 
   /** @type {string | null} */
@@ -272,9 +274,10 @@ export default class GroupIndexController extends Controller {
 
   @action
   updateOrder(field, asc) {
+    // Descending must be an explicit `false`: a null query param serializes to an absent one.
     this.setProperties({
       order: field,
-      asc,
+      asc: asc === true,
     });
   }
 

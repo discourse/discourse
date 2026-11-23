@@ -11,10 +11,12 @@ th:
         insert: แทรก
         preview_archive: คลัง
         mobile: โทรศัพท์
+        save: บันทึก
         themes: ธีม
         theme_name: ชื่อธีม
         edit: แก้ไข
         preview: แสดงตัวอย่าง
+        customize: การปรับแต่ง
         export: ส่งออก
         active: ใช้งานอยู่
   js:
@@ -25,6 +27,7 @@ th:
         preview: แสดงตัวอย่าง
         change:
           title: ชื่อเรื่อง
+          tags: ป้าย
       review:
         copy: คัดลอก
         open: เปิด
@@ -37,6 +40,8 @@ th:
         edit: แก้ไข
         status: สถานะ
         replies: ตอบ
+        title: ชื่อเรื่อง
+      all: ทั้งหมด
       drafts: แบบร่าง
       preview: แสดงตัวอย่าง
       unpublish: ไม่เผยแพร่

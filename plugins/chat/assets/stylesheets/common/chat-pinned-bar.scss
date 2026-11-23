@@ -165,7 +165,6 @@
   }
 
   &__unread-indicator {
-    @include chat-unread-indicator;
     position: absolute;
     inset-block-start: 0;
     inset-inline-end: 0;

@@ -7,16 +7,15 @@
   "license": "GPL-2.0-only",
   "keywords": [],
   "dependencies": {
-    "core-js": "^3.50.0",
+    "core-js": "^3.51.0",
     "discourse": "workspace:0.0.0",
     "discourse-markdown-it": "workspace:*",
     "markdown-it": "^15.0.3",
-    "pretty-text": "workspace:*",
     "rolldown": "1.2.7",
-    "xss": "1.0.15"
+    "xss": "1.0.17"
   },
   "engines": {
-    "node": ">= 20",
+    "node": "^22.22.0 || ^24.13.0 || >=26.0.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
     "pnpm": "^12"

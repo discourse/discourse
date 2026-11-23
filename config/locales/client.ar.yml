@@ -12,6 +12,14 @@ ar:
       title: "الإبلاغ عن المحتوى غير القانوني"
       email: "عنوان البريد الإلكتروني"
       resend_email_code: "إعادة إرسال الرمز"
+    code_editor:
+      search:
+        replace: "استبدال"
+        next: "التالي"
+        previous: "السابق"
+        close: "إغلاق"
+      fold:
+        to: "إلى"
     user_api_key:
       title: 'تفويض "%{application_name}"'
       authorize: "تفويض"
@@ -661,40 +669,30 @@ ar:
         title: "تخصيص موقعك"
         show_light_screenshot: "عرض لقطة شاشة للوضع الفاتح"
         show_dark_screenshot: "عرض لقطة شاشة للوضع الداكن"
+      create_category:
+        action: "إنشاء فئة"
       invite_collaborators:
         title: "دعوة المتعاونين"
         action: "إنشاء دعوة"
-      start_posting:
-        title: "بدء النشر"
-        action: "اطّلع على الأفكار"
-        choose_option: "كيف تود أن تبدأ؟"
-        predefined_topics: "قوالب لكسر حالة السكوت"
-        predefined_topics_subtitle: "امنح الأعضاء الجدد موضوعًا يتحدثون عنه، واختر قالبًا لتعديله، ثم أنشئ قالبك الخاص."
-        predefined_topics_description: "اختر من بين مجموعة من الموضوعات لبدء المحادثات"
-        use_predefined: "تصفح القوالب"
-        back: "رجوع"
-        icebreakers:
-          introduce_yourself:
-            title: "عرّف بنفسك"
-            body: "أهلاً بكم في هذا المجتمع! دعونا نبدأ بالتعرف على بعضنا بعضًا؛ يُرجى تقديم أنفسكم ومشاركتنا نبذة يسيرة عن اهتماماتكم. سأبدأ أنا أولاً: أنا شغوفٌ جدًا بعالم التكنولوجيا وأعشق تعليم الآخرين!"
     design_wizard:
       title: "تخصيص موقعك"
       back: "رجوع"
       next: "التالي"
+      steps:
+        theme:
+          title: "اختيار سمة"
       sections:
-        theme: "السمة"
         fonts: "الخطوط"
+        logo: "الشعار"
         homepage: "الصفحة الرئيسية"
-        welcome_banner: "بانر الترحيب"
-        search: "البحث"
       theme:
         selected: "محدَّدة"
-      colors:
-        light: "فاتح"
-        dark: "داكن"
       fonts:
-        base_font: "الخط الأساسي"
-        heading_font: "خط العنوان"
+        base_font: "النص الأساسي"
+        heading_font: "العناوين"
+      logo:
+        description: "يظهر في شريط التنقل العلوي للموقع، وكذلك في الجزء العلوي من إشعارات البريد الإلكتروني الخاصة بالموقع."
+        help_text: "الحجم الموصى به هو 600 × 80 بكسل."
       homepage:
         topics: "الموضوعات"
         categories: "الفئات"
@@ -1293,6 +1291,7 @@ ar:
         suspect_user: "هل ينشر هذا المستخدم رسائل عشوائية؟"
         approve_post: "هل توافق على هذا المنشور؟"
         approve_topic: "هل توافق على هذا الموضوع؟"
+        something_wrong_with_post: "هل هناك خطأ في هذا المنشور؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
@@ -3083,6 +3082,7 @@ ar:
       no_results: "لا توجد نتائج"
       search: "البحث…"
       label: "تحديد الخيارات"
+      remove_item: "إزالة %{name}"
     d_otp:
       screen_reader:
         zero: أدخل رقمًا
@@ -3203,7 +3203,6 @@ ar:
         }.
     learn_more: "معرفة المزيد…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>اعرف المزيد…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>الملاحظات…</a>"
     mute: كتم
     unmute: إلغاء الكتم
     last_post: آخر منشور
@@ -3594,6 +3593,8 @@ ar:
         size_too_small: "%{provided_file_size} أصغر من الحد الأدنى المسموح به وهو %{min_file_size}"
     emoji_picker:
       filter_placeholder: البحث عن رمز تعبيري
+      no_results: "لا توجد نتائج"
+      favorites: "المستخدمة بشكلٍ متكرر"
       smileys_&_emotion: الوجوه المبتسمة ورموز المشاعر
       people_&_body: الأشخاص وأعضاء الجسم
       animals_&_nature: الحيوانات والطبيعة
@@ -3727,6 +3728,10 @@ ar:
       emoji: "الرمز التعبيري :)"
       more_emoji: "المزيد…"
       options: "الخيارات"
+      ai_content:
+        code: "الرمز"
+        quote: "اقتباس"
+        details: "التفاصيل"
       whisper: "همس"
       unlist: "تم إلغاء إدراجه"
       add_warning: "هذا تحذير رسمي."
@@ -5422,10 +5427,8 @@ ar:
           label: "محدَّد"
           title: "انقر لإزالة المنشور من التحديد"
         select_replies:
-          label: "تحديد المنشور +الردود"
           title: "إضافة المنشور وجميع الردود عليه إلى التحديد"
         select_below:
-          label: "تحديد المنشور +ما يليه"
           title: "إضافة المنشور وكل ما يليه إلى التحديد"
         delete: حذف المحدَّد
         cancel: إلغاء التحديد
@@ -5462,6 +5465,7 @@ ar:
         actions: "الإجراءات الجماعية"
     post:
       accessible_heading: "منشور بواسطة %{username} في %{date}"
+      ai_generated: "الذكاء الاصطناعي"
       heading_anchor: "رابط العنوان"
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
@@ -6897,9 +6901,21 @@ ar:
       forward: "للأمام"
       share: "مشاركة"
       dismiss: "تجاهل"
+    mobile_tab_bar:
+      new_topic: "موضوع جديد"
+      create: "إنشاء"
+      more: "المزيد"
+      back: "رجوع"
+      topics: "الموضوعات"
+      drafts:
+        zero: "المسودات (%{count})"
+        one: "المسودات (%{count})"
+        two: "المسودات (%{count})"
+        few: "المسودات (%{count})"
+        many: "المسودات (%{count})"
+        other: "المسودات (%{count})"
     safe_mode:
       enabled: "تم تفعيل الوضع الآمن، أغلق نافذة المتصفح هذه للخروج منه"
-    theme_preview_notice: "أنت تقوم حاليًا بمعاينة إحدى السمات، أغلق علامة تبويب أو نافذة هذا المتصفح للرجوع إلى التكوين الطبيعي للموقع."
     theme_preview_failed: "فشل معاينة السمة لأنها غير موجودة، أو ليس لديك الإذن للوصول إليها."
     image_removed: "(تمت إزالة الصورة)"
     pause_notifications:
@@ -7352,24 +7368,23 @@ ar:
         name: "الاسم"
         plugin: "الإضافات"
         metadata: "البيانات الوصفية"
-        enabled: "مفعَّلة"
-        enabled_for: "مُفعّل لـ..."
+        enabled: "مفعَّلة؟"
         show_image: "اعرض الصورة"
-        edit_groups: "تعديل مجموعات الانضمام الاختياري"
+        feedback: "الملاحظات"
+        toggle: "تفعيل %{name}"
         groups_updated: "حُدثت المجموعات!"
         save_groups: "احفظ المجموعات"
         add_groups_to_enable: "أضف مجموعات لتفعيل هذه الميزة"
         no_changes_to_save: "لا توجد تغييرات للحفظ"
         select_groups: "تحديد المجموعات…"
         opt_in_groups: "مجموعات الانضمام الاختياري"
-        show_related_settings: "إظهار الإعدادات ذات الصلة..."
+        settings: "الإعدادان"
         opt_in_groups_instructions: "يمكن استخدام مجموعات الانضمام الاختياري للسماح لمجموعة معينة من المستخدمين باختبار تغييرٍ ما قبل طرحه للجميع. يرجى ملاحظة أن هذه المجموعات لن تكون ذات صلة بمجرد انتقال التغيير إلى الحالة المستقرة."
         enabled_for_throttle: "لقد قمت بتغيير الأشخاص المفعَّلة لديهم هذه الميزة بسرعة كبيرة. يرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
         change_enabled_for_success: "لقد فعلت هذا التغيير لـ %{enabledFor}"
         change_disabled: "تم إلغاء اشتراكك في هذا التغيير"
         depends_on_notice: "يتطلَّب هذا التغيير تفعيل %{dependencyLinks}."
         permanent_notice: "أصبح هذا التغيير دائمًا وسيتم إزالته قريبًا. لم يعد بإمكانك إلغاء الاشتراك."
-        permanent_soon_notice: "سيصبح هذا التغيير دائمًا في أقرب وقت. لن تتمكن بعد الآن من إلغاء الاشتراك."
         permanent_no_group_selection: "لا ينطبق؛ حيث تسري التغييرات الدائمة على كافة المجموعات"
         no_changes: "لا توجد تغييرات قادمة في الوقت الحالي."
         preview: "معاينة"
@@ -7377,7 +7392,6 @@ ar:
         default_warning_short: "لقد تغيرت القيمة الافتراضية لهذا الإعداد، يمكنك قراءة المزيد حول ذلك في صفحة <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>التغييرات القادمة</a>."
         enabled_for_options:
           no_one: "لا أحد"
-          everyone: "الجميع"
           staff: "%{staffGroupName} فقط"
           specific_groups: "مجموعة (مجموعات) محدَّدة"
           specific_groups_with_group_names:
@@ -8888,14 +8902,6 @@ ar:
           company_name_placeholder: "ExampleCo"
           company_url: "الموقع الإلكتروني"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "القانون الحاكم"
-          governing_law_placeholder: "المقاطعة أو الولاية أو البلد"
-          governing_law_help: |
-            حدِّد الولاية القضائية فيما يتعلَّق بالشروط القانونية للموقع. تكون منطقة الولاية القضائية عادةً هي مكان عمل الشركة أو تشغيلها.
-          city_for_disputes: "مدينة النزاعات"
-          city_for_disputes_placeholder: "المدينة"
-          city_for_disputes_help: |
-            حدِّد المدينة لحل النزاعات القانونية المتعلقة بهذا المنتدى.
           extra_groups:
             heading: "قائمة المجموعة"
             description: "المجموعات الإضافية المراد عرضها في صفحة \"حول\"."
@@ -9111,7 +9117,6 @@ ar:
           uploading: "جارٍ التحميل…"
           uploading_progress: "جارٍ التحميل: %{progress}%"
           success: "تم تحميل الملف \"%{filename}\" بنجاح. تجري الآن معالجة الملف وسيستغرق دقيقة قبل ظهوره في القائمة."
-          error: "حدثت مشكلة في أثناء تحميل '%{filename}': %{message}"
         settings: "الإعدادات"
         operations:
           is_running: "توجد عملية جارية حاليًا…"
@@ -10212,7 +10217,6 @@ ar:
         silence_duration: "إلى متى سيتم كتم المستخدم؟"
         silence_reason_title: "سبب الكتم"
         silence_reason_placeholder: "سبب الكتم"
-        silence_message: "رسالة إلكترونية"
         suspended_until: "(حتى %{until})"
         suspend_forever: "التعليق للأبد"
         cant_suspend: "لا يمكن تعليق هذا المستخدم."
@@ -10560,6 +10564,8 @@ ar:
       site_text:
         description: "يمكنك تخصيص أي نص في المنتدى الخاص بك."
         search_label: "البحث"
+        preview:
+          default: "افتراضي"
         theme_disabled: "متوقفة"
         filters: "المرشحات"
         status:
@@ -10767,7 +10773,7 @@ ar:
           modal_title: تجميعات الشارات
         granted_by: منحها
         granted_at: تاريخ المنح
-        reason_help: (رابط إلى منشور أو موضوع)
+        reason_help: رابط إلى منشور أو موضوع
         save: حفظ
         delete: حذف
         delete_confirm: هل تريد بالتأكيد حذف هذه الشارة؟

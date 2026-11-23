@@ -455,6 +455,21 @@ RSpec.describe Oneboxer do
       )
     end
 
+    it "renders external metadata as text in generic media oneboxes" do
+      url = "https://example.com/picture"
+      description = "x'><div class='injected'>Sign in</div>"
+      stub_request(:head, url)
+      stub_request(:get, url).to_return(body: <<~HTML)
+        <meta property="og:type" content="image">
+        <meta property="og:image" content="https://example.com/picture.png">
+        <meta name="twitter:description" content="#{CGI.escapeHTML(description)}">
+      HTML
+
+      onebox = Nokogiri::HTML5.fragment(described_class.onebox_raw(url)[:onebox])
+
+      expect(onebox.at_css("img")["alt"]).to eq(description)
+    end
+
     context "when URL contains non-ASCII characters" do
       let(:html) { <<~HTML }
         <html>

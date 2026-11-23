@@ -15,6 +15,9 @@ ug:
         preview_archive: ئارخىپ
         desktop: ئۈستەل يۈزى
         mobile: كۆچمە
+        save: ساقلا
+        path_formats:
+          custom: ئىختىيارى
         back_to_themes: ئۆرنەككە قايت
         new_theme_short: يېڭى ئۆرنەك
         themes: ئۆرنەك
@@ -22,6 +25,7 @@ ug:
         edit: تەھرىر
         activate: ئاكتىپلا
         preview: ئالدىن كۆزەت
+        customize: ئىختىيارى
         export: چىقار
         active: ئاكتىپ
   js:
@@ -33,6 +37,7 @@ ug:
         change:
           title: ئاتاق
           body: مەزمۇن
+          tags: بەلگە
       review:
         create: ئۇلانما قۇر
         copy: كۆچۈر
@@ -49,7 +54,11 @@ ug:
         edit: تەھرىر
         status: ھالەت
         replies: جاۋاب
+        title: ئاتاق
+        page: بەت
+      all: ھەممىسى
       drafts: دەسلەپكى نۇسخا
+      pages: بەت
       preview: ئالدىن كۆزەت
       unpublish: تارقاتما
       appearance_link: كۆرۈنۈش

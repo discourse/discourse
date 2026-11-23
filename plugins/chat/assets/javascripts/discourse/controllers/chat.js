@@ -8,6 +8,7 @@ export default class ChatController extends Controller {
   @service chatChannelsManager;
   @service siteSettings;
   @service router;
+  @service mobileTabBar;
 
   get shouldUseChatSidebar() {
     if (this.chat.chatDisabledInPreferences) {
@@ -36,18 +37,11 @@ export default class ChatController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
-  get enabledRouteCount() {
-    return [
-      this.siteSettings.chat_threads_enabled,
-      this.chat.userCanAccessDirectMessages,
-      this.siteSettings.enable_public_channels,
-    ].filter(Boolean).length;
-  }
-
+  // The footer also supplies chat search to the site header.
   get shouldUseChatFooter() {
     return (
       FOOTER_NAV_ROUTES.includes(this.router.currentRouteName) &&
-      this.enabledRouteCount > 1
+      (this.chat.enabledViewCount > 1 || this.mobileTabBar.enabled)
     );
   }
 

@@ -52,12 +52,6 @@ ar:
         flagged_post_response: "الاستجابة من النموذج: %{llm_response}"
         notify_author_pm:
           subject: "تمت إزالة منشورك مؤقتًا للمراجعة."
-          body: |
-            مرحبًا @%{username}،
-
-            تم إزالة منشورك في "%{topic_title}" مؤقتًا ووضعه في قائمة انتظار المراجعة ليطلع عليه أحد المشرفين. إذا تم الموافقة عليه، سيتم استعادته تلقائيًا.
-
-            المرجع: %{post_url}
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
@@ -162,6 +156,12 @@ ar:
     ai_translation_backfill_hourly_rate: "عدد المنشورات والموضوعات التي تتم ترجمتها كل ساعة أثناء الملء الرجعي. اضبط القيمة على 0 لتعطيل الترجمة التلقائية للمحتوى الحالي."
     ai_translation_backfill_parallel_jobs: "عدد مهام توطين المنشورات التي يتم تنفيذها بالتوازي في كل دورة ملء رجعي. تزيد القيم الأعلى من معدَّل المعالجة لكنها تستهلك موارد أكثر."
     ai_usage_rollup_after_days: "المدة الزمنية بالأيام للاحتفاظ ببيانات استهلاك الذكاء الاصطناعي التفصيلية لكل طلب قبل تحويلها إلى ملخصات يومية مجمعة؛ علمًا بأن تعيين القيمة عند 0 سيؤدي إلى إيقاف ميزة التجميع."
+    keywords:
+      ai_default_llm_model: "نموذج اللغة الافتراضي"
+      ai_discord_search_enabled: "التكامل مع Discord"
+      ai_helper_automatic_chat_thread_title: "عناوين سلاسل المحادثات"
+      ai_summarization_enabled: "الملخصات"
+      ai_summary_gists_enabled: "ملخصات قصيرة لقائمة الموضوعات"
   reviewables:
     reasons:
       flagged_by_toxicity: أبلغ المكوِّن الإضافي الذي يعمل بالذكاء الاصطناعي عن هذا بعد تصنيفه كمحتوى مسيء.
@@ -266,10 +266,6 @@ ar:
           name: "جارٍ إنشاء الصورة..."
         image_generation_custom:
           name: "مخصَّصة"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -1009,6 +1005,20 @@ ar:
           hidden: "إعداد الموقع '%{setting_name}' مخفي ولا يمكن قراءته هنا."
           secret: "يحتوي إعداد الموقع '%{setting_name}' على قيمة سرية ولا يمكن قراءته هنا."
           themeable: "يتطلَّب إعداد الموقع '%{setting_name}' سمةً ولا يمكن قراءته هنا."
+    appearance_authoring:
+      default_theme: "السمة الافتراضية"
+      colors:
+        light:
+          header_background: "الرأس"
+      fonts:
+        base_font: "خط النص الأساسي"
+        heading_font: "خط العنوان"
+    mcp_theme_access:
+      none: "لا يوجد"
+      changes:
+        server: "خادم MCP"
+    mcp_app_setup:
+      none: "لا يوجد"
     reviewables:
       ai_tool_action:
         title: "إجراء أداة الذكاء الاصطناعي"
@@ -1086,6 +1096,7 @@ ar:
       cannot_edit_builtin: "لا يمكنك تعديل نموذج مُدمَج."
       secret_required: "يجب تحديد بيانات الاعتماد"
       secret_not_found: "بيانات الاعتماد المحدَّدة غير موجودة"
+      missing_provider_param: "لا يمكن ترك %{param} فارغة"
       configuration:
         disable_embeddings: "يجب عليك إيقاف 'ai embeddings enabled' أولًا."
         choose_model: "قم بتعيين 'ai embeddings selected model' أولًا."

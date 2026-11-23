@@ -11,6 +11,15 @@ hu:
       go_back: "Visszalépés"
       title: "Illegális tartalom bejelentése"
       email: "E-mail-cím"
+    code_editor:
+      search:
+        replace: "Csere"
+        next: "Következő"
+        previous: "Vissza"
+        close: "Bezárás"
+        go: "Ugrás"
+      fold:
+        to: "–"
     user_api_key:
       title: '"%{application_name}" engedélyezése'
       authorize: "Engedélyezés"
@@ -486,38 +495,29 @@ hu:
       pm_title: "Ajánlott üzenetek"
     admin_onboarding_banner:
       congrats_onboarding_complete: "Gratulálunk a bevezetési folyamat elvégzéséhez!"
+      create_category:
+        action: "Kategória létrehozása"
       invite_collaborators:
         title: "Együttműködők meghívása"
         action: "Meghívó létrehozása"
-      start_posting:
-        title: "Kezdj el posztolni!"
-        choose_option: "Hogyan szeretnél kezdeni?"
-        predefined_topics: "Jégtörő sablonok"
-        predefined_topics_subtitle: "Adj témát az új tagoknak a beszélgetéshez: válassz egy sablont, szerkeszd meg, és alakítsd a sajátodra!"
-        predefined_topics_description: "Válogass a beszélgetésindító ötletek közül, és indítsd be a társalgást!"
-        use_predefined: "Sablonok böngészése"
-        back: "Vissza"
-        icebreakers:
-          introduce_yourself:
-            title: "Mutasd be magad"
-            body: "Üdv a közösségben! Ismerjük meg egymást. Kérlek mutatkozz be, és mesélj egy kicsit az érdeklődési körödről. Először én kezdem: szenvedélyesen rajongok a technológiáért, és szeretek másokat tanítani!"
     design_wizard:
       back: "Vissza"
       next: "Következő"
+      steps:
+        homepage:
+          title: "Megjelenés & élmény"
       sections:
-        theme: "Téma"
         fonts: "Betűkészletek"
+        logo: "Logó"
         homepage: "Főoldal"
-        welcome_banner: "Üdvözlő banner"
-        search: "Keresés"
       theme:
         selected: "Kiválasztott"
-      colors:
-        light: "Világos"
-        dark: "Sötét"
       fonts:
-        base_font: "Alap betűkészlet"
-        heading_font: "Fejléc betűkészlet"
+        base_font: "Törzs"
+        heading_font: "Címsorok"
+      logo:
+        description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
+        help_text: "Az ajánlott méret 600×80 képpont."
       homepage:
         topics: "Témák"
         categories: "Kategóriák"
@@ -963,6 +963,7 @@ hu:
         suspect_user: "Ez felhasználói spam?"
         approve_post: "Jóváhagyod ezt a bejegyzést?"
         approve_topic: "Jóváhagyod ezt a témát?"
+        something_wrong_with_post: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -2498,6 +2499,7 @@ hu:
       no_results: "Nincs találat"
       search: "Keresés…"
       label: "Válasszon a lehetőségekből"
+      remove_item: "%{name} eltávolítás"
     d_otp:
       screen_reader:
         one: Adj meg egy számot
@@ -2578,7 +2580,6 @@ hu:
         } korlát túllépve.
     learn_more: "További információ…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>További információ…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>Visszajelzés…</a>"
     mute: Némítás
     unmute: Némítás feloldása
     last_post: Közzétett
@@ -2905,6 +2906,9 @@ hu:
         size_too_small: "%{provided_file_size} kisebb, mint a minimálisan megengedett %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emodzsi keresése
+      search_placeholder: "Keresés emodzsinév és álnév alapján…"
+      no_results: "Nincs találat"
+      favorites: "Gyakran használt"
       smileys_&_emotion: Mosolyok és érzelmek
       people_&_body: Emberek és test
       animals_&_nature: Állatok és természet
@@ -2946,6 +2950,10 @@ hu:
       emoji: "Emodzsi :)"
       more_emoji: "további…"
       options: "Beállítások"
+      ai_content:
+        code: "Kód"
+        quote: "Idézet"
+        details: "Részletek"
       whisper: "suttogás"
       unlist: "nem listázott"
       add_warning: "Ez egy hivatalos figyelmeztetés."
@@ -4067,10 +4075,8 @@ hu:
           label: "kiválasztott"
           title: "Kattintson a bejegyzés eltávolításához a kiválasztásból"
         select_replies:
-          label: "kiválasztás válaszokkal együtt"
           title: "A hozzászólás és összes válaszának hozzáadása a kiválasztáshoz"
         select_below:
-          label: "Kiválasztás az alatt lévőkkel együtt"
           title: "A bejegyzés és az összes utána következő hozzáadása a kiválasztáshoz"
         delete: kiválasztottak törlése
         cancel: kiválasztások visszavonása
@@ -5184,9 +5190,17 @@ hu:
       forward: "Előre"
       share: "Megosztás"
       dismiss: "Elvet"
+    mobile_tab_bar:
+      new_topic: "Új téma"
+      create: "Létrehozás"
+      more: "Több"
+      back: "Vissza"
+      topics: "Témák"
+      drafts:
+        one: "Vázlatok (%{count})"
+        other: "Vázlatok (%{count})"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, a biztonságos módból való kilépéshez zárja be ezt a keresési lapot"
-    theme_preview_notice: "Épp egy téma előnézetét nézi, zárba be a böngészőlapot vagy ablakot, hogy visszatérjen a webhelykonfigurációhoz."
     theme_preview_failed: "Nem sikerült megtekinteni a témát, mert nem létezik, vagy nincs hozzáférési jogosultsága."
     image_removed: "(kép eltávolítva)"
     pause_notifications:
@@ -5586,29 +5600,26 @@ hu:
         name: "Név"
         plugin: "Bővítmény"
         metadata: "Metaadat"
-        enabled: "Bekapcsolva"
-        enabled_for: "Engedélyezve..."
+        enabled: "Engedélyezve?"
         show_image: "Kép megjelenítése"
-        edit_groups: "Feliratkozási csoportok szerkesztése"
+        feedback: "Visszajelzés"
         groups_updated: "Csoportok frissítve!"
         save_groups: "Csoportok mentése"
         add_groups_to_enable: "Csoportok hozzáadása a funkció engedélyezéséhez"
         no_changes_to_save: "Nincsenek menthető módosítások"
         select_groups: "Csoportok kiválasztása…"
         opt_in_groups: "Feliratkozási csoportok"
-        show_related_settings: "Kapcsolódó beállítások megjelenítése..."
+        settings: "Beállítások"
         opt_in_groups_instructions: "A feliratkozási csoportok segítségével lehetővé tehető, hogy egy adott felhasználói csoport tesztelje a módosítást, mielőtt az mindenki számára elérhetővé válna. Fontos megjegyezni, hogy ezek a csoportok elveszítik a relevanciájukat, miután a módosítás stabil állapotba kerül."
         enabled_for_throttle: "Túl gyorsan módosítottad, hogy kikre vonatkozik ez a módosítás. Kérjük, várj néhány másodpercet, mielőtt újra próbálkozol."
         change_enabled_for_success: "Engedélyezted ezt a módosítást a(z) %{enabledFor} számára"
         change_disabled: "Kizártad ezt a módosítást"
         permanent_notice: "Ez a módosítás mostantól végleges, és hamarosan eltávolításra kerül. Többé nem lehet leiratkozni."
-        permanent_soon_notice: "Ez a változás hamarosan végleges lesz. Többé nem lesz lehetőséged a leiratkozásra."
         permanent_no_group_selection: "N/A, az állandó változtatások minden csoportra vonatkoznak."
         no_changes: "Jelenleg nincsenek közelgő változások."
         preview: "Előnézet"
         enabled_for_options:
           no_one: "Senki"
-          everyone: "Mindenki"
           staff: "csak %{staffGroupName}"
           specific_groups: "Meghatározott csoport(ok)"
           specific_groups_with_group_names:
@@ -6762,14 +6773,6 @@ hu:
           company_name: "Név"
           company_url: "Weboldal"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Irányadó jog"
-          governing_law_placeholder: "Tartomány, állam vagy ország"
-          governing_law_help: |
-            Adja meg a webhely jogi feltételeihez tartozó joghatóságot, általában ott, ahol a vállalat be van jegyezve vagy ahol működik.
-          city_for_disputes: "Város a vitákért"
-          city_for_disputes_placeholder: "Város"
-          city_for_disputes_help: |
-            Adja meg a várost a fórummal kapcsolatos jogi viták rendezésére.
           extra_groups:
             heading: "Csoportos felsorolás"
             description: "További csoportok megjelenítése a Névjegy oldalon."
@@ -6976,7 +6979,6 @@ hu:
           uploading: "Feltöltés…"
           uploading_progress: "Feltöltés...: %{progress}"
           success: "'%{filename}' sikeresen feltöltésre került. A fájl feldolgozása folyamatban van, és egy percig eltarthat, amíg megjelenik a listán."
-          error: "Egy hiba lépett fel feltöltés közben '%{filename}': %{message}"
         settings: "Beállítások"
         operations:
           is_running: "Egy folyamat jelenleg fut már."
@@ -7962,7 +7964,6 @@ hu:
         silence_duration: "Mennyi ideig lesz elnémítva a felhasználó?"
         silence_reason_title: "Némítás oka"
         silence_reason_placeholder: "Némítás oka"
-        silence_message: "E-mail üzenet"
         suspended_until: "(eddig: %{until})"
         suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"
@@ -8282,6 +8283,8 @@ hu:
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
         search_label: "Keresés"
+        preview:
+          default: "Alapértelmezett"
         theme_disabled: "Kikapcsolva"
         filters: "Szűrők"
         status:
@@ -8448,7 +8451,7 @@ hu:
           modal_title: Jelvénycsoportok
         granted_by: Megadta
         granted_at: Megadta
-        reason_help: (Hivatkozás egy bejegyzéshez vagy témához)
+        reason_help: Hivatkozás egy bejegyzéshez vagy témához
         save: Mentés
         delete: Törlés
         delete_confirm: Biztos, hogy törli ezt a jelvényt?

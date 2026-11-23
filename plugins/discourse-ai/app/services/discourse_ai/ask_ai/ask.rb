@@ -18,7 +18,10 @@ module DiscourseAi
         attribute :intent_heuristic, :string
         attribute :classify_intent, :boolean, default: false
         attribute :defer_if_precise, :boolean, default: false
-        attribute :deferred_ask_log_id, :integer
+        attribute :fresh_answer, :boolean, default: false
+        # Kept as given rather than cast, so a malformed id is refused instead
+        # of reading as no id: the controller waives the rate limit for it.
+        attribute :deferred_ask_log_id, :string
 
         # What started a search is only logged, so anything unexpected is
         # dropped rather than refused.
@@ -30,6 +33,7 @@ module DiscourseAi
           self.trigger_reason = trigger_reason.to_s
           self.trigger_reason = "" if !trigger_reason.match?(Discoveries::TRIGGER_REASON_PATTERN)
           self.intent_heuristic = "" if Discoveries::Intent::CHOICES.exclude?(intent_heuristic)
+          self.deferred_ask_log_id = deferred_ask_log_id.presence
 
           # Requesting a held-back answer skips the rate limit, so the request
           # may only claim that answer: never defer again or judge first.
@@ -49,16 +53,22 @@ module DiscourseAi
                   }
         validates :request_id, format: { with: Discoveries::REQUEST_ID_PATTERN }
         validates :scope, format: { with: Discoveries::SCOPE_PATTERN }, allow_nil: true
+        validates :deferred_ask_log_id,
+                  format: {
+                    with: Discoveries::ASK_LOG_ID_PATTERN,
+                  },
+                  allow_nil: true
 
         # what the answer job and its log are given
         def answer_attributes
-          slice(:request_id, :query, :trigger, :trigger_reason, :intent_heuristic)
+          slice(:request_id, :query, :trigger, :trigger_reason, :intent_heuristic, :fresh_answer)
         end
       end
 
       policy :can_ask_ai
       model :request_status, :claim_request
       policy :request_id_matches_query
+      model :deferral_reason, :find_deferral_reason, optional: true
 
       only_if(:answer_deferred?) { only_if(:new_request?) { model :ask_log, :log_deferred_ask } }
 
@@ -110,23 +120,27 @@ module DiscourseAi
         request_status == :created
       end
 
-      def answer_deferred?(params:, guardian:)
+      def find_deferral_reason(params:, guardian:)
         return if !params.defer_if_precise
 
-        Discoveries.precise_search?(params.query) ||
-          Discoveries.private_search?(query: params.query, scope: params.scope, guardian:)
+        Discoveries.answer_deferral_reason(query: params.query, scope: params.scope, guardian:)
       end
 
-      def log_deferred_ask(params:, guardian:)
+      def answer_deferred?(deferral_reason:)
+        deferral_reason.present?
+      end
+
+      def log_deferred_ask(params:, guardian:, deferral_reason:)
         Discoveries.log_deferred_ask(
           user: guardian.user,
           scope: params.scope,
-          **params.answer_attributes.except(:request_id),
+          deferral_reason:,
+          **params.answer_attributes.except(:request_id, :fresh_answer),
         )
       end
 
-      def answer_wanted?(params:, guardian:)
-        !answer_deferred?(params:, guardian:)
+      def answer_wanted?(deferral_reason:)
+        deferral_reason.nil?
       end
 
       def answer_requested_from_search?(params:)
@@ -156,6 +170,7 @@ module DiscourseAi
         Discoveries.enqueue_reply(
           user: guardian.user,
           scope: judgement&.about_site? ? nil : params.scope,
+          requested_scope: params.scope,
           deferred_log_id: params.deferred_ask_log_id,
           **params.answer_attributes,
         )

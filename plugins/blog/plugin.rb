@@ -34,6 +34,9 @@ register_homepage(
 )
 
 after_initialize do
+  register_problem_check ProblemCheck::BlogNotReady
+  register_seedfu_fixtures(Rails.root.join("plugins/blog/db/fixtures"))
+
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
       Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
@@ -42,46 +45,33 @@ after_initialize do
 
   add_to_serializer(
     :site,
-    :blog_base_url,
+    :blogs,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
-  ) { Blog::Configuration.base_url }
-  add_to_serializer(:current_user, :can_blog_edit) { Blog::Configuration.contributor?(object) }
+  ) do
+    Blog::Instance.cached.map do |blog|
+      {
+        id: blog.id,
+        name: blog.name,
+        base_url: Blog::Configuration.base_url(blog),
+        category_id: blog.category_id,
+        path_format: blog.path_format,
+        is_default: blog.is_default,
+      }
+    end
+  end
+  add_to_serializer(:current_user, :can_blog_edit) { scope.is_blog_contributor? }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
+  reloadable_patch { ::Post.prepend(Blog::PostExtensions) }
   if defined?(::Middleware::EnforceHostname)
     reloadable_patch { ::Middleware::EnforceHostname.prepend(Blog::EnforceHostnameExtension) }
   end
 
   Rails.application.config.filter_parameters += [:review_token]
 
-  add_model_callback(:topic, :before_destroy) do
-    Blog::Review.where(topic_id: id).find_each(&:destroy!)
-    Blog::Publication
-      .where(topic_id: id)
-      .or(Blog::Publication.where(draft_topic_id: id))
-      .or(Blog::Publication.where(discussion_topic_id: id))
-      .find_each(&:destroy!)
-  end
-
-  add_model_callback(:topic, :validate) do
-    if category_id_changed? && persisted? &&
-         category_id_in_database == SiteSetting.blog_drafts_category.to_i
-      errors.add(:category_id, I18n.t("blog.editorial.private_source"))
-    end
-  end
-
-  add_model_callback(:post, :after_update) do
-    if post_number == 1 &&
-         ((saved_change_to_hidden? && hidden?) || (saved_change_to_deleted_at? && deleted_at))
-      Blog::Review.revoke_for_topic!(topic_id)
-    end
-  end
-
-  add_model_callback(:topic, :after_update) do
-    if saved_change_to_category_id? || saved_change_to_deleted_at? || saved_change_to_archetype? ||
-         saved_change_to_visible?
-      Blog::Review.revoke_for_topic!(id)
-    end
+  # Article titles like "Contact" are shorter than a forum topic title needs to be.
+  register_modifier(:min_topic_title_length) do |min_length, topic|
+    topic.blog_article_topic? ? 1 : min_length
   end
 
   add_to_serializer(
@@ -90,15 +80,14 @@ after_initialize do
     include_condition: -> do
       object.is_first_post? && object.word_count.to_i >= 250 &&
         Blog::Configuration.public_enabled? &&
-        object.topic.category_id == SiteSetting.blog_category.to_i
+        Blog::Instance.category_ids.include?(object.topic.category_id)
     end,
   ) do
-    if publication =
-         Blog::Publication.publicly_visible.find_by(discussion_topic_id: object.topic_id)
+    if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
-        blog_name: SiteSetting.blog_title,
+        blog_name: publication.blog.name,
       }
     end
   end
@@ -109,9 +98,51 @@ after_initialize do
     include_condition: -> { !blog_publication.nil? },
   ) do
     unless instance_variable_defined?(:@blog_publication)
-      @blog_publication = Blog::PublicationEntry.for_viewer(object.topic, scope.user)
+      publication = Blog::Publication.editable_for(object.topic, scope)
+      @blog_publication =
+        if publication
+          Blog::PublicationSerializer.new(
+            publication,
+            scope:,
+            root: false,
+            viewed_topic: object.topic,
+          ).as_json
+        end
     end
     @blog_publication
+  end
+
+  # Not `on`, which skips events while the plugin is disabled: the settings can
+  # still be changed then.
+  DiscourseEvent.on(:site_setting_changed) do |name| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
+    Blog::DefaultBlogMirror.sync! if Blog::DefaultBlogMirror.setting?(name.to_sym)
+  end
+
+  # "New draft" sends the blog the editor was viewing.
+  add_permitted_post_create_param(:blog_id)
+  on(:topic_created) do |topic, opts, user|
+    next if opts[:blog_id].blank? || user.nil?
+    Blog::Publication::StartOnBlog.call(
+      params: {
+        topic_id: topic.id,
+        blog_id: opts[:blog_id],
+      },
+      guardian: user.guardian,
+    )
+  end
+
+  on(:site_setting_changed) do |name|
+    name = name.to_sym
+    if name == :blog_publisher_groups
+      Blog::Instance.category_ids.each do |category_id|
+        Blog::AddPublishersToPublicCategory.call(params: { category_id: })
+      end
+    end
+    if name == :blog_category
+      Blog::AddPublishersToPublicCategory.call(params: { category_id: SiteSetting.blog_category })
+    end
+    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
+    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

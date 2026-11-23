@@ -3,8 +3,9 @@
 RSpec::Matchers.alias_matcher :resolve, :be_resolves
 
 RSpec.describe JsonApiKit::Declarations::Relationship do
-  subject(:relationship) { described_class.new(:user, resource: users_resource) }
+  subject(:relationship) { described_class.new(:user, resource: users_resource, **options) }
 
+  let(:options) { {} }
   let(:groups_resource) { Class.new(JsonApiKit::Resource) { type :groups } }
   let(:users_resource) do
     related = groups_resource
@@ -17,15 +18,25 @@ RSpec.describe JsonApiKit::Declarations::Relationship do
     end
   end
 
+  it { is_expected.not_to be_writable }
+
   describe ".new" do
-    context "when the readable block declares both a guardian and a record" do
-      subject(:relationship) do
-        described_class.new(
-          :user,
-          resource: users_resource,
-          readable: ->(guardian, record) { true },
-        )
+    context "when the relationship is writable" do
+      let(:options) { super().merge(writable: true) }
+
+      it { is_expected.to be_writable }
+    end
+
+    context "when writability is not a boolean" do
+      let(:options) { super().merge(writable: "true") }
+
+      it "identifies the invalid declaration" do
+        expect { relationship }.to raise_error(ArgumentError, /user.*writable.*true.*false/)
       end
+    end
+
+    context "when the readable block declares both a guardian and a record" do
+      let(:options) { super().merge(readable: ->(guardian, record) { true }) }
 
       it "raises an error" do
         expect { relationship }.to raise_error(described_class::UnsupportedRule, /user/)

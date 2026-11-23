@@ -45,6 +45,22 @@ RSpec.describe UserField do
     ).to eq(true)
   end
 
+  describe ".cast_number" do
+    it "returns integers for whole numbers and floats otherwise" do
+      expect(%w[42 -7 1e3 3.14 .5].map { |value| described_class.cast_number(value) }).to eql(
+        [42, -7, 1000, 3.14, 0.5],
+      )
+    end
+
+    it "returns nil for values that aren't finite numbers" do
+      expect(
+        ["abc", "0x1A", "1_000", "1e999", "", nil, 42].map do |value|
+          described_class.cast_number(value)
+        end,
+      ).to all(be_nil)
+    end
+  end
+
   describe "#required?" do
     let(:user_field) { Fabricate(:user_field, requirement:) }
 

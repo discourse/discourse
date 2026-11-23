@@ -35,7 +35,7 @@ async function generateClipboard(topic, fromPostNumber, toPostNumber) {
   const response = await ajax(url, { data });
 
   let buffer = [];
-  buffer.push("<details class='ai-quote'>");
+  buffer.push("<details class='ai-quote' data-ai-generated='true'>");
   buffer.push("<summary>");
   buffer.push(`<span>${topic.title}</span>`);
   buffer.push(

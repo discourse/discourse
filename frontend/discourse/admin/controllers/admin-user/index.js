@@ -27,6 +27,7 @@ export default class AdminUserIndexController extends Controller {
 
   /** @type {number[] | null} */
   @tracked customGroupIdsBuffer = null;
+  @tracked savingBotInteractivity = false;
 
   /** @type {number | null | undefined} */
   originalPrimaryGroupId = null;
@@ -45,6 +46,11 @@ export default class AdminUserIndexController extends Controller {
   @computed("model.id")
   get isBot() {
     return Number.isInteger(this.model?.id) && this.model.id <= 0;
+  }
+
+  @computed("isBot", "model.id", "currentUser.admin")
+  get canChangeBotInteractivity() {
+    return this.currentUser.admin && this.isBot && this.model.id !== -1;
   }
 
   @computed("siteSettings.enable_badges")
@@ -326,7 +332,12 @@ export default class AdminUserIndexController extends Controller {
 
   @action
   grantModeration() {
-    return this.model.grantModeration();
+    return this.dialog.yesNoConfirm({
+      message: i18n("admin.user.grant_moderation_confirm", {
+        username: this.model.username,
+      }),
+      didConfirm: () => this.model.grantModeration(),
+    });
   }
 
   @action
@@ -540,6 +551,29 @@ export default class AdminUserIndexController extends Controller {
   @action
   showSilenceModal() {
     this.adminTools.showSilenceModal(this.model);
+  }
+
+  @action
+  async toggleBotInteractivity() {
+    if (!this.canChangeBotInteractivity || this.savingBotInteractivity) {
+      return;
+    }
+
+    const model = this.model;
+    const interactiveBot = !model.interactive_bot;
+    this.savingBotInteractivity = true;
+    try {
+      await ajax(`/admin/users/${model.id}/interactive_bot.json`, {
+        type: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify({ interactive_bot: interactiveBot }),
+      });
+      model.set("interactive_bot", interactiveBot);
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.savingBotInteractivity = false;
+    }
   }
 
   @action

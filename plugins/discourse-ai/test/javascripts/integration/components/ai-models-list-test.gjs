@@ -9,10 +9,6 @@ import AiModelsList, {
   modelTypes,
 } from "discourse/plugins/discourse-ai/discourse/components/ai-models-list";
 
-class FilterState {
-  @tracked type = null;
-}
-
 class AdminPluginNavManagerStub extends Service {
   currentPlugin = { name: "discourse-ai" };
 }
@@ -157,13 +153,13 @@ module("Integration | Component | AiModelsList", function (hooks) {
         {
           id: -1,
           display_name: "Seeded decision",
-          provider: "system_one",
+          provider: "CDCK",
           seeded: true,
         },
       ],
       resultSetMeta: { presets: [] },
     };
-    const state = new FilterState();
+    const type = tracked(null);
 
     await render(
       <template>
@@ -171,7 +167,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
           @decisionModels={{this.decisionModels}}
           @embeddings={{this.embeddings}}
           @llms={{this.llms}}
-          @type={{state.type}}
+          @type={{type.value}}
         />
       </template>
     );
@@ -185,12 +181,18 @@ module("Integration | Component | AiModelsList", function (hooks) {
       .dom("[data-model-id='-1'] .ai-models-list__edit-button")
       .doesNotExist("seeded decision models are read-only");
     assert
+      .dom("[data-model-id='-1'] .btn.disabled")
+      .exists("seeded decision models show a disabled edit button");
+    assert
+      .dom("[data-model-id='-1']")
+      .includesText("CDCK", "seeded decision models show the hosted provider");
+    assert
       .dom(
         ".ai-models-list__row[data-model-type='embedding'] .ai-models-list__type"
       )
       .includesText("Embedding");
 
-    state.type = "embedding";
+    type.value = "embedding";
     await settled();
 
     assert.dom(".ai-models-list__row").exists({ count: 1 });
@@ -211,7 +213,7 @@ module("Integration | Component | AiModelsList", function (hooks) {
     );
 
     assert
-      .dom(".ai-models-list__type-filter option[value='decision']")
+      .dom(".d-filter-controls__dropdown option[value='decision']")
       .exists("offers the decision type even without models");
   });
 
@@ -244,21 +246,21 @@ module("Integration | Component | AiModelsList", function (hooks) {
       resultSetMeta: { presets: [] },
     };
     this.embeddings = { content: [], resultSetMeta: { presets: [] } };
-    const state = new FilterState();
+    const type = tracked(null);
 
     await render(
       <template>
         <AiModelsList
           @embeddings={{this.embeddings}}
           @llms={{this.llms}}
-          @type={{state.type}}
+          @type={{type.value}}
         />
       </template>
     );
 
     assert.dom(".ai-configure-default-llm").doesNotExist();
 
-    state.type = "llm";
+    type.value = "llm";
     await settled();
 
     assert.dom(".ai-configure-default-llm").exists();

@@ -12,6 +12,11 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import stubIntersectionObserver from "discourse/tests/helpers/stub-intersection-observer";
+import {
+  disableLoadMoreObserver,
+  enableLoadMoreObserver,
+} from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 acceptance("Group Members - Anonymous", function () {
@@ -134,6 +139,60 @@ acceptance("Group Members", function (needs) {
     assert
       .dom(".bulk-select-buttons-wrap details")
       .exists("it shows menu button if something is selected");
+  });
+});
+
+const MEMBER_PAGE_SIZE = 5;
+const ALL_MEMBERS = Array.from({ length: 12 }, (_, i) => ({
+  id: 900 + i,
+  username: `member${i}`,
+  name: "",
+  avatar_template: `/user_avatar/meta.discourse.org/member${i}/{size}/1.png`,
+}));
+
+acceptance("Group Members - sorting", function (needs) {
+  needs.user();
+
+  const memberRequests = [];
+
+  needs.pretender((server, helper) => {
+    server.get("/groups/discourse/members.json", (request) => {
+      const params = request.queryParams;
+      memberRequests.push(params);
+
+      const offset = Number(params.offset ?? 0);
+      const limit = Number(params.limit ?? MEMBER_PAGE_SIZE);
+
+      return helper.response({
+        owners: [],
+        members: ALL_MEMBERS.slice(offset, offset + limit),
+        meta: { total: ALL_MEMBERS.length, limit, offset },
+      });
+    });
+  });
+
+  test("load more uses the direction the list was sorted with", async function (assert) {
+    enableLoadMoreObserver();
+    const observations = stubIntersectionObserver();
+
+    try {
+      await visit("/g/discourse?order=last_seen_at&asc=false");
+
+      await click(".directory-table__column-header--added");
+
+      const loadMore = observations.findLast(({ element }) =>
+        element.matches(".load-more-sentinel")
+      );
+      await loadMore.trigger();
+
+      assert.deepEqual(
+        memberRequests.map((params) => params.asc),
+        ["false", "false", "false"],
+        "every page is fetched with the direction the list is showing"
+      );
+    } finally {
+      disableLoadMoreObserver();
+    }
   });
 });
 

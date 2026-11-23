@@ -1,6 +1,7 @@
 import RestModel from "discourse/models/rest";
 import type User from "discourse/models/user";
 
+export const TRANSITIONED = 1 as const;
 export const CLAIMED = 3 as const;
 export const UNCLAIMED = 4 as const;
 

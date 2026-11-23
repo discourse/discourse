@@ -20,6 +20,7 @@ pl_PL:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Zmieniono możliwość wykrywania botów czatu"
             chat_channel_status_change: "Zmieniono status kanału czatu"
             chat_channel_delete: "Kanał czatu usunięty"
             chat_auto_remove_membership: "Członkostwa automatycznie usuwane z kanałów"
@@ -46,13 +47,8 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      new_chat: "Nowy czat"
       homepage_option: "Kanał czatu"
-      admin_onboarding:
-        start_posting:
-          title: "Zacznij rozmowę"
-          description: "Wyślij swoją pierwszą wiadomość na kanale nr %{channel}."
-          action: "Napisz wiadomość"
-          completed: "Kontynuuj rozmowę"
       edit_category:
         tab_title: "Czat"
         channel: "Kanał"
@@ -93,6 +89,10 @@ pl_PL:
       no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
       pin_message: "Przypnij wiadomość"
       unpin_message: "Odepnij wiadomość"
+      broadcast_to_channel: "Wyślij do #%{channelName}"
+      remove_broadcast_from_channel: "Usuń z #%{channelName}"
+      broadcast_to_dm: "Wyślij również na główny DM"
+      remove_broadcast_from_dm: "Usuń z głównego DM"
       pinned: "Przypięty"
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
@@ -113,8 +113,7 @@ pl_PL:
           other: "Czy na pewno chcesz usunąć te %{count} wiadomości?"
       channel_settings:
         title: "Ustawienia kanału"
-        edit: "Edytuj"
-        add: "Dodaj"
+        page_title: "Ustawienia %{channel}"
         star_channel: "Wyróżnij kanał"
         unstar_channel: "Usuń wyróżnienie kanału"
         close_channel: "Zamknij kanał"
@@ -123,10 +122,21 @@ pl_PL:
         open_channel_disabled_read_only: "Kanałów przeznaczonych tylko do odczytu nie można ponownie otworzyć."
         archive_channel: "Archiwizuj kanał"
         delete_channel: "Usuń kanał"
+        danger_zone:
+          title: "Strefa niebezpieczna"
+          archive_title: "Archiwizuj ten kanał"
+          archive_description: "Przenieś wiadomości z tego kanału do tematu i ustaw kanał jako tylko do odczytu."
+          close_title: "Zamknij ten kanał"
+          close_description: "Zablokuj członkom możliwość wysyłania nowych wiadomości. Możesz ponownie otworzyć kanał w dowolnym momencie."
+          open_title: "Otwórz ponownie ten kanał"
+          open_description: "Pozwól członkom ponownie wysyłać wiadomości w tym kanale."
+          delete_title: "Usuń ten kanał"
+          delete_description: "Po usunięciu tego kanału i wszystkich jego wiadomości nie będzie można odzyskać."
+          leave_title: "Opuść ten kanał"
+          leave_description: "Przestaniesz otrzymywać wiadomości i powiadomienia z tego kanału. Możesz do niego wrócić w dowolnym momencie."
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
         leave_groupchat_info: "Opuszczając ten czat grupowy, nie będziesz już mieć do niego dostępu i nie będziesz otrzymywać związanych z nim powiadomień. Aby ponownie dołączyć, musisz otrzymać ponowne zaproszenie od członka czatu grupowego."
-        notification_settings: "Ustawienia powiadomień"
         notification_settings_context: "Powiadomienia"
         join: "Dołącz"
         leave: "Opuść"
@@ -440,21 +450,23 @@ pl_PL:
       members_view:
         filter_placeholder: Znajdź członków
         add_member: Dodaj członka
-        back_to_settings: "Powrót do ustawień"
       about_view:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
-        title: Tytuł
         name: Nazwa
         description: Opis
       channel_info:
         back_to_all_channels: "Wszystkie kanały"
         back_to_channel: "Poprzednia"
+        nav_label: "Informacje o kanale"
         tabs:
           members: Członkowie
+          preferences: Ustawienia
           settings: Ustawienia
           search: Szukaj
         remove_member: "Usuń"
+        members_title: "Członkowie %{channel}"
+        preferences_title: "Preferencje %{channel}"
       new_message_modal:
         title: Wyślij wiadomość
         add_user_long: <kbd>shift + click</kbd> lub <kbd>shift + enter</kbd><span>Dodaj @%{username}</span>
@@ -474,7 +486,6 @@ pl_PL:
         create_new_group_chat: "Utwórz czat grupowy"
         group_with_too_many_members: "ma zbyt wielu członków (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Edytuj kanał
         input_placeholder: Dodaj nazwę
         slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
         name: Nazwa kanału
@@ -482,9 +493,7 @@ pl_PL:
         emoji: Emoji kanału
         reset_emoji: Zresetuj emoji
       channel_edit_description_modal:
-        title: Edytuj opis
         input_placeholder: Dodaj opis
-        description: Powiedz innym, o czym jest ten kanał
       direct_message_creator:
         add_to_channel: "Dodaj do kanału"
         title: Nowa wiadomość
@@ -620,6 +629,8 @@ pl_PL:
         bold_text: "pogrubiony tekst"
         code_text: "kod"
         send: "Wyślij"
+        broadcast_label: "Wyślij również na #%{channelName}"
+        broadcast_label_dm: "Wyślij również na główny DM"
       quote:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
@@ -632,7 +643,6 @@ pl_PL:
         always: "Dla całej aktywności"
       settings:
         channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
-        channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         channel_threading_label: "Wątki"
         channel_threading_description: "Gdy wątki są włączone, odpowiedzi na wiadomości czatu utworzą osobną rozmowę, która będzie istnieć obok głównego kanału."
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
@@ -644,6 +654,15 @@ pl_PL:
         followed: "Dołączył"
         mute: "Wycisz kanał"
         unmute: "Wyłącz wyciszenie kanału"
+        muted_until_hint: "do %{until}"
+        mute_options:
+          "off": "Wył."
+          15_minutes: "Przez 15 minut"
+          1_hour: "Przez 1 godzinę"
+          8_hours: "Przez 8 godzin"
+          24_hours: "Przez 24 godziny"
+          until_unmuted: "Dopóki go nie włączę ponownie"
+          current: "Do %{until}"
         threading_enabled: "Włączona"
         threading_disabled: "Wyłączone"
         muted_on: "Wł"
@@ -653,9 +672,6 @@ pl_PL:
         save: "Zapisz"
         saved: "Zapisano"
         unfollow: "Opuść"
-        admin_title: "Administratorzy"
-        settings_title: "Ustawienia"
-        info_title: "Informacje o kanale"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Członkowie"
@@ -671,6 +687,7 @@ pl_PL:
         short_title: Szukaj
         title: Wyszukaj czat
         aria_label: "Przejdź do wyszukiwania czatu"
+        channel_aria_label: "Wyszukaj ten kanał"
         no_results: "Brak wyników wyszukiwania"
         sort:
           relevance: "Trafność"
@@ -808,19 +825,6 @@ pl_PL:
         action: "Oflaguj wiadomość"
       anonymous_flagging:
         description: "Aby zgłosić nielegalną treść, skontaktuj się z <a href='mailto:%{email}?subject=Nielegalne treści: %{channel_title}&body=Ta wiadomość na czacie %{url} zawiera nielegalne treści.'>%{email}</a>"
-      emoji_picker:
-        favorites: "Często używane"
-        smileys_&_emotion: "Buźki i emocje"
-        objects: "Obiekty"
-        people_&_body: "Ludzie i ciało"
-        travel_&_places: "Podróże i miejsca"
-        animals_&_nature: "Zwierzęta i przyroda"
-        food_&_drink: "Jedzenie i picie"
-        activities: "Aktywności"
-        flags: "Flagi"
-        symbols: "Symbolika"
-        search_placeholder: "Szukaj według nazwy emoji i aliasu..."
-        no_results: "Brak wyników"
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek
@@ -830,6 +834,8 @@ pl_PL:
           many: "%{count} odpowiedzi"
           other: "%{count} odpowiedzi"
         label: Wątek
+        broadcast_also_sent_to: "Wysłano do"
+        broadcast_sent_from_thread: "Wysłano z wątku"
         close: "Zamknij wątek"
         original_message:
           started_by: "Rozpoczęty przez"

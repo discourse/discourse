@@ -9,7 +9,7 @@ RSpec.describe Admin::Config::DesignWizardController do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
-      it "returns the core themes with their palette pairs" do
+      it "returns the core themes with their palette pairs and Concord" do
         ThemeField.create!(
           theme_id: Theme::CORE_THEMES["horizon"],
           name: "en",
@@ -30,11 +30,12 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(themes.map { |theme| theme["id"] }).to contain_exactly(
           Theme::CORE_THEMES["foundation"],
           Theme::CORE_THEMES["horizon"],
+          "concord",
         )
 
         horizon = themes.find { |theme| theme["id"] == Theme::CORE_THEMES["horizon"] }
         expect(horizon["description"]).to eq("A simple, beautiful theme")
-        expect(horizon).to include("supports_welcome_banner" => true, "supports_search" => true)
+        expect(horizon).to include("default_homepage" => "latest")
         expect(horizon["palette_pairs"].map { |pair| pair["key"] }).to include(
           "horizon",
           "royal",
@@ -53,53 +54,28 @@ RSpec.describe Admin::Config::DesignWizardController do
           "screenshot_dark_url" => "/images/design-wizard/foundation-dark.webp",
         )
         expect(foundation["palette_pairs"].map { |pair| pair["key"] }).to eq(
-          %w[default wcag solarized dracula],
+          DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["dark_only"]).to eq(true)
         expect(dracula["light"]).to be_nil
       end
 
-      it "excludes installed Concord from the choices by default" do
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-        concord.set_default!
-
-        get "/admin/config/design-wizard.json"
-
-        expect(SiteSetting.concord_in_wizard).to eq(false)
-        expect(response.parsed_body["themes"].map { |theme| theme["id"] }).to contain_exactly(
-          *Theme::CORE_THEMES.values,
-        )
-        expect(response.parsed_body["current_theme"]).to include("id" => concord.id)
-      end
-
-      it "offers Concord for installation without creating a theme" do
-        SiteSetting.concord_in_wizard = true
+      it "offers Concord for installation by default without creating a theme" do
         expect { get "/admin/config/design-wizard.json" }.not_to change { Theme.count }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["themes"].find { |theme| theme["id"] == "concord" }).to include(
+          "default_homepage" => "chat",
           "name" => "Concord",
           "remote_url" => "https://github.com/discourse/discourse-concord-theme",
           "description" => I18n.t("design_wizard.themes.concord.description"),
           "palette_pairs" => [],
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
       end
 
       it "limits choices to core themes and Concord when other themes are installed" do
-        SiteSetting.concord_in_wizard = true
         Fabricate(:theme, name: "Concord")
         Fabricate(
           :theme,
@@ -126,7 +102,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "hides installation choices when repository imports are restricted" do
-        SiteSetting.concord_in_wizard = true
         global_setting :allowed_theme_repos, "https://github.com/discourse/other-theme"
 
         get "/admin/config/design-wizard.json"
@@ -137,7 +112,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "hides installation choices when theme creation is disabled" do
-        SiteSetting.concord_in_wizard = true
         plugin = Plugin::Instance.new
         modifier = ->(*) { false }
         DiscoursePluginRegistry.register_modifier(
@@ -160,7 +134,6 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "returns installed Concord as a selectable default with its palette state" do
-        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -183,9 +156,9 @@ RSpec.describe Admin::Config::DesignWizardController do
         )
         expect(themes.find { |theme| theme["id"] == concord.id }).to include(
           "default" => true,
+          "description" => I18n.t("design_wizard.themes.concord.description"),
+          "default_homepage" => "chat",
           "color_scheme_id" => palette.id,
-          "supports_welcome_banner" => false,
-          "supports_search" => false,
           "screenshot_light_url" => "/images/design-wizard/concord-light.webp",
           "screenshot_dark_url" => "/images/design-wizard/concord-dark.webp",
         )
@@ -232,6 +205,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["base_font"]).to eq("lato")
         expect(response.parsed_body["heading_font"]).to eq("merriweather")
         expect(response.parsed_body["homepage"]).to eq("categories")
+        expect(response.parsed_body["restorable_homepages"]).to include("new", "hot")
       end
 
       it "does not include current_theme when the default theme is a core theme" do
@@ -253,6 +227,7 @@ RSpec.describe Admin::Config::DesignWizardController do
       end
 
       it "reports palettes as not user selectable when only a custom default theme's palettes are selectable" do
+        ColorScheme.update_all(user_selectable: false)
         theme = Fabricate(:theme)
         Fabricate(:color_scheme, theme_id: theme.id, user_selectable: true)
         theme.set_default!
@@ -260,6 +235,17 @@ RSpec.describe Admin::Config::DesignWizardController do
         get "/admin/config/design-wizard.json"
 
         expect(response.parsed_body["palettes_user_selectable"]).to eq(false)
+      end
+
+      it "reports palettes as user selectable when a single-mode site offers only one mode" do
+        Theme.horizon_theme.set_default!
+        horizon_palettes = ColorScheme.where(theme_id: Theme::CORE_THEMES["horizon"])
+        horizon_palettes.update_all(user_selectable: false)
+        horizon_palettes.where.not("name LIKE '% Dark'").update_all(user_selectable: true)
+
+        get "/admin/config/design-wizard.json"
+
+        expect(response.parsed_body["palettes_user_selectable"]).to eq(true)
       end
 
       it "reports palettes as not user selectable when there are none to offer" do
@@ -310,6 +296,30 @@ RSpec.describe Admin::Config::DesignWizardController do
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
+      it "stops a member's own dark palette from overriding a light-only choice" do
+        horizon = Theme.horizon_theme
+        horizon.set_default!
+        light = ColorScheme.find_by(theme_id: horizon.id, name: "Royal")
+        dark = ColorScheme.find_by(theme_id: horizon.id, name: "Royal Dark")
+        ColorScheme.where(theme_id: horizon.id).update_all(user_selectable: true)
+        admin.user_option.update!(dark_scheme_id: dark.id)
+        dark_scheme_links = -> do
+          get "/"
+          Nokogiri.HTML5(response.body).css("link.dark-scheme")
+        end
+        expect(dark_scheme_links.call).to be_present
+
+        put "/admin/config/design-wizard.json",
+            params: {
+              theme_id: horizon.id,
+              light_palette_id: light.id,
+              palettes_user_selectable: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(dark_scheme_links.call).to be_empty
+      end
+
       it "applies the design choices" do
         horizon = Theme.horizon_theme
         light = ColorScheme.find_by(theme_id: horizon.id, name: "Royal")
@@ -325,7 +335,6 @@ RSpec.describe Admin::Config::DesignWizardController do
               heading_font: "merriweather",
               homepage: "categories",
               category_page_style: "categories_boxes",
-              welcome_banner_location: "below_site_header",
             }
 
         expect(response.status).to eq(200)
@@ -336,12 +345,10 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
         expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
-        expect(SiteSetting.welcome_banner_location).to eq("below_site_header")
         expect(light.reload.user_selectable).to eq(true)
       end
 
       it "applies installed Concord" do
-        SiteSetting.concord_in_wizard = true
         concord =
           Fabricate(
             :theme,
@@ -358,24 +365,6 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.default_theme_id).to eq(concord.id)
       end
 
-      it "rejects installed Concord by default" do
-        concord =
-          Fabricate(
-            :theme,
-            remote_theme:
-              Fabricate(
-                :remote_theme,
-                remote_url: "https://github.com/discourse/discourse-concord-theme",
-              ),
-          )
-
-        expect do
-          put "/admin/config/design-wizard.json", params: { theme_id: concord.id }
-        end.not_to change { SiteSetting.default_theme_id }
-
-        expect(response.status).to eq(400)
-      end
-
       it "rejects unsupported themes without changing the default" do
         custom_theme = Fabricate(:theme)
 
@@ -387,30 +376,17 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(response.parsed_body["errors"]).to be_present
       end
 
-      it "applies the welcome banner and search choices to the chosen theme" do
-        horizon = Theme.horizon_theme
+      it "restores a homepage the wizard does not offer as a choice" do
+        SiteSetting.default_homepage = "categories"
 
-        put "/admin/config/design-wizard.json",
-            params: {
-              theme_id: horizon.id,
-              enable_welcome_banner: false,
-              search_experience: "search_field",
-            }
-
-        expect(response.status).to eq(200)
-        expect(SiteSetting.enable_welcome_banner(theme_id: horizon.id)).to eq(false)
-        expect(SiteSetting.search_experience(theme_id: horizon.id)).to eq("search_field")
-      end
-
-      it "returns a 400 for an unsupported search experience" do
         put "/admin/config/design-wizard.json",
             params: {
               theme_id: Theme::CORE_THEMES["horizon"],
-              search_experience: "not_an_experience",
+              homepage: "new",
             }
 
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to be_present
+        expect(response.status).to eq(200)
+        expect(SiteSetting.default_homepage).to eq("new")
       end
 
       it "returns a 400 with errors for an invalid contract" do

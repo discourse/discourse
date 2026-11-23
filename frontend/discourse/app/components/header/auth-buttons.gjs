@@ -4,6 +4,7 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default class AuthButtons extends Component {
   @service header;
+  @service mobileTabBar;
 
   get showSignupButton() {
     return (
@@ -13,8 +14,12 @@ export default class AuthButtons extends Component {
     );
   }
 
+  // The tab bar holds logging in where creating would be
   get showLoginButton() {
-    return !this.header.headerButtonsHidden.includes("login");
+    return (
+      !this.mobileTabBar.enabled &&
+      !this.header.headerButtonsHidden.includes("login")
+    );
   }
 
   <template>

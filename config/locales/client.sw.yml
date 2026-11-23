@@ -6,6 +6,13 @@
 
 sw:
   js:
+    code_editor:
+      search:
+        next: "Ijayo"
+        previous: "Uliopita"
+        close: "Funga"
+      fold:
+        to: "kwenda"
     user_api_key:
       authorize: "Idhini"
       deny: "Batili"
@@ -225,19 +232,13 @@ sw:
       other: "kiwango cha juu cha %{count}"
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Iliyopita"
     design_wizard:
       back: "Iliyopita"
       next: "Ijayo"
       sections:
-        theme: "Mandhari"
         homepage: "Ukurasa mkuu"
-        search: "Tafuta"
-      colors:
-        light: "Hafifu"
-        dark: "Nyeusi"
+      fonts:
+        base_font: "Mwili"
       homepage:
         topics: "Mada"
         categories: "Kategoria"
@@ -1324,6 +1325,10 @@ sw:
     composer:
       emoji: "Ishara :)"
       options: "Chaguo"
+      ai_content:
+        code: "Kodi"
+        quote: "Nukulu"
+        details: "Taarifa"
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
       add_warning: "Hii ni onyo rasmi."
@@ -1844,10 +1849,8 @@ sw:
           label: "imechaguliwa"
           title: "Bofya kuondoa chapisho kwenye chaguo"
         select_replies:
-          label: "chagua +majibu"
           title: "Ongeza chapisho na majibu yake yote kwenye uteuzi"
         select_below:
-          label: "chagua +chini"
           title: "Ongeza chapisho na vile vya baadae kwenye uteuzi"
         delete: futa vilivyochaguliwa
         cancel: ghairi uchaguaji
@@ -2362,6 +2365,11 @@ sw:
       back: "Nyuma"
       share: "Shirikisha"
       dismiss: "Ondosha"
+    mobile_tab_bar:
+      create: "Tengeneza"
+      more: "Zaidi"
+      back: "Iliyopita"
+      topics: "Mada"
     trust_levels:
       names:
         newuser: "mtumiaji mpya"
@@ -2485,10 +2493,9 @@ sw:
           title: "Programu Jalizi"
       upcoming_changes:
         name: "Jina"
-        enabled: "Imeruhusiwa"
+        enabled: "Imeruhusiwa?"
+        settings: "Mipangilio"
         preview: "Kihakiki"
-        enabled_for_options:
-          everyone: "Kila Mtu"
         impact_roles:
           admins: "Viongozi"
           moderators: "Wasimamizi"
@@ -2977,7 +2984,6 @@ sw:
           label: "Pakia"
           title: "Pakia chelezo kwenye mfano huu."
           success: "'%{jina la faili}' imepakiwa kwa mafanikio. Faili lipokwenye harakati na litachukua mpaka dakika kuonekana kwenye orodha."
-          error: "Hitilafu imetokea wakati wa kupakia '%{jina la faili}': %{ujumbe}"
         settings: "Mipangilio"
         operations:
           failed: "%{Operesheni} imeshindwa. Tafadhali angalia batli."
@@ -3404,7 +3410,6 @@ sw:
         silence_modal_title: "Nyamazisha Mtumiaji"
         silence_duration: "Mtumiaji atanyamazishwa kwa mda gani?"
         silence_reason_placeholder: "Nyamazisha Sababu"
-        silence_message: "Tuma ujumbe kwa Barua Pepe"
         suspended_until: "(mpaka %{until})"
         cant_suspend: "Mtumiaji huyu hawezi kusitishwa kwa mda."
         penalty_post_actions: "Ungependa kufanya nini na taarifa shirika?"
@@ -3571,6 +3576,8 @@ sw:
           dropdown: "Shusha Chini"
       site_text:
         search_label: "Tafuta"
+        preview:
+          default: "Halisi"
         theme_disabled: "Imezuiwa"
         filters: "Inachujwa"
         edit: "Hariri"
@@ -3642,7 +3649,7 @@ sw:
           modal_title: VIkundi vya beji
         granted_by: Imetolewa na
         granted_at: Imetolewa wakati wa
-        reason_help: (Kiungo cha taarifa au ujumbe)
+        reason_help: Kiungo cha taarifa au ujumbe
         save: Hifadhi
         delete: Futa
         delete_confirm: Una uhakika unata kufuta hii beji?

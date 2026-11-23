@@ -51,15 +51,13 @@ module(
 
     test("single mode lists input paths and stores one", async function (assert) {
       const writes = [];
-      this.setProperties({
-        node: NODE,
-        nodes: GRAPH.nodes,
-        connections: GRAPH.connections,
-        nodeTypes: GRAPH.nodeTypes,
-        session: buildSession(),
-        schema: { ui: {} },
-        field: { value: "", set: (value) => writes.push(value) },
-      });
+      this.node = NODE;
+      this.nodes = GRAPH.nodes;
+      this.connections = GRAPH.connections;
+      this.nodeTypes = GRAPH.nodeTypes;
+      this.session = buildSession();
+      this.schema = { ui: {} };
+      this.field = { value: "", set: (value) => writes.push(value) };
 
       await render(
         <template>
@@ -90,18 +88,16 @@ module(
 
     test("multiple mode shows the stored list and appends to it", async function (assert) {
       const writes = [];
-      this.setProperties({
-        node: NODE,
-        nodes: GRAPH.nodes,
-        connections: GRAPH.connections,
-        nodeTypes: GRAPH.nodeTypes,
-        session: buildSession(),
-        schema: { ui: { multiple: true } },
-        field: {
-          value: "topic_id, username",
-          set: (value) => writes.push(value),
-        },
-      });
+      this.node = NODE;
+      this.nodes = GRAPH.nodes;
+      this.connections = GRAPH.connections;
+      this.nodeTypes = GRAPH.nodeTypes;
+      this.session = buildSession();
+      this.schema = { ui: { multiple: true } };
+      this.field = {
+        value: "topic_id, username",
+        set: (value) => writes.push(value),
+      };
 
       await render(
         <template>
@@ -128,15 +124,13 @@ module(
     });
 
     test("multiple mode keeps a stored path the input no longer offers", async function (assert) {
-      this.setProperties({
-        node: NODE,
-        nodes: GRAPH.nodes,
-        connections: GRAPH.connections,
-        nodeTypes: GRAPH.nodeTypes,
-        session: buildSession(),
-        schema: { ui: { multiple: true } },
-        field: { value: "vanished_field", set: () => {} },
-      });
+      this.node = NODE;
+      this.nodes = GRAPH.nodes;
+      this.connections = GRAPH.connections;
+      this.nodeTypes = GRAPH.nodeTypes;
+      this.session = buildSession();
+      this.schema = { ui: { multiple: true } };
+      this.field = { value: "vanished_field", set: () => {} };
 
       await render(
         <template>

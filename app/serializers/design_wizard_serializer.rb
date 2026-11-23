@@ -4,7 +4,7 @@ class DesignWizardSerializer < ApplicationSerializer
   attributes :current_theme, :base_font, :heading_font, :homepage, :palettes_user_selectable
 
   attributes :themes
-  attributes :additional_homepages, :homepage_settings
+  attributes :additional_homepages, :homepage_settings, :restorable_homepages
 
   def additional_homepages
     DesignWizard::Homepages.additional_options
@@ -12,6 +12,10 @@ class DesignWizardSerializer < ApplicationSerializer
 
   def homepage_settings
     DesignWizard::Homepages.current_settings
+  end
+
+  def restorable_homepages
+    DesignWizard::Homepages.restorable_ids
   end
 
   def themes
@@ -41,7 +45,8 @@ class DesignWizardSerializer < ApplicationSerializer
   def palettes_user_selectable
     offered = ColorScheme.where(theme_id: preselected_theme&.id)
     offered = ColorScheme.where(via_wizard: true) if offered.none?
-    offered.exists? && offered.where(user_selectable: false).none?
+    # a single-mode site keeps the other mode's palettes unselectable
+    offered.where(user_selectable: true).exists?
   end
 
   private

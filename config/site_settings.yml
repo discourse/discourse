@@ -42,14 +42,21 @@
 #                            `stable` status admins are warned that it will become permanent and they will no
 #                            longer be able to opt out. Set to false when that warning does not apply, for
 #                            example a change that only alters the default value of another site setting.
-#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
-#                            dropdown options the admin can pick for this upcoming change.
+#                          - group_setting: (optional setting name) use an existing group_list setting as
+#                            the audience instead of SiteSettingGroup. Must reference a core setting or one
+#                            from the change's own plugin. Cannot combine with allow_enabled_for.
+#                            The rollout boolean and audience are independent: toggling preserves the linked
+#                            setting, and audience edits update that setting using its normal validation,
+#                            mandatory_values, disallowed_groups, confirmation flow, and staff logging.
+#                            An empty list means no audience; anonymous access requires anonymous_users.
+#                            Linked audience restrictions still apply after auto-promotion and permanent status.
+#                          - allow_enabled_for: (optional array) restricts the audience admins can pick.
 #                            Valid values: everyone, staff, specific_groups.
 #
-#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
-#                            the only value (it cannot combine with staff or specific_groups).
-#                            Omit the key to allow all four options (the default permissive
-#                            behavior).
+#                            `everyone` must be the only value and means the change can't be scoped to
+#                            groups; the admin UI then shows the impact role's groups as a locked audience,
+#                            so make the role match who the change affects. Omit the key to let admins
+#                            pick any groups, starting from the impact role's groups.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
 #                         Use this when the parent setting is not boolean, for example an enum setting.
@@ -142,12 +149,6 @@ required:
     default: ""
     area: "about|legal"
   company_url:
-    default: ""
-    area: "about|legal"
-  governing_law:
-    default: ""
-    area: "about|legal"
-  city_for_disputes:
     default: ""
     area: "about|legal"
 
@@ -493,6 +494,11 @@ basic:
     default: 1
     min: 0
     area: "notifications"
+  push_notification_trusted_hosts:
+    default: "fcm.googleapis.com|updates.push.services.mozilla.com|push.apple.com|notify.windows.com"
+    type: host_list
+    list_type: simple
+    area: "notifications"
   push_notification_localization_max_wait_mins:
     default: 3
     min: 0
@@ -790,6 +796,12 @@ login:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+    area: "authenticators"
+  google_oauth2_hd_groups_allowed:
+    default: ""
+    type: list
+    list_type: simple
+    validator: GoogleOauth2HdGroupsAllowedValidator
     area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
@@ -1221,10 +1233,16 @@ users:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   hide_silencing_reasons:
     default: false
     client: true
     area: "users"
+    upcoming_change_default_override:
+      upcoming_change: "enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons"
+      new_default: true
   log_personal_messages_views:
     default: false
     area: "users"
@@ -2183,7 +2201,7 @@ nested_replies:
   nested_replies_backfill_batch_size:
     default: 100
     type: integer
-    min: 1
+    min: 0
     max: 10000
     hidden: true
   nested_replies_stats_maintenance_enabled:
@@ -4294,9 +4312,6 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
-  concord_in_wizard:
-    default: false
-    hidden: true
   enable_site_owner_onboarding:
     client: true
     default: true
@@ -4812,7 +4827,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/414613"
   enable_composer_redesign:
@@ -4831,17 +4846,26 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "other,all_members"
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/414357"
+  review_queue_consistent_answers:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "other,moderators"
+      learn_more_url: "https://meta.discourse.org/t/-/417015"
   enable_composer_toolbar_customization:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412749"
   enable_category_hashtag_cards:
@@ -4850,7 +4874,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412529"
   prioritize_recently_used_tags:
@@ -4886,15 +4910,18 @@ experimental:
     default: []
     area: "experimental"
     schema:
-      name: community_rule
+      name: Community rule
+      identifier: ground
       properties:
         ground:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500
         explanation:
           type: string
+          textarea: true
           required: true
           validations:
             max_length: 500
@@ -5033,6 +5060,17 @@ experimental:
       permanent_warning: false
       allow_enabled_for:
         - everyone
+  enable_new_default_for_hide_suspension_reasons_and_hide_silencing_reasons:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/416547"
+      permanent_warning: false
+      allow_enabled_for:
+        - everyone
   update_whispers_allowed_groups_default:
     default: false
     hidden: true
@@ -5052,3 +5090,11 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/413150"
+  mobile_footer_navigation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/417307"

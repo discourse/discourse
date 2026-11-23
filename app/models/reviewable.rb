@@ -61,6 +61,23 @@ class Reviewable < ActiveRecord::Base
     {}
   end
 
+  # Approval-style reviewables hold something back until a reviewer lets it
+  # through, so approving one means no problem was found. Otherwise the
+  # reviewable reports a problem, and approving it confirms the problem.
+  def self.approval_style?
+    false
+  end
+
+  def self.approval_style_types
+    types.select(&:approval_style?)
+  end
+
+  # Whether the reviewer sees approval-style questions framed so "Yes" confirms
+  # a problem, matching flag-style ones.
+  def self.consistent_answers_for?(guardian)
+    !!guardian.user&.upcoming_change_enabled?(:review_queue_consistent_answers)
+  end
+
   # This number comes from looking at forums in the wild and what numbers work.
   # As the site accumulates real data it'll be based on the site activity instead.
   def self.typical_sensitivity
@@ -401,6 +418,10 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
     raise Discourse::InvalidAccess if !can_review_target?(performed_by.guardian)
+    if params[:category_id].present? &&
+         !performed_by.guardian.can_move_topic_to_category?(params[:category_id])
+      raise Discourse::InvalidAccess
+    end
 
     (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
@@ -571,6 +592,7 @@ class Reviewable < ActiveRecord::Base
           )
           .includes(reviewable_scores: { user: :user_stat, meta_topic: :posts })
           .includes(reviewable_notes: { user: :user_stat })
+      result = DiscoursePluginRegistry.apply_modifier(:reviewable_preload_relation, result, user)
     end
     return result if user.admin?
 
@@ -622,6 +644,12 @@ class Reviewable < ActiveRecord::Base
       SQL
   end
   private_class_method :exclude_private_messages_hidden_from
+
+  def self.created_solely_by(user)
+    where(created_by_id: user.id).where.not(
+      id: ReviewableScore.pending.where.not(user_id: user.id).select(:reviewable_id),
+    )
+  end
 
   def self.pending_count(user)
     list_for(user).count
@@ -741,10 +769,8 @@ class Reviewable < ActiveRecord::Base
 
     min_score = min_score_for_priority(priority)
 
-    if min_score > 0 && status == :pending
+    if min_score > 0
       result = result.where("reviewables.score >= ? OR reviewables.force_review", min_score)
-    elsif min_score > 0
-      result = result.where("reviewables.score >= ?", min_score)
     end
 
     if !custom_filters.empty?
@@ -948,14 +974,10 @@ class Reviewable < ActiveRecord::Base
     actions,
     bundle = nil,
     require_reject_reason: false,
-    dsa_classification_required: false
+    dsa_classification_required: false,
+    bundle_label: "reviewables.actions.reject_user.title"
   )
-    bundle ||=
-      actions.add_bundle(
-        "#{id}-reject_user",
-        icon: "user-xmark",
-        label: "reviewables.actions.reject_user.title",
-      )
+    bundle ||= actions.add_bundle("#{id}-reject_user", icon: "user-xmark", label: bundle_label)
 
     # The reject reason modal already acts as a confirmation step, so only ask
     # for a separate confirmation when it isn't shown.
@@ -968,6 +990,7 @@ class Reviewable < ActiveRecord::Base
       a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
       if confirmable
+        a.confirm_title = "reviewables.actions.reject_user.delete.confirm_title"
         a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
         a.confirm_message_args = { username: username }
         a.confirm_destructive = true
@@ -980,6 +1003,7 @@ class Reviewable < ActiveRecord::Base
       a.require_reject_reason = require_reject_reason
       a.description = "reviewables.actions.reject_user.block.description"
       if confirmable
+        a.confirm_title = "reviewables.actions.reject_user.block.confirm_title"
         a.confirm_message = "reviewables.actions.reject_user.block.confirm"
         a.confirm_message_args = { username: username }
         a.confirm_destructive = true
@@ -1015,15 +1039,36 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  def self.by_status(partial_result, status)
-    return partial_result if status == :all
+  # Filters that group resolved reviewables by what the reviewer concluded,
+  # since the same status means opposite things for approval-style types.
+  OUTCOME_STATUSES = %i[problem_confirmed no_problem_found]
 
-    if status == :reviewed
+  def self.by_status(partial_result, status)
+    case status
+    when :all
+      partial_result
+    when :reviewed
       partial_result.where(status: statuses.except(:pending).values)
+    when :problem_confirmed
+      by_outcome(partial_result, approval_style_status: :rejected, other_status: :approved)
+    when :no_problem_found
+      by_outcome(partial_result, approval_style_status: :approved, other_status: :rejected)
     else
       partial_result.where(status: statuses[status])
     end
   end
+
+  def self.by_outcome(partial_result, approval_style_status:, other_status:)
+    # Status leads each branch so the (status, type) index can serve the filter.
+    partial_result.where(
+      "(reviewables.status = :approval_style_status AND reviewables.type IN (:approval_style_types)) OR " \
+        "(reviewables.status = :other_status AND reviewables.type NOT IN (:approval_style_types))",
+      approval_style_types: approval_style_types.map(&:sti_name),
+      approval_style_status: statuses[approval_style_status],
+      other_status: statuses[other_status],
+    )
+  end
+  private_class_method :by_outcome
 
   def self.find_by_flagger_or_queued_post_creator(id:, user_id:)
     Reviewable.find_by(

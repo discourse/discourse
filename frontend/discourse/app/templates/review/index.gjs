@@ -49,7 +49,7 @@ export default <template>
           )
         }}</span>
       <div class="unknown-reviewables__options">
-        <LinkTo class="btn" @route="adminPlugins.index">
+        <LinkTo class="btn btn-default" @route="adminPlugins.index">
           {{dIcon "puzzle-piece"}}
           <span>{{i18n "review.unknown.enable_plugins"}}</span>
         </LinkTo>

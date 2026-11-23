@@ -24,6 +24,20 @@ module DiscourseWorkflows
 
     AUTH_MODES = %w[none basic_auth bearer_auth header_auth].freeze
 
+    CREDENTIALS = [
+      {
+        name: "auth",
+        credential_types: %w[basic_auth bearer_token header_auth],
+        required: false,
+        display_options: {
+          show: {
+            authentication: %w[basic_auth bearer_auth header_auth],
+          },
+        },
+        label_key: "discourse_workflows.webhook.credential",
+      },
+    ].freeze
+
     CONFIGURATION_FIELDS = {
       authentication: {
         type: :options,

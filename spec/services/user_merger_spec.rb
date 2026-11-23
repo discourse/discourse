@@ -24,8 +24,8 @@ RSpec.describe UserMerger do
   end
 
   describe "#merge!" do
-    [false, true].each do |reload_target|
-      it "rejects self-merging with #{reload_target ? "a separately loaded" : "the same"} user instance before changing data" do
+    shared_examples "rejecting a self merge" do
+      it "rejects self-merging before changing data" do
         visit = Fabricate(:user_visit, user: source_user, posts_read: 12, time_read: 34)
         PostTiming.create!(
           user: source_user,
@@ -34,7 +34,7 @@ RSpec.describe UserMerger do
           msecs: 5678,
         )
         original_attributes = source_user.attributes
-        target = reload_target ? User.find(source_user.id) : source_user
+        target = merge_target
 
         expect { UserMerger.new(source_user, target).merge! }.to raise_error(
           Discourse::InvalidParameters,
@@ -51,6 +51,18 @@ RSpec.describe UserMerger do
           ).msecs,
         ).to eq(5678)
       end
+    end
+
+    context "with the same user instance" do
+      let(:merge_target) { source_user }
+
+      include_examples "rejecting a self merge"
+    end
+
+    context "with a separately loaded user instance" do
+      let(:merge_target) { User.find(source_user.id) }
+
+      include_examples "rejecting a self merge"
     end
   end
 

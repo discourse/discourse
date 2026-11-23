@@ -12,7 +12,7 @@ module("Integration | Component | Post | TimeGap", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders days correctly", async function (assert) {
-    this.set("daysSince", 5);
+    this.daysSince = 5;
     await renderComponent(this.daysSince);
     assert
       .dom(".small-action-desc.timegap")
@@ -20,7 +20,7 @@ module("Integration | Component | Post | TimeGap", function (hooks) {
   });
 
   test("it renders months correctly", async function (assert) {
-    this.set("daysSince", 90);
+    this.daysSince = 90;
     await renderComponent(this.daysSince);
     assert
       .dom(".small-action-desc.timegap")
@@ -28,7 +28,7 @@ module("Integration | Component | Post | TimeGap", function (hooks) {
   });
 
   test("it renders years correctly", async function (assert) {
-    this.set("daysSince", 730);
+    this.daysSince = 730;
     await renderComponent(this.daysSince);
     assert
       .dom(".small-action-desc.timegap")
@@ -36,7 +36,7 @@ module("Integration | Component | Post | TimeGap", function (hooks) {
   });
 
   test("it renders the correct elements", async function (assert) {
-    this.set("daysSince", 10);
+    this.daysSince = 10;
     await renderComponent(this.daysSince);
     assert.dom(".topic-avatar").exists();
     assert.dom(".small-action-desc.timegap").exists();

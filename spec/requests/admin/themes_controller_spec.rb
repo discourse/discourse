@@ -507,6 +507,25 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "identifies the locale of the embedded translation rows" do
+        SiteSetting.allow_user_locale = true
+        theme = Fabricate(:theme)
+        theme.set_field(target: :translations, name: "en", value: "en:\n  greeting: Hello\n")
+        theme.set_field(target: :translations, name: "fr", value: "fr:\n  greeting: Bonjour\n")
+        theme.save!
+
+        get "/admin/themes.json"
+        row = response.parsed_body["themes"].find { |entry| entry["id"] == theme.id }
+        expect(row["translations_locale"]).to eq("en")
+        expect(row["translations"]).to include(include("key" => "greeting", "value" => "Hello"))
+
+        admin.update!(locale: "fr")
+        get "/admin/themes.json"
+        row = response.parsed_body["themes"].find { |entry| entry["id"] == theme.id }
+        expect(row["translations_locale"]).to eq("fr")
+        expect(row["translations"]).to include(include("key" => "greeting", "value" => "Bonjour"))
+      end
+
       it "correctly returns themes" do
         ColorScheme.destroy_all
         Theme.not_system.destroy_all
@@ -802,6 +821,82 @@ RSpec.describe Admin::ThemesController do
         put "/admin/themes/99999.json"
 
         expect(response.status).to eq(400)
+      end
+
+      context "after a settings migration leaves the settings field unbaked" do
+        before do
+          Dir.mktmpdir("theme-settings-migration") do |directory|
+            File.write("#{directory}/about.json", { name: "Migrated settings" }.to_json)
+            File.write("#{directory}/settings.yml", "enabled: true\n")
+            FileUtils.mkdir_p("#{directory}/migrations/settings")
+            File.write(
+              "#{directory}/migrations/settings/0001-disable.js",
+              "export default function migrate(settings) { settings.set('enabled', false); return settings; }",
+            )
+            @migrated_theme = RemoteTheme.import_theme_from_directory(directory)
+          end
+          expect(@migrated_theme.settings_field.reload.value_baked).to be_nil
+        end
+
+        it "reports invalid YAML without failing the request" do
+          put "/admin/themes/#{@migrated_theme.id}.json",
+              params: {
+                theme: {
+                  theme_fields: [{ target: "settings", name: "yaml", value: "enabled: [" }],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(@migrated_theme.reload.settings_field.error).to be_present
+        end
+
+        it "does not expose defaults that violate their constraints" do
+          put "/admin/themes/#{@migrated_theme.id}.json",
+              params: {
+                theme: {
+                  theme_fields: [
+                    {
+                      target: "settings",
+                      name: "yaml",
+                      value:
+                        "enabled: true\nnew_limit:\n  type: integer\n  default: 20\n  max: 10\n",
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(@migrated_theme.reload.settings_field.error).to be_present
+          expect(@migrated_theme.settings).not_to have_key(:new_limit)
+        end
+      end
+
+      it "updates object settings alongside theme attributes" do
+        theme.set_field(
+          target: :settings,
+          name: "yaml",
+          value: File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")),
+        )
+        theme.save!
+        objects = theme.settings[:resource_sections].value
+        objects[0]["title"] = "Updated resources"
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                name: "Renamed",
+                settings: {
+                  resource_sections: objects.to_json,
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(theme.reload.name).to eq("Renamed")
+        expect(theme.settings[:resource_sections].value[0]["title"]).to eq("Updated resources")
+        expect(
+          theme.object_translation_defaults.dig("resource_sections.getting_started.title", :text),
+        ).to eq("Updated resources")
       end
 
       it "can change default theme" do
@@ -1367,6 +1462,99 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
+      context "with localized tag selections in an objects setting" do
+        fab!(:tag) { Fabricate(:tag, name: "cat", locale: "en", public_topic_count: 1) }
+
+        before do
+          SiteSetting.tagging_enabled = true
+          SiteSetting.allow_user_locale = true
+          SiteSetting.content_localization_enabled = true
+          admin.update!(locale: "zh_CN")
+          Fabricate(:tag_localization, tag:, locale: "zh_CN", name: "猫")
+          theme.set_field(target: :settings, name: :yaml, value: <<~YAML)
+            tag_styles:
+              type: objects
+              default: []
+              schema:
+                name: tag style
+                properties:
+                  tags:
+                    type: tags
+          YAML
+          theme.save!
+        end
+
+        it "saves a localized picker selection by ID while exposing source names" do
+          get "/tags/filter/search.json", params: { q: "cat", filterForInput: true }
+
+          expect(response.status).to eq(200)
+          selected_tag =
+            response.parsed_body.fetch("results").find { |result| result["id"] == tag.id }
+          expect(selected_tag).to include("id" => tag.id, "name" => "猫")
+
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [selected_tag.fetch("id")] }].to_json,
+              }
+
+          expect(response.status).to eq(200), response.body
+          expect(response.parsed_body.fetch("tag_styles")).to eq([{ "tags" => ["cat"] }])
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+          expect(UserHistory.last.new_value).to eq([{ tags: [tag.id] }].to_json)
+        end
+
+        it "continues to accept canonical name arrays from existing clients" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.name] }].to_json,
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body.fetch("tag_styles")).to eq([{ "tags" => ["cat"] }])
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+        end
+
+        it "does not interpret translated display names as source names" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: ["猫"] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.theme_settings.exists?(name: "tag_styles")).to eq(false)
+        end
+
+        it "rejects unknown tag IDs without changing the saved setting" do
+          theme.update_setting(:tag_styles, [{ tags: [tag.name] }])
+
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.id, 99_999_999] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.settings[:tag_styles].value).to eq([{ "tags" => ["cat"] }])
+        end
+
+        it "rejects unknown tag names without saving the setting" do
+          put "/admin/themes/#{theme.id}/setting.json",
+              params: {
+                name: "tag_styles",
+                value: [{ tags: [tag.name, "unknown-tag"] }].to_json,
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body.fetch("errors")).to include(a_string_including("/0/tags"))
+          expect(theme.reload.theme_settings.exists?(name: "tag_styles")).to eq(false)
+        end
+      end
+
       it "returns an error for an invalid objects setting value" do
         theme.set_field(
           target: :settings,
@@ -1390,6 +1578,15 @@ RSpec.describe Admin::ThemesController do
         expect(response.parsed_body["errors"]).to eq(
           ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
         )
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: "{}",
+            }
+
+        expect(response.status).to eq(422)
+        expect(theme.reload.settings[:objects_setting].value).to be_an(Array)
       end
 
       it "updates an objects theme setting" do
@@ -1412,14 +1609,14 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.status).to eq(200)
 
-        expect(theme.settings[:objects_setting].value).to eq(
-          [
-            {
-              "name" => "new_section",
-              "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
-            },
-          ],
-        )
+        expected_value = [
+          {
+            "name" => "new_section",
+            "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
+          },
+        ]
+        expect(response.parsed_body).to eq("objects_setting" => expected_value)
+        expect(theme.reload.settings[:objects_setting].value).to eq(expected_value)
       end
 
       it "clears a theme setting" do
@@ -2296,8 +2493,8 @@ RSpec.describe Admin::ThemesController do
         expect(theme.reload.child_theme_ids).to eq([locked_component.id])
       end
 
-      %w[none merge sync].each do |components|
-        it "blocks type changes removing restricted children when replacing an archive with #{components}" do
+      shared_examples "rejecting archive type changes" do |components:|
+        it "blocks type changes removing restricted children when replacing an archive" do
           theme.add_relative_theme!(:child, locked_component)
 
           post "/admin/themes/import.json",
@@ -2312,7 +2509,7 @@ RSpec.describe Admin::ThemesController do
           expect(theme.child_theme_ids).to eq([locked_component.id])
         end
 
-        it "blocks type changes removing restricted parents when replacing an archive with #{components}" do
+        it "blocks type changes removing restricted parents when replacing an archive" do
           component = Fabricate(:theme, component: true)
           locked_theme.add_relative_theme!(:child, component)
 
@@ -2327,6 +2524,18 @@ RSpec.describe Admin::ThemesController do
           expect(component.reload).to be_component
           expect(locked_theme.reload.child_theme_ids).to eq([component.id])
         end
+      end
+
+      context "with component updates disabled" do
+        include_examples "rejecting archive type changes", components: "none"
+      end
+
+      context "when merging components" do
+        include_examples "rejecting archive type changes", components: "merge"
+      end
+
+      context "when synchronizing components" do
+        include_examples "rejecting archive type changes", components: "sync"
       end
 
       it "blocks including a restricted component in a theme imported from a repository" do

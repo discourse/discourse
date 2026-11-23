@@ -743,6 +743,7 @@ export default class UpsertCategoryGeneral extends Component {
         @name="style_type"
         @title={{i18n "category.style"}}
         @type="custom"
+        @validation="required"
         as |styleField|
       >
         <styleField.Control>

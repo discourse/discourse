@@ -11,6 +11,24 @@ RSpec.describe DiscourseAi::Agents::Tools::Tool do
 
   before { enable_current_plugin }
 
+  describe ".option" do
+    it "resolves the current option class for a tool retained across namespace reloads" do
+      retained_tool = Class.new(described_class)
+      current_option_class = Class.new(DiscourseAi::Agents::Tools::Option)
+      current_tools = Module.new
+
+      stub_const(current_tools, :Option, current_option_class) do
+        stub_const(DiscourseAi::Agents, :Tools, current_tools) do
+          option = retained_tool.option(:allowed_tables, type: :string, default: "events")
+          expect(option).to be_an_instance_of(current_option_class)
+          expect(option.tool).to eq(retained_tool)
+          expect(option.name).to eq("allowed_tables")
+          expect(option.default).to eq("events")
+        end
+      end
+    end
+  end
+
   describe "#read_response_body" do
     class FakeResponse
       def initialize(chunk)

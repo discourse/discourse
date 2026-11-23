@@ -172,6 +172,37 @@ RSpec.describe ApplicationController do
       expect(response.status).to eq(200)
     end
 
+    it "keeps invite-only visitors on site with a sole authenticator" do
+      enable_auth_provider(:google_oauth2)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/latest"
+      expect(response).to redirect_to("/login")
+
+      get "/login"
+      expect(response.status).to eq(200)
+
+      invite = Fabricate(:invite, invited_by: admin)
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with Discourse ID" do
+      enable_auth_provider(:discourse_id)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/login"
+      expect(response.status).to eq(200)
+    end
+
     it "does not redirect to SSO when auth_immediately is disabled" do
       SiteSetting.auth_immediately = false
       SiteSetting.discourse_connect_url = "http://someurl.com"
@@ -665,6 +696,28 @@ RSpec.describe ApplicationController do
         end
       end
 
+      it "does not retain topics converted to private messages" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}/convert-topic/private.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_private_message
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(topic.title)
+      end
+
       it "does not retain topics after a category becomes restricted" do
         Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
         category = Fabricate(:category)
@@ -1051,6 +1104,15 @@ RSpec.describe ApplicationController do
     it "disallows invalid public_key param" do
       args[:auth_redirect] = "discourse://auth_redirect"
       get "/latest", params: args
+
+      expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
+    end
+
+    it "disallows a non-string public_key param without generating a keypair" do
+      args[:auth_redirect] = "discourse://auth_redirect"
+      args[:user_api_public_key] = 4_096
+
+      post "/posts", params: args.merge(raw: "hi", title: "test topic"), as: :json
 
       expect(response.body).to eq(I18n.t("user_api_key.invalid_public_key"))
     end
@@ -1786,16 +1848,14 @@ RSpec.describe ApplicationController do
 
   describe "vary header" do
     it "includes Vary:Accept on all requests where format is not explicit" do
-      # Rails default behaviour - include Vary:Accept when Accept is supplied
+      # Rails varies on both headers used for format negotiation
       get "/latest", headers: { "Accept" => "application/json" }
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
-      # Discourse additional behaviour (see lib/vary_header.rb)
-      # Include Vary:Accept even when Accept is not supplied
       get "/latest"
       expect(response.status).to eq(200)
-      expect(response.headers["Vary"]).to eq("Accept")
+      expect(response.headers["Vary"]).to eq("Accept, X-Requested-With")
 
       # Not needed, because the path 'format' parameter overrides the Accept header
       get "/latest.json"

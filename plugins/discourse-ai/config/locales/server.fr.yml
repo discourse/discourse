@@ -48,12 +48,6 @@ fr:
         flagged_post_response: "Réponse du modèle : %{llm_response}"
         notify_author_pm:
           subject: "Votre publication a été temporairement retirée pour vérification"
-          body: |
-            Bonjour @%{username},
-
-            Votre publication dans « %{topic_title} » a été temporairement retirée et placée dans notre file d'attente de vérification afin d'être examinée par l'équipe de modération. Si elle est approuvée, elle sera automatiquement restaurée.
-
-            Référence : %{post_url}
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"
@@ -158,6 +152,12 @@ fr:
     ai_translation_backfill_hourly_rate: "Nombre de publications et de sujets à traduire par heure pendant les opérations de traitement rétroactif. Définissez cette valeur sur 0 pour désactiver le traitement rétroactif automatique des traductions du contenu existant."
     ai_translation_backfill_parallel_jobs: "Nombre de tâches parallèles de localisation des publications à exécuter à chaque cycle de traitement rétroactif. Des valeurs plus élevées augmentent le débit, mais consomment davantage de ressources."
     ai_usage_rollup_after_days: "Nombre de jours pendant lesquels conserver les statistiques d'utilisation de l'IA par requête avant de les regrouper dans des agrégats quotidiens. Définissez cette valeur sur 0 pour désactiver le regroupement."
+    keywords:
+      ai_default_llm_model: "modèle linguistique par défaut"
+      ai_discord_search_enabled: "intégration à Discord"
+      ai_helper_automatic_chat_thread_title: "titres des fils de discussion"
+      ai_summarization_enabled: "résumés"
+      ai_summary_gists_enabled: "courts résumés de la liste des sujets"
   reviewables:
     reasons:
       flagged_by_toxicity: L'extension IA l'a signalé après l'avoir classé comme toxique.
@@ -258,10 +258,6 @@ fr:
           name: "Génération d'image..."
         image_generation_custom:
           name: "Personnalisé"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -951,6 +947,22 @@ fr:
           hidden: "Le paramètre du site « %{setting_name} » est masqué et ne peut pas être lu ici."
           secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être lu ici."
           themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être lu ici."
+    appearance_authoring:
+      default_theme: "Thème par défaut"
+      colors:
+        light:
+          header_background: "En-tête"
+      fonts:
+        base_font: "Police de contenu"
+        heading_font: "Police de titre"
+    mcp_theme_access:
+      "on": "Activé"
+      "off": "Désactivé"
+      none: "jamais"
+      changes:
+        server: "Serveur MCP"
+    mcp_app_setup:
+      none: "jamais"
     reviewables:
       ai_tool_action:
         title: "Action d'un outil d'IA"
@@ -1016,6 +1028,7 @@ fr:
       cannot_edit_builtin: "Vous ne pouvez pas modifier un modèle intégré."
       secret_required: "Un identifiant doit être sélectionné."
       secret_not_found: "L'identifiant sélectionné n'existe pas."
+      missing_provider_param: "%{param} ne peut pas être vide"
       configuration:
         disable_embeddings: "Vous devez d'abord désactiver « l'intégration de l'IA activée »."
         choose_model: "Définissez d'abord 'ai embeddings selected model'."

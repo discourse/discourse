@@ -65,8 +65,8 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
-    %i[palettes existing_palettes].each do |kind|
-      it "restores the original fonts after retrying a #{kind} activation that failed after applying them" do
+    shared_examples "restoring fonts after retrying activation" do |kind:|
+      it "restores the original fonts after retrying an activation that failed after applying them" do
         appearance_change.update!(kind:)
         original_font = SiteSetting.base_font
         Theme.any_instance.stubs(:update!).raises(ActiveRecord::RecordInvalid)
@@ -86,8 +86,8 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
-    %i[palettes existing_palettes theme].each do |kind|
-      it "restores the original state after retrying a failed #{kind} activation" do
+    shared_examples "restoring state after retrying activation" do |kind:|
+      it "restores the original state after retrying a failed activation" do
         appearance_change.update!(kind:)
         original_font = SiteSetting.base_font
         original_default_theme_id = SiteSetting.default_theme_id
@@ -155,8 +155,8 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
-    %i[existing_palettes theme].each do |kind|
-      it "can reactivate #{kind} changes after another change replaces their fonts" do
+    shared_examples "reactivating changes after font replacement" do |kind:|
+      it "can reactivate changes after another change replaces their fonts" do
         SiteSetting.base_font = "lora"
         first =
           Fabricate(
@@ -207,6 +207,22 @@ RSpec.describe AppearanceChange::Activate do
       end
     end
 
+    context "with new palettes" do
+      include_examples "restoring fonts after retrying activation", kind: :palettes
+      include_examples "restoring state after retrying activation", kind: :palettes
+    end
+
+    context "with existing palettes" do
+      include_examples "restoring fonts after retrying activation", kind: :existing_palettes
+      include_examples "restoring state after retrying activation", kind: :existing_palettes
+      include_examples "reactivating changes after font replacement", kind: :existing_palettes
+    end
+
+    context "with theme changes" do
+      include_examples "restoring state after retrying activation", kind: :theme
+      include_examples "reactivating changes after font replacement", kind: :theme
+    end
+
     context "with a new theme" do
       fab!(:appearance_change) do
         Fabricate(:theme_appearance_change, site_settings: { "heading_font" => "roboto" })
@@ -226,6 +242,18 @@ RSpec.describe AppearanceChange::Activate do
             "default_theme_id" => previous_default_theme_id,
           },
         )
+      end
+    end
+
+    context "with an installed theme" do
+      fab!(:appearance_change, :installed_theme_appearance_change)
+
+      it { is_expected.to run_successfully }
+
+      it "makes the theme the default, keeping its files" do
+        expect { result }.to change { SiteSetting.default_theme_id }.to(appearance_change.theme_id)
+        expect(appearance_change.reload).to be_applied
+        expect(appearance_change.theme.theme_fields.count).to eq(1)
       end
     end
   end

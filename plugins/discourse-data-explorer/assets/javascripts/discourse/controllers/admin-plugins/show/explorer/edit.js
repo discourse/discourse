@@ -18,6 +18,7 @@ import {
   dataExplorerStore,
   rememberMode,
 } from "discourse/plugins/discourse-data-explorer/discourse/lib/data-explorer-store";
+import sqlLanguageOptions from "discourse/plugins/discourse-data-explorer/discourse/lib/sql-language-options";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
 const HIDE_SCHEMA_KEY = "hide_schema";
@@ -26,7 +27,6 @@ const DASHBOARD_REPORT_SOURCE = "data_explorer_query";
 export default class PluginsExplorerController extends Controller {
   @service modal;
   @service dialog;
-  @service appEvents;
   @service siteSettings;
   @service messageBus;
   @service toasts;
@@ -81,6 +81,10 @@ export default class PluginsExplorerController extends Controller {
   // is confusing otherwise.
   get actionsBusy() {
     return this.loading || this.aiGenerating;
+  }
+
+  get sqlLanguageOptions() {
+    return sqlLanguageOptions(this.schema);
   }
 
   get saveDisabled() {
@@ -275,7 +279,6 @@ export default class PluginsExplorerController extends Controller {
     }
 
     panes.style.height = `${size}px`;
-    this.appEvents.trigger("ace:resize");
   }
 
   /** Lets go of the panes. Called by the route on exit. */

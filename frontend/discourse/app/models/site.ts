@@ -175,6 +175,7 @@ export interface SiteAclEntry {
 export interface SiteCategoryType extends CategoryTypeMetadata {
   description: string;
   icon: string | null;
+  svg_icon: string | null;
 }
 
 /** The site banner; an empty object when no banner is set. */
@@ -187,7 +188,7 @@ export type SiteBanner = EmberObject & {
 /** A user's custom field values, keyed by user field id. */
 export type SiteUserFieldValues = Record<
   string,
-  string | string[] | boolean | null | undefined
+  string | string[] | number | boolean | null | undefined
 >;
 
 /**
@@ -370,12 +371,9 @@ export default class Site extends RestModel {
     }
 
     if (result.archetypes) {
-      result.archetypes = (
-        result.archetypes as unknown as { site?: Site }[]
-      ).map((a) => {
+      result.archetypes = result.archetypes.map((a) => {
         a.site = result;
-        // TODO(typescript-pending): RestCompatModel.create is untyped; remove when it returns the subclass.
-        return Archetype.create(a) as Archetype;
+        return Archetype.create(a);
       });
     }
 
@@ -557,7 +555,10 @@ export default class Site extends RestModel {
           | TrustedHTML
           | null
           | undefined = fields ? fields[f.id.toString()] : null;
-        value = value || trustHTML("&mdash;");
+        // Number fields can legitimately hold 0.
+        if (value !== 0) {
+          value = value || trustHTML("&mdash;");
+        }
         return { name: f.name, value };
       });
     }
@@ -625,33 +626,6 @@ export default class Site extends RestModel {
     if (!tags) {
       return [];
     }
-    // TODO(typescript-pending): the store registry has no tag entry; remove when it does.
-    return tags.map(
-      (tag) =>
-        this.store.createRecord(
-          "tag",
-          tag as unknown as RestModelAttrs<RestModel>
-        ) as unknown as Tag
-    );
+    return tags.map((tag) => this.store.createRecord("tag", tag));
   }
-}
-
-/** The deprecated global namespace, present only on pages that still define it. */
-declare const Discourse: object | undefined;
-
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-
-  Object.defineProperty(Discourse, "Site", {
-    get() {
-      if (!warned) {
-        deprecated("Import the Site class instead of using Discourse.Site", {
-          since: "2.4.0",
-          id: "discourse.global.site",
-        });
-        warned = true;
-      }
-      return Site;
-    },
-  });
 }

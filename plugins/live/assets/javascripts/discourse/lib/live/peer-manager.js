@@ -181,6 +181,7 @@ export default class PeerManager {
   #onPeerDestroyed;
   #onPeerConnected;
   #shouldRestartPeer;
+  #onFileChannel;
 
   constructor({
     getIceServers,
@@ -196,6 +197,7 @@ export default class PeerManager {
     onPeerDestroyed,
     onPeerConnected = () => {},
     shouldRestartPeer = () => true,
+    onFileChannel = null,
   }) {
     this.#getIceServers = getIceServers;
     this.#getIceTransportPolicy = getIceTransportPolicy;
@@ -210,6 +212,7 @@ export default class PeerManager {
     this.#onPeerDestroyed = onPeerDestroyed;
     this.#onPeerConnected = onPeerConnected;
     this.#shouldRestartPeer = shouldRestartPeer;
+    this.#onFileChannel = onFileChannel;
   }
 
   has(roomId, userId) {
@@ -311,6 +314,22 @@ export default class PeerManager {
     });
     roomPeers.set(remoteUserId, pc);
 
+    // Reserve SCTP in the initial SDP: signaling cannot renegotiate later.
+    // Both ends use the same explicitly negotiated reliable, ordered stream.
+    if (this.#onFileChannel) {
+      const channel = pc.createDataChannel("live-file-transfer", {
+        negotiated: true,
+        id: 0,
+        ordered: true,
+      });
+      this.#onFileChannel(
+        roomId,
+        remoteUserId,
+        channel,
+        () => pc.sctp?.maxMessageSize
+      );
+    }
+
     const localStream = this.#getLocalStream();
     if (localStream) {
       for (const track of localStream.getTracks()) {
@@ -391,7 +410,9 @@ export default class PeerManager {
     };
 
     pc.onicecandidateerror = (event) => {
-      liveLog.warn("[live] ICE candidate error for peer");
+      // Usually one of several local addresses failing while another succeeds;
+      // connection diagnostics tell the two apart, so this is not a warning.
+      liveLog.info("[live] ICE candidate error for peer");
       if (!iceCandidateErrors.has(pc)) {
         iceCandidateErrors.set(pc, []);
       }
@@ -399,6 +420,8 @@ export default class PeerManager {
         url: event.url,
         errorCode: event.errorCode,
         errorText: event.errorText,
+        address: event.address,
+        port: event.port,
       });
     };
 
@@ -448,7 +471,11 @@ export default class PeerManager {
   destroy(
     roomId,
     remoteUserId,
-    { resetRestartAttempts = true, closeConnection = true } = {}
+    {
+      resetRestartAttempts = true,
+      closeConnection = true,
+      keepPendingCandidates = false,
+    } = {}
   ) {
     const peers = this.#peerConnections.get(roomId);
     const pc = peers?.get(remoteUserId);
@@ -479,7 +506,9 @@ export default class PeerManager {
       this.#clearPeerRestartTimer(roomId, remoteUserId);
     }
     this.#clearConnectionTimeout(roomId, remoteUserId);
-    this.#clearPendingCandidates(roomId, remoteUserId);
+    if (!keepPendingCandidates) {
+      this.#clearPendingCandidates(roomId, remoteUserId);
+    }
     this.#clearSignalQueue(roomId, remoteUserId);
     this.#onPeerDestroyed(roomId, remoteUserId);
   }

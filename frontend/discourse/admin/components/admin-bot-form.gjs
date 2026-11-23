@@ -11,10 +11,13 @@ import {
   validateGranularScopes,
 } from "discourse/admin/lib/api-key-scopes";
 import Form from "discourse/components/form";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { withoutPrefix } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { applyQueryParams } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -38,6 +41,7 @@ export default class AdminBotForm extends Component {
       name: "",
       username: "",
       trust_level: this.args.defaultTrustLevel,
+      interactive_bot: false,
       generate_api_key: false,
       scope_mode: "global",
       scopes: buildScopesFormData(this.args.apiKeyScopes.scopes),
@@ -80,11 +84,16 @@ export default class AdminBotForm extends Component {
   @action
   async createBot(data) {
     const payload = {
-      bot: {
-        name: data.name,
-        username: data.username,
-        trust_level: Number(data.trust_level),
-      },
+      bot: applyValueTransformer(
+        "admin-new-bot-params",
+        {
+          name: data.name,
+          username: data.username,
+          trust_level: Number(data.trust_level),
+          interactive_bot: Boolean(data.interactive_bot),
+        },
+        { data }
+      ),
     };
 
     if (data.generate_api_key) {
@@ -243,6 +252,22 @@ export default class AdminBotForm extends Component {
             {{/each}}
           </field.Control>
         </form.Field>
+
+        <form.Field
+          @description={{i18n "admin.users.bots.interactive_bot_description"}}
+          @format="large"
+          @name="interactive_bot"
+          @title={{i18n "admin.users.bots.interactive_bot"}}
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control />
+        </form.Field>
+
+        <PluginOutlet
+          @name="admin-bot-form-fields"
+          @outletArgs={{lazyHash form=form transientData=transientData}}
+        />
 
         <form.Field
           @description={{i18n "admin.users.bots.generate_api_key_description"}}

@@ -45,4 +45,14 @@ module("Integration | ui-kit | DConditionalLoadingSection", function (hooks) {
     assert.dom(".content").exists();
     assert.dom(".title").doesNotExist();
   });
+
+  test("sizes the spinner with @size", async function (assert) {
+    await render(
+      <template>
+        <DConditionalLoadingSection @isLoading={{true}} @size="small" />
+      </template>
+    );
+
+    assert.dom(".spinner").hasClass("small", "@size is added to the spinner");
+  });
 });

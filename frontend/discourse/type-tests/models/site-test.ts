@@ -153,6 +153,7 @@ interface ExpectedCategoryType {
   title: string;
   description: string;
   icon: string | null;
+  svg_icon: string | null;
   available: boolean;
   visible: boolean;
   configuration_schema: Record<string, Record<string, unknown>[]>;
@@ -350,10 +351,10 @@ expectTypeOf(
 expectTypeOf(site.removeCategory(1)).toEqualTypeOf<void>();
 expectTypeOf(site.removeCategory("1")).toEqualTypeOf<void>();
 
-// User#user_fields includes boolean confirmations and multiselect arrays.
+// User#user_fields includes boolean confirmations, multiselect arrays and numbers.
 // collectUserFields replaces false/null/missing values with a TrustedHTML dash.
 expectTypeOf(site.collectUserFields).returns.toEqualTypeOf<
-  { name: string; value: string | string[] | true | TrustedHTML }[]
+  { name: string; value: string | string[] | number | true | TrustedHTML }[]
 >();
 site.collectUserFields({
   "1": "Text",
@@ -361,6 +362,7 @@ site.collectUserFields({
   "3": true,
   "4": false,
   "5": null,
+  "6": 0,
 });
 site.collectUserFields(null);
 site.collectUserFields(undefined);

@@ -3,9 +3,10 @@ import Service, { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ChatDrawerRoutesBrowse from "discourse/plugins/chat/discourse/components/chat/drawer-routes/browse";
 import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
-import ChatDrawerRoutesChannelInfoMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-info-members";
-import ChatDrawerRoutesChannelInfoSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-info-settings";
+import ChatDrawerRoutesChannelMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-members";
 import ChatDrawerRoutesChannelPins from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-pins";
+import ChatDrawerRoutesChannelPreferences from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-preferences";
+import ChatDrawerRoutesChannelSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-settings";
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
@@ -243,7 +244,7 @@ const ROUTES = {
     },
   },
   "chat.channel.info.settings": {
-    name: ChatDrawerRoutesChannelInfoSettings,
+    name: ChatDrawerRoutesChannelSettings,
 
     extractParams: (route) => {
       return {
@@ -264,7 +265,28 @@ const ROUTES = {
     },
   },
   "chat.channel.info.members": {
-    name: ChatDrawerRoutesChannelInfoMembers,
+    name: ChatDrawerRoutesChannelMembers,
+
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+      };
+    },
+    async model(params) {
+      const channel = await this.chatChannelsManager.find(params.channelId);
+      return { channel };
+    },
+
+    afterModel(model) {
+      this.chat.activeChannel = model.channel;
+    },
+
+    deactivate() {
+      this.chat.activeChannel = null;
+    },
+  },
+  "chat.channel.info.preferences": {
+    name: ChatDrawerRoutesChannelPreferences,
 
     extractParams: (route) => {
       return {

@@ -12,26 +12,17 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { bind } from "discourse/lib/decorators";
 import getURL, { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import { DEFAULT_DIVERSITY } from "discourse/services/emoji-store";
 import { i18n } from "discourse-i18n";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReactionModel, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-
-const removedSecondaryActions = new Set();
-
-export function removeChatComposerSecondaryActions(actionIds) {
-  actionIds.forEach((id) => removedSecondaryActions.add(id));
-}
-
-export function resetRemovedChatComposerSecondaryActions() {
-  removedSecondaryActions.clear();
-}
 
 export default class ChatMessageInteractor {
   @service appEvents;
@@ -124,7 +115,9 @@ export default class ChatMessageInteractor {
 
   get canReply() {
     return (
-      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
+      this.canInteractWithMessage &&
+      (this.siteSettings.chat_thread_improvements ||
+        this.context !== MESSAGE_CONTEXT_THREAD)
     );
   }
 
@@ -161,10 +154,38 @@ export default class ChatMessageInteractor {
   }
 
   get canPinMessage() {
-    if (!this.siteSettings.chat_pinned_messages) {
+    return this.message.channel?.canManagePins;
+  }
+
+  get canBroadcastMessage() {
+    if (
+      !this.siteSettings.chat_thread_improvements ||
+      this.message.deletedAt ||
+      this.message.chatWebhookEvent
+    ) {
       return false;
     }
-    return this.message.channel?.canManagePins;
+    const channel = this.message.channel;
+    if (
+      this.currentUser.id !== this.message.user?.id &&
+      !this.currentUser.admin &&
+      !channel?.canModerate
+    ) {
+      return false;
+    }
+
+    if (this.message.broadcasted) {
+      return true;
+    }
+    if (!channel?.threadingEnabled) {
+      return false;
+    }
+
+    return (
+      this.context === MESSAGE_CONTEXT_THREAD &&
+      Boolean(this.message.threadId) &&
+      this.chatThreadPane.thread?.originalMessage?.id !== this.message.id
+    );
   }
 
   get canRebakeMessage() {
@@ -247,6 +268,31 @@ export default class ChatMessageInteractor {
       });
     }
 
+    if (this.canBroadcastMessage) {
+      const isDm = this.message.channel?.isDirectMessageChannel;
+      if (this.message.broadcasted) {
+        buttons.push({
+          id: "removeMessageBroadcast",
+          name: isDm
+            ? i18n("chat.remove_broadcast_from_dm")
+            : i18n("chat.remove_broadcast_from_channel", {
+                channelName: this.message.channel?.title,
+              }),
+          icon: "xmark",
+        });
+      } else {
+        buttons.push({
+          id: "broadcastMessage",
+          name: isDm
+            ? i18n("chat.broadcast_to_dm")
+            : i18n("chat.broadcast_to_channel", {
+                channelName: this.message.channel?.title,
+              }),
+          icon: "paper-plane",
+        });
+      }
+    }
+
     if (this.canReportMessage) {
       buttons.push({
         id: "flag",
@@ -279,7 +325,10 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
   }
 
   // Visitors and silenced users can't post, but can still link to and report messages.
@@ -304,7 +353,10 @@ export default class ChatMessageInteractor {
       buttons.push({ id: "flag", name: i18n("chat.flag"), icon: "flag" });
     }
 
-    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
+    return applyValueTransformer("chat-message-secondary-actions", buttons, {
+      message: this.message,
+      context: this.context,
+    });
   }
 
   select(checked = true) {
@@ -525,6 +577,30 @@ export default class ChatMessageInteractor {
   @action
   reply() {
     this.composer.replyTo(this.message);
+  }
+
+  @action
+  broadcastMessage() {
+    this.message.broadcasted = true;
+
+    return this.chatApi
+      .setMessageBroadcast(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.broadcasted = false;
+        popupAjaxError(error);
+      });
+  }
+
+  @action
+  removeMessageBroadcast() {
+    this.message.broadcasted = false;
+
+    return this.chatApi
+      .removeMessageBroadcast(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.broadcasted = true;
+        popupAjaxError(error);
+      });
   }
 
   @action

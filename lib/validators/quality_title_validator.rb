@@ -7,7 +7,11 @@ class QualityTitleValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if Discourse.static_doc_topic_ids.include?(record.id) && record.acting_user&.admin?
 
-    sentinel = TextSentinel.title_sentinel(value)
+    sentinel =
+      TextSentinel.title_sentinel(
+        value,
+        min_length: TopicTitleLengthValidator.min_topic_title_length(record),
+      )
 
     if !sentinel.valid?
       if !sentinel.seems_meaningful?

@@ -16,6 +16,9 @@ vi:
         preview_archive: Đã lưu trữ
         desktop: Máy tính để bàn
         mobile: Điện thoại
+        save: Lưu lại
+        path_formats:
+          custom: Tùy biến
         back_to_themes: Quay lại theme
         new_theme_short: Theme mới
         themes: Themes
@@ -23,6 +26,7 @@ vi:
         edit: Sửa
         activate: Kích hoạt
         preview: Xem trước
+        customize: Tùy biến
         import: Nhập
         export: Xuất
         active: Hoạt động
@@ -35,6 +39,7 @@ vi:
         change:
           title: tiêu đề
           body: thân
+          tags: Thẻ
       review:
         create: Tạo link
         copy: Sao chép
@@ -51,7 +56,10 @@ vi:
         edit: Sửa
         status: Trạng thái
         replies: Lượt trả lời
+        title: Tiêu đề
+      all: Tất cả
       drafts: Nháp
+      pages: Trang
       preview: Xem trước
       unpublish: Hủy xuất bản
       appearance_link: Ngoại hình

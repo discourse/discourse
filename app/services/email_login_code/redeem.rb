@@ -120,9 +120,9 @@ class EmailLoginCode::Redeem
     UserField
       .required
       .where(show_on_signup: true)
-      .pluck(:id)
-      .all? do |field_id|
-        value = values[field_id.to_s]
+      .includes(:user_field_options)
+      .all? do |field|
+        value = UserCreator.clean_custom_field_values(field, values[field.id.to_s])
         value.present? && value != "false"
       end
   end
@@ -162,8 +162,8 @@ class EmailLoginCode::Redeem
     !user.active?
   end
 
-  def activate_user(user:)
-    user.activate
+  def activate_user(user:, params:)
+    user.activate(params.email)
   end
 
   def send_welcome_message(user:)

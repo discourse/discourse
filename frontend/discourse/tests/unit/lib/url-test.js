@@ -373,6 +373,34 @@ module("Unit | Utility | url", function (hooks) {
     }
   });
 
+  test("routeTo loads the page for links that preview a theme or turn on safe mode", function (assert) {
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    for (const path of [
+      "/?preview_theme_id=3",
+      "/latest?preview_color_scheme_id=5&preview_dark_color_scheme_id=6",
+      "http://test.localhost/?preview_base_font=inter",
+      "/t/some-topic/1?preview_heading_font=lora",
+      "/categories?safe_mode=no_themes",
+    ]) {
+      DiscourseURL.redirectTo.resetHistory();
+      DiscourseURL.routeTo(path);
+
+      assert.true(
+        DiscourseURL.redirectTo.calledWith(path),
+        `${path} is loaded from the server`
+      );
+    }
+
+    DiscourseURL.redirectTo.resetHistory();
+    DiscourseURL.routeTo("/latest?order=preview_theme_id");
+    assert.false(
+      DiscourseURL.redirectTo.called,
+      "a value that only mentions a preview stays in the app"
+    );
+  });
+
   test("routeTo redirects paths registered as server-rendered homepages", function (assert) {
     const site = Site.current();
     const originalOptions = site.homepage_options;

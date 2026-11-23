@@ -181,6 +181,7 @@ export default class LoginPageController extends Controller {
 
   @action
   showCodeLogin() {
+    this.flash = null;
     this.codeLoginSelected = true;
   }
 

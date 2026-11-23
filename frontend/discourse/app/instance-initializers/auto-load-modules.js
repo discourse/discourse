@@ -2,12 +2,6 @@ import { setOwner } from "@ember/owner";
 import { createHelperContext, registerHelpers } from "discourse/lib/helpers";
 
 export function autoLoadModules(owner, registry) {
-  Object.keys(requirejs.entries).forEach((entry) => {
-    if (entry.includes("/widgets/") && !entry.endsWith("-test")) {
-      requirejs(entry, null, null, true);
-    }
-  });
-
   let context = {
     siteSettings: owner.lookup("service:site-settings"),
     keyValueStore: owner.lookup("service:key-value-store"),

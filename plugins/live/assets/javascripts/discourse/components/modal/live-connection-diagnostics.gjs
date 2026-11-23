@@ -11,11 +11,19 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
+  averageAudioLevel,
   formatBitrate,
   formatCandidateCounts,
+  formatDbfs,
   formatIceError,
   formatReport,
   formatRtt,
+  partitionIceErrors,
+  playbackProblems,
+  primaryInboundAudio,
+  publicIpv4Addresses,
+  receivingSilence,
+  unexpectedLocalAddress,
 } from "../../lib/live/connection-diagnostics.js";
 
 const REFRESH_INTERVAL_MS = 3000;
@@ -41,6 +49,31 @@ function peerStatus(peer) {
     return "failed";
   }
   return "connecting";
+}
+
+function errorGroups(errors, evidence, formatOptions) {
+  const { problems, harmless } = partitionIceErrors(errors, evidence);
+  const format = (error) => formatIceError(error, formatOptions);
+  return {
+    errors: problems.map(format),
+    harmlessErrors: harmless.map(format),
+    harmlessSummary:
+      harmless.length &&
+      i18n("live.connection_diagnostics.harmless_errors", {
+        count: harmless.reduce((sum, error) => sum + error.count, 0),
+      }),
+  };
+}
+
+function incomingAudioLabel(entry) {
+  if (!entry) {
+    return null;
+  }
+  return i18n("live.connection_diagnostics.incoming_audio_value", {
+    packets: entry.packetsReceived,
+    lost: entry.packetsLost ?? "?",
+    level: formatDbfs(averageAudioLevel(entry)) ?? "?",
+  });
 }
 
 function candidateLabel(candidate) {
@@ -100,6 +133,8 @@ export default class LiveConnectionDiagnosticsModal extends Component {
         const pair = stats?.selectedPair;
         const route = stats?.route ?? "unknown";
         const recovery = peer.recovery;
+        const inboundAudio = primaryInboundAudio(stats);
+        const problems = playbackProblems(peer.playback);
 
         return {
           key: peer.userId,
@@ -154,12 +189,33 @@ export default class LiveConnectionDiagnosticsModal extends Component {
             count: recovery.restartAttempts,
             max: recovery.maxRestartAttempts,
           }),
+          pairsByType: Object.entries(stats?.pairsByType || {}).map(
+            ([types, counts]) =>
+              i18n("live.connection_diagnostics.pairs_by_type_value", {
+                types: types.replace("→", " → "),
+                succeeded: counts.succeeded,
+                failed: counts.failed,
+              })
+          ),
+          unexpectedLocalAddress: unexpectedLocalAddress(stats),
+          incomingAudio: incomingAudioLabel(inboundAudio),
+          receivingSilence: receivingSilence(inboundAudio),
+          playbackProblems: problems.map((problem) =>
+            i18n(`live.connection_diagnostics.playback_problems.${problem}`)
+          ),
+          playbackOk:
+            peer.playback &&
+            !problems.length &&
+            i18n("live.connection_diagnostics.playback_ok", {
+              volume: Math.round(peer.playback.volume * 100),
+            }),
           restartsExhausted:
             recovery.restartAttempts >= recovery.maxRestartAttempts &&
             status !== "connected",
-          iceErrors: recovery.iceCandidateErrors.map((error) =>
-            formatIceError(error)
-          ),
+          ...errorGroups(recovery.iceCandidateErrors, {
+            candidates: stats?.localCandidateSources,
+            probes: this.probes || [],
+          }),
         };
       })
       .sort((a, b) => (a.status === "connected") - (b.status === "connected"));
@@ -205,11 +261,22 @@ export default class LiveConnectionDiagnosticsModal extends Component {
             })
           : i18n(`live.connection_diagnostics.probe.${status}`),
         // The probe only talks to this one server, so its URL is redundant.
-        errors: probe.errors.map((error) =>
-          formatIceError(error, { includeUrl: false })
+        ...errorGroups(
+          probe.errors,
+          { probes: this.probes },
+          { includeUrl: false }
         ),
       };
     });
+  }
+
+  get multiplePublicIpv4() {
+    const addresses = publicIpv4Addresses(this.probes);
+    return addresses.length > 1
+      ? i18n("live.connection_diagnostics.multiple_public_ipv4", {
+          addresses: addresses.join(", "),
+        })
+      : null;
   }
 
   get localRows() {
@@ -372,8 +439,35 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                     {{dIcon peer.routeIcon}}
                     {{peer.routeLabel}}
                   </div>
+                  {{#if peer.unexpectedLocalAddress}}
+                    <p class="live-connection-diagnostics__alert">
+                      {{i18n
+                        "live.connection_diagnostics.unexpected_local_address"
+                      }}
+                    </p>
+                  {{/if}}
+                  {{#if peer.receivingSilence}}
+                    <p class="live-connection-diagnostics__alert">
+                      {{i18n "live.connection_diagnostics.receiving_silence"}}
+                    </p>
+                  {{/if}}
+                  {{#each peer.playbackProblems as |problem|}}
+                    <p class="live-connection-diagnostics__alert">
+                      {{problem}}
+                    </p>
+                  {{/each}}
 
                   <dl class="live-connection-diagnostics__details">
+                    {{#if peer.incomingAudio}}
+                      <dt>{{i18n
+                          "live.connection_diagnostics.incoming_audio"
+                        }}</dt>
+                      <dd>{{peer.incomingAudio}}</dd>
+                    {{/if}}
+                    {{#if peer.playbackOk}}
+                      <dt>{{i18n "live.connection_diagnostics.playback"}}</dt>
+                      <dd>{{peer.playbackOk}}</dd>
+                    {{/if}}
                     {{#each peer.states as |state|}}
                       <dt>{{state.label}}</dt>
                       <dd>{{state.value}}</dd>
@@ -407,6 +501,18 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                           "live.connection_diagnostics.candidate_pairs"
                         }}</dt>
                       <dd>{{peer.candidatePairs}}</dd>
+                      {{#if peer.pairsByType.length}}
+                        <dt>{{i18n
+                            "live.connection_diagnostics.pairs_by_type"
+                          }}</dt>
+                        <dd>
+                          {{#each peer.pairsByType as |line|}}
+                            <span
+                              class="live-connection-diagnostics__line"
+                            >{{line}}</span>
+                          {{/each}}
+                        </dd>
+                      {{/if}}
                       <dt>{{i18n
                           "live.connection_diagnostics.local_candidates"
                         }}</dt>
@@ -428,12 +534,22 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                   </dl>
                 {{/if}}
 
-                {{#if peer.iceErrors.length}}
+                {{#if peer.errors.length}}
                   <ul class="live-connection-diagnostics__errors">
-                    {{#each peer.iceErrors as |error|}}
+                    {{#each peer.errors as |error|}}
                       <li>{{error}}</li>
                     {{/each}}
                   </ul>
+                {{/if}}
+                {{#if peer.harmlessErrors.length}}
+                  <details class="live-connection-diagnostics__harmless">
+                    <summary>{{peer.harmlessSummary}}</summary>
+                    <ul>
+                      {{#each peer.harmlessErrors as |error|}}
+                        <li>{{error}}</li>
+                      {{/each}}
+                    </ul>
+                  </details>
                 {{/if}}
               </div>
             {{else}}
@@ -448,6 +564,11 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                 {{i18n "live.connection_diagnostics.probing"}}
               </p>
             {{else}}
+              {{#if this.multiplePublicIpv4}}
+                <p class="live-connection-diagnostics__alert">
+                  {{this.multiplePublicIpv4}}
+                </p>
+              {{/if}}
               {{#each this.probeRows as |probe|}}
                 <div class="live-connection-diagnostics__server">
                   <div class="live-connection-diagnostics__server-header">
@@ -489,6 +610,16 @@ export default class LiveConnectionDiagnosticsModal extends Component {
                         <li>{{error}}</li>
                       {{/each}}
                     </ul>
+                  {{/if}}
+                  {{#if probe.harmlessErrors.length}}
+                    <details class="live-connection-diagnostics__harmless">
+                      <summary>{{probe.harmlessSummary}}</summary>
+                      <ul>
+                        {{#each probe.harmlessErrors as |error|}}
+                          <li>{{error}}</li>
+                        {{/each}}
+                      </ul>
+                    </details>
                   {{/if}}
                 </div>
               {{else}}

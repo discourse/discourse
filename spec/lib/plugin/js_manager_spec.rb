@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "listen"
+
 RSpec.describe Plugin::JsManager do
   describe ".bundle_analysis_assets" do
     let(:directory_name) { "js-manager-spec-plugin" }
@@ -96,6 +98,39 @@ RSpec.describe Plugin::JsManager do
     it "returns nothing when the plugin splits no routes" do
       allow(described_class).to receive(:read_manifest).and_return({ "main" => {} })
       expect(bundle_for("chat")).to eq(nil)
+    end
+  end
+
+  describe "#watch" do
+    let(:listen_options) do
+      captured = nil
+      allow(Listen).to receive(:to) do |*_dirs, options|
+        captured = options
+        stub(start: nil, stop: nil)
+      end
+
+      manager = described_class.new
+      allow(manager).to receive(:compile!)
+      manager.watch {}
+
+      captured
+    end
+
+    # Listen matches these against the path relative to the watched plugin directory.
+    def watched?(relative_path)
+      !Listen::Silencer.new(**listen_options).silenced?(Pathname.new(relative_path), :file)
+    end
+
+    it "ignores files under the plugin's node_modules" do
+      expect(watched?("node_modules/discourse/declarations/app/foo.d.ts")).to eq(false)
+    end
+
+    it "ignores files under a nested node_modules" do
+      expect(watched?("assets/javascripts/node_modules/foo/index.js")).to eq(false)
+    end
+
+    it "watches the plugin's own source files" do
+      expect(watched?("assets/javascripts/discourse/components/foo.gjs")).to eq(true)
     end
   end
 end

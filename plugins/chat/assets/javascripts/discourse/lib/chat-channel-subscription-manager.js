@@ -107,7 +107,12 @@ export default class ChatChannelSubscriptionManager {
     const message = ChatMessage.create(this.channel, data.chat_message);
     message.manager = this.channel.messagesManager;
     this.onNewMessage?.(message);
-    this.channel.lastMessage = message;
+    if (
+      !this.channel.lastMessage?.id ||
+      message.id > this.channel.lastMessage.id
+    ) {
+      this.channel.lastMessage = message;
+    }
   }
 
   handleStagedMessage(channel, messagesManager, data) {
@@ -164,6 +169,7 @@ export default class ChatChannelSubscriptionManager {
       message.aiLlmName = data.chat_message.ai_llm_name;
       message.blocks = data.chat_message.blocks;
       message.isAction = data.chat_message.is_action;
+      message.broadcasted = data.chat_message.broadcasted ?? false;
     }
   }
 
@@ -192,9 +198,10 @@ export default class ChatChannelSubscriptionManager {
     }
 
     if (
-      this.currentUser?.staff ||
-      this.channel.canModerate ||
-      this.currentUser?.id === targetMsg.user.id
+      !data.broadcast_removed &&
+      (this.currentUser?.staff ||
+        this.channel.canModerate ||
+        this.currentUser?.id === targetMsg.user.id)
     ) {
       targetMsg.deletedAt = data.deleted_at;
       targetMsg.deletedById = data.deleted_by_id;
@@ -261,14 +268,16 @@ export default class ChatChannelSubscriptionManager {
   }
 
   handleThreadOriginalMessageUpdate(data) {
-    const message = this.messagesManager.findMessage(data.original_message_id);
-    if (message?.thread) {
-      if (message.thread.preview) {
-        message.thread.preview.update(data.preview);
-      } else {
-        message.thread.preview = ChatThreadPreview.create(data.preview);
-      }
-    }
+    const threadId = parseInt(data.thread_id, 10);
+    this.messagesManager.messages
+      .filter((message) => message.thread?.id === threadId)
+      .forEach((message) => {
+        if (message.thread.preview) {
+          message.thread.preview.update(data.preview);
+        } else {
+          message.thread.preview = ChatThreadPreview.create(data.preview);
+        }
+      });
   }
 
   handlePinMessage(data) {

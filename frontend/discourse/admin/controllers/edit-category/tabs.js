@@ -3,6 +3,10 @@ import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import {
+  completeOnboardingStep,
+  CREATE_CATEGORY_STEP,
+} from "discourse/lib/admin-onboarding";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -86,6 +90,8 @@ const DISCUSSION_TYPE_ID = "discussion";
  * @property {boolean} isDirty
  */
 export default class EditCategoryTabsController extends Controller {
+  @service appEvents;
+  @service currentUser;
   @service dialog;
   @service site;
   @service siteSettings;
@@ -125,6 +131,12 @@ export default class EditCategoryTabsController extends Controller {
 
   get availableLocales() {
     return this.siteSettings.available_locales;
+  }
+
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
   }
 
   get baseTitle() {
@@ -397,6 +409,7 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const isNew = !this.model.id;
       const previousTypes = new Set(
         Object.keys(this.model.categoryTypes ?? {})
       );
@@ -404,6 +417,14 @@ export default class EditCategoryTabsController extends Controller {
       const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
+
+      // awaited ahead of the reloads below, which would cancel the audit write
+      if (isNew && this.currentUser?.show_site_owner_onboarding) {
+        await completeOnboardingStep(
+          { appEvents: this.appEvents, keyValueStore: this.keyValueStore },
+          CREATE_CATEGORY_STEP
+        );
+      }
 
       if (lostAccess) {
         this.router.transitionTo(homepageNavigationDestination());
@@ -529,7 +550,10 @@ export default class EditCategoryTabsController extends Controller {
     const primaryTab = registeredEditCategoryTabs.find(
       (tab) => tab.id === this.selectedTab && tab.primary
     );
-    if (primaryTab) {
+    if (
+      primaryTab ||
+      this.dynamicCategoryTypeTabs.some((type) => type.id === this.selectedTab)
+    ) {
       return;
     }
 

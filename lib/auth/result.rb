@@ -85,7 +85,13 @@ class Auth::Result
     change_made = false
     if (SiteSetting.auth_overrides_username? || overrides_username) &&
          (resolved_username = resolve_username).present?
-      change_made = UsernameChanger.override(user, resolved_username)
+      if user.new_record?
+        user.username = resolved_username
+        change_made = true
+      else
+        user.username = user.username_in_database
+        change_made = UsernameChanger.override(user, resolved_username)
+      end
     end
 
     if (
@@ -215,7 +221,7 @@ class Auth::Result
 
     UserNameSuggester.suggest(
       *username_suggester_attributes,
-      current_username: user&.username,
+      current_username: user&.username_in_database,
       allow_generic_fallback: false,
     )
   end

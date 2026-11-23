@@ -32,7 +32,12 @@ RSpec.describe ArchivePiggybackBrowserPageviewsAfterBeaconCutover do
     boundary = legacy_event(Time.utc(2026, 8, 21))
     later = legacy_event(Time.utc(2026, 8, 22))
     beacon = Fabricate(:browser_pageview_event, created_at: later.created_at)
-    score = BrowserPageviewEventScore.create!(event_id: boundary.id, velocity_score: 42)
+    score =
+      BrowserPageviewEventScore.create!(
+        event_id: boundary.id,
+        velocity_score: 42,
+        distributed_traffic_score: 60,
+      )
     historical_score = BrowserPageviewEventScore.create!(event_id: historical.id)
     event_data =
       DB.query_single(

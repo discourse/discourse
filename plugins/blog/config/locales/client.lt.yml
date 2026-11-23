@@ -14,11 +14,15 @@ lt:
         preview_archive: Archyvuoti
         desktop: Darbalaukis
         mobile: Mobilus
+        save: Saugoti
+        path_formats:
+          custom: Pasirinktinis
         themes: Temos
         theme_name: Temos pavadinimas
         edit: Redaguoti
         activate: Aktyvuoti
         preview: Peržiūrėti
+        customize: Pakeisti
         import: Importuoti
         export: Eksportuoti
         active: Aktyvus
@@ -32,6 +36,7 @@ lt:
         change:
           title: antraštė
           body: tekstas
+          tags: žymos
       review:
         label: Pavadinimas
         create: Sukurti nuorodą
@@ -49,7 +54,10 @@ lt:
         edit: Redaguoti
         status: Statusas
         replies: Atsakymai
+        title: Antraštė
+      all: Visi
       drafts: Juodraščiai
+      pages: Puslapiai
       preview: Peržiūrėti
       unpublish: Atšaukti paskelbimą
       appearance_link: Išvaizda

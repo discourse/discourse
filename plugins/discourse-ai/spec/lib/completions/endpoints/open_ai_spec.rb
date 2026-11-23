@@ -232,6 +232,18 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
     open_ai_mock.stub_raw(response)
   end
 
+  it "still logs provider failures for other AI features" do
+    stub_request(:post, model.url).to_return(status: 401, body: "Invalid API key")
+    logger =
+      track_log_messages do
+        expect do
+          model.to_llm.generate("Hello", user: user, feature_name: "summarize")
+        end.to raise_error(DiscourseAi::Completions::Endpoints::Base::CompletionFailed)
+      end
+
+    expect(logger.errors).to include("#{described_class.name}: status: 401 - body: Invalid API key")
+  end
+
   it "resets stop reasons, usage, and an unfinished decoder across retried streaming attempts" do
     response = instance_double(Net::HTTPResponse, code: "200")
     reads = 0
@@ -1773,7 +1785,7 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("none")
     end
 
-    %w[gpt-4.1-mini gpt-35-turbo].each do |model_name|
+    shared_examples "a model without reasoning support" do |model_name:|
       it "omits per-call efforts for #{model_name}, which does not reason" do
         model.update!(name: model_name)
 
@@ -1791,6 +1803,14 @@ TEXT
 
         expect(bodies.map { |body| body.key?(:reasoning_effort) }).to eq([false, false])
       end
+    end
+
+    context "with the gpt-4.1-mini model" do
+      include_examples "a model without reasoning support", model_name: "gpt-4.1-mini"
+    end
+
+    context "with the gpt-35-turbo model" do
+      include_examples "a model without reasoning support", model_name: "gpt-35-turbo"
     end
 
     it "sends a per-call none to reasoning models" do

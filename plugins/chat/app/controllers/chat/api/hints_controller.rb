@@ -20,8 +20,9 @@ class Chat::Api::HintsController < ApplicationController
       unreachable: visible_groups - mentionable_groups.map(&:name),
       over_members_limit:
         mentionable_groups
-          .select { |g| g.user_count > SiteSetting.max_users_notified_per_group_mention }
-          .map(&:name),
+          .members_visible_groups(current_user)
+          .where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
+          .pluck(:name),
     }
 
     result[:invalid] = (group_names - result[:unreachable]) - result[:over_members_limit]
@@ -32,7 +33,7 @@ class Chat::Api::HintsController < ApplicationController
   private
 
   def filter_mentionable_groups(group_names)
-    return [] if group_names.empty?
+    return Group.none if group_names.empty?
 
     Group
       .select(:name, :user_count)

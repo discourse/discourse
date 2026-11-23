@@ -38,14 +38,15 @@ module DiscourseAi
         def approval_changes
           return [] if appearance_change.nil?
 
-          live_theme = appearance_change.kind_theme? ? Theme.find_default : appearance_change.theme
+          live_theme =
+            appearance_change.new_default_theme? ? Theme.find_default : appearance_change.theme
           changes =
             AppearanceAuthoring.color_changes(
               before: AppearanceAuthoring.theme_palettes(live_theme),
               after: AppearanceAuthoring.change_palettes(appearance_change),
             )
           changes += AppearanceAuthoring.font_changes(appearance_change.site_settings)
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             changes << AppearanceAuthoring.default_theme_change(
               from: live_theme,
               to: appearance_change.theme,
@@ -68,10 +69,18 @@ module DiscourseAi
         end
 
         def validation_error
-          refusal = AppearanceAuthoring.denial(user: context.user, phase: execution_phase)
+          refusal =
+            AppearanceAuthoring.denial(
+              user: context.user,
+              phase: execution_phase,
+              styles: appearance_change&.styled? || false,
+            )
           return error_response(refusal) if refusal
           if appearance_change.nil?
             return error_response(I18n.t("discourse_ai.appearance_authoring.not_found"))
+          end
+          if !styles_still_checked?
+            return error_response(I18n.t("discourse_ai.appearance_authoring.theme_changed"))
           end
           if appearance_change.applied?
             return error_response(I18n.t("discourse_ai.appearance_authoring.already_live"))
@@ -110,6 +119,20 @@ module DiscourseAi
         end
 
         private
+
+        # What goes live has to be what was checked: a theme someone changed
+        # since it was saved is theirs to publish, and styles are checked
+        # again in case the rules got stricter since.
+        def styles_still_checked?
+          return true if !appearance_change.kind_theme?
+          return false if !appearance_change.theme_unchanged?
+          return true if !appearance_change.styled?
+
+          AppearanceStyles::Policy.call(
+            appearance_change.styles,
+            palettes: AppearanceAuthoring.change_palettes(appearance_change),
+          ).valid?
+        end
 
         def appearance_change
           return @appearance_change if defined?(@appearance_change)

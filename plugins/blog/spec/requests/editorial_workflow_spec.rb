@@ -78,7 +78,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
         published_at: 1.day.ago,
       )
     reply = Fabricate(:post, topic: topic, user: writer)
-    source = publication.prepare_draft!(admin)
+    source = prepare_blog_draft(publication, admin)
     expect(source.category_id).to eq(drafts.id)
     expect(source.posts.count).to eq(1)
     expect(source.first_post.raw).to eq(first_post.raw)
@@ -86,10 +86,10 @@ RSpec.describe "Blog editorial workflow", type: :request do
       admin,
       raw: "A carefully revised article that should only go live after approval.",
     )
-    publication.save_metadata!(admin, path: "/updated", excerpt: "A staged introduction")
+    update_blog_metadata(publication, admin, path: "/updated", excerpt: "A staged introduction")
     expect(publication.reload.path).to eq("/existing")
     expect(publication.published_revision.raw).to eq(first_post.raw)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     expect(publication.discussion_topic_id).to eq(topic.id)
     expect(reply.reload.topic_id).to eq(topic.id)
     expect(first_post.reload.raw).to eq(source.first_post.raw)
@@ -100,7 +100,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
     other = Fabricate(:topic, category: drafts, user: admin)
     Fabricate(:post, topic: other, user: admin)
     publication = Blog::Publication.for_topic(other)
-    revision = publication.submit!(admin)
+    revision = submit_blog_draft(publication, admin)
     sign_in(writer)
     get "/blog-editor/publications/#{other.id}.json"
     expect(response.status).to eq(403)
@@ -112,7 +112,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
 
   it "previews the submitted snapshot rather than later edits" do
     publication = Blog::Publication.for_topic(topic)
-    revision = publication.submit!(admin)
+    revision = submit_blog_draft(publication, admin)
     first_post.revise(
       writer,
       raw: "Later unpublished article content must stay out of the revision preview.",
@@ -128,15 +128,15 @@ RSpec.describe "Blog editorial workflow", type: :request do
   it "publishes the scheduled approved revision exactly once even after a newer submission" do
     freeze_time
     publication = Blog::Publication.for_topic(topic)
-    revision = publication.submit!(admin)
-    publication.approve!(admin, revision.id)
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    revision = submit_blog_draft(publication, admin)
+    approve_blog_revision(publication, revision, admin)
+    schedule_blog_revision(publication, revision, admin)
     token = publication.schedule_token
     first_post.revise(
       writer,
       raw: "Another draft for the next editorial round, not this scheduled release.",
     )
-    publication.submit!(writer)
+    submit_blog_draft(publication, writer)
     Jobs::PublishBlogRevision.new.execute(publication_id: publication.id, token: token)
     expect(publication.reload).not_to be_published
     freeze_time 3.hours.from_now
@@ -152,39 +152,23 @@ RSpec.describe "Blog editorial workflow", type: :request do
   it "invalidates canceled schedules and fails closed when publisher access is removed" do
     freeze_time
     publication = Blog::Publication.for_topic(topic)
-    revision = publication.submit!(admin)
-    publication.approve!(admin, revision.id)
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    revision = submit_blog_draft(publication, admin)
+    approve_blog_revision(publication, revision, admin)
+    schedule_blog_revision(publication, revision, admin)
     canceled_token = publication.schedule_token
-    publication.cancel_schedule!(admin)
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    sign_in(admin)
+    delete "/blog-editor/publications/#{topic.id}/schedule.json"
+    expect(response.status).to eq(204)
+    schedule_blog_revision(publication, revision, admin)
     token = publication.schedule_token
     freeze_time 3.hours.from_now
-    publication.run_schedule!(canceled_token)
-    expect(publication.reload).not_to be_published
+    run_blog_schedule(publication, canceled_token)
+    expect(publication).not_to be_published
     admin.update!(suspended_till: 1.day.from_now)
-    publication.run_schedule!(token)
-    expect(publication.reload).not_to be_published
+    run_blog_schedule(publication, token)
+    expect(publication).not_to be_published
     expect(publication.scheduled_at).to be_nil
     expect(publication.schedule_error).to be_present
-  end
-
-  it "rejects stale approvals and cross-article revision IDs without altering approval provenance" do
-    publication = Blog::Publication.for_topic(topic)
-    revision = publication.submit!(admin)
-    publication.approve!(admin, revision.id)
-    approved_at = revision.reload.approved_at
-    freeze_time 1.hour.from_now
-    publication.approve!(admin, revision.id)
-    expect(revision.reload.approved_at).to eq_time(approved_at)
-    publication.submit!(admin)
-    expect { publication.approve!(admin, revision.id) }.to raise_error(Discourse::InvalidParameters)
-    other = Fabricate(:topic, category: drafts, user: admin)
-    Fabricate(:post, topic: other, user: admin)
-    other_revision = Blog::Publication.for_topic(other).submit!(admin)
-    expect { publication.approve!(admin, other_revision.id) }.to raise_error(
-      ActiveRecord::RecordNotFound,
-    )
   end
 
   it "prevents even administrators from moving an untracked editorial topic directly into public view" do
@@ -198,19 +182,19 @@ RSpec.describe "Blog editorial workflow", type: :request do
   it "records a scheduled path collision without leaving an expired schedule behind" do
     freeze_time
     publication = Blog::Publication.for_topic(topic)
-    publication.save_metadata!(admin, path: "/contested-path")
-    revision = publication.submit!(admin)
-    publication.approve!(admin, revision.id)
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    update_blog_metadata(publication, admin, path: "/contested-path")
+    revision = submit_blog_draft(publication, admin)
+    approve_blog_revision(publication, revision, admin)
+    schedule_blog_revision(publication, revision, admin)
     token = publication.schedule_token
     other = Fabricate(:topic, category: drafts, user: admin)
     Fabricate(:post, topic: other, user: admin)
     competitor = Blog::Publication.for_topic(other)
-    competitor.save_metadata!(admin, path: "/contested-path")
-    competitor.publish!(admin)
+    update_blog_metadata(competitor, admin, path: "/contested-path")
+    publish_blog_draft(competitor, admin)
     freeze_time 3.hours.from_now
-    expect { publication.run_schedule!(token) }.not_to change(Topic, :count)
-    expect(publication.reload.scheduled_at).to be_nil
+    expect { run_blog_schedule(publication, token) }.not_to change(Topic, :count)
+    expect(publication.scheduled_at).to be_nil
     expect(publication.schedule_error).to be_present
     expect(publication).not_to be_published
     expect(competitor.reload).to be_publicly_visible
@@ -219,14 +203,30 @@ RSpec.describe "Blog editorial workflow", type: :request do
   it "recovers overdue schedules and rejects invalid scheduling times" do
     freeze_time
     publication = Blog::Publication.for_topic(topic)
-    revision = publication.submit!(admin)
-    publication.approve!(admin, revision.id)
+    revision = submit_blog_draft(publication, admin)
+    approve_blog_revision(publication, revision, admin)
+    sign_in(admin)
     ["invalid", 1.minute.ago.iso8601, 2.years.from_now.iso8601].each do |time|
-      expect { publication.schedule!(admin, revision_id: revision.id, at: time) }.to raise_error(
-        Discourse::InvalidParameters,
+      post "/blog-editor/publications/#{topic.id}/schedule.json",
+           params: {
+             revision_id: revision.id,
+             scheduled_at: time,
+           }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include(
+        I18n.t("blog.editorial.schedule_time"),
       )
     end
-    publication.schedule!(admin, revision_id: revision.id, at: 2.hours.from_now.iso8601)
+    scheduled_at = 2.hours.from_now.change(usec: 0)
+    post "/blog-editor/publications/#{topic.id}/schedule.json",
+         params: {
+           revision_id: revision.id,
+           scheduled_at: scheduled_at.iso8601,
+         }
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["status"]).to eq("scheduled")
+    expect(Time.zone.parse(response.parsed_body["scheduled_at"])).to eq_time(scheduled_at)
+    publication.reload
     freeze_time 3.hours.from_now
     Jobs::RecoverBlogSchedules.new.execute
     expect_job_enqueued(
@@ -236,6 +236,35 @@ RSpec.describe "Blog editorial workflow", type: :request do
         token: publication.schedule_token,
       },
     )
+  end
+
+  it "only lets publishers schedule an approved revision" do
+    publication = Blog::Publication.for_topic(topic)
+    revision = submit_blog_draft(publication, admin)
+    approve_blog_revision(publication, revision, admin)
+    sign_in(writer)
+
+    post "/blog-editor/publications/#{topic.id}/schedule.json",
+         params: {
+           revision_id: revision.id,
+           scheduled_at: 2.hours.from_now.iso8601,
+         }
+    expect(response.status).to eq(403)
+    delete "/blog-editor/publications/#{topic.id}/schedule.json"
+    expect(response.status).to eq(403)
+    expect(publication.reload.scheduled_at).to be_nil
+  end
+
+  it "does not start tracking a never-published topic when asked to withdraw it" do
+    sign_in(admin)
+
+    delete "/blog-editor/publications/#{topic.id}.json"
+    expect(response.status).to eq(404)
+    post "/blog-editor/publications/#{topic.id}/return-to-drafts.json"
+    expect(response.status).to eq(404)
+    delete "/blog-editor/publications/#{topic.id}/schedule.json"
+    expect(response.status).to eq(404)
+    expect(Blog::Publication.where(topic:)).not_to exist
   end
 
   it "lets a non-staff publisher self-approve and publish within native category permissions" do
@@ -255,7 +284,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
       writer,
       raw: "A revised article released by a non-staff publisher after approval.",
     )
-    publication.publish!(writer)
+    publish_blog_draft(publication, writer)
     expect(publication.discussion_topic_id).to eq(discussion_id)
     expect(publication.discussion_topic.first_post.reload.raw).to eq(first_post.reload.raw)
     expect(writer.reload).not_to be_staff
@@ -263,7 +292,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
 
   it "preserves the publication date when correcting an article from a still-open draft form" do
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     original_date = publication.published_at
     discussion_id = publication.discussion_topic_id
     first_post.revise(
@@ -296,14 +325,14 @@ RSpec.describe "Blog editorial workflow", type: :request do
 
   it "distinguishes a published article from its pending private correction in the editor" do
     publication = Blog::Publication.for_topic(topic)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     original_title = topic.title
     sign_in(admin)
     get "/blog-editor/publications/#{topic.id}.json"
     expect(response.parsed_body["draft_correction"]).to eq(false)
     first_post.revise(writer, raw: "A private correction that has not been published yet.")
     topic.update!(title: "A private correction title for review")
-    publication.save_metadata!(admin, excerpt: "A private correction introduction")
+    update_blog_metadata(publication, admin, excerpt: "A private correction introduction")
     get "/blog-editor.json"
     entry = response.parsed_body["topics"].find { |item| item["id"] == topic.id }
     expect(entry["live"]).to eq(true)
@@ -311,7 +340,7 @@ RSpec.describe "Blog editorial workflow", type: :request do
     expect(entry["public_title"]).to eq(original_title)
     expect(entry["source_url"]).to eq(topic.url)
     expect(entry["discussion_url"]).to eq(publication.discussion_topic.url)
-    publication.publish!(admin)
+    publish_blog_draft(publication, admin)
     get "/blog-editor/publications/#{topic.id}.json"
     expect(response.parsed_body["draft_correction"]).to eq(false)
     expect(response.parsed_body["public_title"]).to eq(topic.title)

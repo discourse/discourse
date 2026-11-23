@@ -14,6 +14,11 @@
   &.-expanded {
     @include default-focus;
   }
+
+  &.--disabled {
+    cursor: not-allowed;
+    background-color: var(--d-input-bg-color--disabled);
+  }
 }
 
 .d-multi-select-trigger__selection {
@@ -76,8 +81,17 @@
   background-color: var(--primary-low);
   gap: var(--space-1);
 
-  &:hover {
+  &:hover:not(:disabled, [aria-disabled="true"]) {
     background-color: var(--primary-low-mid);
+  }
+
+  &[aria-disabled="true"] {
+    cursor: default;
+  }
+
+  &:disabled {
+    color: inherit;
+    cursor: not-allowed;
   }
 
   .d-multi-select-trigger__selection-label {

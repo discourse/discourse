@@ -73,6 +73,23 @@ module DiscourseWorkflows
                 none: "discourse_workflows.badge.badge_id_placeholder",
               },
             },
+            reason: {
+              type: :string,
+              required: false,
+              ui: {
+                description_key: "admin.badges.reason_help",
+              },
+              display_options: {
+                show: {
+                  operation: ["grant"],
+                },
+                hide: {
+                  badge_id: [
+                    { condition: { metadata_flag: { collection: "badges", flag: "hide_reason" } } },
+                  ],
+                },
+              },
+            },
             **actor_property,
           },
         )
@@ -83,10 +100,17 @@ module DiscourseWorkflows
             ::Badge
               .where(enabled: true)
               .order(:name)
-              .pluck(:id, :name)
-              .select { |_, name| context.matches_filter?(name) }
-              .map { |id, name| { id:, name: } }
+              .select(:id, :name, :system, :show_posts)
+              .filter_map do |badge|
+                if context.matches_filter?(badge.name)
+                  { id: badge.id, name: badge.name, hide_reason: reason_hidden?(badge) }
+                end
+              end
           end
+        end
+
+        def self.reason_hidden?(badge)
+          badge.system? && !badge.show_posts?
         end
 
         def execute(exec_ctx)
@@ -111,7 +135,8 @@ module DiscourseWorkflows
           user = exec_ctx.find_user(username: config["username"])
           badge = ::Badge.find(config["badge_id"])
           actor = exec_ctx.actor_from_parameter("actor_username", item_index)
-          raise Discourse::InvalidAccess if !actor.guardian.can_grant_badges?(user)
+          guardian = actor.guardian
+          raise Discourse::InvalidAccess if !guardian.can_grant_badges?(user)
 
           user_badges = UserBadge.where(user: user, badge: badge)
 
@@ -121,8 +146,13 @@ module DiscourseWorkflows
             BadgeGranter.revoke(user_badge, revoked_by: actor) if user_badge
             changed = user_badge.present?
           else
+            post =
+              find_reason_post(exec_ctx, item_index, guardian:) unless self.class.reason_hidden?(
+              badge,
+            )
+
             last_user_badge_id = user_badges.maximum(:id)
-            BadgeGranter.grant(badge, user, granted_by: actor)
+            BadgeGranter.grant(badge, user, granted_by: actor, post_id: post&.id)
             changed = user_badges.maximum(:id) != last_user_badge_id
           end
 
@@ -133,6 +163,29 @@ module DiscourseWorkflows
             badge_name: badge.name,
             changed:,
           }
+        rescue BadgeGranter::InvalidReason => error
+          raise NodeError, error.message
+        end
+
+        def find_reason_post(exec_ctx, item_index, guardian:)
+          reason = exec_ctx.get_node_parameter("reason", item_index).to_s.strip
+          reference = /\A(?:(post|topic):)?([0-9]+)\z/.match(reason)
+          return BadgeGranter.post_for_reason(reason, guardian:) if !reference
+
+          type, id = reference.captures
+          if !type
+            raise NodeError,
+                  I18n.t("discourse_workflows.errors.badge.reason_id_requires_prefix", id:)
+          end
+
+          post = type == "post" ? ::Post.find_by(id:) : ::Post.find_by(topic_id: id, post_number: 1)
+          if !post
+            raise NodeError,
+                  I18n.t("discourse_workflows.errors.badge.reason_id_not_found", reference: reason)
+          end
+
+          guardian.ensure_can_see!(post)
+          post
         end
       end
     end

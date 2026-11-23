@@ -560,6 +560,7 @@ class FinalDestination
       uri.port,
       use_ssl: (uri.scheme == "https"),
       open_timeout: timeout,
+      total_timeout: @opts[:total_timeout],
     ) do |http|
       http.read_timeout = timeout
       yield http

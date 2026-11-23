@@ -2,12 +2,13 @@
 
 RSpec.describe "List channels | Drawer" do
   fab!(:current_user, :user)
+  fab!(:admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
-    chat_system_bootstrap
+    chat_system_bootstrap(admin)
     sign_in(current_user)
     chat.prefers_drawer
   end

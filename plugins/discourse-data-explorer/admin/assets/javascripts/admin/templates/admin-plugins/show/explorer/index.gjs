@@ -1,7 +1,10 @@
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
+import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import DFilterControls from "discourse/ui-kit/d-filter-controls";
 import DLoadMore from "discourse/ui-kit/d-load-more";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
@@ -183,7 +186,7 @@ export default <template>
                       <td class="d-table__cell --controls">
                         <div class="d-table__cell-actions">
                           <LinkTo
-                            class="btn btn-text btn-default btn-small"
+                            class="btn btn-text btn-default btn-small query-row__edit"
                             @model={{query.id}}
                             @route="adminPlugins.show.explorer.edit"
                             {{on "click" @controller.scrollTop}}
@@ -194,6 +197,66 @@ export default <template>
                               {{i18n "edit"}}
                             {{/if}}
                           </LinkTo>
+
+                          <DMenu
+                            @icon="ellipsis-vertical"
+                            @identifier="query-row-menu"
+                            @placement="bottom-end"
+                            @title={{i18n "more_options"}}
+                            @triggerClass="btn-default btn-small query-row__menu-trigger"
+                          >
+                            <:content as |menu|>
+                              <DDropdownMenu as |dropdown|>
+                                <dropdown.item>
+                                  <DButton
+                                    class="btn-transparent query-row__dashboard-toggle"
+                                    @action={{fn
+                                      @controller.toggleDashboard
+                                      query
+                                      menu.close
+                                    }}
+                                    @disabled={{and
+                                      (not query.dashboardMounted)
+                                      (not query.dashboardMountable)
+                                    }}
+                                    @icon={{if
+                                      query.dashboardMounted
+                                      "thumbtack-slash"
+                                      "thumbtack"
+                                    }}
+                                    @label={{if
+                                      query.dashboardMounted
+                                      "explorer.dashboard.remove"
+                                      "explorer.dashboard.add"
+                                    }}
+                                    @translatedTitle={{if
+                                      (not
+                                        (or
+                                          query.dashboardMounted
+                                          query.dashboardMountable
+                                        )
+                                      )
+                                      (i18n "explorer.dashboard.unmountable")
+                                    }}
+                                  />
+                                </dropdown.item>
+                                {{#unless query.isDefault}}
+                                  <dropdown.item>
+                                    <DButton
+                                      class="btn-transparent --danger query-row__delete"
+                                      @action={{fn
+                                        @controller.deleteQuery
+                                        query
+                                        menu.close
+                                      }}
+                                      @icon="trash-can"
+                                      @label="explorer.delete"
+                                    />
+                                  </dropdown.item>
+                                {{/unless}}
+                              </DDropdownMenu>
+                            </:content>
+                          </DMenu>
                         </div>
                       </td>
                     </tr>

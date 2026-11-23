@@ -40,10 +40,24 @@ RSpec.describe DiscourseWorkflows::PostButtonController do
     context "when signed in as a group member" do
       before { sign_in(member) }
 
-      it "returns 204 on success" do
-        post "/discourse-workflows/trigger-post-button.json", params: params
+      it "queues feedback for the signed-in user and the submitting tab" do
+        request_id = SecureRandom.uuid
+        post "/discourse-workflows/trigger-post-button.json",
+             params:
+               params.merge(
+                 client_id: "clicking-tab",
+                 request_id:,
+                 user_id: Discourse::SYSTEM_USER_ID,
+               )
 
         expect(response).to have_http_status(:no_content)
+        expect(Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first).to include(
+          "post_button_feedback" => {
+            "client_id" => "clicking-tab",
+            "request_id" => request_id,
+          },
+          "user_id" => member.id,
+        )
       end
 
       it "returns 400 when contract is invalid" do

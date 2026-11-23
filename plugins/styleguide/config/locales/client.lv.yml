@@ -31,6 +31,9 @@ lv:
           title: "Fontu sistēma"
         colors:
           title: "Krāsas"
+        design_variables:
+          type: "Tips"
+          default: "Noklusējums"
         icons:
           title: "Ikonas"
           full_list: "Skatiet pilnu Font Awesome ikonas sarakstu"

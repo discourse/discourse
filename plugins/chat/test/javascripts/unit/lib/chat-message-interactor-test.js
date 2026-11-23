@@ -5,8 +5,10 @@ import {
   logIn,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
 module("Unit | chat-message-interactor", function (hooks) {
   setupTest(hooks);
@@ -215,5 +217,102 @@ module("Unit | chat-message-interactor", function (hooks) {
       interactor.secondaryActions.some(({ id }) => id === "restore"),
       "restore action stays hidden for non-moderators"
     );
+  });
+
+  test("canReply is true in channel context", function (assert) {
+    const channel = this.chatFabricators.channel();
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    const message = this.chatFabricators.message({ channel });
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      "channel"
+    );
+
+    assert.true(interactor.canReply, "reply is available in channel context");
+  });
+
+  test("canReply in thread context follows the upcoming change", function (assert) {
+    for (const [enabled, expected] of [
+      [true, true],
+      [false, false],
+    ]) {
+      this.siteSettings.chat_thread_improvements = enabled;
+      const channel = this.chatFabricators.channel();
+      channel.currentUserMembership = UserChatChannelMembership.create({
+        following: true,
+      });
+      const message = this.chatFabricators.message({ channel });
+      const interactor = new ChatMessageInteractor(
+        getOwner(this),
+        message,
+        MESSAGE_CONTEXT_THREAD
+      );
+
+      assert.strictEqual(
+        interactor.canReply,
+        expected,
+        `thread-context reply is ${expected ? "available" : "hidden"} when the change is ${enabled ? "on" : "off"}`
+      );
+    }
+  });
+
+  test("canBroadcastMessage is true for a moderator of another user's reply", function (assert) {
+    this.siteSettings.chat_thread_improvements = true;
+    updateCurrentUser({ admin: false });
+    const channel = this.chatFabricators.channel({
+      meta: { can_moderate: true },
+    });
+    channel.threadingEnabled = true;
+    const message = this.chatFabricators.message({ channel });
+    message.user.id = this.currentUser.id + 1000;
+    message.threadId = 42;
+
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      MESSAGE_CONTEXT_THREAD
+    );
+
+    assert.true(interactor.canBroadcastMessage);
+  });
+
+  test("canBroadcastMessage is false for a non-moderator acting on another user's reply", function (assert) {
+    this.siteSettings.chat_thread_improvements = true;
+    updateCurrentUser({ admin: false });
+    const channel = this.chatFabricators.channel();
+    channel.threadingEnabled = true;
+    const message = this.chatFabricators.message({ channel });
+    message.user.id = this.currentUser.id + 1000;
+    message.threadId = 42;
+
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      MESSAGE_CONTEXT_THREAD
+    );
+
+    assert.false(interactor.canBroadcastMessage);
+  });
+
+  test("canBroadcastMessage is false for the author when the upcoming change is off", function (assert) {
+    this.siteSettings.chat_thread_improvements = false;
+    const channel = this.chatFabricators.channel();
+    channel.threadingEnabled = true;
+    channel.currentUserMembership = UserChatChannelMembership.create({
+      following: true,
+    });
+    const message = this.chatFabricators.message({ channel });
+    message.threadId = 42;
+
+    const interactor = new ChatMessageInteractor(
+      getOwner(this),
+      message,
+      MESSAGE_CONTEXT_THREAD
+    );
+
+    assert.false(interactor.canBroadcastMessage);
   });
 });
