@@ -228,7 +228,7 @@ module Middleware
       end
 
       def cache_key_other
-        @cache_key_other || "#{cache_key}_other"
+        @cache_key_other ||= "#{cache_key}_other"
       end
 
       def get?

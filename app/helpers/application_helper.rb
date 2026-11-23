@@ -713,7 +713,7 @@ module ApplicationHelper
   end
 
   def theme
-    @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+    @theme ||= theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
   end
 
   def user_dark_scheme_id
