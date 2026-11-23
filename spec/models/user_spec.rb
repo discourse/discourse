@@ -309,6 +309,32 @@ RSpec.describe User do
   end
 
   describe "Validations" do
+    it "rejects matches against the stored password without upgrading a legacy hash" do
+      password = "myawesomepassword"
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      salt = user.user_password.password_salt
+      hash = PasswordHasher.hash_password(password:, salt:, algorithm:)
+      user.user_password.update_columns(
+        password_hash: hash,
+        password_algorithm: algorithm,
+        password_expired_at: 1.day.ago,
+      )
+      expect(user.password_expired?(password)).to be(true)
+      expect(user.password_expired?("different password")).to be(false)
+
+      user.assign_attributes(username: password.capitalize, name: password.capitalize, password:)
+
+      expect(user).not_to be_valid
+      expect(user.errors.of_kind?(:username, :same_as_password)).to be(true)
+      expect(user.errors.of_kind?(:name, :same_as_password)).to be(true)
+      expect(user.user_password.errors.of_kind?(:password, :same_as_current)).to be(true)
+      expect(user.user_password.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_salt: salt,
+        password_hash: hash,
+      )
+    end
+
     describe "#username" do
       it { is_expected.to validate_presence_of :username }
 
@@ -879,7 +905,7 @@ RSpec.describe User do
         users.map { |owner| Fabricate(:user_api_key, user: owner) }
       revoked_key = Fabricate(:user_api_key, user: previous_shadow, revoked_at: 1.day.ago)
 
-      master_user.revoke_all_credentials!
+      master_user.revoke_family_sessions!
 
       expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
         outsider.id,
@@ -902,7 +928,7 @@ RSpec.describe User do
       users = [master_user, shadow, previous_shadow]
       tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
 
-      previous_shadow.revoke_all_credentials!
+      previous_shadow.revoke_family_sessions!
 
       expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
       expect(sibling_key.reload.revoked_at).to be_present
@@ -968,7 +994,7 @@ RSpec.describe User do
       shadow_key = Fabricate(:user_api_key, user: shadow)
       sibling_key = Fabricate(:user_api_key, user: sibling)
 
-      shadow.revoke_all_credentials!
+      shadow.revoke_family_sessions!
 
       expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
       expect(UserAuthToken.exists?(sibling_token.id)).to eq(true)
@@ -2668,65 +2694,23 @@ RSpec.describe User do
     end
   end
 
-  describe "hash_passwords" do
-    let(:too_long) { "x" * (User.max_password_length + 1) }
-
-    def hash(password, salt, algorithm = UserPassword::TARGET_PASSWORD_ALGORITHM)
-      User.new.send(:hash_password, password, salt, algorithm)
-    end
-
-    it "returns the same hash for the same password and salt" do
-      expect(hash("poutine", "gravy")).to eq(hash("poutine", "gravy"))
-    end
-
-    it "returns a different hash for the same salt and different password" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("fries", "gravy"))
-    end
-
-    it "returns a different hash for the same password and different salt" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("poutine", "cheese"))
-    end
-
-    it "raises an error when passwords are too long" do
-      expect { hash(too_long, "gravy") }.to raise_error(StandardError)
-    end
-
-    it "uses the target algorithm for new users" do
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-    end
-
-    it "can use an older algorithm to verify existing passwords, then upgrade" do
-      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
-      expect(old_algorithm).not_to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-
+  describe "#confirm_password?" do
+    it "upgrades a stored legacy hash only after a correct password" do
       password = "poutine"
-      old_hash = hash(password, user.salt, old_algorithm)
+      credential = user.user_password
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      hash = PasswordHasher.hash_password(password:, salt: credential.password_salt, algorithm:)
+      credential.update_columns(password_hash: hash, password_algorithm: algorithm)
 
-      user.user_password.update_columns(password_algorithm: old_algorithm, password_hash: old_hash)
+      expect(user.confirm_password?("notthepassword")).to be(false)
+      expect(credential.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_hash: hash,
+      )
 
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # With an incorrect attempt, should return false with no side effects
-      expect(user.confirm_password?("notthepassword")).to eq(false)
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # Should correctly verify against old algorithm
-      expect(user.confirm_password?(password)).to eq(true)
-
-      # Auto-upgrades to new algorithm
-      expected_new_hash = hash(password, user.salt, UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And persists to the db
-      user.reload
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And can still log in
-      expect(user.confirm_password?(password)).to eq(true)
+      expect(user.confirm_password?(password)).to be(true)
+      expect(credential.reload.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
+      expect(user.reload.confirm_password?(password)).to be(true)
     end
   end
 

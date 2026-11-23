@@ -3,18 +3,14 @@
 RSpec.describe PushNotificationController do
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
 
+  let(:subscription) { { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } } }
+
   context "when logged out" do
     it "does not allow subscribing" do
       post "/push_notifications/subscribe.json",
            params: {
              username: "test",
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
+             subscription:,
              send_confirmation: false,
            }
 
@@ -29,13 +25,7 @@ RSpec.describe PushNotificationController do
       post "/push_notifications/subscribe.json",
            params: {
              username: user.username,
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
+             subscription:,
              send_confirmation: false,
            }
 
@@ -49,16 +39,7 @@ RSpec.describe PushNotificationController do
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
 
-      post "/push_notifications/subscribe.json",
-           params: {
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
-           }
+      post "/push_notifications/subscribe.json", params: { subscription: }
 
       expect(response.status).to eq(200)
       expect(user.shadow_user.push_subscriptions.count).to eq(1)
@@ -73,29 +54,18 @@ RSpec.describe PushNotificationController do
       get "/session/current.json", headers: headers
       expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
 
-      post "/push_notifications/subscribe.json",
-           headers: headers,
-           params: {
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
-           }
+      post "/push_notifications/subscribe.json", headers: headers, params: { subscription: }
 
       expect(response.status).to eq(403)
       expect(user.push_subscriptions).to be_empty
     end
 
     it "repairs duplicate subscriptions" do
-      subscription = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
       2.times { PushSubscription.create!(user: user, data: subscription.to_json) }
       post "/push_notifications/subscribe.json",
            params: {
              username: user.username,
-             subscription: subscription,
+             subscription:,
              send_confirmation: false,
            }
 
@@ -108,13 +78,7 @@ RSpec.describe PushNotificationController do
         post "/push_notifications/subscribe.json",
              params: {
                username: user.username,
-               subscription: {
-                 endpoint: "endpoint",
-                 keys: {
-                   p256dh: "256dh",
-                   auth: "auth",
-                 },
-               },
+               subscription:,
                send_confirmation: false,
              }
       end
@@ -147,13 +111,12 @@ RSpec.describe PushNotificationController do
     end
 
     it "unsubscribes an existing subscription" do
-      sub = { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } }
-      PushSubscription.create!(user: user, data: sub.to_json)
+      PushSubscription.create!(user: user, data: subscription.to_json)
 
       post "/push_notifications/unsubscribe.json",
            params: {
              username: user.username,
-             subscription: sub,
+             subscription:,
            }
 
       expect(response.status).to eq(200)
@@ -164,13 +127,7 @@ RSpec.describe PushNotificationController do
       post "/push_notifications/unsubscribe.json",
            params: {
              username: user.username,
-             subscription: {
-               endpoint: "endpoint",
-               keys: {
-                 p256dh: "256dh",
-                 auth: "auth",
-               },
-             },
+             subscription:,
            }
 
       expect(response.status).to eq(200)

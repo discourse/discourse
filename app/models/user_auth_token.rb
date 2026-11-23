@@ -3,12 +3,22 @@ require "digest/sha1"
 
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
+  has_one :anonymous_mode_session
 
   # Store a reference to the raw association reader, since we're
   # overriding `#user` later in the class definition.
   alias_method :acting_user, :user
 
   scope :unexpired, -> { where("rotated_at > ?", SiteSetting.maximum_session_age.hours.ago) }
+
+  # A switch can retire the cookie while this request is running. Its login ID
+  # must come from the same snapshot as authentication, not from cookie history.
+  scope :with_login_id,
+        -> do
+          left_joins(:anonymous_mode_session).select(
+            "user_auth_tokens.*, COALESCE(anonymous_mode_sessions.id, user_auth_tokens.id) AS login_id",
+          )
+        end
 
   ROTATE_TIME_MINS = 10
   ROTATE_TIME = ROTATE_TIME_MINS.minutes
@@ -142,6 +152,38 @@ class UserAuthToken < ActiveRecord::Base
     user_auth_token
   end
 
+  def self.for_device_list(user, current_login_id: nil)
+    find_by_sql([<<~SQL, { user_id: user.id, current_id: current_login_id }])
+      SELECT tokens.*,
+             CASE WHEN sessions.master_user_id = :user_id THEN sessions.id ELSE tokens.id END AS device_id,
+             (COALESCE(sessions.id, tokens.id) = :current_id) IS TRUE AS current_device
+      FROM user_auth_tokens tokens
+      LEFT JOIN anonymous_mode_sessions sessions ON sessions.user_auth_token_id = tokens.id
+      WHERE tokens.id IN (
+        SELECT id FROM user_auth_tokens WHERE user_id = :user_id
+        UNION ALL
+        SELECT user_auth_token_id FROM anonymous_mode_sessions WHERE master_user_id = :user_id
+      )
+    SQL
+  end
+
+  def self.revoke_device!(user, device_id, current_login_id:)
+    user.with_credential_lock do
+      session = AnonymousModeSession.find_by(id: device_id, master_user_id: user.id)
+      token = session&.user_auth_token || with_login_id.find_by(id: device_id, user_id: user.id)
+      login_id = session&.id || token&.login_id
+      raise Discourse::InvalidParameters.new(:token_id) if !token || login_id == current_login_id
+      token.destroy!
+    end
+  end
+
+  def revoke_login!(login_id)
+    acting_user&.with_credential_lock do
+      token_id = AnonymousModeSession.where(id: login_id).pick(:user_auth_token_id) || login_id
+      UserAuthToken.find_by(id: token_id)&.destroy!
+    end
+  end
+
   def self.matching_token_hash(token_hash)
     unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token_hash)
   end
@@ -150,9 +192,9 @@ class UserAuthToken < ActiveRecord::Base
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)
-    user_token = matching_token_hash(token)
+    user_token = matching_token_hash(token).with_login_id
 
-    if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
+    if SiteSetting.verbose_auth_token_logging && path = opts&.dig(:path)
       user_token = user_token.annotate("path:#{path}")
     end
 
@@ -225,16 +267,15 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def self.cleanup!
+    cutoff = SiteSetting.maximum_session_age.hours.ago
     UserAuthTokenLog.where(
       "created_at < :time AND action NOT IN (:preserved_actions)",
-      time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
+      time: cutoff - ROTATE_TIME,
       preserved_actions: %w[suspicious generate],
     ).delete_all
 
-    where(
-      "rotated_at < :time",
-      time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME,
-    ).delete_all
+    RetiredUserAuthToken.where("rotated_at < ?", cutoff).delete_all
+    where("rotated_at < ?", cutoff - ROTATE_TIME).delete_all
   end
 
   def rotate!(info = nil)

@@ -70,14 +70,9 @@ RSpec.describe User, "#with_credential_lock" do
       end
     end
 
-    it "locks before password validation can upgrade an existing hash" do
-      password = "myawesomepassword"
-      algorithm = "$pbkdf2-sha256$i=5,l=32$"
-      salt = shadow.user_password.password_salt
-      hash = PasswordHasher.hash_password(password:, salt:, algorithm:)
-      shadow.user_password.update_columns(password_hash: hash, password_algorithm: algorithm)
-
-      expect_master_locked_before_writes { shadow.update!(password: password) }
+    it "locks the master before password writes even when validations are skipped" do
+      shadow.password = SecureRandom.hex
+      expect_master_locked_before_writes { shadow.save!(validate: false) }
     end
 
     it "locks the master before anonymization saves the shadow's username" do
@@ -110,12 +105,67 @@ RSpec.describe User, "#with_credential_lock" do
         expect(provider.authenticated_session_user).to eq(shadow)
         Thread
           .new do
-            User.connection_pool.with_connection { User.find(master_id).revoke_all_credentials! }
+            User.connection_pool.with_connection { User.find(master_id).revoke_family_sessions! }
           end
           .value
 
         shadow.with_credential_lock { expect(provider.authenticated_session_user).to be_nil }
       end
+    end
+
+    def sign_in_device
+      device = ActionDispatch::Integration::Session.new(Rails.application)
+      device.host! "test.localhost"
+      device.get "/session/#{master.encoded_username}/become", params: { redirect: "false" }
+      expect(device.response).to be_successful
+      device
+    end
+
+    it "finishes an authenticated logout after the intermediate cookie and its proof have expired" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+      SiteSetting.log_out_strict = false
+      SiteSetting.maximum_session_age = 1
+      freeze_time
+      shadow.reload.anonymous_user_master.update!(active: true)
+
+      browser = sign_in_device
+      original_id = master.user_auth_tokens.sole.id
+      2.times do
+        browser.post "/u/toggle-anon.json"
+        expect(browser.response).to be_successful
+      end
+
+      freeze_time 59.minutes.from_now
+      other_device = sign_in_device
+      cookie = Rack::Utils.escape(browser.cookies["_t"])
+      env = create_request_env(path: "/").merge("HTTP_COOKIE" => "_t=#{cookie}")
+      request = ActionDispatch::Request.new(env)
+      logout = Auth::DefaultCurrentUserProvider.new(env)
+      User.connection_pool.with_connection do
+        expect(Auth::DefaultCurrentUserProvider.new(env).current_user).to eq(master)
+        Thread
+          .new { User.connection_pool.with_connection { browser.post "/u/toggle-anon.json" } }
+          .value
+        expect(browser.response).to be_successful
+        freeze_time 2.minutes.from_now
+        UserAuthToken.cleanup!
+        expect(RetiredUserAuthToken.where(anonymous_mode_session_id: original_id)).to be_empty
+        browser.get "/session/current.json"
+        expect(browser.response.parsed_body.dig("current_user", "id")).to eq(shadow.id)
+
+        login_id = Guardian.new(master, request).current_login_id
+        expect(login_id).to eq(original_id)
+        expect {
+          UserAuthToken.revoke_device!(master, original_id, current_login_id: login_id)
+        }.to raise_error(Discourse::InvalidParameters)
+        logout.log_off_user(env["rack.session"], request.cookie_jar)
+      end
+
+      browser.get "/session/current.json"
+      expect(browser.response.status).to eq(404)
+      other_device.get "/session/current.json"
+      expect(other_device.response.parsed_body.dig("current_user", "id")).to eq(master.id)
     end
 
     it "serializes historical-shadow exchanges and master revocation on the same database row" do
@@ -140,7 +190,7 @@ RSpec.describe User, "#with_credential_lock" do
         expect do
           User.transaction do
             User.connection.execute("SET LOCAL lock_timeout = '100ms'")
-            master.revoke_all_credentials!
+            master.revoke_family_sessions!
           end
         end.to raise_error(ActiveRecord::LockWaitTimeout)
       ensure
@@ -149,7 +199,7 @@ RSpec.describe User, "#with_credential_lock" do
         exchange.join
       end
 
-      expect { master.revoke_all_credentials! }.not_to raise_error
+      expect { master.revoke_family_sessions! }.not_to raise_error
     end
   end
 end

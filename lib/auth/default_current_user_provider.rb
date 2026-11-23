@@ -24,6 +24,7 @@ require_relative "../route_matcher"
 
 class Auth::DefaultCurrentUserProvider
   CURRENT_USER_KEY = "_DISCOURSE_CURRENT_USER"
+  BROWSER_LOGIN_ID = "_DISCOURSE_BROWSER_LOGIN_ID"
   USER_TOKEN_KEY = "_DISCOURSE_USER_TOKEN"
   API_KEY = "api_key"
   API_USERNAME = "api_username"
@@ -148,6 +149,8 @@ class Auth::DefaultCurrentUserProvider
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
+    @env.delete(BROWSER_LOGIN_ID)
+
     # bypass if we have the shared session header
     if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
       return @env[CURRENT_USER_KEY] = self.class.read_shared_session_key(shared_key)
@@ -262,6 +265,8 @@ class Auth::DefaultCurrentUserProvider
     # under no conditions to suspended or inactive accounts get current_user
     current_user = nil if current_user && (current_user.suspended? || !current_user.active)
 
+    @env[BROWSER_LOGIN_ID] = @user_token.login_id if current_user && !api_key && !user_api_key
+
     if current_user && !current_user.is_impersonating && should_update_last_seen?
       ip = request.ip
       user_id = current_user.id
@@ -318,7 +323,7 @@ class Auth::DefaultCurrentUserProvider
   # Read the presented token again without repeating request accounting or using
   # results cached before the caller acquired the identity lock.
   def authenticated_session_user
-    return if is_api? || is_user_api? || @env["HTTP_X_SHARED_SESSION_KEY"]
+    return if delegated_session?
     return unless token = find_auth_token
     return unless @user_token && @user_token.user_id == current_user&.id
 
@@ -351,7 +356,11 @@ class Auth::DefaultCurrentUserProvider
         impersonate: opts[:impersonate],
         authenticated_with_oauth: opts[:authenticated_with_oauth],
       )
-    retire_exchanged_session! if opts[:anonymous_mode_exchange]
+    if master = opts[:anonymous_mode_exchange]
+      @env[BROWSER_LOGIN_ID] = retire_exchanged_session!(token, master: master).id
+    else
+      @env[BROWSER_LOGIN_ID] = token.id
+    end
     @env[USER_TOKEN_KEY] = @user_token = token
     DB.after_commit { set_auth_cookie!(token.unhashed_auth_token, user, cookie_jar) }
 
@@ -426,23 +435,8 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)
-    user = current_user
-
-    if SiteSetting.log_out_strict && user
-      user.revoke_all_credentials!
-
-      if user.admin && defined?(Rack::MiniProfiler)
-        # clear the profiling cookie to keep stuff tidy
-        cookie_jar.delete("__profilin")
-      end
-
-      user.logged_out
-    elsif user && @user_token
-      @user_token.destroy
-      PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
-      DiscourseEvent.trigger(:user_logged_out, user)
-    end
-
+    revoke_browser_login(cookie_jar, push_subscription) unless delegated_session?
+    @env.delete(BROWSER_LOGIN_ID)
     cookie_jar.delete("authentication_data")
     cookie_jar.delete(TOKEN_COOKIE)
   end
@@ -568,11 +562,33 @@ class Auth::DefaultCurrentUserProvider
       )
   end
 
+  def revoke_browser_login(cookie_jar, push_subscription)
+    user = current_user
+    if user && (login_id = @env[BROWSER_LOGIN_ID])
+      if SiteSetting.log_out_strict
+        user.revoke_family_sessions!
+        cookie_jar.delete("__profilin") if user.admin && defined?(Rack::MiniProfiler)
+        user.logged_out
+      else
+        @env.fetch(USER_TOKEN_KEY).revoke_login!(login_id)
+        PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
+        DiscourseEvent.trigger(:user_logged_out, user)
+      end
+    elsif raw_token = find_auth_token
+      # A retired cookie can end only its own login. Never turn it back into a user.
+      RetiredUserAuthToken.revoke_by_cookie(raw_token)
+    end
+  end
+
+  def delegated_session?
+    @env["HTTP_X_SHARED_SESSION_KEY"] || is_api? || is_user_api?
+  end
+
   def replaced_cookie_key(token_hash)
     "replaced_browser_cookie:#{token_hash}"
   end
 
-  def retire_exchanged_session!
+  def retire_exchanged_session!(successor, master:)
     # A late response with either old cookie must not clear the replacement.
     # Mark before commit to avoid a gap. Marks are checked only on a failed login:
     # they never authenticate a request and do not change a rolled-back session.
@@ -581,7 +597,7 @@ class Auth::DefaultCurrentUserProvider
         redis.setex(replaced_cookie_key(token_hash), REPLACED_COOKIE_TTL.to_i, "1")
       end
     end
-    @user_token.destroy!
+    AnonymousModeSession.exchange!(@user_token, successor, master: master)
   end
 
   def find_auth_token

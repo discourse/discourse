@@ -3379,9 +3379,7 @@ RSpec.describe SessionController do
       it "does not sign an external login assertion for an anonymous shadow" do
         SiteSetting.allow_anonymous_mode = true
         SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
-        sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
-        post "/u/toggle-anon.json"
-        expect(response.status).to eq(200)
+        sign_in_and_switch_to_anonymous_mode(Fabricate(:user, trust_level: TrustLevel[1]))
         SiteSetting.allow_anonymous_mode = false
 
         get "/session/sso_provider",
@@ -5262,9 +5260,7 @@ RSpec.describe SessionController do
       end
 
       it "stops authenticating when the master account is suspended", :aggregate_failures do
-        sign_in(master_user)
-        post "/u/toggle-anon.json"
-        expect(response.status).to eq(200)
+        sign_in_and_switch_to_anonymous_mode(master_user)
 
         get "/session/current.json"
         expect(response.status).to eq(200)
@@ -5283,9 +5279,7 @@ RSpec.describe SessionController do
       end
 
       it "stops authenticating when the master account is deactivated", :aggregate_failures do
-        sign_in(master_user)
-        post "/u/toggle-anon.json"
-        expect(response.status).to eq(200)
+        sign_in_and_switch_to_anonymous_mode(master_user)
 
         get "/session/current.json"
         expect(response.status).to eq(200)

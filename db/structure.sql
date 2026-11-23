@@ -1309,6 +1309,17 @@ ALTER SEQUENCE public.allowed_pm_users_id_seq OWNED BY public.allowed_pm_users.i
 
 
 --
+-- Name: anonymous_mode_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.anonymous_mode_sessions (
+    id integer NOT NULL,
+    master_user_id integer NOT NULL,
+    user_auth_token_id integer NOT NULL
+);
+
+
+--
 -- Name: anonymous_users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10269,6 +10280,19 @@ ALTER SEQUENCE public.remote_themes_id_seq OWNED BY public.remote_themes.id;
 
 
 --
+-- Name: retired_user_auth_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.retired_user_auth_tokens (
+    id integer NOT NULL,
+    anonymous_mode_session_id integer NOT NULL,
+    token_hash character varying NOT NULL,
+    previous_token_hash character varying,
+    rotated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: reviewable_claimed_topics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -17241,6 +17265,14 @@ ALTER TABLE ONLY public.allowed_pm_users
 
 
 --
+-- Name: anonymous_mode_sessions anonymous_mode_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT anonymous_mode_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: anonymous_users anonymous_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19166,6 +19198,14 @@ ALTER TABLE ONLY public.redelivering_webhook_events
 
 ALTER TABLE ONLY public.remote_themes
     ADD CONSTRAINT remote_themes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: retired_user_auth_tokens retired_user_auth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT retired_user_auth_tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -21723,6 +21763,20 @@ CREATE UNIQUE INDEX index_allowed_pm_users_on_allowed_pm_user_id_and_user_id ON 
 --
 
 CREATE UNIQUE INDEX index_allowed_pm_users_on_user_id_and_allowed_pm_user_id ON public.allowed_pm_users USING btree (user_id, allowed_pm_user_id);
+
+
+--
+-- Name: index_anonymous_mode_sessions_on_master_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_anonymous_mode_sessions_on_master_user_id ON public.anonymous_mode_sessions USING btree (master_user_id);
+
+
+--
+-- Name: index_anonymous_mode_sessions_on_user_auth_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_anonymous_mode_sessions_on_user_auth_token_id ON public.anonymous_mode_sessions USING btree (user_auth_token_id);
 
 
 --
@@ -24561,6 +24615,34 @@ CREATE INDEX index_redelivering_webhook_events_on_web_hook_event_id ON public.re
 
 
 --
+-- Name: index_retired_user_auth_tokens_on_anonymous_mode_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_anonymous_mode_session_id ON public.retired_user_auth_tokens USING btree (anonymous_mode_session_id);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_previous_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_previous_token_hash ON public.retired_user_auth_tokens USING btree (previous_token_hash) WHERE (previous_token_hash IS NOT NULL);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_rotated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_rotated_at ON public.retired_user_auth_tokens USING btree (rotated_at);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_token_hash ON public.retired_user_auth_tokens USING btree (token_hash);
+
+
+--
 -- Name: index_reviewable_claimed_topics_on_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26586,6 +26668,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 
 --
+-- Name: anonymous_mode_sessions fk_rails_75ec4f4b22; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT fk_rails_75ec4f4b22 FOREIGN KEY (user_auth_token_id) REFERENCES public.user_auth_tokens(id) ON DELETE CASCADE;
+
+
+--
 -- Name: optimized_videos fk_rails_7c76beeaf4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -26655,6 +26745,14 @@ ALTER TABLE ONLY public.poll_votes
 
 ALTER TABLE ONLY public.poll_options
     ADD CONSTRAINT fk_rails_aa85becb42 FOREIGN KEY (poll_id) REFERENCES public.polls(id);
+
+
+--
+-- Name: retired_user_auth_tokens fk_rails_ae20d58572; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT fk_rails_ae20d58572 FOREIGN KEY (anonymous_mode_session_id) REFERENCES public.anonymous_mode_sessions(id) ON DELETE CASCADE;
 
 
 --
@@ -26785,6 +26883,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20261123103548'),
+('20261123031254'),
 ('20261123030923'),
 ('20261123011249'),
 ('20261123011248'),

@@ -72,7 +72,7 @@ module SecondFactor::Actions
     end
 
     def populate_user_data(sso)
-      raise Discourse::InvalidAccess unless current_user.guardian.can_issue_independent_credentials?
+      current_user.guardian.ensure_can_issue_independent_credentials!
       claims = SiteSetting.discourse_connect_provider_claims_map
 
       sso.name = current_user.name if claims.include?("name")

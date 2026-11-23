@@ -71,6 +71,121 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
     end
   end
 
+  context "with independent logins for the same master" do
+    let(:switching_browser) { open_session }
+    let(:other_browser) { open_session }
+
+    before do
+      SiteSetting.log_out_strict = false
+      switching_browser.sign_in(master)
+      other_browser.sign_in(master)
+    end
+
+    def expect_signed_in_as(browser, user)
+      browser.get "/session/current.json"
+      expect(browser.response.parsed_body.dig("current_user", "id")).to eq(user.id)
+    end
+
+    def switch_to(browser, user)
+      browser.post "/u/toggle-anon.json"
+      expect(browser.response.status).to eq(200)
+      expect_signed_in_as(browser, user)
+    end
+
+    def current_device_id(browser)
+      browser.get "/u/#{master.username}.json"
+      devices = browser.response.parsed_body.fetch("user").fetch("user_auth_tokens")
+      devices.select { |device| device.fetch("is_active") }.sole.fetch("id")
+    end
+
+    it "rejects another user's request to revoke a switched device by ID" do
+      device_id = current_device_id(switching_browser)
+      switch_to(switching_browser, shadow)
+      outsider = sign_in(Fabricate(:user))
+
+      post "/u/#{outsider.username}/preferences/revoke-auth-token.json",
+           params: {
+             token_id: device_id,
+           }
+      expect(response.status).to eq(400)
+      expect_signed_in_as(switching_browser, shadow)
+    end
+
+    it "protects the current device's original ID across switches and cookie rotation" do
+      device_id = current_device_id(switching_browser)
+      switch_to(switching_browser, shadow)
+      switch_to(switching_browser, master)
+      cookie = switching_browser.cookies["_t"]
+      freeze_time (UserAuthToken::ROTATE_TIME + 1.minute).from_now
+      expect(current_device_id(switching_browser)).to eq(device_id)
+      expect(switching_browser.cookies["_t"]).not_to eq(cookie)
+
+      switching_browser.post "/u/#{master.username}/preferences/revoke-auth-token.json",
+                             params: {
+                               token_id: device_id,
+                             }
+      expect(switching_browser.response.status).to eq(400)
+      expect_signed_in_as(switching_browser, master)
+    end
+
+    it "keeps a switched login visible and individually revocable from another master device" do
+      sign_in(master)
+      device_id = current_device_id(switching_browser)
+
+      switch_to(switching_browser, shadow)
+      switch_to(other_browser, shadow)
+      get "/u/#{master.username}.json"
+      expect(response.parsed_body.dig("user", "user_auth_tokens")).to include(
+        a_hash_including("id" => device_id, "is_active" => false),
+      )
+
+      post "/u/#{master.username}/preferences/revoke-auth-token.json",
+           params: {
+             token_id: device_id,
+           }
+      expect(response.status).to eq(200)
+
+      switching_browser.get "/session/current.json"
+      expect(switching_browser.response.status).to eq(404)
+      expect_signed_in_as(other_browser, shadow)
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    def expect_stale_logout_to_revoke_only_its_login
+      cookie = switching_browser.cookies["_t"]
+      original_cookie = { "HTTP_COOKIE" => "_t=#{Rack::Utils.escape(cookie)}" }
+      switch_to(switching_browser, shadow)
+      switch_to(switching_browser, master)
+      switch_to(switching_browser, shadow)
+      freeze_time 2.minutes.from_now
+      # Advancing Rails time does not expire the presented cookie's real Redis grace marker.
+      token = decrypt_auth_cookie(cookie).fetch(:token)
+      Discourse.redis.del("replaced_browser_cookie:#{UserAuthToken.hash_token(token)}")
+
+      get "/session/current.json", headers: original_cookie
+      expect(response.status).to eq(404)
+      expect_signed_in_as(switching_browser, shadow)
+
+      reset!
+      delete "/session/#{master.username}.json", headers: original_cookie
+      expect(response.status).to eq(302)
+
+      switching_browser.get "/session/current.json"
+      expect(switching_browser.response.status).to eq(404)
+      expect_signed_in_as(other_browser, master)
+    end
+
+    it "honors ordinary logout with the original cookie after multiple switches and the grace period" do
+      expect_stale_logout_to_revoke_only_its_login
+    end
+
+    it "limits strict logout to one login when only a stale cookie is presented" do
+      SiteSetting.log_out_strict = true
+      expect_stale_logout_to_revoke_only_its_login
+    end
+  end
+
   it "revokes the whole identity on strict logout from anonymous mode" do
     SiteSetting.log_out_strict = true
     expect_shadow_key_to_authenticate
@@ -150,7 +265,7 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
     get "/session/current.json"
     expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
 
-    master.revoke_all_credentials!
+    master.revoke_family_sessions!
 
     get "/session/current.json"
     expect(response.status).to eq(404)
@@ -161,7 +276,7 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
     master_token = UserAuthToken.generate!(user_id: master.id)
     SiteSetting.allow_anonymous_mode = false
 
-    shadow.revoke_all_credentials!
+    shadow.revoke_family_sessions!
 
     expect(UserAuthToken.exists?(master_token.id)).to eq(false)
     expect(shadow_key.reload.revoked_at).to be_present

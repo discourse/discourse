@@ -34,7 +34,7 @@ class MicrosoftAuthRevoker
 
   def self.log_out_users
     User.where("id IN (#{microsoft_user_associated_accounts_sql})").find_each(
-      &:revoke_all_credentials!
+      &:revoke_family_sessions!
     )
   end
 

@@ -177,8 +177,6 @@ class User < ActiveRecord::Base
 
   after_initialize :add_trust_level
 
-  # Password confirmation during validation can upgrade a legacy hash in place.
-  before_validation :lock_before_legacy_password_validation, if: -> { @raw_password && persisted? }
   before_validation :set_skip_validate_email
 
   before_save :update_usernames
@@ -1059,9 +1057,8 @@ class User < ActiveRecord::Base
   end
 
   def password_expired?(password)
-    return false if user_password.nil? || user_password.password_expired_at.nil?
-    user_password.password_hash ==
-      hash_password(password, user_password.password_salt, user_password.password_algorithm)
+    return false unless user_password&.password_expired_at
+    user_password.matches_password?(password)
   end
 
   def confirm_password?(password)
@@ -1832,7 +1829,7 @@ class User < ActiveRecord::Base
 
   # Revoke browser sessions, their push subscriptions, and legacy shadow keys.
   # The master's own authorized apps retain their independent lifecycle.
-  def revoke_all_credentials!
+  def revoke_family_sessions!
     with_credential_lock { |identity| revoke_credentials!(family: identity) }
   end
 
@@ -2200,11 +2197,6 @@ class User < ActiveRecord::Base
     email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
-  def hash_password(password, salt, algorithm)
-    raise StandardError.new("password is too long") if password.size > User.max_password_length
-    PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
-  end
-
   def add_trust_level
     # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
@@ -2251,9 +2243,7 @@ class User < ActiveRecord::Base
 
           errors.add(:username, I18n.t(:"user.username.unique")) if existing.present? && !same_user
 
-          if confirm_password?(username) || confirm_password?(username.downcase)
-            errors.add(:username, :same_as_password)
-          end
+          errors.add(:username, :same_as_password) if matches_password_or_lowercase?(username)
         end
       end
   end
@@ -2261,10 +2251,12 @@ class User < ActiveRecord::Base
   def name_validator
     if name.present?
       name_pw = name[0...User.max_password_length]
-      if confirm_password?(name_pw) || confirm_password?(name_pw.downcase)
-        errors.add(:name, :same_as_password)
-      end
+      errors.add(:name, :same_as_password) if matches_password_or_lowercase?(name_pw)
     end
+  end
+
+  def matches_password_or_lowercase?(value)
+    user_password&.matches_password?(value) || user_password&.matches_password?(value.downcase)
   end
 
   def set_default_categories_preferences
@@ -2394,13 +2386,6 @@ class User < ActiveRecord::Base
     identity = User.lock.find_by(id: master_id || id)
     User.lock.find_by(id: id) if master_id && !identity
     identity
-  end
-
-  def lock_before_legacy_password_validation
-    algorithm = user_password&.password_algorithm
-    if algorithm && algorithm != UserPassword::TARGET_PASSWORD_ALGORITHM
-      User.uncached { lock_credential_identity }
-    end
   end
 
   def with_password_change_revocation

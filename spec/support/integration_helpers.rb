@@ -32,6 +32,12 @@ module IntegrationHelpers
     user
   end
 
+  def sign_in_and_switch_to_anonymous_mode(master)
+    sign_in(master)
+    post "/u/toggle-anon.json"
+    expect(response.status).to eq(200)
+  end
+
   def sign_out
     delete "/session"
   end

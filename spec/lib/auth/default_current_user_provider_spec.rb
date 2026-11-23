@@ -1011,6 +1011,28 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       create_request_env(path: "/").merge({ :method => "GET", "HTTP_COOKIE" => "_t=#{cookie}" })
     end
 
+    it "does not let delegated logout act on a browser cookie sent with the request" do
+      SiteSetting.log_out_strict = true
+      browser_user = Fabricate(:user)
+      browser_token = UserAuthToken.generate!(user_id: browser_user.id)
+      delegated_token = UserAuthToken.generate!(user_id: user.id)
+      shared_key = described_class.store_shared_session_key(delegated_token, user)
+      api_key = ApiKey.create!(user_id: user.id, created_by_id: -1)
+      [
+        { "HTTP_X_SHARED_SESSION_KEY" => shared_key },
+        { "HTTP_API_KEY" => api_key.key },
+      ].each do |headers|
+        session_provider =
+          provider("/", headers.merge("HTTP_COOKIE" => "_t=#{browser_token.unhashed_auth_token}"))
+        expect(session_provider.current_user).to eq(user)
+        request = ActionDispatch::Request.new(session_provider.env)
+        expect(Guardian.new(user, request).current_login_id).to be_nil
+        session_provider.log_off_user({}, session_provider.cookie_jar)
+        expect(UserAuthToken.exists?(browser_token.id)).to be(true)
+        expect(UserAuthToken.exists?(delegated_token.id)).to be(true)
+      end
+    end
+
     it "logs off a user cached by another provider instance" do
       user_provider = TestProvider.new(env)
       expect(user_provider.current_user).to eq(user)

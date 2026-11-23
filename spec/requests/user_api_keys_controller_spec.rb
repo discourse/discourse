@@ -471,9 +471,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
       master = Fabricate(:user, trust_level: TrustLevel[1])
       body = create_pending_device_request
-      sign_in(master)
-      post "/u/toggle-anon.json"
-      expect(response.status).to eq(200)
+      sign_in_and_switch_to_anonymous_mode(master)
       post "/user-api-key/activate.json", params: { code: body["user_code"] }
       expect(response.parsed_body["no_trust_level"]).to eq(true)
       expect(response.parsed_body["approval_token"]).to be_nil
@@ -1152,9 +1150,7 @@ RSpec.describe UserApiKeysController do
       SiteSetting.allow_anonymous_mode = true
       SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
-      sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
-      post "/u/toggle-anon.json"
-      expect(response.status).to eq(200)
+      sign_in_and_switch_to_anonymous_mode(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/user-api-key/otp.json", params: otp_args
 

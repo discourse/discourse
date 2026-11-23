@@ -54,10 +54,7 @@ class DiscourseId::Revoke
   end
 
   def revoke_auth_tokens(associated_account:)
-    user = associated_account.user
-    return if user.nil?
-
-    user.revoke_all_credentials!
+    associated_account.user&.revoke_family_sessions!
   end
 
   def log_revocation(associated_account:, params:)

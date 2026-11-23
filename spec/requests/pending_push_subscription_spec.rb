@@ -25,7 +25,7 @@ RSpec.describe "Pending push subscription registration", type: :request do
 
     master_id = master.id
     Thread
-      .new { User.connection_pool.with_connection { User.find(master_id).revoke_all_credentials! } }
+      .new { User.connection_pool.with_connection { User.find(master_id).revoke_family_sessions! } }
       .value
 
     # Resume the request with the principal and token already cached by middleware.

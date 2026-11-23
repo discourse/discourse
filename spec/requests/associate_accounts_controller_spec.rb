@@ -55,9 +55,7 @@ RSpec.describe Users::AssociateAccountsController do
     it "does not associate an external account with an anonymous shadow" do
       SiteSetting.allow_anonymous_mode = true
       master = Fabricate(:user, trust_level: TrustLevel[1])
-      sign_in(master)
-      post "/u/toggle-anon.json"
-      expect(response.status).to eq(200)
+      sign_in_and_switch_to_anonymous_mode(master)
 
       post "/auth/google_oauth2?reconnect=true"
       get "/auth/google_oauth2/callback.json"

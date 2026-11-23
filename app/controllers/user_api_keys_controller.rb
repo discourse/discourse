@@ -695,11 +695,9 @@ class UserApiKeysController < ApplicationController
   end
 
   def can_authorize_key?
-    guardian.can_issue_independent_credentials? &&
-      (
-        current_user.staff? ||
-          current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
-      )
+    return false unless guardian.can_issue_independent_credentials?
+
+    current_user.staff? || current_user.in_any_groups?(SiteSetting.user_api_key_allowed_groups_map)
   end
 
   # `create` and `create_otp` are the only callers, and both respond in JSON

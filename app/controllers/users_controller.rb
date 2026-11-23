@@ -1156,7 +1156,7 @@ class UsersController < ApplicationController
         user = identity == current_user ? AnonymousShadowCreator.get(identity) : identity
         next unless user&.active? && !user.suspended?
 
-        log_on_user(user, { anonymous_mode_exchange: true })
+        log_on_user(user, { anonymous_mode_exchange: identity })
         user
       end
 
@@ -1955,16 +1955,15 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:token_id]
-      token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
-      # The user should not be able to revoke the auth token of current session.
-      if !token || guardian.auth_token == token.auth_token
-        raise Discourse::InvalidParameters.new(:token_id)
-      end
-      UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+      UserAuthToken.revoke_device!(
+        user,
+        params[:token_id],
+        current_login_id: guardian.current_login_id,
+      )
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      user.revoke_all_credentials!
+      user.revoke_family_sessions!
     end
 
     render json: success_json
