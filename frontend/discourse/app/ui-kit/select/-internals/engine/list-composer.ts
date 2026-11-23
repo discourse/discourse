@@ -766,7 +766,8 @@ export default class ListComposer {
   }
 
   #createOption(options: SelectOption[], filter: string): SelectOption | null {
-    if (!filter || !this.#args.createOption) {
+    // At the cap nothing can be added, so a create row would only be a disabled suggestion.
+    if (!filter || !this.#args.createOption || this.#getAtMaximum()) {
       return null;
     }
     const records = options.map((option) => option.record);

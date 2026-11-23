@@ -177,7 +177,7 @@ module(
 
     test("Enter cannot add an ordinary option after the value reaches @maximum", async function (assert) {
       const onChange = sinon.spy();
-      this.set("value", trackedArray([1]));
+      this.value = trackedArray([1]);
 
       await render(
         <template>
@@ -214,7 +214,7 @@ module(
     test("Space cannot add an ordinary option after the value reaches @maximum", async function (assert) {
       const onChange = sinon.spy();
       forceMobile();
-      this.set("value", trackedArray([1]));
+      this.value = trackedArray([1]);
 
       await render(
         <template>
@@ -249,7 +249,7 @@ module(
       );
     });
 
-    test("the create-on-the-fly row is disabled and inert at @maximum", async function (assert) {
+    test("the create-on-the-fly row is not offered at @maximum", async function (assert) {
       const onChange = sinon.spy();
       const createOption = (filter) => ({
         id: filter,
@@ -260,27 +260,28 @@ module(
           <MultiLimitsHost
             @allowCreate={{true}}
             @createOption={{createOption}}
-            @maximum={{1}}
+            @maximum={{2}}
             @onChange={{onChange}}
             @value={{array 1}}
           />
         </template>
       );
       await fillIn("[role='combobox']", "dragonfruit");
-
       assert
         .dom("[role='option'].--create")
-        .hasAttribute(
-          "aria-disabled",
-          "true",
-          "the create-on-the-fly row is exposed as disabled at the cap"
-        );
+        .exists("below the cap, a typed value is offered to create");
+
       await click("[role='option'].--create");
       assert.strictEqual(
         onChange.callCount,
-        0,
-        "activating the disabled create row emits no onChange"
+        1,
+        "creating it fills the last free place"
       );
+
+      await fillIn("[role='combobox']", "elderberry");
+      assert
+        .dom("[role='option'].--create")
+        .doesNotExist("at the cap, nothing is offered to create");
     });
 
     test("at @maximum only unselected ordinary options become disabled", async function (assert) {

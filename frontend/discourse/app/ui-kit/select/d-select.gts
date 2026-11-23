@@ -269,9 +269,9 @@ export interface DSelectSignature {
     panelChips?: boolean;
     /**
      * Hard cap on a multi-select's selection count. At the cap every unselected ordinary option
-     * is disabled (navigable, with activation blocked) and the limit message
-     * appears. The cap never *newly* disables a selected option, so deselecting one is the way back
-     * under it (an option given `disabled` stays disabled either way, though its chip remains
+     * is disabled (navigable, with activation blocked), no create row is offered, and the limit
+     * message appears. The cap never *newly* disables a selected option, so deselecting one is the
+     * way back under it (an option given `disabled` stays disabled either way, though its chip remains
      * removable); action options stay enabled too, since they never become a value. Ignored
      * on a single-select. Pass `false` for no cap; numbers below `1` (including `0` and
      * negatives) and `NaN` also mean no cap but warn once per select in development.

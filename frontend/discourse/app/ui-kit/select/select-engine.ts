@@ -535,8 +535,8 @@ export interface SelectEngineInit {
    * Hard cap on a multi-select's selection count. Ignored when not `multiple`; `false` means
    * no cap. Numbers below `1` and NaN also mean no cap but warn once per engine in development.
    * At the cap every add is refused — pointer, keyboard, create-on-the-fly and
-   * the compat bridge all reach the same guard — and every unselected ordinary option reports
-   * itself disabled. See {@link SelectEngine#atMaximum}.
+   * the compat bridge all reach the same guard — every unselected ordinary option reports
+   * itself disabled, and no create row is offered. See {@link SelectEngine#atMaximum}.
    *
    * The cap is measured against the value read at activation time, so it holds for a consumer
    * that applies the emitted value synchronously and by replacement (the contract this
@@ -1166,7 +1166,7 @@ export default class SelectEngine {
 
   /**
    * Whether the selection has reached {@link maximum}. At the cap no further record can be
-   * added, and every unselected ordinary option reports itself disabled.
+   * added, every unselected ordinary option reports itself disabled, and no create row is offered.
    */
   get atMaximum(): boolean {
     return this.#selectionActions.atMaximum;
