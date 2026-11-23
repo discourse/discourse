@@ -87,6 +87,8 @@ module DiscourseAi
               user: context.user,
               phase: execution_phase,
               styles: appearance_change&.styled? || false,
+              # its palettes, if any, were created when it was saved
+              new_component: appearance_change&.kind_component? || false,
             )
           return error_response(refusal) if refusal
           if appearance_change.nil?
