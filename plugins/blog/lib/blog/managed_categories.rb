@@ -11,7 +11,6 @@ module ::Blog
       end
     end
 
-    # Brings the categories in line with the groups that hold the roles now.
     def self.sync_role_access
       Instance.category_ids.each do |category_id|
         AddPublishersToPublicCategory.call(params: { category_id: })

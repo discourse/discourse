@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 module ::Blog
-  # The groups that hold each blog role. Nothing else reads the role settings, so
-  # a site that may not choose its own roles gets staff in all three, whatever
-  # groups it has saved.
   module Roles
     SETTINGS = %i[
       blog_role_groups_enabled
