@@ -127,7 +127,9 @@ export default class MeasurePageShell extends Modifier {
               parseFloat(
                 styles.getPropertyValue("--_page-shell-header-main-min-width")
               ) >
-              (tracks[3] || 0) + (tracks[4] || 0);
+              (element.dataset.contextPosition === "end"
+                ? tracks[2] || 0
+                : (tracks[3] || 0) + (tracks[4] || 0));
           if (this.pageShell.compactLogo !== compactLogo) {
             this.pageShell.compactLogo = compactLogo;
           }

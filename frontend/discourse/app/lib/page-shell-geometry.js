@@ -15,6 +15,7 @@
  *
  * @typedef {object} ShellGeometry
  * @property {"centered"|"full"} width - Shell width policy.
+ * @property {"start"|"end"} contextPosition - Side of Main that Context occupies.
  * @property {"grow"|"content"} resize - Whether a growing panel widens a
  *   centered shell or takes the space from Main.
  * @property {number} viewportWidth - What `100vw` resolves to.
@@ -116,6 +117,10 @@ export function shellTracks(geometry) {
  */
 export function handleOffset(geometry, panel) {
   const tracks = shellTracks(geometry);
+  if (panel === "context" && geometry.contextPosition === "end") {
+    return tracks.end + tracks.composer + tracks.context;
+  }
+
   return (
     tracks.offset +
     tracks.navigation +
@@ -188,6 +193,7 @@ export function readShellGeometry(shell, state) {
 
   return {
     width: shell.dataset.width,
+    contextPosition: shell.dataset.contextPosition,
     resize: shell.dataset.resize,
     viewportWidth: window.innerWidth,
     shellWidth: shell.clientWidth,

@@ -94,6 +94,24 @@ export default class PageShellControls extends Component {
           </select>
         </label>
         <label>
+          {{i18n "page_shell.context_position"}}
+          <select
+            disabled={{not this.pageShell.hasContextPanel}}
+            name="contextPosition"
+            value={{this.pageShell.contextPosition}}
+            {{on "change" this.pageShell.change}}
+          >
+            <option
+              selected={{eq this.pageShell.contextPosition "start"}}
+              value="start"
+            >{{i18n "page_shell.context_before_main"}}</option>
+            <option
+              selected={{eq this.pageShell.contextPosition "end"}}
+              value="end"
+            >{{i18n "page_shell.context_after_main"}}</option>
+          </select>
+        </label>
+        <label>
           {{i18n "page_shell.context_width"}}
           <input
             max={{this.pageShell.contextMaxWidth}}

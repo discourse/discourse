@@ -8,6 +8,7 @@ import {
 function geometry(overrides = {}) {
   return {
     width: "centered",
+    contextPosition: "start",
     resize: "grow",
     viewportWidth: 1920,
     shellWidth: 1905,
@@ -129,6 +130,23 @@ module("Unit | Lib | page shell geometry", function () {
         1000
       ),
       350
+    );
+  });
+
+  test("end Context measures its handle from the end gutter and composer", function (assert) {
+    const start = geometry({ contextPosition: "end", composerWidth: 100 });
+    const tracks = shellTracks(start);
+    const offset = handleOffset(start, "context");
+
+    assert.strictEqual(
+      offset,
+      tracks.end + 100 + 300,
+      "The offset starts at the shell's inline end"
+    );
+    assert.strictEqual(
+      widthForHandleOffset(start, "context", offset + 20, 200, 1000),
+      340,
+      "The centered shell absorbs half the pointer travel"
     );
   });
 

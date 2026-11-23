@@ -31,6 +31,7 @@ export default class PageShell extends Component {
           this.pageShell.context
           "hidden"
         }}
+        data-context-position={{this.pageShell.contextPosition}}
         data-footer={{this.pageShell.footer}}
         data-navigation={{if
           @sidebarEnabled
@@ -46,6 +47,7 @@ export default class PageShell extends Component {
           this.pageShell.context
           this.pageShell.navigationWidth
           this.pageShell.contextWidth
+          this.pageShell.contextPosition
         }}
       >
         {{yield to="header"}}
