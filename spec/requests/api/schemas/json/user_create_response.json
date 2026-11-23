@@ -10,6 +10,9 @@
     "message": {
       "type": "string"
     },
+    "login_error": {
+      "type": ["string", "null"]
+    },
     "user_id": {
       "type": "integer"
     }
