@@ -22,6 +22,10 @@ module PageObjects
         has_css?("[role='tooltip'] a[href='#{url}'][target='_blank']", text: "Learn more…")
       end
 
+      def click_category_help
+        within(full_modal_selector) { find("[data-name='category'] .form-kit__tooltip").click }
+      end
+
       def open_rule_menu
         within(full_modal_selector) do
           find("[data-name='community_rule'] .form-kit__control-menu-trigger").click
@@ -34,28 +38,22 @@ module PageObjects
 
       def select_rule(ground)
         open_rule_menu
-        find(".form-kit__control-menu-content .btn", text: ground).click
+        find(".dsa-classification-options .btn", text: ground).click
       end
 
-      def has_no_rule_menu?
-        has_no_css?(".form-kit__control-menu-content")
+      def has_no_classification_menu?
+        has_no_css?(".dsa-classification-options")
       end
 
       def has_rule_option?(ground, explanation:)
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
-      def has_readable_rule?(ground)
-        has_css?(".form-kit__control-menu-item .btn", text: ground) do |option|
-          option.evaluate_script("this.scrollHeight <= this.clientHeight")
-        end
-      end
-
       def select_category(category)
         within(full_modal_selector) do
           find("[data-name='category'] .form-kit__control-menu-trigger").click
         end
-        find(".form-kit__control-menu-content .btn", text: category, exact_text: true).click
+        find(".dsa-classification-options .btn", text: category, exact_text: true).click
       end
 
       def continue

@@ -6,27 +6,15 @@
     min-width: var(--form-kit-small-input);
   }
 
-  &-trigger.btn {
+  &-trigger {
     justify-content: space-between;
 
     @include default-input;
     width: auto;
-    max-width: 100%;
-    text-align: start;
-
-    .d-button-label {
-      @include ellipsis;
-      min-width: 0;
-    }
-
-    .form-kit__field.--full & {
-      width: 100%;
-    }
   }
 
   &-content {
     .dropdown-menu {
-      flex: 1;
       min-width: 200px;
     }
 
@@ -34,19 +22,6 @@
       &:hover {
         background: var(--d-hover);
       }
-    }
-
-    &.fk-d-menu .fk-d-menu__inner-content {
-      flex: 1;
-      max-height: 40dvh;
-    }
-
-    .dropdown-menu__item.form-kit__control-menu-item > .btn.btn-flat {
-      height: auto;
-      min-height: var(--d-sidebar-row-height);
-      white-space: normal;
-      text-align: start;
-      overflow-wrap: anywhere;
     }
   }
 
@@ -65,9 +40,4 @@
       }
     }
   }
-}
-
-html:has(.d-modal .form-kit__control-menu-trigger[aria-expanded="true"])
-  .fk-d-menu.form-kit__control-menu-content {
-  z-index: z("modal", "popover");
 }

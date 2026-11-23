@@ -1,9 +1,16 @@
-import { click, find, render, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  triggerKeyEvent,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+import DModal from "discourse/ui-kit/d-modal";
 
 module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -106,12 +113,12 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     assert.dom(".form-kit__control-menu-trigger").hasAttribute("disabled");
   });
 
-  test("@selection", async function (assert) {
+  test("selection mode exposes the current value and matches a full format field", async function (assert) {
     const data = { foo: "item-1" };
 
     await render(
       <template>
-        <Form style="width: 500px;" @data={{data}} as |form|>
+        <Form @data={{data}} as |form|>
           <form.Field
             @format="full"
             @helpText="Suggested value"
@@ -120,7 +127,11 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
             @type="menu"
             as |field|
           >
-            <field.Control @selection="Current item" as |menu|>
+            <field.Control
+              @selection="Current item"
+              @selectionMode={{true}}
+              as |menu|
+            >
               <menu.Item @value="item-1">Current item</menu.Item>
               <menu.Item @value="item-2">Another item</menu.Item>
             </field.Control>
@@ -130,6 +141,7 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     );
 
     const trigger = find(".form-kit__control-menu-trigger");
+    trigger.style.width = "500px";
     const labelIds = [
       find(".form-kit__container-title").id,
       find(".form-kit__control-menu-trigger .d-button-label").id,
@@ -167,24 +179,33 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
       .doesNotHaveAttribute("aria-current", "leaves other options unmarked");
   });
 
-  test("a mobile menu with a hidden field title names its trigger and dialog", async function (assert) {
+  test("a mobile selection menu keeps the containing dialog open", async function (assert) {
     sinon.stub(this.owner.lookup("service:site"), "mobileView").value(true);
+    const closeModal = sinon.spy();
 
     await render(
       <template>
-        <Form as |form|>
-          <form.Field
-            @name="foo"
-            @showTitle={{false}}
-            @title="Foo"
-            @type="menu"
-            as |field|
-          >
-            <field.Control @selection="Current item" as |menu|>
-              <menu.Item @value="item-1">Current item</menu.Item>
-            </field.Control>
-          </form.Field>
-        </Form>
+        <DModal @closeModal={{closeModal}} @inline={{true}}>
+          <:body>
+            <Form as |form|>
+              <form.Field
+                @name="foo"
+                @showTitle={{false}}
+                @title="Foo"
+                @type="menu"
+                as |field|
+              >
+                <field.Control
+                  @selection="Current item"
+                  @selectionMode={{true}}
+                  as |menu|
+                >
+                  <menu.Item @value="item-1">Current item</menu.Item>
+                </field.Control>
+              </form.Field>
+            </Form>
+          </:body>
+        </DModal>
       </template>
     );
 
@@ -208,5 +229,14 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     assert
       .dom(".fk-d-menu-modal .form-kit__control-menu-item .btn")
       .isFocused("moves focus into the mobile menu when it opens");
+
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+
+    assert.dom(".fk-d-menu-modal").doesNotExist("Escape closes the menu");
+    assert.true(
+      closeModal.notCalled,
+      "Escape keeps the containing dialog open"
+    );
+    assert.dom(trigger).isFocused("returns focus to the field");
   });
 });

@@ -146,6 +146,9 @@ describe "Classifying reviewable moderation" do
       "The EU Digital Services Act asks platforms to record why content was moderated.",
     )
 
+    modal.click_category_help
+    expect(modal).to have_no_classification_menu
+
     modal.open_rule_menu
 
     expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
@@ -156,7 +159,7 @@ describe "Classifying reviewable moderation" do
 
     modal.close_rule_menu
 
-    expect(modal).to have_no_rule_menu
+    expect(modal).to have_no_classification_menu
 
     modal.confirm("Continue to editor")
 

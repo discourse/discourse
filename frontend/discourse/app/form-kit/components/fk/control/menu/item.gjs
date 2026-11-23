@@ -4,8 +4,8 @@ import DButton from "discourse/ui-kit/d-button";
 
 export default class FKControlMenuItem extends Component {
   get selected() {
-    const { action: onSelect, field, value } = this.args;
-    return !onSelect && value != null && value === field.value;
+    const { action: onSelect, field, selectionMode, value } = this.args;
+    return selectionMode && !onSelect && value != null && value === field.value;
   }
 
   @action

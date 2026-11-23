@@ -1,17 +1,23 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
-const CategoryHelp = <template>
+function preventFieldActivation(event) {
+  event.preventDefault();
+}
+
+const ClassificationHelp = <template>
   <DTooltip
     class="form-kit__tooltip"
     @icon="circle-question"
-    @interactive={{true}}
+    @interactive={{@interactive}}
+    {{on "click" preventFieldActivation}}
   >
     <:content>
-      <div>{{trustHTML (i18n "dsa_statements.category_help")}}</div>
+      <div>{{trustHTML @content}}</div>
     </:content>
   </DTooltip>
 </template>;
@@ -51,18 +57,23 @@ export default class DsaModerationDetails extends Component {
         @name="community_rule"
         @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.rule"}}
-        @tooltip={{i18n "dsa_statements.rule_help"}}
+        @tooltip={{component
+          ClassificationHelp
+          content=(i18n "dsa_statements.rule_help")
+        }}
         @type="menu"
         @validation="required"
         as |field|
       >
         <field.Control
+          @contentClass="dsa-classification-options"
           @selection={{selectionLabel
             @options.community_rules
             field.value
             "ground"
             (i18n "dsa_statements.rule_prompt")
           }}
+          @selectionMode={{true}}
           as |menu|
         >
           {{#each @options.community_rules key="id" as |rule|}}
@@ -89,18 +100,24 @@ export default class DsaModerationDetails extends Component {
         @name="category"
         @onSet={{@onFieldSet}}
         @title={{i18n "dsa_statements.category"}}
-        @tooltip={{component CategoryHelp}}
+        @tooltip={{component
+          ClassificationHelp
+          content=(i18n "dsa_statements.category_help")
+          interactive=true
+        }}
         @type="menu"
         @validation="required"
         as |field|
       >
         <field.Control
+          @contentClass="dsa-classification-options"
           @selection={{selectionLabel
             @options.categories
             field.value
             "name"
             (i18n "dsa_statements.category_prompt")
           }}
+          @selectionMode={{true}}
           as |menu|
         >
           {{#each @options.categories key="id" as |category|}}

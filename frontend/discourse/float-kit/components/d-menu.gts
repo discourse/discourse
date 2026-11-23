@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { type ComponentLike } from "@glint/template";
 import curryComponent from "ember-curry-component";
-import { modifier as modifierFn } from "ember-modifier";
+import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import {
   type FloatCallback,
@@ -14,7 +14,6 @@ import {
   type MenuOptions,
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
-import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
 import FloatKitNotifyPositioned from "discourse/float-kit/modifiers/notify-positioned";
 import { isTesting } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
@@ -138,7 +137,7 @@ export default class DMenu<Data = unknown> extends Component<
     listeners: true,
   } as Partial<MenuOptions>);
 
-  registerTrigger = modifierFn((domElement: HTMLElement) => {
+  registerTrigger = modifier((domElement: HTMLElement) => {
     this.menuInstance.trigger = domElement;
     this.options.onRegisterApi?.(this.menuInstance);
 
@@ -149,7 +148,7 @@ export default class DMenu<Data = unknown> extends Component<
     };
   });
 
-  registerFloatBody = modifierFn((domElement: HTMLElement) => {
+  registerFloatBody = modifier((domElement: HTMLElement) => {
     this.#body = domElement;
 
     return () => {
@@ -162,7 +161,7 @@ export default class DMenu<Data = unknown> extends Component<
   // one-time options snapshot; this re-runs whenever `@disabled` changes and gates the open.
   // Becoming disabled while open also closes the menu — a disabled control must not keep an
   // already-open overlay live (its content would stay interactive).
-  syncDisabled = modifierFn((_element: HTMLElement, [disabled]: [boolean?]) => {
+  syncDisabled = modifier((_element: HTMLElement, [disabled]: [boolean?]) => {
     const value = disabled ?? false;
     this.menuInstance.disabled = value;
     if (value && this.menuInstance.expanded) {
@@ -323,10 +322,6 @@ export default class DMenu<Data = unknown> extends Component<
           @closeModal={{this.menuInstance.close}}
           @hideHeader={{true}}
           @inline={{(isTesting)}}
-          {{(if
-            this.options.closeOnEscape
-            (modifier FloatKitCloseOnEscape this.menuInstance.close)
-          )}}
           {{FloatKitNotifyPositioned this.menuInstance}}
         >
           <div aria-hidden="true" class="fk-d-menu-modal__grip"></div>
