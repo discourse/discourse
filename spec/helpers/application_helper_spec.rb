@@ -1223,6 +1223,32 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing having no palette" do
+    fab!(:light_palette) { Fabricate(:color_scheme, user_selectable: true) }
+    fab!(:dark_palette) { Fabricate(:color_scheme, user_selectable: true) }
+
+    before do
+      helper.request.cookies["color_scheme_id"] = light_palette.id
+      helper.request.cookies["dark_scheme_id"] = dark_palette.id
+      controller.params[:preview_color_scheme_id] = "none"
+      controller.params[:preview_dark_color_scheme_id] = "none"
+    end
+
+    it "shows core's palette and no dark mode instead of the viewer's own palettes" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      expect(helper.scheme_id).to be_nil
+      expect(helper.dark_scheme_id).to eq(-1)
+    end
+
+    it "is ignored for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect(helper.scheme_id).to eq(light_palette.id)
+      expect(helper.dark_scheme_id).to eq(dark_palette.id)
+    end
+  end
+
   describe "#preview_font_style_tag" do
     before do
       SiteSetting.base_font = "inter"

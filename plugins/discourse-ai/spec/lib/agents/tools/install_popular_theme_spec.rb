@@ -157,7 +157,12 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
       result = approve_as(other_admin, build_reviewable)
 
       expect(result[:preview_url]).to eq(
-        "#{Discourse.base_url}/?preview_theme_id=#{existing_theme.id}",
+        "#{Discourse.base_url}/?" +
+          {
+            preview_color_scheme_id: existing_theme.color_scheme_id,
+            preview_dark_color_scheme_id: "none",
+            preview_theme_id: existing_theme.id,
+          }.to_query,
       )
       authoring = DiscourseAi::Agents::AppearanceAuthoring
       expect(authoring.change_palettes(AppearanceChange.last)).to eq(
