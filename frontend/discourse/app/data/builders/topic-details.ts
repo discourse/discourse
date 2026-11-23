@@ -1,9 +1,10 @@
 import type { RpcRequest } from "discourse/data/builders/helpers";
+import type { WarpResourceId } from "discourse/data/warp-rest-model";
 
 // RPC-style endpoints; not CRUD, so they bypass `helpers.ts`.
 
 export function updateTopicNotificationLevel(
-  topicId: string | number,
+  topicId: WarpResourceId,
   level: number
 ): RpcRequest {
   return {
@@ -14,7 +15,7 @@ export function updateTopicNotificationLevel(
 }
 
 export function removeAllowedTopicGroup(
-  topicId: string | number,
+  topicId: WarpResourceId,
   name: string
 ): RpcRequest {
   return {
@@ -25,7 +26,7 @@ export function removeAllowedTopicGroup(
 }
 
 export function removeAllowedTopicUser(
-  topicId: string | number,
+  topicId: WarpResourceId,
   username: string
 ): RpcRequest {
   return {

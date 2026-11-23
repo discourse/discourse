@@ -97,9 +97,7 @@ export default class WarpRestModel<SaveResult = never> {
   static type: string | null = null;
 
   /** Converts rooted JSON into a JSON:API document. */
-  static normalize:
-    | ((payload: RestPayload | null | undefined) => JsonApiDocument)
-    | null = null;
+  static normalize: Normalizer | null = null;
 
   static builders: WarpRestBuilders | null = null;
 

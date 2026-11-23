@@ -131,8 +131,9 @@ function collectBadgeMetaIncluded(
 // badges ride along in larger payloads (a user summary, a post) that may
 // simply have none, and callers there expect a list. Only a missing payload
 // is `{ data: null }` (no `included` — JSON:API forbids it when data is null).
-export function normalizeBadgesPayload(json: unknown): JsonApiDocument {
-  const payload = json as BadgesPayload | null | undefined;
+export function normalizeBadgesPayload(
+  payload: BadgesPayload | null | undefined
+): JsonApiDocument {
   if (!payload) {
     return { data: null };
   }
@@ -156,8 +157,9 @@ export function normalizeBadgesPayload(json: unknown): JsonApiDocument {
 //   { user_badge: {...}, badges, badge_types, users, topics, granted_bies }      (grant POST)
 //   { user_badges: [...], badges, badge_types, users, topics, granted_bies }     (findByUsername)
 //   { user_badge_info: { user_badges, grant_count, username }, badges, ... }     (findByBadgeId)
-export function normalizeUserBadgesPayload(json: unknown): JsonApiDocument {
-  const payload = json as UserBadgesPayload | null | undefined;
+export function normalizeUserBadgesPayload(
+  payload: UserBadgesPayload | null | undefined
+): JsonApiDocument {
   if (!payload) {
     return { data: null };
   }
@@ -216,9 +218,7 @@ export function normalizeUserBadgesPayload(json: unknown): JsonApiDocument {
 // than an empty collection — `{ data: [] }` fails the cache validator.
 function recordOnly(normalize: Normalizer, rootKey: string): Normalizer {
   return (payload) =>
-    (payload as Record<string, unknown> | null | undefined)?.[rootKey]
-      ? normalize(payload)
-      : { data: null };
+    payload?.[rootKey] ? normalize(payload) : { data: null };
 }
 
 export const normalizeBadgeRecordPayload = recordOnly(

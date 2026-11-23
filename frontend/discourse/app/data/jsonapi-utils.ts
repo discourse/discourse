@@ -86,7 +86,7 @@ export function maybeRelate(
   includedIds: Set<string>,
   type: string,
   id: Value | undefined
-): void {
+) {
   if (id == null || !includedIds.has(`${type}:${id}`)) {
     return;
   }

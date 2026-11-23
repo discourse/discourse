@@ -9,7 +9,10 @@ import {
   normalizeBadgeRecordPayload,
   normalizeBadgesPayload,
 } from "discourse/data/normalize";
-import type WarpRestModel from "discourse/data/warp-rest-model";
+import type {
+  default as WarpRestModel,
+  WarpResourceId,
+} from "discourse/data/warp-rest-model";
 import { applyQueryParams } from "discourse/lib/url";
 
 export function findBadges(opts: { onlyListable?: boolean } = {}) {
@@ -19,7 +22,7 @@ export function findBadges(opts: { onlyListable?: boolean } = {}) {
   return readMany(url, normalizeBadgesPayload);
 }
 
-export function findBadge(id: string | number) {
+export function findBadge(id: WarpResourceId) {
   return readOne(
     `/badges/${encodeURIComponent(id)}`,
     normalizeBadgeRecordPayload
@@ -33,8 +36,8 @@ export function saveBadge(
   if (badge.id != null) {
     return updateOne(
       "badge",
-      badge.id as string | number,
-      `/admin/badges/${encodeURIComponent(badge.id as string | number)}`,
+      badge.id,
+      `/admin/badges/${encodeURIComponent(badge.id)}`,
       data,
       normalizeBadgeRecordPayload
     );
@@ -42,6 +45,6 @@ export function saveBadge(
   return createOne(`/admin/badges`, data, normalizeBadgeRecordPayload);
 }
 
-export function deleteBadge(id: string | number) {
+export function deleteBadge(id: WarpResourceId) {
   return deleteOne("badge", id, `/admin/badges/${encodeURIComponent(id)}`);
 }

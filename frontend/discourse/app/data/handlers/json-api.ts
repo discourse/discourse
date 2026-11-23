@@ -7,7 +7,7 @@ export const JSON_API_VERSION = "2026-08-31";
 
 // Matched by URL, not by a request option: paging links (`document.next()`)
 // issue a bare `{ url, method }` request.
-function isJsonApiUrl(url: string): boolean {
+function isJsonApiUrl(url: string) {
   return withoutPrefix(
     new URL(url, window.location.origin).pathname
   ).startsWith("/api/");

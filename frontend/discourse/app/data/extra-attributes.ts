@@ -16,7 +16,7 @@ export function recordExtraAttributes(
   type: string,
   id: string,
   attributes: Record<string, unknown>
-): void {
+) {
   if (Object.keys(attributes).length === 0) {
     return;
   }
@@ -31,10 +31,7 @@ export function recordExtraAttributes(
   Object.assign(stored, attributes);
 }
 
-export function extraAttributesFor(
-  type: string,
-  id: string
-): Record<string, unknown> | undefined {
+export function extraAttributesFor(type: string, id: string) {
   return registry.get(keyFor(type, id));
 }
 
@@ -45,7 +42,7 @@ export function extraAttributesFor(
 export function exposeExtraAttributes(
   target: object,
   attributes: Record<string, unknown>
-): void {
+) {
   for (const name of Object.keys(attributes)) {
     if (name in target) {
       continue;
@@ -63,6 +60,6 @@ export function exposeExtraAttributes(
 }
 
 // USE ONLY FOR TESTING PURPOSES.
-export function clearExtraAttributes(): void {
+export function clearExtraAttributes() {
   registry.clear();
 }

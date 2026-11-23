@@ -1,4 +1,8 @@
-import type { Normalizer, WarpRequest } from "discourse/data/warp-rest-model";
+import type {
+  Normalizer,
+  WarpRequest,
+  WarpResourceId,
+} from "discourse/data/warp-rest-model";
 
 /** An RPC-style request; the cache applies no operation for it. */
 export type RpcRequest = Omit<WarpRequest, "op" | "data">;
@@ -30,7 +34,7 @@ export function createOne(
 
 export function updateOne(
   type: string,
-  id: string | number,
+  id: WarpResourceId,
   url: string,
   body: unknown,
   normalize: Normalizer
@@ -46,7 +50,7 @@ export function updateOne(
 
 export function deleteOne(
   type: string,
-  id: string | number,
+  id: WarpResourceId,
   url: string
 ): WarpRequest {
   return {

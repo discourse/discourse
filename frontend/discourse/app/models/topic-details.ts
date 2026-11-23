@@ -273,7 +273,7 @@ export default class TopicDetails extends RestCompatModel {
     const id = this.#effectiveTopicId();
     return store
       .request(
-        updateTopicNotificationLevel(id, level) as Parameters<
+        updateTopicNotificationLevel(id!, level) as Parameters<
           WarpStore["request"]
         >[0]
       )
@@ -289,7 +289,7 @@ export default class TopicDetails extends RestCompatModel {
     const store = warpStore();
     await store.request(
       removeAllowedTopicGroup(
-        this.#effectiveTopicId(),
+        this.#effectiveTopicId()!,
         group.name
       ) as Parameters<WarpStore["request"]>[0]
     );
@@ -302,7 +302,7 @@ export default class TopicDetails extends RestCompatModel {
     const username = user.username ?? (user as User).get?.("username");
     const store = warpStore();
     await store.request(
-      removeAllowedTopicUser(this.#effectiveTopicId(), username) as Parameters<
+      removeAllowedTopicUser(this.#effectiveTopicId()!, username) as Parameters<
         WarpStore["request"]
       >[0]
     );
@@ -313,11 +313,11 @@ export default class TopicDetails extends RestCompatModel {
 
   // Topic's `_details` field initializer runs before Topic.id is assigned, so
   // back-fill lazily from `this.topic.id` on first access.
-  #effectiveTopicId(): string {
+  #effectiveTopicId() {
     if (this.#topicId == null && this.topic?.id != null) {
       this.#topicId = String(this.topic.id);
     }
-    return this.#topicId!;
+    return this.#topicId;
   }
 }
 
