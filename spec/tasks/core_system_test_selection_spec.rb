@@ -100,7 +100,18 @@ RSpec.describe "Core system test selection in shadow" do
     write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
-    report = selection(dependencies: { controller => [sidebar], helper => [about] }, base:)
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+          helper => [about],
+        },
+        base:,
+        boot_lines: {
+          controller => [1, 2, 3],
+          helper => [1, 2, 3],
+        },
+      )
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, new_spec)
     expect(report.fetch("main_drift")).to contain_exactly(controller, new_spec)
@@ -114,7 +125,16 @@ RSpec.describe "Core system test selection in shadow" do
     write(controller, controller_source)
     commit("pull request reverted the controller")
 
-    report = selection(dependencies: { controller => [sidebar] }, base:)
+    report =
+      selection(
+        dependencies: {
+          controller => [sidebar],
+        },
+        base:,
+        boot_lines: {
+          controller => [1, 2, 3],
+        },
+      )
 
     expect(report.fetch("selected_files")).to eq([sidebar])
     expect(report.fetch("full_suite_fallback")).to be_nil
@@ -126,7 +146,8 @@ RSpec.describe "Core system test selection in shadow" do
     write(helper, helper_source.sub(":before", ":after"))
     commit("pull request")
 
-    report = selection(dependencies: { helper => [about] }, base:)
+    report =
+      selection(dependencies: { helper => [about] }, base:, boot_lines: { helper => [1, 2, 3] })
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("unmapped_input")
@@ -142,6 +163,9 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base: @map_sha,
+        boot_lines: {
+          controller => [1, 2, 3],
+        },
         unmapped_browser_specs: [about],
       )
 
@@ -213,6 +237,16 @@ RSpec.describe "Core system test selection in shadow" do
   it "uses the full suite when a declaration changes in a lazily loaded helper" do
     write(helper, helper_source.sub(":original", ":updated"))
     commit("pull request changes a lazy declaration")
+
+    report = selection(dependencies: { helper => [about] }, base: @map_sha)
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("shared_input")
+  end
+
+  it "uses the full suite when a method changes without coverage from every worker's boot" do
+    write(helper, helper_source.sub(":before", ":updated"))
+    commit("pull request changes a helper body")
 
     report = selection(dependencies: { helper => [about] }, base: @map_sha)
 

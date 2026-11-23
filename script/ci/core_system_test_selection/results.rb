@@ -5,7 +5,7 @@ require_relative "../core_system_test_selection"
 
 class CoreSystemResults
   def initialize(directory)
-    @workers = Set.new
+    @workers = {}
     @incomplete_journals = false
     @results =
       Dir[File.join(directory, "examples-*.jsonl")]
@@ -15,7 +15,8 @@ class CoreSystemResults
             @incomplete_journals = true
             next
           end
-          @workers.add(File.basename(file, ".jsonl").delete_prefix("examples-"))
+          worker = File.basename(file, ".jsonl").delete_prefix("examples-")
+          @workers[worker] = examples.any?
           examples.each do |example|
             id = example.fetch("id")
             previous = results[id]
@@ -40,7 +41,7 @@ class CoreSystemResults
     attempts = passed.to_h { |example| [example.fetch("id"), example.fetch("pid")] }
     File.write(File.join(directory, "active-attempts.json"), JSON.generate(attempts))
     passed_by_worker = passed.group_by { |example| example.fetch("pid") }
-    File.write(File.join(directory, "recorded-workers.json"), JSON.generate(@workers.to_a))
+    File.write(File.join(directory, "recorded-workers.json"), JSON.generate(@workers))
     File.write(
       File.join(directory, "passed-specs-by-worker.json"),
       JSON.generate(

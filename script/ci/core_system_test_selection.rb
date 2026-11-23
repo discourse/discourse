@@ -192,13 +192,12 @@ module CoreSystemTestSelection
 
       shared = boot.include?(path) || DEPENDENCY_FILES.include?(File.basename(path))
       if dependencies.key?(path) && path.end_with?(".rb")
-        known_boot_lines = !boot.include?(path) || boot_lines.key?(path)
         shared =
-          !path.start_with?("app/", "lib/") || !known_boot_lines ||
+          !boot.include?(path) || !boot_lines.key?(path) ||
             !runtime_body_change?(
               path:,
               revisions: [revision, base, tested],
-              boot_lines: boot_lines.fetch(path, []),
+              boot_lines: boot_lines.fetch(path),
             )
       end
       return decision(files:, reason: "shared_input", drift:, pr:, revision:) if shared

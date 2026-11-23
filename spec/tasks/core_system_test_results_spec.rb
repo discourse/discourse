@@ -160,4 +160,69 @@ RSpec.describe "Core system test results" do
     expect(report.fetch("measurement_complete")).to eq(false)
     expect(report.fetch("contains_failed_file")).to be_nil
   end
+
+  it "publishes boot lines only for files loaded before every worker ran its specs" do
+    FileUtils.mkdir_p(File.join(@directory, File.dirname(spec_file)))
+    File.write(File.join(@directory, spec_file), "")
+    system("git", "init", "-q", chdir: @directory, exception: true)
+    system("git", "add", spec_file, chdir: @directory, exception: true)
+    system(
+      "git",
+      "-c",
+      "user.email=ci@ci.invalid",
+      "-c",
+      "user.name=Discourse CI",
+      "commit",
+      "-qm",
+      "fixture",
+      chdir: @directory,
+      exception: true,
+    )
+    controller = "app/controllers/tags_controller.rb"
+    helper = "lib/registration.rb"
+    attempts = { example_id => 123, "./#{spec_file}[1:2]" => 456 }
+    workers = { 123 => { controller => [1], helper => [2] }, 456 => { controller => [1, 4] } }
+    artifacts = {
+      "active-attempts.json" => attempts,
+      "passed-specs-by-worker.json" => {
+        123 => [spec_file],
+        456 => [spec_file],
+      },
+      "recorded-workers.json" => {
+        123 => true,
+        456 => true,
+      },
+      "browser.json" => {
+        observed_example_ids: attempts.keys,
+        tests_by_source: {
+        },
+        unmapped_browser_specs: [],
+        missing_asset_maps: [],
+      },
+    }
+    workers.each do |worker, lines|
+      artifacts["ruby-#{worker}.json"] = {
+        boot_lines: lines,
+        boot_sources: ["config/application.rb", *lines.keys],
+        dependencies: {
+          spec_file => [controller, helper],
+        },
+      }
+    end
+    artifacts.each { |file, object| File.write(File.join(@directory, file), JSON.generate(object)) }
+
+    _, stderr, status =
+      Open3.capture3(
+        RbConfig.ruby,
+        File.join(scripts, "build_map.rb"),
+        ".",
+        "browser.json",
+        "map.json",
+        chdir: @directory,
+      )
+    raise stderr unless status.success?
+
+    map = JSON.parse(File.read(File.join(@directory, "map.json")))
+    expect(map.fetch("boot_lines")).to eq(controller => [1, 4])
+  end
 end

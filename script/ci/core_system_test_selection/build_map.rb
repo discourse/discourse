@@ -21,20 +21,28 @@ dependencies = browser.fetch("tests_by_source").transform_values(&:to_set)
 unmapped_browser_specs = browser.fetch("unmapped_browser_specs")
 boot = Set.new
 boot_lines = Hash.new { |hash, source| hash[source] = Set.new }
+loaded_in_all_workers = nil
 expected_by_worker = JSON.parse(File.read(File.join(directory, "passed-specs-by-worker.json")))
-recorded_workers = JSON.parse(File.read(File.join(directory, "recorded-workers.json"))).to_set
+recorded_workers = JSON.parse(File.read(File.join(directory, "recorded-workers.json")))
 ruby_reports = Dir[File.join(directory, "ruby-*.json")]
 raise "No Ruby coverage" if ruby_reports.empty?
 ruby_reports.each do |path|
   result = JSON.parse(File.read(path))
   worker = File.basename(path, ".json").delete_prefix("ruby-")
-  raise "Missing test journal for Ruby worker #{worker}" unless recorded_workers.member?(worker)
+  raise "Missing test journal for Ruby worker #{worker}" unless recorded_workers.key?(worker)
+  ran_examples = recorded_workers.delete(worker)
   ruby_dependencies = result.fetch("dependencies")
   missing = Array(expected_by_worker.delete(worker)) - ruby_dependencies.keys
   raise "Ruby coverage missed specs on worker #{worker}: #{missing.join(", ")}" if missing.any?
 
   boot.merge(result.fetch("boot_sources"))
-  result.fetch("boot_lines").each { |source, lines| boot_lines[source].merge(lines) }
+  worker_boot_lines = result.fetch("boot_lines")
+  if ran_examples
+    worker_sources = worker_boot_lines.keys.to_set
+    loaded_in_all_workers =
+      loaded_in_all_workers ? loaded_in_all_workers & worker_sources : worker_sources
+  end
+  worker_boot_lines.each { |source, lines| boot_lines[source].merge(lines) }
   ruby_dependencies.each do |spec, sources|
     raise "Unexpected spec #{spec}" unless files.member?(spec)
     sources.each { |source| (dependencies[source] ||= Set.new).add(spec) }
@@ -43,6 +51,7 @@ end
 if expected_by_worker.any?
   raise "Ruby coverage missed workers: #{expected_by_worker.keys.join(", ")}"
 end
+raise "Ruby coverage missed workers that ran examples" if recorded_workers.value?(true)
 raise "Ruby coverage missed application boot" unless boot.member?("config/application.rb")
 
 payload = {
@@ -50,7 +59,10 @@ payload = {
   revision: CoreSystemTestSelection.git("rev-parse", "HEAD").strip,
   spec_files: files,
   boot_sources: boot.to_a.sort,
-  boot_lines: boot_lines.transform_values { |lines| lines.to_a.sort },
+  boot_lines:
+    boot_lines
+      .select { |source, _| loaded_in_all_workers&.include?(source) }
+      .transform_values { |lines| lines.to_a.sort },
   tests_by_source: dependencies.transform_values { |specs| specs.to_a.sort },
   unmapped_browser_specs:,
   build_seconds: (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started).round(3),
