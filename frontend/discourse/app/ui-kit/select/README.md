@@ -513,7 +513,7 @@ the layer below, so a function can decorate the default or hand back to it.
 rendered, an attribute (`placeholder`, `aria-label`, `aria-describedby`) is omitted, and an
 announcement is skipped. Nullish means "not set at this layer". Two exceptions:
 
-- `noResults: ""` drops the text and its role, but keeps the element that records the result count.
+- `noResults: ""` drops the text, but keeps the element that records the result count.
 - **Required texts** name a control or a group, so they can't be empty: `ariaLabel`, `clear`,
   `clearAll`, `retry`, `removeSelected`, `chipsLabel`, `stripLabel`, `footerLabel`, `labelWithValue`,
   `labelWithCount`, `unresolvedValue`, `createOption`, `removeHint`, `lockedHint` and `loadError`, plus

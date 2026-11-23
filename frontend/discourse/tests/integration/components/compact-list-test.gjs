@@ -7,6 +7,7 @@ import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -195,6 +196,29 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
     assert
       .dom(".d-select [role='combobox']")
       .isDisabled("the picker follows the setting's disabled state");
+  });
+
+  test("the control names the query that matched no choice, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const setting = { setting: "foo_bar", choices: ["a", "b"] };
+    const changeValue = () => {};
+
+    await render(
+      <template>
+        <CompactList
+          @allowAny={{false}}
+          @changeValueCallback={{changeValue}}
+          @label="Foo bar"
+          @setting={{setting}}
+          @value="a"
+        />
+      </template>
+    );
+
+    await dSelect(".d-select").search("zzz");
+    assert
+      .dom(".d-select__empty")
+      .hasText(i18n("d_select.no_results_for", { query: "zzz" }));
   });
 
   test("the control draws no colour squares, whatever the setting is named", async function (assert) {

@@ -116,7 +116,7 @@ export default class SelectStringList extends Component {
             {{i18n "admin.site_settings.compact_list.empty"}}
           {{/if}}
         {{else}}
-          {{renderSelectText config "noResults"}}
+          {{renderSelectText config "noResults" (hash query=state.query)}}
         {{/if}}
       </:empty>
       <:footer as |state config|>
