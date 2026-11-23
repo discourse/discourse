@@ -306,7 +306,8 @@ module DiscourseAi
 
       AI_STREAM_CONVERSATION_UNIQUE_ID = "ai-stream-conversation-unique-id"
       MAX_STREAM_REPLY_CUSTOM_TOOLS = 20
-      MAX_STREAM_REPLY_TOOL_RESULTS = 20
+      MAX_STREAM_REPLY_TOOL_RESULTS =
+        DiscourseAi::AiBot::StreamReplyCustomToolsSession::MAX_TOOL_RESULTS
       MAX_STREAM_REPLY_CUSTOM_TOOL_DEFINITION_BYTES = 10_000
       MAX_STREAM_REPLY_TOOL_RESULT_CONTENT_BYTES = 100 * 1024
 
@@ -412,8 +413,8 @@ module DiscourseAi
 
         raw_results.map do |tool_result|
           hash = normalize_hash_param(tool_result, key: :tool_results)
-          id = hash["tool_call_id"].presence || hash["id"].presence
-          if id.blank?
+          id = DiscourseAi::AiBot::StreamReplyCustomToolsSession.tool_result_id(hash)
+          if id.nil?
             raise ArgumentError,
                   I18n.t("discourse_ai.errors.invalid_tool_results", details: "tool_call_id")
           end
@@ -438,7 +439,7 @@ module DiscourseAi
                   )
           end
 
-          { "tool_call_id" => id.to_s, "content" => content }
+          { "tool_call_id" => id, "content" => content }
         rescue JSON::GeneratorError
           raise ArgumentError,
                 I18n.t("discourse_ai.errors.invalid_tool_results", details: "content")

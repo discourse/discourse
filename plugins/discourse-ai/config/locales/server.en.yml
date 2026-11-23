@@ -1736,6 +1736,7 @@ en:
       no_pending_tool_calls: There are no pending tool calls for this resume token.
       missing_tool_results: "Missing tool results for tool_call_id(s): %{ids}"
       unexpected_tool_results: "Unexpected tool results for tool_call_id(s): %{ids}"
+      duplicate_tool_results: "Duplicate tool results for tool_call_id(s): %{ids}"
       invalid_tool_result_content: "The tool result for %{id} must include content"
       tool_result_content_too_large: "Each tool result content payload must be at most %{max} bytes."
       stream_reply_max_resume_rounds_reached: Reached maximum custom tool resume rounds (%{max}).

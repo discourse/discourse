@@ -55,6 +55,109 @@ RSpec.describe Jobs::CreateAiReply do
       )
     end
 
+    it "summarizes earlier PM turns and preserves the latest request when it repeats an earlier one" do
+      gpt_35_bot.update!(max_prompt_tokens: 8000, max_output_tokens: 1000)
+      author = Fabricate(:user, refresh_auto_groups: true)
+      pm_topic = Fabricate(:private_message_topic, user: author, recipient: agent.user)
+      repeated_request = "Please continue."
+      Fabricate(:post, topic: pm_topic, user: author, raw: repeated_request)
+      first_answer = Fabricate(:post, topic: pm_topic, user: agent.user, raw: "Alpha. " * 2300)
+      follow_up = Fabricate(:post, topic: pm_topic, user: author, raw: "More detail please.")
+      second_answer = Fabricate(:post, topic: pm_topic, user: agent.user, raw: "Bravo. " * 2300)
+      latest_request = Fabricate(:post, topic: pm_topic, user: author, raw: repeated_request)
+
+      canned_response = "Brief summary or answer."
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        Array.new(12, canned_response),
+      ) do |_, _, prompts, options|
+        job.execute(
+          post_id: latest_request.id,
+          bot_user_id: agent.user_id,
+          agent_id: agent.id,
+          llm_model_id: gpt_35_bot.id,
+          authorization_user_id: author.id,
+        )
+
+        reply = pm_topic.posts.order(:post_number).last
+        expect(reply.raw).to eq(canned_response)
+        expect(reply.user).to eq(agent.user)
+
+        checkpoint = "<compressed_context>#{canned_response}</compressed_context>"
+        expect(prompts.last.messages.drop(1)).to match(
+          [
+            a_hash_including(type: :user, content: checkpoint),
+            a_hash_including(type: :model),
+            a_hash_including(type: :user, content: latest_request.raw),
+          ],
+        )
+
+        fragments =
+          prompts
+            .zip(options)
+            .filter_map do |prompt, option|
+              next if option[:feature_name] != "context_compression"
+
+              JSON.parse(prompt.messages.last[:content].lines.last).fetch("evidence_fragment")
+            end
+        evidence = JSON.parse(fragments.join)
+        expect(evidence.map { |message| message.values_at("type", "content") }).to eq(
+          [
+            ["user", repeated_request],
+            ["model", first_answer.raw],
+            ["user", follow_up.raw],
+            ["model", second_answer.raw],
+          ],
+        )
+      end
+    end
+
+    it "answers a PM after dropping a system message from stored conversation history" do
+      author = Fabricate(:user, refresh_auto_groups: true)
+      pm_topic = Fabricate(:private_message_topic, user: author, recipient: agent.user)
+      opening = Fabricate(:post, topic: pm_topic, user: author, raw: "Help me plan the garden.")
+      historical_reply =
+        Fabricate(:post, topic: pm_topic, user: agent.user, raw: "Mint grows well in pots.")
+      stored_user_message = "I have a shady balcony."
+      private_sentinel = "PRIVATE-PM-HISTORY-QUARTZ-731"
+      PostCustomPrompt.create!(
+        post: historical_reply,
+        custom_prompt: [
+          [stored_user_message, author.username, "user"],
+          [private_sentinel, nil, "system"],
+          [historical_reply.raw, agent.user.username, "model"],
+        ],
+      )
+      latest_request =
+        Fabricate(:post, topic: pm_topic, user: author, raw: "What else can I grow there?")
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([expected_response]) do |canned|
+        job.execute(
+          post_id: latest_request.id,
+          bot_user_id: agent.user_id,
+          agent_id: agent.id,
+          llm_model_id: gpt_35_bot.id,
+          authorization_user_id: author.id,
+        )
+
+        reply = pm_topic.posts.order(:post_number).last
+        expect(reply).to have_attributes(user: agent.user, raw: expected_response)
+        expect(canned.completions).to eq(1)
+        messages = canned.prompt_messages
+        expect(messages.map { |message| message.values_at(:type, :content) }).to match(
+          [
+            [:system, agent.system_prompt],
+            [:user, a_string_including(opening.raw, stored_user_message)],
+            [:model, historical_reply.raw],
+            [:user, latest_request.raw],
+          ],
+        )
+        expect(messages.to_json).not_to include(private_sentinel)
+        expect(
+          Array(reply.post_custom_prompt&.custom_prompt).map { |entry| entry[2] },
+        ).not_to include("tool_call", "tool")
+      end
+    end
+
     it "fails visibly when a member-selected model is no longer selectable at execution" do
       SiteSetting.ai_bot_enabled_llms = ""
 
