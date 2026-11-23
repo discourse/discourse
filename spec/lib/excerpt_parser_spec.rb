@@ -344,4 +344,9 @@ RSpec.describe ExcerptParser do
       expect(ExcerptParser.to_plain_text("<span></span>")).to be_nil
     end
   end
+
+  it "handles nil options in ExcerptParser.new without raising" do
+    parser = ExcerptParser.new(100, nil)
+    expect(parser.excerpt).to eq("")
+  end
 end
