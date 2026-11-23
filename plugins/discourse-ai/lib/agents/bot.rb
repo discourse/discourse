@@ -3,6 +3,8 @@
 module DiscourseAi
   module Agents
     class Bot
+      include Completions::PromptHints
+
       BOT_NOT_FOUND = Class.new(StandardError)
 
       DEFAULT_MAX_TURN_TOKENS = 500_000
@@ -20,46 +22,6 @@ module DiscourseAi
         subagent_parent_agent_id
         subagent_agent_id
         subagent_depth
-      ].freeze
-
-      TOKEN_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
-        [The turn work allowance has been reached — no further tool calls are available.]
-        Answer directly from what you have; do not spend tokens deliberating at length.
-        Provide your final response now using the information already gathered.
-        Do not describe additional tool calls or future work as though you will perform them.
-        If the task is not fully complete, clearly state what was accomplished
-        and what still needs to be done so the user can continue in a follow-up message.
-      TEXT
-      TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT = <<~TEXT.strip
-        [The tool invocation limit has been reached — no further tool calls are available.]
-        Answer directly from what you have; do not spend tokens deliberating at length.
-        Provide your final response now using the information already gathered.
-        If the evidence is insufficient, say so instead of attempting another tool call.
-      TEXT
-      COMPLETION_LIMIT_FINAL_ANSWER_HINT = <<~TEXT.strip
-        [The shared completion safety limit has been reached — no further tool calls are available.]
-        Answer directly from what you have; do not spend tokens deliberating at length.
-        Provide one final response using the information already gathered.
-      TEXT
-      MCP_FAILURE_FINAL_ANSWER_HINT = <<~TEXT.strip
-        [Repeated MCP tool failures have stopped further tool calls for this turn.]
-        Provide a concise final answer explaining the actual error and what remains undone.
-        Do not claim success without successful tool evidence. Do not repeat or promise more calls.
-      TEXT
-      LEGACY_BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
-        [Turn budget exhausted — you cannot call any more tools.]
-        Answer directly from what you have; do not spend tokens deliberating at length.
-        Provide your final response using the information already gathered.
-        If the task is not fully complete, clearly state what was accomplished
-        and what still needs to be done so the user can continue in a follow-up message.
-      TEXT
-      BUDGET_EXHAUSTED_HINT = TOKEN_BUDGET_FINAL_ANSWER_HINT
-      TRANSIENT_TOKEN_BUDGET_HINTS = [
-        TOKEN_BUDGET_FINAL_ANSWER_HINT,
-        TOOL_INVOCATION_BUDGET_FINAL_ANSWER_HINT,
-        COMPLETION_LIMIT_FINAL_ANSWER_HINT,
-        MCP_FAILURE_FINAL_ANSWER_HINT,
-        LEGACY_BUDGET_EXHAUSTED_HINT,
       ].freeze
 
       def self.inject_tool_invocation_budget_final_answer_hint(prompt)
@@ -153,9 +115,7 @@ module DiscourseAi
         if force_tool && agent.forced_tool_count > 0 && !ignore_forced_tool_count
           user_turns =
             context.user_turn_count ||
-              prompt.messages.count do |message|
-                message[:type] == :user && !transient_prompt_hint?(message)
-              end
+              prompt.messages.count { |message| Completions::Prompt.user_request?(message) }
           force_tool = false if user_turns > agent.forced_tool_count
         end
 
@@ -199,7 +159,7 @@ module DiscourseAi
 
         context.user_turn_count ||=
           context.messages.count do |message|
-            message[:type] == :user && !transient_prompt_hint?(message) &&
+            Completions::Prompt.user_request?(message) &&
               !DiscourseAi::Completions::PromptMessagesBuilder.message_text(message).start_with?(
                 COMPRESSED_CONTEXT_PREFIX,
               )
@@ -210,14 +170,10 @@ module DiscourseAi
             current_llm,
             threshold: agent.class.compression_threshold,
           )
-        protected_user_message =
-          if context.protected_message_count
-            prompt.messages[-context.protected_message_count]
-          else
-            prompt.messages.reverse.find do |message|
-              message[:type] == :user && !transient_prompt_hint?(message)
-            end
-          end
+        protected_offset =
+          prompt.original_message_count -
+            context.protected_message_count if context.protected_message_count
+        protected_user_index = prompt.normalized_user_request_index(protected_offset)
         defer_forced_tool =
           agent.defer_forced_tool_for_vision? &&
             context.runtime_tools&.include?(Tools::ViewImage) &&
@@ -354,11 +310,11 @@ module DiscourseAi
               cancel_manager: context.cancel_manager,
               subagent_execution_state: context.subagent_execution_state,
               feature_context: llm_kwargs[:feature_context],
-              protected_user_index: prompt.messages.index(protected_user_message),
+              protected_user_index:,
               **capacity_options,
             )
           if compression_result == :compressed
-            protected_user_message = prompt.messages[preparation.protected_user_index]
+            protected_user_index = preparation.protected_user_index
             raw_context.replace(messages_to_raw_context(prompt.messages.drop(1)))
           end
           break if context.cancel_manager.cancelled?
@@ -895,7 +851,9 @@ module DiscourseAi
             when :tool
               [message[:content], message[:id], "tool", message[:name]]
             when :user
-              [message[:content], message[:id], "user"] if !transient_prompt_hint?(message)
+              unless Completions::Prompt.transient_user?(message)
+                [message[:content], message[:id], "user"]
+              end
             when :model
               [
                 message[:content],
@@ -908,10 +866,6 @@ module DiscourseAi
             end
           end
           .compact
-      end
-
-      def transient_prompt_hint?(message)
-        message[:type] == :user && TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content])
       end
 
       def thinking_context(message)
