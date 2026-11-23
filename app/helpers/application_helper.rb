@@ -698,6 +698,8 @@ module ApplicationHelper
 
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
+    # previewing a theme without a light palette of its own shows core's
+    return @scheme_id = nil if preview_scheme_id == NO_PALETTE
     return preview_scheme_id if preview_scheme_id
 
     if user_scheme_id
@@ -726,6 +728,8 @@ module ApplicationHelper
   end
 
   def dark_scheme_id
+    # previewing a theme without a dark palette shows no dark mode
+    return -1 if preview_dark_scheme_id == NO_PALETTE
     return preview_dark_scheme_id if preview_dark_scheme_id
 
     if user_dark_scheme_id
@@ -741,7 +745,11 @@ module ApplicationHelper
   end
 
   # Staff can try out palettes, including ones no theme uses yet, by passing
-  # them in the URL, the same way `preview_theme_id` previews a theme.
+  # them in the URL, the same way `preview_theme_id` previews a theme. "none"
+  # previews having no palette for that mode, so the viewer's own palette
+  # choice doesn't stand in for one.
+  NO_PALETTE = "none"
+
   def preview_scheme_id
     return @preview_scheme_id if defined?(@preview_scheme_id)
     @preview_scheme_id = previewed_color_scheme_id(:preview_color_scheme_id)
@@ -754,6 +762,7 @@ module ApplicationHelper
 
   def previewed_color_scheme_id(param_name)
     return if params[param_name].blank? || !guardian.is_staff?
+    return NO_PALETTE if params[param_name] == NO_PALETTE
     ColorScheme.valid_id(params[param_name])
   end
 

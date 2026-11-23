@@ -166,6 +166,10 @@ module DiscourseAi
           I18n.t("discourse_ai.ai_bot.chat_tool_approval.question")
         end
 
+        def parameters_for_approval
+          parameters
+        end
+
         def approval_parameters
           parameters.filter_map do |key, value|
             next if key.to_s == "reason"
