@@ -41,8 +41,16 @@ module DiscourseAi
 
       # Returns why the user can't change the site's appearance, or nil when
       # they can. A new theme comes with new palettes, and styles come with a
-      # new theme.
-      def self.denial(user:, phase:, new_theme: false, new_palettes: false, styles: false)
+      # new theme, or with a new component (new_component) for the theme the
+      # site keeps, which only brings palettes when new_palettes says so.
+      def self.denial(
+        user:,
+        phase:,
+        new_theme: false,
+        new_palettes: false,
+        styles: false,
+        new_component: false
+      )
         return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
 
         access = access(user:, phase:)
@@ -51,8 +59,9 @@ module DiscourseAi
         end
 
         refusal = style_denial(user:, phase:) if styles
-        new_theme ||= styles
-        refusal ||= theme_denial(user:, phase:) if new_theme
+        new_theme ||= styles && !new_component
+        # a component is a theme record too, so it follows the same limits
+        refusal ||= theme_denial(user:, phase:) if new_theme || new_component
         refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
       end
 

@@ -86,7 +86,8 @@ module DiscourseAi
             AppearanceAuthoring.denial(
               user: context.user,
               phase: execution_phase,
-              new_theme: theme_draft? || component_draft?,
+              new_theme: theme_draft?,
+              new_component: component_draft?,
               new_palettes:
                 valid_draft? &&
                   (

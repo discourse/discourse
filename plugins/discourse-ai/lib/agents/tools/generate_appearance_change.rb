@@ -98,6 +98,8 @@ module DiscourseAi
               phase: :generation,
               new_theme: new_theme?,
               styles: style_request.present?,
+              new_component: horizon_parent.present?,
+              new_palettes: horizon_parent.present? && colors_requested?,
             )
           return error_response(refusal) if refusal
 
@@ -118,8 +120,9 @@ module DiscourseAi
           site_settings = fonts.reverse_merge(website_fonts(design))
 
           reason = AppearanceAuthoring.palette_denial(user: context.user, phase: :generation)
-          # styles for Horizon don't need new palettes unless colors were asked for
-          if theme && reason && !(horizon_parent && brand.nil?)
+          # styles for Horizon only bring palettes when colors were asked for,
+          # which the access check above already allowed
+          if theme && reason && !horizon_parent
             return(
               existing_palettes_draft(
                 theme,
@@ -216,6 +219,12 @@ module DiscourseAi
         def new_theme?
           return false if horizon_parent
           explicit_new_theme? || style_request.present?
+        end
+
+        # Whether new colors were asked for, directly or from a website.
+        def colors_requested?
+          COLOR_PARAMETERS.any? { parameters[it].to_s.strip.present? } ||
+            parameters[:website_url].to_s.strip.present?
         end
 
         def explicit_new_theme?

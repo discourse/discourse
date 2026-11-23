@@ -115,6 +115,22 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     expect(change.theme.reload.enabled).to eq(false)
   end
 
+  it "saves a component without palettes on a site that can't create palettes" do
+    plugin = Plugin::Instance.new
+    modifier =
+      proc do |decision, request|
+        decision.deny!("No new palettes here.") if request.feature == :palette_authoring
+        decision
+      end
+    plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+    expect(
+      approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: token),
+    ).to include(status: "success")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_feature_access, &modifier)
+  end
+
   it "previews a new version without the version it replaces" do
     approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: token)
     first = AppearanceChange.last

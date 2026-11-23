@@ -690,6 +690,24 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       expect(draft(result)).to include(kind: "theme")
     end
 
+    it "drafts styles without new palettes on a site that can't create palettes" do
+      plugin = Plugin::Instance.new
+      modifier = access_modifier(:palette_authoring, "No new palettes here.")
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      result = invoke_with_styles(name: "Rounded", styles: "Rounder corners")
+      expect(draft(result)).to include(kind: "component")
+
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+      expect(result).to eq(status: "error", error: "No new palettes here.")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
     it "keeps changing only colors on Horizon itself" do
       result = invoke(name: "Acme", brand_color: "#e8590c")
 
