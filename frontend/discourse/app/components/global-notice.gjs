@@ -5,8 +5,13 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isDevelopment } from "discourse/lib/environment";
-import { currentThemeId } from "discourse/lib/theme-selector";
+import getURL from "discourse/lib/get-url";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
+import {
+  applyQueryParams,
+  THEME_PREVIEW_QUERY_PARAMS,
+} from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -17,6 +22,26 @@ export function addGlobalNotice(text, id, options = {}) {
 }
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
+
+// The page the app shows now, without the preview params. It comes from the
+// router, so it follows links opened during the preview. Some browsers hide
+// the query string, so the notice offers a way out. `raw-link` makes the
+// browser load the page again, which is when the server stops applying the
+// preview.
+function exitThemePreviewLink(currentURL) {
+  const href = applyQueryParams(
+    getURL(currentURL),
+    Object.fromEntries(THEME_PREVIEW_QUERY_PARAMS.map((name) => [name, null]))
+  );
+  return `<a href="${escapeExpression(href)}" class="raw-link exit-theme-preview">${escapeExpression(i18n("exit_theme_preview"))}</a>`;
+}
+
+// Whether the server applied the preview this page was loaded with: "active",
+// "failed" or undefined. It comes from the page rather than the current URL,
+// because the preview stays applied after following a link inside the app.
+function themePreviewStatus() {
+  return document.querySelector("meta[name=discourse_theme_preview]")?.content;
+}
 
 /**
  * @typedef {object} NoticeOptions
@@ -145,20 +170,19 @@ export default class GlobalNotice extends Component {
       );
     }
 
-    const previewThemeId =
-      this.router.currentRoute?.queryParams?.preview_theme_id;
-    if (previewThemeId) {
-      if (currentThemeId() === parseInt(previewThemeId, 10)) {
+    const previewStatus = themePreviewStatus();
+    if (previewStatus) {
+      if (previewStatus === "active") {
         notices.push(
           Notice.create({
-            text: i18n("theme_preview_notice"),
+            text: `${i18n("theme_preview_notice")} ${exitThemePreviewLink(this.router.currentURL)}`,
             id: "theme-preview",
           })
         );
       } else {
         notices.push(
           Notice.create({
-            text: i18n("theme_preview_failed"),
+            text: `${i18n("theme_preview_failed")} ${exitThemePreviewLink(this.router.currentURL)}`,
             id: "theme-preview-failed",
             options: {
               level: "error",

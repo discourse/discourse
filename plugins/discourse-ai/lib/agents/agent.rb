@@ -131,6 +131,7 @@ module DiscourseAi
         def all_available_tools
           tools = [
             Tools::ListCategories,
+            Tools::FindCategory,
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
@@ -147,6 +148,8 @@ module DiscourseAi
             Tools::EditPost,
             Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::SetCategoryPermissions,
+            Tools::DeleteCategory,
             Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
@@ -167,6 +170,7 @@ module DiscourseAi
             Tools::ActivateAppearanceChange,
             Tools::RevertAppearanceChange,
             Tools::ListAppearanceChanges,
+            Tools::InstallPopularTheme,
             Tools::ThemeAppHandoff,
             Tools::EnableMcpThemeAccess,
             Tools::RandomPicker,

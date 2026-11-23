@@ -1036,16 +1036,14 @@ class CategoriesController < ApplicationController
 
     case style
     when "categories_and_latest_topics", "categories_and_latest_topics_created_date"
-      @topic_list = TopicQuery.new(current_user, topic_options).list_latest
+      @topic_list = build_topic_query(topic_options).list_latest
       @topic_list.more_topics_url = url_for(latest_path(sort: topic_options[:order]))
     when "categories_and_top_topics"
       @topic_list =
-        TopicQuery.new(current_user, topic_options).list_top_for(
-          SiteSetting.top_page_default_timeframe.to_sym,
-        )
+        build_topic_query(topic_options).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
       @topic_list.more_topics_url = url_for(top_path)
     when "categories_and_hot_topics"
-      @topic_list = TopicQuery.new(current_user, topic_options).list_hot
+      @topic_list = build_topic_query(topic_options).list_hot
       @topic_list.more_topics_url = url_for(hot_path)
     end
 

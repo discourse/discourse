@@ -2577,12 +2577,6 @@ el:
     account_suspended_forever:
       title: "Χρήστης σε Αποβολη"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σου είναι σε κατάσταση αποβολής"
-    account_silenced:
-      title: "Λογαριασμός σε Σίγαση"
-      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
-    account_silenced_forever:
-      title: "Λογαριασμός σε Σίγαση"
-      subject_template: "[%{email_prefix}] Ο λογαριασμός σας είναι σε σίγαση"
     account_deleted:
       title: "Λογαριασμός διαγράφηκε"
       subject_template: "[%{email_prefix}] Ο λογαριασμός σας έχει διαγραφεί"
@@ -3179,6 +3173,7 @@ el:
         complete: "Η ανάρτΗσΗ διαγράφΗκε."
       delete_and_ignore_replies:
         title: "Διαγραφή ανάρτησης και απαντήσεων, αγνόηση αναφοράς"
+        confirm_title: "Διαγραφή ανάρτησης και απαντήσεων, αγνόηση αναφοράς?"
         confirm: "Σίγουρα θέλετε να διαγράψετε και τις απαντήσεις στην ανάρτηση;"
         complete: "Η ανάρτηση και οι απαντήσεις διαγράφηκαν."
       delete_and_agree:
@@ -3188,6 +3183,7 @@ el:
       delete_and_agree_replies:
         title: "Διαγραφή ανάρτησης και απαντήσεων"
         description: "Συμφωνώ με την αναφορά και διαγραφή αυτής της ανάρτησης και όλων των απαντήσεων της. Εάν είναι η πρώτη ανάρτηση, διαγράφεται και το θέμα."
+        confirm_title: "Διαγραφή ανάρτησης και απαντήσεων?"
         complete: "Η ανάρτηση και οι απαντήσεις διαγράφηκαν."
       disagree_and_restore:
         title: "Επαναφορά ανάρτησης"

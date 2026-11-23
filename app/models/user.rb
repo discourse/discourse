@@ -163,6 +163,9 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
+  validates :email,
+            email: true,
+            if: -> { will_save_change_to_staged?(from: true, to: false) && !skip_email_validation }
   validates :validatable_user_fields_values,
             watched_words: true,
             unless: :should_skip_user_fields_validation?
@@ -302,6 +305,8 @@ class User < ActiveRecord::Base
         end
 
   scope :bot_users, -> { where("users.id <= 0") }
+  scope :interactive_bots,
+        -> { bot_users.where(interactive_bot: true).where.not(id: Discourse::SYSTEM_USER_ID) }
 
   scope :human_users,
         ->(allowed_bot_user_ids: nil) do
@@ -526,6 +531,10 @@ class User < ActiveRecord::Base
     !human?
   end
 
+  def interactive_bot?
+    bot? && !is_system_user? && super
+  end
+
   def effective_locale
     if SiteSetting.allow_user_locale && locale.present? && I18n.locale_available?(locale)
       locale
@@ -601,19 +610,20 @@ class User < ActiveRecord::Base
 
     return true if everyone_shortcut || logged_in_shortcut
 
+    # Array#intersect? avoids allocating an intersection; it only accepts Arrays.
+    group_ids = group_ids.to_a unless group_ids.is_a?(Array)
+
     # Sometimes the system user doesn't have their auto groups
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (
-             Group.auto_groups_between(:admins, :trust_level_4) -
-               [Group::AUTO_GROUPS[:anonymous_users]]
-           ) & group_ids
-         ).any?
+           Group.auto_groups_between(:admins, :trust_level_4) -
+             [Group::AUTO_GROUPS[:anonymous_users]]
+         ).intersect?(group_ids)
       return true
     end
 
-    (group_ids & belonging_to_group_ids).any?
+    group_ids.intersect?(belonging_to_group_ids)
   end
 
   def belonging_to_group_ids
@@ -886,7 +896,13 @@ class User < ActiveRecord::Base
     query = notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
     if max_notification_id = query.maximum(:id)
-      update!(seen_notification_id: max_notification_id)
+      self
+        .class
+        .where(id:)
+        .where("seen_notification_id < ?", max_notification_id)
+        .update_all(seen_notification_id: max_notification_id)
+      self.seen_notification_id = max_notification_id
+      clear_attribute_changes([:seen_notification_id])
       true
     else
       false
@@ -918,55 +934,17 @@ class User < ActiveRecord::Base
     seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
+  NOTIFICATIONS_STATE_LOCK_SECONDS = 5
+
   def publish_notifications_state
-    return if !allow_live_notifications?
+    return if !interactive_bot? && !allow_live_notifications?
 
-    # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order("notifications.created_at desc").first
-    json = NotificationSerializer.new(notification).as_json if notification
-
-    sql = <<~SQL
-       SELECT * FROM (
-         SELECT n.id, n.read FROM notifications n
-         LEFT JOIN topics t ON n.topic_id = t.id
-         WHERE
-          t.deleted_at IS NULL AND
-          n.high_priority AND
-          n.user_id = :user_id AND
-          NOT read
-        ORDER BY n.id DESC
-        LIMIT 20
-      ) AS x
-      UNION ALL
-      SELECT * FROM (
-       SELECT n.id, n.read FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        (n.high_priority = FALSE OR read) AND
-        n.user_id = :user_id
-       ORDER BY n.id DESC
-       LIMIT 20
-      ) AS y
-    SQL
-
-    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
-
-    payload = {
-      unread_notifications: unread_notifications,
-      unread_high_priority_notifications: unread_high_priority_notifications,
-      read_first_notification: read_first_notification?,
-      last_notification: json,
-      recent: recent,
-      seen_notification_id: seen_notification_id,
-    }
-
-    payload[:all_unread_notifications_count] = all_unread_notifications_count
-    payload[:grouped_unread_notifications] = grouped_unread_notifications
-    payload[:available_notification_types] = available_notification_types
-    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
-
-    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
+    DistributedMutex.synchronize(
+      "notifications_state_#{id}",
+      validity: NOTIFICATIONS_STATE_LOCK_SECONDS,
+    ) { publish_stored_notifications_state }
+  rescue Discourse::ReadOnly
+    publish_stored_notifications_state
   end
 
   def publish_do_not_disturb(ends_at: nil)
@@ -1266,12 +1244,12 @@ class User < ActiveRecord::Base
   end
 
   def self.username_hash(username)
-    username
-      .each_char
-      .reduce(0) do |result, char|
-        [((result << 5) - result) + char.ord].pack("L").unpack("l").first
-      end
-      .abs
+    result = 0
+    username.each_codepoint do |cp|
+      result = (((result << 5) - result) + cp) & 0xFFFFFFFF
+      result -= 0x100000000 if result >= 0x80000000
+    end
+    result.abs
   end
 
   def self.default_template(username)
@@ -1308,6 +1286,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  LETTER_AVATAR_HEX_COLORS =
+    LetterAvatar::COLORS.map { |r, g, b| format("%02x%02x%02x", r, g, b) }.freeze
+  private_constant :LETTER_AVATAR_HEX_COLORS
+
   def self.letter_avatar_color(username)
     username ||= ""
     if SiteSetting.restrict_letter_avatar_colors.present?
@@ -1318,13 +1300,12 @@ class User < ActiveRecord::Base
       index = (num * hex_length) + num
       colors[index, hex_length]
     else
-      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
-      color.map { |c| c.to_s(16).rjust(2, "0") }.join
+      LETTER_AVATAR_HEX_COLORS[color_index(username, LETTER_AVATAR_HEX_COLORS.length)]
     end
   end
 
   def self.color_index(username, length)
-    Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
+    (Digest::MD5.digest(username).unpack1("Q>") >> 4) % length
   end
 
   def is_system_user?
@@ -1742,6 +1723,8 @@ class User < ActiveRecord::Base
         value =
           if ftype == "confirm"
             !!Helpers::CUSTOM_FIELD_TRUE.include?(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
+          elsif ftype == "number"
+            UserField.cast_number(custom_fields["#{USER_FIELD_PREFIX}#{fid}"])
           else
             custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
           end
@@ -2110,6 +2093,55 @@ class User < ActiveRecord::Base
 
   protected
 
+  def notifications_state
+    # publish last notification json with the message so we can apply an update
+    notification = notifications.visible.order(created_at: :desc, id: :desc).first
+    json = NotificationSerializer.new(notification).as_json if notification
+
+    sql = <<~SQL
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         WHERE
+          t.deleted_at IS NULL AND
+          n.high_priority AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        (n.high_priority = FALSE OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    SQL
+
+    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
+
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_high_priority_notifications: unread_high_priority_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
+
+    payload
+  end
+
   def badge_grant
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
@@ -2338,6 +2370,15 @@ class User < ActiveRecord::Base
 
   private
 
+  def publish_stored_notifications_state
+    self.class.uncached do
+      stored = self.class.find_by(id:)
+      next if !stored
+
+      MessageBus.publish("/notification/#{id}", stored.notifications_state, user_ids: [id])
+    end
+  end
+
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)
   end
@@ -2496,6 +2537,7 @@ end
 #  first_seen_at             :datetime
 #  flag_level                :integer          default(0), not null
 #  group_locked_trust_level  :integer
+#  interactive_bot           :boolean          default(FALSE), not null
 #  ip_address                :inet
 #  last_emailed_at           :datetime
 #  last_posted_at            :datetime

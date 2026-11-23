@@ -188,10 +188,10 @@ class TagsController < ::ApplicationController
         period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
         TopTopic.validate_period(period)
 
-        @list = TopicQuery.new(current_user, list_opts).public_send("list_top_for", period)
+        @list = build_topic_query(list_opts).public_send("list_top_for", period)
         @list.for_period = period
       else
-        @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+        @list = build_topic_query(list_opts).public_send("list_#{filter}")
       end
 
       @list.more_topics_url = construct_url_with(:next, list_opts)
@@ -484,6 +484,8 @@ class TagsController < ::ApplicationController
     synonyms = Tag.where(id: synonym_tag_ids).or(Tag.where_name(new_synonym_names))
     synonym_tag_ids = DiscourseTagging.editable_synonym_ids(synonyms, guardian)
     new_synonym_names -= synonyms.map(&:name)
+    existing_names = synonyms.pluck("lower(tags.name)")
+    new_synonym_names = new_synonym_names.reject { |name| existing_names.include?(name.downcase) }
 
     value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
     if value.is_a?(Hash)

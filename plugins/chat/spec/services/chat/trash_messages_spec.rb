@@ -203,6 +203,16 @@ RSpec.describe Chat::TrashMessages do
             expect(thread.replies_count_cache).to eq(3)
           end
 
+          it "includes trashed broadcast replies in the channel bulk delete payload" do
+            message2.update!(broadcasted: true)
+
+            publishes = MessageBus.track_publish { result }
+            channel_publish = publishes.find { |p| p.channel == "/chat/#{chat_channel.id}" }
+
+            expect(channel_publish.data["type"]).to eq("bulk_delete")
+            expect(channel_publish.data["deleted_ids"]).to eq([message2.id])
+          end
+
           it "updates the tracking to the last non-deleted thread message for users whose last_read_message_id was the trashed message" do
             other_message = Fabricate(:chat_message, chat_channel: chat_channel, thread: thread)
             membership_1 =

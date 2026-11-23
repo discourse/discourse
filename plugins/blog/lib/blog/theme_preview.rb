@@ -9,19 +9,27 @@ module ::Blog
     WORKING_COPY_EXPIRY = 15.minutes
     MAX_WORKING_COPIES = 3
 
-    def self.url(token, path: "/")
-      "#{Configuration.base_url}#{path}?#{{ blog_theme_preview: token }.to_query}"
+    def self.url(token, path: "/", blog: Instance.default_blog)
+      "#{Configuration.base_url(blog)}#{path}?#{{ blog_theme_preview: token }.to_query}"
     end
 
-    def self.token_for(theme)
+    def self.token_for(theme, blog:)
       verifier.generate(
-        { "id" => theme["id"], "revision" => theme["revision"] },
+        { "id" => theme["id"], "revision" => theme["revision"], "blog_id" => blog.id },
         expires_in: DRAFT_EXPIRY,
       )
     end
 
+    # A preview link shows a blog that is not published yet, so it only does that
+    # for the blog it was made for.
+    def self.for_blog?(token, blog)
+      return false if token.blank?
+      data = verifier.verified(token)
+      data.is_a?(Hash) && data["blog_id"] == blog.id
+    end
+
     # Only the newest working copies per editor stay previewable.
-    def self.store_working_copy(values, user:)
+    def self.store_working_copy(values, user:, blog:)
       key = SecureRandom.hex(32)
       DistributedMutex.synchronize("blog-theme-preview-#{user.id}") do
         index = "blog-theme-preview-index:#{user.id}"
@@ -35,7 +43,7 @@ module ::Blog
         Discourse.redis.setex(working_copy_key(key), WORKING_COPY_EXPIRY.to_i, values.to_json)
         Discourse.redis.setex(index, WORKING_COPY_EXPIRY.to_i, keys.to_json)
       end
-      verifier.generate({ "working" => key }, expires_in: WORKING_COPY_EXPIRY)
+      verifier.generate({ "working" => key, "blog_id" => blog.id }, expires_in: WORKING_COPY_EXPIRY)
     end
 
     def self.theme_for(token)

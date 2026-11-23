@@ -1,11 +1,12 @@
 import { tracked } from "@glimmer/tracking";
-import { click, find, render, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, find, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import DefaultInputControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/default-input-control";
 import ExpressionWrapper from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/expression-wrapper";
+import Field from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/field";
 import { WORKFLOW_VARIABLE_MIME } from "discourse/plugins/discourse-workflows/admin/lib/workflows/expression-context";
 
 function variableTransfer(variable) {
@@ -51,6 +52,37 @@ module(
         );
       } else {
         delete document.caretPositionFromPoint;
+      }
+    });
+
+    test("accepts fractional numbers and floats without relaxing integer inputs", async function (assert) {
+      for (const type of ["number", "float", "integer"]) {
+        this.configuration = { amount: null };
+        this.schema = { type };
+
+        await render(
+          <template>
+            <Form @data={{this.configuration}} as |form transientData|>
+              <Field
+                @configuration={{transientData}}
+                @fieldName="amount"
+                @form={{form}}
+                @label="Amount"
+                @schema={{this.schema}}
+              />
+            </Form>
+          </template>
+        );
+
+        await fillIn("input[type=number]", "123.45");
+        assert.strictEqual(
+          find("form").checkValidity(),
+          type !== "integer",
+          `${type} uses its numeric precision for native form validation`
+        );
+
+        await fillIn("input[type=number]", "123");
+        assert.true(find("form").checkValidity(), `${type} accepts integers`);
       }
     });
 

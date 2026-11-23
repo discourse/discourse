@@ -1,3 +1,5 @@
+import randomUUID from "discourse/lib/random-uuid";
+
 export const STICKY_NOTE_TYPE = "flow:sticky_note";
 export const STICKY_NOTE_NAME = "Sticky Note";
 
@@ -43,7 +45,7 @@ export default class StickyNote {
   }
 
   constructor(args = {}) {
-    this.id = args.id?.toString() ?? args.clientId ?? crypto.randomUUID();
+    this.id = args.id?.toString() ?? args.clientId ?? randomUUID();
     this.clientId = args.clientId ?? this.id;
     this.position = args.position ?? { x: 0, y: 0 };
     this.size = args.size ?? { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };

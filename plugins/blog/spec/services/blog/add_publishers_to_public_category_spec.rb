@@ -2,12 +2,13 @@
 
 RSpec.describe Blog::AddPublishersToPublicCategory do
   describe ".call" do
-    subject(:result) { described_class.call(**dependencies) }
+    subject(:result) { described_class.call(params: { category_id: }, **dependencies) }
 
     fab!(:publishers, :group)
     fab!(:other_publishers, :group)
     fab!(:writers, :group)
 
+    let(:category_id) { Blog::Instance.default_blog.category_id }
     let(:dependencies) { {} }
     let(:full) { CategoryGroup.permission_types[:full] }
     let(:create_post) { CategoryGroup.permission_types[:create_post] }
@@ -17,13 +18,19 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
     before { SiteSetting.blog_publisher_groups = "#{publishers.id}|#{other_publishers.id}" }
 
     context "without a blog category" do
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when the category no longer exists" do
+      let(:category_id) { Fabricate(:category).tap(&:destroy!).id }
+
       it { is_expected.to fail_to_find_a_model(:category) }
     end
 
     context "when everyone can start topics in the blog category" do
       fab!(:blog_category, :category)
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "leaves it open without logging anything" do
         expect { result }.not_to change { UserHistory.count }
@@ -44,7 +51,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
         )
       end
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "grants them full access, keeps every other permission and logs the change" do
         expect(result).to run_successfully
@@ -78,7 +85,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
         )
       end
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "changes nothing" do
         expect { result }.not_to change {

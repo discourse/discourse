@@ -4175,10 +4175,8 @@ es:
           label: "seleccionado"
           title: "Haz clic para quitar publicaciones de la selección"
         select_replies:
-          label: "seleccionar +respuestas"
           title: "Añadir publicación y todas sus respuestas a la selección"
         select_below:
-          label: "seleccionar +abajo"
           title: "Añadir publicación y todo lo que le sigue a la selección"
         delete: eliminar selección
         cancel: cancelar selección
@@ -5313,7 +5311,6 @@ es:
         other: "Borradores (%{count})"
     safe_mode:
       enabled: "El modo seguro está activado, para salir del modo seguro cierra esta ventana del navegador"
-    theme_preview_notice: "En este momento estás previsualizando un tema, cierra esta pestaña o ventana del navegador para volver a la configuración normal de tu sitio."
     theme_preview_failed: "No se ha podido crear la vista previa del tema porque no existe o no tienes permiso para acceder a él."
     image_removed: "(imagen eliminada)"
     pause_notifications:
@@ -8107,7 +8104,6 @@ es:
         silence_duration: "¿Cuánto tiempo estará silenciado el usuario?"
         silence_reason_title: "Motivo para silenciar"
         silence_reason_placeholder: "Motivo para silenciar"
-        silence_message: "Mensaje por correo electrónico"
         suspended_until: "(hasta %{until})"
         suspend_forever: "Suspender para siempre"
         cant_suspend: "Este usuario no puede ser suspendido."
@@ -8421,6 +8417,8 @@ es:
       site_text:
         description: "Puedes personalizar cualquier texto de tu foro."
         search_label: "Buscar"
+        preview:
+          default: "Por defecto"
         theme_disabled: "Desactivado"
         filters: "Filtros"
         status:
@@ -8587,7 +8585,7 @@ es:
           modal_title: Grupos de medallas
         granted_by: Concedido por
         granted_at: Concedido en
-        reason_help: (Enlace a una publicación o tema)
+        reason_help: Enlace a una publicación o tema
         save: Guardar
         delete: Eliminar
         delete_confirm: '¿Seguro que quieres eliminar esta medalla?'

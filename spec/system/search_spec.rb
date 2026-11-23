@@ -113,6 +113,15 @@ describe "Search" do
 
       expect(search_page).to have_warning_message
     end
+
+    it "lets the user type a full year into the posted date filter" do
+      visit("/search?expanded=true")
+
+      # Day and month share a value so the result is the same in every locale's segment order.
+      search_page.type_post_date("03032025")
+
+      expect(search_page).to have_post_date("2025-03-03")
+    end
   end
 
   describe "when search menu on desktop" do

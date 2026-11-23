@@ -68,8 +68,43 @@ RSpec.describe Blog::BlogTheme::Activate do
         expect(result.active_theme).to eq(
           theme.merge("snapshot" => result.active_theme["snapshot"]),
         )
-        expect(Blog::BlogTheme.active).to eq(result.active_theme)
+        expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)).to eq(result.active_theme)
         expect(Blog::BlogTheme.snapshot(result.active_theme["snapshot"])).to eq(result.active_theme)
+      end
+
+      it "records the snapshot on the default blog" do
+        active_theme = result.active_theme
+        expect(Blog::Instance.find_by(is_default: true).active_theme).to eq(active_theme)
+      end
+
+      context "with a blog other than the default" do
+        let(:engineering) { Blog::Instance.create!(name: "Engineering", slug: "engineering") }
+        let(:params) { super().merge(blog_id: engineering.id) }
+
+        it "changes only that blog's theme" do
+          result
+          expect(Blog::BlogTheme.active_for(engineering.reload)).to eq(result.active_theme)
+          expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)["id"]).to eq(
+            Blog::ThemePresets::DEFAULT_ID,
+          )
+        end
+      end
+
+      it "keeps a snapshot another blog still shows, however old" do
+        engineering = Blog::Instance.create!(name: "Engineering", slug: "engineering")
+        stub_const(Blog::BlogTheme, :MAX_SNAPSHOTS, 1) do
+          kept =
+            Blog::BlogTheme::Activate.call!(
+              params: params.merge(blog_id: engineering.id),
+              **dependencies,
+            )[
+              :active_theme
+            ]
+          activate_blog_theme(theme, user: Discourse.system_user)
+          result
+
+          expect(Blog::BlogTheme.snapshot(kept["snapshot"])).to be_present
+        end
       end
 
       it "keeps only the newest snapshots" do
@@ -91,11 +126,11 @@ RSpec.describe Blog::BlogTheme::Activate do
 
         it "stores only the preset id so readers follow the shipped files" do
           result
-          expect(PluginStore.get(Blog::BlogTheme::STORE, "active")).to eq(
+          expect(Blog::Instance.find_by(is_default: true).active_theme).to eq(
             "id" => "discourse-blog",
             "preset" => true,
           )
-          expect(Blog::BlogTheme.active).to eq(preset)
+          expect(Blog::BlogTheme.active_for(Blog::Instance.default_blog)).to eq(preset)
         end
       end
 

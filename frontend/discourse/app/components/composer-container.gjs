@@ -849,7 +849,7 @@ export default class ComposerContainer extends Component {
 
           <div class="draft-text">
             {{#if this.composer.model.topic}}
-              {{dIcon "share"}}
+              {{dIcon "reply"}}
               {{trustHTML this.composer.draftTitle}}
             {{else}}
               {{i18n "composer.saved_draft"}}

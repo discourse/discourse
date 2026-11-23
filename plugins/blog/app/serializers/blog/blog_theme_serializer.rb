@@ -57,7 +57,8 @@ module ::Blog
     end
 
     def preview_url
-      ThemePreview.url(ThemePreview.token_for(object))
+      blog = @options[:blog] || Instance.default_blog
+      ThemePreview.url(ThemePreview.token_for(object, blog:), blog:)
     end
   end
 end

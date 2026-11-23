@@ -44,6 +44,8 @@ hy:
         error: "Սխալ"
         response: "Արձագանք"
       discourse_workflows:
+        ai_tool:
+          list_item: "Ցանկի տարր"
         classify:
           text: "Տեքստ"
           upload_ids: "Նկարներ"
@@ -73,6 +75,9 @@ hy:
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        review_queue:
+          setting_groups:
+            settings: "Կարգավորումներ"
         image_caption:
           setting_groups:
             settings: "Կարգավորումներ"

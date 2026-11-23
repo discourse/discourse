@@ -14,6 +14,7 @@ class Blog::Publication::Publish
   model :publication
   policy :can_publish_article
   policy :blog_ready, class_name: Blog::Policy::Ready
+  policy :blog_published, class_name: Blog::Publication::Policy::BlogPublished
 
   only_if(:releasing_current_draft) do
     step :submit_current_draft
@@ -81,9 +82,13 @@ class Blog::Publication::Publish
     end
   end
 
-  def ensure_public_category
-    Blog::EnsurePublicCategory.call do
-      on_failure { fail!(Blog::Readiness.new.error || I18n.t("blog.errors.category_unavailable")) }
+  def ensure_public_category(publication:)
+    Blog::EnsurePublicCategory.call(params: { blog_id: publication.blog_id }) do
+      on_failure do
+        fail!(
+          Blog::Readiness.new(publication.blog).error || I18n.t("blog.errors.category_unavailable"),
+        )
+      end
     end
   end
 

@@ -3126,20 +3126,6 @@ tr_TR:
       title: "Gönderi Gizlendi"
       preview: "Topluluk üyeleri tarafından bildirildiği için gizlenmiş gönderi."
       subject_template: "Gönderi topluluk bayrakları tarafından gizlendi"
-      text_body_template: |
-        Merhaba,
-
-        Bu, gönderinizin gizlendiğini bildirmek için %{site_name} tarafından gönderilen otomatik bir mesajdır.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Bu gönderi topluluktan gelen bayraklar nedeniyle gizlendi, bu nedenle lütfen gönderinizi geri bildirimlerini yansıtacak şekilde nasıl revize edebileceğinizi düşünün. **Gönderinizi %{edit_delay} dakika sonra düzenleyebilirsiniz ve otomatik olarak gizlenmesi kaldırılacaktır.**
-
-        Ancak, gönderi topluluk tarafından ikinci kez gizlenirse personel tarafından ele alınana kadar gizli kalır.
-
-        Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
     reviewable_queued_post_revise_and_reject_edit_post: "Önerilen değişiklikleri yapmak için aşağıdaki orijinal gönderinizi düzenleyip yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Aşağıda ilk gönderinizi düzenleyebilir ve önerilen değişiklikleri yaparak yeniden gönderebilirsiniz."
     reviewable_queued_post_revise_and_reject_edit_topic: "Aşağıda konunuzun ilk mesajını düzenleyip önerilen değişiklikleri yaparak yeniden gönderebilir veya sorularınız varsa bu mesaja yanıt verebilirsiniz."
@@ -3192,31 +3178,9 @@ tr_TR:
       title: "Gönderi Tekrar Gizlendi"
       preview: "Topluluk üyeleri tarafından tekrar gizlendi."
       subject_template: "Gönderi topluluk bayrakları tarafından gizlendi, personel bilgilendirildi"
-      text_body_template: |
-        Merhaba,
-
-        Bu, gönderinizin tekrar gizlendiğini bildirmek için %{site_name} tarafından gönderilen otomatik bir mesajdır.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Topluluk bu gönderiye bayrak ekledi ve gönderi artık gizli. **Bu gönderi birden fazla kez gizlendiğinden, gönderiniz bir personel tarafından incelenene kadar gizli kalacak.**
-
-        Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
     queued_by_staff:
       title: "Gönderi Onay Gerektiriyor"
       subject_template: "Gönderi personel tarafından gizlendi, onay bekleniyor"
-      text_body_template: |
-        Merhaba,
-
-        Bu, %{site_name}'tan gönderinizin gizlendiğini bildirmek için gönderilen otomatik bir mesajdır.
-
-        <%{base_url}%{url}>
-
-        Gönderiniz bir personel tarafından incelenene kadar gizli kalacak.
-
-        Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
     flags_disagreed:
       title: "Bayrak eklenen gönderi personel tarafından geri yüklendi"
       subject_template: "Bayrak eklenen gönderi personel tarafından geri yüklendi"
@@ -3723,6 +3687,8 @@ tr_TR:
         Önlem olarak, bir personel hesabınızı inceleyene kadar yeni hesabınızın yeni yanıt veya konu oluşturması engellendi. Yaşadığınız sıkıntı için üzgünüz.
 
         Daha fazla bilgi için lütfen [topluluk kılavuzumuzu](%{base_url}/guidelines) inceleyin.
+    moderator_silence:
+      subject_template: "Hesabınız susturuldu"
     silenced_by_staff:
       title: "Personel Tarafından Susturuldu"
       preview: "Hesap geçici olarak askıya alındı."
@@ -3749,16 +3715,6 @@ tr_TR:
     user_automatically_silenced_with_reason:
       title: "Kullanıcı Otomatik Olarak Susturuldu"
       subject_template: "Yeni kullanıcı %{username} topluluk bayraklarıyla susturuldu"
-      text_body_template: |
-        Bu otomatik bir mesajdır.
-
-        Yeni kullanıcı [%{username}](%{user_url}) otomatik olarak susturuldu.
-
-        Nedeni - %{reason}
-
-        Lütfen [bayrakları inceleyin](%{base_url}/review). %{username} yanlışlıkla sessizleştirilmişse, [bu kullanıcının yönetici sayfasında](%{user_url}) sessizleştirmeyi kaldır düğmesine tıklayın.
-
-        Bu eşik, `silence_new_user` site ayarları üzerinden değiştirilebilir.
     spam_post_blocked:
       title: "İstenmeyen Gönderi Engellendi"
       subject_template: "%{username} adlı yeni kullanıcının gönderileri tekrarlanan bağlantılar nedeniyle engellendi"
@@ -4107,14 +4063,6 @@ tr_TR:
       title: "Hesap Askıya Alındı"
       subject_template: "[%{email_prefix}] Hesabınız askıya alındı"
       subject_template_improved: "Hesabınız askıya alınmıştır"
-    account_silenced:
-      title: "Hesap Susturuldu"
-      subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      subject_template_improved: "Hesabınız susturuldu"
-    account_silenced_forever:
-      title: "Hesap Susturuldu"
-      subject_template: "[%{email_prefix}] Hesabınız susturuldu"
-      subject_template_improved: "Hesabınız susturuldu"
     account_deleted:
       title: "Hesap Silindi"
       subject_template: "[%{email_prefix}] Hesabınız silindi"
@@ -4291,10 +4239,6 @@ tr_TR:
     signup_after_reject:
       title: "Reddedildikten Sonra Kayıt"
       subject_template: "%{site_name}'ta reddedildiniz"
-      text_body_template: |
-        Bir personel üyesi, %{site_name}'taki hesabınızı reddetti.
-
-        %{reject_reason}
     signup:
       title: "Kaydol"
       preview: "Hesabınızı onaylayın."
@@ -5113,6 +5057,7 @@ tr_TR:
       delete_and_ignore_replies:
         title: "Gönderiyi ve yanıtları sil, bayrağı yok say"
         description: "Gönderiyi ve tüm yanıtlarını silin, ardından kuyruktan kaldırarak bildirimi yok sayın; ilk gönderi ise konuyu da silin."
+        confirm_title: "Gönderiyi ve yanıtları sil, bayrağı yok say?"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       delete_and_agree:
@@ -5122,6 +5067,7 @@ tr_TR:
       delete_and_agree_replies:
         title: "Gönderiyi ve yanıtları sil"
         description: "Bayrağı kabul edin ve bu gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin."
+        confirm_title: "Gönderiyi ve yanıtları sil?"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       disagree_and_restore:

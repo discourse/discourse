@@ -20,6 +20,9 @@ bs_BA:
           table_type: "Tip"
         colors:
           title: "Colors"
+        design_variables:
+          type: "Tip"
+          default: "Uobičajen"
         categories:
           title: "Kategorije"
         navigation:

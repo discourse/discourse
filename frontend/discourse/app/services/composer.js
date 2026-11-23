@@ -596,7 +596,7 @@ export default class ComposerService extends Service {
           this._setupPopupMenuOption({
             name: "change-reply-to",
             action: this.openChangeReplyToModal,
-            icon: "share",
+            icon: "reply",
             label: "composer.change_reply_to.open_from_menu",
           })
         );

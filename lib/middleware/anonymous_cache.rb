@@ -113,7 +113,7 @@ module Middleware
       alias_method :key_is_mobile?, :is_mobile?
 
       def key_has_brotli?
-        @has_brotli ||= @env[ACCEPT_ENCODING].to_s =~ /br/ ? :true : :false
+        @has_brotli ||= @env[ACCEPT_ENCODING]&.include?("br") ? :true : :false
 
         @has_brotli == :true
       end
@@ -228,7 +228,7 @@ module Middleware
       end
 
       def cache_key_other
-        @cache_key_other || "#{cache_key}_other"
+        @cache_key_other ||= "#{cache_key}_other"
       end
 
       def get?

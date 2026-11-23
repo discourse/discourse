@@ -5,10 +5,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ListUsers do
   fab!(:bot_user, :admin)
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def column_value(row, result, column_name)
     row[result[:column_names].index(column_name)]

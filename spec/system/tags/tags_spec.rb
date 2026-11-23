@@ -95,7 +95,7 @@ describe "Tags" do
       expect(discovery.topic_list).to have_topic_tag(topic_with_one_tag, "tag-one")
       expect(discovery.topic_list).to have_topic_tags(topic_with_two_tags, tags: [tag_one, tag_two])
       expect(discovery.topic_list).to have_no_topic_tags(topic_with_no_tags)
-      expect(discovery.tag_drop).to have_selected_name("tags") # unselected
+      expect(discovery.tag_drop).to have_selected_name(I18n.t("js.tagging.selector_tags")) # unselected
 
       # /latest -> /tag/tag-one/id (by clicking tag on topic)
       discovery.topic_list.click_topic_tag(topic_with_one_tag, "tag-one")

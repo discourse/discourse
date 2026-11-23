@@ -199,10 +199,13 @@ export default class ProfileController extends Controller {
 
   _missingRequiredFields(siteFields, userFields) {
     return siteFields
-      .filter(
-        (siteField) =>
-          siteField.requirement === "for_all_users" && !userFields[siteField.id]
-      )
+      .filter((siteField) => {
+        const value = userFields[siteField.id];
+        // Number fields can legitimately hold 0.
+        return (
+          siteField.requirement === "for_all_users" && value !== 0 && !value
+        );
+      })
       .map((field) => EmberObject.create({ field, value: "" }));
   }
 

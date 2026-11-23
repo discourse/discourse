@@ -162,6 +162,18 @@ RSpec.describe FileHelper do
     end
   end
 
+  describe ".contained_path" do
+    it "returns the expanded path when it is inside one of the directories" do
+      expect(FileHelper.contained_path("/a/b/../c/d", "/x", "/a/c")).to eq("/a/c/d")
+    end
+
+    it "returns nil when the path is outside of the directories" do
+      expect(FileHelper.contained_path("/a/c", "/a/c")).to be_nil
+      expect(FileHelper.contained_path("/a/cd/e", "/a/c")).to be_nil
+      expect(FileHelper.contained_path("/a/c/../d", "/a/c")).to be_nil
+    end
+  end
+
   describe ".optimize_image!" do
     def with_optimizer_input(fixture)
       Tempfile.create(["optimizer-spec-", File.extname(fixture)]) do |file|

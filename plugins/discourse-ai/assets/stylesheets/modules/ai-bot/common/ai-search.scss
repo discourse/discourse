@@ -33,6 +33,16 @@
     color: var(--primary-medium);
   }
 
+  &__cached {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+    margin-block-start: var(--space-2);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
   &__title {
     margin: 0 0 var(--space-2);
     font-size: var(--font-up-1);
@@ -269,6 +279,11 @@
       flex: 0 0 auto;
     }
 
+    .ai-search-tabs__ready .d-icon {
+      color: inherit;
+      font-size: 0.85em;
+    }
+
     &.is-active {
       &:hover {
         .d-icon {
@@ -286,7 +301,8 @@
   // Pinned over the pill's corner like a notification badge, so a count
   // arriving does not resize the pill. The row's own padding gives it room.
   &__count,
-  &__empty {
+  &__empty,
+  &__ready {
     position: absolute;
     top: -0.5em;
     right: -0.5em;

@@ -3428,20 +3428,6 @@ de:
       title: "Beitrag versteckt"
       preview: "Beitrag aufgrund von Meldungen durch Community-Mitglieder ausgeblendet."
       subject_template: "Beitrag versteckt wegen Community-Meldungen"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatische Benachrichtigung von %{site_name}, um dich zu informieren, dass dein Beitrag verborgen wurde.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Dieser Beitrag wurde wegen Meldungen der Community verborgen, deshalb prüfe bitte, wie du ihn überarbeiten kannst, um ihrem Feedback zu entsprechen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten und er wird automatisch wieder sichtbar.**
-
-        Falls er jedoch noch einmal von der Community verborgen wird, bleibt er dies, bis ein Team-Mitglied ihn prüft.
-
-        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Du kannst deinen ursprünglichen Beitrag unten bearbeiten und erneut absenden, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, falls du Fragen hast."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Du kannst deinen ursprünglichen Beitrag unten bearbeiten und erneut absenden, um die vorgeschlagenen Änderungen vorzunehmen."
     reviewable_queued_post_revise_and_reject_edit_topic: "Du kannst den ursprünglichen Beitrag deines Themas unten bearbeiten und erneut absenden, um die vorgeschlagenen Änderungen vorzunehmen, oder auf diese Nachricht antworten, falls du Fragen hast."
@@ -3494,31 +3480,9 @@ de:
       title: "Beitrag wieder ausgeblendet"
       preview: "Beitrag von Community-Mitgliedern wieder ausgeblendet."
       subject_template: "Beitrag ausgeblendet wegen Community-Meldungen, Team wurde informiert"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatische Benachrichtigung von %{site_name}, um dich zu informieren, dass dein Beitrag erneut verborgen wurde.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Die Community hat den Beitrag gemeldet und er ist nun verborgen. **Da er mehr als einmal verborgen wurde, wird er so verbleiben, bis ein Team-Mitglied ihn prüft.**
-
-        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     queued_by_staff:
       title: "Beitrag muss genehmigt werden"
       subject_template: "Beitrag vom Team ausgeblendet, warte auf Genehmigung"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisierte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ausgeblendet wurde.
-
-        <%{base_url}%{url}>
-
-        Dein Beitrag bleibt verborgen, bis ein Team-Mitglied ihn überprüft.
-
-        Weitere Informationen findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     flags_disagreed:
       title: "Gemeldeter Beitrag vom Team wiederhergestellt"
       subject_template: "Gemeldeter Beitrag vom Team wiederhergestellt"
@@ -4033,6 +3997,8 @@ de:
         Als Vorsichtsmaßnahme wurde dein neues Konto stummgeschaltet und du kannst keine neuen Antworten oder Themen erstellen, bis ein Team-Mitglied dein Konto überprüft. Wir entschuldigen uns für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    moderator_silence:
+      subject_template: "Dein Konto wurde stummgeschaltet"
     silenced_by_staff:
       title: "Stummgeschaltet vom Team"
       preview: "Konto vorübergehend gesperrt."
@@ -4059,16 +4025,6 @@ de:
     user_automatically_silenced_with_reason:
       title: "Benutzer automatisch stummgeschaltet"
       subject_template: "Neuer Benutzer %{username} wurde wegen Community-Meldungen stummgeschaltet"
-      text_body_template: |
-        Dies ist eine automatische Nachricht.
-
-        Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet.
-
-        Grund - %{reason}
-
-        Bitte [überprüfe die Meldungen](%{base_url}/review). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
-
-        Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_blocked:
       title: "Spam-Beitrag blockiert"
       subject_template: "Beiträge des neuen Benutzers %{username} wegen mehrfacher Verlinkung blockiert"
@@ -4417,14 +4373,6 @@ de:
       title: "Konto gesperrt"
       subject_template: "[%{email_prefix}] Dein Konto wurde gesperrt"
       subject_template_improved: "Dein Konto wurde gesperrt"
-    account_silenced:
-      title: "Konto stummgeschaltet"
-      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
-      subject_template_improved: "Dein Konto wurde stummgeschaltet"
-    account_silenced_forever:
-      title: "Konto stummgeschaltet"
-      subject_template: "[%{email_prefix}] Dein Konto wurde stummgeschaltet"
-      subject_template_improved: "Dein Konto wurde stummgeschaltet"
     account_deleted:
       title: "Konto gelöscht"
       subject_template: "[%{email_prefix}] Dein Konto wurde gelöscht"
@@ -4619,10 +4567,6 @@ de:
     signup_after_reject:
       title: "Registrierung nach Ablehnung"
       subject_template: "Du wurdest bei %{site_name} abgelehnt"
-      text_body_template: |
-        Ein Team-Mitglied hat dein Konto bei %{site_name} abgelehnt.
-
-        %{reject_reason}
     signup:
       title: "Registrierung"
       preview: "Bestätige dein Konto."
@@ -5484,6 +5428,7 @@ de:
       delete_and_ignore_replies:
         title: "Beitrag und Antworten löschen, Meldung ignorieren"
         description: "Lösche den Beitrag und alle Antworten; dann ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        confirm_title: "Beitrag und Antworten löschen, Meldung ignorieren?"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
@@ -5493,6 +5438,7 @@ de:
       delete_and_agree_replies:
         title: "Beitrag und Antworten löschen"
         description: "Stimme der Meldung zu und lösche diesen Beitrag sowie alle seine Antworten; wenn es der erste Beitrag ist, wird auch das Thema gelöscht."
+        confirm_title: "Beitrag und Antworten löschen?"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:

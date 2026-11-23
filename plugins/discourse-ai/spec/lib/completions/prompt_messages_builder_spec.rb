@@ -2,6 +2,8 @@
 
 describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
+  let(:stored_system_entry) { ["Bogus stored system marker", nil, "system"] }
+
   fab!(:user)
   fab!(:admin)
   fab!(:bot_user, :user)
@@ -37,6 +39,101 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     )
     expect(messages[1][:content]).to include({ upload_id: 123 })
     expect { DiscourseAi::Completions::Prompt.new("System", messages: messages) }.not_to raise_error
+  end
+
+  it "replays a crossed stored tool sequence as evidence instead of mismatched native roles" do
+    builder.preserve_history = true
+    earlier_request = { type: :user, content: "Read both records" }
+    current_request = { type: :user, content: "What did you find?" }
+    stored_entries = [
+      { type: :tool_call, id: "one", name: "read", content: '{"arguments":{"record":1}}' },
+      { type: :tool, id: "two", name: "read", content: "Second result" },
+      { type: :tool_call, id: "two", name: "read", content: '{"arguments":{"record":2}}' },
+      { type: :tool, id: "one", name: "read", content: "First result" },
+    ]
+    [earlier_request, *stored_entries, current_request].each { |entry| builder.push(**entry) }
+
+    messages = builder.to_a
+
+    expect(messages.map { |message| message[:type] }).to eq(%i[user model user])
+    expect(DiscourseAi::Completions::Prompt.text_only(messages[1])).to include(
+      *stored_entries.pluck(:content),
+    )
+  end
+
+  it "keeps serial calls that reuse an ID after closure and parallel calls completed out of order" do
+    builder.preserve_history = true
+    first_call = {
+      type: :tool_call,
+      id: "one",
+      name: "read",
+      content: '{"arguments":{"record":1}}',
+      thinking: "Find the records",
+      provider_data: {
+        vllm: {
+          tool_batch_id: "first-batch",
+        },
+      },
+    }
+    first_result = { type: :tool, id: "one", name: "read", content: "First result" }
+    parallel_call = first_call.merge(provider_data: { vllm: { tool_batch_id: "second-batch" } })
+    second_call = parallel_call.merge(id: "two", content: '{"arguments":{"record":2}}')
+    second_result = first_result.merge(id: "two", content: "Second result")
+    messages = [
+      { type: :user, content: "Read the records" },
+      first_call,
+      first_result,
+      parallel_call,
+      second_call,
+      second_result,
+      first_result,
+      { type: :user, content: "What did you find?" },
+    ]
+    messages.each { |message| builder.push(**message) }
+
+    expect(builder.to_a).to eq(messages)
+  end
+
+  it "attaches chat context to a real user message, not a recovered history preamble" do
+    post = Fabricate(:post, user: user)
+    builder.preserve_history = true
+    builder.set_chat_context_posts([post.id], user.guardian)
+    builder.push(type: :model, content: "Retained reply")
+    builder.push(type: :user, content: "Current request")
+
+    prompt = DiscourseAi::Completions::Prompt.new(messages: builder.to_a(style: :chat_with_context))
+    expect(prompt.messages.first).to eq(DiscourseAi::Completions::Prompt::HISTORY_PREAMBLE)
+    expect(DiscourseAi::Completions::Prompt.text_only(prompt.messages.last)).to include(
+      post.raw,
+      "Current request",
+    )
+  end
+
+  it "keeps a restored checkpoint and its attachment evidence separate from linked chat context" do
+    post = Fabricate(:post, user: user)
+    builder.preserve_history = true
+    builder.set_chat_context_posts([post.id], user.guardian)
+    builder.push(type: :user, content: "<compressed_context>Earlier summary</compressed_context>")
+    builder.push(type: :model, content: described_class::COMPRESSED_CONTEXT_ACK)
+    builder.push(
+      type: :user,
+      content: "Retained historical attachments from source message 1:\n",
+      upload_ids: [123],
+    )
+    builder.push(
+      type: :model,
+      content: DiscourseAi::Completions::ContextPreparation::RETAINED_ATTACHMENTS_ACK,
+    )
+    checkpoint = builder.to_a
+    expect(builder.to_a(style: :chat_with_context)).to eq(checkpoint)
+
+    builder.push(type: :user, content: "What does the record say?", id: user.username)
+    messages = builder.to_a(style: :chat_with_context)
+    expect(messages[0...-1]).to eq(checkpoint)
+    expect(DiscourseAi::Completions::Prompt.text_only(messages.last)).to include(
+      post.raw,
+      "What does the record say?",
+    )
   end
 
   it "preserves merged model history and all eligible upload references in preservation mode" do
@@ -295,6 +392,58 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     expect(content).to include("How do I solve this")
   end
 
+  describe "#to_a with stored system entries" do
+    it "keeps the real user request in the same place when stored system entries surround it" do
+      content, _id, role = stored_system_entry
+      builder.preserve_history = true
+      builder.push(type: role.to_sym, content: content)
+      builder.push(type: :user, content: "Current request", id: "alice")
+      builder.push(type: role.to_sym, content: content)
+      clean_builder = described_class.new
+      clean_builder.preserve_history = true
+      clean_builder.push(type: :user, content: "Current request", id: "alice")
+
+      aggregate_failures do
+        [nil, :chat, :chat_with_context, :topic].each do |style|
+          expected = clean_builder.to_a(style: style)
+          expect(builder.to_a(style: style)).to eq(expected),
+          "unexpected output for #{style.inspect}"
+        end
+      end
+    end
+
+    it "renders no conversation when the stored system entry is the only history" do
+      content, _id, role = stored_system_entry
+      builder.preserve_history = true
+      builder.push(type: role.to_sym, content: content)
+
+      aggregate_failures do
+        expect(builder.to_a).to be_empty
+        expect(builder.to_a(style: :chat)).to be_empty
+        expect(builder.to_a(style: :chat_with_context)).to be_empty
+        expect(builder.to_a(style: :topic)).to eq(described_class.new.to_a(style: :topic))
+      end
+    end
+
+    it "keeps conversation turns that fit the token budget after dropping a trailing stored system entry" do
+      content, _id, role = stored_system_entry
+      builder.push(type: :user, content: "Ask")
+      builder.push(type: :model, content: "Yes")
+      builder.push(type: :user, content: "How")
+      builder.push(type: role.to_sym, content: content)
+
+      builder.trim_to_token_budget!(3)
+
+      expect(builder.to_a).to eq(
+        [
+          { type: :user, content: "Ask" },
+          { type: :model, content: "Yes" },
+          { type: :user, content: "How" },
+        ],
+      )
+    end
+  end
+
   describe "chat context posts in direct messages" do
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, bot_user]) }
     fab!(:dm_message) do
@@ -442,6 +591,58 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
         user: user,
         message: "Check this image",
         upload_ids: [upload.id],
+      )
+    end
+
+    def replay_stored_chat_reply(request, bot_reply, latest, stored_reply:)
+      bot_ids = [bot_user.id]
+      entries = [stored_system_entry.dup, [stored_reply, bot_user.username, "model"]]
+      DiscourseAi::Completions::HistorySnapshot.chat(
+        request,
+        guardian: user.guardian,
+        bot_user_ids: bot_ids,
+      ).stamp!(entries)
+      ChatMessageCustomPrompt.create!(message_id: bot_reply.id, custom_prompt: entries)
+      snapshot =
+        DiscourseAi::Completions::HistorySnapshot.chat(
+          latest,
+          guardian: user.guardian,
+          bot_user_ids: bot_ids,
+        )
+      described_class.messages_from_chat(
+        latest,
+        channel: latest.chat_channel,
+        context_post_ids: nil,
+        max_messages: 10,
+        bot_user_ids: bot_ids,
+        history_snapshot: snapshot,
+      )
+    end
+
+    it "omits stored system entries from the public transcript" do
+      stored_reply = "Retained assistant evidence"
+      latest =
+        Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Follow up")
+      messages =
+        replay_stored_chat_reply(
+          public_message1,
+          public_message2,
+          latest,
+          stored_reply: stored_reply,
+        )
+
+      transcript = DiscourseAi::Completions::Prompt.text_only(messages.sole)
+      expect(transcript).to include(stored_reply, latest.message)
+      expect(transcript).not_to include(stored_system_entry.first)
+    end
+
+    it "replays direct-message history as conversation turns without the stored system entry" do
+      stored_reply = "Retained assistant evidence"
+      messages =
+        replay_stored_chat_reply(dm_message1, dm_message2, dm_message3, stored_reply: stored_reply)
+
+      expect(messages.map { |message| message.values_at(:type, :content) }).to eq(
+        [[:user, dm_message1.message], [:model, stored_reply], [:user, dm_message3.message]],
       )
     end
 
@@ -874,6 +1075,37 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       # I am mixed on asserting everything cause the test
       # will be brittle, but open to changing this
+    end
+
+    it "drops stored system entries from ordinary and topic transcripts while preserving the trusted Prompt system message" do
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [stored_system_entry, [second_post.raw, bot_user.username, "model"]],
+      )
+      options = { max_posts: 3, bot_usernames: [bot_user.username] }
+      trusted_system = "Trusted bot instructions"
+
+      conversation = described_class.messages_from_post(third_post, **options)
+      topic_messages = described_class.messages_from_post(third_post, style: :topic, **options)
+      prompt = DiscourseAi::Completions::Prompt.new(trusted_system, messages: topic_messages)
+
+      aggregate_failures do
+        expect(conversation).to eq(
+          [
+            { type: :user, content: first_post.raw, id: user.username },
+            { type: :model, content: second_post.raw },
+            { type: :user, content: third_post.raw, id: user.username },
+          ],
+        )
+        expect(prompt.messages.first).to eq(type: :system, content: trusted_system)
+        expect(prompt.messages.map { |message| message[:type] }).to eq(%i[system user])
+        topic_text = DiscourseAi::Completions::Prompt.text_only(prompt.messages.last)
+        expect(topic_text).to include(first_post.raw, second_post.raw)
+        expect(topic_text).to end_with(
+          "Latest post is by #{user.username} who just posted:\n#{third_post.raw}",
+        )
+        expect(topic_text).not_to include(stored_system_entry.first)
+      end
     end
 
     it "excludes hidden posts the triggering user cannot see from topic context" do

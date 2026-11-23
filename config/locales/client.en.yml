@@ -897,9 +897,9 @@ en:
           other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
-      copied: "copied!"
-      copy: "copy code to clipboard"
-      fullscreen: "show code in full screen"
+      copied: "Copied!"
+      copy: "Copy code to clipboard"
+      fullscreen: "Show code in full screen"
       view_code: "View code"
 
     drafts:
@@ -1008,13 +1008,13 @@ en:
       none_found: "No topics found."
       title:
         search: "Search for a Topic"
-        placeholder: "type the topic title, url or id here"
+        placeholder: "Type the topic title, URL or ID here"
 
     choose_message:
       none_found: "No messages found."
       title:
         search: "Search for a Message"
-        placeholder: "type the message title, url or id here"
+        placeholder: "Type the message title, URL or ID here"
 
     dsa_statements:
       title: "DSA classification"
@@ -1298,6 +1298,7 @@ en:
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
         queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
+        queued_for_approval_by: "Queued for approval by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -1756,16 +1757,16 @@ en:
       "17": "Links"
 
     categories:
-      categories_label: "categories"
-      subcategories_label: "subcategories"
+      categories_label: "Categories"
+      subcategories_label: "Subcategories"
       filter_by_categories_label: "Filter by: categories"
       filter_by_subcategories_label: "Filter by: subcategories"
-      no_subcategories: "no subcategories"
-      remove_filter: "remove filter"
+      no_subcategories: "No subcategories"
+      remove_filter: "Remove filter"
       plus_more_count:
         one: "+%{count} more"
         other: "+%{count} more"
-      view_all: "view all"
+      view_all: "View all"
       category: "Category"
       categories: "Categories"
       category_list: "Display category list"
@@ -3394,6 +3395,7 @@ en:
       standard: Standard
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Noto 3D Emoji
       twemoji: Twemoji
 
     category_page_style:
@@ -5143,21 +5145,21 @@ en:
       invite_private:
         title: "Invite to Message"
         email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
+        email_or_username_placeholder: "Email address or username"
         action: "Invite"
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
         not_allowed: "Sorry, that user can't be invited."
-        group_name: "group name"
+        group_name: "Group name"
 
       controls: "Topic Controls"
 
       invite_reply:
         title: "Invite"
-        username_placeholder: "username"
+        username_placeholder: "Username"
         action: "Send Invite"
-        help: "invite others to this topic via email or notifications"
+        help: "Invite others to this topic via email or notifications"
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
         discourse_connect_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
@@ -5181,14 +5183,14 @@ en:
 
       move_to:
         title: "Move to"
-        action: "move to"
+        action: "Move to"
         error: "There was an error moving posts."
 
       split_topic:
         title: "Move to New Topic"
-        action: "move to new topic"
+        action: "Move to new topic"
         topic_name: "New Topic Title"
-        radio_label: "New Topic"
+        radio_label: "New topic"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
@@ -5196,9 +5198,9 @@ en:
 
       merge_topic:
         title: "Move to Existing Topic"
-        action: "move to existing topic"
+        action: "Move to existing topic"
         error: "There was an error moving posts into that topic."
-        radio_label: "Existing Topic"
+        radio_label: "Existing topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
@@ -5206,9 +5208,9 @@ en:
 
       move_to_new_message:
         title: "Move to New Message"
-        action: "move to new message"
+        action: "Move to new message"
         message_title: "New Message Title"
-        radio_label: "New Message"
+        radio_label: "New message"
         participants: "Participants"
         instructions:
           one: "You are about to create a new message and populate it with the post you've selected."
@@ -5216,8 +5218,8 @@ en:
 
       move_to_existing_message:
         title: "Move to Existing Message"
-        action: "move to existing message"
-        radio_label: "Existing Message"
+        action: "Move to existing message"
+        radio_label: "Existing message"
         participants: "Participants"
         instructions:
           one: "Please choose the message you'd like to move that post to."
@@ -5225,7 +5227,7 @@ en:
 
       merge_posts:
         title: "Merge Selected Posts"
-        action: "merge selected posts"
+        action: "Merge selected posts"
         error: "There was an error merging the selected posts."
 
       publish_page:
@@ -5245,9 +5247,9 @@ en:
 
       change_owner:
         title: "Change Owner"
-        action: "change ownership"
+        action: "Change ownership"
         error: "There was an error changing the ownership of the posts."
-        placeholder: "username of new owner"
+        placeholder: "Username of new owner"
         instructions:
           one: "Please choose a new owner for the post by <b>@%{old_user}</b>"
           other: "Please choose a new owner for the %{count} posts by <b>@%{old_user}</b>"
@@ -5263,24 +5265,24 @@ en:
         instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
 
       multi_select:
-        select: "select"
-        selected: "selected (%{count})"
+        select: "Select"
+        selected: "Selected (%{count})"
         select_post:
-          label: "select"
+          label: "Select"
           title: "Add post to selection"
         selected_post:
-          label: "selected"
+          label: "Selected"
           title: "Click to remove post from selection"
         select_replies:
-          label: "select +replies"
+          label: "Select & replies"
           title: "Add post and all its replies to selection"
         select_below:
-          label: "select +below"
+          label: "Select & below"
           title: "Add post and all after it to selection"
-        delete: delete selected
-        cancel: cancel selecting
-        select_all: select all
-        deselect_all: deselect all
+        delete: Delete selected
+        cancel: Cancel selecting
+        select_all: Select all
+        deselect_all: Deselect all
         description:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
@@ -6429,10 +6431,10 @@ en:
       default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
-      other_tags: "Other Tags"
-      selector_tags: "tags"
-      selector_no_tags: "no tags"
-      selector_remove_filter: "remove filter"
+      other_tags: "Other tags"
+      selector_tags: "Tags"
+      selector_no_tags: "No tags"
+      selector_remove_filter: "Remove filter"
       filter_by_tags_label: "Filter by: tags"
       tags: "Tags"
       tag: "Tag"
@@ -6664,7 +6666,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
-    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_notice: "You are currently previewing a theme."
+    exit_theme_preview: "Exit preview"
     theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
@@ -9789,6 +9792,7 @@ en:
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
             create_bot: "Create bot"
+            change_bot_interactivity: "Change bot interactivity"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -10207,6 +10211,9 @@ en:
               description: "An account for integrations, webhooks, or automated posting through the API."
           back: "Back to bots"
           help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          interactive_bot: "Interactive"
+          interactive_column: "Interactive?"
+          interactive_bot_description: "Notify this bot about forum mentions, direct replies, and personal messages addressed to it. When chat is enabled, also show it in the direct message picker."
           generate_api_key: "Generate API key"
           generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
           scope_mode_description: "The key only has this bot's permissions."
@@ -10616,6 +10623,7 @@ en:
           text: "Text"
           textarea: "Textarea"
           date: "Date"
+          number: "Number"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
@@ -10624,6 +10632,10 @@ en:
         description: "You can customize any of the text on your forum."
         search: "Search text or translation keys"
         search_label: "Search"
+        preview:
+          label: "Text preview for %{key}"
+          customized: "Your text"
+          default: "Default"
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
@@ -10709,9 +10721,9 @@ en:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
-        add_url: "add URL"
-        add_host: "add host"
-        add_group: "add group"
+        add_url: "Add URL"
+        add_host: "Add host"
+        add_group: "Add group"
         compact_list:
           placeholder: "Type a value to add it"
           add_more_placeholder: "Add another…"
@@ -10850,7 +10862,7 @@ en:
           modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
-        reason_help: (A link to a post or topic)
+        reason_help: A link to a post or topic
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?

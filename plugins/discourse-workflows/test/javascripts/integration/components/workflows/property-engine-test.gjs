@@ -1581,6 +1581,61 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert.dom("select").hasValue("or");
   });
 
+  test("updates badge reason visibility when the selected badge changes", async function (assert) {
+    this.configuration = { operation: "grant", badge_id: 1 };
+    this.nodeType = "action:badge";
+    this.nodeTypes = [
+      {
+        identifier: "action:badge",
+        metadata: {
+          badges: [
+            { id: 1, name: "Community badge", hide_reason: false },
+            { id: 2, name: "Anniversary", hide_reason: true },
+          ],
+        },
+      },
+    ];
+    this.schema = {
+      badge_id: {
+        type: "integer",
+        type_options: { load_options_method: "badges" },
+        ui: { control: "combo_box" },
+        control_options: { value_property: "id", name_property: "name" },
+      },
+      reason: {
+        type: "string",
+        display_options: {
+          show: { operation: ["grant"] },
+          hide: {
+            badge_id: [
+              {
+                condition: {
+                  metadata_flag: { collection: "badges", flag: "hide_reason" },
+                },
+              },
+            ],
+          },
+        },
+      },
+    };
+
+    await renderEngine(this);
+    assert.dom('input[name="reason"]').exists("a badge can show its reason");
+
+    const badgeChooser = selectKit(".combo-box");
+    await badgeChooser.expand();
+    await badgeChooser.selectRowByValue(2);
+    assert
+      .dom('input[name="reason"]')
+      .doesNotExist("the selected badge can never display its reason");
+
+    await badgeChooser.expand();
+    await badgeChooser.selectRowByValue(1);
+    assert
+      .dom('input[name="reason"]')
+      .exists("switching back restores the reason field");
+  });
+
   test("renders combo boxes from metadata and applies option patches", async function (assert) {
     this.configuration = {
       agent_force_default_llm: true,

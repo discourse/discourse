@@ -38,7 +38,9 @@ module ::Blog
     end
 
     def feedback
-      raise Discourse::InvalidAccess unless request.headers["Origin"] == Configuration.origin
+      if request.headers["Origin"] != Configuration.request_origin(request)
+        raise Discourse::InvalidAccess
+      end
       RateLimiter.new(nil, "blog-review-feedback-ip-#{request.remote_ip}", 30, 1.hour).performed!
       RateLimiter.new(nil, "blog-review-feedback-#{@review.id}", 60, 1.hour).performed!
       Review::SubmitFeedback.call(service_params.deep_merge(params: { review_id: @review.id })) do
@@ -67,7 +69,7 @@ module ::Blog
       response.headers["Referrer-Policy"] = "no-referrer"
       request.env[ApplicationController::NO_THEMES] = true
       request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = nil
-      raise Discourse::NotFound unless Configuration.blog_request?(request)
+      raise Discourse::NotFound unless Configuration.review_request?(request)
     end
 
     def find_review

@@ -1634,6 +1634,7 @@ id:
       delete_and_agree_replies:
         title: "Hapus postingan dan balasan"
         description: "Setuju dengan penanda dan hapus post ini dan semua balasannya; jika post pertama, hapus topiknya juga."
+        confirm_title: "Hapus postingan dan balasan?"
       disagree_and_restore:
         title: "Pulihkan post"
       disagree_bundle:

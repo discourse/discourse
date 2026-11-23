@@ -586,3 +586,108 @@ acceptance("Admin - User Index", function (needs) {
     );
   });
 });
+
+const INTERACTIVE_BOT_SWITCH = ".interactive-bot .d-toggle-switch__checkbox";
+
+function botInteractivityFixtures(server, helper) {
+  [-1234, -1, 0, 3].forEach((id) => {
+    server.get(`/admin/users/${id}.json`, () =>
+      helper.response({
+        id,
+        username: "helper_bot",
+        active: true,
+        interactive_bot: id === 0,
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/f0a364/{size}.png",
+      })
+    );
+  });
+}
+
+acceptance("Admin - Bot interactivity", function (needs) {
+  needs.user({ admin: true });
+  let updates;
+  let failUpdate;
+
+  needs.pretender((server, helper) => {
+    updates = [];
+    failUpdate = false;
+    botInteractivityFixtures(server, helper);
+    server.put("/admin/users/:id/interactive_bot.json", (request) => {
+      updates.push({
+        id: request.params.id,
+        ...JSON.parse(request.requestBody),
+      });
+      return failUpdate
+        ? helper.response(422, { errors: ["Could not update bot"] })
+        : [204, {}, ""];
+    });
+  });
+
+  test("admins can enable and disable interactivity with a 204 response", async function (assert) {
+    await visit("/admin/users/-1234/helper_bot");
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .hasAttribute(
+        "aria-checked",
+        "false",
+        "reflects the returned admin model"
+      );
+    await click(INTERACTIVE_BOT_SWITCH);
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .hasAttribute("aria-checked", "true", "enables without a response body");
+    await click(INTERACTIVE_BOT_SWITCH);
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .hasAttribute("aria-checked", "false", "can disable again");
+    assert.deepEqual(
+      updates,
+      [
+        { id: "-1234", interactive_bot: true },
+        { id: "-1234", interactive_bot: false },
+      ],
+      "sends explicit boolean values to the bot endpoint"
+    );
+  });
+
+  test("zero-id bots are editable but system and human users are not", async function (assert) {
+    await visit("/admin/users/0/helper_bot");
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .hasAttribute(
+        "aria-checked",
+        "true",
+        "zero-id bot reflects its enabled state"
+      );
+    for (const id of [-1, 3]) {
+      await visit(`/admin/users/${id}/helper_bot`);
+      assert
+        .dom(INTERACTIVE_BOT_SWITCH)
+        .doesNotExist(`user ${id} has no interactivity control`);
+    }
+  });
+
+  test("failed updates retain the previous state and display an error", async function (assert) {
+    failUpdate = true;
+    await visit("/admin/users/-1234/helper_bot");
+    await click(INTERACTIVE_BOT_SWITCH);
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .hasAttribute("aria-checked", "false", "the previous state is retained");
+    assert
+      .dom(".dialog-body")
+      .includesText("Could not update bot", "the error is displayed");
+  });
+});
+
+acceptance("Admin - Bot interactivity - moderator", function (needs) {
+  needs.user({ admin: false, moderator: true });
+  needs.pretender(botInteractivityFixtures);
+
+  test("moderators cannot toggle bot interactivity", async function (assert) {
+    await visit("/admin/users/-1234/helper_bot");
+    assert
+      .dom(INTERACTIVE_BOT_SWITCH)
+      .doesNotExist("only admins see the control");
+  });
+});

@@ -101,9 +101,9 @@ class Invite::RedeemWithEmailCode
     UserField
       .required
       .where(show_on_signup: true)
-      .pluck(:id)
-      .all? do |field_id|
-        value = params.user_fields[field_id.to_s]
+      .includes(:user_field_options)
+      .all? do |field|
+        value = UserCreator.clean_custom_field_values(field, params.user_fields[field.id.to_s])
         value.present? && value != "false"
       end
   end

@@ -13,8 +13,10 @@ module ::Blog
       archive: false,
       tag: nil,
       author: nil,
-      article: nil
+      article: nil,
+      blog: Instance.default_blog
     )
+      @blog = blog
       @title = title
       @preview_token = preview_token
       @path = path
@@ -46,7 +48,7 @@ module ::Blog
     end
 
     def description
-      return SiteSetting.blog_description if description_cooked.blank?
+      return @blog.description if description_cooked.blank?
       Nokogiri::HTML5.fragment(description_cooked).text.squish
     end
 
@@ -54,8 +56,8 @@ module ::Blog
 
     def site
       {
-        "title" => SiteSetting.blog_title,
-        "description" => SiteSetting.blog_description,
+        "title" => @blog.name,
+        "description" => @blog.description,
         "url" => url("/"),
         "archive_url" => url("/archive"),
         "about_url" => url("/about"),
@@ -63,9 +65,7 @@ module ::Blog
         "community_url" => Discourse.base_url,
         "editor_url" => "#{Discourse.base_url}/blog-editor",
         "about_html" =>
-          TemplateRenderer::Html.new(
-            PrettyText.cook(SiteSetting.blog_about.presence || SiteSetting.blog_description),
-          ),
+          TemplateRenderer::Html.new(PrettyText.cook(@blog.about.presence || @blog.description)),
       }
     end
 
@@ -88,7 +88,7 @@ module ::Blog
     def heading
       return I18n.t("blog.archive") if @archive
       return Revision.author_name(@author) if @author
-      @tag&.name || SiteSetting.blog_title
+      @tag&.name || @blog.name
     end
 
     def eyebrow
@@ -111,8 +111,8 @@ module ::Blog
     def description_html
       if description_cooked.present?
         TemplateRenderer::Html.new(ArticleHtml.render(description_cooked))
-      elsif !@author && SiteSetting.blog_description.present?
-        TemplateRenderer::Html.new("<p>#{ERB::Util.html_escape(SiteSetting.blog_description)}</p>")
+      elsif !@author && @blog.description.present?
+        TemplateRenderer::Html.new("<p>#{ERB::Util.html_escape(@blog.description)}</p>")
       end
     end
 
@@ -138,7 +138,7 @@ module ::Blog
     end
 
     def url(path)
-      Configuration.url(path, preview_token: @preview_token)
+      Configuration.url(path, blog: @blog, preview_token: @preview_token)
     end
   end
 end

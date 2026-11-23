@@ -106,16 +106,42 @@ export default class LiveCallControls extends Component {
     return !!this.#ownParticipant && role !== "moderator" && role !== "speaker";
   }
 
+  get canStepDown() {
+    return (
+      this.room?.room_type === "stage" &&
+      this.#ownParticipant?.role === "speaker" &&
+      !this.currentUser?.admin &&
+      Number(this.room.creator_id) !== Number(this.currentUser?.id)
+    );
+  }
+
+  get speakRequestsDisabled() {
+    return this.room?.speak_requests_enabled === false;
+  }
+
+  get raiseHandDisabled() {
+    return !this.handRaisedAt && this.speakRequestsDisabled;
+  }
+
   get handRaisedAt() {
     return this.#ownParticipant?.hand_raised_at;
   }
 
+  get handRaisedPosition() {
+    if (!this.handRaisedAt) {
+      return null;
+    }
+    return queuePosition(this.room, this.currentUser?.id);
+  }
+
   get raiseHandTitle() {
     if (!this.handRaisedAt) {
-      return i18n("live.stage.raise_hand");
+      return this.speakRequestsDisabled
+        ? i18n("live.stage.requests_paused_hint")
+        : i18n("live.stage.raise_hand");
     }
 
-    const position = queuePosition(this.room, this.currentUser?.id);
+    const position = this.handRaisedPosition;
     const lowerHand = i18n("live.stage.lower_hand");
     return position
       ? `${lowerHand} — ${i18n("live.stage.queue_position", { position })}`
@@ -249,6 +275,11 @@ export default class LiveCallControls extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  @action
+  async stepDown() {
+    await this.liveWebrtc.stepDownFromStage(this.room.id);
   }
 
   @action
@@ -403,60 +434,120 @@ export default class LiveCallControls extends Component {
   }
 
   <template>
-    <div class="live-call-controls__combo">
-      <DButton
-        class={{dConcatClass
-          "btn-default live-call-controls__combo-main"
-          (if this.liveWebrtc.audioEnabled "" "--off")
-        }}
-        @action={{this.toggleMute}}
-        @disabled={{this.liveWebrtc.pttEnabled}}
-        @icon={{if
-          this.liveWebrtc.audioEnabled
-          "microphone"
-          "microphone-slash"
-        }}
-        @translatedTitle={{this.micTitle}}
-      >
-        {{#if this.showNoiseSuppressionBadge}}
-          <span
-            aria-hidden="true"
-            class={{dConcatClass
-              "live-call-controls__ns-badge"
-              (if this.noiseSuppressionStarting "--starting")
-            }}
-          >
-            {{dIcon "discourse-sparkles"}}
-          </span>
-        {{/if}}
-      </DButton>
+    {{#unless this.isStageListener}}
+      <div class="live-call-controls__combo live-call-controls__mic-combo">
+        <DButton
+          class={{dConcatClass
+            "btn-default live-call-controls__combo-main"
+            (if this.liveWebrtc.audioEnabled "" "--off")
+          }}
+          @action={{this.toggleMute}}
+          @disabled={{this.liveWebrtc.pttEnabled}}
+          @icon={{if
+            this.liveWebrtc.audioEnabled
+            "microphone"
+            "microphone-slash"
+          }}
+          @translatedTitle={{this.micTitle}}
+        >
+          {{#if this.showNoiseSuppressionBadge}}
+            <span
+              aria-hidden="true"
+              class={{dConcatClass
+                "live-call-controls__ns-badge"
+                (if this.noiseSuppressionStarting "--starting")
+              }}
+            >
+              {{dIcon "discourse-sparkles"}}
+            </span>
+          {{/if}}
+        </DButton>
+        <DMenu
+          @ariaLabel={{i18n "live.room.audio_options"}}
+          @icon="angle-down"
+          @identifier="live-audio-menu"
+          @onShow={{this.loadAudioDevices}}
+          @placement="top-end"
+          @title={{i18n "live.room.audio_options"}}
+          @triggerClass="btn-default live-call-controls__combo-caret"
+        >
+          <:content as |audioMenu|>
+            <DDropdownMenu as |dropdown|>
+              <dropdown.item>
+                <DButton
+                  class="btn-transparent live-call-menu__device-row"
+                  @action={{this.openInputDeviceMenu}}
+                  @forwardEvent={{true}}
+                  @icon="microphone"
+                  @label="live.voice_settings.input_audio"
+                  @suffixIcon="angle-right"
+                >
+                  {{#if this.currentInputDeviceName}}
+                    <span class="live-call-menu__current-device">
+                      {{this.currentInputDeviceName}}
+                    </span>
+                  {{/if}}
+                </DButton>
+              </dropdown.item>
+              {{#if this.audioOutputSupported}}
+                <dropdown.item>
+                  <DButton
+                    class="btn-transparent live-call-menu__device-row"
+                    @action={{this.openOutputDeviceMenu}}
+                    @forwardEvent={{true}}
+                    @icon="volume-high"
+                    @label="live.voice_settings.output_audio"
+                    @suffixIcon="angle-right"
+                  >
+                    {{#if this.currentOutputDeviceName}}
+                      <span class="live-call-menu__current-device">
+                        {{this.currentOutputDeviceName}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                </dropdown.item>
+              {{/if}}
+              <dropdown.divider />
+              <dropdown.item>
+                <DButton
+                  class="btn-transparent live-call-menu__device-row live-call-menu__noise-suppression"
+                  @action={{this.openNoiseSuppressionMenu}}
+                  @disabled={{this.noiseSuppressionStarting}}
+                  @forwardEvent={{true}}
+                  @icon="discourse-sparkles"
+                  @label="live.voice_settings.noise_suppression"
+                  @suffixIcon="angle-right"
+                >
+                  <span class="live-call-menu__current-device">
+                    {{this.currentNoiseSuppressionModeName}}
+                  </span>
+                </DButton>
+              </dropdown.item>
+              <dropdown.item>
+                <DButton
+                  class="btn-transparent"
+                  @action={{fn this.openVoiceSettings audioMenu.close}}
+                  @icon="sliders"
+                  @label="live.voice_settings.audio_settings"
+                />
+              </dropdown.item>
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      </div>
+    {{/unless}}
+    {{#if this.isStageListener}}
       <DMenu
         @ariaLabel={{i18n "live.room.audio_options"}}
-        @icon="angle-down"
+        @icon="volume-high"
         @identifier="live-audio-menu"
         @onShow={{this.loadAudioDevices}}
         @placement="top-end"
         @title={{i18n "live.room.audio_options"}}
-        @triggerClass="btn-default live-call-controls__combo-caret"
+        @triggerClass="btn-default live-call-controls__listener-audio"
       >
         <:content as |audioMenu|>
           <DDropdownMenu as |dropdown|>
-            <dropdown.item>
-              <DButton
-                class="btn-transparent live-call-menu__device-row"
-                @action={{this.openInputDeviceMenu}}
-                @forwardEvent={{true}}
-                @icon="microphone"
-                @label="live.voice_settings.input_audio"
-                @suffixIcon="angle-right"
-              >
-                {{#if this.currentInputDeviceName}}
-                  <span class="live-call-menu__current-device">
-                    {{this.currentInputDeviceName}}
-                  </span>
-                {{/if}}
-              </DButton>
-            </dropdown.item>
             {{#if this.audioOutputSupported}}
               <dropdown.item>
                 <DButton
@@ -475,22 +566,6 @@ export default class LiveCallControls extends Component {
                 </DButton>
               </dropdown.item>
             {{/if}}
-            <dropdown.divider />
-            <dropdown.item>
-              <DButton
-                class="btn-transparent live-call-menu__device-row live-call-menu__noise-suppression"
-                @action={{this.openNoiseSuppressionMenu}}
-                @disabled={{this.noiseSuppressionStarting}}
-                @forwardEvent={{true}}
-                @icon="discourse-sparkles"
-                @label="live.voice_settings.noise_suppression"
-                @suffixIcon="angle-right"
-              >
-                <span class="live-call-menu__current-device">
-                  {{this.currentNoiseSuppressionModeName}}
-                </span>
-              </DButton>
-            </dropdown.item>
             <dropdown.item>
               <DButton
                 class="btn-transparent"
@@ -502,16 +577,30 @@ export default class LiveCallControls extends Component {
           </DDropdownMenu>
         </:content>
       </DMenu>
-    </div>
-    {{#if this.isStageListener}}
       <DButton
         class={{dConcatClass
           "btn-default live-call-controls__raise-hand"
           (if this.handRaisedAt "--active")
         }}
         @action={{this.toggleRaiseHand}}
+        @disabled={{this.raiseHandDisabled}}
         @icon="hand"
         @translatedTitle={{this.raiseHandTitle}}
+      >
+        {{#if this.handRaisedPosition}}
+          <span class="live-call-controls__queue-badge">{{i18n
+              "live.stage.queue_position_badge"
+              position=this.handRaisedPosition
+            }}</span>
+        {{/if}}
+      </DButton>
+    {{/if}}
+    {{#if this.canStepDown}}
+      <DButton
+        class="btn-default live-call-controls__step-down"
+        @action={{this.stepDown}}
+        @icon="ear-listen"
+        @title="live.stage.step_down"
       />
     {{/if}}
     {{! Capture buttons are plain <button>s on purpose: DButton defers its

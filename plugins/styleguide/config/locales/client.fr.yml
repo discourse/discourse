@@ -51,6 +51,9 @@ fr:
           title: "Système de polices"
         colors:
           title: "Couleurs"
+        design_variables:
+          type: "Type"
+          default: "Par défaut"
         dialog:
           title: "Boîte de dialogue"
         icons:

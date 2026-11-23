@@ -210,6 +210,14 @@ he:
       discourse_workflows:
         ai_agent:
           mode: "מצב"
+        ai_tool:
+          tool_ref: "כלי"
+          arguments: "ארגומנטים"
+          list_item: "פריט ברשימה"
+          add_list_item: "הוספת פריט"
+        mcp_tool:
+          tool_name: "כלי"
+          arguments: "ארגומנטים"
         classify:
           text: "טקסט"
           upload_ids: "תמונות"
@@ -301,6 +309,9 @@ he:
           custom_prompt: "בקשה מותאמת אישית"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
+        review_queue:
+          setting_groups:
+            settings: "הגדרות"
         image_caption:
           setting_groups:
             settings: "הגדרות"
@@ -937,7 +948,6 @@ he:
         filter_standalone: "עצמאי"
       ai_bot:
         title: "בוט בינה מלאכותית"
-        llm: "מודל:"
         pm_warning: "הודעות בוט שיח בינה מלאכותית לא נאכפות דרך קבע על ידי המפקחים."
         cancel_streaming: "עצירת התגובה"
         try_again: "ניסיון נוסף"
@@ -997,7 +1007,6 @@ he:
           tab_label: "בינה מלאכותית"
           header: "איך אפשר לעזור?"
           submit: "הגשת שאלה"
-          disclaimer: "בינה מלאכותית מחוללת עלולה לשגות. כדאי לאמת פרטים חשובים."
           placeholder: "הגשת שאלה…"
           new: "שאלה חדשה"
           min_input_length_message:

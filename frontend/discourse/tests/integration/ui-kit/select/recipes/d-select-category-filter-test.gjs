@@ -193,9 +193,9 @@ module(
         );
 
         for (const [scope, label, level] of [
-          [".top", "Filter by: categories", "categories"],
-          [".sub", "Filter by: subcategories", "subcategories"],
-          [".all", "Filter by: subcategories", "subcategories"],
+          [".top", "Filter by: categories", "Categories"],
+          [".sub", "Filter by: subcategories", "Subcategories"],
+          [".all", "Filter by: subcategories", "Subcategories"],
         ]) {
           const root = select(scope).element();
           assert.strictEqual(root.getAttribute("aria-label"), label, scope);
@@ -229,7 +229,7 @@ module(
         );
         assert.strictEqual(
           select(".none").element().getAttribute("aria-label"),
-          "Filter by: subcategories, no subcategories"
+          "Filter by: subcategories, No subcategories"
         );
         assert.strictEqual(
           select(".none").element().dataset.value,

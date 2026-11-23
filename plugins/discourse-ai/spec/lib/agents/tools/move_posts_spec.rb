@@ -9,10 +9,7 @@ RSpec.describe DiscourseAi::Agents::Tools::MovePosts do
   fab!(:post2, :post) { Fabricate(:post, topic: topic) }
   fab!(:destination_topic, :topic)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(params = nil, **kwargs)
     params ||= kwargs

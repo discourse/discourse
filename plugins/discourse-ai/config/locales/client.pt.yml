@@ -81,6 +81,8 @@ pt:
       discourse_workflows:
         ai_agent:
           mode: "Modo"
+        ai_tool:
+          list_item: "Item da Lista"
         classify:
           text: "Texto"
           upload_ids: "Imagens"
@@ -145,6 +147,9 @@ pt:
           markdown_tables: "Gerar tabela de Marcação"
           custom_prompt: "Janela personalizada"
           translator: "Tradutor"
+        review_queue:
+          setting_groups:
+            settings: "Configurações"
         image_caption:
           setting_groups:
             settings: "Configurações"
@@ -410,7 +415,6 @@ pt:
         copy_link: "Copiar hiperligação"
         filter_all: "Todos"
       ai_bot:
-        llm: "Modelo:"
         debug_ai_modal:
           duration_label: "Duração:"
           request: "Pedido"

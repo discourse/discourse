@@ -13,14 +13,13 @@ export default {
       api.registerPluginHeaderActionComponent("blog", BlogAdminPluginActions);
       api.addAdminPluginConfigurationNav("blog", [
         {
+          label: "blog.admin.blogs_tab",
+          route: "adminPlugins.show.discourse-blog-blogs",
+        },
+        {
           label: "blog.admin.themes",
           route: "adminPlugins.show.discourse-blog-themes",
           description: "blog.admin.themes_description",
-        },
-        {
-          label: "blog.admin.identity_tab",
-          route: "adminPlugins.show.discourse-blog-identity",
-          description: "blog.admin.identity_description",
         },
       ]);
     });

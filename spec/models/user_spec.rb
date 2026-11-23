@@ -101,9 +101,11 @@ RSpec.describe User do
 
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
+      expect(user.in_any_groups?(Set[group.id])).to eq(false)
       group.add(user)
       user.reload
       expect(user.in_any_groups?([group.id])).to eq(true)
+      expect(user.in_any_groups?(Set[group.id])).to eq(true)
     end
 
     it "always returns true for system user for automated groups" do
@@ -643,6 +645,21 @@ RSpec.describe User do
           expect(user_field_value).to eq nil
         end
       end
+    end
+  end
+
+  describe "#user_fields" do
+    fab!(:number_field) { Fabricate(:user_field, field_type: "number") }
+
+    it "returns numbers for number fields" do
+      values =
+        %w[42 -2.5 1e3 abc].map do |stored_value|
+          user.set_user_field(number_field.id, stored_value)
+          user.save_custom_fields
+          user.reload.user_fields[number_field.id.to_s]
+        end
+
+      expect(values).to eql([42, -2.5, 1000, nil])
     end
   end
 
@@ -2140,6 +2157,28 @@ RSpec.describe User do
     end
   end
 
+  describe ".username_hash and default .letter_avatar_color" do
+    it "computes 32-bit signed wraparound hashes identically across ASCII and Unicode usernames" do
+      %w[a alice super_long_moderator_username_2026 日本語ユーザー].each do |name|
+        reference =
+          name
+            .each_char
+            .reduce(0) { |res, ch| [((res << 5) - res) + ch.ord].pack("L").unpack("l").first }
+            .abs
+        expect(User.username_hash(name)).to eq(reference)
+      end
+    end
+
+    it "formats default LetterAvatar::COLORS hex strings accurately" do
+      SiteSetting.restrict_letter_avatar_colors = ""
+      %w[system alice codinghorror 日本語].each do |name|
+        idx = Digest::MD5.hexdigest(name)[0...15].to_i(16) % LetterAvatar::COLORS.length
+        expected = LetterAvatar::COLORS[idx].map { |c| c.to_s(16).rjust(2, "0") }.join
+        expect(User.letter_avatar_color(name)).to eq(expected)
+      end
+    end
+  end
+
   describe ".small_avatar_url" do
     let(:user) { build(:user, username: "Sam") }
 
@@ -2976,6 +3015,43 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "publishes the state stored in the database, not the one held in memory" do
+      Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: Notification.maximum(:id))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { in_memory.publish_notifications_state }
+          .first
+
+      expect(message.data).to include(
+        seen_notification_id: user.seen_notification_id,
+        unread_notifications: 0,
+      )
+    end
+
+    it "counts and publishes under a per-user lock" do
+      DistributedMutex
+        .expects(:synchronize)
+        .with("notifications_state_#{user.id}", validity: User::NOTIFICATIONS_STATE_LOCK_SECONDS)
+        .yields
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
+    it "still publishes when the lock cannot be taken" do
+      DistributedMutex.stubs(:synchronize).raises(Discourse::ReadOnly)
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
@@ -3211,6 +3287,29 @@ RSpec.describe User do
         username: "staged1",
         name: "Stage Name",
       )
+    end
+
+    it "preserves staged data when registration policy excludes the email" do
+      notification = Fabricate(:notification, user: user)
+      SiteSetting.blocked_email_domains = "account.com"
+
+      events =
+        DiscourseEvent.track_events do
+          expect { user.unstage! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(user.reload.staged).to eq(true)
+      expect(user.custom_fields[User::FROM_STAGED]).to be_nil
+      expect(user.notifications).to include(notification)
+      expect(events.map { |event| event[:event_name] }).not_to include(:user_unstaged)
+    end
+
+    it "allows promotion when the domain is allowed" do
+      SiteSetting.allowed_email_domains = "account.com"
+
+      user.unstage!
+
+      expect(user.reload.staged).to eq(false)
     end
 
     it "correctly unstages a user" do
@@ -4283,6 +4382,16 @@ RSpec.describe User do
   end
 
   describe "#bump_last_seen_notification!" do
+    it "never moves the marker backward when another request already moved it further" do
+      notification = Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: notification.id + 1)
+
+      in_memory.bump_last_seen_notification!
+
+      expect(user.reload.seen_notification_id).to eq(notification.id + 1)
+    end
+
     it "doesn't error if there are no notifications" do
       Notification.destroy_all
       expect(user.bump_last_seen_notification!).to eq(false)

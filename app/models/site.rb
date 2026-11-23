@@ -153,6 +153,7 @@ class Site
         )
         preloaded_category_ids.concat(sidebar_category_ids)
       end
+      preloaded_category_ids = preloaded_category_ids.to_set
     end
 
     can_lazy_load_categories = @guardian.can_lazy_load_categories?

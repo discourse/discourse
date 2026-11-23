@@ -4549,10 +4549,8 @@ de:
           label: "ausgewählt"
           title: "Klicke, um den Beitrag aus der Auswahl zu entfernen"
         select_replies:
-          label: "auswählen inkl. Antworten"
           title: "Beitrag und alle Antworten zu Auswahl hinzufügen"
         select_below:
-          label: "auswählen inkl. folgender"
           title: "Beitrag und alles danach zu Auswahl hinzufügen"
         delete: ausgewählte löschen
         cancel: Auswahlvorgang abbrechen
@@ -5805,7 +5803,6 @@ de:
         other: "Entwürfe (%{count})"
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
-    theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
     theme_preview_failed: "Die Vorschau des Themes kann nicht angezeigt werden, da es nicht existiert oder du nicht berechtigt bist, darauf zuzugreifen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
@@ -8884,7 +8881,6 @@ de:
         silence_duration: "Wie lange wird der Benutzer stummgeschaltet?"
         silence_reason_title: "Grund der Stummschaltung"
         silence_reason_placeholder: "Grund der Stummschaltung"
-        silence_message: "E-Mail-Nachricht"
         suspended_until: "(bis %{until})"
         suspend_forever: "Für immer sperren"
         cant_suspend: "Der Benutzer kann nicht gesperrt werden."
@@ -9205,6 +9201,8 @@ de:
       site_text:
         description: "Du kannst jeden Text in deinem Forum individuell anpassen."
         search_label: "Suche"
+        preview:
+          default: "Standard"
         theme_disabled: "Deaktiviert"
         filters: "Filter"
         status:
@@ -9384,7 +9382,7 @@ de:
           modal_title: Abzeichen-Gruppierungen
         granted_by: Verliehen von
         granted_at: Verliehen am
-        reason_help: (ein Link zu einem Beitrag oder Thema)
+        reason_help: ein Link zu einem Beitrag oder Thema
         save: Speichern
         delete: Löschen
         delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?

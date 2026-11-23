@@ -3828,10 +3828,8 @@ fi:
           label: "valittu"
           title: "Poista viesti valituista klikkaamalla"
         select_replies:
-          label: "valitse +vastaukset"
           title: "Lisää viesti ja kaikki sen vastaukset valittuihin"
         select_below:
-          label: "valitse +myöhemmät"
           title: "Lisää viesti ja kaikki sitä myöhemmät valittuihin"
         delete: poista valitut
         cancel: peruuta valinta
@@ -4835,7 +4833,6 @@ fi:
         other: "Luonnokset (%{count})"
     safe_mode:
       enabled: "Vikasietotila on käytössä, poistu vikasietotilasta sulkemalla selainikkuna"
-    theme_preview_notice: "Esikatselet parhaillaan teemaa, sulje tämä selaimen välilehti tai ikkuna palataksesi normaaliin sivuston määritykseen."
     image_removed: "(kuva poistettu)"
     pause_notifications:
       title: "Keskeytä ilmoitukset…"
@@ -7448,7 +7445,6 @@ fi:
         silence_duration: "Kuinka pitkäksi aikaa käyttäjä hiljennetään?"
         silence_reason_title: "Hiljennyksen syy"
         silence_reason_placeholder: "Hiljennyksen syy"
-        silence_message: "Sähköpostiviesti"
         suspended_until: "(%{until} asti)"
         suspend_forever: "Hyllytä ikuisesti"
         cant_suspend: "Käyttäjää ei voi hyllyttää."
@@ -7736,6 +7732,8 @@ fi:
       site_text:
         description: "Voit mukauttaa mitä tahansa tekstiä foorumillasi."
         search_label: "Haku"
+        preview:
+          default: "Oletus"
         theme_disabled: "Pois käytöstä"
         filters: "Suodattimet"
         status:
@@ -7885,7 +7883,7 @@ fi:
           modal_title: Kunniamerkkien ryhmittely
         granted_by: Myöntäjä
         granted_at: Myönnetty
-        reason_help: (Linkki viestiin tai ketjuun)
+        reason_help: Linkki viestiin tai ketjuun
         save: Tallenna
         delete: Poista
         delete_confirm: Oletko varma, että haluat poistaa tämän kunniamerkin?

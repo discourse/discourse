@@ -22,6 +22,12 @@
     padding-block: 0.25em;
   }
 
+  &__row.--touch-dragging {
+    outline: 2px solid var(--d-drag-indicator-color);
+    outline-offset: -2px;
+    background-color: var(--tertiary-very-low);
+  }
+
   /* An emptied group member is a live drop target with no rows to give it
      height; the min-height is what keeps it reachable by pointer. */
 

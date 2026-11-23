@@ -19,6 +19,8 @@ module DiscourseAi
           light_palette_id
           dark_palette_id
           site_settings
+          styles
+          replaces_theme_id
         ].freeze
 
         def self.name
@@ -62,7 +64,15 @@ module DiscourseAi
               light: draft[:light_colors],
               dark: draft[:dark_colors],
             },
-          ) + AppearanceAuthoring.font_changes(draft[:site_settings])
+          ) + AppearanceAuthoring.font_changes(draft[:site_settings]) +
+            AppearanceAuthoring.style_changes(
+              draft[:styles],
+              palettes: {
+                light: draft[:light_colors],
+                dark: draft[:dark_colors],
+              },
+              previous: replaced_styles,
+            )
         end
 
         def approval_details
@@ -82,6 +92,7 @@ module DiscourseAi
               phase: execution_phase,
               new_theme: theme_draft?,
               new_palettes: valid_draft? && draft[:kind] == "palettes",
+              styles: valid_draft? && draft[:styles].present?,
             )
           return error_response(refusal) if refusal
           if !valid_draft?
@@ -169,6 +180,13 @@ module DiscourseAi
 
         # Drafts of existing palettes carry their colors too, for the approval
         # card.
+        # The styles of the version a new version replaces, so the approval
+        # card shows what changes, styles it removes too.
+        def replaced_styles
+          return if draft[:replaces_theme_id].blank?
+          AppearanceChange.kind_theme.find_by(theme_id: draft[:replaces_theme_id])&.styles
+        end
+
         def valid_draft?
           draft.present? && SERVICES.key?(draft[:kind]) && draft[:name].present? &&
             draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash) &&

@@ -16,7 +16,7 @@ RSpec.describe Blog::Policy::Ready do
     end
 
     it "passes before the blog has created its categories" do
-      SiteSetting.blog_category = ""
+      update_default_blog(category_id: "")
       SiteSetting.blog_drafts_category = ""
 
       expect(policy.call).to eq(true)

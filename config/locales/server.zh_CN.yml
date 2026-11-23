@@ -75,6 +75,7 @@ zh_CN:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      authoring_guide_unavailable: "指南不可用。请从本站存储库的 .skills/ 或 docs/developer-guides/ 目录下选择一个 Markdown 文件（最大 256 KiB）。"
       category_create_failed: "无法创建类别。"
       category_delete_confirmation_required: "类别删除必须得到确认"
       category_delete_name_mismatch: "类别名称不匹配"
@@ -101,6 +102,7 @@ zh_CN:
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
       post_not_found: "帖子未找到"
+      post_not_created: "无法发布该帖子"
       user_directory_disabled: "用户目录已禁用"
       filter_only_for_filtered_view: "筛选功能仅在已筛选视图中受支持。"
       filter_required: "筛选视图需要一个非空白的筛选器。"
@@ -159,6 +161,10 @@ zh_CN:
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
+      webhook_event_not_deliverable: "此事件无法重新发送。请使用 ping 工具发送 ping 事件。"
+      webhook_event_not_found: "此事件不属于此 Webhook 或已不再可用。"
+      webhook_not_found: "未找到 Webhook"
+      webhook_unknown_selection: "%{field} 中的一个或多个 ID 未知或不可用"
       upload_not_found: "未找到上传文件"
       upload_too_large: "上传文件过大"
       user_create_failed: "无法创建用户"
@@ -702,6 +708,10 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户无法提及其他用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中只能提及 %{count} 个用户。"
+  no_embedded_media_allowed_group: "对不起，你不能在帖子中包含图片、视频或音频。你可以在句子里链接到它们。"
+  no_embedded_media_allowed: "对不起，新用户不能在帖子中包含图片、视频或音频。你可以在句子里链接到它们。"
+  too_many_embedded_media:
+    other: "抱歉，新用户只能在帖子中包含 %{count} 个图片、视频或音频文件。"
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
@@ -2913,7 +2923,6 @@ zh_CN:
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将“常见问题解答”页面重命名为“准则”。“常见问题解答”页面仍可通过 /faq 访问。{{setting:faq_url}} 设置与以前一样有效。"
-    enable_category_hashtag_cards: "当用户点击类别标签时，如果用户有权查看该类别，则显示一个浮动类别卡片。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
@@ -3631,20 +3640,6 @@ zh_CN:
       title: "帖子被隐藏"
       preview: "由于社区成员的举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        此帖子由于社区举报而被隐藏，因此请考虑根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后编辑您的帖子，然后它将自动被取消隐藏**。
-
-        不过，如果帖子再次由于社区举报而被隐藏，它将保持隐藏至管理人员介入。
-
-        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     reviewable_queued_post_revise_and_reject_edit_post: "您可以编辑下方的原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "您可以编辑下方的原帖并重新提交，以进行建议的更改。"
     reviewable_queued_post_revise_and_reject_edit_topic: "您可以编辑下方的话题原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
@@ -3697,31 +3692,9 @@ zh_CN:
       title: "帖子被再次隐藏"
       preview: "由于社区成员的再次举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏，已通知管理人员"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被重新隐藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        此帖子被社区举报，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直至由管理人员处理**。
-
-        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     queued_by_staff:
       title: "帖子需要审批"
       subject_template: "帖子被管理人员隐藏，等待审批"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
-
-        <%{base_url}%{url}>
-
-        在管理人员审核之前，您的帖子将保持隐藏状态。
-
-        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
       title: "遭到举报的帖子被管理人员恢复"
       subject_template: "遭到举报的帖子被管理人员恢复"
@@ -4262,6 +4235,9 @@ zh_CN:
         作为预防措施，您的新帐户已被禁止创建新回复或话题，直到管理人员可以审核您的帐户。对于任何不便之处，我们深表歉意。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      subject_template: "您的帐户已被禁言"
     silenced_by_staff:
       title: "被管理人员禁言"
       preview: "帐户已被临时暂停。"
@@ -4288,16 +4264,6 @@ zh_CN:
     user_automatically_silenced_with_reason:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一条由系统发送的消息。
-
-        新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        原因 - %{reason}
-
-        请[审核举报内容](%{base_url}/review)。如果 %{username} 被错误地禁言，请点击[此用户管理页面](%{user_url})中的解除禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 站点设置进行更改。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -4643,51 +4609,10 @@ zh_CN:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停，直至 %{suspended_till}。
-
-        原因 - %{reason}
-
-        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_suspended_forever:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停。
-
-        原因 - %{reason}
-
-        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "帐户被禁言"
-      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
-      subject_template_improved: "您的帐户已被禁言"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言，直至 %{silenced_till}。
-
-        原因 - %{reason}
-
-        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
-    account_silenced_forever:
-      title: "帐户被禁言"
-      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
-      subject_template_improved: "您的帐户已被禁言"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言。
-
-        原因 - %{reason}
-
-        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_deleted:
       title: "帐户已删除"
       subject_template: "[%{email_prefix}] 您的帐户已被删除"
@@ -4892,10 +4817,6 @@ zh_CN:
     signup_after_reject:
       title: "拒绝后注册"
       subject_template: "您加入 %{site_name} 的请求被拒绝"
-      text_body_template: |
-        一名管理人员拒绝了您在 %{site_name} 上的帐户。
-
-        %{reject_reason}
     signup:
       title: "注册"
       preview: "确认您的帐户。"
@@ -5779,6 +5700,7 @@ zh_CN:
       delete_and_ignore_replies:
         title: "删除帖子与回复，并忽略举报"
         description: "删除帖子及其所有回复，忽略举报，并将其从队列中移除；如果是第一个帖子，同时删除话题"
+        confirm_title: "删除帖子与回复，并忽略举报?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       delete_and_agree:
@@ -5788,6 +5710,7 @@ zh_CN:
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
+        confirm_title: "删除帖子和回复?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       disagree_and_restore:
@@ -5854,11 +5777,13 @@ zh_CN:
         delete:
           title: "删除用户"
           description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址"
+          confirm_title: "删除 @%{username}？"
           confirm: "您确定要删除 @%{username} 吗？"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
+          confirm_title: "删除并阻止 @%{username} ？"
           confirm: "您确定要删除并屏蔽 @%{username} 吗？"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:

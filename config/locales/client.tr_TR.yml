@@ -4245,10 +4245,8 @@ tr_TR:
           label: "seçili"
           title: "Gönderiyi seçimden kaldırmak için tıklayın"
         select_replies:
-          label: "+yanıtları seçin"
           title: "Gönderiyi ve tüm yanıtlarını seçime ekleyin"
         select_below:
-          label: "+aşağıdan seçin"
           title: "Gönderiyi ve ondan sonraki her şeyi seçime ekle"
         delete: seçilenleri sil
         cancel: seçimi iptal et
@@ -5399,7 +5397,6 @@ tr_TR:
         other: "Taslaklar (%{count})"
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
-    theme_preview_notice: "Şu anda bir temayı ön izliyorsunuz, normal site yapılandırmanıza dönmek için bu tarayıcı sekmesini veya penceresini kapatın."
     theme_preview_failed: "Tema mevcut olmadığı veya erişim izniniz olmadığı için önizleme yapılamadı."
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
@@ -8206,7 +8203,6 @@ tr_TR:
         silence_duration: "Kullanıcı ne kadar süreyle susturulacak?"
         silence_reason_title: "Susturulma sebebi"
         silence_reason_placeholder: "Susturulma Nedeni"
-        silence_message: "E-posta Mesajı"
         suspended_until: "(şu zamana kadar: %{until})"
         suspend_forever: "Sonsuza kadar askıya al"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
@@ -8520,6 +8516,8 @@ tr_TR:
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
         search_label: "Ara"
+        preview:
+          default: "Varsayılan"
         theme_disabled: "Devre Dışı"
         filters: "Filtreler"
         status:
@@ -8693,7 +8691,7 @@ tr_TR:
           modal_title: Rozet Gruplamaları
         granted_by: 'Veren:'
         granted_at: 'Verme zamanı:'
-        reason_help: (Bir gönderi veya konuya bağlantı)
+        reason_help: Bir gönderi veya konuya bağlantı
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinizden emin misiniz?

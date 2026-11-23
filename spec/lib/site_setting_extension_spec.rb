@@ -1896,6 +1896,16 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
     end
 
+    it "returns independent mutable copies from cached _map getters and updates when changed" do
+      SiteSetting.emoji_deny_list = "smile|frown"
+      first = SiteSetting.emoji_deny_list_map
+      first << "mutated"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
+
+      SiteSetting.emoji_deny_list = "wink"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[wink])
+    end
+
     it "handles splitting tag_list settings" do
       SiteSetting.digest_suppress_tags = "blah|blah2"
       expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])

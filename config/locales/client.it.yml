@@ -3826,10 +3826,8 @@ it:
           label: "selezionato"
           title: "Clicca per rimuovere un messaggio dalla selezione"
         select_replies:
-          label: "seleziona +risposte"
           title: "Aggiungi il messaggio e tutte le risposte alla selezione"
         select_below:
-          label: "seleziona +seguenti"
           title: "Aggiungi questo messaggio e tutti quelli seguenti alla selezione"
         delete: elimina i selezionati
         cancel: annulla selezione
@@ -4833,7 +4831,6 @@ it:
         other: "Bozze (%{count})"
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
-    theme_preview_notice: "Al momento stai visualizzando in anteprima un tema. Chiudi questa scheda o finestra del browser per tornare alla configurazione normale del sito."
     image_removed: "(immagine rimossa)"
     pause_notifications:
       title: "Sospendi le notifiche per…"
@@ -7440,7 +7437,6 @@ it:
         silence_duration: "Per quanto tempo l'utente sarà silenziato? "
         silence_reason_title: "Motivo del silenzio"
         silence_reason_placeholder: "Motivo Silenzio"
-        silence_message: "Messaggio Email"
         suspended_until: "(fino a %{until})"
         suspend_forever: "Sospendi definitivamente"
         cant_suspend: "Questo utente non può essere sospeso."
@@ -7728,6 +7724,8 @@ it:
       site_text:
         description: "Puoi personalizzare qualsiasi testo sul tuo forum."
         search_label: "Cerca"
+        preview:
+          default: "Predefinito"
         theme_disabled: "Disabilitati"
         filters: "Filtri"
         status:
@@ -7877,7 +7875,7 @@ it:
           modal_title: Raggruppamento Distintivi
         granted_by: Assegnato da
         granted_at: Assegnata in data
-        reason_help: (Un collegamento a un messaggio o argomento)
+        reason_help: Un collegamento a un messaggio o argomento
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler cancellare questo distintivo?

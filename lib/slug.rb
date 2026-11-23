@@ -3,9 +3,12 @@
 module Slug
   CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
   MAX_LENGTH = 255
+  DIGITS_ONLY_REGEXP = /\A\d*\z/
+  EDGE_DASHES_REGEXP = /\A-+|-+\z/
+  private_constant :DIGITS_ONLY_REGEXP, :EDGE_DASHES_REGEXP
 
   def self.for(string, default = "topic", max_length = MAX_LENGTH, method: nil)
-    string = string.gsub(Emoji::EMOJI_CODE_REGEXP, "") if string.present?
+    string = string.gsub(Emoji::EMOJI_CODE_REGEXP, "") if string.present? && string.include?(":")
     method = (method || SiteSetting.slug_generation_method || :ascii).to_sym
     max_length = 9999 if method == :encoded # do not truncate encoded slugs
 
@@ -20,28 +23,35 @@ module Slug
       end
 
     slug = prettify_slug(slug, max_length: max_length)
-    (slug.blank? || slug_is_only_numbers?(slug)) ? default : slug
+    slug.presence || default
   end
 
   private
 
   def self.slug_is_only_numbers?(slug)
-    (slug =~ /[^\d]/).blank?
+    slug.blank? || DIGITS_ONLY_REGEXP.match?(slug)
   end
 
   def self.prettify_slug(slug, max_length:)
     # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
-    slug = (slug_is_only_numbers?(slug) ? "" : slug)
+    return "" if slug_is_only_numbers?(slug)
 
-    slug
-      .tr("_", "-")
-      .truncate(max_length, omission: "")
-      .squeeze("-") # squeeze continuous dashes to prettify slug
-      .gsub(/\A-+|-+\z/, "") # remove possible trailing and preceding dashes
+    slug = slug.tr("_", "-") if slug.include?("_")
+    slug = slug.truncate(max_length, omission: "") if slug.length > max_length
+    slug = slug.squeeze("-") if slug.include?("--")
+    slug = slug.gsub(EDGE_DASHES_REGEXP, "") if slug.start_with?("-") || slug.end_with?("-")
+
+    slug_is_only_numbers?(slug) ? "" : slug
   end
 
   def self.ascii_generator(string)
-    I18n.with_locale(SiteSetting.default_locale) { string.tr("'", "").parameterize }
+    cleaned = string.include?("'") ? string.delete("'") : string
+    target_locale = SiteSetting.default_locale.to_sym
+    if I18n.locale == target_locale
+      cleaned.parameterize
+    else
+      I18n.with_locale(target_locale) { cleaned.parameterize }
+    end
   end
 
   def self.encoded_generator(string, downcase: true)

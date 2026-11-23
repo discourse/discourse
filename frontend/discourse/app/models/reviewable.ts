@@ -97,6 +97,7 @@ export interface ReviewableAction {
   icon: string | null;
   button_class: string | null;
   label: string;
+  confirm_title?: string;
   confirm_message?: string;
   confirm_destructive?: boolean;
   description?: string;
@@ -229,7 +230,7 @@ export interface ReviewableFields {
   reply_count?: number;
   reply_to_post_number?: number;
   link_admin?: boolean;
-  user_fields?: Record<string, string | string[]>;
+  user_fields?: Record<string, string | string[] | number | boolean | null>;
   reject_reason?: string | null;
   /** Embedded JSON, unlike the side-loaded target_created_by model. */
   target_user?: TopicBasicUser & ReviewableUserFields;
@@ -348,16 +349,20 @@ export default class Reviewable extends RestModel {
   get flaggedReviewableContextQuestion(): string {
     // TODO(typescript-pending): uniqueItemsFromArray loses its element type; remove this assertion when generic.
     const uniqueReviewableScores = uniqueItemsFromArray(
-      this.reviewable_scores,
+      this.reviewable_scores.filter(
+        (score) => score.score_type!.type !== "needs_approval"
+      ),
       "score_type.type"
     ) as ReviewableScore[];
 
-    if (uniqueReviewableScores.length === 1) {
-      if (uniqueReviewableScores[0].score_type!.type === "notify_moderators") {
-        return i18n("review.context_question.something_else_wrong", {
-          reviewable_type: this.humanNoun,
-        });
-      }
+    if (
+      uniqueReviewableScores.length === 0 ||
+      (uniqueReviewableScores.length === 1 &&
+        uniqueReviewableScores[0].score_type!.type === "notify_moderators")
+    ) {
+      return i18n("review.context_question.something_else_wrong", {
+        reviewable_type: this.humanNoun,
+      });
     }
 
     const listOfQuestions = I18n.listJoiner(

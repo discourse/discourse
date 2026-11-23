@@ -3824,10 +3824,8 @@ vi:
           label: "đã chọn"
           title: "Nhấp để xóa tút khỏi lựa chọn"
         select_replies:
-          label: "chọn + trả lời"
           title: "Thêm tút và tất cả các câu trả lời của nó cho lựa chọn"
         select_below:
-          label: "chọn + bên dưới"
           title: "Thêm tút và tất cả sau đó để lựa chọn"
         delete: xóa lựa chọn
         cancel: hủy lựa chọn
@@ -4870,7 +4868,6 @@ vi:
         other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
-    theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
     theme_preview_failed: "Không thể xem trước theme vì theme đó không tồn tại hoặc bạn không có quyền truy cập."
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:
@@ -7624,7 +7621,6 @@ vi:
         silence_duration: "Thành viên sẽ bị hạn chế trong bao lâu?"
         silence_reason_title: "Lý do hạn chế"
         silence_reason_placeholder: "Lý do hạn chế"
-        silence_message: "Tin nhắn Email"
         suspended_until: "(đến %{until})"
         suspend_forever: "Đình chỉ vĩnh viễn"
         cant_suspend: "Thành viên này không thể bị đình chỉ."
@@ -7938,6 +7934,8 @@ vi:
       site_text:
         description: "Bạn có thể tùy chỉnh bất kỳ văn bản nào trên diễn đàn của mình."
         search_label: "Tìm"
+        preview:
+          default: "Mặc định"
         theme_disabled: "Vô hiệu hóa"
         filters: "Bộ lọc"
         title: "Văn bản trang web"
@@ -8096,7 +8094,7 @@ vi:
           modal_title: Nhóm huy hiệu
         granted_by: Trao bởi
         granted_at: Đã trao
-        reason_help: (Link của tút hoặc chủ đề)
+        reason_help: Link của tút hoặc chủ đề
         save: Lưu
         delete: Xóa
         delete_confirm: Bạn có chắc chắn muốn xóa huy hiệu này?

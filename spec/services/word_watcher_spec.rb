@@ -145,6 +145,119 @@ RSpec.describe WordWatcher do
       end
     end
 
+    context "when cache is enabled" do
+      before do
+        described_class.enable_cache
+        described_class.clear_cache!
+      end
+
+      after do
+        described_class.disable_cache
+        described_class.clear_cache!
+      end
+
+      it "caches compiled regexps in memory and invalidates when watched words or settings change" do
+        SiteSetting.watched_words_regular_expressions = false
+        first = described_class.compiled_regexps_for_action(:block)
+        Scheduler::Defer.do_all_work
+        second = described_class.compiled_regexps_for_action(:block)
+
+        expect(second).to equal(first)
+        expect(described_class.compiled_regexps_for_action(:censor)).to eq([])
+        Scheduler::Defer.do_all_work
+        expect(described_class.compiled_regexps_for_action(:censor)).to eq([])
+
+        SiteSetting.watched_words_regular_expressions = true
+        regexp_mode = described_class.compiled_regexps_for_action(:block)
+        expect(regexp_mode).not_to equal(first)
+
+        new_word =
+          Fabricate(:watched_word, word: "freshblockedword", action: WatchedWord.actions[:block])
+        updated = described_class.compiled_regexps_for_action(:block)
+        expect(updated.any? { |r| r.match?("freshblockedword") }).to eq(true)
+
+        new_word.destroy!
+        after_destroy = described_class.compiled_regexps_for_action(:block)
+        expect(after_destroy.any? { |r| r.match?("freshblockedword") }).to eq(false)
+      end
+    end
+
+    context "when cache is enabled and invalidation races with a rebuild" do
+      before do
+        described_class.enable_cache
+        described_class.clear_cache!
+      end
+
+      after do
+        described_class.disable_cache
+        described_class.clear_cache!
+      end
+
+      it "defers invalidation until the transaction commits" do
+        described_class.compiled_regexps_for_action(:block)
+        store = described_class.send(:compiled_regexps_cache).hash
+        expect(store.keys.grep(/\Ablock:/)).to be_present
+
+        WatchedWord.transaction(requires_new: true) do
+          Fabricate(:watched_word, word: "committedlater", action: WatchedWord.actions[:block])
+          expect(store.keys.grep(/\Ablock:/)).to be_present
+        end
+
+        expect(store.keys.grep(/\Ablock:/)).to be_empty
+        expect(
+          described_class
+            .compiled_regexps_for_action(:block)
+            .any? { |r| r.match?("committedlater") },
+        ).to eq(true)
+      end
+
+      it "builds from the database even when the Redis word list is stale" do
+        Fabricate(:watched_word, word: "newword", action: WatchedWord.actions[:block])
+        Discourse.cache.write(
+          described_class.cache_key(:block),
+          { "oldword" => { word: "oldword" } },
+          expires_in: 1.day,
+        )
+        described_class.clear_cache!
+        Discourse.cache.write(
+          described_class.cache_key(:block),
+          { "oldword" => { word: "oldword" } },
+          expires_in: 1.day,
+        )
+
+        regexps = described_class.compiled_regexps_for_action(:block)
+
+        expect(regexps.any? { |r| r.match?("newword") }).to eq(true)
+        expect(regexps.any? { |r| r.match?("oldword") }).to eq(false)
+      end
+
+      it "queries the database once per action until invalidated" do
+        Fabricate(:watched_word, word: "oldword", action: WatchedWord.actions[:block])
+        described_class.compiled_regexps_for_action(:block)
+
+        queries =
+          track_sql_queries { 3.times { described_class.compiled_regexps_for_action(:block) } }
+
+        expect(queries.grep(/watched_words/)).to be_empty
+      end
+
+      it "does not cache a build that was started before a clear" do
+        Fabricate(:watched_word, word: "oldword", action: WatchedWord.actions[:block])
+        stale_build = described_class.method(:build_compiled_regexps_for_action)
+        allow(described_class).to receive(:build_compiled_regexps_for_action) do |*args, **kw|
+          result = stale_build.call(*args, **kw)
+          described_class.clear_cache!
+          result
+        end
+
+        described_class.compiled_regexps_for_action(:block)
+        allow(described_class).to receive(:build_compiled_regexps_for_action).and_call_original
+
+        store = described_class.send(:compiled_regexps_cache).hash
+        expect(store.keys.grep(/\Ablock:/)).to be_empty
+      end
+    end
+
     context "when regular expression is invalid" do
       before do
         SiteSetting.watched_words_regular_expressions = true

@@ -1985,6 +1985,24 @@ RSpec.describe UsersController do
       include_examples "failed signup"
     end
 
+    context "when using a value that isn't a number for a number user field on signup" do
+      fab!(:user_field) { Fabricate(:user_field, field_type: "number") }
+
+      let(:create_params) do
+        {
+          name: @user.name,
+          username: @user.username,
+          password: "strongpassword",
+          email: @user.email,
+          user_fields: {
+            user_field.id.to_s => "forty-two",
+          },
+        }
+      end
+
+      include_examples "failed signup"
+    end
+
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field, :user_field)
@@ -2138,6 +2156,53 @@ RSpec.describe UsersController do
           end
         end
 
+        context "with number fields" do
+          before { sign_in(user1) }
+
+          fab!(:user_field) do
+            Fabricate(:user_field, field_type: "number", requirement: "optional")
+          end
+
+          def stored_value
+            user1.reload.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"]
+          end
+
+          it "stores numbers in the format a number input submits" do
+            %w[42 -7 3.14 .5 1e3 -2.5E-4].each do |number|
+              put update_user_url, params: { user_fields: { field_id => " #{number} " } }
+
+              expect(stored_value).to eq(number)
+            end
+          end
+
+          it "stores numbers sent as JSON numbers" do
+            put update_user_url, params: { user_fields: { field_id => 42 } }, as: :json
+
+            expect(response.status).to eq(200)
+            expect(stored_value).to eq("42")
+          end
+
+          it "discards values that aren't numbers" do
+            ["abc", "0x1A", "1_000", "1.", "NaN", "Infinity", "1e999", %w[1 2]].each do |value|
+              put update_user_url, params: { user_fields: { field_id => "42" } }
+              put update_user_url, params: { user_fields: { field_id => value } }
+
+              expect(stored_value).to be_nil
+            end
+          end
+
+          it "rejects a value that isn't a number if the field is required" do
+            put update_user_url, params: { user_fields: { field_id => "42" } }
+            user_field.for_all_users!
+
+            expect do
+              put update_user_url, params: { user_fields: { field_id => "abc" } }
+            end.not_to change { user1.reload.user_fields[field_id] }
+
+            expect(response.status).to eq(422)
+          end
+        end
+
         let(:create_params) do
           {
             name: @user.name,
@@ -2219,6 +2284,70 @@ RSpec.describe UsersController do
       end
 
       fab!(:staged) { Fabricate(:staged, email: "staged@account.com", active: true) }
+
+      shared_examples "an excluded staged account" do |setting, domains|
+        it "preserves the staged account when excluded by #{setting}" do
+          SiteSetting.public_send("#{setting}=", domains)
+
+          post "/u.json",
+               params:
+                 honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+          expect(staged.reload.staged).to eq(true)
+          expect(staged.active).to eq(true)
+          expect(staged.custom_fields[User::FROM_STAGED]).to be_nil
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.not_allowed"))
+        end
+      end
+
+      include_examples "an excluded staged account", :allowed_email_domains, "allowed.com"
+      include_examples "an excluded staged account", :blocked_email_domains, "account.com"
+
+      it "preserves the staged account when its email is screened" do
+        ScreenedEmail.block(staged.email)
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.blocked"))
+        expect(staged.reload.staged).to eq(true)
+      end
+
+      it "honors a provider override for the verified staged email" do
+        SiteSetting.blocked_email_domains = "account.com"
+        server_session[:authentication] = {
+          email: staged.email,
+          email_valid: true,
+          skip_email_validation: true,
+        }
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(staged.reload.staged).to eq(false)
+      end
+
+      it "does not apply a provider override verified for a different email" do
+        SiteSetting.blocked_email_domains = "account.com"
+        server_session[:authentication] = {
+          email: "other@account.com",
+          email_valid: true,
+          skip_email_validation: true,
+        }
+
+        post "/u.json",
+             params:
+               honeypot_magic(email: staged.email, username: "zogstrip", password: "P4ssw0rd$$")
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include(I18n.t("user.email.not_allowed"))
+        expect(staged.reload.staged).to eq(true)
+      end
 
       it "claims the staged account" do
         post "/u.json",
@@ -6304,6 +6433,25 @@ RSpec.describe UsersController do
         expect(response.headers["X-Robots-Tag"]).to eq("noindex")
       end
 
+      it "does not leak retained custom avatar and gravatar images to anonymous viewers" do
+        another_user.user_stat.update!(post_count: 1)
+        custom_upload = Fabricate(:upload, user: another_user)
+        gravatar_upload = Fabricate(:upload, user: another_user)
+        another_user.create_user_avatar!(
+          custom_upload_id: custom_upload.id,
+          gravatar_upload_id: gravatar_upload.id,
+        )
+
+        get "/u/#{another_user.username}.json"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["user"]
+
+        expect(parsed).not_to have_key("custom_avatar_upload_id")
+        expect(parsed).not_to have_key("custom_avatar_template")
+        expect(parsed).not_to have_key("gravatar_avatar_upload_id")
+        expect(parsed).not_to have_key("gravatar_avatar_template")
+      end
+
       describe "user profile views" do
         it "tracks an anonymous profile view" do
           get "/"
@@ -6329,6 +6477,28 @@ RSpec.describe UsersController do
         json = response.parsed_body
 
         expect(json["user"]["has_title_badges"]).to eq(false)
+      end
+
+      it "exposes the owner's retained custom avatar and gravatar metadata" do
+        custom_upload = Fabricate(:upload, user: user1)
+        gravatar_upload = Fabricate(:upload, user: user1)
+        user1.create_user_avatar!(
+          custom_upload_id: custom_upload.id,
+          gravatar_upload_id: gravatar_upload.id,
+        )
+
+        get "/u/#{user1.username}.json"
+        expect(response.status).to eq(200)
+        parsed = response.parsed_body["user"]
+
+        expect(parsed["custom_avatar_upload_id"]).to eq(custom_upload.id)
+        expect(parsed["custom_avatar_template"]).to eq(
+          User.avatar_template(user1.username, custom_upload.id),
+        )
+        expect(parsed["gravatar_avatar_upload_id"]).to eq(gravatar_upload.id)
+        expect(parsed["gravatar_avatar_template"]).to eq(
+          User.avatar_template(user1.username, gravatar_upload.id),
+        )
       end
 
       it "returns not found when the username doesn't exist" do
@@ -6963,14 +7133,15 @@ RSpec.describe UsersController do
 
   describe "#search_users" do
     fab!(:topic)
-    let(:user) { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
+    fab!(:user) do
+      SearchIndexer.with_indexing do
+        Fabricate(:user, username: "joecabot", name: "Lawrence Tierney")
+      end
+    end
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let(:staged_user) { Fabricate(:user, staged: true) }
 
-    before do
-      SearchIndexer.enable
-      post1
-    end
+    before { SearchIndexer.enable }
 
     it "searches when provided the term only" do
       get "/u/search/users.json", params: { term: user.name.split(" ").last }
@@ -7081,6 +7252,8 @@ RSpec.describe UsersController do
     end
 
     it "searches when provided the topic only" do
+      post1
+
       get "/u/search/users.json", params: { topic_id: topic.id }
       expect(response.status).to eq(200)
       json = response.parsed_body
@@ -7088,6 +7261,8 @@ RSpec.describe UsersController do
     end
 
     it "searches when provided the term and topic" do
+      post1
+
       get "/u/search/users.json", params: { term: user.name.split(" ").last, topic_id: topic.id }
 
       expect(response.status).to eq(200)
@@ -9066,18 +9241,18 @@ RSpec.describe UsersController do
       register_test_bookmarkable
       TopicUser.change(user1.id, bookmark1.bookmarkable.topic_id, total_msecs_viewed: 1)
       TopicUser.change(user1.id, bookmark2.bookmarkable_id, total_msecs_viewed: 1)
-      Fabricate(:post, topic: bookmark2.bookmarkable)
-      bookmark3 && bookmark4
+      bookmark3
     end
 
     after { DiscoursePluginRegistry.reset! }
 
     fab!(:topic)
     fab!(:post)
-    let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
-    let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
+    fab!(:topic_post) { Fabricate(:post, topic: topic) }
+    fab!(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: post) }
+    fab!(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: topic) }
+    fab!(:bookmark4, :bookmark)
     let(:bookmark3) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:user)) }
-    let(:bookmark4) { Fabricate(:bookmark) }
 
     it "returns a list of serialized bookmarks for the user" do
       sign_in(user1)

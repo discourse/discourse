@@ -57,6 +57,13 @@ const CUE_PATTERNS = {
       { frequency: 392, offset: 0.07, duration: 0.07, gain: 0.1 },
     ],
   },
+  handRaised: {
+    direction: "up",
+    notes: [
+      { frequency: 587.33, offset: 0, duration: 0.08, gain: 0.1 },
+      { frequency: 880, offset: 0.09, duration: 0.11, gain: 0.11 },
+    ],
+  },
 };
 
 async function playCue(cueName, soundName) {
@@ -99,6 +106,10 @@ export function playDeafenSound(soundName) {
 
 export function playUndeafenSound(soundName) {
   return playCue("undeafened", soundName);
+}
+
+export function playHandRaisedSound(soundName) {
+  return playCue("handRaised", soundName);
 }
 
 let ringtoneTimer = null;

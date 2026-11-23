@@ -2076,10 +2076,8 @@ th:
           label: "เลือกแล้ว"
           title: "คลิกเพื่อลบโพสต์จากการเลือก"
         select_replies:
-          label: "เลือก + ตอบ"
           title: "เพิ่มโพสต์และคำตอบทั้งหมดไปยังการเลือก"
         select_below:
-          label: "เลือก+ด้านล่าง"
           title: "เพิ่มโพสต์และทุกอย่างหลังจากนั้นไปยังการเลือก"
         delete: ลบที่เลือก
         cancel: ยกเลิกการเลือก
@@ -3453,7 +3451,6 @@ th:
         suspend_message: "ข้อความอีเมล"
         suspended_by: "ระงับการใช้งานโดย"
         silence_reason: "เหตุผล"
-        silence_message: "ข้อความอีเมล"
         suspended_until: "(จนกระทั่ง%{until})"
         cant_suspend: "ไม่สามารถระงับผู้ใช้งานนี้ได้"
         delete_posts_failed: "มีปัญหาขณะกำลังลบโพสต์"
@@ -3563,6 +3560,8 @@ th:
           dropdown: "ดร็อปดาวน์"
       site_text:
         search_label: "ค้นหา"
+        preview:
+          default: "ค่าเริ่มต้น"
         theme_disabled: "ปิดใช้งานแล้ว"
         edit: "แก้ไข"
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
@@ -3631,7 +3630,7 @@ th:
           modal_title: การจัดกลุ่มเหรียญ
         granted_by: อนุญาตโดย
         granted_at: อนุญาตเมื่อ
-        reason_help: (ลิงก์ไปยังหัวข้อหรือโพส)
+        reason_help: ลิงก์ไปยังหัวข้อหรือโพส
         save: บันทึก
         delete: ลบ
         delete_confirm: คุณแน่ใจหรือว่าต้องการลบเหรียญนี้

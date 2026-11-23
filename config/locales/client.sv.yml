@@ -3292,10 +3292,8 @@ sv:
           label: "markerad"
           title: "Klicka för att ta bort inlägg från markering"
         select_replies:
-          label: "välj +svar"
           title: "Lägg till inlägg samt alla tillhörande svar till markering"
         select_below:
-          label: "välj +nedanför"
           title: "Lägg till inlägg, samt allting efter det, till markering"
         delete: radera markerade
         cancel: avbryt markering
@@ -6018,7 +6016,6 @@ sv:
         silence_modal_title: "Tysta användaren"
         silence_duration: "Hur länge ska användaren vara tystad?"
         silence_reason_placeholder: "Anledning till att tysta"
-        silence_message: "E-postmeddelande"
         suspended_until: "(till %{until})"
         suspend_forever: "Stäng av för alltid"
         cant_suspend: "Denna användare kan inte uteslutas."
@@ -6266,6 +6263,8 @@ sv:
           multiselect: "Multival"
       site_text:
         search_label: "Sök"
+        preview:
+          default: "Standard"
         theme_disabled: "Inaktiverad"
         filters: "Filter"
         edit: "Redigera"
@@ -6374,7 +6373,7 @@ sv:
           modal_title: Utmärkelsegrupper
         granted_by: Utfärdad av
         granted_at: Utfärdad vid
-        reason_help: (En länk till ett inlägg eller ämne)
+        reason_help: En länk till ett inlägg eller ämne
         save: Spara
         delete: Ta bort
         delete_confirm: Är du säker på att du vill ta bort den utmärkelsen?

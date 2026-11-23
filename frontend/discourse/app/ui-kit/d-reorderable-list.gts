@@ -7,7 +7,7 @@ import {
   isDestroying,
   registerDestructor,
 } from "@ember/destroyable";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import type Owner from "@ember/owner";
@@ -15,6 +15,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import type MenuService from "discourse/float-kit/services/menu";
+import ElementClassLease from "discourse/lib/element-class-lease";
 import type A11yService from "discourse/services/a11y";
 import ItemScope from "discourse/ui-kit/-internals/cursor/item-scope";
 import { step } from "discourse/ui-kit/-internals/cursor/navigation";
@@ -29,6 +30,11 @@ import CreateRow from "discourse/ui-kit/d-reorderable-list/-internals/parts/crea
 import HandlePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle";
 import HandleSlotPart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle-slot";
 import RemovePart from "discourse/ui-kit/d-reorderable-list/-internals/parts/remove";
+import {
+  registerReorderTarget,
+  registerTouchReorder,
+  type ReorderDrop,
+} from "discourse/ui-kit/d-reorderable-list/-internals/touch-reorder";
 import type {
   DReorderableListSignature,
   MoveTarget,
@@ -39,10 +45,6 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 import dDragAndDropSource, {
   type DragPreviewRenderer,
 } from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
-import dDragAndDropTarget, {
-  DropTargetEvent,
-  registerDragAndDropTarget,
-} from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
 
 export type {
@@ -159,22 +161,34 @@ export default class DReorderableList<T> extends Component<
   @service declare a11y: A11yService;
   @service declare menu: MenuService;
 
-  rowClassFor = (row: Row<T>): string | undefined => {
-    const { rowClass } = this.args;
-    if (typeof rowClass === "function") {
-      return rowClass(row.item, { index: row.index, movable: row.movable });
+  /** Update host-supplied classes without overwriting an active drag's feedback. */
+  rowClasses = modifier((element: Element, rows: [Row<T>]) => {
+    let names = this.args.rowClass;
+    if (typeof names === "function") {
+      const [row] = rows;
+      names = names(row.item, { index: row.index, movable: row.movable });
     }
-    return rowClass;
-  };
+    const classes = names?.match(/\S+/g);
+    if (classes) {
+      const leases = classes.map(
+        (name) => new ElementClassLease(element, name)
+      );
+      return () => leases.forEach((lease) => lease.release());
+    }
+  });
 
-  /**
-   * Applied by the handle wherever it renders, so the component knows the row
-   * kept its one control regardless of where a manual placement put it.
-   */
-  registerHandle = modifier((element: Element, [key]: [string]) => {
-    this.#handles.set(key, element as HTMLElement);
+  /** A manually placed grip still belongs to the row that yielded it. */
+  registerHandle = modifier((handle: HTMLElement) => {
+    const key = handle.dataset.reorderableHandleKey!;
+    this.#handles.set(key, handle);
+    const cleanup = registerTouchReorder(handle, () => ({
+      row: this.#ownRowFor(handle),
+      type: this.dragType,
+      data: { key, listId: this.listIdOrDefault },
+    }));
     return () => {
-      if (this.#handles.get(key) === element) {
+      cleanup();
+      if (this.#handles.get(key) === handle) {
         this.#handles.delete(key);
       }
     };
@@ -213,22 +227,27 @@ export default class DReorderableList<T> extends Component<
   });
 
   /**
-   * Registers the list's root element as a drop target while the list is an
-   * empty group member — the one state with no rows to land on. Applied
-   * statically and registered imperatively: a conditionally curried modifier
-   * breaks on the classic-component element wrapper the shell falls back to
-   * for non-shortcut tags. Deliberately consumes `acceptsRootDrops`, so it
-   * re-registers exactly when the items or group change — never mid-drag.
+   * Empty group members need a root target. Keeping the modifier static also
+   * supports custom list tags rendered through the classic-component wrapper.
    */
   rootDropTarget = modifier((element: Element) => {
     if (!this.acceptsRootDrops) {
       return;
     }
-    return registerDragAndDropTarget(element, () => ({
-      accepts: this.dragType,
-      position: "inside" as const,
+    return registerReorderTarget(element, () => this.dragType, {
+      position: "inside",
       onDrop: this.onEmptyRootDrop,
-    }));
+    });
+  });
+
+  /** Reading the key from the DOM keeps the registration alive across row refreshes. */
+  rowDropTarget = modifier((element: Element) => {
+    const key = element.getAttribute("data-reorderable-key")!;
+    return registerReorderTarget(element, () => this.dragType, {
+      canDrop: ({ source }) =>
+        source.data.key !== key || source.data.listId !== this.listIdOrDefault,
+      onDrop: (event) => this.#onRowDrop(key, event),
+    });
   });
 
   /** Dismisses a move menu whose row no longer belongs to the list. */
@@ -833,35 +852,26 @@ export default class DReorderableList<T> extends Component<
   }
 
   /**
-   * Refuses a row's own in-list drag as a drop candidate, which is what keeps
-   * the drop indicator from offering a row a position relative to itself. A
-   * same-valued key arriving from another group member is a different item
-   * and stays droppable.
+   * The drop path for the list's own root element, registered only while the
+   * list is an empty group member — the one state with no rows to land on.
    *
-   * @param rowKey - This row's key.
-   * @param feedback - The target modifier's gate payload.
-   */
-  @action
-  canDropOnRow(
-    rowKey: string,
-    { source }: { source: { data: Record<string, unknown> } }
-  ) {
-    return (
-      source.data.key !== rowKey || source.data.listId !== this.listIdOrDefault
-    );
-  }
-
-  /**
-   * The drop path for one row target. The payload carries only the dragged
-   * row's key; the item and both indices are resolved against the current
-   * rows here, so a host that replaced its items mid-drag still lands the
-   * drop on the right thing — or refuses it when the key is gone.
-   *
-   * @param targetKey - The key of the row the drop landed on.
    * @param event - The target modifier's drop payload.
    */
   @action
-  onRowDrop(targetKey: string, { position, source }: DropTargetEvent) {
+  onEmptyRootDrop({ source }: ReorderDrop) {
+    if (!this.acceptsRootDrops || this.rows.length > 0) {
+      return;
+    }
+    this.#engine.commitCrossMove(
+      source.data.listId as string | undefined,
+      source.data.key as string,
+      0,
+      "drag"
+    );
+  }
+
+  /** Resolve both keys against the current rows in case the host refreshed mid-drag. */
+  #onRowDrop(targetKey: string, { position, source }: ReorderDrop) {
     const rows = this.rows;
     const targetRow = rows.find((candidate) => candidate.key === targetKey);
     if (!targetRow?.movable) {
@@ -898,25 +908,6 @@ export default class DReorderableList<T> extends Component<
     }
 
     this.#engine.commitSeqMove("drag", rows, seq, from, to);
-  }
-
-  /**
-   * The drop path for the list's own root element, registered only while the
-   * list is an empty group member — the one state with no rows to land on.
-   *
-   * @param event - The target modifier's drop payload.
-   */
-  @action
-  onEmptyRootDrop({ source }: DropTargetEvent) {
-    if (!this.acceptsRootDrops || this.rows.length > 0) {
-      return;
-    }
-    this.#engine.commitCrossMove(
-      source.data.listId as string | undefined,
-      source.data.key as string,
-      0,
-      "drag"
-    );
   }
 
   #keyFor(item: T, index: number): string {
@@ -1066,10 +1057,7 @@ export default class DReorderableList<T> extends Component<
                   registration. }}
               {{#if row.movable}}
                 <Item
-                  class={{dConcatClass
-                    "d-reorderable-list__row"
-                    (this.rowClassFor row)
-                  }}
+                  class="d-reorderable-list__row"
                   data-reorderable-cursor={{unless row.rendersHandle "true"}}
                   data-reorderable-key={{row.key}}
                   role={{@itemRole}}
@@ -1081,11 +1069,8 @@ export default class DReorderableList<T> extends Component<
                     dragPreview=this.rowDragPreview
                     disabled=(not row.rendersHandle)
                   }}
-                  {{dDragAndDropTarget
-                    accepts=this.dragType
-                    canDrop=(fn this.canDropOnRow row.key)
-                    onDrop=(fn this.onRowDrop row.key)
-                  }}
+                  {{this.rowDropTarget}}
+                  {{this.rowClasses row}}
                   {{this.verifyKeyboardPath}}
                 >
                   {{#if (and (not this.isManual) row.rendersHandle)}}
@@ -1142,14 +1127,12 @@ export default class DReorderableList<T> extends Component<
                     arrow cursor lands on. Out of the tab sequence: Tab reaches
                     the controls the row renders, not the row. }}
                 <Item
-                  class={{dConcatClass
-                    "d-reorderable-list__row"
-                    (this.rowClassFor row)
-                  }}
+                  class="d-reorderable-list__row"
                   data-reorderable-cursor="true"
                   data-reorderable-key={{row.key}}
                   role={{@itemRole}}
                   tabindex="-1"
+                  {{this.rowClasses row}}
                 >
                   {{#if reservesHandleSlot}}
                     <HandleSlotPart />

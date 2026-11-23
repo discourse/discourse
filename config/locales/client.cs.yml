@@ -4401,10 +4401,8 @@ cs:
           label: "vybrané"
           title: "Kliknutím odstraníte příspěvek z výběru"
         select_replies:
-          label: "vybrat +odpovědi"
           title: "Přidej příspěvek a všechny jeho odpovědi do výběru"
         select_below:
-          label: "vybrat +níže"
           title: "Přidat příspěvek a vše po něm do výběru"
         delete: smazat označené
         cancel: zrušit výběr
@@ -5619,7 +5617,6 @@ cs:
         other: "Koncepty (%{count})"
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
-    theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
     theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
@@ -8442,7 +8439,6 @@ cs:
         silence_duration: "Na jak dlouhou dobu bude uživatel ztišený?"
         silence_reason_title: "Důvod ztišení"
         silence_reason_placeholder: "Důvod ztišení "
-        silence_message: "e-mailová zpráva"
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být pozastaven"
@@ -8784,6 +8780,8 @@ cs:
       site_text:
         description: "Můžete přizpůsobit libovolný text na vašem fóru."
         search_label: "Vyhledat"
+        preview:
+          default: "Výchozí"
         theme_disabled: "Vypnuto"
         filters: "Filtry"
         title: "Texty"
@@ -8955,7 +8953,7 @@ cs:
           modal_title: Skupiny odznaků
         granted_by: Uděleno
         granted_at: Uděleno v
-        reason_help: (Odkaz na příspěvek nebo téma)
+        reason_help: Odkaz na příspěvek nebo téma
         save: Uložit
         delete: Smazat
         delete_confirm: Určitě chcete tento oznak smazat?

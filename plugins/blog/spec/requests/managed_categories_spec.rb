@@ -75,7 +75,7 @@ RSpec.describe "Blog managed categories", type: :request do
       }.by(1)
 
       expect(response.status).to eq(200)
-      blog_category = Category.find(SiteSetting.blog_category)
+      blog_category = Category.find(Blog::Instance.default_blog.category_id)
       expect(blog_category).to have_attributes(
         name: I18n.t("blog.categories.public"),
         read_restricted: false,
@@ -104,7 +104,7 @@ RSpec.describe "Blog managed categories", type: :request do
       expect(response.parsed_body["errors"].first).to include(
         I18n.t("blog.errors.category_name_taken", name: existing.name),
       )
-      expect(SiteSetting.blog_category).to be_blank
+      expect(Blog::Instance.default_blog.category_id).to be_nil
       expect(Blog::Publication.find_by(topic:)&.discussion_topic).to be_nil
     end
   end
@@ -112,7 +112,7 @@ RSpec.describe "Blog managed categories", type: :request do
   describe "POST /blog-editor/publications/:topic_id/prepare" do
     fab!(:blog_category, :category)
 
-    before { SiteSetting.blog_category = blog_category.id }
+    before { update_default_blog(category_id: blog_category.id) }
 
     it "creates the drafts category for the working copy of an existing topic" do
       topic = Fabricate(:topic, category: blog_category, user: writer)

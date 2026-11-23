@@ -4386,10 +4386,8 @@ he:
           label: "נבחרים"
           title: "הקליקו לביטול בחירת הפוסט"
         select_replies:
-          label: "בחירת +תגובות"
           title: "הוספת פוסט ואת כל התגובות שלו לבחירה"
         select_below:
-          label: "יש לבחור +להלן"
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
@@ -5570,7 +5568,6 @@ he:
         other: "טיוטות (%{count})"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
-    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
@@ -8386,7 +8383,6 @@ he:
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
         silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
-        silence_message: "הודעה בדוא״ל"
         suspended_until: "(עד %{until})"
         suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
@@ -8686,6 +8682,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8853,7 +8851,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

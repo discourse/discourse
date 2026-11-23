@@ -8,6 +8,7 @@ import ChatNavbar from "discourse/plugins/chat/discourse/components/chat/navbar"
   discourseImport: "optional",
 };
 import roomIcon, { roomBadge } from "../../lib/live/room-icon.js";
+import { isStageSpeaker } from "../../lib/live/stage-roles.js";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveTranscriptBadge from "./transcript-badge.gjs";
@@ -68,9 +69,26 @@ export default class LiveRoomHeader extends Component {
   }
 
   get participantCountLabel() {
-    const count = this.args.room.active_participants?.length;
+    const participants = this.args.room.active_participants || [];
+    const count = participants.length;
     if (!count) {
       return null;
+    }
+    if (this.args.room.room_type === "stage") {
+      const speakers = participants.filter((p) => isStageSpeaker(p)).length;
+      const listeners = count - speakers;
+      const parts = [];
+      if (speakers > 0) {
+        parts.push(
+          i18n("live.room_page.stage_speaker_count", { count: speakers })
+        );
+      }
+      if (listeners > 0) {
+        parts.push(
+          i18n("live.room_page.stage_listener_count", { count: listeners })
+        );
+      }
+      return parts.join(" · ");
     }
     return i18n("live.room_page.participant_count", { count });
   }

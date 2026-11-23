@@ -228,6 +228,7 @@ Discourse::Application.routes.draw do
         put "unsilence"
         put "trust_level"
         put "trust_level_lock"
+        put "interactive_bot", constraints: AdminConstraint.new
         put "primary_group"
         post "groups" => "users#add_group", :constraints => AdminConstraint.new
         delete "groups/:group_id" => "users#remove_group", :constraints => AdminConstraint.new
@@ -573,6 +574,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/popular-themes" => "customize#popular_themes"
             get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end

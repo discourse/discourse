@@ -1044,7 +1044,7 @@
 }
 
 // ── Deep-link highlight animation ──────────────────────────────────
-.nested-post--highlighted {
+.nested-post[data-highlighted] {
   animation: nested-post-highlight 2s ease-out;
 }
 

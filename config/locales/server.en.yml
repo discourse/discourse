@@ -70,6 +70,7 @@ en:
   mcp:
     errors:
       author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
+      authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
       category_create_failed: "Category could not be created"
       category_delete_confirmation_required: "Category deletion must be confirmed"
       category_delete_name_mismatch: "Category name does not match"
@@ -103,6 +104,7 @@ en:
       moderation_operation_failed: "The moderation action could not be verified. Read the user's current state before retrying."
       moderation_user_not_found: "User not found. Use an exact existing username."
       post_not_found: "Post not found"
+      post_not_created: "The post could not be created"
       user_directory_disabled: "The user directory is disabled"
       filter_only_for_filtered_view: "Filter is only supported by the filtered view"
       filter_required: "A nonblank filter is required for the filtered view"
@@ -145,6 +147,9 @@ en:
       site_setting_value_forbidden: "Do not provide a value when resetting a site setting"
       site_setting_value_required: "Provide a value when setting a site setting"
       site_setting_verification_failed: "The site setting update could not be verified"
+      source_path_unavailable: "Choose a tracked source file under the documented source directories. Absolute paths, private configuration, and symlink escapes are unavailable."
+      source_too_large: "Source output is too large. Use a narrower query, fewer lines, or a file of at most 2 MiB."
+      source_unavailable: "Source checkout or reported commit is unavailable. No latest-version fallback was fetched."
       theme_children_must_be_components: "Only standalone themes can have child components, and every child_theme_id must identify an existing component. Convert a standalone child with component:true first."
       theme_code_compile_failed: "Theme compilation failed; no changes were committed: %{message}"
       theme_code_js_invalid: "The theme's JavaScript bundle failed compilation, possibly in another file; no changes were committed: %{message}"
@@ -3337,7 +3342,7 @@ en:
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
-    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is clicked if the user has permission to view that category."
+    enable_category_hashtag_cards: "Shows a floating category card when a category hashtag is hovered if the user has permission to view that category."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -3486,6 +3491,7 @@ en:
 
   search:
     extreme_load_error: "Site is under extreme load, search is disabled, try again later"
+    keyword_search_timeout: "The search took too long. Try more specific keywords."
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"
@@ -4143,9 +4149,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         %{flag_reason}
 
@@ -4212,9 +4216,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden again.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden again.
 
         %{flag_reason}
 
@@ -4228,9 +4230,7 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to let you know that your post was hidden.
-
-        <%{base_url}%{url}>
+        This is an automated message from %{site_name} to let you know that [your post](%{base_url}%{url}) was hidden.
 
         Your post will remain hidden until a staff member reviews it.
 
@@ -4838,7 +4838,7 @@ en:
 
         %{decision}
 
-        **Reason:** %{reason}
+        Reason: %{reason}
 
         You can still read discussions, but you can’t participate in them while your account is silenced.
 
@@ -4876,7 +4876,7 @@ en:
 
         The new user [%{username}](%{user_url}) was automatically silenced.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
@@ -5275,7 +5275,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended until %{suspended_till}.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5288,7 +5288,7 @@ en:
 
         This is an automated message from %{site_name} to let you know that your account has been suspended.
 
-        Reason - %{reason}
+        Reason: %{reason}
 
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
@@ -5543,10 +5543,13 @@ en:
     signup_after_reject:
       title: "Signup After Reject"
       subject_template: "You've been rejected on %{site_name}"
+      reason_line: "\n\nReason: %{reason}"
       text_body_template: |
-        A staff member rejected your account on %{site_name}.
+        Hello,
 
-        %{reject_reason}
+        This is an automated message from %{site_name} to let you know that a staff member declined your registration.%{reason_line}
+
+        For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     signup:
       title: "Signup"
@@ -5627,6 +5630,9 @@ en:
 
   upload:
     edit_reason: "downloaded local copies of images"
+    too_many_short_urls:
+      one: "Can't look up more than %{count} URL in a single request."
+      other: "Can't look up more than %{count} URLs in a single request."
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
@@ -5695,6 +5701,8 @@ en:
 
   appearance_changes:
     dark_palette_name: "%{name} Dark"
+    draft_name: "%{name} (draft)"
+    previous_name: "%{name} (previous)"
 
   color_schemes:
     base_theme_name: "Base"
@@ -6204,6 +6212,32 @@ en:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
     enter: "Enter Developer Mode"
+  popular_themes:
+    graceful:
+      description: "A light and graceful theme for Discourse."
+    material_design:
+      description: "Inspired by Material Design, this theme comes with several color palettes."
+    mint:
+      description: "A minty colored theme with featured homepage categories and a search banner."
+    simple:
+      description: "Simplified front page design with classic colors and typography."
+    brand_header:
+      description: "Add an extra top header with your logo, navigation links and social icons."
+    custom_header_links:
+      description: "Easily add custom text-based links to the header."
+    category_banners:
+      description: "Show banners on category pages using your existing category details."
+    tag_banners:
+      description: "Show banners on tag pages using your existing tag details."
+    sidebar_theme_toggle:
+      description: "Displays a theme selector in the sidebar menu’s footer provided there is more than one user-selectable theme."
+    header_submenus:
+      description: "Lets you build a header menu with submenus (dropdowns)."
+    table_of_contents:
+      description: "Generates an interactive table of contents on the sidebar of your topic with a simple click in the composer."
+    easy_footer:
+      description: "Add a fully responsive footer without writing any HTML."
+
   design_wizard:
     themes:
       concord:
@@ -6482,6 +6516,7 @@ en:
       delete_and_ignore_replies:
         title: "Delete post and replies, ignore flag"
         description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
+        confirm_title: "Delete post and replies, ignore flag?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -6491,6 +6526,7 @@ en:
       delete_and_agree_replies:
         title: "Delete post and replies"
         description: "Agree with flag and delete this post and all of its replies; if the first post, delete the topic as well."
+        confirm_title: "Delete post and replies?"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
@@ -6557,11 +6593,13 @@ en:
         delete:
           title: "Delete user"
           description: "Delete the user without blocking their email or IP address"
+          confirm_title: "Delete @%{username}?"
           confirm: "Are you sure you want to delete @%{username}?"
           complete: "User deleted."
         block:
           title: "Delete and block user"
           description: "Delete the user and block their email and IP address"
+          confirm_title: "Delete and block @%{username}?"
           confirm: "Are you sure you want to delete and block @%{username}?"
           complete: "User deleted and blocked."
       confirm_spam:

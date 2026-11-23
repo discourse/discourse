@@ -4501,10 +4501,8 @@ ur:
           label: "انتخاب"
           title: "انتخاب سے دھاگہ ہٹانے کے لیے کلک کریں"
         select_replies:
-          label: "منتخب +جوابات"
           title: "انتخاب میں دھاگہ اور اس کے تمام جوابات شامل کریں"
         select_below:
-          label: "منتخب+ذیل میں"
           title: "انتخاب میں دھاگہ اور اس کے بعد سب شامل کریں۔"
         delete: منتخب کو حذف کریں
         cancel: انتخاب کو منسوخ کریں
@@ -5662,7 +5660,6 @@ ur:
         other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
-    theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
     theme_preview_failed: "تھیم دکھانے میں ناکام رہا کیونکہ یہ موجود نہیں یا آپ کے پاس اس تک رسائی کی اجازت نہیں۔"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
@@ -8460,7 +8457,6 @@ ur:
         silence_duration: "صارف کب تک خاموش رہے گا؟"
         silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
-        silence_message: "ای میل پیغام"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
@@ -8717,6 +8713,8 @@ ur:
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
         search_label: "تلاش"
+        preview:
+          default: "ڈِیفالٹ"
         theme_disabled: "غیر فعال"
         filters: "فِلٹر"
         title: "سائٹ کے متون"
@@ -8858,7 +8856,7 @@ ur:
           modal_title: تمغات کے گروپ
         granted_by: کی طرف سے عطا کیا گیا
         granted_at: جس وقت پر عطا کیا گیا
-        reason_help: (کسی دھاگے یا موضوع کا ایک رابطہ)
+        reason_help: کسی دھاگے یا موضوع کا ایک رابطہ
         save: محفوظ کریں
         delete: حذف کریں
         delete_confirm: کیا آپ واقعی اس تمغہ کو حذف کرنا چاہتے ہیں؟
