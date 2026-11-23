@@ -343,6 +343,9 @@ module Live
         Live::ParticipantTracker.create_participant_session!(@room.id, current_user.id)
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       metadata[:last_heartbeat_at] = Time.now.to_f
+      if admission == :added
+        Live::StageRoles.reconcile_resumed_metadata!(@room, current_user, metadata)
+      end
       Live::ParticipantTracker.update_metadata(@room.id, current_user.id, metadata)
       Live::ParticipantTracker.refresh_transport_pin(@room.id)
       Live::RoomBroadcaster.publish_participants_if_changed(@room)
@@ -425,6 +428,8 @@ module Live
       metadata[:last_heartbeat_at] = Time.now.to_f
       if admission == :added
         Live::StageRoles.reconcile_resumed_metadata!(@room, current_user, metadata)
+        # Still connected to the SFU with the permissions of the old role.
+        Live::Livekit::RoomServiceClient.update_participant(@room, current_user)
       end
 
       if params.key?(:idle_state)

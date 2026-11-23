@@ -91,15 +91,35 @@ RSpec.describe Live::RoomsController do
              params: {
                participant_session_id: @listener_session_id,
              }
-        expect(response.status).to eq(204)
 
-        post "/live/rooms/#{room.id}/accept_speak_invitation.json",
+        expect(response.status).to eq(204)
+        expect(Live::ParticipantTracker.user_ids(room.id)).to include(listener.id)
+        expect(Live::ParticipantTracker.speak_invitation(room.id, listener.id)).to be_nil
+      end
+
+      it "drops the invitation when the listener joins again" do
+        post "/live/rooms/#{room.id}/join.json",
              params: {
                participant_session_id: @listener_session_id,
              }
 
-        expect(response.status).to eq(403)
-        expect(Live::ParticipantTracker.session_speaker?(room.id, listener.id)).to eq(false)
+        expect(response.status).to eq(200)
+        expect(Live::ParticipantTracker.user_ids(room.id)).to include(listener.id)
+        expect(Live::ParticipantTracker.speak_invitation(room.id, listener.id)).to be_nil
+      end
+
+      it "drops the invitation when a LiveKit token request resumes presence" do
+        SiteSetting.live_livekit_url = "wss://livekit.example.com"
+        SiteSetting.live_livekit_api_key = "lk_api_key"
+        SiteSetting.live_livekit_api_secret = "lk_api_secret"
+        SiteSetting.live_livekit_room_policy = "all_rooms"
+        Live::ParticipantTracker.pin_transport!(room.id, "livekit")
+
+        post "/live/rooms/#{room.id}/livekit_token.json"
+
+        expect(response.status).to eq(200)
+        expect(Live::ParticipantTracker.user_ids(room.id)).to include(listener.id)
+        expect(Live::ParticipantTracker.speak_invitation(room.id, listener.id)).to be_nil
       end
     end
 

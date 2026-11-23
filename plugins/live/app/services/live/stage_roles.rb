@@ -175,7 +175,7 @@ module Live
           metadata[:is_screen_sharing] = false
         end
 
-        Live::Livekit::RoomServiceClient.update_participant(room, user)
+        metadata
       end
 
       def sync_present_participant!(room, user, effective_role:)
