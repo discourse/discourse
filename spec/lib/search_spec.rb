@@ -63,6 +63,33 @@ RSpec.describe Search do
     it "handles a URI with no path" do
       expect { Search.need_segmenting?("in:solved%20category:50%20order:likes") }.not_to raise_error
     end
+
+    it "returns true for multi-word and non-ASCII queries without raising URI errors" do
+      expect(Search.need_segmenting?("hello world")).to eq(true)
+      expect(Search.need_segmenting?("日本語 テスト")).to eq(true)
+      expect(Search.need_segmenting?("https://example.com/path with spaces")).to eq(true)
+    end
+
+    it "keeps treating whitespace inside a query string as a URI path" do
+      expect(Search.need_segmenting?("/search?q=hello world")).to eq(false)
+      expect(Search.need_segmenting?("https://example.com/a?b=c d")).to eq(false)
+    end
+  end
+
+  describe ".prepare_data" do
+    it "strips query strings from standalone and leading-quoted URLs while leaving plain words intact" do
+      input =
+        'Find   https://example.com/docs/page?utm_source=test&ref=1 and "http://example.org/a?b=2 plus foohttps://bar.com?x=1'
+      expect(Search.prepare_data(input)).to eq(
+        "Find https://example.com/docs/page and http://example.org/a plus foohttps://bar.com?x=1",
+      )
+    end
+
+    it "leaves malformed URLs unchanged without raising" do
+      expect(Search.prepare_data("check https://[::1]:bad?foo=bar text")).to eq(
+        "check https://[::1]:bad?foo=bar text",
+      )
+    end
   end
 
   describe "#ts_config" do
