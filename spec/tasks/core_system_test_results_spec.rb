@@ -161,7 +161,7 @@ RSpec.describe "Core system test results" do
     expect(report.fetch("contains_failed_file")).to be_nil
   end
 
-  it "publishes boot lines only for files loaded before every worker ran its specs" do
+  it "publishes setup lines only for files loaded before every worker ran its specs" do
     FileUtils.mkdir_p(File.join(@directory, File.dirname(spec_file)))
     File.write(File.join(@directory, spec_file), "")
     system("git", "init", "-q", chdir: @directory, exception: true)
@@ -202,7 +202,7 @@ RSpec.describe "Core system test results" do
     }
     workers.each do |worker, lines|
       artifacts["ruby-#{worker}.json"] = {
-        boot_lines: lines,
+        setup_lines: lines,
         boot_sources: ["config/application.rb", *lines.keys],
         dependencies: {
           spec_file => [controller, helper],
@@ -223,6 +223,52 @@ RSpec.describe "Core system test results" do
     raise stderr unless status.success?
 
     map = JSON.parse(File.read(File.join(@directory, "map.json")))
-    expect(map.fetch("boot_lines")).to eq(controller => [1, 4])
+    expect(map.fetch("setup_lines")).to eq(controller => [1, 4])
+  end
+
+  it "protects a method in an eager file when another Ruby file calls it during loading" do
+    provider = "lib/status_provider.rb"
+    files = {
+      provider => "class StatusProvider\n  def self.initial\n    :available\n  end\nend\n",
+      "lib/lazy_status.rb" => "SharedStatus = StatusProvider.initial\n",
+      spec_file => <<~RUBY,
+        RSpec.describe "loading shared status" do
+          it "loads the status" do
+            require_relative "../../lib/lazy_status"
+            expect(SharedStatus).to eq(:available)
+          end
+        end
+      RUBY
+    }
+    files.each do |path, source|
+      file = File.join(@directory, path)
+      FileUtils.mkdir_p(File.dirname(file))
+      File.write(file, source)
+    end
+    rubyopt = [ENV["RUBYOPT"], "-r#{File.join(scripts, "start_ruby_coverage.rb")}"].compact.join(
+      " ",
+    )
+
+    _, stderr, status =
+      Open3.capture3(
+        { "RUBYOPT" => rubyopt, "SPEC_OPTS" => nil, "SYSTEM_COVERAGE_DIRECTORY" => @directory },
+        RbConfig.ruby,
+        "-rrspec/core",
+        "-e",
+        "exit RSpec::Core::Runner.run(ARGV)",
+        "--",
+        "--options",
+        File::NULL,
+        "--require",
+        "./#{provider}",
+        "--require",
+        File.join(scripts, "ruby_coverage.rb"),
+        spec_file,
+        chdir: @directory,
+      )
+    raise stderr unless status.success?
+
+    coverage = JSON.parse(File.read(Dir[File.join(@directory, "ruby-*.json")].sole))
+    expect(coverage.fetch("setup_lines").fetch(provider)).to contain_exactly(1, 2, 3)
   end
 end

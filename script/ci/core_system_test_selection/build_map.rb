@@ -20,7 +20,7 @@ raise "Browser coverage missed passed examples" if expected.empty? || !expected.
 dependencies = browser.fetch("tests_by_source").transform_values(&:to_set)
 unmapped_browser_specs = browser.fetch("unmapped_browser_specs")
 boot = Set.new
-boot_lines = Hash.new { |hash, source| hash[source] = Set.new }
+setup_lines = Hash.new { |hash, source| hash[source] = Set.new }
 loaded_in_all_workers = nil
 expected_by_worker = JSON.parse(File.read(File.join(directory, "passed-specs-by-worker.json")))
 recorded_workers = JSON.parse(File.read(File.join(directory, "recorded-workers.json")))
@@ -36,13 +36,13 @@ ruby_reports.each do |path|
   raise "Ruby coverage missed specs on worker #{worker}: #{missing.join(", ")}" if missing.any?
 
   boot.merge(result.fetch("boot_sources"))
-  worker_boot_lines = result.fetch("boot_lines")
+  worker_setup_lines = result.fetch("setup_lines")
   if ran_examples
-    worker_sources = worker_boot_lines.keys.to_set
+    worker_sources = worker_setup_lines.keys.to_set
     loaded_in_all_workers =
       loaded_in_all_workers ? loaded_in_all_workers & worker_sources : worker_sources
   end
-  worker_boot_lines.each { |source, lines| boot_lines[source].merge(lines) }
+  worker_setup_lines.each { |source, lines| setup_lines[source].merge(lines) }
   ruby_dependencies.each do |spec, sources|
     raise "Unexpected spec #{spec}" unless files.member?(spec)
     sources.each { |source| (dependencies[source] ||= Set.new).add(spec) }
@@ -59,8 +59,8 @@ payload = {
   revision: CoreSystemTestSelection.git("rev-parse", "HEAD").strip,
   spec_files: files,
   boot_sources: boot.to_a.sort,
-  boot_lines:
-    boot_lines
+  setup_lines:
+    setup_lines
       .select { |source, _| loaded_in_all_workers&.include?(source) }
       .transform_values { |lines| lines.to_a.sort },
   tests_by_source: dependencies.transform_values { |specs| specs.to_a.sort },

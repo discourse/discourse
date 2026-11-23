@@ -6,24 +6,36 @@ require "json"
 root = File.realpath(Dir.pwd) + "/"
 dependencies = Hash.new { |hash, spec| hash[spec] = Set.new }
 boot_sources = nil
-boot_lines = {}
+loaded_ruby_sources = Set.new
+setup_lines = {}
 used_files =
   lambda do |record_boot: false|
-    Coverage
-      .result(stop: false, clear: true)
-      .filter_map do |path, counters|
-        next unless path.start_with?(root)
-        lines = counters.fetch(:lines)
-        next unless lines.any? { |hits| hits.to_i.positive? }
+    executed =
+      Coverage
+        .result(stop: false, clear: true)
+        .each_with_object({}) do |(path, counters), sources|
+          next unless path.start_with?(root)
+          lines = counters.fetch(:lines)
+          next unless lines.any? { |hits| hits.to_i.positive? }
 
-        source = path.delete_prefix(root)
-        if record_boot && source.start_with?("app/", "lib/") && source.end_with?(".rb")
-          boot_lines[source] = lines.each_index.filter_map do |index|
-            index + 1 if lines[index].to_i.positive?
-          end
+          sources[path.delete_prefix(root)] = lines
         end
-        source
+    ruby_sources = executed.keys.select { |source| source.end_with?(".rb") }
+    loaded_new_source = ruby_sources.any? { |source| !loaded_ruby_sources.include?(source) }
+    if record_boot
+      ruby_sources.each do |source|
+        setup_lines[source] = Set.new if source.start_with?("app/", "lib/")
       end
+    end
+    if record_boot || loaded_new_source
+      executed.each do |source, lines|
+        if protected_lines = setup_lines[source]
+          lines.each_index { |index| protected_lines.add(index + 1) if lines[index].to_i.positive? }
+        end
+      end
+    end
+    loaded_ruby_sources.merge(ruby_sources)
+    executed.keys
   end
 
 RSpec.configure do |config|
@@ -46,7 +58,7 @@ RSpec.configure do |config|
       JSON.generate(
         dependencies: dependencies.transform_values(&:to_a),
         boot_sources: boot_sources || [],
-        boot_lines:,
+        setup_lines: setup_lines.transform_values(&:to_a),
       ),
     )
   end

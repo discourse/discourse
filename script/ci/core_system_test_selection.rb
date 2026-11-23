@@ -132,7 +132,7 @@ module CoreSystemTestSelection
     parts << source.byteslice(offset..)
   end
 
-  def self.runtime_body_change?(path:, revisions:, boot_lines:)
+  def self.runtime_body_change?(path:, revisions:, setup_lines:)
     snapshots = revisions.uniq.map { |commit| git("show", "#{commit}:#{path}") }
     bodies_by_revision = snapshots.map { |source| method_bodies(source) }
     return false if bodies_by_revision.any?(&:nil?)
@@ -140,11 +140,12 @@ module CoreSystemTestSelection
     original_bodies = bodies_by_revision.first
     return false unless bodies_by_revision.all? { |bodies| bodies.size == original_bodies.size }
 
-    executed_at_boot = boot_lines.to_set
+    executed_during_setup = setup_lines.to_set
     indexes =
       original_bodies.each_index.select do |index|
         body = original_bodies[index]
-        body && (body.start_line..body.end_line).none? { |line| executed_at_boot.include?(line) } &&
+        body &&
+          (body.start_line..body.end_line).none? { |line| executed_during_setup.include?(line) } &&
           bodies_by_revision.all? { |bodies| bodies[index] }
       end
     return false if indexes.empty?
@@ -171,7 +172,7 @@ module CoreSystemTestSelection
     map_files = map.fetch("spec_files").to_set
     dependencies = map.fetch("tests_by_source")
     boot = map.fetch("boot_sources").to_set
-    boot_lines = map.fetch("boot_lines")
+    setup_lines = map.fetch("setup_lines")
     selected = Set.new
     unmapped_browser_specs = map.fetch("unmapped_browser_specs")
 
@@ -193,11 +194,11 @@ module CoreSystemTestSelection
       shared = boot.include?(path) || DEPENDENCY_FILES.include?(File.basename(path))
       if dependencies.key?(path) && path.end_with?(".rb")
         shared =
-          !boot.include?(path) || !boot_lines.key?(path) ||
+          !boot.include?(path) || !setup_lines.key?(path) ||
             !runtime_body_change?(
               path:,
               revisions: [revision, base, tested],
-              boot_lines: boot_lines.fetch(path),
+              setup_lines: setup_lines.fetch(path),
             )
       end
       return decision(files:, reason: "shared_input", drift:, pr:, revision:) if shared

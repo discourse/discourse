@@ -65,13 +65,13 @@ RSpec.describe "Core system test selection in shadow" do
     git("rev-parse", "HEAD")
   end
 
-  def selection(dependencies:, base:, unmapped_browser_specs: [], boot_lines: {})
+  def selection(dependencies:, base:, unmapped_browser_specs: [], setup_lines: {})
     payload = {
       version: 2,
       revision: @map_sha,
       spec_files: [sidebar, about, unrelated],
-      boot_sources: boot_lines.keys,
-      boot_lines:,
+      boot_sources: setup_lines.keys,
+      setup_lines:,
       tests_by_source: dependencies,
       unmapped_browser_specs:,
     }
@@ -107,7 +107,7 @@ RSpec.describe "Core system test selection in shadow" do
           helper => [about],
         },
         base:,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3],
           helper => [1, 2, 3],
         },
@@ -131,7 +131,7 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base:,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3],
         },
       )
@@ -147,7 +147,7 @@ RSpec.describe "Core system test selection in shadow" do
     commit("pull request")
 
     report =
-      selection(dependencies: { helper => [about] }, base:, boot_lines: { helper => [1, 2, 3] })
+      selection(dependencies: { helper => [about] }, base:, setup_lines: { helper => [1, 2, 3] })
 
     expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
     expect(report.fetch("full_suite_fallback")).to eq("unmapped_input")
@@ -163,7 +163,7 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base: @map_sha,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3],
         },
         unmapped_browser_specs: [about],
@@ -185,7 +185,7 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base:,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
       )
@@ -204,7 +204,7 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base: @map_sha,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
       )
@@ -225,7 +225,7 @@ RSpec.describe "Core system test selection in shadow" do
           controller => [sidebar],
         },
         base:,
-        boot_lines: {
+        setup_lines: {
           controller => [1, 2, 3, 6, 7],
         },
       )
