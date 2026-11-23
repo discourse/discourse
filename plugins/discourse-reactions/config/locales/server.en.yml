@@ -2,7 +2,6 @@ en:
   discourse_reactions:
     errors:
       reaction_unavailable: "Reaction is not available"
-      undo_window_expired: "The time limit for changing this reaction has passed."
     discourse_workflows:
       post_reaction:
         cannot_react: "%{username} can't react to this post."

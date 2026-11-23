@@ -37,7 +37,7 @@ module DiscourseReactions
           raise Discourse::InvalidAccess.new(
                   nil,
                   nil,
-                  custom_message: "discourse_reactions.errors.undo_window_expired",
+                  custom_message: "js.discourse_reactions.picker.cant_remove_reaction",
                 )
         end
 
