@@ -144,7 +144,7 @@ module DiscourseAi
         end
 
         CONTRAST_ADVICE = <<~TEXT
-          For text that isn't readable: mid-tone backgrounds such as brand blues and oranges often can't carry white or dark text. Make the background darker or lighter by mixing it with a palette color, such as color-mix(in srgb, var(--tertiary) 70%, var(--primary)), or give explicit shades with light-dark(#light, #dark), and set a color that contrasts with every color of a gradient. Palette colors swap in dark mode, so var(--secondary) is white only in light mode; for text that has to stay light or dark on a background that does, use light-dark() with the same kind of color in both. Each error gives the colors it measured, and when it names an area, set the color in a rule for that area.
+          For text that isn't readable: mid-tone backgrounds such as brand blues and oranges often can't carry white or dark text. For text that stays white (or dark) in both modes, give the background explicit shades that are dark (or light) enough in both, with light-dark(#light-mode shade, #dark-mode shade); mixing with var(--primary) won't do, because var(--primary) is light in dark mode. Mixing with var(--primary), such as color-mix(in srgb, var(--tertiary) 70%, var(--primary)), only suits text in var(--secondary), which swaps the other way. Set a color that contrasts with every color of a gradient. Palette colors swap in dark mode, so var(--secondary) is white only in light mode; for text that has to stay light or dark on a background that does, use light-dark() with the same kind of color in both. Each error gives the colors it measured, and when it names an area, set the color in a rule for that area.
         TEXT
 
         def repair_message(errors)

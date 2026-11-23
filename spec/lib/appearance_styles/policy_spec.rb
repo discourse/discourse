@@ -1083,13 +1083,47 @@ RSpec.describe AppearanceStyles::Policy do
       expect(errors).to include("in a rule for the category_description area")
     end
 
-    it "suggest a rule rather than changing the site's own text color" do
+    it "suggest replacing a background variable with a rule, which then passes" do
       result =
         run(variables: { "--d-category-box-background-color" => "light-dark(#0f172a, #0f172a)" })
 
       expect(result.errors.join).to include(
-        "--primary is used across the site, so set a readable color in a rule for the area",
+        "instead of overriding --d-category-box-background-color, remove it and set both background-color and a readable color in a rule for the category_box area",
       )
+
+      # what the hint asks for, plus the areas inside the box with their own text
+      white = "light-dark(#ffffff, #ffffff)"
+      expect_valid(
+        rules: [
+          {
+            area: "category_box",
+            declarations: {
+              "background-color" => "light-dark(#0f172a, #0f172a)",
+              "color" => white,
+            },
+          },
+          { area: "category_title", declarations: { "color" => white } },
+          { area: "category_description", declarations: { "color" => white } },
+        ],
+      )
+    end
+
+    it "report a failure in each mode, not only the first" do
+      result =
+        run(
+          rules: [
+            {
+              area: "header",
+              declarations: {
+                "background-color" => "light-dark(#777777, #777777)",
+                "color" => "light-dark(#888888, #888888)",
+              },
+            },
+          ],
+        )
+
+      errors = result.errors.join("\n")
+      expect(errors).to include("in light mode", "in dark mode")
     end
   end
 end
