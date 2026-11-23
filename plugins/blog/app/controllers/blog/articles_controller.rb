@@ -4,6 +4,8 @@ module ::Blog
   class ArticlesController < ::ApplicationController
     helper Blog::BlogHelper
     requires_plugin PLUGIN_NAME
+    THEME_ASSET_ACTIONS = %w[theme_css theme_js highlight_js]
+
     skip_before_action :check_xhr, :preload_json
     # These assets contain public code, never session data.
     skip_before_action :verify_authenticity_token, only: %i[theme_js highlight_js]
@@ -202,8 +204,20 @@ module ::Blog
       @blog = Configuration.blog_for(request) || Instance.default_blog
     end
 
+    # Draft previews and reviews of an unpublished blog still load its theme assets,
+    # which name nothing. Readers get the main blog's not-found page.
+    def hide_unpublished_blog
+      return if THEME_ASSET_ACTIONS.include?(action_name)
+      @blog = Instance.default_blog
+      raise Discourse::NotFound
+    end
+
     def ensure_public_blog
       raise Discourse::NotFound unless Configuration.blog_request?(request, @blog)
+      # A blog is themed before it is published, through preview links made for it.
+      if !@blog.published? && !ThemePreview.for_blog?(params[:blog_theme_preview], @blog)
+        hide_unpublished_blog
+      end
       # Revoked visibility must take effect on the next request, including feeds and previews.
       response.headers["Cache-Control"] = "private, no-store"
     end

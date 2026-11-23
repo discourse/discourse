@@ -10,32 +10,20 @@ blog:
         - "everyone"
       requires_plugin_enabled: false
       permanent_warning: false
-  blog_url:
-    default: ""
-    regex: "^$|^https://[a-z0-9.-]+(:[0-9]+)?$"
-  blog_category:
-    type: category
-    default: ""
   blog_drafts_category:
     type: category
     default: ""
     client: true
     hidden: true
-  blog_title:
-    default: "The blog"
-  blog_description:
-    default: "Ideas, stories, and conversations."
-    textarea: true
-  blog_about:
-    default: ""
-    textarea: true
-  blog_path_format:
-    default: "/{slug}"
-    validator: "Blog::PathFormatValidator"
-  blog_posts_per_page:
+  blog_custom_domains_enabled:
+    default: true
+    client: true
+    hidden: true
+  blog_max_instances:
+    type: integer
     default: 10
     min: 1
-    max: 30
+    hidden: true
   blog_contributor_groups:
     type: group_list
     default: "3"

@@ -8,7 +8,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
     fab!(:other_publishers, :group)
     fab!(:writers, :group)
 
-    let(:category_id) { SiteSetting.blog_category.presence }
+    let(:category_id) { Blog::Instance.default_blog.category_id }
     let(:dependencies) { {} }
     let(:full) { CategoryGroup.permission_types[:full] }
     let(:create_post) { CategoryGroup.permission_types[:create_post] }
@@ -30,7 +30,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
     context "when everyone can start topics in the blog category" do
       fab!(:blog_category, :category)
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "leaves it open without logging anything" do
         expect { result }.not_to change { UserHistory.count }
@@ -51,7 +51,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
         )
       end
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "grants them full access, keeps every other permission and logs the change" do
         expect(result).to run_successfully
@@ -85,7 +85,7 @@ RSpec.describe Blog::AddPublishersToPublicCategory do
         )
       end
 
-      before { SiteSetting.blog_category = blog_category.id }
+      before { update_default_blog(category_id: blog_category.id) }
 
       it "changes nothing" do
         expect { result }.not_to change {

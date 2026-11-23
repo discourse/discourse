@@ -2275,7 +2275,8 @@ CREATE TABLE public.blog_instances (
     is_default boolean DEFAULT false NOT NULL,
     "position" integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    published boolean DEFAULT true NOT NULL
 );
 
 
@@ -26768,9 +26769,11 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261123103548'),
 ('20261123030923'),
 ('20261121231304'),
 ('20261120183731'),
+('20261120090013'),
 ('20261119153028'),
 ('20261118215054'),
 ('20261118184327'),

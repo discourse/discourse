@@ -196,7 +196,7 @@ RSpec.describe Blog::Article::List do
     context "with more articles than fit on a page" do
       let(:params) { { page: 2 } }
 
-      before { SiteSetting.blog_posts_per_page = 1 }
+      before { update_default_blog(posts_per_page: 1) }
 
       it "lists the requested page and reports that more follow" do
         expect(result.listing).to eq(publications: [newer_publication], has_more: true)

@@ -27,7 +27,7 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "serves the blog under /blog when the blog URL is the forum's own hostname" do
-      SiteSetting.blog_url = "https://test.localhost"
+      update_default_blog(url: "https://test.localhost")
       sign_in(admin)
       get "/blog-editor.json"
       expect(response.status).to eq(200)
@@ -406,7 +406,7 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "serves robots, the About page, and tag pages from the same published set" do
-      SiteSetting.blog_about = "We publish **field notes** from the team."
+      update_default_blog(about: "We publish **field notes** from the team.")
       DiscourseTagging.tag_topic_by_names(
         publication.discussion_topic,
         Guardian.new(admin),
@@ -460,7 +460,7 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).to include(publication.url)
       expect(html.at_css('meta[name="description"]')["content"]).to eq("Writes about the field.")
 
-      SiteSetting.blog_description = "Notes from the team."
+      update_default_blog(description: "Notes from the team.")
       SiteSetting.hide_user_profiles_from_public = true
       get author_url
       expect(response.status).to eq(200)

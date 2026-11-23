@@ -3,9 +3,11 @@
 module ::Blog
   # The site settings that must be in place before articles can be published or reviewed.
   class Readiness
+    # A problem with a blog is fixed on that blog's admin page, a site-wide one in
+    # its settings.
     Problem =
-      Data.define(:key, :settings, :category_name) do
-        def initialize(key:, settings:, category_name: nil)
+      Data.define(:key, :settings, :blog, :category_name) do
+        def initialize(key:, settings: [], blog: nil, category_name: nil)
           super
         end
 
@@ -73,16 +75,15 @@ module ::Blog
       Problem.new(key: :anonymous_uploads, settings: %i[prevent_anons_from_downloading_files])
     end
 
-    # Only the default blog creates its category when publishing; other blogs get
-    # theirs when they are added.
+    # A blog creates its category when it first publishes, unless the name is taken.
     def category_problem
       category = ManagedCategories.public_category(@blog)
-      return Problem.new(key: :category, settings: %i[blog_category]) if category&.read_restricted?
-      return if category || !@blog.is_default?
+      return Problem.new(key: :category, blog: @blog) if category&.read_restricted?
+      return if category
       return if !ManagedCategories.public_category_name_taken?(@blog)
       Problem.new(
         key: :category_name_taken,
-        settings: %i[blog_category],
+        blog: @blog,
         category_name: ManagedCategories.public_category_name(@blog),
       )
     end
