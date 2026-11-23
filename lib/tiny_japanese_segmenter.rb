@@ -1381,111 +1381,289 @@ class TinyJapaneseSegmenter
     "ﾝ" => -496,
   }
 
+  BLANK_RE = /\A[\x00\t\n\v\f\r ]*\z/
+
+  def self.build_ascii_table(source)
+    table = Hash.new(0)
+    source.each { |key, weight| table[key.bytes.reduce(0) { |acc, b| (acc << 8) | b }] = weight }
+    table.freeze
+  end
+  private_class_method :build_ascii_table
+
+  def self.pack_uchar_key(str)
+    acc = 0
+    str.each_codepoint { |cp| acc = (acc << 17) | (cp + 1) }
+    acc
+  end
+  private_class_method :pack_uchar_key
+
+  def self.build_uchar_table(source)
+    table = Hash.new(0)
+    source.each { |key, weight| table[pack_uchar_key(key)] = weight }
+    table.freeze
+  end
+  private_class_method :build_uchar_table
+
+  UP1_TABLE = build_ascii_table(UP1)
+  UP2_TABLE = build_ascii_table(UP2)
+  UP3_TABLE = build_ascii_table(UP3)
+  BP1_TABLE = build_ascii_table(BP1)
+  BP2_TABLE = build_ascii_table(BP2)
+  UC1_TABLE = build_ascii_table(UC1)
+  UC2_TABLE = build_ascii_table(UC2)
+  UC3_TABLE = build_ascii_table(UC3)
+  UC4_TABLE = build_ascii_table(UC4)
+  UC5_TABLE = build_ascii_table(UC5)
+  UC6_TABLE = build_ascii_table(UC6)
+  BC1_TABLE = build_ascii_table(BC1)
+  BC2_TABLE = build_ascii_table(BC2)
+  BC3_TABLE = build_ascii_table(BC3)
+  TC1_TABLE = build_ascii_table(TC1)
+  TC2_TABLE = build_ascii_table(TC2)
+  TC3_TABLE = build_ascii_table(TC3)
+  TC4_TABLE = build_ascii_table(TC4)
+  UQ1_TABLE = build_ascii_table(UQ1)
+  UQ2_TABLE = build_ascii_table(UQ2)
+  UQ3_TABLE = build_ascii_table(UQ3)
+  BQ1_TABLE = build_ascii_table(BQ1)
+  BQ2_TABLE = build_ascii_table(BQ2)
+  BQ3_TABLE = build_ascii_table(BQ3)
+  BQ4_TABLE = build_ascii_table(BQ4)
+  TQ1_TABLE = build_ascii_table(TQ1)
+  TQ2_TABLE = build_ascii_table(TQ2)
+  TQ3_TABLE = build_ascii_table(TQ3)
+  TQ4_TABLE = build_ascii_table(TQ4)
+
+  UW1_TABLE = build_uchar_table(UW1)
+  UW2_TABLE = build_uchar_table(UW2)
+  UW3_TABLE = build_uchar_table(UW3)
+  UW4_TABLE = build_uchar_table(UW4)
+  UW5_TABLE = build_uchar_table(UW5)
+  UW6_TABLE = build_uchar_table(UW6)
+  BW1_TABLE = build_uchar_table(BW1)
+  BW2_TABLE = build_uchar_table(BW2)
+  BW3_TABLE = build_uchar_table(BW3)
+  TW1_TABLE = build_uchar_table(TW1)
+  TW2_TABLE = build_uchar_table(TW2)
+  TW3_TABLE = build_uchar_table(TW3)
+  TW4_TABLE = build_uchar_table(TW4)
+
+  # Each BMP codepoint is packed into 17 bits as (cp + 1), so any 1..3 BMP-char
+  # string fits losslessly in a 51-bit Fixnum and concatenation is `(a << shift) | b`.
+  B3_TOKEN = pack_uchar_key("B3")
+  B2_TOKEN = pack_uchar_key("B2")
+  B1_TOKEN = pack_uchar_key("B1")
+  E1_TOKEN = pack_uchar_key("E1")
+  E2_TOKEN = pack_uchar_key("E2")
+  E3_TOKEN = pack_uchar_key("E3")
+  NON_BMP_TOKEN = 0x1FFFF
+  MAX_KEY_BITS = 51
+
+  private_constant :BLANK_RE,
+                   :UP1_TABLE,
+                   :UP2_TABLE,
+                   :UP3_TABLE,
+                   :BP1_TABLE,
+                   :BP2_TABLE,
+                   :UC1_TABLE,
+                   :UC2_TABLE,
+                   :UC3_TABLE,
+                   :UC4_TABLE,
+                   :UC5_TABLE,
+                   :UC6_TABLE,
+                   :BC1_TABLE,
+                   :BC2_TABLE,
+                   :BC3_TABLE,
+                   :TC1_TABLE,
+                   :TC2_TABLE,
+                   :TC3_TABLE,
+                   :TC4_TABLE,
+                   :UQ1_TABLE,
+                   :UQ2_TABLE,
+                   :UQ3_TABLE,
+                   :BQ1_TABLE,
+                   :BQ2_TABLE,
+                   :BQ3_TABLE,
+                   :BQ4_TABLE,
+                   :TQ1_TABLE,
+                   :TQ2_TABLE,
+                   :TQ3_TABLE,
+                   :TQ4_TABLE,
+                   :UW1_TABLE,
+                   :UW2_TABLE,
+                   :UW3_TABLE,
+                   :UW4_TABLE,
+                   :UW5_TABLE,
+                   :UW6_TABLE,
+                   :BW1_TABLE,
+                   :BW2_TABLE,
+                   :BW3_TABLE,
+                   :TW1_TABLE,
+                   :TW2_TABLE,
+                   :TW3_TABLE,
+                   :TW4_TABLE,
+                   :B3_TOKEN,
+                   :B2_TOKEN,
+                   :B1_TOKEN,
+                   :E1_TOKEN,
+                   :E2_TOKEN,
+                   :E3_TOKEN,
+                   :NON_BMP_TOKEN,
+                   :MAX_KEY_BITS
+
   class << self
     def segment(text)
-      return [] if text.nil? || text.strip.length == 0
+      return [] if text.nil?
 
-      result = []
-
-      segments = %w[B3 B2 B1]
-      ctypes = %w[O O O]
-
-      text.chars.each do |char|
-        segments << char
-        ctypes << ctype(char)
+      if text.encoding != Encoding::UTF_8 && !text.ascii_only?
+        raise Encoding::CompatibilityError,
+              "incompatible encoding regexp match (UTF-8 with #{text.encoding} string)"
       end
 
-      segments.concat(%w[E1 E2 E3])
-      ctypes.concat(%w[O O O])
+      return [] if BLANK_RE.match?(text)
 
-      word = segments[3]
-      p1 = "U"
-      p2 = "U"
-      p3 = "U"
+      w_vals = [B3_TOKEN, B2_TOKEN, B1_TOKEN]
+      w_shifts = [34, 34, 34]
+      ctypes = [79, 79, 79]
+      byte_offsets = [0, 0, 0]
+      byte_pos = 0
 
-      4.upto(segments.size - 4) do |i|
-        score = BIAS
-        w1 = segments[i - 3]
-        w2 = segments[i - 2]
-        w3 = segments[i - 1]
-        w4 = segments[i]
-        w5 = segments[i + 1]
-        w6 = segments[i + 2]
+      text.each_codepoint do |cp|
+        byte_offsets << byte_pos
+        if cp <= 0x7F
+          byte_pos += 1
+          w_vals << (cp + 1)
+          w_shifts << 17
+        elsif cp <= 0x7FF
+          byte_pos += 2
+          w_vals << (cp + 1)
+          w_shifts << 17
+        elsif cp <= 0xFFFF
+          byte_pos += 3
+          w_vals << (cp + 1)
+          w_shifts << 17
+        else
+          byte_pos += 4
+          w_vals << NON_BMP_TOKEN
+          w_shifts << 68
+        end
+        ctypes << ctype_code(cp)
+      end
+
+      byte_offsets << byte_pos
+      w_vals.push(E1_TOKEN, E2_TOKEN, E3_TOKEN)
+      w_shifts.push(34, 34, 34)
+      ctypes.push(79, 79, 79)
+
+      result = []
+      word_start_byte = 0
+      p1 = 85 # 'U'
+      p2 = 85
+      p3 = 85
+
+      i = 4
+      limit = ctypes.size - 4
+      while i <= limit
+        w1 = w_vals[i - 3]
+        w2 = w_vals[i - 2]
+        w3 = w_vals[i - 1]
+        w4 = w_vals[i]
+        w5 = w_vals[i + 1]
+        w6 = w_vals[i + 2]
+
+        s2 = w_shifts[i - 2]
+        s3 = w_shifts[i - 1]
+        s4 = w_shifts[i]
+        s5 = w_shifts[i + 1]
+        s6 = w_shifts[i + 2]
+
         c1 = ctypes[i - 3]
         c2 = ctypes[i - 2]
         c3 = ctypes[i - 1]
         c4 = ctypes[i]
         c5 = ctypes[i + 1]
         c6 = ctypes[i + 2]
-        score += UP1[p1].to_i
-        score += UP2[p2].to_i
-        score += UP3[p3].to_i
-        score += BP1[p1 + p2].to_i
-        score += BP2[p2 + p3].to_i
-        score += UW1[w1].to_i
-        score += UW2[w2].to_i
-        score += UW3[w3].to_i
-        score += UW4[w4].to_i
-        score += UW5[w5].to_i
-        score += UW6[w6].to_i
-        score += BW1[w2 + w3].to_i
-        score += BW2[w3 + w4].to_i
-        score += BW3[w4 + w5].to_i
-        score += TW1[w1 + w2 + w3].to_i
-        score += TW2[w2 + w3 + w4].to_i
-        score += TW3[w3 + w4 + w5].to_i
-        score += TW4[w4 + w5 + w6].to_i
-        score += UC1[c1].to_i
-        score += UC2[c2].to_i
-        score += UC3[c3].to_i
-        score += UC4[c4].to_i
-        score += UC5[c5].to_i
-        score += UC6[c6].to_i
-        score += BC1[c2 + c3].to_i
-        score += BC2[c3 + c4].to_i
-        score += BC3[c4 + c5].to_i
-        score += TC1[c1 + c2 + c3].to_i
-        score += TC2[c2 + c3 + c4].to_i
-        score += TC3[c3 + c4 + c5].to_i
-        score += TC4[c4 + c5 + c6].to_i
-        # score += TC5[c4 + c5 + c6].to_i
-        score += UQ1[p1 + c1].to_i
-        score += UQ2[p2 + c2].to_i
-        score += UQ3[p3 + c3].to_i
-        score += BQ1[p2 + c2 + c3].to_i
-        score += BQ2[p2 + c3 + c4].to_i
-        score += BQ3[p3 + c2 + c3].to_i
-        score += BQ4[p3 + c3 + c4].to_i
-        score += TQ1[p2 + c1 + c2 + c3].to_i
-        score += TQ2[p2 + c2 + c3 + c4].to_i
-        score += TQ3[p3 + c1 + c2 + c3].to_i
-        score += TQ4[p3 + c2 + c3 + c4].to_i
 
-        p = "O"
+        c23 = (c2 << 8) | c3
+        c34 = (c3 << 8) | c4
+        c123 = (c1 << 16) | c23
+        c234 = (c2 << 16) | c34
+
+        s23 = s2 + s3
+        s34 = s3 + s4
+        s45 = s4 + s5
+        w23 = s23 <= MAX_KEY_BITS ? ((w2 << s3) | w3) : -1
+        w34 = s34 <= MAX_KEY_BITS ? ((w3 << s4) | w4) : -1
+        w45 = s45 <= MAX_KEY_BITS ? ((w4 << s5) | w5) : -1
+
+        tw1_k = (w_shifts[i - 3] + s23) <= MAX_KEY_BITS ? ((w1 << s23) | w23) : -1
+        tw2_k = (s23 + s4) <= MAX_KEY_BITS ? ((w23 << s4) | w4) : -1
+        tw3_k = (s34 + s5) <= MAX_KEY_BITS ? ((w34 << s5) | w5) : -1
+        tw4_k = (s45 + s6) <= MAX_KEY_BITS ? ((w45 << s6) | w6) : -1
+
+        score =
+          BIAS + UP1_TABLE[p1] + UP2_TABLE[p2] + UP3_TABLE[p3] + BP1_TABLE[(p1 << 8) | p2] +
+            BP2_TABLE[(p2 << 8) | p3] + UW1_TABLE[w1] + UW2_TABLE[w2] + UW3_TABLE[w3] +
+            UW4_TABLE[w4] + UW5_TABLE[w5] + UW6_TABLE[w6] + BW1_TABLE[w23] + BW2_TABLE[w34] +
+            BW3_TABLE[w45] + TW1_TABLE[tw1_k] + TW2_TABLE[tw2_k] + TW3_TABLE[tw3_k] +
+            TW4_TABLE[tw4_k] + UC1_TABLE[c1] + UC2_TABLE[c2] + UC3_TABLE[c3] + UC4_TABLE[c4] +
+            UC5_TABLE[c5] + UC6_TABLE[c6] + BC1_TABLE[c23] + BC2_TABLE[c34] +
+            BC3_TABLE[(c4 << 8) | c5] + TC1_TABLE[c123] + TC2_TABLE[c234] +
+            TC3_TABLE[(c34 << 8) | c5] + TC4_TABLE[(c4 << 16) | (c5 << 8) | c6] +
+            UQ1_TABLE[(p1 << 8) | c1] + UQ2_TABLE[(p2 << 8) | c2] + UQ3_TABLE[(p3 << 8) | c3] +
+            BQ1_TABLE[(p2 << 16) | c23] + BQ2_TABLE[(p2 << 16) | c34] +
+            BQ3_TABLE[(p3 << 16) | c23] + BQ4_TABLE[(p3 << 16) | c34] +
+            TQ1_TABLE[(p2 << 24) | c123] + TQ2_TABLE[(p2 << 24) | c234] +
+            TQ3_TABLE[(p3 << 24) | c123] + TQ4_TABLE[(p3 << 24) | c234]
 
         if score > 0
-          result.push(word)
-          word = ""
-          p = "B"
+          cut_byte = byte_offsets[i]
+          result << text.byteslice(word_start_byte, cut_byte - word_start_byte)
+          word_start_byte = cut_byte
+          p = 66 # 'B'
+        else
+          p = 79 # 'O'
         end
 
         p1 = p2
         p2 = p3
         p3 = p
-        word += segments[i]
+        i += 1
       end
 
-      result.push(word)
-
+      result << text.byteslice(word_start_byte, byte_pos - word_start_byte)
       result
     end
 
     private
 
-    def ctype(text)
-      CHARTYPE.each { |regexp, value| return value if text.match(regexp) }
+    def ctype_code(cp)
+      if cp >= 0x3041 && cp <= 0x3093
+        73 # 'I'
+      elsif (cp >= 0x30A1 && cp <= 0x30F4) || cp == 0x30FC || (cp >= 0xFF70 && cp <= 0xFF9E)
+        75 # 'K'
+      elsif (cp >= 0x0041 && cp <= 0x005A) || (cp >= 0x0061 && cp <= 0x007A) ||
+            (cp >= 0xFF21 && cp <= 0xFF3A) || (cp >= 0xFF41 && cp <= 0xFF5A)
+        65 # 'A'
+      elsif (cp >= 0x0030 && cp <= 0x0039) || (cp >= 0xFF10 && cp <= 0xFF19)
+        78 # 'N'
+      elsif cp >= 0x4E00 && cp <= 0x9FA0
+        case cp
+        when 0x4E00, 0x4E03, 0x4E07, 0x4E09, 0x4E5D, 0x4E8C, 0x4E94, 0x5104, 0x5146, 0x516B, 0x516D,
+             0x5341, 0x5343, 0x56DB, 0x767E
+          77 # 'M'
+        else
+          72 # 'H'
+        end
+      elsif cp == 0x3005 || cp == 0x3006 || cp == 0x30F5 || cp == 0x30F6
+        72 # 'H'
+      else
+        79 # 'O'
+      end
+    end
 
-      "O"
+    def ctype(text)
+      ctype_code(text.ord).chr
     end
   end
 end
