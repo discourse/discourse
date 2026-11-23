@@ -3,6 +3,7 @@ import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import Site from "discourse/models/site";
 import groupFixtures from "discourse/tests/fixtures/group-fixtures";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   updateCurrentUser,
@@ -439,6 +440,129 @@ acceptance(
       assert
         .dom(".group-automatic-tooltip")
         .doesNotExist("does not display automatic tooltip");
+    });
+  }
+);
+
+acceptance(
+  "Managing Group Membership with the new select controls",
+  function (needs) {
+    let savedGroup;
+
+    needs.user({ can_create_group: true });
+    needs.settings({ enable_new_select_controls: true });
+    needs.pretender((server, helper) => {
+      server.get("/associated_groups", () =>
+        helper.response({
+          associated_groups: [
+            {
+              id: 123,
+              name: "test-group",
+              provider_name: "google_oauth2",
+              label: "google_oauth2:test-group",
+            },
+            {
+              id: 456,
+              name: "other-group",
+              provider_name: "github",
+              label: "github:other-group",
+            },
+          ],
+        })
+      );
+
+      server.put("/groups/57", (request) => {
+        savedGroup = helper.parsePostData(request.requestBody).group;
+        return helper.response({ success: "OK" });
+      });
+
+      server.put("/admin/groups/automatic_membership_count.json", () =>
+        helper.response({ user_count: 0 })
+      );
+    });
+
+    needs.hooks.beforeEach(() => (savedGroup = null));
+
+    test("adds typed email domains, named by their label", async function (assert) {
+      await visit("/g/alternative-group/manage/membership");
+
+      const domains = dSelect(".group-form-automatic-membership-automatic");
+      assert
+        .dom(
+          'label[for="automatic_membership"] + .d-select #automatic_membership'
+        )
+        .hasAttribute("role", "combobox", "the label names the control");
+
+      await domains.search("foo.com");
+      await domains.select("foo.com");
+      await domains.search("@harness.io");
+      await domains.select("@harness.io");
+      await click(".group-manage-save");
+
+      assert
+        .dom(".dialog-body")
+        .doesNotExist("the server normalizes a leading @, so nothing warns");
+      assert.strictEqual(
+        savedGroup.automatic_membership_email_domains,
+        "foo.com|@harness.io"
+      );
+    });
+
+    test("keeps a removed email domain listed, to pick again", async function (assert) {
+      await visit("/g/alternative-group/manage/membership");
+
+      const domains = dSelect(".group-form-automatic-membership-automatic");
+      await domains.search("foo.com");
+      await domains.select("foo.com");
+      await domains.remove("foo.com");
+      await domains.open();
+
+      assert
+        .dom("[role='option'][data-value='foo.com']")
+        .hasAria("selected", "false");
+    });
+
+    test("refuses an email domain holding the separator", async function (assert) {
+      await visit("/g/alternative-group/manage/membership");
+
+      const domains = dSelect(".group-form-automatic-membership-automatic");
+      await domains.search("a.com|b.com");
+
+      assert.dom("[role='option']").doesNotExist("nothing to add");
+      assert
+        .dom(".d-select__empty")
+        .hasText(
+          i18n("admin.groups.manage.membership.email_domains.not_allowed")
+        );
+    });
+
+    test("picks associated groups by their label", async function (assert) {
+      Site.current().set("can_associate_groups", true);
+
+      await visit("/g/alternative-group/manage/membership");
+
+      const groups = dSelect(
+        ".group-form-automatic-membership-associated-groups"
+      );
+      assert
+        .dom(
+          'label[for="automatic_membership_associated_groups"] + .d-select #automatic_membership_associated_groups'
+        )
+        .exists("the label names the control");
+
+      await groups.open();
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map((option) =>
+          option.textContent.trim()
+        ),
+        ["google_oauth2:test-group", "github:other-group"]
+      );
+
+      await groups.select(456);
+      await click(".group-manage-save");
+
+      // Form-encoded arrays come back keyed with a trailing dot.
+      assert.strictEqual(savedGroup["associated_group_ids."], "456");
     });
   }
 );

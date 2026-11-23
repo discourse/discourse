@@ -8524,6 +8524,11 @@ en:
               other: "%{count} users have the new email domains and will be added to the group."
             automatic_membership_user_unknown_count: "Users with one of the new email domains will be added to the group."
             automatic_membership_associated_groups: "Users who are members of a group on a service listed here will be automatically added to this group when they log in with the service."
+            email_domains:
+              placeholder: "Type a domain to add it"
+              add_more_placeholder: "Add another…"
+              empty: "No domains yet"
+              not_allowed: "Domains can't contain |"
             primary_group: "Automatically set as primary group"
           alert:
             primary_group: "Since this is a primary group, the name '%{group_name}' will be used in CSS classes which can be viewed by anyone."
