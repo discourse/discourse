@@ -125,7 +125,7 @@ jobs:
       - uses: actions/checkout@v7
         timeout-minutes: 5
         with:
-          fetch-depth: 1
+          fetch-depth: ${{ env.OBSERVE_CORE_SYSTEM == 'true' && 2 || 1 }}
         env:
           # Fail stalled fetches so checkout retries them
           GIT_HTTP_LOW_SPEED_LIMIT: 1000

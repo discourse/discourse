@@ -65,7 +65,7 @@ RSpec.describe "Core system test selection in shadow" do
     git("rev-parse", "HEAD")
   end
 
-  def selection(dependencies:, base:, unmapped_browser_specs: [], setup_lines: {})
+  def selection(base:, dependencies: nil, unmapped_browser_specs: [], setup_lines: {})
     payload = {
       version: 2,
       revision: @map_sha,
@@ -77,7 +77,7 @@ RSpec.describe "Core system test selection in shadow" do
     }
     map_path = File.join(@repo, ".git/mapping.json")
     report_path = File.join(@repo, ".git/shadow.json")
-    File.write(map_path, JSON.generate(payload))
+    File.write(map_path, JSON.generate(payload)) if dependencies
     _, stderr, status =
       Open3.capture3(
         { "CORE_SYSTEM_PR_BASE" => base, "CORE_SYSTEM_MAP_SHA" => @map_sha },
@@ -90,6 +90,43 @@ RSpec.describe "Core system test selection in shadow" do
       )
     raise stderr unless status.success?
     JSON.parse(File.read(report_path))
+  end
+
+  it "proposes zero Core system files for a backend library spec change without a map" do
+    backend_spec = "spec/lib/example_helper_spec.rb"
+    write(backend_spec, "new backend example\n")
+    commit("pull request adds a backend example")
+
+    report = selection(base: @map_sha)
+
+    expect(report).to include(
+      "selected_files" => [],
+      "full_suite_fallback" => nil,
+      "pull_request_changes" => [backend_spec],
+    )
+  end
+
+  it "uses the full suite without a map when a pull request changes backend specs and application code" do
+    write("spec/lib/example_helper_spec.rb", "new backend example\n")
+    write(helper, helper_source.sub(":before", ":after"))
+    commit("pull request changes the helper and its backend spec")
+
+    report = selection(base: @map_sha)
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("no_compatible_map")
+  end
+
+  it "uses the full suite for a backend spec change with an unverified merge parent" do
+    write("docs/example.md", "main advanced\n")
+    commit("main advanced")
+    write("spec/lib/example_helper_spec.rb", "new backend example\n")
+    commit("pull request adds a backend example")
+
+    report = selection(base: @map_sha)
+
+    expect(report.fetch("selected_files")).to contain_exactly(sidebar, about, unrelated)
+    expect(report.fetch("full_suite_fallback")).to eq("selection_error")
   end
 
   it "combines changes since collection with changes in the tested pull request" do

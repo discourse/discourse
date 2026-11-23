@@ -11,7 +11,9 @@ module CoreSystemTestSelection
   MAP_VERSION = 2
   SHA = /\A[0-9a-f]{40}\z/
   TEST_FILE = %r{\Aspec/system/.+_spec\.rb\z}
+  BACKEND_LIB_SPEC = %r{\Aspec/lib/.+_spec\.rb\z}
   DEPENDENCY_FILES = %w[Gemfile Gemfile.lock package.json pnpm-lock.yaml pnpm-workspace.yaml].freeze
+  private_constant :BACKEND_LIB_SPEC
 
   def self.git(*args)
     stdout, stderr, status = Open3.capture3("git", *args)
@@ -229,6 +231,16 @@ module CoreSystemTestSelection
     }
   end
 
+  def self.plan_without_map(files:)
+    paths = changed_paths(ci_base, "HEAD")
+    if paths.any? && paths.all?(BACKEND_LIB_SPEC)
+      decision(files:, selected: [], pr: paths)
+    else
+      decision(files:, reason: "no_compatible_map", pr: paths)
+    end
+  end
+  private_class_method :plan_without_map
+
   def self.plan(map_file:, output:)
     start =
       Float(ENV["CORE_SYSTEM_SELECTION_STARTED_AT"], exception: false) ||
@@ -239,7 +251,7 @@ module CoreSystemTestSelection
         if File.file?(map_file)
           select(files:, map: JSON.parse(File.read(map_file)), base: ci_base, tested: "HEAD")
         else
-          decision(files:, reason: "no_compatible_map")
+          plan_without_map(files:)
         end
       rescue StandardError => error
         warn "Core system selection fallback: #{error.message}"
