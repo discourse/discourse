@@ -115,6 +115,11 @@ published.
 - The hidden `blog_max_instances` setting (default 10) caps how many blogs a site
   may have, so a host can lower it per plan. Existing blogs keep working when a
   site is over its limit; only adding is refused.
+- The hidden `blog_role_groups_enabled` setting (on by default) lets a site choose
+  which groups hold the contributor, editor and publisher roles. A host can turn it
+  off per plan: staff then hold all three roles whatever groups are saved, the drafts
+  category is limited to staff within the hour, and the saved groups take effect
+  again when the setting is turned back on.
 
 Enabling the blog claims `/blog` in both modes. A theme or plugin that already
 serves its own page under `/blog` stops receiving those requests.
