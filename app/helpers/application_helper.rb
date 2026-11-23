@@ -680,9 +680,39 @@ module ApplicationHelper
     end
   end
 
+  MAX_PREVIEW_COMPONENTS = 5
+
   def stylesheet_manager
     return @stylesheet_manager if defined?(@stylesheet_manager)
-    @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
+    @stylesheet_manager = Stylesheet::Manager.new(theme_id:, preview_component_ids:)
+  end
+
+  # Staff can try out components that only hold styles, including disabled
+  # ones or ones no theme includes yet, by passing their IDs in the URL, the
+  # same way `preview_theme_id` previews a theme. Only their stylesheets are
+  # added: components with JavaScript, settings or other files are ignored,
+  # since those parts can't be previewed this way.
+  def preview_component_ids
+    return @preview_component_ids if defined?(@preview_component_ids)
+
+    ids =
+      params[:preview_component_ids].to_s.split(",").filter_map { Integer(it, exception: false) }
+    @preview_component_ids =
+      if ids.empty? || !guardian.is_staff? || customization_disabled? ||
+           !guardian.allow_themes?(ids, include_preview: true)
+        []
+      else
+        Theme
+          .where(id: ids.first(MAX_PREVIEW_COMPONENTS), component: true)
+          .includes(:theme_fields)
+          .select do |component|
+            # color definitions aren't added this way, only stylesheets
+            component.theme_fields.all? do |field|
+              field.basic_scss_field? && field.name != "color_definitions"
+            end
+          end
+          .map(&:id)
+      end
   end
 
   def user_scheme_id

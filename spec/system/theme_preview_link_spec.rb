@@ -52,4 +52,49 @@ describe "Theme preview links" do
       visible: false,
     )
   end
+
+  context "with a component that only holds styles" do
+    fab!(:component) do
+      Fabricate(:theme, component: true, enabled: false).tap do |component|
+        component.set_field(
+          target: :common,
+          name: :scss,
+          value: "body { background-color: rgb(255, 224, 240); }",
+        )
+        component.save!
+      end
+    end
+
+    def body_background
+      page.evaluate_script("getComputedStyle(document.body).backgroundColor")
+    end
+
+    it "previews it on the current theme, even while it's disabled, until the preview ends" do
+      visit("/latest?preview_component_ids=#{component.id}")
+
+      expect(page).to have_css("#global-notice-theme-preview")
+      expect(page).to have_no_css("#global-notice-theme-preview-failed")
+      expect(body_background).to eq("rgb(255, 224, 240)")
+
+      find("#global-notice-theme-preview .exit-theme-preview").click
+
+      expect(page).to have_current_path("/latest")
+      expect(page).to have_no_css("#global-notice-theme-preview")
+      expect(body_background).not_to eq("rgb(255, 224, 240)")
+    end
+
+    it "says the preview failed for a component it can't preview" do
+      component.set_field(
+        target: :extra_js,
+        name: "discourse/api-initializers/x.js",
+        value: "export default {};",
+      )
+      component.save!
+
+      visit("/latest?preview_component_ids=#{component.id}")
+
+      expect(page).to have_css("#global-notice-theme-preview-failed")
+      expect(body_background).not_to eq("rgb(255, 224, 240)")
+    end
+  end
 end

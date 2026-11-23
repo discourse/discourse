@@ -1193,6 +1193,74 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing components" do
+    fab!(:theme)
+    fab!(:component) do
+      Fabricate(:theme, component: true, enabled: false).tap do |component|
+        component.set_field(target: :common, name: :scss, value: "body { margin: 1px; }")
+        component.save!
+      end
+    end
+    fab!(:component_with_js) do
+      Fabricate(:theme, component: true).tap do |component|
+        component.set_field(target: :common, name: :scss, value: "body { margin: 2px; }")
+        component.set_field(
+          target: :extra_js,
+          name: "discourse/api-initializers/x.js",
+          value: "export default {};",
+        )
+        component.save!
+      end
+    end
+
+    def component_ids_in_stylesheets
+      helper
+        .discourse_stylesheet_link_tag(:common_theme)
+        .scan(/data-theme-id="(\d+)"/)
+        .flatten
+        .map(&:to_i)
+    end
+
+    before do
+      helper.request.env[:resolved_theme_id] = theme.id
+      controller.params[:preview_component_ids] = "#{component.id},#{component_with_js.id}"
+    end
+
+    it "adds the styles of components that only hold styles, for staff, even when disabled" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      expect(component_ids_in_stylesheets).to include(component.id)
+      expect(component_ids_in_stylesheets).not_to include(component_with_js.id)
+    end
+
+    it "ignores them for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect(component_ids_in_stylesheets).not_to include(component.id)
+    end
+
+    it "ignores them in safe mode" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+      helper.request.env[ApplicationController::NO_THEMES] = true
+
+      expect(helper.preview_component_ids).to eq([])
+    end
+
+    it "ignores everything when one of them isn't a theme or component" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+      controller.params[:preview_component_ids] = "#{component.id},-99999"
+
+      expect(helper.preview_component_ids).to eq([])
+    end
+
+    it "ignores themes that aren't components" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+      controller.params[:preview_component_ids] = "#{theme.id},#{component.id}"
+
+      expect(helper.preview_component_ids).to eq([component.id])
+    end
+  end
+
   describe "previewing palettes" do
     fab!(:light_palette, :color_scheme)
     fab!(:dark_palette, :color_scheme)

@@ -35,6 +35,17 @@ function exitThemePreviewLink() {
   return `<a href="${escapeExpression(href)}" class="raw-link exit-theme-preview">${escapeExpression(i18n("exit_theme_preview"))}</a>`;
 }
 
+// Whether every component a preview asked for added its stylesheets. The
+// server leaves out components it won't preview.
+function previewedComponentsLoaded(ids) {
+  return (ids || "")
+    .split(",")
+    .filter(Boolean)
+    .every((id) =>
+      document.querySelector(`link[data-theme-id="${CSS.escape(id)}"]`)
+    );
+}
+
 /**
  * @typedef {object} NoticeOptions
  * @property {boolean} [dismissable]
@@ -162,10 +173,15 @@ export default class GlobalNotice extends Component {
       );
     }
 
-    const previewThemeId =
-      this.router.currentRoute?.queryParams?.preview_theme_id;
-    if (previewThemeId) {
-      if (currentThemeId() === parseInt(previewThemeId, 10)) {
+    const queryParams = this.router.currentRoute?.queryParams;
+    const previewThemeId = queryParams?.preview_theme_id;
+    const previewComponentIds = queryParams?.preview_component_ids;
+    if (previewThemeId || previewComponentIds) {
+      if (
+        (!previewThemeId ||
+          currentThemeId() === parseInt(previewThemeId, 10)) &&
+        previewedComponentsLoaded(previewComponentIds)
+      ) {
         notices.push(
           Notice.create({
             text: `${i18n("theme_preview_notice")} ${exitThemePreviewLink()}`,
