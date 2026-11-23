@@ -47,25 +47,25 @@ class TopicPostersSummary
         result = {}
         ids = ids || user_ids
 
-        if id = ids[0]
+        if id = ids.shift
           result[id] ||= []
           result[id] << @translations[:original_poster]
         end
 
-        if id = ids[1]
+        if id = ids.shift
           result[id] ||= []
           result[id] << @translations[:most_recent_poster]
         end
 
-        ids[2..].each do |remaining_id|
-          result[remaining_id] ||= []
+        while id = ids.shift
+          result[id] ||= []
           description =
-            if recent_poster_user_ids.include?(remaining_id)
+            if recent_poster_user_ids.include?(id)
               @translations[:recent_poster]
             else
               @translations[:frequent_poster]
             end
-          result[remaining_id] << description
+          result[id] << description
         end
 
         result
@@ -97,7 +97,7 @@ class TopicPostersSummary
   end
 
   def user_ids
-    @user_ids ||= [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
+    [topic.user_id, topic.last_post_user_id, *topic.featured_user_ids]
   end
 
   def recent_poster_user_ids
