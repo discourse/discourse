@@ -208,6 +208,45 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_highlighted_post(chain_posts[4])
     end
 
+    it "clears the previous highlight when navigating before its timer expires" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+      nested_view.remember_highlighted_post(chain_posts[2])
+
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
+
+      expect(nested_view).to have_highlighted_post(chain_posts[4])
+      expect(nested_view.previous_post_highlighted?).to eq(false)
+    end
+
+    it "clears the highlight when leaving the nested view" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+      nested_view.remember_highlighted_post(chain_posts[2])
+
+      nested_view.route_to("/latest")
+
+      expect(nested_view).to have_no_nested_view
+      expect(nested_view.previous_post_highlighted?).to eq(false)
+    end
+
+    it "restarts the CSS animation when forcing a scroll to the same target" do
+      nested_view.visit_nested(topic)
+      nested_view.enable_highlight_animations
+      nested_view.route_to_nested_context(topic, post_number: chain_posts[2].post_number)
+      expect(nested_view).to have_highlighted_post(chain_posts[2])
+
+      expect(nested_view.force_highlight_restart(chain_posts[2])).to eq(
+        "hadAnimation" => true,
+        "sameElement" => true,
+        "newAnimation" => true,
+        "startsAtBeginning" => true,
+        "previousAnimationCancelled" => true,
+      )
+      expect(nested_view).to have_no_highlighted_post(chain_posts[2])
+      expect(nested_view).to have_post(chain_posts[2])
+    end
+
     # Notifications produce /t/slug/id/N URLs; topic/from-params.js
     # detects is_nested_view and keeps the topic route mounted while loading
     # the nested context payload. When N is the post we're already viewing,
