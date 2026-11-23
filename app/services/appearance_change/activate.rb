@@ -18,6 +18,10 @@ class AppearanceChange::Activate
 
   model :appearance_change
   policy :can_edit_theme
+  only_if(:component) do
+    policy :can_edit_parent_theme
+    policy :attached_to_parent
+  end
   policy :not_applied
   policy :palettes_exist
   only_if(:replaces_version) { policy :can_edit_versions }
@@ -27,6 +31,7 @@ class AppearanceChange::Activate
 
   transaction do
     only_if(:changes_palettes) { step :assign_palettes }
+    only_if(:component) { step :enable_component }
     step :record_activation
     only_if(:replaces_version) { step :replace_previous_version }
   end
@@ -57,12 +62,32 @@ class AppearanceChange::Activate
     appearance_change.record_pending_activation!(replaced_state)
   end
 
+  def component(appearance_change:)
+    appearance_change.kind_component?
+  end
+
+  # enabling the component changes what its theme shows
+  def can_edit_parent_theme(guardian:, appearance_change:)
+    guardian.can_edit_theme?(appearance_change.parent_theme)
+  end
+
+  def attached_to_parent(appearance_change:)
+    appearance_change.attached_to_parent?
+  end
+
+  # The earlier components it replaces are disabled, not removed, so
+  # switching back can enable them again.
+  def enable_component(appearance_change:)
+    appearance_change.enabled_sibling_components.find_each { it.update!(enabled: false) }
+    appearance_change.theme.update!(enabled: true)
+  end
+
   def changes_palettes(appearance_change:)
-    !appearance_change.new_default_theme?
+    appearance_change.assigns_palettes?
   end
 
   def assign_palettes(appearance_change:)
-    appearance_change.theme.update!(
+    appearance_change.palette_theme.update!(
       color_scheme: appearance_change.light_color_scheme,
       dark_color_scheme: appearance_change.dark_color_scheme,
     )
@@ -73,7 +98,8 @@ class AppearanceChange::Activate
   end
 
   def replaces_version(appearance_change:)
-    appearance_change.kind_theme? && appearance_change.replaces_theme_id.present?
+    (appearance_change.kind_theme? || appearance_change.kind_component?) &&
+      appearance_change.replaces_theme_id.present?
   end
 
   # Making a version live renames the one it replaces and may remove the one

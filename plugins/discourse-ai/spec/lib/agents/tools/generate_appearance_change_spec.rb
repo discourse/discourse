@@ -598,4 +598,137 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       )
     end
   end
+
+  context "with Horizon" do
+    fab!(:llm_model)
+
+    let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+    let(:horizon) { Theme.horizon_theme }
+    let(:corners_answer) do
+      {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "rules" => [],
+        "unsupported" => [],
+      }
+    end
+    let(:shadow_only_answer) do
+      { "variables" => [], "rules" => [], "unsupported" => ["A shadow on topic rows"] }
+    end
+
+    before do
+      SystemThemesManager.sync_theme!("horizon")
+      horizon.set_default!
+    end
+
+    def invoke_with_styles(answers = [corners_answer], **parameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses(answers) do |_, _, prompts|
+        @prompts = prompts
+        described_class.new(parameters, bot_user: Discourse.system_user, llm:, context:).invoke
+      end
+    end
+
+    it "drafts the styles as a component of Horizon, keeping its colors, and says colors aren't available" do
+      result = invoke_with_styles(name: "Rounded", styles: "Rounder corners")
+
+      expect(result).to include(
+        status: "success",
+        style_changes: ["--d-border-radius: 12px"],
+        saves_as: I18n.t("discourse_ai.appearance_authoring.component_target", theme: horizon.name),
+      )
+      expect(draft(result)).to include(
+        kind: "component",
+        parent_theme_id: horizon.id,
+        styles: {
+          "variables" => {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+      expect(draft(result)).not_to have_key(:light_colors)
+      expect(@prompts.first.messages.map { it[:content] }.join).to include(
+        "added to the Horizon theme",
+      )
+    end
+
+    it "drafts new palettes for Horizon with the styles when colors are asked for too" do
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+
+      palettes = ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c")
+      expect(draft(result)).to include(
+        kind: "component",
+        light_colors: palettes.light,
+        dark_colors: palettes.dark,
+      )
+    end
+
+    it "still drafts the colors when none of the styles can be made, and says so" do
+      result =
+        invoke_with_styles(
+          [shadow_only_answer],
+          name: "Acme",
+          brand_color: "#e8590c",
+          styles: "A shadow on topic rows",
+        )
+
+      expect(result).to include(status: "success", not_supported: ["A shadow on topic rows"])
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+    end
+
+    it "refuses when none of the styles can be made and no colors were asked for" do
+      result = invoke_with_styles([shadow_only_answer], name: "Acme", styles: "A shadow")
+
+      expect(result).to include(status: "error")
+    end
+
+    it "makes a separate theme when one is asked for" do
+      result = invoke_with_styles(name: "Acme", styles: "Rounder corners", new_theme: true)
+
+      expect(draft(result)).to include(kind: "theme")
+      expect(draft(result)).not_to have_key(:parent_theme_id)
+
+      result = invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)
+      expect(draft(result)).to include(kind: "theme")
+    end
+
+    it "keeps changing only colors on Horizon itself" do
+      result = invoke(name: "Acme", brand_color: "#e8590c")
+
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+    end
+
+    it "drafts a new version of the live component the assistant added" do
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+
+      result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+      expect(draft(result)).to include(
+        kind: "component",
+        name: "Rounded",
+        replaces_theme_id: live.theme_id,
+      )
+      expect(@prompts.first.messages.map { it[:content] }.join).to include(
+        '{"variables":{"--d-border-radius":"8px"}}',
+      )
+    end
+  end
 end

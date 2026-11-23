@@ -18,6 +18,7 @@ class AppearanceChange::Revert
 
   model :appearance_change
   policy :can_edit_theme
+  only_if(:component) { policy :can_edit_parent_theme }
   policy :applied
   model :previous_state
   policy :restorable
@@ -27,6 +28,7 @@ class AppearanceChange::Revert
 
   transaction do
     only_if(:changes_palettes) { step :restore_palettes }
+    only_if(:component) { step :restore_components }
     only_if(:renamed_versions) { step :restore_theme_names }
     step :record_revert
   end
@@ -75,12 +77,35 @@ class AppearanceChange::Revert
     ) { on_failure { fail!("failed to update site settings") } }
   end
 
+  def component(appearance_change:)
+    appearance_change.kind_component?
+  end
+
+  def can_edit_parent_theme(guardian:, appearance_change:)
+    guardian.can_edit_theme?(appearance_change.parent_theme)
+  end
+
+  # Disables the component and enables the ones it replaced, where they're
+  # still attached to the theme.
+  def restore_components(appearance_change:, previous_state:)
+    appearance_change.theme.update!(enabled: false)
+    Theme
+      .where(id: previous_state["enabled_component_ids"].to_a, component: true)
+      .where(
+        id:
+          ChildTheme.where(parent_theme_id: appearance_change.parent_theme_id).select(
+            :child_theme_id,
+          ),
+      )
+      .find_each { it.update!(enabled: true) }
+  end
+
   def changes_palettes(appearance_change:)
-    !appearance_change.new_default_theme?
+    appearance_change.assigns_palettes?
   end
 
   def restore_palettes(appearance_change:, previous_state:)
-    appearance_change.theme.update!(
+    appearance_change.palette_theme.update!(
       color_scheme_id: previous_state["color_scheme_id"],
       dark_color_scheme_id: previous_state["dark_color_scheme_id"],
     )
