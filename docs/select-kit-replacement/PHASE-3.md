@@ -490,10 +490,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     excludes the article's author. It branches on the flag to a multiple `DSelectUser`
     (2026-11-23) with `@maximum={{10}}` and the topic's owner in `@exclude`, offering users
     only, as the legacy chooser did.
-  - ☐ discourse-ai's agent and LLM pickers (`ai-agent-llm-selector.gjs`, merged in
+  - ☑ discourse-ai's agent and LLM pickers (`ai-agent-llm-selector.gjs`, merged in
     `155c58773ce`). They were already `DropdownSelectBox` uses; #46469 turned them into an
     `AgentLlmDropdown` subclass that prepends a heading row through a select-kit collection
-    and lets clicks on the heading's settings link through. A port has to carry that heading.
+    and lets clicks on the heading's settings link through. They branch on the flag to two
+    `DSelect`s (2026-11-24). A list of more than three options gets the button variant's
+    search field, a shorter one the static variant. On the conversations page the heading
+    becomes a `:listHeader`, and the settings link moves to the `:footer`, admins only. Agents
+    show their descriptions, and the triggers keep the legacy flat look. The homepage and agent
+    specs run in both modes.
   - Checked in `ebd1d84f27e` and not ad-hoc: the blog plugin's `DMenu`s are action menus, and
     the new `ComboBox` in discourse-ai's spam settings is the generic select-kit control,
     covered by the long tail.

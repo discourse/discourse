@@ -7,13 +7,33 @@ import { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import { slugify } from "discourse/lib/utilities";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const AGENT_SELECTOR_KEY = "ai_agent_selector_id";
 const LEGACY_LLM_SELECTOR_KEY = "ai_llm_selector_id";
 const LLM_SELECTOR_KEY = "ai_llm_selector_model_id";
 const HEADING_COLLECTION = "HEADING_COLLECTION";
+
+/** Longer lists get a search field. */
+const SEARCHABLE_AFTER = 3;
+
+/**
+ * @param {Array<Object>} options
+ * @returns {"button"|"static"} the button variant's panel has a search field; the static one has none
+ */
+function selectVariant(options) {
+  return options.length > SEARCHABLE_AFTER ? "button" : "static";
+}
+
+const MenuSettingsLink = <template>
+  <a href={{getURL @heading.settingsPath}}>
+    {{~dIcon "wrench"}}
+    {{@heading.settingsLabel~}}
+  </a>
+</template>;
 
 const MenuHeading = <template>
   <div class="agent-llm-selector__menu-heading">
@@ -61,6 +81,7 @@ class AgentLlmDropdown extends DropdownSelectBox {
 export default class AiAgentLlmSelector extends Component {
   @service currentUser;
   @service keyValueStore;
+  @service siteSettings;
 
   @tracked allowLLMSelector = true;
   @tracked llm;
@@ -326,38 +347,105 @@ export default class AiAgentLlmSelector extends Component {
   }
 
   <template>
-    <div class="agent-llm-selector">
+    {{! TODO (select-kit-replacement-cleanup): Always lay the selects in a row. }}
+    <div
+      class={{dConcatClass
+        "agent-llm-selector"
+        (if this.siteSettings.enable_new_select_controls "--row")
+      }}
+    >
       {{#if this.showAgentSelector}}
         <div class="agent-llm-selector__selection-wrapper gpt-agent">
-          <AgentLlmDropdown
-            class="agent-llm-selector__agent-dropdown"
-            @content={{this.botOptions}}
-            @menuHeading={{this.agentMenuHeading}}
-            @onChange={{this.changeAgent}}
-            @options={{hash
-              customStyle=true
-              filterable=this.filterable
-              icon=(if @showMenuHeadings "angle-down" "robot")
-              mobilePlacementStrategy=(if @showMenuHeadings "fixed")
-            }}
-            @value={{this.value}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelect
+              class="agent-llm-selector__agent-dropdown"
+              @descriptionField="description"
+              @icon={{unless @showMenuHeadings "robot"}}
+              @identifier="ai-agent-selector"
+              @onChange={{this.changeAgent}}
+              @options={{this.botOptions}}
+              @searchIcon="magnifying-glass"
+              @suppressFooter={{not this.agentMenuHeading.settingsPath}}
+              @texts={{hash
+                ariaLabel=(i18n "discourse_ai.ai_bot.agent_menu_heading")
+              }}
+              @value={{this.value}}
+              @variant={{selectVariant this.botOptions}}
+            >
+              <:listHeader>
+                {{#if this.agentMenuHeading}}
+                  <div class="agent-llm-selector__menu-heading">
+                    {{~this.agentMenuHeading.label~}}
+                  </div>
+                {{/if}}
+              </:listHeader>
+              <:footer>
+                <MenuSettingsLink @heading={{this.agentMenuHeading}} />
+              </:footer>
+            </DSelect>
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <AgentLlmDropdown
+              class="agent-llm-selector__agent-dropdown"
+              @content={{this.botOptions}}
+              @menuHeading={{this.agentMenuHeading}}
+              @onChange={{this.changeAgent}}
+              @options={{hash
+                customStyle=true
+                filterable=this.filterable
+                icon=(if @showMenuHeadings "angle-down" "robot")
+                mobilePlacementStrategy=(if @showMenuHeadings "fixed")
+              }}
+              @value={{this.value}}
+            />
+          {{/if}}
         </div>
       {{/if}}
       {{#if this.showLLMSelector}}
         <div class="agent-llm-selector__selection-wrapper llm-selector">
-          <AgentLlmDropdown
-            class="agent-llm-selector__llm-dropdown"
-            @content={{this.llmOptions}}
-            @menuHeading={{this.llmMenuHeading}}
-            @onChange={{this.changeLlm}}
-            @options={{hash
-              customStyle=true
-              icon=(if @showMenuHeadings "angle-down" "globe")
-              mobilePlacementStrategy=(if @showMenuHeadings "fixed")
-            }}
-            @value={{this.currentLlm}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelect
+              class="agent-llm-selector__llm-dropdown"
+              @icon={{unless @showMenuHeadings "globe"}}
+              @identifier="ai-llm-selector"
+              @onChange={{this.changeLlm}}
+              @options={{this.llmOptions}}
+              @searchIcon="magnifying-glass"
+              @suppressFooter={{not this.llmMenuHeading.settingsPath}}
+              @texts={{hash
+                ariaLabel=(i18n "discourse_ai.ai_bot.model_menu_heading")
+              }}
+              @value={{this.currentLlm}}
+              @variant={{selectVariant this.llmOptions}}
+            >
+              <:listHeader>
+                {{#if this.llmMenuHeading}}
+                  <div class="agent-llm-selector__menu-heading">
+                    {{~this.llmMenuHeading.label~}}
+                  </div>
+                {{/if}}
+              </:listHeader>
+              <:footer>
+                <MenuSettingsLink @heading={{this.llmMenuHeading}} />
+              </:footer>
+            </DSelect>
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <AgentLlmDropdown
+              class="agent-llm-selector__llm-dropdown"
+              @content={{this.llmOptions}}
+              @menuHeading={{this.llmMenuHeading}}
+              @onChange={{this.changeLlm}}
+              @options={{hash
+                customStyle=true
+                icon=(if @showMenuHeadings "angle-down" "globe")
+                mobilePlacementStrategy=(if @showMenuHeadings "fixed")
+              }}
+              @value={{this.currentLlm}}
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

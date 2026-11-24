@@ -38,27 +38,33 @@ RSpec.describe "AI agents" do
     expect(agent.tools.first[1]["update_algorithm"]).to eq("full")
   end
 
-  it "remembers the last selected agent" do
-    visit "/"
-    find(".d-header .ai-bot-button").click()
-    agent_selector = PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
+  shared_examples "remembering the agent" do
+    it "remembers the last selected agent" do
+      ai_pm_homepage = PageObjects::Components::AiPmHomepage.new
+      visit "/"
+      find(".d-header .ai-bot-button").click()
 
-    id =
-      DiscourseAi::AiBot::EntryPoint
-        .available_agents(admin)
-        .find { |available_agent| available_agent[:allow_personal_messages] }[
-        :id
-      ]
+      first_agent =
+        DiscourseAi::AiBot::EntryPoint
+          .available_agents(admin)
+          .find { |available_agent| available_agent[:allow_personal_messages] }
 
-    expect(agent_selector).to have_selected_value(id)
+      expect(ai_pm_homepage).to have_selected_agent(first_agent[:name])
 
-    agent_selector.expand
-    agent_selector.select_row_by_value(-2)
+      other_agent = AiAgent.find(-2)
+      ai_pm_homepage.select_agent(other_agent.name)
 
-    visit "/"
-    find(".d-header .ai-bot-button").click()
-    agent_selector = PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
-    agent_selector.expand
-    expect(agent_selector).to have_selected_value(-2)
+      visit "/"
+      find(".d-header .ai-bot-button").click()
+      expect(ai_pm_homepage).to have_selected_agent(other_agent.name)
+    end
+  end
+
+  include_examples "remembering the agent"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "remembering the agent"
   end
 end

@@ -1,8 +1,41 @@
-import { render } from "@ember/test-helpers";
+import { render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 import AiAgentLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-agent-llm-selector";
+
+/**
+ * Builds agents that can be messaged, numbered from 1 with negative ids.
+ *
+ * @param {number} count
+ * @returns {Array<Object>}
+ */
+function agents(count) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: -(index + 1),
+    name: `Agent ${index + 1}`,
+    username: `agent_${index + 1}`,
+    allow_personal_messages: true,
+    default_llm_id: 1,
+    has_default_llm: true,
+    force_default_llm: false,
+  }));
+}
+
+/**
+ * Builds language models numbered from 1.
+ *
+ * @param {number} count
+ * @returns {Array<Object>}
+ */
+function models(count) {
+  return Array.from({ length: count }, (_, index) => ({
+    id: index + 1,
+    display_name: `Model ${index + 1}`,
+  }));
+}
 
 module("Integration | Component | AiAgentLlmSelector", function (hooks) {
   setupRenderingTest(hooks);
@@ -314,3 +347,233 @@ module("Integration | Component | AiAgentLlmSelector", function (hooks) {
     assert.dom(".agent-llm-selector__llm-dropdown").exists();
   });
 });
+
+module(
+  "Integration | Component | AiAgentLlmSelector | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      this.currentUser = this.owner.lookup("service:current-user");
+      this.currentUser.admin = false;
+      this.keyValueStore = this.owner.lookup("service:key-value-store");
+      this.keyValueStore.remove("ai_agent_selector_id");
+      this.keyValueStore.remove("ai_llm_selector_id");
+      this.keyValueStore.remove("ai_llm_selector_model_id");
+
+      this.currentUser.ai_enabled_agents = agents(2);
+      this.currentUser.ai_available_llm_models = models(2);
+
+      this.llmId = null;
+      this.targetRecipient = null;
+      this.setAgentId = () => {};
+      this.setLlmId = (id) => (this.llmId = id);
+      this.setTargetRecipient = (username) => (this.targetRecipient = username);
+      this.showMenuHeadings = false;
+    });
+
+    hooks.afterEach(function () {
+      this.keyValueStore.remove("ai_agent_selector_id");
+      this.keyValueStore.remove("ai_llm_selector_model_id");
+    });
+
+    /**
+     * Reads a combobox's name from its labelling elements, or else its own label.
+     *
+     * @param {string} selector
+     * @returns {string}
+     */
+    function accessibleName(selector) {
+      const element = document.querySelector(selector);
+      const ids = element.getAttribute("aria-labelledby");
+      if (ids) {
+        return ids
+          .split(" ")
+          .map((id) => document.getElementById(id)?.textContent.trim())
+          .join(" ");
+      }
+      return element.getAttribute("aria-label") ?? "";
+    }
+
+    async function renderSelector(context) {
+      await render(
+        <template>
+          <AiAgentLlmSelector
+            @setAgentId={{context.setAgentId}}
+            @setLlmId={{context.setLlmId}}
+            @setTargetRecipient={{context.setTargetRecipient}}
+            @showMenuHeadings={{context.showMenuHeadings}}
+          />
+        </template>
+      );
+    }
+
+    test("picks the agent and the model with selects", async function (assert) {
+      await renderSelector(this);
+
+      assert.dom(".select-kit").doesNotExist("renders no select-kit control");
+      assert
+        .dom(".agent-llm-selector__agent-dropdown")
+        .hasText("Agent 1", "shows the initial agent");
+
+      await dSelect(".agent-llm-selector__agent-dropdown").select(-2);
+
+      assert
+        .dom(".agent-llm-selector__agent-dropdown")
+        .hasText("Agent 2", "shows the picked agent");
+      assert.strictEqual(this.targetRecipient, "agent_2", "addresses it");
+      assert.strictEqual(this.llmId, 1, "keeps the model");
+
+      await dSelect(".agent-llm-selector__llm-dropdown").select(2);
+
+      assert
+        .dom(".agent-llm-selector__llm-dropdown")
+        .hasText("Model 2", "shows the picked model");
+      assert.strictEqual(this.llmId, 2, "changes the model");
+      assert.strictEqual(
+        this.targetRecipient,
+        "agent_2",
+        "does not replace the recipient"
+      );
+      assert.strictEqual(
+        this.keyValueStore.getItem("ai_llm_selector_model_id"),
+        "2",
+        "remembers the model"
+      );
+    });
+
+    test("describes each agent under its name", async function (assert) {
+      this.currentUser.ai_enabled_agents[1].description = "Answers questions";
+      await renderSelector(this);
+
+      await dSelect(".agent-llm-selector__agent-dropdown").open();
+
+      assert
+        .dom("[role='option'][data-value='-2'] .d-select__option-description")
+        .hasText("Answers questions");
+    });
+
+    test("names each select for what it picks", async function (assert) {
+      await renderSelector(this);
+
+      assert.true(
+        accessibleName(".agent-llm-selector__agent-dropdown").startsWith(
+          i18n("discourse_ai.ai_bot.agent_menu_heading")
+        ),
+        "names the agent select"
+      );
+      assert.true(
+        accessibleName(".agent-llm-selector__llm-dropdown").startsWith(
+          i18n("discourse_ai.ai_bot.model_menu_heading")
+        ),
+        "names the model select"
+      );
+    });
+
+    test("searches only a list of more than three options", async function (assert) {
+      this.currentUser.ai_enabled_agents = agents(4);
+      this.currentUser.ai_available_llm_models = models(3);
+      await renderSelector(this);
+
+      await dSelect(".agent-llm-selector__agent-dropdown").open();
+      assert.dom(".d-select__filter").exists("searches four agents");
+      await dSelect(".agent-llm-selector__agent-dropdown").close();
+
+      await dSelect(".agent-llm-selector__llm-dropdown").open();
+      assert
+        .dom(".d-select__filter")
+        .doesNotExist("lists three models without a search field");
+    });
+
+    test("composer menus show their icons and no heading", async function (assert) {
+      this.currentUser.admin = true;
+      await renderSelector(this);
+
+      assert
+        .dom(".agent-llm-selector__agent-dropdown .d-icon-robot")
+        .exists("marks the agent select");
+      assert
+        .dom(".agent-llm-selector__llm-dropdown .d-icon-globe")
+        .exists("marks the model select");
+
+      await dSelect(".agent-llm-selector__agent-dropdown").open();
+      assert
+        .dom(".d-select__list-header")
+        .hasNoText("shows no heading above the agents");
+      assert
+        .dom(".d-select__footer")
+        .doesNotExist("leaves the settings link to the conversations page");
+    });
+
+    test("conversations page menus open with a heading", async function (assert) {
+      this.showMenuHeadings = true;
+      await renderSelector(this);
+
+      assert
+        .dom(".agent-llm-selector .d-icon-robot")
+        .doesNotExist("leaves the agent select without an icon");
+
+      await dSelect(".agent-llm-selector__agent-dropdown").open();
+      assert
+        .dom(".d-select__list-header")
+        .hasText(i18n("discourse_ai.ai_bot.agent_menu_heading"));
+      assert
+        .dom(".d-select__footer")
+        .doesNotExist("shows non-admins no settings link");
+      await dSelect(".agent-llm-selector__agent-dropdown").close();
+
+      await dSelect(".agent-llm-selector__llm-dropdown").open();
+      assert
+        .dom(".d-select__list-header")
+        .hasText(i18n("discourse_ai.ai_bot.model_menu_heading"));
+    });
+
+    test("admins reach the settings from the menu footer", async function (assert) {
+      this.currentUser.admin = true;
+      this.showMenuHeadings = true;
+      await renderSelector(this);
+
+      await dSelect(".agent-llm-selector__agent-dropdown").open();
+      assert
+        .dom(".d-select__footer a")
+        .hasText(i18n("discourse_ai.ai_agent.manage_agents"))
+        .hasAttribute("href", "/admin/plugins/discourse-ai/ai-agents");
+
+      await triggerKeyEvent(
+        ".agent-llm-selector__agent-dropdown",
+        "keydown",
+        "Tab"
+      );
+      assert
+        .dom(".d-select__footer a")
+        .isFocused("reaches the link from the keyboard");
+      await dSelect(".agent-llm-selector__agent-dropdown").close();
+
+      await dSelect(".agent-llm-selector__llm-dropdown").open();
+      assert
+        .dom(".d-select__footer a")
+        .hasText(i18n("discourse_ai.ai_bot.manage_language_models"))
+        .hasAttribute("href", "/admin/plugins/discourse-ai/ai-models");
+    });
+
+    test("switching through a forced agent preserves the model preference", async function (assert) {
+      this.currentUser.ai_enabled_agents[1].force_default_llm = true;
+      this.currentUser.ai_enabled_agents[1].default_llm_id = 2;
+      this.keyValueStore.setItem("ai_llm_selector_model_id", 1);
+      await renderSelector(this);
+
+      await dSelect(".agent-llm-selector__agent-dropdown").select(-2);
+
+      assert.strictEqual(this.llmId, 2, "uses the forced model");
+      assert
+        .dom(".agent-llm-selector__llm-dropdown")
+        .doesNotExist("hides the model choice");
+
+      await dSelect(".agent-llm-selector__agent-dropdown").select(-1);
+
+      assert.strictEqual(this.llmId, 1, "restores the preferred model");
+      assert.dom(".agent-llm-selector__llm-dropdown").exists();
+    });
+  }
+);

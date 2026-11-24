@@ -792,3 +792,22 @@ html.mobile-tab-bar-visible:has(.ai-bot-conversations-index) {
     }
   }
 }
+
+// The select's panel is portaled out of the page's selector.
+body.ai-bot-conversations-page .agent-llm-selector__menu-heading {
+  padding: var(--space-2) 0.75rem;
+  color: var(--primary-700);
+  font-size: var(--font-down-1);
+  font-weight: 600;
+}
+
+body.ai-bot-conversations-page .agent-llm-selector.--row .d-select__trigger {
+  color: var(--d-button-default-text-color);
+  font-size: var(--font-down-1);
+  font-weight: bold;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--primary);
+  }
+}

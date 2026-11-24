@@ -68,12 +68,50 @@ module PageObjects
         page.find(".sidebar-section-content a.sidebar-section-link").click
       end
 
-      def agent_selector
-        PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
+      def select_agent(name)
+        return agent_select.select_name(name) if SiteSetting.enable_new_select_controls
+
+        agent_selector.expand
+        agent_selector.select_row_by_name(name)
       end
 
-      def llm_selector
-        PageObjects::Components::SelectKit.new(".agent-llm-selector__llm-dropdown")
+      def select_llm(name)
+        return llm_select.select_name(name) if SiteSetting.enable_new_select_controls
+
+        llm_selector.expand
+        llm_selector.select_row_by_name(name)
+      end
+
+      def has_selected_agent?(name)
+        return agent_select.has_selected_name?(name) if SiteSetting.enable_new_select_controls
+
+        agent_selector.has_selected_name?(name)
+      end
+
+      def has_selected_llm?(name)
+        return llm_select.has_selected_name?(name) if SiteSetting.enable_new_select_controls
+
+        llm_selector.has_selected_name?(name)
+      end
+
+      def has_agent_option?(name)
+        if SiteSetting.enable_new_select_controls
+          agent_select.open
+          return agent_select.has_option_name?(name)
+        end
+
+        agent_selector.expand
+        agent_selector.has_option_name?(name)
+      end
+
+      def has_no_agent_option?(name)
+        if SiteSetting.enable_new_select_controls
+          agent_select.open
+          return agent_select.has_no_option_name?(name)
+        end
+
+        agent_selector.expand
+        agent_selector.has_no_option_name?(name)
       end
 
       def has_sidebar_back_link?
@@ -129,6 +167,25 @@ module PageObjects
 
       def has_no_sidebar_back_link?
         page.has_no_css?(".sidebar-sections__back-to-forum")
+      end
+
+      private
+
+      def agent_select
+        PageObjects::Components::UiKit::DSelect.by_identifier("ai-agent-selector")
+      end
+
+      def llm_select
+        PageObjects::Components::UiKit::DSelect.by_identifier("ai-llm-selector")
+      end
+
+      # TODO (select-kit-replacement-cleanup): Remove the select-kit drivers after rollout.
+      def agent_selector
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__agent-dropdown")
+      end
+
+      def llm_selector
+        PageObjects::Components::SelectKit.new(".agent-llm-selector__llm-dropdown")
       end
     end
   end

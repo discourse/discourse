@@ -148,6 +148,60 @@ RSpec.describe "AI Bot - Homepage" do
       SiteSetting.ai_bot_enable_docked_composer = true
     end
 
+    shared_examples "choosing the agent and model" do
+      it "allows navigating to a specific LLM and agent" do
+        # url encode name
+        agent_name = CGI.escape(agent.name)
+        llm_name = CGI.escape(claude_2_dup.display_name)
+        visit "/discourse-ai/ai-bot/conversations?agent=#{agent_name}&llm=#{llm_name}"
+
+        expect(ai_pm_homepage).to have_selected_agent(agent.name)
+        expect(ai_pm_homepage).to have_selected_llm(claude_2_dup.display_name)
+      end
+
+      it "allows navigating to a specific LLM and agent with slugified names" do
+        visit "/discourse-ai/ai-bot/conversations?agent=test-agent&llm=duplicate"
+
+        expect(ai_pm_homepage).to have_selected_agent(agent.name)
+        expect(ai_pm_homepage).to have_selected_llm(claude_2_dup.display_name)
+      end
+
+      it "keeps the URL in sync with the selected agent and LLM" do
+        ai_pm_homepage.visit
+
+        ai_pm_homepage.select_agent(agent.name)
+        expect(page).to have_current_path(/agent=test-agent/)
+
+        ai_pm_homepage.select_llm(claude_2_dup.display_name)
+        expect(page).to have_current_path(/agent=test-agent/)
+        expect(page).to have_current_path(/llm=duplicate/)
+      end
+
+      it "removes agent from selector when allow_personal_messages is disabled" do
+        agent.update!(allow_personal_messages: false)
+        ai_pm_homepage.visit
+        expect(ai_pm_homepage).to have_no_agent_option(agent.name)
+      ensure
+        agent.update!(allow_personal_messages: true)
+      end
+
+      it "includes agent in selector when allow_personal_messages is enabled" do
+        # default is true
+        ai_pm_homepage.visit
+        expect(ai_pm_homepage).to have_agent_option(agent.name)
+      end
+
+      it "Allows choosing agent and LLM" do
+        ai_pm_homepage.visit
+
+        ai_pm_homepage.select_llm(claude_2_dup.display_name)
+
+        # confirm memory works for llm selection
+        ai_pm_homepage.visit
+        expect(ai_pm_homepage).to have_selected_llm(claude_2_dup.display_name)
+      end
+    end
+
     it "allows uploading files to a new conversation" do
       ai_pm_homepage.visit
       expect(ai_pm_homepage).to have_homepage
@@ -253,53 +307,6 @@ RSpec.describe "AI Bot - Homepage" do
       expect(ai_pm_homepage).to have_homepage
       expect(sidebar).to have_section("Today")
       expect(sidebar).to have_section_link(pm.title)
-    end
-
-    it "allows navigating to a specific LLM and agent" do
-      # url encode name
-      agent_name = CGI.escape(agent.name)
-      llm_name = CGI.escape(claude_2_dup.display_name)
-      visit "/discourse-ai/ai-bot/conversations?agent=#{agent_name}&llm=#{llm_name}"
-
-      ai_pm_homepage.agent_selector.expand # not needed, but helps to see what the list has
-      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
-      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
-    end
-
-    it "allows navigating to a specific LLM and agent with slugified names" do
-      visit "/discourse-ai/ai-bot/conversations?agent=test-agent&llm=duplicate"
-
-      expect(ai_pm_homepage.agent_selector).to have_selected_name(agent.name)
-      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
-    end
-
-    it "keeps the URL in sync with the selected agent and LLM" do
-      ai_pm_homepage.visit
-
-      ai_pm_homepage.agent_selector.expand
-      ai_pm_homepage.agent_selector.select_row_by_name(agent.name)
-      expect(page).to have_current_path(/agent=test-agent/)
-
-      ai_pm_homepage.llm_selector.expand
-      ai_pm_homepage.llm_selector.select_row_by_name(claude_2_dup.display_name)
-      expect(page).to have_current_path(/agent=test-agent/)
-      expect(page).to have_current_path(/llm=duplicate/)
-    end
-
-    it "removes agent from selector when allow_personal_messages is disabled" do
-      agent.update!(allow_personal_messages: false)
-      ai_pm_homepage.visit
-      ai_pm_homepage.agent_selector.expand
-      expect(ai_pm_homepage.agent_selector).to have_no_option_name(agent.name)
-    ensure
-      agent.update!(allow_personal_messages: true)
-    end
-
-    it "includes agent in selector when allow_personal_messages is enabled" do
-      # default is true
-      ai_pm_homepage.visit
-      ai_pm_homepage.agent_selector.expand
-      expect(ai_pm_homepage.agent_selector).to have_option_name(agent.name)
     end
 
     it "shows empty state when no PMs exist" do
@@ -420,18 +427,6 @@ RSpec.describe "AI Bot - Homepage" do
       expect(sidebar).to have_no_section_link(pm.title)
     end
 
-    it "Allows choosing agent and LLM" do
-      ai_pm_homepage.visit
-
-      ai_pm_homepage.llm_selector.expand
-      ai_pm_homepage.llm_selector.select_row_by_name(claude_2_dup.display_name)
-      ai_pm_homepage.llm_selector.collapse
-
-      # confirm memory works for llm selection
-      ai_pm_homepage.visit
-      expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
-    end
-
     it "renders back to forum link when header button is disabled" do
       SiteSetting.ai_bot_add_to_header = false
       ai_pm_homepage.visit
@@ -460,6 +455,14 @@ RSpec.describe "AI Bot - Homepage" do
         expect(sidebar).to be_visible
         expect(header_dropdown).to be_visible
       end
+    end
+
+    include_examples "choosing the agent and model"
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      include_examples "choosing the agent and model"
     end
   end
 

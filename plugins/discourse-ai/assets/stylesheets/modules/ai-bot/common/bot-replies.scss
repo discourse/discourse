@@ -245,3 +245,64 @@ span.onebox-ai-llm-title {
     }
   }
 }
+
+.agent-llm-selector.--row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+
+  .agent-llm-selector__selection-wrapper {
+    min-width: 0;
+    margin: 0;
+  }
+
+  // A flat trigger: the selects tune the conversation rather than ask for input.
+  .d-select__trigger.--control {
+    width: auto;
+    min-height: 0;
+    padding-inline: 0;
+    background: transparent;
+    border-color: transparent;
+  }
+}
+
+.composer-fields .agent-llm-selector.--row {
+  padding: var(--space-2) var(--space-4);
+
+  .d-select__trigger {
+    color: var(--d-button-default-text-color);
+    font-weight: var(--token-font-weight-medium);
+  }
+}
+
+// The panels outgrow their narrow flat triggers. Agent rows are windowed and give the panel no
+// intrinsic width, so it takes the widest a description could make it.
+.d-select__content[data-identifier="ai-agent-selector"] {
+  min-width: min(37.5rem, calc(100dvw - 2 * var(--space-4)));
+}
+
+.d-select__content[data-identifier="ai-llm-selector"] {
+  min-width: fit-content;
+}
+
+.d-select__content:is(
+  [data-identifier="ai-agent-selector"],
+  [data-identifier="ai-llm-selector"]
+) {
+  .d-select__option-content {
+    line-height: var(--line-height-medium);
+
+    // The name; the description follows it.
+    > :first-child {
+      font-weight: bold;
+
+      @include viewport.until(sm) {
+        font-weight: normal;
+      }
+    }
+  }
+
+  .d-select__option-description {
+    color: var(--primary-medium);
+  }
+}
