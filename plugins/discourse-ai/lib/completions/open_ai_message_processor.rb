@@ -16,7 +16,8 @@ module DiscourseAi::Completions
       {}
     end
 
-    def initialize(partial_tool_calls: false)
+    def initialize(partial_tool_calls: false, output_thinking: false)
+      @output_thinking = output_thinking
       @tools = {}
       @current_tool_key = nil
       @prompt_tokens = nil
@@ -135,6 +136,8 @@ module DiscourseAi::Completions
         .wrap(content)
         .flat_map do |part|
           if part.is_a?(Hash) && part[:type] == "thinking"
+            next [] if !@output_thinking
+
             text =
               part[:thinking].filter_map { |inner| inner[:text] if inner[:type] == "text" }.join
             if streaming

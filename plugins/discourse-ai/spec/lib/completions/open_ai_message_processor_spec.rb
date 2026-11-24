@@ -49,13 +49,28 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
     { choices: [choice] }
   end
 
+  it "does not emit Mistral thinking by default in streamed or non-streamed responses" do
+    thinking = { type: "thinking", thinking: [{ type: "text", text: "Let me think." }] }
+    text = { type: "text", text: "42" }
+    processor = described_class.new
+
+    expect(processor.process_message(choices: [{ message: { content: [thinking, text] } }])).to eq(
+      ["42"],
+    )
+    expect(processor.process_streamed_message(chunk(delta: { content: [thinking] }))).to be_nil
+    expect(processor.process_streamed_message(chunk(delta: { content: [thinking, text] }))).to eq(
+      "42",
+    )
+    expect(processor.finish).to eq([])
+  end
+
   it "decodes Mistral thinking and text content in streamed and non-streamed responses" do
     thinking = ->(text) { { type: "thinking", thinking: [{ type: "text", text: text }] } }
     text = { type: "text", text: "The answer is " }
     tool = { id: "call_1", function: { name: "lookup", arguments: "{}" } }
     expected_thinking = DiscourseAi::Completions::Thinking.new(message: "Let me think.")
 
-    processor = described_class.new
+    processor = described_class.new(output_thinking: true)
     result =
       processor.process_message(
         choices: [
@@ -72,7 +87,7 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
     expect(result.last).to be_a(DiscourseAi::Completions::ToolCall)
     expect(result.last.parameters).to eq({})
 
-    processor = described_class.new
+    processor = described_class.new(output_thinking: true)
     partial =
       processor.process_streamed_message(chunk(delta: { content: [thinking.call("Let me ")] }))
     expect(Array(partial)).to eq(
@@ -94,7 +109,7 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
     expect(processor.process_streamed_message(chunk(delta: { content: "42" }))).to eq("42")
     expect(processor.finish).to eq([])
 
-    processor = described_class.new
+    processor = described_class.new(output_thinking: true)
     processor.process_streamed_message(chunk(delta: { content: [thinking.call("Let me think.")] }))
     expect(processor.finish).to eq([expected_thinking])
     expect(processor.finish).to eq([])
