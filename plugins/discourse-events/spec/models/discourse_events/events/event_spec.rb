@@ -36,7 +36,6 @@ RSpec.describe DiscourseEvents::Events::Event do
     is_expected.to validate_numericality_of(:max_attendees)
       .only_integer
       .is_greater_than(0)
-      .is_less_than_or_equal_to(DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT)
       .allow_nil
   end
 
@@ -1920,6 +1919,21 @@ describe DiscourseEvents::Events::Event, "#capacity" do
     event.create_invitees(
       [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
     )
+    expect(event.at_capacity?).to eq(true)
+  end
+
+  it "uses the site setting limit when max_attendees is not set" do
+    SiteSetting.discourse_post_event_max_attendees_limit = 1
+    creator = Fabricate(:user)
+    post = Fabricate(:post, user: creator, topic: Fabricate(:topic, user: creator))
+    event = Fabricate(:event, post: post, max_attendees: nil)
+
+    expect(event.at_capacity?).to eq(false)
+
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+    )
+
     expect(event.at_capacity?).to eq(true)
   end
 end

@@ -96,9 +96,10 @@ module DiscourseEvents
           end
         end
 
+        max_attendees_limit = SiteSetting.discourse_post_event_max_attendees_limit
         if extracted_event[:"max-attendees"].present? &&
-             !extracted_event[:"max-attendees"].to_i.between?(1, Event::MAX_ATTENDEES_LIMIT)
-          add_error("invalid_max_attendees", maximum: Event::MAX_ATTENDEES_LIMIT)
+             !extracted_event[:"max-attendees"].to_i.between?(1, max_attendees_limit)
+          add_error("invalid_max_attendees", maximum: max_attendees_limit)
         end
 
         if extracted_event[:"recurrence-until"].present? &&

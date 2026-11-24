@@ -487,7 +487,7 @@ describe Post do
             expect { create_post_with_event(user, "maxAttendees=\"#{value}\"") }.to raise_error(
               I18n.t(
                 "discourse_post_event.errors.models.event.invalid_max_attendees",
-                maximum: DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT,
+                maximum: SiteSetting.discourse_post_event_max_attendees_limit,
               ),
             )
           end
@@ -496,6 +496,41 @@ describe Post do
             expect_rejected_max_attendees("0")
             expect_rejected_max_attendees("9999999999")
             expect_rejected_max_attendees("")
+          end
+
+          it "raises an error when above the max attendees limit" do
+            expect_rejected_max_attendees(SiteSetting.discourse_post_event_max_attendees_limit + 1)
+          end
+
+          it "raises an error when an edit raises it above the max attendees limit" do
+            post = create_post_with_event(user, 'max-attendees="10"')
+            limit = SiteSetting.discourse_post_event_max_attendees_limit
+
+            revisor = PostRevisor.new(post, post.topic)
+            revised =
+              revisor.revise!(
+                user,
+                raw: post.raw.sub('max-attendees="10"', "max-attendees=\"#{limit + 1}\""),
+              )
+
+            expect(revised).to eq(false)
+            expect(post.errors.full_messages).to include(
+              I18n.t(
+                "discourse_post_event.errors.models.event.invalid_max_attendees",
+                maximum: limit,
+              ),
+            )
+            expect(post.reload.event.max_attendees).to eq(10)
+          end
+        end
+
+        context "when max attendees is at the limit" do
+          it "creates the event" do
+            limit = SiteSetting.discourse_post_event_max_attendees_limit
+
+            post = create_post_with_event(user, "max-attendees=\"#{limit}\"")
+
+            expect(post.event.max_attendees).to eq(limit)
           end
         end
 
