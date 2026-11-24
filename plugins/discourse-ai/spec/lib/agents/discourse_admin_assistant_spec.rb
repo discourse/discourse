@@ -96,10 +96,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
 
     prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new(user: admin))
 
-    expect(prompt.system_message_text).to include(
-      restriction,
-      "You are the Discourse Admin Assistant",
-    )
+    expect(prompt.system_message_text).to include(restriction, "You are the Admin Assistant")
   ensure
     if plugin && modifier
       DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_system_prompt, &modifier)
