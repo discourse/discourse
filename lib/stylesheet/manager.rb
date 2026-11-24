@@ -228,9 +228,12 @@ class Stylesheet::Manager
 
   attr_reader :theme_ids
 
-  def initialize(theme_id: nil)
+  # exclude_ids: components left out of a staff preview (see
+  # ApplicationHelper#preview_hidden_component_ids). The rest are the theme's
+  # usual stylesheets, so the cache keeps serving them.
+  def initialize(theme_id: nil, exclude_ids: [])
     @theme_id = theme_id
-    @theme_ids = Theme.transform_ids(@theme_id)
+    @theme_ids = Theme.transform_ids(@theme_id) - exclude_ids
     @themes_cache = {}
   end
 

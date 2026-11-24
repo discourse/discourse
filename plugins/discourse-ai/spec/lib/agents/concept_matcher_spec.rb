@@ -12,24 +12,42 @@ RSpec.describe DiscourseAi::Agents::ConceptMatcher do
   end
 
   describe "#system_prompt" do
-    let(:prompt) { agent.system_prompt }
+    it "uses a static prompt without template interpolation for concept lists" do
+      prompt = agent.system_prompt
 
-    it "includes placeholder for concept list" do
-      expect(prompt).to include("{inferred_concepts}")
-    end
-
-    it "specifies output format" do
-      expect(prompt).to include("matching_concepts")
-      expect(prompt).to include('{"matching_concepts": ["concept1", "concept3", "concept5"]}')
+      expect(prompt).not_to include("{inferred_concepts}")
+      expect(prompt).to include("candidates")
+      expect(prompt).to include("concept_id")
     end
   end
 
   describe "#response_format" do
-    it "defines correct response format" do
-      format = agent.response_format
-
-      expect(format).to eq(
-        [{ "array_type" => "string", "key" => "matching_concepts", "type" => "array" }],
+    it "defines a strict matches object array" do
+      expect(agent.response_format).to eq(
+        [
+          {
+            "key" => "matches",
+            "type" => "array",
+            "array_type" => "object",
+            "max_items" => 7,
+            "items" => {
+              "type" => "object",
+              "additionalProperties" => false,
+              "required" => %w[concept_id relevance primary],
+              "properties" => {
+                "concept_id" => {
+                  "type" => "integer",
+                },
+                "relevance" => {
+                  "type" => "number",
+                },
+                "primary" => {
+                  "type" => "boolean",
+                },
+              },
+            },
+          },
+        ],
       )
     end
   end

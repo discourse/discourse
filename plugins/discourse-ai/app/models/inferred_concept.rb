@@ -27,7 +27,7 @@ class InferredConcept < ActiveRecord::Base
           where(
             "lower(name) = :term OR EXISTS (SELECT 1 FROM unnest(aliases) AS alias WHERE lower(alias) = :term)",
             term: normalized,
-          )
+          ).order(Arel.sql("CASE status WHEN 1 THEN 0 WHEN 0 THEN 1 ELSE 2 END, id ASC"))
         end
 
   def text_for_embedding
