@@ -6182,6 +6182,20 @@ RSpec.describe SessionController do
           )
         end
 
+        def authenticate_passkey
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     userHandle: Base64.strict_encode64(user.secure_identifier),
+                   ),
+               },
+               xhr: true
+        end
+
         it "fails if local logins are not allowed" do
           SiteSetting.enable_local_logins = false
 
@@ -6226,20 +6240,24 @@ RSpec.describe SessionController do
           expect(response.status).to eq(403)
         end
 
-        it "logs the user in" do
-          simulate_localhost_passkey_challenge
-          user.activate
-          user.create_or_fetch_secure_identifier
-          post "/session/passkey/auth.json",
-               params: {
-                 publicKeyCredential:
-                   valid_passkey_auth_data.merge(
-                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
-                   ),
-               }
-          expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).not_to be_present
+        it "logs in with a passkey even when an authenticator app is enrolled" do
+          Fabricate(:user_second_factor_totp, user:)
 
+          authenticate_passkey
+
+          expect(response.status).to eq(200)
+          get "/session/current.json"
+          expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+        end
+
+        it "logs in when only passkeys are registered" do
+          SiteSetting.allow_passkeys_for_2fa = true
+
+          authenticate_passkey
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to be_blank
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).not_to eq(true)
           expect(session[:current_user_id]).to eq(user.id)
         end
 
@@ -6307,6 +6325,7 @@ RSpec.describe SessionController do
         context "with a valid discourse connect provider" do
           before do
             sso = DiscourseConnectBase.new
+            sso.require_2fa = true
             sso.nonce = "mynonce"
             sso.sso_secret = "topsecret"
             sso.return_sso_url = "http://somewhere.over.rainbow/sso"
@@ -6323,6 +6342,18 @@ RSpec.describe SessionController do
             SiteSetting.discourse_connect_secret = sso.sso_secret
             SiteSetting.discourse_connect_provider_secrets =
               "somewhere.over.rainbow|#{sso.sso_secret}"
+          end
+
+          it "confirms two-factor authentication to the relying site after passkey sign-in" do
+            Fabricate(:user_second_factor_totp, user:)
+
+            authenticate_passkey
+
+            expect(response.status).to eq(200)
+            redirect_url = response.parsed_body.fetch("redirect_url")
+            expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?")
+            result = DiscourseConnectBase.parse(URI(redirect_url).query, "topsecret")
+            expect(result.confirmed_2fa).to eq(true)
           end
 
           it "logs the user in" do

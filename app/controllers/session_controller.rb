@@ -31,6 +31,7 @@ class SessionController < ApplicationController
                                   :create_login_code,
                                   :verify_login_code,
                                   :sso_login_second_factor,
+                                  :passkey_login,
                                   :second_factor_auth_perform
 
   # Every SessionController action is part of auth. An archived site permits
@@ -485,7 +486,8 @@ class SessionController < ApplicationController
         factor_type: UserSecurityKey.factor_types[:first_factor],
       ).authenticate_security_key
 
-    user = User.where(id: security_key.user_id, active: true).first
+    user = User.find(security_key.user_id)
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
     if login_not_approved_for?(user)
       render json: login_not_approved
@@ -496,7 +498,7 @@ class SessionController < ApplicationController
       return render json: payload
     end
 
-    if user.email_confirmed?
+    if user.active? && user.email_confirmed?
       login(user, passkey_login: true)
     else
       not_activated(user)

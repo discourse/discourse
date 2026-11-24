@@ -56,6 +56,8 @@ describe ReadOnlyMixin do
       [SessionController, :verify_login_code],
       # Allows staff to log in via DiscourseConnect with a second factor
       [SessionController, :sso_login_second_factor],
+      # Allows staff to log in via passkey
+      [SessionController, :passkey_login],
       # Allows signed-out staff to verify a second factor for sign-in
       [SessionController, :second_factor_auth_perform],
       # Allows staff to log in via OAuth and complete any second-factor step
