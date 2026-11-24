@@ -1,0 +1,17 @@
+name: Collect Core system test map
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  collect:
+    if: github.ref == 'refs/heads/main' && github.repository != 'discourse/discourse-private-mirror'
+    uses: ./.github/workflows/tests.yml
+    with:
+      collect_core_system_map: true
