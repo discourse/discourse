@@ -15,7 +15,7 @@ class InferredConcept < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validates :slug, uniqueness: { case_sensitive: false }, allow_blank: true
   validates :description, length: { maximum: 1000 }
-  validate :parent_cannot_be_self
+  validate :parent_cannot_create_cycle
 
   before_validation :ensure_slug
   before_validation :normalize_aliases
@@ -75,8 +75,21 @@ class InferredConcept < ActiveRecord::Base
       end
   end
 
-  def parent_cannot_be_self
-    errors.add(:parent_id, :invalid) if parent_id.present? && id.present? && parent_id == id
+  def parent_cannot_create_cycle
+    return if parent_id.blank? || id.blank?
+
+    visited = Set[id]
+    current_id = parent_id
+
+    while current_id.present?
+      if visited.include?(current_id)
+        errors.add(:parent_id, :invalid)
+        return
+      end
+
+      visited << current_id
+      current_id = InferredConcept.where(id: current_id).pick(:parent_id)
+    end
   end
 
   def delete_embeddings

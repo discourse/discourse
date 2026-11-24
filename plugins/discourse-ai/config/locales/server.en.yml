@@ -1779,6 +1779,13 @@ en:
         disabled: "The AI translation feature is not fully configured."
         all_posts_translated: "All posts in this topic are already translated."
 
+    concepts:
+      errors:
+        invalid_status: "Concept status must be active, candidate, or retired."
+        invalid_parent: "Parent concept must exist and cannot be retired."
+        invalid_merge: "Select a valid non-retired target concept to merge into."
+        curation_unavailable: "Enable inferred concepts and AI embeddings before running curation."
+
     llm_credit_allocation:
       limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
       limit_exceeded_admin: "You have reached your AI credit limit. Please try again after %{reset_time}."
