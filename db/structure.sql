@@ -24505,6 +24505,13 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 
 
 --
+-- Name: index_push_subscriptions_on_endpoint; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_endpoint ON public.push_subscriptions USING btree ((((data)::jsonb ->> 'endpoint'::text))) WHERE ((strpos((data)::text, '\u0000'::text) = 0) AND (octet_length(((data)::jsonb ->> 'endpoint'::text)) <= 2048));
+
+
+--
 -- Name: index_quoted_posts_on_post_id_and_quoted_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26794,6 +26801,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20261109184113'),
 ('20261109074217'),
 ('20261109060019'),
+('20261106224349'),
 ('20261106020035'),
 ('20261105165644'),
 ('20261104164335'),
