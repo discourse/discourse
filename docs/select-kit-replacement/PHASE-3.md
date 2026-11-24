@@ -416,6 +416,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☐ The wizard (see below).
   - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
     dynamically. It moves with the colors and fonts.
+  - ☐ `WatchedWords`, 1 site: the admin watched word form (`watched-word-form.gjs`), found
+    2026-11-24 after the inventory missed it. A `MultiSelect` that takes any typed word or
+    phrase (`allowAny`) and offers only the words already entered, so a multiple `DSelect` with
+    `@createOption`, like the string lists.
 - ☐ **ui-kit wrappers** as one family.
   - ☑ `d-relative-time-picker` (2026-11-13): its unit select branches on the flag to a static
     `DSelect` named "Unit".
@@ -437,9 +441,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `FORMAT` moved to `discourse/lib/time-shortcut`, re-exported from the old module.
   - ☑ `d-access-control`: the add box (2026-11-11) and the permission select both branch on the
     flag. The legacy grantee chooser goes in the cleanup.
-  - ☐ `DAccessControl`'s permission menu becomes the `DSelectPermission` recipe, with no flag:
-    the caller's permissions as `@options`, then Remove as an action option at the end, after a
-    divider. The old `DAccessControlPermissionMenu` module is deleted.
+  - ☑ `DAccessControl`'s permission menu became the `DSelectPermission` recipe (2026-11-12,
+    `0bc11e587c0`), with no flag: the caller's permissions as `@options`, then Remove as an
+    action option at the end, after a divider. The old `DAccessControlPermissionMenu` module is
+    deleted.
   - Trailing action options (audited 2026-11-11, core and bundled plugins): no select-kit value
     select ends with an action; theirs all lead (the AI suggest options, the drops'
     shortcuts). The recipe returns Remove from `@extraOptions` with `position: "end"` and

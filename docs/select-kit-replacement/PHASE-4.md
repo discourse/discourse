@@ -14,9 +14,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
   `NotificationsButton` and its plugin and theme subclasses) waits on the route decision in
   `ROLLOUT.md`.
 - ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
-  category and tag admin dropdowns, bulk-select bookmarks. Callbacks registered on their
-  `modifySelectKit` identifiers keep running. (composer-actions is excluded; it is replaced
-  independently by `composer-actions-new`.)
+  category and tag admin dropdowns, bulk-select bookmarks, and the admin "New bot" button
+  (`admin/components/admin-new-bot-button.gjs`, added on `main` in #45212 and found 2026-11-24).
+  Callbacks registered on their `modifySelectKit` identifiers keep running. (composer-actions is
+  excluded; it is replaced independently by `composer-actions-new`.)
 - ☐ **Value pickers built on `DMenu`** (audited 2026-11-11, core and bundled plugins). Their
   trigger shows the current value and their rows choose among values, so the guideline points
   them at `DSelect`. Each one is decided on its own, and one we keep on `DMenu` is checked off
