@@ -208,7 +208,6 @@ export default class DsaModerationDetails extends Component {
               <:footer>
                 {{! The help tooltip links the definitions too, but a keyboard can't reach it. }}
                 <a
-                  class="dsa-classification-definitions"
                   href={{CATEGORY_DEFINITIONS_URL}}
                   rel="noopener noreferrer"
                   target="_blank"

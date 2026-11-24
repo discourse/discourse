@@ -354,3 +354,88 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (:footer link)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /**
+     * Resolves a theme color variable the way the browser paints it.
+     *
+     * @param {string} variable
+     * @returns {string}
+     */
+    function themeColor(variable) {
+      const probe = document.createElement("span");
+      probe.style.color = `var(${variable})`;
+      find(".d-select__footer").append(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      return color;
+    }
+
+    test("a lone footer link sits at the trailing edge in the footer's muted link color", async function (assert) {
+      await render(
+        <template>
+          <DSelect @options={{ITEMS}}>
+            <:footer>
+              <a class="test-footer-link" href="/settings">Settings</a>
+            </:footer>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      const footer = find(".d-select__footer");
+      const link = find(".test-footer-link");
+      const style = getComputedStyle(footer);
+      const scale = footer.getBoundingClientRect().width / footer.offsetWidth;
+      const contentEnd =
+        footer.getBoundingClientRect().right -
+        (parseFloat(style.paddingRight) + parseFloat(style.borderRightWidth)) *
+          scale;
+
+      assert.true(
+        Math.abs(link.getBoundingClientRect().right - contentEnd) < 1,
+        `link ends at ${link.getBoundingClientRect().right} vs ${contentEnd}`
+      );
+      assert.strictEqual(
+        getComputedStyle(link).color,
+        themeColor("--primary-high")
+      );
+      assert.strictEqual(
+        getComputedStyle(link).textDecorationLine,
+        "none",
+        "is not underlined at rest"
+      );
+    });
+
+    test("a status note leads the footer and a link trails it", async function (assert) {
+      await render(
+        <template>
+          <DSelect @options={{ITEMS}}>
+            <:footer>
+              <span class="test-footer-note">+19 more</span>
+              <a class="test-footer-link" href="/all">View all</a>
+            </:footer>
+          </DSelect>
+        </template>
+      );
+      await click("[role='combobox']");
+
+      const footer = find(".d-select__footer").getBoundingClientRect();
+      const note = find(".test-footer-note").getBoundingClientRect();
+      const link = find(".test-footer-link").getBoundingClientRect();
+
+      assert.true(
+        note.left - footer.left < footer.right - note.right,
+        "the note sits on the leading side"
+      );
+      assert.true(
+        footer.right - link.right < link.left - footer.left,
+        "the link sits on the trailing side"
+      );
+    });
+  }
+);

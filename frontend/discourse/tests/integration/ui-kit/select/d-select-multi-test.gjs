@@ -2892,3 +2892,46 @@ module(
     });
   }
 );
+
+module(
+  "Integration | ui-kit | select | DSelect (popover search field)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("the popover's search field is a flat strip lined up with the rows' content", async function (assert) {
+      await render(
+        <template><StripHost @multiple={{false}} @variant="button" /></template>
+      );
+      await click(".d-select__trigger");
+
+      const input = find(".d-select__content .d-select__filter");
+      const option = find(".d-select__content .d-select__option");
+      const inputStyle = getComputedStyle(input);
+      const optionStyle = getComputedStyle(option);
+      // The test container is scaled, so rects and computed padding differ by that factor.
+      const scale = option.getBoundingClientRect().width / option.offsetWidth;
+      const inputText =
+        input.getBoundingClientRect().left +
+        parseFloat(inputStyle.paddingLeft) * scale;
+      const optionText =
+        option.getBoundingClientRect().left +
+        parseFloat(optionStyle.paddingLeft) * scale;
+
+      assert.strictEqual(
+        inputStyle.borderTopWidth,
+        "0px",
+        "draws no box against the panel's border"
+      );
+      assert.notStrictEqual(
+        getComputedStyle(find(".d-select__content .d-select__search"))
+          .borderBottomWidth,
+        "0px",
+        "is ruled off from the list"
+      );
+      assert.true(
+        Math.abs(inputText - optionText) < 1,
+        `text starts at ${inputText} vs ${optionText}`
+      );
+    });
+  }
+);

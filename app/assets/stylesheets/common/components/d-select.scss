@@ -506,7 +506,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5em;
-  padding: 0.5em 0.75em;
+  padding: var(--space-1) 0.75em;
   border-top: 1px solid var(--primary-low);
 
   // The footer states something; it is not a call to action competing with the list above it —
@@ -517,6 +517,26 @@
   // needs a focus indicator — and an earlier `background: none` here silently suppressed it.
   .btn {
     font-size: var(--font-down-1);
+  }
+
+  // A link is an action too, so a lone one still trails. It stays quiet like the rest of the
+  // footer and only darkens on hover.
+  > a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline-start: auto;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--primary);
+    }
+
+    &:focus-visible {
+      @include default-focus;
+    }
   }
 }
 
@@ -812,6 +832,32 @@
     inset-inline-end: 0.65em;
     top: 50%;
     transform: translateY(-50%);
+  }
+}
+
+// In a popover the field is a flat strip ruled off from the list. As a boxed input its border lay
+// on the panel's own, and the strip lines its text up with the options instead.
+.fk-d-menu.d-select__content .d-select__search {
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--content-border-color);
+
+  > .d-select__filter {
+    height: auto;
+    padding-block: 0.5em;
+    padding-inline: var(--d-select-option-padding-inline);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+  }
+
+  &.--with-icon > .d-select__filter {
+    padding-inline-end: 2em;
+  }
+
+  .d-select__search-icon {
+    inset-inline-end: var(--d-select-option-padding-inline);
   }
 }
 
