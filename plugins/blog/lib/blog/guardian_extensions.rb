@@ -18,17 +18,15 @@ module ::Blog
 
     # Each role includes the ones below it: publisher, editor, contributor.
     def is_blog_publisher?
-      blog_role_user? && (is_admin? || in_blog_role_groups?(SiteSetting.blog_publisher_groups_map))
+      blog_role_user? && (is_admin? || in_blog_role_groups?(Roles.publisher_group_ids))
     end
 
     def is_blog_editor?
-      is_blog_publisher? ||
-        (blog_role_user? && in_blog_role_groups?(SiteSetting.blog_editor_groups_map))
+      is_blog_publisher? || (blog_role_user? && in_blog_role_groups?(Roles.editor_group_ids))
     end
 
     def is_blog_contributor?
-      is_blog_editor? ||
-        (blog_role_user? && in_blog_role_groups?(SiteSetting.blog_contributor_groups_map))
+      is_blog_editor? || (blog_role_user? && in_blog_role_groups?(Roles.contributor_group_ids))
     end
 
     # Editorial work on an article's working copy or its Blog-category topic.

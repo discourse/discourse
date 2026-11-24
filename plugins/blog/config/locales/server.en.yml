@@ -7,6 +7,7 @@ en:
   site_settings:
     blog_max_instances: The most blogs this site can have.
     blog_custom_domains_enabled: Allow a blog to be served from its own domain instead of the community's address.
+    blog_role_groups_enabled: Allow the site to choose which groups hold the blog contributor, editor and publisher roles. When disabled, only staff hold them.
     blog_contributor_groups: Groups that can write and submit their own blog drafts. These groups can see the private drafts category. This does not grant forum staff privileges.
     blog_editor_groups: Groups that can edit and submit any blog draft they can see. These groups can see the private drafts category. Publication requires the publisher role.
     blog_publisher_groups: Groups that can approve, publish, withdraw, and schedule blog revisions they can see. Publishers may approve their own work. These groups can see the private drafts category and start topics in the public blog category. Administrators always retain access.
