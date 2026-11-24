@@ -485,9 +485,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
     `1d0e7629f72`) branch on the flag to `DSelectGroup` (2026-11-12), offering the groups the
     editor looks up, named after the feature.
-  - ☐ The blog's co-author field (`blog-publication-panel.gjs`, #46193, merged in
+  - ☑ The blog's co-author field (`blog-publication-panel.gjs`, #46193, merged in
     `155c58773ce`): a FormKit custom field with a `UserChooser` capped at 10 users that
-    excludes the article's author. It belongs on `DSelectUser` behind the flag.
+    excludes the article's author. It branches on the flag to a multiple `DSelectUser`
+    (2026-11-23) with `@maximum={{10}}` and the topic's owner in `@exclude`, offering users
+    only, as the legacy chooser did.
   - ☐ discourse-ai's agent and LLM pickers (`ai-agent-llm-selector.gjs`, merged in
     `155c58773ce`). They were already `DropdownSelectBox` uses; #46469 turned them into an
     `AgentLlmDropdown` subclass that prepends a heading row through a select-kit collection

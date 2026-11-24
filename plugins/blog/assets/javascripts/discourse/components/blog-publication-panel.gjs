@@ -19,6 +19,7 @@ import DFlashMessage from "discourse/ui-kit/d-flash-message";
 import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import { findBlog } from "discourse/plugins/blog/discourse/lib/site-blogs";
 import BlogReviews from "./modal/blog-reviews.gjs";
@@ -51,6 +52,7 @@ export default class BlogPublicationPanel extends Component {
   @service dialog;
   @service modal;
   @service site;
+  @service siteSettings;
   @service toasts;
 
   @tracked busy = false;
@@ -1096,14 +1098,31 @@ export default class BlogPublicationPanel extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <UserChooser
-                        @onChange={{field.set}}
-                        @options={{hash
-                          maximum=10
-                          excludedUsernames=this.coAuthorExclusions
-                        }}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectUser
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @exclude={{this.coAuthorExclusions}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @maximum={{10}}
+                          @multiple={{true}}
+                          @onChange={{field.set}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <UserChooser
+                          @onChange={{field.set}}
+                          @options={{hash
+                            maximum=10
+                            excludedUsernames=this.coAuthorExclusions
+                          }}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                   <form.Field

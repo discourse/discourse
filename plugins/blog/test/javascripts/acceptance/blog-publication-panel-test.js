@@ -4,11 +4,45 @@ import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const TOPIC_URL = "/t/internationalization-localization/280";
 const PANEL = ".blog-publication-panel";
+
+/** A never-published draft of the fixture topic. */
+function draftPublication() {
+  return {
+    id: 280,
+    role: "draft",
+    status: "draft",
+    title: "An unfinished story",
+    path: "/an-unfinished-story",
+    url: "https://blog.example.com/an-unfinished-story",
+    excerpt: "",
+    meta_description: "",
+    canonical_url: "",
+    featured: false,
+    changes: [],
+    edits_since_publish: 0,
+    draft_updated_at: "2026-09-01T10:00:00Z",
+    source_topic_id: 280,
+    source_url: TOPIC_URL,
+    preview_url: "/blog-editor/preview/280",
+    published: false,
+    live: false,
+    draft: true,
+    can_publish: true,
+    review_feedback_count: 0,
+    active_review_links: 0,
+    submitted_revision: null,
+    approved_revision: null,
+    scheduled_revision: null,
+    scheduled_at: null,
+    schedule_error: "",
+  };
+}
 
 acceptance("Blog publication panel", function (needs) {
   needs.user({ admin: true });
@@ -17,35 +51,7 @@ acceptance("Blog publication panel", function (needs) {
   let publication;
 
   needs.hooks.beforeEach(() => {
-    publication = {
-      id: 280,
-      role: "draft",
-      status: "draft",
-      title: "An unfinished story",
-      path: "/an-unfinished-story",
-      url: "https://blog.example.com/an-unfinished-story",
-      excerpt: "",
-      meta_description: "",
-      canonical_url: "",
-      featured: false,
-      changes: [],
-      edits_since_publish: 0,
-      draft_updated_at: "2026-09-01T10:00:00Z",
-      source_topic_id: 280,
-      source_url: TOPIC_URL,
-      preview_url: "/blog-editor/preview/280",
-      published: false,
-      live: false,
-      draft: true,
-      can_publish: true,
-      review_feedback_count: 0,
-      active_review_links: 0,
-      submitted_revision: null,
-      approved_revision: null,
-      scheduled_revision: null,
-      scheduled_at: null,
-      schedule_error: "",
-    };
+    publication = draftPublication();
     pretender.get("/t/280.json", () => {
       const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
       topic.blog_publication = publication;
@@ -662,3 +668,102 @@ acceptance("Blog publication panel with several blogs", function (needs) {
       .doesNotExist("a published article stays on its blog");
   });
 });
+
+acceptance(
+  "Blog publication panel with the new select controls",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.settings({ blog_enabled: true, enable_new_select_controls: true });
+
+    const USERS = ["writer_ada", "writer_bob", "writer_cleo", "uwe_keim"].map(
+      (username, index) => ({
+        id: index + 1,
+        username,
+        name: null,
+        avatar_template: "/images/avatar.png",
+      })
+    );
+    const CO_AUTHORS = `${PANEL} [data-name='co_authors'] .d-select`;
+
+    let publication;
+
+    needs.hooks.beforeEach(() => {
+      publication = draftPublication();
+      pretender.get("/t/280.json", () => {
+        const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
+        topic.blog_publication = publication;
+        return response(topic);
+      });
+      pretender.get("/blog-editor/publications/280.json", () =>
+        response(publication)
+      );
+      pretender.get("/u/search/users", (request) => {
+        const { term, usernames } = request.queryParams;
+        if (usernames) {
+          const names = usernames.split(",");
+          return response({
+            users: USERS.filter((user) => names.includes(user.username)),
+          });
+        }
+        return response({
+          users: USERS.filter((user) => user.username.includes(term ?? "")),
+        });
+      });
+    });
+
+    test("picks co-authors from a user select that leaves out the topic's owner", async function (assert) {
+      publication = { ...publication, co_authors: ["writer_ada"] };
+      pretender.put("/blog-editor/publications/280.json", (request) => {
+        const data = new URLSearchParams(request.requestBody);
+        assert.strictEqual(
+          data.get("publication[co_authors]"),
+          "writer_ada,writer_bob",
+          "co-authors are sent as one list of usernames"
+        );
+        return response(publication);
+      });
+
+      await visit(TOPIC_URL);
+      await click(`${PANEL}__settings-toggle`);
+
+      assert
+        .dom(`${CO_AUTHORS} [role='combobox']`)
+        .hasAria("label", "Co-authors", "the select is named for its field");
+      assert.deepEqual(
+        [...document.querySelectorAll(`${CO_AUTHORS} .d-select__chip`)].map(
+          (chip) => chip.dataset.value
+        ),
+        ["writer_ada"],
+        "the held co-author is shown"
+      );
+
+      await dSelect(CO_AUTHORS).search("_");
+      assert.deepEqual(
+        [...document.querySelectorAll("[role='option']")].map(
+          (option) => option.dataset.value
+        ),
+        ["writer_ada", "writer_bob", "writer_cleo"],
+        "the topic's owner is already credited, so isn't offered"
+      );
+
+      await dSelect(CO_AUTHORS).select("writer_bob");
+      await dSelect(CO_AUTHORS).close();
+      await formKit(`${PANEL}__form`).submit();
+    });
+
+    test("holds at most ten co-authors", async function (assert) {
+      publication = {
+        ...publication,
+        co_authors: Array.from({ length: 10 }, (_, index) => `writer${index}`),
+      };
+
+      await visit(TOPIC_URL);
+      await click(`${PANEL}__settings-toggle`);
+      await dSelect(CO_AUTHORS).open();
+
+      assert
+        .dom(".d-select__limit")
+        .exists("the select says the limit is reached");
+    });
+  }
+);
