@@ -810,6 +810,23 @@ CREATE TABLE public.ai_document_fragments_embeddings (
 
 
 --
+-- Name: ai_inferred_concepts_embeddings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_inferred_concepts_embeddings (
+    inferred_concept_id bigint NOT NULL,
+    model_id bigint NOT NULL,
+    model_version integer NOT NULL,
+    strategy_id integer NOT NULL,
+    strategy_version integer NOT NULL,
+    digest text NOT NULL,
+    embeddings public.halfvec NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: ai_mcp_oauth_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7715,7 +7732,10 @@ CREATE TABLE public.inferred_concept_posts (
     inferred_concept_id bigint,
     post_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7727,7 +7747,10 @@ CREATE TABLE public.inferred_concept_topics (
     inferred_concept_id bigint,
     topic_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7739,7 +7762,12 @@ CREATE TABLE public.inferred_concepts (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    slug character varying DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 1 NOT NULL,
+    aliases text[] DEFAULT '{}'::text[] NOT NULL,
+    parent_id bigint
 );
 
 
@@ -21627,6 +21655,13 @@ CREATE UNIQUE INDEX index_ai_artifact_versions_on_ai_artifact_id_and_version_num
 
 
 --
+-- Name: index_ai_concepts_embeddings_on_model_strategy_concept; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_concepts_embeddings_on_model_strategy_concept ON public.ai_inferred_concepts_embeddings USING btree (model_id, strategy_id, inferred_concept_id);
+
+
+--
 -- Name: index_ai_fragments_embeddings_on_model_strategy_fragment; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -23468,10 +23503,38 @@ CREATE UNIQUE INDEX index_inferred_concept_topics_uniqueness ON public.inferred_
 
 
 --
+-- Name: index_inferred_concepts_on_lower_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_lower_name ON public.inferred_concepts USING btree (lower((name)::text));
+
+
+--
 -- Name: index_inferred_concepts_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_inferred_concepts_on_name ON public.inferred_concepts USING btree (name);
+
+
+--
+-- Name: index_inferred_concepts_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_parent_id ON public.inferred_concepts USING btree (parent_id) WHERE (parent_id IS NOT NULL);
+
+
+--
+-- Name: index_inferred_concepts_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_inferred_concepts_on_slug ON public.inferred_concepts USING btree (slug) WHERE ((slug)::text <> ''::text);
+
+
+--
+-- Name: index_inferred_concepts_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_status ON public.inferred_concepts USING btree (status);
 
 
 --
@@ -26890,6 +26953,8 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124152608'),
+('20261124152603'),
 ('20261124151606'),
 ('20261124013641'),
 ('20261124013638'),
