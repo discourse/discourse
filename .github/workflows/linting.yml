@@ -105,11 +105,11 @@ jobs:
             if: ${{ !cancelled() }}
             run: bin/rake svgicons:check
 
-          - name: English locale lint (core)
+          - name: Locale lint (core)
             if: ${{ !cancelled() }}
-            run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
+            run: bundle exec ruby script/i18n_lint.rb "config/**/locales/*.en.yml" "migrations/**/locales/*.en.yml" "spec/support/locales/*.en.yml"
 
-          - name: English locale lint (core plugins)
+          - name: Locale lint (core plugins)
             if: ${{ !cancelled() }}
             run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
 
