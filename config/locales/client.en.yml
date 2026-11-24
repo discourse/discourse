@@ -696,7 +696,7 @@ en:
           title: "Look & feel"
           description: "Choose your fonts and what members see first."
       sections:
-        colors: "Site color modes"
+        colors: "Default color modes"
         fonts: "Fonts"
         logo: "Logo"
         homepage: "Homepage"
@@ -705,9 +705,9 @@ en:
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
-        light_palette: "Light palette"
-        dark_palette: "Dark palette"
+        palette: "Palette"
+        manage_palettes_prompt: "Want a custom palette or to control which palettes members can choose?"
+        manage_palettes: "Manage color palettes"
         modes:
           label: "Color modes"
           both: "Light & dark"
@@ -716,9 +716,6 @@ en:
       fonts:
         base_font: "Body"
         heading_font: "Headings"
-      logo:
-        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
-        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
@@ -9411,8 +9408,8 @@ en:
           title: "Colors"
           edit: "Edit"
           view: "View"
-          set_default_light: "Set as light palette on default theme (%{theme})"
-          set_default_dark: "Set as dark palette on default theme (%{theme})"
+          set_default_light: "Set as light"
+          set_default_dark: "Set as dark"
           set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
