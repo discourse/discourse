@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, focus, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
@@ -8,6 +8,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -333,6 +334,87 @@ acceptance("User Preferences - Account", function (needs) {
     assert
       .dom(".avatar-choice--associated-account")
       .doesNotExist("provider choices require the same permission as uploads");
+  });
+
+  test("picks a flair with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    customUserProps = {
+      flair_group_id: null,
+      groups: [
+        {
+          id: 44,
+          name: "ubuntu",
+          automatic: false,
+          flair_url: "rocket",
+          flair_bg_color: "cc0000",
+          flair_color: "ffffff",
+        },
+        {
+          id: 47,
+          name: "discourse",
+          automatic: false,
+          flair_url: "/images/discourse-logo-sketch-small.png",
+        },
+        { id: 50, name: "plain", automatic: false },
+      ],
+    };
+
+    let savedUserData;
+    pretender.put("/u/eviltrout.json", (request) => {
+      savedUserData = parsePostData(request.requestBody);
+      return response({ user: {} });
+    });
+
+    await visit("/u/eviltrout/preferences/account");
+
+    const FLAIR = "[data-identifier='flair-chooser'][data-trigger]";
+    assert
+      .dom(`${FLAIR} [role='combobox']`)
+      .hasAttribute(
+        "aria-labelledby",
+        document.querySelector(".pref-flair .control-label").id,
+        "the field's label names it"
+      );
+    assert.dSelect(FLAIR).hasLabel(i18n("user.flair.none"));
+
+    const flair = dSelect(FLAIR);
+    await flair.open();
+
+    assert
+      .dom(
+        ".d-select__content [role='option'][data-value='44'] .d-select__glyph .avatar-flair .d-icon-rocket"
+      )
+      .exists("an icon flair is drawn before its group");
+    assert
+      .dom(
+        ".d-select__content [role='option'][data-value='47'] .d-select__glyph .avatar-flair"
+      )
+      .exists("an image flair is drawn before its group");
+    assert
+      .dom(".d-select__content [role='option'][data-value='50']")
+      .doesNotExist("a group without flair isn't offered");
+
+    await flair.select(44);
+    // A focused typeahead shows its input in place of the selection.
+    await focus(".save-changes");
+
+    assert
+      .dom(`${FLAIR} .d-select__glyph .avatar-flair .d-icon-rocket`)
+      .exists("the held flair is drawn in the field");
+
+    await click(".save-changes");
+
+    assert.strictEqual(savedUserData.flair_group_id, "44", "saves the flair");
+
+    await flair.open();
+    await flair.selectByIndex(0);
+    await click(".save-changes");
+
+    assert.strictEqual(
+      savedUserData.flair_group_id,
+      "",
+      "the none option clears the flair"
+    );
   });
 
   test("saves the selected primary group", async function (assert) {

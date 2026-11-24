@@ -397,7 +397,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     timezone control, and the events builder. A fixed list, so a typeahead `DSelect`, likely
     through a small recipe.
   - ☐ `FormTemplateChooser`, 2 sites: the composer and the category topic template editor.
-  - ☐ `FlairChooser`, 1 site: account preferences. Rows show the flair's icon or image.
+  - ☑ `FlairChooser`, 1 site: account preferences. It branches on the flag to a `DSelect`
+    (2026-11-24) that draws each group's flair before its name, in the list and in the field,
+    through the shared `d-select__glyph` the badge recipe also uses. "(none)" is the none option,
+    which clears the flair, and the "Flair" label names the field.
   - ☐ `ColorPalettePicker` (the theme page, the color scheme modal and interface preferences)
     and `ColorPalettes` (the wizard). Rows show swatches.
   - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.

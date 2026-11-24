@@ -53,3 +53,8 @@
     }
   }
 }
+
+// As a select's glyph, a flair takes the glyph's size so it lines up with the name.
+.d-select__glyph > .avatar-flair {
+  --avatar-flair-size: var(--d-select-glyph-size, 1em);
+}

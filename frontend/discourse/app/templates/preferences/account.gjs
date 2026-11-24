@@ -9,6 +9,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import DTextField from "discourse/ui-kit/d-text-field";
@@ -16,11 +17,26 @@ import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
 import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 function updatePrimaryGroup(controller, value) {
   controller.set("newPrimaryGroupInput", value);
 }
+
+/** A group's flair, drawn before its name in the flair select. */
+const FlairGlyph = <template>
+  {{#if @flair.url}}
+    <span class="d-select__glyph">
+      <DAvatarFlair
+        @flairBgColor={{@flair.bgColor}}
+        @flairColor={{@flair.color}}
+        @flairName={{@flair.name}}
+        @flairUrl={{@flair.url}}
+      />
+    </span>
+  {{/if}}
+</template>;
 
 export default <template>
   <div class="control-group pref-username" data-setting-name="user-username">
@@ -318,14 +334,40 @@ export default <template>
 
   {{#if @controller.canSelectFlair}}
     <div class="control-group pref-flair" data-setting-name="user-flair">
-      <label class="control-label">{{i18n "user.flair.title"}}</label>
+      <label class="control-label" id="user-flair-label">{{i18n
+          "user.flair.title"
+        }}</label>
       <div class="controls">
-        <FlairChooser
-          @content={{@controller.model.availableFlairs}}
-          @onChange={{fn (mut @controller.newFlairGroupId)}}
-          @options={{hash none="user.flair.none"}}
-          @value={{@controller.newFlairGroupId}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelect
+            class="flair-chooser"
+            @ariaLabelledBy="user-flair-label"
+            @identifier="flair-chooser"
+            @noneOption={{true}}
+            @onChange={{fn (mut @controller.newFlairGroupId)}}
+            @options={{@controller.model.availableFlairs}}
+            @texts={{hash noneLabel=(i18n "user.flair.none")}}
+            @value={{@controller.newFlairGroupId}}
+          >
+            <:option as |option|>
+              <FlairGlyph @flair={{option.record}} />
+              {{~option.label~}}
+            </:option>
+            <:selection as |option|>
+              <FlairGlyph @flair={{option.record}} />
+              {{~option.label~}}
+            </:selection>
+          </DSelect>
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <FlairChooser
+            @content={{@controller.model.availableFlairs}}
+            @onChange={{fn (mut @controller.newFlairGroupId)}}
+            @options={{hash none="user.flair.none"}}
+            @value={{@controller.newFlairGroupId}}
+          />
+        {{/if}}
       </div>
       <div class="instructions">
         {{i18n "user.flair.instructions"}}
