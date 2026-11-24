@@ -21,7 +21,7 @@ module DiscourseAi
           },
           "deduplicate_concepts" => {
             agent_class: DiscourseAi::Agents::ConceptDeduplicator,
-            schema_key: :streamlined_tags,
+            schema_key: :merges,
             schema_type: "array",
           },
         }.freeze
@@ -96,17 +96,33 @@ module DiscourseAi
         end
 
         def deduplicate_concepts(args, llm, execution_context:)
-          candidates = args[:concepts].to_a.map(&:to_s)
-          raise ArgumentError, "Deduplicate concepts eval requires :concepts" if candidates.empty?
+          names = args[:concepts].to_a.map(&:to_s)
+          raise ArgumentError, "Deduplicate concepts eval requires :concepts" if names.empty?
 
           agent, user = agent_bundle(feature_name)
+          candidates = build_candidates(names)
+          payload = {
+            concepts:
+              candidates.map do |concept|
+                {
+                  id: concept.id,
+                  name: concept.name,
+                  description: concept.description,
+                  aliases: concept.aliases,
+                  status: "active",
+                  parent_id: nil,
+                  usage_count: 1,
+                }
+              end,
+          }
 
           context =
-            build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: candidates.join(", ") }] }
+            build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: payload.to_json }] }
 
-          values =
-            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
-          wrap_result(format_response(values), { concepts: candidates })
+          structured_output =
+            capture_structured_object(agent, user, llm, context, execution_context:)
+          values = extract_surviving_concept_names(structured_output, candidates)
+          wrap_result(format_response(values), { concepts: names })
         end
 
         def agent_bundle(op)
@@ -114,21 +130,6 @@ module DiscourseAi
           agent_klass = config.fetch(:agent_class)
 
           resolve_agent(agent_class: agent_klass)
-        end
-
-        def capture_structured_output(agent, user, llm, context, op, execution_context:)
-          schema = OPERATIONS.fetch(op)
-          schema_key = schema[:schema_key]
-          schema_type = schema[:schema_type] || "array"
-
-          bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
-          capture_structured_response(
-            bot,
-            context,
-            schema_key: schema_key,
-            schema_type: schema_type,
-            execution_context:,
-          )
         end
 
         def capture_structured_object(agent, user, llm, context, execution_context:)
@@ -165,6 +166,31 @@ module DiscourseAi
             end
 
           (matches + proposed).uniq
+        end
+
+        def extract_surviving_concept_names(structured_output, candidates)
+          names = candidates.map(&:name)
+          return names if structured_output.nil?
+
+          valid_ids = candidates.map(&:id).to_set
+          absorbed_ids = Set.new
+
+          Array(structured_output.read_buffered_property(:merges)).each do |item|
+            next unless item.is_a?(Hash)
+
+            entry = item.with_indifferent_access
+            canonical_id = entry[:canonical_id]&.to_i
+            next if canonical_id.nil? || !valid_ids.include?(canonical_id)
+
+            Array(entry[:merge_ids]).each do |merge_id|
+              id = merge_id&.to_i
+              next if id.nil? || id == canonical_id || !valid_ids.include?(id)
+
+              absorbed_ids << id
+            end
+          end
+
+          candidates.reject { |candidate| absorbed_ids.include?(candidate.id) }.map(&:name)
         end
 
         def conversation_to_text(args)

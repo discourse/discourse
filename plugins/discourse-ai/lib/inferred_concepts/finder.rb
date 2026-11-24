@@ -154,37 +154,6 @@ module DiscourseAi
         # Return limited number of posts
         query.limit(limit)
       end
-
-      # Deduplicate and standardize a list of concepts
-      # @param concept_names [Array<String>] List of concept names to deduplicate
-      # @return [Hash] Hash with deduplicated concepts and mapping
-      def deduplicate_concepts(concept_names)
-        return { deduplicated_concepts: [], mapping: {} } if concept_names.blank?
-
-        # Use the ConceptDeduplicator agent to deduplicate concepts
-        agent =
-          AiAgent
-            .all_agents(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_deduplicate_agent.to_i }
-            .new
-
-        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
-
-        # Create the input for the deduplicator
-        input = { type: :user, content: concept_names.join(", ") }
-
-        context =
-          DiscourseAi::Agents::BotContext.new(messages: [input], user: Discourse.system_user)
-
-        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
-        structured_output = nil
-
-        bot.reply(context) do |partial, _, type|
-          structured_output = partial if type == :structured_output
-        end
-
-        structured_output&.read_buffered_property(:streamlined_tags) || []
-      end
     end
   end
 end

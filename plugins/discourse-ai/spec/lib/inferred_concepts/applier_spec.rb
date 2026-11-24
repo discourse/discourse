@@ -72,6 +72,64 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
       expect(updated.primary).to eq(true)
       expect(updated.digest).to eq("digest-2")
     end
+
+    it "re-resolves stale merged concepts to the surviving canonical concept" do
+      stale_duplicate = Fabricate(:inferred_concept, name: "k8s", status: :active)
+      canonical = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      DiscourseAi::InferredConcepts::Merger.new.merge!(
+        canonical: canonical,
+        duplicates: [stale_duplicate],
+      )
+
+      applied =
+        applier.apply_matches_to_topic(
+          topic,
+          [
+            { concept: stale_duplicate, relevance: 0.95, primary: true },
+            { concept: canonical, relevance: 0.7, primary: false },
+          ],
+          digest: "merged-digest",
+        )
+      expect(applied).to eq([canonical])
+
+      canonical_topic_link =
+        InferredConceptTopic.find_by!(topic_id: topic.id, inferred_concept_id: canonical.id)
+      expect(canonical_topic_link.relevance).to eq(0.95)
+      expect(canonical_topic_link.primary).to eq(true)
+      expect(InferredConceptTopic.where(inferred_concept_id: stale_duplicate.id)).to be_empty
+
+      post_applied =
+        applier.apply_matches_to_post(
+          post,
+          [{ concept: stale_duplicate, relevance: 0.85, primary: false }],
+          digest: "post-merged-digest",
+        )
+      expect(post_applied).to eq([canonical])
+      expect(
+        InferredConceptPost.find_by!(post_id: post.id, inferred_concept_id: canonical.id).relevance,
+      ).to eq(0.85)
+      expect(InferredConceptPost.where(inferred_concept_id: stale_duplicate.id)).to be_empty
+    end
+
+    it "skips standalone retired concepts without wiping existing associations" do
+      applier.apply_matches_to_topic(
+        topic,
+        [{ concept: concept1, relevance: 0.9, primary: true }],
+        digest: "existing-digest",
+      )
+      retired = Fabricate(:inferred_concept, name: "obsolete", status: :retired)
+
+      expect(
+        applier.apply_matches_to_topic(
+          topic,
+          [{ concept: retired, relevance: 0.9, primary: true }],
+          digest: "new-digest",
+        ),
+      ).to eq([])
+
+      expect(topic.inferred_concepts.reload).to contain_exactly(concept1)
+      expect(InferredConceptTopic.where(inferred_concept_id: retired.id)).to be_empty
+    end
   end
 
   describe "#topic_content_for_analysis" do

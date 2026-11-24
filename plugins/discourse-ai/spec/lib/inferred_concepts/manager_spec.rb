@@ -133,6 +133,68 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
       expect(manager.generate_concepts_from_topic(deleted_topic)).to eq([])
       expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
     end
+
+    it "re-resolves concepts merged while LLM classification is in flight" do
+      kubernetes = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      k8s = Fabricate(:inferred_concept, name: "k8s", status: :active)
+
+      retriever = instance_double(DiscourseAi::InferredConcepts::CandidateRetriever)
+      allow(DiscourseAi::InferredConcepts::CandidateRetriever).to receive(:new).and_return(
+        retriever,
+      )
+      allow(retriever).to receive(:retrieve).and_return([k8s])
+
+      classifier = instance_double(DiscourseAi::InferredConcepts::Classifier)
+      allow(DiscourseAi::InferredConcepts::Classifier).to receive(:new).and_return(classifier)
+      allow(classifier).to receive(:classify) do
+        DiscourseAi::InferredConcepts::Merger.new.merge!(canonical: kubernetes, duplicates: [k8s])
+        { matches: [{ concept_id: k8s.id, relevance: 0.9, primary: true }], proposed_new: [] }
+      end
+
+      applied = manager.generate_concepts_from_topic(topic)
+
+      expect(applied).to eq([kubernetes])
+      expect(topic.inferred_concepts.reload).to contain_exactly(kubernetes)
+      expect(InferredConceptTopic.where(inferred_concept_id: k8s.id)).to be_empty
+      expect(manager.search_topics_by_concept("Kubernetes")).to contain_exactly(topic)
+      expect(manager.search_topics_by_concept("k8s")).to contain_exactly(topic)
+    end
+
+    it "does not resurrect a candidate retired between applier persistence and promotion" do
+      kubernetes = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      k8s = Fabricate(:inferred_concept, name: "k8s", status: :candidate)
+      extra_topic = Fabricate(:topic)
+      InferredConceptTopic.create!(inferred_concept: k8s, topic: extra_topic)
+
+      retriever = instance_double(DiscourseAi::InferredConcepts::CandidateRetriever)
+      allow(DiscourseAi::InferredConcepts::CandidateRetriever).to receive(:new).and_return(
+        retriever,
+      )
+      allow(retriever).to receive(:retrieve).and_return([k8s])
+
+      classifier = instance_double(DiscourseAi::InferredConcepts::Classifier)
+      allow(DiscourseAi::InferredConcepts::Classifier).to receive(:new).and_return(classifier)
+      allow(classifier).to receive(:classify).and_return(
+        { matches: [{ concept_id: k8s.id, relevance: 0.9, primary: true }], proposed_new: [] },
+      )
+
+      applier = DiscourseAi::InferredConcepts::Applier.new
+      allow(DiscourseAi::InferredConcepts::Applier).to receive(:new).and_return(applier)
+      allow(applier).to receive(
+        :apply_matches_to_topic,
+      ).and_wrap_original do |method, *args, **kwargs|
+        result = method.call(*args, **kwargs)
+        DiscourseAi::InferredConcepts::Merger.new.merge!(canonical: kubernetes, duplicates: [k8s])
+        result
+      end
+
+      expect do manager.generate_concepts_from_topic(topic) end.to change {
+        Jobs::GenerateEmbeddings.jobs.size
+      }.by(1)
+
+      expect(k8s.reload).to be_retired
+      expect(Jobs::GenerateEmbeddings.jobs.last["args"].first["target_id"]).to eq(kubernetes.id)
+    end
   end
 
   describe "#generate_concepts_from_post" do
@@ -171,12 +233,14 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
   end
 
   describe "#search_topics_by_concept and #search_posts_by_concept" do
-    it "finds topics and posts by concept name or alias" do
+    it "finds topics and posts by concept name or alias and skips standalone retired concepts" do
       concept1.topics << topic
       concept1.posts << post
+      retired_concept.topics << Fabricate(:topic)
 
       expect(manager.search_topics_by_concept("coding")).to contain_exactly(topic)
       expect(manager.search_posts_by_concept("coding")).to contain_exactly(post)
+      expect(manager.search_topics_by_concept("deprecated")).to eq([])
       expect(manager.search_topics_by_concept("nonexistent")).to eq([])
     end
   end
@@ -195,43 +259,34 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
     end
   end
 
-  describe "#deduplicate_concepts_by_letter" do
-    before do
-      %w[apple application banana berry cat car dog].each do |name|
-        Fabricate(:inferred_concept, name: name)
-      end
-    end
-
-    it "groups concepts by first letter and deduplicates" do
-      finder = instance_double(DiscourseAi::InferredConcepts::Finder)
-      allow(DiscourseAi::InferredConcepts::Finder).to receive(:new).and_return(finder)
-      allow(finder).to receive(:deduplicate_concepts).at_least(:once).and_return(
-        %w[apple banana cat dog],
+  describe "#deduplicate_concepts and #curate_concepts" do
+    it "delegates deduplication and curation to Curator" do
+      curator = instance_double(DiscourseAi::InferredConcepts::Curator)
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+      allow(curator).to receive(:deduplicate_clusters!).and_return(
+        { clusters_processed: 1, merges_applied: 1, concepts_retired: 1, reparents_applied: 0 },
+      )
+      allow(curator).to receive(:curate!).and_return(
+        {
+          clusters_processed: 1,
+          merges_applied: 1,
+          concepts_retired: 1,
+          reparents_applied: 0,
+          pruned_candidates: 2,
+          promoted_candidates: 0,
+          embeddings_enqueued: 3,
+        },
       )
 
-      expect { manager.deduplicate_concepts_by_letter }.not_to raise_error
-    end
+      dedup_result = manager.deduplicate_concepts
+      curate_result = manager.curate_concepts
 
-    it "preserves retired concepts and their associations when deduplicating active concepts" do
-      retired_concept.topics << topic
-
-      finder = instance_double(DiscourseAi::InferredConcepts::Finder)
-      allow(DiscourseAi::InferredConcepts::Finder).to receive(:new).and_return(finder)
-      allow(finder).to receive(:deduplicate_concepts) do |batch|
-        batch.reject { |name| name == "application" }
-      end
-
-      manager.deduplicate_concepts_by_letter(per_letter_batch: 100, full_pass_batch: 200)
-
-      expect(InferredConcept.find_by(id: retired_concept.id)).to be_present
-      expect(retired_concept.topics.reload).to contain_exactly(topic)
-      expect(InferredConcept.find_by(name: "application")).to be_nil
-      expect(InferredConcept.find_by(name: "apple")).to be_present
-    end
-
-    it "handles empty concept list" do
-      InferredConcept.destroy_all
-      expect { manager.deduplicate_concepts_by_letter }.not_to raise_error
+      expect(dedup_result[:merges_applied]).to eq(1)
+      expect(curate_result[:pruned_candidates]).to eq(2)
+      expect(curator).to have_received(:deduplicate_clusters!).with(
+        max_cosine_distance: DiscourseAi::InferredConcepts::Curator::DEFAULT_MAX_COSINE_DISTANCE,
+      )
+      expect(curator).to have_received(:curate!)
     end
   end
 end

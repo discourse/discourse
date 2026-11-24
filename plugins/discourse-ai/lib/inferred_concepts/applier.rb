@@ -164,12 +164,13 @@ module DiscourseAi
       end
 
       def apply_matches(target, join_model:, table_name:, fk_column:, match_entries:, digest:)
-        return [] if target.blank?
+        return [] if target.blank? || match_entries.blank?
 
-        entries = Array(match_entries).uniq { |entry| entry[:concept].id }
+        entries = resolve_surviving_entries(match_entries)
+        return [] if entries.empty?
 
         ActiveRecord::Base.transaction do
-          if digest.present? && entries.present?
+          if digest.present?
             keep_ids = entries.map { |entry| entry[:concept].id }
             join_model
               .where(fk_column => target.id)
@@ -202,6 +203,51 @@ module DiscourseAi
 
         target.inferred_concepts.reset
         entries.map { |entry| entry[:concept] }
+      end
+
+      def resolve_surviving_entries(match_entries)
+        consolidated = consolidate_entries(match_entries)
+        return [] if consolidated.empty?
+
+        reloaded_by_id =
+          InferredConcept.where(id: consolidated.map { |entry| entry[:concept].id }).index_by(&:id)
+
+        rebuilt =
+          consolidated.filter_map do |entry|
+            reloaded = reloaded_by_id[entry[:concept].id]
+            if reloaded.present? && !reloaded.retired?
+              entry.merge(concept: reloaded)
+            else
+              lookup_name = reloaded&.name || entry[:concept].name
+              replacement =
+                InferredConcept.where.not(status: :retired).by_name_or_alias(lookup_name).first
+              replacement ? entry.merge(concept: replacement) : nil
+            end
+          end
+
+        consolidate_entries(rebuilt)
+      end
+
+      def consolidate_entries(entries)
+        by_id = {}
+
+        Array(entries).each do |entry|
+          concept = entry[:concept]
+          next if concept&.id.nil?
+
+          existing = by_id[concept.id]
+          relevance = entry[:relevance].to_f
+          primary = entry[:primary] == true
+
+          if existing.nil?
+            by_id[concept.id] = { concept: concept, relevance: relevance, primary: primary }
+          else
+            existing[:relevance] = [existing[:relevance], relevance].max
+            existing[:primary] ||= primary
+          end
+        end
+
+        by_id.values
       end
 
       def build_match_entries(matches, candidates)
