@@ -812,7 +812,7 @@ en:
           name: "Discourse Helper"
           description: "AI Bot specialized in helping with Discourse related tasks"
         discourse_admin_assistant:
-          name: "Discourse Admin Assistant"
+          name: "Admin Assistant"
           description: "AI Bot that answers Discourse questions and helps administrators manage site settings"
         web_artifact_creator:
           name: "Web Artifact Creator"
