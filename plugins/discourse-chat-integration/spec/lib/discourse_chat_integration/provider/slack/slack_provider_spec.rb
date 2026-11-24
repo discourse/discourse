@@ -58,21 +58,13 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
       end
     end
 
-    describe "when post contains Slack control sequences" do
-      it "escapes them so Slack shows literal text" do
-        post.update!(raw: "Maintenance tonight `<!channel>` and \\<!here> at <@U024BE7LH>")
+    describe "when post contains characters Slack reserves" do
+      before { post.update!(raw: "AT&T `<!here>` [a>b](https://example.com)") }
 
+      it "escapes them without breaking links" do
         expect(described_class.excerpt(post)).to eq(
-          "Maintenance tonight &lt;!channel&gt; and &lt;!here&gt; at &lt;@U024BE7LH&gt;",
+          "AT&amp;T &lt;!here&gt; <https://example.com|a&gt;b>",
         )
-      end
-    end
-
-    describe "when post contains literal angle brackets and ampersands" do
-      it "escapes them" do
-        post.update!(raw: "AT&T says 1 < 2 and 3 > 2")
-
-        expect(described_class.excerpt(post)).to eq("AT&amp;T says 1 &lt; 2 and 3 &gt; 2")
       end
     end
   end
@@ -412,35 +404,6 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
           "chat_integration.provider.slack.messaging.topic_tag_changed.added",
           added: "<#{tag2.full_url}|#{tag2.name}>",
         ),
-      )
-    end
-
-    it "escapes the topic title in the mrkdwn text but not in the plain text fields" do
-      topic =
-        Fabricate(:topic, title: "Maintenance <!channel> <https://evil.example|runbook> & more")
-      topic.posts << Fabricate(:post, topic: topic)
-
-      result =
-        described_class.create_slack_message(
-          context: {
-            "topic" => topic,
-            "added_tags" => [],
-            "removed_tags" => [],
-            "kind" => DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED,
-          },
-          content: "<https://example.com/x|Runbook>: ${TOPIC}",
-          channel_name: "general",
-          url: "http://example.com",
-        )
-
-      attachment = result[:attachments][0]
-      expect(attachment[:text]).to eq(
-        "<https://example.com/x|Runbook>: Maintenance &lt;!channel&gt; " \
-          "&lt;https://evil.example|runbook&gt; &amp; more",
-      )
-      expect(attachment[:fallback]).to eq(
-        "<https://example.com/x|Runbook>: Maintenance <!channel> " \
-          "<https://evil.example|runbook> & more",
       )
     end
 

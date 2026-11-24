@@ -27,21 +27,5 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider::SlackMessageFo
         expect(described_class.format("<a>test</a>")).to eq("<test.localhost|test>")
       end
     end
-
-    context "with text typed by a user" do
-      it "keeps characters that Slack reserves for its control sequences as entities" do
-        expect(
-          described_class.format(
-            "<p>&lt;!channel&gt; &amp; &lt;#C123|general&gt; 1 &lt; 2 &gt; 0</p>",
-          ),
-        ).to eq("&lt;!channel&gt; &amp; &lt;#C123|general&gt; 1 &lt; 2 &gt; 0")
-      end
-
-      it "escapes link labels" do
-        expect(
-          described_class.format("<a href='http://somepath.com'>plan&gt;now&lt;!channel&gt;</a>"),
-        ).to eq("<http://somepath.com|plan&gt;now&lt;!channel&gt;>")
-      end
-    end
   end
 end

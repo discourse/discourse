@@ -73,6 +73,14 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
     end
   end
 
+  describe ".message_text" do
+    it "escapes HTML in the post excerpt" do
+      post.update!(raw: "AT&T says 1 < 2")
+
+      expect(described_class.message_text(post)).to include("AT&amp;T says 1 &lt; 2")
+    end
+  end
+
   describe ".parse_base_url" do
     it "returns the parsed URI for valid values and nil otherwise" do
       expect(described_class.parse_base_url("https://telegram.example.com/api")).to be_a(URI::HTTPS)

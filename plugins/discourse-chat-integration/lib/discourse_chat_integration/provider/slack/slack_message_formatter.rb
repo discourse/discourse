@@ -2,11 +2,6 @@
 
 module DiscourseChatIntegration::Provider::SlackProvider
   class SlackMessageFormatter < Nokogiri::XML::SAX::Document
-    # Slack reserves <, > and & for its own control sequences and entity escapes, so any
-    # text that did not come from this formatter has to be entity-escaped before it is
-    # placed next to the <url|label> links this class writes.
-    SLACK_ESCAPES = { "&" => "&amp;", "<" => "&lt;", ">" => "&gt;" }.freeze
-
     attr_reader :excerpt
 
     def initialize
@@ -18,10 +13,6 @@ module DiscourseChatIntegration::Provider::SlackProvider
       parser = Nokogiri::HTML4::SAX::Parser.new(me, Encoding::UTF_8.to_s)
       parser.parse(html)
       me.excerpt
-    end
-
-    def self.escape(text)
-      text.gsub(/[&<>]/, SLACK_ESCAPES)
     end
 
     def start_element(name, attributes = [])
@@ -43,7 +34,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
 
     def characters(string)
       string.strip! if @in_a
-      @excerpt << self.class.escape(string)
+      @excerpt << string.gsub(/[&<>]/, "&" => "&amp;", "<" => "&lt;", ">" => "&gt;")
     end
 
     private

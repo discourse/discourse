@@ -202,17 +202,15 @@ module DiscourseChatIntegration::Provider::SlackProvider
   def self.create_slack_message(context:, content:, url:, channel_name:)
     sender = DiscourseChatIntegration::Helper.formatted_display_name(Discourse.system_user)
 
-    tag_changed = context["kind"] == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
+    content = replace_placehoders(content, context) if context["kind"] ==
+      DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
-    # Only the mrkdwn `text` field interprets control sequences, so user-controlled values are
-    # escaped there only; `title` and `fallback` are plain text and keep the literal characters.
-    plain_content = content
-    if tag_changed
-      plain_content = replace_placehoders(content, context)
-      content = replace_placehoders(content, context, escape: true)
-    end
-
-    full_content = tag_changed ? content : "#{content} - #{url}"
+    full_content =
+      if context["kind"] == DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
+        content
+      else
+        "#{content} - #{url}"
+      end
 
     icon_url =
       if SiteSetting.chat_integration_slack_icon_url.present?
@@ -232,12 +230,12 @@ module DiscourseChatIntegration::Provider::SlackProvider
     }
 
     summary = {
-      fallback: plain_content.truncate(100),
+      fallback: content.truncate(100),
       author_name: sender,
       color: nil,
       text: full_content,
       mrkdwn_in: ["text"],
-      title: plain_content.truncate(100),
+      title: content.truncate(100),
       title_link: url,
       thumb_url: nil,
     }
@@ -400,11 +398,10 @@ module DiscourseChatIntegration::Provider::SlackProvider
     )
   end
 
-  def self.replace_placehoders(content, context, escape: false)
+  def self.replace_placehoders(content, context)
     if context["topic"] && content.include?("${TOPIC}")
       topic = context["topic"]
-      title = escape ? SlackMessageFormatter.escape(topic.title) : topic.title
-      content = content.gsub("${TOPIC}", title)
+      content = content.gsub("${TOPIC}", topic.title)
     end
 
     if content.include?("${REMOVED_TAGS}")
