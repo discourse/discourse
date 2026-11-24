@@ -109,9 +109,7 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect do
       result = described_class.call(params: { event_date_id: event_date.id })
       expect(result.success?).to eq(false)
-      expect(result["result.try.default"]&.exception).to be_a(
-        ActiveRecord::RecordNotSaved,
-      )
+      expect(result["result.try.default"]&.exception).to be_a(ActiveRecord::RecordNotSaved)
     end.not_to change(Topic, :count)
 
     expect(force_stale_snapshot).to eq(false)

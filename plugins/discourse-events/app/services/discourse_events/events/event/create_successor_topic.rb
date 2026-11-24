@@ -160,17 +160,23 @@ module DiscourseEvents
           post.event_rollover_validation_actor = Discourse.system_user
 
           begin
-            revised =
-              revisor.revise!(
-                post.user,
-                { raw: archived_raw, title: archive_title },
-                expected_raw: original_raw,
-                bypass_bump: true,
-                bypass_rate_limiter: true,
-                bypass_slow_mode: true,
-                silent: true,
-                skip_post_alert: true,
-              )
+            # A failed title revision must not leave a partial post edit
+            # inside the surrounding rollover transaction.
+            revised = false
+            Post.transaction(requires_new: true) do
+              revised =
+                revisor.revise!(
+                  post.user,
+                  { raw: archived_raw, title: archive_title },
+                  expected_raw: original_raw,
+                  bypass_bump: true,
+                  bypass_rate_limiter: true,
+                  bypass_slow_mode: true,
+                  silent: true,
+                  skip_post_alert: true,
+                )
+              raise ActiveRecord::Rollback unless revised
+            end
           ensure
             post.event_rollover_validation_actor = nil
           end
