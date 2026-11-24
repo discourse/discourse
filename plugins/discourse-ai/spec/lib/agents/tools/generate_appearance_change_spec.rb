@@ -674,6 +674,42 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
       expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
     end
 
+    it "keeps the live component's styles when only the colors in a request can be made" do
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+
+      result =
+        invoke_with_styles(
+          [shadow_only_answer],
+          name: "Acme",
+          brand_color: "#e8590c",
+          styles: "A shadow on topic rows",
+        )
+
+      expect(result).to include(status: "success", not_supported: ["A shadow on topic rows"])
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+      expect(draft(result)).not_to have_key(:replaces_theme_id)
+    end
+
     it "refuses when none of the styles can be made and no colors were asked for" do
       result = invoke_with_styles([shadow_only_answer], name: "Acme", styles: "A shadow")
 

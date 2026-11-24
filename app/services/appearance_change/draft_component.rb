@@ -65,6 +65,7 @@ class AppearanceChange::DraftComponent
       model :dark_color_scheme, :create_dark_color_scheme
     end
     model :component, :create_component
+    step :add_styles
     step :attach_component
     model :appearance_change, :create_appearance_change
     step :log_theme_creation
@@ -145,19 +146,21 @@ class AppearanceChange::DraftComponent
     )
   end
 
-  # The compile is the last check: a component that saves with an SCSS error
-  # would show without its styles.
-  def create_component(params:, guardian:, css:)
+  def create_component(params:, guardian:)
     name =
       params.replaces_theme_id ? AppearanceChange.version_name(params.name, :draft) : params.name
-    component = Theme.create(name:, user: guardian.user, component: true, enabled: false)
-    return component if css.blank? || !component.persisted?
+    Theme.create(name:, user: guardian.user, component: true, enabled: false)
+  end
+
+  # The compile is the last check: a component that saves with an SCSS error
+  # would show without its styles.
+  def add_styles(component:, css:)
+    return if css.blank?
 
     component.set_field(target: :common, name: :scss, value: css)
     component.save!
     error = component.theme_fields.find_by(target_id: Theme.targets[:common], name: "scss")&.error
     fail!(error) if error.present?
-    component
   end
 
   def attach_component(parent_theme:, component:)

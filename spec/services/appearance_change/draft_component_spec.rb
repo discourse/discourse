@@ -94,6 +94,15 @@ RSpec.describe AppearanceChange::DraftComponent do
       )
     end
 
+    it "fails with the compile error when the styles don't compile" do
+      ThemeField.any_instance.stubs(:error).returns("Undefined variable")
+
+      result = described_class.call(params:, guardian: admin.guardian)
+
+      expect(result).to fail_a_step(:add_styles)
+      expect(AppearanceChange.count).to eq(0)
+    end
+
     it "needs administrators" do
       expect(
         described_class.call(params:, guardian: Fabricate(:moderator).guardian),
@@ -221,6 +230,47 @@ RSpec.describe AppearanceChange::DraftComponent do
           guardian: admin.guardian,
         ),
       ).to fail_a_policy(:attached_to_parent)
+    end
+  end
+
+  describe "components someone changed" do
+    it "leaves an earlier component someone edited on when a new one goes live" do
+      first = activate(draft)
+      first.theme.set_field(target: :common, name: :header, value: "<div>Hi</div>")
+      first.theme.save!
+
+      second = draft(name: "Bigger")
+      expect(second.enabled_sibling_components).to be_empty
+      activate(second)
+
+      expect(first.theme.reload.enabled).to eq(true)
+    end
+
+    it "treats a component someone added to another theme as theirs" do
+      first = activate(draft)
+      other_theme = Fabricate(:theme)
+      other_theme.add_relative_theme!(:child, first.theme)
+
+      expect(first.reload.theme_unchanged?).to eq(false)
+      expect(AppearanceChange.managed_component_ids).not_to include(first.theme_id)
+
+      activate(draft(name: "Bigger"))
+      expect(first.theme.reload.enabled).to eq(true)
+
+      first.discard!
+      expect(Theme.exists?(first.theme_id)).to eq(true)
+    end
+  end
+
+  describe ".managed_component_ids" do
+    it "lists unchanged components with the same number of queries however many there are" do
+      first = draft
+      queries = track_sql_queries { AppearanceChange.managed_component_ids }.size
+      others = [draft(name: "Two"), draft(name: "Three")]
+
+      ids = nil
+      expect(track_sql_queries { ids = AppearanceChange.managed_component_ids }.size).to eq(queries)
+      expect(ids).to contain_exactly(first.theme_id, *others.map(&:theme_id))
     end
   end
 

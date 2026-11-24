@@ -81,7 +81,40 @@ class AppearanceChange < ActiveRecord::Base
   end
 
   def self.managed_component_ids
-    kind_component.includes(theme: :theme_fields).select(&:theme_unchanged?).map(&:theme_id).uniq
+    unchanged_components.distinct.pluck(:theme_id)
+  end
+
+  # Component changes whose component still holds only the styles the change
+  # wrote and is attached to its theme alone. Anything else belongs to
+  # whoever changed it.
+  def self.unchanged_components
+    kind_component
+      .where(
+        ChildTheme
+          .where("child_themes.child_theme_id = appearance_changes.theme_id")
+          .where("child_themes.parent_theme_id = appearance_changes.parent_theme_id")
+          .arel
+          .exists,
+      )
+      .where.not(
+        ChildTheme
+          .where("child_themes.child_theme_id = appearance_changes.theme_id")
+          .where("child_themes.parent_theme_id <> appearance_changes.parent_theme_id")
+          .arel
+          .exists,
+      )
+      .where.not(
+        ThemeField
+          .where("theme_fields.theme_id = appearance_changes.theme_id")
+          .where.not(<<~SQL, common: Theme.targets[:common])
+            appearance_changes.css <> ''
+            AND theme_fields.target_id = :common
+            AND theme_fields.name = 'scss'
+            AND theme_fields.value = appearance_changes.css
+          SQL
+          .arel
+          .exists,
+      )
   end
 
   def self.managed_new_theme_ids
@@ -120,7 +153,9 @@ class AppearanceChange < ActiveRecord::Base
   # Whether a new theme still holds only what the change put in it: no
   # components, and no files except the styles it wrote.
   def theme_unchanged?
-    return attached_to_parent? && only_generated_styles? if kind_component?
+    if kind_component?
+      return attached_to_parent? && only_attached_to_parent? && only_generated_styles?
+    end
     return true if !kind_theme?
 
     only_generated_styles? && theme.child_theme_relation.none?
@@ -129,6 +164,12 @@ class AppearanceChange < ActiveRecord::Base
   # A component change's component is still attached to its theme.
   def attached_to_parent?
     ChildTheme.exists?(parent_theme_id:, child_theme_id: theme_id)
+  end
+
+  # Nobody has attached the component to another theme, where enabling,
+  # disabling or removing it would change that theme too.
+  def only_attached_to_parent?
+    ChildTheme.where(child_theme_id: theme_id).where.not(parent_theme_id:).none?
   end
 
   # The theme whose palettes the change sets: a component change's theme, or
@@ -144,15 +185,21 @@ class AppearanceChange < ActiveRecord::Base
     !kind_component? || light_color_scheme_id.present?
   end
 
-  # The earlier components of the same theme, made by appearance changes,
-  # that are enabled now. Making this one live disables them.
+  # The earlier components of the same theme, made by appearance changes and
+  # unchanged since, that are enabled now. Making this one live disables
+  # them. A component someone changed is theirs, so it's left alone.
   def enabled_sibling_components
     return Theme.none if !kind_component?
 
     Theme.where(
-      id: AppearanceChange.kind_component.where(parent_theme_id:).where.not(id:).select(:theme_id),
+      id:
+        AppearanceChange
+          .unchanged_components
+          .where(parent_theme_id:)
+          .where.not(id:)
+          .select(:theme_id),
       enabled: true,
-    ).where(id: ChildTheme.where(parent_theme_id:).select(:child_theme_id))
+    )
   end
 
   # Whether the change goes live by making its theme the default, rather

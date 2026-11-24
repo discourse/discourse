@@ -148,7 +148,10 @@ module DiscourseAi
               dark: palettes.dark,
               colors_requested: brand.present?,
             )
-          edited = edited_change if authored
+          # a new version replaces the live one's styles as a whole, so one
+          # that only exists because the styles asked for couldn't be made
+          # would remove them; the colors go on the theme instead
+          edited = edited_change if authored && !only_unsupported_styles?(authored)
           styles =
             theme_styles(
               authored,
@@ -211,6 +214,10 @@ module DiscourseAi
 
         def refuse(message)
           raise Refusal, message
+        end
+
+        def only_unsupported_styles?(authored)
+          authored.styles.blank? && authored.unsupported.any?
         end
 
         # Styles go in a theme of their own, except on Horizon, where they're
