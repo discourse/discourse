@@ -351,13 +351,15 @@ RSpec.describe "Chat channel" do
     end
   end
 
-  context "when messages are separated by a day" do
-    before { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago) }
+  context "when messages were sent on different dates" do
+    before do
+      Fabricate(:chat_message, chat_channel: channel_1, created_at: Time.utc(2020, 1, 2, 12))
+    end
 
     it "shows a date separator" do
       chat_page.visit_channel(channel_1)
 
-      expect(page).to have_selector(".chat-message-separator__text", text: "Today")
+      expect(page).to have_selector(".chat-message-separator__text", text: "January 2, 2020")
     end
   end
 

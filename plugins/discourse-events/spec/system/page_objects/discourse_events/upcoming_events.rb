@@ -61,12 +61,8 @@ module PageObjects
         end
 
         def click_event_on(date)
-          try_until_success do
-            page.execute_script(<<~JS)
-              document.querySelector(".fc-daygrid-day[data-date='#{date}'] .fc-event").click();
-            JS
-            has_css?("[data-identifier='post-event-menu']")
-          end
+          find(".fc-daygrid-day[data-date='#{date}'] .fc-event").click
+          expect(page).to have_css("[data-identifier='post-event-menu']")
         end
 
         def has_no_event?(title)

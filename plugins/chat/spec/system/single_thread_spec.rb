@@ -177,7 +177,8 @@ describe "Single thread in side panel" do
         expect(thread_page).to have_notification_level("tracking")
       end
 
-      it "handles updates from multiple users sending messages in the thread" do
+      it "handles updates from multiple users sending messages in the thread",
+         browser_features: :simultaneous_browser_sessions do
         using_session(:tab_1) do
           sign_in(current_user)
           chat_page.visit_channel(channel)
@@ -256,15 +257,23 @@ describe "Single thread in side panel" do
       end
     end
 
-    context "when messages are separated by a day" do
+    context "when messages were sent on different dates" do
       before do
-        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 2.days.ago)
+        Fabricate(
+          :chat_message,
+          chat_channel: channel,
+          thread: thread,
+          created_at: Time.utc(2020, 1, 2, 12),
+        )
       end
 
       it "shows a date separator" do
         chat_page.visit_thread(thread)
 
-        expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
+        expect(page).to have_selector(
+          ".chat-thread .chat-message-separator__text",
+          text: "January 2, 2020",
+        )
       end
     end
   end

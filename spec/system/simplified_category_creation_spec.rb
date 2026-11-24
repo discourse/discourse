@@ -72,6 +72,7 @@ describe "Simplified Category Creation" do
       form.field("name").fill_in("Test Category")
       category_page.set_style_color("FF5733")
       category_page.save_settings
+      expect(page).to have_no_current_path(%r{\A/new-category/})
 
       created_category = Category.find_by(name: "Test Category")
       expect(created_category).to be_present
@@ -82,12 +83,12 @@ describe "Simplified Category Creation" do
       category_page.visit_general(category)
 
       form.field("name").fill_in("Updated Name")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.name).to eq("Updated Name")
 
       category_page.set_style_color("123ABC")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.color).to eq("123ABC")
     end
@@ -99,7 +100,7 @@ describe "Simplified Category Creation" do
       parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
       parent_chooser.expand
       parent_chooser.select_row_by_value(parent_category.id)
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.parent_category_id).to eq(parent_category.id)
     end
@@ -113,7 +114,7 @@ describe "Simplified Category Creation" do
       group_chooser.expand
       group_chooser.select_row_by_value(group.id)
       group_chooser.collapse
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.category_groups.map(&:group_id)).to include(group.id)
     end
@@ -129,7 +130,7 @@ describe "Simplified Category Creation" do
       expect(page).to have_no_css("input.form-kit__control-radio[value='group_restricted']")
 
       form.field("name").fill_in("Renamed staff")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.name).to eq("Renamed staff")
 
@@ -284,6 +285,7 @@ describe "Simplified Category Creation" do
       category_permission_row.remove_group_permission(group.name)
       category_page.save_settings
 
+      expect(toasts).to have_success(I18n.t("js.saved"))
       expect(category.reload.category_groups.map(&:group_id)).not_to include(group.id)
     end
 
@@ -293,6 +295,7 @@ describe "Simplified Category Creation" do
       category_permission_row.toggle_group_permission(group.name, "reply")
       category_page.save_settings
 
+      expect(toasts).to have_success(I18n.t("js.saved"))
       expect(category.reload.category_groups.find_by(group:).permission_type).to eq(
         CategoryGroup.permission_types[:create_post],
       )
@@ -321,6 +324,7 @@ describe "Simplified Category Creation" do
       )
 
       category_page.save_settings
+      expect(page).to have_no_current_path(%r{\A/new-category/})
       expect(category_page).to have_no_posting_review_groups_error
 
       created_category = Category.find_by(name: "Review Test")
@@ -336,7 +340,7 @@ describe "Simplified Category Creation" do
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
         "everyone",
       )
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       category_page.visit_moderation(category)
       expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
@@ -358,7 +362,7 @@ describe "Simplified Category Creation" do
         group.id,
       )
 
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       category_page.visit_moderation(category)
       expect(category_page).to have_no_posting_review_groups_error
@@ -377,7 +381,7 @@ describe "Simplified Category Creation" do
       category_page.visit_appearance(category)
 
       form.field("default_view").select("latest")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.default_view).to eq("latest")
 
@@ -387,7 +391,7 @@ describe "Simplified Category Creation" do
         make_visible: true,
       )
       expect(page).to have_css("#category-logo-uploader.has-image")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.uploaded_logo).to be_present
     end
@@ -411,7 +415,7 @@ describe "Simplified Category Creation" do
       category_page.visit_tags(category)
 
       form.field("allowed_tags").select("tag1")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.tags.map(&:name)).to include("tag1")
 
@@ -420,14 +424,14 @@ describe "Simplified Category Creation" do
       expect(form.field("allowed_tags")).to have_selected_names("tag1")
 
       form.field("minimum_required_tags").fill_in("2")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.minimum_required_tags).to eq(2)
 
       allowed_tag_groups_chooser.expand
       allowed_tag_groups_chooser.select_row_by_name("My Group")
       allowed_tag_groups_chooser.collapse
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(category.reload.tag_groups.map(&:name)).to include("My Group")
 

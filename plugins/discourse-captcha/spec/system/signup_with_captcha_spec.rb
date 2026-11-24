@@ -142,8 +142,9 @@ RSpec.describe "Signup with captcha" do
       expect(captcha).to have_recaptcha_container
     end
 
-    it "completes signup using the renamed v2 provider and keys" do
-      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+    it "completes signup using the renamed v2 provider and keys",
+       browser_features: :document_preload do
+      page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
         window.grecaptcha = {
           render: (_element, options) => {
             setTimeout(() => options.callback("v2-token"), 0);
@@ -181,13 +182,13 @@ RSpec.describe "Signup with captcha" do
     end
   end
 
-  context "with reCaptcha v3" do
+  context "with reCaptcha v3", browser_features: :document_preload do
     before do
       SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
       SiteSetting.recaptcha_v3_site_key = "v3-site-key"
       SiteSetting.recaptcha_v3_secret_key = "v3-secret-key"
 
-      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+      page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
           window.captchaExecutions = 0;
           window.grecaptcha = {
             execute: () => Promise.resolve(`v3-token-${++window.captchaExecutions}`)
@@ -203,7 +204,7 @@ RSpec.describe "Signup with captcha" do
     end
 
     it "fetches a fresh token after the signup form has been open for three minutes" do
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.install }
+      page.driver.with_browser_page { |browser_page| browser_page.clock.install }
       signup_page
         .open
         .fill_email("test@example.com")
@@ -212,7 +213,7 @@ RSpec.describe "Signup with captcha" do
       expect(captcha).to have_no_hcaptcha_container
       expect(captcha).to have_no_recaptcha_container
       expect(signup_page).to have_valid_fields
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.fast_forward(180_000) }
+      page.driver.with_browser_page { |browser_page| browser_page.clock.fast_forward(180_000) }
       expect(page.evaluate_script("window.captchaExecutions")).to eq(0)
 
       signup_page.click_create_account
@@ -221,13 +222,13 @@ RSpec.describe "Signup with captcha" do
     end
   end
 
-  context "with reCaptcha v3 signup retries" do
+  context "with reCaptcha v3 signup retries", browser_features: :document_preload do
     before do
       SiteSetting.discourse_captcha_provider = DiscourseCaptcha::CaptchaProvider::RECAPTCHA_V3
       SiteSetting.recaptcha_v3_site_key = "v3-site-key"
       SiteSetting.recaptcha_v3_secret_key = "v3-secret-key"
 
-      page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+      page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
         window.captchaExecutions = 0;
         window.grecaptcha = {
           execute: () => Promise.resolve(`v3-token-${++window.captchaExecutions}`)

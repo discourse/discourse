@@ -426,13 +426,13 @@ shared_examples "social authentication scenarios" do
         signup_page.open
 
         # Manually set the destination_url, as if it were set by a plugin
-        page.driver.with_playwright_page do |pw_page|
-          pw_page.context.add_cookies(
-            [{ url: pw_page.url, name: :destination_url, value: category.url }],
+        page.driver.with_browser_page do |browser_page|
+          browser_page.context.add_cookies(
+            [{ url: browser_page.url, name: :destination_url, value: category.url }],
           )
 
           cookie_found =
-            pw_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
+            browser_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
           expect(cookie_found).not_to be_falsey
         end
 
@@ -440,9 +440,9 @@ shared_examples "social authentication scenarios" do
         expect(page).to have_current_path(category.url)
 
         # Ensure the destination_url cookie was removed after being used
-        page.driver.with_playwright_page do |pw_page|
+        page.driver.with_browser_page do |browser_page|
           cookie_found =
-            pw_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
+            browser_page.context.cookies.any? { |cookie| cookie["name"] == "destination_url" }
           expect(cookie_found).to be_falsey
         end
       end

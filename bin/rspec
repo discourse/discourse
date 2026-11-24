@@ -31,8 +31,8 @@ if ENV["LOAD_PLUGINS"].nil? && plugin_spec_requested
   ENV["LOAD_PLUGINS"] = "1"
 end
 
-ENV["PLAYWRIGHT_HEADLESS"] = "0" if ARGV.delete("--headful")
-ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"] = "1" if ARGV.delete("--debug-client-settled")
+ENV["SYSTEM_TEST_HEADLESS"] = "0" if ARGV.delete("--headful")
+ENV["SYSTEM_TEST_DEBUG_CLIENT_SETTLED"] = "1" if ARGV.delete("--debug-client-settled")
 
 if ARGV.any? { |arg| arg.include?("RspecPerformanceFormatter") }
   ENV["DISCOURSE_RSPEC_PERFORMANCE_FORMATTER"] = "1"

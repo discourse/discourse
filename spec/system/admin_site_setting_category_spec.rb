@@ -16,6 +16,9 @@ describe "Admin site setting category" do
     chooser.select_row_by_value(category.id)
 
     settings_page.save_setting("shared_drafts_category")
+    expect(settings_page.find_setting("shared_drafts_category")).to have_no_css(
+      ".setting-controls .ok",
+    )
     page.refresh
 
     expect(SiteSetting.shared_drafts_category).to eq(category.id.to_s)

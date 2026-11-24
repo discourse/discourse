@@ -29,11 +29,15 @@ module ThemeScreenshotMarker
       end
 
       if (mode = ENV["SCREENSHOTS_MODE"].presence)
-        page.driver.with_playwright_page { |pw_page| pw_page.emulate_media(colorScheme: mode) }
+        page.driver.with_browser_page do |browser_page|
+          browser_page.emulate_media(colorScheme: mode)
+        end
       end
 
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.add_style_tag(content: "#global-notice-theme-preview { display: none !important; }")
+      page.driver.with_browser_page do |browser_page|
+        browser_page.add_style_tag(
+          content: "#global-notice-theme-preview { display: none !important; }",
+        )
       end
     end
   end
@@ -56,21 +60,21 @@ module ThemeScreenshotMarker
     theme_name = ENV["SCREENSHOTS_THEME_NAME"] || "default"
     mode = ENV["SCREENSHOTS_MODE"] || "light"
 
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |browser_page|
       unless @message_bus_blocked
-        pw_page.route(%r{/message-bus/}, ->(route, _request) { route.abort })
+        browser_page.route(%r{/message-bus/}, ->(route, _request) { route.abort })
         @message_bus_blocked = true
       end
-      pw_page.wait_for_load_state(state: "networkidle", timeout: 10_000)
-    rescue Playwright::TimeoutError
+      browser_page.wait_for_load_state(state: "networkidle", timeout: 10_000)
+    rescue SystemBrowserTimeout
       # page is visually complete; a stray background request is still open
     end
 
     filename = File.join(raw_dir, "#{device}-#{theme_name}-#{mode}-#{label}.png")
 
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.set_viewport_size(width: pw_page.viewport_size[:width], height: 1200)
-      pw_page.screenshot(path: filename)
+    page.driver.with_browser_page do |browser_page|
+      browser_page.set_viewport_size(width: browser_page.viewport_size[:width], height: 1200)
+      browser_page.screenshot(path: filename)
     end
 
     puts "📸 #{filename}"

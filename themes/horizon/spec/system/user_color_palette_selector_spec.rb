@@ -20,6 +20,8 @@ describe "Horizon theme | User color palette selector" do
   end
   let(:marigold_palette) { theme.color_schemes.find_by(name: "Marigold") }
   let(:marigold_palette_dark) { theme.color_schemes.find_by(name: "Marigold Dark") }
+  let(:marigold_light_background) { "oklch(from #d3881f 92% calc(c * 0.5) h)" }
+  let(:marigold_dark_background) { "oklch(from #d3881f calc(l * 0.7) calc(c * 0.25) h)" }
 
   before do
     SiteSetting.interface_color_selector = "sidebar_footer"
@@ -61,16 +63,16 @@ describe "Horizon theme | User color palette selector" do
       expect(palette_selector).to have_no_palette_menu
       expect(palette_selector).to have_selected_palette(marigold_palette)
       expect(palette_selector).to have_loaded_css
-      expect(palette_selector).to have_computed_color("oklch(0.92 0.0708528 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_light_background)
 
       interface_color_selector.expand
       interface_color_selector.dark_option.click
       expect(interface_color_mode).to have_dark_mode_forced
-      expect(palette_selector).to have_computed_color("oklch(0.481966 0.0354264 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_dark_background)
 
       page.refresh
       expect(palette_selector).to have_selected_palette(marigold_palette)
-      expect(palette_selector).to have_computed_color("oklch(0.481966 0.0354264 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_dark_background)
     end
 
     context "when the theme is not default but is selected by a user" do
@@ -111,18 +113,18 @@ describe "Horizon theme | User color palette selector" do
       expect(palette_selector).to have_no_palette_menu
       expect(palette_selector).to have_selected_palette(marigold_palette)
       expect(palette_selector).to have_loaded_css
-      expect(palette_selector).to have_computed_color("oklch(0.92 0.0708528 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_light_background)
 
       interface_color_selector.expand
       interface_color_selector.dark_option.click
       expect(interface_color_mode).to have_dark_mode_forced
       expect(palette_selector).to have_selected_palette(marigold_palette)
       expect(palette_selector).to have_loaded_css
-      expect(palette_selector).to have_computed_color("oklch(0.481966 0.0354264 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_dark_background)
 
       page.refresh
       expect(palette_selector).to have_selected_palette(marigold_palette)
-      expect(palette_selector).to have_computed_color("oklch(0.481966 0.0354264 68.5036)")
+      expect(palette_selector).to have_computed_color(marigold_dark_background)
     end
   end
 end

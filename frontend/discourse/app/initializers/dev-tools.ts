@@ -11,8 +11,7 @@ declare global {
 
 const KEY = "discourse__dev_tools";
 
-function parseStoredValue() {
-  const val = window.localStorage?.getItem(KEY);
+function parseStoredValue(val: string | null | undefined) {
   if (val === "true") {
     return true;
   } else if (val === "false") {
@@ -33,10 +32,12 @@ export default {
     }
 
     function storeValue(value: boolean) {
-      if (value === defaultEnabled) {
-        window.localStorage?.removeItem(KEY);
-      } else {
-        window.localStorage?.setItem(KEY, String(value));
+      for (const storage of [window.localStorage, window.sessionStorage]) {
+        if (value === defaultEnabled) {
+          storage?.removeItem(KEY);
+        } else {
+          storage?.setItem(KEY, String(value));
+        }
       }
     }
 
@@ -50,7 +51,19 @@ export default {
       window.location.reload();
     };
 
-    if (parseStoredValue() ?? defaultEnabled) {
+    const persistentPreference = parseStoredValue(
+      window.localStorage?.getItem(KEY)
+    );
+    if (persistentPreference !== null) {
+      // Once the preference survives a reload, let persistent storage own it.
+      window.sessionStorage?.removeItem(KEY);
+    }
+    const enabled =
+      persistentPreference ??
+      parseStoredValue(window.sessionStorage?.getItem(KEY)) ??
+      defaultEnabled;
+
+    if (enabled) {
       // eslint-disable-next-line no-console
       console.log("Loading Discourse dev tools...");
 

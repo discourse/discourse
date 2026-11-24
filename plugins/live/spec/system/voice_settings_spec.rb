@@ -2,7 +2,7 @@
 
 require_relative "../support/live_fake_media"
 
-describe "Voice settings" do
+describe "Voice settings", browser_features: :document_preload do
   fab!(:user)
   fab!(:admin)
   fab!(:room) { Fabricate(:live_room, name: "Live Room", creator: admin, public: true) }

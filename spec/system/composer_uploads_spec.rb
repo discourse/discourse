@@ -22,12 +22,12 @@ describe "Uploading files in the composer" do
     expect(composer.preview).to have_css(".image-wrapper", count: 2)
   end
 
-  it "allows cancelling uploads" do
+  it "allows cancelling uploads", browser_features: :network_interception do
     visit "/new-topic"
     expect(composer).to be_opened
 
     file_path_1 = file_from_fixtures("huge.jpg", "images").path
-    cdp.with_slow_upload do
+    cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
       attach_file("file-uploader", file_path_1, make_visible: true)
       expect(composer).to have_in_progress_uploads
       find("#cancel-file-upload").click

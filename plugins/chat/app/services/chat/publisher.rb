@@ -57,10 +57,10 @@ module Chat
             thread_id: chat_message.thread_id,
             force_thread: chat_message.thread&.force,
             message:
-              Chat::MessageSerializer.new(
-                chat_message,
-                { scope: anonymous_guardian, root: false },
-              ).as_json,
+              Chat::MessageSerializer
+                .new(chat_message, { scope: anonymous_guardian, root: false })
+                .as_json
+                .merge(created_at: chat_message.created_at.iso8601(3)),
           },
           permissions(chat_channel),
         )

@@ -22,7 +22,7 @@ export default class NestedViewCacheService extends Service {
     }
 
     // Always listen for popstate as a fallback — the Navigation API's
-    // navigate event may not fire in all environments (e.g. Playwright CDP).
+    // navigate event may not fire in all environments (e.g. CDP browser automation).
     this.#onPopstate = () => {
       this.#popstateTime = Date.now();
     };

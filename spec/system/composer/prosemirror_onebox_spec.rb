@@ -192,11 +192,10 @@ describe "Composer - ProseMirror - Oneboxing" do
     # of resolving to an error card.
     Oneboxer.stubs(:preview).returns("")
 
-    cdp.allow_clipboard
     open_composer
 
     cdp.with_paused_request(%r{/onebox\?}) do |onebox_request|
-      cdp.copy_paste("https://example.com/fail")
+      composer.type_content("https://example.com/fail")
       page.send_keys(:enter)
 
       onebox_request.wait

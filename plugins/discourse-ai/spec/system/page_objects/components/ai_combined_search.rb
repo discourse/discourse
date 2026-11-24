@@ -19,9 +19,7 @@ module PageObjects
       def search_while_intent_pending(query)
         fill_query(query)
         # Capybara's Enter waits for AJAX, which would also wait for the held model.
-        page.driver.with_playwright_page do |pw_page|
-          pw_page.locator("#welcome-banner-search-input").press("Enter")
-        end
+        page.driver.with_browser_page { |browser_page| browser_page.keyboard.press("Enter") }
       end
 
       def wait_for_intent_reply
@@ -300,8 +298,10 @@ module PageObjects
       private
 
       def wait_for_client
-        page.driver.with_playwright_page do |pw_page|
-          pw_page.evaluate("() => window.clientSettled(#{Capybara.default_max_wait_time * 1000})")
+        page.driver.with_browser_page do |browser_page|
+          browser_page.evaluate(
+            "() => window.clientSettled(#{Capybara.default_max_wait_time * 1000})",
+          )
         end
       end
 

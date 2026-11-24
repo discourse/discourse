@@ -5,8 +5,8 @@ module PageObjects
     module DevTools
       class Toolbar < PageObjects::Components::Base
         def enable
-          page.driver.with_playwright_page { |pw| pw.evaluate("window.enableDevTools()") }
-          has_toolbar? # Wait for toolbar to appear
+          page.driver.with_browser_page { |pw| pw.evaluate("window.enableDevTools()") }
+          page.assert_selector(".dev-tools-toolbar")
           self
         end
 
@@ -59,6 +59,7 @@ module PageObjects
 
         def close_blocks_menu
           find(".dev-tools-toolbar .toggle-blocks").click if page.has_css?(".block-debug-menu")
+          page.assert_no_selector(".block-debug-menu", visible: :all)
           self
         end
 

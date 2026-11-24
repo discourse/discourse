@@ -157,7 +157,7 @@ task "docker:test" do
   begin
     @good = true
     @good &&= run_or_fail("pnpm install")
-    @good &&= run_or_fail("pnpm playwright-install")
+    @good &&= run_or_fail("script/test-chromium --install")
 
     unless ENV["SKIP_LINT"]
       puts "Running linters/prettyfiers"

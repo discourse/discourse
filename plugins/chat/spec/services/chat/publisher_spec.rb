@@ -488,7 +488,9 @@ describe Chat::Publisher do
       context "if threading_enabled is true for the channel" do
         before { channel.update!(threading_enabled: true) }
 
-        it "does publish to the new_messages_message_bus_channel" do
+        it "publishes the new thread message with its millisecond timestamp" do
+          message_1.update!(created_at: Time.zone.parse("2026-01-01T12:35:46.800Z"))
+
           messages =
             MessageBus.track_publish(
               described_class.new_messages_message_bus_channel(channel.id),
@@ -500,10 +502,10 @@ describe Chat::Publisher do
               thread_id: thread.id,
               force_thread: false,
               message:
-                Chat::MessageSerializer.new(
-                  message_1,
-                  { scope: Guardian.new(nil), root: false },
-                ).as_json,
+                Chat::MessageSerializer
+                  .new(message_1, { scope: Guardian.new(nil), root: false })
+                  .as_json
+                  .merge(created_at: "2026-01-01T12:35:46.800Z"),
             },
           )
         end

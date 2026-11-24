@@ -124,7 +124,7 @@ it "sets the correct query param on filter change"
 
 ## Freezing Time
 
-For time-sensitive system tests, use the `time:` metadata key instead of calling `freeze_time` manually. This freezes **both** the Ruby server time and the Playwright browser clock simultaneously:
+For time-sensitive system tests, use the `time:` metadata key instead of calling `freeze_time` manually. On drivers that support browser clock overrides, it freezes Ruby server time and offsets the browser clock while timers continue to run.
 
 ```rb
 it "shows the post timestamp correctly", time: Time.zone.parse("2024-01-15 10:00:00") do
@@ -133,7 +133,7 @@ it "shows the post timestamp correctly", time: Time.zone.parse("2024-01-15 10:00
 end
 ```
 
-**Why this matters:** In system tests, JavaScript also needs to see the frozen time (e.g. for relative timestamps like "5 minutes ago"). The `time:` metadata calls both `freeze_time` and `pw_page.clock.set_fixed_time` under the hood. Using plain `freeze_time` only freezes the Ruby side, leaving the browser clock running normally.
+**Why this matters:** In system tests, JavaScript also needs to see the frozen time (e.g. for relative timestamps like "5 minutes ago"). The `time:` metadata calls both `freeze_time` and `BrowserTime.freeze` under the hood. Using plain `freeze_time` only freezes the Ruby side, leaving the browser clock running normally.
 
 ## Common Helpers
 

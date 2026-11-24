@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer - ProseMirror - Onebox Toolbar" do
+describe "Composer - ProseMirror - Onebox Toolbar", browser_features: :clipboard do
   include_context "with prosemirror editor"
 
   let(:onebox_toolbar) { PageObjects::Components::ComposerOneboxToolbar.new }

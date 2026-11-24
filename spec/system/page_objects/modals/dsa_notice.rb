@@ -22,7 +22,7 @@ module PageObjects
       end
 
       def fill_verification_code(code)
-        page.driver.with_playwright_page do |browser_page|
+        page.driver.with_browser_page do |browser_page|
           browser_page.locator("#{full_modal_selector} .d-otp-input").fill(code)
         end
       end

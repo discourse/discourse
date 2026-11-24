@@ -104,8 +104,7 @@ describe "Post stream" do
       last_post_number = topic.highest_post_number
 
       # Scroll to the bottom of the page to load more posts
-      # We use the :end key to scroll to the bottom
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
 
       # Verify that the last post is not cloaked
       expect(post_stream).to have_no_css(
@@ -157,14 +156,14 @@ describe "Post stream" do
       expect(blockquote).to have_content(first_post.raw)
 
       # Scroll to bottom to trigger post cloaking
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
 
       # Verify that the second post gets cloaked and the quote is removed
       expect(post_stream).to have_css("#{post2_selector}.post-stream--cloaked")
       expect(post_stream).to have_no_css("#{post2_selector} aside.quote")
 
       # Scroll back to top
-      send_keys(:home)
+      send_keys(SystemHelpers::PAGE_TOP_KEY)
 
       # Verify that the second post becomes visible again
       expect(post_stream).to have_css(post2_selector)
@@ -207,7 +206,7 @@ describe "Post stream" do
       expect(page).to have_css("#{selector} .small-action")
       uncloaked_space = space_taken(selector)
 
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
 
       expect(page).to have_css("#{selector}.post-stream--cloaked")
       expect(space_taken(selector)).to be_within(0.5).of(uncloaked_space)

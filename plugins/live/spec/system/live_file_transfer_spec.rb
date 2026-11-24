@@ -9,7 +9,9 @@ require_relative "../support/live_fake_media"
 # remote-debugging-port, which otherwise prevents launching the second browser.
 # Core blocks DNS by default; allow only local mDNS ICE host candidates so the
 # two browser processes can connect without relying on external STUN/TURN.
-describe "Live mesh file transfers", allow_network: ["*.local"] do
+describe "Live mesh file transfers",
+         allow_network: ["*.local"],
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
   fab!(:alice) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:bob) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:sender_group, :group)
@@ -36,7 +38,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
     sign_in(user)
     install_live_fake_media
     # Observe native channel traffic without replacing the transport or messages.
-    page.driver.with_playwright_page { |browser| browser.add_init_script(script: <<~JS) }
+    page.driver.with_browser_page { |browser| browser.add_init_script(script: <<~JS) }
         window.__filePeers = [];
         window.__fileChannels = [];
         window.__fileChannelEvidence = { opened: 0, binarySent: 0, binaryReceived: 0, offersReceived: 0 };
@@ -371,7 +373,8 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
     end
   end
 
-  it "requires acceptance before binary bytes and completes binary and empty files with matching bytes" do
+  it "requires acceptance before binary bytes and completes binary and empty files with matching bytes",
+     browser_features: %i[simultaneous_browser_sessions document_preload completed_downloads] do
     join_both
     bytes = [0, 255, 128, 13, 10, 0, 42] * 5000
     binary_wire_bytes = 0
@@ -423,7 +426,7 @@ describe "Live mesh file transfers", allow_network: ["*.local"] do
             "#{transfers}.some(t => t.id === #{id.to_json} && t.hasFile === true && !Object.hasOwn(t, 'blob'))",
           ),
         ).to eq(true)
-        page.driver.with_playwright_page do |browser|
+        page.driver.with_browser_page do |browser|
           download =
             browser.expect_download do
               find("[data-transfer-id='#{id}'] .live-file-transfer__save").click

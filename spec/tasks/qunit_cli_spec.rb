@@ -308,18 +308,22 @@ describe "bin/qunit" do
     expect(result.err).to include("--browser-inactivity-timeout must be greater than 0")
   end
 
-  it "asks for Playwright's Chromium to be installed when it is missing" do
+  it "asks for Chromium to be installed when it is missing" do
     Dir.mktmpdir do |dir|
       _out, err, status =
         Open3.capture3(
-          { "PLAYWRIGHT_BROWSERS_PATH" => dir },
+          {
+            "XDG_CACHE_HOME" => dir,
+            "CHROMIUM_PATH" => nil,
+            "TESTEM_DEFAULT_BROWSER" => "Chromium",
+          },
           "bin/qunit",
           core_test_file,
           chdir: Rails.root.to_s,
         )
 
       expect(status.exitstatus).to eq(1)
-      expect(err).to include("Run `pnpm playwright-install`")
+      expect(err).to include("Run `script/test-chromium --install`")
     end
   end
 end

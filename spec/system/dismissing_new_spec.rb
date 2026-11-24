@@ -15,7 +15,8 @@ RSpec.describe "Dismissing New" do
     fab!(:post1) { create_post(user: user, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
-    it "lets the user stop tracking replies across sessions" do
+    it "lets the user stop tracking replies across sessions",
+       browser_features: :simultaneous_browser_sessions do
       sign_in(user)
 
       visit("/new?subset=replies")

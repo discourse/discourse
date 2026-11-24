@@ -8,13 +8,10 @@ module PageObjects
       end
 
       def has_group_permission?(group_name, permissions = nil)
-        if !permissions
-          page.has_css?(group_permission_row_selector(group_name))
-        else
-          permissions.each do |permission|
-            page.has_css?("#{group_permission_row_selector(group_name)} .#{permission}-granted")
-          end
-        end
+        selector = group_permission_row_selector(group_name)
+        return page.has_css?(selector) unless permissions
+
+        permissions.all? { |permission| page.has_css?("#{selector} .#{permission}-granted") }
       end
 
       def has_no_group_permission?(group_name)

@@ -2,7 +2,7 @@
 
 require_relative "../support/live_fake_media"
 
-describe "Live room chat panel" do
+describe "Live room chat panel", browser_features: :document_preload do
   fab!(:user)
   fab!(:admin)
   fab!(:channel, :chat_channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -110,7 +110,8 @@ describe "Live room chat panel" do
     expect(chat_panel).to have_image_message
   end
 
-  it "keeps the user's draft when another participant starts the conversation" do
+  it "keeps the user's draft when another participant starts the conversation",
+     browser_features: %i[simultaneous_browser_sessions document_preload] do
     visit("/live/r/#{room.slug}?chat=true")
     click_button(I18n.t("js.live.room.join"))
     wait_for_animation(find(".chat-side-panel"))

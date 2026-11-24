@@ -7,7 +7,7 @@ describe "Poll UI Builder" do
     visit "/"
 
     errors =
-      $playwright_logger.logs.select do |log|
+      $system_browser_logger.logs.select do |log|
         log[:level] == "error" &&
           log[:message].include?("/discourse-local-dates/lib/generate-current-date-markup")
       end

@@ -12,8 +12,7 @@ module LiveFakeMedia
   def install_live_fake_media(video_feeds: DEFAULT_VIDEO_FEEDS)
     feeds_json = JSON.generate(video_feeds)
 
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.add_init_script(script: <<~JS)
+    page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
         (() => {
           if (window.__liveFakeMediaInstalled) {
             return;
@@ -157,7 +156,6 @@ module LiveFakeMedia
           };
         })();
       JS
-    end
   end
 
   def live_media_track_count(selector, kind: :video, timeout: 5)

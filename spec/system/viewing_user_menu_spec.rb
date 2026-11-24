@@ -133,8 +133,8 @@ RSpec.describe "Viewing User Menu" do
       visit("/latest")
 
       page_errors = []
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.on("pageerror", ->(error) { page_errors << error.message })
+      page.driver.with_browser_page do |browser_page|
+        browser_page.on("pageerror", ->(error) { page_errors << error.message })
       end
 
       user_menu.open

@@ -76,6 +76,15 @@ module PageObjects
         has_css?("#post_#{number}")
       end
 
+      def has_post_in_viewport?(number)
+        has_css?("#post_#{number} .cooked") { |content| content.evaluate_script(<<~JS) }
+            (() => {
+              const { top, bottom } = this.getBoundingClientRect();
+              return top < innerHeight && bottom > 0;
+            })()
+          JS
+      end
+
       def has_replies_expanded?(post)
         within_post(post) { has_css?(".embedded-posts") }
       end

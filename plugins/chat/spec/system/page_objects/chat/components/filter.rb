@@ -21,7 +21,7 @@ module PageObjects
         end
 
         def toggle
-          locator(".c-navbar__filter").click(position: { x: 0, y: 25 }) # avoid mini profiler
+          find(".c-navbar__filter").click
           self
         end
 
@@ -53,9 +53,9 @@ module PageObjects
           has_css?(".alert.alert-info", text: I18n.t("js.chat.search.no_results"))
         end
 
-        def has_state?(results: nil, position: nil)
-          filter_bar.locator(".chat-channel__filter-position-total", hasText: results) &&
-            filter_bar.locator(".chat-channel__filter-position-index", hasText: position)
+        def has_state?(results:, position:)
+          has_css?(".chat-channel__filter-position-total", exact_text: results.to_s) &&
+            has_css?(".chat-channel__filter-position-index", exact_text: position.to_s)
         end
 
         def navigate_to_previous_result

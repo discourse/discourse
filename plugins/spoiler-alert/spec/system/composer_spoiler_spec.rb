@@ -240,7 +240,7 @@ describe "Composer - ProseMirror editor - Spoiler extension" do
 
     expect(rich).to have_css("span.spoiled.spoiler-blurred", text: "hello")
 
-    composer.send_keys(:left, :left)
+    select_text_range(".ProseMirror span.spoiled", "hello".length, 0)
 
     expect(rich).to have_css("span.spoiled:not(.spoiler-blurred)", text: "hello")
 

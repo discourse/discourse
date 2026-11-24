@@ -1225,8 +1225,8 @@ module ApplicationHelper
     end
 
     if Rails.env.test?
-      if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-        setup_data[:capybara_playwright_debug_client_settled] = true
+      if ENV["SYSTEM_TEST_DEBUG_CLIENT_SETTLED"].present?
+        setup_data[:system_test_debug_client_settled] = true
       end
 
       # Allow controlling deprecation behavior in tests via environment variable

@@ -99,7 +99,7 @@ describe "Admin Dashboard Redesign | Reports section" do
       expect(page.evaluate_script("window.getSelection().toString()")).to be_present
     end
 
-    it "reorders reports with a real browser drag" do
+    it "reorders reports with a real browser drag", browser_features: :native_drag do
       AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
       AdminDashboardReport.create!(source: "core_report", identifier: "topics", position: 1)
 

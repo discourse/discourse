@@ -2,50 +2,70 @@
 require "highline/import"
 
 module SystemHelpers
-  PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+  include RSpec::Core::Pending
+
+  def require_browser_feature(feature)
+    if (reason = SystemDrivers.feature_skip_reason(feature))
+      skip reason
+    end
+  end
+
+  MACOS_KEYBOARD = /darwin/i.match?(RUBY_PLATFORM) || ENV["DISCOURSE_SYSTEM_BROWSER"] == "safari"
+  private_constant :MACOS_KEYBOARD
+  PLATFORM_KEY_MODIFIER = MACOS_KEYBOARD ? :meta : :control
 
   # Pass to `send_keys` to move the caret to the start of the current line in a
   # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
-  LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
+  LINE_START_KEY = MACOS_KEYBOARD ? %i[meta left] : :home
+  PAGE_TOP_KEY = MACOS_KEYBOARD ? %i[meta up] : :home
+  PAGE_BOTTOM_KEY = MACOS_KEYBOARD ? %i[meta down] : :end
 
   def pause_test
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
-    msg += "Browser inspection URLs:\n"
-
-    response =
-      Net::HTTP.get(CHROME_REMOTE_DEBUGGING_ADDRESS, "/json/list", CHROME_REMOTE_DEBUGGING_PORT)
+    targets =
+      begin
+        JSON.parse(
+          Net::HTTP.get(
+            CHROME_REMOTE_DEBUGGING_ADDRESS,
+            "/json/list",
+            CHROME_REMOTE_DEBUGGING_PORT,
+          ),
+        )
+      rescue Errno::ECONNREFUSED
+        []
+      end
+    msg += "Browser inspection URLs:\n" if targets.any?
 
     socat_pid = nil
 
-    if exposed_port =
-         ENV["PLAYWRIGHT_FORWARD_DEVTOOLS_TO_PORT"].presence ||
-           ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
+    exposed_port =
+      ENV["CHROME_FORWARD_DEVTOOLS_TO_PORT"].presence ||
+        ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
+    if exposed_port && targets.any?
       socat_pid =
         fork do
           exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{CHROME_REMOTE_DEBUGGING_PORT}"
         end
     end
 
-    JSON
-      .parse(response)
-      .each do |result|
-        devtools_url = result["devtoolsFrontendUrl"]
+    targets.each do |result|
+      devtools_url = result["devtoolsFrontendUrl"]
 
-        devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
+      devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
 
-        if ENV["CODESPACE_NAME"]
-          devtools_url =
-            devtools_url
-              .gsub(
-                "localhost:#{exposed_port}",
-                "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
-              )
-              .gsub("http://", "https://")
-              .gsub("ws=", "wss=")
-        end
-
-        msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+      if ENV["CODESPACE_NAME"]
+        devtools_url =
+          devtools_url
+            .gsub(
+              "localhost:#{exposed_port}",
+              "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+            )
+            .gsub("http://", "https://")
+            .gsub("ws=", "wss=")
       end
+
+      msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
+    end
 
     result = ask("\n\e[33m#{msg}\e[0m")
     debugger if result == "d" # rubocop:disable Lint/Debugger
@@ -55,20 +75,12 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    response =
-      visit File.join(
-              GlobalSetting.relative_url_root || "",
-              "/session/#{user.encoded_username}/become.json?redirect=false",
-            )
-    message = "Signed in to #{user.username} successfully"
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
 
-    if response.is_a?(Playwright::Response)
-      # This endpoint serves plain text, so its body is the document's content.
-      expect(response.text.force_encoding(Encoding::UTF_8)).to eq(message)
-      expect(response.status).to eq(200)
-    else
-      expect(page).to have_content(message)
-    end
+    expect(page).to have_content("Signed in to #{user.username} successfully", wait: 0)
   end
 
   def setup_system_test
@@ -81,8 +93,9 @@ module SystemHelpers
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
     SiteSetting.global_notice = ""
-    SiteSetting.force_hostname = Capybara.server_host
-    SiteSetting.port = Capybara.server_port
+    app_host = URI(Capybara.app_host) if Capybara.app_host
+    SiteSetting.force_hostname = app_host&.host || Capybara.server_host
+    SiteSetting.port = app_host&.port || Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
     if ENV["S3_SYSTEM_TEST_ENDPOINT"].present?
@@ -96,14 +109,18 @@ module SystemHelpers
   end
 
   def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
-    start ||= Time.zone.now
+    deadline ||= Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout.to_f
     backoff ||= frequency
     yield
   rescue RSpec::Expectations::ExpectationNotMetError,
          Capybara::ExpectationNotMet,
          Capybara::ElementNotFound
-    raise if Time.zone.now >= start + timeout.seconds
-    sleep backoff
+    remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    raise if remaining <= 0
+
+    sleep [backoff, remaining].min
+    raise if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+
     backoff += frequency
     retry
   end
@@ -164,9 +181,8 @@ module SystemHelpers
 
   def using_browser_timezone(timezone, &example)
     using_session(timezone) do
-      page.driver.with_playwright_page do |pw_page|
-        cdp_session = pw_page.context.new_cdp_session(pw_page)
-        cdp_session.send_message("Emulation.setTimezoneOverride", params: { timezoneId: timezone })
+      page.driver.with_browser_page do |browser_page|
+        browser_page.override_timezone(timezone)
         freeze_time(&example)
       end
     end
@@ -283,10 +299,12 @@ module SystemHelpers
   end
 
   def with_logs
-    playwright_logger = nil
-    page.driver.with_playwright_page { |pw_page| playwright_logger = PlaywrightLogger.new(pw_page) }
+    browser_logger = nil
+    page.driver.with_browser_page do |browser_page|
+      browser_logger = SystemBrowserLogger.new(browser_page)
+    end
 
-    yield(playwright_logger)
+    yield(browser_logger)
   end
 
   # This method can be used to run a system test with a user that has a physical security key by adding a virtual
@@ -336,8 +354,9 @@ module SystemHelpers
   end
 
   def with_virtual_authenticator(options = {})
-    page.driver.with_playwright_page do |pw_page|
-      cdp_client = pw_page.context.new_cdp_session(pw_page)
+    require_browser_feature(:virtual_authenticator)
+    page.driver.with_browser_page do |browser_page|
+      cdp_client = browser_page.context.new_cdp_session(browser_page)
       cdp_client.send_message("WebAuthn.enable")
 
       authenticator_options = {
@@ -374,8 +393,8 @@ module SystemHelpers
   end
 
   def add_cookie(options = {})
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.context.add_cookies(
+    page.driver.with_browser_page do |browser_page|
+      browser_page.context.add_cookies(
         [{ domain: Discourse.current_hostname, path: "/" }.merge(options)],
       )
     end
@@ -384,8 +403,8 @@ module SystemHelpers
   def expect_no_alert
     opened_dialog = false
 
-    page.driver.with_playwright_page do |pw_page|
-      pw_page.on("dialog", ->(dialog) { opened_dialog = true })
+    page.driver.with_browser_page do |browser_page|
+      browser_page.on("dialog", ->(dialog) { opened_dialog = true })
 
       yield
 
@@ -407,15 +426,13 @@ module SystemHelpers
   # should be used only on very rare occasion when you need to wait for something
   # that is not visually changing on the page
   def wait_for_timeout(ms = 100)
-    page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
+    page.driver.with_browser_page { |browser_page| browser_page.wait_for_timeout(ms) }
   end
 
   def wait_until_hidden(element)
-    element.with_playwright_element_handle do |playwright_element|
-      playwright_element.wait_for_element_state("hidden")
-    rescue Playwright::Error => e
-      raise if !detached_element_error?(e)
-    end
+    element.native.wait_for_element_state("hidden")
+  rescue SystemBrowserError => e
+    raise unless detached_element_error?(e)
   end
 
   # Retries the block on "Element is not attached to the DOM" error.
@@ -424,29 +441,29 @@ module SystemHelpers
     deadline = Time.current + timeout.seconds
     begin
       yield
-    rescue Playwright::Error => e
+    rescue SystemBrowserError => e
       retry if detached_element_error?(e) && Time.current < deadline
       raise
     end
   end
 
   def detached_element_error?(error)
-    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
+    error.is_a?(SystemBrowserError) && error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
     if locator
       locator.locator(selector)
     else
-      page.driver.with_playwright_page { |pw_page| pw_page.locator(selector) }
+      page.driver.with_browser_page { |browser_page| browser_page.locator(selector) }
     end
   end
 
   def tap_screen_at(x, y)
-    page.driver.with_playwright_page { |pw_page| pw_page.touchscreen.tap_point(x, y) }
+    page.driver.with_browser_page { |browser_page| browser_page.touchscreen.tap_point(x, y) }
   end
 
-  # Drives a real native drag through Playwright's CDP drag interception.
+  # Drives a real native drag through CDP drag interception.
   #
   # Capybara's own `drag_to` synthesises mouse events, and a native drag driven
   # that way can fire `dragstart` and then stall with no `dragover`, `drop` or
@@ -463,22 +480,23 @@ module SystemHelpers
   # `steps:` adds intermediate moves for a drag that needs more to register.
   #
   # This does NOT wait for the client to settle: that wait lives in Capybara's
-  # patched node methods, and driving Playwright directly bypasses it. Assert
+  # Capybara node methods. Direct browser calls bypass it. Assert
   # through a retrying matcher, not a value read once.
   def drag_and_drop(source:, target:, source_position: nil, target_position: nil, steps: nil)
-    page.driver.with_playwright_page do |pw_page|
+    require_browser_feature(:native_drag)
+    page.driver.with_browser_page do |browser_page|
       options = {}
       options[:sourcePosition] = source_position if source_position
       options[:targetPosition] = target_position if target_position
       options[:steps] = steps if steps
-      pw_page.drag_and_drop(source, target, **options)
+      browser_page.drag_and_drop(source, target, **options)
     end
   end
 
   # A native drag that pauses over an intermediate element before dropping, for
   # a destination that only appears once a drag has dwelt somewhere.
   #
-  # `drag_and_drop` cannot express this. Playwright's own drag is one atomic
+  # `drag_and_drop` cannot express this. The driver drag is one atomic
   # call, so there is no point during it at which to wait.
   #
   # The drag is driven by hand instead. That needs CDP drag interception, or
@@ -490,39 +508,40 @@ module SystemHelpers
   # Like `drag_and_drop`, this bypasses Capybara's client-settle wait, so assert
   # through a retrying matcher rather than a value read once.
   def drag_and_hold(from:, over:, to:, steps: 10)
-    page.driver.with_playwright_page do |pw_page|
-      session = pw_page.context.new_cdp_session(pw_page)
+    require_browser_feature(:native_drag)
+    page.driver.with_browser_page do |browser_page|
+      session = browser_page.context.new_cdp_session(browser_page)
       session.send_message("Input.setInterceptDrags", params: { "enabled" => true })
 
-      start_x, start_y = viewport_centre_of(pw_page, from)
-      over_x, over_y = viewport_centre_of(pw_page, over)
+      start_x, start_y = viewport_centre_of(browser_page, from)
+      over_x, over_y = viewport_centre_of(browser_page, over)
 
-      pw_page.mouse.move(start_x, start_y)
-      pw_page.mouse.down
+      browser_page.mouse.move(start_x, start_y)
+      browser_page.mouse.down
       # Stepped, so the drag is seen crossing the threshold rather than
       # teleporting past it, and so the dwell sees more than one move.
-      pw_page.mouse.move(over_x, over_y, steps: steps)
+      browser_page.mouse.move(over_x, over_y, steps: steps)
     end
 
     begin
       # Outside the driver block, so Capybara's own matchers work normally in it.
       yield if block_given?
-      page.driver.with_playwright_page do |pw_page|
-        drop_x, drop_y = viewport_centre_of(pw_page, to)
-        pw_page.mouse.move(drop_x, drop_y, steps: steps)
+      page.driver.with_browser_page do |browser_page|
+        drop_x, drop_y = viewport_centre_of(browser_page, to)
+        browser_page.mouse.move(drop_x, drop_y, steps: steps)
       end
     ensure
       # Released even when an in-drag assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      page.driver.with_browser_page { |browser_page| browser_page.mouse.up }
     end
   end
 
   # Waited for rather than queried once. `query_selector` returns nil without
   # waiting, so a missing element fails as a NoMethodError naming nothing useful.
-  def viewport_centre_of(pw_page, selector)
+  def viewport_centre_of(browser_page, selector)
     node =
-      pw_page.wait_for_selector(
+      browser_page.wait_for_selector(
         selector,
         state: "visible",
         timeout: Capybara.default_max_wait_time * 1000,
@@ -560,15 +579,15 @@ module SystemHelpers
   def drag_with_pointer(from:, to: nil, by: nil, steps: 10)
     raise ArgumentError, "pass exactly one of to: or by:" if to.nil? == by.nil?
 
-    page.driver.with_playwright_page do |pw_page|
+    page.driver.with_browser_page do |browser_page|
       # Waited for rather than queried once: `query_selector` returns nil without
       # waiting, so a not-yet-rendered element would fail as a `NoMethodError` on
       # nil, naming neither the selector nor the timing.
-      # Capybara's budget, not Playwright's 30s default: the driver is registered
+      # Capybara's configured wait time: the driver is registered
       # without `default_timeout`, so a missing handle would otherwise stall the
       # example for half a minute before failing.
       node =
-        pw_page.wait_for_selector(
+        browser_page.wait_for_selector(
           from,
           state: "visible",
           timeout: Capybara.default_max_wait_time * 1000,
@@ -580,11 +599,11 @@ module SystemHelpers
       end_x = to ? to[:x] : start_x + by.fetch(:x, 0)
       end_y = to ? to[:y] : start_y + by.fetch(:y, 0)
 
-      pw_page.mouse.move(start_x, start_y)
-      pw_page.mouse.down
+      browser_page.mouse.move(start_x, start_y)
+      browser_page.mouse.down
       # Stepped rather than a single jump: a gesture with a threshold needs to be
       # seen crossing it, not teleported past it.
-      pw_page.mouse.move(end_x, end_y, steps: steps)
+      browser_page.mouse.move(end_x, end_y, steps: steps)
     end
 
     begin
@@ -593,7 +612,7 @@ module SystemHelpers
     ensure
       # Released even when an in-gesture assertion fails, so the example does not
       # run its remaining hooks with the button still held.
-      page.driver.with_playwright_page { |pw_page| pw_page.mouse.up }
+      page.driver.with_browser_page { |browser_page| browser_page.mouse.up }
     end
   end
 

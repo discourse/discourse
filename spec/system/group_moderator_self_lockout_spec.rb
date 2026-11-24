@@ -76,6 +76,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
 
       expect(dialog).to be_closed
+      expect(group_page).to have_saved
       expect(group.reload.visibility_level).to eq(Group.visibility_levels[:staff])
     end
   end
@@ -93,6 +94,7 @@ describe "Group moderator self-lockout warning" do
       group_page.click_save
 
       expect(dialog).to be_closed
+      expect(group_page).to have_saved
       expect(group.reload.visibility_level).to eq(Group.visibility_levels[:owners])
     end
   end

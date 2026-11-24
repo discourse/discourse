@@ -39,12 +39,14 @@ describe "Composer - ProseMirror - Container" do
     expect(composer).to have_rich_editor_active
   end
 
-  it "handles uploads and disables the editor toggle while uploading" do
+  it "handles uploads and disables the editor toggle while uploading",
+     browser_features: :network_interception do
     open_composer
 
     file_path = file_from_fixtures("logo.png", "images").path
-    cdp.with_slow_upload do
+    cdp.with_paused_request(%r{/uploads\.json(?:\?|$)}) do |request|
       attach_file("file-uploader", file_path, make_visible: true)
+      request.wait
       expect(composer).to have_in_progress_uploads
       expect(composer.editor_toggle_switch).to be_disabled
     end

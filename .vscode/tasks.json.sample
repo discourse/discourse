@@ -34,9 +34,9 @@
       "problemMatcher": []
     },
     {
-      "label": "deps/playwright",
+      "label": "deps/chromium",
       "type": "shell",
-      "command": "pnpm playwright-install && sudo pnpm exec playwright install-deps chromium",
+      "command": "script/test-chromium --install",
       "presentation": {
         "reveal": "always",
         "group": "deps",
@@ -102,7 +102,7 @@
     {
       "label": "deps/testing",
       "dependsOn": [
-        "deps/playwright",
+        "deps/chromium",
         "spec/migrate"
       ],
       "dependsOrder": "sequence",

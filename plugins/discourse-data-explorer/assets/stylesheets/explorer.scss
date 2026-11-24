@@ -304,18 +304,23 @@ table.group-reports {
   }
 
   &.no-schema {
+    .panels-flex {
+      position: relative;
+    }
+
     .editor-panel {
       flex-basis: 100%;
     }
 
     .right-panel {
+      position: static;
       width: 0;
     }
 
     .schema__toggle.--expand {
       position: absolute;
       inset-block-start: var(--space-2);
-      inset-inline-start: -2.75em;
+      inset-inline-end: var(--space-2);
       z-index: 1;
     }
   }

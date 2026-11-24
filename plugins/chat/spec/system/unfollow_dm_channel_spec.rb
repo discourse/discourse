@@ -15,7 +15,8 @@ RSpec.describe "Unfollow DM channel" do
     sign_in(current_user)
   end
 
-  context "when receiving a message after unfollowing" do
+  context "when receiving a message after unfollowing",
+          browser_features: :simultaneous_browser_sessions do
     it "correctly shows the channel" do
       visit("/")
       chat_sidebar_page.remove_channel(dm_channel_1)

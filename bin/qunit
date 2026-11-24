@@ -45,7 +45,7 @@ class QunitRunner
   end
 
   def run
-    ensure_playwright_chromium! if browser == "Chrome" && !@dry_run
+    ensure_chromium! if browser == "Chrome" && !@dry_run
 
     if @standalone_mode
       with_standalone_rails { run_tests }
@@ -458,24 +458,16 @@ class QunitRunner
   end
 
   def browser
-    ENV["TESTEM_DEFAULT_BROWSER"] || "Chrome"
+    requested_browser = ENV.fetch("TESTEM_DEFAULT_BROWSER", "Chrome")
+    requested_browser == "Chromium" ? "Chrome" : requested_browser
   end
 
-  def ensure_playwright_chromium!
-    path =
-      IO.popen(
-        %w[node -p require('playwright-core').chromium.executablePath()],
-        chdir: rails_root,
-        err: File::NULL,
-        &:read
-      ).strip
+  def ensure_chromium!
+    path = IO.popen([File.join(rails_root, "script/test-chromium")], &:read).strip
+    exit 1 unless $?.success?
 
-    if !$?.success? || !File.exist?(path)
-      abort "Playwright's Chromium isn't installed. Run `pnpm playwright-install` and try again."
-    end
-
-    if !system(path, "--version", out: File::NULL, err: File::NULL)
-      abort "Playwright's Chromium is installed but can't start. On Linux, install its system libraries with `pnpm exec playwright install-deps chromium`."
+    unless system(path, "--version", out: File::NULL, err: File::NULL)
+      abort "Chromium cannot start. Check its shared library dependencies."
     end
   end
 

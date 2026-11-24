@@ -42,7 +42,8 @@ RSpec.describe "Dates separators" do
       channel_1.add(user_1)
     end
 
-    it "doesn't impact the last visit separator" do
+    it "doesn't impact the last visit separator",
+       browser_features: :simultaneous_browser_sessions do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("message1")
       sidebar_page.open_channel(channel_2)

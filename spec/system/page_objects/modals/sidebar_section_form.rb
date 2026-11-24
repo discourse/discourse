@@ -225,11 +225,13 @@ module PageObjects
       # handle up again. Finding it by name would pass even if focus had been lost,
       # which is most of what there is to get wrong here.
       def press_focused_link_move_down
-        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Alt+ArrowDown") }
+        page.driver.with_browser_page do |browser_page|
+          browser_page.keyboard.press("Alt+ArrowDown")
+        end
       end
 
       def open_focused_link_menu
-        page.driver.with_playwright_page { |pw_page| pw_page.keyboard.press("Enter") }
+        page.driver.with_browser_page { |browser_page| browser_page.keyboard.press("Enter") }
       end
 
       # The link whose row currently holds focus. The row is the cursor's item, so

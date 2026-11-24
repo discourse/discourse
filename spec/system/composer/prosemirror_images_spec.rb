@@ -4,7 +4,7 @@ describe "Composer - ProseMirror - Images" do
   include_context "with prosemirror editor"
 
   describe "image toolbar" do
-    it "allows scaling image down and up via toolbar" do
+    it "allows scaling image down and up via toolbar", browser_features: :image_clipboard do
       open_composer
       paste_and_click_image
       find(".composer-image-toolbar__zoom-out").click
@@ -17,7 +17,7 @@ describe "Composer - ProseMirror - Images" do
       expect(rich).to have_selector(".composer-image-node img[data-scale='100']")
     end
 
-    it "allows removing image via toolbar" do
+    it "allows removing image via toolbar", browser_features: :image_clipboard do
       open_composer
       composer.type_content("Before")
       paste_and_click_image
@@ -26,7 +26,7 @@ describe "Composer - ProseMirror - Images" do
       expect(rich).to have_content("Before")
     end
 
-    it "hides toolbar when clicking outside image" do
+    it "hides toolbar when clicking outside image", browser_features: :image_clipboard do
       open_composer
       paste_and_click_image
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
@@ -81,7 +81,7 @@ describe "Composer - ProseMirror - Images" do
     end
   end
 
-  describe "image alt text display and editing" do
+  describe "image alt text display and editing", browser_features: :image_clipboard do
     it "shows alt text input when image is selected" do
       open_composer
       paste_and_click_image
@@ -202,7 +202,7 @@ describe "Composer - ProseMirror - Images" do
       JS
     end
 
-    it "opens lightbox with single image" do
+    it "opens lightbox with single image", browser_features: :image_clipboard do
       open_composer
       paste_and_click_image
 
@@ -242,7 +242,8 @@ describe "Composer - ProseMirror - Images" do
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
     end
 
-    it "lets the user dismiss the alt text input by clicking the image without opening the lightbox" do
+    it "lets the user dismiss the alt text input by clicking the image without opening the lightbox",
+       browser_features: :image_clipboard do
       open_composer
       paste_and_click_image
 

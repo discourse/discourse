@@ -18,7 +18,8 @@ RSpec.describe "Reply to message - smoke" do
     channel_1.update!(threading_enabled: true)
   end
 
-  context "when two users create a thread on the same message" do
+  context "when two users create a thread on the same message",
+          browser_features: :simultaneous_browser_sessions do
     it "opens the same thread for both users" do
       sign_in(user_1)
       chat_page.visit_channel(channel_1)

@@ -85,7 +85,7 @@ lazy_support_files.each { |constant, file| Object.autoload(constant, file) }
 Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 if system_specs_requested
-  require "capybara-playwright-driver"
+  require_relative "browser_driver/driver"
   system_support_files.each { |f| require f }
   Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
   Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
@@ -144,6 +144,13 @@ RSpec.configure do |config|
 
   config.order = "random"
   config.infer_spec_type_from_file_location!
+  if system_specs_requested
+    config.define_derived_metadata(type: :system) do |metadata|
+      if (reason = SystemDrivers.skip_reason(metadata))
+        metadata[:skip] ||= reason
+      end
+    end
+  end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -199,10 +206,21 @@ RSpec.configure do |config|
       s3_system_test_urls = [s3_endpoint.to_s, s3_bucket_endpoint.to_s]
     end
 
-    WebMock.disable_net_connect!(
-      allow_localhost: true,
-      allow: [*s3_system_test_urls, ENV["CAPYBARA_REMOTE_DRIVER_URL"]].compact,
-    )
+    allowed_urls = s3_system_test_urls
+    ENV
+      .values_at("SAFARIDRIVER_URL", "WEBKIT_WEBDRIVER_URL")
+      .compact_blank
+      .each do |driver_url|
+        endpoint = URI(driver_url)
+        allowed_urls << ->(request) do
+          request.scheme == endpoint.scheme && request.host == endpoint.host &&
+            request.port == endpoint.port &&
+            request.path.match?(
+              %r{\A#{Regexp.escape(endpoint.path.delete_suffix("/"))}/(?:status|session(?:/.*)?)\z},
+            )
+        end
+      end
+    WebMock.disable_net_connect!(allow_localhost: true, allow: allowed_urls)
 
     # Registering this from inside before(:suite) makes it run at the end of the
     # before(:each) chain. It must run after the specs' `sign_in`, so the auth
@@ -226,6 +244,7 @@ RSpec.configure do |config|
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
   config.before(:each, type: :system) do |example|
+    $system_browser_logger = nil
     SystemDrivers.preload_model_schemas!
     SystemDrivers.register!(example)
     driven_by SystemDrivers.driver_for(example)
@@ -239,14 +258,13 @@ RSpec.configure do |config|
     # they click things in the composer.
     SiteSetting.educate_until_posts = 0
 
-    SystemArtifacts.record_video(example)
-    SystemArtifacts.start_trace(page, example)
+    SystemArtifacts.start(page, example)
 
-    page.driver.with_playwright_page do |pw_page|
-      $playwright_logger = PlaywrightLogger.new(pw_page)
+    page.driver.with_browser_page do |browser_page|
+      $system_browser_logger = SystemBrowserLogger.new(browser_page)
 
       if (tz = example.metadata[:timezone])
-        BrowserTime.override_timezone(pw_page, tz)
+        BrowserTime.override_timezone(browser_page, tz)
       end
     end
   end
@@ -280,7 +298,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :system) do |example|
-    SystemArtifacts.stop_trace(page, example)
+    SystemArtifacts.stop(page, example)
 
     lines = example.metadata[:extra_failure_lines]
 
@@ -291,23 +309,29 @@ RSpec.configure do |config|
 
     # Recommended that this is not disabled, since it makes debugging
     # failed system tests a lot trickier.
-    if ENV["PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS"].blank? && $playwright_logger && example.exception
-      $playwright_logger.append_failure_logs(lines)
+    browser_logs = $system_browser_logger&.logs
+    if ENV["SYSTEM_TEST_DISABLE_VERBOSE_JS_LOGS"].blank? && $system_browser_logger &&
+         example.exception
+      $system_browser_logger.append_failure_logs(lines, logs: browser_logs)
     end
 
-    deprecation_error = EmberDeprecations.fatal_error($playwright_logger&.logs)
+    deprecation_error = EmberDeprecations.fatal_error(browser_logs)
     expect(deprecation_error).to be_nil, deprecation_error
 
-    EmberDeprecations.record_counts($playwright_logger&.logs, example.metadata)
-    EmberDeprecations.record_details($playwright_logger&.logs, example.metadata)
+    EmberDeprecations.record_counts(browser_logs, example.metadata)
+    EmberDeprecations.record_details(browser_logs, example.metadata)
 
-    page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
-
+    if $system_browser_logger
+      page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+    end
+  ensure
     # Block all incoming requests before resetting Capybara session which will wait for all requests to finish
-    BlockRequestsMiddleware.block_requests!
-
-    Capybara.reset_session!
-    MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
+    begin
+      BlockRequestsMiddleware.block_requests!
+      Capybara.reset_session!
+    ensure
+      MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
+    end
   end
 
   # Registered last so that, running in reverse order, it executes before the

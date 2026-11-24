@@ -386,7 +386,7 @@ shared_examples "login scenarios" do
         login_link = wait_for_email_link(user, :email_login)
         visit login_link
         find(".toggle-second-factor-method").click
-        find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+        find('input[type="text"].second-factor-token-input').fill_in(with: "iAmValidBackupCode")
         find(".email-login-form .btn-primary").click
 
         expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -471,7 +471,8 @@ RSpec.describe "System test sign-in navigation" do
     "/session/#{user.encoded_username}/become.json?redirect=false"
   end
 
-  it "uses the app response, updates the browser session and adds an entry to history" do
+  it "uses the app response, updates the browser session and adds an entry to history",
+     browser_features: :navigation_status do
     visit "/about"
     sign_in(user)
 
@@ -495,7 +496,8 @@ RSpec.describe "System test sign-in navigation" do
     ).to eq(admin.username)
   end
 
-  it "reports a failed sign-in as such, despite the page still navigating" do
+  it "reports a failed sign-in as such, despite the page still navigating",
+     browser_features: :navigation_status do
     expect { sign_in(inactive) }.to raise_error(
       RSpec::Expectations::ExpectationNotMetError,
       /is not active/,

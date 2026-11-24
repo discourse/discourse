@@ -495,12 +495,16 @@ export default class ComposerEditor extends Component {
       false
     );
 
-    this.composer.model.set("reply", formTemplateData);
+    const model = this.composer.model;
+    model.set("reply", formTemplateData);
 
-    this.preview = await this.cachedCookAsync(
+    const preview = await this.cachedCookAsync(
       formTemplateData,
       this.markdownOptions
     );
+    if (this.composer.model === model && model.reply === formTemplateData) {
+      this.preview = preview;
+    }
   }
 
   async cachedCookAsync(text, options) {

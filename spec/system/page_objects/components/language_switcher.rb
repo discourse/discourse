@@ -19,7 +19,8 @@ module PageObjects
 
       def select_language(locale)
         @menu.expand
-        @menu.option("[data-menu-option-id='#{locale}']").click
+        @menu.option("[data-menu-option-id='#{locale}'] button").click
+        page.assert_selector("html[lang='#{locale.tr("_", "-")}'] #main.ember-application")
       end
     end
   end

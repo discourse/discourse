@@ -2,7 +2,7 @@
 
 require_relative "../support/live_fake_media"
 
-describe "Live subtitles" do
+describe "Live subtitles", browser_features: :document_preload do
   fab!(:user)
   fab!(:admin)
   fab!(:room) { Fabricate(:live_room, name: "Live Room", creator: admin, public: true) }
@@ -18,13 +18,11 @@ describe "Live subtitles" do
   end
 
   def stub_webgpu
-    page.driver.with_playwright_page do |playwright_page|
-      playwright_page.add_init_script(script: <<~JS)
+    page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
         if (!navigator.gpu) {
           Object.defineProperty(navigator, "gpu", { configurable: true, value: {} });
         }
       JS
-    end
   end
 
   def join_room

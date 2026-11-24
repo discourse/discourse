@@ -89,13 +89,13 @@ describe "Post event" do
       expect(post_event_page).to have_no_description_toggle
     end
 
-    it "correctly builds a multiline description" do
+    it "correctly builds a multiline description", browser_features: :browser_clock do
       timezone = "Europe/Paris"
       admin.user_option.update!(timezone:)
 
       time = Time.new(2025, 6, 15, 14, 30, 0, "+02:00")
       freeze_time(time)
-      page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+      page.driver.with_browser_page { |browser_page| browser_page.clock.install(time:) }
 
       visit("/new-topic")
       find(".toolbar-menu__options-trigger").click
@@ -208,9 +208,9 @@ describe "Post event" do
   end
 
   context "when showing local time" do
-    it "correctly shows month/day" do
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
+    it "correctly shows month/day", browser_features: :browser_clock do
+      page.driver.with_browser_page do |browser_page|
+        browser_page.clock.install(time: Time.new(2025, 6, 5, 22, 0, 0))
       end
 
       title = "My FR test meetup event"
@@ -429,7 +429,7 @@ describe "Post event" do
 
         # Freeze browser clock **after** sign_in (which may navigate/reset state)
         # so moment() uses the same time as the server.
-        page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time:) }
+        page.driver.with_browser_page { |browser_page| browser_page.clock.install(time:) }
 
         visit(post.topic.url)
 
@@ -655,7 +655,7 @@ describe "Post event" do
   end
 
   context "with add to calendar from more menu" do
-    it "includes rrule for recurring events" do
+    it "includes rrule for recurring events", browser_features: :completed_downloads do
       admin.user_option.update!(default_calendar: "ics")
 
       title = "Weekly standup"
@@ -668,8 +668,8 @@ describe "Post event" do
       visit(post.topic.url)
 
       ics_content = nil
-      page.driver.with_playwright_page do |pw_page|
-        download = pw_page.expect_download { post_event_page.add_to_calendar }
+      page.driver.with_browser_page do |browser_page|
+        download = browser_page.expect_download { post_event_page.add_to_calendar }
         ics_content = download.path.then { |path| File.read(path) }
       end
 

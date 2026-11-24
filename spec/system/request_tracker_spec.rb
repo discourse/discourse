@@ -6,6 +6,9 @@ describe "Request tracking" do
     ApplicationRequest.enable
     CachedCounting.reset
     CachedCounting.enable
+    # Some browsers fetch the icons on error pages.
+    SiteSetting.stubs(:site_favicon_url).returns("/images/default-favicon.png")
+    SiteSetting.stubs(:site_apple_touch_icon_url).returns("/images/default-apple-touch-icon.png")
   end
 
   after do
@@ -51,7 +54,7 @@ describe "Request tracking" do
 
       expect(event.user_id).to be_nil
       expect(event.url).to eq("#{Discourse.base_url_no_prefix}/")
-      expect(event.ip_address.to_s).to eq("::1")
+      expect(event.ip_address).to be_loopback
       expect(event.referrer).to be_blank
       expect(event.session_id).to eq(pageview_tracking.session_id)
 
@@ -83,14 +86,15 @@ describe "Request tracking" do
 
       expect(event_2.user_id).to be_nil
       expect(event_2.url).to eq("#{Discourse.base_url_no_prefix}/categories")
-      expect(event_2.ip_address.to_s).to eq("::1")
+      expect(event_2.ip_address).to be_loopback
       expect(event_2.referrer).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event_2.session_id).to eq(event.session_id)
     end
 
     it "tracks a crawler visit correctly" do
-      # Can't change playwright user agent for now... so change site settings to make Discourse detect chrome as a crawler
-      SiteSetting.crawler_user_agents += "|chrome"
+      visit "/robots.txt"
+      user_agent = page.evaluate_script("navigator.userAgent")
+      SiteSetting.crawler_user_agents += "|#{user_agent}"
 
       events =
         track_pageview_events do
@@ -153,7 +157,7 @@ describe "Request tracking" do
 
       expect(event.user_id).to eq(user.id)
       expect(event.url).to eq("#{Discourse.base_url_no_prefix}/")
-      expect(event.ip_address.to_s).to eq("::1")
+      expect(event.ip_address).to be_loopback
       expect(event.referrer).to be_blank
       expect(event.session_id).to be_present
       expect(event.topic_id).to be_blank
@@ -188,7 +192,7 @@ describe "Request tracking" do
 
       expect(event_2.user_id).to eq(user.id)
       expect(event_2.url).to eq("#{Discourse.base_url_no_prefix}/categories")
-      expect(event_2.ip_address.to_s).to eq("::1")
+      expect(event_2.ip_address).to be_loopback
       expect(event_2.referrer).to eq("#{Discourse.base_url_no_prefix}/")
       expect(event_2.session_id).to eq(event.session_id)
     end
@@ -281,7 +285,7 @@ describe "Request tracking" do
 
       expect(event.user_id).to be_nil
       expect(event.url).to eq("#{Discourse.base_url_no_prefix}/safe-mode")
-      expect(event.ip_address.to_s).to eq("::1")
+      expect(event.ip_address).to be_loopback
       expect(event.referrer).to be_blank
       expect(event.session_id).to be_present
     end
@@ -372,7 +376,7 @@ describe "Request tracking" do
 
       expect(event.user_id).to be_nil
       expect(event.url).to eq("#{Discourse.base_url_no_prefix}/pub/some-page")
-      expect(event.ip_address.to_s).to eq("::1")
+      expect(event.ip_address).to be_loopback
       expect(event.referrer).to be_blank
       expect(event.session_id).to be_present
     end
@@ -414,7 +418,7 @@ describe "Request tracking" do
 
         expect(event.user_id).to eq(current_user.id)
         expect(event.url).to eq(topic.url)
-        expect(event.ip_address.to_s).to eq("::1")
+        expect(event.ip_address).to be_loopback
         expect(event.referrer).to eq("#{Discourse.base_url_no_prefix}/")
         expect(event.session_id).to be_present
         expect(event.language).to eq(page.evaluate_script("navigator.language"))
@@ -448,7 +452,7 @@ describe "Request tracking" do
 
         expect(event.user_id).to be_blank
         expect(event.url).to eq(topic.url)
-        expect(event.ip_address.to_s).to eq("::1")
+        expect(event.ip_address).to be_loopback
         expect(event.referrer).to eq("#{Discourse.base_url}/")
         expect(event.session_id).to be_present
       end

@@ -18,18 +18,11 @@ describe "Topic timeline scroller drag" do
     expect(topic_page).to have_post_number(1)
     expect(topic_page.timeline).to have_scroller
 
-    # The pointer path is only exercised for real in a browser, where pointer
-    # capture actually routes the drag back to the scroller. A synthetic dispatch
-    # picks its own event target and so cannot tell a live drag from a dead one.
-    topic_page.timeline.drag_to_bottom
+    # While held, the readout follows the pointer. After release it follows the
+    # viewport as the post stream loads and scrolls to the selected position.
+    topic_page.timeline.drag_to_bottom { expect(topic_page.timeline).to have_position(31, 31) }
 
-    # A later chunk had to load for this to be in the DOM at all.
-    expect(topic_page).to have_post_number(25)
-    # And the reader travelled with it. Asserted separately because the two can
-    # come apart: a cloaked post keeps its `#post_N` id, so the assertion above
-    # proves the stream advanced without saying where the reader ended up, and
-    # the readout is computed from the drag rather than from what loaded.
-    expect(topic_page.timeline).to have_position(31, 31)
+    expect(topic_page).to have_post_in_viewport(31)
   end
 
   it "clears the user's drag state when the pointer is released" do

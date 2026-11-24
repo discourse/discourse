@@ -513,13 +513,12 @@ describe "Boards Board Viewer" do
         ),
       )
 
+      notes =
+        find(
+          ".discourse-boards-card-detail-modal .form-kit__field[data-name='notes'] .ProseMirror.d-editor-input[contenteditable='true']",
+        )
       page.active_element.send_keys(:tab)
-      expect(page.active_element).to eq(
-        first(
-          ".discourse-boards-card-detail-modal .form-kit__field[data-name='notes'] .ProseMirror.d-editor-input",
-          minimum: 1,
-        ),
-      )
+      expect(page.active_element).to eq(notes)
 
       find(".discourse-boards-card-detail-modal .d-modal-cancel").send_keys(:tab)
 

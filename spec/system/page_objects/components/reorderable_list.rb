@@ -23,7 +23,12 @@ module PageObjects
       end
 
       def open_menu
-        find("#{@row_selector} #{@handle}").click
+        handle = find(handle_selector)
+        return self if handle["aria-expanded"] == "true"
+
+        has_menu = handle["aria-haspopup"] == "menu"
+        handle.click
+        find(menu_selector) if has_menu
         self
       end
 
@@ -57,7 +62,20 @@ module PageObjects
       private
 
       def close_menu
-        send_keys(:escape)
+        handle = find(handle_selector)
+        return unless handle["aria-expanded"] == "true"
+
+        handle.click
+        expect(page).to have_css("#{handle_selector}[aria-expanded='false']")
+        expect(page).to have_no_css(menu_selector, visible: :all)
+      end
+
+      def handle_selector
+        "#{@row_selector} #{@handle}"
+      end
+
+      def menu_selector
+        "[data-identifier='reorderable-list-move']"
       end
 
       def destination_selector(target)

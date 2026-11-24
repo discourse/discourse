@@ -21,10 +21,6 @@ module PageObjects
 
       def select(value)
         @select_element.find("option[value='#{value}']").select_option
-        @select_element.execute_script(<<~JS, @select_element)
-          var selector = arguments[0];
-          selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
-        JS
       end
 
       def has_no_value?

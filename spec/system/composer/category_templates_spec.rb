@@ -392,7 +392,8 @@ describe "Composer Form Templates" do
     expect(form_template_chooser).to have_selected_name(form_template_2.name)
   end
 
-  it "allows uploading from paste after switching from a template category to a non-template category" do
+  it "allows uploading from paste after switching from a template category to a non-template category",
+     browser_features: :image_clipboard do
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_input
@@ -612,7 +613,7 @@ describe "Composer Form Templates" do
       category_page.new_topic_button.click
 
       expect(page).to have_css("[name='1']", text: tag3.name.upcase)
-      expect(page).to have_css("[name='2']", text: tag4.name.upcase)
+      expect(page).to have_select("2", with_options: [tag4.name.upcase])
 
       find(:select, "1").find(:option, tag1.description).select_option
       find(:select, "2").find(:option, tag2.description).select_option

@@ -235,7 +235,7 @@ describe "Custom sidebar sections" do
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
-  it "allows the user to reorder links in custom section" do
+  it "allows the user to reorder links in custom section", browser_features: :native_drag do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     sidebar_url_1 =
@@ -334,7 +334,7 @@ describe "Custom sidebar sections" do
       ).to be > 0
     end
 
-    it "lets the user reorder links in a custom section" do
+    it "lets the user reorder links in a custom section", browser_features: :native_drag do
       sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
       sidebar_url_1 =
@@ -482,7 +482,7 @@ describe "Custom sidebar sections" do
     end
   end
 
-  it "reorders links in the sidebar with drag and drop" do
+  it "reorders links in the sidebar with drag and drop", browser_features: :native_drag do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
@@ -519,7 +519,8 @@ describe "Custom sidebar sections" do
 
   # The browser refuses a drop whose effect mismatches the row's `effectAllowed`,
   # with no `drop` event. A synthetic drag cannot see that, so this must be real.
-  it "splits a link out into a new section by dropping it on the zone" do
+  it "splits a link out into a new section by dropping it on the zone",
+     browser_features: :native_drag do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)

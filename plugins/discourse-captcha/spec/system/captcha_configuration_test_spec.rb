@@ -19,7 +19,8 @@ describe "CAPTCHA admin configuration" do
     )
   end
 
-  it "reports working keys and a low score without asking the admin to solve a challenge" do
+  it "reports working keys and a low score without asking the admin to solve a challenge",
+     browser_features: :document_preload do
     SiteSetting.discourse_captcha_enabled = true
     SiteSetting.discourse_captcha_provider = "recaptcha_v3"
     SiteSetting.recaptcha_v3_site_key = "v3-site-key"
@@ -27,7 +28,7 @@ describe "CAPTCHA admin configuration" do
     SiteSetting.recaptcha_v3_score_threshold = 0.5
     sign_in(admin)
 
-    page.driver.with_playwright_page { |pw_page| pw_page.add_init_script(script: <<~JS) }
+    page.driver.with_browser_page { |browser_page| browser_page.add_init_script(script: <<~JS) }
       window.grecaptcha = {
         execute: (siteKey, { action }) => {
           if (siteKey !== "v3-site-key" || action !== "configuration_test") {

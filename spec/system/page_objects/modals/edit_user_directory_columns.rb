@@ -18,21 +18,15 @@ module PageObjects
         self
       end
 
-      def drag_after_with_touch(column, target)
+      def drag_after_with_touch(column, target, &block)
         grip = find("#{column_selector(column)} .d-reorderable-list__handle").native.bounding_box
         row = find(column_selector(target)).native.bounding_box
         x = grip["x"] + grip["width"] / 2
         start_y = grip["y"] + grip["height"] / 2
         end_y = row["y"] + row["height"] * 0.75
 
-        page.driver.with_playwright_page do |browser_page|
-          session = browser_page.context.new_cdp_session(browser_page)
-          dispatch_touch(session, "touchStart", [{ x:, y: start_y }])
-          dispatch_touch(session, "touchMove", [{ x:, y: end_y }])
-          yield if block_given?
-        ensure
-          dispatch_touch(session, "touchEnd", []) if session
-          session&.detach
+        page.driver.with_browser_page do |browser_page|
+          browser_page.touchscreen.drag(from: { x:, y: start_y }, to: { x:, y: end_y }, &block)
         end
         self
       end
@@ -61,10 +55,6 @@ module PageObjects
       end
 
       private
-
-      def dispatch_touch(session, type, points)
-        session.send_message("Input.dispatchTouchEvent", params: { type:, touchPoints: points })
-      end
 
       def column_selector(column)
         "#{COLUMN_SELECTOR}[data-reorderable-key='#{column.id}']"

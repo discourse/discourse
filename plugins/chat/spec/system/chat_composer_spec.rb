@@ -252,7 +252,7 @@ RSpec.describe "Chat composer" do
     end
   end
 
-  context "when upload is in progress" do
+  context "when upload is in progress", browser_features: :network_interception do
     it "doesn’t allow to send" do
       chat_page.visit_channel(channel_1)
 

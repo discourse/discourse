@@ -174,7 +174,8 @@ RSpec.describe "AI Bot - Homepage" do
       expect(page).to have_no_css(".ai-bot-upload")
     end
 
-    it "shows an error when trying to submit while uploads are in progress" do
+    it "shows an error when trying to submit while uploads are in progress",
+       browser_features: :network_interception do
       ai_pm_homepage.visit
       expect(ai_pm_homepage).to have_homepage
 
@@ -183,7 +184,7 @@ RSpec.describe "AI Bot - Homepage" do
 
       ai_pm_homepage.input.fill_in(with: "Some message to send to AI with uploads")
 
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("ai-bot-file-uploader", [file_path_1, file_path_2], make_visible: true)
         expect(page).to have_css(".ai-bot-upload--in-progress", count: 2)
 

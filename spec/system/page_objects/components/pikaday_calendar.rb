@@ -75,15 +75,12 @@ module PageObjects
       end
 
       def select_year(year)
-        # need to wait for the element since eval_on_selector doesn't
-        find(".pika-select-year", visible: false)
-
-        page.driver.with_playwright_page do |playwright_page|
-          playwright_page.eval_on_selector(
-            ".pika-select-year",
-            "select => { select.value = '#{year}'; select.dispatchEvent(new Event('change', { bubbles: true })); }",
-          )
-        end
+        select = find(".pika-select-year", visible: false)
+        page.execute_script(<<~JS, select, year.to_s)
+          const [select, year] = arguments;
+          select.value = year;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        JS
       end
     end
   end

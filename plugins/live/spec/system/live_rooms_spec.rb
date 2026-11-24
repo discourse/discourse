@@ -116,7 +116,7 @@ describe "Live rooms" do
         expect(live_sidebar).to have_room(private_room.name)
       end
 
-      it "can publish a fake camera stream on the room page" do
+      it "can publish a fake camera stream on the room page", browser_features: :document_preload do
         install_live_fake_media
 
         visit("/live/r/#{room.slug}")
@@ -131,7 +131,8 @@ describe "Live rooms" do
         expect(live_media_track_count(video_selector)).to eq(1)
       end
 
-      it "switches between presentation and tiled layouts from the menu" do
+      it "switches between presentation and tiled layouts from the menu",
+         browser_features: :document_preload do
         install_live_fake_media
 
         visit("/live/r/#{room.slug}")
@@ -146,7 +147,8 @@ describe "Live rooms" do
         expect(page).to have_css(".live-room-page.--tiled")
       end
 
-      it "keeps the active call in a widget after switching to widget mode" do
+      it "keeps the active call in a widget after switching to widget mode",
+         browser_features: :document_preload do
         install_live_fake_media
 
         visit("/live/r/#{room.slug}")
@@ -172,7 +174,8 @@ describe "Live rooms" do
         expect(live_media_track_count(page_video_selector)).to eq(1)
       end
 
-      it "can stop video and leave the call from the persistent widget" do
+      it "can stop video and leave the call from the persistent widget",
+         browser_features: :document_preload do
         install_live_fake_media
 
         visit("/live/r/#{room.slug}")
@@ -191,7 +194,7 @@ describe "Live rooms" do
         expect(page).to have_no_css(".live-call-widget")
       end
 
-      it "opens room actions from the widget overflow menu" do
+      it "opens room actions from the widget overflow menu", browser_features: :document_preload do
         install_live_fake_media
 
         visit("/live/r/#{room.slug}")
@@ -211,7 +214,8 @@ describe "Live rooms" do
         expect(page).to have_css(".live-room-info-modal")
       end
 
-      it "shows remote fake video when another user publishes a camera stream" do
+      it "shows remote fake video when another user publishes a camera stream",
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
         other_user.activate
         other_user.update!(trust_level: TrustLevel[2])
         Group.refresh_automatic_groups!
@@ -265,7 +269,8 @@ describe "Live rooms" do
         end
       end
 
-      it "keeps remote video attached in widget mode" do
+      it "keeps remote video attached in widget mode",
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
         other_user.activate
         other_user.update!(trust_level: TrustLevel[2])
         Group.refresh_automatic_groups!
@@ -356,7 +361,8 @@ describe "Live rooms" do
 
       before { other_user.activate }
 
-      it "lets a joined moderator publish camera video while a listener gets no capture buttons" do
+      it "lets a joined moderator publish camera video while a listener gets no capture buttons",
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
         using_session(:moderator) do
           sign_in(user)
           install_live_fake_media

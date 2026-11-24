@@ -170,8 +170,11 @@ describe "Content Localization" do
 
       modal = topic_page.open_content_language_preferences
       expect(modal).to have_removable_understood_language("en")
-      modal.remove_understood_language("en").save
+      modal.remove_understood_language("en")
+      page.execute_script("document.documentElement.dataset.languagePreferencesBeforeReload = ''")
+      modal.save
 
+      expect(page).to have_no_css("html[data-language-preferences-before-reload]", visible: :all)
       modal = topic_page.open_content_language_preferences
       expect(modal).to have_understood_language_option("en")
     end
@@ -189,6 +192,7 @@ describe "Content Localization" do
       composer.set_locale("日本語")
       composer.fill_content("この小説は、名前のない猫の視点から明治時代の人間社会を風刺的に描いています。")
       composer.create
+      expect(composer).to be_closed
 
       new_post = Post.find_by(post_number: 4, topic_id: topic.id)
       expect(new_post).to_not be_nil
@@ -682,7 +686,6 @@ describe "Content Localization" do
     context "for tags" do
       let(:discovery) { PageObjects::Pages::Discovery.new }
       let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
-      let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
       fab!(:tag) { Fabricate(:tag, name: "strategy", locale: "en") }
       fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
@@ -711,8 +714,7 @@ describe "Content Localization" do
         topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
         expect(page).to have_css(".title-wrapper .discourse-tag", text: "戦略")
 
-        switcher.expand
-        switcher.option("[data-menu-option-id='en']").click
+        language_switcher.select_language("en")
 
         visit("/")
         expect(sidebar).to have_section_link("strategy")

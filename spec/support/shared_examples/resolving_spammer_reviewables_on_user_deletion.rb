@@ -9,7 +9,8 @@ RSpec.shared_examples "resolving a spammer's reviewables on user deletion" do
 
   before { Jobs.run_immediately! }
 
-  it "resolves every reviewable tied to the spammer in the acting and watching queues" do
+  it "resolves every reviewable tied to the spammer in the acting and watching queues",
+     browser_features: :simultaneous_browser_sessions do
     flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
     flag.target.update!(
       hidden: true,
