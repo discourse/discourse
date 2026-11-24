@@ -111,6 +111,7 @@ module SystemDrivers
   # (host-resolver-rules are a launch arg and can't be changed per-test).
   def self.driver_for(example)
     driver = [browser_type]
+    driver << :headless_shell if chromium_headless_shell?(example)
     driver << :mobile if example.metadata[:mobile]
     driver << example.metadata[:color_scheme] if example.metadata[:color_scheme]
 
@@ -124,6 +125,7 @@ module SystemDrivers
     name = driver_for(example)
     browser = browser_type
     hosts = allow_network_hosts(example)
+    headless_shell = chromium_headless_shell?(example)
     options = {
       mobile: !!example.metadata[:mobile],
       color_scheme: example.metadata[:color_scheme],
@@ -132,11 +134,20 @@ module SystemDrivers
     Capybara.register_driver(name) do |app|
       case browser
       when :chromium, :edge
+        executable =
+          if headless_shell
+            ENV.fetch("CHROMIUM_HEADLESS_SHELL_PATH")
+          elsif browser == :edge
+            edge_executable
+          else
+            chromium_executable
+          end
         DiscourseSystemDriver.new(
           app,
-          executable: browser == :edge ? edge_executable : chromium_executable,
-          args: apply_base_chrome_args(allow_network: hosts),
+          executable:,
+          args: apply_base_chrome_args(allow_network: hosts, use_script_cache: headless_shell),
           fresh_context_on_reset: browser == :edge,
+          persistent_profile: headless_shell,
           **options,
         )
       when :firefox
@@ -169,6 +180,14 @@ module SystemDrivers
     (ENV["SYSTEM_TEST_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0"
   end
   private_class_method :headless?
+
+  def self.chromium_headless_shell?(example)
+    browser_type == :chromium && headless? && ENV["CHROMIUM_HEADLESS_SHELL_PATH"].present? &&
+      ENV["CHROME_DEVTOOLS"] != "1" && ENV["SELENIUM_DEVTOOLS"] != "1" &&
+      ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].blank? && !example.metadata[:video] &&
+      !example.metadata[:trace]
+  end
+  private_class_method :chromium_headless_shell?
 
   def self.firefox_major_version
     @firefox_versions ||= {}
@@ -209,7 +228,7 @@ module SystemDrivers
     [ENV["CHROME_DEVICE_SCALE_FACTOR"].to_i, 1].max
   end
 
-  def self.apply_base_chrome_args(allow_network: [])
+  def self.apply_base_chrome_args(allow_network: [], use_script_cache: false)
     # A custom --disable-features replaces the generated list. Keep the browser
     # safeguards relevant to Chromium in our Linux test image alongside our flags.
     disabled_features = [
@@ -238,6 +257,8 @@ module SystemDrivers
       # Avoid creating the companion AI Mode popup page when tests replace pages.
       "WebUIOmniboxAimPopup",
     ]
+
+    disabled_features << "ScriptStreaming" if use_script_cache
 
     base_args = %W[
       --disable-search-engine-choice-screen

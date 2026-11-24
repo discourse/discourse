@@ -289,6 +289,22 @@ jobs:
           echo "Using $chromium"
           echo "CHROMIUM_PATH=$chromium" >> "$GITHUB_ENV"
 
+      - name: Restore Chromium headless shell cache
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/discourse-test-browsers/chrome-headless-shell-*
+          key: chromium-headless-shell-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('script/test-chromium') }}
+
+      - name: Locate Chromium headless shell
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        env:
+          DISCOURSE_TEST_BROWSER_IMAGE_CACHE: /home/discourse/.cache
+        run: |
+          shell=$(script/test-chromium --install --headless-shell)
+          echo "Using $shell"
+          echo "CHROMIUM_HEADLESS_SHELL_PATH=$shell" >> "$GITHUB_ENV"
+
       - name: Precompile the JS bundles
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: bin/rake assets:precompile:asset_processor assets:precompile:pretty_text

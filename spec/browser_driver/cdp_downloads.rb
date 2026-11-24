@@ -118,7 +118,7 @@ module NativeBrowserDownloads
         downloadPath: @download_directory,
         eventsEnabled: true,
         browserContextId: context_id,
-      },
+      }.compact,
       browser: true,
     )
   end

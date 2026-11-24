@@ -48,7 +48,8 @@ class DiscourseSystemDriver < Capybara::Driver::Base
     mobile:,
     headless: true,
     color_scheme: nil,
-    fresh_context_on_reset: false
+    fresh_context_on_reset: false,
+    persistent_profile: false
   )
     @app = app
     @executable = executable
@@ -56,6 +57,7 @@ class DiscourseSystemDriver < Capybara::Driver::Base
     @mobile = mobile
     @headless = headless
     @fresh_context_on_reset = fresh_context_on_reset
+    @persistent_profile = persistent_profile
     @color_scheme = color_scheme
     @pages_by_target = {}
     @pages_by_session = {}
@@ -729,7 +731,7 @@ class DiscourseSystemDriver < Capybara::Driver::Base
     unless @fresh_context_on_reset
       command("Storage.clearDataForOrigin", { origin: "*", storageTypes: "all" })
     end
-    command("Browser.resetPermissions", { browserContextId: @context_id }, browser: true)
+    command("Browser.resetPermissions", { browserContextId: @context_id }.compact, browser: true)
     @permissions = {}
   end
 
@@ -859,7 +861,7 @@ class DiscourseSystemDriver < Capybara::Driver::Base
     launch_args -= %w[--headless --hide-scrollbars] unless @headless
     arguments = [@executable, *launch_args, *@args, "--user-data-dir=#{@profile}"]
     @client = DiscourseCDPClient.new(arguments) { |event| report_event(event) }
-    @context_id = create_browser_context
+    @context_id = @persistent_profile ? nil : create_browser_context
     create_page
   rescue StandardError
     quit
