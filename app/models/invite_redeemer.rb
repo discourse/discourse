@@ -93,6 +93,19 @@ class InviteRedeemer
     session: nil,
     email_token: nil
   )
+    if user_custom_fields.present?
+      user_custom_fields = user_custom_fields.dup
+      UserField
+        .where(show_on_signup: true)
+        .each do |field|
+          key = field.id.to_s
+          user_custom_fields[key] = UserCreator.clean_custom_field_values(
+            field,
+            user_custom_fields[key],
+          )
+        end
+    end
+
     if username && UsernameValidator.new(username).valid_format? &&
          User.username_available?(username, email)
       available_username = username

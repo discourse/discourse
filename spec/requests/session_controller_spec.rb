@@ -933,6 +933,91 @@ RSpec.describe SessionController do
         end
       end
 
+      context "when a dropdown user field is shown at signup" do
+        fab!(:dropdown_field) do
+          Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Engineering")
+            field.user_field_options.create!(value: "Sales")
+          end
+        end
+
+        let(:field_key) { dropdown_field.id.to_s }
+
+        it "ignores a value that is not one of the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   field_key => "Staff",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com").user_fields[field_key]).to be_nil
+        end
+
+        it "keeps a value that is one of the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   field_key => "Sales",
+                 },
+               }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com").user_fields[field_key]).to eq("Sales")
+        end
+
+        context "when the field is required at signup" do
+          before { dropdown_field.update!(requirement: "on_signup") }
+
+          it "rejects a value that is not one of the configured options" do
+            post "/session/login-code/verify.json",
+                 params: {
+                   email: "newuser@example.com",
+                   code:,
+                   user_fields: {
+                     field_key => "Staff",
+                   },
+                 }
+
+            expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_user_field"))
+            expect(User.find_by_email("newuser@example.com")).to be_nil
+            expect(session[:current_user_id]).to be_nil
+            expect(login_code.reload.consumed_at).to be_nil
+          end
+        end
+      end
+
+      context "when a multiselect user field is shown at signup" do
+        fab!(:multiselect_field) do
+          Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Axe")
+            field.user_field_options.create!(value: "Sword")
+          end
+        end
+
+        it "keeps only the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 user_fields: {
+                   multiselect_field.id.to_s => %w[Axe Juice Sword],
+                 },
+               }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(
+            User.find_by_email("newuser@example.com").user_fields[multiselect_field.id.to_s],
+          ).to eq(%w[Axe Sword])
+        end
+      end
+
       context "when a full name is required at signup" do
         before { SiteSetting.full_name_requirement = "required_at_signup" }
 
