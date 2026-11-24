@@ -1207,6 +1207,36 @@ module(
         .hasText("Banana", "mobile has the same block-free fallback");
     });
 
+    test("the closed trigger starts the held value after its leading icon", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 400px">
+            <DSelect
+              @icon="globe"
+              @options={{ITEMS}}
+              @value={{2}}
+              @variant="typeahead"
+            />
+          </div>
+        </template>
+      );
+
+      const icon = find(".d-select__trigger .d-select__leading-icon");
+      const value = find(".d-select__trigger .d-select__presentation");
+      const caret = find(".d-select__trigger .d-select__caret");
+      const gap = (from, to) =>
+        to.getBoundingClientRect().left - from.getBoundingClientRect().right;
+
+      assert.true(
+        gap(icon, value) < 10,
+        `the value sits beside the icon, not centered (${gap(icon, value)}px)`
+      );
+      assert.true(
+        gap(value, caret) < 10,
+        `the value fills the room up to the caret (${gap(value, caret)}px)`
+      );
+    });
+
     test("the closed root is a focusable button naming the field and its value", async function (assert) {
       await render(
         <template>

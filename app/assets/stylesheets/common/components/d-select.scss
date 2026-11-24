@@ -141,6 +141,12 @@
   min-width: 0;
 }
 
+// Likewise the held value with no input beside it (mobile typeahead), so the trigger's
+// space-between doesn't center it between a leading icon and the caret.
+.d-select__trigger > .d-select__presentation {
+  flex: 1 1 auto;
+}
+
 .d-select__caret,
 .d-select__pending-icon {
   color: var(--primary-medium);
