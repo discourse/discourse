@@ -5211,7 +5211,6 @@ sk:
         other: "Návrhy (%{count})"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
-    theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
     image_removed: "(obrázok odstránený)"
     pause_notifications:
       title: "Pozastavenie oznámení pre…"

@@ -765,12 +765,12 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       return write.promise;
     };
     this.sinks[0].finish = () => finish.promise;
-    await waitUntil(() => this.a.sent.some((d) => d instanceof ArrayBuffer));
+    const sentChunks = () =>
+      this.a.sent.filter((d) => d instanceof ArrayBuffer).length;
+    await waitUntil(() => sentChunks() >= WINDOW_CHUNKS);
+    // Give the sender time to overrun the window if it is going to.
     await new Promise((resolve) => setTimeout(resolve, 30));
-    assert.strictEqual(
-      this.a.sent.filter((d) => d instanceof ArrayBuffer).length,
-      WINDOW_CHUNKS
-    );
+    assert.strictEqual(sentChunks(), WINDOW_CHUNKS);
     assert.false(
       this.b.sent.some(
         (data) => typeof data === "string" && JSON.parse(data).type === "ack"
@@ -778,11 +778,7 @@ module("Live | Unit | Lib | file-transfer-manager", function (hooks) {
       "no ACK until disk persistence"
     );
     write.resolve();
-    await waitUntil(
-      () =>
-        this.a.sent.filter((d) => d instanceof ArrayBuffer).length ===
-        WINDOW_CHUNKS + 1
-    );
+    await waitUntil(() => sentChunks() === WINDOW_CHUNKS + 1);
     await waitUntil(() =>
       this.a.sent.some(
         (d) => typeof d === "string" && JSON.parse(d).type === "complete"

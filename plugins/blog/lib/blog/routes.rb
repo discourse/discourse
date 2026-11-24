@@ -128,7 +128,17 @@ module Blog
         end
 
         # The themes list is served by Blog::ThemesController, which renders the app for page loads.
-        %w[appearance identity themes/new themes/import/new themes/:id/edit].each do |path|
+        %w[
+          appearance
+          identity
+          blogs/new
+          blogs/:id/about
+          blogs/:id/settings
+          blogs/:id/theme
+          themes/new
+          themes/import/new
+          themes/:id/edit
+        ].each do |path|
           get "/admin/plugins/blog/#{path}" => "admin/plugins#show",
               :defaults => {
                 plugin_id: "blog",

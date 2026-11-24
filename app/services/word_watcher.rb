@@ -3,6 +3,7 @@
 class WordWatcher
   REPLACEMENT_LETTER = CGI.unescape_html("&#9632;")
   CACHE_VERSION = 4
+  GENERATION_KEY = "generation"
 
   def initialize(raw)
     @raw = raw
@@ -10,20 +11,35 @@ class WordWatcher
 
   @cache_enabled = true
 
+  def self.enable_cache
+    @cache_enabled = true
+  end
+
   def self.disable_cache
     @cache_enabled = false
+    @compiled_regexps_cache&.hash&.clear
   end
 
   def self.cache_enabled?
     @cache_enabled
   end
 
+  def self.compiled_regexps_cache
+    @compiled_regexps_cache ||= DistributedCache.new("word_watcher_compiled_regexps")
+  end
+  private_class_method :compiled_regexps_cache
+
   def self.cache_key(action)
     "watched-words-list:v#{CACHE_VERSION}:#{action}"
   end
 
+  # Runs after commit so other workers cannot rebuild from pre-update rows
+  # once the cache has been invalidated.
   def self.clear_cache!
-    WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+    DB.after_commit do
+      WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+      compiled_regexps_cache.clear(after_commit: false)
+    end
   end
 
   def self.words_for_action(action)
@@ -87,7 +103,41 @@ class WordWatcher
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   def self.compiled_regexps_for_action(action, raise_errors: false)
-    words = cached_words_for_action(action)
+    return cached_compiled_regexps_for_action(action) if cache_enabled? && !raise_errors
+
+    build_compiled_regexps_for_action(action, raise_errors: raise_errors)
+  end
+
+  # Values are built straight from the database, never from the Redis word
+  # list, which a concurrent miss can repopulate with pre-commit rows right
+  # after a clear. They are stored in this process only; invalidation is what
+  # gets distributed. The generation token is wiped
+  # by any clear, so a build that started before a clear never outlives it.
+  def self.cached_compiled_regexps_for_action(action)
+    store = compiled_regexps_cache.hash
+    key = "#{action}:#{SiteSetting.watched_words_regular_expressions?}"
+    return store[key] if store.key?(key)
+
+    token = (store[GENERATION_KEY] ||= Object.new)
+    regexps =
+      build_compiled_regexps_for_action(
+        action,
+        raise_errors: false,
+        words: words_for_action(action).presence,
+      ).freeze
+    if store[GENERATION_KEY].equal?(token)
+      store[key] = regexps
+      store.delete(key) if !store[GENERATION_KEY].equal?(token)
+    end
+    regexps
+  end
+  private_class_method :cached_compiled_regexps_for_action
+
+  def self.build_compiled_regexps_for_action(
+    action,
+    raise_errors: false,
+    words: cached_words_for_action(action)
+  )
     return [] if words.blank?
 
     words
@@ -132,6 +182,7 @@ class WordWatcher
       end
       .compact
   end
+  private_class_method :build_compiled_regexps_for_action
 
   def self.serialized_regexps_for_action(action)
     compiled_regexps_for_action(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }

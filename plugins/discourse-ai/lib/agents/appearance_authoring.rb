@@ -111,6 +111,8 @@ module DiscourseAi
       end
 
       def self.change_palettes(appearance_change)
+        return theme_palettes(appearance_change.theme) if uses_theme_palettes?(appearance_change)
+
         {
           light: palette_colors(appearance_change.light_color_scheme),
           dark: palette_colors(appearance_change.dark_color_scheme),
@@ -248,15 +250,38 @@ module DiscourseAi
       # theme, both palettes and the change's fonts, so an administrator's own
       # theme or palette choice can't change what the preview shows.
       def self.preview_url(appearance_change)
+        light, dark = preview_palette_ids(appearance_change)
         query = {
           preview_theme_id: appearance_change.theme_id,
-          preview_color_scheme_id: appearance_change.light_color_scheme_id,
-          preview_dark_color_scheme_id: appearance_change.dark_color_scheme_id,
+          preview_color_scheme_id: light,
+          preview_dark_color_scheme_id: dark,
           preview_base_font: appearance_change.site_settings["base_font"],
           preview_heading_font: appearance_change.site_settings["heading_font"],
         }.compact
         "#{Discourse.base_url}/?#{query.to_query}"
       end
+
+      # A theme the site installed or already had shows its own current
+      # palettes, which an administrator may have changed since it was saved.
+      # Where it has none for a mode, the preview says so ("none") rather than
+      # leaving the viewer's own palette choice in its place.
+      def self.preview_palette_ids(appearance_change)
+        if !uses_theme_palettes?(appearance_change)
+          return appearance_change.light_color_scheme_id, appearance_change.dark_color_scheme_id
+        end
+
+        theme = appearance_change.theme
+        light = theme.color_scheme_id
+        dark = theme.dark_color_scheme_id
+        dark ||= light if theme.theme_modifier_set&.only_theme_color_schemes
+        [light, dark].map { |id| id || ApplicationHelper::NO_PALETTE }
+      end
+      private_class_method :preview_palette_ids
+
+      def self.uses_theme_palettes?(change)
+        change.kind_existing_theme? || change.kind_installed_theme?
+      end
+      private_class_method :uses_theme_palettes?
 
       def self.safe_mode_url
         "#{Discourse.base_url}/?safe_mode=no_themes"

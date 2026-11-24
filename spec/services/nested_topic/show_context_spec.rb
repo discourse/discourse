@@ -33,8 +33,17 @@ RSpec.describe NestedTopic::ShowContext do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when target post is not found" do
+    context "when the requested post number is beyond the end of the topic" do
       let(:params) { { target_post_number: 99_999, sort: "top" } }
+
+      it "returns the last visible post" do
+        expect(result).to run_successfully
+        expect(result[:response][:target_post][:id]).to eq(target.id)
+      end
+    end
+
+    context "when no visible post precedes the requested post number" do
+      let(:params) { { target_post_number: 0, sort: "top" } }
 
       it { is_expected.to fail_to_find_a_model(:target_post) }
     end
@@ -42,7 +51,10 @@ RSpec.describe NestedTopic::ShowContext do
     context "when target post has an invisible post type" do
       before { target.update!(post_type: Post.types[:whisper]) }
 
-      it { is_expected.to fail_to_find_a_model(:target_post) }
+      it "falls back to the preceding visible post" do
+        expect(result).to run_successfully
+        expect(result[:response][:target_post][:id]).to eq(op.id)
+      end
     end
 
     context "when target post is soft-deleted" do

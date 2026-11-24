@@ -3383,6 +3383,7 @@ en:
       standard: Standard
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Noto 3D Emoji
       twemoji: Twemoji
 
     category_page_style:
@@ -3666,7 +3667,7 @@ en:
       more_emoji: "more…"
       options: "Options"
       ai_content:
-        menu: "Add AI content..."
+        menu: "Label AI content..."
         code: "Code"
         quote: "Quote"
         details: "Details"

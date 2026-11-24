@@ -43,6 +43,16 @@ html.composer-open:not(.has-full-page-chat) {
   z-index: z("mobile-composer");
 }
 
+.composer-action-title,
+.composer-actions-btn[data-action-id="reply_to_post"],
+.composer-actions-btn[data-action-id="reply_to_topic"],
+[data-name="change-reply-to"],
+.draft-text {
+  .d-icon-reply {
+    transform: scaleX(-1);
+  }
+}
+
 #reply-control {
   position: fixed;
   display: flex;

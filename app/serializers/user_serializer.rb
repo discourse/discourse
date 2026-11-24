@@ -186,7 +186,7 @@ class UserSerializer < UserCardSerializer
 
   def user_auth_tokens
     ActiveModel::ArraySerializer.new(
-      object.user_auth_tokens,
+      UserAuthToken.for_device_list(object, current_login_id: scope.current_login_id),
       each_serializer: UserAuthTokenSerializer,
       scope: scope,
     )

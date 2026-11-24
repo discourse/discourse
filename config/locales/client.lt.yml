@@ -6657,7 +6657,6 @@ lt:
         other: "Juodraščiai (%{count})"
     safe_mode:
       enabled: "Saugus režimas įjungtas, norėdami išeiti iš saugaus režimo uždarykite šį naršyklės langą"
-    theme_preview_notice: "Šiuo metu peržiūrite temą, uždarykite šį naršyklės skirtuką arba langą, kad grįžtumėte į įprastą svetainės konfigūraciją."
     theme_preview_failed: "Nepavyko peržiūrėti temos, nes jos nėra arba neturite leidimo jos pasiekti."
     image_removed: "(vaizdas pašalintas)"
     pause_notifications:

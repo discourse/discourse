@@ -114,6 +114,7 @@ pl_PL:
       moderation_operation_failed: "Nie udało się zweryfikować działania moderacji. Przed ponowieniem próby odczytaj aktualny stan użytkownika."
       moderation_user_not_found: "Użytkownik nie został znaleziony. Użyj dokładnej, istniejącej nazwy użytkownika."
       post_not_found: "Nie znaleziono wpisu"
+      post_not_created: "Nie udało się utworzyć wpisu"
       user_directory_disabled: "Katalog użytkowników jest wyłączony"
       filter_only_for_filtered_view: "Filtr jest obsługiwany tylko przez widok filtrowany"
       filter_required: "Do widoku filtrowanego wymagany jest filtr niepusty"
@@ -5997,6 +5998,31 @@ pl_PL:
     title: "Tryb programisty"
     enable_rack_mini_profiler: "Włącz funkcję Rack Mini Profiler, aby zmiany w sesjach były zachowywane przez 1 godzinę"
     enter: "Przejdź do trybu programisty"
+  popular_themes:
+    graceful:
+      description: "Lekki i elegancki motyw dla Discourse."
+    material_design:
+      description: "Zainspirowany Material Design motyw oferuje kilka palet kolorów."
+    mint:
+      description: "Motyw w kolorze miętowym z wyróżnionymi kategoriami na stronie głównej i banerem wyszukiwania."
+    simple:
+      description: "Uproszczony projekt strony głównej z klasyczną kolorystyką i typografią."
+    brand_header:
+      description: "Dodaj dodatkowy nagłówek górny ze swoim logo, linkami nawigacyjnymi i ikonami mediów społecznościowych."
+    custom_header_links:
+      description: "Łatwe dodawanie niestandardowych linków tekstowych do nagłówka."
+    category_banners:
+      description: "Wyświetlaj banery na stronach kategorii, wykorzystując istniejące szczegóły kategorii."
+    tag_banners:
+      description: "Wyświetlaj banery na stronach tagów, używając istniejących szczegółów tagu."
+    sidebar_theme_toggle:
+      description: "Wyświetla selektor motywu w stopce menu bocznego, pod warunkiem, że użytkownik ma do wyboru więcej niż jeden motyw."
+    header_submenus:
+      description: "Umożliwia zbudowanie menu nagłówkowego z podmenu (listami rozwijanymi)."
+    table_of_contents:
+      description: "Generuje interaktywny spis treści na pasku bocznym wybranego tematu za pomocą jednego kliknięcia w edytorze."
+    easy_footer:
+      description: "Dodaj w pełni responsywną stopkę bez konieczności pisania kodu HTML."
   design_wizard:
     themes:
       concord:
@@ -6276,6 +6302,7 @@ pl_PL:
       delete_and_ignore_replies:
         title: "Usuń wpis i odpowiedzi, zignoruj flagę"
         description: "Usuń wpis i wszystkie odpowiedzi, a następnie zignoruj flagę, usuwając ją z kolejki; jeśli to pierwszy wpis, usuń również temat"
+        confirm_title: "Usunąć wpis i odpowiedzi, zignorować flagę?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       delete_and_agree:
@@ -6285,6 +6312,7 @@ pl_PL:
       delete_and_agree_replies:
         title: "Usuń post i odpowiedzi"
         description: "Zgódź się z flagą i usuń ten post oraz wszystkie jego odpowiedzi; jeśli to pierwszy post, usuń również temat."
+        confirm_title: "Usunąć wpis i odpowiedzi?"
         confirm: "Czy na pewno chcesz usunąć również odpowiedzi na ten post?"
         complete: "Post i odpowiedzi usunięte."
       disagree_and_restore:
@@ -6351,11 +6379,13 @@ pl_PL:
         delete:
           title: "Usuń użytkownika"
           description: "Usuń użytkownika bez blokowania jego adresu e-mail lub adresu IP"
+          confirm_title: "Usunąć @%{username}?"
           confirm: "Czy na pewno chcesz usunąć @%{username}?"
           complete: "Użytkownik usunięty."
         block:
           title: "Usuń i zablokuj użytkownika"
           description: "Usuń użytkownika i zablokuj jego adres e-mail i adres IP"
+          confirm_title: "Usunąć i zablokować @%{username}?"
           confirm: "Czy na pewno chcesz usunąć i zablokować @%{username}?"
           complete: "Użytkownik usunięty i zablokowany."
       confirm_spam:

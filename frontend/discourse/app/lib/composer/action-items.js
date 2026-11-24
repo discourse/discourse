@@ -160,7 +160,7 @@ export class ComposerActionItemBuilder {
           postUsername: this.#postDisplayName(postForLabel),
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_post",
       };
     }
@@ -183,7 +183,7 @@ export class ComposerActionItemBuilder {
       return {
         name: i18n(`${keyPrefix}.label`),
         description: i18n(`${keyPrefix}.desc`),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       };
     }
@@ -196,7 +196,7 @@ export class ComposerActionItemBuilder {
           postUsername: this.#postDisplayName(this.snapshotPost),
         }),
         description: i18n("composer.composer_actions.reply_to_post.desc"),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_post",
       };
     }
@@ -210,7 +210,7 @@ export class ComposerActionItemBuilder {
       return {
         name: i18n(`${keyPrefix}.label`),
         description: i18n(`${keyPrefix}.desc`),
-        icon: "share",
+        icon: "reply",
         id: "reply_to_topic",
       };
     }

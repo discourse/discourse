@@ -105,6 +105,9 @@ module Live
       room = event_room(event)
       return if room.nil?
 
+      # Successive calls share the room name, so a late finish from the
+      # previous call must not drop grants made in the one now running.
+      Live::StageRoles.clear_session_speakers!(room) if Live::ParticipantTracker.vacant?(room.id)
       AgentManager.evict_agents_in_room!(room, delete_room: false)
       Live::ParticipantTracker.clear_livekit_sids(room.id)
     end

@@ -563,10 +563,10 @@ export default class ComposerService extends Service {
             {
               name: "ai-content-code",
               action: () => {
-                const placeholder = i18n("composer.ai_content.placeholder");
                 this.appEvents.trigger(
                   "composer:insert-block",
-                  `\`\`\` ai\n// ${placeholder}\n\`\`\``
+                  "``` ai\n\n```",
+                  { moveCursorInside: true }
                 );
               },
               icon: "code",
@@ -596,7 +596,7 @@ export default class ComposerService extends Service {
           this._setupPopupMenuOption({
             name: "change-reply-to",
             action: this.openChangeReplyToModal,
-            icon: "share",
+            icon: "reply",
             label: "composer.change_reply_to.open_from_menu",
           })
         );

@@ -129,6 +129,15 @@ module PageObjects
         page.has_css?(".search-menu-container .results .no-results")
       end
 
+      def type_post_date(digits)
+        find("#search-post-date").send_keys(digits)
+        self
+      end
+
+      def has_post_date?(date)
+        has_field?("search-post-date", with: date)
+      end
+
       def search_term(id = "icon-search-input")
         page.find("##{id}").value
       end

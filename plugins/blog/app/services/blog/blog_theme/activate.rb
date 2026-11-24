@@ -31,12 +31,9 @@ class Blog::BlogTheme::Activate
     guardian.is_admin?
   end
 
-  # Choosing a theme for each blog comes with the admin pages for blogs. A site
-  # without a default row yet gets one, as activation needs a row to write.
   def fetch_blog(params:)
     return Blog::Instance.find_cached(params.blog_id) if params.blog_id
-    blog = Blog::Instance.default_blog
-    blog.persisted? ? blog : Blog::DefaultBlogMirror.sync!
+    Blog::Instance.default_blog
   end
 
   def fetch_theme(params:)

@@ -168,13 +168,7 @@ class Upload < ActiveRecord::Base
   end
 
   def content
-    original_path = Discourse.store.path_for(self)
-
-    if original_path.blank?
-      File.read(Discourse.store.download!(self))
-    else
-      File.read(original_path)
-    end
+    File.read(Discourse.store.download!(self))
   end
 
   def fix_image_extension
@@ -182,8 +176,7 @@ class Upload < ActiveRecord::Base
 
     begin
       # this is relatively cheap once cached
-      original_path = Discourse.store.path_for(self)
-      original_path = Discourse.store.download(self) if original_path.blank?
+      original_path = Discourse.store.download(self)
 
       image_info =
         begin
@@ -293,12 +286,7 @@ class Upload < ActiveRecord::Base
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
     begin
-      path =
-        if local?
-          Discourse.store.path_for(self)
-        else
-          Discourse.store.download!(self)
-        end
+      path = Discourse.store.download!(self)
 
       if extension == "svg"
         w, h =
@@ -383,12 +371,7 @@ class Upload < ActiveRecord::Base
       %w[svg ico].include?(extension)
 
     if color.nil?
-      local_path ||=
-        if local?
-          Discourse.store.path_for(self)
-        else
-          Discourse.store.download(self)
-        end
+      local_path ||= Discourse.store.download(self)
 
       if local_path.nil? || !File.exist?(local_path)
         # Download failed, or the file is gone from the store. Could be too large

@@ -22,13 +22,14 @@ RSpec.describe Blog::Readiness do
       expect(readiness.problems).to be_empty
     end
 
-    it "reports a name clash only for the default blog, which creates its category on publish" do
-      SiteSetting.blog_category = ""
-      Fabricate(:category, name: "Blog")
-      blog = Blog::Instance.create!(name: "Blog", slug: "engineering")
+    it "reports a name clash for a blog that has yet to create its category" do
+      Fabricate(:category, name: "Engineering Blog")
+      blog = Blog::Instance.create!(name: "Engineering", slug: "engineering")
 
-      expect(readiness.problems).to contain_exactly(have_attributes(key: :category_name_taken))
-      expect(described_class.new(blog).problems).to be_empty
+      expect(described_class.new(blog).problems).to contain_exactly(
+        have_attributes(key: :category_name_taken, blog:),
+      )
+      expect(readiness.problems).to be_empty
     end
 
     it "reports a login-required site" do
@@ -59,7 +60,7 @@ RSpec.describe Blog::Readiness do
     end
 
     it "accepts missing categories, which the blog creates when it needs them" do
-      SiteSetting.blog_category = ""
+      update_default_blog(category_id: "")
       SiteSetting.blog_drafts_category = ""
 
       expect(readiness.problems).to be_empty
@@ -69,16 +70,16 @@ RSpec.describe Blog::Readiness do
       category.update!(read_restricted: true)
 
       expect(readiness.problems).to contain_exactly(
-        have_attributes(key: :category, settings: %i[blog_category]),
+        have_attributes(key: :category, blog: Blog::Instance.default_blog),
       )
     end
 
     it "reports a missing blog category when its default name is already taken" do
-      SiteSetting.blog_category = ""
+      update_default_blog(category_id: "")
       Fabricate(:category, name: I18n.t("blog.categories.public"))
 
       expect(readiness.problems).to contain_exactly(
-        have_attributes(key: :category_name_taken, settings: %i[blog_category]),
+        have_attributes(key: :category_name_taken, blog: Blog::Instance.default_blog),
       )
       expect(readiness.error).to eq(
         I18n.t("blog.errors.category_name_taken", name: I18n.t("blog.categories.public")),

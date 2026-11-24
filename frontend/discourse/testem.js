@@ -290,12 +290,16 @@ module.exports = {
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
+      "--disable-features=WebUIOmniboxPopup,WebUIOmniboxAimPopup",
       "--mute-audio",
       "--remote-debugging-port=0",
       "--window-size=1440,900",
       "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
+      "--js-flags=--max_old_space_size=4096 --no-enable-lazy-source-positions",
       "--disable-background-networking",
+      // Without it, macOS asks for the login keychain password whenever Chromium needs its
+      // storage encryption key, and Playwright passes it for the same reason.
+      "--use-mock-keychain",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },

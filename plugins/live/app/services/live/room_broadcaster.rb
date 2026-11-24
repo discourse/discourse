@@ -22,6 +22,27 @@ module Live
       new(room).publish_hand_raise(user_id, raised: raised, raised_at: raised_at, reason: reason)
     end
 
+    def self.publish_speak_invitation(
+      room,
+      user_id,
+      invited:,
+      inviter: nil,
+      invited_at: nil,
+      reason: nil
+    )
+      new(room).publish_speak_invitation(
+        user_id,
+        invited: invited,
+        inviter: inviter,
+        invited_at: invited_at,
+        reason: reason,
+      )
+    end
+
+    def self.publish_force_mute(room, user_id, muted_by: nil)
+      new(room).publish_force_mute(user_id, muted_by: muted_by)
+    end
+
     def self.publish_reaction(room, user, emoji)
       new(room).publish_reaction(user, emoji)
     end
@@ -140,6 +161,40 @@ module Live
           reason: reason,
         },
         user_ids: participant_ids,
+      )
+    end
+
+    def publish_speak_invitation(user_id, invited:, inviter: nil, invited_at: nil, reason: nil)
+      participant_ids = Live::ParticipantTracker.user_ids(room.id)
+      return if participant_ids.empty?
+
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "speak_invitation",
+          room_id: room.id,
+          user_id: user_id,
+          invited: invited,
+          inviter_id: inviter&.id,
+          inviter_username: inviter&.username,
+          invited_at: invited_at,
+          reason: reason,
+        },
+        user_ids: participant_ids,
+      )
+    end
+
+    def publish_force_mute(user_id, muted_by: nil)
+      MessageBus.publish(
+        Live.room_channel(room.id),
+        {
+          type: "force_mute",
+          room_id: room.id,
+          user_id: user_id,
+          muted_by_id: muted_by&.id,
+          muted_by_username: muted_by&.username,
+        },
+        user_ids: [user_id],
       )
     end
 

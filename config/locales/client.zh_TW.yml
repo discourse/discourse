@@ -5653,7 +5653,6 @@ zh_TW:
         other: "草稿（%{count}）"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
-    theme_preview_notice: "您當前正在預覽佈景主題，請關閉此瀏覽器標籤頁或窗口以返回到正常網站配置。"
     theme_preview_failed: "無法預覽佈景主題，因為它不存在，或你沒有存取權。"
     image_removed: "(圖片被移除)"
     pause_notifications:

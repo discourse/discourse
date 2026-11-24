@@ -27,8 +27,10 @@ class Notification::Action::BulkCreate < Service::ActionBase
     return [] if records.blank?
 
     insert_notifications
-    publish_notification_states
-    post_process_notifications
+    DB.after_commit do
+      publish_notification_states
+      post_process_notifications
+    end
 
     @notification_ids
   end

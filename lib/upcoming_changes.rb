@@ -148,9 +148,12 @@ module UpcomingChanges
     data
   end
 
+  EMPTY_METADATA = {}.freeze
+  private_constant :EMPTY_METADATA
+
   def self.change_metadata(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    settings_provider.upcoming_change_metadata[change_setting_name] || {}
+    settings_provider.upcoming_change_metadata[change_setting_name] || EMPTY_METADATA
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -182,7 +185,7 @@ module UpcomingChanges
   end
 
   def self.exists?(change_setting_name)
-    change_metadata(change_setting_name.to_sym).present?
+    !change_metadata(change_setting_name).empty?
   end
 
   # An upcoming change owned by a plugin that is not configurable on this site,

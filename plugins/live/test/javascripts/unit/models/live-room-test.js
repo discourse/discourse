@@ -4,13 +4,17 @@ import LiveRoom from "discourse/plugins/live/admin/models/live-room";
 module("Unit | model | live-room", function () {
   const attrs = () => ({
     name: "Team Meeting",
+    slug: "team-meeting",
     description: "Recurring sync",
     public: true,
+    room_type: "stage",
+    speak_requests_enabled: true,
     max_participants: 20,
     video_enabled: true,
     livekit_enabled: false,
     chat_channel_id: 6,
     chat_idle_minutes: 2,
+    max_quality_profile: "standard",
   });
 
   test("createProperties includes the chat settings fields", function (assert) {

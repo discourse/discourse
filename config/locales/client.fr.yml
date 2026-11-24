@@ -5783,7 +5783,6 @@ fr:
         other: "Brouillons (%{count})"
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
-    theme_preview_notice: "Vous prévisualisez actuellement un thème. Fermez cet onglet ou cette fenêtre de navigateur pour revenir à la configuration normale de votre site."
     theme_preview_failed: "Impossible de prévisualiser le thème, car il n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
     image_removed: "(image supprimée)"
     pause_notifications:

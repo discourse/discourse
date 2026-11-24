@@ -5201,7 +5201,6 @@ hu:
         other: "Vázlatok (%{count})"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, a biztonságos módból való kilépéshez zárja be ezt a keresési lapot"
-    theme_preview_notice: "Épp egy téma előnézetét nézi, zárba be a böngészőlapot vagy ablakot, hogy visszatérjen a webhelykonfigurációhoz."
     theme_preview_failed: "Nem sikerült megtekinteni a témát, mert nem létezik, vagy nincs hozzáférési jogosultsága."
     image_removed: "(kép eltávolítva)"
     pause_notifications:

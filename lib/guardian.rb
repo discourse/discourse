@@ -158,8 +158,11 @@ class Guardian
     moderated_category_ids.include?(category.id)
   end
 
+  EMPTY_CATEGORY_ID_SET = Set.new.freeze
+  private_constant :EMPTY_CATEGORY_ID_SET
+
   def moderated_category_ids
-    return Set.new if !category_group_moderation_allowed?
+    return EMPTY_CATEGORY_ID_SET if !category_group_moderation_allowed?
 
     @moderated_category_ids ||= category_group_moderator_scope.pluck(:id).to_set
   end
@@ -664,6 +667,14 @@ class Guardian
 
   def can_see_site_contact_details?
     !SiteSetting.login_required? || authenticated?
+  end
+
+  def auth_token_id
+    request&.env&.dig(Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY)&.id
+  end
+
+  def current_login_id
+    request&.env&.dig(Auth::DefaultCurrentUserProvider::BROWSER_LOGIN_ID)
   end
 
   def auth_token

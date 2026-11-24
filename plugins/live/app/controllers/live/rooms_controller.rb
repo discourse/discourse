@@ -44,6 +44,11 @@ module Live
                     stop_recording
                     request_to_speak
                     withdraw_request_to_speak
+                    invite_to_speak
+                    withdraw_speak_invitation
+                    accept_speak_invitation
+                    step_down
+                    mute_participant
                     reaction
                   ]
 
@@ -113,6 +118,7 @@ module Live
       name_changed = room_params[:name].present? && room_params[:name] != @room.name
 
       if @room.update(room_params)
+        Live::StageRoles.sync_room_type_change!(@room) if @room.saved_change_to_room_type?
         Live::DirectoryBroadcaster.broadcast(action: :updated, room: @room)
         refresh_participant_statuses(@room) if name_changed
         Live::ParticipantEvictor.evict_unauthorized!(@room)
@@ -240,8 +246,9 @@ module Live
         Live::ParticipantTracker.create_participant_session!(@room.id, current_user.id)
 
       membership = @room.room_memberships.find_by(user_id: current_user.id)
-      role = membership&.role_name || "participant"
+      role = Live::StageRoles.effective_role(@room, current_user, membership: membership)
       metadata = { role: role, last_heartbeat_at: Time.now.to_f }
+      metadata[:is_muted] = true if @room.stage? && !guardian.can_speak_in_live_room?(@room)
 
       if SiteSetting.live_analytics_enabled
         session = nil
@@ -336,6 +343,9 @@ module Live
         Live::ParticipantTracker.create_participant_session!(@room.id, current_user.id)
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       metadata[:last_heartbeat_at] = Time.now.to_f
+      if admission == :added
+        Live::StageRoles.reconcile_resumed_metadata!(@room, current_user, metadata)
+      end
       Live::ParticipantTracker.update_metadata(@room.id, current_user.id, metadata)
       Live::ParticipantTracker.refresh_transport_pin(@room.id)
       Live::RoomBroadcaster.publish_participants_if_changed(@room)
@@ -381,7 +391,10 @@ module Live
       session = Live::ParticipantEvictor.close_session(@room.id, current_user.id)
       Live::ParticipantTracker.mark_left(@room.id, current_user.id)
       Live::ParticipantTracker.remove(@room.id, current_user.id)
-      Live::AgentManager.evict_agents_in_room!(@room) if Live::ParticipantTracker.vacant?(@room.id)
+      if Live::ParticipantTracker.vacant?(@room.id)
+        Live::StageRoles.clear_session_speakers!(@room)
+        Live::AgentManager.evict_agents_in_room!(@room)
+      end
       Live::UserStatusManager.clear_live_status(current_user)
       Live::RoomBroadcaster.publish_participants(@room)
       Live::BadgeGranterHooks.on_leave(current_user, session)
@@ -413,6 +426,11 @@ module Live
 
       metadata = Live::ParticipantTracker.get_metadata(@room.id, current_user.id)
       metadata[:last_heartbeat_at] = Time.now.to_f
+      if admission == :added
+        Live::StageRoles.reconcile_resumed_metadata!(@room, current_user, metadata)
+        # Still connected to the SFU with the permissions of the old role.
+        Live::Livekit::RoomServiceClient.update_participant(@room, current_user)
+      end
 
       if params.key?(:idle_state)
         idle_state = params[:idle_state].to_s
@@ -586,6 +604,16 @@ module Live
       # user is actually in the call.
       ensure_participant_session!
 
+      remaining = Live::ParticipantTracker.hand_raise_cooldown_remaining(@room.id, current_user.id)
+      if remaining > 0
+        return(
+          render_json_error(
+            I18n.t("live.errors.speak_request_cooldown", count: remaining),
+            status: 429,
+          )
+        )
+      end
+
       if Live::ParticipantTracker.raise_hand(@room.id, current_user.id)
         raised_at =
           Live::ParticipantTracker.get_metadata(@room.id, current_user.id)[:hand_raised_at]
@@ -616,9 +644,113 @@ module Live
 
       if Live::ParticipantTracker.lower_hand(@room.id, target_id)
         reason = target_id == current_user.id ? "withdrawn" : "dismissed"
+        if reason == "dismissed"
+          Live::ParticipantTracker.set_hand_raise_cooldown(@room.id, target_id)
+        end
         Live::RoomBroadcaster.publish_hand_raise(@room, target_id, raised: false, reason: reason)
         Live::RoomBroadcaster.publish_participants(@room)
       end
+
+      head :no_content
+    end
+
+    def invite_to_speak
+      guardian.ensure_can_manage_live_room!(@room)
+      raise Discourse::InvalidParameters.new(:room_type) unless @room.stage?
+
+      target_user = User.find_by(id: params.require(:user_id).to_i)
+      raise Discourse::InvalidParameters.new(:user_id) if target_user.blank? || target_user.bot?
+
+      if Live::ParticipantTracker.user_ids(@room.id).exclude?(target_user.id)
+        raise Discourse::InvalidParameters.new(:user_id)
+      end
+
+      if target_user.guardian.can_speak_in_live_room?(@room)
+        return render_json_error(I18n.t("live.errors.already_speaker"), status: 422)
+      end
+
+      invitation =
+        Live::ParticipantTracker.set_speak_invitation(
+          @room.id,
+          target_user.id,
+          inviter: current_user,
+        )
+      Live::RoomBroadcaster.publish_speak_invitation(
+        @room,
+        target_user.id,
+        invited: true,
+        inviter: current_user,
+        invited_at: invitation[:invited_at],
+        reason: "invited",
+      )
+      Live::RoomBroadcaster.publish_participants(@room)
+
+      head :no_content
+    end
+
+    def withdraw_speak_invitation
+      target_id = params[:user_id].present? ? params[:user_id].to_i : current_user.id
+
+      if target_id == current_user.id
+        guardian.ensure_can_join_live_room!(@room)
+        ensure_participant_session!
+      else
+        guardian.ensure_can_manage_live_room!(@room)
+      end
+
+      if Live::ParticipantTracker.clear_speak_invitation(@room.id, target_id)
+        reason = target_id == current_user.id ? "declined" : "withdrawn"
+        Live::RoomBroadcaster.publish_speak_invitation(
+          @room,
+          target_id,
+          invited: false,
+          inviter: current_user,
+          reason: reason,
+        )
+        Live::RoomBroadcaster.publish_participants(@room)
+      end
+
+      head :no_content
+    end
+
+    def accept_speak_invitation
+      guardian.ensure_can_join_live_room!(@room)
+      ensure_participant_session!
+      raise Discourse::InvalidParameters.new(:room_type) unless @room.stage?
+
+      if Live::ParticipantTracker.user_ids(@room.id).exclude?(current_user.id) ||
+           Live::ParticipantTracker.speak_invitation(@room.id, current_user.id).blank?
+        raise Discourse::InvalidAccess.new(
+                :live_no_speak_invitation,
+                nil,
+                custom_message: "live.errors.no_speak_invitation",
+              )
+      end
+
+      Live::StageRoles.grant_session_speaker!(@room, current_user)
+
+      head :no_content
+    end
+
+    def step_down
+      guardian.ensure_can_step_down_in_live_room!(@room)
+      ensure_participant_session!
+
+      Live::StageRoles.step_down!(@room, current_user)
+
+      head :no_content
+    end
+
+    def mute_participant
+      guardian.ensure_can_manage_live_room!(@room)
+
+      target_id = params.require(:user_id).to_i
+      raise Discourse::InvalidParameters.new(:user_id) if target_id == current_user.id
+
+      target_user = User.find_by(id: target_id)
+      raise Discourse::InvalidParameters.new(:user_id) if target_user.blank? || target_user.bot?
+
+      Live::StageRoles.mute_participant!(@room, target_user, acting_user: current_user)
 
       head :no_content
     end
@@ -835,6 +967,7 @@ module Live
           :public,
           :max_participants,
           :room_type,
+          :speak_requests_enabled,
           :video_enabled,
           :livekit_enabled,
           :chat_channel_id,

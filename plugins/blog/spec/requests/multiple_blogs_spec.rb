@@ -27,6 +27,24 @@ RSpec.describe "Several blogs", type: :request do
     publish_blog_draft(publication, admin)
   end
 
+  describe "GET /site.json" do
+    before { engineering.update!(published: false) }
+
+    it "leaves unpublished blogs out for visitors without a blog role" do
+      get "/site.json"
+      expect(response.parsed_body["blogs"].map { _1["id"] }).to contain_exactly(
+        Blog::Instance.default_blog.id,
+      )
+
+      sign_in(admin)
+      get "/site.json"
+      expect(response.parsed_body["blogs"].map { _1["id"] }).to contain_exactly(
+        Blog::Instance.default_blog.id,
+        engineering.id,
+      )
+    end
+  end
+
   describe "without custom domains" do
     let!(:main_article) do
       publish_article(Blog::Instance.default_blog, path: "/story", raw: "A story on the main blog.")
@@ -61,7 +79,7 @@ RSpec.describe "Several blogs", type: :request do
     end
 
     it "keeps another blog under the forum when the default blog moves to its own domain" do
-      SiteSetting.blog_url = "https://#{BlogSpecHelpers::BLOG_HOST}"
+      update_default_blog(url: "https://#{BlogSpecHelpers::BLOG_HOST}")
 
       get "/blog/engineering/story"
       expect(response.status).to eq(200)

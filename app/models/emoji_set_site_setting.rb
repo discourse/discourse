@@ -15,6 +15,7 @@ class EmojiSetSiteSetting < EnumSiteSetting
       { name: "emoji_set.google", value: "google" },
       { name: "emoji_set.google_classic", value: "google_classic" },
       { name: "emoji_set.noto", value: "noto" },
+      { name: "emoji_set.noto_3d", value: "noto_3d" },
       { name: "emoji_set.openmoji", value: "openmoji" },
       { name: "emoji_set.twemoji", value: "twemoji" },
       { name: "emoji_set.twitter", value: "twitter" },

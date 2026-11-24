@@ -99,6 +99,7 @@ module Onebox
         start_time = Time.now
 
         size_bytes = Onebox.options.max_download_kb * 1024
+        timeout = Onebox.options.timeout
         http.request(request) do |response|
           if set_cookies = response.get_fields("set-cookie")
             cookie_header =
@@ -136,7 +137,7 @@ module Onebox
               raise_error_when_response_too_large ? raise(DownloadTooLarge.new) : break
             end
 
-            raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
+            raise Timeout::Error.new if (Time.now - start_time) > timeout
           end
 
           return result.string
@@ -146,14 +147,16 @@ module Onebox
 
     def self.fetch_content_length(location)
       uri = URI(location)
+      connect_timeout = Onebox.options.connect_timeout
+      timeout = Onebox.options.timeout
 
       FinalDestination::HTTP.start(
         uri.host,
         uri.port,
-        open_timeout: Onebox.options.connect_timeout,
+        open_timeout: connect_timeout,
         use_ssl: uri.is_a?(URI::HTTPS),
       ) do |http|
-        http.read_timeout = Onebox.options.timeout
+        http.read_timeout = timeout
         if uri.is_a?(URI::HTTPS)
           http.use_ssl = true
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE

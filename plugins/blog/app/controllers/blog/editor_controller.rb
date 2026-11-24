@@ -126,6 +126,9 @@ module ::Blog
         on_failed_policy(:blog_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failed_policy(:blog_published) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
         on_failed_step(:submit_current_draft) { raise Discourse::InvalidAccess }
         on_failed_step(:ensure_public_category) do |step|
           raise Discourse::InvalidParameters.new(step.error)
@@ -249,6 +252,9 @@ module ::Blog
         on_model_not_found(:publication) { raise Discourse::NotFound }
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_ready) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_policy(:blog_published) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
         on_model_not_found(:revision) { raise Discourse::NotFound }
