@@ -15,16 +15,19 @@ if [[ -z "$file" || ! -f "$file" ]]; then
   exit 1
 fi
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-core_dir="${CORE_DIR:-$(git -C "$script_dir" rev-parse --show-toplevel)}"
-target_repo="$(git -C "$(dirname "$file")" rev-parse --show-toplevel 2>/dev/null || dirname "$file")"
-file="$(cd "$(dirname "$file")" && pwd)/$(basename "$file")"
+script_dir="$(cd -P -- "$(dirname "${BASH_SOURCE[0]}")" && pwd)" || exit $?
+core_dir="${CORE_DIR:-$(git -C "$script_dir" rev-parse --show-toplevel)}" || exit $?
+core_dir="$(cd -P -- "$core_dir" && pwd)" || exit $?
+file_dir="$(cd -P -- "$(dirname "$file")" && pwd)" || exit $?
+file="$file_dir/$(basename "$file")"
+target_repo="$(git -C "$file_dir" rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$file_dir")"
 rel="${file#"$target_repo"/}"
 rel="${rel%.*}"
 in_core=0
 [[ "$target_repo" == "$core_dir" ]] && in_core=1
 
 all_the="${ALL_THE_DIR:-$HOME/discourse/all-the}"
+[[ "$all_the" == /* ]] || all_the="$PWD/$all_the"
 external_dirs=()
 for d in all-the-plugins/official all-the-plugins/third-party all-the-themes/official \
          all-the-themes/third-party all-the-custom-plugins/plugins all-the-custom-themes/themes; do
@@ -52,40 +55,51 @@ esac
 resolver_name="${rel#*/components/}"
 [[ "$resolver_name" == "$rel" ]] && resolver_name="${rel##*/}"
 # `export default class X`, or `export default X;` for a classic `const X = Component.extend(...)`
-class_name="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); from common import default_export_name; print(default_export_name(open(sys.argv[2]).read()) or "")' "$script_dir" "$file")"
+class_name="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); from common import default_export_name; print(default_export_name(open(sys.argv[2]).read()) or "")' "$script_dir" "$file")" || exit $?
 base_name="$(basename "$rel")"
 
 # Split at <template> so class-level greps ignore the template and vice versa.
-class_part="$(awk '/<template>/{exit} {print}' "$file")"
-template_part="$(awk 'f{print} /<template>/{f=1}' "$file")"
+class_part="$(awk '/<template>/{exit} {print}' "$file")" || exit $?
+template_part="$(awk 'f{print} /<template>/{f=1}' "$file")" || exit $?
 
-# Where consumers can live.
+cd "$core_dir" || exit $?
+
+# Where consumers can live. Resolve bundled plugin globs from the core checkout.
 src_dirs=()
+for p in frontend/discourse/app frontend/discourse/admin frontend/discourse/tests \
+         plugins/*/assets/javascripts plugins/*/admin/assets/javascripts; do
+  [[ -d "$p" ]] && src_dirs+=("$p")
+done
 if [[ $in_core -eq 1 ]]; then
-  src_dirs+=(frontend/discourse/app frontend/discourse/admin frontend/discourse/select-kit frontend/discourse/float-kit frontend/discourse/tests)
-  for p in plugins/*/assets/javascripts plugins/*/admin/assets/javascripts plugins/*/test/javascripts; do [[ -d "$p" ]] && src_dirs+=("$p"); done
+  for p in frontend/discourse/select-kit frontend/discourse/float-kit plugins/*/test/javascripts; do
+    [[ -d "$p" ]] && src_dirs+=("$p")
+  done
 else
-  for p in assets/javascripts admin/assets/javascripts test/javascripts javascripts; do [[ -d "$target_repo/$p" ]] && src_dirs+=("$target_repo/$p"); done
-  for p in frontend/discourse/app frontend/discourse/admin frontend/discourse/tests; do [[ -d "$core_dir/$p" ]] && src_dirs+=("$core_dir/$p"); done
-  for p in "$core_dir"/plugins/*/assets/javascripts "$core_dir"/plugins/*/admin/assets/javascripts; do [[ -d "$p" ]] && src_dirs+=("$p"); done
+  for p in assets/javascripts admin/assets/javascripts test/javascripts javascripts; do
+    [[ -d "$target_repo/$p" ]] && src_dirs+=("$target_repo/$p")
+  done
 fi
-cd "$core_dir"
 # Recursive search over source files, printing path:line:text (or paths with -l). Ripgrep is
 # about twenty times faster over the external checkouts; grep is the fallback.
 # SEARCH_EXT (comma-separated extensions) overrides the file types for one call.
 search() {
   local mode=-n
   [[ "$1" == -l ]] && { mode=-l; shift; }
-  local pattern="$1" ext="${SEARCH_EXT:-gjs,gts,js,ts,hbs,es6}" args=() e d
+  local pattern="$1" ext="${SEARCH_EXT:-gjs,gts,js,ts,hbs,es6}" args=() e d status=0
   shift
+  [[ $# -gt 0 ]] || return 0
   if command -v rg >/dev/null; then
     args=(--no-config -uu --sort path --with-filename "$mode" -g "*.{$ext}")
     for d in node_modules dist .git tmp public; do args+=(-g "!$d"); done
-    rg "${args[@]}" -e "$pattern" -- "$@" 2>/dev/null
+    rg "${args[@]}" -e "$pattern" -- "$@" || status=$?
   else
     for e in ${ext//,/ }; do args+=(--include="*.$e"); done
     for d in node_modules dist .git tmp public; do args+=(--exclude-dir="$d"); done
-    grep -rE "$mode" "${args[@]}" -- "$pattern" "$@" 2>/dev/null
+    grep -rE "$mode" "${args[@]}" -- "$pattern" "$@" || status=$?
+  fi
+  if (( status > 1 )); then
+    echo "Search failed (status $status) for pattern: $pattern" >&2
+    return "$status"
   fi
 }
 
@@ -167,7 +181,8 @@ printf '%s\n' "$template_part" | grep -oE 'this\.[A-Za-z_][A-Za-z0-9_]*' | sort 
 hr "call sites (angle-bracket, absolute and relative imports, string lookups)"
 site_re="from \"${import_path}(\.g?[jt]s)?\"|from \"\.{1,2}/([^\"]*/)?${base_name}(\.g?[jt]s)?\"|component:${resolver_name}([^A-Za-z0-9/_-]|\$)|\{\{component \"${resolver_name}\"|\{\{${resolver_name}[ }]"
 [[ -n "$class_name" ]] && site_re="<${class_name}([^A-Za-z0-9_]|\$)|<\/${class_name}>|${site_re}"
-call_sites="$(search "$site_re" "${src_dirs[@]}" | grep -v "^$file:" | grep -v "^${rel}\.[a-z]*:" || true)"
+call_sites="$(search "$site_re" ${src_dirs[@]+"${src_dirs[@]}"})" || exit $?
+call_sites="$(printf '%s\n' "$call_sites" | grep -v "^$file:" | grep -v "^${rel}\.[a-z]*:" || true)"
 printf '%s\n' "$call_sites" | grep -v '^$' | strip_root | prefix "" || true
 # A component nothing renders is dead code: delete it instead of converting it. Connectors are
 # the exception, since the plugin-outlet system renders them by directory path.
@@ -179,7 +194,7 @@ if [[ -z "$call_sites" && "$rel" != */connectors/* ]]; then
 fi
 
 hr "file type: .gjs or .gts (SKILL.md Step 1; follow the neighborhood, not the original)"
-printf '%s\n' "$call_sites" | grep -v '^$' | python3 "$script_dir/file-type.py" "$core_dir" "$file" "$rel" || true
+printf '%s\n' "$call_sites" | python3 "$script_dir/file-type.py" "$core_dir" "$file" "$rel" || exit $?
 
 hr "class fields that call sites also pass as args (classic lets the arg win; Glimmer needs this.args.x ?? default)"
 fields="$(printf '%s\n' "$members" | sed -E 's/^[0-9]+://' | grep -E '^ {2}(@tracked\s+)?[A-Za-z_][A-Za-z0-9_]*\s*=[^=]' | sed -E 's/^ {2}(@tracked[[:space:]]+)?//; s/[[:space:]]*=.*$//' | sort -u | tr '\n' '|' | sed 's/|$//')"
@@ -208,34 +223,39 @@ fi
 
 hr "subclasses (extends / .extend)"
 if [[ -n "$class_name" ]]; then
-  search "extends ${class_name}([^A-Za-z0-9_]|\$)|${class_name}\.extend\(" "${src_dirs[@]}" | grep -v "^$file:" | strip_root | prefix "" || true
+  subclasses="$(search "extends ${class_name}([^A-Za-z0-9_]|\$)|${class_name}\.extend\(" ${src_dirs[@]+"${src_dirs[@]}"})" || exit $?
+  printf '%s\n' "$subclasses" | grep -v -e '^$' -e "^$file:" | strip_root | prefix "" || true
 fi
 
 hr "modifyClass targets (core, bundled plugins, target repo)"
-search "modifyClass\(\s*[\"'\`]component:${resolver_name}[\"'\`]" "${src_dirs[@]}" | strip_root | prefix "" || true
+patches="$(search "modifyClass\(\s*[\"'\`]component:${resolver_name}[\"'\`]" ${src_dirs[@]+"${src_dirs[@]}"})" || exit $?
+printf '%s\n' "$patches" | grep -v '^$' | strip_root | prefix "" || true
 
 if [[ ${#external_dirs[@]} -gt 0 ]]; then
   hr "external checkouts under $all_the (flag, do not edit; single pass, about ten seconds)"
   ext_re="modifyClass\(\s*[\"'\`]component:${resolver_name}[\"'\`]|\{\{component \"${resolver_name}\""
   [[ "$kind" == "core" || "$kind" == "plugin" ]] && ext_re="${ext_re}|\"${import_path}(\.g?[jt]s)?\""
   [[ -n "$class_name" ]] && ext_re="${ext_re}|<${class_name}([^A-Za-z0-9_]|\$)|extends ${class_name}([^A-Za-z0-9_]|\$)|${class_name}\.extend\("
-  search "$ext_re" "${external_dirs[@]}" | grep -v "^$file:" | strip_root | prefix "" || true
+  external_hits="$(search "$ext_re" "${external_dirs[@]}")" || exit $?
+  printf '%s\n' "$external_hits" | grep -v -e '^$' -e "^$file:" | strip_root | prefix "" || true
 else
   hr "external checkouts not found at $all_the (set ALL_THE_DIR to override)"
 fi
 
 hr "tests and specs (by resolver/class name, then by selectors the component renders)"
 test_dirs=()
+for p in frontend/discourse/tests spec/system; do
+  [[ -d "$p" ]] && test_dirs+=("$p")
+done
 if [[ $in_core -eq 1 ]]; then
-  test_dirs+=(frontend/discourse/tests spec/system)
   for p in plugins/*/test/javascripts plugins/*/spec/system; do [[ -d "$p" ]] && test_dirs+=("$p"); done
 else
   for p in test/javascripts spec; do [[ -d "$target_repo/$p" ]] && test_dirs+=("$target_repo/$p"); done
-  test_dirs+=("$core_dir/frontend/discourse/tests" "$core_dir/spec/system")
 fi
 test_re="\b${resolver_name}(-test)?\b"
 [[ -n "$class_name" ]] && test_re="${test_re}|\b${class_name}\b"
-SEARCH_EXT=js,gjs,gts,ts,rb search -l "$test_re" "${test_dirs[@]}" | strip_root | prefix "" || true
+test_hits="$(SEARCH_EXT=js,gjs,gts,ts,rb search -l "$test_re" ${test_dirs[@]+"${test_dirs[@]}"})" || exit $?
+printf '%s\n' "$test_hits" | grep -v '^$' | strip_root | prefix "" || true
 selectors="$( { printf '%s\n' "$class_part" | grep -oE '@classNames\([^)]*\)' | grep -oE '"[^"]+"' | tr -d '"' | tr ' ' '\n' | sed 's/^/./';
                 printf '%s\n' "$class_part" | grep -oE 'elementId\s*=\s*"[^"]+"' | grep -oE '"[^"]+"' | tr -d '"' | sed 's/^/#/';
                 printf '%s\n' "$template_part" | grep -oE '(^|[ (])id="[^"{]+"' | grep -oE '"[^"]+"' | tr -d '"' | sed 's/^/#/';
@@ -246,7 +266,8 @@ selectors="$(printf '%s\n' "$selectors" | grep -vE "$generic" | grep -v '^\.$' |
 if [[ -n "$selectors" ]]; then
   echo "  -- specs and tests referencing selectors ($(echo "$selectors" | tr '\n' ' '))"
   sel_re="$(printf '%s\n' "$selectors" | sed -E 's/[.#]//' | tr '\n' '|' | sed 's/|$//')"
-  SEARCH_EXT=js,gjs,gts,ts,rb search -l "[.#\"'](${sel_re})([^A-Za-z0-9_-]|\$)" "${test_dirs[@]}" | strip_root | prefix "" | head -40 || true
+  selector_hits="$(SEARCH_EXT=js,gjs,gts,ts,rb search -l "[.#\"'](${sel_re})([^A-Za-z0-9_-]|\$)" ${test_dirs[@]+"${test_dirs[@]}"})" || exit $?
+  printf '%s\n' "$selector_hits" | grep -v '^$' | strip_root | prefix "" | sed -n '1,40p' || true
 else
   echo "  -- no ids or non-generic classes found in the template; grep specs by the wrapper classes manually"
 fi
@@ -263,9 +284,9 @@ if [[ -n "$site_files" ]]; then
       [[ "${stem##*/}" == *-* ]] && printf '%s\n' "${stem##*/}"
       printf '%s\n' "$(basename "$(dirname "$stem")")-${stem##*/}"
     done <<<"$site_files" | sort -u | tr '\n' '|' | sed 's/|$//')"
-  if [[ -n "$site_name_re" ]]; then
-    site_tests="$(find "${test_dirs[@]}" -type f \( -name '*-test.js' -o -name '*-test.gjs' -o -name '*_spec.rb' \) 2>/dev/null \
-      | grep -E "/(${site_name_re})[-_](test|spec)\.[a-z]+$" || true)"
+  if [[ -n "$site_name_re" && ${#test_dirs[@]} -gt 0 ]]; then
+    site_tests="$(find "${test_dirs[@]}" -type f \( -name '*-test.js' -o -name '*-test.gjs' -o -name '*_spec.rb' \))" || exit $?
+    site_tests="$(printf '%s\n' "$site_tests" | grep -E "/(${site_name_re})[-_](test|spec)\.[a-z]+$" || true)"
     if [[ -n "$site_tests" ]]; then
       echo "  -- tests named after a call site's page (run these; they cover the component in situ)"
       printf '%s\n' "$site_tests" | strip_root | prefix "" || true
