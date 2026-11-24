@@ -1,10 +1,8 @@
 # Data flow: two-way bindings, call sites, inputs
 
-Classic components let a child write into its parent through any arg. Glimmer args are
-read-only (`this.args` is frozen in development, and a write is a silent no-op in
-production), so every such write becomes an explicit callback. This is the only part of a
-conversion that changes the component's interface, and the one that must be designed per
-case. Nothing here is mechanical.
+Classic components can write back through args. Trace who owns the value before replacing
+the binding with a callback or local state. A Glimmer component can still pass a reference
+that a classic child writes through.
 
 ## 1. Find the writes
 
@@ -35,17 +33,18 @@ A component whose class body is empty still counts: `{{fn (mut this.value)}}` or
 binding on an arg, and turning the file into a template-only component keeps it alive as
 `(mut @value)`. Read the template before calling a conversion trivial.
 
-Cross each write with the call sites: the name is an arg if any invocation passes
-`@x=`. A name nobody passes is own state, not a binding, even when the classic class never
-declared it: declare the field and apply SKILL.md Step 2.3 for `@tracked`. It drops out of
-this reference.
+Cross each write with the call sites, including external ones. Declare fields for confirmed
+own state and use `@tracked` when the write must update a template or effect.
 
 ## 2. Find who reads it back
 
 For each written arg, look at every call site's owner (the parent component, controller,
 or route template) and answer: after the child writes, does the parent read the value?
-Signs: the parent renders `{{this.x}}`, passes `this.x` to another component, has a
-`@computed`/getter over it, sends it in a request, or a test asserts on it.
+Check whether the parent renders the value, forwards it, reads it in a getter, or sends
+it in a request. Also check whether the parent writes it later. `AdminEditableField`
+opened edit mode and the caller closed it after saving (#43541). Local `@tracked` state
+broke the save path. The caller owns `@editing`, and the child requests a change through
+`@toggleEditing`.
 
 ## 3. Choose the redesign
 
@@ -60,11 +59,12 @@ The parent passed a starting value and never looked again. The child keeps a loc
 @tracked selectedTopicId = this.args.selectedTopicId;
 ```
 
-A copy made in a field initializer or the constructor runs once and never follows later
-arg changes; that is only right when the parent stops changing the value. If the arg can
-change later and the local copy must follow it, use
-`@resettableTracked selectedTopicId = this.args.selectedTopicId;` instead, or lift the
-state to the parent.
+A field initializer or constructor seeds a snapshot, including when the initializer wraps
+the arg in a function. Lint can miss the wrapped form. `GamificationLeaderboard` stayed
+mounted across `/leaderboard/:id` and kept the old period. Use
+`@resettableTracked selectedTopicId = this.args.selectedTopicId;` when the copy must reset
+with the arg, or lift the state to the parent. A [guarded reset](feature-mapping.md#lifecycle)
+may need to keep state when an arg clears.
 
 ### 3.2 The parent reads it back: add a callback
 
@@ -113,8 +113,7 @@ Discourse-wide shape (select-kit, DTextField, form-kit).
 `this.set("composer.title", v)` mutates the shared model the parent passed. Keep it:
 `this.args.composer.set("title", v)` for `EmberObject`/`RestModel`, plain assignment for
 tracked models. Reactivity depends on the model declaring the property; check the model
-before assuming a getter over it updates. This is not DDAU-pure, but it is the same
-amount of code and the same behavior, so it stays.
+before assuming a getter over it updates.
 
 ### 3.4 Editable local copy with reset
 
@@ -139,18 +138,10 @@ the action instead of writing into `info`.
 
 ## 4. Update the call sites
 
-For every invocation (core, bundled plugins, tests):
-
-1. Add the callback arg; remove the arg if it was write-only.
-2. Replace `@classNames=`, `@class=`, `@id=`, `@elementId=`, `@tagName=` with attributes.
-3. Replace string action names with functions.
-4. Check the parent's own state is reactive: a Glimmer parent needs `@tracked` on the field
-   the callback assigns; a classic parent uses `this.set` inside the action.
-5. If the parent is a route template (`app/templates/*.gjs`), the state lives on the
-   controller: `@onChange={{@controller.someAction}}` or `{{fn (mut @controller.x)}}`.
-
-Then the plugin outlet args: `@outletArgs={{lazyHash x=this.x}}` becomes `x=@x` for args
-and `x=this.x` for own state; forgetting this renders `undefined` silently.
+When the owner is a route controller, pass `@onChange={{@controller.someAction}}` or
+`{{fn (mut @controller.x)}}` from the route template. See
+[consumer updates](consumers-and-tests.md#what-each-call-site-needs) for wrapper args
+and plugin outlets.
 
 ## 5. Built-in inputs inside the converted component
 
@@ -182,9 +173,13 @@ own arg reaches the caller's property when the Glimmer component forwards the ar
 `ValueList` without `@onChange`, `DEditor`. So a pass-through conversion "works", with the
 binding hidden two levels down. Give the child its callback anyway (`@onChange` on
 `ComboBox`, `ValueList`) and route it to the caller's callback; the site-settings list family
-did (`changeValueCallback`, #43541 and the site-settings-lists PR). The write-through only
-breaks when the component *derives* the value it passes (a getter, a split string) or used
-to write it with its own `this.set`.
+did (`changeValueCallback`, #43541 and #44570). Deriving the forwarded value with a getter
+or splitting a string can break its write-through behavior.
+
+When moving serialization from a child into a callback, check its defaults and the
+server's stored format. `url-list` relied on `ValueList` joining with newlines for
+`default_avatars`. The server splits that setting on newlines while the other list settings
+use `|` (#44570).
 
 ## 6. `{{action}}` and `{{mut}}` leftovers at call sites
 
@@ -200,9 +195,3 @@ over.
 | `onclick={{action ...}}` | `{{on "click" ...}}` (and `preventDefault` if a link) |
 | `@onChange={{action (mut this.x)}}` | `@onChange={{fn (mut this.x)}}` or an `@action` |
 | `@value={{readonly this.x}}` | `@value={{this.x}}` once the child is Glimmer |
-
-## 7. Report the interface change
-
-List in the reply, per arg: old contract (`@x` two-way), new contract (`@x` read-only +
-`@onX(value)`), every call site edited, and every external call site that needs the same
-edit. A reviewer should be able to check the change from the list alone.

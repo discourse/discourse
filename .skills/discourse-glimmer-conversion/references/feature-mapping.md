@@ -1,10 +1,8 @@
 # Feature mapping: classic → Glimmer
 
-Every classic component feature and its replacement. Snippets with a sha in parentheses
-are lifted or adapted from real conversions in this repo (`git show <sha>` for the whole
-diff); the rest are illustrative sketches, not landed diffs. Attribute, argument, and modifier order on the
-elements below follows `discourse-frontend-conventions` Step 4 (attributes, then
-`@arguments`, then modifiers).
+Use the sections that match features in the component. For adaptation examples with a commit
+ID, run `git show <sha>`. Follow the [frontend conventions](../../discourse-frontend-conventions/SKILL.md)
+for attribute, argument, and modifier order.
 
 ## Imports
 
@@ -20,10 +18,10 @@ elements below follows `discourse-frontend-conventions` Step 4 (attributes, then
 | `import { modifier } from "ember-modifier";` | add when a lifecycle hook touched the DOM |
 | `import { on } from "@ember/modifier";`, `import { fn } from "@ember/helper";` | add for element handlers |
 | `import { untrack } from "@glimmer/validator";` | add for one-shot reads inside a mount-once modifier |
-| anything else a replacement below needs | see the import list at the top of SKILL.md |
+| Implicit injection from `lib/implicit-injections.js` | declare `@service` |
 | `/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */` | delete the whole banner |
 
-Autofixers that do part of this for you, so run `bin/lint --fix` on the file first:
+The final lint pass can autofix some mechanical changes:
 `discourse/no-computed-macros`, `discourse/no-discourse-computed`, `discourse/ui-kit-imports`,
 `discourse/migrate-tracked-built-ins-to-ember-collections`, `discourse/deprecated-imports`,
 `discourse/no-at-class`.
@@ -31,8 +29,7 @@ Autofixers that do part of this for you, so run `bin/lint --fix` on the file fir
 ## Wrapper element
 
 ```js
-// adapted from 9874801f946 (topic-post-badges; the commit used object syntax and left out
-// ...attributes, which golden rule 4 requires)
+// adapted from 9874801f946 (topic-post-badges)
 @tagName("span")
 @classNameBindings(":topic-post-badges")
 export default class TopicPostBadges extends Component {
@@ -81,6 +78,7 @@ attributeBindings: ["form", "isDisabled:disabled", "computedTitle:title", "tabin
 >
 ```
 
+Use `dConcatClass` from `discourse/ui-kit/helpers/d-concat-class` for class bindings.
 Binding syntax: `"flag:on"` → `(if this.flag "on")`; `"flag:on:off"` → `(if this.flag "on"
 "off")`; `"flag::off"` → `(unless this.flag "off")`; `":static"` → literal. A bare `"name"`
 depends on the value's type: `true` adds the dasherized property name (`(if this.isActive
@@ -96,22 +94,25 @@ drops an attribute whose value is `false`, so write `aria-pressed={{if this.acti
 scratch test that asserts its `innerHTML` against a wrong value (the failure prints the
 markup), convert, and compare.
 
-Splat placement (before the splat the caller wins, after it the component wins, `class`
-merges) is `discourse-frontend-conventions` Step 4. A component with `@tagName("")` already
-renders a fragment; keep it that way.
+Keep an existing fragment's `...attributes`. Preserve significant template whitespace
+(`{{~ ~}}`, `9874801f946`). Before changing a wrapper, check style and test selectors.
+An anonymous wrapper can affect sibling and child-position selectors such as `:last-child`
+even when it has no classes, as in `ReviewableField`.
 
 Dynamic tag from the caller (`@tagName` passed at call sites):
 
 ```js
-// category-unread.gjs (still classic, but the pattern is right)
 import dElement from "discourse/ui-kit/helpers/d-element";
-{{#let (dElement (or @tagName "span")) as |TagName|}}
-  <TagName class="category__badges" ...attributes>...</TagName>
-{{/let}}
-// or in JS: get wrapper() { return dElement(this.args.tagName ?? "div"); } then <this.wrapper>
+get wrapper() {
+  return dElement(this.args.tagName ?? "span");
+}
+// <this.wrapper class="category__badges" ...attributes>...</this.wrapper>
 ```
 
-Do not add `dElement` when the call sites all pass the same tag or none; fix the tag.
+Use a static wrapper when all callers use the same effective tag. Remove their redundant
+`@tagName` arguments. Keep `@tagName` as a named arg when callers select different elements.
+An empty string selects the helper's pass-through wrapper. Keep it distinct from the
+default tag when callers use it to select a fragment.
 
 ## Element event methods
 
@@ -122,16 +123,13 @@ click(event) { ... }
 @action
 click(event) { ... }
 <template>
-  {{! eslint-disable ember/template-no-invalid-interactive }}
+  {{! eslint-disable-next-line ember/template-no-invalid-interactive }}
   <div ...attributes {{on "click" this.click}}>...</div>
 </template>
 ```
 
-The directive is a mustache comment inside `<template>`, placed above the element; it
-disables the rule from there to the end of the template. The old
-`template-lint-disable` form is itself a lint error in core now; rewrite any you find. An
-external repo that still runs ember-template-lint (it has a `.template-lintrc.*`) takes
-`{{! template-lint-disable no-invalid-interactive }}` instead.
+Use the next-line directive for a noninteractive wrapper that must keep a delegated
+listener. In an external repo using ember-template-lint, use its corresponding directive.
 
 Method → DOM event: `click`→`click`, `doubleClick`→`dblclick`, `keyDown`→`keydown`,
 `keyUp`→`keyup`, `keyPress`→`keypress`, `mouseEnter`→`mouseenter`, `mouseLeave`→`mouseleave`,
@@ -140,15 +138,14 @@ Method → DOM event: `click`→`click`, `doubleClick`→`dblclick`, `keyDown`�
 `dragOver`→`dragover`, `dragStart`→`dragstart`, `drop`→`drop`, `touchStart`→`touchstart`,
 `touchEnd`→`touchend`, `paste`→`paste`, `scroll`→`scroll`.
 
-Classic handlers caught bubbled events from every descendant, so the wrapper is the target
-unless the body already narrows with `event.target.closest(...)`. A classic handler that
-returned `false` got `preventDefault()` and `stopPropagation()` (see
-`lib/ember-events.js`), and `{{action}}` called `preventDefault()`; `{{on}}` does neither,
-so add the calls the old behavior depended on. `{{on}}` also does not bind `this` (pass an
-`@action`/`@bind` method) and has no `value="target.value"` option; use `withEventValue`
-(data-flow reference, section 5).
+A listener on the wrapper still receives bubbling events from descendants. Port any
+`event.target.closest(...)` filter. In classic dispatch, returning `false` called
+`preventDefault()` and `stopPropagation()` (`lib/ember-events.js`, `0c1a658f28c`).
+Make either operation explicit where the old handler relied on it. Pass a bound method
+(`@action` or `@bind`) and use [`withEventValue`](data-flow.md#5-built-in-inputs-inside-the-converted-component)
+when replacing the action helper's `value` option.
 
-## Args (every `this.x` not declared on the class)
+## Args
 
 ```js
 // before
@@ -175,8 +172,18 @@ label = "topic.create";          // callers passed @label and it won
 get label() { return this.args.label ?? "topic.create"; }
 ```
 
-Positional params, `this.attrs`, `{{foo-bar x}}` curly invocation: none remain in this repo;
-if met, convert to named args and angle brackets first.
+Keep any observable distinction between an omitted, null, and false value. For example,
+`plans?.toSorted(...)` still throws for `@plans={{false}}`, which the classic truthiness
+guard in `PaymentOptions` accepted. Audit hook-created defaults as well (`c96dce29348`).
+
+Classic classes have no Glimmer-style `this.args`. An optional read such as
+`this.args?.allowImages` in `RagUploader` silently ignored the caller. Changing a file to
+`.gjs` alone also leaves its args untracked (`92312eec7b1`). Replace positional params,
+`this.attrs`, and curly component invocations with named args and angle brackets where found.
+
+Verify that template `@name` reads are caller args. A blanket rewrite changed
+`PaymentPlan`'s `this.planClick` to an unpassed `@planClick` (`3dd5c4039d3`).
+`scripts/self-args.py` can flag some of these.
 
 ## State
 
@@ -186,7 +193,7 @@ _isSaved = false;
 this.setProperties({ _isSaved: false, _isSaving: true });
 this.toggleProperty("expanded");
 // after
-@tracked _isSaved = false;      // @tracked when the template, a getter it reads, a modifier, or a helperFn must react (SKILL.md Step 2.3)
+@tracked _isSaved = false;
 this._isSaved = false; this._isSaving = true;
 this.expanded = !this.expanded;
 ```
@@ -196,8 +203,17 @@ this.expanded = !this.expanded;
 @computed("category", "categories", "noSubcategories")
 get categoryBreadcrumbs() { ... }
 // after
-get categoryBreadcrumbs() { ... }               // reads this.args.category etc.; @cached per SKILL.md Step 2.2
+get categoryBreadcrumbs() { ... } // reads this.args.category and other dependencies
 ```
+
+Use `@tracked` when a write must update the template or an effect it reads. Keep JSDoc
+types on surviving JavaScript fields (#44656). Use `@cached` for expensive getters or
+when their result needs stable identity and derive any replacement collection inside
+the getter from the inputs that reset it.
+
+An unused dependency key may point to a dropped positional read from the
+`discourseComputed` migration. Check the older implementation before dropping it
+(`a2e64d4b458`, `DiscourseLinkedText` lost its interpolation parameters).
 
 Getter/setter pairs on a `@computed` (`get watchForLink()` / `set watchForLink(v)`) become
 a plain accessor pair; the setter usually writes into an arg's object
@@ -206,7 +222,7 @@ a plain accessor pair; the setter usually writes into an arg's object
 `this.get("a.b")` on own state → `this.a?.b` (the old `get` was null-safe on the path).
 `this.get("composer.titleLength")` → `this.args.composer?.titleLength` works because
 `titleLength` is a `@computed` getter on the model. `composer.title` is a plain field, so a
-getter reading it goes stale (SKILL.md Step 2.5): declare `title` `@tracked` on the model
+getter reading it goes stale. Declare `title` `@tracked` on the model
 (the `Reviewable` pattern in `3f7cf1139da`; classic `set()` writers keep working) or read
 with `get(this.args.composer, "title")`. Template paths (`{{@composer.title}}`) do track
 plain fields, because they read through Ember's `getProp`. This is why `ember/no-get` stays
@@ -225,12 +241,17 @@ deprecated since Ember 5.10) → `trackedArray()` from `@ember/reactive/collecti
 native `push`/`splice` (`4e417223e5d` builds one inside a `@cached` getter), or reassign a
 genuinely new array to a `@tracked` field. Do not re-assign the same array to itself
 (`this.items = this.items`) to force an update; that is the RFC 0812 anti-pattern. Tracked
-collections are created with factory calls, not `new`; `new TrackedArray` from
-`@ember-compat/tracked-built-ins` is retired and autofixed away.
+collections are created with factory calls. Some deprecated array reads such as
+`firstObject` still work through `app/array-shim.js`. Switching to `[0]` in this case
+is a port, as in `GroupsFormInteractionFields`.
 
 ## Observers
 
-Pick by intent:
+Replace observers before changing the base class. Discourse's async observers can still
+fire for tracked changes during a partial conversion. Getters also cover the initial
+value when a service set it before an observer could attach, as with the restored notice
+in `GlobalNotice`. For non-DOM effects, import `helperFn` from
+`discourse/helpers/helper-fn`. Choose the replacement by intent:
 
 ```js
 // 1. derived state → getter (topic-navigation, 991cbda4528)
@@ -248,8 +269,7 @@ setContent = modifier(() => {
   this.skipChangePropagation = false;
 });
 // <div class="ace" ...attributes {{this.setContent}}>
-// The same file still uses {{didInsert}}/{{didUpdate}} from @ember/render-modifiers for its
-// other observers; that is legacy (golden rule 3), fold each into a modifier() that reads the arg.
+// Use modifier() for reactive DOM work. Read each dependency in its body.
 
 // 3. non-DOM side effect with cleanup → helperFn (user-tip.gjs)
 registerTip = helperFn((_, on) => {
@@ -271,6 +291,14 @@ modifier, or `helperFn`, so the write must be deferred (`schedule("afterRender")
 or the debounce the observer already had) or it trips the backtracking-rerender assertion.
 
 ## Lifecycle
+
+Use `@resettableTracked` from `discourse/lib/tracked-tools` for local state that reseeds
+from an arg. Use `modifier()` from `ember-modifier` for DOM effects. Its arguments are lazy, and only
+reads in the body add dependencies. The modifier cleans up before each rerun and on
+teardown. Its teardown still has the detached node for listener removal, so avoid
+layout reads or ancestor lookups there. Use `willDestroy` after modifier cleanup for
+instance teardown. Inspect lifecycle decorators such as `@on("willDestroyElement")` as
+well as method names (`8a09fd370a6`).
 
 ```js
 // init → constructor
@@ -427,12 +455,15 @@ actions = { toggleItem() { ... } };   // and <a href onclick={{action "toggleIte
 @action toggleItem(event) { event.preventDefault(); ... }   // and <a href {{on "click" this.toggleItem}}>
 ```
 
-Keep the existing element. Swapping an `<a>` for `<DButton>` (as that commit did) is a
-markup change that breaks selectors; do it only when asked (see pitfalls).
+Keep the existing element to preserve selectors (`eccfc946f16`). Move actions into
+methods, since leaving `@action` inside an action hash silently drops the handler
+(`39e1b97a5d1`). A local `this.send("foo")` becomes `this.foo()`. If it bubbled to the
+route, pass the route action down as an arg. `sendAction("name")` becomes
+`this.args.name?.()`. For strings and action helpers, see
+[call-site replacements](data-flow.md#6-action-and-mut-leftovers-at-call-sites).
 
-`this.send("foo")` → `this.foo()`. `sendAction("name")` → `this.args.name?.()`. A string
-`@action="save"` at a call site must become a function reference. `this.send` that bubbled
-to a route: pass the route action down as an arg.
+When replacing `this.set()` inside a callback argument, check when it ran. For example,
+`.finally(this.set(...))` evaluated the write immediately in `WatchedWordForm`.
 
 ## Mixins, `extend`, layout
 
@@ -476,13 +507,17 @@ body becomes class members.
 | `{{yield}}`, `{{yield x}}`, named blocks | unchanged |
 | `elementId` / `{{this.elementId}}` in the template | `dUniqueId` from `discourse/ui-kit/helpers/d-unique-id`, or a literal id |
 
+Keep branch exclusivity and string assembly when moving computations into the template.
+`TopicStatus` lost punctuation in an i18n key (`248501f4c7d`) and rendered both branches
+until it used `{{#if}}...{{else}}` (`94b309b05e0`).
+
 ## Reactivity boundary with classic code
 
 - A classic parent's `@computed("childValue")` still works when the child calls back and
   the parent `set`s its own property; computed properties can depend on `@tracked` fields.
 - A classic consumer whose dependent key crosses a *native getter* on a class you convert
   (a model, a service, a yielded object) stops updating; give that getter
-  `@dependentKeyCompat` or convert the consumer.
+  `@dependentKeyCompat` or convert the consumer (`4acd9c67535`, `11fac4c6bca`).
 - Reading a model property that classic code updates with `set()`: see the State section
   above (tracked only when the model declares it, else `get()`).
 - `trackedArray`/`@trackedArray` content changes are bridged into `@computed` dependencies

@@ -1,68 +1,87 @@
-# Glimmer conversion plan
+# Glimmer conversion campaign
 
-Where the campaign to retire classic components in core and bundled plugins stands and how
-targets are picked. SKILL.md is the per-component procedure and its Step 10 the batching
-rules; this is the layer above it. The PR log is [PROGRESS.md](PROGRESS.md); the research
-behind the skill is [DESIGN.md](DESIGN.md).
+Use [SKILL.md](SKILL.md) for each component. This plan covers selecting targets and
+shipping campaign PRs. [PROGRESS.md](PROGRESS.md) records the PRs and the components they
+cover.
 
-## Status
+## Pick targets
 
-`scripts/rank-targets.py` prints the live totals (classic components left, in flight,
-ranked, blocked, unreachable) in its first two lines, and PROGRESS.md lists every PR. The
-easy tier is used up: the top of the ranking is data-flow work, blocked items, and ui-kit
-components that come out as `.gts`.
+Run `git fetch origin main`, then `scripts/rank-targets.py` from the core checkout. It reads
+`origin/main` directly and prints the live counts and risk ranking. It excludes files in
+open `glimmer-conversion` PRs, select-kit and its subclasses, and subclasses that convert
+with a listed base. Use `--list` for the full classic inventory. The ranking weighs
+lifecycle and element work, mixins, subclasses, bindings, consumers, and size. Every pick
+still gets the [preflight](SKILL.md#preflight).
 
-## Tooling
+- **`DEAD?`** means the search found no consumer. Confirm reachability before proposing
+  deletion in a separate PR, as in #43390 and #43531.
+- **`fields:`** flags possible caller overrides or shared state. Check
+  [who reads or writes the value](references/data-flow.md#2-find-who-reads-it-back).
+- **`2way:`** needs a data-flow decision. Keep these out of mixed batches.
+- **`ts`** suggests a `.gts` result. Budget for a signature, TSDoc, and a ui-kit type test.
+- **`BLOCKED`** entries need a dedicated PR or a decision. Remove an entry when its blocker
+  is resolved.
 
-- `scripts/rank-targets.py`: ranks `origin/main`'s classic components by risk. It reads git
-  directly, so it works from any checkout state. It leaves out files in open
-  `glimmer-conversion` PRs, select-kit and its subclasses, and subclasses of a listed base
-  (the base's score counts them), and prints unreachable components separately; `--list`
-  prints the inventory only. It takes a few seconds. Run `git fetch origin main` first.
-- `scripts/analyze.sh <file>`: the per-component pre-flight (SKILL.md Step 1).
-- `scripts/self-args.py`: template `@name` reads that shadow a member (SKILL.md Step 8).
-- `scripts/refresh-progress.py`: the merged/approved marks in PROGRESS.md (SKILL.md Step 10).
-- `scripts/component-history.py`: an HTML chart of classic vs Glimmer counts over time.
-- `scripts/common.py`: what the Python scripts share (git and gh calls, module resolution
-  from the tsconfig `paths`, the `.gts` rule, and `Modules`, which classifies a module as a
-  classic or Glimmer component by following its superclass through imports, aliases and
-  class factories).
+`scripts/component-history.py` charts the classic and Glimmer counts over time.
 
-## Picking targets
+## Batch and open a PR
 
-The risk score counts what makes a conversion expensive or easy to get wrong: lifecycle
-hooks and observers (×3), `this.element`/jQuery, mixins (×5), subclasses (×6), class
-bindings, element event handlers, `@computed`s, two-way writes including template-side
-`(mut this.x)` (×4), external consumers (×4), an implicit wrapper `<div>`, extra call sites,
-and size. Lowest first. The score only orders the work. Each pick still gets the full
-pre-flight.
+Batch ten independent conversions into one commit and one PR. Work through each component
+individually. Give a conversion its own PR if it needs a data-flow or plugin-API decision,
+substantial test changes, or edits to a call site another member of the batch also changes.
+A hierarchy goes in one PR. Group ui-kit conversions when they can share a TypeScript review.
 
-Rules the ranking can't apply for you:
+When asked to ship, branch from `origin/main` to keep unrelated commits out. If carrying over
+changes from another branch, first compare the target files with `origin/main` using
+`git diff origin/main HEAD -- <paths>`. Stage only the conversion and its related edits.
+Use `0-glimmer-batch-<n>` for a batch or `0-glimmer-<file-name>` for a single conversion.
 
-1. **`DEAD?` means delete, not convert** (SKILL.md Step 1), in a separate PR (#43390,
-   #43531). The first "easiest" targets were all unreferenced.
-2. **`fields:` in the output is a warning, not trivia.** A class field that callers also
-   pass is at best an override (`this.args.x ?? default`) and at worst a flag shared with
-   the caller. `AdminEditableField`'s `editing` was the second kind and shipped broken
-   (#43541; see the pitfalls reference).
-3. **`2way:` means a data-flow decision.** Leave these out of mixed batches. An arg
-   forwarded untouched into a classic child that sets it (`DEditor`, `ValueList`,
-   select-kit without `@onChange`) keeps working through Glimmer, but only because the write
-   goes through the reference, hidden. Give the child a callback anyway (data-flow §5).
-4. **`ts` means the result is `.gts`** (ui-kit, or a mostly TypeScript directory or family).
-   It adds a `Signature`, TSDoc, and for ui-kit a type test, so count it as extra work when
-   filling a batch (SKILL.md Step 1).
-5. **`BLOCKED` entries need their own PR or a decision first.** The script prints each one
-   with its reason; remove an entry from `BLOCKED` once its blocker is gone.
+Use the same subject and body for the commit and the draft PR, without attribution trailers.
+
+- Single conversion: `DEV: Convert <ComponentName> to a glimmer component`
+- Single conversion with interface changes or a bug fix:
+  `DEV: Modernize <ComponentName> component`
+- Batch: `DEV: Convert <n> components to glimmer`
+
+Start the body with the fixed opening and list class names grouped by origin. Put core
+components on one bullet and each plugin's components on its own bullet, with the plugin
+directory name in parentheses. After the list, add a short sentence for each interface
+change or pre-existing bug fixed. Put external follow-ups and behavior differences in the
+[user report](SKILL.md#report).
+
+```markdown
+Done with the help of our glimmer conversion skill.
+
+* AdminReportTableRow, CategoriesAndLatestTopics, CategoriesAndTopTopics
+* SubscriptionsCampaign, SubscriptionsCampaignSidebar (discourse-subscriptions)
+```
+
+With `branch`, `subject`, and `body_file` set to the chosen branch, subject, and body path:
+
+```bash
+git switch -c "$branch" origin/main
+git add -- path/to/component.gjs path/to/related-edit.gjs
+{ printf '%s\n\n' "$subject"; cat "$body_file"; } | git commit -F -
+git push -u origin "$branch"
+gh pr create --draft --base main --title "$subject" --body-file "$body_file" --label glimmer-conversion
+```
+
+## Record the PR
+
+Append one top-level PR link to [PROGRESS.md](PROGRESS.md), with one nested bullet per
+component. Use short, unambiguous paths such as `ui-kit/d-tap-tile` or
+`plugins/discourse-assign/connectors/assigned-list`. Keep `connectors/` in connector paths
+to distinguish them from components with the same name.
+
+Run `scripts/refresh-progress.py` after appending. A merged PR gets ☑️, an approved PR gets
+✅, and other entries have no mark. The script leaves merged entries alone and rechecks the
+rest. Commit the log with the skill, separately from the conversion.
 
 ## Next
 
-1. **The ui-kit components flagged `ts`** come out as `.gts` with a `Signature`, TSDoc and a
-   type test. Batch them together so the TypeScript review happens once.
-2. **Hierarchies** (`edit-category-panel`'s `buildCategoryPanel` factory and its panels):
-   one PR per hierarchy, per SKILL.md Step 0.
-3. **Blocked items** last, each with its own design: first the `getTopicFooterButtons`
-   receiver contract, then `discourse-root` only with a clear reason for the earlier revert.
-4. **External consumers** flagged in PR reports (for example the third-party plugin that
-   passes `@editing` to `AdminEditableField`) need follow-ups outside this repo once the
-   PRs land.
+1. Group ui-kit targets flagged `ts` for TypeScript review.
+2. Convert the `edit-category-panel` factory and its panels together.
+3. Handle blocked targets individually. Start with the `getTopicFooterButtons` receiver
+   contract. Revisit `discourse-root` once the cause of the earlier revert is understood
+   (`27408c7e14b` → `9408ea44617`).
+4. Follow up with external consumers identified in the conversion reports once the PRs land.

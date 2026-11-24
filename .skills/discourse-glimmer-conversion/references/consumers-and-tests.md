@@ -1,84 +1,80 @@
 # Consumers and tests
 
-How to find everything that depends on a component, what to do with each category, and
-how to convert its tests. `scripts/analyze.sh` runs the greps below; this file explains
-what each result means and what you owe it.
-
-## Consumer categories
-
-| Category | Where | Action |
-|---|---|---|
-| Angle-bracket invocations | core, bundled plugins, tests | edit in the same change |
-| Import of the class (composition, `<this.dynamic>` maps, `curryComponent`) | same | edit |
-| Subclasses (`extends Foo`, `Foo.extend(`) | core, bundled plugins | convert in the same change or stop (Step 0) |
-| String lookups (`{{component "foo"}}`, `component:foo` in a resolver map, `owner.lookup`) | same | keep the file path; edit the invocation if it passed `tagName`/`classNames` |
-| `api.modifyClass("component:foo")` in a bundled plugin | `plugins/*/assets/javascripts` | keep path and name; rewrite the patch against `this.args` and modifiers, or fold it into the component |
-| `api.modifyClass("component:foo")` in an external checkout | `~/discourse/all-the/…` | keep path and name; flag with what breaks |
-| Plugin outlet connectors passing args into it | plugins, themes | edit bundled; flag external |
-| External plugins and themes (`~/discourse/all-the/…`) | `all-the-plugins/{official,third-party}`, `all-the-themes/{official,third-party}`, `all-the-custom-{plugins,themes}` | never edit; list the file and the exact edit |
-| Tests (`-test.gjs`, system specs by CSS selector) | `frontend/discourse/tests`, `plugins/*/test/javascripts`, `spec/system`, `plugins/*/spec/system` | convert or update |
-
 ## Discovery
 
-The script derives the import path (`discourse/components/foo`,
-`discourse/admin/components/foo`, `discourse/plugins/<plugin>/discourse/components/foo`,
-`discourse/plugins/<plugin>/admin/components/foo`), the resolver name (`foo`, or `foo/bar`
-for nested), and the class name from the file. For a component in another repo it scans
-that repo and the core checkout (`CORE_DIR` overrides which one). Use its output rather
-than hand-written greps: its resolver patterns are anchored, its imports allow the
-extension relative imports carry, and it covers every external checkout.
+Use `scripts/analyze.sh` as an index. Verify imports, angle-bracket and curly invocations,
+subclasses, and `component:<name>` registry or `modifyClass` lookups. Check aliases,
+component maps, and `curryComponent` when an import leads to an indirect caller. Scan
+bundled plugins and the available external checkouts. Themes can override a core resolver
+name with a non-colocated `templates/components/*.hbs` backed by a classic class
+(`instance-initializers/component-templates.js`, `8f52b81efa7`). Keep the module path and
+resolver name stable.
 
+Inspect functions that receive the component instance. For example,
+`getTopicFooterButtons(this)` gives plugin callbacks the component as their receiver and
+implements legacy dependent keys with `context.get()`. This needs a plugin API change
+before the conversion. A plain arg callback can also depend on its receiver.
+`this.args.done()` supplies the args object where `this.done()` supplied the component.
+Preserve the receiver when it is part of the contract. In #43534 only the
+`WatchedWordUploader` test used it, so the test could assert the actual callback contract.
 
-Also grep for the component's CSS classes in `spec/system` and
-`frontend/discourse/tests/acceptance`: system specs find elements by class, and a changed
-wrapper or a `<DButton>` replacing an `<a>` changes what those selectors match.
+### Extension changes
+
+On a `.gjs` to `.gts` rename, extensionless imports and string lookups keep resolving.
+Update explicit-extension imports. The analyzer lists candidates, but lint and type
+checking may miss a stale relative path. If `bin/dev` reports `UNLOADABLE_DEPENDENCY` for
+the old path after you update the imports, remove that module's stale generated
+declarations under `frontend/discourse-types/declarations/` and restart `bin/dev`.
 
 ## What each call site needs
 
-Read every invocation and record, per arg:
+- Change classic `@classNames` or `@class` to `class=`, and `@elementId` or `@id` to
+  `id=`. Handle `@tagName` through the
+  [wrapper recipe](feature-mapping.md#wrapper-element).
+- Preserve the values callers pass. If migrating from a truthiness check to a strict
+  boolean check, update a string such as `@triggerAppEvent="true"` to
+  `@triggerAppEvent={{true}}` (`d6d3fc86294`). See
+  [action helper replacements](data-flow.md#6-action-and-mut-leftovers-at-call-sites)
+  for string action names.
+- Check writes through args and give callers any
+  [required callbacks](data-flow.md#3-choose-the-redesign). Keep args that may be supplied
+  by external consumers even if in-tree callers pass nothing.
+- Update an in-repo `api.modifyClass` patch for Glimmer args and lifecycle, or fold it
+  into the component if appropriate. Before replacing a patch's `classNameBindings`,
+  check downstream CSS and selectors. For `SearchResultEntry`, a private plugin relied
+  on `.ai-result`. #44615 preserved the class through a value transformer.
 
-- **Passed and read only**: unchanged. `@foo={{this.x}}` keeps working.
-- **Passed and written by the child**: the two-way binding. Decide per the data-flow
-  reference; the call site gains a callback (`@onChange={{this.action}}` or
-  `{{fn (mut this.x)}}`) and the child stops writing.
-- **Passed as `@tagName`, `@classNames`, `@class`, `@id`, `@elementId`**: classic wrapper
-  configuration. Becomes a plain attribute on the invocation (`class=`, `id=`), or a
-  changed wrapper tag in the component when only one value was ever passed.
-- **Passed as a string that should be a boolean/number** (`@foo="true"`): keep the classic
-  string semantics unless the component compares strictly; then `{{true}}`.
-- **Passed as a string action name** (`@action="save"`): must become a function.
-- **Not passed anywhere but read by the component**: dead arg; keep the read (it may be a
-  theme's arg) unless it is clearly internal.
-- **Passed positionally or via `{{foo-bar x}}` curly invocation**: convert to named args
-  and angle brackets.
+### Plugin outlets
 
-Every call site edit is verified by opening the page or running the test that renders it.
+A Glimmer connector receives individual outlet args as `@topic` or `this.args.topic`.
+The entire hash remains available as `@outletArgs`. In the component rendering
+`<PluginOutlet>`, keep `@outletArgs` and update its contents. For example,
+`@outletArgs={{lazyHash topic=this.topic}}` becomes
+`@outletArgs={{lazyHash topic=@topic}}` when topic is an arg (`323013d9c79`).
+If children rerender unexpectedly, inspect fresh object identities
+(`707a91243c3` → `f8d61a341e0` → `3867c879ab8`).
+Give classic connectors that had a wrapper the same explicit wrapper as any other
+component.
 
-## External consumers: the report entry
+### External consumers
 
-For each hit outside core and bundled plugins, the report lists:
-
-```
-~/discourse/all-the/all-the-plugins/official/<plugin>/assets/javascripts/discourse/initializers/x.js:12
-  modifyClass("component:composer-body") overrides `didInsertElement` and reads `this.composer`.
-  After conversion: hook no longer exists; read `this.args.composer`; move DOM setup to a modifier.
-```
-
-The user decides whether the conversion waits for those repos or ships with a
-deprecation. Do not soften the wording; a missed external consumer is a production break
-in someone else's site.
+For each breaking external use, report the file and the required edit. An inherited class
+that only reads old base properties may still work if the base exposes same-named getters.
+`DDateTimeInput` used this to preserve reads in discourse-custom-wizard. A classic
+subclass that calls `this.set()` or relies on classic hooks needs a coordinated change.
+A template-only export makes an external `extends` fail at import time and leaves
+`modifyClass` without a class to patch. If an empty backing class is explicitly required
+for compatibility, scope the `ember/no-empty-glimmer-component-classes` exception to that
+class and name the consumer.
 
 ## Tests
 
 ### Integration tests for the component
 
-Structure per the `discourse-writing-js-tests` skill:
-`setupRenderingTest(hooks)` from `discourse/tests/helpers/component-test`, `render` and
-`rerender` from `@ember/test-helpers`, an inline `<template>` with a real import, `assert.dom`.
-
-Outer state the test mutates after rendering goes in a standalone `tracked(v)` box from
-`@glimmer/tracking`, not a local class with a `@tracked` field; this replaces
-`this.set(...)` on the classic test context:
+Follow the [JS test skill](../../discourse-writing-js-tests/SKILL.md).
+When rewriting a legacy rendering test, use `.gjs` with an inline template and a real
+component import. Existing passing `.gjs` tests can keep `this.set()` on the test context.
+For new coverage of a changing arg, use a `tracked(v)` box and `await rerender()`:
 
 ```gjs
 test("updates when the arg changes", async function (assert) {
@@ -93,15 +89,8 @@ test("updates when the arg changes", async function (assert) {
 });
 ```
 
-Why `rerender()` and not `settled()` after a tracked change, and the box's semantics
-(`Object.is` dedupe, `tracked(undefined)` for an empty box), are in
-`discourse-writing-js-tests`. `this.set("x", ...)` on the test context still works (the
-template is lexically bound to the test function's `this`), which is why passing
-`this.set` tests are left alone.
-
 Objects the component mutates through an arg must be reactive and the test must assert
-the write reached the caller (adapted from `c96dce29348`, which used `new TrackedObject`
-from the now-retired compat package):
+the write reached the caller (adapted from `c96dce29348`):
 
 ```gjs
 const status = trackedObject({ emoji: "tooth", description: "off to dentist" });
@@ -111,16 +100,13 @@ await click(".emoji-picker .emoji[title='mega']");
 assert.strictEqual(status.emoji, "mega", "writes the picked emoji to the status object");
 ```
 
-Callbacks added for a redesigned two-way binding get a test that passes a recording
-function and asserts it was called with the new value.
-
 ### Traps when writing them
 
 - One test per redesigned two-way binding (callback fires, arg is not mutated). Render the
   converted component directly with a recording callback. A test through the real parent
-  cannot tell the callback from a classic child writing through a forwarded `@value` (see
-  data-flow §5): the in-place enum test on the theme editor still passed with `@onChange`
-  removed. Mutation-test against the direct test.
+  can miss callback removal when a [classic child writes through](data-flow.md#5-built-in-inputs-inside-the-converted-component).
+  The theme editor's in-place enum test still passed with `@onChange` removed. Make the
+  direct test fail when you remove the callback.
 - A test for a `get()` read must change *only* the untracked field. If the same change also
   flips a tracked value the template reads around the getter (an `{{#if}}` block), the block
   renders fresh and the test passes without the fix. `ComposerActionTitle` reads
@@ -144,13 +130,12 @@ function and asserts it was called with the new value.
 
 ### Finding the test that actually exercises the component
 
-Selector greps go blind when the component's classes are generic (`.field`, `.value`,
-`.name`): the script prints forty unit tests that happen to mention them and the one test
-that renders the component is not among them. The script's "tests named after a call site's
-page" section closes that gap — it matches test *filenames* against each call site's path
-(`admin/templates/admin-user/index.gjs` → `acceptance/admin-user-index-test.js`). Run those,
-not just the ones matching the component name; `AdminEditableField` shipped broken because
-`admin-user-index-test.js` was never run.
+Selector matches can miss the page that renders the component, especially with generic
+classes such as `.field`. Check tests named for the caller's page too.
+`AdminEditableField`'s save path was covered by `acceptance/admin-user-index-test.js`,
+named for `admin/templates/admin-user/index.gjs`. Verify the behavior each test covers
+and run relevant files by path. A spaced `--filter` may match zero tests when the module
+uses a PascalCase component name.
 
 ### Running tests against `bin/dev`
 
@@ -184,9 +169,8 @@ tag inside `<template>` is rejected by `ember/template-no-forbidden-elements`.
 
 ### Acceptance and system tests
 
-Run every acceptance test whose module or selectors reference the component's classes,
-and the system specs the script lists. When markup changed unavoidably, update selectors
-in the same change and say so in the report.
+Run the acceptance and system tests that exercise the changed behavior. Update selectors
+when a required markup change affects them.
 
 Timing-dependent replacements (IntersectionObserver, ResizeObserver, `matchMedia`) do not
 fire deterministically in tests; assert on state you can drive (`TrackedMediaQuery`
