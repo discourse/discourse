@@ -735,7 +735,7 @@ login:
     hidden: true
   allow_passkeys_for_2fa:
     client: true
-    default: false
+    default: true
     area: "login"
   allow_new_registrations:
     client: true

@@ -73,7 +73,7 @@ class UsersController < ApplicationController
                        user_menu_messages
                      ]
 
-  before_action :check_confirmed_session,
+  before_action :check_second_factor_management_session,
                 only: %i[
                   create_second_factor_totp
                   enable_second_factor_totp
@@ -82,9 +82,10 @@ class UsersController < ApplicationController
                   create_second_factor_backup
                   register_second_factor_security_key
                   create_second_factor_security_key
+                  update_security_key
+                  create_passkey
                   register_passkey
                   delete_passkey
-                  update_security_key
                 ]
   before_action :respond_to_suspicious_request, only: [:create]
   before_action :ensure_random_username_access, only: [:generate_random_username]
@@ -841,6 +842,9 @@ class UsersController < ApplicationController
     if user.save
       authentication.finish
       activation.finish
+      if expires_at = authentication.enrollment_proof_expires_at
+        Auth::SecondFactorEnrollment.mark_external_login!(request, user, expires_at:)
+      end
       associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
@@ -1708,11 +1712,12 @@ class UsersController < ApplicationController
   end
 
   def list_second_factors
-    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
-      raise Discourse::NotFound
-    end
+    raise Discourse::NotFound unless second_factor_management_enabled?
 
-    if session_is_trusted?
+    case second_factor_management_access(
+      webauthn_supported: params[:webauthn_supported].to_s == "true",
+    )
+    when :allowed
       totp_second_factors =
         current_user
           .totps
@@ -1729,8 +1734,12 @@ class UsersController < ApplicationController
           .as_json(only: %i[id user_id credential_id public_key factor_type enabled name last_used])
 
       render json: success_json.merge(totps: totp_second_factors, security_keys: security_keys)
-    else
+    when :external_login_required
+      render json: success_json.merge(external_login_required: true)
+    when :local_confirmation_required
       render json: success_json.merge(unconfirmed_session: true)
+    else
+      raise Discourse::InvalidAccess
     end
   end
 
@@ -1946,15 +1955,6 @@ class UsersController < ApplicationController
 
   def user_just_created
     current_user.created_at > 5.minutes.ago
-  end
-
-  def check_confirmed_session
-    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
-      raise Discourse::NotFound
-    end
-
-    raise Discourse::InvalidAccess.new if !current_user
-    raise Discourse::InvalidAccess.new unless session_is_trusted?
   end
 
   def revoke_account
@@ -2426,6 +2426,57 @@ class UsersController < ApplicationController
 
   def session_is_trusted?
     server_session_confirmed? || user_just_created
+  end
+
+  def second_factor_management_access(webauthn_supported: true)
+    if !current_user || current_user.anonymous? || current_user.is_impersonating || is_api? ||
+         is_user_api?
+      return :denied
+    end
+
+    local_logins_available =
+      SiteSetting.enable_local_logins && !SiteSetting.enable_discourse_connect
+    return :allowed if local_logins_available && server_session_confirmed?
+    return :allowed if Auth::SecondFactorEnrollment.recent_external_login?(request, current_user)
+    return :external_login_required unless local_logins_available
+
+    if !current_user.authenticated_with_oauth
+      return user_just_created ? :allowed : :local_confirmation_required
+    end
+
+    # Browser capability only selects the prompt; neither prompt grants access.
+    if current_user.has_password? ||
+         (
+           webauthn_supported && SiteSetting.enable_passkeys &&
+             current_user.passkey_credential_ids.any?
+         )
+      :local_confirmation_required
+    else
+      :external_login_required
+    end
+  end
+
+  def check_second_factor_management_session
+    raise Discourse::NotFound unless second_factor_management_enabled?
+
+    case second_factor_management_access
+    when :allowed
+      nil
+    when :external_login_required
+      render_json_error(
+        I18n.t("login.second_factor_external_login_required"),
+        status: :forbidden,
+        skip_error_prefix: true,
+        type: "second_factor_external_login_required",
+      )
+    else
+      raise Discourse::InvalidAccess
+    end
+  end
+
+  def second_factor_management_enabled?
+    !SiteSetting.enable_discourse_connect &&
+      (SiteSetting.enable_local_logins || SiteSetting.enforce_second_factor_on_external_auth)
   end
 
   def summary_cache_key(user)

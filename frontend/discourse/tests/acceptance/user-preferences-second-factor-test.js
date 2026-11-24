@@ -4,8 +4,10 @@ import {
   fillIn,
   triggerKeyEvent,
   visit,
+  waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -60,6 +62,50 @@ acceptance("User Preferences - Second Factor", function (needs) {
       return helper.response({ success: "OK" });
     });
   });
+
+  test("staff cannot open another user's factor management page", async function (assert) {
+    let loads = 0;
+    pretender.post("/u/second_factors.json", () => {
+      loads++;
+      return response({ success: "OK", totps: [], security_keys: [] });
+    });
+
+    await visit("/u/charlie/preferences/second-factor");
+
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.security",
+      "redirects to the other user's security preferences"
+    );
+    assert.strictEqual(loads, 0, "does not request any factor data");
+  });
+
+  for (const [failure, failureResponse] of [
+    ["an HTTP error", () => response(500, { errors: ["Load failed"] })],
+    ["an incomplete success", () => response({ success: "OK", totps: [] })],
+    [
+      "an invalid factor entry",
+      () => response({ success: "OK", totps: [], security_keys: [null] }),
+    ],
+  ]) {
+    test(`hides stale factor controls after ${failure}`, async function (assert) {
+      await visit("/u/eviltrout/preferences/second-factor");
+      assert.dom(".security-key-dropdown").exists("loads an editable key");
+
+      pretender.post("/u/second_factors.json", failureResponse);
+      await click(".security-key-dropdown .select-kit-header");
+      await click(".security-key-dropdown li[data-name='Edit']");
+      await fillIn("input[name='security-key-name']", "Updated key");
+      await click(".d-modal .btn-primary");
+
+      assert.dom(".second-factor__load-error").exists("shows the load error");
+      assert.dom(".security-key-dropdown").doesNotExist("hides the stale key");
+      assert.dom(".new-totp").doesNotExist("hides enrollment controls");
+      assert
+        .dom(".pref-second-factor-disable-all")
+        .doesNotExist("does not offer to disable all factors");
+    });
+  }
 
   test("second factor totp", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
@@ -147,16 +193,6 @@ acceptance("User Preferences - Second Factor", function (needs) {
       .dom(".d-modal__container")
       .doesNotExist("modal is closed when form is submitted via keyboard");
   });
-
-  test("redirects away from another user's second factors", async function (assert) {
-    await visit("/u/charlie/preferences/second-factor");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.security",
-      "it transitions to the other user's security preferences"
-    );
-  });
 });
 
 acceptance(
@@ -209,7 +245,7 @@ acceptance(
       server.post("/u/second_factors.json", () => {
         return helper.response({
           success: "OK",
-          unconfirmed_session: "true",
+          unconfirmed_session: true,
         });
       });
     });
@@ -223,5 +259,92 @@ acceptance(
         "it transitions to security preferences"
       );
     });
+
+    test("offers local confirmation from the manage button and reloads after confirmation", async function (assert) {
+      let loads = 0;
+      let confirmed = false;
+      pretender.post("/u/second_factors.json", () => {
+        loads++;
+        return response(
+          confirmed
+            ? { success: "OK", totps: [], security_keys: [] }
+            : { success: "OK", unconfirmed_session: true }
+        );
+      });
+      pretender.post("/u/confirm-session.json", () => {
+        confirmed = true;
+        return response({ success: "OK" });
+      });
+
+      await visit("/u/eviltrout/preferences/security");
+      await click(".btn-second-factor");
+      assert.dom(".confirm-session").exists("asks for a local credential");
+      assert.dom(".new-totp").doesNotExist("hides controls until confirmed");
+      assert.strictEqual(loads, 1, "loads only once before confirmation");
+
+      await fillIn(".confirm-session #password", "local password");
+      await click(".confirm-session .btn-primary");
+
+      assert.dom(".new-totp").exists("shows controls after confirmation");
+      assert.strictEqual(loads, 2, "reloads once after confirmation");
+    });
   }
 );
+
+acceptance("User Preferences - External Second Factor", function (needs) {
+  needs.user({ no_password: true });
+  needs.settings({ enable_local_logins: false });
+
+  test("opens authenticator enrollment without a local credential", async function (assert) {
+    let loads = 0;
+    pretender.post("/u/second_factors.json", () => {
+      loads++;
+      return response({ success: "OK", totps: [], security_keys: [] });
+    });
+    pretender.post("/u/create_second_factor_totp.json", () =>
+      response({ key: "test key" })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    assert
+      .dom("#change-password-button")
+      .doesNotExist("keeps the password controls hidden");
+    await click(".btn-second-factor");
+    assert.strictEqual(loads, 1, "loads factors only once");
+    await click(".new-totp");
+    assert
+      .dom(".confirm-session")
+      .doesNotExist("does not ask for a local credential");
+    assert
+      .dom(".d-modal .show-second-factor-key")
+      .exists("opens authenticator enrollment");
+  });
+
+  test("offers sign-out without leaving the required enrollment page", async function (assert) {
+    this.siteSettings.enforce_second_factor = "all";
+    pretender.post("/u/second_factors.json", () =>
+      response({ success: "OK", external_login_required: true })
+    );
+    let signedOut = false;
+    pretender.delete("/session/eviltrout", () => {
+      signedOut = true;
+      return response({ redirect_url: "/login" });
+    });
+
+    await visit("/u/eviltrout/preferences/second-factor");
+    assert.strictEqual(
+      currentRouteName(),
+      "preferences.second-factor",
+      "stays on enrollment"
+    );
+    assert
+      .dom(".second-factor__external-login-required")
+      .exists("explains how to continue");
+    assert
+      .dom(".new-totp")
+      .doesNotExist("hides enrollment until the user signs in again");
+    await click(".second-factor__sign-out");
+    await waitUntil(() => signedOut);
+    assert.true(signedOut, "uses the standard sign-out flow");
+  });
+});

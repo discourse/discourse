@@ -395,3 +395,76 @@ acceptance("User Preferences - Security", function (needs) {
       );
   });
 });
+
+acceptance("User Preferences - Security with external auth", function (needs) {
+  needs.user({ no_password: true, user_passkeys: [] });
+  needs.settings({ enable_local_logins: false, enable_passkeys: true });
+
+  test("shows passkey registration when local logins are disabled without confirming session", async function (assert) {
+    let createCalled = 0;
+    pretender.post("/u/create_passkey.json", () => {
+      createCalled++;
+      return response({
+        challenge: "challenge",
+        rp_name: "Discourse",
+        rp_id: "localhost",
+        user_secure_id: "user1",
+        supported_algorithms: [-7],
+        existing_passkey_credential_ids: [],
+      });
+    });
+    const createStub = sinon
+      .stub(navigator.credentials, "create")
+      .rejects(new DOMException("Cancelled", "NotAllowedError"));
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert
+      .dom("#change-password-button")
+      .doesNotExist("keeps password controls hidden");
+    assert
+      .dom(".pref-passkeys__add .btn")
+      .exists("renders passkey registration controls");
+
+    await click(".pref-passkeys__add .btn");
+
+    assert.strictEqual(
+      createCalled,
+      1,
+      "requests a passkey challenge directly"
+    );
+    assert
+      .dom(".confirm-session")
+      .doesNotExist("does not ask for a local credential");
+    assert.true(createStub.calledOnce, "starts WebAuthn registration");
+  });
+
+  test("prompts to sign in again when external passkey grant has expired", async function (assert) {
+    pretender.post("/u/create_passkey.json", () =>
+      response(403, {
+        error_type: "second_factor_external_login_required",
+        errors: ["Sign in again"],
+      })
+    );
+
+    await visit("/u/eviltrout/preferences/security");
+    await click(".pref-passkeys__add .btn");
+
+    assert.dom(".dialog-header h3").hasText(i18n("user.confirm_access.title"));
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.passkeys.external_login_required"));
+    assert.dom(".dialog-footer .btn-primary").hasText(i18n("user.log_out"));
+  });
+
+  test("hides passkey and 2FA controls when external auth 2FA is disabled", async function (assert) {
+    this.siteSettings.enforce_second_factor_on_external_auth = false;
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.dom(".pref-passkeys").doesNotExist("hides passkey management");
+    assert
+      .dom(".pref-second-factor")
+      .doesNotExist("hides two-factor management");
+  });
+});

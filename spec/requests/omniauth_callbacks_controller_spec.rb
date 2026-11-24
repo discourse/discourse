@@ -762,24 +762,380 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
-      context "when user has TOTP enabled" do
-        before { user.create_totp(enabled: true) }
+      context "when the user has TOTP enabled" do
+        let!(:totp) { user.create_totp(enabled: true) }
 
-        it "requires second factor for a user with TOTP enabled" do
-          get "/auth/google_oauth2/callback.json"
+        def start_omniauth_challenge(method: :get)
+          public_send(method, "/auth/google_oauth2/callback")
+          location = URI(response.location)
+          expect(location.path).to eq("/session/2fa")
+          Rack::Utils.parse_query(location.query).fetch("nonce")
+        end
 
-          expect(response.status).to eq(302)
+        def verify_totp(nonce, token: totp.totp_object.now)
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+                 second_factor_token: token,
+               },
+               xhr: true
+        end
 
-          data = JSON.parse(cookies[:authentication_data])
+        it "signs in only after a native challenge and returns to the original destination" do
+          SiteSetting.auth_overrides_name = true
+          user.update!(active: false, name: "Original name")
+          cookies[:destination_url] = "/t/123?source=login"
 
-          expect(data["email"]).to eq(user.email)
-          expect(data["omniauth_disallow_totp"]).to eq(true)
+          nonce = nil
+          expect { nonce = start_omniauth_challenge }.not_to change(UserAuthToken, :count)
+          expect(cookies[:authentication_data]).to be_blank
+          expect(user.reload).to have_attributes(active: false, name: "Original name")
 
-          user.update!(email: "different@user.email")
-          get "/auth/google_oauth2/callback.json"
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(401)
 
-          expect(response.status).to eq(302)
-          expect(JSON.parse(cookies[:authentication_data])["email"]).to eq(user.email)
+          verify_totp(nonce, token: "invalid")
+          expect(response.status).to eq(400)
+
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+          callback = response.parsed_body
+          expect(callback).to include(
+            "callback_method" => "POST",
+            "callback_path" => "/auth/second-factor",
+          )
+          expect(user.user_auth_tokens).to be_empty
+
+          # There is no provider response to authenticate again during the continuation.
+          Rails.application.env_config["omniauth.auth"] = nil
+          post callback.fetch("callback_path"), params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to include(
+            "redirect_url" => "/t/123?source=login",
+            "reload" => true,
+          )
+          auth_data = JSON.parse(cookies[:authentication_data])
+          expect(auth_data).to include("authenticated" => true)
+          expect(auth_data).not_to have_key("associate_url")
+          expect(cookies["_bypass_cache"]).to eq("true")
+          expect(user.reload).to have_attributes(active: true, name: "Some name")
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+          get "/session/current.json"
+          expect(response.parsed_body.dig("current_user", "id")).to eq(user.id)
+
+          expect do
+            post callback.fetch("callback_path"), params: { second_factor_nonce: nonce }, xhr: true
+          end.not_to change(UserAuthToken, :count)
+          expect(response.status).to eq(404)
+        end
+
+        it "binds a POST provider callback challenge to the browser session" do
+          nonce = start_omniauth_challenge(method: :post)
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          another_browser = open_session
+          another_browser.post "/auth/second-factor.json",
+                               params: {
+                                 second_factor_nonce: nonce,
+                               },
+                               xhr: true
+          expect(another_browser.response.status).to eq(404)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "uses subfolder-aware challenge and continuation paths" do
+          set_subfolder "/forum"
+
+          get "/auth/google_oauth2/callback", env: { "SCRIPT_NAME" => "/forum" }
+          location = URI(response.location)
+          expect(location.path).to eq("/forum/session/2fa")
+          nonce = Rack::Utils.parse_query(location.query).fetch("nonce")
+          verify_totp(nonce)
+          expect(response.parsed_body["callback_path"]).to eq("/forum/auth/second-factor")
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.parsed_body["redirect_url"]).to eq("/forum")
+        end
+
+        it "requires CSRF protection on the continuation, not the provider callback" do
+          ActionController::Base.allow_forgery_protection = true
+          nonce = start_omniauth_challenge(method: :post)
+          get "/session/csrf.json"
+          csrf = response.parsed_body.fetch("csrf")
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+                 second_factor_token: totp.totp_object.now,
+               },
+               headers: {
+                 "X-CSRF-Token" => csrf,
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(user.user_auth_tokens).to be_empty
+
+          get "/session/csrf.json"
+          post "/auth/second-factor.json",
+               params: {
+                 second_factor_nonce: nonce,
+               },
+               headers: {
+                 "X-CSRF-Token" => response.parsed_body.fetch("csrf"),
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+        ensure
+          ActionController::Base.allow_forgery_protection = false
+        end
+
+        it "rejects expired verified challenges" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          freeze_time 7.minutes.from_now
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(401)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "rejects a verified challenge if the account is subsequently suspended" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+          user.update!(suspended_till: 1.day.from_now)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "does not reactivate an account deactivated after the challenge started" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          user.update!(active: false)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(user.reload.active).to eq(false)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "rejects a challenge if its provider association is revoked" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          UserAssociatedAccount.find_by!(provider_name: "google_oauth2", user:).destroy!
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "does not apply stale provider attributes after the saved association changes" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          freeze_time 1.second.from_now
+          user.user_associated_accounts.sole.update!(info: { "name" => "Updated provider profile" })
+          expect do
+            post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          end.not_to change(UserAuthToken, :count)
+          expect(response).to have_http_status(:forbidden)
+        end
+
+        it "rejects a challenge if the target account email changes" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          user.update!(email: "changed@example.com")
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "does not issue a new token for a signed-in target account before verification" do
+          sign_in(user)
+          token_count = user.user_auth_tokens.count
+          nonce = start_omniauth_challenge
+          expect(user.user_auth_tokens.count).to eq(token_count)
+          verify_totp(nonce)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          expect(user.user_auth_tokens.where(authenticated_with_oauth: true).count).to eq(1)
+        end
+
+        it "cannot use an anonymous login challenge after another login signs in the same account" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          sign_in(user)
+
+          expect do
+            post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          end.not_to change(UserAuthToken, :count)
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it "cannot finish a reauthentication challenge from a replaced session for the same user" do
+          sign_in(user)
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          sign_in(user)
+
+          expect do
+            post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          end.not_to change(UserAuthToken, :count)
+          expect(response).to have_http_status(:not_found)
+        end
+
+        it "does not switch the signed-in account until verification" do
+          sign_in(Fabricate(:user))
+          nonce = start_omniauth_challenge
+          expect(user.user_auth_tokens).to be_empty
+          verify_totp(nonce)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+        end
+
+        it "preserves the awaiting-approval result without prompting for a factor" do
+          SiteSetting.must_approve_users = true
+          user.reload.update!(approved: false)
+          user.email_tokens.update_all(confirmed: true)
+
+          get "/auth/google_oauth2/callback"
+          expect(response).to redirect_to("/")
+          expect(JSON.parse(cookies[:authentication_data])).to include("awaiting_approval" => true)
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "accepts a backup code instead of TOTP" do
+          backup_code = user.generate_backup_codes.first
+          nonce = start_omniauth_challenge
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+                 second_factor_token: backup_code,
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+
+          post response.parsed_body.fetch("callback_path"),
+               params: {
+                 second_factor_nonce: nonce,
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+        end
+
+        it "allows staff sign-in and blocks non-staff in staff-writes-only mode" do
+          Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+
+          get "/auth/google_oauth2/callback"
+          expect(response.status).to eq(503)
+
+          user.update!(admin: true)
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+        ensure
+          Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+        end
+
+        it "challenges enrolled users even when local logins are disabled" do
+          SiteSetting.enable_local_logins = false
+
+          nonce = start_omniauth_challenge
+          expect(user.user_auth_tokens).to be_empty
+
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+        end
+
+        it "allows verifying with a passkey on /session/2fa even when local logins are disabled" do
+          SiteSetting.enable_passkeys = true
+          SiteSetting.enable_local_logins = false
+          user.create_or_fetch_secure_identifier
+          Fabricate(
+            :user_security_key,
+            user: user,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+          )
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+          simulate_localhost_passkey_challenge
+
+          nonce = start_omniauth_challenge
+          get "/session/2fa.json", params: { nonce: }
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body).to include(
+            "passkeys_enabled" => true,
+            "passkey_allowed_credential_ids" => [valid_passkey_data[:credential_id]],
+          )
+
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:passkey],
+                 second_factor_token: valid_passkey_auth_data,
+               },
+               xhr: true
+          expect(response).to have_http_status(:ok)
+          expect(response.parsed_body["ok"]).to eq(true)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response).to have_http_status(:ok)
+          expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+        end
+
+        it "activates unapproved users and queues approval only after the challenge" do
+          Jobs.run_immediately!
+          SiteSetting.must_approve_users = true
+          user.reload.update!(active: false, approved: false)
+
+          nonce = start_omniauth_challenge
+          expect(user.reload).to have_attributes(active: false, email_confirmed?: false)
+          expect(ReviewableUser.pending.where(target: user)).to be_empty
+
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("login.not_approved"))
+          expect(user.reload).to have_attributes(active: true, email_confirmed?: true)
+          expect(ReviewableUser.pending.where(target: user)).to exist
+          expect(user.user_auth_tokens).to be_empty
+        end
+
+        it "rejects a pending continuation after entering full read-only mode" do
+          nonce = start_omniauth_challenge
+          verify_totp(nonce)
+          expect(response.status).to eq(200)
+
+          Discourse.enable_readonly_mode
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(503)
+          expect(user.user_auth_tokens).to be_empty
+        ensure
+          Discourse.disable_readonly_mode
         end
       end
 
@@ -796,33 +1152,92 @@ RSpec.describe Users::OmniauthCallbacksController do
 
           expect(data["authenticated"]).to eq(true)
         end
+
+        it "activates unapproved users and queues approval when external auth 2FA is disabled" do
+          Jobs.run_immediately!
+          SiteSetting.enforce_second_factor_on_external_auth = false
+          SiteSetting.must_approve_users = true
+          user.reload.update!(active: false, approved: false)
+
+          get "/auth/google_oauth2/callback"
+          expect(response).to redirect_to("/")
+          expect(JSON.parse(cookies[:authentication_data])).to include("awaiting_approval" => true)
+          expect(user.reload).to have_attributes(active: true, email_confirmed?: true)
+          expect(ReviewableUser.pending.where(target: user)).to exist
+          expect(user.user_auth_tokens).to be_empty
+        end
       end
 
-      context "when user has security key enabled" do
-        before { Fabricate(:user_security_key_with_random_credential, user: user) }
+      it "does not treat a passkey-only registration as second-factor enrollment" do
+        SiteSetting.enable_passkeys = true
+        SiteSetting.allow_passkeys_for_2fa = true
+        Fabricate(:passkey_with_random_credential, user:)
 
-        it "requires second factor for a user with a security key" do
-          get "/auth/google_oauth2/callback.json"
+        get "/auth/google_oauth2/callback"
+        expect(response).to redirect_to("/")
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+      end
 
-          expect(response.status).to eq(302)
+      it "offers security keys in the native challenge for a security-key-only account" do
+        Fabricate(:user_security_key_with_random_credential, user: user)
 
-          data = JSON.parse(cookies[:authentication_data])
+        get "/auth/google_oauth2/callback"
+        location = URI(response.location)
+        expect(location.path).to eq("/session/2fa")
+        get "#{location.path}.json?#{location.query}"
+        expect(response.parsed_body).to include(
+          "security_keys_enabled" => true,
+          "totp_enabled" => false,
+        )
+        expect(user.user_auth_tokens).to be_empty
+      end
 
-          expect(data["email"]).to eq(user.email)
-          expect(data["omniauth_disallow_totp"]).to eq(true)
+      it "activates unapproved users and queues approval without 2FA" do
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user.reload.update!(active: false, approved: false)
 
-          user.update!(email: "different@user.email")
-          get "/auth/google_oauth2/callback.json"
+        get "/auth/google_oauth2/callback"
+        expect(response).to redirect_to("/")
+        expect(JSON.parse(cookies[:authentication_data])).to include("awaiting_approval" => true)
+        expect(user.reload).to have_attributes(active: true, email_confirmed?: true)
+        expect(ReviewableUser.pending.where(target: user)).to exist
+        expect(user.user_auth_tokens).to be_empty
+      end
 
-          expect(response.status).to eq(302)
-          expect(JSON.parse(cookies[:authentication_data])["email"]).to eq(user.email)
-        end
+      it "challenges and completes OAuth login for a backup-codes-only user" do
+        backup_code = user.generate_backup_codes.first
+
+        get "/auth/google_oauth2/callback"
+        location = URI(response.location)
+        expect(location.path).to eq("/session/2fa")
+        nonce = Rack::Utils.parse_query(location.query).fetch("nonce")
+        expect(user.user_auth_tokens).to be_empty
+
+        post "/session/2fa.json",
+             params: {
+               nonce:,
+               second_factor_method: UserSecondFactor.methods[:backup_codes],
+               second_factor_token: backup_code,
+             },
+             xhr: true
+        expect(response.status).to eq(200)
+
+        post response.parsed_body.fetch("callback_path"),
+             params: {
+               second_factor_nonce: nonce,
+             },
+             xhr: true
+        expect(response.status).to eq(200)
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
       end
 
       context "when sso_payload cookie exist" do
         before do
           SiteSetting.enable_discourse_connect_provider = true
           SiteSetting.discourse_connect_secret = "topsecret"
+          SiteSetting.discourse_connect_provider_secrets =
+            "somewhere.over.rainbow|#{SiteSetting.discourse_connect_secret}"
 
           @sso = DiscourseConnectBase.new
           @sso.nonce = "mynonce"
@@ -848,6 +1263,82 @@ RSpec.describe Users::OmniauthCallbacksController do
           data = JSON.parse(cookies[:authentication_data])
 
           expect(data["destination_url"]).to match(%r{/session/sso_provider\?sso\=.*\&sig\=.*})
+        end
+
+        it "hands off directly to the relying site without prompting twice when require_2fa is enabled" do
+          totp = user.create_totp(enabled: true)
+          @sso.require_2fa = true
+          cookies[:sso_payload] = @sso.payload
+
+          get "/auth/google_oauth2/callback"
+          nonce = Rack::Utils.parse_query(URI(response.location).query).fetch("nonce")
+
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:totp],
+                 second_factor_token: totp.totp_object.now,
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          redirect_url = response.parsed_body.fetch("redirect_url")
+          expect(redirect_url).to start_with("/session/sso_provider?")
+
+          get redirect_url
+          expect(response.status).to eq(302)
+          expect(response.location).to start_with("http://somewhere.over.rainbow/sso?")
+          result = DiscourseConnectBase.parse(URI(response.location).query, "topsecret")
+          expect(result.confirmed_2fa).to eq(true)
+
+          # Reusing the same provider URL cannot replay the single-use login 2FA proof.
+          get redirect_url
+          expect(response.status).to eq(302)
+          expect(URI(response.location).path).to eq("/session/2fa")
+        end
+
+        it "still prompts on the provider when the login challenge used a backup code" do
+          user.create_totp(enabled: true)
+          backup_code = user.generate_backup_codes.first
+          @sso.require_2fa = true
+          cookies[:sso_payload] = @sso.payload
+
+          get "/auth/google_oauth2/callback"
+          nonce = Rack::Utils.parse_query(URI(response.location).query).fetch("nonce")
+
+          post "/session/2fa.json",
+               params: {
+                 nonce:,
+                 second_factor_method: UserSecondFactor.methods[:backup_codes],
+                 second_factor_token: backup_code,
+               },
+               xhr: true
+          expect(response.status).to eq(200)
+
+          post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
+          expect(response.status).to eq(200)
+          redirect_url = response.parsed_body.fetch("redirect_url")
+
+          get redirect_url
+          expect(response.status).to eq(302)
+          expect(URI(response.location).path).to eq("/session/2fa")
+        end
+
+        it "still prompts on the provider when enforce_second_factor_on_external_auth is false" do
+          SiteSetting.enforce_second_factor_on_external_auth = false
+          user.create_totp(enabled: true)
+          @sso.require_2fa = true
+          cookies[:sso_payload] = @sso.payload
+
+          get "/auth/google_oauth2/callback"
+          redirect_url = URI(response.location).request_uri
+          expect(redirect_url).to start_with("/session/sso_provider?")
+
+          get redirect_url
+          expect(response.status).to eq(302)
+          expect(URI(response.location).path).to eq("/session/2fa")
         end
       end
 
@@ -1154,7 +1645,8 @@ RSpec.describe Users::OmniauthCallbacksController do
         # Disconnect
         UserAssociatedAccount.find_by(user_id: user.id).destroy
 
-        # Reconnect flow:
+        # Reconnect is account linking, not a new login.
+        user.create_totp(enabled: true)
         post "/auth/google_oauth2?reconnect=true"
         expect(response.status).to eq(302)
         expect(session[:auth_reconnect]).to eq(true)
@@ -1354,6 +1846,90 @@ RSpec.describe Users::OmniauthCallbacksController do
     it "does not leak 'other_phase' for disabled auth methods onto other methods" do
       get "/auth/twitter/blah"
       expect(response.status).to eq(404)
+    end
+
+    it "challenges and signs in a user returned by a registered plugin authenticator" do
+      FakeAuthenticator.any_instance.stubs(:enabled?).returns(true)
+      totp = user.create_totp(enabled: true)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:fake] = OmniAuth::AuthHash.new(
+        provider: "fake",
+        uid: "external-id",
+        info: {
+          email: user.email,
+        },
+      )
+      Fabricate(:user_associated_account, provider_name: "fake", provider_uid: "external-id", user:)
+
+      get "/auth/fake/callback"
+      location = URI(response.location)
+      expect(location.path).to eq("/session/2fa")
+      nonce = Rack::Utils.parse_query(location.query).fetch("nonce")
+      expect(user.user_auth_tokens).to be_empty
+
+      post "/session/2fa.json",
+           params: {
+             nonce:,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: totp.totp_object.now,
+           },
+           xhr: true
+      expect(response.status).to eq(200)
+      post response.parsed_body.fetch("callback_path"),
+           params: {
+             second_factor_nonce: nonce,
+           },
+           xhr: true
+      expect(response.status).to eq(200)
+      expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+    ensure
+      OmniAuth.config.mock_auth[:fake] = nil
+    end
+
+    it "challenges and signs in when a ManagedAuthenticator matches a user without a UserAssociatedAccount" do
+      FakeAuthenticator.any_instance.stubs(:enabled?).returns(true)
+      totp = user.create_totp(enabled: true)
+      auth_result = Auth::Result.new
+      auth_result.user = user
+      auth_result.email = user.email
+      auth_result.email_valid = true
+      auth_result.extra_data = { provider: "fake", uid: "external-no-assoc" }
+      FakeAuthenticator.any_instance.stubs(:after_authenticate).returns(auth_result)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:fake] = OmniAuth::AuthHash.new(
+        provider: "fake",
+        uid: "external-no-assoc",
+        info: {
+          email: user.email,
+        },
+      )
+
+      get "/auth/fake/callback"
+      location = URI(response.location)
+      expect(location.path).to eq("/session/2fa")
+      nonce = Rack::Utils.parse_query(location.query).fetch("nonce")
+      expect(user.user_associated_accounts).to be_empty
+      expect(user.user_auth_tokens).to be_empty
+
+      post "/session/2fa.json",
+           params: {
+             nonce:,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: totp.totp_object.now,
+           },
+           xhr: true
+      expect(response.status).to eq(200)
+
+      post response.parsed_body.fetch("callback_path"),
+           params: {
+             second_factor_nonce: nonce,
+           },
+           xhr: true
+      expect(response.status).to eq(200)
+      expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+    ensure
+      OmniAuth.config.mock_auth[:fake] = nil
     end
 
     it "runs 'other_phase' for enabled auth methods" do
