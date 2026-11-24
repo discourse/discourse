@@ -1,4 +1,5 @@
 /* eslint-disable ember/no-classic-components, ember/no-observers */
+import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -15,7 +16,10 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ChatSkeleton from "discourse/plugins/chat/discourse/components/chat-skeleton";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 @tagName("")
@@ -33,6 +37,17 @@ export default class ChatDrawer extends Component {
   bodyInlineSize = null;
   hasUnreadMessages = false;
   drawerStyle = null;
+
+  // A retained route keeps the model and params it loaded with until the next route is ready.
+  @cached
+  get routeView() {
+    const { component, model, params } = this.chatDrawerRouter;
+    return component?.().then((RouteComponent) => ({
+      RouteComponent,
+      model,
+      params,
+    }));
+  }
 
   get drawerActions() {
     return {
@@ -319,15 +334,47 @@ export default class ChatDrawer extends Component {
             }}
           />
 
-          <this.chatDrawerRouter.component
-            @close={{this.close}}
-            @drawerActions={{this.drawerActions}}
-            @model={{this.chatDrawerRouter.model}}
-            @openInFullPage={{this.openInFullPage}}
-            @openURL={{this.openURL}}
-            @params={{this.chatDrawerRouter.params}}
-            @toggleExpand={{this.toggleExpand}}
-          />
+          {{#if this.chatDrawerRouter.component}}
+            <DAsyncContent
+              @asyncData={{this.routeView}}
+              @retainWhileReloading={{true}}
+            >
+              <:loading>
+                <div
+                  aria-busy="true"
+                  class="c-drawer-routes chat-drawer-loading"
+                >
+                  <div class="c-navbar-container">
+                    <nav class="c-navbar"></nav>
+                  </div>
+
+                  {{#if this.chatStateManager.isDrawerExpanded}}
+                    {{#if this.chatDrawerRouter.drawerRoute.showsMessages}}
+                      <ChatSkeleton />
+                    {{else}}
+                      <DSkeleton
+                        class="chat-drawer-loading__rows"
+                        @count={{5}}
+                        @height="2.5rem"
+                        @variant="rect"
+                      />
+                    {{/if}}
+                  {{/if}}
+                </div>
+              </:loading>
+              <:content as |view|>
+                <view.RouteComponent
+                  @close={{this.close}}
+                  @drawerActions={{this.drawerActions}}
+                  @model={{view.model}}
+                  @openInFullPage={{this.openInFullPage}}
+                  @openURL={{this.openURL}}
+                  @params={{view.params}}
+                  @toggleExpand={{this.toggleExpand}}
+                />
+              </:content>
+            </DAsyncContent>
+          {{/if}}
         </div>
       </div>
     {{/if}}
