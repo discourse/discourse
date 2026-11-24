@@ -6,6 +6,8 @@ class Service::ContractBase
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations::Callbacks
 
+  validate :values_valid_for_type
+
   delegate :slice, :merge, :except, to: :to_hash
 
   class << self
@@ -65,6 +67,14 @@ class Service::ContractBase
   end
 
   private
+
+  def values_valid_for_type
+    @attributes.each_value do |attribute|
+      next if !attribute.type.respond_to?(:valid_input?)
+      next if attribute.type.valid_input?(attribute.value_before_type_cast)
+      errors.add(attribute.name, :invalid)
+    end
+  end
 
   def nested_attributes_valid?
     nested_attributes.map(&method(:validate_nested)).all?

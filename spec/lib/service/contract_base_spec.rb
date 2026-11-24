@@ -95,6 +95,53 @@ RSpec.describe Service::ContractBase, type: :model do
     end
   end
 
+  describe "Type input validation" do
+    let(:contract_class) do
+      Class.new(described_class) do
+        attribute :enabled, :boolean, default: false
+        attribute :lenient, :boolean, strict: false
+        attribute :settings do
+          attribute :visible, :boolean
+        end
+
+        def self.name = "TestContract"
+      end
+    end
+    let(:params) { { enabled: true } }
+
+    it { is_expected.to be_valid }
+
+    context "when a boolean is omitted" do
+      let(:params) { {} }
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when a boolean is given an unrecognised value" do
+      let(:params) { { enabled: "invalid" } }
+
+      it "is invalid" do
+        expect(contract).to be_invalid
+        expect(contract.errors).to be_of_kind(:enabled, :invalid)
+      end
+    end
+
+    context "when a non-strict boolean is given an unrecognised value" do
+      let(:params) { { lenient: "invalid" } }
+
+      it { is_expected.to be_valid }
+    end
+
+    context "when a nested boolean is given an unrecognised value" do
+      let(:params) { { settings: { visible: [true] } } }
+
+      it "is invalid" do
+        expect(contract).to be_invalid
+        expect(contract.errors).to be_of_kind(:"settings.visible", :invalid)
+      end
+    end
+  end
+
   describe "Nested attributes" do
     let(:contract_class) do
       Class.new(described_class) do
