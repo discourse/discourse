@@ -539,7 +539,7 @@ uk:
         discourse_helper:
           name: "Discourse Помічник"
           description: "AI Bot спеціалізується на допомозі із завданнями, пов’язаними з Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Помічник адміністратора дискурсу"
           description: "ШІ-бот, який відповідає на запитання Discourse та допомагає адміністраторам керувати налаштуваннями сайту"
         web_artifact_creator:

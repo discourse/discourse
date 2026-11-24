@@ -2,7 +2,7 @@
 
 module DiscourseAi
   module Agents
-    class DiscourseAdminAssistant < Agent
+    class AdminAssistant < Agent
       SYSTEM_PROMPT_MODIFIER = :admin_assistant_system_prompt
 
       TOOL_GROUPS = {

@@ -727,7 +727,7 @@ zh_CN:
         discourse_helper:
           name: "Discourse 助手"
           description: "专门帮助处理 Discourse 相关任务的 AI 机器人"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Discourse 管理助手"
           description: "AI 机器人会回答 Discourse 问题，并帮助管理员管理站点设置"
         web_artifact_creator:

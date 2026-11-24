@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
+RSpec.describe DiscourseAi::Agents::AdminAssistant do
   subject(:assistant) { described_class.new }
 
   fab!(:admin)

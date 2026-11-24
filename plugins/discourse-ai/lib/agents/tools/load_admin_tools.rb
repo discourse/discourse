@@ -33,7 +33,7 @@ module DiscourseAi
           if !context.user&.admin?
             return error_response("Only administrators can load administration tools.")
           end
-          if !agent.is_a?(DiscourseAdminAssistant)
+          if !agent.is_a?(AdminAssistant)
             return error_response("This tool requires the Admin Assistant.")
           end
 

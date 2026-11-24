@@ -62,7 +62,7 @@ module DiscourseAi
             Designer,
             ForumResearcher,
             Discover,
-            DiscourseAdminAssistant,
+            AdminAssistant,
           ].freeze
         end
 
@@ -322,7 +322,7 @@ module DiscourseAi
             SentimentClassifier => -36,
             EmotionClassifier => -37,
             AdminDashboardHighlights => -38,
-            DiscourseAdminAssistant => -39,
+            AdminAssistant => -39,
             AskAiQueryRewriter => -40,
             AskAiSynthesis => -41,
             AskAiReporter => -42,

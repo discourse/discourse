@@ -459,7 +459,7 @@ fr:
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Assistant d'administration Discourse"
           description: "Bot d'IA qui répond aux questions sur Discourse et aide les administrateurs à gérer les paramètres du site"
         web_artifact_creator:
