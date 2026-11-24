@@ -2233,3 +2233,4 @@ en:
           title: "AI-Flagged chat message"
         reviewable_ai_tool_action:
           title: "AI Tool Action"
+          approval_heading: "AI action approval"

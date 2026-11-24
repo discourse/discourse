@@ -1237,6 +1237,10 @@ en:
         all:
           title: "Everything"
 
+      pending_post_approval: "Post approval"
+      pending_topic_approval: "Topic approval"
+      pending_account_approval: "Account approval"
+      account_review: "Account review"
       context_question:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
@@ -1245,9 +1249,6 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
-        something_wrong_with_post: "Is there something wrong with this post?"
-        something_wrong_with_topic: "Is there something wrong with this topic?"
-        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -9706,6 +9707,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            approve_account_review: "approved account review"
             removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"

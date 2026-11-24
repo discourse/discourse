@@ -40,24 +40,28 @@ module("Unit | Model | reviewable", function (hooks) {
     );
   });
 
-  test("userReviewableContextQuestion asks whether approval-style items have a problem", function (assert) {
+  test("pending approvals identify what the moderator is approving", function (assert) {
     assert.strictEqual(
       this.build({ type: "ReviewableQueuedPost", topic: { id: 1 } })
         .userReviewableContextQuestion,
-      "Is there something wrong with this post?"
+      "Post approval"
     );
     assert.strictEqual(
       this.build({ type: "ReviewableQueuedPost" })
         .userReviewableContextQuestion,
-      "Is there something wrong with this topic?"
+      "Topic approval"
     );
+    assert.strictEqual(
+      this.build({ type: "ReviewableUser", signup_approval: true })
+        .userReviewableContextQuestion,
+      "Account approval"
+    );
+  });
+
+  test("an already-published post uses the post approval heading", function (assert) {
     assert.strictEqual(
       this.build({ type: "ReviewablePost" }).userReviewableContextQuestion,
-      "Is there something wrong with this post?"
-    );
-    assert.strictEqual(
-      this.build({ type: "ReviewableUser" }).userReviewableContextQuestion,
-      "Is there something wrong with this account?"
+      "Post approval"
     );
   });
 
@@ -73,7 +77,15 @@ module("Unit | Model | reviewable", function (hooks) {
     );
   });
 
-  test("userReviewableContextQuestion is absent for resolved items, flags and plugin approval types", function (assert) {
+  test("a flagged account under review gets a neutral heading", function (assert) {
+    assert.strictEqual(
+      this.build({ type: "ReviewableUser", signup_approval: false })
+        .userReviewableContextQuestion,
+      "Account review"
+    );
+  });
+
+  test("userReviewableContextQuestion is absent for resolved items, flags and plugin types without an approval heading", function (assert) {
     assert.strictEqual(
       this.build({ type: "ReviewableUser", status: REJECTED })
         .userReviewableContextQuestion,
@@ -91,8 +103,8 @@ module("Unit | Model | reviewable", function (hooks) {
     );
     assert.strictEqual(
       this.build({
-        type: "ReviewableAiToolAction",
-        type_source: "discourse-ai",
+        type: "ReviewablePluginQueue",
+        type_source: "a-plugin",
       }).userReviewableContextQuestion,
       null
     );
