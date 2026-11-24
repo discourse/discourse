@@ -1126,4 +1126,64 @@ RSpec.describe AppearanceStyles::Policy do
       expect(errors).to include("in light mode", "in dark mode")
     end
   end
+
+  context "with Horizon" do
+    def horizon(styles)
+      described_class.call(styles, base_theme_id: Theme::CORE_THEMES["horizon"])
+    end
+
+    it "allows non-color corners, spacing and typography" do
+      result =
+        horizon(
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+          rules: [
+            {
+              area: "topic_list_item",
+              declarations: {
+                "padding" => "12px",
+                "font-weight" => "600",
+              },
+            },
+          ],
+        )
+      expect(result.errors).to eq([])
+    end
+
+    it "refuses color variables, including scoped rule variables" do
+      [
+        { variables: { "--d-sidebar-background" => "var(--secondary)" } },
+        {
+          rules: [
+            {
+              area: "topic_list_item",
+              declarations: {
+                "--d-sidebar-link-color" => "var(--primary)",
+              },
+            },
+          ],
+        },
+      ].each do |styles|
+        result = horizon(styles)
+        expect(result).not_to be_valid
+        expect(result.errors.join).to include("styles on Horizon can't set colors yet")
+      end
+    end
+
+    it "refuses backgrounds, colors and composite color-bearing properties" do
+      {
+        "color" => "var(--primary)",
+        "background" => "var(--secondary)",
+        "background-image" => "linear-gradient(var(--secondary), var(--tertiary))",
+        "border" => "1px solid var(--primary)",
+        "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.1)",
+        "opacity" => "0.8",
+      }.each do |property, value|
+        result = horizon(rules: [{ area: "topic_list_item", declarations: { property => value } }])
+        expect(result).not_to be_valid
+        expect(result.errors.join).to include("contrast can't be checked on Horizon")
+      end
+    end
+  end
 end

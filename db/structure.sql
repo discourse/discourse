@@ -1463,7 +1463,8 @@ CREATE TABLE public.appearance_changes (
     updated_at timestamp(6) without time zone NOT NULL,
     styles jsonb DEFAULT '{}'::jsonb NOT NULL,
     css text DEFAULT ''::text NOT NULL,
-    replaces_theme_id integer
+    replaces_theme_id integer,
+    parent_theme_id integer
 );
 
 
@@ -21851,6 +21852,13 @@ CREATE INDEX index_api_keys_on_user_id ON public.api_keys USING btree (user_id);
 
 
 --
+-- Name: index_appearance_changes_on_parent_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_appearance_changes_on_parent_theme_id ON public.appearance_changes USING btree (parent_theme_id);
+
+
+--
 -- Name: index_appearance_changes_on_theme_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26953,6 +26961,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124173030'),
 ('20261124170000'),
 ('20261124152608'),
 ('20261124152603'),

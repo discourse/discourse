@@ -12,52 +12,73 @@ RSpec.describe DiscourseAi::Agents::ConceptFinder do
   end
 
   describe "#system_prompt" do
-    before do
+    it "is static across concept additions and canonicalizes to default_locale" do
+      SiteSetting.default_locale = "fr"
+      prompt_before = agent.system_prompt
+
       Fabricate(:inferred_concept, name: "programming")
       Fabricate(:inferred_concept, name: "testing")
-      Fabricate(:inferred_concept, name: "ruby")
-    end
 
-    it "includes existing concepts when available" do
-      prompt = agent.system_prompt
+      prompt_after = agent.system_prompt
 
-      InferredConcept.all.each { |concept| expect(prompt).to include(concept.name) }
-    end
-
-    it "handles empty existing concepts" do
-      InferredConcept.destroy_all
-      prompt = agent.system_prompt
-
-      expect(prompt).not_to include("following concepts already exist")
-      expect(prompt).to include("advanced concept tagging system")
-    end
-
-    it "limits existing concepts to 100" do
-      manager = instance_double(DiscourseAi::InferredConcepts::Manager)
-      allow(DiscourseAi::InferredConcepts::Manager).to receive(:new).and_return(manager)
-      allow(manager).to receive(:list_concepts).with(limit: 100).and_return(%w[concept1 concept2])
-
-      agent.system_prompt
-    end
-
-    it "includes format instructions" do
-      prompt = agent.system_prompt
-
-      expect(prompt).to include('{"concepts": ["concept1", "concept2", "concept3"]}')
-    end
-
-    it "includes language preservation instruction" do
-      prompt = agent.system_prompt
-
-      expect(prompt).to include("original language of the text")
+      expect(prompt_after).to eq(prompt_before)
+      expect(prompt_after).to include("fr")
+      expect(prompt_after).to include("concept_id")
+      expect(prompt_after).to include("proposed_new")
+      expect(prompt_after).not_to include("programming")
     end
   end
 
   describe "#response_format" do
-    it "defines correct response format" do
-      format = agent.response_format
-
-      expect(format).to eq([{ "array_type" => "string", "key" => "concepts", "type" => "array" }])
+    it "defines strict matches and proposed_new object arrays" do
+      expect(agent.response_format).to eq(
+        [
+          {
+            "key" => "matches",
+            "type" => "array",
+            "array_type" => "object",
+            "max_items" => 7,
+            "items" => {
+              "type" => "object",
+              "additionalProperties" => false,
+              "required" => %w[concept_id relevance primary],
+              "properties" => {
+                "concept_id" => {
+                  "type" => "integer",
+                },
+                "relevance" => {
+                  "type" => "number",
+                },
+                "primary" => {
+                  "type" => "boolean",
+                },
+              },
+            },
+          },
+          {
+            "key" => "proposed_new",
+            "type" => "array",
+            "array_type" => "object",
+            "max_items" => 3,
+            "items" => {
+              "type" => "object",
+              "additionalProperties" => false,
+              "required" => %w[name description parent_concept_id],
+              "properties" => {
+                "name" => {
+                  "type" => "string",
+                },
+                "description" => {
+                  "type" => "string",
+                },
+                "parent_concept_id" => {
+                  "type" => "integer",
+                },
+              },
+            },
+          },
+        ],
+      )
     end
   end
 end

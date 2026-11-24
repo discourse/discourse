@@ -665,14 +665,17 @@ en:
           palettes: "Save palettes: %{name}"
           existing_palettes: "Use palettes: %{name}"
           theme: "Save theme: %{name}"
+          component: "Save styles: %{name}"
         save_appearance_details:
           palettes: "Saves these colors without changing the site, so you can preview them first."
           existing_palettes: "Saves the choice of these palettes, which the site already has, without changing the site, so you can preview them first."
           theme: "Saves a new theme based on Foundation, core's default design, without making it the default theme, so you can preview it first."
+          component: "Saves these styles as a component of the current theme, turned off, so you can preview them first. The site keeps its theme and layout."
         save_appearance_question: "Do you want to save this?"
         activate_appearance_title: "Make live: %{name}"
         activate_appearance_details: "Everyone sees this as soon as you approve it. [Preview it first](%{preview_url}). You can switch back afterwards."
         activate_appearance_question: "Do you want to make this live?"
+        activate_component_details: "Turns the component on for everyone as soon as you approve it. %{theme} keeps its layout. [Preview it first](%{preview_url}). You can switch back afterwards."
         revert_appearance_title: "Switch back from: %{name}"
         revert_appearance_details: "Restores how the site looked before %{name} went live."
         revert_appearance_question: "Do you want to switch back?"
@@ -1506,6 +1509,11 @@ en:
       styles_failed: "I couldn't write styles that pass the theme's safety checks. Ask the administrator to describe the change differently, or offer to build it with their own AI app."
       more_styles: "More style changes"
       theme_changed: "This theme has been changed since it was saved, so I can't make it live. Make it the default in Admin > Appearance > Themes instead, or ask me for a new version."
+      component_target: "Styles added to %{theme} as a component, so its layout stays"
+      component_version_target: "A new version of %{name}, added to %{theme} as a component. The current version is kept so you can switch back."
+      component_label: "Component: %{name}"
+      component_on: "On"
+      component_off: "Off"
       new_version_target: "A new version of %{name}, saved as a draft until it's made live. The current version is kept so you can switch back."
       styles_unsupported: "These styles can't make that change: %{requests}. Offer to build it with the administrator's own AI app instead."
       name_required: "Give the palettes or theme a short name."
@@ -1723,6 +1731,7 @@ en:
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
+        enable_embeddings_first: "You must enable AI embeddings and select an embedding model before enabling this feature."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     decision_models:
