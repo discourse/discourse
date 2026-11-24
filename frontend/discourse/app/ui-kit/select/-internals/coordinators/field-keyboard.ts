@@ -64,7 +64,11 @@ export function handleFieldKeydown(
       }
       return true;
     }
-    if (!multiple && (event.key === "Backspace" || event.key === "Delete")) {
+    if (
+      !multiple &&
+      engine.hasRemovableValue &&
+      (event.key === "Backspace" || event.key === "Delete")
+    ) {
       event.preventDefault();
       engine.clear();
       return true;

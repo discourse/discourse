@@ -228,11 +228,18 @@ export interface DSelectSignature {
      *
      * It does NOT gate clearing by keyboard, which is always available from an empty query:
      * Backspace removes the last chip in multi-select (repeat to empty it), and Backspace or
-     * Delete clears a single selection. That matches the family this replaces, which clears on
+     * Delete clears a single selection unless it is `@required`. That matches the family this replaces, which clears on
      * Backspace-with-an-empty-filter with no opt-in — so a picker is never a place a reader can
      * reach a value but not leave.
      */
     clearable?: boolean;
+    /**
+     * A single value the field must always hold, such as a choice with no empty state. Backspace
+     * and Delete don't empty it, it shows no clear control or none option (asking for either
+     * warns in development), and the field carries `aria-required`. Ignored on multi-select,
+     * where removing chips is unchanged.
+     */
+    required?: boolean;
     /** Fully disables the control: not focusable, cannot open, cannot mutate. */
     disabled?: boolean;
     /** Locks the value: focusable and readable, but cannot open, edit, or mutate. */
@@ -690,6 +697,10 @@ export default class DSelect extends Component<DSelectSignature> {
         this.labelledByWithValue
       }}
       aria-readonly={{this.presenter.triggerRootReadonly}}
+      aria-required={{unless
+        this.presenter.isDesktopTypeahead
+        (if this.engine.required "true")
+      }}
       {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
       class={{dConcatClass "d-select" this.engine.legacyKinds}}
       data-select-id={{this.listboxId}}

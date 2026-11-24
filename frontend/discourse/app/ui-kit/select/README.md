@@ -904,11 +904,14 @@ again.
 
 **`config`** overrides presentation. The core keys are `caretIcon` (a string or
 `{ open, closed }`), `iconOnly`, `searchIcon`, `icon`, `showCaret`, `clearable`, `noneOption`,
-`loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
+`required`, `loadingStatus`, `disabled` and `texts` (see [Texts](#texts)), plus the keys a recipe declares
 (see [Recipes](#recipes)). `current` holds the values so far, starting from the call site's
 arguments. Every key is last-wins except `disabled`, which can add a lock but never lift one, and
 `texts`, which merges per entry. `iconOnly` needs an `icon` and an `ariaLabel` text above the
-engine's default: without either it is ignored with a warning. A key that is neither core nor declared
+engine's default: without either it is ignored with a warning. A `clearable` or `noneOption`
+that lands on a `required` single select asserts in development, because either would empty a
+value that must stay; a `forAll` step that turns them on leaves those selects alone by returning
+nothing when `current.required` is true. A key that is neither core nor declared
 warns in development and is ignored, and a non-object result is skipped. The values resolve once
 per change in what they read, not once per option. The context has `value` and `control`, and no
 `config`, because config cannot depend on itself.
@@ -1165,6 +1168,10 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
   its value instead of the `placeholder` text. A field that should prompt for a choice leaves the
   none option out, and uses `@clearable` if the value can be cleared. `@maximum` and `@minimum` cap the selection
   and announce the limit.
+- `@required` is for a single value the field must always hold, such as a choice with no empty
+  state. Backspace and Delete, which otherwise empty a single selection from an empty query,
+  leave it alone, and the field carries `aria-required`. Combining it with `@clearable` or
+  `@noneOption` asserts in development. Multi-selects ignore it.
 - Held options stay listed and marked as selected, which keeps the selection reachable for
   assistive technology. `@hideSelected` exists, but is not a default to copy from the old
   component.

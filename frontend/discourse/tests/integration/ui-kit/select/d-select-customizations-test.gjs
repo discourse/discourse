@@ -349,6 +349,50 @@ module(
       assert.dom(".d-select__clear").exists();
     });
 
+    test("clearable from an extension on a @required select asserts", async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+      overrideOptions(() => ({ clearable: true }));
+
+      await render(
+        <template>
+          <DSelect @options={{ITEMS}} @required={{true}} @value={{1}} />
+        </template>
+      );
+
+      assert.true(
+        messages.some(
+          (message) =>
+            message.includes("@required") &&
+            message.includes("current.required")
+        ),
+        `the assertion says how an extension can skip required fields: ${messages}`
+      );
+    });
+
+    test("an extension that skips required selects leaves them alone", async function (assert) {
+      const messages = [];
+      setupOnerror((error) => messages.push(error.message));
+      overrideOptions((current) =>
+        current.required ? {} : { clearable: true }
+      );
+
+      await render(
+        <template>
+          <div class="required">
+            <DSelect @options={{ITEMS}} @required={{true}} @value={{1}} />
+          </div>
+          <div class="optional">
+            <DSelect @options={{ITEMS}} @value={{1}} />
+          </div>
+        </template>
+      );
+
+      assert.deepEqual(messages, [], "nothing asserts");
+      assert.dom(".required .d-select__clear").doesNotExist();
+      assert.dom(".optional .d-select__clear").exists();
+    });
+
     test("placeholder reaches the single trigger of every variant", async function (assert) {
       overrideOptions(() => ({ texts: { placeholder: "From extension" } }));
 

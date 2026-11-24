@@ -2,6 +2,7 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { createCache, getValue } from "@glimmer/tracking/primitives/cache";
 import { untrack } from "@glimmer/validator";
+import { assert } from "@ember/debug";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
 import { bind } from "discourse/lib/decorators";
@@ -1068,6 +1069,13 @@ export default class SelectEngine {
   @cached
   get config(): SelectConfig {
     const args = this.#args.presentationArgs;
+    const noneOption = args.noneOption ?? this.#args.noneOptionDefault;
+    assert(
+      `DSelect: \`@required\` keeps a value, so it can't also take ${
+        args.clearable ? "`@clearable`" : "`@noneOption`"
+      }, which would empty it.`,
+      !args.required || this.multiple || !(args.clearable || noneOption)
+    );
     return this.#customizations.resolveOptions(
       {
         caretIcon: args.caretIcon,
@@ -1076,7 +1084,8 @@ export default class SelectEngine {
         icon: args.icon,
         showCaret: args.showCaret,
         clearable: args.clearable,
-        noneOption: args.noneOption ?? this.#args.noneOptionDefault,
+        noneOption,
+        required: args.required,
         loadingStatus: args.loadingStatus,
         disabled: args.disabled,
       },
@@ -1187,9 +1196,14 @@ export default class SelectEngine {
     return this.#selectionActions.remaining;
   }
 
-  /** Whether a held value can be removed: one that isn't in {@link SelectEngineInit#lockedValues}. */
+  /** Whether a held value can be removed: one that isn't locked, and not a required single value. */
   get hasRemovableValue(): boolean {
-    return this.#selectionActions.hasRemovableValue;
+    return !this.required && this.#selectionActions.hasRemovableValue;
+  }
+
+  /** Whether the field must always hold its single value; never true for multi-select. */
+  get required(): boolean {
+    return !!this.config.required;
   }
 
   /** Whether this is a multi-select. */

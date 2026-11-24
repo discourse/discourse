@@ -118,6 +118,11 @@ export interface SelectPresentationConfig {
   clearable?: boolean;
   /** Adds a single-select "none" row that clears the value; off by default. */
   noneOption?: boolean;
+  /**
+   * A single value the field must always hold: nothing empties it, and the field says it is
+   * required. Ignored on multi-select.
+   */
+  required?: boolean;
   /** An additive lock: a later customization cannot remove it. */
   disabled?: boolean;
 }
@@ -150,6 +155,7 @@ const CORE_CONFIG_KEYS = new Set<keyof SelectPresentationConfig>([
   "showCaret",
   "clearable",
   "noneOption",
+  "required",
   "disabled",
 ]);
 
@@ -558,7 +564,18 @@ export default class SelectCustomizations {
       );
       current = this.#configSnapshot(next, layers, wrappers, textInputs);
     });
-    const noneOption = !!current.noneOption;
+    const required = !!current.required && !textInputs.multiple;
+    // The call site's own arguments are checked before customizations run, so a conflict
+    // here comes from an extension.
+    assert(
+      `DSelect: an extension set ${
+        current.clearable ? "`clearable`" : "`noneOption`"
+      } on a \`@required\` select, which must keep its value. Return nothing for it when ` +
+        "`current.required` is true.",
+      !required || !(current.clearable || current.noneOption)
+    );
+    const clearable = required ? false : current.clearable;
+    const noneOption = !required && !!current.noneOption;
     const loadingStatus = !!current.loadingStatus;
     let iconOnly = current.iconOnly;
     if (iconOnly && !selectTextResolver(current)!.explicit("ariaLabel")) {
@@ -586,12 +603,21 @@ export default class SelectCustomizations {
       iconOnly = false;
     }
     if (
+      required !== current.required ||
+      clearable !== current.clearable ||
       noneOption !== current.noneOption ||
       loadingStatus !== current.loadingStatus ||
       iconOnly !== current.iconOnly
     ) {
       current = this.#configSnapshot(
-        { ...current, noneOption, loadingStatus, iconOnly },
+        {
+          ...current,
+          required,
+          clearable,
+          noneOption,
+          loadingStatus,
+          iconOnly,
+        },
         layers,
         wrappers,
         textInputs

@@ -243,6 +243,7 @@ const SingleTriggerDisplay: TemplateOnlyComponent<SingleTriggerDisplaySignature>
         <ComboboxQueryInput
           aria-busy={{if @pending "true"}}
           aria-invalid={{if @invalid "true"}}
+          aria-required={{if @engine.required "true"}}
           id={{@id}}
           @ariaOwns={{true}}
           {{! Only the resting held value needs a description. Pending feedback can also
