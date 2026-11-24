@@ -1,5 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -119,5 +120,32 @@ acceptance("Admin - Edit category topic template", function (needs) {
     assert
       .dom(".d-floating-control-bar")
       .doesNotExist("banner is gone after saving");
+  });
+
+  test("Selecting form templates with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    putData = null;
+    await visit("/c/bug/edit/topic-template");
+
+    await click(".toggle-template-type");
+
+    const select = dSelect(
+      "[data-identifier='category-form-templates'][data-trigger]"
+    );
+    await select.open();
+    await select.select(2);
+    await select.select(1);
+
+    assert
+      .dom(".d-floating-control-bar")
+      .exists("banner is shown after selecting form templates");
+
+    await click(".d-floating-control-bar .btn-primary");
+
+    assert.deepEqual(
+      putData.form_template_ids,
+      [2, 1],
+      "it sends the picked form template ids"
+    );
   });
 });

@@ -6942,6 +6942,9 @@ en:
 
     form_template_chooser:
       select_template: "Select form templates"
+      label: "Form template"
+      label_multiple: "Form templates"
+      none_yet: "No form templates yet"
     form_templates:
       upload_field:
         upload: "Upload"

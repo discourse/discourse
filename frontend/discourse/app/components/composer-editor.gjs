@@ -45,6 +45,7 @@ import FormTemplateChooser from "discourse/select-kit/components/form-template-c
 import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
 import DEditor from "discourse/ui-kit/d-editor";
 import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
+import DSelectFormTemplate from "discourse/ui-kit/select/recipes/form-templates/d-select-form-template";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -968,13 +969,26 @@ export default class ComposerEditor extends Component {
           {{yield}}
 
           {{#if (gt this.composer.formTemplateIds.length 1)}}
-            <FormTemplateChooser
-              class="composer-select-form-template"
-              @filteredIds={{this.composer.formTemplateIds}}
-              @onChange={{this.updateSelectedFormTemplateId}}
-              @options={{hash maximum=1}}
-              @value={{this.selectedFormTemplateId}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectFormTemplate
+                class="composer-select-form-template"
+                @formTemplateIds={{this.composer.formTemplateIds}}
+                @identifier="composer-form-template"
+                @onChange={{this.updateSelectedFormTemplateId}}
+                @required={{true}}
+                @value={{this.selectedFormTemplateId}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <FormTemplateChooser
+                class="composer-select-form-template"
+                @filteredIds={{this.composer.formTemplateIds}}
+                @onChange={{this.updateSelectedFormTemplateId}}
+                @options={{hash maximum=1}}
+                @value={{this.selectedFormTemplateId}}
+              />
+            {{/if}}
           {{/if}}
           <form
             id="form-template-form"

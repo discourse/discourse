@@ -8,6 +8,7 @@ import FormTemplateChooser from "discourse/select-kit/components/form-template-c
 import DEditor from "discourse/ui-kit/d-editor";
 import DTextField from "discourse/ui-kit/d-text-field";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import DSelectFormTemplate from "discourse/ui-kit/select/recipes/form-templates/d-select-form-template";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTopicTemplateEditor extends Component {
@@ -133,11 +134,23 @@ export default class CategoryTopicTemplateEditor extends Component {
 
       {{#if this.showFormTemplate}}
         <div class="control-group">
-          <FormTemplateChooser
-            class="select-category-template"
-            @onChange={{this.handleFormTemplateChange}}
-            @value={{@category.form_template_ids}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectFormTemplate
+              class="select-category-template"
+              @identifier="category-form-templates"
+              @multiple={{true}}
+              @onChange={{this.handleFormTemplateChange}}
+              @value={{@category.form_template_ids}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <FormTemplateChooser
+              class="select-category-template"
+              @onChange={{this.handleFormTemplateChange}}
+              @value={{@category.form_template_ids}}
+            />
+          {{/if}}
 
           <p class="select-category-template__info desc">
             {{#if this.currentUser.staff}}

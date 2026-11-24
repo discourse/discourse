@@ -365,33 +365,72 @@ describe "Composer Form Templates" do
     expect(composer).to have_form_template_chooser
   end
 
-  it "updates the form template when a different template is selected" do
-    category_page.visit(category_with_multiple_templates_1)
-    category_page.new_topic_button.click
-    expect(composer).to have_form_template_field("input")
-    form_template_chooser.select_row_by_name(form_template_2.name)
-    expect(composer).to have_form_template_field("checkbox")
+  def form_template_select
+    PageObjects::Components::UiKit::DSelect.by_identifier("composer-form-template")
   end
 
-  it "shows the correct template options when switching categories" do
-    category_page.visit(category_with_multiple_templates_1)
-    category_page.new_topic_button.click
-    expect(composer).to have_form_template_chooser
-    form_template_chooser.expand
-    expect(form_template_chooser).to have_selected_choice_name(form_template_1.name)
-    expect(form_template_chooser).to have_option_name(form_template_2.name)
-    composer.switch_category(category_with_multiple_templates_2.name)
-    form_template_chooser.expand
-    expect(form_template_chooser).to have_selected_choice_name(form_template_3.name)
-    expect(form_template_chooser).to have_option_name(form_template_4.name)
+  def pick_form_template(name)
+    if SiteSetting.enable_new_select_controls
+      form_template_select.select_name(name)
+    else
+      form_template_chooser.select_row_by_name(name)
+    end
   end
 
-  it "shows the correct template name in the dropdown header after switching templates" do
-    category_page.visit(category_with_multiple_templates_1)
-    category_page.new_topic_button.click
-    expect(form_template_chooser).to have_selected_name(form_template_1.name)
-    form_template_chooser.select_row_by_name(form_template_2.name)
-    expect(form_template_chooser).to have_selected_name(form_template_2.name)
+  def expect_held_form_template(name)
+    if SiteSetting.enable_new_select_controls
+      expect(form_template_select).to have_selected_name(name)
+    else
+      expect(form_template_chooser).to have_selected_name(name)
+    end
+  end
+
+  def expect_offered_form_templates(held, other)
+    if SiteSetting.enable_new_select_controls
+      form_template_select.open
+      expect(form_template_select).to have_selected_option_name(held)
+      expect(form_template_select).to have_option_name(other)
+      form_template_select.close
+    else
+      form_template_chooser.expand
+      expect(form_template_chooser).to have_selected_choice_name(held)
+      expect(form_template_chooser).to have_option_name(other)
+    end
+  end
+
+  shared_examples "picking a form template" do
+    it "updates the form template when a different template is selected" do
+      category_page.visit(category_with_multiple_templates_1)
+      category_page.new_topic_button.click
+      expect(composer).to have_form_template_field("input")
+      pick_form_template(form_template_2.name)
+      expect(composer).to have_form_template_field("checkbox")
+    end
+
+    it "shows the correct template options when switching categories" do
+      category_page.visit(category_with_multiple_templates_1)
+      category_page.new_topic_button.click
+      expect(composer).to have_form_template_chooser
+      expect_offered_form_templates(form_template_1.name, form_template_2.name)
+      composer.switch_category(category_with_multiple_templates_2.name)
+      expect_offered_form_templates(form_template_3.name, form_template_4.name)
+    end
+
+    it "shows the correct template name in the dropdown header after switching templates" do
+      category_page.visit(category_with_multiple_templates_1)
+      category_page.new_topic_button.click
+      expect_held_form_template(form_template_1.name)
+      pick_form_template(form_template_2.name)
+      expect_held_form_template(form_template_2.name)
+    end
+  end
+
+  include_examples "picking a form template"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "picking a form template"
   end
 
   it "allows uploading from paste after switching from a template category to a non-template category" do

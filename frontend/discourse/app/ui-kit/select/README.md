@@ -1456,6 +1456,16 @@ name alone doesn't say what is being granted. Descriptions may hold markup, so t
 them as plain text without loading or running anything in them, and cuts one longer than 200
 characters short (the server allows 500).
 
+#### Form template recipe
+
+**`DSelectFormTemplate`** (kind `select-form-template`) picks form templates by name. The server
+can't search them, so the recipe fetches every template the user can see once, sorts them by
+name and hands them to the select as `@options`, which searches them in the list.
+`@formTemplateIds` limits the list to those templates, and a new set of ids changes the list
+without fetching again. `@value` and `@onChange` use the template's id, or an array of ids with
+`@multiple`. The picker is named "Form template", or "Form templates" when it holds several, and
+says "No form templates yet" when there are none at all.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 

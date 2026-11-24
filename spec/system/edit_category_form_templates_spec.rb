@@ -16,48 +16,58 @@ describe "Edit Category Form Templates" do
     sign_in(admin)
   end
 
-  describe "when editing a category with no form templates set" do
-    before { category.update(form_template_ids: []) }
+  shared_examples "editing form templates" do
+    describe "when editing a category with no form templates set" do
+      before { category.update(form_template_ids: []) }
 
-    it "disables form templates and enables the topic template" do
-      category_page.visit_edit_template(category)
-      expect(category_page).not_to have_form_template_enabled
-      expect(category_page).to have_d_editor
+      it "disables form templates and enables the topic template" do
+        category_page.visit_edit_template(category)
+        expect(category_page).not_to have_form_template_enabled
+        expect(category_page).to have_d_editor
+      end
+
+      it "allows selecting and saving one form template" do
+        category_page.visit_edit_template(category)
+        category_page.toggle_form_templates
+        expect(category_page).to have_no_d_editor
+        category_page.select_form_template(form_template.name)
+        expect(category_page).to have_selected_template(form_template.name)
+        category_page.save_settings
+
+        expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
+      end
+
+      it "allows selecting and saving multiple form templates" do
+        category_page.visit_edit_template(category)
+        category_page.toggle_form_templates
+        category_page.select_form_template(form_template.name)
+        category_page.select_form_template(form_template_2.name)
+        category_page.save_settings
+
+        expect(Category.find_by_id(category.id).form_template_ids).to eq(
+          [form_template.id, form_template_2.id],
+        )
+      end
     end
 
-    it "allows selecting and saving one form template" do
-      category_page.visit_edit_template(category)
-      category_page.toggle_form_templates
-      expect(category_page).to have_no_d_editor
-      category_page.select_form_template(form_template.name)
-      expect(category_page).to have_selected_template(form_template.name)
-      category_page.save_settings
+    describe "when editing a category with form templates set" do
+      before { category.update(form_template_ids: [form_template.id, form_template_2.id]) }
 
-      expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
-    end
-
-    it "allows selecting and saving multiple form templates" do
-      category_page.visit_edit_template(category)
-      category_page.toggle_form_templates
-      category_page.select_form_template(form_template.name)
-      category_page.select_form_template(form_template_2.name)
-      category_page.save_settings
-
-      expect(Category.find_by_id(category.id).form_template_ids).to eq(
-        [form_template.id, form_template_2.id],
-      )
+      it "enables form templates and shows the selected templates" do
+        category_page.visit_edit_template(category)
+        expect(category_page).to have_form_template_enabled
+        expect(category_page).to have_no_d_editor
+        selected_templates = "#{form_template.name},#{form_template_2.name}"
+        expect(category_page).to have_selected_template(selected_templates)
+      end
     end
   end
 
-  describe "when editing a category with form templates set" do
-    before { category.update(form_template_ids: [form_template.id, form_template_2.id]) }
+  include_examples "editing form templates"
 
-    it "enables form templates and shows the selected templates" do
-      category_page.visit_edit_template(category)
-      expect(category_page).to have_form_template_enabled
-      expect(category_page).to have_no_d_editor
-      selected_templates = "#{form_template.name},#{form_template_2.name}"
-      expect(category_page).to have_selected_template(selected_templates)
-    end
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "editing form templates"
   end
 end

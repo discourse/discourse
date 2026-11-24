@@ -396,7 +396,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☐ `TimezoneInput`, 5 sites: profile preferences, local dates, the workflows settings and
     timezone control, and the events builder. A fixed list, so a typeahead `DSelect`, likely
     through a small recipe.
-  - ☐ `FormTemplateChooser`, 2 sites: the composer and the category topic template editor.
+  - ☑ `FormTemplateChooser`, 2 sites: the composer and the category topic template editor. Both
+    branch on the flag to the new `DSelectFormTemplate` recipe (2026-11-24), which fetches the
+    templates once and searches them in the list. The composer's is a single typeahead that hands
+    back a number, not a one-item array, and ignores a cleared value so a topic keeps its form. The
+    category's holds several and, when no templates exist, says so instead of being disabled.
   - ☑ `FlairChooser`, 1 site: account preferences. It branches on the flag to a `DSelect`
     (2026-11-24) that draws each group's flair before its name, in the list and in the field,
     through the shared `d-select__glyph` the badge recipe also uses. "(none)" is the none option,

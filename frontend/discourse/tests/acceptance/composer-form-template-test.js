@@ -3,7 +3,9 @@ import {
   currentURL,
   fillIn,
   find,
+  focus,
   settled,
+  triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -14,9 +16,13 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
+
+const FORM_TEMPLATE_SELECT =
+  "[data-identifier='composer-form-template'][data-trigger]";
 
 const FORM_TEMPLATES = [
   {
@@ -217,6 +223,72 @@ acceptance("Composer Form Template", function (needs) {
       selectKit(".form-template-chooser").header().value(),
       "2"
     );
+    assert
+      .dom(".form-template-field__input[name='activity-date']")
+      .exists("it renders form template field");
+  });
+
+  test("picks a form template with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/");
+    await click("#create-topic");
+
+    assert.dSelect(FORM_TEMPLATE_SELECT).hasLabel("Testing");
+    assert
+      .dom(".form-template-field__input[name='full-name']")
+      .exists("the held template's form is shown");
+
+    const select = dSelect(FORM_TEMPLATE_SELECT);
+    await select.open();
+    assert
+      .dSelect(FORM_TEMPLATE_SELECT)
+      .hasOptions([2, 3, 4, 1], "the category's templates, by name");
+
+    await select.select(2);
+
+    assert
+      .dom(".form-template-field__input[name='activity-date']")
+      .exists("the picked template's form is shown");
+    assert
+      .dom(".form-template-field__input[name='full-name']")
+      .doesNotExist("in place of the other one");
+  });
+
+  test("the new select can't empty the form template", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/");
+    await click("#create-topic");
+
+    const select = dSelect(FORM_TEMPLATE_SELECT);
+    await select.open();
+    await select.select(2);
+
+    const input = `${FORM_TEMPLATE_SELECT} [role='combobox']`;
+    await focus(input);
+    await fillIn(input, "");
+    await triggerKeyEvent(input, "keydown", "Backspace");
+    await focus("#reply-title");
+
+    assert
+      .dSelect(FORM_TEMPLATE_SELECT)
+      .hasLabel("Another Test", "the picked template stays, not the first");
+    assert
+      .dom(input)
+      .hasAria("required", "true", "the field says a template is required");
+    assert
+      .dom(".form-template-field__input[name='activity-date']")
+      .exists("and its form stays");
+  });
+
+  test("the new select opens on the specified form template", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/");
+
+    const composer = this.owner.lookup("service:composer");
+    await composer.openNewTopic({ formTemplate: FORM_TEMPLATES[1] });
+    await settled();
+
+    assert.dSelect(FORM_TEMPLATE_SELECT).hasLabel("Another Test");
     assert
       .dom(".form-template-field__input[name='activity-date']")
       .exists("it renders form template field");

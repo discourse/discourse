@@ -100,6 +100,10 @@ module PageObjects
       end
 
       def has_selected_template?(template_name)
+        if SiteSetting.enable_new_select_controls
+          return form_template_select.has_selected_names?(*template_name.split(","))
+        end
+
         has_css?(".select-category-template .select-kit-header[data-name='#{template_name}']")
       end
 
@@ -124,9 +128,17 @@ module PageObjects
       end
 
       def select_form_template(template_name)
+        if SiteSetting.enable_new_select_controls
+          return form_template_select.select_name(template_name)
+        end
+
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click
         find(".select-category-template").click
+      end
+
+      def form_template_select
+        PageObjects::Components::UiKit::DSelect.by_identifier("category-form-templates")
       end
 
       def new_topic_button
