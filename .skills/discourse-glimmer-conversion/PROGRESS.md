@@ -191,3 +191,5 @@
   - ui-kit/d-time-input
   - wizard/fields/text
   - plugins/poll/poll-breakdown-chart
+- [#46801](https://github.com/discourse/discourse/pull/46801)
+  - ui-kit/d-future-date-input
