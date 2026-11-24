@@ -569,6 +569,28 @@ export default class InteractionCoordinator {
     }
   }
 
+  /**
+   * The trigger root lost focus. A panel without a search field leaves focus on the root while it
+   * is open, so without this a Shift+Tab off a static select left its panel open. Closes only
+   * when focus left the whole widget. A searchable panel takes focus into its field and closes
+   * through {@link handlePanelFocusOut}; the typeahead's input and the mobile modal own their
+   * dismissal too.
+   */
+  @action
+  handleTriggerRootFocusOut(event: FocusEvent): void {
+    if (
+      this.#presenter.isTypeahead ||
+      this.#presenter.isPanelSearchable ||
+      this.#presenter.overlayIsModal
+    ) {
+      return;
+    }
+    if (this.#focusEscapedWidget(event.relatedTarget)) {
+      this.triggerFocused = false;
+      this.#menu?.close({ focusTrigger: false });
+    }
+  }
+
   @action
   handleInputKeydown(event: KeyboardEvent): void {
     this.handleControllerKeydown(event);

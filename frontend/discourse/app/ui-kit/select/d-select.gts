@@ -753,6 +753,7 @@ export default class DSelect extends Component<DSelectSignature> {
       {{this.host.selectionHooks}}
       {{on "keydown" this.interaction.handleControllerKeydown capture=true}}
       {{on "keydown" this.interaction.handleTriggerRootKeydown}}
+      {{on "focusout" this.interaction.handleTriggerRootFocusOut}}
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "mousedown" this.interaction.preventTriggerBlur}}
       {{didInsert this.interaction.registerStaticController}}

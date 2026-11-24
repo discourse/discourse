@@ -1948,6 +1948,40 @@ module("Integration | ui-kit | select | DSelect (static)", function (hooks) {
         "browsers expose no value for a combobox that can't take focus"
       );
   });
+
+  test("focus leaving the trigger for another field closes it", async function (assert) {
+    await render(
+      <template>
+        <button class="outside" type="button">outside</button>
+        <Host @variant="static" />
+      </template>
+    );
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+    assert.dom("[role='listbox']").exists();
+
+    await focus(".outside");
+
+    assert.dom("[role='listbox']").doesNotExist("Shift+Tab out closes");
+  });
+
+  test("focus moving from the trigger into the panel keeps it open", async function (assert) {
+    await render(
+      <template>
+        <DSelect @options={{ITEMS}} @variant="static">
+          <:footer>
+            <button class="footer-action" type="button">Act</button>
+          </:footer>
+        </DSelect>
+      </template>
+    );
+    await focus(".d-select__trigger");
+    await triggerKeyEvent(".d-select__trigger", "keydown", "Enter");
+
+    await focus(".footer-action");
+
+    assert.dom("[role='listbox']").exists("Tab into the footer stays open");
+  });
 });
 
 module(
