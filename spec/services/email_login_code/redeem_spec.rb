@@ -181,6 +181,69 @@ RSpec.describe EmailLoginCode::Redeem do
       end
     end
 
+    context "when a required dropdown field is present at signup" do
+      fab!(:dropdown_field) do
+        Fabricate(:user_field, field_type: "dropdown").tap do |field|
+          field.user_field_options.create!(value: "Dev")
+        end
+      end
+
+      let(:params) do
+        { email:, code:, username:, user_fields: { dropdown_field.id.to_s => value } }
+      end
+
+      context "when the value is not one of the field's options" do
+        let(:value) { "Staff" }
+
+        it { is_expected.to fail_a_policy(:required_fields_provided) }
+
+        it "does not consume the code or create a user" do
+          result
+
+          expect(login_code.reload.consumed_at).to be_nil
+          expect(User.find_by_email(email)).to be_nil
+        end
+      end
+
+      context "when the value is one of the field's options" do
+        let(:value) { "Dev" }
+
+        it { is_expected.to run_successfully }
+
+        it "saves the option on the new user" do
+          expect(result[:user].custom_fields["user_field_#{dropdown_field.id}"]).to eq("Dev")
+        end
+      end
+    end
+
+    context "when an optional multiselect field gets values that aren't options" do
+      fab!(:multiselect_field) do
+        Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+          field.user_field_options.create!(value: "Axe")
+          field.user_field_options.create!(value: "Sword")
+        end
+      end
+
+      let(:params) do
+        {
+          email:,
+          code:,
+          username:,
+          user_fields: {
+            multiselect_field.id.to_s => %w[Axe Juice Sword],
+          },
+        }
+      end
+
+      it { is_expected.to run_successfully }
+
+      it "saves only the configured options" do
+        expect(result[:user].custom_fields["user_field_#{multiselect_field.id}"]).to eq(
+          %w[Axe Sword],
+        )
+      end
+    end
+
     context "when a full name is required at signup" do
       before { SiteSetting.full_name_requirement = "required_at_signup" }
 
