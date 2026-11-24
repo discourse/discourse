@@ -5,6 +5,13 @@ module DiscourseAi
     class BedrockEmbeddings
       TIMEOUT = 60
 
+      COHERE_INPUT_TYPES = {
+        document: "search_document",
+        query: "search_query",
+        clustering: "clustering",
+        classification: "classification",
+      }.freeze
+
       CATEGORIES_BY_ERROR_CODE = {
         "AccessDeniedException" => :authorization_failed,
         "UnrecognizedClientException" => :authentication_failed,
@@ -65,11 +72,11 @@ module DiscourseAi
 
       attr_reader :region, :model_id, :dimensions
 
-      def perform!(content)
+      def perform!(content, task: nil)
         response =
           client.invoke_model(
             model_id: model_id,
-            body: payload_for(content).to_json,
+            body: payload_for(content, task: task).to_json,
             content_type: "application/json",
             accept: "application/json",
           )
@@ -108,12 +115,12 @@ module DiscourseAi
           end
       end
 
-      def payload_for(content)
+      def payload_for(content, task: nil)
         case model_family
         when :cohere
           payload = {
             texts: [content],
-            input_type: "search_document",
+            input_type: cohere_input_type(task),
             embedding_types: ["float"],
             truncate: "END",
           }
@@ -123,6 +130,14 @@ module DiscourseAi
           payload = { inputText: content, normalize: true }
           payload[:dimensions] = dimensions if dimensions.present?
           payload
+        end
+      end
+
+      def cohere_input_type(task)
+        return "search_document" if task.nil?
+
+        COHERE_INPUT_TYPES.fetch(task.to_sym) do
+          raise ArgumentError, "Unknown embedding task: #{task}"
         end
       end
 
