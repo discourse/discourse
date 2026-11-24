@@ -53,18 +53,28 @@ RSpec.describe DesignWizard::PalettePairs do
         expect(default_pair[:light][:colors].keys).to include("primary", "secondary", "tertiary")
       end
 
-      it "offers single-mode built-ins only in the mode their colors suit" do
-        pairs = described_class.for_theme(theme).index_by { |pair| pair[:key] }
+      it "offers every built-in pair in both modes" do
+        pairs = described_class.for_theme(theme)
 
-        expect(pairs.values_at("neutral", "shades_of_blue", "summer")).to all(include(dark: nil))
-        expect(pairs.values_at("grey_amber", "latte", "dark_rose")).to all(include(light: nil))
+        pairs.each do |pair|
+          expect(pair[:light]).to be_present, "#{pair[:key]} has no light palette"
+          expect(pair[:dark]).to be_present, "#{pair[:key]} has no dark palette"
+        end
       end
 
-      it "leaves a pair without a light palette out of light mode" do
-        dracula = described_class.for_theme(theme).find { |pair| pair[:key] == "dracula" }
+      it "pairs palettes whose colors suit the mode they are offered in" do
+        dark_colors = ->(colors) do
+          ColorMath.brightness(colors["primary"]) > ColorMath.brightness(colors["secondary"])
+        end
 
-        expect(dracula[:light]).to be_nil
-        expect(dracula[:dark]).to be_present
+        described_class
+          .for_theme(theme)
+          .each do |pair|
+            expect(dark_colors.call(pair[:light][:colors])).to eq(false),
+            "#{pair[:key]} light is dark"
+            expect(dark_colors.call(pair[:dark][:colors])).to eq(true),
+            "#{pair[:key]} dark is light"
+          end
       end
 
       it "prefers an already materialized copy over the in-memory built-in" do
