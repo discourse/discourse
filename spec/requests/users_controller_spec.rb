@@ -7583,7 +7583,18 @@ RSpec.describe UsersController do
       expect(usernames).to include(admin.username, large_group_member.username)
       expect(usernames).not_to include(hidden_member.username)
 
-      hidden_access_group.update!(members_visibility_level: Group.visibility_levels[:public])
+      hidden_access_group.update!(
+        visibility_level: Group.visibility_levels[:owners],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |user| user["username"] }
+      expect(usernames).to include(large_group_member.username)
+      expect(usernames).not_to include(hidden_member.username)
+
+      hidden_access_group.update!(visibility_level: Group.visibility_levels[:public])
       get "/u/search/users.json", params: params
 
       expect(response.status).to eq(200)

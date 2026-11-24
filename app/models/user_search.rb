@@ -247,13 +247,11 @@ class UserSearch
   # user can see.
   def with_observable_category_access(users)
     visible_group_ids =
-      Group.where(<<~SQL, @topic.category_id).members_visible_groups(@searching_user).select(:id)
-          groups.id IN (
-            SELECT group_id
-              FROM category_groups
-             WHERE category_id = ?
-          )
-        SQL
+      Group
+        .where(id: CategoryGroup.where(category_id: @topic.category_id).select(:group_id))
+        .visible_groups(@searching_user)
+        .members_visible_groups(@searching_user)
+        .select(:id)
 
     observable_participant_ids =
       @guardian
