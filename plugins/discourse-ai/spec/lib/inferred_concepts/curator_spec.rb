@@ -168,12 +168,62 @@ RSpec.describe DiscourseAi::InferredConcepts::Curator do
     end
   end
 
+  describe "#reconcile_retired_associations!" do
+    it "migrates stray topic and post associations from retired duplicates to surviving canonical concepts" do
+      canonical =
+        Fabricate(:inferred_concept, name: "Kubernetes", aliases: ["k8s"], status: :active)
+      retired_dup = Fabricate(:inferred_concept, name: "k8s", status: :retired)
+      standalone_retired = Fabricate(:inferred_concept, name: "obsolete", status: :retired)
+
+      topic = Fabricate(:topic)
+      post = Fabricate(:post)
+      standalone_topic = Fabricate(:topic)
+
+      InferredConceptTopic.create!(
+        inferred_concept: canonical,
+        topic: topic,
+        relevance: 0.6,
+        primary: false,
+      )
+      InferredConceptTopic.create!(
+        inferred_concept: retired_dup,
+        topic: topic,
+        relevance: 0.92,
+        primary: true,
+      )
+      InferredConceptPost.create!(
+        inferred_concept: retired_dup,
+        post: post,
+        relevance: 0.88,
+        primary: true,
+      )
+      InferredConceptTopic.create!(
+        inferred_concept: standalone_retired,
+        topic: standalone_topic,
+        relevance: 0.8,
+      )
+
+      expect(curator.reconcile_retired_associations!).to eq(1)
+
+      link = InferredConceptTopic.find_by!(inferred_concept: canonical, topic: topic)
+      expect(link.relevance).to eq(0.92)
+      expect(link.primary).to eq(true)
+      expect(InferredConceptPost.find_by!(inferred_concept: canonical, post: post).relevance).to eq(
+        0.88,
+      )
+      expect(InferredConceptTopic.where(inferred_concept_id: retired_dup.id)).to be_empty
+      expect(InferredConceptPost.where(inferred_concept_id: retired_dup.id)).to be_empty
+      expect(standalone_retired.topics.reload).to contain_exactly(standalone_topic)
+    end
+  end
+
   describe "#curate!" do
     it "returns zero stats when embeddings are disabled" do
       SiteSetting.ai_embeddings_enabled = false
 
       expect(curator.curate!).to eq(
         {
+          reconciled_retired: 0,
           clusters_processed: 0,
           merges_applied: 0,
           concepts_retired: 0,

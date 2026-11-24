@@ -159,6 +159,42 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
       expect(manager.search_topics_by_concept("Kubernetes")).to contain_exactly(topic)
       expect(manager.search_topics_by_concept("k8s")).to contain_exactly(topic)
     end
+
+    it "does not resurrect a candidate retired between applier persistence and promotion" do
+      kubernetes = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      k8s = Fabricate(:inferred_concept, name: "k8s", status: :candidate)
+      extra_topic = Fabricate(:topic)
+      InferredConceptTopic.create!(inferred_concept: k8s, topic: extra_topic)
+
+      retriever = instance_double(DiscourseAi::InferredConcepts::CandidateRetriever)
+      allow(DiscourseAi::InferredConcepts::CandidateRetriever).to receive(:new).and_return(
+        retriever,
+      )
+      allow(retriever).to receive(:retrieve).and_return([k8s])
+
+      classifier = instance_double(DiscourseAi::InferredConcepts::Classifier)
+      allow(DiscourseAi::InferredConcepts::Classifier).to receive(:new).and_return(classifier)
+      allow(classifier).to receive(:classify).and_return(
+        { matches: [{ concept_id: k8s.id, relevance: 0.9, primary: true }], proposed_new: [] },
+      )
+
+      applier = DiscourseAi::InferredConcepts::Applier.new
+      allow(DiscourseAi::InferredConcepts::Applier).to receive(:new).and_return(applier)
+      allow(applier).to receive(
+        :apply_matches_to_topic,
+      ).and_wrap_original do |method, *args, **kwargs|
+        result = method.call(*args, **kwargs)
+        DiscourseAi::InferredConcepts::Merger.new.merge!(canonical: kubernetes, duplicates: [k8s])
+        result
+      end
+
+      expect do manager.generate_concepts_from_topic(topic) end.to change {
+        Jobs::GenerateEmbeddings.jobs.size
+      }.by(1)
+
+      expect(k8s.reload).to be_retired
+      expect(Jobs::GenerateEmbeddings.jobs.last["args"].first["target_id"]).to eq(kubernetes.id)
+    end
   end
 
   describe "#generate_concepts_from_post" do

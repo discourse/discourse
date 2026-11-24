@@ -259,8 +259,15 @@ module DiscourseAi
               InferredConceptPost.where(inferred_concept_id: concept.id).count
           next if usage_count < PROMOTION_THRESHOLD
 
-          concept.active!
-          enqueue_concept_embedding(concept)
+          promoted =
+            InferredConcept.where(
+              id: concept.id,
+              status: InferredConcept.statuses[:candidate],
+            ).update_all(status: InferredConcept.statuses[:active], updated_at: Time.zone.now)
+          if promoted > 0
+            concept.status = :active
+            enqueue_concept_embedding(concept)
+          end
         end
       end
 

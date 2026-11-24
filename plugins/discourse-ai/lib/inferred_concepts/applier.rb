@@ -4,7 +4,6 @@ module DiscourseAi
   module InferredConcepts
     class Applier
       MAX_CONTENT_CHARS = 12_000
-      MAX_RESOLVE_ATTEMPTS = 3
       CandidateStub = Struct.new(:id, :name, :description, :aliases)
 
       # Associates the provided concepts with a topic
@@ -167,12 +166,10 @@ module DiscourseAi
       def apply_matches(target, join_model:, table_name:, fk_column:, match_entries:, digest:)
         return [] if target.blank? || match_entries.blank?
 
-        entries = nil
+        entries = resolve_surviving_entries(match_entries)
+        return [] if entries.empty?
 
         ActiveRecord::Base.transaction do
-          entries = resolve_and_lock_entries(match_entries)
-          return [] if entries.empty?
-
           if digest.present?
             keep_ids = entries.map { |entry| entry[:concept].id }
             join_model
@@ -208,57 +205,27 @@ module DiscourseAi
         entries.map { |entry| entry[:concept] }
       end
 
-      def resolve_and_lock_entries(match_entries)
-        current = consolidate_entries(match_entries)
-        locked_by_id = {}
+      def resolve_surviving_entries(match_entries)
+        consolidated = consolidate_entries(match_entries)
+        return [] if consolidated.empty?
 
-        MAX_RESOLVE_ATTEMPTS.times do
-          ids = current.map { |entry| entry[:concept].id }.uniq.sort
-          return [] if ids.empty?
+        reloaded_by_id =
+          InferredConcept.where(id: consolidated.map { |entry| entry[:concept].id }).index_by(&:id)
 
-          locked_by_id =
-            InferredConcept.where(id: ids).order(:id).lock("FOR SHARE").load.index_by(&:id)
-
-          if current.all? { |entry|
-               concept = locked_by_id[entry[:concept].id]
-               concept.present? && !concept.retired?
-             }
-            return(
-              consolidate_entries(
-                current.map { |entry| entry.merge(concept: locked_by_id[entry[:concept].id]) },
-              )
-            )
+        rebuilt =
+          consolidated.filter_map do |entry|
+            reloaded = reloaded_by_id[entry[:concept].id]
+            if reloaded.present? && !reloaded.retired?
+              entry.merge(concept: reloaded)
+            else
+              lookup_name = reloaded&.name || entry[:concept].name
+              replacement =
+                InferredConcept.where.not(status: :retired).by_name_or_alias(lookup_name).first
+              replacement ? entry.merge(concept: replacement) : nil
+            end
           end
 
-          rebuilt =
-            current.filter_map do |entry|
-              locked = locked_by_id[entry[:concept].id]
-              if locked.present? && !locked.retired?
-                entry.merge(concept: locked)
-              else
-                lookup_name = locked&.name || entry[:concept].name
-                replacement =
-                  InferredConcept.where.not(status: :retired).by_name_or_alias(lookup_name).first
-                replacement ? entry.merge(concept: replacement) : nil
-              end
-            end
-
-          current = consolidate_entries(rebuilt)
-          return [] if current.empty?
-        end
-
-        ids = current.map { |entry| entry[:concept].id }.uniq.sort
-        locked_by_id =
-          InferredConcept.where(id: ids).order(:id).lock("FOR SHARE").load.index_by(&:id)
-
-        consolidate_entries(
-          current.filter_map do |entry|
-            concept = locked_by_id[entry[:concept].id]
-            next if concept.nil? || concept.retired?
-
-            entry.merge(concept: concept)
-          end,
-        )
+        consolidate_entries(rebuilt)
       end
 
       def consolidate_entries(entries)

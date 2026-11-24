@@ -77,6 +77,33 @@ module DiscourseAi
         true
       end
 
+      def migrate_retired_associations!(canonical:, retired:)
+        return false if canonical.nil? || retired.nil? || canonical.retired? || !retired.retired?
+        return false if canonical.id == retired.id
+
+        ActiveRecord::Base.transaction do
+          now = Time.zone.now
+          migrate_associations!(
+            join_model: InferredConceptTopic,
+            table_name: "inferred_concept_topics",
+            fk_column: "topic_id",
+            canonical_id: canonical.id,
+            duplicate_ids: [retired.id],
+            now: now,
+          )
+          migrate_associations!(
+            join_model: InferredConceptPost,
+            table_name: "inferred_concept_posts",
+            fk_column: "post_id",
+            canonical_id: canonical.id,
+            duplicate_ids: [retired.id],
+            now: now,
+          )
+        end
+
+        true
+      end
+
       private
 
       def migrate_associations!(

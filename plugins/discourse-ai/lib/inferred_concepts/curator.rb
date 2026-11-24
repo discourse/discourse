@@ -18,6 +18,7 @@ module DiscourseAi
         unless DiscourseAi::Embeddings.enabled?
           return(
             {
+              reconciled_retired: 0,
               clusters_processed: 0,
               merges_applied: 0,
               concepts_retired: 0,
@@ -29,11 +30,37 @@ module DiscourseAi
           )
         end
 
+        reconciled_retired = reconcile_retired_associations!
         dedup_stats = deduplicate_clusters!(max_cosine_distance: max_cosine_distance)
         prune_stats = prune_stale_candidates!(stale_after: stale_after)
         enqueued = enqueue_missing_embeddings
 
-        dedup_stats.merge(prune_stats).merge(embeddings_enqueued: enqueued)
+        dedup_stats.merge(prune_stats).merge(
+          reconciled_retired: reconciled_retired,
+          embeddings_enqueued: enqueued,
+        )
+      end
+
+      def reconcile_retired_associations!
+        retired_concepts =
+          InferredConcept.retired.where(
+            "EXISTS (SELECT 1 FROM inferred_concept_topics t WHERE t.inferred_concept_id = inferred_concepts.id) OR EXISTS (SELECT 1 FROM inferred_concept_posts p WHERE p.inferred_concept_id = inferred_concepts.id)",
+          )
+
+        merger = Merger.new
+        reconciled = 0
+
+        retired_concepts.find_each do |retired|
+          canonical =
+            InferredConcept.where.not(status: :retired).by_name_or_alias(retired.name).first
+          next if canonical.nil?
+
+          if merger.migrate_retired_associations!(canonical: canonical, retired: retired)
+            reconciled += 1
+          end
+        end
+
+        reconciled
       end
 
       def find_duplicate_clusters(
@@ -145,8 +172,15 @@ module DiscourseAi
 
         stale.each do |candidate|
           if (usage_counts[candidate.id] || 0) >= Manager::PROMOTION_THRESHOLD
-            candidate.active!
-            promoted += 1
+            promoted_count =
+              InferredConcept.where(
+                id: candidate.id,
+                status: InferredConcept.statuses[:candidate],
+              ).update_all(status: InferredConcept.statuses[:active], updated_at: Time.zone.now)
+            if promoted_count > 0
+              candidate.status = :active
+              promoted += 1
+            end
           else
             candidate.destroy!
             pruned += 1

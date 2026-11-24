@@ -73,7 +73,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
       expect(updated.digest).to eq("digest-2")
     end
 
-    it "locks rows FOR SHARE and re-resolves stale merged concepts to the canonical concept" do
+    it "re-resolves stale merged concepts to the surviving canonical concept" do
       stale_duplicate = Fabricate(:inferred_concept, name: "k8s", status: :active)
       canonical = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
       DiscourseAi::InferredConcepts::Merger.new.merge!(
@@ -81,21 +81,16 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
         duplicates: [stale_duplicate],
       )
 
-      queries =
-        track_sql_queries do
-          applied =
-            applier.apply_matches_to_topic(
-              topic,
-              [
-                { concept: stale_duplicate, relevance: 0.95, primary: true },
-                { concept: canonical, relevance: 0.7, primary: false },
-              ],
-              digest: "merged-digest",
-            )
-          expect(applied).to eq([canonical])
-        end
-
-      expect(queries).to include(a_string_matching(/FROM "inferred_concepts".*FOR SHARE/))
+      applied =
+        applier.apply_matches_to_topic(
+          topic,
+          [
+            { concept: stale_duplicate, relevance: 0.95, primary: true },
+            { concept: canonical, relevance: 0.7, primary: false },
+          ],
+          digest: "merged-digest",
+        )
+      expect(applied).to eq([canonical])
 
       canonical_topic_link =
         InferredConceptTopic.find_by!(topic_id: topic.id, inferred_concept_id: canonical.id)
