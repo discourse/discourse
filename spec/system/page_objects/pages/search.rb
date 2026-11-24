@@ -51,6 +51,26 @@ module PageObjects
         find(".search-cta").click
       end
 
+      def click_search_type(type)
+        find(".search-types__type[data-search-type='#{type}']").click
+      end
+
+      def has_active_search_type?(type)
+        has_css?(".search-types__type.active[data-search-type='#{type}']")
+      end
+
+      def click_category_result(name)
+        find(".fps-category-item", text: name).click
+      end
+
+      def has_category_result?(name)
+        has_css?(".fps-category-item", text: name)
+      end
+
+      def has_user_result?(username)
+        has_css?(".fps-user-item .username", text: username)
+      end
+
       def expand_dropdown
         click_search_icon if !has_css?(".search-menu .search-menu-panel", wait: 0)
         self
