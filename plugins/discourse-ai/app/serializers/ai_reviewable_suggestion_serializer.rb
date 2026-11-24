@@ -18,7 +18,10 @@ class AiReviewableSuggestionSerializer < ApplicationSerializer
   def suggested_action
     return @suggested_action if defined?(@suggested_action)
 
-    name = object.ai_reviewable_suggestion.action_name
+    suggestion = object.ai_reviewable_suggestion
+    return @suggested_action = nil unless suggestion&.actionable?
+
+    name = suggestion.action_name
     @suggested_action = object.actions_for(scope).to_a.find { |action| action.action_name == name }
   end
 

@@ -1007,8 +1007,8 @@ CREATE TABLE public.ai_reviewable_suggestions (
     id bigint NOT NULL,
     reviewable_id bigint NOT NULL,
     decision_model_id bigint NOT NULL,
-    action_name character varying NOT NULL,
-    confidence double precision NOT NULL,
+    action_name character varying,
+    confidence double precision,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -26890,6 +26890,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124151606'),
 ('20261124013641'),
 ('20261124013638'),
 ('20261123103548'),
