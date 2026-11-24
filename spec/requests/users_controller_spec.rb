@@ -9326,6 +9326,17 @@ RSpec.describe UsersController do
 
         expect(passkey.reload.name).to eq("original name")
       end
+
+      it "does not rename a second-factor security key" do
+        security_key =
+          Fabricate(:user_security_key_with_random_credential, user: user1, name: "YubiKey")
+
+        sign_in(user1)
+        put "/u/rename_passkey/#{security_key.id}.json", params: { name: "new name" }
+
+        expect(response.status).to eq(400)
+        expect(security_key.reload.name).to eq("YubiKey")
+      end
     end
   end
 
@@ -9353,6 +9364,17 @@ RSpec.describe UsersController do
         delete "/u/delete_passkey/#{passkey.id}.json"
         expect(response.status).to eq(200)
         expect(user1.passkey_credential_ids).to eq([])
+      end
+
+      it "does not delete a second-factor security key" do
+        security_key = Fabricate(:user_security_key_with_random_credential, user: user1)
+
+        sign_in(user1)
+        expect do delete "/u/delete_passkey/#{security_key.id}.json" end.not_to change(
+          UserSecurityKey,
+          :count,
+        )
+        expect(response.status).to eq(200)
       end
 
       it "does not let an admin delete a passkey associated with user1" do
@@ -9404,6 +9426,15 @@ RSpec.describe UsersController do
       before do
         stub_server_session_confirmed
         sign_in(user1)
+      end
+
+      it "does not modify a first-factor passkey" do
+        passkey = Fabricate(:passkey_with_random_credential, user: user1, name: "Original name")
+
+        put "/u/security_key.json", params: { id: passkey.id, name: "new name", disable: "true" }
+
+        expect(response).to have_http_status(:bad_request)
+        expect(passkey.reload).to have_attributes(name: "Original name", enabled: true)
       end
 
       it "returns 400 for an invalid security key id" do

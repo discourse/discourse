@@ -50,7 +50,7 @@ export default class SecondFactorAuthController extends Controller {
 
   @computed("model.allowed_methods")
   get allowedMethods() {
-    return this.model?.allowed_methods;
+    return this.model?.allowed_methods ?? [];
   }
 
   @computed("model.description")
@@ -110,19 +110,20 @@ export default class SecondFactorAuthController extends Controller {
   get shownSecondFactorMethod() {
     if (this.userSelectedMethod !== null) {
       return this.userSelectedMethod;
-    } else {
-      if (this.passkeysAvailable) {
-        return PASSKEY;
-      } else if (this.securityKeysAvailable) {
-        return SECURITY_KEY;
-      } else if (this.totpAvailable) {
-        return TOTP;
-      } else if (this.backupCodesAvailable) {
-        return BACKUP_CODE;
-      } else {
-        throw new Error("unexpected state of user 2fa settings!");
-      }
     }
+    if (this.passkeysAvailable) {
+      return PASSKEY;
+    }
+    if (this.securityKeysAvailable) {
+      return SECURITY_KEY;
+    }
+    if (this.totpAvailable) {
+      return TOTP;
+    }
+    if (this.backupCodesAvailable) {
+      return BACKUP_CODE;
+    }
+    return null;
   }
 
   @computed(
@@ -267,10 +268,7 @@ export default class SecondFactorAuthController extends Controller {
 
       const callbackResponse = await ajax(response.callback_path, {
         type: response.callback_method,
-        data: {
-          second_factor_nonce: this.nonce,
-          ...response.callback_params,
-        },
+        data: { second_factor_nonce: this.nonce },
       });
 
       this.displaySuccess(i18n("second_factor_auth.redirect_after_success"));

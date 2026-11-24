@@ -8,7 +8,11 @@ import {
 import { test } from "qunit";
 import sinon from "sinon";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import pretender, {
+  response as jsonResponse,
+} from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY, PASSKEY } = SECOND_FACTOR_METHODS;
 
@@ -136,6 +140,26 @@ acceptance("Second Factor Auth Page", function (needs) {
         "could not find an active challenge in your session",
         "load error message is shown"
       );
+  });
+
+  test("asks the user to restart if no allowed method remains", async function (assert) {
+    pretender.get("/session/2fa.json", () =>
+      jsonResponse({
+        allowed_methods: [TOTP, SECURITY_KEY],
+        totp_enabled: false,
+        security_keys_enabled: false,
+        backup_enabled: true,
+      })
+    );
+
+    await visit("/session/2fa?nonce=methods-changed");
+
+    assert
+      .dom(".alert-error")
+      .hasText(i18n("second_factor_auth.no_available_method"));
+    assert.dom(".second-factor-token-input").doesNotExist();
+    assert.dom("#security-key-authenticate-button").doesNotExist();
+    assert.strictEqual(callbackCount, 0);
   });
 
   test("default 2FA method", async function (assert) {

@@ -93,6 +93,10 @@ module SecondFactorManager
     totp_enabled? || security_keys_enabled?
   end
 
+  def requires_second_factor_for_login?
+    has_any_second_factor_methods_enabled? || backup_codes_enabled?
+  end
+
   def has_multiple_second_factor_methods?
     security_keys_enabled? && totp_or_backup_codes_enabled?
   end
@@ -115,7 +119,7 @@ module SecondFactorManager
 
   def authenticate_second_factor(params, server_session)
     ok_result = SecondFactorAuthenticationResult.new(true)
-    if !security_keys_enabled? && !totp_or_backup_codes_enabled? &&
+    if !requires_second_factor_for_login? &&
          (!passkeys_available_as_second_factor? || params[:second_factor_method].blank?)
       return ok_result
     end
