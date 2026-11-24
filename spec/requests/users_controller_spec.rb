@@ -8883,18 +8883,19 @@ RSpec.describe UsersController do
     context "while logged in" do
       before { 2.times { sign_in(user1) } }
 
-      it "logs user out" do
-        subscription = Fabricate(:push_subscription, user: user1)
-        ids = user1.user_auth_tokens.order(:created_at).pluck(:id)
+      it "revokes only the selected device and its push subscription" do
+        revoked, current = user1.user_auth_tokens.order(:id)
+        Fabricate(:push_subscription, user: user1, user_auth_token: revoked)
+        current_push = Fabricate(:push_subscription, user: user1, user_auth_token: current)
 
-        post "/u/#{user1.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user1.username}/preferences/revoke-auth-token.json",
+             params: {
+               token_id: revoked.id,
+             }
 
         expect(response.status).to eq(200)
-
-        user1.user_auth_tokens.reload
-        expect(user1.user_auth_tokens.count).to eq(1)
-        expect(user1.user_auth_tokens.first.id).to eq(ids[1])
-        expect(PushSubscription.exists?(subscription.id)).to eq(true)
+        expect(user1.user_auth_tokens).to contain_exactly(current)
+        expect(user1.push_subscriptions).to contain_exactly(current_push)
       end
 
       it "checks if token exists" do

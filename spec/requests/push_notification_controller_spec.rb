@@ -3,7 +3,15 @@
 RSpec.describe PushNotificationController do
   fab!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
 
-  let(:subscription) { { endpoint: "endpoint", keys: { p256dh: "256dh", auth: "auth" } } }
+  let(:subscription) do
+    {
+      endpoint: "https://fcm.googleapis.com/fcm/send/endpoint",
+      keys: {
+        p256dh: "256dh",
+        auth: "auth",
+      },
+    }
+  end
 
   context "when logged out" do
     it "does not allow subscribing" do
@@ -30,7 +38,7 @@ RSpec.describe PushNotificationController do
            }
 
       expect(response.status).to eq(200)
-      expect(user.push_subscriptions.count).to eq(1)
+      expect(user.push_subscriptions.sole.user_auth_token_id).to eq(user.user_auth_tokens.sole.id)
     end
 
     it "registers the shadow, not the master, when browsing anonymously" do
@@ -42,7 +50,10 @@ RSpec.describe PushNotificationController do
       post "/push_notifications/subscribe.json", params: { subscription: }
 
       expect(response.status).to eq(200)
-      expect(user.shadow_user.push_subscriptions.count).to eq(1)
+      shadow = user.shadow_user
+      expect(shadow.push_subscriptions.sole.user_auth_token_id).to eq(
+        shadow.user_auth_tokens.sole.id,
+      )
       expect(user.push_subscriptions).to be_empty
     end
 
@@ -60,17 +71,35 @@ RSpec.describe PushNotificationController do
       expect(user.push_subscriptions).to be_empty
     end
 
-    it "repairs duplicate subscriptions" do
-      2.times { PushSubscription.create!(user: user, data: subscription.to_json) }
-      post "/push_notifications/subscribe.json",
-           params: {
-             username: user.username,
-             subscription:,
-             send_confirmation: false,
-           }
+    it "binds a matching legacy subscription and repairs duplicates without sending a confirmation" do
+      PushSubscription.create!(user: user, data: subscription.to_json)
+      legacy = PushSubscription.create!(user: user, data: subscription.to_json)
+      WebPush.expects(:payload_send).never
+
+      post "/push_notifications/subscribe.json", params: { subscription:, send_confirmation: true }
 
       expect(response.status).to eq(200)
-      expect(user.push_subscriptions.count).to eq(1)
+      expect(user.push_subscriptions).to contain_exactly(legacy)
+      expect(legacy.reload.user_auth_token_id).to eq(user.user_auth_tokens.sole.id)
+    end
+
+    it "moves a matching subscription to the registering login without sending a confirmation" do
+      original_token = UserAuthToken.generate!(user_id: user.id)
+      existing =
+        Fabricate(
+          :push_subscription,
+          user: user,
+          data: subscription.to_json,
+          user_auth_token: original_token,
+        )
+      WebPush.expects(:payload_send).never
+
+      post "/push_notifications/subscribe.json", params: { subscription:, send_confirmation: true }
+
+      expect(response.status).to eq(200)
+      original_token.destroy!
+      expect(user.push_subscriptions).to contain_exactly(existing)
+      expect(existing.reload.user_auth_token_id).to eq(user.user_auth_tokens.sole.id)
     end
 
     it "does not create duplicate subscriptions" do

@@ -17,6 +17,10 @@ class AnonymousModeSession < ActiveRecord::Base
       previous_token_hash: (source.prev_auth_token if source.prev_auth_token != source.auth_token),
       rotated_at: source.rotated_at,
     )
+    # The token changes with the persona; the push recipient does not.
+    PushSubscription.where(user_auth_token_id: source.id).update_all(
+      user_auth_token_id: successor.id,
+    )
     source.destroy!
     session
   end

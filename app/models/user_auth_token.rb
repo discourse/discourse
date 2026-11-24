@@ -4,6 +4,7 @@ require "digest/sha1"
 class UserAuthToken < ActiveRecord::Base
   belongs_to :user
   has_one :anonymous_mode_session
+  has_many :push_subscriptions, dependent: :delete_all
 
   # Store a reference to the raw association reader, since we're
   # overriding `#user` later in the class definition.

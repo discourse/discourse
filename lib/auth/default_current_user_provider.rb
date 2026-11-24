@@ -435,7 +435,8 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_off_user(session, cookie_jar, push_subscription: nil)
-    revoke_browser_login(cookie_jar, push_subscription) unless delegated_session?
+    # Keep the keyword for provider compatibility; push cleanup follows token revocation.
+    revoke_browser_login(cookie_jar) unless delegated_session?
     @env.delete(BROWSER_LOGIN_ID)
     cookie_jar.delete("authentication_data")
     cookie_jar.delete(TOKEN_COOKIE)
@@ -562,7 +563,7 @@ class Auth::DefaultCurrentUserProvider
       )
   end
 
-  def revoke_browser_login(cookie_jar, push_subscription)
+  def revoke_browser_login(cookie_jar)
     user = current_user
     if user && (login_id = @env[BROWSER_LOGIN_ID])
       if SiteSetting.log_out_strict
@@ -571,7 +572,6 @@ class Auth::DefaultCurrentUserProvider
         user.logged_out
       else
         @env.fetch(USER_TOKEN_KEY).revoke_login!(login_id)
-        PushNotificationPusher.unsubscribe(user, push_subscription) if push_subscription
         DiscourseEvent.trigger(:user_logged_out, user)
       end
     elsif raw_token = find_auth_token

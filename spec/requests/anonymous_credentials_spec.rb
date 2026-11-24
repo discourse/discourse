@@ -128,12 +128,36 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
       expect_signed_in_as(switching_browser, master)
     end
 
-    it "keeps a switched login visible and individually revocable from another master device" do
+    def register_push(browser, user, device)
+      subscription = {
+        endpoint: "https://fcm.googleapis.com/fcm/send/#{device}",
+        keys: {
+          p256dh: "p256dh",
+          auth: "auth",
+        },
+      }
+      browser.post "/push_notifications/subscribe.json", params: { subscription: }
+      expect(browser.response.status).to eq(200)
+      user.push_subscriptions.find_by!(data: subscription.to_json)
+    end
+
+    it "moves both personas' subscriptions across exchanges and revokes only the selected device" do
       sign_in(master)
       device_id = current_device_id(switching_browser)
+      master_push = register_push(switching_browser, master, "switching")
+      other_master_push = register_push(other_browser, master, "other")
 
       switch_to(switching_browser, shadow)
+      shadow_push = register_push(switching_browser, shadow, "switching")
       switch_to(other_browser, shadow)
+      other_shadow_push = register_push(other_browser, shadow, "other")
+      switch_to(switching_browser, master)
+      switch_to(switching_browser, shadow)
+
+      successor = AnonymousModeSession.find(device_id).user_auth_token
+      expect(
+        PushSubscription.where(user_auth_token: successor).pluck(:id, :user_id),
+      ).to contain_exactly([master_push.id, master.id], [shadow_push.id, shadow.id])
       get "/u/#{master.username}.json"
       expect(response.parsed_body.dig("user", "user_auth_tokens")).to include(
         a_hash_including("id" => device_id, "is_active" => false),
@@ -144,7 +168,10 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
              token_id: device_id,
            }
       expect(response.status).to eq(200)
-
+      expect(PushSubscription.where(user: [master, shadow])).to contain_exactly(
+        other_master_push,
+        other_shadow_push,
+      )
       switching_browser.get "/session/current.json"
       expect(switching_browser.response.status).to eq(404)
       expect_signed_in_as(other_browser, shadow)
@@ -152,10 +179,26 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
       expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
     end
 
+    it "revokes both personas' subscriptions on ordinary logout without an endpoint" do
+      register_push(switching_browser, master, "switching")
+      other_push = register_push(other_browser, master, "other")
+      switch_to(switching_browser, shadow)
+      register_push(switching_browser, shadow, "switching")
+
+      switching_browser.delete "/session/#{shadow.username}.json"
+
+      expect(switching_browser.response.status).to eq(302)
+      expect(PushSubscription.where(user: [master, shadow])).to contain_exactly(other_push)
+      expect_signed_in_as(other_browser, master)
+    end
+
     def expect_stale_logout_to_revoke_only_its_login
       cookie = switching_browser.cookies["_t"]
       original_cookie = { "HTTP_COOKIE" => "_t=#{Rack::Utils.escape(cookie)}" }
+      register_push(switching_browser, master, "switching")
+      other_push = register_push(other_browser, master, "other")
       switch_to(switching_browser, shadow)
+      register_push(switching_browser, shadow, "switching")
       switch_to(switching_browser, master)
       switch_to(switching_browser, shadow)
       freeze_time 2.minutes.from_now
@@ -170,6 +213,7 @@ RSpec.describe "Anonymous credential lifecycle", type: :request do
       reset!
       delete "/session/#{master.username}.json", headers: original_cookie
       expect(response.status).to eq(302)
+      expect(PushSubscription.where(user: [master, shadow])).to contain_exactly(other_push)
 
       switching_browser.get "/session/current.json"
       expect(switching_browser.response.status).to eq(404)
