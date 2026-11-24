@@ -1373,6 +1373,20 @@ RSpec.describe InvitesController do
           expect(response.status).to eq(200)
           expect(Jobs::InviteEmail.jobs.size).to eq(1)
         end
+
+        it "counts an email change towards max_invites_per_day" do
+          SiteSetting.max_invites_per_day = 2
+          sign_in(user)
+          invite = Fabricate(:invite, invited_by: user, email: "first@example.com")
+
+          put "/invites/#{invite.id}.json", params: { email: "second@example.com" }
+          expect(response.status).to eq(200)
+
+          put "/invites/#{invite.id}.json", params: { email: "third@example.com" }
+          expect(response.status).to eq(429)
+          expect(invite.reload.email).to eq("second@example.com")
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+        end
       end
 
       context "when allow_email_invites is disabled" do
