@@ -170,9 +170,8 @@ class UserSearch
         )
       SQL
 
-      if @searching_user.present?
-        category_groups = category_groups.members_visible_groups(@searching_user)
-      end
+      category_groups =
+        category_groups.visible_groups(@searching_user).members_visible_groups(@searching_user)
 
       category_users = filtered_by_term_users.where(<<~SQL, category_groups.pluck(:id))
           users.id IN (
