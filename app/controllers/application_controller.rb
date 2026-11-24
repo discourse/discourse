@@ -1119,7 +1119,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def run_second_factor!(action_class, action_data: nil, target_user: current_user)
+  def run_second_factor!(
+    action_class,
+    action_data: nil,
+    target_user: current_user,
+    nonce: params[:second_factor_nonce].presence
+  )
     if current_user && target_user != current_user
       # Anon can run 2fa against another target, but logged-in users should not.
       # This should be validated at the `run_second_factor!` call site.
@@ -1129,7 +1134,7 @@ class ApplicationController < ActionController::Base
     action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
     manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
-    result = manager.run!(request, params, server_session)
+    result = manager.run!(request, params, server_session, nonce:)
 
     if !result.no_second_factors_enabled? && !result.second_factor_auth_completed? &&
          !result.second_factor_auth_skipped?

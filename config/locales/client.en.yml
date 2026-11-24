@@ -6574,6 +6574,7 @@ en:
       view_table: "View Table"
 
     second_factor_auth:
+      no_available_method: "None of your current two-factor methods can be used for this request. Start again."
       redirect_after_success: "Second factor authentication is successful. Redirecting to the previous page…"
 
     sidebar:
