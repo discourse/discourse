@@ -27,7 +27,7 @@ history trimming or compression removes that evidence, the model can load the gr
 again. Availability is rechecked against the current site, user, and plugin restrictions.
 Ungrouped tools added by `admin_assistant_tools` remain immediately available for
 backward compatibility; removing a tool through that modifier still excludes it from
-loaded groups. Keep new built-in domain tools in `DiscourseAdminAssistant::TOOL_GROUPS`.
+loaded groups. Keep new built-in domain tools in `AdminAssistant::TOOL_GROUPS`.
 
 ### Evals
 

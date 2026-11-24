@@ -477,7 +477,7 @@ ar:
         discourse_helper:
           name: "مساعد Discourse"
           description: "روبوت ذكاء اصطناعي متخصص في المساعدة على المهام المتعلقة بمنصة Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "مساعد مسؤولي Discourse"
           description: "روبوت الذكاء الاصطناعي الذي يجيب عن الأسئلة على Discourse ويساعد المسؤولين في إدارة إعدادات الموقع"
         web_artifact_creator:

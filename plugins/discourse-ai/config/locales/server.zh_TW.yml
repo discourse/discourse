@@ -502,7 +502,7 @@ zh_TW:
         discourse_helper:
           name: "Discourse 助理"
           description: "專門協助處理 Discourse 相關工作的 AI 機器人"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Discourse 管理員助理"
           description: "回答 Discourse 問題並協助管理員管理網站設定的 AI 機器人"
         web_artifact_creator:

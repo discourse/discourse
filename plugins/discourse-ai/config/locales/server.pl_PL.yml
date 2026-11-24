@@ -800,7 +800,7 @@ pl_PL:
         discourse_helper:
           name: "Pomocnik Discourse"
           description: "Bot AI specjalizujący się w pomocy w zadaniach związanych z Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Asystent administratora Discourse"
           description: "Bot AI, który odpowiada na pytania Discourse i pomaga administratorom zarządzać ustawieniami witryny"
         web_artifact_creator:
