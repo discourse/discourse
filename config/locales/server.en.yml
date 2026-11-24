@@ -1138,6 +1138,7 @@ en:
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
     email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
+    email_change_not_allowed_after_invite: "This account has accepted an invitation, so it can only be activated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
