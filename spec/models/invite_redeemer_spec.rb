@@ -482,6 +482,35 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field_3.id}"]).to eq(nil)
       end
 
+      it "only sets dropdown and multiselect values that are configured options" do
+        dropdown_field =
+          Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Engineering")
+          end
+        multiselect_field =
+          Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Axe")
+            field.user_field_options.create!(value: "Sword")
+          end
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: {
+              dropdown_field.id.to_s => "Staff",
+              multiselect_field.id.to_s => %w[Axe Juice Sword],
+            },
+          ).redeem
+
+        expect(user).to be_present
+        expect(user.custom_fields["user_field_#{dropdown_field.id}"]).to be_nil
+        expect(user.custom_fields["user_field_#{multiselect_field.id}"]).to eq(%w[Axe Sword])
+      end
+
       it "does not add user to group if inviter does not have permissions" do
         group = Fabricate(:group, grant_trust_level: 2)
         InvitedGroup.create(group_id: group.id, invite_id: invite.id)

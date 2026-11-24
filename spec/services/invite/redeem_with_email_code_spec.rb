@@ -142,6 +142,36 @@ RSpec.describe Invite::RedeemWithEmailCode do
       end
     end
 
+    context "when a required dropdown field gets a value that isn't an option" do
+      fab!(:dropdown_field) do
+        Fabricate(:user_field, field_type: "dropdown").tap do |field|
+          field.user_field_options.create!(value: "Engineer")
+        end
+      end
+
+      let(:params) do
+        {
+          invite_key: invite.invite_key,
+          email:,
+          code:,
+          username:,
+          user_fields: {
+            dropdown_field.id.to_s => "Staff",
+          },
+        }
+      end
+
+      it { is_expected.to fail_a_policy(:required_fields_provided) }
+
+      it "does not consume the code or redeem the invite" do
+        result
+
+        expect(login_code.reload.consumed_at).to be_nil
+        expect(User.find_by_email(email)).to be_nil
+        expect(invite.reload.redemption_count).to eq(0)
+      end
+    end
+
     context "when a full name is required at signup" do
       before { SiteSetting.full_name_requirement = "required_at_signup" }
 

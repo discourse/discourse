@@ -99,6 +99,19 @@ class InviteRedeemer
   )
     raise Discourse::SiteArchived if SiteSetting.site_archived
 
+    if user_custom_fields.present?
+      user_custom_fields = user_custom_fields.dup
+      UserField
+        .where(show_on_signup: true)
+        .each do |field|
+          key = field.id.to_s
+          user_custom_fields[key] = UserCreator.clean_custom_field_values(
+            field,
+            user_custom_fields[key],
+          )
+        end
+    end
+
     if email_verified && username.present?
       available_username = username
     elsif username && UsernameValidator.new(username).valid_format? &&

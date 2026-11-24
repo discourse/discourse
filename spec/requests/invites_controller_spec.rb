@@ -1809,6 +1809,56 @@ RSpec.describe InvitesController do
       end
     end
 
+    context "with user fields" do
+      fab!(:invite)
+
+      fab!(:dropdown_field) do
+        Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+          field.user_field_options.create!(value: "Engineering")
+          field.user_field_options.create!(value: "Sales")
+        end
+      end
+
+      fab!(:multiselect_field) do
+        Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+          field.user_field_options.create!(value: "Axe")
+          field.user_field_options.create!(value: "Sword")
+        end
+      end
+
+      it "ignores dropdown and multiselect values that are not configured options" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              user_custom_fields: {
+                dropdown_field.id.to_s => "Staff",
+                multiselect_field.id.to_s => %w[Axe Juice Sword],
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        user_fields = User.find_by_email(invite.email).user_fields
+        expect(user_fields[dropdown_field.id.to_s]).to be_nil
+        expect(user_fields[multiselect_field.id.to_s]).to eq(%w[Axe Sword])
+      end
+
+      it "keeps dropdown and multiselect values that are configured options" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              user_custom_fields: {
+                dropdown_field.id.to_s => "Sales",
+                multiselect_field.id.to_s => %w[Axe Sword],
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        user_fields = User.find_by_email(invite.email).user_fields
+        expect(user_fields[dropdown_field.id.to_s]).to eq("Sales")
+        expect(user_fields[multiselect_field.id.to_s]).to eq(%w[Axe Sword])
+      end
+    end
+
     context "with a domain invite" do
       fab!(:invite) do
         Fabricate(
