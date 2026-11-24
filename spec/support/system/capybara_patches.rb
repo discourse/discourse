@@ -87,35 +87,44 @@ end
 
 Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
 
+module CapybaraPlaywrightSettlement
+  def evaluate_client_settled(timeout_ms)
+    @touched = true
+
+    # The result is a primitive, so there is no need to fetch and unwrap a JS handle.
+    driver.with_playwright_page do |page|
+      page.capybara_current_frame.evaluate(<<~JS, arg: timeout_ms)
+        async (timeoutMs) => {
+          try {
+            return await window.clientSettled?.(timeoutMs);
+          } catch (error) {
+            return error.message;
+          }
+        }
+      JS
+    end
+  end
+end
+
+Capybara::Session.prepend(CapybaraPlaywrightSettlement)
+
 module CapybaraPlaywrightBasePatch
   private
 
-  def execute_async_client_settled_script(session)
-    result = session.evaluate_async_script(<<~JS)
-        const done = arguments[0];
-
-        if (window.clientSettled) {
-          window.clientSettled(#{Capybara.default_max_wait_time * 1000})
-            .then(done)
-            .catch((error) => { done(error.message) });
-        } else {
-          done();
-        }
-      JS
-
+  def execute_async_client_settled_script
+    session = @driver.send(:session)
+    result = session.evaluate_client_settled(Capybara.default_max_wait_time * 1000)
     raise result if result.is_a? String
   end
 
   def wait_for_client_settled(method_name)
-    session = @driver.send(:session)
-
     if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
       now = Time.now.to_f
       puts "[#{now}] #{method_name}: START"
-      execute_async_client_settled_script(session)
+      execute_async_client_settled_script
       puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
     else
-      execute_async_client_settled_script(session)
+      execute_async_client_settled_script
     end
   end
 end
@@ -150,7 +159,16 @@ end
 module CapybaraPlaywrightBrowserPatch
   include CapybaraPlaywrightBasePatch
 
-  METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+  METHODS_TO_PATCH = %i[go_back go_forward refresh resize_window_to]
+
+  def visit(path)
+    response = super
+    return response if plain_text_sign_in_response?(path, response)
+
+    wait_for_ember_boot
+    wait_for_client_settled(:visit)
+    response
+  end
 
   METHODS_TO_PATCH.each do |method_name|
     define_method(method_name) do |*args, **options|
@@ -162,6 +180,14 @@ module CapybaraPlaywrightBrowserPatch
   end
 
   private
+
+  def plain_text_sign_in_response?(url, response)
+    return false unless response&.headers&.fetch("content-type", "")&.start_with?("text/plain;")
+    return false if response.request.redirected_from
+
+    uri = Addressable::URI.parse(url)
+    uri.query == "redirect=false" && uri.path.match?(%r{/session/[^/]+/become\.json\z})
+  end
 
   # `<discourse-assets>` is only present on Ember pages; `ember-application`
   # is added to the root element (`#main`) once Ember mounts.
@@ -199,8 +225,8 @@ module PlaywrightSoftReset
       # further investigation, but system specs currently do not rely on
       # service workers so blocking them is an acceptable trade-off.
       @page_options = { serviceWorkers: "block" }.merge(@page_options)
-      @context_downloaded = false
       super.tap do |browser_context|
+        # Keep this set until a hard reset, even if another context opens or closes.
         browser_context.on("download", ->(_download) { @context_downloaded = true })
       end
     end
@@ -211,8 +237,9 @@ module PlaywrightSoftReset
       return false if @context_downloaded
 
       context = contexts.first
-      context.pages.each(&:close)
+      previous_pages = context.pages
       new_page = create_page(context)
+      previous_pages.each(&:close)
       return false if fake_clock_installed?(new_page)
 
       clear_storage(new_page)

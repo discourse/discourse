@@ -30,13 +30,9 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "banner visibility" do
-    it "shows the onboarding banner for admin users" do
+    it "shows the onboarding banner with all three steps for admin users" do
       visit("/")
       expect(banner).to be_visible
-    end
-
-    it "shows all three onboarding steps" do
-      visit("/")
       expect(banner.step_names).to eq(%w[select_theme create_category invite_collaborators])
     end
 
@@ -67,7 +63,12 @@ describe "Admin Onboarding Banner" do
       )
     end
 
-    it "takes the admin to the category setup and completes once a category is saved" do
+    it "only completes the step after the admin saves a new category" do
+      visit("/")
+      expect(banner.step_not_completed?("create_category")).to eq(true)
+
+      open_category_form_from_banner
+
       visit("/")
       expect(banner.step_not_completed?("create_category")).to eq(true)
 
@@ -83,14 +84,6 @@ describe "Admin Onboarding Banner" do
       expect(banner.step_completed?("create_category")).to eq(true)
     end
 
-    it "stays open when the admin leaves the category setup without saving" do
-      visit("/")
-      open_category_form_from_banner
-
-      visit("/")
-      expect(banner.step_not_completed?("create_category")).to eq(true)
-    end
-
     it "stays open when an existing category is edited" do
       category_page.visit_general(general_category)
       category_form.field("name").fill_in("General chat")
@@ -104,12 +97,17 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "invite collaborators step" do
-    it "marks step as complete after creating invite" do
+    it "only completes the step after the admin creates an invite" do
       visit("/")
       expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("invite_collaborators")
+      expect(create_invite_modal).to be_open
+      create_invite_modal.close
+      expect(create_invite_modal).to be_closed
+      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
 
+      banner.click_step_action("invite_collaborators")
       expect(create_invite_modal).to be_open
       create_invite_modal.save_button.click
       expect(create_invite_modal).to have_copy_button
@@ -118,30 +116,9 @@ describe "Admin Onboarding Banner" do
 
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
     end
-
-    it "does not mark step complete if modal is cancelled" do
-      visit("/")
-      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
-      banner.click_step_action("invite_collaborators")
-
-      expect(create_invite_modal).to be_open
-      create_invite_modal.close
-
-      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
-    end
   end
 
   describe "select theme step" do
-    it "opens the design wizard as a sheet" do
-      visit("/")
-      expect(banner.step_not_completed?("select_theme")).to eq(true)
-
-      banner.click_step_action("select_theme")
-
-      expect(design_wizard_panel).to be_visible
-      expect(design_wizard_panel).to have_site_sidebar
-    end
-
     it "docks to the bottom edge on a narrow viewport, leaving the preview visible" do
       admin.update!(uploaded_avatar: Fabricate(:image_upload, width: 100, height: 100))
       visit("/")
@@ -180,11 +157,14 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
 
-    it "does not mark the step complete when closed without saving" do
+    it "opens the design wizard as a sheet and leaves the step incomplete on close" do
       visit("/")
+      expect(banner.step_not_completed?("select_theme")).to eq(true)
+
       banner.click_step_action("select_theme")
 
       expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to have_site_sidebar
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("default")
