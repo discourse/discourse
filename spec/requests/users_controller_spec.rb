@@ -7545,6 +7545,170 @@ RSpec.describe UsersController do
       expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
     end
 
+    it "filters last-seen suggestions by category member visibility only for allowed-user searches" do
+      searching_user = Fabricate(:user, last_seen_at: 1.day.ago)
+      hidden_member = Fabricate(:user, last_seen_at: 1.minute.from_now)
+      large_group_member = Fabricate(:user, last_seen_at: 2.minutes.from_now)
+      admin = Fabricate(:admin, last_seen_at: 3.minutes.from_now)
+      global_user = Fabricate(:user, last_seen_at: 4.minutes.from_now)
+      hidden_access_group =
+        Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      large_visible_access_group =
+        Fabricate(:group, members_visibility_level: Group.visibility_levels[:public])
+      hidden_access_group.add(searching_user)
+      hidden_access_group.add(hidden_member)
+      large_visible_access_group.add(large_group_member)
+      large_visible_access_group.update_column(:user_count, UserSearch::MAX_SIZE_PRIORITY_MENTION)
+
+      category = Fabricate(:category)
+      category.set_permissions(
+        hidden_access_group => :readonly,
+        large_visible_access_group => :readonly,
+      )
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+
+      sign_in(searching_user)
+      params = {
+        term: "",
+        topic_id: topic.id,
+        topic_allowed_users: "true",
+        last_seen_users: true,
+        limit: 10,
+      }
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |user| user["username"] }
+      expect(usernames).to include(admin.username, large_group_member.username)
+      expect(usernames).not_to include(hidden_member.username)
+
+      hidden_access_group.update!(members_visibility_level: Group.visibility_levels[:public])
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        admin.username,
+        hidden_member.username,
+        large_group_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(topic_allowed_users: "false")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        global_user.username,
+      )
+    end
+
+    it "does not reveal hidden category-access members through term or username searches",
+       :aggregate_failures do
+      searching_user = Fabricate(:user, last_seen_at: 1.day.ago)
+      hidden_member = Fabricate(:user, username: "secretivemember", last_seen_at: 1.minute.ago)
+      participant = Fabricate(:user, username: "knownparticipant", last_seen_at: 1.minute.ago)
+      access_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      access_group.add(searching_user)
+      access_group.add(hidden_member)
+      access_group.add(participant)
+
+      category = Fabricate(:category)
+      category.set_permissions(access_group => :readonly)
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+      Fabricate(:post, topic: topic, user: participant)
+
+      sign_in(searching_user)
+
+      params = { topic_id: topic.id, topic_allowed_users: "true" }
+
+      get "/u/search/users.json",
+          params: params.merge(term: hidden_member.username, last_seen_users: true)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(term: "secretive")
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(usernames: hidden_member.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(term: participant.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        participant.username,
+      )
+
+      access_group.update!(members_visibility_level: Group.visibility_levels[:public])
+
+      get "/u/search/users.json", params: params.merge(term: hidden_member.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        hidden_member.username,
+      )
+    end
+
+    it "does not treat hidden posts as observable topic participation", :aggregate_failures do
+      searching_user = Fabricate(:user)
+      hidden_post_author = Fabricate(:user, username: "hiddenpostauthor")
+      visible_participant = Fabricate(:user, username: "visibleparticipant")
+      access_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      access_group.add(searching_user)
+      access_group.add(hidden_post_author)
+      access_group.add(visible_participant)
+
+      category = Fabricate(:category)
+      category.set_permissions(access_group => :readonly)
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+      hidden_post = Fabricate(:post, topic: topic, user: hidden_post_author, hidden: true)
+      Fabricate(:post, topic: topic, user: visible_participant)
+
+      sign_in(searching_user)
+
+      expect(searching_user.guardian.can_see_post?(hidden_post)).to eq(false)
+
+      get "/u/search/users.json",
+          params: {
+            term: hidden_post_author.username,
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_post_author.username,
+      )
+
+      get "/u/search/users.json",
+          params: {
+            term: visible_participant.username,
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        visible_participant.username,
+      )
+
+      get "/u/search/users.json",
+          params: {
+            term: "",
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to contain_exactly(
+        visible_participant.username,
+      )
+    end
+
     it "interprets blank category id correctly" do
       pm_topic = Fabricate(:private_message_post).topic
       sign_in(pm_topic.user)
