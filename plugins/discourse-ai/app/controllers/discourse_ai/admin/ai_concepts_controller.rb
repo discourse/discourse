@@ -113,7 +113,7 @@ module DiscourseAi
 
       def update
         concept = InferredConcept.find(params[:id])
-        attrs = normalized_concept_params
+        attrs = normalized_concept_params(existing_parent_id: concept.parent_id)
         return if performed?
 
         concept.assign_attributes(attrs)
@@ -267,7 +267,7 @@ module DiscourseAi
         serialize_concepts([concept]).first
       end
 
-      def normalized_concept_params
+      def normalized_concept_params(existing_parent_id: nil)
         raw =
           params.require(:ai_concept).permit(:name, :description, :status, :parent_id, aliases: [])
 
@@ -281,7 +281,7 @@ module DiscourseAi
             raw[:parent_id] = nil
           else
             parent = InferredConcept.find_by(id: raw[:parent_id])
-            if parent.nil? || parent.retired?
+            if parent.nil? || (parent.retired? && parent.id != existing_parent_id)
               render_json_error(I18n.t("discourse_ai.concepts.errors.invalid_parent"), status: 422)
               return
             end

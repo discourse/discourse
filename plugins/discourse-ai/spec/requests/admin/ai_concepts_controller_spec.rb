@@ -181,6 +181,32 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
       expect(child.reload).to be_retired
       expect(DiscourseAi::Embeddings::Schema.for(InferredConcept).find_by_target(child)).to be_nil
     end
+
+    it "allows unrelated edits when the existing parent is retired, while still rejecting new retired parents" do
+      parent = Fabricate(:inferred_concept, name: "Legacy Platform", status: :retired)
+      other_retired = Fabricate(:inferred_concept, name: "Deprecated", status: :retired)
+      child = Fabricate(:inferred_concept, name: "Kubernetes", parent: parent, status: :active)
+
+      put "/admin/plugins/discourse-ai/ai-concepts/#{child.id}.json",
+          params: {
+            ai_concept: {
+              name: "Renamed Child",
+              description: "Updated description",
+              parent_id: parent.id,
+            },
+          }
+      expect(response.status).to eq(200)
+      expect(child.reload.name).to eq("Renamed Child")
+      expect(child.parent_id).to eq(parent.id)
+
+      put "/admin/plugins/discourse-ai/ai-concepts/#{child.id}.json",
+          params: {
+            ai_concept: {
+              parent_id: other_retired.id,
+            },
+          }
+      expect(response.status).to eq(422)
+    end
   end
 
   describe "#destroy" do
