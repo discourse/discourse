@@ -166,7 +166,7 @@
     "ember-cli-htmlbars": "^7.0.1",
     "ember-exam": "^10.3.0",
     "ember-modifier": "^4.3.0",
-    "ember-qunit": "^9.2.0",
+    "ember-qunit": "^9.2.1",
     "ember-template-imports": "^4.4.0",
     "expect-type": "^1.4.0",
     "jquery": "^4.0.0",
