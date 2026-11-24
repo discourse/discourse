@@ -30,6 +30,7 @@ import {
   disableVirtualization,
   enableVirtualization,
 } from "discourse/ui-kit/-internals/windowing/virtualizer";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectList from "discourse/ui-kit/select/d-select-list";
 import { selectOption } from "discourse/ui-kit/select/select-engine";
@@ -4580,3 +4581,166 @@ module(
     });
   }
 );
+
+const GLYPH_OPTIONS = [
+  { id: 1, name: "Bolt", symbol: "bolt", description: "Charged" },
+  {
+    id: 2,
+    name: "Gardener",
+    picture: "/images/gardener.png",
+    description: "Tidy gardens",
+  },
+  { id: 3, name: "Lighthouse", symbol: "certificate" },
+  { id: 4, name: "Beacon", boxed: "bolt" },
+];
+
+const Glyph = <template>
+  <span class="d-select__glyph">
+    {{~#if @record.picture~}}
+      <img alt="" src={{@record.picture}} />
+    {{~else if @record.boxed~}}
+      {{! A box with a smaller icon centered in it, the way a group's flair is drawn. }}
+      <span class="glyph-box">{{dIcon @record.boxed}}</span>
+    {{~else~}}
+      {{dIcon @record.symbol}}
+    {{~/if~}}
+  </span>
+</template>;
+
+const GlyphHost = <template>
+  <DSelect
+    @descriptionField="description"
+    @options={{GLYPH_OPTIONS}}
+    @value={{@value}}
+  >
+    <:option as |option|>
+      <Glyph @record={{option.record}} />
+      {{~option.label~}}
+    </:option>
+    <:selection as |option|>
+      <Glyph @record={{option.record}} />
+      {{~option.label~}}
+    </:selection>
+  </DSelect>
+</template>;
+
+function glyphRow(id) {
+  return find(`.d-select__content [role='option'][data-value='${id}']`);
+}
+
+module("Integration | ui-kit | select | DSelect glyph", function (hooks) {
+  setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    document.body.style.removeProperty("--d-select-glyph-size");
+    this.glyphStyle?.remove();
+  });
+
+  test("glyph: icons and images share one size variable", async function (assert) {
+    // Computed sizes, since the test container is scaled.
+    const size = (element) => {
+      const { width, height } = getComputedStyle(element);
+      return [width, height];
+    };
+
+    // The open list floats outside the select, so the variable is set where both inherit it.
+    document.body.style.setProperty("--d-select-glyph-size", "30px");
+    await render(<template><GlyphHost @value={{2}} /></template>);
+
+    assert.deepEqual(
+      size(find(".d-select__trigger .d-select__glyph img")),
+      ["30px", "30px"],
+      "the held image follows the variable"
+    );
+
+    await dSelect(".d-select").open();
+
+    assert.deepEqual(
+      size(glyphRow(1).querySelector(".d-select__glyph .d-icon")),
+      ["30px", "30px"],
+      "a listed icon follows the variable"
+    );
+    assert.deepEqual(
+      size(glyphRow(2).querySelector(".d-select__glyph img")),
+      ["30px", "30px"],
+      "a listed image follows the variable"
+    );
+  });
+
+  test("glyph: the held glyph sits level with the name in the field", async function (assert) {
+    const style = document.createElement("style");
+    style.textContent = `
+      .glyph-box { display: flex; align-items: center; justify-content: center; width: 1em; height: 1em; }
+      .glyph-box .d-icon { width: 60%; height: 60%; }
+    `;
+    // First in the head, so like a component's own stylesheet it loses a tie with the select's.
+    document.head.prepend(style);
+    this.glyphStyle = style;
+
+    for (const value of [2, 4]) {
+      await render(<template><GlyphHost @value={{value}} /></template>);
+
+      const glyph = find(".d-select__trigger .d-select__glyph");
+      const text = [...glyph.parentElement.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+      );
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const name = range.getBoundingClientRect();
+      const box = glyph.getBoundingClientRect();
+      const middle = (rect) => (rect.top + rect.bottom) / 2;
+      // The test container is scaled, so compare against a fraction of the glyph's own height.
+      const tolerance = box.height / 10;
+
+      assert.true(
+        Math.abs(middle(box) - middle(name)) <= tolerance,
+        `option ${value}: the glyph's middle is at ${middle(box)}, the name's at ${middle(name)}`
+      );
+    }
+
+    const outer = find(".d-select__trigger .glyph-box").getBoundingClientRect();
+    const icon = find(
+      ".d-select__trigger .glyph-box .d-icon"
+    ).getBoundingClientRect();
+    const centre = (rect) => [
+      Math.round((rect.left + rect.right) / 2),
+      Math.round((rect.top + rect.bottom) / 2),
+    ];
+    assert.deepEqual(
+      centre(icon),
+      centre(outer),
+      "a picture that lays out its own inner icon keeps it centred"
+    );
+  });
+
+  test("glyph: a description starts under the name, not under the glyph", async function (assert) {
+    await render(<template><GlyphHost /></template>);
+    await dSelect(".d-select").open();
+
+    const nameStart = (id) => {
+      const label =
+        glyphRow(id).querySelector(".d-select__glyph").parentElement;
+      const text = [...label.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+      );
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      return range.getBoundingClientRect().left;
+    };
+
+    for (const id of [1, 2]) {
+      const descriptionStart = glyphRow(id)
+        .querySelector(".d-select__option-description")
+        .getBoundingClientRect().left;
+
+      assert.true(
+        Math.abs(nameStart(id) - descriptionStart) < 1,
+        `option ${id}: the description starts at ${descriptionStart}, under the name at ${nameStart(id)}`
+      );
+    }
+    assert.true(
+      Math.abs(nameStart(1) - nameStart(3)) < 1,
+      "a described name lines up with an undescribed one"
+    );
+  });
+});

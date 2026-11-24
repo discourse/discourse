@@ -410,6 +410,48 @@
   flex: none;
 }
 
+// A picture drawn before a name by an `:option` or `:selection` block. Icons and images share one
+// size, so a list mixing both lines up.
+.d-select__glyph {
+  // Its baseline is its bottom edge whatever it draws, so a picture with its own baseline inside,
+  // such as a smaller icon centred in a box, still sits level with the name. A clipped
+  // inline-block takes that baseline; a flex box would take its first child's.
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: -0.125em;
+  margin-inline-end: var(--d-select-option-gap, 0.25em);
+
+  // Direct children only, so a drawn picture that sizes and lays out its own inner icon keeps it.
+  > .d-icon,
+  > img {
+    display: block;
+    width: var(--d-select-glyph-size, 1em);
+    height: var(--d-select-glyph-size, 1em);
+  }
+
+  > img {
+    object-fit: contain;
+  }
+}
+
+// Straight in a row, the row's own gap already separates the glyph from the name.
+.d-select__option > .d-select__glyph {
+  margin-inline-end: 0;
+}
+
+// The glyph belongs to the name, so a described row is indented by the glyph's room and the glyph
+// pulled back into it: the description then starts under the name, as it does beside a row icon.
+.d-select__option-content:has(> :first-child > .d-select__glyph:first-child) {
+  --d-select-glyph-room: calc(
+    var(--d-select-glyph-size, 1em) + var(--d-select-option-gap, 0.25em)
+  );
+  padding-inline-start: var(--d-select-glyph-room);
+
+  .d-select__glyph {
+    margin-inline-start: calc(-1 * var(--d-select-glyph-room));
+  }
+}
+
 .d-select__option.--selected .d-select__option-selected-icon {
   visibility: visible;
 

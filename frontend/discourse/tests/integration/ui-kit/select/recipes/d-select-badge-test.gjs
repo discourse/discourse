@@ -37,7 +37,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.afterEach(function () {
-      document.body.style.removeProperty("--d-select-badge-glyph-size");
+      document.body.style.removeProperty("--d-select-glyph-size");
     });
 
     test("draws each badge's icon or image before its name", async function (assert) {
@@ -48,30 +48,30 @@ module(
 
       assert.dom(row(1)).includesText("Spark");
       assert
-        .dom(".d-select-badge__glyph .d-icon-bolt", row(1))
+        .dom(".d-select__glyph .d-icon-bolt", row(1))
         .exists("an icon badge draws its icon");
 
       assert.dom(row(2)).includesText("Gardener");
       assert
-        .dom(".d-select-badge__glyph img", row(2))
+        .dom(".d-select__glyph img", row(2))
         .hasAttribute(
           "src",
           "/images/gardener.png",
           "an image badge draws its image"
         );
       assert
-        .dom(".d-select-badge__glyph img", row(2))
+        .dom(".d-select__glyph img", row(2))
         .hasAttribute("alt", "", "the image is decorative beside the name");
 
       assert
-        .dom(".d-select-badge__glyph .d-icon-certificate", row(3))
+        .dom(".d-select__glyph .d-icon-certificate", row(3))
         .exists("a class-style icon name is converted");
 
       assert
-        .dom(".d-select-badge__glyph img", row(4))
+        .dom(".d-select__glyph img", row(4))
         .exists("a badge with an image draws it");
       assert
-        .dom(".d-select-badge__glyph img", row(5))
+        .dom(".d-select__glyph img", row(5))
         .hasAttribute(
           "src",
           "/images/archivist.png",
@@ -91,18 +91,16 @@ module(
       );
 
       assert
-        .dom(".d-select__trigger .d-select-badge__glyph img")
+        .dom(".d-select__trigger .d-select__glyph img")
         .hasAttribute("src", "/images/gardener.png");
       assert.dom(".d-select__trigger").includesText("Gardener");
 
       value.value = 1;
       await settled();
       assert
-        .dom(".d-select__trigger .d-select-badge__glyph .d-icon-bolt")
+        .dom(".d-select__trigger .d-select__glyph .d-icon-bolt")
         .exists("an icon badge shows its icon");
-      assert
-        .dom(".d-select__trigger .d-select-badge__glyph img")
-        .doesNotExist();
+      assert.dom(".d-select__trigger .d-select__glyph img").doesNotExist();
     });
 
     test("sizes icons and images from one variable", async function (assert) {
@@ -114,25 +112,25 @@ module(
       };
 
       // The open list floats outside the select, so the variable is set where both inherit it.
-      document.body.style.setProperty("--d-select-badge-glyph-size", "30px");
+      document.body.style.setProperty("--d-select-glyph-size", "30px");
       await render(
         <template><DSelectBadge @options={{options}} @value={{2}} /></template>
       );
 
       assert.deepEqual(
-        size(find(".d-select__trigger .d-select-badge__glyph img")),
+        size(find(".d-select__trigger .d-select__glyph img")),
         ["30px", "30px"],
         "the held image follows the variable"
       );
 
       await new DSelect().open();
       assert.deepEqual(
-        size(row(1).querySelector(".d-select-badge__glyph .d-icon")),
+        size(row(1).querySelector(".d-select__glyph .d-icon")),
         ["30px", "30px"],
         "a listed icon follows the variable"
       );
       assert.deepEqual(
-        size(row(2).querySelector(".d-select-badge__glyph img")),
+        size(row(2).querySelector(".d-select__glyph img")),
         ["30px", "30px"],
         "a listed image follows the variable"
       );
@@ -280,9 +278,7 @@ module(
       await new DSelect().open();
 
       const nameStart = (id) => {
-        const label = row(id).querySelector(
-          ".d-select-badge__glyph"
-        ).parentElement;
+        const label = row(id).querySelector(".d-select__glyph").parentElement;
         const text = [...label.childNodes].find(
           (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
         );

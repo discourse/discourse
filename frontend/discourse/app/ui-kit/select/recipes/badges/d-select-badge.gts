@@ -88,13 +88,13 @@ function emitBadgeId(onChange?: (badgeId: number | null) => void) {
 
 /**
  * A badge's image, or else its icon. Drawn by the recipe rather than the select, because the
- * select has no notion of an image; both are sized by `--d-select-badge-glyph-size`.
+ * select has no notion of an image; both are sized by `--d-select-glyph-size`.
  */
 const BadgeGlyph: TemplateOnlyComponent<{ Args: { badge: SelectRecord } }> =
   <template>
     {{~#let (glyphOf @badge) as |glyph|~}}
       {{~#if (or glyph.image glyph.icon)~}}
-        <span class="d-select-badge__glyph">{{dIconOrImage glyph}}</span>
+        <span class="d-select__glyph">{{dIconOrImage glyph}}</span>
       {{~/if~}}
     {{~/let~}}
   </template>;

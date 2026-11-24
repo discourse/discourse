@@ -691,6 +691,11 @@ and `:footer` also yield the select's resolved config, so a recipe can render va
 override (see [Recipes](#recipes)). It comes after the block's own values, and for the group
 blocks before the group.
 
+A block that draws a picture before the name, such as an image the select can't draw as an icon,
+wraps it in `d-select__glyph`. Icons and images inside it share one size,
+`--d-select-glyph-size` (`1em` by default), so a list mixing them lines up, and a described row
+starts its description under the name rather than under the picture.
+
 `:option`, `:selection` and `:unresolved` yield `(option, config)`. The option is the resolved
 option: what the select made of every source that knows the value, the one the row, the chip and
 the trigger draw. Read what the select shows from it (`option.label`, `option.icon`,
@@ -1434,8 +1439,8 @@ call site names it; the access control names each row's picker after its grantee
 and `@noneOption` emits `null`. Each badge shows its uploaded image, or else its icon, before its
 name, in the list and in the trigger; class-style icon names such as `fa-certificate` are
 converted. The recipe draws both in its own `:option` and `:selection` blocks, because the select
-has no notion of an image, and sizes both with `--d-select-badge-glyph-size` (`1em` by default) so
-a list mixing them lines up. Like any `:selection` block, the glyph is hidden while a typeahead
+has no notion of an image, inside the shared `d-select__glyph` (see
+[Custom option content](#custom-option-content)). Like any `:selection` block, the glyph is hidden while a typeahead
 trigger is focused. Unlike other recipes, it takes no `:option` or `:selection` block from the
 call site: drawing every badge the same way is what the recipe is for.
 
