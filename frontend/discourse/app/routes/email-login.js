@@ -15,11 +15,12 @@ export default class EmailLogin extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.set(
-      "secondFactorMethod",
-      model.security_key_required
-        ? SECOND_FACTOR_METHODS.SECURITY_KEY
-        : SECOND_FACTOR_METHODS.TOTP
-    );
+    let method = SECOND_FACTOR_METHODS.TOTP;
+    if (model.security_key_required) {
+      method = SECOND_FACTOR_METHODS.SECURITY_KEY;
+    } else if (model.backup_codes_enabled && !model.totp_enabled) {
+      method = SECOND_FACTOR_METHODS.BACKUP_CODE;
+    }
+    controller.set("secondFactorMethod", method);
   }
 }

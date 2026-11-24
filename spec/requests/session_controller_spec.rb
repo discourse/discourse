@@ -91,6 +91,17 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
       end
 
+      it "offers the recovery code when it is the only remaining factor" do
+        Fabricate(:user_second_factor_backup, user:)
+        get "/session/email-login/#{email_token.token}.json"
+        expect(response.parsed_body).to include(
+          "second_factor_required" => true,
+          "backup_codes_enabled" => true,
+          "totp_enabled" => false,
+        )
+        expect(user.user_auth_tokens).to be_empty
+      end
+
       context "when user has 2-factor logins" do
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
         let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
@@ -5769,6 +5780,25 @@ RSpec.describe SessionController do
         expect(response.status).to eq(403)
       end
 
+      it "requires proof of a factor, not just an OK result for an unenrolled account" do
+        post "/session/2fa/test-action", xhr: true
+        nonce = response.parsed_body.fetch("second_factor_challenge_nonce")
+        # A factor can disappear between the eligibility check and authentication.
+        User
+          .any_instance
+          .stubs(:authenticate_second_factor)
+          .returns(SecondFactorManager::SecondFactorAuthenticationResult.new(true))
+
+        post "/session/2fa.json",
+             params: {
+               nonce:,
+               second_factor_method: UserSecondFactor.methods[:totp],
+             }
+        expect(response).to have_http_status(:forbidden)
+        post "/session/2fa/test-action", params: { second_factor_nonce: nonce }, xhr: true
+        expect(response).to have_http_status(:unauthorized)
+      end
+
       it "marks the challenge as successful if the 2fa succeeds" do
         post "/session/2fa/test-action", params: { redirect_url: "/ggg" }, xhr: true
         nonce = response.parsed_body["second_factor_challenge_nonce"]
@@ -5791,6 +5821,46 @@ RSpec.describe SessionController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present
         expect(response.parsed_body["result"]).to eq("second_factor_auth_completed")
+      end
+
+      it "preserves the replacement challenge when an earlier verification finishes late" do
+        post "/session/2fa/test-action", xhr: true
+        original_nonce = response.parsed_body.fetch("second_factor_challenge_nonce")
+        replacement_nonce = nil
+        result = SecondFactorManager::SecondFactorAuthenticationResult.new(true)
+        result.used_2fa_method = UserSecondFactor.methods[:totp]
+        User
+          .any_instance
+          .stubs(:authenticate_second_factor)
+          .with do |_params, session|
+            guardian = user.guardian
+            action = TestSecondFactorAction.new(guardian, request, target_user: user)
+            manager = SecondFactor::AuthManager.new(guardian, action, target_user: user)
+            begin
+              manager.run!(request, { redirect_url: "/replacement" }, session)
+            rescue SecondFactor::AuthManager::SecondFactorRequired => error
+              replacement_nonce = error.nonce
+            end
+            true
+          end
+          .returns(result)
+
+        post "/session/2fa.json",
+             params: {
+               nonce: original_nonce,
+               second_factor_method: UserSecondFactor.methods[:totp],
+               second_factor_token: "unused",
+             }
+        expect(response.status).to eq(404)
+
+        expect(replacement_nonce).to be_present
+        get "/session/2fa.json", params: { nonce: replacement_nonce }
+        expect(response.status).to eq(200)
+
+        post "/session/2fa/test-action", params: { second_factor_nonce: original_nonce }
+        expect(response.status).to eq(404)
+        post "/session/2fa/test-action", params: { second_factor_nonce: replacement_nonce }
+        expect(response.status).to eq(401)
       end
 
       it "does not mark the challenge as successful if the 2fa fails" do

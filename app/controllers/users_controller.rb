@@ -1231,7 +1231,7 @@ class UsersController < ApplicationController
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true
-      elsif @user.totp_or_backup_codes_enabled? || @user.security_keys_enabled?
+      elsif @user.requires_second_factor_for_login?
         @redirect_to = path("/login")
       else
         @user.enqueue_welcome_message("welcome_user") if @user.send_welcome_message
@@ -1828,9 +1828,13 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+    security_key =
+      current_user.security_keys.find_by(
+        id: params[:id].to_i,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      )
 
-    if security_key&.first_factor? && current_user.passkey_credential_ids.length == 1
+    if security_key && current_user.passkey_credential_ids.length == 1
       if !current_user.has_password? && current_user.associated_accounts.blank?
         return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
       end
@@ -1847,7 +1851,11 @@ class UsersController < ApplicationController
     params.require(:id)
     params.require(:name)
 
-    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
+    passkey =
+      current_user.security_keys.find_by(
+        id: params[:id].to_i,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      )
     raise Discourse::InvalidParameters.new(:id) unless passkey
 
     passkey.update!(name: params[:name])
@@ -1855,7 +1863,7 @@ class UsersController < ApplicationController
   end
 
   def update_security_key
-    user_security_key = current_user.security_keys.find_by(id: params[:id].to_i)
+    user_security_key = current_user.second_factor_security_keys.find_by(id: params[:id].to_i)
     raise Discourse::InvalidParameters unless user_security_key
 
     user_security_key.update!(name: params[:name]) if params[:name] && params[:name].present?
