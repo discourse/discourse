@@ -508,8 +508,8 @@ RSpec.describe TopicQuery do
 
       # Not used in assertions but fabricated to ensure we're not leaking topics
       # across categories
-      let!(:_category) { Fabricate(:category_with_definition) }
-      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+      fab!(:_category, :category_with_definition)
+      fab!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
 
       it "works with subcategories" do
         expect(
@@ -2042,13 +2042,13 @@ RSpec.describe TopicQuery do
   describe "#list_group_topics" do
     fab!(:group)
 
-    let(:user) do
+    fab!(:user) do
       user = Fabricate(:user)
       group.add(user)
       user
     end
 
-    let(:user2) do
+    fab!(:user2) do
       user = Fabricate(:user)
       group.add(user)
       user
@@ -2058,13 +2058,13 @@ RSpec.describe TopicQuery do
 
     fab!(:private_category) { Fabricate(:private_category_with_definition, group: group) }
 
-    let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
-    let!(:topic1) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
-    let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
-    let!(:topic4) { Fabricate(:topic) }
-    let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
-    let!(:topic6) { Fabricate(:topic, user: user2) }
+    fab!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
+    fab!(:topic1) { Fabricate(:topic, user: user) }
+    fab!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
+    fab!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
+    fab!(:topic4, :topic)
+    fab!(:topic5) { Fabricate(:topic, user: user, visible: false) }
+    fab!(:topic6) { Fabricate(:topic, user: user2) }
 
     it "returns the expected lists for an anonymous user" do
       topics = TopicQuery.new.list_group_topics(group).topics

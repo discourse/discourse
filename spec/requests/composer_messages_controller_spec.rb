@@ -11,10 +11,13 @@ RSpec.describe ComposerMessagesController do
     end
 
     context "when logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user)
+
       let(:args) do
         { "topic_id" => post.topic.id, "post_id" => "333", "composer_action" => "reply" }
       end
+
+      before { sign_in(user) }
 
       it "redirects to your user preferences" do
         get "/composer_messages.json"
@@ -138,9 +141,12 @@ RSpec.describe ComposerMessagesController do
     end
 
     context "when logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user)
 
-      before { SiteSetting.pm_warn_user_last_seen_months_ago = 24 }
+      before do
+        sign_in(user)
+        SiteSetting.pm_warn_user_last_seen_months_ago = 24
+      end
 
       it "requires usernames parameter to be present" do
         get "/composer_messages/user_not_seen_in_a_while.json"

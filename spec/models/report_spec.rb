@@ -1692,15 +1692,13 @@ RSpec.describe Report do
 
   describe "report_top_ignored_users" do
     let(:report) { Report.find("top_ignored_users") }
-    let(:tarek) { Fabricate(:user, username: "tarek") }
-    let(:john) { Fabricate(:user, username: "john") }
-    let(:matt) { Fabricate(:user, username: "matt") }
 
     context "with data" do
-      before do
-        Fabricate(:ignored_user, user: tarek, ignored_user: john)
-        Fabricate(:ignored_user, user: tarek, ignored_user: matt)
-      end
+      fab!(:tarek) { Fabricate(:user, username: "tarek") }
+      fab!(:john) { Fabricate(:user, username: "john") }
+      fab!(:matt) { Fabricate(:user, username: "matt") }
+      fab!(:ignored_john) { Fabricate(:ignored_user, user: tarek, ignored_user: john) }
+      fab!(:ignored_matt) { Fabricate(:ignored_user, user: tarek, ignored_user: matt) }
 
       it "returns ignored-user counts" do
         expect(report.data.length).to eq(2)

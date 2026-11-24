@@ -9565,9 +9565,9 @@ RSpec.describe UsersController do
 
   describe "#bookmarks excerpts" do
     fab!(:user)
-    let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:topic_post) { Fabricate(:post, topic: topic) }
-    let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:topic_post) { Fabricate(:post, topic: topic) }
+    fab!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
 
     it "uses the first post of the topic for the bookmarks excerpt" do
       TopicUser.change(
