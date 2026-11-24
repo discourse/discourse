@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { trackedArray } from "@ember/reactive/collections";
 import {
   click,
@@ -740,6 +741,52 @@ module("Integration | ui-kit | select | DSelect options", function (hooks) {
     assert
       .dom(".d-select__chip")
       .exists({ count: expected.length }, "only eligible records get chips");
+  });
+
+  test("noneOption: a search finds the none option by its label", async function (assert) {
+    const options = [
+      { id: "apple", name: "Apple" },
+      { id: "banana", name: "Banana" },
+    ];
+    // A recipe's own matcher reads records, so it never sees the none option's label.
+    const filterBy = (record, term) => record.name.toLowerCase().includes(term);
+    const held = tracked("apple");
+    const changes = [];
+    const onChange = (value) => {
+      changes.push(value);
+      held.value = value;
+    };
+
+    await render(
+      <template>
+        <DSelect
+          @filterBy={{filterBy}}
+          @noneOption={{true}}
+          @onChange={{onChange}}
+          @options={{options}}
+          @texts={{hash noneLabel="Leave empty"}}
+          @value={{held.value}}
+        />
+      </template>
+    );
+    const select = dSelect();
+    await select.open();
+
+    await select.search("EMPTY");
+    assert.dom("[role='option']").exists({ count: 1 });
+    assert
+      .dom("[role='option'].--none")
+      .hasText("Leave empty", "matched by its label, whatever the case");
+
+    await select.search("ban");
+    assert
+      .dom("[role='option'].--none")
+      .doesNotExist("a search its label doesn't match leaves it out");
+    assert.dom("[role='option']").hasText("Banana");
+
+    await select.search("leave");
+    await click("[role='option'].--none");
+    assert.deepEqual(changes, [null], "picking it clears the value");
   });
 
   test("noneOption and createOption expose engine flags through the option block", async function (assert) {

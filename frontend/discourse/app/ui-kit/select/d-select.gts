@@ -307,10 +307,10 @@ export interface DSelectSignature {
     /**
      * Single-select only: adds a first-class "none" option to the top of the list, labeled with
      * `texts.noneLabel`. Selecting it clears the value to `null`, and the option reads as selected
-     * whenever nothing else is. It is a list affordance shown only while browsing (an active filter
-     * query hides it, so a non-matching search still reaches the empty state), and after choosing
-     * it the trigger shows the placeholder — `null` cannot encode "None" in the trigger. Ignored on
-     * multi-select, where the empty state is the placeholder rather than an option.
+     * whenever nothing else is. A search keeps it only when its label matches, ignoring case, so a
+     * search that matches nothing still reaches the empty state. While nothing is held the field
+     * shows its label as the value. Ignored on multi-select, where the empty state is the
+     * placeholder rather than an option.
      */
     noneOption?: boolean;
     /**

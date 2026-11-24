@@ -1165,7 +1165,8 @@ Selection (`d-select.gts`, `-internals/engine/list-composer.ts`):
   extra option keeps it; the same record object in both asserts in development.
 - `@noneOption` adds the single-select "none" option, worded by the `noneLabel` text. Choosing none
   and choosing nothing are the same value, so while nothing is chosen the field shows that label as
-  its value instead of the `placeholder` text. A field that should prompt for a choice leaves the
+  its value instead of the `placeholder` text. A search finds it by that label, ignoring case;
+  a matcher given in `@filterBy` reads records only, so it never decides. A field that should prompt for a choice leaves the
   none option out, and uses `@clearable` if the value can be cleared. `@maximum` and `@minimum` cap the selection
   and announce the limit.
 - `@required` is for a single value the field must always hold, such as a choice with no empty

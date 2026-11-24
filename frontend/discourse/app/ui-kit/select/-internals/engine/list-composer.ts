@@ -896,7 +896,10 @@ export default class ListComposer {
    */
   #noneOption(): SelectOption | null {
     const label = this.#args.noneLabel;
-    if (label == null || this.#getFilter() !== "") {
+    // Matched by its label as the default filter matches options: a matcher of the caller's
+    // reads records, and the none option has none.
+    const filter = this.#getFilter().toLowerCase();
+    if (label == null || !label.toLowerCase().includes(filter)) {
       return null;
     }
     if (this.#none?.label !== label) {
