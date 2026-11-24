@@ -133,6 +133,32 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
       expect(manager.generate_concepts_from_topic(deleted_topic)).to eq([])
       expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
     end
+
+    it "re-resolves concepts merged while LLM classification is in flight" do
+      kubernetes = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      k8s = Fabricate(:inferred_concept, name: "k8s", status: :active)
+
+      retriever = instance_double(DiscourseAi::InferredConcepts::CandidateRetriever)
+      allow(DiscourseAi::InferredConcepts::CandidateRetriever).to receive(:new).and_return(
+        retriever,
+      )
+      allow(retriever).to receive(:retrieve).and_return([k8s])
+
+      classifier = instance_double(DiscourseAi::InferredConcepts::Classifier)
+      allow(DiscourseAi::InferredConcepts::Classifier).to receive(:new).and_return(classifier)
+      allow(classifier).to receive(:classify) do
+        DiscourseAi::InferredConcepts::Merger.new.merge!(canonical: kubernetes, duplicates: [k8s])
+        { matches: [{ concept_id: k8s.id, relevance: 0.9, primary: true }], proposed_new: [] }
+      end
+
+      applied = manager.generate_concepts_from_topic(topic)
+
+      expect(applied).to eq([kubernetes])
+      expect(topic.inferred_concepts.reload).to contain_exactly(kubernetes)
+      expect(InferredConceptTopic.where(inferred_concept_id: k8s.id)).to be_empty
+      expect(manager.search_topics_by_concept("Kubernetes")).to contain_exactly(topic)
+      expect(manager.search_topics_by_concept("k8s")).to contain_exactly(topic)
+    end
   end
 
   describe "#generate_concepts_from_post" do
