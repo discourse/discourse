@@ -29,6 +29,12 @@ module DiscourseAi
                 max_length,
                 strict: SiteSetting.ai_strict_token_counting,
               )
+            when InferredConcept
+              vdef.tokenizer.truncate(
+                target.text_for_embedding,
+                max_length,
+                strict: SiteSetting.ai_strict_token_counting,
+              )
             else
               raise ArgumentError, "Invalid target type"
             end

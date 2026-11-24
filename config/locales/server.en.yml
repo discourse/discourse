@@ -1459,6 +1459,7 @@ en:
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
     activated: "Sorry, this account has already been activated."
     email_change_not_allowed: "This account has been active before, so it can only be reactivated using its current email address."
+    email_change_not_allowed_after_invite: "This account has accepted an invitation, so it can only be activated using its current email address."
     admin_confirm:
       title: "Confirm Admin Account"
       description: "Are you sure you want <b>%{target_username} (%{target_email})</b> to be an administrator?"
@@ -3288,7 +3289,7 @@ en:
     enable_composer_redesign: "Enable the redesigned composer."
     enable_new_reordering_controls: "Use the shared reordering controls on list settings, admin lists, the user directory columns and sidebar links, giving each one the same drag handle, move menu and keyboard support."
     enable_main_outlet_grid_layout_change: "Place the composer inside the main layout grid so themes can position it in a grid column, and use a narrower sidebar."
-    review_queue_consistent_answers: "Frame every review queue question so \"Yes\" always means there is a problem, and label reviewed items \"Problem confirmed\" or \"No problem found\" for every type."
+    review_queue_consistent_answers: 'Use “Approve” and “Deny” for signups, queued posts, and reviews of published posts. Flags and review history show whether a problem was found.'
     enable_composer_toolbar_customization: "Let members choose which buttons appear in their composer toolbar, from their interface preferences."
     prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
@@ -3489,6 +3490,7 @@ en:
 
   search:
     extreme_load_error: "Site is under extreme load, search is disabled, try again later"
+    keyword_search_timeout: "The search took too long. Try more specific keywords."
     within_post: "#%{post_number} by %{username}"
     types:
       category: "Categories"
@@ -6465,8 +6467,6 @@ en:
     actions:
       answer_yes:
         title: "Yes"
-        delete_post_title: "Yes, delete post"
-        keep_post_deleted_title: "Yes, keep post deleted"
       answer_no:
         title: "No"
       agree:
@@ -6569,6 +6569,21 @@ en:
         title: "Yes"
         action_title: "Approve post"
         complete: "Post approved."
+      approve_topic:
+        title: "Approve topic"
+      deny_topic:
+        title: "Deny topic"
+      deny_post:
+        title: "Deny post"
+      deny_and_delete_post:
+        title: "Deny and delete post"
+        complete: "Post deleted."
+      deny_and_delete_topic:
+        title: "Deny and delete topic"
+        complete: "Topic deleted."
+      deny_and_keep_deleted:
+        title: "Deny and keep post deleted"
+        complete: "Post kept deleted."
       approve_post_closed:
         title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
@@ -6584,7 +6599,12 @@ en:
         complete: "Avatar removed."
       approve_user:
         title: "Yes"
+        action_title: "Approve account"
         complete: "User approved."
+      deny_account:
+        title: "Deny account"
+      approve_account_review:
+        complete: "Account review approved."
       reject_user:
         title: "No"
         delete:
@@ -6629,9 +6649,14 @@ en:
         title: Scrub record
       approve_and_restore:
         title: "Yes"
+        action_title: "Approve and restore post"
         complete: "Post approved and restored."
+      approve_and_restore_topic:
+        action_title: "Approve and restore topic"
+        complete: "Topic approved and restored."
       approve_and_unhide:
         title: "Yes"
+        action_title: "Approve and unhide post"
         complete: "Post approved and unhidden"
       silence_user:
         title: "Silence user"

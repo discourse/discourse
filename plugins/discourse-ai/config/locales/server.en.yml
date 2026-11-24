@@ -201,9 +201,9 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_reviewable_action_suggestions_enabled: "Generate action suggestions for new review queue items."
-    ai_reviewable_action_decision_model: "Send new pending review items, including flagged private content, to this decision model for action suggestions. Leave blank to disable."
-    ai_reviewable_action_min_confidence: "Minimum confidence required to save a suggested review action, from 0 to 1."
+    ai_reviewable_action_suggestions_enabled: "Generate action suggestions for pending review queue items."
+    ai_reviewable_action_decision_model: "Send pending review items, including flagged private content, to this decision model for action suggestions. Leave blank to disable."
+    ai_reviewable_action_min_confidence: "Minimum confidence required to show a suggested review action, from 0 to 1."
     ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
@@ -665,14 +665,17 @@ en:
           palettes: "Save palettes: %{name}"
           existing_palettes: "Use palettes: %{name}"
           theme: "Save theme: %{name}"
+          component: "Save styles: %{name}"
         save_appearance_details:
           palettes: "Saves these colors without changing the site, so you can preview them first."
           existing_palettes: "Saves the choice of these palettes, which the site already has, without changing the site, so you can preview them first."
           theme: "Saves a new theme based on Foundation, core's default design, without making it the default theme, so you can preview it first."
+          component: "Saves these styles as a component of the current theme, turned off, so you can preview them first. The site keeps its theme and layout."
         save_appearance_question: "Do you want to save this?"
         activate_appearance_title: "Make live: %{name}"
         activate_appearance_details: "Everyone sees this as soon as you approve it. [Preview it first](%{preview_url}). You can switch back afterwards."
         activate_appearance_question: "Do you want to make this live?"
+        activate_component_details: "Turns the component on for everyone as soon as you approve it. %{theme} keeps its layout. [Preview it first](%{preview_url}). You can switch back afterwards."
         revert_appearance_title: "Switch back from: %{name}"
         revert_appearance_details: "Restores how the site looked before %{name} went live."
         revert_appearance_question: "Do you want to switch back?"
@@ -739,6 +742,19 @@ en:
         question: "Do you want to make this change?"
         category_question: "Do you want to make this change to %{category}?"
         category_change: "Changing `%{field}` from %{before} → %{after}"
+        category_group_access_label: "%{group}:"
+        category_access_levels:
+          full: "Create, reply, see"
+          create_post: "Reply, see"
+          readonly: "See"
+          none: "No access"
+        category_group_access_change: "Changing `%{group}` from %{before} → %{after}"
+        category_permissions_question: "Do you want to change who can access this category?"
+        category_make_private_question: "Do you want to make this category private?"
+        category_becomes_private: "The category becomes private. Only the listed groups and administrators will be able to see it."
+        delete_category_title: "Delete category: %{category}"
+        delete_category_details: "Permanently deletes this empty category. This can't be undone."
+        delete_category_question: "Do you want to delete this category?"
         empty_value: "Empty"
         approved: "Approved by @%{username}."
         rejected: "Rejected by @%{username}."
@@ -972,6 +988,7 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_admin_tools: "Load administration tools"
         theme_app_handoff: "Checking how to build themes with an AI app"
         install_popular_theme: "Install theme"
         enable_mcp_theme_access: "Let AI apps build themes"
@@ -988,6 +1005,7 @@ en:
         github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        find_category: "Find category"
         users: "List users"
         flag_post: "Flag post"
         close_topic: "Close topic"
@@ -1002,6 +1020,8 @@ en:
         edit_tag: "Edit tag"
         create_category: "Create category"
         edit_category: "Edit category"
+        set_category_permissions: "Set category permissions"
+        delete_category: "Delete category"
         change_topic_category: "Change topic category"
         set_topic_timer: "Set topic timer"
         set_slow_mode: "Set slow mode"
@@ -1041,6 +1061,7 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_admin_tools: "Load the administration tools needed for a request."
         theme_app_handoff: "Explain how to build themes with an AI app through the MCP server"
         install_popular_theme: "Install a ready-made theme maintained by Discourse without making it live"
         enable_mcp_theme_access: "Let AI apps build themes through the MCP server"
@@ -1057,6 +1078,7 @@ en:
         github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        find_category: "Find a category by name, including private categories, with its permissions"
         users: "List users on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
@@ -1071,6 +1093,8 @@ en:
         edit_tag: "Rename a tag or change its description"
         create_category: "Create a new category"
         edit_category: "Edit an existing category's name, description, or colors"
+        set_category_permissions: "Change which groups can see, reply to, or create topics in a category"
+        delete_category: "Delete an empty category"
         change_topic_category: "Move a topic to a different category"
         set_topic_timer: "Set a timer on a topic to close, open, delete, or bump it"
         set_slow_mode: "Enable or disable slow mode on a topic"
@@ -1109,6 +1133,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_admin_tools: "Loading administration tools"
         load_discourse_website_page: "Loaded the %{page_name} page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
@@ -1136,6 +1161,8 @@ en:
         edit_tag: "Editing tag '%{name}' (%{fields})"
         create_category: "Creating category '%{name}'"
         edit_category: "Editing %{fields} for %{category_name}"
+        set_category_permissions: "Changing access to %{category_name}"
+        delete_category: "Deleting %{category_name}"
         change_topic_category: "Moving topic %{topic_id} to category %{category_id}"
         set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
@@ -1158,6 +1185,9 @@ en:
         categories:
           one: "Found %{count} category"
           other: "Found %{count} categories"
+        find_category:
+          one: "Found %{count} category matching '%{query}'"
+          other: "Found %{count} categories matching '%{query}'"
         users:
           one: "Found %{count} user"
           other: "Found %{count} users"
@@ -1318,6 +1348,39 @@ en:
           no_reason: "A reason is required to edit a category."
         success: "Category '%{name}' updated successfully."
 
+      find_category:
+        no_results: "No category you can manage matches '%{query}'."
+        errors:
+          no_query: "A category name or slug is required."
+          not_allowed: "Category lookup is only available to people who manage categories, in private conversations."
+
+      set_category_permissions:
+        errors:
+          unavailable: "Changing category permissions is not available on this site."
+          private_conversation_required: "Category permissions can only be changed in a private conversation with the assistant."
+          not_found: "Category not found."
+          not_allowed: "You are not allowed to change this category's permissions."
+          uncategorized: "The uncategorized category's permissions cannot be changed."
+          no_reason: "A reason is required to change category permissions."
+          no_groups: "At least one group must be given access. Use `everyone` to make the category public."
+          duplicate_groups: "Each group can only have one permission level, but these were listed more than once: %{groups}."
+          unknown_groups: "These groups do not exist: %{groups}. Available groups include: %{available}."
+          unchanged: "The category already has these permissions."
+        success: "Permissions for '%{name}' updated successfully."
+
+      delete_category:
+        errors:
+          not_found: "Category not found."
+          not_allowed: "You are not allowed to delete this category."
+          private_conversation_required: "Categories can only be deleted in a private conversation with the assistant."
+          no_reason: "A reason is required to delete a category."
+          uncategorized: "The uncategorized category cannot be deleted."
+          has_subcategories: "'%{name}' has subcategories, so it cannot be deleted. Delete or move its subcategories first, then delete it from its settings: %{url}"
+          has_topics:
+            one: "'%{name}' still contains %{count} topic, so it cannot be deleted. Move or delete the topic first, then delete the category from its settings: %{url}"
+            other: "'%{name}' still contains %{count} topics, so it cannot be deleted. Move or delete the topics first, then delete the category from its settings: %{url}"
+        success: "Category '%{name}' deleted successfully."
+
       change_topic_category:
         errors:
           not_found: "Topic not found."
@@ -1446,6 +1509,11 @@ en:
       styles_failed: "I couldn't write styles that pass the theme's safety checks. Ask the administrator to describe the change differently, or offer to build it with their own AI app."
       more_styles: "More style changes"
       theme_changed: "This theme has been changed since it was saved, so I can't make it live. Make it the default in Admin > Appearance > Themes instead, or ask me for a new version."
+      component_target: "Styles added to %{theme} as a component, so its layout stays"
+      component_version_target: "A new version of %{name}, added to %{theme} as a component. The current version is kept so you can switch back."
+      component_label: "Component: %{name}"
+      component_on: "On"
+      component_off: "Off"
       new_version_target: "A new version of %{name}, saved as a draft until it's made live. The current version is kept so you can switch back."
       styles_unsupported: "These styles can't make that change: %{requests}. Offer to build it with the administrator's own AI app instead."
       name_required: "Give the palettes or theme a short name."
@@ -1663,6 +1731,7 @@ en:
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
+        enable_embeddings_first: "You must enable AI embeddings and select an embedding model before enabling this feature."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     decision_models:

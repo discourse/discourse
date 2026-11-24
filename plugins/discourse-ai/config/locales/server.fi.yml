@@ -259,6 +259,8 @@ fi:
           text_color: "tekstin väri"
         approve_label: "Kyllä"
         reject_label: "Ei"
+        category_access_levels:
+          readonly: "Katselu"
       agents:
         cannot_have_duplicate_tools: "Ei voi sisältää päällekkäisiä työkaluja"
         github_helper:
@@ -511,6 +513,12 @@ fi:
         errors:
           not_found: "Ketjua ei löytynyt."
       edit_category:
+        errors:
+          not_found: "Aluetta ei löytynyt."
+      set_category_permissions:
+        errors:
+          not_found: "Aluetta ei löytynyt."
+      delete_category:
         errors:
           not_found: "Aluetta ei löytynyt."
       change_topic_category:

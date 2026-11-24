@@ -352,8 +352,8 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "with default user options" do
-        let!(:user1) { Fabricate(:user) }
-        let!(:user2) { Fabricate(:user) }
+        fab!(:user1, :user)
+        fab!(:user2, :user)
 
         it "updates every existing user option" do
           SiteSetting.default_email_in_reply_to = true

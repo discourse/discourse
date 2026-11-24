@@ -7,7 +7,7 @@ module Jobs
     # This job runs daily and generates new concepts from popular topics and posts
     # It selects items based on engagement metrics and generates concepts from their content
     def execute(_args)
-      return unless SiteSetting.inferred_concepts_enabled
+      return unless SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
 
       process_popular_topics
       process_popular_posts
@@ -29,25 +29,13 @@ module Jobs
 
       return if candidates.blank?
 
-      # Process candidate topics - first generate concepts, then match
+      # Process candidate topics in a single classify + stage pass
       Jobs.enqueue(
         :generate_inferred_concepts,
         item_type: "topics",
         item_ids: candidates.map(&:id),
         batch_size: 10,
       )
-
-      if SiteSetting.inferred_concepts_background_match
-        # Schedule a follow-up job to match existing concepts
-        Jobs.enqueue_in(
-          1.hour,
-          :generate_inferred_concepts,
-          item_type: "topics",
-          item_ids: candidates.map(&:id),
-          batch_size: 10,
-          match_only: true,
-        )
-      end
     end
 
     def process_popular_posts
@@ -63,25 +51,13 @@ module Jobs
 
       return if candidates.blank?
 
-      # Process candidate posts - first generate concepts, then match
+      # Process candidate posts in a single classify + stage pass
       Jobs.enqueue(
         :generate_inferred_concepts,
         item_type: "posts",
         item_ids: candidates.map(&:id),
         batch_size: 10,
       )
-
-      if SiteSetting.inferred_concepts_background_match
-        # Schedule a follow-up job to match against existing concepts
-        Jobs.enqueue_in(
-          1.hour,
-          :generate_inferred_concepts,
-          item_type: "posts",
-          item_ids: candidates.map(&:id),
-          batch_size: 10,
-          match_only: true,
-        )
-      end
     end
   end
 end

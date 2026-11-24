@@ -73,6 +73,13 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Atualizar"
+        columns:
+          user: "Utilizador"
+          reason: "Sinalizado como"
+          created: "Criado"
+          status: "Estado"
       copied: "Copiado"
       ai_decoded_transcript:
         type: "Tipo"

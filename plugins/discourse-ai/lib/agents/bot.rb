@@ -214,6 +214,8 @@ module DiscourseAi
           end
           break if context.cancel_manager.cancelled?
 
+          agent.prepare_next_completion(prompt: prompt, context: context, llm: current_llm)
+
           if context.mcp_failure_limit_reached?
             prompt.push(type: :user, content: MCP_FAILURE_FINAL_ANSWER_HINT)
             prompt.tool_choice = :none

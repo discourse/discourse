@@ -128,14 +128,7 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name|
-    name = name.to_sym
-    if name == :blog_publisher_groups
-      Blog::Instance.category_ids.each do |category_id|
-        Blog::AddPublishersToPublicCategory.call(params: { category_id: })
-      end
-    end
-    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
-    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
+    Blog::ManagedCategories.sync_role_access if Blog::Roles::SETTINGS.include?(name.to_sym)
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

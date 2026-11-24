@@ -230,11 +230,10 @@ after_initialize do
                SiteSetting.ai_reviewable_action_suggestions_enabled
         next false
       end
-      name = object.ai_reviewable_suggestion&.action_name
-      name.present? &&
-        bundled_actions.any? do |bundle|
-          bundle.actions.any? { |action| action.action_name == name }
-        end
+      suggestion = object.ai_reviewable_suggestion
+      next false unless suggestion&.actionable?
+      name = suggestion.action_name
+      bundled_actions.any? { |bundle| bundle.actions.any? { |action| action.action_name == name } }
     end,
   ) { object.ai_reviewable_suggestion.action_name }
 

@@ -58,6 +58,8 @@ hr:
           text_color: "boja teksta"
         approve_label: "Da"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Vidi"
       tool_summary:
         search: "Pretraživanje"
         time: "Vrijeme"
@@ -77,6 +79,12 @@ hr:
         errors:
           not_found: "Tema nije pronađena."
       edit_category:
+        errors:
+          not_found: "Kategorija nije pronađena."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorija nije pronađena."
+      delete_category:
         errors:
           not_found: "Kategorija nije pronađena."
       change_topic_category:

@@ -188,10 +188,10 @@ class TagsController < ::ApplicationController
         period = params[:period] || SiteSetting.top_page_default_timeframe.to_sym
         TopTopic.validate_period(period)
 
-        @list = TopicQuery.new(current_user, list_opts).public_send("list_top_for", period)
+        @list = build_topic_query(list_opts).public_send("list_top_for", period)
         @list.for_period = period
       else
-        @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+        @list = build_topic_query(list_opts).public_send("list_#{filter}")
       end
 
       @list.more_topics_url = construct_url_with(:next, list_opts)

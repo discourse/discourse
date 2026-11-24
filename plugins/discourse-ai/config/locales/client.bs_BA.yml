@@ -38,6 +38,12 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Refresh"
+        columns:
+          user: "User"
+          created: "Stvoreno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"

@@ -309,6 +309,32 @@ RSpec.describe User do
   end
 
   describe "Validations" do
+    it "rejects matches against the stored password without upgrading a legacy hash" do
+      password = "myawesomepassword"
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      salt = user.user_password.password_salt
+      hash = PasswordHasher.hash_password(password:, salt:, algorithm:)
+      user.user_password.update_columns(
+        password_hash: hash,
+        password_algorithm: algorithm,
+        password_expired_at: 1.day.ago,
+      )
+      expect(user.password_expired?(password)).to be(true)
+      expect(user.password_expired?("different password")).to be(false)
+
+      user.assign_attributes(username: password.capitalize, name: password.capitalize, password:)
+
+      expect(user).not_to be_valid
+      expect(user.errors.of_kind?(:username, :same_as_password)).to be(true)
+      expect(user.errors.of_kind?(:name, :same_as_password)).to be(true)
+      expect(user.user_password.errors.of_kind?(:password, :same_as_current)).to be(true)
+      expect(user.user_password.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_salt: salt,
+        password_hash: hash,
+      )
+    end
+
     describe "#username" do
       it { is_expected.to validate_presence_of :username }
 
@@ -843,6 +869,137 @@ RSpec.describe User do
       expect(messages.size).to eq(1)
       expect(messages[0].user_ids).to eq([shadow_user.id])
       expect(messages[0].data).to eq(shadow_user.id)
+    end
+
+    def historical_shadow
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: master_user, active: false)
+      shadow
+    end
+
+    it "identifies historical and orphaned shadows independently of anonymous posting eligibility" do
+      shadow = Fabricate(:user, trust_level: TrustLevel[0])
+      expect(shadow.anonymous_user_master).to be_nil
+      AnonymousUser.create!(user_id: shadow.id, master_user_id: master_user.id, active: false)
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      SiteSetting.allow_anonymous_mode = false
+
+      expect(master_user.anonymous_shadow?).to eq(false)
+      expect(shadow.anonymous_shadow?).to eq(true)
+
+      master_user.destroy!
+
+      expect(shadow.reload.anonymous_shadow?).to eq(true)
+    end
+
+    it "revokes family sessions and only unrevoked shadow keys using current membership" do
+      freeze_time(Time.zone.now.change(usec: 0))
+      shadow = AnonymousShadowCreator.get(master_user)
+      master_user.anonymous_user_shadows.load
+      previous_shadow = historical_shadow
+      outsider = Fabricate(:user)
+      users = [master_user, shadow, previous_shadow, outsider]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      master_key, shadow_key, previous_shadow_key, outsider_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+      revoked_key = Fabricate(:user_api_key, user: previous_shadow, revoked_at: 1.day.ago)
+
+      master_user.revoke_family_sessions!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        outsider.id,
+      )
+      expect(
+        PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id),
+      ).to contain_exactly(outsider.id)
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(outsider_key.reload.revoked_at).to be_nil
+      expect(shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(previous_shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(revoked_key.reload.revoked_at).to eq_time(1.day.ago)
+    end
+
+    it "revokes the family when a historical shadow explicitly revokes credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      previous_shadow = historical_shadow
+      master_key = Fabricate(:user_api_key, user: master_user)
+      sibling_key = Fabricate(:user_api_key, user: shadow)
+      users = [master_user, shadow, previous_shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+
+      previous_shadow.revoke_family_sessions!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(sibling_key.reload.revoked_at).to be_present
+      expect(master_key.reload.revoked_at).to be_nil
+    end
+
+    it "revokes only the historical shadow's credentials when its password changes" do
+      sibling = AnonymousShadowCreator.get(master_user)
+      shadow = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      keys = users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.update!(password: SecureRandom.hex)
+
+      remaining = [master_user.id, sibling.id]
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to match_array(remaining)
+      expect(PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id)).to match_array(
+        remaining,
+      )
+      expect(UserApiKey.where(id: keys.map(&:id), revoked_at: nil).pluck(:user_id)).to match_array(
+        remaining,
+      )
+    end
+
+    it "revokes both current and historical shadow credentials when the master is destroyed" do
+      shadows = [AnonymousShadowCreator.get(master_user), historical_shadow]
+      tokens = shadows.map { |shadow| UserAuthToken.generate!(user_id: shadow.id) }
+      keys = shadows.map { |shadow| Fabricate(:user_api_key, user: shadow) }
+
+      master_user.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(keys.map { |key| key.reload.revoked_at }).to all(be_present)
+    end
+
+    it "removes a single shadow without revoking master or sibling credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      master_key, sibling_key, shadow_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        master_user.id,
+        sibling.id,
+      )
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(sibling_key.reload.revoked_at).to be_nil
+      expect(UserApiKey.exists?(shadow_key.id)).to eq(false)
+    end
+
+    it "cleans up only the calling shadow's credentials when its master is missing" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      master_user.destroy!
+      shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+      sibling_token = UserAuthToken.generate!(user_id: sibling.id)
+      shadow_key = Fabricate(:user_api_key, user: shadow)
+      sibling_key = Fabricate(:user_api_key, user: sibling)
+
+      shadow.revoke_family_sessions!
+
+      expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+      expect(UserAuthToken.exists?(sibling_token.id)).to eq(true)
+      expect(shadow_key.reload.revoked_at).to be_present
+      expect(sibling_key.reload.revoked_at).to be_nil
     end
   end
 
@@ -1610,6 +1767,16 @@ RSpec.describe User do
 
   describe "passwords" do
     let(:user) { Fabricate.build(:user, active: false) }
+
+    it "does not lock a credential identity or sweep credentials on creation" do
+      queries = track_sql_queries { user.save! }
+
+      expect(queries.grep(/FROM "anonymous_users"|FROM "users".*FOR UPDATE/i)).to be_empty
+      expect(
+        queries.grep(/(?:FROM|UPDATE) "(?:user_auth_tokens|user_api_keys|push_subscriptions)"/i),
+      ).to be_empty
+      expect(user.email_tokens.where(expired: false)).to exist
+    end
 
     it "keeps the account inactive despite a valid password" do
       user.password = "ilovepasta"
@@ -2527,65 +2694,23 @@ RSpec.describe User do
     end
   end
 
-  describe "hash_passwords" do
-    let(:too_long) { "x" * (User.max_password_length + 1) }
-
-    def hash(password, salt, algorithm = UserPassword::TARGET_PASSWORD_ALGORITHM)
-      User.new.send(:hash_password, password, salt, algorithm)
-    end
-
-    it "returns the same hash for the same password and salt" do
-      expect(hash("poutine", "gravy")).to eq(hash("poutine", "gravy"))
-    end
-
-    it "returns a different hash for the same salt and different password" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("fries", "gravy"))
-    end
-
-    it "returns a different hash for the same password and different salt" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("poutine", "cheese"))
-    end
-
-    it "raises an error when passwords are too long" do
-      expect { hash(too_long, "gravy") }.to raise_error(StandardError)
-    end
-
-    it "uses the target algorithm for new users" do
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-    end
-
-    it "can use an older algorithm to verify existing passwords, then upgrade" do
-      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
-      expect(old_algorithm).not_to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-
+  describe "#confirm_password?" do
+    it "upgrades a stored legacy hash only after a correct password" do
       password = "poutine"
-      old_hash = hash(password, user.salt, old_algorithm)
+      credential = user.user_password
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      hash = PasswordHasher.hash_password(password:, salt: credential.password_salt, algorithm:)
+      credential.update_columns(password_hash: hash, password_algorithm: algorithm)
 
-      user.user_password.update_columns(password_algorithm: old_algorithm, password_hash: old_hash)
+      expect(user.confirm_password?("notthepassword")).to be(false)
+      expect(credential.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_hash: hash,
+      )
 
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # With an incorrect attempt, should return false with no side effects
-      expect(user.confirm_password?("notthepassword")).to eq(false)
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # Should correctly verify against old algorithm
-      expect(user.confirm_password?(password)).to eq(true)
-
-      # Auto-upgrades to new algorithm
-      expected_new_hash = hash(password, user.salt, UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And persists to the db
-      user.reload
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And can still log in
-      expect(user.confirm_password?(password)).to eq(true)
+      expect(user.confirm_password?(password)).to be(true)
+      expect(credential.reload.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
+      expect(user.reload.confirm_password?(password)).to be(true)
     end
   end
 
@@ -3015,6 +3140,43 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "publishes the state stored in the database, not the one held in memory" do
+      Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: Notification.maximum(:id))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { in_memory.publish_notifications_state }
+          .first
+
+      expect(message.data).to include(
+        seen_notification_id: user.seen_notification_id,
+        unread_notifications: 0,
+      )
+    end
+
+    it "counts and publishes under a per-user lock" do
+      DistributedMutex
+        .expects(:synchronize)
+        .with("notifications_state_#{user.id}", validity: User::NOTIFICATIONS_STATE_LOCK_SECONDS)
+        .yields
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
+    it "still publishes when the lock cannot be taken" do
+      DistributedMutex.stubs(:synchronize).raises(Discourse::ReadOnly)
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)

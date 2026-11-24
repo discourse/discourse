@@ -50,6 +50,8 @@ sl:
           color: "barva"
         approve_label: "Da"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Glej"
       tool_summary:
         search: "Išči"
         time: "Čas"

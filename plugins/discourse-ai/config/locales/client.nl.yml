@@ -239,6 +239,13 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Vernieuwen"
+        columns:
+          user: "Gebruiker"
+          reason: "Gemarkeerd als"
+          created: "Gemaakt"
+          status: "Status"
       dsa_classification:
         suggest: "Voorstellen met AI"
       copied: "Gekopieerd"

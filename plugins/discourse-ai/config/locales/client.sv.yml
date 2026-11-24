@@ -40,6 +40,12 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      review_bulk:
+        refresh: "Uppdatera"
+        columns:
+          user: "Användare"
+          created: "Skapade"
+          status: "Status"
       copied: "Kopierad"
       ai_decoded_transcript:
         type: "Typ"

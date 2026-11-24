@@ -295,26 +295,25 @@ class TopicEmbed < ActiveRecord::Base
             # If there is a mistyped URL, just do nothing
           end
         end
-        # only allow classes in the allowlist
-        allowed_classes =
-          if allowed_embed_classnames.blank?
-            []
-          else
-            allowed_embed_classnames.split(/[ ,]+/i)
-          end
-        doc
-          .search('[class]:not([class=""])')
-          .each do |classnode|
-            classes =
-              classnode[:class]
-                .split(" ")
-                .select { |classname| allowed_classes.include?(classname) }
-            if classes.length === 0
-              classnode.delete("class")
-            else
-              classnode[:class] = classes.join(" ")
-            end
-          end
+      end
+
+    # only allow classes in the allowlist
+    allowed_classes =
+      if allowed_embed_classnames.blank?
+        Set.new
+      else
+        allowed_embed_classnames.split(/[ ,]+/i).to_set
+      end
+    doc
+      .search('[class]:not([class=""])')
+      .each do |classnode|
+        classes =
+          classnode[:class].split(" ").select { |classname| allowed_classes.include?(classname) }
+        if classes.length === 0
+          classnode.delete("class")
+        else
+          classnode[:class] = classes.join(" ")
+        end
       end
 
     response.body = doc.at("body").children.to_html

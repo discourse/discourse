@@ -198,6 +198,13 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      review_bulk:
+        refresh: "רענון"
+        columns:
+          user: "משתמש"
+          reason: "מסומן בתור"
+          created: "נוצר"
+          status: "מצב"
       dsa_classification:
         suggest: "הצעה עם בינה מלאכותית"
       copied: "הועתק"

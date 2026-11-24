@@ -197,6 +197,7 @@ class UserHistory < ActiveRecord::Base
         web_hook_ping: 137,
         web_hook_redeliver: 138,
         change_bot_interactivity: 139,
+        approve_account_review: 140,
       )
   end
 
@@ -264,6 +265,7 @@ class UserHistory < ActiveRecord::Base
       change_name
       topic_timestamps_changed
       approve_user
+      approve_account_review
       web_hook_create
       web_hook_update
       web_hook_destroy
@@ -351,6 +353,7 @@ class UserHistory < ActiveRecord::Base
     @moderator_visible_actions ||= [
       # user account
       :approve_user,
+      :approve_account_review,
       :activate_user,
       :deactivate_user,
       :delete_user,

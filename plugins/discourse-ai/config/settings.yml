@@ -801,6 +801,7 @@ discourse_ai:
   inferred_concepts_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_background_match:
     default: false

@@ -3387,6 +3387,7 @@ pl_PL:
         value: "Sekret DiscourseConnect"
   search:
     extreme_load_error: "Strona jest pod ekstremalnym obciążeniem, wyszukiwanie jest wyłączone, spróbuj ponownie później"
+    keyword_search_timeout: "Wyszukiwanie trwało zbyt długo. Wypróbuj bardziej szczegółowe słowa kluczowe."
     within_post: "#%{post_number} przez %{username}"
     types:
       category: "Kategorie"

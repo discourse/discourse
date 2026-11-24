@@ -493,7 +493,8 @@ RSpec.describe PostsController do
       end
 
       context "with permanently destroy" do
-        let!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
+        fab!(:topic)
+        fab!(:post) { Fabricate(:post, topic_id: topic.id, post_number: 3) }
 
         before { SiteSetting.can_permanently_delete = true }
 

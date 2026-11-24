@@ -38,7 +38,11 @@ function blogFixture(overrides = {}) {
 
 acceptance("Blog admin with one blog", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+  needs.settings({
+    blog_enabled: true,
+    blog_custom_domains_enabled: true,
+    blog_custom_themes_enabled: true,
+  });
   needs.site({
     blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
   });
@@ -273,7 +277,11 @@ acceptance("Blog admin with one blog", function (needs) {
 
 acceptance("Blog admin with several blogs", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+  needs.settings({
+    blog_enabled: true,
+    blog_custom_domains_enabled: true,
+    blog_custom_themes_enabled: true,
+  });
   needs.site({
     blogs: [
       { id: 1, is_default: true },
@@ -472,7 +480,11 @@ acceptance(
   "Blog admin list after a blog is added or deleted",
   function (needs) {
     needs.user({ admin: true });
-    needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+    needs.settings({
+      blog_enabled: true,
+      blog_custom_domains_enabled: true,
+      blog_custom_themes_enabled: true,
+    });
     needs.site({ blogs: [{ id: 1, is_default: true }] });
 
     let blogs;

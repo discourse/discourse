@@ -131,6 +131,7 @@ module DiscourseAi
         def all_available_tools
           tools = [
             Tools::ListCategories,
+            Tools::FindCategory,
             Tools::ListUsers,
             Tools::Time,
             Tools::Search,
@@ -147,6 +148,8 @@ module DiscourseAi
             Tools::EditPost,
             Tools::CreateCategory,
             Tools::EditCategory,
+            Tools::SetCategoryPermissions,
+            Tools::DeleteCategory,
             Tools::ChangeTopicCategory,
             Tools::SetTopicTimer,
             Tools::SetSlowMode,
@@ -161,6 +164,7 @@ module DiscourseAi
             Tools::SettingContext,
             Tools::ReadSiteSetting,
             Tools::ListUpcomingChanges,
+            Tools::LoadAdminTools,
             Tools::ChangeSiteSetting,
             Tools::GenerateAppearanceChange,
             Tools::SaveAppearanceChange,
@@ -452,6 +456,9 @@ module DiscourseAi
 
       def defer_forced_tool_for_vision?
         false
+      end
+
+      def prepare_next_completion(prompt:, context:, llm:)
       end
 
       def craft_prompt(context, llm: nil)

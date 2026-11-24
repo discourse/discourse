@@ -17,6 +17,16 @@ uk:
         desktop: Десктоп
         mobile: Мобільний
         save: Зберегти
+        about_tab: Про
+        blog_slug: Мітка
+        general_heading: Основний
+        settings_tab: Налаштування
+        theme_tab: Кольорова схема
+        column_name: Імʼя
+        column_category: Категорія
+        column_status: Статус
+        needs_attention: Потребує уваги
+        select_theme: Виберіть тему
         path_formats:
           custom: Користувацька
         back_to_themes: Назад до тем

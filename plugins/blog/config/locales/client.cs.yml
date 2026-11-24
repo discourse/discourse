@@ -17,6 +17,14 @@ cs:
         desktop: Desktop
         mobile: Mobilní verze
         save: Uložit
+        about_tab: O tomto webu
+        blog_slug: URL
+        general_heading: Obecné
+        settings_tab: Nastavení
+        theme_tab: Téma
+        column_name: Jméno
+        column_category: Kategorie
+        column_status: Stav
         path_formats:
           custom: Přizpůsobené
         back_to_themes: Zpět na motivy

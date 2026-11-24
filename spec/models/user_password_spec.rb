@@ -44,6 +44,15 @@ RSpec.describe UserPassword do
     end
   end
 
+  describe "#matches_password?" do
+    it "rejects inputs longer than the maximum password length" do
+      credential = Fabricate(:user_password)
+      expect {
+        credential.matches_password?("x" * (UserPassword::MAX_PASSWORD_LENGTH + 1))
+      }.to raise_error(StandardError, "password is too long")
+    end
+  end
+
   describe "#confirm_password?" do
     context "when input password is same as saved password" do
       let(:pw) { SecureRandom.hex }

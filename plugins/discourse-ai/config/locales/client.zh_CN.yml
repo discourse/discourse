@@ -310,6 +310,15 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "刷新"
+        columns:
+          user: "用户"
+          reason: "被标记为"
+          created: "创建时间"
+          status: "状态"
+        status:
+          applying: "应用…"
       dsa_classification:
         suggest: "通过 AI 提出建议"
         suggested_by_ai: "由 AI 建议"

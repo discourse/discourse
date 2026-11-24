@@ -98,6 +98,13 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      review_bulk:
+        refresh: "Ανανέωση"
+        columns:
+          user: "Χρήστης"
+          reason: "Αναφορά ως"
+          created: "Δημιουργήθηκε"
+          status: "Κατάσταση"
       copied: "Αντιγράφηκε"
       ai_decoded_transcript:
         arguments: "Παράμετροι"

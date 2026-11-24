@@ -17,6 +17,15 @@ he:
         desktop: מחשב-שולחני
         mobile: נייד
         save: שמירה
+        about_tab: אודות
+        blog_slug: מזהה ייצוגי
+        general_heading: כללי
+        settings_tab: הגדרות
+        theme_tab: תמה
+        column_name: שם
+        column_category: קטגוריה
+        column_status: מצב
+        select_theme: בחירת ערכת עיצוב
         path_formats:
           custom: מותאם
         back_to_themes: חזרה לערכות עיצוב

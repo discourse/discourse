@@ -163,6 +163,13 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      review_bulk:
+        refresh: "Päivitä"
+        columns:
+          user: "Käyttäjä"
+          reason: "Liputettu merkinnällä"
+          created: "Luotu"
+          status: "Tila"
       dsa_classification:
         suggest: "Ehdota tekoälyllä"
       copied: "Kopioitiin"

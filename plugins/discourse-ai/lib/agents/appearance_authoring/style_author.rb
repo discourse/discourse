@@ -36,8 +36,13 @@ module DiscourseAi
         # current_styles: the styles of the theme being edited, if any; the
         # answer replaces them as a whole.
         # Returns a Result, or a Failure with the last errors.
-        def call(request, palettes:, current_styles: nil)
+        # base_theme_id: the theme the styles are added to as a component, when
+        # it isn't a new theme. Horizon only takes styles without colors.
+        def call(request, palettes:, current_styles: nil, base_theme_id: nil)
           prompt = build_prompt(request.to_s.truncate(MAX_REQUEST_LENGTH), palettes, current_styles)
+          if base_theme_id == Theme::CORE_THEMES["horizon"]
+            prompt.push(type: :user, content: HORIZON_NOTE)
+          end
           errors = []
 
           @max_attempts.times do |attempt|
@@ -56,7 +61,7 @@ module DiscourseAi
               return Failure.new(errors: ["The model gave no styles."], attempts: attempt + 1)
             end
 
-            result = AppearanceStyles::Policy.call(styles, palettes:)
+            result = AppearanceStyles::Policy.call(styles, palettes:, base_theme_id:)
             if result.valid?
               return(
                 Result.new(
@@ -142,6 +147,10 @@ module DiscourseAi
             messages: [{ type: :user, content: request }],
           )
         end
+
+        HORIZON_NOTE = <<~TEXT
+          These styles are added to the Horizon theme, so its layout stays. They can't set colors yet: no colors, backgrounds, borders with a color, shadows or opacity, including through variables. When the administrator asks for one of those, list that request under unsupported; colors are changed separately with palettes. Don't list anything they didn't ask for.
+        TEXT
 
         CONTRAST_ADVICE = <<~TEXT
           For text that isn't readable: mid-tone backgrounds such as brand blues and oranges often can't carry white or dark text. For text that stays white (or dark) in both modes, give the background explicit shades that are dark (or light) enough in both, with light-dark(#light-mode shade, #dark-mode shade); mixing with var(--primary) won't do, because var(--primary) is light in dark mode. Mixing with var(--primary), such as color-mix(in srgb, var(--tertiary) 70%, var(--primary)), only suits text in var(--secondary), which swaps the other way. Set a color that contrasts with every color of a gradient. Palette colors swap in dark mode, so var(--secondary) is white only in light mode; for text that has to stay light or dark on a background that does, use light-dark() with the same kind of color in both. Each error gives the colors it measured, and when it names an area, set the color in a rule for that area.

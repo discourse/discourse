@@ -18,6 +18,29 @@ RSpec.describe "Blog managed categories", type: :request do
     topic
   end
 
+  describe "GET /blog-editor" do
+    it "closes the editor and the drafts to a saved team while the site may not choose its roles" do
+      topic = draft_topic_for(writer)
+      sign_in(writer)
+      get "/blog-editor.json"
+      expect(response.status).to eq(200)
+
+      SiteSetting.blog_role_groups_enabled = false
+
+      get "/blog-editor.json"
+      expect(response.status).to eq(403)
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(404)
+
+      SiteSetting.blog_role_groups_enabled = true
+
+      get "/blog-editor.json"
+      expect(response.status).to eq(200)
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "POST /blog-editor/drafts-category" do
     it "requires a blog role" do
       post "/blog-editor/drafts-category.json"

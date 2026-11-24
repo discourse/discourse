@@ -250,6 +250,15 @@ uk:
               description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
+      review_bulk:
+        refresh: "Оновити"
+        columns:
+          user: "Користувач"
+          reason: "Позначено як"
+          created: "Створено"
+          status: "Статус"
+        status:
+          applying: "Застосування…"
       dsa_classification:
         suggest: "Підказки від ШІ"
       copied: "Скопійовано"

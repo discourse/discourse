@@ -100,7 +100,10 @@ class PostAlerter
       return
     end
 
-    return unless user.push_subscriptions.exists? || UserApiKey.push_clients_for(user).any?
+    unless user.push_subscriptions.with_unexpired_login.exists? ||
+             UserApiKey.push_clients_for(user).any?
+      return
+    end
 
     push_window = SiteSetting.push_notification_time_window_mins
     if push_window > 0 && user.seen_since?(push_window.minutes.ago)
