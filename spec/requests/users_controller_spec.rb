@@ -5792,6 +5792,139 @@ RSpec.describe UsersController do
       user
     end
 
+    context "when the account has redeemed an invite" do
+      fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+
+      before { SiteSetting.enable_local_logins_via_email = false }
+
+      def redeem_invite(invite, email: "invitee@example.com")
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: email,
+              username: "invitee",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        User.find_by!(username: "invitee")
+      end
+
+      def update_invitee_email(user, email)
+        put "/u/update-activation-email.json",
+            params: {
+              username: user.username,
+              password: "verystrongpassword",
+              email: email,
+            }
+      end
+
+      it "rejects a change after an unrestricted invite and preserves activation at the original address" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        original_email = user.email
+        original_token = user.email_tokens.find_by!(scope: EmailToken.scopes[:signup])
+        signup_email =
+          Jobs::CriticalUserEmail
+            .jobs
+            .reverse
+            .map { |job| job["args"].first }
+            .find { |args| args["user_id"] == user.id && args["type"] == "signup" }
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed_after_invite"),
+        )
+        expect(user.reload.email).to eq(original_email)
+        expect(user.email_tokens.where(email: "changed@example.net")).to be_empty
+        expect(EmailToken.exists?(original_token.id)).to eq(true)
+
+        put "/u/activate-account/#{signup_email["email_token"]}.json"
+
+        expect(response.status).to eq(200)
+        expect(user.reload).to be_active
+      end
+
+      it "rejects a change when the redeemed account already has private message access" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        pm = Fabricate(:private_message_topic, user: inviter, recipient: user)
+        expect(pm.allowed_users).to include(user)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+        expect(user).not_to be_active
+        expect(user.email_tokens.where(email: "changed@example.net")).to be_empty
+      end
+
+      it "rejects a same-domain typo correction after a group invite" do
+        group = Fabricate(:group)
+        invite = Invite.generate(admin, domain: "example.com", group_ids: [group.id])
+        user = redeem_invite(invite, email: "invtee@example.com")
+        expect(user.groups).to include(group)
+
+        update_invitee_email(user, "invitee@example.com")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invtee@example.com")
+      end
+
+      it "rejects a change after an email-specific invite" do
+        invite = Invite.generate(inviter, email: "invitee@example.com", skip_email: true)
+        user = redeem_invite(invite)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "rejects a change after the redeemed invite was soft-deleted" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        invite.trash!(inviter)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "rejects a change after the redeemed invite was hard-deleted" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        invite.destroy!
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "allows resending activation to the unchanged address after normalization" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+
+        update_invitee_email(user, " INVITEE@example.com ")
+
+        expect(response.status).to eq(200)
+        expect(user.reload.email).to eq("invitee@example.com")
+        expect(user.email_tokens.where(email: user.email, expired: false)).to be_present
+      end
+
+      it "rejects a change authenticated through the signup session after an invite was redeemed" do
+        user = post_user
+        Fabricate(:invited_user, user: user)
+
+        put "/u/update-activation-email.json", params: { email: "changed@example.net" }
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("osama@example.com")
+      end
+    end
+
     context "with a session variable" do
       it "raises an error with an invalid session value" do
         post_user
