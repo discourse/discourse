@@ -145,6 +145,23 @@ RSpec.describe "System browser driver" do
     expect(locator("main").locator("section", hasText: "Missing")).to be_hidden
   end
 
+  it "hovers a target at the same coordinates after navigation" do
+    2.times do |navigation|
+      visit "/robots.txt?hover=#{navigation}"
+      page.execute_script(<<~JS)
+        document.body.innerHTML = '<button style="position:fixed;left:100px;top:100px">Hover target</button>';
+        const target = document.querySelector("button");
+        target.addEventListener("pointerover", (event) => {
+          target.dataset.trustedHover = event.isTrusted;
+        });
+      JS
+
+      find_button("Hover target").hover
+
+      expect(page).to have_css("button[data-trusted-hover='true']")
+    end
+  end
+
   it "evaluates signed zero as a number inside an array" do
     visit "/robots.txt"
 

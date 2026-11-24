@@ -66,7 +66,13 @@ class DiscourseBiDiNode < Capybara::Driver::Node
   end
 
   def hover
-    driver.pointer_actions([pointer_move])
+    target = pointer_move
+    moves = [target]
+    if driver.pointer_position == target.values_at(:x, :y)
+      x = target.fetch(:x)
+      moves.unshift(target.merge(x: x.zero? ? 1 : x - 1))
+    end
+    driver.pointer_actions(moves)
     driver.settled
   end
 
