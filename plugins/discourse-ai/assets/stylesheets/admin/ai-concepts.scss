@@ -108,15 +108,14 @@
   }
 }
 
+.ai-concept-chooser {
+  width: 100%;
+}
+
 .ai-concept-merge-modal {
   &__description {
     margin-top: 0;
     margin-bottom: var(--space-4);
     color: var(--primary-high);
-  }
-
-  &__empty {
-    margin: 0;
-    color: var(--primary-medium);
   }
 }

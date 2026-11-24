@@ -209,24 +209,15 @@ export default class AiConceptsList extends Component {
   }
 
   @action
-  async openMergeModal(concept, closeMenu) {
+  openMergeModal(concept, closeMenu) {
     closeMenu?.();
 
-    try {
-      const list = await ajax("/admin/plugins/discourse-ai/ai-concepts.json", {
-        data: { status: "non_retired", order: "name", per_page: 200 },
-      });
-
-      this.modal.show(AiConceptMergeModal, {
-        model: {
-          concept,
-          availableConcepts: list.ai_concepts || [],
-          onMerged: () => this.#refreshList(),
-        },
-      });
-    } catch (error) {
-      popupAjaxError(error);
-    }
+    this.modal.show(AiConceptMergeModal, {
+      model: {
+        concept,
+        onMerged: () => this.#refreshList(),
+      },
+    });
   }
 
   @action

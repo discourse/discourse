@@ -242,4 +242,11 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
       expect(response.status).to eq(422)
     end
   end
+
+  describe "client translations" do
+    it "keeps secrets.modal and concepts keys under their expected scopes" do
+      expect(I18n.t("js.discourse_ai.secrets.modal.title")).to eq("Create new credential")
+      expect(I18n.t("js.discourse_ai.concepts.short_title")).to eq("Concepts")
+    end
+  end
 end

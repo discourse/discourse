@@ -1,15 +1,7 @@
-import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminPluginsShowDiscourseAiConceptsNewRoute extends DiscourseRoute {
-  async model() {
-    const response = await ajax(
-      "/admin/plugins/discourse-ai/ai-concepts.json",
-      {
-        data: { status: "non_retired", order: "name", per_page: 200 },
-      }
-    );
-
+  model() {
     return {
       concept: {
         name: "",
@@ -17,10 +9,10 @@ export default class AdminPluginsShowDiscourseAiConceptsNewRoute extends Discour
         aliases: [],
         status: "active",
         parent_id: null,
+        parent_name: null,
       },
       topics: [],
       children: [],
-      availableConcepts: response.ai_concepts || [],
       isNew: true,
     };
   }

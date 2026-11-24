@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
@@ -8,6 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DModal from "discourse/ui-kit/d-modal";
 import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
+import AiConceptChooser from "discourse/plugins/discourse-ai/discourse/components/ai-concept-chooser";
 
 export default class AiConceptMergeModal extends Component {
   @service toasts;
@@ -15,19 +17,8 @@ export default class AiConceptMergeModal extends Component {
   @cached
   get formData() {
     return {
-      target_concept_id: this.targetOptions[0]?.id || "",
+      target_concept_id: null,
     };
-  }
-
-  get targetOptions() {
-    const sourceId = this.args.model.concept.id;
-
-    return (this.args.model.availableConcepts || [])
-      .filter((item) => item.id !== sourceId && item.status !== "retired")
-      .map((item) => ({
-        id: String(item.id),
-        name: item.name,
-      }));
   }
 
   @action
@@ -74,43 +65,42 @@ export default class AiConceptMergeModal extends Component {
           {{i18n "discourse_ai.concepts.merge.description"}}
         </p>
 
-        {{#if this.targetOptions.length}}
-          <Form
-            class="ai-concept-merge-modal__form"
-            @data={{this.formData}}
-            @onSubmit={{this.submitMerge}}
-            as |form|
+        <Form
+          class="ai-concept-merge-modal__form"
+          @data={{this.formData}}
+          @onSubmit={{this.submitMerge}}
+          as |form|
+        >
+          <form.Field
+            @format="full"
+            @name="target_concept_id"
+            @title={{i18n "discourse_ai.concepts.merge.target_label"}}
+            @type="custom"
+            @validation="required"
+            as |field|
           >
-            <form.Field
-              @format="full"
-              @name="target_concept_id"
-              @title={{i18n "discourse_ai.concepts.merge.target_label"}}
-              @type="select"
-              @validation="required"
-              as |field|
-            >
-              <field.Control @includeNone={{false}} as |select|>
-                {{#each this.targetOptions as |option|}}
-                  <select.Option @value={{option.id}}>
-                    {{option.name}}
-                  </select.Option>
-                {{/each}}
-              </field.Control>
-            </form.Field>
-
-            <form.Actions>
-              <form.Submit
-                class="btn-primary ai-concept-merge-modal__submit"
-                @label="discourse_ai.concepts.merge.submit"
+            <field.Control>
+              <AiConceptChooser
+                class="ai-concept-merge-modal__target-chooser"
+                @excludeId={{@model.concept.id}}
+                @onChange={{field.set}}
+                @options={{hash
+                  clearable=false
+                  none="discourse_ai.concepts.merge.target_placeholder"
+                }}
+                @value={{field.value}}
               />
-              <DModalCancel @close={{@closeModal}} />
-            </form.Actions>
-          </Form>
-        {{else}}
-          <p class="ai-concept-merge-modal__empty">
-            {{i18n "discourse_ai.concepts.merge.no_targets"}}
-          </p>
-        {{/if}}
+            </field.Control>
+          </form.Field>
+
+          <form.Actions>
+            <form.Submit
+              class="btn-primary ai-concept-merge-modal__submit"
+              @label="discourse_ai.concepts.merge.submit"
+            />
+            <DModalCancel @close={{@closeModal}} />
+          </form.Actions>
+        </Form>
       </:body>
     </DModal>
   </template>

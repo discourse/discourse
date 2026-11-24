@@ -109,6 +109,9 @@ describe "Admin AI concepts" do
     find("[data-concept-id='#{kubernetes.id}'] .ai-concepts-list__edit-btn").click
 
     expect(page).to have_css(".ai-concept-editor__form")
+    expect(
+      PageObjects::Components::SelectKit.new(".ai-concept-editor__parent-chooser"),
+    ).to have_selected_name("Infrastructure")
     expect(page).to have_css(".ai-concept-editor__children-card", text: "Helm")
     expect(page).to have_css(
       ".ai-concept-editor__topics-card",
@@ -122,7 +125,13 @@ describe "Admin AI concepts" do
     find(".ai-concepts-list__merge-btn").click
 
     expect(page).to have_css(".ai-concept-merge-modal")
-    find(".ai-concept-merge-modal select").select("Kubernetes")
+    merge_target =
+      PageObjects::Components::SelectKit.new(
+        ".ai-concept-merge-modal .ai-concept-merge-modal__target-chooser",
+      )
+    merge_target.expand
+    merge_target.search("Kubernetes")
+    merge_target.select_row_by_name("Kubernetes")
     find(".ai-concept-merge-modal__submit").click
 
     expect(page).to have_no_css(".ai-concept-merge-modal")

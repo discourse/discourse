@@ -1403,10 +1403,13 @@ en:
         mcp_server: "MCP server"
         mcp_server_oauth_client_secret: "MCP server OAuth client secret"
         decision_model: "Decision model"
+        modal:
+          title: "Create new credential"
 
       concepts:
         short_title: "Concepts"
         description: "Inspect, curate, and organize inferred concepts discovered across the forum"
+        chooser_placeholder: "Search concepts..."
         new: "New concept"
         edit: "Edit"
         edit_heading: "Edit concept"
@@ -1474,10 +1477,7 @@ en:
           target_label: "Target canonical concept"
           target_placeholder: "Select a concept..."
           submit: "Merge concept"
-          no_targets: "No other active or candidate concepts are available to merge into."
           success: "Merged into \"%{target}\"."
-        modal:
-          title: "Create new credential"
 
       decision_models:
         seeded_description: "Pre-configured model"

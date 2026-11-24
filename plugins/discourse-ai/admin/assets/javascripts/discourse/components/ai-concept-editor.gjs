@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
@@ -10,6 +11,7 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import AiConceptChooser from "discourse/plugins/discourse-ai/discourse/components/ai-concept-chooser";
 import AiConceptMergeModal from "discourse/plugins/discourse-ai/discourse/components/modal/ai-concept-merge-modal";
 
 const CONCEPT_STATUSES = ["active", "candidate", "retired"];
@@ -33,15 +35,15 @@ export default class AiConceptEditor extends Component {
     }));
   }
 
-  get parentOptions() {
-    const currentId = this.concept.id;
+  get initialParent() {
+    if (this.concept.parent_id && this.concept.parent_name) {
+      return {
+        id: this.concept.parent_id,
+        name: this.concept.parent_name,
+      };
+    }
 
-    return (this.args.model.availableConcepts || [])
-      .filter((item) => item.id !== currentId && item.status !== "retired")
-      .map((item) => ({
-        value: String(item.id),
-        label: item.name,
-      }));
+    return null;
   }
 
   get canMerge() {
@@ -63,7 +65,7 @@ export default class AiConceptEditor extends Component {
       description: concept.description || "",
       aliases: (concept.aliases || []).join(", "),
       status: concept.status || "active",
-      parent_id: concept.parent_id ? String(concept.parent_id) : "",
+      parent_id: concept.parent_id ?? null,
     };
   }
 
@@ -118,7 +120,6 @@ export default class AiConceptEditor extends Component {
     this.modal.show(AiConceptMergeModal, {
       model: {
         concept: this.concept,
-        availableConcepts: this.args.model.availableConcepts || [],
         onMerged: (canonical) => {
           this.router.transitionTo(
             "adminPlugins.show.discourse-ai-concepts.edit",
@@ -244,18 +245,21 @@ export default class AiConceptEditor extends Component {
               @format="large"
               @name="parent_id"
               @title={{i18n "discourse_ai.concepts.form.parent"}}
-              @type="select"
+              @type="custom"
               as |field|
             >
-              <field.Control @includeNone={{false}} as |select|>
-                <select.Option @value="">
-                  {{i18n "discourse_ai.concepts.form.parent_none"}}
-                </select.Option>
-                {{#each this.parentOptions as |option|}}
-                  <select.Option @value={{option.value}}>
-                    {{option.label}}
-                  </select.Option>
-                {{/each}}
+              <field.Control>
+                <AiConceptChooser
+                  class="ai-concept-editor__parent-chooser"
+                  @excludeId={{this.concept.id}}
+                  @onChange={{field.set}}
+                  @options={{hash
+                    clearable=true
+                    none="discourse_ai.concepts.form.parent_none"
+                  }}
+                  @selectedConcept={{this.initialParent}}
+                  @value={{field.value}}
+                />
               </field.Control>
             </form.Field>
 
