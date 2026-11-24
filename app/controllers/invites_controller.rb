@@ -351,9 +351,7 @@ class InvitesController < ApplicationController
         return render_json_error(e.record.errors.full_messages.first)
       end
 
-      # Pointing an invite at another address invites another person, so it has
-      # to count towards max_invites_per_day like a newly created invite does.
-      # Raising here rolls the address change back.
+      # A new address reaches a new person, so it counts like a new invite.
       invite.limit_invites_per_day.performed! if new_email && old_email != new_email
     end
 

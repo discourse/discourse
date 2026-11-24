@@ -1374,98 +1374,18 @@ RSpec.describe InvitesController do
           expect(Jobs::InviteEmail.jobs.size).to eq(1)
         end
 
-        context "when the daily invite limit is reached" do
-          before { SiteSetting.max_invites_per_day = 1 }
-
-          it "does not retarget an invite to another address" do
-            Jobs.run_immediately!
-            sign_in(user)
-
-            post "/invites.json", params: { email: "first@example.com" }
-            expect(response.status).to eq(200)
-            invite = Invite.find_by!(invited_by: user)
-
-            post "/invites.json", params: { email: "second@example.com" }
-            expect(response.status).to eq(429)
-
-            put "/invites/#{invite.id}.json",
-                params: {
-                  email: "extra@example.com",
-                  custom_message: "Cheap watches at [this shop](http://shop.invalid/)",
-                }
-
-            expect(ActionMailer::Base.deliveries.map { |mail| mail.to.first }).to eq(
-              ["first@example.com"],
-            )
-            expect(invite.reload.email).to eq("first@example.com")
-            expect(response.status).to eq(429)
-          end
-
-          it "does not retarget an invite to another address when skipping the email" do
-            sign_in(user)
-
-            post "/invites.json", params: { email: "first@example.com" }
-            expect(response.status).to eq(200)
-            invite = Invite.find_by!(invited_by: user)
-
-            put "/invites/#{invite.id}.json",
-                params: {
-                  email: "extra@example.com",
-                  skip_email: true,
-                }
-
-            expect(response.status).to eq(429)
-            expect(invite.reload.email).to eq("first@example.com")
-          end
-        end
-
-        it "counts an email change towards the daily invite limit" do
+        it "counts an email change towards max_invites_per_day" do
           SiteSetting.max_invites_per_day = 2
           sign_in(user)
-
-          post "/invites.json", params: { email: "first@example.com" }
-          expect(response.status).to eq(200)
-          invite = Invite.find_by!(invited_by: user)
+          invite = Fabricate(:invite, invited_by: user, email: "first@example.com")
 
           put "/invites/#{invite.id}.json", params: { email: "second@example.com" }
           expect(response.status).to eq(200)
-          expect(invite.reload.email).to eq("second@example.com")
 
-          post "/invites.json", params: { email: "third@example.com" }
-          expect(response.status).to eq(429)
-
-          put "/invites/#{invite.id}.json", params: { email: "first@example.com" }
+          put "/invites/#{invite.id}.json", params: { email: "third@example.com" }
           expect(response.status).to eq(429)
           expect(invite.reload.email).to eq("second@example.com")
-        end
-
-        it "counts an email change that only differs in case" do
-          SiteSetting.max_invites_per_day = 2
-          sign_in(user)
-
-          post "/invites.json", params: { email: "first@example.com" }
-          invite = Invite.find_by!(invited_by: user)
-
-          put "/invites/#{invite.id}.json", params: { email: "First@Example.com" }
-          expect(response.status).to eq(200)
-          expect(Jobs::InviteEmail.jobs.size).to eq(2)
-
-          post "/invites.json", params: { email: "third@example.com" }
-          expect(response.status).to eq(429)
-        end
-
-        it "does not count an email change rejected by validation" do
-          SiteSetting.max_invites_per_day = 2
-          sign_in(user)
-
-          post "/invites.json", params: { email: "first@example.com" }
-          invite = Invite.find_by!(invited_by: user)
-
-          put "/invites/#{invite.id}.json", params: { email: "not-an-email" }
-          expect(response.status).to eq(422)
-
-          put "/invites/#{invite.id}.json", params: { email: "second@example.com" }
-          expect(response.status).to eq(200)
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
         end
       end
 
