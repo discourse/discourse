@@ -133,9 +133,7 @@ acceptance("Design wizard - admin launch", function (needs) {
     await visit("/admin");
     await click(APPEARANCE_LAUNCH_BUTTON);
     await click(".design-wizard__next");
-    await click(
-      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
-    );
+    await click(".design-wizard__palette-card[data-pair-key='default']");
 
     const previewLinks = captureColorSchemeLinks();
     const sections = find(".design-wizard__sections");
@@ -195,9 +193,7 @@ acceptance("Design wizard - admin launch", function (needs) {
       .dom(".design-wizard__minimize")
       .isFocused("returns focus to the panel");
     assert
-      .dom(
-        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
-      )
+      .dom(".design-wizard__palette-card[data-pair-key='default']")
       .hasAria("pressed", "true", "preserves the palette selection");
     assert.strictEqual(
       find(".design-wizard__sections"),
@@ -406,7 +402,7 @@ acceptance("Design wizard - admin launch", function (needs) {
       .hasText("Choose your fonts and what members see first.");
   });
 
-  test("a single color mode uses its palette for both", async function (assert) {
+  test("offers one palette for the chosen color modes", async function (assert) {
     wizardData.themes[0].palette_pairs.push(
       {
         key: "wcag",
@@ -433,8 +429,8 @@ acceptance("Design wizard - admin launch", function (needs) {
         },
       }
     );
-    const LIGHT_ROW = ".design-wizard__palette-row[data-mode='light']";
-    const DARK_ROW = ".design-wizard__palette-row[data-mode='dark']";
+    const CARD = (key) =>
+      `.design-wizard__palette-card[data-pair-key='${key}']`;
     const MODE = (value) =>
       `.design-wizard__palette-modes input[value='${value}']`;
 
@@ -444,25 +440,36 @@ acceptance("Design wizard - admin launch", function (needs) {
 
     assert.dom(MODE("both")).isChecked("starts with both modes");
     assert
-      .dom(`${LIGHT_ROW} [data-pair-key='dracula']`)
-      .doesNotExist("a dark-only palette is not offered for light mode");
-    assert
-      .dom(LIGHT_ROW)
+      .dom(".design-wizard__palette-row")
+      .exists({ count: 1 }, "shows a single palette row")
       .hasAttribute("role", "group")
-      .hasAria("label", "Light palette", "labels the light row");
+      .hasAria("label", "Palette", "labels the row");
     assert
-      .dom(DARK_ROW)
-      .hasAria("label", "Dark palette", "labels the dark row");
+      .dom(CARD("dracula"))
+      .doesNotExist("a palette without a light pair is not offered for both");
 
-    await click(`${LIGHT_ROW} [data-pair-key='wcag']`);
-    await click(`${DARK_ROW} [data-pair-key='dracula']`);
+    await click(CARD("wcag"));
+    await click(".design-wizard__next");
+
+    assert.strictEqual(
+      savedPayloads.at(-1).light_palette_id,
+      "-3",
+      "saves the pair's light palette"
+    );
+    assert.strictEqual(
+      savedPayloads.at(-1).dark_palette_id,
+      "-10",
+      "saves the pair's dark palette"
+    );
+
+    await click(".design-wizard__back");
     await click(MODE("dark"));
 
-    assert.dom(LIGHT_ROW).doesNotExist("hides the light row");
     assert
-      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
-      .hasAria("pressed", "true");
+      .dom(CARD("dracula"))
+      .exists("a dark-only palette is offered for dark only");
 
+    await click(CARD("dracula"));
     await click(".design-wizard__next");
 
     assert.strictEqual(
@@ -475,11 +482,11 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".design-wizard__back");
     await click(MODE("light"));
 
-    assert.dom(DARK_ROW).doesNotExist("hides the dark row");
     assert
-      .dom(`${LIGHT_ROW} [data-pair-key='wcag']`)
-      .hasAria("pressed", "true", "keeps the light palette picked earlier");
+      .dom(CARD("dracula"))
+      .doesNotExist("a dark-only palette is not offered for light only");
 
+    await click(CARD("wcag"));
     await click(".design-wizard__next");
 
     assert.strictEqual(
@@ -497,8 +504,8 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(MODE("both"));
 
     assert
-      .dom(`${DARK_ROW} [data-pair-key='dracula']`)
-      .hasAria("pressed", "true", "restores the dark palette picked earlier");
+      .dom(CARD("wcag"))
+      .hasAria("pressed", "true", "keeps the pair picked in light only");
   });
 
   test("a site using one palette for both modes is dark only", async function (assert) {
@@ -520,14 +527,14 @@ acceptance("Design wizard - admin launch", function (needs) {
     await click(".design-wizard__next");
 
     assert
-      .dom(
-        ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
-      )
+      .dom(".design-wizard__palette-card[data-pair-key='dracula']")
       .hasAria("pressed", "true", "reflects the saved dark palette");
     assert
       .dom(".design-wizard__palette-modes input[value='dark']")
       .isChecked("the same palette in both modes is dark only");
-    assert.dom(".design-wizard__palette-row[data-mode='light']").doesNotExist();
+    assert
+      .dom(".design-wizard__palette-row")
+      .hasAttribute("data-mode", "dark", "renders the dark swatches");
   });
 
   test("a theme without a dark palette is light only", async function (assert) {
@@ -540,11 +547,11 @@ acceptance("Design wizard - admin launch", function (needs) {
     assert
       .dom(".design-wizard__palette-modes input[value='light']")
       .isChecked();
-    assert.dom(".design-wizard__palette-row[data-mode='dark']").doesNotExist();
     assert
-      .dom(
-        ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
-      )
+      .dom(".design-wizard__palette-row")
+      .hasAttribute("data-mode", "light", "renders the light swatches");
+    assert
+      .dom(".design-wizard__palette-card[data-pair-key='default']")
       .hasAria("pressed", "true");
   });
 
