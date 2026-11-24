@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,7 +9,7 @@ import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-to
 import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
@@ -18,7 +19,12 @@ import { i18n } from "discourse-i18n";
 export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
+  @service router;
   @service siteSettings;
+
+  @tracked externalLoginRequired = false;
+  @tracked localConfirmationRequired = false;
+  @tracked factorsLoaded = false;
 
   loading = false;
   dirty = false;
@@ -26,12 +32,10 @@ export default class SecondFactorController extends Controller {
   /** @type {string | null} */
   errorMessage = null;
 
-  /** @type {string | null} */
-  newUsername = null;
-
-  secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   totps = [];
   security_keys = [];
+
+  #factorLoadId = 0;
 
   @computed("model.second_factor_backup_enabled")
   get backupEnabled() {
@@ -47,14 +51,10 @@ export default class SecondFactorController extends Controller {
     return findAll().length > 0;
   }
 
-  @computed
-  get displayOAuthWarning() {
-    return (
-      this.hasOAuth && this.siteSettings.enforce_second_factor_on_external_auth
-    );
-  }
-
-  @computed("currentUser")
+  @computed(
+    "currentUser",
+    "siteSettings.enforce_second_factor_on_external_auth"
+  )
   get showEnforcedWithOAuthNotice() {
     return (
       this.currentUser &&
@@ -64,7 +64,10 @@ export default class SecondFactorController extends Controller {
     );
   }
 
-  @computed("currentUser")
+  @computed(
+    "currentUser",
+    "siteSettings.enforce_second_factor_on_external_auth"
+  )
   get showEnforcedNotice() {
     return (
       this.currentUser &&
@@ -73,17 +76,92 @@ export default class SecondFactorController extends Controller {
     );
   }
 
+  get isEnforcedForCurrentSession() {
+    return Boolean(
+      this.model?.enforcedSecondFactor &&
+      (this.siteSettings.enforce_second_factor_on_external_auth ||
+        this.model.login_method !== "oauth")
+    );
+  }
+
+  get isRequiredForCurrentSession() {
+    return Boolean(
+      this.model?.requiresSecondFactor &&
+      (this.siteSettings.enforce_second_factor_on_external_auth ||
+        this.model.login_method !== "oauth")
+    );
+  }
+
   @computed("totps", "security_keys")
   get hasSecondFactors() {
     return this.totps.length > 0 || this.security_keys.length > 0;
   }
 
-  async createToTpModal() {
+  resetFactorLoad() {
+    this.#factorLoadId++;
+    this.setProperties({
+      errorMessage: null,
+      externalLoginRequired: false,
+      factorsLoaded: false,
+      localConfirmationRequired: false,
+      loading: false,
+      totps: [],
+      security_keys: [],
+    });
+  }
+
+  async loadSecondFactors({ onEntry = false, confirmOnEntry = false } = {}) {
+    if (!this.dirty) {
+      return;
+    }
+
+    this.resetFactorLoad();
+    const loadId = this.#factorLoadId;
+    this.set("loading", true);
+    try {
+      const response = await this.model.loadSecondFactorCodes();
+      if (loadId !== this.#factorLoadId) {
+        return;
+      }
+
+      this.set("dirty", false);
+      if (response.external_login_required) {
+        this.externalLoginRequired = true;
+      } else if (response.unconfirmed_session) {
+        this.localConfirmationRequired = true;
+        if (confirmOnEntry) {
+          this.confirmLocalSession();
+        } else if (onEntry && !this.isEnforcedForCurrentSession) {
+          this.router.replaceWith("preferences.security");
+        }
+      } else {
+        this.setProperties({
+          factorsLoaded: true,
+          totps: response.totps,
+          security_keys: response.security_keys,
+        });
+      }
+    } catch (error) {
+      if (loadId === this.#factorLoadId) {
+        const { message } = extractErrorInfo(error, error?.message, {
+          skipConsoleError: true,
+        });
+        this.set("errorMessage", message);
+      }
+    } finally {
+      if (loadId === this.#factorLoadId) {
+        this.set("loading", false);
+      }
+    }
+  }
+
+  @action
+  async createTotp() {
     try {
       await this.modal.show(SecondFactorAddTotp, {
         model: {
           secondFactor: this.model,
-          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+          enforcedSecondFactor: this.isEnforcedForCurrentSession,
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
@@ -94,12 +172,13 @@ export default class SecondFactorController extends Controller {
     }
   }
 
-  async createSecurityKeyModal() {
+  @action
+  async createSecurityKey() {
     try {
       await this.modal.show(SecondFactorAddSecurityKey, {
         model: {
           secondFactor: this.model,
-          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+          enforcedSecondFactor: this.isEnforcedForCurrentSession,
           markDirty: this.markDirty,
           onError: this.handleError,
         },
@@ -115,8 +194,12 @@ export default class SecondFactorController extends Controller {
     if (error.jqXHR) {
       error = error.jqXHR;
     }
-    let parsedJSON = error.responseJSON;
-    if (parsedJSON.error_type === "invalid_access") {
+    const errorType = error.responseJSON?.error_type;
+    if (errorType === "second_factor_external_login_required") {
+      this.modal.close();
+      this.resetFactorLoad();
+      this.externalLoginRequired = true;
+    } else if (errorType === "invalid_access") {
       const usernameLower = this.model.username.toLowerCase();
       DiscourseURL.redirectTo(
         userPath(`${usernameLower}/preferences/second-factor`)
@@ -137,79 +220,31 @@ export default class SecondFactorController extends Controller {
   }
 
   @action
-  loadSecondFactors() {
-    if (this.dirty === false) {
-      return;
-    }
-    this.set("loading", true);
-
-    this.model
-      .loadSecondFactorCodes()
-      .then((response) => {
-        if (response.error) {
-          this.set("errorMessage", response.error);
-          return;
-        }
-
-        this.setProperties({
-          errorMessage: null,
-          totps: response.totps,
-          security_keys: response.security_keys,
-          dirty: false,
-        });
-      })
-      .catch((e) => this.handleError(e))
-      .finally(() => this.set("loading", false));
-  }
-
-  @action
   markDirty() {
     this.set("dirty", true);
   }
 
   @action
-  async createTotp() {
-    try {
-      const trustedSession = await this.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () => this.createToTpModal(),
-        });
-      } else {
-        await this.createToTpModal();
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  async createSecurityKey() {
-    try {
-      const trustedSession = await this.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () => this.createSecurityKeyModal(),
-        });
-      } else {
-        await this.createSecurityKeyModal();
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
+  confirmLocalSession() {
+    this.dialog.dialog({
+      title: i18n("user.confirm_access.title"),
+      type: "notice",
+      bodyComponent: ConfirmSession,
+      didConfirm: () => {
+        this.markDirty();
+        this.loadSecondFactors();
+      },
+    });
   }
 
   @action
   disableAllSecondFactors() {
-    if (this.loading) {
+    if (this.isRequiredForCurrentSession) {
+      this.dialog.alert(i18n("user.second_factor.enforced_notice"));
+      return;
+    }
+
+    if (this.loading || !this.factorsLoaded) {
       return;
     }
 
@@ -333,10 +368,7 @@ export default class SecondFactorController extends Controller {
             this.markDirty();
             this.send("closeModal");
           })
-          .catch((error) => {
-            this.send("closeModal");
-            this.onError(error);
-          })
+          .catch((error) => this.handleError(error))
           .finally(() => this.set("loading", false));
       },
     });

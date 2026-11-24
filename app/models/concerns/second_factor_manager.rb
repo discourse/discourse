@@ -65,22 +65,21 @@ module SecondFactorManager
   end
 
   def totp_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins && totps.any?
+    second_factor_methods_allowed? && totps.any?
   end
 
   def backup_codes_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      user_second_factors&.backup_codes&.exists?
+    second_factor_methods_allowed? && user_second_factors&.backup_codes&.exists?
   end
 
   def security_keys_enabled?
-    !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+    second_factor_methods_allowed? &&
       security_key_factor_enabled?(UserSecurityKey.factor_types[:second_factor])
   end
 
   def passkeys_available_as_second_factor?
     SiteSetting.allow_passkeys_for_2fa && SiteSetting.enable_passkeys &&
-      !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
+      second_factor_methods_allowed? &&
       security_key_factor_enabled?(UserSecurityKey.factor_types[:first_factor])
   end
   alias_method :passkeys_for_2fa_enabled?, :passkeys_available_as_second_factor?
@@ -307,6 +306,11 @@ module SecondFactorManager
   end
 
   private
+
+  def second_factor_methods_allowed?
+    !SiteSetting.enable_discourse_connect &&
+      (SiteSetting.enable_local_logins || SiteSetting.enforce_second_factor_on_external_auth)
+  end
 
   def security_key_factor_enabled?(factor_type)
     if security_keys.loaded?

@@ -27,7 +27,8 @@ class SessionController < ApplicationController
                                   :forgot_password,
                                   :redeem_password_reset_code,
                                   :create_login_code,
-                                  :verify_login_code
+                                  :verify_login_code,
+                                  :second_factor_auth_perform
 
   # Every SessionController action is part of auth. An archived site permits
   # all of them so existing users can log in, log out, and reset passwords.
@@ -46,6 +47,7 @@ class SessionController < ApplicationController
   GENERATED_USERNAME_SIGNUP_KEY_PREFIX = "login-code-generated-username-"
   GENERATED_USERNAME_SIGNUP_INDEX_KEY = "login-code-generated-username-ids"
   GENERATED_USERNAME_ATTEMPTS = 5
+  SSO_PROVIDER_2FA_CONFIRMED_KEY = "sso_provider_2fa_confirmed"
 
   def csrf
     render json: { csrf: form_authenticity_token }
@@ -77,9 +79,27 @@ class SessionController < ApplicationController
       raise Discourse::InvalidAccess
     end
 
+    if current_user && !confirmed_2fa_during_login && params[:second_factor_nonce].blank?
+      token_id = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]&.id
+      if token_id
+        stored = server_session[SSO_PROVIDER_2FA_CONFIRMED_KEY]
+        expected = { user_id: current_user.id, token_id:, payload: payload || request.query_string }
+        if stored == expected &&
+             server_session.compare_and_set(
+               SSO_PROVIDER_2FA_CONFIRMED_KEY,
+               expected: stored,
+               replacement: nil,
+             )
+          confirmed_2fa_during_login = true
+        end
+      end
+    end
+
     result =
       run_second_factor!(
         SecondFactor::Actions::DiscourseConnectProvider,
+        # A provider request resumed by login starts its own action.
+        nonce: payload ? nil : params[:second_factor_nonce].presence,
         action_data: {
           payload: payload,
           confirmed_2fa_during_login: confirmed_2fa_during_login,
@@ -673,6 +693,11 @@ class SessionController < ApplicationController
         current_user:,
       )
     user = User.find(challenge.fetch(:target_user_id))
+    if @staff_writes_only_mode && !current_user&.staff?
+      unless user.staff? && challenge[:action] == SecondFactor::Actions::Login.name
+        raise Discourse::ReadOnly
+      end
+    end
 
     second_factor_method = params[:second_factor_method].to_i
     raise Discourse::InvalidAccess if challenge[:allowed_methods].exclude?(second_factor_method)

@@ -8,6 +8,7 @@ import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
 import UserMcpAuthorizations from "discourse/components/user-preferences/user-mcp-authorizations";
 import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import lazyHash from "discourse/helpers/lazy-hash";
+import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -62,11 +63,13 @@ export default <template>
         {{/unless}}
       {{/unless}}
     </div>
+  {{/if}}
 
-    {{#if @controller.canUsePasskeys}}
-      <UserPasskeys @model={{@model}} />
-    {{/if}}
+  {{#if @controller.canUsePasskeys}}
+    <UserPasskeys @logout={{routeAction "logout"}} @model={{@model}} />
+  {{/if}}
 
+  {{#if @controller.canUseSecondFactors}}
     <div
       class="control-group pref-second-factor"
       data-setting-name="user-second-factor"

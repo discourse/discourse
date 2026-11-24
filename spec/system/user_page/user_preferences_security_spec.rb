@@ -134,18 +134,18 @@ describe "User preferences | Security" do
 
       visit("/")
 
+      expect(page).to have_current_path("/u/#{user.username}/preferences/second-factor")
       expect(page).to have_selector(
         ".alert-error",
-        text: "You are required to enable two-factor authentication before accessing this site.",
+        text: I18n.t("js.user.second_factor.enforced_notice"),
       )
+      expect(page).to have_no_css(".new-totp")
 
-      expect(page).to have_css(".user-preferences .totp")
+      click_button I18n.t("js.user.confirm_access.title")
+      PageObjects::Modals::ConfirmSession.new.submit_password(password)
+
       expect(page).to have_css(".user-preferences .security-key")
-
-      find(".user-preferences .totp .btn.new-totp").click
-
-      find(".dialog-body input#password").fill_in(with: password)
-      find(".confirm-session .btn-primary").click
+      find(".user-preferences .totp .new-totp").click
 
       expect(page).to have_css(".qr-code")
     end
