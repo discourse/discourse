@@ -14,6 +14,7 @@ require_relative "lib/discourse_events/configuration/time_of_day_validator"
 require_relative "lib/discourse_events/configuration/event_custom_fields_validator"
 require_relative "lib/discourse_events/configuration/first_day_of_week"
 require_relative "lib/discourse_events/configuration/upcoming_events_default_view"
+require_relative "lib/discourse_events/configuration/recurring_topic_mode"
 
 enabled_site_setting :discourse_events_enabled
 

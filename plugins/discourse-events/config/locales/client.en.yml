@@ -27,6 +27,9 @@ en:
               label: Topic ID
     discourse_events:
       title: "Events"
+      recurring_topic_mode:
+        reuse_topic: "Reuse the same topic"
+        create_next_topic: "Create a new topic for each occurrence"
       livestream:
         zoom:
           join: "Join Zoom"
