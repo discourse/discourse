@@ -24,7 +24,8 @@ export function isEmptyCategoryList({ category, tag, list }) {
 
   const aboutTopicId = Number(category.topic_url?.split("/").pop());
 
+  // The server lists the original poster first in `posters`.
   return (list.topics ?? []).every(
-    (topic) => topic.id === aboutTopicId || topic.creator?.id <= 0
+    (topic) => topic.id === aboutTopicId || topic.posters?.[0]?.user?.id <= 0
   );
 }
