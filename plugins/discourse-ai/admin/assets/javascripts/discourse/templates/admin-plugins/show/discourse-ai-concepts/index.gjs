@@ -2,10 +2,9 @@ import AiConceptsList from "discourse/plugins/discourse-ai/discourse/components/
 
 export default <template>
   <AiConceptsList
-    @filter={{@controller.filter}}
+    @filter={{@controller.model.queryParams.filter}}
     @model={{@controller.model}}
-    @onQueryChange={{@controller.updateQuery}}
-    @order={{@controller.order}}
-    @status={{@controller.status}}
+    @order={{@controller.model.queryParams.order}}
+    @status={{@controller.model.queryParams.status}}
   />
 </template>

@@ -23,6 +23,18 @@ export default class AdminPluginsShowDiscourseAiConceptsIndexRoute extends Disco
       data.order = params.order;
     }
 
-    return ajax("/admin/plugins/discourse-ai/ai-concepts.json", { data });
+    const response = await ajax(
+      "/admin/plugins/discourse-ai/ai-concepts.json",
+      { data }
+    );
+
+    return {
+      ...response,
+      queryParams: {
+        status: params.status || "all",
+        filter: params.filter || "",
+        order: params.order || "usage",
+      },
+    };
   }
 }

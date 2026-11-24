@@ -24,6 +24,7 @@ export default class AiConceptsList extends Component {
   @service adminPluginNavManager;
   @service dialog;
   @service modal;
+  @service router;
   @service toasts;
 
   #filterDebounce = null;
@@ -255,7 +256,27 @@ export default class AiConceptsList extends Component {
   }
 
   #applyQuery(updates) {
-    this.args.onQueryChange?.(updates);
+    if (this.args.onQueryChange) {
+      this.args.onQueryChange(updates);
+      return;
+    }
+
+    const nextStatus =
+      "status" in updates ? updates.status || "all" : this.selectedStatus;
+    const nextFilter =
+      "filter" in updates ? (updates.filter || "").trim() : this.args.filter;
+    const nextOrder =
+      "order" in updates
+        ? updates.order || "usage"
+        : this.args.order || "usage";
+
+    this.router.replaceWith({
+      queryParams: {
+        status: nextStatus === "all" ? null : nextStatus,
+        filter: nextFilter || null,
+        order: nextOrder === "usage" ? null : nextOrder,
+      },
+    });
   }
 
   async #refreshList() {
