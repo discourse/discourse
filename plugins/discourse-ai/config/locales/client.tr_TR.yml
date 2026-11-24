@@ -239,6 +239,13 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      review_bulk:
+        refresh: "Yenile"
+        columns:
+          user: "Kullanıcı"
+          reason: "Bayrak ekleme nedeni:"
+          created: "Oluşturulma"
+          status: "Durum"
       dsa_classification:
         suggest: "YZ ile öner"
       copied: "Kopyalandı"

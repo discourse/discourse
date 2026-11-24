@@ -93,6 +93,12 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Segarkan"
+        columns:
+          user: "Pengguna"
+          created: "Dibuat"
+          status: "Status"
       copied: "Disalin"
       ai_decoded_transcript:
         type: "Tipe"

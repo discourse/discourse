@@ -216,6 +216,13 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Atualizar"
+        columns:
+          user: "Usuário(a)"
+          reason: "Sinalizado como"
+          created: "Criado(a)"
+          status: "Status"
       dsa_classification:
         suggest: "Sugestão com IA"
       copied: "Copiou"

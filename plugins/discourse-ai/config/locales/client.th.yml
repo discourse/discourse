@@ -38,6 +38,12 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      review_bulk:
+        refresh: "รีเฟรช"
+        columns:
+          user: "ผู้ใช้"
+          created: "สร้างแล้ว"
+          status: "สถานะ"
       copied: "คัดลอกแล้ว"
       ai_decoded_transcript:
         type: "ชนิด"

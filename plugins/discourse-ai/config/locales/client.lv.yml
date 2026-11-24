@@ -38,6 +38,12 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      review_bulk:
+        refresh: "Pārlādēt"
+        columns:
+          user: "Lietotājs"
+          created: "Radīts"
+          status: "Statuss"
       copied: "Nokopēts"
       ai_decoded_transcript:
         type: "Tips"

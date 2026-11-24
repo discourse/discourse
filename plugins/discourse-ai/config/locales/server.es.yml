@@ -363,6 +363,8 @@ es:
           text_color: "color del texto"
         approve_label: "Sí"
         reject_label: "No"
+        category_access_levels:
+          readonly: "Ver"
         empty_value: "Vacío"
         unexpected_error: "se ha producido un error inesperado"
       agents:
@@ -552,6 +554,7 @@ es:
         edit_tag: "Editar etiqueta"
         create_category: "Crear categoría"
         edit_category: "Editar categoría"
+        delete_category: "Eliminar categoría"
         set_topic_timer: "Editar temporizador de tema"
         set_slow_mode: "Establecer modo lento"
         move_posts: "Mover publicaciones"
@@ -745,6 +748,12 @@ es:
         errors:
           tagging_disabled: "La opción de añadir etiquetas no está activada en este sitio."
       edit_category:
+        errors:
+          not_found: "Categoría no encontrada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoría no encontrada."
+      delete_category:
         errors:
           not_found: "Categoría no encontrada."
       change_topic_category:

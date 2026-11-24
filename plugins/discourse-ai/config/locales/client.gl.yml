@@ -40,6 +40,12 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualizar"
+        columns:
+          user: "Usuario"
+          created: "Creado"
+          status: "Estado"
       copied: "Copiado"
       ai_decoded_transcript:
         type: "Tipo"

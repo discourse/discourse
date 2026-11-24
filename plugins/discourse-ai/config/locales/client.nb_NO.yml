@@ -38,6 +38,12 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      review_bulk:
+        refresh: "Last inn siden på nytt"
+        columns:
+          user: "Bruker"
+          created: "Opprettet"
+          status: "Status"
       copied: "Kopiert"
       ai_decoded_transcript:
         type: "Type"

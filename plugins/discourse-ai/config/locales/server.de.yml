@@ -412,6 +412,8 @@ de:
           text_color: "textfarbe"
         approve_label: "Ja"
         reject_label: "Nein"
+        category_access_levels:
+          readonly: "Ansehen"
         empty_value: "Leer"
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."
@@ -626,6 +628,7 @@ de:
         edit_tag: "Schlagwort bearbeiten"
         create_category: "Kategorie erstellen"
         edit_category: "Kategorie bearbeiten"
+        delete_category: "Kategorie löschen"
         set_topic_timer: "Themen-Timer einstellen"
         set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
@@ -846,6 +849,12 @@ de:
         errors:
           tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
       edit_category:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      delete_category:
         errors:
           not_found: "Kategorie nicht gefunden."
       change_topic_category:

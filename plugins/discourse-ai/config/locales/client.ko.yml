@@ -44,6 +44,12 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      review_bulk:
+        refresh: "새로 고침"
+        columns:
+          user: "사용자"
+          created: "생성됨"
+          status: "상태"
       copied: "복사되었습니다"
       ai_decoded_transcript:
         type: "형식"
