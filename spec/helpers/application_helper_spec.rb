@@ -1281,6 +1281,64 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing without some of a theme's components" do
+    fab!(:theme)
+    fab!(:moderator)
+    fab!(:live_component) do
+      Fabricate(:theme, component: true).tap do |component|
+        component.set_field(target: :common, name: :scss, value: "body { margin: 1px; }")
+        component.save!
+        theme.add_relative_theme!(:child, component)
+      end
+    end
+
+    def stylesheet_theme_ids
+      helper
+        .discourse_stylesheet_link_tag(:common_theme)
+        .scan(/data-theme-id="(\d+)"/)
+        .flatten
+        .map(&:to_i)
+    end
+
+    def hide(*components, as: moderator)
+      helper.stubs(:current_user).returns(as)
+      controller.params[:preview_hide_component_ids] = components.map(&:id).join(",")
+    end
+
+    before { helper.request.env[:resolved_theme_id] = theme.id }
+
+    it "leaves out the stylesheets of components that only hold styles, for staff" do
+      hide(live_component)
+
+      expect(stylesheet_theme_ids).not_to include(live_component.id)
+      expect(helper.theme_preview_status).to eq("active")
+    end
+
+    it "leaves out nothing for everyone else, and says the preview failed" do
+      hide(live_component, as: Fabricate(:user))
+
+      expect(stylesheet_theme_ids).to include(live_component.id)
+      expect(helper.theme_preview_status).to eq("failed")
+    end
+
+    it "leaves out nothing when a component isn't the theme's, or holds more than styles" do
+      other = Fabricate(:theme, component: true)
+      hide(live_component, other)
+      expect(helper.preview_hidden_component_ids).to be_nil
+      expect(helper.theme_preview_status).to eq("failed")
+
+      live_component.set_field(
+        target: :extra_js,
+        name: "discourse/api-initializers/x.js",
+        value: "export default {};",
+      )
+      live_component.save!
+      helper.remove_instance_variable(:@preview_hidden_component_ids)
+      hide(live_component)
+      expect(helper.preview_hidden_component_ids).to be_nil
+    end
+  end
+
   describe "previewing palettes" do
     fab!(:light_palette, :color_scheme)
     fab!(:dark_palette, :color_scheme)

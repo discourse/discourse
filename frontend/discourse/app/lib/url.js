@@ -27,6 +27,7 @@ export const THEME_PREVIEW_QUERY_PARAMS = [
   "preview_base_font",
   "preview_heading_font",
   "preview_component_ids",
+  "preview_hide_component_ids",
 ];
 
 // Query params the server applies while it renders the page, so a link that

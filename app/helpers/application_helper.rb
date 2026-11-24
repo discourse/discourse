@@ -684,7 +684,8 @@ module ApplicationHelper
 
   def stylesheet_manager
     return @stylesheet_manager if defined?(@stylesheet_manager)
-    @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
+    @stylesheet_manager =
+      Stylesheet::Manager.new(theme_id: theme_id, exclude_ids: preview_hidden_component_ids.to_a)
   end
 
   MAX_PREVIEW_COMPONENTS = 5
@@ -695,13 +696,40 @@ module ApplicationHelper
   }.freeze
 
   def requested_preview_component_ids
-    @requested_preview_component_ids ||=
-      params[:preview_component_ids]
-        .to_s
-        .split(",")
-        .filter_map { Integer(it, exception: false) }
-        .uniq
-        .first(MAX_PREVIEW_COMPONENTS)
+    @requested_preview_component_ids ||= preview_ids_param(:preview_component_ids)
+  end
+
+  def preview_ids_param(name)
+    params[name]
+      .to_s
+      .split(",")
+      .filter_map { Integer(it, exception: false) }
+      .uniq
+      .first(MAX_PREVIEW_COMPONENTS)
+  end
+
+  # Staff can also leave out components the theme has, to preview a page
+  # without them, for example when a previewed component would replace them.
+  # Only components that hold nothing but styles can be left out, since only
+  # their stylesheets are. Returns the IDs left out, or nil when they can't
+  # be, so the preview fails rather than showing a mix.
+  def preview_hidden_component_ids
+    return @preview_hidden_component_ids if defined?(@preview_hidden_component_ids)
+
+    ids = preview_ids_param(:preview_hide_component_ids)
+    @preview_hidden_component_ids =
+      if ids.empty?
+        []
+      elsif guardian.is_staff? && !customization_disabled? && theme_id.present? &&
+            (ids - Theme.components_for(theme_id)).empty?
+        components =
+          Theme.where(id: ids, component: true).includes(
+            :theme_fields,
+            :theme_modifier_set,
+            :color_schemes,
+          )
+        ids if components.size == ids.size && components.all? { previewable_component?(it) }
+      end
   end
 
   # Staff can try out components that only hold styles, including disabled
@@ -759,11 +787,13 @@ module ApplicationHelper
   def theme_preview_status
     preview_theme_id = params[:preview_theme_id].presence
     preview_components = params[:preview_component_ids].present?
-    return if !preview_theme_id && !preview_components
+    hidden_components = params[:preview_hide_component_ids].present?
+    return if !preview_theme_id && !preview_components && !hidden_components
 
     theme_ok = !preview_theme_id || theme_id == preview_theme_id.to_i
     components_ok = !preview_components || preview_component_styles.present?
-    theme_ok && components_ok ? "active" : "failed"
+    hidden_ok = !hidden_components || preview_hidden_component_ids.present?
+    theme_ok && components_ok && hidden_ok ? "active" : "failed"
   end
 
   def previewable_component?(component)
