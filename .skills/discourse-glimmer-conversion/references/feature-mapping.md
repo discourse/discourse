@@ -360,6 +360,39 @@ get state() {
 ```
 
 ```js
+// didReceiveAttrs that re-derives only while the arg is set → @cached latch (#46801, ui-kit/d-future-date-input)
+didReceiveAttrs() {
+  super.didReceiveAttrs(...arguments);
+  if (this.input) { this.setProperties({ selection: ..., _date: ..., _time: ... }); }
+}
+// after
+class InputState {
+  @tracked date = null;
+  @tracked selection = null;
+  @tracked time = null;
+}
+
+#state = new InputState();
+
+@cached
+get state() {
+  if (this.args.input) {
+    // eslint-disable-next-line ember/no-side-effects
+    this.#state = this.#stateFromInput(this.args.input);
+  }
+  return this.#state;
+}
+// actions and <Input @value={{this.state.time}}> write this.state.x
+```
+
+The `if` is the contract: an empty arg keeps the state, so a picked "custom" keeps its
+pickers open after the input is cleared. `@resettableTracked` re-seeds on every change,
+empty included, and loses it. `#state` is untracked, so writing it in the getter cannot
+dirty a tag the render has read; the lint disable follows `d-async-content.gts`. The state
+is rebuilt when anything the derivation reads changes, not on every arg change as
+`didReceiveAttrs` was.
+
+```js
 // canRender + didUpdateAttrs + next() rebuild hack → keyed each (991cbda4528)
 {{#each (array @topic) key="id"}}
   {{yield this.info}}
