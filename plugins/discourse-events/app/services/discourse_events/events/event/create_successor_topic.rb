@@ -87,9 +87,9 @@ module DiscourseEvents
 
       def prepare_rollover(event_date:, event:)
         context[:original_title] = topic.title
-        original_raw = post.raw
+        context[:original_raw] = post.raw
         context[:rewriter] = BbcodeRewriter.new(
-          original_raw,
+          context[:original_raw],
           tag: "event",
           selector: "div.discourse-post-event",
           cook_options: {
@@ -111,7 +111,14 @@ module DiscourseEvents
         )
       end
 
-      def archive_occurrence(event_date:, event:, rewriter:, original_title:, archived_hostnames:)
+      def archive_occurrence(
+        event_date:,
+        event:,
+        rewriter:,
+        original_title:,
+        archived_hostnames:,
+        original_raw:
+      )
         topic.acting_user = Discourse.system_user
 
         archived_raw =
@@ -157,6 +164,7 @@ module DiscourseEvents
               revisor.revise!(
                 post.user,
                 { raw: archived_raw, title: archive_title },
+                expected_raw: original_raw,
                 bypass_bump: true,
                 bypass_rate_limiter: true,
                 bypass_slow_mode: true,

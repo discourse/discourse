@@ -76,6 +76,61 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(successor.first_post.reload.event.recurrence).to eq("every_week")
   end
 
+  it "rejects a stale archival revision and retries with updated content" do
+    starts_at = 7.days.after.change(sec: 0)
+    ends_at = starts_at + 1.hour
+    title = "Concurrent edit rollover"
+
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+      [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+      Meeting notes.
+      [/event]
+    RAW
+
+    event_date = post.reload.event.event_dates.pending.first
+    original_raw = post.raw
+    edited_raw = "#{original_raw}\n\nA user edit made before retry."
+    force_stale_snapshot = true
+
+    allow_any_instance_of(PostRevisor).to receive(:revise!).and_wrap_original do |method, *args|
+      options = args.fetch(2)
+
+      expected = force_stale_snapshot ? original_raw : edited_raw
+      expect(options.fetch(:expected_raw)).to eq(expected)
+
+      if force_stale_snapshot
+        force_stale_snapshot = false
+        args[2] = options.merge(expected_raw: "stale snapshot")
+      end
+
+      method.call(*args)
+    end
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result.success?).to eq(false)
+      expect(result["result.try.default"]&.exception).to be_a(
+        ActiveRecord::RecordNotSaved,
+      )
+    end.not_to change(Topic, :count)
+
+    expect(force_stale_snapshot).to eq(false)
+    expect(post.reload.raw).to eq(original_raw)
+    expect(post.topic.reload.title).to eq(title)
+    expect(event_date.reload.finished_at).to be_nil
+
+    # A subsequent user edit is available when the rollover is retried.
+    post.update_columns(raw: edited_raw)
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    expect(successor.first_post.raw).to include("A user edit made before retry.")
+  end
+
   it "does not retry an archival revision that fails for another reason" do
     starts_at = 7.days.after.change(sec: 0)
     ends_at = starts_at + 1.hour
