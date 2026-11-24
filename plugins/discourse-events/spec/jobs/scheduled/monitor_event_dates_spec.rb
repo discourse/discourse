@@ -1547,11 +1547,11 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(archived_event.recurrence).to be_nil
         expect(archived_event.original_ends_at).to be_nil
-        expect(archived_post.raw).to include("start=2026-04-03")
+        expect(archived_post.raw).to include("start=2026-04-04")
 
         # The archived BBCode reparses to midnight UTC. Persisted Event
         # attributes must match, or SyncFromPost can reschedule the Event.
-        expect(archived_event.original_starts_at).to eq_time(Time.utc(2026, 4, 3))
+        expect(archived_event.original_starts_at).to eq_time(Time.utc(2026, 4, 4))
 
         # No replacement EventDate or RSVP reset is permitted.
         expect(archived_event.event_dates.pluck(:id).sort).to eq(event_date_ids_before)
@@ -1583,6 +1583,51 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
           end
         expect(repeated_endings).to eq(0)
         expect(archived_event.event_dates.pluck(:id).sort).to eq(event_date_ids_before)
+      end
+
+      it "preserves explicit-end all-day duration across repeated DST rollovers" do
+        freeze_time Time.utc(2026, 3, 20, 12)
+
+        title = "Weekly all-day duration across BST"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+            [event start="2026-03-21" end="2026-03-21" all-day="true" status="public" timezone="Europe/London" recurrence="every_week"]
+            One-day planning meeting.
+            [/event]
+          RAW
+
+        initial_event = post.reload.event
+
+        expect(initial_event.original_starts_at).to eq_time(Time.utc(2026, 3, 21))
+        expect(initial_event.original_ends_at).to eq_time(Time.utc(2026, 3, 21).end_of_day)
+
+        observed_ranges = []
+
+        [
+          Time.utc(2026, 3, 22, 12),
+          Time.utc(2026, 3, 29, 12),
+          Time.utc(2026, 4, 5, 12),
+        ].each do |monitor_time|
+          freeze_time monitor_time
+
+          expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+          successor = Topic.where(title:).sole
+          successor_event = successor.first_post.reload.event.reload
+
+          expect(successor_event.all_day).to eq(true)
+          expect(successor_event.recurrence).to eq("every_week")
+          expect(successor_event.original_ends_at).to be_present
+
+          observed_ranges << [
+            successor_event.original_starts_at.utc.to_date.iso8601,
+            successor_event.original_ends_at.utc.to_date.iso8601,
+          ]
+        end
+
+        expect(observed_ranges).to eq(
+          [%w[2026-03-28 2026-03-28], %w[2026-04-04 2026-04-04], %w[2026-04-11 2026-04-11]],
+        )
       end
 
       it "preserves all-day dates without timezone drift" do

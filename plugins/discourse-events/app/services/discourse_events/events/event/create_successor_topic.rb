@@ -138,10 +138,13 @@ module DiscourseEvents
       )
         topic.acting_user = Discourse.system_user
 
+        archived_start = format_date(event_date.starts_at)
+        archived_end = formatted_end(event_date.ends_at, starts_at: event_date.starts_at)
+
         archived_raw =
           rewriter.rewrite(
-            "start" => format_date(event_date.starts_at),
-            "end" => formatted_end(event_date.ends_at),
+            "start" => archived_start,
+            "end" => archived_end,
             "recurrence" => nil,
             "recurrence-until" => nil,
             "recurrenceUntil" => nil,
@@ -156,11 +159,11 @@ module DiscourseEvents
         # explicit end date parsed at the end of that UTC day. Persist the
         # same values to avoid a post-edit EventDate resync after rollover.
         archived_starts_at =
-          event.all_day ? event_date.starts_at.utc.beginning_of_day : event_date.starts_at
+          event.all_day ? Date.iso8601(archived_start).to_time(:utc) : event_date.starts_at
 
         archived_ends_at =
           if event.original_ends_at && event_date.ends_at
-            event.all_day ? event_date.ends_at.utc.end_of_day : event_date.ends_at
+            event.all_day ? Date.iso8601(archived_end).to_time(:utc).end_of_day : event_date.ends_at
           end
 
         Event.where(id: event.id).update_all(
@@ -239,7 +242,8 @@ module DiscourseEvents
         successor_raw =
           rewriter.rewrite(
             "start" => format_date(next_occurrence[:starts_at]),
-            "end" => formatted_end(next_occurrence[:ends_at]),
+            "end" =>
+              formatted_end(next_occurrence[:ends_at], starts_at: next_occurrence[:starts_at]),
             "hosts" => successor_hostnames.presence&.join(","),
           )
 
@@ -350,7 +354,7 @@ module DiscourseEvents
       def archived_title_suffix(event_date)
         date =
           if event.all_day
-            event_date.starts_at.utc.strftime("%Y-%m-%d")
+            format_date(event_date.starts_at)
           else
             event_date.starts_at.in_time_zone(event.rrule_timezone).strftime("%Y-%m-%d")
           end
@@ -358,15 +362,31 @@ module DiscourseEvents
         " (archived event on #{date})"
       end
 
-      def formatted_end(value)
+      def formatted_end(value, starts_at:)
         return nil if event.original_ends_at.nil?
         return nil if value.nil?
+
+        if event.all_day
+          day_span = event.original_ends_at.utc.to_date - event.original_starts_at.utc.to_date
+          return (all_day_date(starts_at) + day_span).iso8601
+        end
 
         format_date(value)
       end
 
+      # All-day BBCode dates are UTC calendar dates, whereas recurrence
+      # instants follow the anchor's local wall-clock time. Preserve the
+      # anchor's calendar-day offset when daylight saving time changes.
+      def all_day_date(value)
+        anchor = event.recurrence_anchor_starts_at
+        timezone = event.rrule_timezone
+        day_offset = anchor.utc.to_date - anchor.in_time_zone(timezone).to_date
+
+        value.in_time_zone(timezone).to_date + day_offset
+      end
+
       def format_date(value)
-        return value.utc.strftime("%Y-%m-%d") if event.all_day
+        return all_day_date(value).iso8601 if event.all_day
 
         local_time = value.in_time_zone(event.rrule_timezone)
         formatted = local_time.strftime("%Y-%m-%d %H:%M:%S")
