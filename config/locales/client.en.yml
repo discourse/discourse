@@ -2321,7 +2321,6 @@ en:
         extended_description: |
           Two-factor authentication adds a verification step when you sign in, including when you use an external account. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         use: "Use Authenticator app"
-        enforced_with_oauth_notice: "You are required to enable two-factor authentication. You will only be prompted to use this when logging in with a password, not with external authentication or social login methods."
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         external_login_required: "To confirm your identity before managing two-factor authentication, please log out and log in again with your external account."
         disable: "Disable"

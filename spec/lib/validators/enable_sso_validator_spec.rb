@@ -86,10 +86,10 @@ RSpec.describe EnableSsoValidator do
         SiteSetting.discourse_connect_secret = "x" * 10
       end
 
-      it "rejects enabling DiscourseConnect when second factor is enforced" do
+      it "accepts enabling DiscourseConnect when second factor enrollment is required" do
         SiteSetting.enforce_second_factor = "all"
 
-        expect(validator.valid_value?("t")).to eq(false)
+        expect(validator.valid_value?("t")).to eq(true)
       end
 
       it "accepts enabling DiscourseConnect when second factor is optional" do

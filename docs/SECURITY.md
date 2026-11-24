@@ -16,6 +16,14 @@ Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm 
 
 Discourse currently uses PBKDF2 with the sha256 hashing algorithm and 600,000 iterations.
 
+### Two-factor authentication and external sign-in
+
+`enforce_second_factor` controls who must **enroll**. An account with a Discourse authenticator or security key must complete a Discourse factor on its next sign-in, even when enrollment is optional or the identity provider does its own MFA.
+
+Before upgrading a site that disabled `enforce_second_factor_on_external_auth`, switched to DiscourseConnect, or turned off local logins, ask enrolled users and administrators to check their authenticator, security key, or backup codes. Previously enrolled factors that were ignored on external login will be required again. If a user has lost every factor, an authorized administrator can reset that user's two-factor authentication after verifying their identity. Keep a recovery path for administrators as well.
+
+Existing sessions stay signed in, but users previously exempt from a `staff` or `all` enrollment requirement will be directed to **Preferences → Security** when they next use the site. A two-factor challenge open during deployment must be restarted.
+
 ### XSS
 
 The main vector for [XSS](https://en.wikipedia.org/wiki/Cross-site_scripting) attacks is via the post composer, as we allow users to enter Markdown, HTML (a safe subset thereof), and BBCode to format posts.

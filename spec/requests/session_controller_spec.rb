@@ -2318,6 +2318,325 @@ RSpec.describe SessionController do
       end.not_to change { UserAuthToken.count }
     end
 
+    it "requires native 2FA before logging in on a login-required site" do
+      SiteSetting.login_required = true
+      Fabricate(:single_sign_on_record, user:, external_id: "abc")
+      second_factor = Fabricate(:user_second_factor_totp, user:)
+      sso = get_sso("/a/")
+      sso.email = user.email
+      sso.external_id = "abc"
+
+      expect do
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      end.not_to change { user.user_auth_tokens.count }
+
+      challenge_url = URI(response.location)
+      expect(challenge_url.path).to eq("/session/2fa")
+      nonce = Rack::Utils.parse_query(challenge_url.query).fetch("nonce")
+      get challenge_url.request_uri, headers: headers
+      expect(response.status).to eq(200)
+      expect(response.body).to include('"2fa_challenge_data"')
+
+      post "/session/2fa.json",
+           params: {
+             nonce:,
+             second_factor_method: UserSecondFactor.methods[:totp],
+             second_factor_token: ROTP::TOTP.new(second_factor.data).now,
+           },
+           headers: headers
+      expect(response.parsed_body).to include(
+        "ok" => true,
+        "callback_method" => "POST",
+        "callback_path" => "/session/sso_login/second-factor",
+      )
+      expect(user.user_auth_tokens).to be_empty
+
+      post "/session/sso_login/second-factor.json",
+           params: {
+             second_factor_nonce: nonce,
+           },
+           headers: headers
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq("redirect_url" => "/a/", "reload" => true)
+      expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+      expect(Discourse.current_user_provider.new(request.env).current_user).to eq(user)
+    end
+
+    context "with a pending native second factor" do
+      let!(:second_factor) { Fabricate(:user_second_factor_totp, user:) }
+      let!(:identity) { Fabricate(:single_sign_on_record, user:, external_id: "abc") }
+      let(:sso_callback) do
+        sso = get_sso("/a/?source=sso")
+        sso.email = user.email
+        sso.external_id = identity.external_id
+        sso.admin = true
+        Rack::Utils.parse_query(sso.payload)
+      end
+
+      def start_sso_challenge
+        get "/session/sso_login", params: sso_callback, headers: headers
+        challenge_url = URI(response.location)
+        expect(challenge_url.path).to eq("/session/2fa")
+        Rack::Utils.parse_query(challenge_url.query).fetch("nonce")
+      end
+
+      def verify_sso_factor(nonce, token: ROTP::TOTP.new(second_factor.data).now)
+        post "/session/2fa.json",
+             params: {
+               nonce:,
+               second_factor_method: UserSecondFactor.methods[:totp],
+               second_factor_token: token,
+             },
+             headers: headers
+      end
+
+      def resume_sso(nonce)
+        post "/session/sso_login/second-factor.json",
+             params: {
+               second_factor_nonce: nonce,
+             },
+             headers: headers
+      end
+
+      it "keeps the SSO nonce one-time and never repeats privilege synchronization" do
+        nonce = start_sso_challenge
+        expect(user.reload).to be_admin
+        user.update!(admin: false)
+
+        get "/session/sso_login", params: sso_callback, headers: headers
+        expect(response.status).to eq(419)
+        resume_sso(nonce)
+        expect(response.status).to eq(401)
+        verify_sso_factor(nonce, token: "invalid")
+        expect(response.status).to eq(400)
+        expect(user.user_auth_tokens).to be_empty
+
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        resume_sso(nonce)
+        expect(response.parsed_body).to eq("redirect_url" => "/a/?source=sso", "reload" => true)
+        expect(user.reload).not_to be_admin
+        expect { resume_sso(nonce) }.not_to change { user.user_auth_tokens.count }
+        expect(response.status).to eq(404)
+      end
+
+      it "rejects resume if the external ID is reassigned to a different account" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        identity.update!(user: Fabricate(:user))
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(403)
+      end
+
+      it "rejects resume if the target email changed" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        user.update!(email: "replacement@example.com")
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(403)
+      end
+
+      it "rejects a different logged-in principal in the originating browser" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        other_user = sign_in(Fabricate(:user))
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(404)
+        get "/session/current.json"
+        expect(response.parsed_body.dig("current_user", "id")).to eq(other_user.id)
+      end
+
+      it "rejects a verified continuation in another browser and after expiry" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        open_session do |other_browser|
+          other_browser.host! Discourse.current_hostname
+          other_browser.post "/session/sso_login/second-factor.json",
+                             params: {
+                               second_factor_nonce: nonce,
+                             }
+          expect(other_browser.response.status).to eq(404)
+        end
+
+        freeze_time (SecondFactor::AuthManager::MAX_CHALLENGE_AGE + 2.minutes).from_now
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(401)
+      end
+
+      it "rejects resume when the user is suspended after passing the factor" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        user.update!(suspended_till: 2.days.from_now, suspended_at: Time.zone.now)
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(403)
+      end
+
+      it "rechecks the administrator IP allowlist before issuing a session" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response).to have_http_status(:ok)
+        SiteSetting.use_admin_ip_allowlist = true
+        Fabricate(
+          :screened_ip_address,
+          ip_address: "192.0.2.17",
+          action_type: ScreenedIpAddress.actions[:allow_admin],
+        )
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "keeps the current session when the signed identity already owns it" do
+        sign_in(user)
+
+        expect do
+          get "/session/sso_login", params: sso_callback, headers: headers
+        end.not_to change(UserAuthToken, :count)
+        expect(response).to redirect_to("/a/?source=sso")
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).not_to eq(true)
+      end
+
+      it "requires a factor for a same-account invite without issuing a fresh session" do
+        sign_in(user)
+        invite = Fabricate(:invite, invited_by: admin, email: nil)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+
+        nonce = start_sso_challenge
+        expect(invite.reload).not_to be_redeemed
+        verify_sso_factor(nonce)
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(invite.reload).to be_redeemed
+        post "/u/second_factors.json"
+        expect(response.parsed_body).to include("external_login_required" => true)
+      end
+
+      it "redeems the invite only after verification and redirects to its topic" do
+        invite = Fabricate(:invite, invited_by: admin, email: nil)
+        topic = Fabricate(:topic)
+        TopicInvite.create!(invite:, topic:)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+
+        nonce = start_sso_challenge
+        expect(invite.reload).not_to be_redeemed
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        resume_sso(nonce)
+
+        expect(response.parsed_body).to include("redirect_url" => topic.relative_url)
+        expect(invite.reload).to be_redeemed
+      end
+
+      it "activates an initially inactive account through a valid invite after verification" do
+        invite = Fabricate(:invite, invited_by: admin, email: nil)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+        # The default resolver activates trusted identities itself. Simulate a resolver
+        # extension that leaves activation to the invite, while keeping signature validation real.
+        allow(DiscourseConnect).to receive(:parse).and_wrap_original do |parse, *args, **kwargs|
+          parse
+            .call(*args, **kwargs)
+            .tap do |sso|
+              allow(sso).to receive(
+                :lookup_or_create_user,
+              ).and_wrap_original do |lookup, ip_address|
+                lookup.call(ip_address).tap { |account| account.update!(active: false) }
+              end
+            end
+        end
+
+        nonce = start_sso_challenge
+        expect(user.reload).not_to be_active
+        expect(invite.reload).not_to be_redeemed
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        resume_sso(nonce)
+
+        expect(response.status).to eq(200)
+        expect(user.reload).to be_active
+        expect(invite.reload).to be_redeemed
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+      end
+
+      it "does not reactivate an account deactivated during a pending invite login" do
+        invite = Fabricate(:invite, invited_by: admin, email: nil)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+
+        nonce = start_sso_challenge
+        expect(user.reload).to be_active
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        user.update!(active: false)
+
+        expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+        expect(response.status).to eq(403)
+        expect(user.reload).not_to be_active
+        expect(invite.reload).not_to be_redeemed
+      end
+
+      it "skips an expired pending invite for an otherwise eligible active account" do
+        invite = Fabricate(:invite, invited_by: admin, email: nil)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        invite.update!(expires_at: 1.minute.ago)
+        resume_sso(nonce)
+
+        expect(response.parsed_body).to eq("redirect_url" => "/a/?source=sso", "reload" => true)
+        expect(invite.reload.redemption_count).to eq(0)
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+      end
+
+      it "skips a consumed pending invite for an otherwise eligible active account" do
+        invite = Fabricate(:invite, invited_by: admin, email: nil, max_redemptions_allowed: 1)
+        server_session[SessionController::DISCOURSE_CONNECT_INVITE_KEY] = invite.invite_key
+
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+        invite.update!(redemption_count: 1)
+        resume_sso(nonce)
+
+        expect(response.parsed_body).to eq("redirect_url" => "/a/?source=sso", "reload" => true)
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(user.invited_user).to be_nil
+      end
+
+      it "requires a CSRF token to complete a verified challenge" do
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+
+        begin
+          ActionController::Base.allow_forgery_protection = true
+          expect { resume_sso(nonce) }.not_to change(UserAuthToken, :count)
+          expect(response.status).to eq(403)
+        ensure
+          ActionController::Base.allow_forgery_protection = false
+        end
+      end
+
+      it "allows a staff login in staff-writes-only mode" do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+        nonce = start_sso_challenge
+        verify_sso_factor(nonce)
+        expect(response.status).to eq(200)
+
+        resume_sso(nonce)
+        expect(response.status).to eq(200)
+        expect(user.user_auth_tokens.sole.authenticated_with_oauth).to eq(true)
+      end
+    end
+
     it "never redirects back to the SSO path" do
       sso = get_sso("/session/sso?bla=1")
       sso.email = user.email
@@ -5915,6 +6234,25 @@ RSpec.describe SessionController do
                }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
+
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+
+        it "logs the user in directly without a second-factor challenge even when TOTP is enabled" do
+          Fabricate(:user_second_factor_totp, user: user)
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          expect(response.parsed_body["redirect_url"]).to be_nil
 
           expect(session[:current_user_id]).to eq(user.id)
         end

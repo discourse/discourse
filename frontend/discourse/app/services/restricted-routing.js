@@ -2,7 +2,6 @@ import Service, { service } from "@ember/service";
 
 export default class RestrictedRouting extends Service {
   @service currentUser;
-  @service siteSettings;
 
   get isRestricted() {
     return this._needsRequiredFields || this._needs2fa;
@@ -19,21 +18,9 @@ export default class RestrictedRouting extends Service {
   }
 
   get _needs2fa() {
-    // NOTE: Matches the should_enforce_2fa? and disqualified_from_2fa_enforcement
-    // methods in ApplicationController.
-    const enforcing2fa =
-      (this.siteSettings.enforce_second_factor === "staff" &&
-        this.currentUser?.staff) ||
-      this.siteSettings.enforce_second_factor === "all";
-
-    const exemptedFrom2faEnforcement =
-      !this.currentUser ||
-      this.currentUser.is_anonymous ||
-      this.currentUser.second_factor_enabled ||
-      (!this.siteSettings.enforce_second_factor_on_external_auth &&
-        this.currentUser.login_method === "oauth");
-
-    return enforcing2fa && !exemptedFrom2faEnforcement;
+    return (
+      this.currentUser?.enforcedSecondFactor && !this.currentUser.is_anonymous
+    );
   }
 
   get _needsRequiredFields() {

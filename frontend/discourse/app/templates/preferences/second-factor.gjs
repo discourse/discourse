@@ -18,15 +18,9 @@ export default <template>
       class="user-content user-preferences solo-preference second-factor"
     >
       <DConditionalLoadingSpinner @condition={{@controller.loading}}>
-        {{#if @controller.showEnforcedNotice}}
+        {{#if @controller.model.enforcedSecondFactor}}
           <div class="alert alert-error">
             {{i18n "user.second_factor.enforced_notice"}}
-          </div>
-        {{/if}}
-
-        {{#if @controller.showEnforcedWithOAuthNotice}}
-          <div class="alert alert-error">
-            {{i18n "user.second_factor.enforced_with_oauth_notice"}}
           </div>
         {{/if}}
 
@@ -157,7 +151,7 @@ export default <template>
             </div>
 
             {{#if @controller.hasSecondFactors}}
-              {{#unless @controller.isRequiredForCurrentSession}}
+              {{#unless @controller.model.requiresSecondFactor}}
                 <div class="control-group pref-second-factor-disable-all">
                   <div class="controls -actions">
                     <DButton
@@ -178,7 +172,7 @@ export default <template>
           </div>
         {{/if}}
 
-        {{#unless @controller.isEnforcedForCurrentSession}}
+        {{#unless @controller.model.enforcedSecondFactor}}
           <LinkTo
             class="cancel"
             @model={{@controller.model.username}}

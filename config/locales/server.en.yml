@@ -671,7 +671,6 @@ en:
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
       secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
-      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "You cannot enforce 2FA if DiscourseConnect is enabled."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
@@ -2337,8 +2336,7 @@ en:
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Customizing specific system email templates on Meta</a>."
     simple_email_subject: "When enabled, the email subject lines will be more concise, containing only the essential information. This makes it easier for users to quickly understand the purpose of the email at a glance."
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. When {{setting:enforce_second_factor_on_external_auth}} is enabled, users who set up 2FA will also be prompted for it when logging in with external authentication providers."
-    enforce_second_factor_on_external_auth: "Require users to confirm two-factor authentication (2FA) when logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the {{setting:enforce_second_factor}} setting."
+    enforce_second_factor: "Choose who must set up two-factor authentication before using the site. Users who have already set it up are protected even when enrollment is optional, including when they sign in through an external provider."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -3436,7 +3434,6 @@ en:
       auth_provider_credentials_missing: "You must set %{settings} before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
-      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."
       delete_rejected_email_after_days: "This setting cannot be set lower than the delete_email_logs_after_days setting or greater than %{max}"
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       uncategorized_category_missing: '''allow uncategorized topics'' cannot be enabled because the "Uncategorized" category no longer exists.'
