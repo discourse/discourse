@@ -171,12 +171,14 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
   end
 
   describe "#search_topics_by_concept and #search_posts_by_concept" do
-    it "finds topics and posts by concept name or alias" do
+    it "finds topics and posts by concept name or alias and skips standalone retired concepts" do
       concept1.topics << topic
       concept1.posts << post
+      retired_concept.topics << Fabricate(:topic)
 
       expect(manager.search_topics_by_concept("coding")).to contain_exactly(topic)
       expect(manager.search_posts_by_concept("coding")).to contain_exactly(post)
+      expect(manager.search_topics_by_concept("deprecated")).to eq([])
       expect(manager.search_topics_by_concept("nonexistent")).to eq([])
     end
   end
@@ -195,43 +197,34 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
     end
   end
 
-  describe "#deduplicate_concepts_by_letter" do
-    before do
-      %w[apple application banana berry cat car dog].each do |name|
-        Fabricate(:inferred_concept, name: name)
-      end
-    end
-
-    it "groups concepts by first letter and deduplicates" do
-      finder = instance_double(DiscourseAi::InferredConcepts::Finder)
-      allow(DiscourseAi::InferredConcepts::Finder).to receive(:new).and_return(finder)
-      allow(finder).to receive(:deduplicate_concepts).at_least(:once).and_return(
-        %w[apple banana cat dog],
+  describe "#deduplicate_concepts and #curate_concepts" do
+    it "delegates deduplication and curation to Curator" do
+      curator = instance_double(DiscourseAi::InferredConcepts::Curator)
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+      allow(curator).to receive(:deduplicate_clusters!).and_return(
+        { clusters_processed: 1, merges_applied: 1, concepts_retired: 1, reparents_applied: 0 },
+      )
+      allow(curator).to receive(:curate!).and_return(
+        {
+          clusters_processed: 1,
+          merges_applied: 1,
+          concepts_retired: 1,
+          reparents_applied: 0,
+          pruned_candidates: 2,
+          promoted_candidates: 0,
+          embeddings_enqueued: 3,
+        },
       )
 
-      expect { manager.deduplicate_concepts_by_letter }.not_to raise_error
-    end
+      dedup_result = manager.deduplicate_concepts
+      curate_result = manager.curate_concepts
 
-    it "preserves retired concepts and their associations when deduplicating active concepts" do
-      retired_concept.topics << topic
-
-      finder = instance_double(DiscourseAi::InferredConcepts::Finder)
-      allow(DiscourseAi::InferredConcepts::Finder).to receive(:new).and_return(finder)
-      allow(finder).to receive(:deduplicate_concepts) do |batch|
-        batch.reject { |name| name == "application" }
-      end
-
-      manager.deduplicate_concepts_by_letter(per_letter_batch: 100, full_pass_batch: 200)
-
-      expect(InferredConcept.find_by(id: retired_concept.id)).to be_present
-      expect(retired_concept.topics.reload).to contain_exactly(topic)
-      expect(InferredConcept.find_by(name: "application")).to be_nil
-      expect(InferredConcept.find_by(name: "apple")).to be_present
-    end
-
-    it "handles empty concept list" do
-      InferredConcept.destroy_all
-      expect { manager.deduplicate_concepts_by_letter }.not_to raise_error
+      expect(dedup_result[:merges_applied]).to eq(1)
+      expect(curate_result[:pruned_candidates]).to eq(2)
+      expect(curator).to have_received(:deduplicate_clusters!).with(
+        max_cosine_distance: DiscourseAi::InferredConcepts::Curator::DEFAULT_MAX_COSINE_DISTANCE,
+      )
+      expect(curator).to have_received(:curate!)
     end
   end
 end

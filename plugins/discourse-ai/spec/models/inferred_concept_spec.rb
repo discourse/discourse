@@ -121,6 +121,14 @@ RSpec.describe InferredConcept do
       expect(InferredConcept.by_name_or_alias("podman")).to be_empty
       expect(InferredConcept.by_name_or_alias("docker")).to contain_exactly(other)
     end
+
+    it "prioritizes active concepts over retired concepts with the same alias or name" do
+      retired = Fabricate(:inferred_concept, name: "k8s", status: :retired)
+      active = Fabricate(:inferred_concept, name: "Kubernetes", aliases: ["k8s"], status: :active)
+
+      expect(InferredConcept.by_name_or_alias("k8s").first).to eq(active)
+      expect(InferredConcept.by_name_or_alias("k8s")).to eq([active, retired])
+    end
   end
 
   describe "hierarchy" do

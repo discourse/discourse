@@ -17,70 +17,22 @@ module DiscourseAi
         query.pluck(:name)
       end
 
-      # Deduplicate concepts in batches by letter
-      # This method will:
-      # 1. Group concepts by first letter
-      # 2. Process each letter group separately through the deduplicator
-      # 3. Do a final pass with all deduplicated concepts
-      # @return [Hash] Statistics about the deduplication process
-      def deduplicate_concepts_by_letter(per_letter_batch: 50, full_pass_batch: 150)
-        # Get all concepts
-        all_concepts = list_concepts
-        return if all_concepts.empty?
+      # Run full taxonomy curation: vector-clustered deduplication, candidate pruning, and embedding backfill
+      # @param max_cosine_distance [Float] Maximum cosine distance for clustering concept neighbors
+      # @param stale_after [Time] Age cutoff for pruning unused candidate concepts
+      # @return [Hash] Statistics about the curation run
+      def curate_concepts(
+        max_cosine_distance: Curator::DEFAULT_MAX_COSINE_DISTANCE,
+        stale_after: Curator::DEFAULT_STALE_CANDIDATE_AGE.ago
+      )
+        Curator.new.curate!(max_cosine_distance:, stale_after:)
+      end
 
-        letter_groups = Hash.new { |h, k| h[k] = [] }
-
-        # Group concepts by first letter
-        all_concepts.each do |concept|
-          first_char = concept[0]&.upcase
-
-          if first_char && first_char.match?(/[A-Z]/)
-            letter_groups[first_char] << concept
-          else
-            # Non-alphabetic or empty concepts go in a special group
-            letter_groups["#"] << concept
-          end
-        end
-
-        # Process each letter group
-        letter_deduplicated_concepts = []
-        finder = DiscourseAi::InferredConcepts::Finder.new
-
-        letter_groups.each do |letter, concepts|
-          next if concepts.empty?
-
-          batches = concepts.each_slice(per_letter_batch).to_a
-
-          batches.each do |batch|
-            result = finder.deduplicate_concepts(batch)
-            letter_deduplicated_concepts.concat(result)
-          end
-        end
-
-        # Final pass with all deduplicated concepts
-        if letter_deduplicated_concepts.present?
-          final_result = []
-
-          batches = letter_deduplicated_concepts.each_slice(full_pass_batch).to_a
-          batches.each do |batch|
-            dedups = finder.deduplicate_concepts(batch)
-            final_result.concat(dedups)
-          end
-
-          # Remove duplicates
-          final_result.uniq!
-
-          # Apply deduplication only to concepts included in the deduplication pass
-          removed_names = all_concepts - final_result
-          if removed_names.present?
-            InferredConcept.where.not(status: :retired).where(name: removed_names).destroy_all
-          end
-
-          new_names = final_result - all_concepts
-          if new_names.present?
-            InferredConcept.insert_all(new_names.map { |concept| { name: concept } })
-          end
-        end
+      # Deduplicate non-retired concepts using vector-clustered neighborhoods
+      # @param max_cosine_distance [Float] Maximum cosine distance for clustering concept neighbors
+      # @return [Hash] Statistics about merges and reparents applied
+      def deduplicate_concepts(max_cosine_distance: Curator::DEFAULT_MAX_COSINE_DISTANCE)
+        Curator.new.deduplicate_clusters!(max_cosine_distance:)
       end
 
       # Extract new concepts from arbitrary content
@@ -163,7 +115,7 @@ module DiscourseAi
       # @param concept_name [String] The name or alias of the concept to search for
       # @return [Array<Topic>] Topics that have the specified concept
       def search_topics_by_concept(concept_name)
-        concept = ::InferredConcept.by_name_or_alias(concept_name).first
+        concept = ::InferredConcept.where.not(status: :retired).by_name_or_alias(concept_name).first
         return [] unless concept
         concept.topics
       end
@@ -172,7 +124,7 @@ module DiscourseAi
       # @param concept_name [String] The name or alias of the concept to search for
       # @return [Array<Post>] Posts that have the specified concept
       def search_posts_by_concept(concept_name)
-        concept = ::InferredConcept.by_name_or_alias(concept_name).first
+        concept = ::InferredConcept.where.not(status: :retired).by_name_or_alias(concept_name).first
         return [] unless concept
         concept.posts
       end

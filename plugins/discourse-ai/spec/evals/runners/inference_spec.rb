@@ -63,5 +63,18 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
         runner.run(OpenStruct.new(args: {}), llm, execution_context: execution_context)
       }.to raise_error(ArgumentError, /requires :concepts/)
     end
+
+    it "returns surviving concepts after applying merges for deduplicate_concepts" do
+      allow(structured_output).to receive(:read_buffered_property).with(:merges).and_return(
+        [{ "canonical_id" => 1, "merge_ids" => [2], "description" => "Merged concept" }],
+      )
+
+      eval_case = OpenStruct.new(args: { concepts: %w[Kubernetes k8s Docker] })
+      runner = described_class.new("deduplicate_concepts")
+
+      expect(runner.run(eval_case, llm, execution_context: execution_context)[:raw]).to eq(
+        "Kubernetes\nDocker",
+      )
+    end
   end
 end
