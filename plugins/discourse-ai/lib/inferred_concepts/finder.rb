@@ -8,29 +8,14 @@ module DiscourseAi
       def identify_concepts(content)
         return [] if content.blank?
 
-        # Use the ConceptFinder agent to identify concepts
-        agent =
-          AiAgent
-            .all_agents(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_generate_agent.to_i }
-            .new
+        candidates = CandidateRetriever.new.retrieve(content: content)
+        result = Classifier.new.classify(content, candidates: candidates, allow_new: true)
 
-        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
-        context =
-          DiscourseAi::Agents::BotContext.new(
-            messages: [{ type: :user, content: content }],
-            user: Discourse.system_user,
-            inferred_concepts: DiscourseAi::InferredConcepts::Manager.new.list_concepts,
-          )
+        by_id = candidates.index_by(&:id)
+        matched_names = result[:matches].filter_map { |match| by_id[match[:concept_id]]&.name }
+        proposed_names = result[:proposed_new].map { |entry| entry[:name] }
 
-        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
-        structured_output = nil
-
-        bot.reply(context) do |partial, _, type|
-          structured_output = partial if type == :structured_output
-        end
-
-        structured_output&.read_buffered_property(:concepts) || []
+        (matched_names + proposed_names).uniq
       end
 
       # Creates or finds concepts in the database from provided names
@@ -38,7 +23,23 @@ module DiscourseAi
       def create_or_find_concepts(concept_names)
         return [] if concept_names.blank?
 
-        concept_names.map { |name| InferredConcept.find_or_create_by(name: name) }
+        concept_names.filter_map do |name|
+          cleaned = name.to_s.strip
+          next if cleaned.blank?
+
+          existing = InferredConcept.by_name_or_alias(cleaned).first
+          next existing if existing
+
+          concept = InferredConcept.create!(name: cleaned)
+          if DiscourseAi::Embeddings.enabled?
+            Jobs.enqueue(
+              :generate_embeddings,
+              target_type: "InferredConcept",
+              target_id: concept.id,
+            )
+          end
+          concept
+        end
       end
 
       # Finds candidate topics to use for concept generation

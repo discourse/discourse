@@ -91,54 +91,28 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
       end
     end
 
-    it "schedules background matching jobs when enabled" do
+    it "enqueues a single classify pass per item type without duplicate delayed jobs" do
       SiteSetting.inferred_concepts_background_match = true
 
-      candidate_topics = [topic]
-      candidate_posts = [post]
+      expect_enqueued_with(
+        job: :generate_inferred_concepts,
+        args: {
+          item_type: "topics",
+          item_ids: [topic.id],
+          batch_size: 10,
+        },
+      ) do
+        expect_enqueued_with(
+          job: :generate_inferred_concepts,
+          args: {
+            item_type: "posts",
+            item_ids: [post.id],
+            batch_size: 10,
+          },
+        ) { job.execute({}) }
+      end
 
-      expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
-        :find_candidate_topics,
-      ).and_return(candidate_topics)
-      expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
-        :find_candidate_posts,
-      ).and_return(candidate_posts)
-
-      # Expect generation jobs
-      allow(Jobs).to receive(:enqueue).with(
-        :generate_inferred_concepts,
-        item_type: "topics",
-        item_ids: [topic.id],
-        batch_size: 10,
-      )
-
-      allow(Jobs).to receive(:enqueue).with(
-        :generate_inferred_concepts,
-        item_type: "posts",
-        item_ids: [post.id],
-        batch_size: 10,
-      )
-
-      # Expect background matching jobs
-      allow(Jobs).to receive(:enqueue_in).with(
-        1.hour,
-        :generate_inferred_concepts,
-        item_type: "topics",
-        item_ids: [topic.id],
-        batch_size: 10,
-        match_only: true,
-      )
-
-      allow(Jobs).to receive(:enqueue_in).with(
-        1.hour,
-        :generate_inferred_concepts,
-        item_type: "posts",
-        item_ids: [post.id],
-        batch_size: 10,
-        match_only: true,
-      )
-
-      job.execute({})
+      expect(Jobs::GenerateInferredConcepts.jobs.size).to eq(2)
     end
 
     it "does not schedule jobs when no candidates found" do
