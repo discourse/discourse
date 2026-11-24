@@ -972,6 +972,7 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_admin_tools: "Load administration tools"
         theme_app_handoff: "Checking how to build themes with an AI app"
         install_popular_theme: "Install theme"
         enable_mcp_theme_access: "Let AI apps build themes"
@@ -1041,6 +1042,7 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_admin_tools: "Load the administration tools needed for a request."
         theme_app_handoff: "Explain how to build themes with an AI app through the MCP server"
         install_popular_theme: "Install a ready-made theme maintained by Discourse without making it live"
         enable_mcp_theme_access: "Let AI apps build themes through the MCP server"
@@ -1109,6 +1111,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_admin_tools: "Loading administration tools"
         load_discourse_website_page: "Loaded the %{page_name} page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
