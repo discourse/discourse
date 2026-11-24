@@ -10,6 +10,7 @@ import type {
   AddTextOptions,
   AutocompleteHandler,
   AutocompleteOptions,
+  InsertBlockOptions,
   PlaceholderHandler,
   ReplaceTextOptions,
   SelectedText,
@@ -155,8 +156,8 @@ export default class TextareaTextManipulation implements TextManipulation {
     this.textarea.focus({ preventScroll: true });
   }
 
-  insertBlock(text: string): void {
-    this._addBlock(this.getSelected(), text);
+  insertBlock(text: string, options?: InsertBlockOptions): void {
+    this._addBlock(this.getSelected(), text, options);
   }
 
   insertText(text: string, options?: AddTextOptions): void {
@@ -1159,7 +1160,11 @@ export default class TextareaTextManipulation implements TextManipulation {
       .join("\n");
   }
 
-  _addBlock(sel: SelectedText, text: string): void {
+  _addBlock(
+    sel: SelectedText,
+    text: string,
+    options?: InsertBlockOptions
+  ): void {
     text = (text || "").trim();
     if (text.length === 0) {
       return;
@@ -1167,6 +1172,7 @@ export default class TextareaTextManipulation implements TextManipulation {
 
     let start = sel.start;
     let end = sel.end;
+    const firstLineEnd = text.indexOf("\n");
 
     const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
     if (newLinesBeforeSelection) {
@@ -1189,7 +1195,11 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
 
     this._insertAt(start, end, text);
-    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    const cursorOffset =
+      options?.moveCursorInside && firstLineEnd !== -1
+        ? (sel.pre.length > 0 ? 2 : 0) + firstLineEnd + 1
+        : text.length;
+    this.textarea.setSelectionRange(start + cursorOffset, start + cursorOffset);
     schedule("afterRender", this, this.blurAndFocus);
   }
 

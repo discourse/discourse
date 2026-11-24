@@ -3667,7 +3667,7 @@ en:
       more_emoji: "more…"
       options: "Options"
       ai_content:
-        menu: "Add AI content..."
+        menu: "Label AI content..."
         code: "Code"
         quote: "Quote"
         details: "Details"
