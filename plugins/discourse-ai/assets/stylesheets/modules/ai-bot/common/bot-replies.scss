@@ -48,6 +48,11 @@ article.streaming {
     .add-warning {
       display: none;
     }
+
+    // The recipients keep no room for the hidden warning.
+    .users-input.can-warn {
+      width: 100%;
+    }
   }
 }
 
