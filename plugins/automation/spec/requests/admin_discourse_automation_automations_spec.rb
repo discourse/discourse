@@ -60,7 +60,9 @@ describe DiscourseAutomation::AdminAutomationsController do
     after { DiscourseAutomation::Scriptable.remove(script) }
 
     context "when logged in as an admin" do
-      before { sign_in(Fabricate(:admin)) }
+      fab!(:admin)
+
+      before { sign_in(admin) }
 
       it "creates the 'forced triggerable' automation" do
         post "/admin/plugins/automation/automations.json",
@@ -103,7 +105,9 @@ describe DiscourseAutomation::AdminAutomationsController do
 
   describe "#update" do
     context "when logged in as an admin" do
-      before { sign_in(Fabricate(:admin)) }
+      fab!(:admin)
+
+      before { sign_in(admin) }
 
       it "updates the automation" do
         put "/admin/plugins/automation/automations/#{automation.id}.json",
@@ -386,7 +390,9 @@ describe DiscourseAutomation::AdminAutomationsController do
     fab!(:automation2) { Fabricate(:automation, name: "Second Automation") }
 
     context "when logged in as an admin" do
-      before { sign_in(Fabricate(:admin)) }
+      fab!(:admin)
+
+      before { sign_in(admin) }
 
       it "returns a list of automations" do
         get "/admin/plugins/automation/automations.json"
@@ -513,7 +519,9 @@ describe DiscourseAutomation::AdminAutomationsController do
     fab!(:automation)
 
     context "when logged in as an admin" do
-      before { sign_in(Fabricate(:admin)) }
+      fab!(:admin)
+
+      before { sign_in(admin) }
 
       it "destroys the automation" do
         delete "/admin/plugins/automation/automations/#{automation.id}.json"

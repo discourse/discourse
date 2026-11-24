@@ -4,6 +4,7 @@ class Users::AssociateAccountsController < ApplicationController
   SERVER_SESSION_PREFIX = "omniauth_reconnect"
 
   before_action :ensure_logged_in
+  before_action { guardian.ensure_can_issue_independent_credentials! }
 
   def connect_info
     account_description = authenticator.description_for_auth_hash(auth_hash)

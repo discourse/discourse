@@ -18,6 +18,7 @@ class Blog::BlogTheme::Activate
   lock do
     transaction do
       model :theme
+      policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
       policy :revision_is_current, class_name: Blog::BlogTheme::Policy::RevisionIsCurrent
       model :active_theme, :activate_theme
       step :prune_snapshots

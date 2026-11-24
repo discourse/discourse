@@ -5,15 +5,17 @@ module ::Blog
   module ManagedCategories
     MAX_NAME_ATTEMPTS = 10
 
-    def self.editorial_group_ids
-      (
-        SiteSetting.blog_contributor_groups_map + SiteSetting.blog_editor_groups_map +
-          SiteSetting.blog_publisher_groups_map
-      ).uniq
+    def self.drafts_permissions
+      existing_group_ids(Roles.editorial_group_ids).index_with do
+        CategoryGroup.permission_types[:full]
+      end
     end
 
-    def self.drafts_permissions
-      existing_group_ids(editorial_group_ids).index_with { CategoryGroup.permission_types[:full] }
+    def self.sync_role_access
+      Instance.category_ids.each do |category_id|
+        AddPublishersToPublicCategory.call(params: { category_id: })
+      end
+      EnsureDraftsCategory.call(options: { create_missing: false })
     end
 
     def self.drafts_permissions_current?(category)
@@ -40,7 +42,7 @@ module ::Blog
     end
 
     def self.publisher_group_ids
-      existing_group_ids(SiteSetting.blog_publisher_groups_map)
+      existing_group_ids(Roles.publisher_group_ids)
     end
 
     # The default blog's category predates blog names, so it keeps its own name.

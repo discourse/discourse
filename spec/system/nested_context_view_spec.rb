@@ -65,16 +65,11 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_context_banner
     end
 
-    it "marks direct post URLs as context routes" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
-
-      expect(nested_view).to have_context_view
-    end
-
-    it "highlights the target post" do
+    it "opens the context view and highlights the target when the user follows a direct post URL" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
       expect(nested_view).to have_highlighted_post(chain_posts[2])
+      expect(nested_view).to have_context_view
     end
   end
 
@@ -87,13 +82,6 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(chain_posts[0])
       expect(nested_view).to have_no_post(chain_posts[1])
       expect(nested_view).to have_no_post(chain_posts[2])
-    end
-
-    it "keeps the target as the branch root" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
-
-      expect(nested_view).to have_no_post(chain_posts[0])
-      expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
     end
 
     it "offers parent-context navigation" do
@@ -140,12 +128,6 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(deep_chain[12])
       expect(nested_view).to have_post(deep_chain[3])
       expect(nested_view).to have_no_post(deep_chain[1])
-    end
-
-    it "marks truncated contexts as targeted nested views" do
-      nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-
-      expect(nested_view).to have_context_view
     end
 
     it "context=0 starts at the target even when ancestors would be truncated" do

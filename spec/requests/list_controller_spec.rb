@@ -770,7 +770,7 @@ RSpec.describe ListController do
     end
 
     describe "when user not in personal_message_enabled_groups group" do
-      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+      fab!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
@@ -873,17 +873,11 @@ RSpec.describe ListController do
   end
 
   describe "#group_topics" do
-    %i[user user2].each do |user|
-      let(user) do
-        user = Fabricate(:user)
-        group.add(user)
-        user
-      end
-    end
-
-    let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user2) }
-    let!(:another_topic) { Fabricate(:topic) }
+    fab!(:group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:other_group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:topic) { Fabricate(:topic, user: group_member) }
+    fab!(:topic2) { Fabricate(:topic, user: other_group_member) }
+    fab!(:another_topic, :topic)
 
     describe "when an invalid group name is given" do
       it "returns the expected response" do
@@ -961,7 +955,7 @@ RSpec.describe ListController do
     end
 
     describe "for a group user" do
-      before { sign_in(user) }
+      before { sign_in(group_member) }
 
       it "allows viewing topics started by group members" do
         get "/topics/groups/#{group.name}.json"

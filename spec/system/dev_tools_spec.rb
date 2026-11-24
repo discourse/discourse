@@ -48,12 +48,13 @@ describe "Discourse dev tools" do
   end
 
   describe "plugin outlet debugging" do
-    it "shows plugin outlet overlays with tooltips" do
+    it "shows plugin outlet overlays with tooltips and a wrapper outlet indicator" do
       visit("/latest")
       toolbar.enable
       toolbar.toggle_plugin_outlets
 
       expect(plugin_outlet_debug).to have_outlets(minimum: 10)
+      expect(plugin_outlet_debug).to have_wrapper_outlet
 
       plugin_outlet_debug.hover_outlet("home-logo-contents__before")
       expect(plugin_outlet_debug).to have_tooltip
@@ -63,14 +64,6 @@ describe "Discourse dev tools" do
 
       toolbar.toggle_plugin_outlets
       expect(plugin_outlet_debug).to have_no_outlets
-    end
-
-    it "shows wrapper outlet indicator" do
-      visit("/latest")
-      toolbar.enable
-      toolbar.toggle_plugin_outlets
-
-      expect(plugin_outlet_debug).to have_wrapper_outlet
     end
   end
 
@@ -119,7 +112,7 @@ describe "Discourse dev tools" do
         expect(block_debug).to have_outlet_block_count(23)
       end
 
-      it "shows ghost blocks for failed conditions" do
+      it "shows the failed user condition in the conditional block's ghost tooltip" do
         visit("/latest") # Anonymous user, admin condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
@@ -128,24 +121,19 @@ describe "Discourse dev tools" do
         block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
         expect(block_debug).to have_ghost_tooltip
         expect(block_debug).to have_conditions
-      end
-
-      it "shows conditions as failed with condition type" do
-        visit("/latest") # Anonymous user, admin condition fails
-        toolbar.enable
-        toolbar.toggle_ghost_blocks
-
-        block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
         expect(block_debug).to have_failed_conditions
         expect(block_debug).to have_condition_type("user")
       end
 
-      it "shows multiple condition types for combined conditions" do
+      it "shows the failed combined conditions in the ghost block's tooltip" do
         visit("/latest") # Anonymous user, admin + TL2 condition fails
         toolbar.enable
         toolbar.toggle_ghost_blocks
 
+        expect(block_debug).to have_ghost_block("theme:dev-tools-test:debug-conditions-block")
         block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
+        expect(block_debug).to have_ghost_tooltip
+        expect(block_debug).to have_conditions
         expect(block_debug).to have_failed_conditions
         expect(block_debug).to have_condition_type("AND")
         expect(block_debug).to have_condition_type("user")
@@ -162,17 +150,6 @@ describe "Discourse dev tools" do
         expect(block_debug).to have_block_arg(key: "title")
         expect(block_debug).to have_block_arg(key: "count")
         expect(block_debug).to have_block_arg(key: "enabled")
-      end
-
-      it "shows ghost blocks with combined conditions" do
-        visit("/latest") # Anonymous user, admin + TL2 condition fails
-        toolbar.enable
-        toolbar.toggle_ghost_blocks
-
-        expect(block_debug).to have_ghost_block("theme:dev-tools-test:debug-conditions-block")
-        block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
-        expect(block_debug).to have_ghost_tooltip
-        expect(block_debug).to have_conditions
       end
 
       it "shows nested ghost blocks for groups with all children hidden (4 levels deep)" do

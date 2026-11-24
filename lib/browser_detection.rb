@@ -1,33 +1,59 @@
 # frozen_string_literal: true
 
 module BrowserDetection
+  EDGE_REGEXP = /Edg/i
+  OPERA_REGEXP = /Opera|OPR/i
+  SAMSUNG_BROWSER_REGEXP = %r{SamsungBrowser/}i
+  UC_BROWSER_REGEXP = %r{(?:UCBrowser|UC Browser)[/ ]}i
+  QQ_BROWSER_REGEXP = %r{(?:MQQBrowser|QQBrowser)/}i
+  BAIDU_BROWSER_REGEXP = %r{(?:BIDUBrowser|BaiduBrowser)/}i
+  KAIOS_BROWSER_REGEXP = %r{KaiOS/}i
+  IE_REGEXP = /MSIE|Trident|IEMobile/i
+  FIREFOX_REGEXP = /Firefox|FxiOS/i
+  CHROME_REGEXP = /Chrome|CriOS/i
+  ANDROID_BROWSER_REGEXP = %r{Android.+Version/[\d.]+.+Safari/}i
+  SAFARI_REGEXP = /Safari/i
+  DISCOURSE_REGEXP = /Discourse/i
+
+  ANDROID_REGEXP = /Android/i
+  CROS_REGEXP = /CrOS/i
+  IPAD_REGEXP = /iPad/i
+  IPHONE_REGEXP = /iPhone/i
+  IPOD_REGEXP = /iPod/i
+  MOBILE_REGEXP = /Mobile/i
+  MAC_REGEXP = /Macintosh/i
+  LINUX_REGEXP = /Linux/i
+  WINDOWS_REGEXP = /Windows/i
+  IOS_REGEXP = /iPhone|iPad|iPod|Darwin/i
+
   def self.browser(user_agent)
-    case user_agent
-    when /Edg/i
+    return :unknown if !user_agent
+
+    if EDGE_REGEXP.match?(user_agent)
       :edge
-    when /Opera/i, /OPR/i
+    elsif OPERA_REGEXP.match?(user_agent)
       :opera
-    when %r{SamsungBrowser/}i
+    elsif SAMSUNG_BROWSER_REGEXP.match?(user_agent)
       :samsung_browser
-    when %r{(?:UCBrowser|UC Browser)[/ ]}i
+    elsif UC_BROWSER_REGEXP.match?(user_agent)
       :uc_browser
-    when %r{(?:MQQBrowser|QQBrowser)/}i
+    elsif QQ_BROWSER_REGEXP.match?(user_agent)
       :qq_browser
-    when %r{(?:BIDUBrowser|BaiduBrowser)/}i
+    elsif BAIDU_BROWSER_REGEXP.match?(user_agent)
       :baidu_browser
-    when %r{KaiOS/}i
+    elsif KAIOS_BROWSER_REGEXP.match?(user_agent)
       :kaios_browser
-    when /MSIE|Trident|IEMobile/i
+    elsif IE_REGEXP.match?(user_agent)
       :ie
-    when /Firefox/i, /FxiOS/i
+    elsif FIREFOX_REGEXP.match?(user_agent)
       :firefox
-    when /Chrome/i, /CriOS/i
+    elsif CHROME_REGEXP.match?(user_agent)
       :chrome
-    when %r{Android.+Version/[\d.]+.+Safari/}i
+    elsif ANDROID_BROWSER_REGEXP.match?(user_agent)
       :android_browser
-    when /Safari/i
+    elsif SAFARI_REGEXP.match?(user_agent)
       :safari
-    when /Discourse/i
+    elsif DISCOURSE_REGEXP.match?(user_agent)
       :discoursehub
     else
       :unknown
@@ -35,24 +61,25 @@ module BrowserDetection
   end
 
   def self.device(user_agent)
-    case user_agent
-    when /Android/i
+    return :unknown if !user_agent
+
+    if ANDROID_REGEXP.match?(user_agent)
       :android
-    when /CrOS/i
+    elsif CROS_REGEXP.match?(user_agent)
       :chromebook
-    when /iPad/i
+    elsif IPAD_REGEXP.match?(user_agent)
       :ipad
-    when /iPhone/i
+    elsif IPHONE_REGEXP.match?(user_agent)
       :iphone
-    when /iPod/i
+    elsif IPOD_REGEXP.match?(user_agent)
       :ipod
-    when /Mobile/i
+    elsif MOBILE_REGEXP.match?(user_agent)
       :mobile
-    when /Macintosh/i
+    elsif MAC_REGEXP.match?(user_agent)
       :mac
-    when /Linux/i
+    elsif LINUX_REGEXP.match?(user_agent)
       :linux
-    when /Windows/i
+    elsif WINDOWS_REGEXP.match?(user_agent)
       :windows
     else
       :unknown
@@ -60,18 +87,19 @@ module BrowserDetection
   end
 
   def self.os(user_agent)
-    case user_agent
-    when /Android/i
+    return :unknown if !user_agent
+
+    if ANDROID_REGEXP.match?(user_agent)
       :android
-    when /CrOS/i
+    elsif CROS_REGEXP.match?(user_agent)
       :chromeos
-    when /iPhone|iPad|iPod|Darwin/i
+    elsif IOS_REGEXP.match?(user_agent)
       :ios
-    when /Macintosh/i
+    elsif MAC_REGEXP.match?(user_agent)
       :macos
-    when /Linux/i
+    elsif LINUX_REGEXP.match?(user_agent)
       :linux
-    when /Windows/i
+    elsif WINDOWS_REGEXP.match?(user_agent)
       :windows
     else
       :unknown

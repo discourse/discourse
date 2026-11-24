@@ -40,6 +40,14 @@ module DiscourseAi
         format_link(topic.title, topic.url)
       end
 
+      # Approval cards are cooked as the bot user, which can't resolve hashtags
+      # for categories it can't see, so private categories are linked by name.
+      def self.format_category(category)
+        return "##{category.slug_ref}::category" if !category.read_restricted
+
+        format_link(category.name, category.url)
+      end
+
       def self.format_link(text, url)
         title = CGI.escapeHTML(text).gsub(/[\\`*_\[\]]/) { |character| "\\#{character}" }
         "[#{title}](#{url})"

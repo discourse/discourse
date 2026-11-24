@@ -6,12 +6,18 @@ class UserAuthTokenSerializer < ApplicationSerializer
   attributes :seen_at
   attributes :is_active
 
+  def id
+    object[:device_id] || object.id
+  end
+
   def include_is_active?
     scope && scope.request
   end
 
   def is_active
-    scope.auth_token == object.auth_token
+    return object.current_device if object.has_attribute?(:current_device)
+
+    scope.auth_token_id == object.id
   end
 
   def seen_at

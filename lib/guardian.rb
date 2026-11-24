@@ -669,6 +669,14 @@ class Guardian
     !SiteSetting.login_required? || authenticated?
   end
 
+  def auth_token_id
+    request&.env&.dig(Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY)&.id
+  end
+
+  def current_login_id
+    request&.env&.dig(Auth::DefaultCurrentUserProvider::BROWSER_LOGIN_ID)
+  end
+
   def auth_token
     return if !request
 

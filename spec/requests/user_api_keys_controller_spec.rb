@@ -466,6 +466,25 @@ RSpec.describe UserApiKeysController do
       user
     end
 
+    it "does not bind or authorize a pending device request as a shadow" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:everyone].to_s
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      body = create_pending_device_request
+      sign_in_and_switch_to_anonymous_mode(master)
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+      expect(response.parsed_body["no_trust_level"]).to eq(true)
+      expect(response.parsed_body["approval_token"]).to be_nil
+
+      post "/user-api-key/device/authorize.json", params: { code: body["user_code"] }
+      expect(response.status).to eq(403)
+      expect(UserApiKey.where(user_id: master.shadow_user.id)).to be_empty
+
+      post "/u/toggle-anon.json"
+      post "/user-api-key/activate.json", params: { code: body["user_code"] }
+      expect(response.parsed_body["approval_token"]).to be_present
+    end
+
     it "creates a pending request" do
       freeze_time
 
@@ -1028,6 +1047,53 @@ RSpec.describe UserApiKeysController do
     end
   end
 
+  describe "#undo_revoke" do
+    it "lets a user restore their own key" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      sign_in(key.user)
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).to be_nil
+    end
+
+    it "lets an admin restore an ordinary user's key" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(200)
+      expect(key.reload.revoked_at).to be_nil
+    end
+
+    it "does not restore a key whose owner no longer exists" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      key.user.delete
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+
+    it "keeps an orphaned shadow's key revoked even when an admin requests restoration" do
+      master = Fabricate(:user)
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: master, active: false)
+      key = Fabricate(:readonly_user_api_key, user: shadow, revoked_at: 1.day.ago)
+      master.destroy!
+      sign_in(Fabricate(:admin))
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+  end
+
   describe "#otp" do
     it "includes padding parameter in the model only when provided" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
@@ -1080,6 +1146,18 @@ RSpec.describe UserApiKeysController do
   end
 
   describe "#create_otp" do
+    it "denies an OTP to a shadow even when its group may request one" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:logged_in_users].to_s
+      SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
+      sign_in_and_switch_to_anonymous_mode(Fabricate(:user, trust_level: TrustLevel[1]))
+
+      post "/user-api-key/otp.json", params: otp_args
+
+      expect(response.status).to eq(403)
+      expect(response.parsed_body).not_to have_key("redirect_url")
+    end
+
     it "does not allow anon" do
       post "/user-api-key/otp", params: otp_args
       expect(response.status).to eq(403)

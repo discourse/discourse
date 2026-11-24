@@ -8,7 +8,7 @@ RSpec.describe Jobs::DeliverUntrustedPushNotifications do
 
   def subscribe(subscriber, endpoint)
     Fabricate(
-      :push_subscription,
+      :bound_push_subscription,
       user: subscriber,
       data: { endpoint: endpoint, keys: { p256dh: "p256dh", auth: "auth" } }.to_json,
     )
@@ -45,6 +45,22 @@ RSpec.describe Jobs::DeliverUntrustedPushNotifications do
         "https://push.example.org/user",
         "https://push.example.org/other",
       )
+    end
+
+    it "skips queued confirmations for orphaned and unbound subscriptions" do
+      orphan = subscribe(user, "https://push.example.org/revoked")
+      legacy = subscribe(user, "https://push.example.org/legacy")
+      legacy.update!(user_auth_token_id: nil)
+      delivered = track_deliveries
+      described_class.add(user_id: user.id, message: message, subscription_id: orphan.id)
+      described_class.add(user_id: user.id, message: message, subscription_id: legacy.id)
+      described_class.add(user_id: user.id, message: message)
+      UserAuthToken.where(id: orphan.user_auth_token_id).delete_all
+      expect(orphan.reload.user_auth_token_id).to be_present
+
+      described_class.new.execute({})
+
+      expect(delivered).to contain_exactly("https://push.example.org/user")
     end
 
     it "leaves the queue to the job holding this site's lock" do

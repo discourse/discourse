@@ -36,6 +36,9 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
     end
 
     it "loads multiple groups without exposing unrelated tools" do
+      topic = Fabricate(:private_message_topic, user: admin, recipient: Discourse.system_user)
+      context.topic_id = topic.id
+      context.private_message = true
       prompt = assistant.craft_prompt(context)
       initial_tools = prompt.tools.map(&:name)
 

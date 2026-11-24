@@ -28,10 +28,7 @@ module ::Blog
     end
 
     def self.editorial_group_ids
-      (
-        Group::AUTO_GROUPS.values_at(:admins, :moderators, :staff) +
-          ManagedCategories.editorial_group_ids
-      ).uniq
+      (Group::AUTO_GROUPS.values_at(:admins, :moderators, :staff) + Roles.editorial_group_ids).uniq
     end
     private_class_method :editorial_group_ids
 

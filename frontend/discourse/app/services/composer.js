@@ -563,10 +563,10 @@ export default class ComposerService extends Service {
             {
               name: "ai-content-code",
               action: () => {
-                const placeholder = i18n("composer.ai_content.placeholder");
                 this.appEvents.trigger(
                   "composer:insert-block",
-                  `\`\`\` ai\n// ${placeholder}\n\`\`\``
+                  "``` ai\n\n```",
+                  { moveCursorInside: true }
                 );
               },
               icon: "code",

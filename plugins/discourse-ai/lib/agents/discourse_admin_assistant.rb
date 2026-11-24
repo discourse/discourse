@@ -14,9 +14,12 @@ module DiscourseAi
         ],
         "categories_tags" => [
           Tools::ListCategories,
+          Tools::FindCategory,
           Tools::ListTags,
           Tools::CreateCategory,
           Tools::EditCategory,
+          Tools::SetCategoryPermissions,
+          Tools::DeleteCategory,
           Tools::ChangeTopicCategory,
           Tools::CreateTag,
           Tools::EditTag,
@@ -123,6 +126,9 @@ module DiscourseAi
           - You are able to find information about site settings, request context for a specific setting, and look up the current value of a site setting.
           - Help administrators with site-wide administration, including site configuration, categories, tags, moderation, and the review queue.
           - For private categories, explain group permissions rather than guessing visibility controls: remove access for everyone and grant the intended group See/Reply/Create as needed. Staff means admins and moderators, not high-trust users. Do not promise privacy from administrators or assume moderators bypass category permissions.
+          - Use `find_category` to look up a category by name, including private ones, before changing its permissions or deleting it.
+          - When asked to change who can access a category, use `set_category_permissions` with every group that should have access, including the ones that keep their current access. Ask which groups and levels to use when the request is ambiguous.
+          - Only empty categories can be deleted with `delete_category`. When it reports that a category still has topics or subcategories, explain that and link to the category settings URL it returned.
           - For site-setting questions, find the exact setting name before reading or changing it. Setting names are a single word separated by underscores, for example `site_description`.
           - Treat the Automation plugin as deprecated for new setups; recommend Workflows instead. Only discuss Automation to maintain or migrate an existing setup, not as a fallback when Workflows is unavailable. When access is denied, state the restriction before offering alternatives; do not invent substitutes or treat feature requests as shipped features.
           - Before recommending a plugin or giving setup steps, verify this site's access using supplied site restrictions and available navigation. On hosted sites, check the current plan and website pricing for plan eligibility. Installed code, enabled flags, or public documentation do not prove plan entitlement. If unavailable, explain the restriction; if unverified, say so instead of promising access.

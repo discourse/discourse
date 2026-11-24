@@ -115,6 +115,11 @@ published.
 - The hidden `blog_max_instances` setting (default 10) caps how many blogs a site
   may have, so a host can lower it per plan. Existing blogs keep working when a
   site is over its limit; only adding is refused.
+- The hidden `blog_role_groups_enabled` setting (on by default) lets a site choose
+  which groups hold the contributor, editor and publisher roles. A host can turn it
+  off per plan: staff then hold all three roles whatever groups are saved, the drafts
+  category is limited to staff within the hour, and the saved groups take effect
+  again when the setting is turned back on.
 
 Enabling the blog claims `/blog` in both modes. A theme or plugin that already
 serves its own page under `/blog` stops receiving those requests.
@@ -245,6 +250,12 @@ Open **Admin → Plugins → Blog**. **Themes** lists the included designs, then
 saved drafts, and badges the one currently shown to readers; **Blogs** lists each blog, whose About tab holds its name, tagline, and About
 content and whose Theme tab picks its design. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
+
+The hidden `blog_custom_themes_enabled` setting (on by default) lets a host offer
+custom themes only on some plans. With it off, a site keeps to the included designs
+as shipped: creating, customizing, importing, pulling and previewing unsaved edits
+are refused, and so is activating a custom theme. A blog already showing a custom
+theme keeps it, and existing themes can still be exported or deleted.
 
 Included designs are the built-in **Default** and each folder under `branding/`
 with a `blog-theme.json`. They are read-only: activating one stores only its id,
