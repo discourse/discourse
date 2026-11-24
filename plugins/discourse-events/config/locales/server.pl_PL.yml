@@ -73,6 +73,7 @@ pl_PL:
     discourse_post_event_allowed_custom_fields_invalid: "Te nazwy pól niestandardowych są nieprawidłowe: %{names}. Nazwy muszą zaczynać się i kończyć literą lub cyfrą, a jako separatory należy używać kropek, myślników lub podkreśleń (na przykład: dress_code, live-stream, q.and.a)."
     discourse_post_event_allowed_custom_fields_collision: "Te niestandardowe nazwy pól odpowiadają tej samej nazwie po znormalizowaniu kropek, myślników i wielkości liter: %{names}. Każde pole niestandardowe musi być unikatowe."
     discourse_post_event_allowed_custom_fields_reserved: "Te niestandardowe nazwy pól są zarezerwowane przez wbudowane opcje zdarzeń (na przykład nazwa, adres URL, status, lokalizacja): %{names}. Wybierz inne nazwy."
+    discourse_post_event_max_attendees_limit: "Maksymalna liczba uczestników, którzy potwierdzili udział w wydarzeniu. Jest to również najwyższa wartość maksymalnej liczby uczestników, jaką może ustawić organizator wydarzenia, i dotyczy to również wydarzeń, w których nie ustalono tej wartości."
     discourse_post_event_edit_notifications_time_extension: "Wydłuża (w minutach) okres po zakończeniu wydarzenia, w którym osoby zaproszone są nadal powiadamiane o edycji w oryginalnym poście."
     holiday_calendar_topic_id: "Identyfikator tematu kalendarza świąt/nieobecności personelu."
     holiday_status_emoji: Określa emoji używane dla statusu świąt.
@@ -217,6 +218,17 @@ pl_PL:
           recurrence_until_must_be_a_valid_date: "Data zakończenia powtarzania musi być prawidłową datą."
           invalid_max_attendees: "Maksymalna liczba uczestników musi być liczbą z przedziału od 1 do %{maximum}."
           invalid_reminders: "Nieprawidłowe przypomnienia: %{reminders}."
+          too_many_reminders:
+            notification:
+              one: "Zdarzenie może mieć maksymalnie %{count} przypomnienie o powiadomieniu."
+              few: "Zdarzenie może mieć maksymalnie %{count} przypomnienia o powiadomieniu."
+              many: "Zdarzenie może mieć maksymalnie %{count} przypomnień o powiadomieniu."
+              other: "Zdarzenie może mieć maksymalnie %{count} przypomnień o powiadomieniu."
+            bump_topic:
+              one: "Zdarzenie może mieć maksymalnie %{count} przypomnienie o podbiciu tematu."
+              few: "Zdarzenie może mieć maksymalnie %{count} przypomnienia o podbiciu tematu."
+              many: "Zdarzenie może mieć maksymalnie %{count} przypomnień o podbiciu tematu."
+              other: "Zdarzenie może mieć maksymalnie %{count} przypomnień o podbiciu tematu."
           invalid_recurrence: "Powtarzalność musi być jedną z następujących wartości: %{recurrences}."
           invalid_timezone: "Strefa czasowa nie została rozpoznana."
           invalid_url: "Adres URL musi być prawidłowym adresem internetowym."

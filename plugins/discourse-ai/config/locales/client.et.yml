@@ -38,6 +38,12 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      review_bulk:
+        refresh: "Värskenda"
+        columns:
+          user: "Kasutaja"
+          created: "Loodud"
+          status: "Staatus"
       copied: "Kopeeritud"
       ai_decoded_transcript:
         type: "Tüüp"

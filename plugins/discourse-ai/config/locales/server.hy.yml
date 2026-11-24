@@ -50,6 +50,8 @@ hy:
           color: "գույն"
         approve_label: "Այո"
         reject_label: "Ոչ"
+        category_access_levels:
+          readonly: "Դիտել"
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"
@@ -68,6 +70,12 @@ hy:
         errors:
           not_found: "Թեման չի գտնվել."
       edit_category:
+        errors:
+          not_found: "Կատեգորիան չի գտնվել."
+      set_category_permissions:
+        errors:
+          not_found: "Կատեգորիան չի գտնվել."
+      delete_category:
         errors:
           not_found: "Կատեգորիան չի գտնվել."
       change_topic_category:

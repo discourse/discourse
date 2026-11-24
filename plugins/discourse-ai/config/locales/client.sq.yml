@@ -37,6 +37,12 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      review_bulk:
+        refresh: "Rifresko"
+        columns:
+          user: "User"
+          created: "Krijuar"
+          status: "Status"
       copied: "Kopjuar"
       ai_decoded_transcript:
         type: "Lloji"

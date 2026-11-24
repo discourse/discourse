@@ -13,6 +13,14 @@ bg:
         preview_archive: Архив
         mobile: Мобилен
         save: Запази
+        about_tab: Относно
+        blog_slug: Slug
+        general_heading: Основни
+        settings_tab: Настройки
+        theme_tab: Тема
+        column_name: Име
+        column_category: Категория
+        column_status: Статус
         path_formats:
           custom: По избор
         edit: Редактирай

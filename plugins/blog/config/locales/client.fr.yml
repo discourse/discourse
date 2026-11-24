@@ -17,6 +17,16 @@ fr:
         desktop: Ordinateur
         mobile: Mobile
         save: Enregistrer
+        about_tab: À propos
+        blog_slug: Identifiant
+        general_heading: Général
+        settings_tab: Paramètres
+        theme_tab: Thème
+        column_name: Nom
+        column_category: Catégorie
+        column_status: Statut
+        needs_attention: Nécessite une attention particulière
+        select_theme: Sélectionner un thème
         path_formats:
           custom: Personnalisé
         back_to_themes: Retour aux thèmes

@@ -13,6 +13,14 @@ te:
         desktop: డెస్క్‌టాప్
         mobile: మొబైల్
         save: సేవ్ చేయండి
+        about_tab: మా సంఘం గురించి
+        blog_slug: స్లగ్
+        general_heading: సాధారణ
+        settings_tab: అమరికలు
+        theme_tab: థీమ్
+        column_name: పేరు
+        column_category: వర్గం
+        column_status: స్థితి
         path_formats:
           custom: అనురూప
         themes: థీమ్స్

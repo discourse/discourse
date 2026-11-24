@@ -48,6 +48,13 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      review_bulk:
+        refresh: "Aktualizovat"
+        columns:
+          user: "Uživatel"
+          reason: "Nahlášeno jako"
+          created: "Vytvořený"
+          status: "Stav"
       dsa_classification:
         suggest: "Navrhnout s AI"
       copied: "Zkopírováno"

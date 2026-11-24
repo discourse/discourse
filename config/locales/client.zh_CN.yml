@@ -3279,7 +3279,6 @@ zh_CN:
       more_emoji: "更多…"
       options: "选项"
       ai_content:
-        menu: "添加 AI 生成内容..."
         code: "代码"
         quote: "引用"
         details: "详细信息"
