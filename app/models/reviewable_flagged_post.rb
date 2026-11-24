@@ -334,8 +334,9 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_agree_and_hide(performed_by, args)
+    moderation = moderation_action(performed_by:, args:)
     agree(performed_by, args) do |action|
-      moderation_action(performed_by:, args:).hide(post_action_type_id: action.post_action_type_id)
+      moderation.hide(post_action_type_id: action.post_action_type_id)
     end
   end
 
@@ -391,27 +392,31 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
+    moderation = moderation_action(performed_by:, args:)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    moderation_action(performed_by:, args:).delete
+    moderation.delete
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
+    moderation = moderation_action(performed_by:, args:)
     result = perform_ignore_and_do_nothing(performed_by, args)
-    moderation_action(performed_by:, args:).delete_with_replies
+    moderation.delete_with_replies
 
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
+    moderation = moderation_action(performed_by:, args:)
     result = agree(performed_by, args)
-    moderation_action(performed_by:, args:).delete
+    moderation.delete
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
+    moderation = moderation_action(performed_by:, args:)
     result = agree(performed_by, args)
-    moderation_action(performed_by:, args:).delete_with_replies
+    moderation.delete_with_replies
     result
   end
 

@@ -1,0 +1,657 @@
+# frozen_string_literal: true
+
+RSpec.describe ModerationNotice do
+  fab!(:moderator)
+  fab!(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:author) { Fabricate(:user, refresh_auto_groups: true) }
+
+  before do
+    SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
+    SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true
+    SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
+    Jobs::SendSystemMessage.clear
+  end
+
+  describe "notices from review actions" do
+    shared_examples "notice source attribution" do |action:, source:, dsa_enabled:|
+      it "describes #{source} detection for #{action} with DSA #{dsa_enabled ? "enabled" : "disabled"}" do
+        rule = {
+          "ground" => "Terms, section 3",
+          "explanation" => "Personal attacks are prohibited.",
+        }
+        enable_dsa_reporting(community_rules: [rule]) if dsa_enabled
+        post = Fabricate(:post, user: author)
+        reply =
+          PostCreator.create(
+            Fabricate(:user),
+            topic_id: post.topic_id,
+            reply_to_post_number: post.post_number,
+            raw: "This is a reply to the flagged post.",
+          )
+        post.update!(reply_count: 1)
+        reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+        if source != :community
+          reviewable.reviewable_scores.first.update!(
+            user_id: Discourse::SYSTEM_USER_ID,
+            reason: "watched_word",
+          )
+        end
+        if source == :mixed
+          PostActionCreator.inappropriate(Fabricate(:user, refresh_auto_groups: true), post)
+        end
+        Jobs::SendSystemMessage.clear
+
+        reviewable.perform(
+          moderator,
+          action,
+          dsa_classification: {
+            community_rule: rule,
+            category: DsaStatementOfRecord::TERMS_VIOLATION_CATEGORY,
+          },
+        )
+        jobs = Jobs::SendSystemMessage.jobs.map { |job| job["args"].first.deep_symbolize_keys }
+        jobs.each { |args| Jobs::SendSystemMessage.new.execute(args) }
+
+        notices =
+          Post.where(topic_id: Topic.private_messages.select(:id)).order(:id).last(jobs.size)
+        expected_detection = source == :automated ? "an automated flag" : "flags from the community"
+        expect(notices).to be_present
+        notices.each do |notice|
+          if action == :agree_and_hide
+            expect(notice.raw).to include("hidden by a moderator due to")
+            expect(notice.topic.title).to eq(
+              (
+                if source == :automated
+                  "Post hidden by an automated flag"
+                else
+                  "Post hidden by community flags"
+                end
+              ),
+            )
+          else
+            expect(notice.raw).to include("a staff member opted to remove it.")
+            expect(notice.topic.title).to eq(
+              (
+                if notice.topic.allowed_users.exists?(id: author.id)
+                  "Flagged post removed by staff"
+                else
+                  "Reply removed from flagged post by staff"
+                end
+              ),
+            )
+          end
+          expect(notice.raw).to include(
+            (
+              if action == :agree_and_hide
+                expected_detection
+              else
+                "This post was flagged #{source == :automated ? "automatically" : "by the community"} and a staff member opted to remove it."
+              end
+            ),
+          )
+          expect(notice.raw).to include("an automated check indicates") if source == :automated
+          expect(notice.raw).to include("the community feels") if source != :automated
+          if dsa_enabled
+            expect(notice.raw).to include("To appeal this decision, contact appeals@example.com")
+            expect(notice.raw).to include(rule["ground"], rule["explanation"])
+          else
+            expect(notice.raw).not_to include(rule["ground"])
+          end
+        end
+        expect(jobs.size).to eq(action.to_s.end_with?("_replies") ? 2 : 1)
+        expect(reply.reload.deleted_at).to be_present if action.to_s.end_with?("_replies")
+      end
+    end
+
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :community,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :community,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :automated,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :automated,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :mixed,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :agree_and_hide,
+                     source: :mixed,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :community,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :community,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :automated,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :automated,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :mixed,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree,
+                     source: :mixed,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :community,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :community,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :automated,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :automated,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :mixed,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore,
+                     source: :mixed,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :community,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :community,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :automated,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :automated,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :mixed,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_agree_replies,
+                     source: :mixed,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :community,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :community,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :automated,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :automated,
+                     dsa_enabled: true
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :mixed,
+                     dsa_enabled: false
+    include_examples "notice source attribution",
+                     action: :delete_and_ignore_replies,
+                     source: :mixed,
+                     dsa_enabled: true
+
+    it "identifies an authorized category moderator and the automated source" do
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      category_moderator = Fabricate(:user, refresh_auto_groups: true)
+      group.add(category_moderator)
+      category = Fabricate(:category)
+      Fabricate(:category_moderation_group, category:, group:)
+      post = Fabricate(:post, user: author, topic: Fabricate(:topic, category:))
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+
+      reviewable.perform(category_moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include(
+        "This post was hidden by a moderator due to an automated flag",
+      )
+    end
+
+    it "retains community attribution when a custom community flag contributes" do
+      custom_flag = Fabricate(:flag, name: "Custom community flag", notify_type: true)
+      post = Fabricate(:post, user: author)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+      PostActionCreator.new(
+        Fabricate(:user, refresh_auto_groups: true),
+        post,
+        custom_flag.id,
+      ).perform
+
+      reviewable.perform(moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("hidden by a moderator due to flags from the community")
+      expect(Post.last.topic.title).to eq("Post hidden by community flags")
+    end
+
+    it "identifies an automated check when a moderator hides a post again" do
+      post = Fabricate(:post, user: author, hidden_at: 1.day.ago)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+
+      reviewable.perform(moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include(
+        "An automated check flagged this post and a moderator hid it.",
+      )
+      expect(Post.last.topic.title).to eq("Post hidden by an automated flag, staff notified")
+    end
+
+    it "keeps notice wording independent of DSA classification" do
+      enable_dsa_reporting
+      notices =
+        [
+          nil,
+          {
+            community_rule: {
+              "ground" => "Terms, section 3",
+              "explanation" => "Personal attacks are prohibited.",
+            },
+            category: "STATEMENT_CATEGORY_DATA_PROTECTION_AND_PRIVACY_VIOLATIONS",
+          },
+        ].map do |classification|
+          post = Fabricate(:post, user: author)
+          reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+          reviewable.perform(moderator, :agree_and_hide, dsa_classification: classification)
+          args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+          Jobs::SendSystemMessage.new.execute(args)
+
+          expect(DsaStatementOfRecord.find_by!(reviewable_id: reviewable.id).status).to eq(
+            classification ? "ready" : "pending",
+          )
+          Post.last.raw.gsub(post.url, "/flagged-post")
+        end
+
+      paragraph =
+        "More specifically, your post violated the following community guideline: **Terms, section 3**. Personal attacks are prohibited."
+      expect(notices.last).to include(paragraph)
+      expect(notices.first).to eq(notices.last.sub("\n\n#{paragraph}", ""))
+    end
+
+    it "identifies the moderator when a post is hidden again" do
+      post = Fabricate(:post, user: author, hidden_at: 1.day.ago)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+
+      reviewable.perform(moderator, :agree_and_hide)
+      args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+      Jobs::SendSystemMessage.new.execute(args)
+
+      expect(Post.last.raw).to include("The community flagged this post and a moderator hid it.")
+      expect(Post.last.topic.title).to eq("Post hidden by community flags, staff notified")
+    end
+
+    it "retains automated detection and appeal facts after scores and settings change before delivery" do
+      enable_dsa_reporting
+      post = Fabricate(:post, user: author)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+
+      reviewable.perform(moderator, :agree_and_hide)
+      args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+      reviewable.reviewable_scores.update_all(user_id: flagger.id, reason: nil)
+      SiteSetting.dsa_reporting_enabled = false
+      SiteSetting.dsa_moderation_appeal_email = "changed@example.com"
+      SiteSetting.enable_updated_moderation_notice_copy = false
+      Jobs::SendSystemMessage.new.execute(args)
+
+      expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
+      expect(Post.last.raw).to include("To appeal this decision, contact appeals@example.com")
+    end
+  end
+
+  describe ".enqueue" do
+    shared_examples "the original notice copy" do |message_type:|
+      it "preserves the original #{message_type} copy when the upcoming change is disabled" do
+        SiteSetting.enable_updated_moderation_notice_copy = false
+        options = {
+          flag_source: "automated",
+          url: "/flagged-post",
+          edit_delay: 10,
+          flagged_post_raw_content: "The flagged post.",
+          flagged_post_response_raw_content: "A response to the flagged post.",
+        }
+        reason_prefix =
+          message_type.end_with?("_for_responders") ? "flag_reasons.responder" : "flag_reasons"
+        original_reason = I18n.t("#{reason_prefix}.inappropriate", base_path: Discourse.base_path)
+        original =
+          SystemMessage.create(
+            author,
+            message_type,
+            options.except(:flag_source).merge(flag_reason: original_reason),
+          )
+
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          message_options: options,
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+        SiteSetting.enable_updated_moderation_notice_copy = true
+        Jobs::SendSystemMessage.new.execute(args)
+
+        expect(Post.last.raw).to eq(original.raw)
+        expect(Post.last.topic.title).to eq(original.topic.title)
+      end
+    end
+
+    include_examples "the original notice copy", message_type: "post_hidden"
+    include_examples "the original notice copy", message_type: "post_hidden_again"
+    include_examples "the original notice copy", message_type: "flags_agreed_and_post_deleted"
+    include_examples "the original notice copy",
+                     message_type: "flags_agreed_and_post_deleted_for_responders"
+
+    it "keeps automated attribution when the notice falls back from an untranslated locale" do
+      SiteSetting.default_locale = "de"
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        post_action_type_id: PostActionType.types[:inappropriate],
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          edit_delay: 10,
+        },
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("an automated check indicates")
+      expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
+    end
+
+    it "uses the custom flag name when an automated flag has no seeded explanation" do
+      custom_flag = Fabricate(:flag, name: 'Unwanted "sales" links 日本語', notify_type: true)
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "flags_agreed_and_post_deleted",
+        post_action_type_id: custom_flag.id,
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          flagged_post_raw_content: "The flagged post.",
+        },
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("\n\n#{custom_flag.name}\n\n")
+      expect(Post.last.raw).to include("This post was flagged automatically")
+    end
+
+    shared_examples "a customized notice body" do |message_type:|
+      it "uses the customized #{message_type} variant" do
+        customized_body = "Custom instructions for this site."
+        TranslationOverride.upsert!(
+          :en,
+          "system_messages.#{message_type}_automated.text_body_template",
+          customized_body,
+        )
+
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          message_options: {
+            flag_source: "automated",
+          },
+          post_action_type_id: PostActionType.types[:inappropriate],
+        )
+        Jobs::SendSystemMessage.new.execute(
+          Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+        )
+
+        expect(Post.last.raw).to eq(customized_body)
+      end
+    end
+
+    include_examples "a customized notice body", message_type: "post_hidden"
+    include_examples "a customized notice body", message_type: "post_hidden_again"
+    include_examples "a customized notice body", message_type: "flags_agreed_and_post_deleted"
+    include_examples "a customized notice body",
+                     message_type: "flags_agreed_and_post_deleted_for_responders"
+
+    it "uses the English fallback for a British English recipient" do
+      SiteSetting.allow_user_locale = true
+      author.update!(locale: "en_GB")
+      post = Fabricate(:post, user: author)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+
+      reviewable.perform(moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
+      expect(Post.last.raw).to include("an automated check indicates")
+      expect(Post.last.topic.title).to eq("Post hidden by an automated flag")
+    end
+
+    it "uses the English fallback on a British English site" do
+      SiteSetting.default_locale = "en_GB"
+      post = Fabricate(:post, user: author)
+      reviewable = PostActionCreator.inappropriate(flagger, post).reviewable
+      reviewable.reviewable_scores.first.update!(
+        user_id: Discourse::SYSTEM_USER_ID,
+        reason: "watched_word",
+      )
+
+      reviewable.perform(moderator, :agree_and_hide)
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to include("hidden by a moderator due to an automated flag")
+      expect(Post.last.raw).to include("an automated check indicates")
+      expect(Post.last.topic.title).to eq("Post hidden by an automated flag")
+    end
+
+    it "uses the recipient locale for a translated notice variant" do
+      SiteSetting.allow_user_locale = true
+      author.update!(locale: "de")
+      TranslationOverride.upsert!(
+        :de,
+        "system_messages.post_hidden_automated.text_body_template",
+        "Lokaler Hinweis.",
+      )
+      TranslationOverride.upsert!(
+        :de,
+        "system_messages.post_hidden_automated.subject_template",
+        "Lokaler Betreff",
+      )
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        message_options: {
+          flag_source: "automated",
+        },
+        post_action_type_id: PostActionType.types[:inappropriate],
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to eq("Lokaler Hinweis.")
+      expect(Post.last.topic.title).to eq("Lokaler Betreff")
+    end
+
+    it "uses a customized automated explanation in a customized notice" do
+      customized_reason = "A customized explanation of this flag."
+      TranslationOverride.upsert!(:en, "flag_reasons.automated.inappropriate", customized_reason)
+      TranslationOverride.upsert!(
+        :en,
+        "system_messages.post_hidden_automated.text_body_template",
+        "CUSTOM %{flag_reason} END",
+      )
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "post_hidden",
+        message_options: {
+          flag_source: "automated",
+        },
+        post_action_type_id: PostActionType.types[:inappropriate],
+      )
+      Jobs::SendSystemMessage.new.execute(
+        Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+      )
+
+      expect(Post.last.raw).to eq("CUSTOM #{customized_reason} END")
+    end
+  end
+
+  describe "automated flag explanations" do
+    it "uses the existing flag label when a responder has no seeded explanation" do
+      flag_type = PostActionType.types[:illegal]
+      expected_label = PostActionTypeView.new.names[flag_type]
+
+      ModerationNotice.enqueue(
+        user: author,
+        message_type: "flags_agreed_and_post_deleted_for_responders",
+        post_action_type_id: flag_type,
+        message_options: {
+          flag_source: "automated",
+          url: "/flagged-post",
+          flagged_post_raw_content: "The flagged post.",
+          flagged_post_response_raw_content: "A response to the flagged post.",
+        },
+      )
+      args = Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys
+      Jobs::SendSystemMessage.new.execute(args)
+
+      expect(args[:message_options][:flag_reason]).to eq(expected_label)
+      expect(Post.last.raw).to include("\n\n#{expected_label}\n\n")
+      expect(Post.last.raw).to include(
+        "This post was flagged automatically and a staff member opted to remove it.",
+      )
+    end
+
+    shared_examples "an automated flag explanation" do |flag_type:, message_type:, explanation:|
+      it "attributes #{flag_type} to an automated check in #{message_type}" do
+        ModerationNotice.enqueue(
+          user: author,
+          message_type:,
+          post_action_type_id: PostActionType.types[flag_type],
+          message_options: {
+            flag_source: "automated",
+            url: "/flagged-post",
+            flagged_post_raw_content: "The flagged post.",
+            flagged_post_response_raw_content: "A response to the flagged post.",
+          },
+        )
+        Jobs::SendSystemMessage.new.execute(
+          Jobs::SendSystemMessage.jobs.last["args"].first.deep_symbolize_keys,
+        )
+
+        expect(Post.last.raw).to include(explanation)
+        expect(Post.last.raw).to include(
+          "This post was flagged automatically and a staff member opted to remove it.",
+        )
+      end
+    end
+
+    include_examples "an automated flag explanation",
+                     flag_type: :off_topic,
+                     message_type: "flags_agreed_and_post_deleted",
+                     explanation: "an automated check indicates it is not a good fit for the topic"
+    include_examples "an automated flag explanation",
+                     flag_type: :off_topic,
+                     message_type: "flags_agreed_and_post_deleted_for_responders",
+                     explanation: "an automated check indicates it is not a good fit for the topic"
+    include_examples "an automated flag explanation",
+                     flag_type: :inappropriate,
+                     message_type: "flags_agreed_and_post_deleted",
+                     explanation: "an automated check indicates it is offensive"
+    include_examples "an automated flag explanation",
+                     flag_type: :inappropriate,
+                     message_type: "flags_agreed_and_post_deleted_for_responders",
+                     explanation: "an automated check indicates it is offensive"
+    include_examples "an automated flag explanation",
+                     flag_type: :illegal,
+                     message_type: "flags_agreed_and_post_deleted",
+                     explanation: "an automated check indicates it might be breaking the law"
+    include_examples "an automated flag explanation",
+                     flag_type: :spam,
+                     message_type: "flags_agreed_and_post_deleted",
+                     explanation: "an automated check indicates it is an advertisement"
+    include_examples "an automated flag explanation",
+                     flag_type: :spam,
+                     message_type: "flags_agreed_and_post_deleted_for_responders",
+                     explanation: "an automated check indicates it is an advertisement"
+    include_examples "an automated flag explanation",
+                     flag_type: :notify_moderators,
+                     message_type: "flags_agreed_and_post_deleted",
+                     explanation:
+                       "an automated check indicates something about the post requires manual intervention"
+    include_examples "an automated flag explanation",
+                     flag_type: :notify_moderators,
+                     message_type: "flags_agreed_and_post_deleted_for_responders",
+                     explanation:
+                       "an automated check indicates something about the post requires manual intervention"
+  end
+end

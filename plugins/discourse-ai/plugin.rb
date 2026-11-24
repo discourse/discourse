@@ -189,22 +189,16 @@ after_initialize do
   register_problem_check ProblemCheck::AiImageCaptionAgent
   register_problem_check ProblemCheck::AiAskAiExternalSource
 
-  register_modifier(:reviewable_automated_detection) do |automated, reviewable|
-    scores = reviewable.reviewable_scores
-
+  register_modifier(:reviewable_score_automated_detection) do |automated, score|
     automated ||
-      scores
-        .where(
-          "context LIKE ?",
-          "#{ReviewableScore.sanitize_sql_like(DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX)}%",
-        )
-        .or(
-          scores.where(
-            user_id: SiteSetting.ai_spam_detection_user_id.presence,
-            reviewable_score_type: ReviewableScore.types[:spam],
-          ),
-        )
-        .exists?
+      score.context.to_s.start_with?(
+        DiscourseAi::Automation::TRIAGE_AUTOMATION_SCORE_CONTEXT_PREFIX,
+      ) ||
+      (
+        SiteSetting.ai_spam_detection_user_id.present? &&
+          score.user_id == SiteSetting.ai_spam_detection_user_id.to_i &&
+          score.reviewable_score_type == ReviewableScore.types[:spam]
+      )
   end
 
   register_reviewable_type ReviewableAiChatMessage

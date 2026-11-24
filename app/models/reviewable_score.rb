@@ -38,6 +38,14 @@ class ReviewableScore < ActiveRecord::Base
     { approved: statuses[:agreed], rejected: statuses[:disagreed], ignored: statuses[:ignored] }
   end
 
+  def automated_detection?
+    automated =
+      user_id == Discourse::SYSTEM_USER_ID &&
+        %w[watched_word fast_typer auto_silence_regex email_spam suspect_user].include?(reason)
+
+    DiscoursePluginRegistry.apply_modifier(:reviewable_score_automated_detection, automated, self)
+  end
+
   def score_type
     Reviewable::Collection::Item.new(reviewable_score_type)
   end
