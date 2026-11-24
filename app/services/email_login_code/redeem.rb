@@ -120,9 +120,8 @@ class EmailLoginCode::Redeem
     UserField
       .required
       .where(show_on_signup: true)
-      .pluck(:id)
-      .all? do |field_id|
-        value = values[field_id.to_s]
+      .all? do |field|
+        value = UserCreator.clean_custom_field_values(field, values[field.id.to_s])
         value.present? && value != "false"
       end
   end
