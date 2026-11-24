@@ -4841,7 +4841,7 @@ experimental:
       body_class: true
       learn_more_url: "https://meta.discourse.org/t/-/407849"
   enable_page_shell_prototype:
-    default: false
+    default: true
     client: true
     hidden: true
     area: "experimental"
