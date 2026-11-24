@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -242,6 +243,53 @@ acceptance(
           `${calendar} is available as a default calendar`
         );
       }
+    });
+  }
+);
+
+const TIMEZONE_FIELD = "[data-identifier='user-timezone'][data-trigger]";
+
+acceptance(
+  "User - Preferences - Profile - Time zone with the new select controls",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_new_select_controls: true });
+    needs.hooks.beforeEach(() => {
+      sinon.stub(moment.tz, "guess").returns("Europe/Lisbon");
+    });
+
+    test("offers the device's zone in the list instead of a separate button", async function (assert) {
+      await visit("/my/preferences/profile");
+      const select = dSelect(TIMEZONE_FIELD);
+      await select.open();
+
+      assert.strictEqual(
+        document.querySelector(".d-select__panel [role='option']").dataset
+          .value,
+        "Europe/Lisbon",
+        "the device's zone comes first"
+      );
+      assert
+        .dom(".pref-timezone .btn")
+        .doesNotExist("no button repeats what the list offers");
+
+      await select.select("Europe/Lisbon");
+
+      assert.dSelect(TIMEZONE_FIELD).hasName("Lisbon, Portugal");
+    });
+  }
+);
+
+acceptance(
+  "User - Preferences - Profile - Time zone with the legacy select",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_new_select_controls: false });
+
+    test("keeps the button that fills in the device's zone", async function (assert) {
+      await visit("/my/preferences/profile");
+
+      assert.dom(".pref-timezone .btn").exists();
     });
   }
 );

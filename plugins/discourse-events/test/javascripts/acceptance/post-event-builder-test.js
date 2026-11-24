@@ -1,6 +1,7 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -191,3 +192,52 @@ acceptance("Post event - composer - custom fields", function (needs) {
       );
   });
 });
+
+acceptance(
+  "Post event - composer - with the new select controls",
+  function (needs) {
+    needs.user({ admin: true, can_create_discourse_post_event: true });
+    needs.settings({
+      discourse_local_dates_enabled: true,
+      discourse_events_enabled: true,
+      discourse_post_event_enabled: true,
+      discourse_post_event_allowed_on_groups: "",
+      discourse_post_event_allowed_custom_fields: "",
+      enable_new_select_controls: true,
+    });
+
+    test("picks the event's time zone with the new select", async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+      await dSelect(".category-chooser").select(2);
+      await click(".toolbar-menu__options-trigger");
+      await click(
+        `button[title='${i18n("discourse_post_event.builder_modal.attach")}']`
+      );
+      // The preview draws the event editor after cooking.
+      await waitFor(".d-editor-preview .composer-event__more-dropdown button");
+      await click(".d-editor-preview .composer-event__more-dropdown button");
+
+      const modal = ".post-event-builder-modal";
+      const field = "[data-identifier='post-event-timezone'][data-trigger]";
+      const select = dSelect(field);
+      await select.open();
+      await select.search("paris");
+      await select.select("Europe/Paris");
+
+      assert.dSelect(field).hasName("Paris, France");
+
+      await fillIn(`${modal} .from input[type=date]`, "2022-07-01");
+      await fillIn(`${modal} .from .time-input`, "12:00");
+      await fillIn(`${modal} .to input[type=date]`, "2022-07-01");
+      await fillIn(`${modal} .to .time-input`, "13:00");
+      await click(`${modal} .d-modal__footer .btn-primary`);
+
+      assert
+        .dom(".d-editor-input")
+        .hasValue(
+          `[event start="2022-07-01 12:00" status=public timezone=Europe/Paris end="2022-07-01 13:00" reminders=notification.15.minutes]\n[/event]`
+        );
+    });
+  }
+);

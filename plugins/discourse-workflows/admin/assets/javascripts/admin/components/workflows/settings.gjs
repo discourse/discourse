@@ -6,12 +6,14 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TimezoneInput from "discourse/select-kit/components/timezone-input";
+import DSelectTimezone from "discourse/ui-kit/select/recipes/timezones/d-select-timezone";
 import { i18n } from "discourse-i18n";
 import confirmDeleteWorkflow from "../../lib/workflows/confirm-delete-workflow.js";
 import ErrorWorkflowChooser from "./error-workflow-chooser.js";
 
 export default class WorkflowSettings extends Component {
   @service router;
+  @service siteSettings;
   @service dialog;
   @service toasts;
 
@@ -104,7 +106,19 @@ export default class WorkflowSettings extends Component {
         as |field|
       >
         <field.Control>
-          <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectTimezone
+              @describedBy={{field.describedBy}}
+              @id={{field.id}}
+              @identifier="workflow-timezone"
+              @onChange={{field.set}}
+              @required={{true}}
+              @value={{field.value}}
+            />
+          {{else}}
+            <TimezoneInput @onChange={{field.set}} @value={{field.value}} />
+          {{/if}}
         </field.Control>
       </form.Field>
 

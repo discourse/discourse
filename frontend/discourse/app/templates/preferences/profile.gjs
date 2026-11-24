@@ -13,6 +13,7 @@ import DButton from "discourse/ui-kit/d-button";
 import DEditor from "discourse/ui-kit/d-editor";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
+import DSelectTimezone from "discourse/ui-kit/select/recipes/timezones/d-select-timezone";
 import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
@@ -48,18 +49,29 @@ export default <template>
     {{/if}}
 
     <div class="control-group pref-timezone" data-setting-name="user-timezone">
-      <label class="control-label">{{i18n "user.timezone"}}</label>
-      <TimezoneInput
-        class="input-xxlarge"
-        @onChange={{fn (mut @controller.model.user_option.timezone)}}
-        @value={{@controller.model.user_option.timezone}}
-      />
-      <DButton
-        class="btn-default"
-        @action={{@controller.useCurrentTimezone}}
-        @icon="globe"
-        @label="user.use_current_timezone"
-      />
+      <label class="control-label" id="user-timezone-label">
+        {{~i18n "user.timezone"~}}
+      </label>
+      {{#if @controller.siteSettings.enable_new_select_controls}}
+        <DSelectTimezone
+          @ariaLabelledBy="user-timezone-label"
+          @identifier="user-timezone"
+          @onChange={{fn (mut @controller.model.user_option.timezone)}}
+          @value={{@controller.model.user_option.timezone}}
+        />
+      {{else}}
+        <TimezoneInput
+          class="input-xxlarge"
+          @onChange={{fn (mut @controller.model.user_option.timezone)}}
+          @value={{@controller.model.user_option.timezone}}
+        />
+        <DButton
+          class="btn-default"
+          @action={{@controller.useCurrentTimezone}}
+          @icon="globe"
+          @label="user.use_current_timezone"
+        />
+      {{/if}}
     </div>
 
     {{#if @controller.model.can_change_location}}

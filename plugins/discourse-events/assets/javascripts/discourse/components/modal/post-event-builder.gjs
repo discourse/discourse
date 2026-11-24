@@ -18,6 +18,7 @@ import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-s
 import DDateInput from "discourse/ui-kit/d-date-input";
 import DDateTimeInput from "discourse/ui-kit/d-date-time-input";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectTimezone from "discourse/ui-kit/select/recipes/timezones/d-select-timezone";
 import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import { MAX_HOSTS } from "../../lib/constants.js";
@@ -1144,11 +1145,29 @@ export default class PostEventBuilder extends Component {
                   as |field|
                 >
                   <field.Control>
-                    <TimezoneInput
-                      @none="discourse_post_event.builder_modal.timezone.remove_timezone"
-                      @onChange={{field.set}}
-                      @value={{field.value}}
-                    />
+                    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                    {{#if this.siteSettings.enable_new_select_controls}}
+                      <DSelectTimezone
+                        @describedBy={{field.describedBy}}
+                        @id={{field.id}}
+                        @identifier="post-event-timezone"
+                        @invalid={{if field.error true false}}
+                        @noneOption={{true}}
+                        @onChange={{field.set}}
+                        @texts={{hash
+                          noneLabel=(i18n
+                            "discourse_post_event.builder_modal.timezone.remove_timezone"
+                          )
+                        }}
+                        @value={{field.value}}
+                      />
+                    {{else}}
+                      <TimezoneInput
+                        @none="discourse_post_event.builder_modal.timezone.remove_timezone"
+                        @onChange={{field.set}}
+                        @value={{field.value}}
+                      />
+                    {{/if}}
                   </field.Control>
                 </form.Field>
 

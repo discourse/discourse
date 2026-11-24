@@ -1,0 +1,53 @@
+// The row's place and common name stack on the left; its time and offset line up on the right.
+.d-select__content.--kind-select-timezone .d-select__option-content {
+  column-gap: var(--space-3);
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  > :first-child,
+  .d-select-timezone__option {
+    display: contents;
+  }
+
+  .d-select__option-description {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
+.d-select-timezone__when,
+.d-select-timezone__offset {
+  color: var(--primary-medium);
+  font-variant-numeric: tabular-nums;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.d-select-timezone__offset {
+  font-size: var(--font-down-1);
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.d-select-timezone__day {
+  background: var(--primary-very-low);
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-2);
+  margin-right: var(--space-1);
+  padding: 0 var(--space-1);
+}
+
+.d-select-timezone__selection {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+  padding-inline-end: var(--space-2);
+  width: 100%;
+
+  .d-select-timezone__place {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

@@ -1,5 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   metaModifier,
@@ -209,3 +210,33 @@ acceptance("composer", function (needs) {
       );
   });
 });
+
+acceptance(
+  "composer - date modal with the new select controls",
+  function (needs) {
+    needs.user();
+    needs.settings({
+      discourse_local_dates_enabled: true,
+      discourse_local_dates_default_formats: "LLL|LTS|LL|LLLL",
+      enable_new_select_controls: true,
+    });
+
+    test("picks the time zone with the new select", async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+      await click(".toolbar-menu__options-trigger");
+      await click("[data-name='local-dates']");
+
+      const select = dSelect(
+        "[data-identifier='local-dates-timezone'][data-trigger]"
+      );
+      await select.open();
+      await select.search("macau");
+      await select.select("Asia/Macau");
+
+      assert
+        .dom(".preview .discourse-local-date")
+        .includesText("Macau", "outputs a preview date in selected timezone");
+    });
+  }
+);

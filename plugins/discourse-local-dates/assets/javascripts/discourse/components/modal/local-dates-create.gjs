@@ -22,6 +22,7 @@ import DCalendarDateTimeInput from "discourse/ui-kit/d-calendar-date-time-input"
 import DModal from "discourse/ui-kit/d-modal";
 import DTextField from "discourse/ui-kit/d-text-field";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectTimezone from "discourse/ui-kit/select/recipes/timezones/d-select-timezone";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
@@ -510,11 +511,21 @@ export default class LocalDatesCreate extends Component {
               </div>
 
               {{#if this.site.desktopView}}
-                <TimezoneInput
-                  @onChange={{fn (mut this.timezone)}}
-                  @options={{hash icon="globe"}}
-                  @value={{this.timezone}}
-                />
+                {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                {{#if this.siteSettings.enable_new_select_controls}}
+                  <DSelectTimezone
+                    @icon="globe"
+                    @identifier="local-dates-timezone"
+                    @onChange={{fn (mut this.timezone)}}
+                    @value={{this.timezone}}
+                  />
+                {{else}}
+                  <TimezoneInput
+                    @onChange={{fn (mut this.timezone)}}
+                    @options={{hash icon="globe"}}
+                    @value={{this.timezone}}
+                  />
+                {{/if}}
               {{/if}}
             </div>
 
@@ -532,11 +543,21 @@ export default class LocalDatesCreate extends Component {
             </div>
 
             {{#if this.site.mobileView}}
-              <TimezoneInput
-                @onChange={{fn (mut this.timezone)}}
-                @options={{hash icon="globe"}}
-                @value={{this.timezone}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectTimezone
+                  @icon="globe"
+                  @identifier="local-dates-timezone"
+                  @onChange={{fn (mut this.timezone)}}
+                  @value={{this.timezone}}
+                />
+              {{else}}
+                <TimezoneInput
+                  @onChange={{fn (mut this.timezone)}}
+                  @options={{hash icon="globe"}}
+                  @value={{this.timezone}}
+                />
+              {{/if}}
             {{/if}}
           </div>
 
