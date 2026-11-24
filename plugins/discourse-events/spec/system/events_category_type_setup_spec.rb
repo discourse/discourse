@@ -32,8 +32,7 @@ RSpec.describe "Events Category Type Setup" do
     expect(banner).to be_visible
     banner.click_save
 
-    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Events"))
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-events")
+    expect(page).to have_current_path(%r{\A/c/events/\d+\z})
     expect(SiteSetting.discourse_events_enabled).to eq(true)
     expect(SiteSetting.discourse_post_event_enabled).to eq(true)
 
