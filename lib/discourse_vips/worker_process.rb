@@ -31,7 +31,7 @@ module DiscourseVips
     def initialize(socket_path: nil)
       @state_mutex = Mutex.new
       @socket_path = socket_path
-      start
+      start(shared: !socket_path.nil?)
     end
 
     def alive?
@@ -70,9 +70,17 @@ module DiscourseVips
     rescue IOError
     end
 
+    def stop_accepting
+      remove_socket
+      @owner_writer.write("\0")
+    rescue IOError, Errno::EPIPE
+    ensure
+      discard
+    end
+
     private
 
-    def start
+    def start(shared:)
       prepare_socket_path
       server = UNIXServer.new(@socket_path)
       File.chmod(0o600, @socket_path)
@@ -85,6 +93,8 @@ module DiscourseVips
           *worker_command,
           server.fileno.to_s,
           owner_reader.fileno.to_s,
+          Process.pid.to_s,
+          shared.to_s,
           server.fileno => server,
           owner_reader.fileno => owner_reader,
           :in => File::NULL,

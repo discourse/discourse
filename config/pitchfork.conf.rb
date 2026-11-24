@@ -4,6 +4,27 @@ discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/.
 enable_logstash_logger = ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 stderr_log_path = "#{discourse_path}/log/unicorn.stderr.log"
 
+refork_after_setting = ENV["APP_SERVER_REFORK_AFTER"]
+if refork_after_setting
+  if !Pitchfork::REFORKING_AVAILABLE
+    raise "APP_SERVER_REFORK_AFTER requires Pitchfork reforking support"
+  end
+
+  require_relative "../lib/pitchfork_refork_patch"
+
+  around_refork do |server, worker, promote|
+    if !Discourse.fork_when_idle(timeout: 5, &promote)
+      server.logger.info("#{worker.to_log} skipped promotion: background work did not finish")
+    end
+  end
+
+  refork_after(
+    refork_after_setting.split(",").map { |limit| limit.strip == "false" ? false : Integer(limit) },
+  )
+  before_worker_exit { |_server, _worker| Discourse.wait_for_pending_work(timeout: 10) }
+  before_service_worker_exit { |_server, _service| Discourse.before_service_exit }
+end
+
 if enable_logstash_logger
   require_relative "../lib/discourse_logstash_logger"
   require_relative "../lib/pitchfork_logstash_patch"
@@ -60,11 +81,12 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
-  if mold.generation.zero?
+  Discourse.after_preloader_fork(warmed: mold.generation > 0) if refork_after_setting
+
+  if mold.generation.zero? || refork_after_setting
     Discourse.preload_rails!
 
     supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
-
     if supervisor > 0
       Thread.new do
         while true
@@ -92,6 +114,10 @@ after_worker_fork do |server, worker|
 end
 
 before_service_worker_ready do |server, service_worker|
+  if refork_after_setting && service_worker.generation > 0
+    Discourse.reset_worker_db_variables_overrides
+  end
+
   sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
 
   require "demon/discourse_vips"

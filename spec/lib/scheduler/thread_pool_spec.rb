@@ -93,6 +93,44 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
 
       expect(results.sort).to eq((0..max_threads).to_a)
     end
+
+    context "with one worker thread" do
+      let(:min_threads) { 1 }
+      let(:max_threads) { 1 }
+
+      it "runs child submissions and leaves queued tasks with the parent" do
+        completed = Queue.new
+        started = Queue.new
+        release = Queue.new
+        pool.post do
+          started << true
+          release.pop
+        end
+        expect(started.pop(timeout: 5)).to eq(true)
+        pool.post { completed << :parent }
+
+        child =
+          fork do
+            pool.post { completed << :child }
+            exit!(completed.pop(timeout: 5) == :child ? 0 : 1)
+          end
+        _, status = Timeout.timeout(10) { Process.wait2(child) }
+        child = nil
+
+        expect(status).to be_success
+        release.close
+        expect(completed.pop(timeout: 5)).to eq(:parent)
+      ensure
+        release&.close
+        if child
+          begin
+            Process.kill("KILL", child)
+            Process.waitpid(child)
+          rescue Errno::ESRCH, Errno::ECHILD
+          end
+        end
+      end
+    end
   end
 
   describe "#shutdown" do
@@ -170,6 +208,27 @@ RSpec.describe Scheduler::ThreadPool, type: :multisite do
         expect(pool.stats[:thread_count]).to eq(0)
       ensure
         release&.push(true)
+      end
+
+      it "releases pending work when a timed out shutdown discards queued tasks" do
+        started = Queue.new
+        release = Queue.new
+        pool.post do
+          started << Thread.current
+          release.pop
+        end
+        worker = started.pop(timeout: 5)
+        pool.post {}
+        pool.shutdown
+
+        expect { pool.wait_for_termination(timeout: 0) }.to raise_error(
+          Scheduler::ThreadPool::ShutdownError,
+        )
+        expect(worker.join(5)).to eq(worker)
+
+        expect(Scheduler::PendingWork.when_idle(timeout: 0) { :idle }).to eq(:idle)
+      ensure
+        release&.close
       end
     end
   end

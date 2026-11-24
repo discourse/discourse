@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "weakref"
+require_relative "pending_work"
 
 module Scheduler
   module Deferrable
@@ -10,21 +11,15 @@ module Scheduler
 
     def initialize
       @async = !Rails.env.test?
-      @queue =
-        WorkQueue::ThreadSafeWrapper.new(
-          WorkQueue::FairQueue.new(:site, 500) do
-            WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
-          end,
-        )
-
-      @mutex = Mutex.new
-      @stats_mutex = Mutex.new
-      @paused = false
-      @thread = nil
-      @reactor = nil
       @timeout = DEFAULT_TIMEOUT
-      @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
-      @finish = false
+      @mutex = Mutex.new
+      reset_execution_state
+    end
+
+    def reset_after_fork
+      return if @pid == Process.pid
+
+      @mutex.synchronize { reset_execution_state if @pid != Process.pid }
     end
 
     def timeout=(t)
@@ -45,6 +40,7 @@ module Scheduler
     end
 
     def resume
+      reset_after_fork if @pid != Process.pid
       @paused = false
     end
 
@@ -60,6 +56,7 @@ module Scheduler
       current_user: nil,
       &blk
     )
+      reset_after_fork if @pid != Process.pid
       @stats_mutex.synchronize do
         stats = (@stats[desc] ||= { queued: 0, finished: 0, duration: 0, errors: 0 })
         stats[:queued] += 1
@@ -67,9 +64,11 @@ module Scheduler
 
       if @async
         start_thread if !@thread&.alive? && !@paused
-        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        PendingWork.enqueue do
+          @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
+        end
       else
-        blk.call
+        PendingWork.run(&blk)
       end
     end
 
@@ -107,23 +106,61 @@ module Scheduler
 
     private
 
+    def reset_execution_state
+      @queue =
+        WorkQueue::ThreadSafeWrapper.new(
+          WorkQueue::FairQueue.new(:site, 500) do
+            WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
+          end,
+        )
+      @stats_mutex = Mutex.new
+      @thread = nil
+      @reactor = nil
+      @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
+      @finish = false
+      @paused = false
+      @pid = Process.pid
+    end
+
     def start_thread
       @mutex.synchronize do
-        @reactor = MessageBus::TimerThread.new if !@reactor
-        @thread =
-          Thread.new do
-            Thread.current.abort_on_exception = true if Rails.env.test?
-            do_work while !@finish || !@queue.empty?
-          end if !@thread&.alive?
+        return if @thread&.alive?
+
+        Thread.handle_interrupt(Object => :never) do
+          @reactor ||=
+            Thread
+              .new { Thread.handle_interrupt(Object => :immediate) { MessageBus::TimerThread.new } }
+              .value
+
+          @thread =
+            Thread.new do
+              Thread.handle_interrupt(Object => :immediate) do
+                Thread.current.abort_on_exception = true if Rails.env.test?
+                do_work while !@finish || !@queue.empty?
+              end
+            end
+        end
       end
     end
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
-      db, job, desc, finish = @queue.shift(block: !non_block).values_at(:db, :job, :desc, :finish)
+      Thread.handle_interrupt(Object => :never) do
+        task = Thread.handle_interrupt(Object => :on_blocking) { @queue.shift(block: !non_block) }
+        return if !task || task[:finish]
 
-      return if finish
+        begin
+          Thread.handle_interrupt(Object => :immediate) { process_task(task, non_block) }
+        ensure
+          PendingWork.finish
+        end
+      end
+    rescue => ex
+      Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
+    end
 
+    def process_task(task, non_block)
+      db, job, desc = task.values_at(:db, :job, :desc)
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
@@ -142,19 +179,15 @@ module Scheduler
       ensure
         warning_job&.cancel
       end
-    rescue => ex
-      Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
       if ActiveRecord::Base.connection&.verify!
         ActiveRecord::Base.connection_handler.clear_active_connections!
       end
-      if start
-        @stats_mutex.synchronize do
-          stats = @stats[desc]
-          if stats
-            stats[:finished] += 1
-            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
-          end
+      @stats_mutex.synchronize do
+        stats = @stats[desc]
+        if stats
+          stats[:finished] += 1
+          stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
         end
       end
     end

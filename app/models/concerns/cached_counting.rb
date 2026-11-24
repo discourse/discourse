@@ -37,6 +37,11 @@ module CachedCounting
     clear_flush_to_db_lock!
   end
 
+  def self.after_fork
+    QUEUE.clear
+    @last_ensure_thread = nil
+  end
+
   ENSURE_THREAD_COOLDOWN_SECONDS = 5
 
   def self.ensure_thread!

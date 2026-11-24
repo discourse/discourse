@@ -116,6 +116,49 @@ RSpec.describe Scheduler::Defer do
     expect(s).to eq("good")
   end
 
+  it "keeps inherited jobs in the parent while running new child jobs" do
+    reader, writer = IO.pipe
+    @defer.pause
+    @defer.later do
+      writer.puts("parent")
+      writer.flush
+    end
+
+    child =
+      fork do
+        reader.close
+        @defer.resume
+        @defer.later do
+          writer.puts("child")
+          writer.flush
+        end
+        @defer.stop!(finish_work: true)
+        exit!(0)
+      end
+    _, status = Timeout.timeout(10) { Process.wait2(child) }
+    child = nil
+    expect(status).to be_success
+    @defer.do_all_work
+    writer.close
+
+    expect(reader.read.lines.map(&:chomp)).to eq(%w[child parent])
+  ensure
+    if child
+      begin
+        Process.kill("KILL", child)
+      rescue StandardError
+        nil
+      end
+      begin
+        Process.waitpid(child)
+      rescue StandardError
+        nil
+      end
+    end
+    reader&.close unless reader&.closed?
+    writer&.close unless writer&.closed?
+  end
+
   describe "#later" do
     let!(:ivar) { Concurrent::IVar.new }
     let!(:responses) { Thread::Queue.new }
