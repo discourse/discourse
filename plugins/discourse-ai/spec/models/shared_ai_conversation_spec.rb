@@ -246,15 +246,16 @@ RSpec.describe SharedAiConversation, type: :model do
   end
 
   describe "#publicly_visible?" do
-    let(:visibility_topic) { Fabricate(:private_message_topic, user: user, recipient: agent.user) }
-    let!(:visibility_post) { Fabricate(:post, topic: visibility_topic, user: user) }
+    fab!(:visibility_topic) { Fabricate(:private_message_topic, user: user, recipient: agent.user) }
+    fab!(:visibility_post) { Fabricate(:post, topic: visibility_topic, user: user) }
+    fab!(:sharing_group, :group)
+
     let(:conversation) { described_class.share_conversation(user, visibility_topic) }
 
     before do
-      group = Fabricate(:group)
-      group.add(user)
+      sharing_group.add(user)
       user.reload
-      SiteSetting.ai_bot_public_sharing_allowed_groups = group.id.to_s
+      SiteSetting.ai_bot_public_sharing_allowed_groups = sharing_group.id.to_s
     end
 
     it "accepts matching preloaded topics and posts while rejecting unrelated preloads" do

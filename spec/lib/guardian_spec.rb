@@ -1225,8 +1225,8 @@ RSpec.describe Guardian do
 
       describe "post edit time limits" do
         context "when post is older than post_edit_time_limit" do
-          let(:user) { Fabricate(:user, refresh_auto_groups: true) }
-          let(:topic) { Fabricate(:topic, user: user) }
+          fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+          fab!(:topic) { Fabricate(:topic, user: user) }
           let(:old_post) do
             Fabricate(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago)
           end
@@ -1417,7 +1417,7 @@ RSpec.describe Guardian do
       end
 
       context "when archived" do
-        let(:archived_topic) { Fabricate(:topic, user: user, archived: true) }
+        fab!(:archived_topic) { Fabricate(:topic, user: user, archived: true) }
 
         it "returns true as a moderator" do
           expect(Guardian.new(moderator).can_edit?(archived_topic)).to be_truthy

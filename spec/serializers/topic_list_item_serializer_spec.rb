@@ -111,7 +111,7 @@ RSpec.describe TopicListItemSerializer do
   end
 
   describe "correctly serializes op_likes data" do
-    let(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:moderator) { Fabricate(:moderator) }
     let(:first_post) { Fabricate(:post, topic: topic, user: user) }
     let(:plugin) { Plugin::Instance.new }

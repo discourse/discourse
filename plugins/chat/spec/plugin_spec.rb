@@ -84,7 +84,7 @@ describe Chat do
 
   describe "user card serializer extension #can_chat_user" do
     fab!(:target_user, :user)
-    let!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
 

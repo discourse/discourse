@@ -510,10 +510,10 @@ RSpec.describe Chat::CreateMessage do
                   end
 
                   context "when thread is part of the provided channel" do
-                    let(:thread) { Fabricate(:chat_thread, channel: channel) }
+                    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
                     context "when replying to an existing message" do
-                      let(:reply_to) { Fabricate(:chat_message, chat_channel: channel) }
+                      fab!(:reply_to) { Fabricate(:chat_message, chat_channel: channel) }
 
                       context "when reply thread does not match the provided thread" do
                         let!(:another_thread) do

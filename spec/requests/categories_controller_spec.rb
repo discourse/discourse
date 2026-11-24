@@ -1933,7 +1933,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#categories_and_topics" do
-    before { 10.times { Fabricate(:topic) } }
+    fab!(:topics) { Fabricate.times(10, :topic) }
 
     it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5

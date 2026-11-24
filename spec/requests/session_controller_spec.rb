@@ -2113,7 +2113,7 @@ RSpec.describe SessionController do
   end
 
   describe "#become" do
-    let!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     describe "when in production mode" do
       before { Rails.env.stubs(:production?).returns(true) }
@@ -5228,7 +5228,9 @@ RSpec.describe SessionController do
     end
 
     context "when logged in" do
-      let!(:user) { sign_in(Fabricate(:user)) }
+      fab!(:user)
+
+      before { sign_in(user) }
 
       it "returns the JSON for the user" do
         get "/session/current.json"
