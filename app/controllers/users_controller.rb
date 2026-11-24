@@ -1293,6 +1293,14 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
+        if primary_email.saved_change_to_email? && InvitedUser.exists?(user_id: @user.id)
+          raise Discourse::InvalidAccess.new(
+                  nil,
+                  nil,
+                  custom_message: "activation.email_change_not_allowed_after_invite",
+                )
+        end
+
         @user.revoke_approval! if revoke_approval
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
