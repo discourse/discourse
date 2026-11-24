@@ -7,7 +7,7 @@ module SiteSettingExtension
   SiteSettingChangeResult = Struct.new(:previous_value, :new_value)
   InvalidSettingAccess = Class.new(StandardError)
 
-  delegate :description, :keywords, :placeholder, :humanized_name, to: SiteSettings::LabelFormatter
+  delegate :description, :keywords, :placeholder, to: SiteSettings::LabelFormatter
 
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
@@ -99,7 +99,10 @@ module SiteSettingExtension
     @theme_site_settings[provider.current_site] ||= {}
   end
 
-  #
+  def humanized_name(name)
+    SiteSettings::LabelFormatter.humanized_name(name, unit: units[name.to_sym])
+  end
+
   def humanized_names(name)
     @humanized_names ||= {}
     @humanized_names[name] ||= humanized_name(name)

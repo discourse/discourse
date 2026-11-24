@@ -233,7 +233,7 @@ module SiteSettings
           .gsub(SETTING_LINK_PATTERN) { "'#{humanized_name(Regexp.last_match(1))}'" }
       end
 
-      def humanized_name(setting)
+      def humanized_name(setting, unit: nil)
         name = setting.to_s.tr("_", " ")
         words = name.split(" ")
 
@@ -256,6 +256,8 @@ module SiteSettings
         HUMANIZED_MIXED_CASE_REGEX.each do |regex, replacement|
           result = result.gsub(regex, replacement)
         end
+
+        result = result.sub(/ #{Regexp.escape(unit.tr("_", " "))}\z/i, "") if unit.present?
 
         result
       end
