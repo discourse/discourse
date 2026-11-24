@@ -273,9 +273,13 @@ export default class SecondFactorAuthController extends Controller {
 
       this.displaySuccess(i18n("second_factor_auth.redirect_after_success"));
 
-      DiscourseURL.routeTo(
-        callbackResponse.redirect_url || response.redirect_url
-      );
+      const destination =
+        callbackResponse.redirect_url || response.redirect_url;
+      if (callbackResponse.reload) {
+        DiscourseURL.redirectTo(destination);
+      } else {
+        DiscourseURL.routeTo(destination);
+      }
     } catch (error) {
       this.displayError(extractError(error));
     } finally {

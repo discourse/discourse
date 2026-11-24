@@ -54,10 +54,26 @@ export default class SecurityController extends Controller {
     return this.currentUser?.id === this.model.id;
   }
 
-  get canUsePasskeys() {
+  get secondFactorsAvailable() {
     return (
       !this.siteSettings.enable_discourse_connect &&
-      this.siteSettings.enable_local_logins &&
+      (this.siteSettings.enable_local_logins ||
+        this.siteSettings.enforce_second_factor_on_external_auth)
+    );
+  }
+
+  get canManageSecondFactors() {
+    return (
+      this.secondFactorsAvailable &&
+      this.isCurrentUser &&
+      !this.model.is_anonymous
+    );
+  }
+
+  get canUsePasskeys() {
+    return (
+      this.secondFactorsAvailable &&
+      !this.model?.is_anonymous &&
       this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
@@ -237,24 +253,9 @@ export default class SecurityController extends Controller {
   }
 
   @action
-  async manage2FA() {
-    try {
-      const trustedSession = await this.model.trustedSession();
-
-      if (!trustedSession.success) {
-        this.dialog.dialog({
-          title: i18n("user.confirm_access.title"),
-          type: "notice",
-          bodyComponent: ConfirmSession,
-          didConfirm: () =>
-            this.router.transitionTo("preferences.second-factor"),
-        });
-      } else {
-        await this.router.transitionTo("preferences.second-factor");
-      }
-    } catch (error) {
-      popupAjaxError(error);
-    }
+  manage2FA() {
+    const transition = this.router.transitionTo("preferences.second-factor");
+    transition.data.confirmSecondFactorSession = true;
   }
 
   @action

@@ -1422,6 +1422,8 @@ Discourse::Application.routes.draw do
     end
 
     match "/auth/failure", to: "users/omniauth_callbacks#failure", via: %i[get post]
+    post "/auth/second-factor" => "users/omniauth_callbacks#complete_second_factor",
+         :as => :omniauth_second_factor
     get "/auth/:provider", to: "users/omniauth_callbacks#confirm_request"
     post "/auth/discourse_id/revoke" => "users/discourse_id#revoke"
     match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: %i[get post]

@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import pretender, {
   response as jsonResponse,
@@ -417,6 +418,21 @@ acceptance("Second Factor Auth Page", function (needs) {
       "user has been redirected to the redirect_url"
     );
     assert.strictEqual(callbackCount, 1, "callback request has been performed");
+  });
+
+  test("reloads the destination after a callback signs the browser in", async function (assert) {
+    pretender.put("/callback-path", () =>
+      jsonResponse({ redirect_url: "/latest", reload: true })
+    );
+    const redirect = sinon.stub(DiscourseURL, "redirectTo");
+
+    await visit("/session/2fa?nonce=ok110111");
+    await fillIn("form.totp-token .second-factor-token-input", "323421");
+    await click('form.totp-token .btn-primary[type="submit"]');
+    assert.true(
+      redirect.calledWithExactly("/latest"),
+      "loads the new signed-in session"
+    );
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {

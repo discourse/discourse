@@ -150,10 +150,19 @@ RSpec.describe SecondFactorManager do
     end
 
     describe "when local login is disabled" do
-      it "returns false" do
+      it "returns true when enforce_second_factor_on_external_auth is enabled" do
         SiteSetting.enable_local_logins = false
 
+        expect(user.totp_enabled?).to eq(true)
+        expect(user.security_keys_enabled?).to eq(true)
+      end
+
+      it "returns false when enforce_second_factor_on_external_auth is disabled" do
+        SiteSetting.enable_local_logins = false
+        SiteSetting.enforce_second_factor_on_external_auth = false
+
         expect(user.totp_enabled?).to eq(false)
+        expect(user.security_keys_enabled?).to eq(false)
       end
     end
   end
@@ -195,12 +204,10 @@ RSpec.describe SecondFactorManager do
   end
 
   describe "#passkeys_available_as_second_factor?" do
-    before do
-      SiteSetting.allow_passkeys_for_2fa = true
-      Fabricate(:passkey_with_random_credential, user: user)
-    end
+    before { Fabricate(:passkey_with_random_credential, user: user) }
 
-    it "is true when both setting flags are on" do
+    it "is true by default when enable_passkeys is on" do
+      expect(SiteSetting.allow_passkeys_for_2fa).to eq(true)
       expect(user.passkeys_available_as_second_factor?).to eq(true)
     end
 
@@ -211,6 +218,17 @@ RSpec.describe SecondFactorManager do
 
     it "is false when allow_passkeys_for_2fa is off" do
       SiteSetting.allow_passkeys_for_2fa = false
+      expect(user.passkeys_available_as_second_factor?).to eq(false)
+    end
+
+    it "is true when local logins are disabled and external auth 2FA is enabled" do
+      SiteSetting.enable_local_logins = false
+      expect(user.passkeys_available_as_second_factor?).to eq(true)
+    end
+
+    it "is false when local logins and external auth 2FA are both disabled" do
+      SiteSetting.enable_local_logins = false
+      SiteSetting.enforce_second_factor_on_external_auth = false
       expect(user.passkeys_available_as_second_factor?).to eq(false)
     end
 
@@ -666,8 +684,15 @@ RSpec.describe SecondFactorManager do
       end
 
       describe "when local login is disabled" do
-        it "returns false" do
+        it "returns true when enforce_second_factor_on_external_auth is enabled" do
           SiteSetting.enable_local_logins = false
+
+          expect(user_backup.backup_codes_enabled?).to eq(true)
+        end
+
+        it "returns false when enforce_second_factor_on_external_auth is disabled" do
+          SiteSetting.enable_local_logins = false
+          SiteSetting.enforce_second_factor_on_external_auth = false
 
           expect(user_backup.backup_codes_enabled?).to eq(false)
         end

@@ -139,6 +139,18 @@ RSpec.describe UsersController do
           expect(user_deferred.reload.active).to eq(true)
         end
 
+        it "still requires a fresh login on an external-only site" do
+          SiteSetting.enable_local_logins = false
+          Fabricate(:user_second_factor_totp, user: user_deferred)
+
+          expect { put "/u/activate-account/#{email_token.token}" }.not_to change(
+            UserAuthToken,
+            :count,
+          )
+          expect(response.parsed_body["redirect_to"]).to eq("/login")
+          expect(user_deferred.reload.active?).to eq(true)
+        end
+
         it "activates the account without logging in a user with only backup codes" do
           Fabricate(:user_second_factor_backup, user: user_deferred)
 
@@ -7871,7 +7883,10 @@ RSpec.describe UsersController do
 
             post "/users/create_second_factor_totp.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8180,7 +8195,10 @@ RSpec.describe UsersController do
 
             put "/users/second_factors_backup.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8381,6 +8399,14 @@ RSpec.describe UsersController do
     end
 
     it "fails if user is not logged in" do
+      post "/u/create_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if session is not confirmed" do
+      UsersController.any_instance.unstub(:server_session_confirmed?)
+      sign_in(user1)
       post "/u/create_passkey.json"
 
       expect(response.status).to eq(403)
@@ -8893,7 +8919,15 @@ RSpec.describe UsersController do
     context "when local logins are not enabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "does not allow access" do
+      it "requires a recent external login when external auth 2FA is enabled" do
+        post "/u/second_factors.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["external_login_required"]).to eq(true)
+      end
+
+      it "does not allow access when enforce_second_factor_on_external_auth is false" do
+        SiteSetting.enforce_second_factor_on_external_auth = false
+
         post "/u/second_factors.json"
         expect(response.status).to eq(404)
       end
