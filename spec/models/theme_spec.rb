@@ -1925,4 +1925,16 @@ RSpec.describe Theme do
       expect(resolved_settings[:user_in_multi_group_setting]).to eq(true)
     end
   end
+
+  describe "#list_baked_fields" do
+    it "lists a disabled component's own fields, so its styles can be previewed" do
+      component = Fabricate(:theme, component: true, enabled: false)
+      component.set_field(target: :common, name: :scss, value: "body { margin: 1px; }")
+      component.save!
+
+      expect(component.list_baked_fields(:common, :scss).map(&:value)).to eq(
+        ["body { margin: 1px; }"],
+      )
+    end
+  end
 end

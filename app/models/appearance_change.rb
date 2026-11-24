@@ -9,6 +9,7 @@
 # - theme: a new theme with its own new palettes, and optionally styles
 # - installed_theme: a theme installed from the list of popular themes, with
 #   whatever palettes it comes with
+# - existing_theme: a theme the site already has, made the default as it is
 #
 # A new theme can be a new version of a theme an earlier change created. It is
 # saved as "Name (draft)"; making it live renames the version it replaces to
@@ -27,7 +28,9 @@ class AppearanceChange < ActiveRecord::Base
   # marks previous_state while switching back hasn't finished
   REVERTING_KEY = "reverting"
 
-  enum :kind, { palettes: 0, theme: 1, existing_palettes: 2, installed_theme: 3 }, prefix: true
+  enum :kind,
+       { palettes: 0, theme: 1, existing_palettes: 2, installed_theme: 3, existing_theme: 4 },
+       prefix: true
 
   belongs_to :theme
   belongs_to :light_color_scheme, class_name: "ColorScheme", optional: true
@@ -39,7 +42,7 @@ class AppearanceChange < ActiveRecord::Base
   validate :only_supported_site_settings
 
   scope :drafts, -> { where(activated_at: nil) }
-  scope :abandoned_drafts, -> { drafts.where(created_at: ...DRAFT_LIFETIME.ago) }
+  scope :abandoned_drafts, -> { drafts.where(updated_at: ...DRAFT_LIFETIME.ago) }
 
   def self.dark_palette_name(name)
     I18n.t("appearance_changes.dark_palette_name", name:, locale: SiteSetting.default_locale)
@@ -104,12 +107,17 @@ class AppearanceChange < ActiveRecord::Base
   # Whether the change goes live by making its theme the default, rather
   # than by giving an existing theme new palettes.
   def new_default_theme?
+    kind_theme? || kind_installed_theme? || kind_existing_theme?
+  end
+
+  # Whether the change created its theme, so the theme can go with it.
+  def created_theme?
     kind_theme? || kind_installed_theme?
   end
 
-  # An installed theme uses whatever palettes it comes with, if any.
+  # An installed or existing theme uses whatever palettes it has, if any.
   def palettes_exist?
-    return true if kind_installed_theme?
+    return true if kind_installed_theme? || kind_existing_theme?
     light_color_scheme.present? && dark_color_scheme.present?
   end
 
@@ -201,7 +209,7 @@ class AppearanceChange < ActiveRecord::Base
   def discard!
     transaction do
       destroy!
-      theme.destroy! if new_default_theme? && disposable_theme?
+      theme.destroy! if created_theme? && disposable_theme?
       created_palettes.each { |palette| palette.destroy! if disposable_palette?(palette) }
     end
   end
@@ -269,7 +277,7 @@ class AppearanceChange < ActiveRecord::Base
   # Palettes the site already had aren't the change's to remove, and an
   # installed theme's palettes go with the theme when it's removed.
   def created_palettes
-    kind_existing_palettes? || kind_installed_theme? ? [] : palettes
+    kind_existing_palettes? || kind_installed_theme? || kind_existing_theme? ? [] : palettes
   end
 
   def only_supported_site_settings
@@ -286,8 +294,11 @@ class AppearanceChange < ActiveRecord::Base
     record.updated_at > created_at
   end
 
+  # Another change may still use the theme, such as one made later to make
+  # an installed theme live.
   def disposable_theme?
     !edited_since_saved?(theme) && !theme.default? && !theme.user_selectable? && theme_unchanged? &&
+      AppearanceChange.where(theme_id:).where.not(id:).none? &&
       AppearanceChange.where(
         "previous_state -> 'site_settings' ->> 'default_theme_id' = ?",
         theme.id.to_s,

@@ -6,10 +6,11 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::SimpleDiff do
   before { enable_current_plugin }
 
   describe ".apply" do
-    it "raises error for nil inputs" do
+    it "raises error for nil or empty search inputs" do
       expect { simple_diff.apply(nil, "search", "replace") }.to raise_error(ArgumentError)
       expect { simple_diff.apply("content", nil, "replace") }.to raise_error(ArgumentError)
       expect { simple_diff.apply("content", "search", nil) }.to raise_error(ArgumentError)
+      expect { simple_diff.apply("content", "", "replace") }.to raise_error(ArgumentError)
     end
 
     it "prioritizes exact matches over all fuzzy matches" do
@@ -76,6 +77,42 @@ RSpec.describe DiscourseAi::Utils::DiffUtils::SimpleDiff do
       expect(simple_diff.apply(content, search, replace)).to eq(
         "line one one one\nnew_line2\nline three three",
       )
+    end
+
+    it "enforces the exact Levenshtein threshold of 2 on shared-affix lines" do
+      content = "header\n  const badgeLabel = computeStatusLabel(items);\nfooter"
+
+      # Distance 2 (missing 'e' and 's') matches
+      expect(
+        simple_diff.apply(
+          content,
+          "  const badgeLabel = computStatusLabl(items);",
+          "  const badgeLabel = 'ready';",
+        ),
+      ).to eq("header\n  const badgeLabel = 'ready';\nfooter")
+
+      # Distance 3 (missing 'e', 's', and 'i') rejects
+      expect {
+        simple_diff.apply(
+          content,
+          "  const badgeLabel = computStatusLabl(tems);",
+          "  const badgeLabel = 'ready';",
+        )
+      }.to raise_error(DiscourseAi::Utils::DiffUtils::SimpleDiff::NoMatchError)
+    end
+
+    it "measures fuzzy edit distance in Unicode characters rather than UTF-8 bytes" do
+      content = "header\n  title = \"こんにちは世界\"\nfooter"
+
+      # 2 character substitutions ('にち' -> 'ばん'), 4+ UTF-8 bytes changed -> matches
+      expect(simple_diff.apply(content, "  title = \"こんばんは世界\"", "  title = \"新しいタイトル\"")).to eq(
+        "header\n  title = \"新しいタイトル\"\nfooter",
+      )
+
+      # 3 character substitutions -> exceeds threshold of 2
+      expect {
+        simple_diff.apply(content, "  title = \"さようなら世界\"", "  title = \"新しいタイトル\"")
+      }.to raise_error(DiscourseAi::Utils::DiffUtils::SimpleDiff::NoMatchError)
     end
 
     it "is forgiving in multi-line blocks with indentation differences" do

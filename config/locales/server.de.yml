@@ -5428,6 +5428,7 @@ de:
       delete_and_ignore_replies:
         title: "Beitrag und Antworten löschen, Meldung ignorieren"
         description: "Lösche den Beitrag und alle Antworten; dann ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        confirm_title: "Beitrag und Antworten löschen, Meldung ignorieren?"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
@@ -5437,6 +5438,7 @@ de:
       delete_and_agree_replies:
         title: "Beitrag und Antworten löschen"
         description: "Stimme der Meldung zu und lösche diesen Beitrag sowie alle seine Antworten; wenn es der erste Beitrag ist, wird auch das Thema gelöscht."
+        confirm_title: "Beitrag und Antworten löschen?"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:

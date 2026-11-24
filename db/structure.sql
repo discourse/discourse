@@ -810,6 +810,23 @@ CREATE TABLE public.ai_document_fragments_embeddings (
 
 
 --
+-- Name: ai_inferred_concepts_embeddings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_inferred_concepts_embeddings (
+    inferred_concept_id bigint NOT NULL,
+    model_id bigint NOT NULL,
+    model_version integer NOT NULL,
+    strategy_id integer NOT NULL,
+    strategy_version integer NOT NULL,
+    digest text NOT NULL,
+    embeddings public.halfvec NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: ai_mcp_oauth_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1007,8 +1024,8 @@ CREATE TABLE public.ai_reviewable_suggestions (
     id bigint NOT NULL,
     reviewable_id bigint NOT NULL,
     decision_model_id bigint NOT NULL,
-    action_name character varying NOT NULL,
-    confidence double precision NOT NULL,
+    action_name character varying,
+    confidence double precision,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1306,6 +1323,17 @@ CREATE SEQUENCE public.allowed_pm_users_id_seq
 --
 
 ALTER SEQUENCE public.allowed_pm_users_id_seq OWNED BY public.allowed_pm_users.id;
+
+
+--
+-- Name: anonymous_mode_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.anonymous_mode_sessions (
+    id integer NOT NULL,
+    master_user_id integer NOT NULL,
+    user_auth_token_id integer NOT NULL
+);
 
 
 --
@@ -2275,7 +2303,8 @@ CREATE TABLE public.blog_instances (
     is_default boolean DEFAULT false NOT NULL,
     "position" integer DEFAULT 0 NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    published boolean DEFAULT true NOT NULL
 );
 
 
@@ -3557,37 +3586,6 @@ CREATE SEQUENCE public.chat_channels_id_seq
 --
 
 ALTER SEQUENCE public.chat_channels_id_seq OWNED BY public.chat_channels.id;
-
-
---
--- Name: chat_discoverable_bots; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.chat_discoverable_bots (
-    id bigint NOT NULL,
-    user_id integer NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.chat_discoverable_bots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: chat_discoverable_bots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.chat_discoverable_bots_id_seq OWNED BY public.chat_discoverable_bots.id;
 
 
 --
@@ -7734,7 +7732,10 @@ CREATE TABLE public.inferred_concept_posts (
     inferred_concept_id bigint,
     post_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7746,7 +7747,10 @@ CREATE TABLE public.inferred_concept_topics (
     inferred_concept_id bigint,
     topic_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7758,7 +7762,12 @@ CREATE TABLE public.inferred_concepts (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    slug character varying DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 1 NOT NULL,
+    aliases text[] DEFAULT '{}'::text[] NOT NULL,
+    parent_id bigint
 );
 
 
@@ -8132,7 +8141,8 @@ CREATE TABLE public.live_rooms (
     livekit_enabled boolean DEFAULT false NOT NULL,
     max_quality_profile integer,
     ephemeral boolean DEFAULT false NOT NULL,
-    last_occupied_at timestamp(6) without time zone
+    last_occupied_at timestamp(6) without time zone,
+    speak_requests_enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -10082,7 +10092,8 @@ CREATE TABLE public.push_subscriptions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
-    first_error_at timestamp without time zone
+    first_error_at timestamp without time zone,
+    user_auth_token_id integer
 );
 
 
@@ -10295,6 +10306,19 @@ CREATE SEQUENCE public.remote_themes_id_seq
 --
 
 ALTER SEQUENCE public.remote_themes_id_seq OWNED BY public.remote_themes.id;
+
+
+--
+-- Name: retired_user_auth_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.retired_user_auth_tokens (
+    id integer NOT NULL,
+    anonymous_mode_session_id integer NOT NULL,
+    token_hash character varying NOT NULL,
+    previous_token_hash character varying,
+    rotated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -14194,7 +14218,8 @@ CREATE TABLE public.users (
     flair_group_id integer,
     last_seen_reviewable_id integer,
     required_fields_version integer,
-    seen_notification_id bigint DEFAULT 0 NOT NULL
+    seen_notification_id bigint DEFAULT 0 NOT NULL,
+    interactive_bot boolean DEFAULT false NOT NULL
 );
 
 
@@ -15013,13 +15038,6 @@ ALTER TABLE ONLY public.chat_channel_custom_fields ALTER COLUMN id SET DEFAULT n
 --
 
 ALTER TABLE ONLY public.chat_channels ALTER COLUMN id SET DEFAULT nextval('public.chat_channels_id_seq'::regclass);
-
-
---
--- Name: chat_discoverable_bots id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.chat_discoverable_bots ALTER COLUMN id SET DEFAULT nextval('public.chat_discoverable_bots_id_seq'::regclass);
 
 
 --
@@ -17276,6 +17294,14 @@ ALTER TABLE ONLY public.allowed_pm_users
 
 
 --
+-- Name: anonymous_mode_sessions anonymous_mode_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT anonymous_mode_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: anonymous_users anonymous_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17713,14 +17739,6 @@ ALTER TABLE ONLY public.chat_channel_custom_fields
 
 ALTER TABLE ONLY public.chat_channels
     ADD CONSTRAINT chat_channels_pkey PRIMARY KEY (id);
-
-
---
--- Name: chat_discoverable_bots chat_discoverable_bots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.chat_discoverable_bots
-    ADD CONSTRAINT chat_discoverable_bots_pkey PRIMARY KEY (id);
 
 
 --
@@ -19212,6 +19230,14 @@ ALTER TABLE ONLY public.remote_themes
 
 
 --
+-- Name: retired_user_auth_tokens retired_user_auth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT retired_user_auth_tokens_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reviewable_claimed_topics reviewable_claimed_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20289,6 +20315,13 @@ CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions U
 --
 
 CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summaries USING btree (target_id, target_type, summary_type, locale) NULLS NOT DISTINCT;
+
+
+--
+-- Name: idx_anonymous_users_all_shadows_by_master; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_anonymous_users_all_shadows_by_master ON public.anonymous_users USING btree (master_user_id);
 
 
 --
@@ -21622,6 +21655,13 @@ CREATE UNIQUE INDEX index_ai_artifact_versions_on_ai_artifact_id_and_version_num
 
 
 --
+-- Name: index_ai_concepts_embeddings_on_model_strategy_concept; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_concepts_embeddings_on_model_strategy_concept ON public.ai_inferred_concepts_embeddings USING btree (model_id, strategy_id, inferred_concept_id);
+
+
+--
 -- Name: index_ai_fragments_embeddings_on_model_strategy_fragment; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21759,6 +21799,20 @@ CREATE UNIQUE INDEX index_allowed_pm_users_on_allowed_pm_user_id_and_user_id ON 
 --
 
 CREATE UNIQUE INDEX index_allowed_pm_users_on_user_id_and_allowed_pm_user_id ON public.allowed_pm_users USING btree (user_id, allowed_pm_user_id);
+
+
+--
+-- Name: index_anonymous_mode_sessions_on_master_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_anonymous_mode_sessions_on_master_user_id ON public.anonymous_mode_sessions USING btree (master_user_id);
+
+
+--
+-- Name: index_anonymous_mode_sessions_on_user_auth_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_anonymous_mode_sessions_on_user_auth_token_id ON public.anonymous_mode_sessions USING btree (user_auth_token_id);
 
 
 --
@@ -22291,13 +22345,6 @@ CREATE UNIQUE INDEX index_chat_channels_on_slug ON public.chat_channels USING bt
 --
 
 CREATE INDEX index_chat_channels_on_status ON public.chat_channels USING btree (status);
-
-
---
--- Name: index_chat_discoverable_bots_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_chat_discoverable_bots_on_user_id ON public.chat_discoverable_bots USING btree (user_id);
 
 
 --
@@ -23456,10 +23503,38 @@ CREATE UNIQUE INDEX index_inferred_concept_topics_uniqueness ON public.inferred_
 
 
 --
+-- Name: index_inferred_concepts_on_lower_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_lower_name ON public.inferred_concepts USING btree (lower((name)::text));
+
+
+--
 -- Name: index_inferred_concepts_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_inferred_concepts_on_name ON public.inferred_concepts USING btree (name);
+
+
+--
+-- Name: index_inferred_concepts_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_parent_id ON public.inferred_concepts USING btree (parent_id) WHERE (parent_id IS NOT NULL);
+
+
+--
+-- Name: index_inferred_concepts_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_inferred_concepts_on_slug ON public.inferred_concepts USING btree (slug) WHERE ((slug)::text <> ''::text);
+
+
+--
+-- Name: index_inferred_concepts_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_status ON public.inferred_concepts USING btree (status);
 
 
 --
@@ -24555,6 +24630,20 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 
 
 --
+-- Name: index_push_subscriptions_on_user_auth_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_auth_token_id ON public.push_subscriptions USING btree (user_auth_token_id) WHERE (user_auth_token_id IS NOT NULL);
+
+
+--
+-- Name: index_push_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_id ON public.push_subscriptions USING btree (user_id);
+
+
+--
 -- Name: index_quoted_posts_on_post_id_and_quoted_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24594,6 +24683,34 @@ CREATE INDEX index_rag_document_sources_on_target_type_and_target_id ON public.r
 --
 
 CREATE INDEX index_redelivering_webhook_events_on_web_hook_event_id ON public.redelivering_webhook_events USING btree (web_hook_event_id);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_anonymous_mode_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_anonymous_mode_session_id ON public.retired_user_auth_tokens USING btree (anonymous_mode_session_id);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_previous_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_previous_token_hash ON public.retired_user_auth_tokens USING btree (previous_token_hash) WHERE (previous_token_hash IS NOT NULL);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_rotated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_rotated_at ON public.retired_user_auth_tokens USING btree (rotated_at);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_token_hash ON public.retired_user_auth_tokens USING btree (token_hash);
 
 
 --
@@ -26622,6 +26739,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 
 --
+-- Name: anonymous_mode_sessions fk_rails_75ec4f4b22; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT fk_rails_75ec4f4b22 FOREIGN KEY (user_auth_token_id) REFERENCES public.user_auth_tokens(id) ON DELETE CASCADE;
+
+
+--
 -- Name: optimized_videos fk_rails_7c76beeaf4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -26691,6 +26816,14 @@ ALTER TABLE ONLY public.poll_votes
 
 ALTER TABLE ONLY public.poll_options
     ADD CONSTRAINT fk_rails_aa85becb42 FOREIGN KEY (poll_id) REFERENCES public.polls(id);
+
+
+--
+-- Name: retired_user_auth_tokens fk_rails_ae20d58572; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT fk_rails_ae20d58572 FOREIGN KEY (anonymous_mode_session_id) REFERENCES public.anonymous_mode_sessions(id) ON DELETE CASCADE;
 
 
 --
@@ -26820,7 +26953,21 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124152608'),
+('20261124152603'),
+('20261124151606'),
+('20261124013641'),
+('20261124013638'),
+('20261123103548'),
+('20261123031254'),
+('20261123030923'),
+('20261123011249'),
+('20261123011248'),
+('20261122235552'),
+('20261121231304'),
 ('20261120183731'),
+('20261120090013'),
+('20261119190450'),
 ('20261119153028'),
 ('20261118215054'),
 ('20261118184327'),

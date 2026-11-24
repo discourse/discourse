@@ -1782,9 +1782,10 @@ RSpec.describe Admin::UsersController do
       end
 
       context "with param block_url" do
+        fab!(:linked_post) { Fabricate(:post_with_external_links, user: delete_me) }
+
         before do
-          @post = Fabricate(:post_with_external_links, user: delete_me)
-          TopicLink.extract_from(@post)
+          TopicLink.extract_from(linked_post)
 
           @urls =
             TopicLink

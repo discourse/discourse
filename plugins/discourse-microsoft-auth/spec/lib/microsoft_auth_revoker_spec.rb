@@ -48,6 +48,20 @@ RSpec.describe MicrosoftAuthRevoker do
     fab!(:api_key_for_user_2) { Fabricate(:api_key, created_by_id: user_2.id) }
     fab!(:api_key_for_user_3) { Fabricate(:api_key, created_by_id: user_3.id) }
 
+    it "logs out linked shadows without revoking the provider user's own app key on logout alone" do
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: user_1, active: false)
+      token = UserAuthToken.generate!(user_id: shadow.id)
+      key = Fabricate(:user_api_key, user: shadow)
+
+      MicrosoftAuthRevoker.log_out_users
+
+      expect(UserAuthToken.exists?(token.id)).to eq(false)
+      expect(key.reload.revoked_at).to be_present
+      expect(user_api_key_for_user_1.reload.revoked_at).to be_nil
+      expect(user_3.user_auth_tokens).not_to be_empty
+    end
+
     it "deletes all Microsoft provider `UserAssociatedAccount` records" do
       expect do MicrosoftAuthRevoker.revoke end.to change { UserAssociatedAccount.count }.by(-2)
       expect(UserAssociatedAccount.where(provider_name: "microsoft_office365").count).to eq(0)

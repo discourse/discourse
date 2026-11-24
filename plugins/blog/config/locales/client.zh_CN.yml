@@ -27,7 +27,6 @@ zh_CN:
         go_to_editor: 前往编辑器
         open_blog: 打开博客
         safe_mode: 无需自定义代码即可打开
-        identity: 博客标识
         blog_title: 博客名称
         tagline: 标语
         accent: 强调色
@@ -75,7 +74,17 @@ zh_CN:
         js: 自定义 JavaScript
         js_description: 纯 JavaScript，最多 65,536 字节。脚本标签不会被解析——要加载另一个脚本，请添加一个脚本元素（document.createElement("script")）。
         save: 保存
-        identity_tab: 身份
+        about_tab: 关于
+        blog_slug: 缩略名
+        general_heading: 常规
+        settings_tab: 设置
+        theme_tab: 主题
+        published_status: 已发布
+        column_name: 名称
+        column_category: 类别
+        column_status: 状态
+        needs_attention: 需要关注
+        select_theme: 选择主题
         path_formats:
           custom: 自定义
         themes_index_description: 选择读者看到的界面设计。您可以自定义内置主题或编辑自己的主题；更改在您激活之前都将保持私密状态。
@@ -268,6 +277,7 @@ zh_CN:
       editor_title: 博客编辑器
       editor_description: 草稿在您发布之前始终保持私密状态。您可以编辑文章以发布、安排发布时间或进行更正。
       editor_table:
+        blog: 博客
         edit: 编辑
         status: 状态
         published: 已发布
@@ -290,6 +300,7 @@ zh_CN:
       preview: 预览
       load_more: 加载更多
       unpublish_confirm: 删除此博客文章？该主题及其回复仍将在社区内公开。已存在于信息流和搜索引擎中的副本无法撤回。
+      blog_field: 博客
       path: 文章路径
       excerpt: 摘录
       excerpt_hint: 文章卡片和搜索预览的简短介绍。留空则生成文章摘录。

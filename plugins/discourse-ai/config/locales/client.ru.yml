@@ -234,6 +234,13 @@ ru:
               description: "Разрешить добавление тегов к сообщениям, созданным пользователем системы."
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Обновить"
+        columns:
+          user: "Пользователь"
+          reason: "Помечено как"
+          created: "Создан"
+          status: "Статус"
       dsa_classification:
         suggest: "Подсказки от AI"
       copied: "Скопировано"

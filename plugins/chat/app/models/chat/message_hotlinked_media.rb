@@ -27,10 +27,9 @@ module Chat
       return false if !SiteSetting.download_remote_images_to_local?
       return false if !SiteSetting.chat_allow_uploads?
       return false if src.downcase.start_with?("data:")
-      # Host-agnostic on purpose: the downloader signs our own S3 path for any
-      # URL shaped like this, whoever serves it. Posts gate that on the author
-      # seeing the access-control post; chat messages have none, so there is
-      # nothing to authorize against.
+      # Our own secure-upload URLs bounce anonymous fetches, and chat messages
+      # have no access-control post to authorize against, so leave them alone.
+      # A foreign host serving a similar path is just another remote image.
       return false if Upload.secure_uploads_url?(src)
 
       if !HotlinkedMedia.remote_src?(src)

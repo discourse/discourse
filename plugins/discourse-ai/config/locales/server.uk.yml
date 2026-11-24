@@ -482,6 +482,8 @@ uk:
           text_color: "колір тексту"
         approve_label: "Так"
         reject_label: "Ні"
+        category_access_levels:
+          readonly: "Переглянути"
         empty_value: "Порожній"
         approved: "Схвалено @%{username}."
         rejected: "Відхилено користувачем @%{username}."
@@ -737,6 +739,7 @@ uk:
         edit_tag: "Редагувати тег"
         create_category: "Створити категорію"
         edit_category: "Редагувати категорію"
+        delete_category: "Видалити категорію"
         change_topic_category: "Змінити категорію теми"
         set_topic_timer: "Встановити таймер теми"
         set_slow_mode: "Встановити повільний режим"
@@ -1034,6 +1037,12 @@ uk:
           nothing_to_edit: "Потрібно вказати принаймні один із параметрів: name (назва), description (опис), color (колір) або text_color (колір_тексту)."
           no_reason: "Для редагування категорії потрібна причина."
         success: "Категорія «%{name}» успішно оновлена."
+      set_category_permissions:
+        errors:
+          not_found: "Розділ не знайдено."
+      delete_category:
+        errors:
+          not_found: "Розділ не знайдено."
       change_topic_category:
         errors:
           not_found: "Тему не знайдено."

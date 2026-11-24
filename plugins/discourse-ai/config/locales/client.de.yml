@@ -243,6 +243,15 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      review_bulk:
+        refresh: "Aktualisieren"
+        columns:
+          user: "Nutzer"
+          reason: "Gemeldet als"
+          created: "Erstellt"
+          status: "Status"
+        status:
+          applying: "Wird angewendet…"
       dsa_classification:
         suggest: "Mit KI vorschlagen"
       copied: "Kopiert"

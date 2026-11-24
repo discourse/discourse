@@ -18,7 +18,7 @@ RSpec.describe Jobs::DeliverPushNotification do
   end
 
   describe "time window gate" do
-    fab!(:time_window_push_subscription) { Fabricate(:push_subscription, user: user) }
+    fab!(:time_window_push_subscription) { Fabricate(:bound_push_subscription, user: user) }
 
     it "does not deliver when user is missing" do
       PushNotificationPusher.expects(:push).never
@@ -57,7 +57,7 @@ RSpec.describe Jobs::DeliverPushNotification do
     before { user.update!(last_seen_at: 10.minutes.ago) }
 
     it "calls PushNotificationPusher when user has push subscriptions" do
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       PushNotificationPusher.expects(:push).with(user, payload).once
       Jobs::DeliverPushNotification.new.execute(user_id: user.id, payload: payload)
     end
@@ -80,7 +80,7 @@ RSpec.describe Jobs::DeliverPushNotification do
   describe "both mechanisms" do
     it "delivers via both pushers for the same user" do
       user.update!(last_seen_at: 10.minutes.ago)
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
 
       PushNotificationPusher.expects(:push).with(user, payload).once
       HubPushNotificationPusher.expects(:push).with(user, payload).once
@@ -115,7 +115,7 @@ RSpec.describe Jobs::DeliverPushNotification do
     end
 
     it "localizes payload before delivering to web push" do
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       Fabricate(
         :topic_localization,
         topic: topic,
@@ -170,7 +170,7 @@ RSpec.describe Jobs::DeliverPushNotification do
 
     it "does not localize when content_localization_enabled is false" do
       SiteSetting.content_localization_enabled = false
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       Fabricate(
         :topic_localization,
         topic: topic,
@@ -190,7 +190,7 @@ RSpec.describe Jobs::DeliverPushNotification do
     end
 
     it "keeps the original excerpt when the translation is for an older version of the post" do
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       Fabricate(
         :post_localization,
         post: localized_post,
@@ -206,7 +206,7 @@ RSpec.describe Jobs::DeliverPushNotification do
 
     it "keeps the original content when the user turned off automatic translation" do
       user.user_option.update!(automatically_translate: false)
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳</p>")
 
       PushNotificationPusher.expects(:push).with { |_, p| p[:excerpt] == "Original post content" }
@@ -215,7 +215,7 @@ RSpec.describe Jobs::DeliverPushNotification do
     end
 
     it "keeps a caller-provided excerpt" do
-      Fabricate(:push_subscription, user: user)
+      Fabricate(:bound_push_subscription, user: user)
       Fabricate(:topic_localization, topic: topic, locale: "ja", title: "ローカライズされたトピック")
       Fabricate(:post_localization, post: localized_post, locale: "ja", cooked: "<p>翻訳</p>")
 
@@ -238,7 +238,7 @@ RSpec.describe Jobs::DeliverPushNotification do
       let(:pending_modifier) { Proc.new { |_pending, _post, _user| pending.first } }
 
       before do
-        Fabricate(:push_subscription, user: user)
+        Fabricate(:bound_push_subscription, user: user)
         DiscoursePluginRegistry.register_modifier(
           plugin,
           :deliver_push_notification_localization_pending,

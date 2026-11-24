@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseSubscriptions::SubscribeController do
-  let(:user) { Fabricate(:user) }
-  let(:campaign_user) { Fabricate(:user) }
-
   before do
     SiteSetting.discourse_subscriptions_enabled = true
     SiteSetting.discourse_subscriptions_secret_key = "secret-key"
   end
 
   context "when showing products" do
+    fab!(:user)
+    fab!(:published_product) { Fabricate(:product, external_id: "prodct_23456") }
+
     let(:product) do
       {
         id: "prodct_23456",
@@ -64,7 +64,6 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
     before do
       sign_in(user)
-      Fabricate(:product, external_id: "prodct_23456")
       SiteSetting.discourse_subscriptions_public_key = "public-key"
     end
 
@@ -133,6 +132,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
     end
 
     describe "#get_contributors" do
+      fab!(:campaign_user, :user)
+
       before do
         Fabricate(:product, external_id: "prod_campaign")
         user.user_stat.update!(post_count: 1)
@@ -298,6 +299,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
     end
 
     context "when authenticated" do
+      fab!(:user)
       fab!(:published_product) { Fabricate(:product, external_id: "product_12345") }
 
       before { sign_in(user) }

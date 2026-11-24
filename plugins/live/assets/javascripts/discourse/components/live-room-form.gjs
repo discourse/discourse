@@ -28,6 +28,7 @@ export default class LiveRoomForm extends Component {
       description: this.args.room?.description || "",
       public: this.args.room?.public ?? false,
       room_type: this.args.room?.room_type || "open",
+      speak_requests_enabled: this.args.room?.speak_requests_enabled ?? true,
       max_participants: this.args.room?.max_participants || null,
       video_enabled: this.args.room?.video_enabled ?? true,
       livekit_enabled: this.args.room?.livekit_enabled ?? false,
@@ -200,6 +201,16 @@ export default class LiveRoomForm extends Component {
           <div class="live-room-form__stage-hint">
             {{i18n "live.room.type_stage_hint"}}
           </div>
+          <form.Field
+            @description={{i18n "live.admin.room.speak_requests_enabled_help"}}
+            @format="full"
+            @name="speak_requests_enabled"
+            @title={{i18n "live.admin.room.speak_requests_enabled"}}
+            @type="toggle"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
         {{/if}}
 
         <form.Field

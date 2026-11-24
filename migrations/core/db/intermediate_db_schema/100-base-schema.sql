@@ -642,6 +642,7 @@ CREATE TABLE users
     first_seen_at             DATETIME,
     flair_group_id            NUMERIC,
     group_locked_trust_level  INTEGER,
+    interactive_bot           BOOLEAN,
     ip_address                INET_TEXT,
     last_seen_at              DATETIME,
     locale                    TEXT,

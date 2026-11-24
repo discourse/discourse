@@ -26,10 +26,21 @@ module DiscourseReactions
     end
 
     def toggle!
-      raise Discourse::InvalidAccess unless @user.guardian.can_use_reactions?(@post)
+      guardian = @user.guardian
+      raise Discourse::InvalidAccess unless guardian.can_use_reactions?(@post)
 
-      if (@like && !@user.guardian.can_delete_post_action?(@like)) ||
-           (reaction_user && !@user.guardian.can_delete_reaction_user?(reaction_user))
+      existing_reaction_user = reaction_user
+      if (@like && !guardian.can_delete_post_action?(@like)) ||
+           (existing_reaction_user && !guardian.can_delete_reaction_user?(existing_reaction_user))
+        oldest_action_at = [@like&.created_at, existing_reaction_user&.created_at].compact.min
+        if oldest_action_at <= SiteSetting.post_undo_action_window_mins.minutes.ago
+          raise Discourse::InvalidAccess.new(
+                  nil,
+                  nil,
+                  custom_message: "js.discourse_reactions.picker.cant_remove_reaction",
+                )
+        end
+
         raise Discourse::InvalidAccess
       end
 

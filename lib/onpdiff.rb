@@ -31,10 +31,24 @@ class ONPDiff
   )
     @a, @b = a, b
     @m, @n = a.size, b.size
-    @backtrack = []
     if @reverse = @m > @n
       @a, @b = @b, @a
       @m, @n = @n, @m
+    end
+    @is_string = @a.is_a?(String) && @b.is_a?(String)
+    if @is_string
+      if @a.valid_encoding? && @b.valid_encoding?
+        @eq_a = @a.ascii_only? ? @a.bytes : @a.codepoints
+        @eq_b = @b.ascii_only? ? @b.bytes : @b.codepoints
+      else
+        @eq_a = @a.chars
+        @eq_b = @b.chars
+      end
+    else
+      intern = {}
+      next_id = 0
+      @eq_a = @a.map { |el| intern[el] ||= (next_id += 1) }
+      @eq_b = @b.map { |el| intern[el] ||= (next_id += 1) }
     end
     @offset = @m + 1
     @delta = @n - @m
@@ -59,91 +73,152 @@ class ONPDiff
   def compose
     return @shortest_path if @shortest_path
 
-    size = @m + @n + 3
-    fp = Array.new(size, -1)
-    @path = Array.new(size, -1)
-    p = -1
+    m = @m
+    n = @n
+    offset = @offset
+    delta = @delta
+    eq_a = @eq_a
+    eq_b = @eq_b
+    budget = @comparison_budget
+    used = @comparisons_used
 
-    begin
+    size = m + n + 3
+    fp = Array.new(size, -1)
+    path = Array.new(size, -1)
+    bt_x = []
+    bt_y = []
+    bt_prev = []
+
+    p = -1
+    delta_offset = delta + offset
+
+    until fp[delta_offset] == n
       p += 1
 
       k = -p
-      while k <= @delta - 1
-        fp[k + @offset] = snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
+      while k < delta
+        k_off = k + offset
+        left_p = fp[k_off - 1] + 1
+        right_pp = fp[k_off + 1]
+        if left_p > right_pp
+          r = path[k_off - 1]
+          y = left_p
+        else
+          r = path[k_off + 1]
+          y = right_pp
+        end
+        x = y - k
+        while x < m && y < n
+          used += 1
+          if used > budget
+            @comparisons_used = used
+            raise_diff_limit_exceeded!
+          end
+          break if eq_a[x] != eq_b[y]
+          x += 1
+          y += 1
+        end
+        idx = bt_x.size
+        path[k_off] = idx
+        bt_x << x
+        bt_y << y
+        bt_prev << r
+        fp[k_off] = y
         k += 1
       end
 
-      k = @delta + p
-      while k >= @delta + 1
-        fp[k + @offset] = snake(k, fp[k - 1 + @offset] + 1, fp[k + 1 + @offset])
+      k = delta + p
+      while k > delta
+        k_off = k + offset
+        left_p = fp[k_off - 1] + 1
+        right_pp = fp[k_off + 1]
+        if left_p > right_pp
+          r = path[k_off - 1]
+          y = left_p
+        else
+          r = path[k_off + 1]
+          y = right_pp
+        end
+        x = y - k
+        while x < m && y < n
+          used += 1
+          if used > budget
+            @comparisons_used = used
+            raise_diff_limit_exceeded!
+          end
+          break if eq_a[x] != eq_b[y]
+          x += 1
+          y += 1
+        end
+        idx = bt_x.size
+        path[k_off] = idx
+        bt_x << x
+        bt_y << y
+        bt_prev << r
+        fp[k_off] = y
         k -= 1
       end
 
-      fp[@delta + @offset] = snake(@delta, fp[@delta - 1 + @offset] + 1, fp[@delta + 1 + @offset])
-    end until fp[@delta + @offset] == @n
+      left_p = fp[delta_offset - 1] + 1
+      right_pp = fp[delta_offset + 1]
+      if left_p > right_pp
+        r = path[delta_offset - 1]
+        y = left_p
+      else
+        r = path[delta_offset + 1]
+        y = right_pp
+      end
+      x = y - delta
+      while x < m && y < n
+        used += 1
+        if used > budget
+          @comparisons_used = used
+          raise_diff_limit_exceeded!
+        end
+        break if eq_a[x] != eq_b[y]
+        x += 1
+        y += 1
+      end
+      idx = bt_x.size
+      path[delta_offset] = idx
+      bt_x << x
+      bt_y << y
+      bt_prev << r
+      fp[delta_offset] = y
+    end
 
-    r = @path[@delta + @offset]
+    @comparisons_used = used
 
-    @shortest_path = []
-
+    r = path[delta_offset]
+    shortest_path = []
     while r != -1
-      @shortest_path << [@backtrack[r][0], @backtrack[r][1]]
-      r = @backtrack[r][2]
+      shortest_path << [bt_x[r], bt_y[r]]
+      r = bt_prev[r]
     end
-
-    @shortest_path
-  end
-
-  def snake(k, p, pp)
-    k_offset = k + @offset
-
-    if p > pp
-      r = @path[k_offset - 1]
-      y = p
-    else
-      r = @path[k_offset + 1]
-      y = pp
-    end
-
-    x = y - k
-
-    while x < @m && y < @n
-      @comparisons_used += 1
-      raise_diff_limit_exceeded! if @comparisons_used > @comparison_budget
-
-      break if @a[x] != @b[y]
-
-      x += 1
-      y += 1
-    end
-
-    @path[k_offset] = @backtrack.size
-    @backtrack << [x, y, r]
-
-    y
+    @shortest_path = shortest_path
   end
 
   def build_edit_script(shortest_path)
     ses = []
-    x, y = 1, 1
     px, py = 0, 0
+    seq_a = @is_string && !@a.ascii_only? ? @a.chars : @a
+    seq_b = @is_string && !@b.ascii_only? ? @b.chars : @b
+    add_op = @reverse ? :delete : :add
+    del_op = @reverse ? :add : :delete
+
     i = shortest_path.size - 1
     while i >= 0
-      while px < shortest_path[i][0] || py < shortest_path[i][1]
-        if shortest_path[i][1] - shortest_path[i][0] > py - px
-          t = @reverse ? :delete : :add
-          ses << [@b[py], t]
-          y += 1
+      sx, sy = shortest_path[i]
+      s_diff = sy - sx
+      while px < sx || py < sy
+        if s_diff > py - px
+          ses << [seq_b[py], add_op]
           py += 1
-        elsif shortest_path[i][1] - shortest_path[i][0] < py - px
-          t = @reverse ? :add : :delete
-          ses << [@a[px], t]
-          x += 1
+        elsif s_diff < py - px
+          ses << [seq_a[px], del_op]
           px += 1
         else
-          ses << [@a[px], :common]
-          x += 1
-          y += 1
+          ses << [seq_a[px], :common]
           px += 1
           py += 1
         end
@@ -154,29 +229,31 @@ class ONPDiff
   end
 
   def build_short_edit_script(shortest_path)
+    return build_short_string_edit_script(shortest_path) if @is_string
+
     ses = []
-    x, y = 1, 1
     px, py = 0, 0
+    add_op = @reverse ? :delete : :add
+    del_op = @reverse ? :add : :delete
+
     i = shortest_path.size - 1
     while i >= 0
-      while px < shortest_path[i][0] || py < shortest_path[i][1]
-        if shortest_path[i][1] - shortest_path[i][0] > py - px
-          t = @reverse ? :delete : :add
-          if ses.size > 0 && ses[-1][1] == t
+      sx, sy = shortest_path[i]
+      s_diff = sy - sx
+      while px < sx || py < sy
+        if s_diff > py - px
+          if ses.size > 0 && ses[-1][1] == add_op
             ses[-1][0] << @b[py]
           else
-            ses << [@b[py], t]
+            ses << [@b[py], add_op]
           end
-          y += 1
           py += 1
-        elsif shortest_path[i][1] - shortest_path[i][0] < py - px
-          t = @reverse ? :add : :delete
-          if ses.size > 0 && ses[-1][1] == t
+        elsif s_diff < py - px
+          if ses.size > 0 && ses[-1][1] == del_op
             ses[-1][0] << @a[px]
           else
-            ses << [@a[px], t]
+            ses << [@a[px], del_op]
           end
-          x += 1
           px += 1
         else
           if ses.size > 0 && ses[-1][1] == :common
@@ -184,10 +261,59 @@ class ONPDiff
           else
             ses << [@a[px], :common]
           end
-          x += 1
-          y += 1
           px += 1
           py += 1
+        end
+      end
+      i -= 1
+    end
+    ses
+  end
+
+  def build_short_string_edit_script(shortest_path)
+    ses = []
+    px, py = 0, 0
+    add_op = @reverse ? :delete : :add
+    del_op = @reverse ? :add : :delete
+
+    i = shortest_path.size - 1
+    while i >= 0
+      sx, sy = shortest_path[i]
+      s_diff = sy - sx
+      while px < sx || py < sy
+        cur_diff = py - px
+        if s_diff > cur_diff
+          py_end = py + (s_diff - cur_diff)
+          py_end = sy if py_end > sy
+          chunk = @b[py...py_end]
+          if !ses.empty? && ses[-1][1] == add_op
+            ses[-1][0] << chunk
+          else
+            ses << [+chunk, add_op]
+          end
+          py = py_end
+        elsif s_diff < cur_diff
+          px_end = px + (cur_diff - s_diff)
+          px_end = sx if px_end > sx
+          chunk = @a[px...px_end]
+          if !ses.empty? && ses[-1][1] == del_op
+            ses[-1][0] << chunk
+          else
+            ses << [+chunk, del_op]
+          end
+          px = px_end
+        else
+          rem_x = sx - px
+          rem_y = sy - py
+          count = rem_x < rem_y ? rem_x : rem_y
+          chunk = @a[px, count]
+          if !ses.empty? && ses[-1][1] == :common
+            ses[-1][0] << chunk
+          else
+            ses << [+chunk, :common]
+          end
+          px += count
+          py += count
         end
       end
       i -= 1

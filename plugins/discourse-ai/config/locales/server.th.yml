@@ -43,6 +43,8 @@ th:
           color: "สี"
         approve_label: "ใช่"
         reject_label: "ไม่ใช่"
+        category_access_levels:
+          readonly: "ดู"
       tool_summary:
         search: "ค้นหา"
         time: "เวลา"

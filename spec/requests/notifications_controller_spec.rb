@@ -396,6 +396,22 @@ RSpec.describe NotificationsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([liked1.id])
           end
+
+          it "filters the full list and keeps the types in the load more URL" do
+            get "/notifications.json", params: { filter_by_types: "liked", limit: 1 }
+
+            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq([liked1.id])
+            expect(response.parsed_body["total_rows_notifications"]).to eq(2)
+            expect(response.parsed_body["load_more_notifications"]).to include(
+              "filter_by_types=liked",
+            )
+          end
+
+          it "rejects types that are not a comma separated string" do
+            get "/notifications.json", params: { filter_by_types: %w[liked] }
+
+            expect(response.status).to eq(400)
+          end
         end
 
         context "when username params is not valid" do
@@ -705,6 +721,21 @@ RSpec.describe NotificationsController do
               notification.reload
             }.not_to change { notification.read }
           end
+        end
+
+        it "rejects a malformed id or types instead of marking everything as read" do
+          [
+            { id: false },
+            { id: [notification.id] },
+            { dismiss_types: "," },
+            { dismiss_types: %w[liked] },
+          ].each do |params|
+            put "/notifications/mark-read.json", params:, as: :json
+
+            expect(response.status).to eq(400)
+          end
+
+          expect(notification.reload.read).to eq(false)
         end
 
         context "when targeting notifications by type" do

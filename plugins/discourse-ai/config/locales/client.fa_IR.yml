@@ -64,6 +64,12 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      review_bulk:
+        refresh: "تازه‌سازی"
+        columns:
+          user: "کاربر"
+          created: "ساخته شده"
+          status: "وضعیت"
       copied: "کپی شد"
       ai_decoded_transcript:
         tool: "ابزار"

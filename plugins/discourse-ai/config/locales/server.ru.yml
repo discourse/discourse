@@ -300,6 +300,8 @@ ru:
           text_color: "цвет текста"
         approve_label: "Да"
         reject_label: "Нет"
+        category_access_levels:
+          readonly: "Просматривать"
         empty_value: "Пустой"
       agents:
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
@@ -455,6 +457,7 @@ ru:
         edit_post: "Редактировать пост"
         edit_tag: "Редактировать тег"
         create_category: "Создать категорию"
+        delete_category: "Удаление категории"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"
@@ -635,6 +638,12 @@ ru:
         errors:
           tagging_disabled: "На этом сайте функция добавления тегов отключена."
       edit_category:
+        errors:
+          not_found: "Категория не найдена."
+      set_category_permissions:
+        errors:
+          not_found: "Категория не найдена."
+      delete_category:
         errors:
           not_found: "Категория не найдена."
       change_topic_category:

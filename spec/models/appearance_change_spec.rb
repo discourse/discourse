@@ -164,6 +164,28 @@ RSpec.describe AppearanceChange do
       expect(ColorScheme.exists?(shared.id)).to eq(true)
     end
 
+    it "keeps a theme the site already had" do
+      appearance_change = Fabricate(:installed_theme_appearance_change, kind: :existing_theme)
+
+      appearance_change.discard!
+
+      expect(described_class.exists?(appearance_change.id)).to eq(false)
+      expect(Theme.exists?(appearance_change.theme_id)).to eq(true)
+    end
+
+    it "keeps an installed theme another change still uses" do
+      appearance_change = Fabricate(:installed_theme_appearance_change)
+      Fabricate(
+        :installed_theme_appearance_change,
+        kind: :existing_theme,
+        theme: appearance_change.theme,
+      )
+
+      appearance_change.discard!
+
+      expect(Theme.exists?(appearance_change.theme_id)).to eq(true)
+    end
+
     it "keeps an installed theme someone has let users choose" do
       appearance_change = Fabricate(:installed_theme_appearance_change)
       appearance_change.theme.update_columns(user_selectable: true)

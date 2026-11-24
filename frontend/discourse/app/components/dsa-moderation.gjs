@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { schedule } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import DsaModerationDetails from "discourse/components/dsa-moderation-details";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -113,7 +114,11 @@ const Footer = <template>
       class={{@submitClass}}
       type={{if @flow.enabled "submit" "button"}}
       @action={{unless @flow.enabled @flow.submit}}
-      @disabled={{or @disabled @flow.isUpdatingClassification}}
+      @disabled={{or
+        @disabled
+        @flow.isUpdatingClassification
+        (and @requireCompleteClassification (not @flow.classificationComplete))
+      }}
       @form={{if @flow.enabled @flow.formId}}
       @icon={{@submitIcon}}
       @isLoading={{@isLoading}}
@@ -155,10 +160,16 @@ export default class DsaModeration extends Component {
   @tracked isUpdatingClassification = false;
 
   formId = `dsa-moderation-${guidFor(this)}`;
+  #getClassificationField = tracked(null);
   #setClassification;
 
   get actionStepLabel() {
     return this.args.actionStepLabel ?? i18n("review.moderation_steps.action");
+  }
+
+  get classificationComplete() {
+    const getField = this.#getClassificationField.value;
+    return Boolean(getField?.("community_rule") && getField("category"));
   }
 
   get enabled() {
@@ -194,8 +205,13 @@ export default class DsaModeration extends Component {
   }
 
   @action
-  registerFormApi({ setProperties }) {
+  registerFormApi({ get, setProperties }) {
     this.#setClassification = setProperties;
+    schedule("afterRender", () => {
+      if (!this.isDestroying) {
+        this.#getClassificationField.value = get;
+      }
+    });
   }
 
   @action

@@ -38,6 +38,12 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      review_bulk:
+        refresh: "Обнови"
+        columns:
+          user: "Потребител"
+          created: "Създадени"
+          status: "Статус"
       copied: "Копирано"
       ai_decoded_transcript:
         type: "Тип"

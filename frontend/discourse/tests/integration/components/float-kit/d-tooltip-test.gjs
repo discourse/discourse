@@ -12,6 +12,7 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
@@ -32,6 +33,27 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
   async function close() {
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
   }
+
+  test("crossing the mobile breakpoint keeps the tooltip working", async function (assert) {
+    const narrow = tracked(false);
+    sinon
+      .stub(getOwner(this).lookup("service:site"), "mobileView")
+      .get(() => narrow.value);
+
+    await render(
+      <template><DTooltip @content="Tip" @inline={{true}} /></template>
+    );
+
+    narrow.value = true;
+    await settled();
+    narrow.value = false;
+    await settled();
+
+    await hover();
+    assert
+      .dom(".fk-d-tooltip__content")
+      .hasText("Tip", "back on desktop, hovering still opens it");
+  });
 
   test("@label", async function (assert) {
     await render(

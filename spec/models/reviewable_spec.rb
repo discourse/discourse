@@ -1238,7 +1238,7 @@ RSpec.describe Reviewable, type: :model do
       ).to eq(%w[reject_post revise_and_reject_post])
     end
 
-    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+    it "offers Deny post before Approve post with consistent answers" do
       SiteSetting.review_queue_consistent_answers = true
 
       actions = reviewable.actions_for(user.guardian)
@@ -1246,9 +1246,9 @@ RSpec.describe Reviewable, type: :model do
       expect(actions.bundles.map(&:id)).to eq(
         ["#{reviewable.id}-reject-post", "#{reviewable.id}-approve_post"],
       )
-      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_post.title")
       expect(actions.bundles.last.actions.map(&:label)).to eq(
-        ["reviewables.actions.answer_no.title"],
+        ["reviewables.actions.approve_post.action_title"],
       )
     end
 

@@ -1401,17 +1401,17 @@ RSpec.describe PostAlerter do
     end
 
     it "adds display name to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:display_name] = "Benji McCool"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:display_name] = "Benji McCool"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:display_name]).to eq("Benji McCool")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
 
     it "does not add a display name when names are disabled" do
@@ -1423,17 +1423,17 @@ RSpec.describe PostAlerter do
     end
 
     it "applies modifiers to notification_data" do
-      Plugin::Instance
-        .new
-        .register_modifier(:notification_data) do |notification_data|
-          notification_data[:silly_key] = "silly value"
-          notification_data
-        end
+      plugin = Plugin::Instance.new
+      modifier = ->(notification_data) do
+        notification_data[:silly_key] = "silly value"
+        notification_data
+      end
+      plugin.register_modifier(:notification_data, &modifier)
 
       notification = PostAlerter.new.create_notification(user, type, post)
       expect(notification.data_hash[:silly_key]).to eq("silly value")
-
-      DiscoursePluginRegistry.clear_modifiers!
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(plugin, :notification_data, &modifier)
     end
   end
 
@@ -1636,7 +1636,7 @@ RSpec.describe PostAlerter do
 
     context "with push subscriptions" do
       before do
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
         SiteSetting.push_notification_time_window_mins = 10
       end
 
@@ -1753,7 +1753,7 @@ RSpec.describe PostAlerter do
 
       it "tells the push to keep an excerpt provided by the caller" do
         evil_trout.update_columns(last_seen_at: 1.hour.ago)
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
 
         expect_enqueued_with(
           job: :deliver_push_notification,
@@ -3086,7 +3086,9 @@ RSpec.describe PostAlerter do
       )
     end
 
-    def create_post_with_incoming
+    fab!(:incoming_email_post) do
+      SiteSetting.enable_smtp = true
+      SiteSetting.email_in = true
       raw_mail = <<~EMAIL
       From: Foo <foo@discourse.org>
       To: discourse@example.com
@@ -3101,7 +3103,7 @@ RSpec.describe PostAlerter do
       This is the first email.
       EMAIL
 
-      Email::Receiver.new(raw_mail, {}).process!
+      Jobs.with_immediate_jobs { Email::Receiver.new(raw_mail, {}).process! }
     end
 
     it "does not error if SMTP is enabled and the topic has no incoming email or allowed groups" do
@@ -3120,7 +3122,6 @@ RSpec.describe PostAlerter do
     end
 
     it "sends a group smtp email because SMTP is enabled for the site and the group" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
@@ -3136,7 +3137,6 @@ RSpec.describe PostAlerter do
     end
 
     it "sends a group smtp email when the original group has had SMTP disabled and there is an additional topic allowed group" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       other_allowed_group = Fabricate(:smtp_group)
       TopicAllowedGroup.create(group: other_allowed_group, topic: topic)
@@ -3158,7 +3158,6 @@ RSpec.describe PostAlerter do
 
     it "does not send a group smtp email if smtp is not enabled for the group" do
       group.update!(smtp_enabled: false)
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3168,7 +3167,6 @@ RSpec.describe PostAlerter do
 
     it "does not send a group smtp email if SiteSetting.enable_smtp is false" do
       SiteSetting.enable_smtp = false
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3177,7 +3175,6 @@ RSpec.describe PostAlerter do
     end
 
     it "does not send group smtp emails for a whisper" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
       expect { PostAlerter.new.after_save_post(post, true) }.not_to change {
@@ -3187,11 +3184,10 @@ RSpec.describe PostAlerter do
 
     it "sends the group smtp email job with a delay of personal_email_time_window_seconds" do
       freeze_time
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
-      PostAlerter.new.after_save_post(post, true)
-      job_enqueued?(
+      Jobs.run_later!
+      expect_enqueued_with(
         job: :group_smtp_email,
         args: {
           group_id: group.id,
@@ -3200,11 +3196,25 @@ RSpec.describe PostAlerter do
           cc_emails: %w[bar@discourse.org jim@othersite.com],
         },
         at: Time.zone.now + SiteSetting.personal_email_time_window_seconds.seconds,
-      )
+      ) { PostAlerter.post_created(post) }
+    end
+
+    it "excludes an interactive bot from group SMTP even when it is the oldest recipient" do
+      topic = incoming_email_post.topic
+      bot = Fabricate(:bot, interactive_bot: true)
+      bot.user_option.update!(email_messages_level: UserOption.email_level_types[:always])
+      oldest_recipient = topic.topic_allowed_users.order(:created_at).first
+      topic.topic_allowed_users.create!(user: bot, created_at: oldest_recipient.created_at - 1.day)
+      post = Fabricate(:post, topic: topic)
+
+      PostAlerter.post_created(post)
+
+      email = ActionMailer::Base.deliveries.last
+      expect(email.to).to eq([oldest_recipient.user.email])
+      expect(email.cc).not_to include(bot.email)
     end
 
     it "does not send a group smtp email for anyone if the reply post originates from an incoming email that is auto generated" do
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic)
       Fabricate(:incoming_email, post: post, topic: topic, is_auto_generated: true)
@@ -3221,7 +3231,6 @@ RSpec.describe PostAlerter do
       SiteSetting.simple_email_subject = true
       SiteSetting.email_subject = "%{site_name}: %{topic_title}"
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       group_user1 = Fabricate(:group_user, group: group)
@@ -3259,7 +3268,6 @@ RSpec.describe PostAlerter do
     it "excludes users with email_messages_level set to never from group SMTP emails" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       # Get one of the topic allowed users and set their email preference to never
@@ -3282,7 +3290,6 @@ RSpec.describe PostAlerter do
     it "skips sending a notification email to the cc address that was added on the same post with an incoming email" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
 
       post = Fabricate(:post, topic: topic.reload)
@@ -3334,7 +3341,6 @@ RSpec.describe PostAlerter do
     it "handles the OP of the topic replying by email and sends a group email to the other topic allowed users successfully" do
       NotificationEmailer.enable
 
-      incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
       post = Fabricate(:post, topic: topic.reload)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
@@ -3400,8 +3406,8 @@ RSpec.describe PostAlerter do
       This is the first email.
       EMAIL
 
-      incoming_email_post = Email::Receiver.new(raw_mail, {}).process!
-      topic = incoming_email_post.topic
+      original_post = Email::Receiver.new(raw_mail, {}).process!
+      topic = original_post.topic
       post = Fabricate(:post, topic: topic.reload)
       expect { PostAlerter.new.after_save_post(post, true) }.to change {
         ActionMailer::Base.deliveries.size

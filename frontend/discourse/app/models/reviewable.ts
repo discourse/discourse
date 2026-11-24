@@ -97,6 +97,7 @@ export interface ReviewableAction {
   icon: string | null;
   button_class: string | null;
   label: string;
+  confirm_title?: string;
   confirm_message?: string;
   confirm_destructive?: boolean;
   description?: string;
@@ -229,6 +230,8 @@ export interface ReviewableFields {
   reply_count?: number;
   reply_to_post_number?: number;
   link_admin?: boolean;
+  /** Whether this user review is for signup approval. */
+  signup_approval?: boolean;
   user_fields?: Record<string, string | string[] | number | boolean | null>;
   reject_reason?: string | null;
   /** Embedded JSON, unlike the side-loaded target_created_by model. */
@@ -295,6 +298,7 @@ export default class Reviewable extends RestModel {
   @tracked reviewable_histories!: ReviewableFields["reviewable_histories"];
   @tracked reviewable_scores!: ReviewableFields["reviewable_scores"];
   @tracked score!: ReviewableFields["score"];
+  @tracked signup_approval?: ReviewableFields["signup_approval"];
   @tracked status!: ReviewableFields["status"];
   @tracked target_created_at?: ReviewableFields["target_created_at"];
   @tracked target_created_by?: ReviewableFields["target_created_by"];
@@ -348,16 +352,20 @@ export default class Reviewable extends RestModel {
   get flaggedReviewableContextQuestion(): string {
     // TODO(typescript-pending): uniqueItemsFromArray loses its element type; remove this assertion when generic.
     const uniqueReviewableScores = uniqueItemsFromArray(
-      this.reviewable_scores,
+      this.reviewable_scores.filter(
+        (score) => score.score_type!.type !== "needs_approval"
+      ),
       "score_type.type"
     ) as ReviewableScore[];
 
-    if (uniqueReviewableScores.length === 1) {
-      if (uniqueReviewableScores[0].score_type!.type === "notify_moderators") {
-        return i18n("review.context_question.something_else_wrong", {
-          reviewable_type: this.humanNoun,
-        });
-      }
+    if (
+      uniqueReviewableScores.length === 0 ||
+      (uniqueReviewableScores.length === 1 &&
+        uniqueReviewableScores[0].score_type!.type === "notify_moderators")
+    ) {
+      return i18n("review.context_question.something_else_wrong", {
+        reviewable_type: this.humanNoun,
+      });
     }
 
     const listOfQuestions = I18n.listJoiner(
@@ -380,17 +388,16 @@ export default class Reviewable extends RestModel {
     "type_source",
     "resolvedType",
     "reviewable_scores",
+    "signup_approval",
     "status"
   )
   get userReviewableContextQuestion(): string | null {
-    // Plugin approval-style types label their own actions instead of answering
-    // core's Yes/No question.
-    if (!this.approval_style || this.type_source !== "core") {
+    if (!this.approval_style) {
       return null;
     }
 
     if (!this.siteSettings.review_queue_consistent_answers) {
-      return this.#approvalQuestion();
+      return this.type_source === "core" ? this.#approvalQuestion() : null;
     }
 
     // Resolved items can only be undone or scrubbed, which doesn't answer the question.
@@ -398,19 +405,27 @@ export default class Reviewable extends RestModel {
       return null;
     }
 
-    // Framed so "Yes" means there's a problem, matching flagged reviewables.
-    // A whole sentence per noun, since translations agree with the noun.
+    if (this.type_source !== "core") {
+      return (
+        i18n(`review.types.${underscore(this.resolvedType)}.approval_heading`, {
+          defaultValue: "",
+        }) || null
+      );
+    }
+
     if (this.resolvedType === "ReviewableUser") {
       if (this.#isSuspectUser) {
         return i18n("review.context_question.suspect_user");
       }
-      return i18n("review.context_question.something_wrong_with_account");
+      return this.signup_approval
+        ? i18n("review.pending_account_approval")
+        : i18n("review.account_review");
     }
 
     if (this.resolvedType === "ReviewableQueuedTopic") {
-      return i18n("review.context_question.something_wrong_with_topic");
+      return i18n("review.pending_topic_approval");
     }
-    return i18n("review.context_question.something_wrong_with_post");
+    return i18n("review.pending_post_approval");
   }
 
   /**

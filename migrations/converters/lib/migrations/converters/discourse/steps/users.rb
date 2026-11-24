@@ -65,6 +65,7 @@ module Migrations
               first_seen_at: item[:first_seen_at],
               flair_group_id: item[:flair_group_id],
               group_locked_trust_level: item[:group_locked_trust_level],
+              interactive_bot: item[:interactive_bot],
               ip_address: item[:ip_address],
               last_seen_at: item[:last_seen_at],
               locale: item[:locale],

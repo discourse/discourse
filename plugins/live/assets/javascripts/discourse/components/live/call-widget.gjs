@@ -11,8 +11,11 @@ import { avatarUrl } from "discourse/lib/avatar-utils";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
+import { speakQueue } from "../../lib/live/speak-queue.js";
+import { isStageSpeaker } from "../../lib/live/stage-roles.js";
 import {
   computeWidgetGrid,
   trackGridSize,
@@ -27,6 +30,7 @@ import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
 import LiveReactionOverlay from "./reaction-overlay.gjs";
 import LiveRecordingBadge from "./recording-badge.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
+import LiveSpeakQueue from "./speak-queue.gjs";
 import LiveTranscriptBadge from "./transcript-badge.gjs";
 import LiveVideoTile from "./video-tile.gjs";
 
@@ -231,6 +235,18 @@ export default class LiveCallWidget extends Component {
     return trustHTML(
       `--live-tile-width: ${grid.tileWidth}px; --live-tile-height: ${grid.tileHeight}px;`
     );
+  }
+
+  get isStageRoom() {
+    return this.room?.room_type === "stage";
+  }
+
+  get showStageQueue() {
+    return this.isStageRoom && !!this.room?.can_manage;
+  }
+
+  get speakQueueCount() {
+    return speakQueue(this.room).length;
   }
 
   get openRoomTitle() {
@@ -632,12 +648,22 @@ export default class LiveCallWidget extends Component {
   #tileRank(participant) {
     if (participant.id === this.currentUser?.id) {
       const kind = this.liveWebrtc.localVideoKind;
-      return kind === "screen" ? 0 : kind ? 1 : 2;
-    }
-    if (participant.is_screen_sharing) {
+      if (kind === "screen") {
+        return 0;
+      }
+      if (kind) {
+        return 1;
+      }
+    } else if (participant.is_screen_sharing) {
       return 0;
+    } else if (participant.is_video_on) {
+      return 1;
     }
-    return participant.is_video_on ? 1 : 2;
+
+    if (this.isStageRoom) {
+      return isStageSpeaker(participant) ? 2 : 3;
+    }
+    return 2;
   }
 
   #isPublishing(participant) {
@@ -766,6 +792,28 @@ export default class LiveCallWidget extends Component {
             />
           {{else}}
             <LiveCallControls @room={{this.room}} />
+            {{#if this.showStageQueue}}
+              <DMenu
+                @ariaLabel={{i18n "live.stage.queue_title"}}
+                @identifier="live-widget-speak-queue-menu"
+                @modalForMobile={{true}}
+                @placement="top-end"
+                @title={{i18n "live.stage.queue_title"}}
+                @triggerClass="btn-default live-speak-queue-trigger"
+              >
+                <:trigger>
+                  {{dIcon "list-ol"}}
+                  {{#if this.speakQueueCount}}
+                    <span
+                      class="live-speak-queue-trigger__count"
+                    >{{this.speakQueueCount}}</span>
+                  {{/if}}
+                </:trigger>
+                <:content>
+                  <LiveSpeakQueue @room={{this.room}} />
+                </:content>
+              </DMenu>
+            {{/if}}
             <DButton
               class="btn-default"
               @action={{this.openRoom}}

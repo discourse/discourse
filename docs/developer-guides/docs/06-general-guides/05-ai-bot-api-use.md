@@ -160,12 +160,14 @@ The client executes the tool and resumes the stream:
 }
 ```
 
-The server reloads the saved prompt state, inserts the tool result, continues generation, and streams more `partial` chunks.
+The server validates the entire batch before continuing. Submit one result per call, using the `id` from the event as `tool_call_id`. If the server rejects missing, unexpected, or duplicate IDs, correct the submission using the **same token** before its original deadline. Do not run completed tools again.
+
+Once the round advances, the old token is spent. Use the **new token** from each subsequent `tool_calls` event. If the server accepts the results but cannot continue because the source post was deleted or access was revoked, it can retain those results privately until the original deadline. A retry on that token reuses the stored results; it cannot replace them.
 
 ### Tool Limits
 
 - Max custom tools: **20**
-- Max tool results: **20**
+- Max caller tool calls and results per round: **20**
 - Max custom tool definition size: **10,000 bytes**
 - Max tool result content size: **100 KB**
 - Resume TTL: **15 minutes**

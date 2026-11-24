@@ -4856,6 +4856,7 @@ hu:
       delete_and_ignore_replies:
         title: "Bejegyzés és válaszok törlése, a jelentés figyelmen kívül hagyása"
         description: "A bejegyzés és az összes rá érkezett válasz törlése, majd a jelentés figyelmen kívül hagyása a várólistáról való eltávolítással; ha ez az első bejegyzés, a rendszer a témát is törli."
+        confirm_title: "Bejegyzés és válaszok törlése, a jelentés figyelmen kívül hagyása?"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:
@@ -4865,6 +4866,7 @@ hu:
       delete_and_agree_replies:
         title: "Bejegyzés és válaszok törlése"
         description: "Egyetértek a jelöléssek és bejegyzés törlése az össze válasszal; ha ez az első hozzászólás, akkor töröld a témát is."
+        confirm_title: "Bejegyzés és válaszok törlése?"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       disagree_and_restore:

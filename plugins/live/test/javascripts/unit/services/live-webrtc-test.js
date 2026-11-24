@@ -3883,4 +3883,69 @@ module("Live | Unit | Service | live-webrtc", function (hooks) {
       localStorage.removeItem("voice_audio_input_device");
     }
   });
+
+  test("stage listener joins muted, ignores toggleMute, and undeafening never sends muted=false", async function (assert) {
+    const muteRequests = [];
+    const stageRoom = {
+      id: 42,
+      slug: "stage-test",
+      name: "Stage Test",
+      room_type: "stage",
+      public: true,
+      active_participants: [
+        {
+          id: this.currentUser.id,
+          username: this.currentUser.username,
+          role: "participant",
+          is_muted: true,
+        },
+      ],
+    };
+
+    pretender.post("/live/rooms/42/join", () =>
+      response({
+        transport: "mesh",
+        participant_session_id: "stage-session",
+        ice: { iceServers: [] },
+        room: stageRoom,
+      })
+    );
+    pretender.post("/live/rooms/42/toggle_mute", (request) => {
+      muteRequests.push(request.requestBody);
+      return response(204, {});
+    });
+    pretender.delete("/live/rooms/42/leave", () => response(204, {}));
+
+    this.owner.lookup("service:live-rooms").seedRoom(stageRoom);
+    await this.subject.join(stageRoom);
+
+    assert.false(
+      this.subject.audioEnabled,
+      "stage listener starts with audioEnabled false"
+    );
+
+    this.subject.toggleMute();
+    assert.false(
+      this.subject.audioEnabled,
+      "toggleMute is a no-op for a stage listener"
+    );
+    assert.strictEqual(
+      muteRequests.length,
+      0,
+      "toggleMute sends no server state request for a stage listener"
+    );
+
+    this.subject.toggleDeafen();
+    this.subject.toggleDeafen();
+    assert.false(this.subject.deafened, "undeafens locally");
+    assert.false(
+      this.subject.audioEnabled,
+      "undeafening does not unmute a stage listener"
+    );
+    assert.strictEqual(muteRequests.length, 2, "sends both deafen transitions");
+    assert.true(
+      muteRequests.every((body) => body.includes("muted=true")),
+      "every toggle_mute payload keeps muted=true for a stage listener"
+    );
+  });
 });

@@ -382,6 +382,7 @@ module("Unit | Utility | url", function (hooks) {
       "/latest?preview_color_scheme_id=5&preview_dark_color_scheme_id=6",
       "http://test.localhost/?preview_base_font=inter",
       "/t/some-topic/1?preview_heading_font=lora",
+      "/?preview_component_ids=12",
       "/categories?safe_mode=no_themes",
     ]) {
       DiscourseURL.redirectTo.resetHistory();

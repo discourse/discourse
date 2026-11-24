@@ -20,7 +20,9 @@ class NotificationSerializer < ApplicationSerializer
              :acting_user_name
 
   def slug
-    Slug.for(object.topic.title) if object.topic.present?
+    return unless topic = object.topic
+
+    topic[:slug].presence || Slug.for(topic.title)
   end
 
   def is_warning

@@ -31,6 +31,7 @@ import type { EditorView } from "prosemirror-view";
 import type {
   AutocompleteHandler,
   AutocompleteOptions,
+  InsertBlockOptions,
   PlaceholderHandler,
   ReplaceTextOptions,
   SelectedText,
@@ -349,13 +350,24 @@ export default class ProsemirrorTextManipulation implements TextManipulation {
     this.focus();
   }
 
-  insertBlock(block: string): void {
+  insertBlock(block: string, options?: InsertBlockOptions): void {
     const doc = this.convertFromMarkdown(block);
 
     const tr = this.view.state.tr.replaceSelection(
       new Slice(doc.content, 0, 0)
     );
-    if (!tr.selection.$from.nodeAfter) {
+    if (options?.moveCursorInside) {
+      tr.mapping.maps.at(-1)?.forEach((_, __, start, end) => {
+        const selection = Selection.findFrom(
+          tr.doc.resolve(start + 1),
+          1,
+          true
+        );
+        if (selection && selection.from < end) {
+          tr.setSelection(selection);
+        }
+      });
+    } else if (!tr.selection.$from.nodeAfter) {
       tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.from + 1)));
     }
     this.view.dispatch(tr);

@@ -1075,10 +1075,21 @@ module("Integration | ui-kit | DReorderableList", function (hooks) {
         "the primitive marks the dragged row, so no state is mirrored by hand"
       );
 
+    const target = rowSelector(initialItems[0].id);
+    await dragOver(target, {
+      dataTransfer,
+      coordinates: dropCoordinates(target, "before"),
+    });
+    assert
+      .dom(target)
+      .hasClass("--drag-above", "the target shows the pending drop");
+
     items.value = currentItems;
     await settled();
 
-    const target = rowSelector(initialItems[0].id);
+    assert
+      .dom(target)
+      .hasClass("--drag-above", "the active target survives the refresh");
     assert
       .dom(target)
       .hasAttribute(

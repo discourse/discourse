@@ -5057,6 +5057,7 @@ tr_TR:
       delete_and_ignore_replies:
         title: "Gönderiyi ve yanıtları sil, bayrağı yok say"
         description: "Gönderiyi ve tüm yanıtlarını silin, ardından kuyruktan kaldırarak bildirimi yok sayın; ilk gönderi ise konuyu da silin."
+        confirm_title: "Gönderiyi ve yanıtları sil, bayrağı yok say?"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       delete_and_agree:
@@ -5066,6 +5067,7 @@ tr_TR:
       delete_and_agree_replies:
         title: "Gönderiyi ve yanıtları sil"
         description: "Bayrağı kabul edin ve bu gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin."
+        confirm_title: "Gönderiyi ve yanıtları sil?"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       disagree_and_restore:

@@ -9,11 +9,12 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   before { enable_current_plugin }
 
   it "combines Discourse knowledge, general administration, and site-setting tools" do
-    expect(assistant.tools).to start_with(
+    expect(assistant.tools).to include(
       *[
         DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
         DiscourseAi::Agents::Tools::ListCategories,
+        DiscourseAi::Agents::Tools::FindCategory,
         DiscourseAi::Agents::Tools::ListTags,
         DiscourseAi::Agents::Tools::SettingContext,
         DiscourseAi::Agents::Tools::SearchSettings,
@@ -29,6 +30,8 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
         DiscourseAi::Agents::Tools::EditPost,
         DiscourseAi::Agents::Tools::CreateCategory,
         DiscourseAi::Agents::Tools::EditCategory,
+        DiscourseAi::Agents::Tools::SetCategoryPermissions,
+        DiscourseAi::Agents::Tools::DeleteCategory,
         DiscourseAi::Agents::Tools::ChangeTopicCategory,
         DiscourseAi::Agents::Tools::CreateTag,
         DiscourseAi::Agents::Tools::EditTag,

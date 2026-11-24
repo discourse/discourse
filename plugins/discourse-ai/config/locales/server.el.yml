@@ -78,6 +78,8 @@ el:
           text_color: "χρώμα κειμένου"
         approve_label: "Ναι "
         reject_label: "Όχι"
+        category_access_levels:
+          readonly: "Προβολή"
         empty_value: "Κενό"
       agents:
         post_raw_translator:
@@ -91,6 +93,7 @@ el:
         edit_post: "Επεξεργασία ανάρτησης"
         edit_tag: "Επεξεργασία ετικέτας"
         create_category: "Δημιουργία κατηγορίας"
+        delete_category: "Διαγραφή κατηγορίας"
         assign: "Ανάθεση θέματος"
         search: "Αναζήτηση"
         time: "Ώρα"
@@ -119,6 +122,12 @@ el:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
       edit_category:
+        errors:
+          not_found: "Η κατηγορία δεν βρέθηκε."
+      set_category_permissions:
+        errors:
+          not_found: "Η κατηγορία δεν βρέθηκε."
+      delete_category:
         errors:
           not_found: "Η κατηγορία δεν βρέθηκε."
       change_topic_category:

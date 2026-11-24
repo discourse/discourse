@@ -18,6 +18,29 @@ RSpec.describe "Blog managed categories", type: :request do
     topic
   end
 
+  describe "GET /blog-editor" do
+    it "closes the editor and the drafts to a saved team while the site may not choose its roles" do
+      topic = draft_topic_for(writer)
+      sign_in(writer)
+      get "/blog-editor.json"
+      expect(response.status).to eq(200)
+
+      SiteSetting.blog_role_groups_enabled = false
+
+      get "/blog-editor.json"
+      expect(response.status).to eq(403)
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(404)
+
+      SiteSetting.blog_role_groups_enabled = true
+
+      get "/blog-editor.json"
+      expect(response.status).to eq(200)
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "POST /blog-editor/drafts-category" do
     it "requires a blog role" do
       post "/blog-editor/drafts-category.json"
@@ -75,7 +98,7 @@ RSpec.describe "Blog managed categories", type: :request do
       }.by(1)
 
       expect(response.status).to eq(200)
-      blog_category = Category.find(SiteSetting.blog_category)
+      blog_category = Category.find(Blog::Instance.default_blog.category_id)
       expect(blog_category).to have_attributes(
         name: I18n.t("blog.categories.public"),
         read_restricted: false,
@@ -104,7 +127,7 @@ RSpec.describe "Blog managed categories", type: :request do
       expect(response.parsed_body["errors"].first).to include(
         I18n.t("blog.errors.category_name_taken", name: existing.name),
       )
-      expect(SiteSetting.blog_category).to be_blank
+      expect(Blog::Instance.default_blog.category_id).to be_nil
       expect(Blog::Publication.find_by(topic:)&.discussion_topic).to be_nil
     end
   end
@@ -112,7 +135,7 @@ RSpec.describe "Blog managed categories", type: :request do
   describe "POST /blog-editor/publications/:topic_id/prepare" do
     fab!(:blog_category, :category)
 
-    before { SiteSetting.blog_category = blog_category.id }
+    before { update_default_blog(category_id: blog_category.id) }
 
     it "creates the drafts category for the working copy of an existing topic" do
       topic = Fabricate(:topic, category: blog_category, user: writer)

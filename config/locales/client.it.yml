@@ -4831,7 +4831,6 @@ it:
         other: "Bozze (%{count})"
     safe_mode:
       enabled: "La modalità sicura è attiva, per disattivarla chiudi il browser"
-    theme_preview_notice: "Al momento stai visualizzando in anteprima un tema. Chiudi questa scheda o finestra del browser per tornare alla configurazione normale del sito."
     image_removed: "(immagine rimossa)"
     pause_notifications:
       title: "Sospendi le notifiche per…"

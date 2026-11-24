@@ -31,6 +31,10 @@ class Emoji
     @site_emoji_cache ||= DistributedCache.new("site_emoji_cache")
   end
 
+  def self.denied_cache
+    @denied_cache ||= DistributedCache.new("denied_emoji_cache")
+  end
+
   def self.all
     Discourse.cache.fetch(cache_key("all_emojis")) { standard | custom }
   end
@@ -44,8 +48,17 @@ class Emoji
   end
 
   def self.denied
-    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
+    return nil if SiteSetting.emoji_deny_list.blank?
+    denied_cache.defer_get_set("denied_emojis:#{SiteSetting.emoji_deny_list}") { load_denied }
   end
+
+  def self.denied?(name)
+    return false if SiteSetting.emoji_deny_list.blank?
+    denied_cache
+      .defer_get_set("denied_emojis_set:#{SiteSetting.emoji_deny_list}") { Set.new(load_denied) }
+      .include?(name)
+  end
+  private_class_method :denied?
 
   def self.grouped
     groups = allowed.group_by(&:group)
@@ -80,6 +93,11 @@ class Emoji
   def self.tonable_emojis
     tonable_emojis_db
   end
+
+  def self.tonable_emojis_set
+    @tonable_emojis_set ||= Set.new(tonable_emojis_db)
+  end
+  private_class_method :tonable_emojis_set
 
   # Only some standard emojis are animated; those that are, are in every tone.
   def self.animated_emojis
@@ -139,7 +157,7 @@ class Emoji
 
     Emoji.new.tap do |e|
       e.name = name
-      e.tonable = Emoji.tonable_emojis.include?(name)
+      e.tonable = tonable_emojis_set.include?(name)
       e.animated = Emoji.animated_emojis.include?(name)
       e.url = Emoji.url_for(filename)
       e.group = group
@@ -170,6 +188,7 @@ class Emoji
     end
     global_emoji_cache.clear
     site_emoji_cache.clear
+    denied_cache.clear
     @locale_search_aliases = nil
   end
 
@@ -333,7 +352,7 @@ class Emoji
     @unicode_replacements ||=
       begin
         replacements = {}
-        is_tonable_emojis = Emoji.tonable_emojis
+        is_tonable_emojis = tonable_emojis_set
         fitzpatrick_scales = FITZPATRICK_SCALE.map { |scale| scale.to_i(16) }
 
         emojis_db.each do |e|
@@ -374,16 +393,18 @@ class Emoji
   end
 
   def self.gsub_emoji_to_unicode(str)
-    str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name } if str
+    return if !str
+    return str if !str.include?(":")
+    str.gsub(EMOJI_CODE_REGEXP) { |name| Emoji.lookup_unicode($1) || name }
   end
 
   def self.lookup_unicode(name)
-    return "" if denied&.include?(name)
+    return "" if denied?(name)
 
     @reverse_map ||=
       begin
         map = {}
-        is_tonable_emojis = Emoji.tonable_emojis
+        is_tonable_emojis = tonable_emojis_set
 
         emojis_db.each do |e|
           next if e["name"] == "tm"

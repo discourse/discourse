@@ -4,6 +4,15 @@
 module UserGuardian
   AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar current]
 
+  def can_update_bot_interactivity?(target_user)
+    is_admin? && target_user.bot? && !target_user.is_system_user?
+  end
+
+  # A shadow can enter a session only through its master's anonymous-mode exchange.
+  def can_issue_independent_credentials?
+    authenticated? && !user.anonymous_shadow?
+  end
+
   def can_edit_avatar?(target_user)
     can_edit?(target_user) && !SiteSetting.auth_overrides_avatar &&
       !SiteSetting.discourse_connect_overrides_avatar

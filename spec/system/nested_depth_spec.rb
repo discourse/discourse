@@ -18,7 +18,7 @@ RSpec.describe "Nested view depth and nesting" do
   end
 
   describe "max depth setting" do
-    it "uses capped nesting by default at low max depth" do
+    it "shows capped replies without expansion controls at a low depth limit" do
       SiteSetting.nested_replies_max_depth = 2
       chain = create_reply_chain(depth: 4)
 
@@ -29,6 +29,8 @@ RSpec.describe "Nested view depth and nesting" do
       expect(nested_view).to have_post_at_depth(chain[2], depth: 2)
       expect(nested_view).to have_post_at_depth(chain[3], depth: 2)
       expect(nested_view).to have_no_continue_thread_for(chain[2])
+      expect(nested_view).to have_post(chain[2])
+      expect(nested_view).to have_no_replies_toggle_for(chain[2])
     end
 
     it "allows deeper nesting with higher max depth" do
@@ -45,15 +47,6 @@ RSpec.describe "Nested view depth and nesting" do
     context "when cap_nesting_depth is OFF" do
       before { SiteSetting.nested_replies_cap_nesting_depth = false }
 
-      it "shows 'Continue this thread' at max depth" do
-        SiteSetting.nested_replies_max_depth = 3
-        chain = create_reply_chain(depth: 5)
-
-        nested_view.visit_nested(topic)
-
-        expect(nested_view).to have_continue_thread_for(chain[3])
-      end
-
       it "does not show 'Continue this thread' below max depth" do
         SiteSetting.nested_replies_max_depth = 5
         chain = create_reply_chain(depth: 3)
@@ -63,28 +56,17 @@ RSpec.describe "Nested view depth and nesting" do
         chain.each { |post| expect(nested_view).to have_no_continue_thread_for(post) }
       end
 
-      it "navigates to context=0 view when clicking 'Continue this thread'" do
+      it "lets the user follow 'Continue this thread' at max depth into a view without ancestors" do
         SiteSetting.nested_replies_max_depth = 3
         chain = create_reply_chain(depth: 5)
 
         nested_view.visit_nested(topic)
+        expect(nested_view).to have_continue_thread_for(chain[3])
+
         nested_view.click_continue_thread(chain[3])
 
         expect(nested_view).to have_context_view
         expect(nested_view).to have_post_at_depth(chain[3], depth: 0)
-      end
-    end
-
-    context "when cap_nesting_depth is ON" do
-      before { SiteSetting.nested_replies_cap_nesting_depth = true }
-
-      it "does not show 'Continue this thread' at max depth" do
-        SiteSetting.nested_replies_max_depth = 3
-        chain = create_reply_chain(depth: 4)
-
-        nested_view.visit_nested(topic)
-
-        chain.each { |post| expect(nested_view).to have_no_continue_thread_for(post) }
       end
     end
   end
@@ -116,18 +98,6 @@ RSpec.describe "Nested view depth and nesting" do
       nested_view.visit_nested(topic)
 
       chain.each { |post| expect(nested_view).to have_no_continue_thread_for(post) }
-    end
-  end
-
-  describe "expand button at max depth" do
-    it "does not show the expand button for posts at max depth with replies" do
-      SiteSetting.nested_replies_max_depth = 2
-      chain = create_reply_chain(depth: 4)
-
-      nested_view.visit_nested(topic)
-
-      expect(nested_view).to have_post(chain[2])
-      expect(nested_view).to have_no_replies_toggle_for(chain[2])
     end
   end
 

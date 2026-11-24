@@ -117,6 +117,19 @@ export default class LiveVideoTile extends Component {
       : this.participant.username;
   }
 
+  get stageRoleBadge() {
+    if (this.args.room?.room_type !== "stage") {
+      return null;
+    }
+    if (this.participant.role === "moderator") {
+      return i18n("live.stage.role_moderator");
+    }
+    if (this.participant.role === "speaker") {
+      return i18n("live.stage.role_speaker");
+    }
+    return null;
+  }
+
   @action
   handleAspect(aspect) {
     this.aspect = aspect;
@@ -207,6 +220,11 @@ export default class LiveVideoTile extends Component {
 
       <div class="live-video-tile__info">
         <span class="live-video-tile__name">{{this.displayName}}</span>
+        {{#if this.stageRoleBadge}}
+          <span
+            class="live-video-tile__role --{{this.participant.role}}"
+          >{{this.stageRoleBadge}}</span>
+        {{/if}}
         {{#if this.participant.is_muted}}
           {{dIcon "microphone-slash"}}
         {{/if}}

@@ -14,6 +14,7 @@ Live is a Discourse plugin that adds Discord-style voice and video rooms powered
 - **Themed audio cues** — synthesized tones for calls, connect/disconnect, user join/leave, and mute/deafen toggles follow each listener's existing **Chat notifications** sound choice. **None**, missing, or legacy choices use **Classic and clean**.
 - **Noise suppression** — optional DTLN-based background noise filtering via WebAssembly. See [Noise Suppression](#noise-suppression).
 - **Live subtitles** — optional viewer-side captions powered by NVIDIA Parakeet speech recognition running locally via WebGPU. See [Live Subtitles](#live-subtitles).
+- **Stage mode** — audio-stage rooms where moderators and speakers appear on stage while up to 200 listeners join the audience. Listeners can raise their hand to queue for the stage, moderators can approve (as session-only speakers), invite listeners to speak, pause requests, dismiss with a cooldown, or mute speakers for everyone, and speakers can step back to the audience anytime. See [Stage rooms](docs/stage-rooms.md).
 - **Video and screen sharing** — optional, off by default. Each room gets a full page at `/live/r/<slug>` with a tile grid; camera and screen share toggle without renegotiation, and senders only encode toward peers who are actually watching the page. Rooms can opt out individually. See [Video](#video).
 - **Video settings with background blur** — a per-room video settings modal with a live preview, camera device picker, and MediaPipe-powered background blur with an adjustable strength slider. See [Background Blur](#background-blur).
 - **User-to-user file transfers** — optional mesh-room transfers with a configurable per-file maximum (100 MiB by default), with explicit acceptance, progress/cancel controls, and attachment-only saving. Disabled by default; files are not uploaded to Discourse or scanned for viruses. See [File transfers](docs/file-transfers.md).
@@ -54,7 +55,7 @@ When a user's groups allow camera or screen sharing (and the room's own video to
 - Still pure mesh: a video m-line is pre-negotiated on every peer connection, so toggling the camera or a screen share is a `replaceTrack` with no renegotiation.
 - Senders attach video only toward participants currently on the room page (`watching_video` presence flag) — every skipped peer saves a full encoder session.
 - Encoding quality scales down with watcher count (720p ≤3 watchers, 480p ≤6, 360p beyond) and is capped by `live_video_max_publishers`.
-- Camera and screen share are mutually exclusive per user. Stage rooms do not support video yet.
+- Camera and screen share are mutually exclusive per user. In stage rooms, moderators and speakers can publish camera and screen shares when video is enabled; listeners remain receive-only.
 - On LiveKit-routed rooms the mesh details above are handled by the SFU instead: each track is published once with simulcast, and per-watcher gating happens on the subscriber side. The UI, the `watching_video` flag, and the publisher cap behave identically.
 
 See `docs/roadmap/video-screenshare.md` for the full design.

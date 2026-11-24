@@ -72,8 +72,6 @@ class Reviewable < ActiveRecord::Base
     types.select(&:approval_style?)
   end
 
-  # Whether the reviewer sees approval-style questions framed so "Yes" confirms
-  # a problem, matching flag-style ones.
   def self.consistent_answers_for?(guardian)
     !!guardian.user&.upcoming_change_enabled?(:review_queue_consistent_answers)
   end
@@ -990,6 +988,7 @@ class Reviewable < ActiveRecord::Base
       a.description = "reviewables.actions.reject_user.delete.description"
       a.require_reject_reason = require_reject_reason
       if confirmable
+        a.confirm_title = "reviewables.actions.reject_user.delete.confirm_title"
         a.confirm_message = "reviewables.actions.reject_user.delete.confirm"
         a.confirm_message_args = { username: username }
         a.confirm_destructive = true
@@ -1002,6 +1001,7 @@ class Reviewable < ActiveRecord::Base
       a.require_reject_reason = require_reject_reason
       a.description = "reviewables.actions.reject_user.block.description"
       if confirmable
+        a.confirm_title = "reviewables.actions.reject_user.block.confirm_title"
         a.confirm_message = "reviewables.actions.reject_user.block.confirm"
         a.confirm_message_args = { username: username }
         a.confirm_destructive = true

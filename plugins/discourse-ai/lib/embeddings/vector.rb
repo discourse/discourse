@@ -3,6 +3,8 @@
 module DiscourseAi
   module Embeddings
     class Vector
+      TASKS = %i[document query clustering classification].freeze
+
       def self.instance
         vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
         raise "Invalid embeddings selected model" if vector_def.nil?
@@ -40,7 +42,7 @@ module DiscourseAi
 
           pool.post do
             results << { target: record, text: prepared_text, digest: new_digest }.merge(
-              embedding: request_embedding!(prepared_text),
+              embedding: request_embedding!(prepared_text, task: :document),
             )
           rescue StandardError => e
             results << e
@@ -81,24 +83,30 @@ module DiscourseAi
         new_digest = OpenSSL::Digest::SHA1.hexdigest(text)
         return if schema.find_by_target(target)&.digest == new_digest
 
-        embeddings = request_embedding!(text)
+        embeddings = request_embedding!(text, task: :document)
 
         schema.store(target, embeddings, new_digest)
       end
 
-      def vector_from(text, asymmetric = false)
-        prepared_text = vdef.prepare_query_text(text, asymmetric: asymmetric)
+      def vector_from(text, asymmetric = false, task: nil)
+        task = task&.to_sym
+        raise ArgumentError, "Unknown embedding task: #{task}" if task && !TASKS.include?(task)
+
+        effective_asymmetric = asymmetric || task == :query
+        effective_task = task || (asymmetric ? :query : nil)
+
+        prepared_text = vdef.prepare_query_text(text, asymmetric: effective_asymmetric)
         return if prepared_text.blank?
 
-        request_embedding!(prepared_text)
+        request_embedding!(prepared_text, task: effective_task)
       end
 
       attr_reader :vdef
 
       private
 
-      def request_embedding!(text)
-        ProviderHealth.request!(vdef) { vdef.inference_client.perform!(text) }
+      def request_embedding!(text, task: nil)
+        ProviderHealth.request!(vdef) { vdef.inference_client.perform!(text, task: task) }
       end
 
       def expected_provider_error?(error)

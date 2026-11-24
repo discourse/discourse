@@ -76,7 +76,7 @@ RSpec.describe Blog::BlogHelper, type: :helper do
       output = helper.blog_render_template("about")
 
       expect(output).to be_html_safe
-      expect(output).to eq("<p class=\"custom\">#{SiteSetting.blog_title}</p>")
+      expect(output).to eq("<p class=\"custom\">#{Blog::Instance.default_blog.name}</p>")
     end
 
     it "wraps page content in the layout" do

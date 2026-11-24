@@ -4868,7 +4868,6 @@ vi:
         other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
-    theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
     theme_preview_failed: "Không thể xem trước theme vì theme đó không tồn tại hoặc bạn không có quyền truy cập."
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:

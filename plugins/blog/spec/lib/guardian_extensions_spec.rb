@@ -383,6 +383,16 @@ RSpec.describe Blog::GuardianExtensions do
 
       expect(admin.guardian.is_blog_publisher?).to eq(false)
     end
+
+    it "leaves every role to staff when the site may not choose its role groups" do
+      SiteSetting.blog_role_groups_enabled = false
+
+      expect(publisher.guardian.is_blog_publisher?).to eq(false)
+      expect(editor.guardian.is_blog_editor?).to eq(false)
+      expect(writer.guardian.is_blog_contributor?).to eq(false)
+      expect(moderator.guardian.is_blog_publisher?).to eq(true)
+      expect(admin.guardian.is_blog_publisher?).to eq(true)
+    end
   end
 
   describe "#is_blog_editor?" do

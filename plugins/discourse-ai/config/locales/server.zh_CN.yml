@@ -668,6 +668,9 @@ zh_CN:
         question: "您要进行此更改吗？"
         category_question: "您是否要将此更改更改为 %{category}？"
         category_change: "将 `%{field}` 从 %{before} 更改为 %{after}"
+        category_access_levels:
+          readonly: "查看"
+        category_group_access_change: "将 `%{group}` 从 %{before} 更改为 %{after}"
         empty_value: "空的"
         approved: "由 @%{username} 批准。"
         rejected: "由 @%{username} 拒绝。"
@@ -929,6 +932,7 @@ zh_CN:
         edit_tag: "编辑标签"
         create_category: "创建类别"
         edit_category: "编辑类别"
+        delete_category: "删除类别"
         change_topic_category: "更改主题类别"
         set_topic_timer: "设置话题计时器"
         set_slow_mode: "设置慢速模式"
@@ -1219,6 +1223,12 @@ zh_CN:
           nothing_to_edit: "名称、描述、颜色或文本颜色中至少需要提供一项。"
           no_reason: "编辑分类需要提供理由。"
         success: "类别“%{name}”已成功更新。"
+      set_category_permissions:
+        errors:
+          not_found: "找不到类别。"
+      delete_category:
+        errors:
+          not_found: "找不到类别。"
       change_topic_category:
         errors:
           not_found: "找不到话题。"
@@ -1593,6 +1603,7 @@ zh_CN:
       no_pending_tool_calls: 此恢复令牌没有待处理的工具调用。
       missing_tool_results: "tool_call_id (s) 缺少工具结果：%{ids}"
       unexpected_tool_results: "tool_call_id (s) 的意外工具结果：%{ids}"
+      duplicate_tool_results: "tool_call_id (s) 的重复工具结果：%{ids}"
       invalid_tool_result_content: "%{id} 的工具结果必须包含内容"
       tool_result_content_too_large: "每个工具结果内容有效负载最多为 %{max} 字节。"
       stream_reply_max_resume_rounds_reached: 已达到自定义工具恢复轮数上限 (%{max})。

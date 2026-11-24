@@ -371,9 +371,7 @@ module JsLocaleHelper
     if hash.is_a?(Hash)
       hash.each do |key, value|
         if value.is_a?(Hash)
-          message_formats.merge!(
-            strip_out_message_formats!(value, join_key(prefix, key), message_formats),
-          )
+          strip_out_message_formats!(value, join_key(prefix, key), message_formats)
         elsif key.to_s.end_with?("_MF")
           message_formats[join_key(prefix, key)] = value
           hash.delete(key)

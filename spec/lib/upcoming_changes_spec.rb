@@ -122,10 +122,12 @@ RSpec.describe UpcomingChanges do
       )
     end
 
-    it "returns an empty hash for a setting without metadata" do
+    it "returns a frozen empty hash without allocating for a setting without metadata" do
       metadata = described_class.change_metadata("nonexistent_setting")
 
       expect(metadata).to eq({})
+      expect(metadata).to be_frozen
+      expect(described_class.change_metadata(:nonexistent_setting)).to equal(metadata)
     end
 
     it "accepts string setting names" do

@@ -573,6 +573,20 @@ module DiscourseAi
         nil
       end
 
+      # The attachment/acknowledgement pairs after a checkpoint are evidence, not requests.
+      def self.checkpoint_end(messages, index)
+        offset = index + 2
+        while (message = messages[offset]) && message[:type] == :user && message[:id].blank? &&
+                Array(message[:content]).first.to_s.start_with?(
+                  "Retained historical attachments",
+                ) &&
+                messages[offset + 1]&.values_at(:type, :content) ==
+                  [:model, ContextPreparation::RETAINED_ATTACHMENTS_ACK]
+          offset += 2
+        end
+        offset
+      end
+
       def self.normalize_upload_inclusion(
         include_uploads,
         include_image_uploads,
@@ -799,6 +813,9 @@ module DiscourseAi
         if !%i[user model tool tool_call system].include?(type)
           raise ArgumentError, "type must be either :user, :model, :tool, :tool_call or :system"
         end
+        # The builder ingests conversation history; trusted system instructions go directly to Prompt.
+        return if type == :system
+
         raise ArgumentError, "upload_ids must be an array" if upload_ids && !upload_ids.is_a?(Array)
         if provider_data && !provider_data.is_a?(Hash)
           raise ArgumentError, "provider_data must be a hash"
@@ -889,42 +906,10 @@ module DiscourseAi
       end
 
       def represent_incomplete_batches(messages)
-        result = []
-        index = 0
-        while index < messages.length
-          message = messages[index]
-          if !%i[tool_call tool].include?(message[:type])
-            result << message
-            index += 1
-            next
-          end
-          finish = index
-          finish += 1 while finish < messages.length &&
-            %i[tool_call tool].include?(messages[finish][:type])
-          batch = messages[index...finish]
-          calls = batch.select { |entry| entry[:type] == :tool_call }.map { |entry| entry[:id] }
-          outputs = batch.select { |entry| entry[:type] == :tool }.map { |entry| entry[:id] }
-          complete =
-            calls.present? && calls.none?(&:blank?) && outputs.none?(&:blank?) &&
-              calls.uniq.length == calls.length && outputs.uniq.length == outputs.length &&
-              calls.map(&:to_s).sort == outputs.map(&:to_s).sort && batch.first[:type] == :tool_call
-          if complete
-            result.concat(batch)
-          else
-            batch.each do |entry|
-              details = entry.except(:content).to_json
-              result << {
-                type: :model,
-                content: [
-                  "Incomplete historical tool evidence (not executable): #{details}\n",
-                  *Array(entry[:content]),
-                ],
-              }
-            end
-          end
-          index = finish
+        ToolCallBatch.each_incomplete_index(messages) do |index|
+          messages[index] = Prompt.historical_tool_evidence(messages[index])
         end
-        result
+        messages
       end
 
       def valid_messages_array(messages)
@@ -943,11 +928,7 @@ module DiscourseAi
 
           if !last_type && message[:type] != :user
             if preserve_history
-              result << {
-                type: :user,
-                content:
-                  "The following is retained conversation history; earlier user context is unavailable.",
-              }
+              result << Prompt::HISTORY_PREAMBLE.dup
               last_type = :user
             else
               next
@@ -989,10 +970,7 @@ module DiscourseAi
               if last_message[:thinking_provider_info].present? ||
                    message[:thinking_provider_info].present? ||
                    last_message[:provider_data].present? || message[:provider_data].present?
-                result << {
-                  type: :user,
-                  content: "Continuation of the assistant response follows.",
-                }
+                result << Prompt::ASSISTANT_CONTINUATION.dup
                 result << message
                 last_type = message[:type]
                 next
@@ -1019,7 +997,12 @@ module DiscourseAi
       def prepend_chat_post_context(messages)
         return if @chat_context_posts.blank?
 
-        old_content = messages[0][:content]
+        checkpoint = compression_checkpoint_index(messages)
+        start = checkpoint ? self.class.checkpoint_end(messages, checkpoint) : 0
+        request = messages.drop(start).find { |message| Prompt.user_request?(message) }
+        return unless request
+
+        old_content = request[:content]
         old_content = [old_content] if !old_content.is_a?(Array)
 
         new_content = []
@@ -1031,7 +1014,7 @@ module DiscourseAi
 
         compressed = compress_messages_buffer(new_content.flatten, max_uploads: MAX_CHAT_UPLOADS)
 
-        messages[0][:content] = compressed
+        request[:content] = compressed
       end
 
       def format_user_info(user)
@@ -1182,6 +1165,8 @@ module DiscourseAi
 
       def chat_array(limit:)
         raw_messages = messages_after_last_compression(@raw_messages)
+        return [] if raw_messages.empty?
+
         buffer = []
         if raw_messages.length > 1
           buffer << +"You are replying inside a Discourse chat channel. Here is a summary of the conversation so far:\n{{{"

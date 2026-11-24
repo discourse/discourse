@@ -1237,6 +1237,10 @@ en:
         all:
           title: "Everything"
 
+      pending_post_approval: "Post approval"
+      pending_topic_approval: "Topic approval"
+      pending_account_approval: "Account approval"
+      account_review: "Account review"
       context_question:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
@@ -1245,9 +1249,6 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
-        something_wrong_with_post: "Is there something wrong with this post?"
-        something_wrong_with_topic: "Is there something wrong with this topic?"
-        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1290,6 +1291,7 @@ en:
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
         queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
+        queued_for_approval_by: "Queued for approval by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -3382,6 +3384,7 @@ en:
       standard: Standard
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Noto 3D Emoji
       twemoji: Twemoji
 
     category_page_style:
@@ -3665,7 +3668,7 @@ en:
       more_emoji: "more…"
       options: "Options"
       ai_content:
-        menu: "Add AI content..."
+        menu: "Label AI content..."
         code: "Code"
         quote: "Quote"
         details: "Details"
@@ -9640,6 +9643,7 @@ en:
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
             create_bot: "Create bot"
+            change_bot_interactivity: "Change bot interactivity"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -9703,6 +9707,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            approve_account_review: "approved account review"
             removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
@@ -10058,6 +10063,9 @@ en:
               description: "An account for integrations, webhooks, or automated posting through the API."
           back: "Back to bots"
           help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          interactive_bot: "Interactive"
+          interactive_column: "Interactive?"
+          interactive_bot_description: "Notify this bot about forum mentions, direct replies, and personal messages addressed to it. When chat is enabled, also show it in the direct message picker."
           generate_api_key: "Generate API key"
           generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
           scope_mode_description: "The key only has this bot's permissions."

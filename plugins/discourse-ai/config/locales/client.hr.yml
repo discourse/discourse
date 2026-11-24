@@ -40,6 +40,13 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      review_bulk:
+        refresh: "Osvježi"
+        columns:
+          user: "Korisnik"
+          reason: "Označeno kao"
+          created: "Stvoreno"
+          status: "Statust"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"

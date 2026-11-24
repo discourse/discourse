@@ -146,11 +146,11 @@ class Group < ActiveRecord::Base
   VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}\Z/i
 
   def self.visibility_levels
-    @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
+    @visibility_levels ||= Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
   end
 
   def self.smtp_ssl_modes
-    @smtp_ssl_modes = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
+    @smtp_ssl_modes ||= Enum.new(none: 0, ssl_tls: 1, starttls: 2)
   end
 
   def self.auto_groups_between(lower, upper)
