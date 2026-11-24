@@ -32,6 +32,67 @@ RSpec.describe Email::Sender do
     end
   end
 
+  it "writes theme header and footer content to both email parts" do
+    theme = Fabricate(:theme)
+    theme.set_field(target: :email, name: "header", value: "<div>Theme header</div>")
+    theme.set_field(target: :email, name: "footer", value: "<div>Theme footer</div>")
+    theme.save!
+    SiteSetting.default_theme_id = theme.id
+    SiteSetting.enable_email_theme_header_and_footer = true
+
+    user = Fabricate(:user)
+    message = UserNotifications.signup(user)
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :signup, user).send
+
+    expect(message.html_part.body.decoded).to include("Theme header", "Theme footer")
+    expect(message.text_part.body.decoded).to include("Theme header", "Theme footer")
+  end
+
+  it "preserves the original text when branding is disabled or empty" do
+    original = "Literal &lt;example&gt; and &amp;"
+    [false, true].each do |enabled|
+      SiteSetting.enable_email_theme_header_and_footer = enabled
+      message = Mail::Message.new(to: "recipient@example.com", body: original)
+      stub_deliver_response(message)
+
+      Email::Sender.new(message, :test_message).send
+
+      expect(message.text_part.body.decoded).to eq(original)
+    end
+  end
+
+  it "uses the mailer locale in both parts instead of the sender recipient locale" do
+    theme = Fabricate(:theme)
+    theme.set_field(target: :email, name: "header", value: "<header>%{branding}</header>")
+    theme.set_field(target: :translations, name: :en, value: "en:\n  branding: English branding")
+    theme.set_field(target: :translations, name: :fr, value: "fr:\n  branding: French branding")
+    theme.save!
+    SiteSetting.default_theme_id = theme.id
+    SiteSetting.enable_email_theme_header_and_footer = true
+    SiteSetting.allow_user_locale = true
+    user = Fabricate(:user, locale: "fr")
+    message = TestMailer.send_test(user.email, locale: "en", html_override: +"<p>Body</p>")
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :test_message, user).send
+
+    expect([message.html_part.body.decoded, message.text_part.body.decoded]).to all(
+      include("English branding"),
+    )
+  end
+
+  it "terminates the HTML part with a newline" do
+    message = Mail::Message.new(to: "recipient@example.com", body: "Café")
+    stub_deliver_response(message)
+
+    Email::Sender.new(message, :test_message).send
+
+    expect(message.html_part.body.decoded).to end_with("\n")
+    expect(message.html_part.encoded).to end_with("</body></html>\r\n")
+  end
+
   context "when disable_emails is enabled" do
     fab!(:user)
     fab!(:moderator)
@@ -774,6 +835,13 @@ RSpec.describe Email::Sender do
           expect(summary.to_s.scan("Content-Type: text/plain;").length).to eq(1)
           expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(2)
           expect(summary.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
+
+          preview = Email::Preview.new(user: post.user, since: 24.hours.ago)
+          preview.deliver_to(post.user.email)
+
+          expect(preview.message.attachments.map(&:filename)).to match_array(
+            summary.attachments.map(&:filename),
+          )
         end
 
         it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do
