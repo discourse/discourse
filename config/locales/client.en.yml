@@ -1026,6 +1026,7 @@ en:
       category: "Category"
       category_help: "Select the EU Digital Services Act category that best describes the violation. <a href='https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification' rel='noopener noreferrer' target='_blank'>View category definitions…</a>"
       category_prompt: "Choose a category"
+      category_definitions: "View category definitions…"
       save: "Save classification"
     review:
       continue_to_editor: "Continue to editor"

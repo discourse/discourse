@@ -11,6 +11,9 @@ import DSelect from "discourse/ui-kit/select/d-select";
 import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
+const CATEGORY_DEFINITIONS_URL =
+  "https://transparency.dsa.ec.europa.eu/page/documentation#16.-category-%26-specification";
+
 function preventFieldActivation(event) {
   event.preventDefault();
 }
@@ -170,40 +173,90 @@ export default class DsaModerationDetails extends Component {
           </field.Control>
         </form.Field>
       {{/if}}
-      <form.Field
-        @disabled={{@disabled}}
-        @format="full"
-        @helpText={{@fieldHints.category}}
-        @name="category"
-        @onSet={{@onFieldSet}}
-        @title={{i18n "dsa_statements.category"}}
-        @tooltip={{component
-          ClassificationHelp
-          content=(i18n "dsa_statements.category_help")
-          interactive=true
-          selectedLabel=(selectionLabel @options.categories data.category)
-        }}
-        @type="menu"
-        @validation="required"
-        as |field|
-      >
-        <field.Control
-          @selection={{selectionLabel
-            @options.categories
-            field.value
-            (i18n "dsa_statements.category_prompt")
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <form.Field
+          @disabled={{@disabled}}
+          @format="full"
+          @helpText={{@fieldHints.category}}
+          @name="category"
+          @onSet={{@onFieldSet}}
+          @title={{i18n "dsa_statements.category"}}
+          @tooltip={{component
+            ClassificationHelp
+            content=(i18n "dsa_statements.category_help")
+            interactive=true
           }}
-          as |menu|
+          @type="custom"
+          @validation="required"
+          as |field|
         >
-          {{#each @options.categories key="id" as |category|}}
-            <ClassificationMenuOption
-              @Item={{menu.Item}}
-              @option={{category}}
+          <field.Control>
+            <DSelect
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @onChange={{field.set}}
+              @options={{@options.categories}}
+              @texts={{hash
+                ariaLabel=field.title
+                placeholder=(i18n "dsa_statements.category_prompt")
+              }}
               @value={{field.value}}
-            />
-          {{/each}}
-        </field.Control>
-      </form.Field>
+            >
+              <:footer>
+                {{! The help tooltip links the definitions too, but a keyboard can't reach it. }}
+                <a
+                  class="dsa-classification-definitions"
+                  href={{CATEGORY_DEFINITIONS_URL}}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {{~i18n "dsa_statements.category_definitions"}}
+                  {{dIcon "up-right-from-square"~}}
+                </a>
+              </:footer>
+            </DSelect>
+          </field.Control>
+        </form.Field>
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <form.Field
+          @disabled={{@disabled}}
+          @format="full"
+          @helpText={{@fieldHints.category}}
+          @name="category"
+          @onSet={{@onFieldSet}}
+          @title={{i18n "dsa_statements.category"}}
+          @tooltip={{component
+            ClassificationHelp
+            content=(i18n "dsa_statements.category_help")
+            interactive=true
+            selectedLabel=(selectionLabel @options.categories data.category)
+          }}
+          @type="menu"
+          @validation="required"
+          as |field|
+        >
+          <field.Control
+            @selection={{selectionLabel
+              @options.categories
+              field.value
+              (i18n "dsa_statements.category_prompt")
+            }}
+            as |menu|
+          >
+            {{#each @options.categories key="id" as |category|}}
+              <ClassificationMenuOption
+                @Item={{menu.Item}}
+                @option={{category}}
+                @value={{field.value}}
+              />
+            {{/each}}
+          </field.Control>
+        </form.Field>
+      {{/if}}
     </Form>
   </template>
 }

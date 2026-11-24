@@ -473,12 +473,15 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `dsa-classification-select.gjs` and moved the legacy branch to a FormKit menu field; the
     merge in `77a47932da2` kept the flag branch and switches the whole field, since the two
     branches need different FormKit field types.
-  - ☐ The DSA statement's category field (`dsa-moderation-details.gjs`, #46652, merged in
+  - ☑ The DSA statement's category field (`dsa-moderation-details.gjs`, #46652, merged in
     `77a47932da2`). It was a FormKit select; it is now a FormKit menu field that picks one of
     the EU DSA statement categories, marks the current one with a check, and names it to screen
-    readers through a hidden label in the help tooltip. It has no flag branch yet, so it shows
-    the legacy menu in both modes. It belongs on `DSelect` behind the flag, like the rule field
-    next to it.
+    readers through a hidden label in the help tooltip. It branches on the flag to a typeahead
+    `DSelect` (2026-11-23), like the rule field next to it. The combobox shows the held category
+    as its value, so the new branch drops the hidden label. The help tooltip's link to the
+    category definitions can't be reached from the keyboard, so the panel's `:footer` carries it
+    too, where Tab from the field lands. The classification specs, core and discourse-ai, run in
+    both modes.
   - ☑ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
     `1d0e7629f72`) branch on the flag to `DSelectGroup` (2026-11-12), offering the groups the
     editor looks up, named after the feature.

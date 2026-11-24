@@ -54,7 +54,9 @@ module PageObjects
       end
 
       def has_no_classification_menu?
-        return false if SiteSetting.enable_new_select_controls && !rule_select.has_no_listbox?
+        if SiteSetting.enable_new_select_controls
+          return false unless rule_select.has_no_listbox? && category_select.has_no_listbox?
+        end
 
         has_no_css?(".dsa-classification-option")
       end
@@ -75,6 +77,8 @@ module PageObjects
       end
 
       def select_category(category)
+        return category_select.select_name(category) if SiteSetting.enable_new_select_controls
+
         within(full_modal_selector) do
           find("[data-name='category'] .form-kit__control-menu-trigger").click
         end
@@ -168,13 +172,13 @@ module PageObjects
         has_selected_rule?(I18n.t("js.dsa_statements.rule_prompt"))
       end
 
-      # The new combobox exposes the held rule as its value, so it needs no hidden label.
+      # The new combobox exposes the held value as its value, so it needs no hidden label.
       def has_accessible_selection?(field, label)
-        if field == "community_rule" && SiteSetting.enable_new_select_controls
+        if SiteSetting.enable_new_select_controls
           return(
-            has_css?(
-              "#{full_modal_selector} [data-name='community_rule'] [role='combobox']",
-            ) { |input| input.value == label }
+            has_css?("#{full_modal_selector} [data-name='#{field}'] [role='combobox']") do |input|
+              input.value == label
+            end
           )
         end
 
@@ -188,6 +192,10 @@ module PageObjects
       end
 
       def has_selected_category?(category)
+        if SiteSetting.enable_new_select_controls
+          return category_select.has_selected_name?(category)
+        end
+
         has_css?(
           "#{full_modal_selector} [data-name='category'] .d-button-label",
           text: category,
@@ -214,7 +222,7 @@ module PageObjects
       private
 
       def field_control(field)
-        if field == "community_rule" && SiteSetting.enable_new_select_controls
+        if SiteSetting.enable_new_select_controls
           "[role='combobox']"
         else
           ".form-kit__control-menu-trigger"
@@ -224,6 +232,12 @@ module PageObjects
       def rule_select
         PageObjects::Components::UiKit::DSelect.at(
           "#{full_modal_selector} [data-name='community_rule'] .d-select",
+        )
+      end
+
+      def category_select
+        PageObjects::Components::UiKit::DSelect.at(
+          "#{full_modal_selector} [data-name='category'] .d-select",
         )
       end
     end

@@ -145,6 +145,25 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   }
 }
 
+.dsa-classification-definitions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-down-1);
+  color: var(--primary-medium);
+
+  .d-icon {
+    font-size: var(--font-down-1);
+    color: inherit;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--tertiary);
+    text-decoration: underline;
+  }
+}
+
 .dsa-classification-footer:not([hidden]) {
   display: contents;
 }
