@@ -33,7 +33,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
       find(".c-navbar__star-channel-button").click
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
-      expect(membership.reload.starred).to eq(true)
+      try_until_success { expect(membership.reload.starred).to eq(true) }
 
       visit("/")
 
@@ -148,7 +148,7 @@ RSpec.describe "Starred channels" do
       find(".c-navbar__star-channel-button").click
       expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
       expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
-      expect(membership.reload.starred).to eq(false)
+      try_until_success { expect(membership.reload.starred).to eq(false) }
 
       visit("/")
 
@@ -207,7 +207,7 @@ RSpec.describe "Starred channels" do
       expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
       find(".c-navbar__star-channel-button").click
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
-      expect(membership.reload.starred).to eq(true)
+      try_until_success { expect(membership.reload.starred).to eq(true) }
 
       visit("/")
 
@@ -282,7 +282,9 @@ RSpec.describe "Starred channels" do
       find(".c-navbar__star-channel-button").click
 
       expect(page).to have_css(".c-navbar__star-channel-button.--starred .d-icon-star")
-      expect(channel_1.membership_for(current_user).reload.starred).to eq(true)
+      try_until_success do
+        expect(channel_1.membership_for(current_user).reload.starred).to eq(true)
+      end
     end
 
     it "can unstar a channel from the navbar" do
@@ -296,7 +298,9 @@ RSpec.describe "Starred channels" do
 
       expect(page).to have_css(".c-navbar__star-channel-button .d-icon-far-star")
       expect(page).to have_no_css(".c-navbar__star-channel-button.--starred")
-      expect(channel_1.membership_for(current_user).reload.starred).to eq(false)
+      try_until_success do
+        expect(channel_1.membership_for(current_user).reload.starred).to eq(false)
+      end
     end
 
     it "shows the correct tooltip when hovering over the star button" do

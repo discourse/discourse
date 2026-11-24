@@ -18,11 +18,11 @@ module PageObjects
         end
 
         def show_all_channels
-          component.find(".empty-state__cta .btn").click
+          component.find(".empty-state__cta button:enabled").click
         end
 
         def toggle_channel_filter
-          component.find(".chat-channel-list-filter-toggle").click
+          component.find("button.chat-channel-list-filter-toggle:enabled").click
         end
 
         def open_browse

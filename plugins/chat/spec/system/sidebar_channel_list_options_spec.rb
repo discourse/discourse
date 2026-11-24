@@ -115,7 +115,7 @@ RSpec.describe "Chat sidebar channel list options" do
       expect(current_user.user_option.reload.chat_channel_list_filter_starred).to eq("unread")
     end
 
-    chat_sidebar.toggle_channel_filter
+    chat_sidebar.toggle_channel_filter(section: chat_sidebar.starred_section)
 
     within(chat_sidebar.starred_section) { expect(page).to have_css(".channel-#{read_channel.id}") }
     try_until_success(reason: "temporary override retains the starred filter") do
@@ -146,7 +146,7 @@ RSpec.describe "Chat sidebar channel list options" do
       expect(current_user.user_option.reload.chat_channel_list_filter_dms).to eq("unread")
     end
 
-    chat_sidebar.toggle_channel_filter
+    chat_sidebar.toggle_channel_filter(section: chat_sidebar.dms_section)
 
     within(chat_sidebar.dms_section) { expect(page).to have_css(".channel-#{dm_channel.id}") }
     try_until_success(reason: "temporary override retains the DM filter") do
