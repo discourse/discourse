@@ -246,6 +246,8 @@ class Upload < ActiveRecord::Base
   end
 
   def self.secure_uploads_url?(url)
+    return false unless local_secure_uploads_url?(url)
+
     # we do not want to exclude topic links that for whatever reason
     # have secure-uploads in the URL e.g. /t/secure-uploads-are-cool/223452
     route = UrlHelper.rails_route_from_url(url)
@@ -257,11 +259,52 @@ class Upload < ActiveRecord::Base
   end
 
   def self.signed_url_from_secure_uploads_url(url, include_content_disposition:)
+    return url unless secure_uploads_url?(url)
+
+    Discourse.store.signed_url_for_path(
+      secure_uploads_store_path(url),
+      include_content_disposition:,
+    )
+  rescue Discourse::NotFound
+  end
+
+  # The path that gets signed. Permission checks must resolve the upload from
+  # this rather than from the raw URL, which can name a different one.
+  def self.secure_uploads_store_path(url)
     route = UrlHelper.rails_route_from_url(url)
     url = Rails.application.routes.url_for(route.merge(only_path: true))
-    secure_upload_s3_path = url[url.index(route[:path])..-1]
-    Discourse.store.signed_url_for_path(secure_upload_s3_path, include_content_disposition:)
-  rescue Discourse::NotFound
+    url[url.index(route[:path])..-1]
+  end
+
+  def self.local_secure_uploads_url?(url)
+    encoded_url = UrlHelper.encode(url)
+    scheme_relative = encoded_url.start_with?("//")
+    uri = URI.parse(encoded_url)
+
+    # authority-free relative paths (e.g. /secure-uploads/...) are always local
+    return true if uri.relative? && !scheme_relative
+    return false if uri.host.blank?
+    # we never emit userinfo, and prefix-based local checks treat it as another host
+    return false if uri.userinfo
+
+    # scheme-relative URLs inherit the page scheme, so treat them as using ours
+    scheme = scheme_relative ? Discourse.base_protocol : uri.scheme&.downcase
+    return false if !scheme.in?(%w[http https])
+
+    # an omitted port resolves to the scheme's default, not to the site's custom port
+    input_port = uri.port || (scheme == "https" ? 443 : 80)
+
+    [Discourse.base_url, Discourse.asset_host].compact.any? do |local_url|
+      local_uri = URI.parse(local_url)
+      next false if local_uri.host.blank?
+
+      local_scheme = local_uri.scheme&.downcase.presence || Discourse.base_protocol
+      local_port = local_uri.port || (local_scheme == "https" ? 443 : 80)
+
+      uri.host.casecmp?(local_uri.host) && scheme == local_scheme && input_port == local_port
+    end
+  rescue URI::Error, Addressable::URI::InvalidURIError
+    false
   end
 
   def self.secure_uploads_url_from_upload_url(url)
