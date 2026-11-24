@@ -170,12 +170,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
@@ -188,12 +183,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_dark",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_dark"))
 
       within("[data-palette-id='#{regular_palette.id}']") do
         expect(page).to have_css(
@@ -218,12 +208,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       expect(page).to have_no_css(".fk-d-default-toast.-success")
     end
@@ -241,12 +226,7 @@ describe "Admin Color Palettes Config Area Page" do
 
       expect(page).to have_css(".dropdown-menu")
 
-      click_button(
-        I18n.t(
-          "admin_js.admin.customize.colors.set_default_light",
-          { theme: Theme.find_default.name },
-        ),
-      )
+      click_button(I18n.t("admin_js.admin.customize.colors.set_default_light"))
 
       expected_message =
         I18n.t(

@@ -183,16 +183,13 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
 
       expect(design_wizard_panel).to have_palette_mode("both")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "dark")
-      expect(design_wizard_panel).to have_selected_palette_name("Default", mode: "light")
+      expect(design_wizard_panel).to have_selected_palette("default")
 
-      design_wizard_panel.select_palette("dracula", mode: "dark")
       design_wizard_panel.select_palette_mode("light")
 
-      expect(design_wizard_panel).to have_no_palette_row(mode: "dark")
+      expect(design_wizard_panel).to have_no_palette("dracula")
 
-      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -210,10 +207,7 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
 
       design_wizard_panel.select_palette_mode("dark")
-
-      expect(design_wizard_panel).to have_no_palette_row(mode: "light")
-
-      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette("dracula")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -224,13 +218,15 @@ describe "Admin Onboarding Banner" do
       expect(theme.dark_color_scheme.base_scheme_id).to eq(dracula_id)
     end
 
-    it "saves the light and dark palettes picked separately" do
+    it "saves both palettes of the pair picked for light and dark" do
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
-      design_wizard_panel.select_palette("solarized", mode: "light")
-      design_wizard_panel.select_palette("wcag", mode: "dark")
+      expect(design_wizard_panel).to have_no_palette("dracula")
+      expect(design_wizard_panel).to have_no_palette("neutral")
+
+      design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -240,11 +236,11 @@ describe "Admin Onboarding Banner" do
         ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
       )
       expect(theme.dark_color_scheme.base_scheme_id).to eq(
-        ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Dark"],
       )
     end
 
-    it "offers palettes admins created in the mode their colors suit" do
+    it "offers palettes admins created only in the mode their colors suit" do
       night =
         ColorScheme.create_from_base(
           name: "Night",
@@ -255,12 +251,16 @@ describe "Admin Onboarding Banner" do
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
-      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}", mode: "light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}")
 
-      design_wizard_panel.select_palette("custom_#{night.id}", mode: "dark")
+      design_wizard_panel.select_palette_mode("light")
 
-      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}", mode: "dark")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}")
+
+      design_wizard_panel.select_palette_mode("dark")
+      design_wizard_panel.select_palette("custom_#{night.id}")
+
+      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}")
 
       design_wizard_panel.next_step
       design_wizard_panel.save
@@ -298,7 +298,7 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to be_visible
 
       design_wizard_panel.next_step
-      design_wizard_panel.select_palette("royal", mode: "light")
+      design_wizard_panel.select_palette("royal")
       expect(design_wizard_panel).to have_palette_preview
 
       design_wizard_panel.next_step
