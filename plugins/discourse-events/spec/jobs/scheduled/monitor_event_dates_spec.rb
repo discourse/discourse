@@ -1424,6 +1424,100 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(post.raw).not_to match(/\srecurrence=/)
       end
 
+      it "preserves all-day RSVPs and completion after switching modes across DST" do
+        freeze_time Time.utc(2026, 3, 20, 12)
+
+        SiteSetting.discourse_post_event_recurring_topic_mode = "reuse_topic"
+
+        title = "All-day rollover after British Summer Time"
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+            [event start="2026-03-21" all-day="true" status="public" timezone="Europe/London" recurrence="every_week"]
+            All-day meeting notes.
+            [/event]
+          RAW
+
+        original_topic = post.topic
+        event = post.reload.event
+
+        expect(event.original_starts_at).to eq_time(Time.utc(2026, 3, 21))
+        expect(event.original_ends_at).to be_nil
+
+        # Advance twice using the original reuse-topic behaviour.
+        freeze_time Time.utc(2026, 3, 22, 12)
+        job.execute({})
+
+        freeze_time Time.utc(2026, 3, 29, 12)
+        job.execute({})
+
+        event.reload
+        occurrence = event.event_dates.pending.sole
+
+        # Midnight local time shifts to 23:00 UTC when BST begins.
+        expect(occurrence.starts_at).to eq_time(Time.utc(2026, 4, 3, 23))
+        expect(occurrence.ends_at).to be_present
+
+        invitee =
+          DiscourseEvents::Events::Invitee.create_attendance!(
+            going_once_user.id,
+            event.id,
+            :interested,
+          )
+
+        invitee_before = invitee.attributes.slice("status", "recurring", "notified")
+        event_date_ids_before = event.event_dates.pluck(:id).sort
+
+        SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
+        freeze_time(occurrence.ends_at + 1.hour)
+
+        ended_events = nil
+        expect do ended_events = DiscourseEvent.track_events { job.execute({}) } end.to change(
+          Topic,
+          :count,
+        ).by(1)
+
+        archived_event = event.reload
+        archived_post = post.reload
+
+        expect(archived_event.recurrence).to be_nil
+        expect(archived_event.original_ends_at).to be_nil
+        expect(archived_post.raw).to include("start=2026-04-03")
+
+        # The archived BBCode reparses to midnight UTC. Persisted Event
+        # attributes must match, or SyncFromPost can reschedule the Event.
+        expect(archived_event.original_starts_at).to eq_time(Time.utc(2026, 4, 3))
+
+        # No replacement EventDate or RSVP reset is permitted.
+        expect(archived_event.event_dates.pluck(:id).sort).to eq(event_date_ids_before)
+        expect(archived_event.event_dates.pending).to be_empty
+        expect(occurrence.reload.finished_at).to eq_time(Time.current)
+        expect(invitee.reload.attributes.slice("status", "recurring", "notified")).to eq(
+          invitee_before,
+        )
+
+        first_endings =
+          ended_events.count do |entry|
+            entry[:event_name] == :discourse_post_event_event_ended &&
+              entry[:params].first.id == archived_event.id
+          end
+        expect(first_endings).to eq(1)
+
+        successor = Topic.where(title:).where.not(id: original_topic.id).sole
+        expect(successor.first_post.reload.event).to be_present
+
+        repeated_events = nil
+        expect do
+          repeated_events = DiscourseEvent.track_events { job.execute({}) }
+        end.not_to change(Topic, :count)
+
+        repeated_endings =
+          repeated_events.count do |entry|
+            entry[:event_name] == :discourse_post_event_event_ended &&
+              entry[:params].first.id == archived_event.id
+          end
+        expect(repeated_endings).to eq(0)
+        expect(archived_event.event_dates.pluck(:id).sort).to eq(event_date_ids_before)
+      end
+
       it "preserves all-day dates without timezone drift" do
         starts_on = 7.days.after.to_date
         title = "Weekly all-day planning meeting"

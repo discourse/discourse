@@ -137,9 +137,20 @@ module DiscourseEvents
         # without callbacks so it does not reschedule the completed occurrence
         # or reset RSVPs. Keep the in-memory recurrence for the event-ended
         # workflow. The surrounding service transaction rolls back on failure.
+        # Date-only all-day BBCode is parsed at midnight UTC, with an
+        # explicit end date parsed at the end of that UTC day. Persist the
+        # same values to avoid a post-edit EventDate resync after rollover.
+        archived_starts_at =
+          event.all_day ? event_date.starts_at.utc.beginning_of_day : event_date.starts_at
+
+        archived_ends_at =
+          if event.original_ends_at && event_date.ends_at
+            event.all_day ? event_date.ends_at.utc.end_of_day : event_date.ends_at
+          end
+
         Event.where(id: event.id).update_all(
-          original_starts_at: event_date.starts_at,
-          original_ends_at: event.original_ends_at ? event_date.ends_at : nil,
+          original_starts_at: archived_starts_at,
+          original_ends_at: archived_ends_at,
           recurrence: nil,
           recurrence_until: nil,
         )
