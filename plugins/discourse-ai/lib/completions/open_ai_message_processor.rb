@@ -35,7 +35,7 @@ module DiscourseAi::Completions
       tool_calls = json.dig(:choices, 0, :message, :tool_calls)
 
       message = json.dig(:choices, 0, :message, :content)
-      result << message if message.present?
+      result.concat(process_content(message))
 
       if tool_calls.present?
         tool_calls.each do |tool_call|
@@ -54,9 +54,9 @@ module DiscourseAi::Completions
     end
 
     def process_streamed_message(json)
-      result = []
       tool_calls = json.dig(:choices, 0, :delta, :tool_calls)
       content = json.dig(:choices, 0, :delta, :content)
+      result = process_content(content, streaming: true)
       finished_tools = json.dig(:choices, 0, :finish_reason) || tool_calls == []
 
       tool_calls&.each do |tool_call|
@@ -115,8 +115,6 @@ module DiscourseAi::Completions
 
       # Switching indexes does not complete a call: argument fragments can interleave.
       result.concat(finish) if finished_tools
-      # Content and tool calls may share a delta; preserve whitespace-only text.
-      result.unshift(content) if !content.to_s.empty?
       @stop_reason = json.dig(:choices, 0, :finish_reason) || @stop_reason
       update_usage(json)
 
@@ -124,13 +122,42 @@ module DiscourseAi::Completions
     end
 
     def finish
-      result = @tools.values.uniq.map(&:finish)
+      result = finish_thinking + @tools.values.uniq.map(&:finish)
       @tools.clear
       @current_tool_key = nil
       result
     end
 
     private
+
+    def process_content(content, streaming: false)
+      Array
+        .wrap(content)
+        .flat_map do |part|
+          if part.is_a?(Hash) && part[:type] == "thinking"
+            text =
+              part[:thinking].filter_map { |inner| inner[:text] if inner[:type] == "text" }.join
+            if streaming
+              @thinking ||= +""
+              @thinking << text
+            end
+            [Thinking.new(message: text, partial: streaming)]
+          else
+            text = part.is_a?(Hash) ? part[:text] : part
+            next [] if !text.is_a?(String) || text.empty?
+
+            finish_thinking + [text]
+          end
+        end
+    end
+
+    def finish_thinking
+      return [] if @thinking.nil?
+
+      thinking = Thinking.new(message: @thinking)
+      @thinking = nil
+      [thinking]
+    end
 
     class ToolState
       attr_reader :id
