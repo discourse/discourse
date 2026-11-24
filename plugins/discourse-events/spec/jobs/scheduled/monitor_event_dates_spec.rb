@@ -685,6 +685,73 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(event_date.reload.finished_at).to be_present
       end
 
+      shared_examples "authorised Event edits permit rollover" do |role, wiki|
+        it "continues rollover after #{role} corrects an existing Event" do
+          editor =
+            if wiki
+              Fabricate(:user, refresh_auto_groups: true)
+            else
+              Fabricate(:moderator)
+            end
+
+          SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
+          SiteSetting.discourse_post_event_allowed_on_groups =
+            Group::AUTO_GROUPS[:trust_level_0].to_s
+
+          starts_at = 7.days.after.change(sec: 0)
+          ends_at = starts_at + 1.hour
+          title = "Recurring meeting corrected by #{role}"
+
+          post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+              [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+              Typo in teh meeting notes.
+              [/event]
+            RAW
+
+          original_topic_id = post.topic_id
+          event_date = post.reload.event.event_dates.pending.first
+
+          if wiki
+            expect(
+              PostRevisor.new(post).revise!(event_author, { wiki: true }, bypass_bump: true),
+            ).to eq(true)
+            post.reload
+          end
+
+          expect(editor.guardian.can_edit_post?(post)).to eq(true)
+
+          corrected_raw = post.raw.sub("Typo in teh meeting notes.", "Typo in the meeting notes.")
+
+          expect(
+            PostRevisor.new(post).revise!(editor, { raw: corrected_raw }, bypass_bump: true),
+          ).to eq(true)
+
+          expect(post.reload.last_editor_id).to eq(editor.id)
+          expect(
+            post
+              .post_revisions
+              .where(user_id: editor.id)
+              .any? { |revision| revision.modifications.key?("raw") },
+          ).to eq(true)
+
+          freeze_time(ends_at + 1.hour)
+
+          expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+          successor = Topic.where(title:).where.not(id: original_topic_id).sole
+          successor_post = successor.first_post.reload
+
+          expect(successor_post.user_id).to eq(event_author.id)
+          expect(successor_post.raw).to include("Typo in the meeting notes.")
+          expect(successor_post.raw).not_to include("teh meeting notes")
+          expect(successor_post.event.recurrence).to eq("every_week")
+          expect(event_date.reload.finished_at).to be_present
+        end
+      end
+
+      include_examples "authorised Event edits permit rollover", "moderator", false
+      include_examples "authorised Event edits permit rollover", "wiki editor", true
+
       it "does not publish a wiki editor's event under the original author's identity" do
         editor = Fabricate(:user, refresh_auto_groups: true)
 
