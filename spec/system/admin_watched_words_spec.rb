@@ -9,16 +9,42 @@ describe "Admin Watched Words" do
 
   let(:ww_page) { PageObjects::Pages::AdminWatchedWords.new }
 
-  it "correctly saves watched words" do
-    ww_page.visit
-    ww_page.add_word "foo"
+  shared_examples "adding watched words" do
+    it "correctly saves watched words" do
+      ww_page.visit
+      ww_page.add_word "foo"
 
-    expect(ww_page).to have_word
+      expect(ww_page).to have_word
 
-    ww_page.visit
+      ww_page.visit
 
-    expect(ww_page).to have_word
+      expect(ww_page).to have_word
+    end
+
+    it "shows the 'outputs HTML' option when action=replace" do
+      ww_page.visit
+      expect(ww_page).not_to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
+
+      ww_page.visit(action: "replace")
+      expect(ww_page).to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
+    end
+
+    it "creates a watched word with the tag action type" do
+      Fabricate(:tag, name: "greeting")
+
+      ww_page.visit(action: "tag")
+      ww_page.add_word_with_tag("hello", "greeting")
+
+      expect(ww_page).to have_word
+
+      watched_word = WatchedWord.find_by(word: "hello")
+      expect(watched_word).to be_present
+      expect(watched_word.action).to eq(WatchedWord.actions[:tag])
+      expect(watched_word.replacement).to eq("greeting")
+    end
   end
+
+  include_examples "adding watched words"
 
   it "shows error when character limit is exceeded" do
     ww_page.visit
@@ -27,30 +53,19 @@ describe "Admin Watched Words" do
     expect(ww_page).to have_error("Word is too long (maximum is 100 characters)")
   end
 
-  it "shows the 'outputs HTML' option when action=replace" do
-    ww_page.visit
-    expect(ww_page).not_to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
-
-    ww_page.visit(action: "replace")
-    expect(ww_page).to have_text(I18n.t("admin_js.admin.watched_words.form.html_description"))
-  end
-
-  it "creates a watched word with the tag action type" do
-    Fabricate(:tag, name: "greeting")
-
-    ww_page.visit(action: "tag")
-    ww_page.add_word_with_tag("hello", "greeting")
-
-    expect(ww_page).to have_word
-
-    watched_word = WatchedWord.find_by(word: "hello")
-    expect(watched_word).to be_present
-    expect(watched_word.action).to eq(WatchedWord.actions[:tag])
-    expect(watched_word.replacement).to eq("greeting")
-  end
-
   context "with the new select controls" do
     with_select_controls(true)
+
+    include_examples "adding watched words"
+
+    it "doesn't offer a word past the character limit" do
+      ww_page.visit
+      words = PageObjects::Components::UiKit::DSelect.by_identifier("watched-words")
+      words.search("a" * 101)
+
+      expect(words).to have_no_option_name("a" * 101)
+      expect(page).to have_text(I18n.t("admin_js.admin.watched_words.form.too_long", max: 100))
+    end
 
     it "creates a watched word with the tag action type with the new select controls" do
       Fabricate(:tag, name: "greeting")
@@ -73,11 +88,7 @@ describe "Admin Watched Words" do
       ww_page.visit(action: "tag")
 
       tag_chooser = PageObjects::Components::UiKit::DSelect.at(".watched-word-input .tag-chooser")
-      words_selector = PageObjects::Components::SelectKit.new("#watched-words")
-      words_selector.expand
-      words_selector.search("hello")
-      words_selector.select_row_by_name("hello")
-      words_selector.collapse
+      ww_page.enter_word("hello")
 
       tag_chooser.search("brand-new")
       tag_chooser.select_name("brand-new")

@@ -9,11 +9,11 @@ module PageObjects
       end
 
       def add_word(word)
-        ww = page.find("#watched-words")
-        ww.find("#watched-words-header").click
-        ww.find(".filter-input").send_keys(word)
-        ww.find(".select-kit-row").click
+        enter_word(word)
+        submit
+      end
 
+      def submit
         page.find(".watched-words-detail .btn-primary").click
       end
 
@@ -22,11 +22,7 @@ module PageObjects
       end
 
       def add_word_with_tag(word, tag_name)
-        words_selector = PageObjects::Components::SelectKit.new("#watched-words")
-        words_selector.expand
-        words_selector.search(word)
-        words_selector.select_row_by_name(word)
-        words_selector.collapse
+        enter_word(word)
 
         if find(".tag-chooser").matches_css?(".d-select", wait: 0)
           tag_chooser = PageObjects::Components::UiKit::DSelect.at(".tag-chooser")
@@ -45,6 +41,23 @@ module PageObjects
 
       def has_error?(error)
         has_css?(".dialog-container .dialog-body", text: error)
+      end
+
+      # Types a word into the words field and adds it, leaving the field closed.
+      def enter_word(word)
+        if SiteSetting.enable_new_select_controls
+          words = PageObjects::Components::UiKit::DSelect.by_identifier("watched-words")
+          words.search(word)
+          words.select_name(word)
+          words.close
+        else
+          # TODO (select-kit-replacement-cleanup)
+          words = PageObjects::Components::SelectKit.new("#watched-words")
+          words.expand
+          words.search(word)
+          words.select_row_by_name(word)
+          words.collapse
+        end
       end
     end
   end

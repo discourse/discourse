@@ -7,12 +7,37 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import WatchedWord from "discourse/admin/models/watched-word";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
+
+/** The longest word the server stores; see `WatchedWord`'s length validation. */
+const MAX_WORD_LENGTH = 100;
+
+/** A word as the server stores it: trimmed, with each run of wildcards as one. */
+function normalizeWord(word) {
+  return (word ?? "").trim().replace(/\*+/g, "*");
+}
+
+/** A typed word or phrase as the picker's record. */
+function wordRecord(word) {
+  const name = word.trim();
+  return { id: name, name };
+}
+
+function isTooLong(word) {
+  return normalizeWord(word).length > MAX_WORD_LENGTH;
+}
+
+/** Whether a typed word can be saved. */
+function isWord(word) {
+  return normalizeWord(word).length > 0 && !isTooLong(word);
+}
 
 export default class WatchedWordForm extends Component {
   @service siteSettings;
@@ -25,6 +50,14 @@ export default class WatchedWordForm extends Component {
 
   /** @type {{ id?: number | string, name: string }[]} */
   @tracked selectedTags = [];
+
+  /**
+   * Every word the field has held since the form last saved, in the order each was first held,
+   * so a removed one keeps its row and can be picked again.
+   *
+   * @type {string[]}
+   */
+  @tracked offered = [];
 
   /** @type {string[]} */
   @tracked words = [];
@@ -55,6 +88,12 @@ export default class WatchedWordForm extends Component {
     return this.args.actionKey === "link";
   }
 
+  get wordOptions() {
+    return uniqueItemsFromArray([...this.offered, ...this.words]).map(
+      wordRecord
+    );
+  }
+
   get placeholderKey() {
     if (this.siteSettings.watched_words_regular_expressions) {
       return "admin.watched_words.form.placeholder_regexp";
@@ -64,26 +103,49 @@ export default class WatchedWordForm extends Component {
   }
 
   get isUniqueWord() {
-    const existingWords = this.args.filteredContent || [];
-    const filtered = existingWords.filter(
+    return !this.words.some((word) => this.existsAlready(word));
+  }
+
+  /**
+   * Every word this action already watches, including any the page's search hides.
+   *
+   * @returns {{ word: string, action: string, case_sensitive: boolean }[]}
+   */
+  get #existingWords() {
+    return (this.args.existingWords ?? []).filter(
       (content) => content.action === this.args.actionKey
     );
+  }
 
-    const duplicate = filtered.find((content) => {
-      if (content.case_sensitive === true) {
-        return this.words?.includes(content.word);
-      } else {
-        return this.words
-          ?.map((w) => w.toLowerCase())
-          ?.includes(content.word.toLowerCase());
-      }
-    });
+  @action
+  allowCreate(word) {
+    return isWord(word) && !this.existsAlready(word);
+  }
 
-    return !duplicate;
+  /**
+   * Whether the action already watches the word, matched as the server matches it: exactly for a
+   * case-sensitive word, in any case otherwise.
+   */
+  @action
+  existsAlready(word) {
+    const typed = normalizeWord(word);
+    if (!typed) {
+      return false;
+    }
+    return this.#existingWords.some((content) =>
+      content.case_sensitive
+        ? content.word === typed
+        : content.word.toLowerCase() === typed.toLowerCase()
+    );
   }
 
   @action
   changeWords(words) {
+    this.offered = uniqueItemsFromArray([
+      ...this.offered,
+      ...this.words,
+      ...words,
+    ]);
     this.words = words;
     if (!isEmpty(words)) {
       this.shownMessage = null;
@@ -123,6 +185,7 @@ export default class WatchedWordForm extends Component {
       watchedWord
         .save()
         .then((result) => {
+          this.offered = [];
           this.words = [];
           this.replacement = "";
           this.replacementTags = [];
@@ -154,15 +217,43 @@ export default class WatchedWordForm extends Component {
         <label for="watched-word">{{i18n
             "admin.watched_words.form.label"
           }}</label>
-        <WatchedWords
-          @id="watched-words"
-          @onChange={{this.changeWords}}
-          @options={{hash
-            filterPlaceholder=this.placeholderKey
-            disabled=this.formSubmitted
-          }}
-          @value={{this.words}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelect
+            class="watched-word-input-field"
+            @allowCreate={{this.allowCreate}}
+            @createOption={{wordRecord}}
+            @disabled={{this.formSubmitted}}
+            @id="watched-word"
+            @identifier="watched-words"
+            @multiple={{true}}
+            @onChange={{this.changeWords}}
+            @options={{this.wordOptions}}
+            @texts={{hash placeholder=(i18n this.placeholderKey)}}
+            @value={{this.words}}
+          >
+            <:empty as |state|>
+              {{#if (isTooLong state.query)}}
+                {{i18n "admin.watched_words.form.too_long" max=MAX_WORD_LENGTH}}
+              {{else if (this.existsAlready state.query)}}
+                {{i18n "admin.watched_words.form.exists"}}
+              {{else}}
+                {{i18n "admin.watched_words.form.empty"}}
+              {{/if}}
+            </:empty>
+          </DSelect>
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <WatchedWords
+            @id="watched-words"
+            @onChange={{this.changeWords}}
+            @options={{hash
+              filterPlaceholder=this.placeholderKey
+              disabled=this.formSubmitted
+            }}
+            @value={{this.words}}
+          />
+        {{/if}}
       </div>
 
       {{#if this.canReplace}}

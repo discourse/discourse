@@ -65,7 +65,7 @@ export default <template>
   <WatchedWordForm
     @action={{@controller.recordAdded}}
     @actionKey={{@controller.actionNameKey}}
-    @filteredContent={{@controller.currentActionFiltered.words}}
+    @existingWords={{@controller.currentAction.words}}
   />
 
   {{#if @controller.currentActionFiltered.words}}

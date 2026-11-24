@@ -416,10 +416,16 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - ☐ The wizard (see below).
   - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
     dynamically. It moves with the colors and fonts.
-  - ☐ `WatchedWords`, 1 site: the admin watched word form (`watched-word-form.gjs`), found
-    2026-11-24 after the inventory missed it. A `MultiSelect` that takes any typed word or
-    phrase (`allowAny`) and offers only the words already entered, so a multiple `DSelect` with
-    `@createOption`, like the string lists.
+  - ☑ `WatchedWords`, 1 site: the admin watched word form (`watched-word-form.gjs`), found
+    2026-11-24 after the inventory missed it. It branches on the flag to a multiple `DSelect`
+    (2026-11-24) that takes any typed word or phrase. Like the string lists, a removed word keeps
+    its row until the form saves. It doesn't offer a word the server would refuse: one longer
+    than 100 characters, or one the action already watches, matched as the server does (in any
+    case unless the saved word is case-sensitive). The legacy check ran only on submit and
+    against the words the page's search left visible; it now reads every word in both modes.
+    The field's label names its input; the legacy one pointed at an id nothing had. The specs
+    run in both modes. A pasted `a|b` adds two words in both modes, so a regular expression
+    with `|` has to be typed.
 - ☐ **ui-kit wrappers** as one family.
   - ☑ `d-relative-time-picker` (2026-11-13): its unit select branches on the flag to a static
     `DSelect` named "Unit".

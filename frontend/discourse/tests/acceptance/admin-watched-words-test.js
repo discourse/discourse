@@ -7,13 +7,18 @@ import {
   waitFor,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import pretender, {
+  fixturesByUrl,
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
+
+const NEW_WORDS =
+  ".watched-word-form [data-identifier='watched-words'][data-trigger]";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -195,11 +200,10 @@ acceptance("Admin - Watched Words", function (needs) {
       .dom(".watched-word-form .select-kit.tag-chooser")
       .doesNotExist("replaces the legacy tag chooser");
 
-    await click("#watched-words .select-kit-header");
-    await fillIn(".select-kit-filter input", "poutine");
-    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+    await dSelect(NEW_WORDS).search("poutine");
+    await triggerKeyEvent("#watched-word", "keydown", "Enter");
 
-    const tags = dSelect(".watched-word-form .d-select");
+    const tags = dSelect(".watched-word-form .tag-chooser");
     await tags.selectByName("monkey");
     await tags.close();
     let data;
@@ -219,6 +223,185 @@ acceptance("Admin - Watched Words", function (needs) {
       "monkey",
       "submits the chosen tag name"
     );
+  });
+
+  test("adds words with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/customize/watched_words/action/block");
+    await click(".show-words-checkbox");
+
+    assert
+      .dom("#watched-word")
+      .hasAttribute("role", "combobox", "the field's label names the input")
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.watched_words.form.placeholder")
+      );
+
+    await dSelect(NEW_WORDS).search("poutine");
+    await triggerKeyEvent("#watched-word", "keydown", "Enter");
+    await dSelect(NEW_WORDS).search("cheese");
+    await triggerKeyEvent("#watched-word", "keydown", "Enter");
+
+    assert.dSelect(NEW_WORDS).hasValue("poutine,cheese");
+
+    await click(".watched-word-form .btn-primary");
+
+    const words = findAll(".watched-words-list .watched-word span").map(
+      (elem) => elem.innerText.trim()
+    );
+    assert.true(words.includes("poutine"), "has word 'poutine'");
+    assert.true(words.includes("cheese"), "has word 'cheese'");
+    assert.dSelect(NEW_WORDS).hasNoSelection("the form starts over");
+  });
+
+  test("the new word field keeps a removed word until the form saves", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/customize/watched_words/action/block");
+
+    const words = dSelect(NEW_WORDS);
+    await words.search("poutine");
+    await triggerKeyEvent("#watched-word", "keydown", "Enter");
+    await words.removeTriggerChip("poutine");
+    await words.open();
+
+    assert
+      .dom(".d-select__content [role='option'][aria-selected='false']")
+      .hasText("poutine", "a removed word stays to be picked again");
+
+    await words.select("poutine");
+    await words.close();
+    await click(".watched-word-form .btn-primary");
+    await words.open();
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .doesNotExist("a save starts the list over");
+    assert
+      .dom(".d-select__content")
+      .includesText(i18n("admin.watched_words.form.empty"));
+  });
+
+  test("the new word field refuses a word the action already has", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const list = cloneJSON(
+      fixturesByUrl["/admin/customize/watched_words.json"]
+    );
+    list.words.push({
+      id: 99,
+      word: "Fennel",
+      action: "block",
+      case_sensitive: true,
+    });
+    pretender.get("/admin/customize/watched_words.json", () => response(list));
+
+    await visit("/admin/customize/watched_words/action/block");
+    // The page's search hides the existing word from the list below the form.
+    await fillIn(".admin-controls .controls input[type=text]", "zzz");
+
+    const words = dSelect(NEW_WORDS);
+    await words.search("Liquorice");
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .doesNotExist("a word saved without case sensitivity matches any case");
+    assert
+      .dom(".d-select__content")
+      .includesText(i18n("admin.watched_words.form.exists"));
+
+    await words.search("Fennel");
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .doesNotExist("a case-sensitive word matches its own spelling");
+
+    await words.search("fennel");
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .exists({ count: 1 }, "but not another case");
+
+    await words.search("liquorice2");
+
+    assert.dom(".d-select__content [role='option']").exists({ count: 1 });
+  });
+
+  test("a word the search hides still counts as existing", async function (assert) {
+    await visit("/admin/customize/watched_words/action/block");
+    await fillIn(".admin-controls .controls input[type=text]", "zzz");
+
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "anise");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+    await click(".watched-word-form .btn-primary");
+
+    assert
+      .dom(".watched-word-form .success-message")
+      .hasText(i18n("admin.watched_words.form.exists"));
+  });
+
+  test("the new word field doesn't offer a word too long to save", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    await visit("/admin/customize/watched_words/action/block");
+
+    const words = dSelect(NEW_WORDS);
+    await words.search("a".repeat(101));
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .doesNotExist("offers no word past the limit");
+    assert
+      .dom(".d-select__content")
+      .includesText(i18n("admin.watched_words.form.too_long", { max: 100 }));
+
+    await words.search(`${"a".repeat(98)}***`);
+
+    assert
+      .dom(".d-select__content [role='option']")
+      .exists(
+        { count: 1 },
+        "a run of wildcards counts once, as the server stores it"
+      );
+  });
+
+  test("the new word field asks for regular expressions when they're on", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    this.siteSettings.watched_words_regular_expressions = true;
+    await visit("/admin/customize/watched_words/action/block");
+
+    assert
+      .dom("#watched-word")
+      .hasAttribute(
+        "placeholder",
+        i18n("admin.watched_words.form.placeholder_regexp")
+      );
+  });
+
+  test("the new word field is disabled while saving", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let release;
+    const held = new Promise((resolve) => (release = resolve));
+    pretender.post("/admin/customize/watched_words.json", async () => {
+      await held;
+      return response({
+        id: 1,
+        word: "poutine",
+        action: "block",
+        case_sensitive: false,
+      });
+    });
+
+    await visit("/admin/customize/watched_words/action/block");
+    await dSelect(NEW_WORDS).search("poutine");
+    await triggerKeyEvent("#watched-word", "keydown", "Enter");
+
+    const submitted = click(".watched-word-form .btn-primary");
+    await waitFor(".case-sensitivity-checkbox input:disabled");
+
+    assert.dSelect(NEW_WORDS).isDisabled();
+
+    release();
+    await submitted;
   });
 
   test("test modal - tag", async function (assert) {

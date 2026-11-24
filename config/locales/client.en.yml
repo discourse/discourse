@@ -10024,6 +10024,8 @@ en:
           html_label: "HTML"
           html_description: "Outputs HTML in the replacement"
           words_or_phrases: "words or phrases"
+          empty: "No words or phrases yet"
+          too_long: "Words can't be longer than %{max} characters"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
