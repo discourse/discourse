@@ -6,6 +6,7 @@ import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import {
+  colorBrightness,
   isValidHex,
   normalizeHex,
   resolveColor,
@@ -31,32 +32,10 @@ function colorLabel(usedColors, color) {
   return `#${color}${usedText}`;
 }
 
-function calculateLuminance(hex) {
-  if (!hex || hex.length < 3) {
-    return 1;
-  }
-
-  let normalized = hex.toUpperCase();
-
-  if (normalized.length === 3) {
-    normalized =
-      normalized[0] +
-      normalized[0] +
-      normalized[1] +
-      normalized[1] +
-      normalized[2] +
-      normalized[2];
-  }
-
-  const r = parseInt(normalized.slice(0, 2), 16);
-  const g = parseInt(normalized.slice(2, 4), 16);
-  const b = parseInt(normalized.slice(4, 6), 16);
-
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-}
-
 function colorLuminanceClass(color) {
-  return calculateLuminance(color) > 0.5 ? "--is-light" : "--is-dark";
+  return !color || color.length < 3 || colorBrightness(color) > 127.5
+    ? "--is-light"
+    : "--is-dark";
 }
 
 export default class FKControlColor extends FKBaseControl {
@@ -130,8 +109,7 @@ export default class FKControlColor extends FKBaseControl {
       return "--is-light";
     }
 
-    const hex = normalizeHex(value);
-    return calculateLuminance(hex) > 0.5 ? "--is-light" : "--is-dark";
+    return colorLuminanceClass(value);
   }
 
   setValue(value) {
@@ -178,7 +156,13 @@ export default class FKControlColor extends FKBaseControl {
     <div class="form-kit__control-color">
       <div class="form-kit__control-color-input">
         {{#if this.showPrefix}}
-          <span class="form-kit__control-color-input-prefix">#</span>
+          <span class="form-kit__control-color-input-prefix">
+            {{#if (has-block "prefix")}}
+              {{yield to="prefix"}}
+            {{else}}
+              #
+            {{/if}}
+          </span>
         {{/if}}
         <input
           aria-describedby={{@field.describedBy}}
@@ -202,6 +186,7 @@ export default class FKControlColor extends FKBaseControl {
           }}
         >
           <input
+            aria-label={{@field.title}}
             class="form-kit__control-color-input-picker"
             disabled={{@field.disabled}}
             type="color"
@@ -212,7 +197,7 @@ export default class FKControlColor extends FKBaseControl {
         </span>
         {{#if (and @colors @collapseSwatches)}}
           <DMenu
-            class="btn-default form-kit__control-color-swatches-btn"
+            class="btn-transparent form-kit__control-color-swatches-btn"
             @icon="palette"
             @identifier="color-swatches-menu"
             @modalForMobile={{true}}

@@ -30,6 +30,7 @@ const ICON_TOOLTIP = "d-icon-grid-picker-icon";
  * @property {object} Args
  *
  * @property {{id: string, symbol?: string}} Args.icon - The icon to render.
+ * @property {boolean} [Args.showName] - Whether to label the icon inline.
  * @property {boolean} [Args.selected] - Whether the icon is the currently selected value.
  * @property {(icon: {id: string, symbol?: string}) => void} Args.onSelect - Called with the picked icon.
  */
@@ -66,6 +67,7 @@ class IconButton extends Component {
     >
       {{this.symbol}}
       {{dIcon @icon.id ignoreMissing=true}}
+      {{#if @showName}}<span>{{@icon.id}}</span>{{/if}}
     </button>
   </template>
 }
@@ -73,12 +75,16 @@ class IconButton extends Component {
 /**
  * The content panel rendered inside the DMenu dropdown or modal.
  * Handles icon search, favorites row, and the async-loaded icon grid.
+ * The optional default block renders after the search input in the filter row.
+ * Use it for controls that should stay visible while results scroll.
  *
  * @param {string} value - The currently selected icon ID.
  * @param {Function} onSelect - Called with the selected icon ID when an icon is picked.
+ * @param {string} [searchPlaceholder] - A translated placeholder for the search input.
  * @param {string[]} [favorites] - Icon IDs to display in a pinned favorites row above the grid.
  * @param {boolean} [showSelectedName] - When true, the selected favorite chip also displays
  *   the icon name alongside the icon.
+ * @param {boolean} [showNames] - Display results as a list with visible icon names.
  * @param {boolean} [onlyAvailable] - When true, only offers icons available in the
  *   current SVG sprite set. Defaults to true.
  */
@@ -131,6 +137,10 @@ export default class DIconGridPickerContent extends Component {
    * by a page at a time. The selected chip is skipped: it shows its name inline.
    */
   iconTooltips = modifier((/** @type {HTMLElement} */ element) => {
+    if (this.args.showNames) {
+      return;
+    }
+
     /** @type {HTMLElement?} */
     let current = null;
 
@@ -491,7 +501,10 @@ export default class DIconGridPickerContent extends Component {
   <template>
     {{! eslint-disable ember/template-no-invalid-interactive }}
     <div
-      class="d-icon-grid-picker__content"
+      class={{dConcatClass
+        "d-icon-grid-picker__content"
+        (if @showNames "--list")
+      }}
       style={{@iconColorStyle}}
       {{on "keydown" this.onKeyDown}}
     >
@@ -499,13 +512,17 @@ export default class DIconGridPickerContent extends Component {
         <DFilterInput
           aria-controls="d-icon-grid-picker-listbox"
           aria-label={{i18n "d_icon_grid_picker.search_label"}}
-          placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
+          placeholder={{or
+            @searchPlaceholder
+            (i18n "d_icon_grid_picker.search_placeholder")
+          }}
           @containerClass="d-icon-grid-picker__filter"
           @filterAction={{withEventValue this.setFilter}}
           @icons={{hash left="magnifying-glass"}}
           @onClearInput={{fn this.setFilter ""}}
           @value={{this.filter}}
         />
+        {{yield}}
       </div>
 
       <div
@@ -516,7 +533,7 @@ export default class DIconGridPickerContent extends Component {
         {{this.registerGridWrapper}}
         {{this.iconTooltips}}
       >
-        {{#if this.hasFavorites}}
+        {{#if (and this.hasFavorites (not @showNames))}}
           <div
             aria-label={{i18n "d_icon_grid_picker.favorites"}}
             class="d-icon-grid-picker__favorites"
@@ -572,6 +589,7 @@ export default class DIconGridPickerContent extends Component {
                   @icon={{item}}
                   @onSelect={{this.selectIcon}}
                   @selected={{eq item.id @value}}
+                  @showName={{@showNames}}
                 />
               {{/each}}
             </:content>
