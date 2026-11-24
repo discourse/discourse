@@ -213,6 +213,91 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(post.last_editor_id).to eq(author.id)
   end
 
+  it "links consecutive successor topics without accumulating continuation links" do
+    freeze_time Time.utc(2027, 1, 1, 12)
+
+    starts_at = Time.utc(2027, 1, 2, 12)
+    ends_at = starts_at + 1.hour
+    title = "Linked weekly occurrence"
+
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+      [event start="2027-01-02 12:00" end="2027-01-02 13:00" status="public" timezone="UTC" recurrence="every_week"]
+      Original meeting notes.
+      [/event]
+    RAW
+
+    original_topic = post.topic
+    first_date = post.reload.event.event_dates.pending.first
+
+    freeze_time(ends_at + 1.hour)
+
+    expect do
+      expect(described_class.call(params: { event_date_id: first_date.id })).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    second_topic = Topic.where(title:).where.not(id: original_topic.id).sole
+    second_post = second_topic.first_post.reload
+
+    original_url = post.reload.full_url
+    first_link = "[#{original_topic.reload.markdown_link_title}](#{original_url})"
+    first_prefix = "#{I18n.t("js.post.continue_discussion", postLink: first_link)}\n\n"
+
+    expect(first_prefix).to start_with("Continuing the discussion from ")
+    expect(second_post.raw).to include("\n\n[event")
+    expect(second_post.raw).to start_with(first_prefix)
+    expect(second_post.raw).to include("Original meeting notes.")
+    expect(second_post.event.recurrence).to eq("every_week")
+
+    expect(
+      TopicLink.exists?(
+        topic_id: second_topic.id,
+        link_topic_id: original_topic.id,
+        reflection: false,
+      ),
+    ).to eq(true)
+
+    expect(
+      TopicLink.exists?(
+        topic_id: original_topic.id,
+        link_topic_id: second_topic.id,
+        reflection: true,
+      ),
+    ).to eq(true)
+
+    second_date = second_post.event.event_dates.pending.first
+    freeze_time(second_date.ends_at + 1.hour)
+
+    expect do
+      expect(described_class.call(params: { event_date_id: second_date.id })).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    third_topic = Topic.where(title:).where.not(id: [original_topic.id, second_topic.id]).sole
+    third_post = third_topic.first_post.reload
+
+    second_link = "[#{second_topic.reload.markdown_link_title}](#{second_post.reload.full_url})"
+    second_prefix = "#{I18n.t("js.post.continue_discussion", postLink: second_link)}\n\n"
+
+    expect(third_post.raw).to start_with(second_prefix)
+    expect(third_post.raw).not_to include(first_prefix)
+    expect(third_post.raw).not_to include(original_url)
+    expect(third_post.raw).to include("Original meeting notes.")
+    expect(third_post.event.recurrence).to eq("every_week")
+
+    expect(second_post.reload.raw).to start_with(first_prefix)
+
+    expect(
+      TopicLink.exists?(
+        topic_id: third_topic.id,
+        link_topic_id: second_topic.id,
+        reflection: false,
+      ),
+    ).to eq(true)
+
+    expect(
+      TopicLink.exists?(topic_id: second_topic.id, link_topic_id: third_topic.id, reflection: true),
+    ).to eq(true)
+  end
+
   it "skips missed occurrences when a rollover runs late" do
     freeze_time Time.utc(2026, 10, 1, 12)
 

@@ -5,6 +5,8 @@ module DiscourseEvents
     class Event::CreateSuccessorTopic
       include Service::Base
 
+      CONTINUATION_PREFIX_TOPIC_CUSTOM_FIELD = "discourse_post_event_recurring_continuation_prefix"
+
       params do
         attribute :event_date_id, :integer
         validates :event_date_id, presence: true
@@ -215,10 +217,22 @@ module DiscourseEvents
             "hosts" => successor_hostnames.presence&.join(","),
           )
 
+        # Replace only the previous rollover's generated introduction.
+        # Leave any user-authored content untouched.
+        previous_prefix = topic.custom_fields[CONTINUATION_PREFIX_TOPIC_CUSTOM_FIELD]
+        if previous_prefix.present? && successor_raw.start_with?(previous_prefix)
+          successor_raw = successor_raw.delete_prefix(previous_prefix)
+        end
+
+        previous_link = "[#{topic.markdown_link_title}](#{post.full_url})"
+        continuation_prefix =
+          "#{I18n.t("js.post.continue_discussion", postLink: previous_link)}\n\n"
+
         context[:successor_post] = create_successor_post(
-          successor_raw,
+          "#{continuation_prefix}#{successor_raw}",
           original_title,
           recurrence_anchor:,
+          continuation_prefix:,
         )
         context[:successor_topic] = context[:successor_post].topic
       end
@@ -245,7 +259,7 @@ module DiscourseEvents
         post.topic
       end
 
-      def create_successor_post(raw, title, recurrence_anchor:)
+      def create_successor_post(raw, title, recurrence_anchor:, continuation_prefix:)
         PostCreator.create!(
           post.user,
           acting_user: Discourse.system_user,
@@ -258,6 +272,7 @@ module DiscourseEvents
             custom_fields: {
               Event::RECURRENCE_ANCHOR_TOPIC_CUSTOM_FIELD => recurrence_anchor.iso8601,
               Event::RECURRENCE_ANCHOR_INITIALIZING_TOPIC_CUSTOM_FIELD => true,
+              CONTINUATION_PREFIX_TOPIC_CUSTOM_FIELD => continuation_prefix,
             },
           },
         ).reload
