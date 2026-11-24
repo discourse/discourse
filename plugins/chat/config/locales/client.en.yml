@@ -14,6 +14,14 @@ en:
           messages:
             one: "message"
             other: "messages"
+        chat_preferred_index:
+          channels: "Channels"
+          direct_messages: "Direct messages"
+          my_threads: "My threads"
+        chat_archive_destination_topic_status:
+          archived: "Archived"
+          open: "Open"
+          closed: "Closed"
   js:
     admin:
       site_settings:
