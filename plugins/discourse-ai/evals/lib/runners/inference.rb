@@ -6,15 +6,17 @@ module DiscourseAi
   module Evals
     module Runners
       class Inference < Base
+        Candidate = Struct.new(:id, :name, :description, :aliases)
+
         OPERATIONS = {
           "generate_concepts" => {
             agent_class: DiscourseAi::Agents::ConceptFinder,
-            schema_key: :concepts,
+            schema_key: :matches,
             schema_type: "array",
           },
           "match_concepts" => {
             agent_class: DiscourseAi::Agents::ConceptMatcher,
-            schema_key: :matching_concepts,
+            schema_key: :matches,
             schema_type: "array",
           },
           "deduplicate_concepts" => {
@@ -52,36 +54,45 @@ module DiscourseAi
           content = conversation_to_text(args)
           raise ArgumentError, "Missing input for generate concepts eval" if content.blank?
 
+          candidates = build_candidates(args[:existing_concepts])
           agent, user = agent_bundle(feature_name)
-          context =
-            build_ctx.tap do |ctx|
-              ctx.messages = [{ type: :user, content: content }]
-              ctx.inferred_concepts = args[:existing_concepts] || []
-            end
+          payload = {
+            content: content,
+            candidates:
+              DiscourseAi::InferredConcepts::CandidateRetriever.serialize_candidates(candidates),
+          }
 
-          values =
-            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
+          context =
+            build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: payload.to_json }] }
+
+          structured_output =
+            capture_structured_object(agent, user, llm, context, execution_context:)
+          values = extract_concept_names(structured_output, candidates, include_proposed: true)
           wrap_result(format_response(values), { query: content })
         end
 
         def match_concepts(args, llm, execution_context:)
           content = conversation_to_text(args)
-          candidates = args[:concepts].to_a.map(&:to_s)
-          if content.blank? || candidates.empty?
+          raw_concepts = args[:concepts].to_a.map(&:to_s)
+          if content.blank? || raw_concepts.empty?
             raise ArgumentError, "Match concepts eval requires :input/:conversation and :concepts"
           end
 
+          candidates = build_candidates(raw_concepts)
           agent, user = agent_bundle(feature_name)
+          payload = {
+            content: content,
+            candidates:
+              DiscourseAi::InferredConcepts::CandidateRetriever.serialize_candidates(candidates),
+          }
 
           context =
-            build_ctx.tap do |ctx|
-              ctx.messages = [{ type: :user, content: content }]
-              ctx.inferred_concepts = candidates
-            end
+            build_ctx.tap { |ctx| ctx.messages = [{ type: :user, content: payload.to_json }] }
 
-          values =
-            capture_structured_output(agent, user, llm, context, feature_name, execution_context:)
-          wrap_result(format_response(values), { query: content, concepts: candidates })
+          structured_output =
+            capture_structured_object(agent, user, llm, context, execution_context:)
+          values = extract_concept_names(structured_output, candidates, include_proposed: false)
+          wrap_result(format_response(values), { query: content, concepts: raw_concepts })
         end
 
         def deduplicate_concepts(args, llm, execution_context:)
@@ -118,6 +129,42 @@ module DiscourseAi
             schema_type: schema_type,
             execution_context:,
           )
+        end
+
+        def capture_structured_object(agent, user, llm, context, execution_context:)
+          bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
+          structured_output = nil
+          bot.reply(context, execution_context:) do |partial, _, type|
+            structured_output = partial if type == :structured_output
+          end
+          structured_output
+        end
+
+        def build_candidates(names)
+          Array(names).each_with_index.map do |name, index|
+            Candidate.new(index + 1, name.to_s, "", [])
+          end
+        end
+
+        def extract_concept_names(structured_output, candidates, include_proposed:)
+          return [] if structured_output.nil?
+
+          by_id = candidates.index_by(&:id)
+          matches =
+            Array(structured_output.read_buffered_property(:matches)).filter_map do |item|
+              next unless item.is_a?(Hash)
+              by_id[item.with_indifferent_access[:concept_id]&.to_i]&.name
+            end
+
+          return matches unless include_proposed
+
+          proposed =
+            Array(structured_output.read_buffered_property(:proposed_new)).filter_map do |item|
+              next unless item.is_a?(Hash)
+              item.with_indifferent_access[:name].presence
+            end
+
+          (matches + proposed).uniq
         end
 
         def conversation_to_text(args)

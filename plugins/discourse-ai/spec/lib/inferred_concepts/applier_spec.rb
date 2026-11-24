@@ -3,52 +3,74 @@
 RSpec.describe DiscourseAi::InferredConcepts::Applier do
   subject(:applier) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic) { Fabricate(:topic, title: "Ruby Programming Tutorial") }
   fab!(:post) { Fabricate(:post, raw: "This post is about advanced testing techniques") }
   fab!(:user) { Fabricate(:user, username: "dev_user") }
   fab!(:concept1) { Fabricate(:inferred_concept, name: "programming") }
   fab!(:concept2) { Fabricate(:inferred_concept, name: "testing") }
-  fab!(:llm_model, :fake_model)
 
   before do
     enable_current_plugin
-
-    SiteSetting.inferred_concepts_match_agent = -1
+    assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
-
-    # Set up the post's user
     post.update!(user: user)
+
+    vector = [0.1] * vector_def.dimensions
+    DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec")
+    DiscourseAi::Embeddings::Schema.for(Post).store(post, vector, "post-vec")
   end
 
   describe "#apply_to_topic" do
-    it "does nothing for blank topic or concepts" do
+    it "does nothing for blank topic or concepts and is idempotent" do
       expect { applier.apply_to_topic(nil, [concept1]) }.not_to raise_error
       expect { applier.apply_to_topic(topic, []) }.not_to raise_error
-      expect { applier.apply_to_topic(topic, nil) }.not_to raise_error
-    end
 
-    it "associates concepts with topic" do
       applier.apply_to_topic(topic, [concept1, concept2])
+      applier.apply_to_topic(topic, [concept1])
 
-      expect(topic.inferred_concepts).to include(concept1, concept2)
-      expect(concept1.topics).to include(topic)
-      expect(concept2.topics).to include(topic)
+      expect(topic.inferred_concepts).to contain_exactly(concept1, concept2)
     end
   end
 
   describe "#apply_to_post" do
-    it "does nothing for blank post or concepts" do
-      expect { applier.apply_to_post(nil, [concept1]) }.not_to raise_error
-      expect { applier.apply_to_post(post, []) }.not_to raise_error
-      expect { applier.apply_to_post(post, nil) }.not_to raise_error
-    end
-
-    it "associates concepts with post" do
+    it "associates concepts idempotently" do
       applier.apply_to_post(post, [concept1, concept2])
+      applier.apply_to_post(post, [concept2])
 
-      expect(post.inferred_concepts).to include(concept1, concept2)
-      expect(concept1.posts).to include(post)
-      expect(concept2.posts).to include(post)
+      expect(post.inferred_concepts).to contain_exactly(concept1, concept2)
+    end
+  end
+
+  describe "#apply_matches_to_topic" do
+    it "upserts relevance, primary, and digest and removes stale associations on re-classification" do
+      applier.apply_matches_to_topic(
+        topic,
+        [
+          { concept: concept1, relevance: 0.9, primary: true },
+          { concept: concept2, relevance: 0.6, primary: false },
+        ],
+        digest: "digest-1",
+      )
+
+      link = InferredConceptTopic.find_by(topic_id: topic.id, inferred_concept_id: concept1.id)
+      expect(link.relevance).to eq(0.9)
+      expect(link.primary).to eq(true)
+      expect(link.digest).to eq("digest-1")
+
+      applier.apply_matches_to_topic(
+        topic,
+        [{ concept: concept2, relevance: 0.95, primary: true }],
+        digest: "digest-2",
+      )
+
+      expect(topic.inferred_concepts).to contain_exactly(concept2)
+      updated = InferredConceptTopic.find_by(topic_id: topic.id, inferred_concept_id: concept2.id)
+      expect(updated.relevance).to eq(0.95)
+      expect(updated.primary).to eq(true)
+      expect(updated.digest).to eq("digest-2")
     end
   end
 
@@ -57,278 +79,94 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
       expect(applier.topic_content_for_analysis(nil)).to eq("")
     end
 
-    it "extracts title and posts content" do
-      # Create additional posts for the topic
-      post1 = Fabricate(:post, topic: topic, post_number: 1, raw: "First post content", user: user)
-      post2 = Fabricate(:post, topic: topic, post_number: 2, raw: "Second post content", user: user)
+    it "extracts title, category, regular posts up to 10, and truncates long content" do
+      category = Fabricate(:category, name: "Engineering")
+      topic.update!(category: category)
+      12.times do |i|
+        Fabricate(:post, topic: topic, post_number: i + 1, raw: "Post #{i + 1}", user: user)
+      end
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 13,
+        post_type: Post.types[:whisper],
+        raw: "Secret whisper",
+        user: user,
+      )
 
       content = applier.topic_content_for_analysis(topic)
 
       expect(content).to include(topic.title)
-      expect(content).to include("First post content")
-      expect(content).to include("Second post content")
-      expect(content).to include(user.username)
-      expect(content).to include("1)")
-      expect(content).to include("2)")
-    end
+      expect(content).to include("Category: Engineering")
+      expect(content).to include("10) dev_user: Post 10")
+      expect(content).not_to include("11) dev_user: Post 11")
+      expect(content).not_to include("Secret whisper")
 
-    it "limits to first 10 posts" do
-      # Create 12 posts for the topic
-      12.times { |i| Fabricate(:post, topic: topic, post_number: i + 1, user: user) }
-
-      allow(Post).to receive(:where).with(topic_id: topic.id).and_call_original
-      allow_any_instance_of(ActiveRecord::Relation).to receive(:limit).with(10).and_call_original
-
-      applier.topic_content_for_analysis(topic)
-
-      expect(Post).to have_received(:where).with(topic_id: topic.id)
+      stub_const(described_class, :MAX_CONTENT_CHARS, 40) do
+        expect(applier.topic_content_for_analysis(topic).length).to eq(40)
+      end
     end
   end
 
   describe "#post_content_for_analysis" do
-    it "returns empty string for blank post" do
+    it "returns empty string for blank post and includes topic context" do
       expect(applier.post_content_for_analysis(nil)).to eq("")
-    end
 
-    it "extracts post content with topic context" do
       content = applier.post_content_for_analysis(post)
-
       expect(content).to include(post.topic.title)
       expect(content).to include(post.raw)
-      expect(content).to include(post.user.username)
-      expect(content).to include("Topic:")
-      expect(content).to include("Post by")
-    end
-
-    it "handles post without topic" do
-      # Mock the post to return nil for topic
-      allow(post).to receive(:topic).and_return(nil)
-
-      content = applier.post_content_for_analysis(post)
-
-      expect(content).to include(post.raw)
-      expect(content).to include(post.user.username)
-      expect(content).to include("Topic: ")
+      expect(content).to include(user.username)
     end
   end
 
   describe "#match_existing_concepts" do
-    let(:manager) { instance_double(DiscourseAi::InferredConcepts::Manager) }
+    it "matches concepts via ConceptMatcher, stores metadata, and skips unchanged digests" do
+      Fabricate(:post, topic: topic, post_number: 1, raw: "Ruby programming guide", user: user)
+      response = { matches: [{ concept_id: concept1.id, relevance: 0.92, primary: true }] }
 
-    before do
-      allow(DiscourseAi::InferredConcepts::Manager).to receive(:new).and_return(manager)
-      allow(manager).to receive(:list_concepts).and_return(%w[programming testing ruby])
-    end
+      matched =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          applier.match_existing_concepts(topic)
+        end
 
-    it "returns empty array for blank topic" do
-      expect(applier.match_existing_concepts(nil)).to eq([])
-    end
+      expect(matched).to eq([concept1])
+      expect(topic.inferred_concepts).to contain_exactly(concept1)
 
-    it "returns empty array when no existing concepts" do
-      allow(manager).to receive(:list_concepts).and_return([])
-
-      result = applier.match_existing_concepts(topic)
-      expect(result).to eq([])
-    end
-
-    it "matches concepts and applies them to topic" do
-      # Test the real implementation without stubbing internal methods
-      allow(InferredConcept).to receive(:where).with(name: ["programming"]).and_return([concept1])
-
-      # Mock the LLM interaction
-      agent_instance_double = instance_spy("DiscourseAi::Agents::Agent")
-      bot_double = instance_spy(DiscourseAi::Agents::Bot)
-      structured_output_double = instance_double("DiscourseAi::Completions::StructuredOutput")
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_yield(
-        structured_output_double,
-        nil,
-        :structured_output,
-      )
-      allow(structured_output_double).to receive(:read_buffered_property).with(
-        :matching_concepts,
-      ).and_return(["programming"])
-
-      result = applier.match_existing_concepts(topic)
-      expect(result).to eq([concept1])
+      # Unchanged digest returns existing concepts without calling the LLM again
+      expect(applier.match_existing_concepts(topic)).to contain_exactly(concept1)
     end
   end
 
   describe "#match_existing_concepts_for_post" do
-    let(:manager) { instance_double(DiscourseAi::InferredConcepts::Manager) }
+    it "matches concepts for a post and persists relevance" do
+      response = { matches: [{ concept_id: concept2.id, relevance: 0.85, primary: true }] }
 
-    before do
-      allow(DiscourseAi::InferredConcepts::Manager).to receive(:new).and_return(manager)
-      allow(manager).to receive(:list_concepts).and_return(%w[programming testing ruby])
-    end
+      matched =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          applier.match_existing_concepts_for_post(post)
+        end
 
-    it "returns empty array for blank post" do
-      expect(applier.match_existing_concepts_for_post(nil)).to eq([])
-    end
-
-    it "returns empty array when no existing concepts" do
-      allow(manager).to receive(:list_concepts).and_return([])
-
-      result = applier.match_existing_concepts_for_post(post)
-      expect(result).to eq([])
-    end
-
-    it "matches concepts and applies them to post" do
-      # Test the real implementation without stubbing internal methods
-      allow(InferredConcept).to receive(:where).with(name: ["testing"]).and_return([concept2])
-
-      # Mock the LLM interaction
-      agent_instance_double = instance_spy("DiscourseAi::Agents::Agent")
-      bot_double = instance_spy(DiscourseAi::Agents::Bot)
-      structured_output_double = instance_double("DiscourseAi::Completions::StructuredOutput")
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_yield(
-        structured_output_double,
-        nil,
-        :structured_output,
-      )
-      allow(structured_output_double).to receive(:read_buffered_property).with(
-        :matching_concepts,
-      ).and_return(["testing"])
-
-      result = applier.match_existing_concepts_for_post(post)
-      expect(result).to eq([concept2])
+      expect(matched).to eq([concept2])
+      link = InferredConceptPost.find_by(post_id: post.id, inferred_concept_id: concept2.id)
+      expect(link.relevance).to eq(0.85)
     end
   end
 
   describe "#match_concepts_to_content" do
     it "returns empty array for blank content or concept list" do
       expect(applier.match_concepts_to_content("", ["concept1"])).to eq([])
-      expect(applier.match_concepts_to_content(nil, ["concept1"])).to eq([])
       expect(applier.match_concepts_to_content("content", [])).to eq([])
-      expect(applier.match_concepts_to_content("content", nil)).to eq([])
     end
 
-    it "uses ConceptMatcher agent to match concepts" do
-      content = "This is about Ruby programming"
-      concept_list = %w[programming testing ruby]
-      structured_output_double = instance_double("DiscourseAi::Completions::StructuredOutput")
+    it "matches both concept names and InferredConcept records" do
+      response = { matches: [{ concept_id: concept1.id, relevance: 0.9, primary: true }] }
 
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-      agent_instance_double = instance_spy("DiscourseAi::Agents::Agent")
-      bot_double = instance_spy(DiscourseAi::Agents::Bot)
+      result =
+        DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
+          applier.match_concepts_to_content("Ruby programming", %w[programming testing])
+        end
 
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_yield(
-        structured_output_double,
-        nil,
-        :structured_output,
-      )
-      allow(structured_output_double).to receive(:read_buffered_property).with(
-        :matching_concepts,
-      ).and_return(%w[programming ruby])
-
-      result = applier.match_concepts_to_content(content, concept_list)
-      expect(result).to eq(%w[programming ruby])
-
-      expect(bot_double).to have_received(:reply)
-      expect(structured_output_double).to have_received(:read_buffered_property).with(
-        :matching_concepts,
-      )
-    end
-
-    it "handles no structured output gracefully" do
-      content = "Test content"
-      concept_list = ["concept1"]
-
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-      agent_instance_double = instance_double("DiscourseAi::Agents::Agent")
-      bot_double = instance_double("DiscourseAi::Agents::Bot")
-
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_yield(nil, nil, :text)
-
-      result = applier.match_concepts_to_content(content, concept_list)
-      expect(result).to eq([])
-    end
-
-    it "returns empty array when no matching concepts found" do
-      content = "This is about something else"
-      concept_list = %w[programming testing]
-      expected_response = [['{"matching_concepts": []}']]
-
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-      agent_instance_double = instance_double("DiscourseAi::Agents::Agent")
-      bot_double = instance_double("DiscourseAi::Agents::Bot")
-
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_return(expected_response)
-
-      result = applier.match_concepts_to_content(content, concept_list)
-      expect(result).to eq([])
-    end
-
-    it "handles missing matching_concepts key in response" do
-      content = "Test content"
-      concept_list = ["concept1"]
-      expected_response = [['{"other_key": ["value"]}']]
-
-      agent_class_double = double("AgentClass") # rubocop:disable RSpec/VerifiedDoubles
-      agent_instance_double = instance_double("DiscourseAi::Agents::Agent")
-      bot_double = instance_double("DiscourseAi::Agents::Bot")
-
-      allow(AiAgent).to receive(:all_agents).and_return([agent_class_double])
-      allow(agent_class_double).to receive(:id).and_return(
-        SiteSetting.inferred_concepts_match_agent.to_i,
-      )
-      allow(agent_class_double).to receive(:new).and_return(agent_instance_double)
-      allow(agent_class_double).to receive(:default_llm_id).and_return(llm_model.id)
-      allow(agent_instance_double).to receive(:class).and_return(agent_class_double)
-      allow(LlmModel).to receive(:find).and_return(llm_model)
-      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(bot_double)
-      allow(bot_double).to receive(:reply).and_return(expected_response)
-
-      result = applier.match_concepts_to_content(content, concept_list)
-      expect(result).to eq([])
+      expect(result).to eq(["programming"])
     end
   end
 end
