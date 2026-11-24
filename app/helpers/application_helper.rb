@@ -78,17 +78,19 @@ module ApplicationHelper
   end
 
   def shared_session_key
-    if SiteSetting.long_polling_base_url != "/" && current_user
-      sk = "shared_session_key"
-      return request.env[sk] if request.env[sk]
+    return if SiteSetting.long_polling_base_url == "/" || !current_user
 
-      token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
-      return if !token || token.user != current_user
+    sk = "shared_session_key_v2"
+    return request.env[sk] if request.env[sk]
 
-      request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
-      key
-    end
+    token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
+    return unless token
+
+    request.env[sk] = session[sk] = Auth::DefaultCurrentUserProvider.store_shared_session_key(
+      token,
+      current_user,
+      previous_key: session[sk],
+    )
   end
 
   def is_brotli_req?

@@ -424,6 +424,13 @@ RSpec.describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 
+      it "leaves existing sessions intact when the new password fails validation" do
+        put "/u/password-reset/#{email_token.token}.json", params: { password: "abc" }
+
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(UserAuthToken.exists?(user_auth_token.id)).to eq(true)
+      end
+
       it "stops private message pushes to previously authorized browsers after a password reset" do
         Fabricate(:push_subscription, user: user1)
         allow(WebPush).to receive(:payload_send)
@@ -895,6 +902,103 @@ RSpec.describe UsersController do
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
+    end
+
+    it "does not let an in-flight request with a replaced cookie clear the new session" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      before_rotation = Rack::Utils.escape(cookies["_t"])
+      token = master.user_auth_tokens.sole
+      token.update!(auth_token_seen: true)
+      expect(token.rotate!).to eq(true)
+      after_rotation = create_auth_cookie(token: token.unhashed_auth_token, user_id: master.id)
+      old_cookies = [before_rotation, after_rotation]
+      old_cookies.each do |old_cookie|
+        probe = open_session
+        probe.get "/session/current.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(probe.response.parsed_body.dig("current_user", "id")).to eq(master.id)
+      end
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      old_cookies.each do |old_cookie|
+        stale_request = open_session
+        stale_request.get "/session/current.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(stale_request.response.status).to eq(404)
+        expect(stale_request.response.headers["Discourse-Logged-Out"]).to be_nil
+        stale_request.get "/latest.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(stale_request.response.status).to eq(200)
+        expect(stale_request.response.headers["Discourse-Logged-Out"]).to be_nil
+        expect(stale_request.response.headers["Set-Cookie"].to_s).not_to include("_t=;")
+      end
+
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.reload.shadow_user.id)
+    end
+
+    it "keeps the original session and emits no login event if the exchange rolls back" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      original_cookie = cookies["_t"]
+
+      events =
+        DiscourseEvent.track_events(:user_logged_in) do
+          User.transaction(requires_new: true) do
+            post "/u/toggle-anon.json"
+            expect(response.status).to eq(200)
+            raise ActiveRecord::Rollback
+          end
+        end
+
+      expect(events).to be_empty
+      expect(cookies["_t"]).to eq(original_cookie)
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "denies the exchange when a custom provider cannot freshly authenticate browser sessions" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      legacy_provider =
+        Class.new(TestCurrentUserProvider) { undef_method :authenticated_session_user }
+      Discourse.stubs(:current_user_provider).returns(legacy_provider)
+
+      expect { post "/u/toggle-anon.json" }.not_to change { UserAuthToken.count }
+      expect(response.status).to eq(403)
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "denies a shadow user API key even when accompanied by a valid shadow cookie" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      key =
+        Fabricate(
+          :user_api_key,
+          user: master.shadow_user,
+          scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+        )
+      key_headers = { HTTP_USER_API_KEY: key.key }
+
+      expect { post "/u/toggle-anon.json", headers: key_headers }.not_to change {
+        UserAuthToken.where(user_id: master.id).count
+      }
+      expect(response.status).to eq(403)
+
+      reset!
+      get "/session/current.json", headers: key_headers
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.shadow_user.id)
+
+      expect { post "/u/toggle-anon.json", headers: key_headers }.not_to change {
+        UserAuthToken.where(user_id: master.id).count
+      }
+      expect(response.status).to eq(403)
+      get "/session/current.json"
+      expect(response.status).to eq(404)
     end
   end
 
@@ -8779,18 +8883,19 @@ RSpec.describe UsersController do
     context "while logged in" do
       before { 2.times { sign_in(user1) } }
 
-      it "logs user out" do
-        subscription = Fabricate(:push_subscription, user: user1)
-        ids = user1.user_auth_tokens.order(:created_at).pluck(:id)
+      it "revokes only the selected device and its push subscription" do
+        revoked, current = user1.user_auth_tokens.order(:id)
+        Fabricate(:push_subscription, user: user1, user_auth_token: revoked)
+        current_push = Fabricate(:push_subscription, user: user1, user_auth_token: current)
 
-        post "/u/#{user1.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user1.username}/preferences/revoke-auth-token.json",
+             params: {
+               token_id: revoked.id,
+             }
 
         expect(response.status).to eq(200)
-
-        user1.user_auth_tokens.reload
-        expect(user1.user_auth_tokens.count).to eq(1)
-        expect(user1.user_auth_tokens.first.id).to eq(ids[1])
-        expect(PushSubscription.exists?(subscription.id)).to eq(true)
+        expect(user1.user_auth_tokens).to contain_exactly(current)
+        expect(user1.push_subscriptions).to contain_exactly(current_push)
       end
 
       it "checks if token exists" do
