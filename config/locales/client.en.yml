@@ -10524,15 +10524,36 @@ en:
           hours:
             one: "hour"
             other: "hours"
+          megapixels:
+            one: "megapixel"
+            other: "megapixels"
           mentions:
             one: "mention"
             other: "mentions"
+          milliseconds:
+            one: "millisecond"
+            other: "milliseconds"
           minutes:
             one: "minute"
             other: "minutes"
+          months:
+            one: "month"
+            other: "months"
+          percent:
+            one: "percent"
+            other: "percent"
+          posts:
+            one: "post"
+            other: "posts"
           seconds:
             one: "second"
             other: "seconds"
+          tags:
+            one: "tag"
+            other: "tags"
+          topics:
+            one: "topic"
+            other: "topics"
           users:
             one: "user"
             other: "users"
