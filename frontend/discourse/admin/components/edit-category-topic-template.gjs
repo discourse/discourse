@@ -7,6 +7,7 @@ export default class EditCategoryTopicTemplate extends buildCategoryPanel(
   <template>
     <CategoryTopicTemplateEditor
       @category={{or this.transientData this.category}}
+      @hideFormTemplateControls={{this.category.can_edit_as_group_moderator}}
       @onChange={{this.form.set}}
     />
   </template>

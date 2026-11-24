@@ -2,6 +2,32 @@
 
 class CategoryUpdater
   MAX_DESCRIPTION_LENGTH = CategoryCreator::MAX_DESCRIPTION_LENGTH
+  GROUP_MODERATOR_MAX_TEMPLATE_LENGTH = 10_000
+  GROUP_MODERATOR_MAX_FEATURED_TOPICS = 10
+  GROUP_MODERATOR_FIELDS = %i[
+    allow_badges
+    color
+    default_list_filter
+    default_top_period
+    default_view
+    emoji
+    icon
+    name
+    navigate_to_first_post_after_read
+    num_featured_topics
+    read_only_banner
+    search_priority
+    show_subcategory_list
+    slug
+    sort_ascending
+    sort_order
+    style_type
+    subcategory_list_style
+    text_color
+    topic_featured_link_allowed
+    topic_template
+    topic_title_placeholder
+  ].freeze
 
   def self.update(
     guardian,
@@ -10,6 +36,7 @@ class CategoryUpdater
     log_attributes: nil,
     old_permissions: nil,
     old_custom_fields: nil,
+    as_group_moderator: false,
     **attribute_keywords
   )
     attributes = attributes ? attributes.to_h.merge(attribute_keywords) : attribute_keywords
@@ -21,7 +48,7 @@ class CategoryUpdater
       log_attributes:,
       old_permissions:,
       old_custom_fields:,
-    ).update
+    ).update(as_group_moderator:)
   end
 
   def initialize(
@@ -40,8 +67,15 @@ class CategoryUpdater
     @old_custom_fields = old_custom_fields
   end
 
-  def update
-    guardian.ensure_can_edit!(category)
+  def update(as_group_moderator: false)
+    if as_group_moderator
+      guardian.ensure_can_edit_category_as_group_moderator!(category)
+      attributes.slice!(*GROUP_MODERATOR_FIELDS)
+      log_attributes.slice!(*GROUP_MODERATOR_FIELDS)
+      return false unless valid_group_moderator_attributes?
+    else
+      guardian.ensure_can_edit!(category)
+    end
 
     if attributes[:parent_category_id].present?
       parent_category = Category.find_by(id: attributes[:parent_category_id])
@@ -78,6 +112,26 @@ class CategoryUpdater
   end
 
   private
+
+  def valid_group_moderator_attributes?
+    template = attributes[:topic_template]
+    if template && template != category.topic_template &&
+         template.size > GROUP_MODERATOR_MAX_TEMPLATE_LENGTH
+      category.errors.add(:topic_template, :too_long, count: GROUP_MODERATOR_MAX_TEMPLATE_LENGTH)
+    end
+
+    count = attributes[:num_featured_topics]
+    if count && count.to_i != category.num_featured_topics &&
+         count.to_i > GROUP_MODERATOR_MAX_FEATURED_TOPICS
+      category.errors.add(
+        :num_featured_topics,
+        :less_than_or_equal_to,
+        count: GROUP_MODERATOR_MAX_FEATURED_TOPICS,
+      )
+    end
+
+    category.errors.empty?
+  end
 
   attr_reader :guardian,
               :category,

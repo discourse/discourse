@@ -106,7 +106,12 @@ export default class Tabs extends Component {
           {{/let}}
         </form.Section>
 
-        {{#if (eq @controller.selectedTab "settings")}}
+        {{#if
+          (and
+            (eq @controller.selectedTab "settings")
+            (not @controller.model.can_edit_as_group_moderator)
+          )
+        }}
           {{#if (or @controller.model.can_delete @controller.model.id)}}
             <form.Section
               class="edit-category__footer"

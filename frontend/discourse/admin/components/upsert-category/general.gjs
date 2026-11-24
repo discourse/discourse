@@ -73,10 +73,11 @@ export default class UpsertCategoryGeneral extends Component {
   constructor() {
     super(...arguments);
 
-    this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
-      ...type,
-      preventRemoval: type.id === DISCUSSION_TYPE_ID,
-    }));
+    this.categoryTypes =
+      this.categoryTypeChooser.allTypes?.map((type) => ({
+        ...type,
+        preventRemoval: type.id === DISCUSSION_TYPE_ID,
+      })) ?? [];
   }
 
   get showDescription() {
@@ -623,7 +624,12 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
+    {{#if
+      (and
+        (not @category.can_edit_as_group_moderator)
+        (or this.isEditingExistingCategory @showAdvancedTabs)
+      )
+    }}
       <@form.Field
         @format="max"
         @name="category_type_ids"
@@ -892,7 +898,12 @@ export default class UpsertCategoryGeneral extends Component {
         </div>
       {{/if}}
 
-      {{#unless @category.isUncategorizedCategory}}
+      {{#unless
+        (or
+          @category.isUncategorizedCategory
+          @category.can_edit_as_group_moderator
+        )
+      }}
         <@form.Field
           @format="max"
           @name="parent_category_id"
@@ -921,7 +932,9 @@ export default class UpsertCategoryGeneral extends Component {
         </@form.Field>
       {{/unless}}
 
-      {{#if @category.is_special}}
+      {{#if
+        (and @category.is_special (not @category.can_edit_as_group_moderator))
+      }}
         <@form.Container
           @format="max"
           @title={{i18n "category.visibility.title"}}
@@ -934,7 +947,7 @@ export default class UpsertCategoryGeneral extends Component {
             {{/if}}
           </@form.Alert>
         </@form.Container>
-      {{else}}
+      {{else if (not @category.can_edit_as_group_moderator)}}
         <@form.Container
           class="--radio-cards"
           @format="max"

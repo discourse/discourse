@@ -16,7 +16,10 @@ export default class UpsertCategorySettings extends Component {
   }
 
   get showPositionInput() {
-    return this.siteSettings.fixed_category_positions;
+    return (
+      this.siteSettings.fixed_category_positions &&
+      !this.args.category.can_edit_as_group_moderator
+    );
   }
 
   get searchPrioritiesOptions() {
@@ -131,84 +134,86 @@ export default class UpsertCategorySettings extends Component {
       <field.Control />
     </@form.Field>
 
-    <@form.Field
-      @format="max"
-      @name="all_topics_wiki"
-      @title={{i18n "category.all_topics_wiki"}}
-      @type="checkbox"
-      as |field|
-    >
-      <field.Control />
-    </@form.Field>
+    {{#unless @category.can_edit_as_group_moderator}}
+      <@form.Field
+        @format="max"
+        @name="all_topics_wiki"
+        @title={{i18n "category.all_topics_wiki"}}
+        @type="checkbox"
+        as |field|
+      >
+        <field.Control />
+      </@form.Field>
 
-    <@form.Field
-      @format="max"
-      @name="allow_unlimited_owner_edits_on_first_post"
-      @title={{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
-      @type="checkbox"
-      as |field|
-    >
-      <field.Control />
-    </@form.Field>
+      <@form.Field
+        @format="max"
+        @name="allow_unlimited_owner_edits_on_first_post"
+        @title={{i18n "category.allow_unlimited_owner_edits_on_first_post"}}
+        @type="checkbox"
+        as |field|
+      >
+        <field.Control />
+      </@form.Field>
 
-    <@form.Section @title={{i18n "category.settings_sections.email"}}>
-      {{#if this.emailInEnabled}}
-        <@form.Field
-          @format="max"
-          @name="email_in"
-          @title={{i18n "category.email_in"}}
-          @type="input"
-          as |field|
-        >
-          <field.Control @maxlength="255" />
-        </@form.Field>
+      <@form.Section @title={{i18n "category.settings_sections.email"}}>
+        {{#if this.emailInEnabled}}
+          <@form.Field
+            @format="max"
+            @name="email_in"
+            @title={{i18n "category.email_in"}}
+            @type="input"
+            as |field|
+          >
+            <field.Control @maxlength="255" />
+          </@form.Field>
 
-        <@form.Field
-          @format="max"
-          @name="email_in_allow_strangers"
-          @title={{i18n "category.email_in_allow_strangers"}}
-          @type="checkbox"
-          as |field|
-        >
-          <field.Control />
-        </@form.Field>
+          <@form.Field
+            @format="max"
+            @name="email_in_allow_strangers"
+            @title={{i18n "category.email_in_allow_strangers"}}
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </@form.Field>
 
-        <@form.Field
-          @format="max"
-          @name="mailinglist_mirror"
-          @title={{i18n "category.mailinglist_mirror"}}
-          @type="checkbox"
-          as |field|
-        >
-          <field.Control />
-        </@form.Field>
+          <@form.Field
+            @format="max"
+            @name="mailinglist_mirror"
+            @title={{i18n "category.mailinglist_mirror"}}
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </@form.Field>
 
-        <PluginOutlet
-          @connectorTagName="div"
-          @name="category-email-in"
-          @outletArgs={{lazyHash category=@category form=@form}}
-        />
-      {{else}}
-        <@form.Alert @type="info">
-          {{trustHTML
-            (i18n
-              "category.email_in_disabled"
-              setting_url=(getUrl
-                "/admin/site_settings/category/all_results?filter=email_in"
+          <PluginOutlet
+            @connectorTagName="div"
+            @name="category-email-in"
+            @outletArgs={{lazyHash category=@category form=@form}}
+          />
+        {{else}}
+          <@form.Alert @type="info">
+            {{trustHTML
+              (i18n
+                "category.email_in_disabled"
+                setting_url=(getUrl
+                  "/admin/site_settings/category/all_results?filter=email_in"
+                )
               )
-            )
-          }}
-        </@form.Alert>
-      {{/if}}
-    </@form.Section>
+            }}
+          </@form.Alert>
+        {{/if}}
+      </@form.Section>
 
-    <PluginOutlet
-      @name="category-custom-settings"
-      @outletArgs={{lazyHash
-        category=@category
-        form=@form
-        transientData=@transientData
-      }}
-    />
+      <PluginOutlet
+        @name="category-custom-settings"
+        @outletArgs={{lazyHash
+          category=@category
+          form=@form
+          transientData=@transientData
+        }}
+      />
+    {{/unless}}
   </template>
 }

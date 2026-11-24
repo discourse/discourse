@@ -8,6 +8,30 @@ describe "Edit Category General" do
 
   before { sign_in(admin) }
 
+  it "allows limited edits from the category page for a category group moderator" do
+    SiteSetting.enable_category_group_moderation = true
+    SiteSetting.category_group_moderators_can_edit_categories = true
+    moderation = Fabricate(:category_moderation_group, category:)
+    moderator = Fabricate(:user, refresh_auto_groups: true)
+    moderation.group.add(moderator)
+    sign_in(moderator)
+
+    category_page.visit(category)
+    category_page.click_edit_category
+    expect(page).to have_no_css("a[href$='/edit/security']")
+    expect(page).to have_no_css(".category-show-advanced-tabs-toggle")
+
+    form.field("name").fill_in("Moderated announcements")
+    category_page.save_settings
+
+    expect(page).to have_content(I18n.t("js.saved"))
+    expect(category.reload.name).to eq("Moderated announcements")
+
+    category_page.visit_security(category)
+    expect(form.field("name")).to have_value("Moderated announcements")
+    expect(page).to have_no_css(".edit-category-tab-security")
+  end
+
   context "when changing background color" do
     it "displays an error when the hex code is invalid" do
       category_page.visit_general(category)

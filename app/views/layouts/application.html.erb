@@ -69,7 +69,7 @@
 
     <%= preload_script 'js/browser-detect' %>
 
-    <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
+    <%= module_preloads_for "discourse", ((staff? || guardian.can_edit_categories_as_group_moderator?) ? "admin/compat-modules" : nil) %>
 
     <%- unless customization_disabled? %>
       <%- theme_js_assets.each do |asset| %>
