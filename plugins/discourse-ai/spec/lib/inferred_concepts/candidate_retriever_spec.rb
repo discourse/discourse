@@ -20,6 +20,36 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
       expect(results).not_to include(retired_concept)
     end
 
+    it "surfaces matching concepts past the limit via lexical fallback when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      33.times { |index| Fabricate(:inferred_concept, name: "unrelated_#{index}", status: :active) }
+      alias_match =
+        Fabricate(
+          :inferred_concept,
+          name: "Container Orchestration",
+          aliases: ["k8s"],
+          description: "Cluster scheduling and autoscaling",
+          status: :active,
+        )
+      name_match =
+        Fabricate(
+          :inferred_concept,
+          name: "Rate Limiting",
+          description: "API request throttling",
+          status: :active,
+        )
+
+      results =
+        retriever.retrieve(
+          content: "Configuring rate limiting and k8s autoscaling for the ingress controller",
+          limit: 30,
+        )
+
+      expect(results.length).to eq(30)
+      expect(results.first(2)).to contain_exactly(name_match, alias_match)
+    end
+
     context "when embeddings are enabled" do
       fab!(:vector_def, :cloudflare_embedding_def)
       fab!(:topic)

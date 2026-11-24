@@ -166,6 +166,23 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
       expect { manager.deduplicate_concepts_by_letter }.not_to raise_error
     end
 
+    it "preserves retired concepts and their associations when deduplicating active concepts" do
+      retired_concept.topics << topic
+
+      finder = instance_double(DiscourseAi::InferredConcepts::Finder)
+      allow(DiscourseAi::InferredConcepts::Finder).to receive(:new).and_return(finder)
+      allow(finder).to receive(:deduplicate_concepts) do |batch|
+        batch.reject { |name| name == "application" }
+      end
+
+      manager.deduplicate_concepts_by_letter(per_letter_batch: 100, full_pass_batch: 200)
+
+      expect(InferredConcept.find_by(id: retired_concept.id)).to be_present
+      expect(retired_concept.topics.reload).to contain_exactly(topic)
+      expect(InferredConcept.find_by(name: "application")).to be_nil
+      expect(InferredConcept.find_by(name: "apple")).to be_present
+    end
+
     it "handles empty concept list" do
       InferredConcept.destroy_all
       expect { manager.deduplicate_concepts_by_letter }.not_to raise_error

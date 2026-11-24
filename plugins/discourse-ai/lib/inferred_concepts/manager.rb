@@ -70,9 +70,16 @@ module DiscourseAi
           # Remove duplicates
           final_result.uniq!
 
-          # Apply the deduplicated concepts
-          InferredConcept.where.not(name: final_result).destroy_all
-          InferredConcept.insert_all(final_result.map { |concept| { name: concept } })
+          # Apply deduplication only to concepts included in the deduplication pass
+          removed_names = all_concepts - final_result
+          if removed_names.present?
+            InferredConcept.where.not(status: :retired).where(name: removed_names).destroy_all
+          end
+
+          new_names = final_result - all_concepts
+          if new_names.present?
+            InferredConcept.insert_all(new_names.map { |concept| { name: concept } })
+          end
         end
       end
 

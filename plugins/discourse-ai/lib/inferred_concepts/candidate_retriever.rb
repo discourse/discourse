@@ -24,11 +24,11 @@ module DiscourseAi
           vector = resolve_query_vector(content:, target:)
           if vector.present?
             results = vector_candidates(vector, non_retired:, limit:)
-            return top_up_candidates(results, non_retired:, limit:)
+            return top_up_candidates(results, non_retired:, content:, limit:)
           end
         end
 
-        non_retired.order(status: :desc, id: :asc).limit(limit).to_a
+        lexical_candidates(non_retired, content:, limit:)
       end
 
       private
@@ -73,18 +73,45 @@ module DiscourseAi
         []
       end
 
-      def top_up_candidates(results, non_retired:, limit:)
+      def top_up_candidates(results, non_retired:, content:, limit:)
         return results if results.size >= limit
 
         remaining = limit - results.size
-        top_up =
-          non_retired
-            .where.not(id: results.map(&:id))
-            .order(status: :desc, id: :asc)
-            .limit(remaining)
-            .to_a
+        remaining_scope = non_retired.where.not(id: results.map(&:id))
+        results + lexical_candidates(remaining_scope, content:, limit: remaining)
+      end
 
-        results + top_up
+      def lexical_candidates(scope, content:, limit:)
+        return scope.order(status: :desc, id: :asc).limit(limit).to_a if content.blank?
+
+        query_text = content.to_s.first(Applier::MAX_CONTENT_CHARS)
+        score_sql =
+          ActiveRecord::Base.sanitize_sql_array([<<~SQL.squish, query_text, query_text, query_text])
+                (
+                  CASE WHEN position(lower(inferred_concepts.name) IN lower(?)) > 0 THEN 10.0 ELSE 0.0 END +
+                  CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM unnest(inferred_concepts.aliases) AS alias
+                    WHERE alias <> '' AND position(lower(alias) IN lower(?)) > 0
+                  ) THEN 8.0 ELSE 0.0 END +
+                  COALESCE((
+                    SELECT COUNT(*)::float
+                    FROM unnest(
+                      tsvector_to_array(
+                        to_tsvector(
+                          'simple',
+                          coalesce(inferred_concepts.name, '') || ' ' ||
+                            coalesce(inferred_concepts.description, '') || ' ' ||
+                            array_to_string(inferred_concepts.aliases, ' ')
+                        )
+                      )
+                    ) AS concept_lexeme
+                    WHERE concept_lexeme = ANY(tsvector_to_array(to_tsvector('simple', ?)))
+                  ), 0.0)
+                )
+              SQL
+
+        scope.order(Arel.sql("#{score_sql} DESC"), status: :desc, id: :asc).limit(limit).to_a
       end
     end
   end
