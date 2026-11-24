@@ -9,12 +9,6 @@ import { i18n } from "discourse-i18n";
 export default class EmptyCategory extends Component {
   @service currentUser;
 
-  get body() {
-    return i18n("category.empty_state.body", {
-      categoryName: this.args.category.displayName,
-    });
-  }
-
   get createTopicLabel() {
     if (this.currentUser && !this.args.createTopicDisabled) {
       return i18n("category.empty_state.create_topic");
@@ -30,7 +24,7 @@ export default class EmptyCategory extends Component {
   <template>
     <DEmptyState
       style={{categoryColorVariable @category.color}}
-      @body={{this.body}}
+      @body={{i18n "category.empty_state.body"}}
       @ctaAction={{@createTopic}}
       @ctaIcon="plus"
       @ctaLabel={{this.createTopicLabel}}

@@ -117,7 +117,12 @@ export default class DiscoveryTopics extends Component {
   get showEmptyFilterEducationInFooter() {
     const topicsLength = this.args.model.get("topics.length");
 
-    if (!this.allLoaded || topicsLength > 0 || !this.currentUser) {
+    if (
+      !this.allLoaded ||
+      topicsLength > 0 ||
+      !this.currentUser ||
+      this.showEmptyCategory
+    ) {
       return false;
     }
 

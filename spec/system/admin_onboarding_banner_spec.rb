@@ -305,6 +305,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "previews and applies the design choices and marks step complete" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       visit("/")
       banner.click_step_action("select_theme")
 

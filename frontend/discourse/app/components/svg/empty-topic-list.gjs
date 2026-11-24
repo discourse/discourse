@@ -115,11 +115,14 @@ const SvgEmptyTopicList = <template>
 
     <path
       d="M309 22h74a11 11 0 0 1 11 11v66a11 11 0 0 1-11 11h-45l-20 19v-19h-9a11 11 0 0 1-11-11V33a11 11 0 0 1 11-11z"
-      fill="var(--tertiary-high)"
+      fill="var(--secondary)"
+      stroke="var(--primary-medium)"
+      stroke-linejoin="round"
+      stroke-width="4"
     />
     <path
       d="M346 47v38M327 66h38"
-      stroke="var(--secondary)"
+      stroke="var(--primary-medium)"
       stroke-linecap="round"
       stroke-width="7"
     />

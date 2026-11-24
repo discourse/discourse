@@ -12,6 +12,8 @@ describe "Discovery Category Routes" do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   it "uses desktop_category_page style on categories and subcategories page" do
+    SiteSetting.desktop_category_page_style = "categories_only"
+
     visit "/categories"
     expect(page).to have_css(".category-list")
 
