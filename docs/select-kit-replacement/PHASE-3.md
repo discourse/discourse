@@ -338,7 +338,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
         declares `list_type: color` (site and theme settings); `category_colors` and
         `restrict_letter_avatar_colors` do. Behind the flag it edits in `ColorList`: a
         reorderable list of `DColorInput` rows (ui-kit, extracted from FormKit's color control)
-        with an add row, storing 6-digit uppercase hex. The server validates every entry
+        with an add row, storing 6-digit lowercase hex (switched from uppercase 2026-11-24, since
+        the browser's picker reports lowercase; stored colors read in lowercase, so the first
+        edit rewrites the list). The server validates every entry
         (`ColorListValidator` by default, theme settings through `ThemeSettingsValidator`).
         The compact and named list pickers no longer draw squares. With the flag off,
         `ListSetting` keeps its name check. `DReorderableList`'s create row now holds the
@@ -393,9 +395,28 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `nameProperty` and `onChangeChoices`. Split the sites by shape before porting: group lists
     toward `DSelectGroup`, string lists toward `DSelect` with create, and mandatory values as
     `@lockedValues`.
-  - ☐ `TimezoneInput`, 5 sites: profile preferences, local dates, the workflows settings and
-    timezone control, and the events builder. A fixed list, so a typeahead `DSelect`, likely
-    through a small recipe.
+  - ☑ `TimezoneInput`, 5 sites: profile preferences, local dates (desktop and mobile), the
+    workflows settings and Time window field, and the events builder. Each branches on the flag
+    to the new `DSelectTimezone` recipe (2026-11-24). The legacy component stays for third-party
+    callers.
+    - Zones are named "City, Country", using the browser's locale data for the zone's own
+      country, so Paris is "Paris, France" though Monaco shares it. Each row shows the zone's
+      common name, its current time and its offset, with a Tomorrow or Yesterday badge when its
+      date differs from the device's. The times refresh each time the list opens.
+    - Only modern zone names are offered, without moment's legacy aliases ("IST", "Japan"). A held
+      alias still shows.
+    - Zones are grouped by region. The device's zone leads under its own heading unless it's
+      held, its region comes next, and UTC comes last.
+    - A search matches the city, the country, the zone's name and common name word by word, and
+      offsets such as "utc-3" or "+5:30". "gmt" also finds UTC.
+    - The closed field shows the offset beside the name. The profile drops its "Use Current
+      Timezone" button, since the device's zone leads the list.
+    - The workflows Time window field offers "Workflow default" as a none option, and the events
+      builder offers "Remove timezone".
+    - ☑ Engine: a search now finds the none option by its label, ignoring case (2026-11-24). It
+      used to hide whenever a query was typed.
+    - ☑ Engine: on mobile, the held value now sits beside a leading icon (2026-11-24). It used to
+      be centered between the icon and the caret.
   - ☑ `FormTemplateChooser`, 2 sites: the composer and the category topic template editor. Both
     branch on the flag to the new `DSelectFormTemplate` recipe (2026-11-24), which fetches the
     templates once and searches them in the list. The composer's is a single typeahead that hands
@@ -419,7 +440,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       (`combobox-query-input.gts:169-175`), so typing appends to the name ("Interplayfair")
       instead of replacing it. Keyboard focus selects the name. With a `:selection` block the
       name is selected as it appears, so typing replaces it. Decide whether a click should select
-      the name for every single typeahead; a per-picker dummy block was rejected.
+      the name for every single typeahead; a per-picker dummy block was rejected. `DSelectTimezone`
+      gets the selected name from its own `:selection` block, which draws the offset.
     - ☐ The wizard (see below).
   - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
     dynamically. It moves with the colors and fonts.
