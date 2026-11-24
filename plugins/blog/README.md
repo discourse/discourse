@@ -251,6 +251,12 @@ saved drafts, and badges the one currently shown to readers; **Blogs** lists eac
 content and whose Theme tab picks its design. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
 
+The hidden `blog_custom_themes_enabled` setting (on by default) lets a host offer
+custom themes only on some plans. With it off, a site keeps to the included designs
+as shipped: creating, customizing, importing, pulling and previewing unsaved edits
+are refused, and so is activating a custom theme. A blog already showing a custom
+theme keeps it, and existing themes can still be exported or deleted.
+
 Included designs are the built-in **Default** and each folder under `branding/`
 with a `blog-theme.json`. They are read-only: activating one stores only its id,
 so readers pick up changes shipped with the plugin. **Customize** opens a new
