@@ -1291,20 +1291,18 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new if @user.active?
 
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
-      # Automatic approval granted for the email's domain must not carry over to an
-      # address that would not have been auto-approved; staff approvals stand.
-      domain_approved =
+      # Automatic approval only holds while the unconfirmed address would still be
+      # auto-approved; staff approvals stand.
+      auto_approved =
         SiteSetting.must_approve_users? && @user.approved? &&
-          (@user.approved_by_id.blank? || @user.approved_by_id == Discourse::SYSTEM_USER_ID) &&
-          EmailValidator.can_auto_approve_user?(@user.email)
+          (@user.approved_by_id.blank? || @user.approved_by_id == Discourse::SYSTEM_USER_ID)
 
       primary_email = @user.primary_email
       primary_email.email = params[:email]
       primary_email.skip_validate_email = false
 
       if primary_email.save
-        if revoke_approval ||
-             (domain_approved && !EmailValidator.can_auto_approve_user?(@user.email))
+        if revoke_approval || (auto_approved && !EmailValidator.can_auto_approve_user?(@user.email))
           @user.revoke_approval!
         end
         @email_token =

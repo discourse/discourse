@@ -6409,6 +6409,15 @@ RSpec.describe UsersController do
             expect(user.reload).to be_approved
           end
 
+          it "requires staff approval when the domain stopped qualifying before the move" do
+            user = sign_up("someone@example.com")
+            SiteSetting.auto_approve_email_domains = "another.com"
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).not_to be_approved
+          end
+
           it "preserves approval when correcting the email within a qualifying domain" do
             user = sign_up("someone@example.com")
 
