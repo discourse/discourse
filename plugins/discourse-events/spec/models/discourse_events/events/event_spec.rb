@@ -1936,6 +1936,21 @@ describe DiscourseEvents::Events::Event, "#capacity" do
 
     expect(event.at_capacity?).to eq(true)
   end
+
+  it "uses the site setting limit when max_attendees is above it" do
+    creator = Fabricate(:user)
+    post = Fabricate(:post, user: creator, topic: Fabricate(:topic, user: creator))
+    event = Fabricate(:event, post: post, max_attendees: 2)
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+    )
+
+    expect(event.at_capacity?).to eq(false)
+
+    SiteSetting.discourse_post_event_max_attendees_limit = 1
+
+    expect(event.at_capacity?).to eq(true)
+  end
 end
 
 describe DiscourseEvents::Events::Event, "#url" do

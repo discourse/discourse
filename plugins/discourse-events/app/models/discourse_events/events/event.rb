@@ -460,7 +460,8 @@ module DiscourseEvents
       end
 
       def at_capacity?
-        going_count >= (max_attendees || SiteSetting.discourse_post_event_max_attendees_limit)
+        going_count >=
+          [max_attendees, SiteSetting.discourse_post_event_max_attendees_limit].compact.min
       end
 
       def self.statuses
