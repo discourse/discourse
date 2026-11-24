@@ -441,7 +441,8 @@ input[type="search"] {
 ::-webkit-datetime-edit-text,
 ::-webkit-datetime-edit-month-field,
 ::-webkit-datetime-edit-day-field,
-::-webkit-datetime-edit-year-field {
+::-webkit-datetime-edit-year-field,
+::-webkit-calendar-picker-indicator {
   padding-top: 0;
   padding-bottom: 0;
 }
