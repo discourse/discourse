@@ -4,6 +4,7 @@ module DiscourseAi
   module InferredConcepts
     class CandidateRetriever
       DEFAULT_LIMIT = 30
+      EmbeddingsUnavailableError = Class.new(StandardError)
 
       def self.serialize_candidates(concepts)
         Array(concepts).map do |concept|
@@ -17,18 +18,18 @@ module DiscourseAi
       end
 
       def retrieve(content: nil, target: nil, limit: DEFAULT_LIMIT)
+        unless DiscourseAi::Embeddings.enabled?
+          raise EmbeddingsUnavailableError, "AI embeddings must be enabled"
+        end
+
         non_retired = InferredConcept.where.not(status: :retired)
         return [] unless non_retired.exists?
 
-        if DiscourseAi::Embeddings.enabled?
-          vector = resolve_query_vector(content:, target:)
-          if vector.present?
-            results = vector_candidates(vector, non_retired:, limit:)
-            return top_up_candidates(results, non_retired:, content:, limit:)
-          end
-        end
+        vector = resolve_query_vector(content:, target:)
+        return [] if vector.blank?
 
-        lexical_candidates(non_retired, content:, limit:)
+        results = vector_candidates(vector, non_retired:, limit:)
+        top_up_unembedded(results, non_retired:, limit:)
       end
 
       private
@@ -43,11 +44,6 @@ module DiscourseAi
         return if content.blank?
 
         DiscourseAi::Embeddings::Vector.instance.vector_from(content, task: :query)
-      rescue DiscourseAi::Inference::EmbeddingInferenceError,
-             DiscourseAi::Embeddings::ProviderPausedError,
-             DiscourseAi::Embeddings::Schema::MissingEmbeddingError,
-             RuntimeError
-        nil
       end
 
       def vector_candidates(vector, non_retired:, limit:)
@@ -73,45 +69,25 @@ module DiscourseAi
         []
       end
 
-      def top_up_candidates(results, non_retired:, content:, limit:)
+      def top_up_unembedded(results, non_retired:, limit:)
         return results if results.size >= limit
 
         remaining = limit - results.size
-        remaining_scope = non_retired.where.not(id: results.map(&:id))
-        results + lexical_candidates(remaining_scope, content:, limit: remaining)
-      end
+        model_id = SiteSetting.ai_embeddings_selected_model.to_i
+        table = DiscourseAi::Embeddings::Schema::INFERRED_CONCEPTS_TABLE
 
-      def lexical_candidates(scope, content:, limit:)
-        return scope.order(status: :desc, id: :asc).limit(limit).to_a if content.blank?
+        unembedded =
+          non_retired
+            .where.not(id: results.map(&:id))
+            .where(
+              "NOT EXISTS (SELECT 1 FROM #{table} e WHERE e.inferred_concept_id = inferred_concepts.id AND e.model_id = :model_id)",
+              model_id: model_id,
+            )
+            .order(status: :desc, id: :asc)
+            .limit(remaining)
+            .to_a
 
-        query_text = content.to_s.first(Applier::MAX_CONTENT_CHARS)
-        score_sql =
-          ActiveRecord::Base.sanitize_sql_array([<<~SQL.squish, query_text, query_text, query_text])
-                (
-                  CASE WHEN position(lower(inferred_concepts.name) IN lower(?)) > 0 THEN 10.0 ELSE 0.0 END +
-                  CASE WHEN EXISTS (
-                    SELECT 1
-                    FROM unnest(inferred_concepts.aliases) AS alias
-                    WHERE alias <> '' AND position(lower(alias) IN lower(?)) > 0
-                  ) THEN 8.0 ELSE 0.0 END +
-                  COALESCE((
-                    SELECT COUNT(*)::float
-                    FROM unnest(
-                      tsvector_to_array(
-                        to_tsvector(
-                          'simple',
-                          coalesce(inferred_concepts.name, '') || ' ' ||
-                            coalesce(inferred_concepts.description, '') || ' ' ||
-                            array_to_string(inferred_concepts.aliases, ' ')
-                        )
-                      )
-                    ) AS concept_lexeme
-                    WHERE concept_lexeme = ANY(tsvector_to_array(to_tsvector('simple', ?)))
-                  ), 0.0)
-                )
-              SQL
-
-        scope.order(Arel.sql("#{score_sql} DESC"), status: :desc, id: :asc).limit(limit).to_a
+        results + unembedded
       end
     end
   end

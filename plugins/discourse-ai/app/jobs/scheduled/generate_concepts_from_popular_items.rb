@@ -7,7 +7,7 @@ module Jobs
     # This job runs daily and generates new concepts from popular topics and posts
     # It selects items based on engagement metrics and generates concepts from their content
     def execute(_args)
-      return unless SiteSetting.inferred_concepts_enabled
+      return unless SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
 
       process_popular_topics
       process_popular_posts

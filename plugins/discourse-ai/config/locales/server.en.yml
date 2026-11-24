@@ -1720,6 +1720,7 @@ en:
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
+        enable_embeddings_first: "You must enable AI embeddings and select an embedding model before enabling this feature."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     decision_models:

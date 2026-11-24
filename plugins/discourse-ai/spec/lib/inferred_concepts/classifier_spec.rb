@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::InferredConcepts::Classifier do
   subject(:classifier) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:concept_1) do
     Fabricate(:inferred_concept, name: "Caching", description: "HTTP and Redis caching")
   end
@@ -11,6 +12,8 @@ RSpec.describe DiscourseAi::InferredConcepts::Classifier do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
   end
 

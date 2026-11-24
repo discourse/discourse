@@ -6,7 +6,7 @@ module DiscourseAi
       # Identifies potential concepts from provided content
       # Returns an array of concept names (strings)
       def identify_concepts(content)
-        return [] if content.blank?
+        return [] if content.blank? || !DiscourseAi::Embeddings.enabled?
 
         candidates = CandidateRetriever.new.retrieve(content: content)
         result = Classifier.new.classify(content, candidates: candidates, allow_new: true)
@@ -16,6 +16,10 @@ module DiscourseAi
         proposed_names = result[:proposed_new].map { |entry| entry[:name] }
 
         (matched_names + proposed_names).uniq
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       # Creates or finds concepts in the database from provided names

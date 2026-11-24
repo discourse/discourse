@@ -93,7 +93,7 @@ module DiscourseAi
 
       # Match a topic with existing concepts
       def match_existing_concepts(topic)
-        return [] if topic.blank?
+        return [] if topic.blank? || !DiscourseAi::Embeddings.enabled?
 
         content = topic_content_for_analysis(topic)
         return [] if content.blank?
@@ -110,11 +110,15 @@ module DiscourseAi
         match_entries = build_match_entries(result[:matches], candidates)
 
         apply_matches_to_topic(topic, match_entries, digest: digest)
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       # Match a post with existing concepts
       def match_existing_concepts_for_post(post)
-        return [] if post.blank?
+        return [] if post.blank? || !DiscourseAi::Embeddings.enabled?
 
         content = post_content_for_analysis(post)
         return [] if content.blank?
@@ -131,6 +135,10 @@ module DiscourseAi
         match_entries = build_match_entries(result[:matches], candidates)
 
         apply_matches_to_post(post, match_entries, digest: digest)
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       # Use ConceptMatcher agent to match content against provided concepts

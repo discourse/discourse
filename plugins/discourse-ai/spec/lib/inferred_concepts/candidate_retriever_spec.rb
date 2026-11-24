@@ -10,44 +10,12 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
     fab!(:candidate_concept) { Fabricate(:inferred_concept, name: "CDN", status: :candidate) }
     fab!(:retired_concept) { Fabricate(:inferred_concept, name: "Obsolete", status: :retired) }
 
-    it "returns non-retired concepts ordered active-first when embeddings are disabled" do
+    it "raises EmbeddingsUnavailableError when embeddings are disabled" do
       SiteSetting.ai_embeddings_enabled = false
 
-      results = retriever.retrieve(content: "HTTP caching")
-
-      expect(results).to contain_exactly(active_concept, candidate_concept)
-      expect(results.first).to eq(active_concept)
-      expect(results).not_to include(retired_concept)
-    end
-
-    it "surfaces matching concepts past the limit via lexical fallback when embeddings are disabled" do
-      SiteSetting.ai_embeddings_enabled = false
-
-      33.times { |index| Fabricate(:inferred_concept, name: "unrelated_#{index}", status: :active) }
-      alias_match =
-        Fabricate(
-          :inferred_concept,
-          name: "Container Orchestration",
-          aliases: ["k8s"],
-          description: "Cluster scheduling and autoscaling",
-          status: :active,
-        )
-      name_match =
-        Fabricate(
-          :inferred_concept,
-          name: "Rate Limiting",
-          description: "API request throttling",
-          status: :active,
-        )
-
-      results =
-        retriever.retrieve(
-          content: "Configuring rate limiting and k8s autoscaling for the ingress controller",
-          limit: 30,
-        )
-
-      expect(results.length).to eq(30)
-      expect(results.first(2)).to contain_exactly(name_match, alias_match)
+      expect { retriever.retrieve(content: "HTTP caching") }.to raise_error(
+        described_class::EmbeddingsUnavailableError,
+      )
     end
 
     context "when embeddings are enabled" do
@@ -68,7 +36,9 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
         concepts_schema.store(retired_concept, target_vector, "d3")
       end
 
-      it "reuses a stored topic embedding without calling the embedding API and excludes retired concepts" do
+      after { DiscourseAi::Embeddings::ProviderHealth.clear!(vector_def) }
+
+      it "reuses a stored topic embedding, excludes retired concepts, and tops up with unembedded concepts" do
         DiscourseAi::Embeddings::Schema.for(Topic).store(topic, target_vector, "topic-digest")
         unembedded = Fabricate(:inferred_concept, name: "Unembedded", status: :active)
 
@@ -77,12 +47,11 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
         results = retriever.retrieve(content: "irrelevant", target: topic, limit: 3)
 
         expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
-        expect(results.first(2)).to eq([candidate_concept, active_concept])
-        expect(results).to include(unembedded)
+        expect(results).to eq([candidate_concept, active_concept, unembedded])
         expect(results).not_to include(retired_concept)
       end
 
-      it "falls back to database ordering when embedding provider is paused" do
+      it "propagates ProviderPausedError when embedding provider is paused" do
         DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) do
           raise DiscourseAi::Inference::EmbeddingInferenceError.new(
                   provider: vector_def.provider,
@@ -92,9 +61,9 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
       rescue DiscourseAi::Inference::EmbeddingInferenceError
         nil
       ensure
-        results = retriever.retrieve(content: "caching query", limit: 10)
-        expect(results).to contain_exactly(active_concept, candidate_concept)
-        expect(results).not_to include(retired_concept)
+        expect { retriever.retrieve(content: "caching query", limit: 10) }.to raise_error(
+          DiscourseAi::Embeddings::ProviderPausedError,
+        )
       end
     end
   end

@@ -3,17 +3,27 @@
 RSpec.describe DiscourseAi::InferredConcepts::Manager do
   subject(:manager) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, post_number: 1, raw: "Deep dive into Ruby caching") }
   fab!(:concept1) { Fabricate(:inferred_concept, name: "programming", aliases: ["coding"]) }
   fab!(:concept2) { Fabricate(:inferred_concept, name: "testing") }
   fab!(:retired_concept) { Fabricate(:inferred_concept, name: "deprecated", status: :retired) }
 
+  let(:sample_vector) { [0.1] * vector_def.dimensions }
+
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
+
+    DiscourseAi::Embeddings::Schema.for(Topic).store(topic, sample_vector, "topic-vec")
+    DiscourseAi::Embeddings::Schema.for(Post).store(post, sample_vector, "post-vec")
   end
+
+  after { DiscourseAi::Embeddings::ProviderHealth.clear!(vector_def) }
 
   describe "#list_concepts" do
     it "returns non-retired concepts sorted by name and respects limit" do
@@ -74,6 +84,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
       candidate = Fabricate(:inferred_concept, name: "Edge Caching", status: :candidate)
       topic2 = Fabricate(:topic)
       Fabricate(:post, topic: topic2, post_number: 1, raw: "CDN edge caching notes")
+      DiscourseAi::Embeddings::Schema.for(Topic).store(topic2, sample_vector, "topic2-vec")
 
       response = {
         matches: [{ concept_id: candidate.id, relevance: 0.9, primary: true }],
@@ -87,6 +98,27 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
         manager.generate_concepts_from_topic(topic2)
         expect(candidate.reload).to be_active
       end
+    end
+
+    it "skips classification when embeddings are disabled or provider is paused" do
+      SiteSetting.ai_embeddings_enabled = false
+      expect(manager.generate_concepts_from_topic(topic)).to eq([])
+
+      SiteSetting.ai_embeddings_enabled = true
+      topic_without_embedding = Fabricate(:topic)
+      Fabricate(:post, topic: topic_without_embedding, post_number: 1, raw: "Paused test")
+      begin
+        DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) do
+          raise DiscourseAi::Inference::EmbeddingInferenceError.new(
+                  provider: vector_def.provider,
+                  category: :authentication_failed,
+                )
+        end
+      rescue DiscourseAi::Inference::EmbeddingInferenceError
+        nil
+      end
+
+      expect(manager.generate_concepts_from_topic(topic_without_embedding)).to eq([])
     end
   end
 
@@ -138,6 +170,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
 
   describe "#match_content_to_concepts" do
     it "matches content against existing non-retired concepts" do
+      EmbeddingsGenerationStubs.cloudflare_service("programming guide", sample_vector)
       response = { matches: [{ concept_id: concept1.id, relevance: 0.85, primary: true }] }
 
       result =

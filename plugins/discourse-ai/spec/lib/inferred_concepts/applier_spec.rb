@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::InferredConcepts::Applier do
   subject(:applier) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic) { Fabricate(:topic, title: "Ruby Programming Tutorial") }
   fab!(:post) { Fabricate(:post, raw: "This post is about advanced testing techniques") }
   fab!(:user) { Fabricate(:user, username: "dev_user") }
@@ -12,8 +13,14 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
     post.update!(user: user)
+
+    vector = [0.1] * vector_def.dimensions
+    DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec")
+    DiscourseAi::Embeddings::Schema.for(Post).store(post, vector, "post-vec")
   end
 
   describe "#apply_to_topic" do

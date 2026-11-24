@@ -3,11 +3,14 @@
 RSpec.describe Jobs::GenerateConceptsFromPopularItems do
   subject(:job) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic) { Fabricate(:topic, posts_count: 6, views: 150, like_count: 12) }
   fab!(:post) { Fabricate(:post, like_count: 8, post_number: 2) }
 
   before do
     enable_current_plugin
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
     SiteSetting.inferred_concepts_daily_topics_limit = 20
     SiteSetting.inferred_concepts_daily_posts_limit = 30
@@ -30,6 +33,19 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
         :find_candidate_posts,
       )
       allow(Jobs).to receive(:enqueue)
+
+      job.execute({})
+    end
+
+    it "does nothing when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).not_to receive(
+        :find_candidate_topics,
+      )
+      expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).not_to receive(
+        :find_candidate_posts,
+      )
 
       job.execute({})
     end

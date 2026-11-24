@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::InferredConcepts::Finder do
   subject(:finder) { described_class.new }
 
+  fab!(:vector_def, :cloudflare_embedding_def)
   fab!(:topic) { Fabricate(:topic, posts_count: 5, views: 200, like_count: 15) }
   fab!(:post) { Fabricate(:post, like_count: 10) }
   fab!(:concept1) { Fabricate(:inferred_concept, name: "programming") }
@@ -11,6 +12,8 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_embeddings_selected_model = vector_def.id
+    SiteSetting.ai_embeddings_enabled = true
     SiteSetting.inferred_concepts_enabled = true
   end
 
@@ -21,6 +24,8 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
     end
 
     it "combines matched existing concepts and proposed new concepts" do
+      query = "This is about Ruby programming and metaprogramming"
+      EmbeddingsGenerationStubs.cloudflare_service(query, [0.1] * vector_def.dimensions)
       response = {
         matches: [{ concept_id: concept1.id, relevance: 0.9, primary: true }],
         proposed_new: [
@@ -30,7 +35,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
 
       result =
         DiscourseAi::Completions::Llm.with_prepared_responses([response]) do
-          finder.identify_concepts("This is about Ruby programming and metaprogramming")
+          finder.identify_concepts(query)
         end
 
       expect(result).to eq(%w[programming Metaprogramming])

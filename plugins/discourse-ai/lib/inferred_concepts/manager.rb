@@ -181,12 +181,16 @@ module DiscourseAi
       # @param content [String] The content to analyze
       # @return [Array<String>] Names of matching concepts
       def match_content_to_concepts(content)
-        return [] if content.blank?
+        return [] if content.blank? || !DiscourseAi::Embeddings.enabled?
 
         candidates = CandidateRetriever.new.retrieve(content: content)
         return [] if candidates.empty?
 
         DiscourseAi::InferredConcepts::Applier.new.match_concepts_to_content(content, candidates)
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       # Find candidate topics that are good for concept generation
@@ -214,7 +218,7 @@ module DiscourseAi
       private
 
       def classify_target(target, join_model:, fk_column:, allow_new:)
-        return [] if target.blank?
+        return [] if target.blank? || !DiscourseAi::Embeddings.enabled?
 
         applier = Applier.new
         content =
@@ -267,6 +271,10 @@ module DiscourseAi
 
         promote_candidates!(applied)
         applied
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       def resolve_proposed_concept(entry, candidates_by_id:)
