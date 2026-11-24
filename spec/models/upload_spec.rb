@@ -939,15 +939,47 @@ RSpec.describe Upload do
   end
 
   describe ".secure_uploads_url?" do
-    it "works for a secure uploads url with or without schema + host" do
-      url =
-        "//localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_uploads_url?(url)).to eq(true)
-      url = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_uploads_url?(url)).to eq(true)
-      url =
-        "http://localhost:3000/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
-      expect(Upload.secure_uploads_url?(url)).to eq(true)
+    it "recognizes authority-free paths and matching origins only" do
+      secure_path = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      base_uri = URI.parse(Discourse.base_url)
+      local_url = "#{base_uri.scheme}://#{base_uri.host.upcase}:#{base_uri.port}#{secure_path}"
+
+      expect(Upload.secure_uploads_url?(local_url)).to eq(true)
+      expect(Upload.secure_uploads_url?(secure_path)).to eq(true)
+
+      foreign_urls = [
+        "https://attacker.invalid#{secure_path}",
+        "//attacker.invalid#{secure_path}",
+        "#{base_uri.scheme == "https" ? "http" : "https"}://#{base_uri.host}:#{base_uri.port}#{secure_path}",
+        "#{base_uri.scheme}://ignored@#{base_uri.host}:#{base_uri.port}#{secure_path}",
+      ]
+      expect(foreign_urls).to all(satisfy { |url| !Upload.secure_uploads_url?(url) })
+    end
+
+    it "recognizes a first-party scheme-relative secure url emitted by cook_url" do
+      setup_s3
+      SiteSetting.secure_uploads = true
+      upload = Fabricate(:upload_s3, secure: true)
+
+      cooked_url = UrlHelper.cook_url(upload.url, secure: true)
+
+      expect(cooked_url).to start_with("//")
+      expect(Upload.secure_uploads_url?(cooked_url)).to eq(true)
+    end
+
+    it "resolves an omitted port from the scheme instead of a custom site port" do
+      secure_path = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      Discourse.stubs(:base_url).returns("https://forum.example:8443")
+      Discourse.stubs(:asset_host).returns(nil)
+      Discourse.stubs(:base_protocol).returns("https")
+
+      expect(Upload.secure_uploads_url?("//forum.example:8443#{secure_path}")).to eq(true)
+      expect(Upload.secure_uploads_url?("https://forum.example:8443#{secure_path}")).to eq(true)
+
+      # an omitted port resolves to the scheme default (443), not the site's custom port
+      expect(Upload.secure_uploads_url?("//forum.example#{secure_path}")).to eq(false)
+      expect(Upload.secure_uploads_url?("//forum.example:443#{secure_path}")).to eq(false)
+      expect(Upload.secure_uploads_url?("https://forum.example#{secure_path}")).to eq(false)
     end
 
     it "does not get false positives on a topic url" do
@@ -974,6 +1006,75 @@ RSpec.describe Upload do
     it "does not raise for invalid URLs" do
       url = "http://URL:%20https://google.com"
       expect(Upload.secure_uploads_url?(url)).to eq(false)
+    end
+  end
+
+  describe ".signed_url_from_secure_uploads_url" do
+    it "signs only authority-free paths and matching origins" do
+      secure_path = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      signed_url = "https://s3.example.com/signed-upload.png"
+      store = stub
+      store.stubs(:signed_url_for_path).returns(signed_url)
+      Discourse.stubs(:store).returns(store)
+
+      expect(
+        Upload.signed_url_from_secure_uploads_url(secure_path, include_content_disposition: false),
+      ).to eq(signed_url)
+
+      base_uri = URI.parse(Discourse.base_url)
+      foreign_urls = [
+        "https://attacker.invalid#{secure_path}",
+        "//attacker.invalid#{secure_path}",
+        "#{base_uri.scheme == "https" ? "http" : "https"}://#{base_uri.host}:#{base_uri.port}#{secure_path}",
+        "#{base_uri.scheme}://ignored@#{base_uri.host}:#{base_uri.port}#{secure_path}",
+      ]
+      expect(
+        foreign_urls.map do |url|
+          Upload.signed_url_from_secure_uploads_url(url, include_content_disposition: false)
+        end,
+      ).to eq(foreign_urls)
+    end
+
+    it "does not sign scheme-relative urls that omit a custom site port" do
+      secure_path = "/secure-uploads/original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      signed_url = "https://s3.example.com/signed-upload.png"
+      store = stub
+      store.stubs(:signed_url_for_path).returns(signed_url)
+      Discourse.stubs(:store).returns(store)
+      Discourse.stubs(:base_url).returns("https://forum.example:8443")
+      Discourse.stubs(:asset_host).returns(nil)
+      Discourse.stubs(:base_protocol).returns("https")
+
+      expect(
+        Upload.signed_url_from_secure_uploads_url(
+          "//forum.example:8443#{secure_path}",
+          include_content_disposition: false,
+        ),
+      ).to eq(signed_url)
+
+      omitted_port_url = "//forum.example#{secure_path}"
+      expect(
+        Upload.signed_url_from_secure_uploads_url(
+          omitted_port_url,
+          include_content_disposition: false,
+        ),
+      ).to eq(omitted_port_url)
+    end
+  end
+
+  describe ".secure_uploads_store_path" do
+    it "returns the path the route resolves to, whatever else the URL names" do
+      store_path = "original/2X/f/f62055931bb702c7fd8f552fb901f977e0289a18.png"
+      other_key = "/original/2X/a/a94a8fe5ccb19ba61c4c0873d391e987982fbbd3.png"
+      urls = [
+        "/secure-uploads/#{store_path}",
+        "#{Discourse.base_url}/secure-uploads/#{store_path}",
+        "/secure-uploads/#{store_path.sub("original/", "original//")}?x=#{other_key}",
+        "/secure-uploads/#{store_path.sub("original/", "original%2F")}?x=#{other_key}",
+        "/secure-uploads/#{store_path.sub("original/", "original//")}##{other_key}",
+      ]
+
+      expect(urls.map { |url| Upload.secure_uploads_store_path(url) }).to all(eq(store_path))
     end
   end
 

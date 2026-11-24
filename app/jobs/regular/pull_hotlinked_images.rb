@@ -166,14 +166,19 @@ module Jobs
       # make sure we actually have a url
       return false if src.blank?
 
+      # The downloader signs every URL this recognizes, so it has to pass the
+      # permission check below even when the prefix matching sees a remote URL.
+      secure_upload_url = Upload.secure_uploads_url?(src)
+
       local_bases =
         [Discourse.base_url, Discourse.asset_host, SiteSetting.external_emoji_url.presence].compact
           .map { |s| normalize_src(s) }
 
-      if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) ||
-           src =~ %r{\A/[^/]}i
-        if Upload.secure_uploads_url?(src)
-          upload = Upload.fetch_from(sha1: Upload.sha1_from_long_url(src), url: src)
+      if secure_upload_url || Discourse.store.has_been_uploaded?(src) ||
+           normalize_src(src).start_with?(*local_bases) || src =~ %r{\A/[^/]}i
+        if secure_upload_url
+          signed_path = "/#{Upload.secure_uploads_store_path(src)}"
+          upload = Upload.fetch_from(sha1: Upload.sha1_from_long_url(signed_path), url: signed_path)
           return false if upload.nil?
           return false if !can_see_upload?(upload, guardian: post&.user&.guardian)
         elsif src.match?(%r{/uploads/})
