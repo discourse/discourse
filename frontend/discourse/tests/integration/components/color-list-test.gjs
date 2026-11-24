@@ -50,7 +50,11 @@ module("Integration | Component | ColorList", function (hooks) {
       </template>
     );
 
-    assert.deepEqual(shownColors(), ["FF0000", "00FF00", "0000FF"]);
+    assert.deepEqual(
+      shownColors(),
+      ["ff0000", "00ff00", "0000ff"],
+      "stored colors show in lowercase"
+    );
     assert.dom(rowHex(1)).hasAria("label", "Color 2");
     assert.dom(`${rowSelector(1)} .d-color-input__prefix`).exists();
     assert.dom(rowHex(1)).hasAttribute("maxlength", "6");
@@ -66,26 +70,26 @@ module("Integration | Component | ColorList", function (hooks) {
       </template>
     );
 
-    await fillIn(rowHex(1), "abcdef");
+    await fillIn(rowHex(1), "ABCDEF");
     assert.deepEqual(
       this.changes,
-      [["FF0000", "ABCDEF", "0000FF"]],
-      "a 6-digit color replaces the row's, in uppercase, keeping its position"
+      [["ff0000", "abcdef", "0000ff"]],
+      "a 6-digit color replaces the row's, keeping its position, and the list is saved in lowercase"
     );
 
-    await fillIn(rowHex(1), "abc");
+    await fillIn(rowHex(1), "ABC");
     assert.strictEqual(this.changes.length, 1, "a 3-digit color waits");
     await blur(rowHex(1));
     assert.deepEqual(
       this.changes.at(-1),
-      ["FF0000", "AABBCC", "0000FF"],
+      ["ff0000", "aabbcc", "0000ff"],
       "and expands when the field is left"
     );
 
     await fillIn(rowHex(1), "zz");
     await blur(rowHex(1));
     assert.strictEqual(this.changes.length, 2, "an invalid color is not kept");
-    assert.dom(rowHex(1)).hasValue("AABBCC", "the field shows the color again");
+    assert.dom(rowHex(1)).hasValue("aabbcc", "the field shows the color again");
 
     const picker = document.querySelector(
       `${rowSelector(0)} .d-color-input__picker`
@@ -94,9 +98,23 @@ module("Integration | Component | ColorList", function (hooks) {
     picker.dispatchEvent(new Event("input", { bubbles: true }));
     assert.deepEqual(
       this.changes.at(-1),
-      ["123456", "AABBCC", "0000FF"],
+      ["123456", "aabbcc", "0000ff"],
       "the picker edits the row too"
     );
+  });
+
+  test("leaving a row unchanged saves nothing, even when stored in uppercase", async function (assert) {
+    await render(
+      <template>
+        <ColorList @onChange={{this.onChange}} @values={{this.values.value}} />
+      </template>
+    );
+
+    await triggerEvent(rowHex(1), "focus");
+    await blur(rowHex(1));
+
+    assert.deepEqual(this.changes, []);
+    assert.dom(rowHex(1)).hasValue("00ff00");
   });
 
   test("a pasted color edits a row like a typed one", async function (assert) {
@@ -117,16 +135,16 @@ module("Integration | Component | ColorList", function (hooks) {
     await paste(rowHex(1), " #123456 ");
     assert.deepEqual(
       this.changes,
-      [["FF0000", "123456", "0000FF"]],
+      [["ff0000", "123456", "0000ff"]],
       "a whole color is kept at once"
     );
 
-    await paste(rowHex(1), "#f00");
-    assert.dom(rowHex(1)).hasValue("F00", "a short one shows as pasted");
+    await paste(rowHex(1), "#F00");
+    assert.dom(rowHex(1)).hasValue("f00", "a short one shows as pasted");
     await blur(rowHex(1));
     assert.deepEqual(
       this.changes.at(-1),
-      ["FF0000", "FF0000", "0000FF"],
+      ["ff0000", "ff0000", "0000ff"],
       "and expands when the field is left"
     );
   });
@@ -153,7 +171,7 @@ module("Integration | Component | ColorList", function (hooks) {
     await fillIn(ADD_HEX, "00ff00");
     assert
       .dom(ADD_BUTTON)
-      .isDisabled("a color the list holds can't be added twice");
+      .isDisabled("a color the list holds can't be added twice, in any case");
     assert.dom(ADD_BUTTON).hasAttribute("title", "Already in the list");
 
     await fillIn(ADD_HEX, "zz");
@@ -161,16 +179,16 @@ module("Integration | Component | ColorList", function (hooks) {
 
     await fillIn(ADD_HEX, "abc");
     await click(ADD_BUTTON);
-    assert.deepEqual(this.changes, [["FF0000", "00FF00", "0000FF", "AABBCC"]]);
+    assert.deepEqual(this.changes, [["ff0000", "00ff00", "0000ff", "aabbcc"]]);
     assert.dom(ADD_HEX).hasValue("", "the field empties for the next one");
 
     await fillIn(ADD_HEX, "123456");
     await triggerKeyEvent(ADD_HEX, "keydown", "Enter");
     assert.deepEqual(this.changes.at(-1), [
-      "FF0000",
-      "00FF00",
-      "0000FF",
-      "AABBCC",
+      "ff0000",
+      "00ff00",
+      "0000ff",
+      "aabbcc",
       "123456",
     ]);
     assert.true(enterPrevented, "Enter adds without submitting the form");
@@ -184,10 +202,10 @@ module("Integration | Component | ColorList", function (hooks) {
     );
 
     await moveViaChord(0, "down");
-    assert.deepEqual(this.changes.at(-1), ["00FF00", "FF0000", "0000FF"]);
+    assert.deepEqual(this.changes.at(-1), ["00ff00", "ff0000", "0000ff"]);
 
     await click(`${rowSelector(2)} .d-reorderable-list__remove`);
-    assert.deepEqual(this.changes.at(-1), ["00FF00", "FF0000"]);
+    assert.deepEqual(this.changes.at(-1), ["00ff00", "ff0000"]);
   });
 
   test("can't be changed while disabled", async function (assert) {

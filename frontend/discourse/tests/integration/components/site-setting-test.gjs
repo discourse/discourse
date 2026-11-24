@@ -916,7 +916,11 @@ module("Integration | Component | SiteSetting", function (hooks) {
     await click(".color-list__add-btn");
     await click(".setting-controls__ok");
 
-    assert.strictEqual(body.test_colors, "FF0000|00FF00|0000FF");
+    assert.strictEqual(
+      body.test_colors,
+      "ff0000|00ff00|0000ff",
+      "saved in lowercase"
+    );
   });
 
   test("a locale list setting names its choices from the available locales", async function (assert) {

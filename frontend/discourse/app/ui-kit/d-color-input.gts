@@ -30,7 +30,7 @@ interface DColorInputSignature {
     value?: string | null;
 
     /**
-     * Called with what was typed, picked or pasted, without a leading `#`. Hex comes in uppercase,
+     * Called with what was typed, picked or pasted, without a leading `#`. Hex comes in lowercase,
      * except text typed into a field that takes names, which comes as typed.
      */
     onChange: (value: string) => void;
@@ -54,10 +54,10 @@ interface DColorInputSignature {
  * reports every change through `@onChange`, leaving storage format and validation to the caller.
  */
 export default class DColorInput extends Component<DColorInputSignature> {
-  /** Hex shows in uppercase; a field taking names shows what it holds, so a name being typed is left alone. */
+  /** Hex shows in lowercase; a field taking names shows what it holds, so a name being typed is left alone. */
   get bareValue() {
     const value = withoutHash(this.args.value ?? "");
-    return this.args.allowNamedColors ? value : value.toUpperCase();
+    return this.args.allowNamedColors ? value : value.toLowerCase();
   }
 
   get maxLength() {
@@ -118,7 +118,7 @@ export default class DColorInput extends Component<DColorInputSignature> {
   @action
   handlePickerInput(event: Event) {
     this.args.onChange(
-      withoutHash((event.target as HTMLInputElement).value).toUpperCase()
+      withoutHash((event.target as HTMLInputElement).value).toLowerCase()
     );
   }
 
@@ -135,9 +135,9 @@ export default class DColorInput extends Component<DColorInputSignature> {
     this.args.onChange(typed);
   }
 
-  /** Typed text in the case the field shows: uppercase hex, or as typed where names are taken. */
+  /** Typed text in the case the field shows: lowercase hex, or as typed where names are taken. */
   #typed(value: string) {
-    return this.args.allowNamedColors ? value : value.toUpperCase();
+    return this.args.allowNamedColors ? value : value.toLowerCase();
   }
 
   <template>

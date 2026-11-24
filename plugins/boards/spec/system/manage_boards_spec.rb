@@ -131,7 +131,7 @@ describe "Manage Boards Boards" do
 
       expect(boards_page).to have_column("To Do")
       expect(boards_page).to have_column("Done")
-      expect(boards_page.column_by_title("To Do")).to have_color("C97CF4")
+      expect(boards_page.column_by_title("To Do")).to have_color("c97cf4")
     end
 
     it "can delete a column with no cards without confirmation" do

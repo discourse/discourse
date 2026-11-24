@@ -89,7 +89,7 @@ module("Integration | Component | ThemeSettingEditor", function (hooks) {
       [
         ...document.querySelectorAll(".color-list__row .d-color-input__hex"),
       ].map((input) => input.value),
-      ["FF0000", "00FF00"]
+      ["ff0000", "00ff00"]
     );
     assert.dom(".select-string-list").doesNotExist();
   });

@@ -204,13 +204,17 @@ acceptance("Category color", function (needs) {
     await click(".edit-category-images a");
     assert.strictEqual(
       formKit().field("text_color").value(),
-      CATEGORY_TEXT_COLORS[0],
-      "has the default text color"
+      CATEGORY_TEXT_COLORS[0].toLowerCase(),
+      "has the default text color, shown in lowercase"
     );
 
     await click(".edit-category-general a");
     await formKit().field("color").fillIn("EEEEEE");
-    assert.strictEqual(previewBadgeColor(), "#EEEEEE");
+    assert.strictEqual(
+      previewBadgeColor(),
+      "#eeeeee",
+      "typed hex is lowercased"
+    );
 
     await click(".edit-category-images a");
     assert.strictEqual(

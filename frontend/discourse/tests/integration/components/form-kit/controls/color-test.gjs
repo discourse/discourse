@@ -23,12 +23,16 @@ module(
         </template>
       );
 
-      assert.strictEqual(formKit().field("color").value(), "FF0000");
+      assert.strictEqual(
+        formKit().field("color").value(),
+        "ff0000",
+        "hex shows in lowercase"
+      );
 
       await fillIn(".form-kit__control-color-input-hex", "00FF00");
       await formKit().submit();
 
-      assert.strictEqual(data.color, "00FF00");
+      assert.strictEqual(data.color, "00ff00", "typed hex is saved lowercase");
     });
 
     test("shows # prefix by default", async function (assert) {
@@ -185,7 +189,7 @@ module(
 
       await formKit().submit();
 
-      assert.strictEqual(data.color, "00FF00");
+      assert.strictEqual(data.color, "00ff00");
     });
 
     test("picker displays named colors correctly", async function (assert) {
@@ -223,7 +227,7 @@ module(
       await fillIn(".form-kit__control-color-input-hex", "");
       await blur(".form-kit__control-color-input-hex");
 
-      assert.strictEqual(formKit().field("color").value(), "AABBCC");
+      assert.strictEqual(formKit().field("color").value(), "aabbcc");
     });
 
     test("@prefixHex stores value with # prefix", async function (assert) {
@@ -245,7 +249,7 @@ module(
       await fillIn(".form-kit__control-color-input-hex", "FF0000");
       await formKit().submit();
 
-      assert.strictEqual(data.color, "#FF0000");
+      assert.strictEqual(data.color, "#ff0000");
     });
 
     test("@prefixHex with native color picker", async function (assert) {
@@ -262,7 +266,7 @@ module(
         </template>
       );
 
-      assert.dom(".form-kit__control-color-input-hex").hasValue("FF0000");
+      assert.dom(".form-kit__control-color-input-hex").hasValue("ff0000");
 
       const picker = formKit().field("color").pickerElement;
       picker.value = "#00FF00";
@@ -270,7 +274,7 @@ module(
 
       await formKit().submit();
 
-      assert.strictEqual(data.color, "#00FF00");
+      assert.strictEqual(data.color, "#00ff00");
     });
 
     test("@collapseSwatches and @collapseSwatchesLabel", async function (assert) {

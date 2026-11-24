@@ -13,16 +13,16 @@ const TOKEN_SEPARATOR = "|";
 const INDEX_KEY = "@index";
 const WHOLE_HEX = /^[0-9a-f]{6}$/i;
 
-/** A color as it is stored: 6-digit uppercase hex without `#`, or `null` when it isn't one. */
+/** A color as it is stored: 6-digit lowercase hex without `#`, or `null` when it isn't one. */
 function storedColor(value) {
   const bare = (value ?? "").replace(/^#/, "");
-  return isValidHex(bare) ? normalizeHex(bare).toUpperCase() : null;
+  return isValidHex(bare) ? normalizeHex(bare).toLowerCase() : null;
 }
 
 /** A color typed in full, so committing it can't cut the typing short. */
 function wholeColor(value) {
   const bare = (value ?? "").replace(/^#/, "");
-  return WHOLE_HEX.test(bare) ? bare.toUpperCase() : null;
+  return WHOLE_HEX.test(bare) ? bare.toLowerCase() : null;
 }
 
 function colorLabel(color) {
@@ -36,7 +36,7 @@ function rowLabel(index) {
 /**
  * Edits a list of colors whose order matters, such as colors offered in order or assigned by position.
  * Each row is a color input; rows can be moved and removed, and a color is added at the end.
- * Colors are stored as 6-digit uppercase hex without `#`. `@onChange` receives the new list.
+ * Colors are stored as 6-digit lowercase hex without `#`. `@onChange` receives the new list.
  */
 export default class ColorList extends Component {
   /** What the add field holds, as typed. */
@@ -53,8 +53,12 @@ export default class ColorList extends Component {
     return !this.args.disabled && Boolean(this.draftColor) && !this.draftHeld;
   }
 
+  /** The stored colors, in lowercase whatever case they were saved in, so any change saves them so. */
   get colors() {
-    return (this.args.values ?? "").split(TOKEN_SEPARATOR).filter(Boolean);
+    return (this.args.values ?? "")
+      .toLowerCase()
+      .split(TOKEN_SEPARATOR)
+      .filter(Boolean);
   }
 
   get draftColor() {

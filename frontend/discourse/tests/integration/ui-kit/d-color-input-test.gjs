@@ -20,7 +20,7 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
           @onChange={{noop}}
           @value="#FF0000"
         />
-        <DColorInput class="bare" @onChange={{noop}} @value="00ff00" />
+        <DColorInput class="bare" @onChange={{noop}} @value="00FF00" />
         <DColorInput
           class="named"
           @allowNamedColors={{true}}
@@ -30,8 +30,8 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
       </template>
     );
 
-    assert.dom(`${HEX}.with-hash`).hasValue("FF0000");
-    assert.dom(`${HEX}.bare`).hasValue("00FF00", "hex shows in uppercase");
+    assert.dom(`${HEX}.with-hash`).hasValue("ff0000");
+    assert.dom(`${HEX}.bare`).hasValue("00ff00", "hex shows in lowercase");
     assert
       .dom(`${HEX}.named`)
       .hasValue("Blue", "a field taking names shows what it holds");
@@ -41,7 +41,7 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
       .exists("it sits before the field that asked for it");
   });
 
-  test("reports what is typed, picked or pasted, without a # and in uppercase", async function (assert) {
+  test("reports what is typed, picked or pasted, without a # and in lowercase", async function (assert) {
     const changes = [];
     const onChange = (value) => changes.push(value);
 
@@ -49,20 +49,20 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
       <template><DColorInput @onChange={{onChange}} @value="" /></template>
     );
 
-    await fillIn(HEX, "abc");
+    await fillIn(HEX, "ABC");
 
     const picker = document.querySelector(PICKER);
     picker.value = "#aabbcc";
     picker.dispatchEvent(new Event("input", { bubbles: true }));
 
     const clipboardData = new DataTransfer();
-    clipboardData.setData("text/plain", "#ddeeff");
+    clipboardData.setData("text/plain", "#DDEEFF");
     await triggerEvent(HEX, "paste", { clipboardData });
 
-    assert.deepEqual(changes, ["ABC", "AABBCC", "DDEEFF"]);
+    assert.deepEqual(changes, ["abc", "aabbcc", "ddeeff"]);
   });
 
-  test("uppercases typing in place, keeping the caret", async function (assert) {
+  test("lowercases typing in place, keeping the caret", async function (assert) {
     const noop = () => {};
 
     await render(
@@ -70,11 +70,11 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
     );
 
     const input = document.querySelector(HEX);
-    input.value = "abcdef";
+    input.value = "ABCDEF";
     input.setSelectionRange(2, 2);
     input.dispatchEvent(new Event("input", { bubbles: true }));
 
-    assert.dom(HEX).hasValue("ABCDEF");
+    assert.dom(HEX).hasValue("abcdef");
     assert.strictEqual(input.selectionStart, 2, "the caret stays put");
   });
 
@@ -84,18 +84,18 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
 
     await render(
       <template>
-        <DColorInput @onChange={{onChange}} @value="ABCDEF" />
+        <DColorInput @onChange={{onChange}} @value="abcdef" />
       </template>
     );
 
     const input = document.querySelector(HEX);
     input.setSelectionRange(2, 2);
     const clipboardData = new DataTransfer();
-    clipboardData.setData("text/plain", " #f00 ");
+    clipboardData.setData("text/plain", " #F00 ");
     await triggerEvent(HEX, "paste", { clipboardData });
 
-    assert.dom(HEX).hasValue("F00", "the field shows the pasted color");
-    assert.deepEqual(changes, ["F00"]);
+    assert.dom(HEX).hasValue("f00", "the field shows the pasted color");
+    assert.deepEqual(changes, ["f00"]);
   });
 
   test("other pasted text goes in at the cursor, within the limit", async function (assert) {
@@ -104,7 +104,7 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
 
     await render(
       <template>
-        <DColorInput class="partial" @onChange={{onChange}} @value="AB" />
+        <DColorInput class="partial" @onChange={{onChange}} @value="ab" />
         <DColorInput class="alpha" @onChange={{onChange}} @value="" />
       </template>
     );
@@ -112,22 +112,22 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
     const partial = document.querySelector(`${HEX}.partial`);
     partial.setSelectionRange(1, 1);
     let clipboardData = new DataTransfer();
-    clipboardData.setData("text/plain", "cdefgh");
+    clipboardData.setData("text/plain", "CDEFGH");
     await triggerEvent(partial, "paste", { clipboardData });
 
     assert
       .dom(partial)
-      .hasValue("ACDEFB", "only what fits goes in, where the cursor is");
+      .hasValue("acdefb", "only what fits goes in, where the cursor is");
     assert.strictEqual(partial.selectionStart, 5, "and the cursor follows it");
 
     clipboardData = new DataTransfer();
-    clipboardData.setData("text/plain", "#ff0000aa");
+    clipboardData.setData("text/plain", "#FF0000AA");
     await triggerEvent(`${HEX}.alpha`, "paste", { clipboardData });
 
     assert
       .dom(`${HEX}.alpha`)
-      .hasValue("FF0000", "a color with alpha keeps the 6 digits that fit");
-    assert.deepEqual(changes, ["ACDEFB", "FF0000"]);
+      .hasValue("ff0000", "a color with alpha keeps the 6 digits that fit");
+    assert.deepEqual(changes, ["acdefb", "ff0000"]);
   });
 
   test("keeps pasted names as pasted, without spaces", async function (assert) {
@@ -152,7 +152,7 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
     assert.deepEqual(changes, ["cornflowerblue"]);
   });
 
-  test("keeps typed names as typed, but picks in uppercase", async function (assert) {
+  test("keeps typed names as typed, and picks in lowercase", async function (assert) {
     const changes = [];
     const onChange = (value) => changes.push(value);
 
@@ -166,14 +166,14 @@ module("Integration | ui-kit | DColorInput", function (hooks) {
       </template>
     );
 
-    await fillIn(HEX, "bee");
+    await fillIn(HEX, "Bee");
 
     const picker = document.querySelector(PICKER);
     picker.value = "#aabbcc";
     picker.dispatchEvent(new Event("input", { bubbles: true }));
 
-    assert.deepEqual(changes, ["bee", "AABBCC"]);
-    assert.dom(HEX).hasValue("bee");
+    assert.deepEqual(changes, ["Bee", "aabbcc"]);
+    assert.dom(HEX).hasValue("Bee");
   });
 
   test("the picker shows the color, or black when there is none", async function (assert) {

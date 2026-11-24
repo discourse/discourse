@@ -76,7 +76,7 @@ describe "Simplified Category Creation" do
 
       created_category = Category.find_by(name: "Test Category")
       expect(created_category).to be_present
-      expect(created_category.color).to eq("FF5733")
+      expect(created_category.color).to eq("ff5733")
     end
 
     it "edits an existing category name" do
@@ -94,7 +94,7 @@ describe "Simplified Category Creation" do
       form.field("color").fill_in("123ABC")
       category_page.save_settings
 
-      expect(category.reload.color).to eq("123ABC")
+      expect(category.reload.color).to eq("123abc")
     end
 
     it "selects a parent category" do
