@@ -315,6 +315,11 @@
   padding: 0.5em var(--d-select-option-padding-inline);
   cursor: pointer;
 
+  // A name with no break points, such as a long typed value, still wraps inside the panel.
+  // `anywhere` rather than `break-word`: a plain label is a bare text node in this flex row,
+  // and only `anywhere` lets it shrink below its longest word.
+  overflow-wrap: anywhere;
+
   &.--sticky {
     background: var(--secondary);
   }
@@ -605,6 +610,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
+  max-width: 100%;
+  min-width: 0;
 
   // Horizontal inset only. The trigger has no height of its own, so block padding here makes
   // a multi-select taller than the single-selects beside it and a row of fields stops
@@ -624,6 +631,14 @@
     outline: 2px solid var(--tertiary);
     outline-offset: 1px;
   }
+}
+
+// A long name is cut short so the chip stays inside the field.
+.d-select__chip-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .d-select__chip-remove {

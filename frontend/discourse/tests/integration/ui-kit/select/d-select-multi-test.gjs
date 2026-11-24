@@ -2935,3 +2935,73 @@ module(
     });
   }
 );
+
+const LONG_NAME = "a".repeat(101);
+const LONG_OPTIONS = [
+  { id: LONG_NAME, name: LONG_NAME },
+  { id: "short", name: "Short" },
+];
+
+module(
+  "Integration | ui-kit | select | DSelect (long names)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    test("long names: a chip is cut short inside the field", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 300px">
+            <DSelect
+              @multiple={{true}}
+              @options={{LONG_OPTIONS}}
+              @value={{array LONG_NAME}}
+            />
+          </div>
+        </template>
+      );
+
+      const trigger = find(".d-select__trigger").getBoundingClientRect();
+      const chip = find(".d-select__chip").getBoundingClientRect();
+      const label = find(".d-select__chip-label");
+
+      assert.true(
+        chip.right <= trigger.right,
+        `the chip ends at ${chip.right}, inside the field's ${trigger.right}`
+      );
+      assert.true(
+        label.scrollWidth > label.clientWidth,
+        "the label is cut short"
+      );
+      assert.strictEqual(
+        getComputedStyle(label).textOverflow,
+        "ellipsis",
+        "and ends with an ellipsis"
+      );
+    });
+
+    test("long names: an option wraps inside the panel", async function (assert) {
+      await render(
+        <template>
+          <div style="width: 300px">
+            <DSelect @multiple={{true}} @options={{LONG_OPTIONS}} />
+          </div>
+        </template>
+      );
+      await dSelect(".d-select").open();
+
+      const content = find(".d-select__content").getBoundingClientRect();
+      const [long, short] = [
+        ...document.querySelectorAll(".d-select__content [role='option']"),
+      ].map((option) => option.getBoundingClientRect());
+
+      assert.true(
+        long.right <= content.right,
+        `the option ends at ${long.right}, inside the panel's ${content.right}`
+      );
+      assert.true(
+        long.height > short.height,
+        "the long name wraps onto more lines"
+      );
+    });
+  }
+);
