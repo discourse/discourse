@@ -65,6 +65,23 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
           DiscourseAi::Embeddings::ProviderPausedError,
         )
       end
+
+      it "skips private messages when ai_embeddings_generate_for_pms is disabled and skips deleted targets" do
+        SiteSetting.ai_embeddings_generate_for_pms = false
+        pm_topic = Fabricate(:private_message_topic)
+        pm_reply = Fabricate(:post, topic: pm_topic, post_number: 2, raw: "Secret PM reply")
+        deleted_topic = Fabricate(:topic, deleted_at: Time.zone.now)
+
+        allow(DiscourseAi::Embeddings::Vector).to receive(:instance)
+
+        expect(retriever.retrieve(content: "Secret PM reply", target: pm_reply, limit: 10)).to eq(
+          [],
+        )
+        expect(
+          retriever.retrieve(content: "Deleted topic", target: deleted_topic, limit: 10),
+        ).to eq([])
+        expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+      end
     end
   end
 end

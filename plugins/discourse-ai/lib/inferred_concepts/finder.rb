@@ -117,7 +117,18 @@ module DiscourseAi
         category_ids: nil,
         created_after: 30.days.ago
       )
-        query = Post.where("posts.like_count >= ?", min_likes)
+        query =
+          Post
+            .joins(:topic)
+            .where(
+              topics: {
+                archetype: Archetype.default,
+              },
+              posts: {
+                post_type: Post.types[:regular],
+              },
+            )
+            .where("posts.like_count >= ?", min_likes)
 
         # Exclude first posts if specified
         query = query.where("posts.post_number > 1") if exclude_first_posts
@@ -127,9 +138,7 @@ module DiscourseAi
         query = query.where("posts.created_at >= ?", created_after) if created_after.present?
 
         # Filter by category if specified
-        if category_ids.present?
-          query = query.joins(:topic).where("topics.category_id IN (?)", category_ids)
-        end
+        query = query.where("topics.category_id IN (?)", category_ids) if category_ids.present?
 
         # Exclude posts that already have concepts
         posts_with_concepts = <<~SQL

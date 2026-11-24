@@ -94,12 +94,17 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
     fab!(:good_post) { Fabricate(:post, like_count: 8, post_number: 2) }
     fab!(:bad_post) { Fabricate(:post, like_count: 2, post_number: 2) }
     fab!(:first_post) { Fabricate(:post, like_count: 10, post_number: 1) }
+    fab!(:pm_topic, :private_message_topic)
+    fab!(:pm_reply) { Fabricate(:post, topic: pm_topic, like_count: 10, post_number: 2) }
+    fab!(:whisper_post) do
+      Fabricate(:post, like_count: 10, post_number: 2, post_type: Post.types[:whisper])
+    end
 
-    it "finds non-first posts meeting criteria" do
+    it "finds non-first regular posts in public topics meeting criteria" do
       candidates = finder.find_candidate_posts(min_likes: 5)
 
       expect(candidates).to include(good_post)
-      expect(candidates).not_to include(bad_post, first_post)
+      expect(candidates).not_to include(bad_post, first_post, pm_reply, whisper_post)
     end
   end
 end

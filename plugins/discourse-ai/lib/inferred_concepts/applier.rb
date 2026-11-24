@@ -93,7 +93,7 @@ module DiscourseAi
 
       # Match a topic with existing concepts
       def match_existing_concepts(topic)
-        return [] if topic.blank? || !DiscourseAi::Embeddings.enabled?
+        return [] if ineligible_target?(topic) || !DiscourseAi::Embeddings.enabled?
 
         content = topic_content_for_analysis(topic)
         return [] if content.blank?
@@ -118,7 +118,7 @@ module DiscourseAi
 
       # Match a post with existing concepts
       def match_existing_concepts_for_post(post)
-        return [] if post.blank? || !DiscourseAi::Embeddings.enabled?
+        return [] if ineligible_target?(post) || !DiscourseAi::Embeddings.enabled?
 
         content = post_content_for_analysis(post)
         return [] if content.blank?
@@ -154,6 +154,14 @@ module DiscourseAi
       end
 
       private
+
+      def ineligible_target?(target)
+        return true if target.blank?
+
+        topic = target.is_a?(Topic) ? target : target.topic
+        target.deleted_at.present? || topic.nil? || topic.deleted_at.present? ||
+          topic.private_message?
+      end
 
       def apply_matches(target, join_model:, table_name:, fk_column:, match_entries:, digest:)
         return [] if target.blank?

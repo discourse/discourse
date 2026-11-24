@@ -218,7 +218,7 @@ module DiscourseAi
       private
 
       def classify_target(target, join_model:, fk_column:, allow_new:)
-        return [] if target.blank? || !DiscourseAi::Embeddings.enabled?
+        return [] if ineligible_target?(target) || !DiscourseAi::Embeddings.enabled?
 
         applier = Applier.new
         content =
@@ -316,6 +316,14 @@ module DiscourseAi
         return unless DiscourseAi::Embeddings.enabled?
 
         Jobs.enqueue(:generate_embeddings, target_type: "InferredConcept", target_id: concept.id)
+      end
+
+      def ineligible_target?(target)
+        return true if target.blank?
+
+        topic = target.is_a?(Topic) ? target : target.topic
+        target.deleted_at.present? || topic.nil? || topic.deleted_at.present? ||
+          topic.private_message?
       end
     end
   end

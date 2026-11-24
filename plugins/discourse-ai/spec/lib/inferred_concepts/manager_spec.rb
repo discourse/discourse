@@ -120,6 +120,19 @@ RSpec.describe DiscourseAi::InferredConcepts::Manager do
 
       expect(manager.generate_concepts_from_topic(topic_without_embedding)).to eq([])
     end
+
+    it "skips private messages and deleted targets without calling embeddings or LLMs" do
+      pm_topic = Fabricate(:private_message_topic)
+      pm_reply = Fabricate(:post, topic: pm_topic, post_number: 2, raw: "Private discussion")
+      deleted_topic = Fabricate(:topic, deleted_at: Time.zone.now)
+
+      allow(DiscourseAi::Embeddings::Vector).to receive(:instance)
+
+      expect(manager.generate_concepts_from_topic(pm_topic)).to eq([])
+      expect(manager.generate_concepts_from_post(pm_reply)).to eq([])
+      expect(manager.generate_concepts_from_topic(deleted_topic)).to eq([])
+      expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+    end
   end
 
   describe "#generate_concepts_from_post" do

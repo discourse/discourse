@@ -22,6 +22,8 @@ module DiscourseAi
           raise EmbeddingsUnavailableError, "AI embeddings must be enabled"
         end
 
+        return [] if ineligible_target?(target)
+
         non_retired = InferredConcept.where.not(status: :retired)
         return [] unless non_retired.exists?
 
@@ -33,6 +35,14 @@ module DiscourseAi
       end
 
       private
+
+      def ineligible_target?(target)
+        return false unless target.is_a?(Topic) || target.is_a?(Post)
+
+        topic = target.is_a?(Topic) ? target : target.topic
+        target.deleted_at.present? || topic.nil? || topic.deleted_at.present? ||
+          (topic.private_message? && !SiteSetting.ai_embeddings_generate_for_pms)
+      end
 
       def resolve_query_vector(content:, target:)
         if target.is_a?(Topic) || target.is_a?(Post)
