@@ -113,7 +113,7 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     forward `@multiple`, so a tag picker holds one tag unless the call site passes
     `@multiple={{true}}`.
   - ☑ The tag filter (2026-10-29): the core `caretIcon` replaces its own caret and its
-    `caretDownIcon`/`caretUpIcon` kind options, its shortcuts are `@specialItems`, and an empty
+    `caretDownIcon`/`caretUpIcon` kind options, its shortcuts are `@extraOptions`, and an empty
     filter holds nothing and shows its placeholder.
   - ☑ Names (2026-10-30): "Tag"/"Tags" and "Tag group"/"Tag groups" by default, and
     `@ariaLabelledBy` on all three recipes.
@@ -128,6 +128,18 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☐ Move search and lookup onto the `Tag` / `TagGroup` models, deferred until those models
     become TypeScript. `Tag.search` will return plain typed rows, and `Site.topTags` /
     `categoryTopTags` will replace the source's `topTags`.
+  - ☐ Rework how tag descriptions show, and decide when to show them (found 2026-11-18). The
+    recipes draw a search row's description in full under its name (`tagSettings`,
+    `lib/tag-source.ts:316`), in the composer field and in the tag filter alike. Select-kit
+    never drew them: its rows passed the description on, but the default tag renderer leaves it
+    out (`lib/render-tag.ts:49`). It looks bad today:
+    - Nothing caps the length. The server sends the whole description (up to 1000 characters,
+      `tags_controller.rb:624`), so one long description fills the composer's list.
+    - In the narrow tag filter, even a short description wraps, and rows with and without one
+      differ in height and rhythm.
+    - Open question: whether descriptions belong in every tag picker at all, or only where
+      choosing a tag needs the context (the composer field rather than the topic list filter),
+      and whether to cut them the way badges (200 characters) and categories do.
 - ☑ **Tag family:** tag chooser, mini tag chooser, tag drop, tag group, intersection, tag dropdown,
   and FormKit's `tag-chooser` control. Joined `MIGRATED_SELECT_KIT_MODULES`; the admin tag category
   dropdown moves with wave 3's menus. Rows reuse `dDiscourseTag` / `renderTag`. Engine prerequisites, generic
@@ -187,6 +199,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☑ Assign's category groups moved to `DSelectGroup` once the engine could hold values that
     can't be removed: the global groups are `@lockedValues` (2026-11-10).
   - ☑ Held names match in any case, through the engine's opt-in `normalizeKey` (2026-10-31).
+  - ☐ Make `DSelectGroup`'s search match the full name too (found 2026-11-18, deferred). Its
+    rows show the full name under the group name (`d-select-group.gts:120`), but the default
+    search matches the name only, so typing a full name finds nothing. `DSelectUser` does match
+    the full name on its second line, through the server's user search. The legacy
+    `GroupChooser` searched names only as well, so this improves on it rather than fixing a
+    regression.
   - ☐ `addUserSearchOption` reaches only the legacy pickers; the new ones take `searchOptions`
     through a customization.
   - ☑ Boards modals: the "ResizeObserver loop" error was a test-only effect. A list rendered in
@@ -237,16 +255,144 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `DSelectTopic` takes `@exclude` for the current topic.
   - ☑ The profile's featured topic is a field saved with "Save changes" instead of a modal that
     saved on pick (2026-11-03); the profile update stores it under `can_feature_topic?`.
-- ☐ **Long tail.** Inventoried 2026-11-12, counting production call sites only; none branch on
-  the flag yet.
-  - ☐ `ListSetting`, 15 sites. Core: the site setting lists (`site-settings/group-list`,
-    `named-list`, `host-list`, `compact-list`, `file-types-list`, `locale-list`),
-    `setting-field/group-list` and `compact-list`, and `groups-form-membership-fields`. Plugins:
-    data explorer's query tags, discourse-ai's attachment types, patreon's filters and the
-    workflows tags editor, plus two styleguide examples. Lists of strings that can take new
-    entries (`allowAny`), with `mandatoryValues`, `nameProperty` and `onChangeChoices`. Split the
-    sites by shape before porting: group lists toward `DSelectGroup`, string lists toward
-    `DSelect` with create, and mandatory values as `@lockedValues`.
+- ☐ **Long tail.** Inventoried 2026-11-12 and re-checked 2026-11-19 after `main` moved the admin
+  site settings onto FormKit, counting production call sites only; none branch on the flag yet.
+  - **Site settings now render in two places.** The admin settings page draws each setting
+    through its FormKit field (`setting-field/*`, chosen in `lib/setting-field-registry.js` and
+    `admin/lib/setting-field-types.js`). The older `site-settings/*` controls still render
+    wherever a setting doesn't track changes (`useFormKit` in `site-setting.gjs`): theme
+    settings, theme site settings, theme translations, and the workflows variables. A port
+    covers both until `main` retires the old controls. Category, category list, tag list, tag
+    group list, topic, group, group list and host list branch in both.
+  - ☑ The group and group list settings (2026-11-19): all four controls branch on the flag to
+    `DSelectGroup`. Disallowed groups aren't offered, everyone shows as "everyone (legacy)",
+    granular permissions show logged_in_users in its place and store it back as everyone, and
+    held mandatory groups are `@lockedValues`.
+  - ☐ `ListSetting`, 16 sites (15 before `main` added `setting-field/host-list`), 12 left after
+    the group and host lists. Each is ported one setting type at a time, on a plain `DSelect`
+    over string records with `@createOption` (2026-11-19): a recipe would only wrap strings as
+    records, and the rules on typed entries differ at every site.
+    - Core site settings:
+      - ☑ The compact, locale and file types lists (2026-11-19): the FormKit fields
+        `setting-field/compact-list` and `locale-list`, and the older `site-settings/compact-list`,
+        `locale-list` and `file-types-list` (which the file types field wraps), all render the
+        shared `SelectStringList` (`setting-field/-internals/`). Held and removed values stay
+        listed in first-held order; an empty free-text list says "No values yet"; a refused
+        value says why. The file types field now passes its title and disabled state, and its
+        add-types buttons follow the disabled state.
+      - ☑ The older `site-settings/named-list` (2026-11-19) renders `SelectStringList` too. No
+        setting in core or the bundled plugins has the named list type; the official
+        discourse-geoblocking plugin has two (`geoblocking_blocked_countries` and
+        `geoblocking_allowed_countries`, about 250 `{ name, value }` country choices). It has no
+        FormKit field, so only the older control renders it.
+      - ☑ `setting-field/group-list` and `site-settings/group-list` (see above).
+      - ☑ `setting-field/host-list` and `site-settings/host-list` (2026-11-19): typed hosts,
+        never with a wildcard or a `|`; a pasted list skips the ones that can't be stored.
+        Both render the shared `SelectHostList` (`setting-field/-internals/`).
+      - ◐ VoiceOver says "N items selected" / "selection replaced N items selected" while
+        typing or clearing the query in a multi-select that lists its held values (found
+        2026-11-19 on `category_colors`, 16 held). Chrome reports the changing set of
+        `aria-selected` rows as a selection change; nothing was picked. Engine-wide, not
+        specific to the setting pickers: check the group list and tag pickers too.
+        - Diagnosed 2026-11-23 with VoiceOver and Chrome on `blocked_crawler_user_agents`
+          (5 held), three variants of the option markup (`select-option-content.gts`):
+          - `aria-selected` (today): typing "b" says "4 items selected", "bl" says
+            "selection deleted 1 item selected", clearing says "seo spider added to selection
+            5 items selected". The active row is never read while typing. Held rows read
+            "mauibot selected (1 of 5)".
+          - `aria-checked` alone: typing reads the active row ("Create “bl” (1 of 2)"), no
+            selection talk, but held rows lose their state ("mauibot (1 of 5)").
+          - `aria-checked` plus `aria-description` "selected" on held rows: typing as above,
+            and held rows read "mauibot selected (1 of 5)". Both problems gone.
+        - The `aria-checked` variants are withdrawn: the APG advises against mixing state
+          conventions, and `aria-checked` on options is reported unsupported by VoiceOver on iOS.
+        - Reference libraries, same VoiceOver and Chrome, 2026-11-23, held rows kept listed:
+          - MUI Autocomplete ("Multiple values" demo) and Ariakit (multi-selectable combobox):
+            same markup as ours and the same speech ("5 items selected", then "4 items
+            selected" while typing).
+          - React Aria ComboBox (`selectionMode="multiple"`): same markup, but it announces
+            "N options available" assertively whenever the option count changes
+            (`useComboBox.ts`), which talks over the selection speech. Its "States" example
+            leaves held values out of the list instead, as select-kit does.
+        - Conclusion: the speech is how VoiceOver and Chrome report the standard pattern, not a
+          defect of ours. Possible follow-up: an assertive result-count announcement as React
+          Aria does. Not decided.
+        - Experiment 2026-11-23 (local patch, reverted): an assertive "N results for “q”, M
+          selected" from `#resolvePendingCount`, M = held rows shown.
+          - With today's 1400 ms settle delay it follows Chrome's speech ("selection deleted 1
+            item selected", then "2 results for “bl”, 1 selected").
+          - With no delay it lands 0.3 s after, or replaces it ("5 results for “b”, 4 selected"
+            with no "4 items selected" spoken).
+          - Gaps: the count after open is suppressed and deduped, so the first keystroke and
+            clearing the query said nothing of ours.
+        - Built 2026-11-23 (uncommitted), for multi-selects that list held rows only
+          (`@multiple` without `@hideSelected`): "2 results for “bl”, 1 of them selected", "none
+          of them selected", "5 results, 5 of them selected" for an empty query. Polite, same
+          1400 ms delay, spoken whatever the cursor did, deduped on (N, M). A pick or removal
+          suppresses the count. Four new `@texts` keys.
+          - VoiceOver pass on `blocked_crawler_user_agents`: heard after Chrome's line at every
+            query change, including the first keystroke and clearing ("seo spider added to
+            selection 5 items selected", then "5 results, 5 of them selected"). Nothing new on
+            open, on an arrowed row or on Escape.
+      - ☑ Replace the colour-list name check with an explicit flag (2026-11-20). A setting
+        declares `list_type: color` (site and theme settings); `category_colors` and
+        `restrict_letter_avatar_colors` do. Behind the flag it edits in `ColorList`: a
+        reorderable list of `DColorInput` rows (ui-kit, extracted from FormKit's color control)
+        with an add row, storing 6-digit uppercase hex. The server validates every entry
+        (`ColorListValidator` by default, theme settings through `ThemeSettingsValidator`).
+        The compact and named list pickers no longer draw squares. With the flag off,
+        `ListSetting` keeps its name check. `DReorderableList`'s create row now holds the
+        handle's place, and a custom create block gets `handleSlot` for it.
+      - ☑ The value list editor's add field (2026-11-19): `admin/components/value-list` serves
+        48 plain `list` settings, 10 `value_list` and 1 `url_list` setting, and the options of a
+        dropdown user field. Behind the flag, a list with choices adds through a `DSelect` that
+        holds nothing (choices it doesn't hold, blank ones dropped), and hides it once a list that
+        takes only its choices holds them all. A list without choices gets a text field and a
+        `+` button, like `SimpleList`. The setting's `allow_any` now reaches the editor, so
+        `allowed_onebox_iframes` refuses typed origins the server would reject, and says so.
+    - ☑ `SimpleList`'s add picker for a list that takes only its choices (2026-11-19):
+      `top_menu`, `post_menu`, `post_menu_hidden_items`, `share_links`, `share_quote_buttons`
+      and the events plugin's `event_participation_buttons`. Behind the flag it is a `DSelect`
+      that holds nothing and offers the choices the list doesn't hold, named "Add item…"; it is
+      hidden once the list holds them all, and a typed value that isn't a choice says so.
+    - ☑ The file size unit (2026-11-19): `FileSizeInput` serves the six `file_size_restriction`
+      settings (`max_image_size_kb`, `max_attachment_size_kb`, `max_export_file_size_kb`,
+      `email_total_attachment_size_limit_kb`, `system_user_max_attachment_size_kb`,
+      `secure_uploads_max_email_embed_image_size_kb`). Behind the flag its unit is a static
+      `DSelect` named "Unit" (KB, MB, GB), joined to the number input as the combo box was.
+    - ☑ Enum settings (2026-11-19): 150 `enum` settings and `default_locale` (`locale_enum`).
+      The FormKit fields drew a native select; under the flag they and the older
+      `site-settings/enum` and `site-settings/locale-enum` (theme setting editors) render the
+      shared `SelectEnum` (`setting-field/-internals/`), a typeahead. The registry entry names
+      `newSelectControlsType: "custom"`, which `SettingDefinitionField` uses under the flag,
+      since a FormKit select field can only hold a native select. A held value that is no longer
+      a choice is listed as itself; a pick reports the choice's own value, numbers included.
+      - None: the none row appears where it did (a bare `""` valid value, `allows_none`, or a
+        definition without it that isn't required).
+      - Clear: the clear button appears when the setting's default is blank and blank isn't a
+        named choice, so the field can go back to "not set" without the Reset button. That is 12
+        settings today (`onebox_locale`, `chat_homepage_channel`, the AI model and agent
+        settings). The setting's definition now carries its `default` for this.
+        `default_homepage` names its blank value ("First item in top menu"), so it's picked,
+        not cleared to. Some AI model settings refuse a blank value while modules that use them
+        are on; the server says which on save.
+    - ☑ Core elsewhere: `groups-form-membership-fields` (2026-11-23). The email domains take
+      typed values (`GroupsFormEmailDomains`; the server normalizes and validates them, so only
+      `|` is refused) and the associated groups are a `DSelect` named by their label. Both are
+      named by the label above them through `@id`.
+    - ☑ Plugins (2026-11-23), each a plain `DSelect`:
+      - discourse-ai's attachment types: typed types lowercased, named by the FormKit field.
+      - data explorer's query tags: reserved tags never created, automatic tags locked with
+        their own hint, and a held tag offered in its own spelling (the legacy branch offers the
+        first spelling it meets, so `Ops` held beside an available `ops` read as two tags).
+      - patreon's rewards: a fixed list, named "Rewards".
+      - the workflows tags editor: typed tags, at most 10, named "Tags".
+    - ☐ The two styleguide examples, which exist to show `ListSetting` itself.
+
+    Lists of strings that can take new entries (`allowAny`), with `mandatoryValues`,
+    `nameProperty` and `onChangeChoices`. Split the sites by shape before porting: group lists
+    toward `DSelectGroup`, string lists toward `DSelect` with create, and mandatory values as
+    `@lockedValues`.
   - ☐ `TimezoneInput`, 5 sites: profile preferences, local dates, the workflows settings and
     timezone control, and the events builder. A fixed list, so a typeahead `DSelect`, likely
     through a small recipe.
@@ -254,7 +400,20 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
   - ☐ `FlairChooser`, 1 site: account preferences. Rows show the flair's icon or image.
   - ☐ `ColorPalettePicker` (the theme page, the color scheme modal and interface preferences)
     and `ColorPalettes` (the wizard). Rows show swatches.
-  - ☐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
+  - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
+    - ☑ The font list setting (2026-11-19): `setting-field/font-list` and the older
+      `site-settings/font-list` render the shared `SelectFont` (`setting-field/-internals/`), a
+      typeahead over the fonts sorted by name. Each row is drawn in its font, and the held font's
+      class sits on the root, so the field and its input share one typeface and nothing shifts on
+      focus. The `body-font-*` and `heading-font-*` classes set the same family
+      (`lib/stylesheet/importer.rb:117-122`), so one class serves `base_font` and `heading_font`.
+    - ☐ Engine question (found 2026-11-19): a single typeahead without a `:selection` block keeps
+      the held name as the input's text, and a click puts the caret where it lands
+      (`combobox-query-input.gts:169-175`), so typing appends to the name ("Interplayfair")
+      instead of replacing it. Keyboard focus selects the name. With a `:selection` block the
+      name is selected as it appears, so typing replaces it. Decide whether a click should select
+      the name for every single typeahead; a per-picker dummy block was rejected.
+    - ☐ The wizard (see below).
   - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
     dynamically. It moves with the colors and fonts.
 - ☐ **ui-kit wrappers** as one family.
@@ -278,6 +437,14 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     `FORMAT` moved to `discourse/lib/time-shortcut`, re-exported from the old module.
   - ☑ `d-access-control`: the add box (2026-11-11) and the permission select both branch on the
     flag. The legacy grantee chooser goes in the cleanup.
+  - ☐ `DAccessControl`'s permission menu becomes the `DSelectPermission` recipe, with no flag:
+    the caller's permissions as `@options`, then Remove as an action option at the end, after a
+    divider. The old `DAccessControlPermissionMenu` module is deleted.
+  - Trailing action options (audited 2026-11-11, core and bundled plugins): no select-kit value
+    select ends with an action; theirs all lead (the AI suggest options, the drops'
+    shortcuts). The recipe returns Remove from `@extraOptions` with `position: "end"` and
+    `divider: "before"`. The other `DMenu` value pickers, two of which also end with an action,
+    are tracked in PHASE-4, wave 3.
 
 ## Exit criteria
 
@@ -302,10 +469,26 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     from a `DMenu` with a `DDropdownMenu`. #45679 moved it into a shared
     `dsa-classification-select.gjs` (merged in `1d0e7629f72`). It branches on the flag to a
     typeahead `DSelect` (2026-11-12): admins can configure any number of rules, so it searches
-    by rule name, and each explanation is its option's description.
+    by rule name, and each explanation is its option's description. #46652 deleted
+    `dsa-classification-select.gjs` and moved the legacy branch to a FormKit menu field; the
+    merge in `77a47932da2` kept the flag branch and switches the whole field, since the two
+    branches need different FormKit field types.
+  - ☐ The DSA statement's category field (`dsa-moderation-details.gjs`, #46652, merged in
+    `77a47932da2`). It was a FormKit select; it is now a FormKit menu field that picks one of
+    the EU DSA statement categories, marks the current one with a check, and names it to screen
+    readers through a hidden label in the help tooltip. It has no flag branch yet, so it shows
+    the legacy menu in both modes. It belongs on `DSelect` behind the flag, like the rule field
+    next to it.
   - ☑ discourse-ai's feature access groups (`ai-feature-agent-groups.gjs`, #45998, merged in
     `1d0e7629f72`) branch on the flag to `DSelectGroup` (2026-11-12), offering the groups the
     editor looks up, named after the feature.
+  - ☐ The blog's co-author field (`blog-publication-panel.gjs`, #46193, merged in
+    `155c58773ce`): a FormKit custom field with a `UserChooser` capped at 10 users that
+    excludes the article's author. It belongs on `DSelectUser` behind the flag.
+  - ☐ discourse-ai's agent and LLM pickers (`ai-agent-llm-selector.gjs`, merged in
+    `155c58773ce`). They were already `DropdownSelectBox` uses; #46469 turned them into an
+    `AgentLlmDropdown` subclass that prepends a heading row through a select-kit collection
+    and lets clicks on the heading's settings link through. A port has to carry that heading.
   - Checked in `ebd1d84f27e` and not ad-hoc: the blog plugin's `DMenu`s are action menus, and
     the new `ComboBox` in discourse-ai's spam settings is the generic select-kit control,
     covered by the long tail.
