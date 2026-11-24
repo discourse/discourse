@@ -73,20 +73,28 @@ class IconButton extends Component {
 }
 
 /**
+ * @typedef DIconGridPickerContentSignature
+ *
+ * @property {object} Args
+ * @property {string | null} [Args.value] - The currently selected icon ID.
+ * @property {(iconId: string) => void} Args.onSelect - Called with the selected icon ID when an icon is picked.
+ * @property {import("@ember/template").TrustedHTML | null} [Args.iconColorStyle] - Inline style setting the icon color.
+ * @property {string} [Args.searchPlaceholder] - A translated placeholder for the search input.
+ * @property {string[]} [Args.favorites] - Icon IDs to display in a pinned favorites row above the grid.
+ * @property {boolean} [Args.showSelectedName] - When true, the selected favorite chip also displays
+ *   the icon name alongside the icon.
+ * @property {boolean} [Args.showNames] - Display results as a list with visible icon names.
+ * @property {boolean} [Args.onlyAvailable] - When true, only offers icons available in the
+ *   current SVG sprite set. Defaults to true.
+ * @property {object} Blocks
+ * @property {[]} Blocks.default - Optional controls beside the search input that stay visible while results scroll.
+ */
+
+/**
  * The content panel rendered inside the DMenu dropdown or modal.
  * Handles icon search, favorites row, and the async-loaded icon grid.
- * The optional default block renders after the search input in the filter row.
- * Use it for controls that should stay visible while results scroll.
  *
- * @param {string} value - The currently selected icon ID.
- * @param {Function} onSelect - Called with the selected icon ID when an icon is picked.
- * @param {string} [searchPlaceholder] - A translated placeholder for the search input.
- * @param {string[]} [favorites] - Icon IDs to display in a pinned favorites row above the grid.
- * @param {boolean} [showSelectedName] - When true, the selected favorite chip also displays
- *   the icon name alongside the icon.
- * @param {boolean} [showNames] - Display results as a list with visible icon names.
- * @param {boolean} [onlyAvailable] - When true, only offers icons available in the
- *   current SVG sprite set. Defaults to true.
+ * @extends {Component<DIconGridPickerContentSignature>}
  */
 export default class DIconGridPickerContent extends Component {
   /** @type {import("discourse/float-kit/services/tooltip").default} */
