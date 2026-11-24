@@ -41,34 +41,6 @@ module DiscourseEvents
         return false if source_post.hidden? || source_post.deleted_at.present?
         return false if !source_topic.visible? || source_topic.deleted_at.present?
 
-        # Edits to an existing Event are allowed, but a non-owner must not
-        # introduce an Event that will be republished under the author's name.
-        non_owner_revisions =
-          source_post.post_revisions.where.not(
-            user_id: [source_post.user_id, Discourse::SYSTEM_USER_ID],
-          )
-
-        non_owner_revisions.find_each do |revision|
-          raw_changes = revision.modifications["raw"]
-          next if raw_changes.nil?
-
-          # Unknown revision formats cannot establish Event provenance.
-          return false unless raw_changes.is_a?(Array) && raw_changes.length == 2
-
-          previous_raw, edited_raw = raw_changes
-          next if rendered_event?(source_post, previous_raw)
-
-          return false if rendered_event?(source_post, edited_raw)
-        end
-
-        # Keep the safeguard against unrecorded changes by another human.
-        last_editor_id = source_post.last_editor_id
-
-        if last_editor_id != source_post.user_id && last_editor_id != Discourse::SYSTEM_USER_ID
-          latest_revision = source_post.post_revisions.order(number: :desc).first
-          return false if latest_revision.nil? || latest_revision.user_id != last_editor_id
-        end
-
         if author && (author.suspended? || SpamRule::AutoSilence.prevent_posting?(author))
           return false
         end
@@ -78,15 +50,6 @@ module DiscourseEvents
 
       # Use the actual Event parser so examples inside code fences do not
       # count as Events introduced by an editor.
-      def self.rendered_event?(source_post, raw)
-        return false if raw.blank?
-
-        snapshot = Post.new(raw:, topic_id: source_post.topic_id, user_id: source_post.user_id)
-
-        Parser.extract_events(snapshot).present?
-      end
-
-      private_class_method :rendered_event?
 
       private
 

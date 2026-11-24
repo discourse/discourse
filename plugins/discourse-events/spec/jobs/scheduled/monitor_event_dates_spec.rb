@@ -752,20 +752,21 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
       include_examples "authorised Event edits permit rollover", "moderator", false
       include_examples "authorised Event edits permit rollover", "wiki editor", true
 
-      it "does not publish a wiki editor's event under the original author's identity" do
+      it "creates a linked successor after an authorised wiki editor introduces recurrence" do
         editor = Fabricate(:user, refresh_auto_groups: true)
 
+        SiteSetting.discourse_post_event_recurring_topic_mode = "create_next_topic"
         SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
         SiteSetting.discourse_post_event_allowed_on_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
 
-        starts_at = 7.days.after.change(sec: 0)
+        starts_at = 7.days.after.utc.change(sec: 0)
         ends_at = starts_at + 1.hour
         title = "Recurring event added by a wiki editor"
 
         post =
           PostCreator.create!(
             event_author,
-            title:,
+            title: title,
             category: event_category.id,
             raw: "Original author's shared wiki notes.",
           )
@@ -774,12 +775,11 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
           PostRevisor.new(post).revise!(event_author, { wiki: true }, bypass_bump: true),
         ).to eq(true)
 
-        expect(post.reload.wiki?).to eq(true)
-        expect(editor.guardian.can_edit_post?(post)).to eq(true)
+        expect(editor.guardian.can_edit_post?(post.reload)).to eq(true)
         expect(editor.guardian.can_create_discourse_post_event?).to eq(true)
 
         edited_raw = <<~RAW
-          [event start="#{starts_at.utc.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.utc.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
+          [event start="#{starts_at.strftime("%Y-%m-%d %H:%M")}" end="#{ends_at.strftime("%Y-%m-%d %H:%M")}" status="public" timezone="UTC" recurrence="every_week"]
           Event added by another wiki editor.
           [/event]
         RAW
@@ -789,49 +789,37 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         )
 
         post.reload
+        original_topic_id = post.topic_id
+
         expect(post.user_id).to eq(event_author.id)
         expect(post.last_editor_id).to eq(editor.id)
-
-        event = post.event
-        expect(event).to be_present
-        expect(event.recurrence).to eq("every_week")
-
-        event_date = event.event_dates.pending.first
-        freeze_time(ends_at + 1.hour)
-
-        expect { job.execute({}) }.not_to change(Topic, :count)
-
-        expect(event_date.reload.finished_at).to be_nil
-        expect(post.reload.user_id).to eq(event_author.id)
-        expect(post.last_editor_id).to eq(editor.id)
-
-        # A later, unrelated edit by the original author must not
-        # implicitly authorise republication of the wiki editor's Event.
-        expect(
-          PostRevisor.new(post).revise!(
-            event_author,
-            { raw: post.raw + "\n\nOriginal author added an unrelated clarification." },
-            bypass_bump: true,
-          ),
-        ).to eq(true)
-
-        expect(post.reload.last_editor_id).to eq(event_author.id)
         expect(post.event.recurrence).to eq("every_week")
 
-        expect { job.execute({}) }.not_to change(Topic, :count)
+        revision = post.post_revisions.where(user_id: editor.id).order(:number).last
+        expect(revision).to be_present
+        expect(revision.modifications.fetch("raw").last).to include('recurrence="every_week"')
 
-        expect(event_date.reload.finished_at).to be_nil
+        event_date = post.event.event_dates.pending.first
 
-        expect(
-          DiscourseEvents::Events::Event::CreateSuccessorTopic.call(
-            params: {
-              event_date_id: event_date.id,
-            },
-          ),
-        ).to fail_a_policy(:rollover_allowed)
+        freeze_time(ends_at + 1.hour)
 
-        expect(event_date.reload.finished_at).to be_nil
-        expect(post.reload.user_id).to eq(event_author.id)
+        expect { job.execute({}) }.to change(Topic, :count).by(1)
+
+        successor_topic = Topic.where(title: title).where.not(id: original_topic_id).sole
+        successor_post = successor_topic.first_post
+
+        expect(successor_post.user_id).to eq(event_author.id)
+        expect(successor_post.raw).to include("Event added by another wiki editor.")
+        expect(successor_post.raw).to include("/t/")
+        expect(successor_post.raw).to include("/#{original_topic_id}/")
+        expect(successor_post.event.recurrence).to eq("every_week")
+
+        expect(event_date.reload.finished_at).to be_present
+        expect(post.reload.event.recurrence).to be_nil
+
+        # The archived source still records which editor introduced
+        # recurrence, and the successor links back to that source.
+        expect(post.post_revisions.where(user_id: editor.id)).to exist
       end
 
       it "keeps recurring private-message events in their original topic" do
