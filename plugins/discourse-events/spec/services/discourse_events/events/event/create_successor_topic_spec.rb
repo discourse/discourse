@@ -266,6 +266,42 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(post.raw).not_to include("recurrence-until=")
   end
 
+  it "preserves distinct UTC offsets when archiving a DST fall-back occurrence" do
+    freeze_time Time.utc(2026, 10, 30, 12)
+
+    starts_at = Time.iso8601("2026-11-01T01:30:00-04:00")
+    ends_at = Time.iso8601("2026-11-01T01:30:00-05:00")
+    title = "DST fall-back rollover"
+
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+      [event start="2026-11-01 01:30:00 -04:00" end="2026-11-01 01:30:00 -05:00" status="public" timezone="America/New_York" recurrence="every_week"]
+      Meeting across the repeated hour.
+      [/event]
+    RAW
+
+    event_date = post.reload.event.event_dates.pending.first
+    expect(event_date.starts_at).to eq_time(starts_at)
+    expect(event_date.ends_at).to eq_time(ends_at)
+
+    freeze_time(ends_at + 1.hour)
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    archived = post.reload
+    expect(archived.raw).to include('start="2026-11-01 01:30:00 -04:00"')
+    expect(archived.raw).to include('end="2026-11-01 01:30:00 -05:00"')
+    expect(archived.event.reload.original_starts_at).to eq_time(starts_at)
+    expect(archived.event.original_ends_at).to eq_time(ends_at)
+    # The scheduled monitor, not this service, marks the occurrence finished.
+    expect(event_date.reload.finished_at).to be_nil
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    expect(successor.first_post.reload.event.recurrence).to eq("every_week")
+  end
+
   it "preserves the original last-Monday rule when listing successor occurrences" do
     freeze_time Time.utc(2026, 8, 1, 12)
 

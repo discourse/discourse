@@ -329,9 +329,13 @@ module DiscourseEvents
 
         local_time = value.in_time_zone(event.rrule_timezone)
         formatted = local_time.strftime("%Y-%m-%d %H:%M:%S")
-        return formatted if local_time.usec.zero?
 
-        "#{formatted}.#{local_time.strftime("%6N")}".sub(/0+\z/, "")
+        if local_time.usec.positive?
+          formatted = "#{formatted}.#{local_time.strftime("%6N")}".sub(/0+\z/, "")
+        end
+
+        # Preserve the actual instant when local times repeat at DST fall-back.
+        "#{formatted} #{local_time.strftime("%:z")}"
       end
     end
   end

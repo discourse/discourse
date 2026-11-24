@@ -1111,6 +1111,56 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor_topic.title).to eq(title)
       end
 
+      it "finishes a recurring Event across the repeated DST fall-back hour" do
+        freeze_time Time.utc(2026, 10, 30, 12)
+
+        starts_at = Time.iso8601("2026-11-01T01:30:00-04:00")
+        ends_at = Time.iso8601("2026-11-01T01:30:00-05:00")
+        title = "DST fall-back scheduled rollover"
+
+        post = PostCreator.create!(event_author, title:, category: event_category.id, raw: <<~RAW)
+          [event start="2026-11-01 01:30:00 -04:00" end="2026-11-01 01:30:00 -05:00" status="public" timezone="America/New_York" recurrence="every_week"]
+          Meeting across the repeated hour.
+          [/event]
+        RAW
+
+        original_event = post.reload.event
+        occurrence = original_event.event_dates.pending.first
+
+        expect(occurrence.starts_at).to eq_time(starts_at)
+        expect(occurrence.ends_at).to eq_time(ends_at)
+
+        freeze_time(ends_at + 1.hour)
+
+        ended_events = nil
+        expect do ended_events = DiscourseEvent.track_events { job.execute({}) } end.to change(
+          Topic,
+          :count,
+        ).by(1)
+
+        expect(occurrence.reload.finished_at).to eq_time(Time.current)
+        expect(original_event.reload.recurrence).to be_nil
+        expect(original_event.original_starts_at).to eq_time(starts_at)
+        expect(original_event.original_ends_at).to eq_time(ends_at)
+
+        expect(
+          ended_events.count do |entry|
+            entry[:event_name] == :discourse_post_event_event_ended &&
+              entry[:params].first.id == original_event.id
+          end,
+        ).to eq(1)
+
+        successor = Topic.where(title:).where.not(id: post.topic_id).sole
+        successor_event = successor.first_post.reload.event
+
+        expect(successor_event.recurrence).to eq("every_week")
+        expect(successor_event.original_starts_at).to eq_time(
+          Time.iso8601("2026-11-08T01:30:00-05:00"),
+        )
+
+        expect { job.execute({}) }.not_to change(Topic, :count)
+      end
+
       it "preserves second-precision dates and RSVPs for a sub-minute recurring Event" do
         starts_at = 7.days.after.utc.change(sec: 30, usec: 0)
         ends_at = starts_at + 20.seconds
@@ -1146,8 +1196,8 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(archived_event.recurrence).to be_nil
         expect(archived_event.original_starts_at).to eq_time(starts_at)
         expect(archived_event.original_ends_at).to eq_time(ends_at)
-        expect(archived.raw).to include(%(start="#{starts_at.strftime("%Y-%m-%d %H:%M:%S")}"))
-        expect(archived.raw).to include(%(end="#{ends_at.strftime("%Y-%m-%d %H:%M:%S")}"))
+        expect(archived.raw).to include(%(start="#{starts_at.strftime("%Y-%m-%d %H:%M:%S %:z")}"))
+        expect(archived.raw).to include(%(end="#{ends_at.strftime("%Y-%m-%d %H:%M:%S %:z")}"))
         expect(archived_event.event_dates.pluck(:id)).to contain_exactly(original_occurrence_id)
         expect(occurrence.reload.finished_at).to eq_time(Time.current)
         expect(occurrence.starts_at).to eq_time(starts_at)
@@ -1161,8 +1211,10 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         expect(successor.event.recurrence).to eq("every_week")
         expect(successor.event.original_starts_at).to eq_time(next_starts_at)
         expect(successor.event.original_ends_at).to eq_time(next_ends_at)
-        expect(successor.raw).to include(%(start="#{next_starts_at.strftime("%Y-%m-%d %H:%M:%S")}"))
-        expect(successor.raw).to include(%(end="#{next_ends_at.strftime("%Y-%m-%d %H:%M:%S")}"))
+        expect(successor.raw).to include(
+          %(start="#{next_starts_at.strftime("%Y-%m-%d %H:%M:%S %:z")}"),
+        )
+        expect(successor.raw).to include(%(end="#{next_ends_at.strftime("%Y-%m-%d %H:%M:%S %:z")}"))
       end
 
       it "does not reschedule or emit a duplicate ending when a seconds-precision Event has no end" do
