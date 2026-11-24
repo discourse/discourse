@@ -1,4 +1,3 @@
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { i18n } from "discourse-i18n";
 
@@ -8,14 +7,17 @@ export function preventDecimal(event) {
   }
 }
 
+function unitLabel(unit, value) {
+  return i18n(`admin.site_settings.units.${unit}`, {
+    count: Number(value) || 0,
+  });
+}
+
 export default <template>
   <@field.Control
     max={{@definition.max}}
     min={{@definition.min}}
-    @after={{if
-      @definition.unit
-      (i18n (concat "admin.site_settings.units." @definition.unit))
-    }}
+    @after={{if @definition.unit (unitLabel @definition.unit @field.value)}}
     {{on "keydown" preventDecimal}}
   />
 </template>

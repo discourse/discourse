@@ -10515,10 +10515,27 @@ en:
         nav_title: "Settings"
         no_results: "No results found."
         units:
-          characters: "characters"
-          days: "days"
-          minutes: "minutes"
-          seconds: "seconds"
+          characters:
+            one: "character"
+            other: "characters"
+          days:
+            one: "day"
+            other: "days"
+          hours:
+            one: "hour"
+            other: "hours"
+          mentions:
+            one: "mention"
+            other: "mentions"
+          minutes:
+            one: "minute"
+            other: "minutes"
+          seconds:
+            one: "second"
+            other: "seconds"
+          users:
+            one: "user"
+            other: "users"
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."

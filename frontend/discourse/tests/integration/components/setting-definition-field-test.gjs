@@ -6,6 +6,7 @@ import SettingDefinitionField from "discourse/components/setting-definition-fiel
 import Site from "discourse/models/site";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -78,6 +79,32 @@ module("Integration | Component | SettingDefinitionField", function (hooks) {
     assert.dom("[data-name='my_int'] input").hasAttribute("min", "1");
     assert.dom("[data-name='my_int'] input").hasAttribute("max", "10");
     assert.dom("[data-name='my_int'] input").hasValue("5");
+  });
+
+  test("integer pluralizes its unit as the value changes", async function (assert) {
+    await render(
+      <template>
+        <Form @data={{hash my_int="1"}} as |form|>
+          <SettingDefinitionField
+            @definition={{hash
+              key="my_int"
+              type="integer"
+              label="My int"
+              unit="hours"
+            }}
+            @form={{form}}
+          />
+        </Form>
+      </template>
+    );
+
+    const suffix = "[data-name='my_int'] .form-kit__after-input";
+    assert
+      .dom(suffix)
+      .hasText("hour", "a stored string value of 1 is singular");
+
+    await formKit().field("my_int").fillIn("2");
+    assert.dom(suffix).hasText("hours", "the suffix updates after editing");
   });
 
   test("bool renders a checkbox with the description as its label and no title", async function (assert) {

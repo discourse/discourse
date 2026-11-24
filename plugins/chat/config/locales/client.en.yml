@@ -11,9 +11,9 @@ en:
           chat_moderation: "Moderation and rate limits"
           chat_retention: "Retention and archiving"
         units:
-          mentions: "mentions"
-          messages: "messages"
-          users: "users"
+          messages:
+            one: "message"
+            other: "messages"
   js:
     admin:
       site_settings:
