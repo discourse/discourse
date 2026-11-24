@@ -1,0 +1,74 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { concat, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
+import { PEOPLE } from "../../../../../lib/select-fixtures.js";
+
+export default class SelectionBlockSelectExample extends Component {
+  @tracked value = this.args.multiple ? [101, 103] : 101;
+
+  @action
+  onChange(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @identifier={{@identifier}}
+      @labelField="name"
+      @multiple={{@multiple}}
+      @onChange={{this.onChange}}
+      @options={{PEOPLE}}
+      @texts={{hash
+        placeholder=(i18n
+          (if
+            @multiple
+            "styleguide.sections.select.placeholders.add_people"
+            "styleguide.sections.select.placeholders.find_person"
+          )
+        )
+      }}
+      @value={{this.value}}
+    >
+      <:option as |option|>
+        {{#let option.record as |person|}}
+          <span class="select-examples__row select-examples__row--identity">
+            <svg
+              aria-hidden="true"
+              class="select-examples__avatar"
+              style={{person.avatarStyle}}
+              viewBox="0 0 48 48"
+            >
+              <use
+                href="/plugins/styleguide/images/avatar.svg#select-avatar"
+              ></use>
+            </svg>
+            <span class="select-examples__details">
+              <span class="select-examples__primary">{{option.label}}</span>
+              <span class="select-examples__secondary">
+                {{if person.title person.title (concat "@" person.username)}}
+              </span>
+            </span>
+          </span>
+        {{/let}}
+      </:option>
+      <:selection as |option|>
+        <span class="select-examples__row select-examples__row--glyph">
+          <svg
+            aria-hidden="true"
+            class="select-examples__avatar --small"
+            style={{option.record.avatarStyle}}
+            viewBox="0 0 48 48"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
+          {{option.label}}
+        </span>
+      </:selection>
+    </DSelect>
+  </template>
+}

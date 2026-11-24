@@ -1,10 +1,14 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 function preventFieldActivation(event) {
@@ -67,7 +71,15 @@ export function defaultClassification(options) {
 }
 
 export default class DsaModerationDetails extends Component {
+  @service siteSettings;
+
   formData = defaultClassification(this.args.options);
+
+  get ruleOptions() {
+    return this.args.options.community_rules.map((rule) =>
+      selectOption(rule, { description: rule.explanation })
+    );
+  }
 
   get rules() {
     return this.args.options.community_rules.map((rule) => ({
@@ -88,39 +100,76 @@ export default class DsaModerationDetails extends Component {
       @validate={{@validate}}
       as |form data|
     >
-      <form.Field
-        @disabled={{@disabled}}
-        @format="full"
-        @helpText={{@fieldHints.community_rule}}
-        @name="community_rule"
-        @onSet={{@onFieldSet}}
-        @title={{i18n "dsa_statements.rule"}}
-        @tooltip={{component
-          ClassificationHelp
-          content=(i18n "dsa_statements.rule_help")
-          selectedLabel=(selectionLabel this.rules data.community_rule)
-        }}
-        @type="menu"
-        @validation="required"
-        as |field|
-      >
-        <field.Control
-          @selection={{selectionLabel
-            this.rules
-            field.value
-            (i18n "dsa_statements.rule_prompt")
+      {{! TODO (select-kit-replacement-cleanup) }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <form.Field
+          @disabled={{@disabled}}
+          @format="full"
+          @helpText={{@fieldHints.community_rule}}
+          @name="community_rule"
+          @onSet={{@onFieldSet}}
+          @title={{i18n "dsa_statements.rule"}}
+          @tooltip={{component
+            ClassificationHelp
+            content=(i18n "dsa_statements.rule_help")
           }}
-          as |menu|
+          @type="custom"
+          @validation="required"
+          as |field|
         >
-          {{#each this.rules key="id" as |rule|}}
-            <ClassificationMenuOption
-              @Item={{menu.Item}}
-              @option={{rule}}
+          <field.Control>
+            <DSelect
+              @describedBy={{field.describedBy}}
+              @disabled={{field.disabled}}
+              @id={{field.id}}
+              @invalid={{if field.error true false}}
+              @labelField="ground"
+              @onChange={{field.set}}
+              @options={{this.ruleOptions}}
+              @texts={{hash
+                ariaLabel=field.title
+                placeholder=(i18n "dsa_statements.rule_prompt")
+              }}
               @value={{field.value}}
             />
-          {{/each}}
-        </field.Control>
-      </form.Field>
+          </field.Control>
+        </form.Field>
+      {{else}}
+        {{! TODO (select-kit-replacement-cleanup) }}
+        <form.Field
+          @disabled={{@disabled}}
+          @format="full"
+          @helpText={{@fieldHints.community_rule}}
+          @name="community_rule"
+          @onSet={{@onFieldSet}}
+          @title={{i18n "dsa_statements.rule"}}
+          @tooltip={{component
+            ClassificationHelp
+            content=(i18n "dsa_statements.rule_help")
+            selectedLabel=(selectionLabel this.rules data.community_rule)
+          }}
+          @type="menu"
+          @validation="required"
+          as |field|
+        >
+          <field.Control
+            @selection={{selectionLabel
+              this.rules
+              field.value
+              (i18n "dsa_statements.rule_prompt")
+            }}
+            as |menu|
+          >
+            {{#each this.rules key="id" as |rule|}}
+              <ClassificationMenuOption
+                @Item={{menu.Item}}
+                @option={{rule}}
+                @value={{field.value}}
+              />
+            {{/each}}
+          </field.Control>
+        </form.Field>
+      {{/if}}
       <form.Field
         @disabled={{@disabled}}
         @format="full"

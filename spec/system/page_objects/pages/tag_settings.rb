@@ -3,6 +3,8 @@
 module PageObjects
   module Pages
     class TagSettings < PageObjects::Pages::Base
+      SYNONYMS_CHOOSER = ".form-kit__field[data-name='synonyms'] .mini-tag-chooser"
+
       def visit(tag)
         page.visit "/tag/#{tag.slug_for_url}/#{tag.id}/edit/general"
         self
@@ -144,33 +146,74 @@ module PageObjects
       end
 
       def has_synonym?(name)
-        synonym_items.include?(name)
+        if synonyms_d_select?
+          synonyms_field.has_css?(".d-select__chip", text: name)
+        else
+          synonym_items.include?(name)
+        end
       end
 
       def has_no_synonyms?
-        header = synonyms_field.find(".multi-select-header")
-        header["data-name"].to_s.strip.empty?
+        if synonyms_d_select?
+          synonyms_field.has_no_css?(".d-select__chip")
+        else
+          header = synonyms_field.find(".multi-select-header")
+          header["data-name"].to_s.strip.empty?
+        end
       end
 
       def synonyms_chooser
-        PageObjects::Components::SelectKit.new(
-          ".form-kit__field[data-name='synonyms'] .mini-tag-chooser",
-        )
+        if synonyms_d_select?
+          PageObjects::Components::UiKit::DSelect.at(SYNONYMS_CHOOSER)
+        else
+          PageObjects::Components::SelectKit.new(SYNONYMS_CHOOSER)
+        end
       end
 
       def add_synonym(name)
-        synonyms_chooser.expand
-        synonyms_chooser.search(name)
-        synonyms_chooser.select_row_by_name(name)
-        synonyms_chooser.collapse
+        chooser = synonyms_chooser
+        if chooser.is_a?(PageObjects::Components::UiKit::DSelect)
+          # Opens through the query input: the trigger's centre can land on a chip's remove button.
+          chooser.open
+          chooser.search(name)
+          chooser.select_name(name)
+          chooser.close
+        else
+          chooser.expand
+          chooser.search(name)
+          chooser.select_row_by_name(name)
+          chooser.collapse
+        end
         self
       end
 
       def remove_synonym(name)
-        synonyms_chooser.expand
-        find(".select-kit-body .selected-content button[data-name='#{name}']").click
-        synonyms_chooser.collapse
+        chooser = synonyms_chooser
+        if chooser.is_a?(PageObjects::Components::UiKit::DSelect)
+          chooser.remove_name(name)
+        else
+          chooser.expand
+          find(".select-kit-body .selected-content button[data-name='#{name}']").click
+          chooser.collapse
+        end
         self
+      end
+
+      # A DSelect driver when the new select controls render the tag switcher in the header, a
+      # select-kit one otherwise.
+      def tag_dropdown
+        selector = ".tag-settings-title__dropdown .tag-dropdown"
+        if has_css?(selector) && has_css?("#{selector}.d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
+      end
+
+      private
+
+      def synonyms_d_select?
+        has_css?(SYNONYMS_CHOOSER) && has_css?("#{SYNONYMS_CHOOSER}.d-select", wait: 0)
       end
     end
   end

@@ -12,6 +12,7 @@ import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import topicFixtures from "discourse/tests/fixtures/topic";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -231,6 +232,150 @@ acceptance("discourse-templates", function (needs) {
     assert
       .dom(".templates-list .template-item")
       .exists({ count: 1 }, "preserves selected tag across composer sessions");
+  });
+});
+
+/** Names of the options listed in the open select panel. */
+function displayedOptionNames() {
+  return Array.from(
+    document.querySelectorAll(".d-select__panel [role='option'][data-value]"),
+    (option) => option.dataset.name
+  );
+}
+
+async function selectCategoryWithNewControls() {
+  await dSelect(".category-chooser").select(2);
+}
+
+async function openTemplatesPanel() {
+  await click(".toolbar-menu__options-trigger");
+  await click(`button[title="${i18n("templates.insert_template")}"]`);
+}
+
+acceptance("discourse-templates | new select controls", function (needs) {
+  needs.settings({
+    discourse_templates_enabled: true,
+    allow_uncategorized_topics: true,
+    tagging_enabled: true,
+    enable_new_select_controls: true,
+  });
+  needs.user({
+    can_use_templates: true,
+  });
+
+  needs.pretender(templatesPretender);
+
+  test("Filtering by tags with the new select controls", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategoryWithNewControls();
+    await openTemplatesPanel();
+
+    assert
+      .dom(".templates-filter-bar .tag-drop.d-select")
+      .exists("renders the new tag drop");
+
+    const tagDrop = dSelect(".templates-filter-bar .tag-drop");
+    await tagDrop.search("cupcake");
+    assert.deepEqual(
+      displayedOptionNames(),
+      ["cupcakes"],
+      "filters tags in the dropdown"
+    );
+
+    await tagDrop.selectByName("cupcakes");
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "filters replies by tag");
+
+    await click("#template-item-1 .templates-apply");
+
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly. Candy canes sugar plum soufflé sweet roll jelly-o danish jelly muffin. I love jelly-o powder topping carrot cake toffee.",
+        "inserts the template in the composer"
+      );
+  });
+
+  test("Navigate to source with the new select controls", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategoryWithNewControls();
+    await openTemplatesPanel();
+
+    const tagDrop = dSelect(".templates-filter-bar .tag-drop");
+    await tagDrop.search("lorem");
+    assert.deepEqual(
+      displayedOptionNames(),
+      ["lorem"],
+      "filters tags in the dropdown"
+    );
+
+    await tagDrop.selectByName("lorem");
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "filters replies by tag");
+
+    await click("#template-item-130 .template-item-title");
+    await click("#template-item-130 .template-item-source-link");
+
+    assert.strictEqual(
+      currentURL(),
+      "/t/lorem-ipsum-dolor-sit-amet/130",
+      "navigates to the source"
+    );
+  });
+
+  test("Remembers selected tag between openings with the new select controls", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategoryWithNewControls();
+    await openTemplatesPanel();
+
+    const tagDrop = dSelect(".templates-filter-bar .tag-drop");
+    await tagDrop.search("cupcake");
+    await tagDrop.selectByName("cupcakes");
+    assert.dom(".templates-list .template-item").exists({ count: 1 });
+
+    await click("#reply-control .toggle-save-and-close");
+
+    await click("#create-topic");
+    await selectCategoryWithNewControls();
+    await openTemplatesPanel();
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "preserves selected tag across composer sessions");
+    assert
+      .dom(".templates-filter-bar .tag-drop")
+      .hasAttribute("data-name", "cupcakes", "shows the remembered tag");
+  });
+
+  test("Modal | Templates modal | Template is inserted with the new select controls", async function (assert) {
+    await visit("/u/charlie/preferences/profile");
+
+    await focus(".d-editor-input");
+
+    const isMac = PLATFORM_KEY_MODIFIER.toLowerCase() === "meta";
+    await triggerKeyEvent(document, "keydown", "I", {
+      ...(isMac ? { metaKey: true } : { ctrlKey: true }),
+      shiftKey: true,
+    });
+
+    const tagDrop = dSelect(".templates-filter-bar .tag-drop");
+    await tagDrop.search("cupcake");
+    await tagDrop.selectByName("cupcakes");
+    await click("#template-item-1 .templates-apply");
+
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        "Cupcake ipsum dolor sit amet cotton candy cheesecake jelly.",
+        "inserts the template in the textarea"
+      );
   });
 });
 

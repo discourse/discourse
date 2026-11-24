@@ -1,7 +1,9 @@
 import { hash } from "@ember/helper";
 import Form from "discourse/components/form";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -16,12 +18,27 @@ export default <template>
       as |field|
     >
       <field.Control>
-        <UserChooser
-          class="admin-embedding-posts-and-topics-form__embed_by_username"
-          @onChange={{field.set}}
-          @options={{hash maximum=1 excludeCurrentUser=false}}
-          @value={{field.value}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            class="admin-embedding-posts-and-topics-form__embed_by_username"
+            @describedBy={{field.describedBy}}
+            @disabled={{field.disabled}}
+            @id={{field.id}}
+            @invalid={{if field.error true false}}
+            @onChange={{legacyPickOne field.set}}
+            @texts={{hash ariaLabel=field.title}}
+            @value={{field.value}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <UserChooser
+            class="admin-embedding-posts-and-topics-form__embed_by_username"
+            @onChange={{field.set}}
+            @options={{hash maximum=1 excludeCurrentUser=false}}
+            @value={{field.value}}
+          />
+        {{/if}}
       </field.Control>
     </form.Field>
     <form.Field

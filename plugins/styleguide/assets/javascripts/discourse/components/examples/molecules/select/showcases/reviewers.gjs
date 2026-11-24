@@ -1,0 +1,114 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import DSkeleton from "discourse/ui-kit/d-skeleton";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
+import { reviewerApi } from "../../../../../lib/select-fixtures.js";
+
+export default class ReviewersSelectExample extends Component {
+  @tracked value = [101, 102, 103, 104, 105, 106, 999];
+
+  @action
+  createUnresolvedRecord(value) {
+    return {
+      id: value,
+      name: i18n("styleguide.sections.select.showcases.reviewers.deleted_name"),
+      title: i18n(
+        "styleguide.sections.select.showcases.reviewers.deleted_description"
+      ),
+      username: i18n(
+        "styleguide.sections.select.showcases.reviewers.deleted_username"
+      ),
+    };
+  }
+
+  @action
+  update(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @createUnresolvedRecord={{this.createUnresolvedRecord}}
+      @identifier="sg-reviewers"
+      @labelField="username"
+      @load={{reviewerApi.search}}
+      @multiple={{true}}
+      @onChange={{this.update}}
+      @resolveValues={{reviewerApi.findMany}}
+      @texts={{hash
+        placeholder=(i18n
+          "styleguide.sections.select.showcases.reviewers.placeholder"
+        )
+      }}
+      @value={{this.value}}
+    >
+      <:selection as |option|>
+        <span class="select-examples__row select-examples__row--glyph">
+          <svg
+            aria-hidden="true"
+            class="select-examples__avatar --small"
+            style={{option.record.avatarStyle}}
+            viewBox="0 0 48 48"
+          >
+            <use
+              href="/plugins/styleguide/images/avatar.svg#select-avatar"
+            ></use>
+          </svg>
+          {{option.label}}
+        </span>
+      </:selection>
+
+      <:unresolved as |option|>
+        <span class="select-examples__row select-examples__row--glyph">
+          {{option.record.name}}
+        </span>
+      </:unresolved>
+
+      <:option as |option|>
+        {{#let option.record as |reviewer|}}
+          <span class="select-examples__row select-examples__row--identity">
+            <svg
+              aria-hidden="true"
+              class="select-examples__avatar"
+              style={{reviewer.avatarStyle}}
+              viewBox="0 0 48 48"
+            >
+              <use
+                href="/plugins/styleguide/images/avatar.svg#select-avatar"
+              ></use>
+            </svg>
+            <span class="select-examples__details">
+              <span class="select-examples__primary">{{reviewer.name}}</span>
+              <span class="select-examples__secondary">
+                @{{reviewer.username}}{{#if reviewer.title}}
+                  ·
+                  {{reviewer.title}}
+                {{/if}}
+              </span>
+            </span>
+          </span>
+        {{/let}}
+      </:option>
+
+      <:selectionLoading>
+        <div class="select-examples__row select-examples__row--glyph">
+          <DSkeleton @size="1.25rem" @variant="circle" />
+          <DSkeleton @width="5rem" />
+        </div>
+      </:selectionLoading>
+
+      <:skeleton>
+        <div class="select-examples__row select-examples__row--identity">
+          <DSkeleton @size="2rem" @variant="circle" />
+          <div class="select-examples__details">
+            <DSkeleton class="select-examples__primary" @width="8rem" />
+            <DSkeleton class="select-examples__secondary" @width="12rem" />
+          </div>
+        </div>
+      </:skeleton>
+    </DSelect>
+  </template>
+}

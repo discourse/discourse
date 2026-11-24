@@ -263,12 +263,51 @@ class CategoryUser < ActiveRecord::Base
     query.where(conditions.join(" OR "))
   end
 
+  # SQL condition on `categories` matching the indirect set of `muted_category_ids_query`.
+  # It looks up each row's own level and its parent's, so its cost follows the rows it
+  # filters rather than the site's size.
+  def self.indirectly_muted_condition(user)
+    if SiteSetting.mute_all_categories_by_default
+      # Every category without a level is muted, which the user's rows alone cannot show.
+      return "categories.id IN (#{muted_category_ids_query(user).select("categories.id").to_sql})"
+    end
+
+    user_id = user.id.to_i
+    muted = notification_levels[:muted]
+    muted_ids =
+      "SELECT category_id FROM category_users WHERE user_id = #{user_id} AND notification_level = #{muted}"
+    has_level = ->(table) { <<~SQL }
+      EXISTS (
+        SELECT 1 FROM category_users own
+        WHERE own.category_id = #{table}.id AND own.user_id = #{user_id}
+      )
+    SQL
+
+    # A row is muted through its parent when that parent is muted, or, at nesting 3, has no
+    # level of its own under a muted grandparent. Only parents with children can pass it on.
+    muting_parents = [muted_ids]
+    muting_parents << <<~SQL if SiteSetting.max_category_nesting == 3
+        SELECT parents.id FROM categories parents
+        WHERE COALESCE(parents.parent_category_id, -1) IN (#{muted_ids})
+          AND EXISTS (
+            SELECT 1 FROM categories children
+            WHERE COALESCE(children.parent_category_id, -1) = parents.id
+          )
+          AND NOT #{has_level.call("parents")}
+      SQL
+
+    <<~SQL
+      COALESCE(categories.parent_category_id, -1) IN (#{muting_parents.join(" UNION ALL ")})
+      AND NOT #{has_level.call("categories")}
+    SQL
+  end
+
   def self.muted_category_ids(user)
     muted_category_ids_query(user, include_direct: true).pluck("categories.id")
   end
 
   def self.indirectly_muted_category_ids(user)
-    muted_category_ids_query(user).pluck("categories.id")
+    Category.where(indirectly_muted_condition(user)).pluck(:id)
   end
 end
 

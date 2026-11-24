@@ -1,4 +1,5 @@
-import { find, settled, triggerEvent } from "@ember/test-helpers";
+import { find, triggerEvent } from "@ember/test-helpers";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 
 /**
  * Makes an element accept pointer capture for a pointer that was never real.
@@ -127,7 +128,7 @@ export async function dragPointer(
     pointerId,
     ...coordinate(to),
   });
-  await settleGestureFrame();
+  await settledAfterFrame();
 
   if (release) {
     await triggerEvent(element, "pointerup", {
@@ -138,18 +139,4 @@ export async function dragPointer(
   }
 
   return element;
-}
-
-/**
- * Waits for a gesture's pending report to land.
- *
- * Pointer moves are coalesced into an animation frame, so the size or position a
- * gesture computes is reported on the next frame rather than during the move that
- * caused it. `settled` does not await frames, so a test that presses, moves, and
- * asserts reads the value from before the move and quietly passes or fails on the
- * wrong basis. Await this between a move and any assertion about what the move did.
- */
-export async function settleGestureFrame() {
-  await new Promise((resolve) => requestAnimationFrame(resolve));
-  await settled();
 }

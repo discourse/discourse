@@ -37,17 +37,27 @@ RSpec.describe "DSA classification suggestion" do
     sign_in(moderator)
   end
 
-  it "prefills the community rule and category when the moderator opens the classification modal" do
-    DiscourseAi::Decisions.with_canned_answers(
-      community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
-      category:,
-    ) do
-      review_page.visit_reviewable(reviewable)
-      review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
+  shared_examples "prefilling a classification" do
+    it "prefills the community rule and category when the moderator opens the classification modal" do
+      DiscourseAi::Decisions.with_canned_answers(
+        community_rule: "#{advertising_rule[:ground]}: #{advertising_rule[:explanation]}",
+        category:,
+      ) do
+        review_page.visit_reviewable(reviewable)
+        review_page.select_bundled_action(reviewable, "post-agree_and_edit", bundle_index: 1)
 
-      expect(modal).to have_selected_rule(advertising_rule[:ground])
-      expect(modal).to have_accessible_selection("category", category)
-      expect(modal).to have_accessible_field_description("category", "Suggested by AI")
+        expect(modal).to have_selected_rule(advertising_rule[:ground])
+        expect(modal).to have_accessible_selection("category", category)
+        expect(modal).to have_accessible_field_description("category", "Suggested by AI")
+      end
     end
+  end
+
+  include_examples "prefilling a classification"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "prefilling a classification"
   end
 end

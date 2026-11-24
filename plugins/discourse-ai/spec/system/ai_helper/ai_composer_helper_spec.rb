@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Composer helper" do
+  with_select_controls(false)
+
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:non_member_group, :group)
   fab!(:embedding_definition)
@@ -498,6 +500,7 @@ RSpec.describe "AI Composer helper" do
 
       tag_chooser.expand
       tag_chooser.select_row_by_value("ai-tag-suggest")
+      expect(page).to have_css(".mini-tag-chooser .select-kit-row[data-value='ai-tag-exit']")
       tag_chooser.select_row_by_name(cloud.name)
 
       expect(page).to have_css(".mini-tag-chooser .formatted-selection", text: cloud.name)
@@ -512,6 +515,103 @@ RSpec.describe "AI Composer helper" do
 
       tag_chooser.expand
       tag_chooser.select_row_by_value("ai-tag-suggest")
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
+  end
+
+  context "when suggesting tags with the new select controls" do
+    with_select_controls(true)
+
+    let(:edit_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".edit-tags__wrapper .mini-tag-chooser")
+    end
+    let(:composer_tag_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".tags-input .mini-tag-chooser")
+    end
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
+    end
+
+    it "suggests tags in topic edit without the ones already on the topic" do
+      response =
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, count: 1 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.open
+      edit_tag_chooser.select_value("ai-tag-suggest")
+
+      expect(edit_tag_chooser).to have_option_value("ai-tag-exit")
+      expect(edit_tag_chooser).to have_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_no_option_name(video.name)
+      expect(edit_tag_chooser).to have_no_option_name(music.name)
+    end
+
+    it "applies a suggested tag in topic edit and stops offering it" do
+      response = [cloud, feedback].map { |t| { id: t.id, name: t.name, count: 1 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.open
+      edit_tag_chooser.select_value("ai-tag-suggest")
+      edit_tag_chooser.select_name(cloud.name)
+
+      expect(page).to have_css(
+        ".edit-tags__wrapper .mini-tag-chooser .d-select__chip",
+        text: cloud.name,
+      )
+      expect(edit_tag_chooser).to have_no_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_option_name(feedback.name)
+    end
+
+    it "offers no suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      edit_tag_chooser.open
+
+      expect(edit_tag_chooser).to have_no_option_value("ai-tag-suggest")
+    end
+
+    it "suggests tags in the composer and applies the selected one" do
+      response = [{ id: cloud.id, name: cloud.name, count: 1 }]
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_tag_chooser.open
+      composer_tag_chooser.select_value("ai-tag-suggest")
+      expect(composer_tag_chooser).to have_option_value("ai-tag-exit")
+      composer_tag_chooser.select_name(cloud.name)
+
+      expect(composer_tag_chooser).to have_selected_name(cloud.name)
+    end
+
+    it "shows a toast when the composer gets no tag suggestions" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_tag_chooser.open
+      composer_tag_chooser.select_value("ai-tag-suggest")
 
       expect(toasts).to have_error(
         I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
@@ -576,6 +676,90 @@ RSpec.describe "AI Composer helper" do
         expect(ai_helper_menu).to have_no_context_menu
         expect(diff_modal).to be_visible
       end
+    end
+  end
+
+  context "when suggesting a category with the new select controls" do
+    with_select_controls(true)
+
+    let(:edit_category_chooser) do
+      PageObjects::Components::UiKit::DSelect.at(".edit-category__wrapper .category-chooser")
+    end
+    let(:composer_category_chooser) do
+      PageObjects::Components::UiKit::DSelect.at("#reply-control .category-input .category-chooser")
+    end
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
+    end
+
+    def suggested(*categories)
+      categories.map do |c|
+        { id: c.id, name: c.name, slug: c.slug, color: c.color, topicCount: 1, score: 1.0 }
+      end
+    end
+
+    it "applies the best suggestion in topic edit and closes the list" do
+      DiscourseAi::AiHelper::SemanticCategorizer
+        .any_instance
+        .stubs(:categories)
+        .returns(suggested(category_2))
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_category_chooser.open
+      edit_category_chooser.select_value("ai-category-suggest")
+
+      expect(edit_category_chooser).to have_selected_name(category_2.name)
+      expect(edit_category_chooser).not_to be_expanded
+    end
+
+    it "applies the best suggestion in the composer and closes the list" do
+      DiscourseAi::AiHelper::SemanticCategorizer
+        .any_instance
+        .stubs(:categories)
+        .returns(suggested(category, category_2))
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_category_chooser.open
+      composer_category_chooser.select_value("ai-category-suggest")
+
+      expect(composer_category_chooser).to have_selected_name(category.name)
+      expect(composer_category_chooser).not_to be_expanded
+    end
+
+    it "shows a toast when the composer gets no category suggestions" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      composer_category_chooser.open
+      composer_category_chooser.select_value("ai-category-suggest")
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+      edit_category_chooser.open
+
+      expect(edit_category_chooser).to have_no_option_value("ai-category-suggest")
     end
   end
 end

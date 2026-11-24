@@ -4,7 +4,8 @@
   border-top: none;
   background: var(--primary-very-low);
 
-  .d-icon {
+  .tap-tile-date-input > .d-icon,
+  .tap-tile-time-input > .d-icon {
     padding: 0 0.75em 0 0;
     color: var(--primary-high);
     margin-top: -0.5em;

@@ -136,6 +136,13 @@
     gap: 0.25em;
   }
 
+  /* Adds to the create row's tighter gap so the input starts where the rows'
+     content does, past their 0.5em gap. */
+
+  &__create > &__handle-slot {
+    margin-inline-end: 0.25em;
+  }
+
   /* Two classes to outrank the global text input rule, whose bottom margin
      would lift the input off the add button's centre line. */
 

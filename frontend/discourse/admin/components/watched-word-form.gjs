@@ -11,6 +11,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import WatchedWords from "discourse/select-kit/components/watched-words";
 import DButton from "discourse/ui-kit/d-button";
 import DTextField from "discourse/ui-kit/d-text-field";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
 
 export default class WatchedWordForm extends Component {
@@ -183,17 +184,33 @@ export default class WatchedWordForm extends Component {
 
       {{#if this.canTag}}
         <div class="watched-word-input">
-          <label for="watched-tag">{{i18n
+          <label for="watched-tag" id="watched-tag-label">{{i18n
               "admin.watched_words.form.tag_label"
             }}</label>
-          <TagChooser
-            class="watched-word-input-field"
-            @everyTag={{true}}
-            @id="watched-tag"
-            @onChange={{this.changeSelectedTags}}
-            @options={{hash allowAny=true disabled=this.formSubmitted}}
-            @tags={{this.selectedTags}}
-          />
+          {{! TODO (select-kit-replacement-cleanup) }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <DSelectTag
+              class="watched-word-input-field"
+              @allowCreate={{true}}
+              @ariaLabelledBy="watched-tag-label"
+              @disabled={{this.formSubmitted}}
+              @id="watched-tag"
+              @ignoreRestrictions={{true}}
+              @multiple={{true}}
+              @onChange={{this.changeSelectedTags}}
+              @value={{this.selectedTags}}
+            />
+          {{else}}
+            {{! TODO (select-kit-replacement-cleanup) }}
+            <TagChooser
+              class="watched-word-input-field"
+              @everyTag={{true}}
+              @id="watched-tag"
+              @onChange={{this.changeSelectedTags}}
+              @options={{hash allowAny=true disabled=this.formSubmitted}}
+              @tags={{this.selectedTags}}
+            />
+          {{/if}}
         </div>
       {{/if}}
 

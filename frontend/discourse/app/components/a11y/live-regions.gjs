@@ -1,55 +1,85 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
+import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 
 /**
- * What the regions hold when there is nothing to say.
- *
- * A live region speaks when its text *changes*, and an empty one is not a reliable starting
- * point: announcing the same message twice in a row is inaudible on VoiceOver even though the
- * region is blanked and rewritten in between, because the text it ends up with is the text it
- * already had. Idling on a non-breaking space makes every transition a change between two
- * non-empty strings, which does get read — so a reader who keeps typing a query that keeps
- * matching nothing hears the outcome each time rather than once.
- *
- * A non-breaking space renders invisibly and is not announced on its own. Deliberately applied
- * here and not in the service, whose messages are the values callers compare announcements
- * against: a placeholder there makes "nothing is being announced" indistinguishable from a real
- * message, and every such comparison silently stops matching.
- *
- * Exported so a test asserting that a region said nothing can name this rather than spell out an
- * invisible character.
+ * The live element of one announcement. It is added empty and given its text a run-loop turn
+ * later, because text that arrives together with its live element is not reliably read.
  */
-export const IDLE_ANNOUNCEMENT = "\u00a0"; // non-breaking space
+class LiveMessage extends Component {
+  @tracked filled = false;
 
-export default class A11yLiveRegions extends Component {
-  @service a11y;
-
-  get assertiveMessage() {
-    return this.a11y.assertiveMessage || IDLE_ANNOUNCEMENT;
-  }
-
-  get politeMessage() {
-    return this.a11y.politeMessage || IDLE_ANNOUNCEMENT;
-  }
+  fillLater = modifier(() => {
+    const timer = next(() => (this.filled = true));
+    return () => cancel(timer);
+  });
 
   <template>
     <div
       aria-atomic="true"
-      aria-live="polite"
-      class="sr-only"
-      id="a11y-announcements-polite"
-      role="status"
+      aria-live={{@live}}
+      role={{@role}}
+      {{this.fillLater}}
     >
-      {{this.politeMessage}}
+      {{~if this.filled @text~}}
     </div>
-    <div
-      aria-atomic="true"
-      aria-live="assertive"
-      class="sr-only"
-      id="a11y-announcements-assertive"
-      role="alert"
+  </template>
+}
+
+/**
+ * A live region that renders every write in a new element, keyed on the write count. VoiceOver
+ * stays silent when an element is given the text it last said, even if it was emptied in
+ * between, so one long-lived element would swallow every repeat. The id sits on a wrapper that
+ * is not itself live. Idle elements hold nothing: an idle character is read aloud whenever a
+ * message clears.
+ */
+const LiveRegion = <template>
+  <div class="sr-only" id={{@id}}>
+    {{#each (array @writeCount)}}
+      <LiveMessage @live={{@live}} @role={{@role}} @text={{@text}} />
+    {{/each}}
+  </div>
+</template>;
+
+export default class A11yLiveRegions extends Component {
+  @service a11y;
+
+  get assertiveWriteCount() {
+    return this.a11y.liveRegionWriteCount("assertive");
+  }
+
+  get atRoot() {
+    return !this.a11y.liveRegionOutlet;
+  }
+
+  get politeWriteCount() {
+    return this.a11y.liveRegionWriteCount("polite");
+  }
+
+  <template>
+    <DConditionalInElement
+      @append={{true}}
+      @element={{this.a11y.liveRegionOutlet}}
+      @inline={{this.atRoot}}
     >
-      {{this.assertiveMessage}}
-    </div>
+      <LiveRegion
+        @id="a11y-announcements-polite"
+        @live="polite"
+        @role="status"
+        @text={{this.a11y.politeMessage}}
+        @writeCount={{this.politeWriteCount}}
+      />
+      <LiveRegion
+        @id="a11y-announcements-assertive"
+        @live="assertive"
+        @role="alert"
+        @text={{this.a11y.assertiveMessage}}
+        @writeCount={{this.assertiveWriteCount}}
+      />
+    </DConditionalInElement>
   </template>
 }

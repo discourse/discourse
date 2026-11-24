@@ -217,7 +217,9 @@ export default class TagChooser extends MultiSelectComponent {
       });
     }
 
-    results = skipSort ? results : this.tagUtils.sortSearchResults(results);
+    results = skipSort
+      ? results
+      : this.tagUtils.sortSearchResults(results, this.selectKit.filter);
 
     return uniqueItemsFromArray(results, "name");
   }

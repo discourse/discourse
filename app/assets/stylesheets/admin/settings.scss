@@ -110,7 +110,8 @@
         padding-right: 0;
       }
 
-      .select-kit {
+      .select-kit,
+      .d-select.category-selector {
         width: 100% !important; // Needs !important to override hard-coded value
 
         @media (max-width: $mobile-breakpoint) {
@@ -290,4 +291,30 @@
       margin-right: var(--space-1);
     }
   }
+}
+
+// Drawn in the select's portaled panel, outside `.settings`.
+.file-types-list__footer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.4em;
+}
+
+.file-types-list__label {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.file-types-list__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+}
+
+.color-list__add {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding-block: 0.25em;
 }

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tags intersection" do
+  with_select_controls(false)
+
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category) { Fabricate(:category, name: "fruits") }
@@ -64,6 +66,69 @@ describe "Tags intersection" do
     chooser.unselect_by_name("tangy")
 
     expect(page).to have_current_path("/tags/intersection/sour/sweet")
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    let(:chooser) { PageObjects::Components::UiKit::DSelect.at(".tags-intersection-chooser") }
+
+    it "navigates when adding and removing tags with the new select controls" do
+      visit("/tags/intersection/sour/tangy")
+      expect(page).to have_css(".tags-intersection-chooser .d-select__chip", count: 2)
+      expect(chooser.chip_labels).to eq(%w[sour tangy])
+
+      chooser.search("sweet")
+      chooser.select_name("sweet")
+
+      expect(page).to have_current_path("/tags/intersection/sour/tangy/sweet")
+      expect(discovery.topic_list).to have_topics(count: 2)
+
+      chooser.remove_name("tangy")
+
+      expect(page).to have_current_path("/tags/intersection/sour/sweet")
+    end
+
+    it "navigates to the canonical tag URL when the new select controls narrow to one tag" do
+      visit("/tags/intersection/sour/tangy")
+
+      chooser.remove_name("tangy")
+
+      expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}")
+      expect(discovery.topic_list).to have_topic(tagged_topic)
+      expect(discovery.topic_list).to have_topic(the_topic)
+    end
+
+    context "with capitalized tag names" do
+      fab!(:cap_tag) { Fabricate(:tag, name: "Spicy") }
+      fab!(:cap_tag2) { Fabricate(:tag, name: "Bitter") }
+      fab!(:cap_tag3) { Fabricate(:tag, name: "Savory") }
+
+      fab!(:cap_tagged_topic) { Fabricate(:topic, tags: [cap_tag, cap_tag2, cap_tag3]) }
+      fab!(:cap_the_topic) { Fabricate(:topic, category:, tags: [cap_tag, cap_tag2, cap_tag3]) }
+
+      it "keeps tag names when adding and removing tags with the new select controls" do
+        visit("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+
+        expect(page).to have_css(".tags-intersection-chooser .d-select__chip", count: 2)
+        expect(chooser.chip_labels).to eq(%w[Spicy Bitter])
+        expect(discovery.topic_list).to have_topics(count: 2)
+
+        chooser.search("Savory")
+        chooser.select_name("Savory")
+
+        expect(page).to have_current_path("/tags/intersection/Spicy/Bitter/Savory")
+        expect(page).to have_css(".tags-intersection-chooser .d-select__chip", count: 3)
+        expect(chooser.chip_labels).to eq(%w[Spicy Bitter Savory])
+        expect(discovery.topic_list).to have_topics(count: 2)
+
+        chooser.remove_name("Bitter")
+
+        expect(page).to have_current_path("/tags/intersection/Spicy/Savory")
+        expect(page).to have_css(".tags-intersection-chooser .d-select__chip", count: 2)
+        expect(chooser.chip_labels).to eq(%w[Spicy Savory])
+      end
+    end
   end
 
   context "with capitalized tag names" do

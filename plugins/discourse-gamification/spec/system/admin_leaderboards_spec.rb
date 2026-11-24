@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin leaderboards" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
   let(:admin_leaderboard_page) { PageObjects::Pages::AdminLeaderboards.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
@@ -129,6 +131,35 @@ describe "Admin leaderboards" do
       expect(page).to have_content(I18n.t("js.gamification.leaderboard.delete_success"))
 
       expect(DiscourseGamification::GamificationLeaderboard.exists?(leaderboard.id)).to eq(false)
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    fab!(:leaderboard) { Fabricate(:gamification_leaderboard, name: "Coolest duders") }
+
+    it "saves the picked groups" do
+      visit("/admin/plugins/discourse-gamification")
+      admin_leaderboard_page.edit_leaderboard(leaderboard)
+
+      included = PageObjects::Components::UiKit::DSelect.at("#leaderboard-edit__included-groups")
+      included.search("admins")
+      included.select_name("admins")
+      included.close
+
+      excluded = PageObjects::Components::UiKit::DSelect.at("#leaderboard-edit__excluded-groups")
+      excluded.search("trust_level_0")
+      excluded.select_name("trust_level_0")
+      excluded.close
+
+      admin_leaderboard_page.full_form.submit
+      expect(page).to have_content(I18n.t("js.gamification.leaderboard.save_success"))
+
+      expect(leaderboard.reload).to have_attributes(
+        included_groups_ids: [Group::AUTO_GROUPS[:admins]],
+        excluded_groups_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
     end
   end
 end

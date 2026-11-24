@@ -8,6 +8,7 @@ import {
 } from "discourse/admin/lib/setting-anchor";
 import discourseLater from "discourse/lib/later";
 import { scrollTop } from "discourse/lib/scroll-top";
+import { selectControl } from "discourse/lib/select-control";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -112,11 +113,12 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
         didConfirm: () => this.#leave(transition),
         didCancel: () => {
           // After render, so we win over the dialog restoring focus on close
-          schedule("afterRender", () =>
-            document
-              .querySelector(".parent-themes-setting .select-kit-header")
-              ?.focus()
-          );
+          schedule("afterRender", () => {
+            const setting = document.querySelector(".parent-themes-setting");
+            if (setting) {
+              selectControl(setting)?.focus();
+            }
+          });
         },
       });
     }

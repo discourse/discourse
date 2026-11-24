@@ -474,9 +474,11 @@ export interface DReorderableListSignature<T> {
 
     /**
      * Replaces the default create affordance when `@allowCreate` is set,
-     * rendered after the rows.
+     * rendered after the rows. `handleSlot` holds the handle's place while the
+     * rows have handles and renders nothing otherwise, so the block's content
+     * can start where the rows' content does.
      */
-    create: [];
+    create: [{ handleSlot: ComponentLike }];
   };
   Element: HTMLElement;
 }

@@ -15,43 +15,52 @@ describe "Bulk pin and unpin topics" do
 
   before { sign_in(admin) }
 
-  it "allows a user to pin and unpin multiple topics in bulk" do
-    visit("/latest")
+  shared_examples "pinning in bulk" do
+    it "allows a user to pin and unpin multiple topics in bulk" do
+      visit("/latest")
 
-    expect(topic_list).to have_no_pinned_status(topic_1)
-    expect(topic_list).to have_no_pinned_status(topic_2)
+      expect(topic_list).to have_no_pinned_status(topic_1)
+      expect(topic_list).to have_no_pinned_status(topic_2)
 
-    topic_list_header.click_bulk_select_button
-    topic_list.click_topic_checkbox(topic_1)
-    topic_list.click_topic_checkbox(topic_2)
-    topic_list_header.click_bulk_select_topics_dropdown
-    topic_list_header.click_bulk_button("pin-topics")
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topic_1)
+      topic_list.click_topic_checkbox(topic_2)
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("pin-topics")
 
-    topic_bulk_actions_modal.pin_in_category_date_selector.expand
-    topic_bulk_actions_modal.pin_in_category_date_selector.select_row_by_value("next_month")
-    topic_bulk_actions_modal.click_pin_in_category
+      topic_bulk_actions_modal.pin_in_category_until("next_month")
+      topic_bulk_actions_modal.click_pin_in_category
 
-    expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
+      expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
 
-    visit("/latest")
+      visit("/latest")
 
-    expect(topic_list).to have_pinned_status(topic_1)
-    expect(topic_list).to have_pinned_status(topic_2)
+      expect(topic_list).to have_pinned_status(topic_1)
+      expect(topic_list).to have_pinned_status(topic_2)
 
-    topic_list_header.click_bulk_select_button
-    topic_list.click_topic_checkbox(topic_1)
-    topic_list.click_topic_checkbox(topic_2)
-    topic_list_header.click_bulk_select_topics_dropdown
-    topic_list_header.click_bulk_button("unpin-topics")
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topic_1)
+      topic_list.click_topic_checkbox(topic_2)
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("unpin-topics")
 
-    topic_bulk_actions_modal.click_bulk_topics_confirm
+      topic_bulk_actions_modal.click_bulk_topics_confirm
 
-    expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
+      expect(toasts).to have_success(I18n.t("js.topics.bulk.completed"))
 
-    visit("/latest")
+      visit("/latest")
 
-    expect(topic_list).to have_no_pinned_status(topic_1)
-    expect(topic_list).to have_no_pinned_status(topic_2)
+      expect(topic_list).to have_no_pinned_status(topic_1)
+      expect(topic_list).to have_no_pinned_status(topic_2)
+    end
+  end
+
+  include_examples "pinning in bulk"
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    include_examples "pinning in bulk"
   end
 
   it "displays pin counts and confirms before pinning globally when many are already pinned" do
@@ -77,8 +86,7 @@ describe "Bulk pin and unpin topics" do
     )
     expect(topic_bulk_actions_modal).to have_pin_stats_text("Topics currently pinned globally: 4")
 
-    topic_bulk_actions_modal.pin_globally_date_selector.expand
-    topic_bulk_actions_modal.pin_globally_date_selector.select_row_by_value("next_month")
+    topic_bulk_actions_modal.pin_globally_until("next_month")
     topic_bulk_actions_modal.click_pin_globally
 
     expect(dialog).to have_content(I18n.t("js.topic.feature_topic.confirm_pin_globally", count: 4))

@@ -12,6 +12,7 @@ import {
   MENU,
   type MenuOptions,
 } from "discourse/float-kit/lib/constants";
+import { dialogFloatOutlet } from "discourse/float-kit/lib/dialog-float-outlet";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type MenuService from "discourse/float-kit/services/menu";
 import { animateClosing } from "discourse/lib/animation-utils";
@@ -91,6 +92,7 @@ export default class DMenuInstance extends FloatKitInstance {
   get portalOutletElement() {
     return (
       this.portalOutletOverrideElement ||
+      dialogFloatOutlet(this._trigger) ||
       document.getElementById("d-menu-portals")
     );
   }

@@ -3,6 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
@@ -44,5 +45,31 @@ module("Integration | Component | DaGroupField", function (hooks) {
     await selectKit().selectRowByValue(1);
 
     assert.strictEqual(this.field.metadata.value, 1);
+  });
+
+  module("with the new select controls", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("set value", async function (assert) {
+      this.field = new AutomationFabricators(getOwner(this)).field({
+        component: "group",
+      });
+      this.field.metadata.value = undefined;
+
+      await render(
+        <template>
+          <AutomationField
+            @automation={{this.automation}}
+            @field={{this.field}}
+          />
+        </template>
+      );
+
+      await dSelect(".group-field .d-select").select(1);
+
+      assert.strictEqual(this.field.metadata.value, 1);
+    });
   });
 });

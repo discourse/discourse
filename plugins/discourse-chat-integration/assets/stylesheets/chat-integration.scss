@@ -124,7 +124,8 @@
     max-width: 100%;
   }
 
-  .select-kit {
+  .select-kit,
+  .d-select:is(.category-chooser, .tag-chooser) {
     width: 100%;
   }
 }

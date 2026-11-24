@@ -159,6 +159,11 @@ class SiteSettings::TypeSupervisor
     end
     @types[name] = get_data_type(name, @defaults_provider[name])
 
+    # a color list holds 6-digit hex colors unless the setting names its own validator
+    if opts[:type].to_s == "list" && opts[:list_type].to_s == "color"
+      opts[:validator] ||= "ColorListValidator"
+    end
+
     opts[:validator] = opts[:validator].try(:constantize)
     if (validator_type = opts[:validator] || validator_for(@types[name]))
       validator_opts = opts.slice(*VALIDATOR_OPTS)

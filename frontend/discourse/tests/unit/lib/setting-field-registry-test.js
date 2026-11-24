@@ -1,4 +1,6 @@
+import "discourse/admin/lib/setting-field-types";
 import { module, test } from "qunit";
+import ColorListControl from "discourse/admin/components/setting-field/color-list";
 import CategoryControl from "discourse/components/setting-field/category";
 import CategoryListControl from "discourse/components/setting-field/category-list";
 import CompactListControl from "discourse/components/setting-field/compact-list";
@@ -69,6 +71,15 @@ module("Unit | Lib | setting-field-registry", function () {
           .renderer,
         CompactListControl
       );
+    });
+
+    test("a color list resolves to the admin color list control", function (assert) {
+      const resolved = resolveSettingFieldType({
+        type: "list",
+        list_type: "color",
+      });
+      assert.strictEqual(resolved.renderer, ColorListControl);
+      assert.true(resolved.adminReady);
     });
 
     test("resolves a first-class list type without a list_type discriminator", function (assert) {

@@ -1,10 +1,11 @@
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import DButton from "discourse/ui-kit/d-button";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const META_URL =
@@ -12,6 +13,11 @@ const META_URL =
 
 function updateFilter(rule, property, value) {
   rule.set(property, value);
+}
+
+/** A reward's printed name as the picker's record. */
+function rewardRecords(names) {
+  return (names ?? []).map((name) => ({ id: name, name }));
 }
 
 export default <template>
@@ -64,12 +70,34 @@ export default <template>
                 @value={{@controller.editing.group_id}}
                 @valueProperty="id"
               /></td>
-            <td><ListSetting
-                class="rewards"
-                @choices={{@controller.rewardsNames}}
-                @onChange={{fn updateFilter @controller.editing "reward_list"}}
-                @value={{@controller.editing.reward_list}}
-              /></td>
+            <td>
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelect
+                  class="rewards"
+                  @multiple={{true}}
+                  @onChange={{fn
+                    updateFilter
+                    @controller.editing
+                    "reward_list"
+                  }}
+                  @options={{rewardRecords @controller.rewardsNames}}
+                  @texts={{hash ariaLabel=(i18n "patreon.rewards")}}
+                  @value={{@controller.editing.reward_list}}
+                />
+              {{else}}
+                <ListSetting
+                  class="rewards"
+                  @choices={{@controller.rewardsNames}}
+                  @onChange={{fn
+                    updateFilter
+                    @controller.editing
+                    "reward_list"
+                  }}
+                  @value={{@controller.editing.reward_list}}
+                />
+              {{/if}}
+            </td>
             <td>
               <div class="pull-right">
                 <DButton

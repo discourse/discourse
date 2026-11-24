@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import SelectStringList from "discourse/components/setting-field/-internals/select-string-list";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "discourse/select-kit/components/list-setting";
@@ -17,6 +19,8 @@ import ListSetting from "discourse/select-kit/components/list-setting";
  * @param {boolean} allowAny - Whether to allow arbitrary values
  */
 export default class CompactList extends Component {
+  @service siteSettings;
+
   /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
   tokenSeparator = "|";
@@ -26,6 +30,18 @@ export default class CompactList extends Component {
    */
   get hasValidValues() {
     return this.args.setting.validValues?.length > 0;
+  }
+
+  /** The setting's own choices: an enum's `{ name, value }` pairs, or its plain choices. */
+  get ownChoices() {
+    if (this.hasValidValues) {
+      return this.args.setting.validValues.map((v) => ({
+        name: v.name,
+        value: String(v.value),
+      }));
+    }
+
+    return makeArray(this.args.setting.choices);
   }
 
   /**
@@ -74,16 +90,29 @@ export default class CompactList extends Component {
   }
 
   <template>
-    <ListSetting
-      @choices={{this.settingChoices}}
-      @mandatoryValues={{@setting.mandatory_values}}
-      @nameProperty={{if this.hasValidValues "name"}}
-      @onChange={{this.onChangeListSetting}}
-      @onChangeChoices={{this.onChangeChoices}}
-      @options={{hash allowAny=@allowAny}}
-      @settingName={{@setting.setting}}
-      @value={{this.settingValue}}
-      @valueProperty={{if this.hasValidValues "value"}}
-    />
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <SelectStringList
+        @allowAny={{@allowAny}}
+        @ariaLabel={{@label}}
+        @choices={{this.ownChoices}}
+        @disabled={{@disabled}}
+        @mandatory={{@setting.mandatory_values}}
+        @onChange={{this.onChangeListSetting}}
+        @values={{this.settingValue}}
+      />
+    {{else}}
+      <ListSetting
+        @choices={{this.settingChoices}}
+        @mandatoryValues={{@setting.mandatory_values}}
+        @nameProperty={{if this.hasValidValues "name"}}
+        @onChange={{this.onChangeListSetting}}
+        @onChangeChoices={{this.onChangeChoices}}
+        @options={{hash allowAny=@allowAny}}
+        @settingName={{@setting.setting}}
+        @value={{this.settingValue}}
+        @valueProperty={{if this.hasValidValues "value"}}
+      />
+    {{/if}}
   </template>
 }

@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import withEventValue from "discourse/helpers/with-event-value";
 import DButton from "discourse/ui-kit/d-button";
 import DDateInput from "discourse/ui-kit/d-date-input";
-import DTimeInput from "discourse/ui-kit/d-time-input";
 
 /** Legacy global supplied by the application, without introducing a module import. */
 declare const moment: typeof import("moment");
@@ -92,6 +93,14 @@ export default class DDateTimeInput extends Component<DDateTimeInputSignature> {
     return this.date && this.showTime ? this.date.minutes() : null;
   }
 
+  get time() {
+    if (!this.date || !this.showTime) {
+      return null;
+    }
+    const pad = (part: number) => String(part).padStart(2, "0");
+    return `${pad(this.date.hours())}:${pad(this.date.minutes())}`;
+  }
+
   get resolvedTimezone() {
     return this.args.timezone || moment.tz.guess();
   }
@@ -120,6 +129,16 @@ export default class DDateTimeInput extends Component<DDateTimeInputSignature> {
         })
       );
     }
+  }
+
+  /** Reads the time input's "HH:mm"; an emptied input keeps the date's time. */
+  @action
+  onInputTime(value: string) {
+    if (!value) {
+      return;
+    }
+    const [hours, minutes] = value.split(":").map(Number);
+    this.onChangeTime({ hours, minutes });
   }
 
   @action
@@ -163,10 +182,11 @@ export default class DDateTimeInput extends Component<DDateTimeInputSignature> {
       {{/unless}}
 
       {{#if this.showTime}}
-        <DTimeInput
-          @date={{this.date}}
-          @onChange={{this.onChangeTime}}
-          @relativeDate={{this.relativeDate}}
+        <input
+          class="time-input"
+          type="time"
+          value={{this.time}}
+          {{on "input" (withEventValue this.onInputTime)}}
         />
       {{/if}}
 

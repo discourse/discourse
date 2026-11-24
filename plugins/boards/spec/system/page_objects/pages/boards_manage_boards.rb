@@ -72,6 +72,16 @@ module PageObjects
 
       def select_modal_board_tag(tag_name)
         modal = board_settings_modal
+        selector =
+          "#{modal.full_body_selector} [data-name='tag_names'] .form-kit__control-tag-chooser"
+        if has_css?("#{selector}.d-select", wait: 0)
+          chooser = PageObjects::Components::UiKit::DSelect.at(selector)
+          chooser.search(tag_name)
+          chooser.select_name(tag_name)
+          chooser.close
+          return self
+        end
+
         chooser =
           PageObjects::Components::SelectKit.new(
             "#{modal.full_body_selector} [data-name='tag_names'] .form-kit__control-tag-chooser",
@@ -113,8 +123,16 @@ module PageObjects
 
       def select_modal_column_tag(tag_name)
         modal = column_settings_modal
-        chooser =
-          PageObjects::Components::SelectKit.new("#{modal.full_body_selector} .mini-tag-chooser")
+        selector = "#{modal.full_body_selector} .mini-tag-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          chooser = PageObjects::Components::UiKit::DSelect.at(selector)
+          chooser.search(tag_name)
+          chooser.select_name(tag_name)
+          chooser.close
+          return self
+        end
+
+        chooser = PageObjects::Components::SelectKit.new(selector)
         chooser.expand
         chooser.search(tag_name)
         chooser.select_row_by_name(tag_name)

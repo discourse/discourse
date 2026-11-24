@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Board Category Constraints" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
   fab!(:board) { Fabricate(:boards_board, column_names: ["To Do", "In Progress", "Done"]) }
 
@@ -68,6 +70,20 @@ describe "Board Category Constraints" do
         board_manage_page.save_column_modal
 
         expect(board_viewer).to have_column(tag.name)
+      end
+
+      context "with the new select controls" do
+        with_select_controls(true)
+
+        it "allows category tag group tags for a column with the new select controls" do
+          board_viewer.visit_board(board)
+          board_component.open_board_menu
+          board_component.click_add_column_menu_item
+          board_manage_page.select_modal_column_tag(tag.name)
+          board_manage_page.save_column_modal
+
+          expect(board_viewer).to have_column(tag.name)
+        end
       end
     end
   end

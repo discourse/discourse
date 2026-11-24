@@ -163,6 +163,7 @@ en:
       search_placeholder: "Filter by name or username"
       no_workflows_found: "No workflows match your filters"
       tags:
+        label: "Tags"
         manage: "Manage tags"
         filter_label: "Filter by tags"
         filter_by: "Filter the list by this tag"

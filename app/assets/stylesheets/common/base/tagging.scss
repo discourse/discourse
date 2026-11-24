@@ -317,7 +317,8 @@
   }
 
   @include viewport.until(md) {
-    .select-kit.multi-select {
+    .select-kit.multi-select,
+    .d-select.tag-chooser {
       width: 100%;
     }
 

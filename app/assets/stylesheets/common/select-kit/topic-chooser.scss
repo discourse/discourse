@@ -1,3 +1,4 @@
+// TODO (select-kit-replacement-cleanup): Remove with the legacy topic chooser.
 .select-kit {
   &.combo-box {
     &.topic-chooser {
@@ -5,5 +6,58 @@
         display: initial;
       }
     }
+  }
+}
+
+.d-topic-option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.25em;
+  min-width: 0;
+
+  .topic-statuses {
+    flex: none;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__title {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    flex-basis: 100%;
+    font-size: var(--font-down-1);
+  }
+}
+
+// The title gives way first, so the category stays readable in a narrow field.
+.d-topic-selection {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+
+  &__title {
+    flex: 0 1 auto;
+    min-width: 2em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__category {
+    display: flex;
+    flex: 0 0 auto;
+    max-width: 50%;
+    overflow: hidden;
   }
 }

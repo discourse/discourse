@@ -133,8 +133,12 @@ module PageObjects
 
       def has_overridden_topic_setting?(setting_name, value: nil)
         setting_field = find_setting(setting_name, overridden: true)
-        return setting_field.find(".selected-name")["data-value"] == value.to_s if value
-        true
+        return true if !value
+        # TODO (select-kit-replacement-cleanup): Keep only the new control once rollout completes.
+        if setting_field.has_css?(".d-select", wait: 0)
+          return setting_field.has_css?(".d-select[data-value='#{value}']")
+        end
+        setting_field.find(".selected-name")["data-value"] == value.to_s
       end
 
       def has_no_overridden_setting?(setting_name)
@@ -246,21 +250,34 @@ module PageObjects
       end
 
       def category_setting(setting_name)
-        PageObjects::Components::SelectKit.new(
-          "#{setting_row_selector(setting_name)} .category-chooser",
-        )
+        selector = "#{setting_row_selector(setting_name)} .category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def group_setting(setting_name)
         PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .combo-box")
       end
 
+      # A DSelect driver under the new select controls, a select-kit one otherwise.
       def tag_list_setting(setting_name)
-        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .tag-chooser")
+        selector = "#{setting_row_selector(setting_name)} .tag-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def has_tags_in_setting?(setting_name, tags)
         tag_chooser = tag_list_setting(setting_name)
+        if tag_chooser.is_a?(PageObjects::Components::UiKit::DSelect)
+          return tag_chooser.has_selected_names?(*tags.map(&:name))
+        end
+
         tag_names = tags.map(&:name).sort
         selected_names = tag_chooser.value&.split(",")&.sort || []
         tag_names == selected_names

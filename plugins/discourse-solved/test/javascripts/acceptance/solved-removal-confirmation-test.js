@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -25,7 +26,8 @@ function unsolvedTopicFixture() {
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
-acceptance("Solved Removal Confirmation", function (needs) {
+/** Shared fixtures for the legacy and new select controls modules. */
+function setupSolvedRemoval(needs, settings = {}) {
   needs.user({ admin: true });
 
   needs.settings({
@@ -33,6 +35,7 @@ acceptance("Solved Removal Confirmation", function (needs) {
     allow_solved_on_all_topics: false,
     tagging_enabled: true,
     enable_solved_tags: "solved-tag",
+    ...settings,
   });
 
   needs.hooks.beforeEach(() => {
@@ -108,6 +111,10 @@ acceptance("Solved Removal Confirmation", function (needs) {
       helper.response({ basic_topic: { id: 53, title: "Test solved" } })
     );
   });
+}
+
+acceptance("Solved Removal Confirmation", function (needs) {
+  setupSolvedRemoval(needs);
 
   test("shows confirmation modal when changing from solved to unsolved category", async function (assert) {
     await visit("/t/test-solved/50");
@@ -292,3 +299,55 @@ acceptance("Solved Removal Confirmation", function (needs) {
       );
   });
 });
+
+acceptance(
+  "Solved Removal Confirmation | new select controls",
+  function (needs) {
+    setupSolvedRemoval(needs, { enable_new_select_controls: true });
+
+    test("shows modal when removing solved tag with the new select controls", async function (assert) {
+      await visit("/t/test-solved/52");
+
+      await click("#topic-title .d-icon-pencil");
+
+      assert
+        .dom(
+          ".title-wrapper .mini-tag-chooser .d-select__chip[data-name='solved-tag']"
+        )
+        .exists("holds the solved tag");
+      await dSelect(".title-wrapper .mini-tag-chooser").remove(1);
+      assert
+        .dom(
+          ".title-wrapper .mini-tag-chooser .d-select__chip[data-name='solved-tag']"
+        )
+        .doesNotExist("removes the solved tag");
+
+      await click("#topic-title .submit-edit");
+
+      assert
+        .dom(".solved-removal-confirmation-modal")
+        .exists("confirmation modal is shown when removing solved tag");
+    });
+
+    test("does not show modal when removing solved tag but category enables solutions with the new select controls", async function (assert) {
+      await visit("/t/test-solved/53");
+
+      await click("#topic-title .d-icon-pencil");
+
+      await dSelect(".title-wrapper .mini-tag-chooser").remove(1);
+      assert
+        .dom(
+          ".title-wrapper .mini-tag-chooser .d-select__chip[data-name='solved-tag']"
+        )
+        .doesNotExist("removes the solved tag");
+
+      await click("#topic-title .submit-edit");
+
+      assert
+        .dom(".solved-removal-confirmation-modal")
+        .doesNotExist(
+          "confirmation modal is not shown when category still enables solutions"
+        );
+    });
+  }
+);

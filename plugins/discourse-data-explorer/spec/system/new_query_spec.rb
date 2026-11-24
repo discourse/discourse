@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Data explorer new query" do
+  with_select_controls(false)
+
   fab!(:admin)
 
   let(:query_runner) { PageObjects::Pages::DataExplorerQueryRunner.new }

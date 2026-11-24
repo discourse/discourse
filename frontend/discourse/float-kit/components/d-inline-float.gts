@@ -47,7 +47,11 @@ const DInlineFloat: TemplateOnlyComponent<DInlineFloatSignature> = <template>
   {{#if @instance.expanded}}
     {{#if @instance.renderInModal}}
       <DModal
-        aria-label={{@instance.options.ariaLabel}}
+        aria-label={{unless
+          @instance.options.ariaLabelledBy
+          @instance.options.ariaLabel
+        }}
+        aria-labelledby={{@instance.options.ariaLabelledBy}}
         class={{dConcatClass
           "fk-d-menu-modal"
           (concat @instance.options.identifier "-content")

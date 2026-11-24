@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import SelectStringList from "discourse/components/setting-field/-internals/select-string-list";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "discourse/select-kit/components/list-setting";
@@ -9,6 +11,8 @@ import ListSetting from "discourse/select-kit/components/list-setting";
 const TOKEN_SEPARATOR = "|";
 
 export default class SettingFieldCompactList extends Component {
+  @service siteSettings;
+
   /** @type {Array<string | { name: string, value: string }> | null} */
   @tracked createdChoices = null;
 
@@ -27,12 +31,21 @@ export default class SettingFieldCompactList extends Component {
       .filter(Boolean);
   }
 
-  get choices() {
+  /** The setting's own choices: an enum's `{ name, value }` pairs, or its plain choices. */
+  get ownChoices() {
     if (this.hasEnumChoices) {
       return this.args.definition.valid_values.map((v) => ({
         name: v.name,
         value: String(v.value),
       }));
+    }
+
+    return makeArray(this.args.definition.choices);
+  }
+
+  get choices() {
+    if (this.hasEnumChoices) {
+      return this.ownChoices;
     }
 
     return uniqueItemsFromArray([
@@ -57,17 +70,30 @@ export default class SettingFieldCompactList extends Component {
 
   <template>
     <@field.Control>
-      <ListSetting
-        @choices={{this.choices}}
-        @mandatoryValues={{@definition.mandatory_values}}
-        @nameProperty={{if this.hasEnumChoices "name"}}
-        @onChange={{this.onChange}}
-        @onChangeChoices={{this.onChangeChoices}}
-        @options={{hash allowAny=this.allowAny disabled=@field.disabled}}
-        @settingName={{@definition.key}}
-        @value={{this.settingValue}}
-        @valueProperty={{if this.hasEnumChoices "value"}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <SelectStringList
+          @allowAny={{this.allowAny}}
+          @ariaLabel={{@field.title}}
+          @choices={{this.ownChoices}}
+          @disabled={{@field.disabled}}
+          @mandatory={{@definition.mandatory_values}}
+          @onChange={{this.onChange}}
+          @values={{this.settingValue}}
+        />
+      {{else}}
+        <ListSetting
+          @choices={{this.choices}}
+          @mandatoryValues={{@definition.mandatory_values}}
+          @nameProperty={{if this.hasEnumChoices "name"}}
+          @onChange={{this.onChange}}
+          @onChangeChoices={{this.onChangeChoices}}
+          @options={{hash allowAny=this.allowAny disabled=@field.disabled}}
+          @settingName={{@definition.key}}
+          @value={{this.settingValue}}
+          @valueProperty={{if this.hasEnumChoices "value"}}
+        />
+      {{/if}}
     </@field.Control>
   </template>
 }

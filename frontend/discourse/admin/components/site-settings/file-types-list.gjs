@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import SelectStringList from "discourse/components/setting-field/-internals/select-string-list";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "discourse/select-kit/components/list-setting";
@@ -25,19 +27,65 @@ const VIDEO_TYPES = ["mov", "mp4", "webm", "m4v", "3gp", "ogv", "avi", "mpeg"];
 const AUDIO_TYPES = ["mp3", "ogg", "m4a", "wav", "aac", "flac"];
 const DOCUMENT_TYPES = ["txt", "pdf", "doc", "docx", "csv"];
 const TOKEN_SEPARATOR = "|";
-const IMAGE_TYPES_STRING = IMAGE_TYPES.join(", ");
-const VIDEO_TYPES_STRING = VIDEO_TYPES.join(", ");
-const AUDIO_TYPES_STRING = AUDIO_TYPES.join(", ");
-const DOCUMENT_TYPES_STRING = DOCUMENT_TYPES.join(", ");
+
+/** The categories whose default types a button adds, in button order. */
+const DEFAULT_TYPES = [
+  { category: "image", label: "add_image_types", types: IMAGE_TYPES },
+  { category: "video", label: "add_video_types", types: VIDEO_TYPES },
+  { category: "audio", label: "add_audio_types", types: AUDIO_TYPES },
+  { category: "document", label: "add_document_types", types: DOCUMENT_TYPES },
+];
+
+/** The buttons that add a category's default types to the list. */
+const AddTypesButtons = <template>
+  {{#each @buttons as |button|}}
+    <DButton
+      class={{concat @buttonClass " file-types-list__button " button.category}}
+      @action={{fn @onInsert button.category}}
+      @disabled={{button.disabled}}
+      @label={{concat "admin.site_settings.file_types_list." button.label}}
+      @translatedTitle={{button.title}}
+    />
+  {{/each}}
+</template>;
 
 export default class FileTypesList extends Component {
+  @service siteSettings;
   @service toasts;
 
   /** @type {string[] | null} */
   @tracked createdChoices = null;
 
+  /** The id of the label that names the add-types buttons in the picker's footer. */
+  addTypesLabelId = `${guidFor(this)}-add-types`;
+
   get settingValue() {
     return this.args.value.toString().split(TOKEN_SEPARATOR).filter(Boolean);
+  }
+
+  /**
+   * One entry per add-types button: the types it would add, and whether it can add any. A button
+   * whose types are all allowed already is disabled, and its title says so.
+   */
+  get addTypesButtons() {
+    const held = this.settingValue;
+    return DEFAULT_TYPES.map(({ category, label, types }) => {
+      const missing = types.filter((type) => !held.includes(type));
+      const title = missing.length
+        ? i18n("admin.site_settings.file_types_list.add_types_title", {
+            types: missing.join(", "),
+          })
+        : i18n("admin.site_settings.file_types_list.already_allowed", {
+            types: types.join(", "),
+          });
+      return {
+        category,
+        label,
+        missing,
+        title,
+        disabled: Boolean(this.args.disabled) || missing.length === 0,
+      };
+    });
   }
 
   get settingChoices() {
@@ -63,25 +111,9 @@ export default class FileTypesList extends Component {
 
   @action
   insertDefaultTypes(category) {
-    let types;
-    switch (category) {
-      case "image":
-        types = IMAGE_TYPES;
-        break;
-      case "video":
-        types = VIDEO_TYPES;
-        break;
-      case "audio":
-        types = AUDIO_TYPES;
-        break;
-      case "document":
-        types = DOCUMENT_TYPES;
-        break;
-    }
-
-    const oldTypes = this.settingValue;
-    const newTypes = uniqueItemsFromArray([...oldTypes, ...types]);
-    const diffTypes = newTypes.filter((type) => !oldTypes.includes(type));
+    const diffTypes = this.addTypesButtons.find(
+      (button) => button.category === category
+    ).missing;
 
     if (isEmpty(diffTypes)) {
       return;
@@ -95,56 +127,58 @@ export default class FileTypesList extends Component {
       },
     });
 
-    this.args.changeValueCallback(newTypes.join(TOKEN_SEPARATOR));
+    this.args.changeValueCallback(
+      [...this.settingValue, ...diffTypes].join(TOKEN_SEPARATOR)
+    );
   }
 
   <template>
     <div class="file-types-list">
-      <ListSetting
-        @choices={{this.settingChoices}}
-        @onChange={{this.onChangeListSetting}}
-        @onChangeChoices={{this.onChangeChoices}}
-        @options={{hash allowAny=@allowAny}}
-        @settingName={{@setting.setting}}
-        @value={{this.settingValue}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <SelectStringList
+          @allowAny={{@allowAny}}
+          @ariaLabel={{@label}}
+          @choices={{makeArray @setting.choices}}
+          @disabled={{@disabled}}
+          @onChange={{this.onChangeListSetting}}
+          @values={{this.settingValue}}
+        >
+          <:footer>
+            <div class="file-types-list__footer">
+              <span class="file-types-list__label" id={{this.addTypesLabelId}}>
+                {{i18n "admin.site_settings.file_types_list.add_common_types"}}
+              </span>
+              <div
+                aria-labelledby={{this.addTypesLabelId}}
+                class="file-types-list__buttons"
+                role="group"
+              >
+                <AddTypesButtons
+                  @buttonClass="btn-default btn-small"
+                  @buttons={{this.addTypesButtons}}
+                  @onInsert={{this.insertDefaultTypes}}
+                />
+              </div>
+            </div>
+          </:footer>
+        </SelectStringList>
+      {{else}}
+        <ListSetting
+          @choices={{this.settingChoices}}
+          @onChange={{this.onChangeListSetting}}
+          @onChangeChoices={{this.onChangeChoices}}
+          @options={{hash allowAny=@allowAny disabled=@disabled}}
+          @settingName={{@setting.setting}}
+          @value={{this.settingValue}}
+        />
 
-      <DButton
-        class="btn btn-small btn-default file-types-list__button image"
-        @action={{fn this.insertDefaultTypes "image"}}
-        @label="admin.site_settings.file_types_list.add_image_types"
-        @translatedTitle={{i18n
-          "admin.site_settings.file_types_list.add_types_title"
-          types=IMAGE_TYPES_STRING
-        }}
-      />
-      <DButton
-        class="btn btn-small btn-default file-types-list__button video"
-        @action={{fn this.insertDefaultTypes "video"}}
-        @label="admin.site_settings.file_types_list.add_video_types"
-        @translatedTitle={{i18n
-          "admin.site_settings.file_types_list.add_types_title"
-          types=VIDEO_TYPES_STRING
-        }}
-      />
-      <DButton
-        class="btn btn-small btn-default file-types-list__button"
-        @action={{fn this.insertDefaultTypes "audio"}}
-        @label="admin.site_settings.file_types_list.add_audio_types"
-        @translatedTitle={{i18n
-          "admin.site_settings.file_types_list.add_types_title"
-          types=AUDIO_TYPES_STRING
-        }}
-      />
-      <DButton
-        class="btn btn-small btn-default file-types-list__button document"
-        @action={{fn this.insertDefaultTypes "document"}}
-        @label="admin.site_settings.file_types_list.add_document_types"
-        @translatedTitle={{i18n
-          "admin.site_settings.file_types_list.add_types_title"
-          types=DOCUMENT_TYPES_STRING
-        }}
-      />
+        <AddTypesButtons
+          @buttonClass="btn btn-small btn-default"
+          @buttons={{this.addTypesButtons}}
+          @onInsert={{this.insertDefaultTypes}}
+        />
+      {{/if}}
     </div>
   </template>
 }

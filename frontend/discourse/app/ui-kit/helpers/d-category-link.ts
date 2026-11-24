@@ -68,6 +68,12 @@ export interface CategoryBadgeOptions {
 
   /** Whether to display the read-only indicator. */
   readOnly?: boolean;
+
+  /**
+   * Draws the emoji with an empty alt and no title, for a badge whose name is read on its own,
+   * so its emoji's code is not read before the name.
+   */
+  decorativeEmoji?: boolean;
 }
 
 /** Renders a category badge as HTML. */
@@ -160,7 +166,9 @@ export function categoryBadgeHTML(
       .map((c) => {
         return categoryBadgeHTML(c, {
           ...newOpts,
-          ...(c !== category ? { topicCount: undefined } : {}),
+          ...(c !== category
+            ? { topicCount: undefined, hasSubcategories: undefined }
+            : {}),
           ...(readOnly && c === category ? { readOnly } : {}),
         });
       })
@@ -216,6 +224,18 @@ export function categoryLinkHTML(
     }
     if (options.emoji) {
       categoryOptions.emoji = options.emoji;
+    }
+    if (options.topicCount) {
+      categoryOptions.topicCount = options.topicCount;
+    }
+    if (options.hasSubcategories) {
+      categoryOptions.hasSubcategories = true;
+    }
+    if (options.readOnly) {
+      categoryOptions.readOnly = options.readOnly;
+    }
+    if (options.decorativeEmoji) {
+      categoryOptions.decorativeEmoji = true;
     }
   }
   return trustHTML(categoryBadgeHTML(category, categoryOptions));
@@ -308,7 +328,11 @@ export function defaultCategoryLinkRenderer(
   }
 
   if (opts.styleType === "emoji" && opts.emoji) {
-    html += dEmoji(opts.emoji) ?? "";
+    html +=
+      dEmoji(
+        opts.emoji,
+        opts.decorativeEmoji ? { alt: "", skipTitle: true } : undefined
+      ) ?? "";
   }
 
   // not ideal as we have to call it manually and we pass a fake category object

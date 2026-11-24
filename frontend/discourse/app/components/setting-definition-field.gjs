@@ -1,14 +1,32 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import {
   resolveSettingFieldType,
   settingFieldValidation,
 } from "discourse/lib/setting-field-registry";
 
 export default class SettingDefinitionField extends Component {
+  @service siteSettings;
+
   @cached
   get entry() {
     return resolveSettingFieldType(this.args.definition);
+  }
+
+  /**
+   * The FormKit control type. An entry drawn as a native select under the old controls names the
+   * type its renderer needs under the new ones.
+   */
+  get type() {
+    // TODO (select-kit-replacement-cleanup): read `this.entry.type` once the new controls ship.
+    if (
+      this.siteSettings.enable_new_select_controls &&
+      this.entry.newSelectControlsType
+    ) {
+      return this.entry.newSelectControlsType;
+    }
+    return this.entry.type;
   }
 
   get renderer() {
@@ -45,7 +63,7 @@ export default class SettingDefinitionField extends Component {
       @showControlTitle={{@showControlTitle}}
       @showTitle={{@showTitle}}
       @title={{@definition.label}}
-      @type={{this.entry.type}}
+      @type={{this.type}}
       @validation={{this.validation}}
       as |field|
     >

@@ -1,9 +1,13 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import SelectHostList from "discourse/components/setting-field/-internals/select-host-list";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class HostList extends Component {
+  @service siteSettings;
+
   tokenSeparator = "|";
 
   get settingValue() {
@@ -24,13 +28,23 @@ export default class HostList extends Component {
 
   <template>
     <div ...attributes>
-      <ListSetting
-        @choices={{this.settingValue}}
-        @onChange={{this.onChange}}
-        @options={{hash allowAny=@allowAny disabled=@disabled}}
-        @settingName={{@setting.setting}}
-        @value={{this.settingValue}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <SelectHostList
+          @ariaLabel={{@label}}
+          @disabled={{@disabled}}
+          @hosts={{this.settingValue}}
+          @onChange={{this.onChange}}
+        />
+      {{else}}
+        <ListSetting
+          @choices={{this.settingValue}}
+          @onChange={{this.onChange}}
+          @options={{hash allowAny=@allowAny disabled=@disabled}}
+          @settingName={{@setting.setting}}
+          @value={{this.settingValue}}
+        />
+      {{/if}}
     </div>
   </template>
 }

@@ -18,6 +18,7 @@ import {
   shouldDeferSwipeToContent,
 } from "discourse/lib/swipe-events";
 import type Site from "discourse/models/site";
+import type A11yService from "discourse/services/a11y";
 import type AppEventsService from "discourse/services/app-events";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import type ModalService from "discourse/services/modal";
@@ -183,12 +184,17 @@ interface DModalSignature {
 }
 
 export default class DModal extends Component<DModalSignature> {
+  @service declare a11y: A11yService;
   @service declare appEvents: AppEventsService;
   @service declare capabilities: CapabilitiesService;
   @service declare modal: ModalService;
   @service declare site: Site;
 
   @tracked animating = false;
+  registerLiveRegionOutlet = modifierFn((el: HTMLElement) => {
+    this.a11y.registerLiveRegionOutlet(el);
+    return () => this.a11y.unregisterLiveRegionOutlet(el);
+  });
   registerModalContainer = modifierFn((el: HTMLElement) => {
     this.#modalContainerElement = el;
   });
@@ -422,7 +428,11 @@ export default class DModal extends Component<DModalSignature> {
       event.preventDefault();
     }
 
-    if (event.key === "Escape" && this.dismissable) {
+    if (
+      event.key === "Escape" &&
+      this.dismissable &&
+      !this.#focusedSearchClaimsEscape()
+    ) {
       event.stopPropagation();
       this.closeModal(CLOSE_INITIATED_BY_ESC);
     }
@@ -466,7 +476,8 @@ export default class DModal extends Component<DModalSignature> {
       document.activeElement?.closest("form") ||
       document.activeElement?.closest(ENTER_HANDLING_CONTROLS) ||
       document.activeElement?.closest(".select-kit") ||
-      this.#focusedComboboxClaimsEnter()
+      this.#focusedComboboxClaimsEnter() ||
+      this.#focusedListFieldClaimsEnter()
     ) {
       return false;
     }
@@ -490,6 +501,41 @@ export default class DModal extends Component<DModalSignature> {
       combobox instanceof HTMLTextAreaElement;
 
     return !isTextEntry || combobox.getAttribute("aria-expanded") === "true";
+  }
+
+  /**
+   * A search field that drives a listbox it controls (`aria-autocomplete` with
+   * `aria-controls`, but no combobox role) picks the active option on Enter
+   * while that listbox is rendered.
+   */
+  #focusedListFieldClaimsEnter() {
+    const field = document.activeElement;
+    if (
+      !(field instanceof HTMLInputElement) ||
+      !field.hasAttribute("aria-autocomplete")
+    ) {
+      return false;
+    }
+
+    return (field.getAttribute("aria-controls") ?? "")
+      .split(/\s+/)
+      .some(
+        (id) =>
+          id && document.getElementById(id)?.getAttribute("role") === "listbox"
+      );
+  }
+
+  /**
+   * A search field that holds text clears it on Escape, as browsers do, so the first Escape
+   * empties the search and only the next one closes the modal.
+   */
+  #focusedSearchClaimsEscape() {
+    const field = document.activeElement;
+    return (
+      field instanceof HTMLInputElement &&
+      field.type === "search" &&
+      field.value !== ""
+    );
   }
 
   #animateBackdropOpacity(position: number) {
@@ -709,6 +755,14 @@ export default class DModal extends Component<DModalSignature> {
 
           {{yield to="belowFooter"}}
         </div>
+        {{! Menus opened from the dialog render here: content outside an open modal dialog is
+          left out of the accessibility tree. }}
+        <div class="d-modal__float-outlet" data-float-outlet></div>
+        {{! Announcements are read from here while the dialog is open, for the same reason. }}
+        <div
+          class="d-modal__live-region-outlet"
+          {{this.registerLiveRegionOutlet}}
+        ></div>
       </this.dynamicElement>
       {{#unless @inline}}
         {{! eslint-disable ember/template-no-pointer-down-event-binding }}

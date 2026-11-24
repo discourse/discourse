@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import SelectStringList from "discourse/components/setting-field/-internals/select-string-list";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class LocaleList extends Component {
@@ -30,14 +31,26 @@ export default class LocaleList extends Component {
   }
 
   <template>
-    <ListSetting
-      @choices={{this.choices}}
-      @nameProperty="name"
-      @onChange={{this.onChangeListSetting}}
-      @options={{hash allowAny=@allowAny}}
-      @settingName={{@setting.setting}}
-      @value={{this.settingValue}}
-      @valueProperty="value"
-    />
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.siteSettings.enable_new_select_controls}}
+      <SelectStringList
+        @allowAny={{@allowAny}}
+        @ariaLabel={{@label}}
+        @choices={{this.choices}}
+        @disabled={{@disabled}}
+        @onChange={{this.onChangeListSetting}}
+        @values={{this.settingValue}}
+      />
+    {{else}}
+      <ListSetting
+        @choices={{this.choices}}
+        @nameProperty="name"
+        @onChange={{this.onChangeListSetting}}
+        @options={{hash allowAny=@allowAny}}
+        @settingName={{@setting.setting}}
+        @value={{this.settingValue}}
+        @valueProperty="value"
+      />
+    {{/if}}
   </template>
 }

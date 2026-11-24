@@ -32,7 +32,7 @@ export default class VirtualListExample extends Component {
    * selection rather than changing on every read, which is the point being shown.
    */
   @cached
-  get selectedPins() {
+  get keepSelectedMounted() {
     const selectedIndex = this.selectedIndex;
     return () => (selectedIndex == null ? [] : [selectedIndex]);
   }
@@ -40,10 +40,10 @@ export default class VirtualListExample extends Component {
   /**
    * Whether the selected row falls inside the VISIBLE range. Outside it the row
    * may still be mounted because of overscan; only beyond that does keeping it
-   * mounted demonstrate `@pinnedIndices`.
+   * mounted demonstrate `@keepMounted`.
    *
    * Undefined until the first window is published. Collapsing that into "outside"
-   * would state a positive fact about pinning from an absence of measurement.
+   * would state a positive fact about keeping rows mounted from an absence of measurement.
    */
   get selectionInVisibleRange() {
     const range = this.visibleRange;
@@ -118,11 +118,11 @@ export default class VirtualListExample extends Component {
       @initialIndex={{this.selectedIndex}}
       @itemRole="option"
       @items={{this.rows}}
+      @keepMounted={{this.keepSelectedMounted}}
       @key="id"
       @onRegisterApi={{this.registerApi}}
       @onVisibleRangeChange={{this.trackRange}}
       @ownedRow={{true}}
-      @pinnedIndices={{this.selectedPins}}
       @role="listbox"
       as |item row|
     >

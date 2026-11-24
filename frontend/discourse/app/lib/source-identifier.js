@@ -67,6 +67,24 @@ export function getThemeInfo(id) {
   };
 }
 
+/**
+ * Maps a plugin API's customization source to the shape `deprecated()` and its admin notice
+ * expect, which identify a theme by name and settings path rather than by id alone.
+ *
+ * @param {import("discourse/lib/customization-source").CustomizationSource} [source]
+ * @returns {{ type: string, name: string, id?: number, path?: string } | undefined} `undefined`
+ *   for core, so callers fall back to identifying the source from the stack.
+ */
+export function noticeSourceFor(source) {
+  if (source?.type === "plugin") {
+    return { type: "plugin", name: source.name };
+  }
+
+  if (source?.type === "theme") {
+    return { type: "theme", ...getThemeInfo(source.id) };
+  }
+}
+
 export function consolePrefix(error, source) {
   source = source || identifySource(error);
   if (source && source.type === "theme") {

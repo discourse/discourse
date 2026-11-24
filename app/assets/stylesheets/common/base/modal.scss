@@ -46,6 +46,13 @@ html:not(.keyboard-visible).mobile-device {
     --modal-min-width: 400px;
   }
 
+  &__float-outlet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: auto;
+  }
+
   &__container {
     display: flex;
     flex-direction: column;

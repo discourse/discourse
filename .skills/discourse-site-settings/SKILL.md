@@ -77,8 +77,10 @@ Start with the simplest type that matches the admin's mental model:
 - `bool`: on/off behavior.
 - `integer` / `float`: numeric values; set `min`/`max` where possible.
 - `enum`: one value from a fixed set; use `enum: "ClassName"` for reusable translated enums.
-- `list`: multiple values from choices; use `list_type: compact` for selector-style UI and
-  `list_type: simple` for reorderable item lists.
+- `list`: multiple values from choices; use `list_type: compact` for selector-style UI,
+  `list_type: simple` for reorderable item lists, and `list_type: color` for an ordered list of
+  6-digit hex colors (validated by `ColorListValidator` unless the setting names its own
+  `validator`).
 - `group` / `group_list`: one or many groups; use `mandatory_values` and `disallowed_groups` where
   relevant.
 - `category` / `category_list`: one or many categories through the category picker.

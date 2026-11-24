@@ -149,3 +149,36 @@ acceptance("Create Account - User Fields", function (needs) {
       );
   });
 });
+
+acceptance("Create Account - Dropdown user field", function (needs) {
+  needs.site({
+    user_fields: [
+      {
+        id: 38,
+        name: "Favorite season",
+        field_type: "dropdown",
+        options: ["Spring", "Autumn"],
+        required: true,
+        show_on_signup: true,
+      },
+    ],
+  });
+
+  test("submitting with the required dropdown empty focuses it", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    await fillIn("#new-account-name", "Dr. Good Tuna");
+    await fillIn("#new-account-password", "cool password bro");
+    await fillIn("#new-account-email", "good.tuna@test.com");
+    await fillIn("#new-account-username", "goodtuna");
+
+    assert.dom(".user-field-favorite-season .select-kit-header").isNotFocused();
+
+    await click(".signup-fullpage .btn-primary");
+
+    assert
+      .dom(".user-field-favorite-season .select-kit-header")
+      .isFocused("the empty required dropdown takes focus");
+  });
+});

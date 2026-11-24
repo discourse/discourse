@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin User Page" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
 
   let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }
@@ -290,18 +292,31 @@ describe "Admin User Page" do
         )
       end
 
-      it "silence and unsilence the user" do
-        admin_user_page.click_silence_button
+      shared_examples "silencing until a picked date" do
+        it "silence and unsilence the user" do
+          admin_user_page.click_silence_button
 
-        silence_user_modal.fill_in_silence_reason("spamming")
-        silence_user_modal.set_future_date("tomorrow")
-        silence_user_modal.perform
+          silence_user_modal.fill_in_silence_reason("spamming")
+          silence_user_modal.set_future_date("tomorrow")
+          silence_user_modal.perform
 
-        expect(silence_user_modal).to be_closed
-        expect(page).to have_css(".silence-info")
+          expect(silence_user_modal).to be_closed
+          expect(page).to have_css(".silence-info")
 
-        admin_user_page.click_unsilence_button
-        expect(page).not_to have_css(".silence-info")
+          admin_user_page.click_unsilence_button
+          expect(page).not_to have_css(".silence-info")
+        end
+      end
+
+      include_examples "silencing until a picked date"
+
+      context "with the new select controls" do
+        with_select_controls(true)
+
+        # The outer hook visited the page before the flag was on.
+        before { admin_user_page.visit(user) }
+
+        include_examples "silencing until a picked date"
       end
     end
   end

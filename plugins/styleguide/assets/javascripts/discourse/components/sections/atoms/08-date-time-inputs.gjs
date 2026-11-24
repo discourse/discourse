@@ -12,14 +12,8 @@ import DateTimeInputRangeWithoutTimeExample from "../../examples/atoms/date-time
 import dateTimeInputRangeWithoutTimeSource from "../../examples/atoms/date-time-inputs/date-time-input-range-without-time?source=file";
 import FutureDateInputExample from "../../examples/atoms/date-time-inputs/future-date-input.gjs";
 import futureDateInputSource from "../../examples/atoms/date-time-inputs/future-date-input?source=file";
-import TimeInputExample from "../../examples/atoms/date-time-inputs/time-input.gjs";
-import timeInputSource from "../../examples/atoms/date-time-inputs/time-input?source=file";
 
 export default <template>
-  <StyleguideExample @code={{timeInputSource}} @title="TimeInput">
-    <TimeInputExample />
-  </StyleguideExample>
-
   <StyleguideExample @code={{dateInputSource}} @title="DateInput">
     <DateInputExample />
   </StyleguideExample>

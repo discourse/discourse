@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Creating Invites" do
+  with_select_controls(false)
+
   fab!(:group)
   fab!(:user) { Fabricate(:user, groups: [group]) }
   fab!(:topic) { Fabricate(:post).topic }
@@ -101,6 +103,23 @@ describe "Creating Invites" do
     before do
       visit_invites_page_and_open_modal
       display_advanced_options
+    end
+
+    it "is possible to pick the arrival topic with the new select controls" do
+      SiteSetting.enable_new_select_controls = true
+      user.update!(admin: true)
+      page.refresh
+      open_invite_modal
+      display_advanced_options
+
+      create_invite_modal.choose_topic(topic)
+      create_invite_modal.save_button.click
+
+      expect(create_invite_modal).to have_copy_button
+
+      create_invite_modal.close
+
+      expect(user_invited_pending_page.latest_invite).to have_topic(topic)
     end
 
     it "is possible to populate all the fields" do

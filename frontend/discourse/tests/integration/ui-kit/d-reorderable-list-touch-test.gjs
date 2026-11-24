@@ -3,11 +3,9 @@ import { find, render, settled, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
 import { centerOf } from "discourse/tests/helpers/ui-kit/drag-and-drop-helper";
-import {
-  settleGestureFrame,
-  stubPointerCapture,
-} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import {
   dropCoordinates,
   label,
@@ -81,7 +79,7 @@ module("Integration | ui-kit | DReorderableList | touch", function (hooks) {
     const target = rowSelector("charlie");
     const point = dropCoordinates(target, "after");
     touch("pointermove", point);
-    await settleGestureFrame();
+    await settledAfterFrame();
     assert
       .dom(target)
       .hasClass("--drag-below", "the touch reaches the destination");
@@ -167,7 +165,7 @@ module("Integration | ui-kit | DReorderableList | touch", function (hooks) {
     const touch = pressGrip("alpha");
     touch("pointermove", dropCoordinates(rowSelector("bravo"), "after"));
     touch("pointerup", dropCoordinates(rowSelector("charlie"), "after"));
-    await settleGestureFrame();
+    await settledAfterFrame();
 
     assert.strictEqual(
       onMove.firstCall.args[0].toIndex,
@@ -216,7 +214,7 @@ module("Integration | ui-kit | DReorderableList | touch", function (hooks) {
     for (const key of ["movable", "frozen"]) {
       const point = centerOf(rowSelector(key));
       touch("pointermove", point);
-      await settleGestureFrame();
+      await settledAfterFrame();
       const { top, height } = find(outer).getBoundingClientRect();
       const expected =
         point.clientY < top + height / 2 ? "--drag-above" : "--drag-below";
@@ -310,7 +308,7 @@ module("Integration | ui-kit | DReorderableList | touch", function (hooks) {
     await waitUntil(() => scroller.scrollTop < start);
     touch("pointercancel", point);
     const cancelledAt = scroller.scrollTop;
-    await settleGestureFrame();
+    await settledAfterFrame();
     assert.strictEqual(
       scroller.scrollTop,
       cancelledAt,

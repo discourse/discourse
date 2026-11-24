@@ -629,6 +629,32 @@ RSpec.describe UserUpdater do
       end
     end
 
+    context "with a featured topic" do
+      fab!(:topic)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      before { SiteSetting.allow_featured_topic_on_user_profiles = true }
+
+      it "features a topic the user may feature, and clears it with a blank value" do
+        updater = UserUpdater.new(user, user)
+
+        updater.update(featured_topic_id: topic.id.to_s)
+        expect(user.reload.user_profile.featured_topic_id).to eq(topic.id)
+
+        updater.update(featured_topic_id: "")
+        expect(user.reload.user_profile.featured_topic_id).to be_nil
+      end
+
+      it "keeps the featured topic when given one the user may not feature" do
+        user.user_profile.update!(featured_topic_id: topic.id)
+
+        UserUpdater.new(user, user).update(featured_topic_id: private_topic.id.to_s)
+
+        expect(user.reload.user_profile.featured_topic_id).to eq(topic.id)
+      end
+    end
+
     context "when website includes http" do
       it "does not add http before updating" do
         updater = UserUpdater.new(acting_user, user)

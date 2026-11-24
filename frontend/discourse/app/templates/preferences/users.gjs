@@ -6,6 +6,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import UserChooser from "discourse/select-kit/components/user-chooser";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -34,11 +35,23 @@ export default <template>
           {{dIcon "d-muted" class="icon"}}
           <span>{{i18n "user.muted_users"}}</span>
         </label>
-        <UserChooser
-          @onChange={{@controller.onChangeMutedUsernames}}
-          @options={{hash excludeCurrentUser=true}}
-          @value={{@controller.mutedUsernames}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            @excludeCurrentUser={{true}}
+            @multiple={{true}}
+            @onChange={{@controller.onChangeMutedUsernames}}
+            @texts={{hash ariaLabel=(i18n "user.muted_users")}}
+            @value={{@controller.mutedUsernames}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <UserChooser
+            @onChange={{@controller.onChangeMutedUsernames}}
+            @options={{hash excludeCurrentUser=true}}
+            @value={{@controller.mutedUsernames}}
+          />
+        {{/if}}
       </div>
       <div class="instructions">{{i18n "user.muted_users_instructions"}}</div>
     </div>
@@ -72,11 +85,27 @@ export default <template>
         </div>
         {{#if @controller.allowPmUsersEnabled}}
           <div class="controls tracking-controls">
-            <UserChooser
-              @onChange={{@controller.onChangeAllowedPmUsernames}}
-              @options={{hash excludeCurrentUser=true}}
-              @value={{@controller.allowedPmUsernames}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if @controller.siteSettings.enable_new_select_controls}}
+              <DSelectUser
+                @excludeCurrentUser={{true}}
+                @multiple={{true}}
+                @onChange={{@controller.onChangeAllowedPmUsernames}}
+                @texts={{hash
+                  ariaLabel=(i18n
+                    "user.allow_private_messages_from_specific_users"
+                  )
+                }}
+                @value={{@controller.allowedPmUsernames}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <UserChooser
+                @onChange={{@controller.onChangeAllowedPmUsernames}}
+                @options={{hash excludeCurrentUser=true}}
+                @value={{@controller.allowedPmUsernames}}
+              />
+            {{/if}}
           </div>
           <div class="instructions">{{i18n
               "user.allowed_pm_users_instructions"

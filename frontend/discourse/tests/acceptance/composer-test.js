@@ -29,12 +29,12 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
+  settledAfterFrame,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   dragPointer,
-  settleGestureFrame,
   stubPointerCapture,
 } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import { i18n } from "discourse-i18n";
@@ -469,7 +469,7 @@ acceptance(`Composer`, function (needs) {
       clientY: to,
       pointerId: 1,
     });
-    await settleGestureFrame();
+    await settledAfterFrame();
 
     assert.strictEqual(
       document.documentElement.style.getPropertyValue("--composer-height"),
@@ -520,7 +520,7 @@ acceptance(`Composer`, function (needs) {
       clientY: to,
       pointerId: 1,
     });
-    await settleGestureFrame();
+    await settledAfterFrame();
     assert
       .dom(replyControl)
       .hasClass("clear-transitions", "clears transitions on the first move");

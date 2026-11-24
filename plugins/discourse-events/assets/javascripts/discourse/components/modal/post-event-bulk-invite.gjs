@@ -7,10 +7,12 @@ import Form from "discourse/components/form";
 import GroupSelector from "discourse/components/group-selector";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import Group from "discourse/models/group";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 import BulkInviteSampleCsvFile from "../bulk-invite-sample-csv-file.gjs";
 import CsvUploader from "../csv-uploader.gjs";
@@ -19,6 +21,7 @@ const DEFAULT_ATTENDANCE = "going";
 
 export default class PostEventBulkInvite extends Component {
   @service toasts;
+  @service siteSettings;
 
   @tracked flash = null;
 
@@ -182,15 +185,41 @@ export default class PostEventBulkInvite extends Component {
                       />
                     {{/if}}
                     {{#if @model.event.isPublic}}
-                      <EmailGroupUserChooser
-                        class="bulk-invite-identifier"
-                        @onChange={{fn this.setUserIdentifier field}}
-                        @options={{hash
-                          maximum=1
-                          filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
-                        }}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectUser
+                          class="bulk-invite-identifier"
+                          @clearable={{true}}
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @onChange={{legacyPickOne
+                            (fn this.setUserIdentifier field)
+                          }}
+                          @texts={{hash
+                            ariaLabel=field.title
+                            placeholder=(i18n
+                              "discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                            )
+                            searchPlaceholder=(i18n
+                              "discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                            )
+                          }}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <EmailGroupUserChooser
+                          class="bulk-invite-identifier"
+                          @onChange={{fn this.setUserIdentifier field}}
+                          @options={{hash
+                            maximum=1
+                            filterPlaceholder="discourse_post_event.bulk_invite_modal.user_selector_placeholder"
+                          }}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     {{/if}}
                   </field.Control>
                 </collection.Field>

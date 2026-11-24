@@ -53,6 +53,10 @@ class ThemeSettingsValidator
           errors:,
           translation_prefix: "string",
         )
+      when types[:list]
+        if opts[:list_type].to_s == "color" && !ColorListValidator.new.valid_value?(value.to_s)
+          errors << I18n.t("themes.settings_errors.color_list_value_not_valid")
+        end
       when types[:objects]
         errors.concat(validate_object_translations(opts[:schema]))
         errors.concat(

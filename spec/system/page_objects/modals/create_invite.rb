@@ -48,6 +48,16 @@ module PageObjects
       end
 
       def choose_topic(topic)
+        # TODO (select-kit-replacement-cleanup): Keep only the new control once rollout completes.
+        if page.has_css?(".create-invite-modal .d-select.topic-chooser", wait: 0)
+          topic_picker =
+            PageObjects::Components::UiKit::DSelect.at(
+              ".create-invite-modal .d-select.topic-chooser",
+            )
+          topic_picker.search(topic.id)
+          topic_picker.select_value(topic.id)
+          return
+        end
         topic_picker = PageObjects::Components::SelectKit.new(".topic-chooser")
         topic_picker.expand
         topic_picker.search(topic.id)

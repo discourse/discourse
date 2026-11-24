@@ -1,5 +1,7 @@
 import { click, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { FORMAT, timeShortcuts } from "discourse/lib/time-shortcut";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   fakeTime,
@@ -175,5 +177,53 @@ acceptance("Admin - Silence User", function (needs) {
     ];
 
     assert.deepEqual(options, expected, "options are correct");
+  });
+});
+
+acceptance("Admin - Suspend User - new select controls", function (needs) {
+  let clock = null;
+  let suspension = null;
+
+  needs.user();
+  needs.settings({ enable_new_select_controls: true });
+  needs.pretender((server, helper) => {
+    server.put("/admin/users/:user_id/suspend", (request) => {
+      suspension = helper.parsePostData(request.requestBody);
+      return helper.response(200, {
+        suspension: { suspended_till: "2100-05-04T08:00:00.000Z" },
+      });
+    });
+  });
+
+  needs.hooks.beforeEach(() => {
+    suspension = null;
+    const timezone = loggedInUser().user_option.timezone;
+    clock = fakeTime("2100-05-03T08:00:00", timezone, true); // Monday morning
+  });
+
+  needs.hooks.afterEach(() => {
+    clock.restore();
+  });
+
+  test("suspends until the picked timeframe", async function (assert) {
+    await visit("/admin/users/1234/regular");
+    await click(".suspend-user");
+
+    assert
+      .dom(".perform-penalize")
+      .isDisabled("disabled until a date is picked");
+
+    await dSelect(".suspend-until .d-select").select("tomorrow");
+    await fillIn("input.suspend-reason", "for breaking the rules");
+    await click(".perform-penalize");
+
+    assert.strictEqual(
+      suspension.suspend_until.slice(0, 16),
+      timeShortcuts(loggedInUser().user_option.timezone)
+        .tomorrow()
+        .time.locale("en")
+        .format(FORMAT)
+        .slice(0, 16)
+    );
   });
 });

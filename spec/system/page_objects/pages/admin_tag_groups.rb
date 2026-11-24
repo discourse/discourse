@@ -4,11 +4,11 @@ module PageObjects
   module Pages
     class AdminTagGroups < PageObjects::Pages::Base
       def tags_chooser
-        PageObjects::Components::SelectKit.new(".group-tags-list .tag-chooser")
+        tag_chooser(".group-tags-list .tag-chooser")
       end
 
       def parent_tag_chooser
-        PageObjects::Components::SelectKit.new(".parent-tag-section .tag-chooser")
+        tag_chooser(".parent-tag-section .tag-chooser")
       end
 
       def has_tag_group_in_sidebar?(name)
@@ -118,6 +118,18 @@ module PageObjects
       def click_tag_group(name)
         find(".tag-groups-sidebar li a", text: name).click
         self
+      end
+
+      private
+
+      # A DSelect driver when the new select controls render the chooser, a select-kit one
+      # otherwise.
+      def tag_chooser(selector)
+        if has_css?(selector) && has_css?("#{selector}.d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
     end
   end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Topic bulk select" do
+  with_select_controls(false)
+
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
   fab!(:admin)
   fab!(:user)
@@ -307,6 +309,125 @@ describe "Topic bulk select" do
         expect(page).to have_no_css("#bulk-topics-confirm")
         expect(topic.reload.tags).to include(restricted_tag)
         expect(topic_2.reload.tags).not_to include(restricted_tag)
+      end
+    end
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      it "adds, removes, and replaces tags in a single submission with the new select controls" do
+        tag4 = Fabricate(:tag)
+        tag5 = Fabricate(:tag)
+        topic.update!(tags: [tag1, tag2])
+        topic_2.update!(tags: [tag1, tag3])
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        expect(modal.add_tag_selector).to be_a(PageObjects::Components::UiKit::DSelect)
+        expect(modal).to have_disabled_submit
+
+        modal.select_replace_from(tag1.name)
+        modal.select_replace_to(tag5.name)
+
+        modal.add_tags(tag4.name)
+        modal.remove_tags(tag2.name)
+
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [tag4, tag5])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [tag3, tag4, tag5])
+      end
+
+      context "when selecting topics that are all in the same category" do
+        fab!(:category)
+        fab!(:restricted_tag_group, :tag_group)
+        fab!(:restricted_tag, :tag)
+
+        before do
+          topic.update!(category_id: category.id)
+          topic_2.update!(category_id: category.id)
+          TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+          CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+        end
+
+        it "limits tag search to restricted tags when category does not allow global tags with the new select controls" do
+          modal = open_manage_tags_modal([topic, topic_2])
+          add_tag_selector = modal.add_tag_selector
+
+          expect(add_tag_selector).to have_option_name(restricted_tag.name)
+          expect(add_tag_selector).to have_no_option_name(tag1.name)
+          expect(add_tag_selector.option_values.size).to eq(1)
+        end
+
+        it "allows for searching restricted tags for that category and other tags too if the category allows it with the new select controls" do
+          category.update!(allow_global_tags: true)
+
+          modal = open_manage_tags_modal([topic, topic_2])
+
+          modal.add_tags(restricted_tag.name, tag1.name)
+
+          modal.click_confirm
+
+          expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
+          expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
+        end
+
+        it "can remove and replace-away a restricted tag with the new select controls" do
+          restricted_to_replace = Fabricate(:tag)
+          TagGroupMembership.create!(tag: restricted_to_replace, tag_group: restricted_tag_group)
+          category.update!(allow_global_tags: true)
+          topic.update!(tags: [restricted_tag, restricted_to_replace])
+
+          modal = open_manage_tags_modal([topic, topic_2])
+
+          modal.remove_tags(restricted_tag.name)
+          modal.select_replace_from(restricted_to_replace.name)
+          modal.select_replace_to(tag1.name)
+
+          modal.click_confirm
+
+          expect(topic_list).to have_topic_tags(topic, tags: [tag1])
+        end
+      end
+
+      context "when selecting topics across multiple categories" do
+        fab!(:category_a, :category)
+        fab!(:category_b, :category)
+        fab!(:restricted_tag_group, :tag_group)
+        fab!(:restricted_tag, :tag)
+
+        before do
+          topic.update!(category_id: category_a.id)
+          topic_2.update!(category_id: category_b.id)
+          TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+        end
+
+        it "lets a restricted tag be added when every selected category allows it with the new select controls" do
+          CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+          CategoryTagGroup.create!(category: category_b, tag_group: restricted_tag_group)
+
+          modal = open_manage_tags_modal([topic, topic_2])
+          modal.add_tags(restricted_tag.name)
+          modal.click_confirm
+
+          expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag])
+          expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag])
+        end
+
+        it "reports an error for topics whose category forbids the tag with the new select controls" do
+          CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+
+          modal = open_manage_tags_modal([topic, topic_2])
+          modal.add_tags(restricted_tag.name)
+          modal.click_confirm
+
+          expect(topic_bulk_actions_modal).to have_errors
+          expect(page).to have_css(
+            ".topic-bulk-actions-modal__errors .discourse-tag",
+            text: restricted_tag.name,
+          )
+          expect(topic.reload.tags).to include(restricted_tag)
+          expect(topic_2.reload.tags).not_to include(restricted_tag)
+        end
       end
     end
   end

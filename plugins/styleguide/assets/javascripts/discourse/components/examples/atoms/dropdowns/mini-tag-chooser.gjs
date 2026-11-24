@@ -2,9 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 
 export default class MiniTagChooserExample extends Component {
+  @service siteSettings;
+
   @tracked tags = ["apple", "orange", "potato"];
 
   @action
@@ -13,10 +17,22 @@ export default class MiniTagChooserExample extends Component {
   }
 
   <template>
-    <MiniTagChooser
-      @onChange={{this.onChange}}
-      @options={{hash filterable=true}}
-      @value={{this.tags}}
-    />
+    {{#if this.siteSettings.enable_new_select_controls}}
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      <DSelectTag
+        @allowCreate={{true}}
+        @legacyKind="mini-tag-chooser"
+        @multiple={{true}}
+        @onChange={{this.onChange}}
+        @value={{this.tags}}
+      />
+    {{else}}
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      <MiniTagChooser
+        @onChange={{this.onChange}}
+        @options={{hash filterable=true}}
+        @value={{this.tags}}
+      />
+    {{/if}}
   </template>
 }

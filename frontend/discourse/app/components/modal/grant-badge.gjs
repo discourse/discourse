@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import {
@@ -17,9 +18,12 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectBadge from "discourse/ui-kit/select/recipes/badges/d-select-badge";
 import { i18n } from "discourse-i18n";
 
 export default class GrantBadgeModal extends Component {
+  @service siteSettings;
+
   @tracked loading = true;
   @tracked saving = false;
 
@@ -115,12 +119,25 @@ export default class GrantBadgeModal extends Component {
             <p>{{i18n "admin.badges.no_badges"}}</p>
           {{else}}
             <p>
-              <ComboBox
-                @content={{this.badgeOptions}}
-                @onChange={{fn (mut this.selectedBadgeId)}}
-                @options={{hash filterable=true none="badges.none"}}
-                @value={{this.selectedBadgeId}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectBadge
+                  @clearable={{true}}
+                  @descriptions={{true}}
+                  @identifier="grant-badge"
+                  @onChange={{fn (mut this.selectedBadgeId)}}
+                  @options={{this.availableBadges}}
+                  @texts={{hash ariaLabel=(i18n "admin.badges.badge")}}
+                  @value={{this.selectedBadgeId}}
+                />
+              {{else}}
+                <ComboBox
+                  @content={{this.badgeOptions}}
+                  @onChange={{fn (mut this.selectedBadgeId)}}
+                  @options={{hash filterable=true none="badges.none"}}
+                  @value={{this.selectedBadgeId}}
+                />
+              {{/if}}
             </p>
           {{/if}}
         </DConditionalLoadingSpinner>

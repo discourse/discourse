@@ -1,12 +1,39 @@
 import { tracked } from "@glimmer/tracking";
-import { trackedMap } from "@ember/reactive/collections";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { cancel, next, type Timer } from "@ember/runloop";
 import Service from "@ember/service";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import { i18n } from "discourse-i18n";
 
 /** Priority of an ARIA live-region announcement. */
 export type AnnouncementType = "polite" | "assertive";
+
+/**
+ * One write the service made to a live region on behalf of `announce`, with the calls it
+ * carried. Same-tick calls are combined into one write, so text alone cannot say which calls a
+ * delivery answers; this does.
+ */
+export interface AnnouncementRecord {
+  /** Increases with every record. */
+  id: number;
+  /** The live region written to. */
+  type: AnnouncementType;
+  /** Exactly what was written; "" for a clear. */
+  text: string;
+  /** Call ids whose message is in `text`, including identical calls merged into one. */
+  delivered: readonly number[];
+  /** Calls from the same tick that did not make it into `text`, and why. */
+  dropped: readonly {
+    /** The call id. */
+    call: number;
+    /** Left out because it restated the region, or discarded by a later empty announcement. */
+    reason: "restated" | "cleared";
+  }[];
+}
+
+/** How many records `announcementHistory` keeps; the oldest are dropped first. */
+const ANNOUNCEMENT_HISTORY_LIMIT = 50;
 
 let clearAnnouncements = true;
 
@@ -69,6 +96,22 @@ export default class A11y extends Service {
    */
   @tracked autoUpdatingRelativeDateRef: Date = new Date();
 
+  /**
+   * Untracked map of announcements waiting to be composed by type
+   */
+  #pendingAnnouncements = new Map<
+    AnnouncementType,
+    { calls: { id: number; text: string }[]; clearDelay: number }
+  >();
+
+  #history: AnnouncementRecord[] = [];
+
+  #liveRegionOutlets = trackedArray<HTMLElement>();
+
+  #nextCallId = 1;
+
+  #nextRecordId = 1;
+
   #state = new (class {
     /**
      * Map of screen reader announcements by type
@@ -76,14 +119,14 @@ export default class A11y extends Service {
     #messages = trackedMap<AnnouncementType, string>();
 
     /**
+     * How many times each region has been written, identical repeats included
+     */
+    #writes = trackedMap<AnnouncementType, number>();
+
+    /**
      * Map of announcement clear timers by type
      */
     #timers = trackedMap<AnnouncementType, Timer>();
-
-    /**
-     * Map of pending repeat-restore timers by type
-     */
-    #restores = new Map<AnnouncementType, Timer>();
 
     /**
      * Sets an announcement message with auto-clearing
@@ -96,28 +139,9 @@ export default class A11y extends Service {
       message: string,
       clearDelay: number
     ): void {
-      // Two announcements in one tick can queue a restore between this call being scheduled
-      // and it running, so the request-time cancel in `announce` cannot be the only one.
-      this.cancelRestore(type);
-
       if (message === "") {
         this.#messages.delete(type);
         this.#scheduleClear(type, 0);
-        return;
-      }
-
-      // A live region only speaks when its text changes, so writing the same string back is
-      // a DOM no-op that no screen reader picks up. Blank the region and restore it a render
-      // later to give it a change it can act on.
-      if (this.#messages.get(type) === message) {
-        this.#messages.delete(type);
-        this.#restores.set(
-          type,
-          next(() => {
-            this.#restores.delete(type);
-            this.#write(type, message, clearDelay);
-          })
-        );
         return;
       }
 
@@ -134,6 +158,15 @@ export default class A11y extends Service {
     }
 
     /**
+     * Gets how many times a region has been written
+     * @param type - Type of announcement
+     * @returns The number of writes, identical repeats included
+     */
+    getWriteCount(type: AnnouncementType): number {
+      return this.#writes.get(type) ?? 0;
+    }
+
+    /**
      * Clears all pending announcement timers
      */
     clearTimers(): void {
@@ -143,21 +176,6 @@ export default class A11y extends Service {
         }
       });
       this.#timers.clear();
-
-      this.#restores.forEach((timer) => cancel(timer));
-      this.#restores.clear();
-    }
-
-    /**
-     * Cancels the pending repeat-restore for a type, if there is one
-     * @param type - Type of announcement
-     */
-    cancelRestore(type: AnnouncementType): void {
-      const pendingRestore = this.#restores.get(type);
-      if (pendingRestore) {
-        cancel(pendingRestore);
-        this.#restores.delete(type);
-      }
     }
 
     /**
@@ -168,6 +186,7 @@ export default class A11y extends Service {
      */
     #write(type: AnnouncementType, message: string, clearDelay: number): void {
       this.#messages.set(type, message);
+      this.#writes.set(type, (this.#writes.get(type) ?? 0) + 1);
 
       if (clearAnnouncements) {
         this.#scheduleClear(type, clearDelay);
@@ -187,13 +206,17 @@ export default class A11y extends Service {
       }
 
       if (clearDelay > 0) {
-        this.#timers.set(
-          type,
-          discourseLater(() => {
-            this.#messages.delete(type);
-            this.#timers.delete(type);
-          }, clearDelay)
-        );
+        const timer = discourseLater(() => {
+          // A clear that falls due in the same flush as a newer write runs after it even
+          // though the write cancelled it, because Backburner queues every due timer first.
+          if (this.#timers.get(type) !== timer) {
+            return;
+          }
+
+          this.#messages.delete(type);
+          this.#timers.delete(type);
+        }, clearDelay);
+        this.#timers.set(type, timer);
       }
     }
   })();
@@ -203,6 +226,7 @@ export default class A11y extends Service {
    */
   willDestroy(): void {
     super.willDestroy();
+    this.#pendingAnnouncements.clear();
     this.#state.clearTimers();
   }
 
@@ -221,10 +245,37 @@ export default class A11y extends Service {
   }
 
   /**
-   * Announce a message to screen readers
+   * Where the live regions render: the outlet of the newest open modal dialog, or `undefined`
+   * for the page root. Browsers leave everything outside an open `aria-modal` dialog out of the
+   * accessibility tree, so regions left at the root go unread while one is open.
+   */
+  get liveRegionOutlet(): HTMLElement | undefined {
+    return this.#liveRegionOutlets.at(-1);
+  }
+
+  /**
+   * The newest writes made to the live regions, oldest first, as frozen copies.
+   */
+  get announcementHistory(): readonly AnnouncementRecord[] {
+    return Object.freeze(
+      this.#history.map((record) =>
+        Object.freeze({
+          ...record,
+          delivered: Object.freeze([...record.delivered]),
+          dropped: Object.freeze(
+            record.dropped.map((entry) => Object.freeze({ ...entry }))
+          ),
+        })
+      )
+    );
+  }
+
+  /**
+   * Announce a message to screen readers, composing same-type messages in one flush
    * @param message - The message to announce
    * @param type - The announcement type
    * @param clearDelay - Delay in ms before clearing the message
+   * @returns The call id, which `announcementHistory` records against this call
    * @throws TypeError - If message is not a string
    * @throws Error - If clearDelay is not positive or type is invalid
    */
@@ -232,7 +283,7 @@ export default class A11y extends Service {
     message: string,
     type: AnnouncementType = "polite",
     clearDelay: number = 2000
-  ): void {
+  ): number {
     if (typeof message !== "string") {
       throw new TypeError("The announced message must be a string");
     }
@@ -249,12 +300,43 @@ export default class A11y extends Service {
     }
 
     const trimmed = message.trim();
+    const callId = this.#nextCallId++;
 
-    // Drop a pending repeat-restore as soon as a newer message is requested rather than a
-    // tick later when the write below runs, because the restore is already queued ahead of
-    // that write and would otherwise put the older message back first. Restores are held
-    // outside tracked state, so cancelling one here is safe during render.
-    this.#state.cancelRestore(type);
+    if (trimmed === "") {
+      const discarded = this.#pendingAnnouncements.get(type)?.calls ?? [];
+      this.#pendingAnnouncements.delete(type);
+
+      next(() => {
+        if (this.isDestroying) {
+          return;
+        }
+
+        this.#record(
+          type,
+          "",
+          [callId],
+          discarded.map(({ id }) => ({ call: id, reason: "cleared" }))
+        );
+        this.#state.setMessage(type, "", clearDelay);
+      });
+      return callId;
+    }
+
+    const pendingAnnouncement = this.#pendingAnnouncements.get(type);
+    if (pendingAnnouncement) {
+      pendingAnnouncement.calls.push({ id: callId, text: trimmed });
+      pendingAnnouncement.clearDelay = Math.max(
+        pendingAnnouncement.clearDelay,
+        clearDelay
+      );
+      return callId;
+    }
+
+    const announcement = {
+      calls: [{ id: callId, text: trimmed }],
+      clearDelay,
+    };
+    this.#pendingAnnouncements.set(type, announcement);
 
     // Defer the tracked-state write out of the current render. `announce` is often
     // called from a render-driven data load (e.g. an async content resolution), and
@@ -263,11 +345,98 @@ export default class A11y extends Service {
     // awaited by `settled()`; a live region is polled asynchronously, so the one-tick
     // delay is imperceptible.
     next(() => {
+      if (this.#pendingAnnouncements.get(type) !== announcement) {
+        return;
+      }
+
+      this.#pendingAnnouncements.delete(type);
+
       if (this.isDestroying) {
         return;
       }
 
-      this.#state.setMessage(type, trimmed, clearDelay);
+      // Dedupe identical texts: repeating the same phrase in one atomic announcement
+      // conveys nothing to a screen reader. A `Set` preserves first-occurrence order.
+      let messages = [...new Set(announcement.calls.map(({ text }) => text))];
+
+      // A message that only restates what the region already says is news to nobody once the
+      // same flush carries something else, and composing it in reads the superseded value
+      // aloud first — a count that moved from one to two would be announced as both. Alone it
+      // is kept, so re-asserting an unchanged state still reaches the reader.
+      if (messages.length > 1) {
+        const current = this.#state.getMessage(type);
+        messages = messages.filter((text) => text !== current);
+      }
+
+      const kept = new Set(messages);
+      // Translated because the sentence break differs by script, spacing included.
+      const text = messages.join(i18n("a11y_announcement_separator"));
+
+      this.#record(
+        type,
+        text,
+        announcement.calls
+          .filter((call) => kept.has(call.text))
+          .map(({ id }) => id),
+        announcement.calls
+          .filter((call) => !kept.has(call.text))
+          .map(({ id }) => ({ call: id, reason: "restated" }))
+      );
+      this.#state.setMessage(type, text, announcement.clearDelay);
     });
+
+    return callId;
+  }
+
+  /**
+   * How many times a live region has been written, identical repeats included. The live
+   * regions render each write in a new element, because VoiceOver stays silent when an
+   * element is given the text it last said, even if it was emptied in between.
+   * @param type - Type of announcement
+   * @returns The number of writes
+   */
+  liveRegionWriteCount(type: AnnouncementType): number {
+    return this.#state.getWriteCount(type);
+  }
+
+  /**
+   * Renders the live regions inside `element` until it is unregistered. An open modal dialog
+   * registers its outlet, so the newest one holds them.
+   */
+  registerLiveRegionOutlet(element: HTMLElement): void {
+    this.#liveRegionOutlets.push(element);
+  }
+
+  unregisterLiveRegionOutlet(element: HTMLElement): void {
+    const index = this.#liveRegionOutlets.indexOf(element);
+    if (index !== -1) {
+      this.#liveRegionOutlets.splice(index, 1);
+    }
+  }
+
+  /**
+   * Appends a write to `announcementHistory`, dropping the oldest past the limit.
+   *
+   * @param type - The live region written to
+   * @param text - What is written
+   * @param delivered - Call ids whose message is in `text`
+   * @param dropped - Calls left out, and why
+   */
+  #record(
+    type: AnnouncementType,
+    text: string,
+    delivered: number[],
+    dropped: AnnouncementRecord["dropped"]
+  ): void {
+    this.#history.push({
+      id: this.#nextRecordId++,
+      type,
+      text,
+      delivered,
+      dropped,
+    });
+    if (this.#history.length > ANNOUNCEMENT_HISTORY_LIMIT) {
+      this.#history.shift();
+    }
   }
 }

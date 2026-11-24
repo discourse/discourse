@@ -6,6 +6,7 @@ import Form from "discourse/components/form";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
@@ -182,12 +183,31 @@ export default <template>
                       as |field|
                     >
                       <field.Control>
-                        <GroupChooser
-                          class="query-group-select"
-                          @content={{@controller.groupOptions}}
-                          @onChange={{field.set}}
-                          @value={{field.value}}
-                        />
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        {{#if
+                          @controller.siteSettings.enable_new_select_controls
+                        }}
+                          <DSelectGroup
+                            class="query-group-select"
+                            @describedBy={{field.describedBy}}
+                            @disabled={{field.disabled}}
+                            @id={{field.id}}
+                            @invalid={{if field.error true false}}
+                            @multiple={{true}}
+                            @onChange={{field.set}}
+                            @options={{@controller.groupOptions}}
+                            @texts={{hash ariaLabel=field.title}}
+                            @value={{field.value}}
+                          />
+                        {{else}}
+                          {{! TODO (select-kit-replacement-cleanup) }}
+                          <GroupChooser
+                            class="query-group-select"
+                            @content={{@controller.groupOptions}}
+                            @onChange={{field.set}}
+                            @value={{field.value}}
+                          />
+                        {{/if}}
                       </field.Control>
                     </form.Field>
                   </row.Col>
@@ -261,12 +281,31 @@ export default <template>
                     as |field|
                   >
                     <field.Control>
-                      <GroupChooser
-                        class="query-group-select"
-                        @content={{@controller.groupOptions}}
-                        @onChange={{field.set}}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup) }}
+                      {{#if
+                        @controller.siteSettings.enable_new_select_controls
+                      }}
+                        <DSelectGroup
+                          class="query-group-select"
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @multiple={{true}}
+                          @onChange={{field.set}}
+                          @options={{@controller.groupOptions}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup) }}
+                        <GroupChooser
+                          class="query-group-select"
+                          @content={{@controller.groupOptions}}
+                          @onChange={{field.set}}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 </row.Col>

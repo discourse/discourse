@@ -211,39 +211,49 @@ describe "Admin Users Page" do
   describe "bulk user suspend" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserSuspendConfirmation.new }
 
-    it "can suspend multiple users" do
-      admin_users_page.visit
-      admin_users_page.bulk_select_button.click
+    shared_examples "suspending in bulk" do
+      it "can suspend multiple users" do
+        admin_users_page.visit
+        admin_users_page.bulk_select_button.click
 
-      admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
-      admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
-      admin_users_page.bulk_actions_dropdown.expand
-      admin_users_page.bulk_actions_dropdown.option(".bulk-suspend").click
+        admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
+        admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
+        admin_users_page.bulk_actions_dropdown.expand
+        admin_users_page.bulk_actions_dropdown.option(".bulk-suspend").click
 
-      expect(confirmation_modal).to be_open
-      expect(confirmation_modal).to have_confirm_button_disabled
+        expect(confirmation_modal).to be_open
+        expect(confirmation_modal).to have_confirm_button_disabled
 
-      confirmation_modal.set_future_date("tomorrow")
-      confirmation_modal.fill_in_reason("spamming")
-      expect(confirmation_modal).to have_confirm_button_enabled
+        confirmation_modal.set_future_date("tomorrow")
+        confirmation_modal.fill_in_reason("spamming")
+        expect(confirmation_modal).to have_confirm_button_enabled
 
-      confirmation_modal.confirm
+        confirmation_modal.confirm
 
-      expect(confirmation_modal).to have_successful_log_entry_for_user(
-        user: user_1,
-        position: 1,
-        total: 2,
-      )
-      expect(confirmation_modal).to have_successful_log_entry_for_user(
-        user: user_2,
-        position: 2,
-        total: 2,
-      )
-      expect(confirmation_modal).to have_no_error_log_entries
+        expect(confirmation_modal).to have_successful_log_entry_for_user(
+          user: user_1,
+          position: 1,
+          total: 2,
+        )
+        expect(confirmation_modal).to have_successful_log_entry_for_user(
+          user: user_2,
+          position: 2,
+          total: 2,
+        )
+        expect(confirmation_modal).to have_no_error_log_entries
 
-      confirmation_modal.close
+        confirmation_modal.close
 
-      expect(User.where(id: [user_1.id, user_2.id]).where.not(suspended_till: nil).count).to eq(2)
+        expect(User.where(id: [user_1.id, user_2.id]).where.not(suspended_till: nil).count).to eq(2)
+      end
+    end
+
+    include_examples "suspending in bulk"
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      include_examples "suspending in bulk"
     end
   end
 

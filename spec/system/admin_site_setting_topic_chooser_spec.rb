@@ -40,4 +40,38 @@ describe "Admin Site Setting Topic Selector Component" do
 
     expect(settings_page).to have_css(".selected-name", text: "Moderator guide")
   end
+
+  context "with the new select controls" do
+    let(:topic_picker) { PageObjects::Components::UiKit::DSelect.at(".d-select.topic-chooser") }
+
+    before { SiteSetting.enable_new_select_controls = true }
+
+    it "can configure the setting with a topic found by its id" do
+      settings_page.visit
+      settings_page.type_in_search("moderator guide topic")
+
+      expect(settings_page).to have_n_results(1)
+
+      topic_picker.search(topic.id)
+      topic_picker.select_value(topic.id)
+
+      expect(topic_picker).to have_selected_name("Moderator guide")
+
+      banner.click_save
+
+      expect(settings_page).to have_overridden_topic_setting(
+        "moderator_guide_topic",
+        value: topic.id,
+      )
+    end
+
+    it "names the held topic when the page loads" do
+      SiteSetting.moderator_guide_topic = topic.id
+
+      settings_page.visit
+      settings_page.type_in_search("moderator guide topic")
+
+      expect(topic_picker).to have_selected_name("Moderator guide")
+    end
+  end
 end

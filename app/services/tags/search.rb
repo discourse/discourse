@@ -14,7 +14,10 @@ class Tags::Search
   #   @option params [Boolean] :filterForInput Whether filtering for tag input
   #   @option params [Boolean] :excludeSynonyms Exclude synonym tags
   #   @option params [Boolean] :excludeHasSynonyms Exclude tags that have synonyms
+  #   @option params [Array<String>] :names Exact names to look up instead of `q`, with no page limit
   #   @return [Service::Base::Context]
+
+  MAX_NAMES = 100
 
   params do
     attribute :q, :string
@@ -26,8 +29,11 @@ class Tags::Search
     attribute :excludeSynonyms, :boolean
     attribute :excludeHasSynonyms, :boolean
     attribute :prioritizeRecentTags, :boolean
+    attribute :names, :array
 
     validate :limit_is_valid
+    validates :names, length: { maximum: MAX_NAMES }
+    validates :q, absence: true, if: -> { names.present? }
 
     def limit_is_valid
       raw = raw_attributes["limit"]
@@ -46,6 +52,10 @@ class Tags::Search
       q.present? ? DiscourseTagging.clean_tag(q) : nil
     end
 
+    def cleaned_names
+      names.map { |name| DiscourseTagging.clean_tag(name.to_s) }.compact_blank.uniq
+    end
+
     def capped_limit
       limit.present? ? [limit, SiteSetting.max_tag_search_results].min : nil
     end
@@ -58,6 +68,11 @@ class Tags::Search
         exclude_synonyms: excludeSynonyms,
         exclude_has_synonyms: excludeHasSynonyms,
       }
+
+      if names.present?
+        # A list of names has no page; a required group is a minimum that later picks can meet.
+        return opts.merge(only_tag_names: cleaned_names, ignore_required_tag_groups: true)
+      end
 
       opts[:limit] = capped_limit if capped_limit
 
@@ -84,6 +99,7 @@ class Tags::Search
 
   model :category, optional: true
   step :search_tags
+  only_if(:has_names) { step :detect_forbidden_names }
   only_if(:has_term_for_input) { step :append_disabled_tags }
   only_if(:has_term) { step :detect_forbidden_tag }
 
@@ -100,6 +116,10 @@ class Tags::Search
 
   def has_term(params:)
     params.term.present?
+  end
+
+  def has_names(params:)
+    params.names.present?
   end
 
   def visible_tags(guardian)
@@ -127,6 +147,15 @@ class Tags::Search
     context[:remaining_required_tag_count] = filter_result_context[:remaining_required_tag_count]
     context[:forbidden] = nil
     context[:forbidden_message] = nil
+    context[:forbidden_names] = nil
+  end
+
+  def detect_forbidden_names(params:, tags:, guardian:)
+    context[:forbidden_names] = visible_tags(guardian)
+      .where_name(params.cleaned_names)
+      .where.not(id: tags.map { |tag| tag[:id] } | params.resolved_selected_tag_ids)
+      .order(:name)
+      .pluck(:name)
   end
 
   def recent_priority_tag_ids(params:, guardian:)

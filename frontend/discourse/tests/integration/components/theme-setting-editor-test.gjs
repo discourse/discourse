@@ -67,4 +67,30 @@ module("Integration | Component | ThemeSettingEditor", function (hooks) {
         i18n("admin.customize.theme.setting_link_label", { name: "cards" })
       );
   });
+
+  test("a color list setting edits its colors in a color list with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const setting = ThemeSettings.create({
+      setting: "brand_colors",
+      humanized_name: "Brand colors",
+      type: "list",
+      list_type: "color",
+      value: "FF0000|00FF00",
+      default: "",
+    });
+
+    await render(
+      <template>
+        <ThemeSettingEditor @model={{hash id=1}} @setting={{setting}} />
+      </template>
+    );
+
+    assert.deepEqual(
+      [
+        ...document.querySelectorAll(".color-list__row .d-color-input__hex"),
+      ].map((input) => input.value),
+      ["FF0000", "00FF00"]
+    );
+    assert.dom(".select-string-list").doesNotExist();
+  });
 });

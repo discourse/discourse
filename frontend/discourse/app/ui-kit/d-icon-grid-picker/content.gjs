@@ -83,6 +83,10 @@ class IconButton extends Component {
  *   current SVG sprite set. Defaults to true.
  */
 export default class DIconGridPickerContent extends Component {
+  /** @type {import("discourse/services/a11y").default} */
+  // @ts-ignore (incorrect no-initialization error)
+  @service a11y;
+
   /** @type {import("discourse/float-kit/services/tooltip").default} */
   // @ts-ignore (incorrect no-initialization error)
   @service tooltip;
@@ -176,6 +180,9 @@ export default class DIconGridPickerContent extends Component {
     };
   });
 
+  /** The last result count announced, so an unchanged one is not narrated again. */
+  #lastAnnouncedResults = null;
+
   #search = 0;
 
   #page = 0;
@@ -209,19 +216,6 @@ export default class DIconGridPickerContent extends Component {
    */
   get hasFavorites() {
     return this.displayFavorites.length > 0 && !this.filter;
-  }
-
-  get resultAnnouncement() {
-    if (!this.icons) {
-      return "";
-    }
-
-    return i18n(
-      this.hasMore
-        ? "d_icon_grid_picker.results_loaded"
-        : "d_icon_grid_picker.results_count",
-      { count: this.icons.length }
-    );
   }
 
   /**
@@ -382,6 +376,7 @@ export default class DIconGridPickerContent extends Component {
       this.icons = icons;
       this.hasMore = hasMore;
       this.#page = 0;
+      this.#announceResults();
     }
 
     return icons;
@@ -411,6 +406,7 @@ export default class DIconGridPickerContent extends Component {
       this.icons = [...loaded, ...icons];
       this.hasMore = hasMore;
       this.#page++;
+      this.#announceResults();
     } catch (error) {
       if (this.#isCurrent(search)) {
         this.hasMore = false;
@@ -454,6 +450,32 @@ export default class DIconGridPickerContent extends Component {
   selectIcon(icon) {
     addExtraSpriteSymbols([icon]);
     this.args.onSelect(icon.id);
+  }
+
+  /**
+   * Announces the result count, skipping a message identical to the last one. The
+   * shared live region is built to make a repeated message audible rather than
+   * swallow it, so without the guard a search narrowed by a character that changes
+   * nothing is narrated with the same count again.
+   */
+  #announceResults() {
+    if (!this.icons) {
+      return;
+    }
+
+    const message = i18n(
+      this.hasMore
+        ? "d_icon_grid_picker.results_loaded"
+        : "d_icon_grid_picker.results_count",
+      { count: this.icons.length }
+    );
+
+    if (message === this.#lastAnnouncedResults) {
+      return;
+    }
+
+    this.#lastAnnouncedResults = message;
+    this.a11y.announce(message, "polite");
   }
 
   /**
@@ -597,10 +619,6 @@ export default class DIconGridPickerContent extends Component {
             @root={{this.gridWrapper}}
           />
         {{/if}}
-      </div>
-
-      <div aria-live="polite" class="sr-only" role="status">
-        {{this.resultAnnouncement}}
       </div>
     </div>
   </template>

@@ -94,6 +94,24 @@ module PageObjects
           card.find("button.styleguide-example__code-toggle[aria-controls]")["aria-controls"]
         controls.present? && card.has_css?(".styleguide-example__code##{controls}")
       end
+
+      # The select sandbox addresses an example by its DSelect trigger rather than by title,
+      # because a grouped page repeats titles across groups while the trigger identifier stays
+      # unique. Same panel, different way in, so the addressing mode is named here to keep it
+      # apart from the title-addressed helpers above.
+      def show_example_source_by_trigger(identifier)
+        find("#{example_selector(identifier)} button.styleguide-example__code-toggle").click
+      end
+
+      def has_example_source_by_trigger?(identifier, text:)
+        has_css?("#{example_selector(identifier)} .styleguide-example__code", text: text)
+      end
+
+      private
+
+      def example_selector(identifier)
+        ".styleguide-example:has([data-identifier='#{identifier}'][data-trigger])"
+      end
     end
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Post history with tag changes" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:tag1) { Fabricate(:tag, name: "alpha") }
   fab!(:tag2) { Fabricate(:tag, name: "beta") }

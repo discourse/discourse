@@ -9,10 +9,12 @@ import { extractError } from "discourse/lib/ajax-error";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class PostEventInviteUserOrGroup extends Component {
   @service toasts;
+  @service siteSettings;
 
   @tracked flash = null;
 
@@ -75,15 +77,36 @@ export default class PostEventInviteUserOrGroup extends Component {
             as |field|
           >
             <field.Control>
-              <EmailGroupUserChooser
-                @onChange={{field.set}}
-                @options={{hash
-                  includeMessageableGroups=true
-                  filterPlaceholder="composer.users_placeholder"
-                  excludeCurrentUser=true
-                }}
-                @value={{field.value}}
-              />
+              {{! TODO (select-kit-replacement-cleanup) }}
+              {{#if this.siteSettings.enable_new_select_controls}}
+                <DSelectUser
+                  @describedBy={{field.describedBy}}
+                  @disabled={{field.disabled}}
+                  @excludeCurrentUser={{true}}
+                  @id={{field.id}}
+                  @includeGroups="messageable"
+                  @invalid={{if field.error true false}}
+                  @multiple={{true}}
+                  @onChange={{field.set}}
+                  @texts={{hash
+                    ariaLabel=field.title
+                    placeholder=(i18n "composer.users_placeholder")
+                    searchPlaceholder=(i18n "composer.users_placeholder")
+                  }}
+                  @value={{field.value}}
+                />
+              {{else}}
+                {{! TODO (select-kit-replacement-cleanup) }}
+                <EmailGroupUserChooser
+                  @onChange={{field.set}}
+                  @options={{hash
+                    includeMessageableGroups=true
+                    filterPlaceholder="composer.users_placeholder"
+                    excludeCurrentUser=true
+                  }}
+                  @value={{field.value}}
+                />
+              {{/if}}
             </field.Control>
           </form.Field>
         </Form>

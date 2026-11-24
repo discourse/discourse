@@ -47,39 +47,66 @@ module PageObjects
       CATEGORY_FILTER = "#{SELECTOR} .db-support__filter .multiple-categories-selector"
 
       def category_filter
-        PageObjects::Components::SelectKit.new(CATEGORY_FILTER)
+        selector = CATEGORY_FILTER
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def expand_category_filter
-        category_filter.expand
+        if category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          category_filter.open
+        else
+          category_filter.expand
+        end
         self
       end
 
       def select_category(category)
         expand_category_filter
-        category_filter.select_row_by_value(category.id)
+        if category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          category_filter.select_value(category.id)
+        else
+          category_filter.select_row_by_value(category.id)
+        end
         self
       end
 
       def close_category_filter
-        category_filter.collapse
+        if category_filter.is_a?(PageObjects::Components::UiKit::DSelect)
+          category_filter.close
+        else
+          category_filter.collapse
+        end
         self
       end
 
       def has_selected_category?(category)
-        has_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        has_css?(
+          "#{CATEGORY_FILTER} #{category_choice_class(CATEGORY_FILTER)}[data-value='#{category.id}']",
+        )
       end
 
       def has_no_selected_category?(category)
-        has_no_css?("#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}']")
+        has_no_css?(
+          "#{CATEGORY_FILTER} #{category_choice_class(CATEGORY_FILTER)}[data-value='#{category.id}']",
+        )
       end
 
       def has_selected_category_with_parent?(category)
         has_css?(
-          "#{CATEGORY_FILTER} .selected-choice[data-value='#{category.id}'] " \
+          "#{CATEGORY_FILTER} #{category_choice_class(CATEGORY_FILTER)}[data-value='#{category.id}'] " \
             ".badge-category__wrapper:has(.badge-category[data-category-id='#{category.parent_category_id}']) + " \
             ".badge-category__wrapper .badge-category[data-category-id='#{category.id}']",
         )
+      end
+
+      private
+
+      def category_choice_class(selector)
+        find(selector).matches_css?(".d-select", wait: 0) ? ".d-select__chip" : ".selected-choice"
       end
     end
   end

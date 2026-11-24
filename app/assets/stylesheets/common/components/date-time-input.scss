@@ -12,17 +12,8 @@
     flex: 1 1 auto;
   }
 
-  .d-time-input {
-    .select-kit-header {
-      border-color: transparent;
-    }
-  }
-
-  .d-date-input + .d-time-input {
+  .d-date-input + .time-input,
+  .time-input + .d-date-input {
     margin-left: 1px;
-  }
-
-  .d-time-input + .d-date-input {
-    margin-right: 1px;
   }
 }

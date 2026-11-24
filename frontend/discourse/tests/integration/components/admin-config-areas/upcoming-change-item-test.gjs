@@ -1,8 +1,9 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { i18n } from "discourse-i18n";
 
 function buildChange(overrides = {}) {
@@ -809,3 +810,97 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
     assert.dom('.d-multi-select__result[title="team"]').exists();
   });
 });
+
+module(
+  "Integration | Component | UpcomingChangeItem | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    /** The staff-only change, whose audience always includes staff. */
+    function staffChange() {
+      return buildChange({
+        groups: "staff",
+        upcoming_change: {
+          status: "beta",
+          enabled_for: "staff",
+          allow_enabled_for: ["staff", "specific_groups"],
+        },
+      });
+    }
+
+    test("staff cannot be removed by clicking or keyboard", async function (assert) {
+      let saves = 0;
+      pretender.put("/admin/config/upcoming-changes/toggle", () => {
+        saves++;
+        return response({ success: "OK" });
+      });
+      const change = staffChange();
+      await render(
+        <template>
+          <table><tbody><UpcomingChangeItem
+                @change={{change}}
+              /></tbody></table>
+        </template>
+      );
+
+      assert
+        .dom(".upcoming-change__groups-description")
+        .hasText(i18n("admin.upcoming_changes.staff_always_included"));
+      const remove =
+        ".d-select__chip[data-value='staff'] .d-select__chip-remove";
+      assert
+        .dom(".d-select__chip[data-value='staff']")
+        .hasClass("--locked", "the staff chip is locked");
+      assert
+        .dom(remove)
+        .hasAttribute("aria-disabled", "true", "its button is disabled");
+      assert
+        .dom(`${remove} .d-icon-lock`)
+        .exists("it shows a lock instead of the remove icon");
+
+      await click(remove);
+      await triggerKeyEvent(".d-select__input", "keydown", "Backspace");
+      await triggerKeyEvent(".d-select__input", "keydown", "Backspace");
+
+      assert.strictEqual(saves, 0, "nothing was saved");
+      assert
+        .dom(".d-select__chip[data-value='staff']")
+        .exists("staff is still held");
+      assert
+        .dom(".upcoming-change__save-groups")
+        .isDisabled("there is no change to save");
+    });
+
+    test("an added group is saved alongside the locked staff group", async function (assert) {
+      const requests = [];
+      pretender.put("/admin/config/upcoming-changes/toggle", (request) => {
+        requests.push(JSON.parse(request.requestBody));
+        return response({ success: "OK" });
+      });
+      const change = staffChange();
+      await render(
+        <template>
+          <table><tbody><UpcomingChangeItem
+                @change={{change}}
+              /></tbody></table>
+        </template>
+      );
+
+      const groups = dSelect(".upcoming-change__group-controls .d-select");
+      await groups.open();
+      await groups.select("trust_level_1");
+      await groups.close();
+      await click(".upcoming-change__save-groups");
+
+      assert.deepEqual(
+        requests.map(({ group_names }) => group_names),
+        [["staff", "trust_level_1"]],
+        "staff stays in the saved audience"
+      );
+    });
+  }
+);

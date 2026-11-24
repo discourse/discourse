@@ -6,6 +6,8 @@ const SettingFieldFileTypesList = <template>
     <FileTypesList
       @allowAny={{not (eq @definition.allow_any false)}}
       @changeValueCallback={{@field.set}}
+      @disabled={{@field.disabled}}
+      @label={{@field.title}}
       @setting={{hash setting=@definition.key choices=@definition.choices}}
       @value={{@field.value}}
     />

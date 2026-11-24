@@ -357,6 +357,7 @@ export default class SiteSetting extends EmberObject {
       min: this.min,
       max: this.max,
       choices: this.choices,
+      default: this.default,
       valid_values: this.validValues,
       allows_none: !!this.allowsNone,
       allow_any: this.allow_any,

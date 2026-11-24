@@ -1,15 +1,20 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import Group from "discourse/models/group";
 import DButton from "discourse/ui-kit/d-button";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeGroupControl extends Component {
+  @service siteSettings;
+
   @tracked _saving = false;
   @tracked _draftGroups = null;
 
@@ -60,15 +65,13 @@ export default class UpcomingChangeGroupControl extends Component {
   }
 
   @action
+  groupNamesChanged(names) {
+    this.#setDraft(names);
+  }
+
+  @action
   groupsChanged(selection) {
-    if (!this.disabled) {
-      this._draftGroups = [
-        ...new Set([
-          ...(this.args.lockedGroups || []),
-          ...selection.map((group) => group.name),
-        ]),
-      ];
-    }
+    this.#setDraft(selection.map((group) => group.name));
   }
 
   @action
@@ -101,6 +104,14 @@ export default class UpcomingChangeGroupControl extends Component {
     }
   }
 
+  #setDraft(names) {
+    if (!this.disabled) {
+      this._draftGroups = [
+        ...new Set([...(this.args.lockedGroups || []), ...names]),
+      ];
+    }
+  }
+
   <template>
     <div
       class={{dConcatClass
@@ -109,25 +120,44 @@ export default class UpcomingChangeGroupControl extends Component {
       }}
     >
       <div class="upcoming-change__group-controls">
-        <DMultiSelect
-          class="upcoming-change__group-selector"
-          @compareFn={{this.compareGroups}}
-          @disabled={{this.disabled}}
-          @label={{i18n "admin.upcoming_changes.select_groups"}}
-          @loadFn={{this.loadGroups}}
-          @matchTriggerWidth={{true}}
-          @onChange={{this.groupsChanged}}
-          @placement="bottom-start"
-          @selection={{this.selection}}
-        >
-          <:selection as |group|>
-            {{group.name}}
-            {{#if group.preventRemoval}}
-              {{dIcon "lock"}}
-            {{/if}}
-          </:selection>
-          <:result as |group|>{{group.name}}</:result>
-        </DMultiSelect>
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectGroup
+            @disabled={{this.disabled}}
+            @emit="names"
+            @everyone={{if @includeEveryone true false}}
+            @exclude={{@disallowedGroups}}
+            @lockedValues={{@lockedGroups}}
+            @multiple={{true}}
+            @onChange={{this.groupNamesChanged}}
+            @texts={{hash
+              ariaLabel=(i18n "admin.upcoming_changes.select_groups")
+              placeholder=(i18n "admin.upcoming_changes.select_groups")
+            }}
+            @value={{this.groups}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <DMultiSelect
+            class="upcoming-change__group-selector"
+            @compareFn={{this.compareGroups}}
+            @disabled={{this.disabled}}
+            @label={{i18n "admin.upcoming_changes.select_groups"}}
+            @loadFn={{this.loadGroups}}
+            @matchTriggerWidth={{true}}
+            @onChange={{this.groupsChanged}}
+            @placement="bottom-start"
+            @selection={{this.selection}}
+          >
+            <:selection as |group|>
+              {{group.name}}
+              {{#if group.preventRemoval}}
+                {{dIcon "lock"}}
+              {{/if}}
+            </:selection>
+            <:result as |group|>{{group.name}}</:result>
+          </DMultiSelect>
+        {{/if}}
         {{#unless @locked}}
           <DButton
             class={{dConcatClass

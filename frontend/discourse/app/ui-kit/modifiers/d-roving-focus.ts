@@ -605,7 +605,7 @@ export default class DRovingFocusModifier extends Modifier<DRovingFocusSignature
    */
   #cleanup(): void {
     this.#keyboard.destroy();
-    this.#activeStrategy?.disarmPendingSeed();
+    this.#activeStrategy?.stopObservingItems();
     this.#listenElement?.removeEventListener("keydown", this.#handleKeydown);
     this.#boundContainer?.removeEventListener(
       "mousedown",

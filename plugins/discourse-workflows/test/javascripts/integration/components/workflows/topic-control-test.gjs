@@ -1,8 +1,10 @@
 import { tracked } from "@glimmer/tracking";
-import { render, waitFor } from "@ember/test-helpers";
+import { hash } from "@ember/helper";
+import { click, findAll, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import TopicControl from "discourse/plugins/discourse-workflows/admin/components/workflows/configurators/topic-control";
 
@@ -90,3 +92,128 @@ module("Integration | Component | Workflows | TopicControl", function (hooks) {
       .includesText("Topic #999", "shows a placeholder for the missing topic");
   });
 });
+
+module(
+  "Integration | Component | Workflows | TopicControl | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      this.searches = [];
+      this.lookups = [];
+      pretender.get("/search/query", (request) => {
+        this.searches.push(request.queryParams);
+        return response(searchResponse(request.queryParams.term.trim()));
+      });
+      pretender.get("/topics/lookup.json", (request) => {
+        const ids = []
+          .concat(request.queryParams.topic_ids ?? [])
+          .map((id) => parseInt(id, 10));
+        this.lookups.push(ids);
+        return response({
+          topics: TOPICS.filter((topic) => ids.includes(topic.id)),
+        });
+      });
+    });
+
+    /** Searches for `term` and picks the row titled `title`. */
+    async function pick(select, term, title) {
+      await select.open();
+      await select.search(term);
+      await click(
+        findAll("[role='option']").find((row) =>
+          row.textContent.includes(title)
+        )
+      );
+    }
+
+    test("stores an array of topic ids, searching every archetype", async function (assert) {
+      await renderControl(this, []);
+      const select = new DSelect(".topic-selector");
+
+      await pick(select, "cube", "Cube challenge");
+      assert.deepEqual(this.field.value, [280], "stores the first selection");
+
+      await pick(select, "leaderboard", "Cube leaderboard");
+      assert.deepEqual(this.field.value, [280, 34], "appends later selections");
+      assert.deepEqual(this.searches[0], {
+        term: "cube ",
+        type_filter: "topic",
+        search_for_id: "true",
+      });
+    });
+
+    test("searches what the trigger's topic type watches", async function (assert) {
+      const topicType = tracked("topics");
+      this.field = tracked([]);
+      const field = this.field;
+      await render(
+        <template>
+          <TopicControl
+            @configuration={{hash topic_type=topicType.value}}
+            @field={{field}}
+            @supportsExpression={{false}}
+          />
+        </template>
+      );
+      const select = new DSelect(".topic-selector");
+
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        {
+          term: "cube ",
+          type_filter: "topic",
+          restrict_to_archetype: "regular",
+          search_for_id: "true",
+        },
+        "topics: regular topics only"
+      );
+      await select.close();
+
+      topicType.value = "personal_messages";
+      await settled();
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        {
+          term: "cube in:all-pms",
+          type_filter: "private_messages",
+          restrict_to_archetype: "private_message",
+          search_for_id: "true",
+        },
+        "personal messages: every user's messages"
+      );
+      await select.close();
+
+      topicType.value = "all";
+      await settled();
+      await select.open();
+      await select.search("cube");
+      assert.deepEqual(
+        this.searches.at(-1),
+        { term: "cube ", type_filter: "topic", search_for_id: "true" },
+        "all: every topic, with messages by id or URL"
+      );
+    });
+
+    test("names stored topics through one lookup", async function (assert) {
+      await renderControl(this, [280, 34]);
+
+      assert.deepEqual(this.lookups, [[280, 34]]);
+      assert
+        .dom(".topic-selector")
+        .hasAttribute("data-name", "Cube challenge,Cube leaderboard");
+    });
+
+    test("names unresolvable ids and drops non-numeric entries", async function (assert) {
+      await renderControl(this, ["=$json.topic_ids", 999]);
+
+      assert.dom(".topic-selector").hasAttribute("data-value", "999");
+      assert.dom(".topic-selector").hasAttribute("data-name", "Topic #999");
+    });
+  }
+);

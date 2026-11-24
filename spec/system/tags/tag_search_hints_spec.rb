@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Tag search: disabled hints" do
+  with_select_controls(false)
+
   fab!(:admin)
 
   let(:composer) { PageObjects::Components::Composer.new }

@@ -12,12 +12,14 @@ import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class LiveInviteUsersModal extends Component {
   @service currentUser;
   @service router;
   @service toasts;
+  @service siteSettings;
 
   @tracked suggestions = [];
   @tracked loadingSuggestions = true;
@@ -139,19 +141,36 @@ export default class LiveInviteUsersModal extends Component {
     >
       <:body>
         <div class="live-invite-modal__search">
-          <span class="live-invite-modal__label">
+          <span class="live-invite-modal__label" id="live-invite-search-label">
             {{i18n "live.invite.search_label"}}
           </span>
           <div class="live-invite-modal__search-row">
-            <UserChooser
-              class="live-invite-modal__user-chooser"
-              @onChange={{this.setSelectedUsernames}}
-              @options={{hash
-                excludeCurrentUser=true
-                filterPlaceholder="live.invite.search_placeholder"
-              }}
-              @value={{this.selectedUsernames}}
-            />
+            {{! TODO (select-kit-replacement-cleanup) }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelectUser
+                class="live-invite-modal__user-chooser"
+                @ariaLabelledBy="live-invite-search-label"
+                @excludeCurrentUser={{true}}
+                @multiple={{true}}
+                @onChange={{this.setSelectedUsernames}}
+                @texts={{hash
+                  placeholder=(i18n "live.invite.search_placeholder")
+                  searchPlaceholder=(i18n "live.invite.search_placeholder")
+                }}
+                @value={{this.selectedUsernames}}
+              />
+            {{else}}
+              {{! TODO (select-kit-replacement-cleanup) }}
+              <UserChooser
+                class="live-invite-modal__user-chooser"
+                @onChange={{this.setSelectedUsernames}}
+                @options={{hash
+                  excludeCurrentUser=true
+                  filterPlaceholder="live.invite.search_placeholder"
+                }}
+                @value={{this.selectedUsernames}}
+              />
+            {{/if}}
             <DButton
               class="btn-primary live-invite-modal__send"
               @action={{this.inviteSelected}}

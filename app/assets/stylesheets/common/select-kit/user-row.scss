@@ -20,3 +20,84 @@
     }
   }
 }
+
+.d-user-option,
+.d-group-option,
+.d-email-option,
+.d-unknown-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+
+  .avatar,
+  .d-icon {
+    flex: none;
+  }
+}
+
+.d-user-option {
+  // A chip or trigger keeps the height of its text.
+  &.--selection .avatar {
+    width: 1lh;
+    height: 1lh;
+  }
+
+  &__label {
+    min-width: 0;
+
+    @include ellipsis;
+  }
+
+  &__username {
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  &__name {
+    margin-inline-start: 0.25em;
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  &__status {
+    flex: none;
+    display: inline-flex;
+
+    .emoji {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  &__decorations:empty {
+    display: none;
+  }
+}
+
+.d-group-option__name,
+.d-email-option__address,
+.d-unknown-option__name {
+  min-width: 0;
+
+  @include ellipsis;
+}
+
+.d-user-option__reason,
+.d-group-option__reason {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  flex-shrink: 0;
+  padding: var(--space-half) var(--space-1);
+  border-radius: var(--d-border-radius);
+  background: var(--primary-low);
+  color: var(--primary-very-high);
+  font-size: var(--font-down-3);
+  white-space: nowrap;
+}
+
+// A name nobody has is kept as typed, so the warning is what tells it from a real user.
+.d-unknown-option .d-icon {
+  color: var(--danger);
+}

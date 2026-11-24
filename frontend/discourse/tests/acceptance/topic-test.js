@@ -8,16 +8,19 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import { FORMAT, timeShortcuts } from "discourse/lib/time-shortcut";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   chromeTest,
   fakeTime,
+  loggedInUser,
   publishToMessageBus,
   selectText,
   updateCurrentUser,
@@ -560,6 +563,43 @@ acceptance(`Topic pinning/unpinning as an admin`, function (needs) {
       assert
         .dom(".d-modal.feature-topic")
         .doesNotExist("topic is pinned and modal closes");
+    } finally {
+      clock.restore();
+    }
+  });
+});
+
+acceptance(`Topic pinning with the new select controls`, function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ enable_new_select_controls: true });
+
+  test("pins until the picked timeframe", async function (assert) {
+    const timezone = loggedInUser().user_option.timezone;
+    const clock = fakeTime("2100-12-13T08:00:00", timezone, true);
+    let pinnedUntil;
+    pretender.put(
+      "/t/a-topic-with-group-category-moderators/2480/status",
+      (request) => {
+        pinnedUntil = parsePostData(request.requestBody).until;
+        return response({ success: "OK" });
+      }
+    );
+
+    try {
+      await visit("/t/topic-for-group-moderators/2480");
+      await click(".toggle-admin-menu");
+      await click(".topic-admin-pin .btn");
+      await dSelect(".pin-until .d-select").select("tomorrow");
+      await click(".feature-topic .btn-primary");
+
+      assert.strictEqual(
+        pinnedUntil.slice(0, 16),
+        timeShortcuts(timezone)
+          .tomorrow()
+          .time.locale("en")
+          .format(FORMAT)
+          .slice(0, 16)
+      );
     } finally {
       clock.restore();
     }

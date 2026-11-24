@@ -13,10 +13,8 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  settleGestureFrame,
-  stubPointerCapture,
-} from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
+import { settledAfterFrame } from "discourse/tests/helpers/qunit-helpers";
+import { stubPointerCapture } from "discourse/tests/helpers/ui-kit/pointer-gesture-helper";
 import DResizeSeparator from "discourse/ui-kit/d-resize-separator";
 
 module("Integration | ui-kit | DResizeSeparator", function (hooks) {
@@ -600,7 +598,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await settleGestureFrame();
+    await settledAfterFrame();
     await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
 
     // Without a starting size there is nothing to resize *from*, so the honest
@@ -815,7 +813,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await settleGestureFrame();
+    await settledAfterFrame();
     await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
 
     // On the outcome rather than the cadence, as the sibling drags do: how many
@@ -873,7 +871,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
         clientY: from,
       });
       await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: to });
-      await settleGestureFrame();
+      await settledAfterFrame();
       await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: to });
     }
 
@@ -922,7 +920,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await settleGestureFrame();
+    await settledAfterFrame();
     await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
 
     // A consumer whose number is not a measurement of the box keeps its own,
@@ -1092,7 +1090,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await settleGestureFrame();
+    await settledAfterFrame();
     await triggerEvent(handle, "pointerup", { pointerId: 1, clientY: 360 });
 
     assert.deepEqual(ends, [340], "the release committed once");
@@ -1131,7 +1129,7 @@ module("Integration | ui-kit | DResizeSeparator", function (hooks) {
       clientY: 400,
     });
     await triggerEvent(handle, "pointermove", { pointerId: 1, clientY: 360 });
-    await settleGestureFrame();
+    await settledAfterFrame();
 
     assert.deepEqual(ends, [], "nothing committed while the gesture is held");
 

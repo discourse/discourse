@@ -15,13 +15,13 @@ import { INVITE_DESCRIPTION_MAX_LENGTH } from "discourse/lib/constants";
 import { shortDate } from "discourse/lib/formatter";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
+import { FORMAT as DATE_INPUT_FORMAT } from "discourse/lib/time-shortcut";
 import {
   clipboardCopyAsync,
   emailValid,
   hostnameValid,
 } from "discourse/lib/utilities";
 import Invite from "discourse/models/invite";
-import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TopicChooser from "discourse/select-kit/components/topic-chooser";
 import DButton from "discourse/ui-kit/d-button";
@@ -29,6 +29,8 @@ import DCopyButton from "discourse/ui-kit/d-copy-button";
 import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
 import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 
 const FORM = "form";
@@ -515,7 +517,7 @@ export default class CreateInviteWithRoles extends Component {
 
   @action
   onChangeTopic(fieldSet, topicId, topic) {
-    this.topics = [topic];
+    this.topics = topic ? [topic] : [];
     fieldSet(topicId);
   }
 
@@ -892,12 +894,29 @@ export default class CreateInviteWithRoles extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <TopicChooser
-                        @content={{this.topics}}
-                        @onChange={{fn this.onChangeTopic field.set}}
-                        @options={{hash additionalFilters="status:public"}}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectTopic
+                          @additionalFilters="status:public"
+                          @clearable={{true}}
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @onChange={{fn this.onChangeTopic field.set}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @topics={{this.topics}}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+                        <TopicChooser
+                          @content={{this.topics}}
+                          @onChange={{fn this.onChangeTopic field.set}}
+                          @options={{hash additionalFilters="status:public"}}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}
@@ -911,12 +930,28 @@ export default class CreateInviteWithRoles extends Component {
                     as |field|
                   >
                     <field.Control>
-                      <GroupChooser
-                        @content={{this.allGroups}}
-                        @labelProperty="name"
-                        @onChange={{field.set}}
-                        @value={{field.value}}
-                      />
+                      {{! TODO (select-kit-replacement-cleanup): Keep the picker switch until rollout completes. }}
+                      {{#if this.siteSettings.enable_new_select_controls}}
+                        <DSelectGroup
+                          @automatic={{false}}
+                          @describedBy={{field.describedBy}}
+                          @disabled={{field.disabled}}
+                          @id={{field.id}}
+                          @invalid={{if field.error true false}}
+                          @multiple={{true}}
+                          @onChange={{field.set}}
+                          @texts={{hash ariaLabel=field.title}}
+                          @value={{field.value}}
+                        />
+                      {{else}}
+                        {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+                        <GroupChooser
+                          @content={{this.allGroups}}
+                          @labelProperty="name"
+                          @onChange={{field.set}}
+                          @value={{field.value}}
+                        />
+                      {{/if}}
                     </field.Control>
                   </form.Field>
                 {{/if}}

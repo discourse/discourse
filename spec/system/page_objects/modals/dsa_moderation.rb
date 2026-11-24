@@ -35,6 +35,8 @@ module PageObjects
       end
 
       def open_rule_menu
+        return rule_select.open if SiteSetting.enable_new_select_controls
+
         within(full_modal_selector) do
           find("[data-name='community_rule'] .form-kit__control-menu-trigger").click
         end
@@ -45,15 +47,30 @@ module PageObjects
       end
 
       def select_rule(ground)
+        return rule_select.select_name(ground) if SiteSetting.enable_new_select_controls
+
         open_rule_menu
         find(".dsa-classification-option", text: ground).click
       end
 
       def has_no_classification_menu?
+        return false if SiteSetting.enable_new_select_controls && !rule_select.has_no_listbox?
+
         has_no_css?(".dsa-classification-option")
       end
 
       def has_rule_option?(ground, explanation:)
+        if SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              rule_select.in_panel("[role='option'][data-name='#{ground}']"),
+              text: "#{ground} #{explanation}",
+              exact_text: true,
+              normalize_ws: true,
+            )
+          )
+        end
+
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
@@ -130,6 +147,8 @@ module PageObjects
       end
 
       def has_selected_rule?(ground)
+        return rule_select.has_selected_name?(ground) if SiteSetting.enable_new_select_controls
+
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .d-button-label",
           text: ground,
@@ -137,7 +156,28 @@ module PageObjects
         )
       end
 
+      def has_no_selected_rule?
+        if SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              "#{full_modal_selector} [data-name='community_rule'] [role='combobox']",
+            ) { |input| input.value.empty? }
+          )
+        end
+
+        has_selected_rule?(I18n.t("js.dsa_statements.rule_prompt"))
+      end
+
+      # The new combobox exposes the held rule as its value, so it needs no hidden label.
       def has_accessible_selection?(field, label)
+        if field == "community_rule" && SiteSetting.enable_new_select_controls
+          return(
+            has_css?(
+              "#{full_modal_selector} [data-name='community_rule'] [role='combobox']",
+            ) { |input| input.value == label }
+          )
+        end
+
         has_css?(
           "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger",
         ) do |trigger|
@@ -162,13 +202,29 @@ module PageObjects
       def has_accessible_field_description?(field, text, invalid: false)
         invalid_selector = invalid ? "[aria-invalid='true']" : ":not([aria-invalid='true'])"
         has_css?(
-          "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger#{invalid_selector}",
+          "#{full_modal_selector} [data-name='#{field}'] #{field_control(field)}#{invalid_selector}",
         ) do |trigger|
           trigger.evaluate_script(
             "this.ariaDescribedByElements?.some((element) => element.textContent.trim() === arguments[0])",
             text,
           )
         end
+      end
+
+      private
+
+      def field_control(field)
+        if field == "community_rule" && SiteSetting.enable_new_select_controls
+          "[role='combobox']"
+        else
+          ".form-kit__control-menu-trigger"
+        end
+      end
+
+      def rule_select
+        PageObjects::Components::UiKit::DSelect.at(
+          "#{full_modal_selector} [data-name='community_rule'] .d-select",
+        )
       end
     end
   end

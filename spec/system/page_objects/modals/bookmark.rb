@@ -37,6 +37,14 @@ module PageObjects
       end
 
       def select_relative_time_interval(interval)
+        if SiteSetting.enable_new_select_controls
+          return(
+            PageObjects::Components::UiKit::DSelect.at(".relative-time-intervals").select_value(
+              interval,
+            )
+          )
+        end
+
         select_kit = PageObjects::Components::SelectKit.new(".relative-time-intervals")
         select_kit.expand
         select_kit.select_row_by_value(interval)

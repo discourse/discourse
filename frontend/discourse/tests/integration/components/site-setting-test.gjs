@@ -20,6 +20,7 @@ import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   logIn,
   publishToMessageBus,
@@ -132,12 +133,9 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert
       .dom(".formatted-selection")
       .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
-
-    await click(".file-types-list__button.image");
-
     assert
-      .dom(".formatted-selection")
-      .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
+      .dom(".file-types-list__button.image")
+      .isDisabled("nothing is left to add once every image type is allowed");
   });
 
   test("prevents decimal in integer setting input", async function (assert) {
@@ -652,6 +650,165 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.strictEqual(body.test_types, "mov|mp4|webm|m4v|3gp|ogv|avi|mpeg");
   });
 
+  test("a file types list setting picks its types with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let body;
+    pretender.put("/admin/site_settings/test_types", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_types",
+      value: "jpg|png",
+      type: "file_types_list",
+    });
+
+    const control = ".form-kit__field .file-types-list .d-select";
+    assert.dom(control).hasAttribute("data-name", "jpg,png");
+    assert
+      .dom(`${control} [role='combobox']`)
+      .hasAria("label", "test_types", "the picker is named after the setting");
+
+    assert
+      .dom(".file-types-list > .file-types-list__button")
+      .doesNotExist("the add-types buttons aren't drawn under the field");
+
+    await dSelect(control).search("mp3");
+    await click("[role='option'].--create");
+
+    const buttons = ".d-select__footer .file-types-list__buttons";
+    const labelId = document
+      .querySelector(buttons)
+      ?.getAttribute("aria-labelledby");
+    assert
+      .dom(buttons)
+      .hasAttribute("role", "group", "the add-types buttons form a group");
+    assert
+      .dom(labelId ? `#${labelId}` : ".no-label")
+      .hasText(
+        i18n("admin.site_settings.file_types_list.add_common_types"),
+        "named by the label drawn before them"
+      );
+
+    await click(".d-select__footer .file-types-list__button.document");
+    assert
+      .dom(control)
+      .hasAttribute(
+        "data-name",
+        "jpg,png,mp3,txt,pdf,doc,docx,csv",
+        "a typed type and the default document types join the list"
+      );
+
+    await click(".setting-controls__ok");
+    assert.strictEqual(body.test_types, "jpg|png|mp3|txt|pdf|doc|docx|csv");
+  });
+
+  test("a file types list setting only offers the default types it would add with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await renderSetting({
+      setting: "test_types",
+      value: "gif|png|jpeg|jpg|heic|heif|webp|avif|svg|mp4",
+      type: "file_types_list",
+    });
+
+    const control = ".form-kit__field .file-types-list .d-select";
+    const images = ".d-select__footer .file-types-list__button.image";
+    const videos = ".d-select__footer .file-types-list__button.video";
+    await dSelect(control).open();
+
+    assert
+      .dom(images)
+      .isDisabled("every image type is allowed already")
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.file_types_list.already_allowed", {
+          types: "gif, png, jpeg, jpg, heic, heif, webp, avif, svg",
+        }),
+        "and the title says so"
+      );
+    assert
+      .dom(videos)
+      .isEnabled("some video types are missing")
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.file_types_list.add_types_title", {
+          types: "mov, webm, m4v, 3gp, ogv, avi, mpeg",
+        }),
+        "and the title lists only those"
+      );
+
+    await click("[role='option'][data-value='png']");
+
+    assert
+      .dom(images)
+      .isEnabled("removing an image type offers it again")
+      .hasAttribute(
+        "title",
+        i18n("admin.site_settings.file_types_list.add_types_title", {
+          types: "png",
+        })
+      );
+  });
+
+  test("a disabled file types list setting disables its add-types buttons", async function (assert) {
+    await renderSetting({
+      setting: "test_types",
+      value: "jpg",
+      type: "file_types_list",
+      disabled: true,
+    });
+
+    assert
+      .dom(".form-kit__field .file-types-list__button.video")
+      .isDisabled("even when it would add types");
+  });
+
+  test("a disabled file types list setting can't be changed with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+
+    await renderSetting({
+      setting: "test_types",
+      value: "jpg",
+      type: "file_types_list",
+      disabled: true,
+    });
+
+    assert
+      .dom(".form-kit__field .file-types-list .d-select [role='combobox']")
+      .isDisabled("the picker follows the setting");
+    assert
+      .dom(".file-types-list__button")
+      .doesNotExist(
+        "the add-types buttons stay in the panel, which can't open"
+      );
+  });
+
+  test("an enum setting whose default is blank can be cleared with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let body;
+    pretender.put("/admin/site_settings/onebox_locale", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "onebox_locale",
+      type: "enum",
+      value: "fr",
+      default: "",
+      valid_values: [
+        { name: "English", value: "en" },
+        { name: "French", value: "fr" },
+      ],
+    });
+
+    await dSelect(".form-kit__field .d-select").clear();
+    await click(".setting-controls__ok");
+    assert.strictEqual(body.onebox_locale, "", "saves the blank default");
+  });
+
   test("an upload setting shows its restrictions and saves a removed file", async function (assert) {
     let body;
     pretender.put("/admin/site_settings/test_upload", (request) => {
@@ -737,6 +894,29 @@ module("Integration | Component | SiteSetting", function (hooks) {
       "red",
       "named colors are kept as typed"
     );
+  });
+
+  test("a color list setting saves its colors in order with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    let body;
+    pretender.put("/admin/site_settings/test_colors", (request) => {
+      body = parsePostData(request.requestBody);
+      return response(200, {});
+    });
+
+    await renderSetting({
+      setting: "test_colors",
+      value: "FF0000|00FF00",
+      default: "",
+      type: "list",
+      list_type: "color",
+    });
+
+    await fillIn(".color-list__add .d-color-input__hex", "0000ff");
+    await click(".color-list__add-btn");
+    await click(".setting-controls__ok");
+
+    assert.strictEqual(body.test_colors, "FF0000|00FF00|0000FF");
   });
 
   test("a locale list setting names its choices from the available locales", async function (assert) {

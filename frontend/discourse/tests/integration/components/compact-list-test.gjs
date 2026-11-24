@@ -1,9 +1,13 @@
-import { render } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
+import CompactList from "discourse/admin/components/site-settings/compact-list";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -118,5 +122,127 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
     // value "42" (string) should match valid_values 42 (integer)
     assert.dom(".selected-content .selected-choice").exists({ count: 1 });
     assert.strictEqual(subject.rowByIndex(0).name(), "Item Forty-Three");
+  });
+
+  test("the control offers choices, takes typed entries and keeps removed ones with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const value = tracked("a|b");
+    const setting = {
+      setting: "foo_bar",
+      choices: ["a", "b"],
+      mandatory_values: "a",
+    };
+    const changes = [];
+    const changeValue = (newValue) => {
+      changes.push(newValue);
+      value.value = newValue;
+    };
+
+    await render(
+      <template>
+        <CompactList
+          @allowAny={{true}}
+          @changeValueCallback={{changeValue}}
+          @label="Foo bar"
+          @setting={{setting}}
+          @value={{value.value}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select__chip[data-value='a']")
+      .hasClass("--locked", "a mandatory value can't be removed");
+
+    await dSelect(".d-select").search("custom");
+    await click("[role='option'].--create");
+    await dSelect(".d-select").close();
+    await dSelect(".d-select").remove("custom");
+    assert.deepEqual(changes, ["a|b|custom", "a|b"], "reports each list");
+
+    await dSelect(".d-select").open();
+    assert
+      .dom("[role='option'][data-value='custom']")
+      .exists("a removed typed entry stays on offer");
+  });
+
+  test("the control refuses typed entries when the setting does, and follows @disabled, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const setting = { setting: "foo_bar", choices: ["a", "b"] };
+    const disabled = tracked(false);
+    const changeValue = () => {};
+
+    await render(
+      <template>
+        <CompactList
+          @allowAny={{false}}
+          @changeValueCallback={{changeValue}}
+          @disabled={{disabled.value}}
+          @label="Foo bar"
+          @setting={{setting}}
+          @value="a"
+        />
+      </template>
+    );
+
+    await dSelect(".d-select").search("custom");
+    assert
+      .dom("[role='option'].--create")
+      .doesNotExist("no typed entry is offered");
+
+    await dSelect(".d-select").close();
+    disabled.value = true;
+    await settled();
+    assert
+      .dom(".d-select [role='combobox']")
+      .isDisabled("the picker follows the setting's disabled state");
+  });
+
+  test("the control names the query that matched no choice, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const setting = { setting: "foo_bar", choices: ["a", "b"] };
+    const changeValue = () => {};
+
+    await render(
+      <template>
+        <CompactList
+          @allowAny={{false}}
+          @changeValueCallback={{changeValue}}
+          @label="Foo bar"
+          @setting={{setting}}
+          @value="a"
+        />
+      </template>
+    );
+
+    await dSelect(".d-select").search("zzz");
+    assert
+      .dom(".d-select__empty")
+      .hasText(i18n("d_select.no_results_for", { query: "zzz" }));
+  });
+
+  test("the control draws no colour squares, whatever the setting is named", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const setting = { setting: "category_colors" };
+    const changeValue = () => {};
+
+    await render(
+      <template>
+        <CompactList
+          @allowAny={{true}}
+          @changeValueCallback={{changeValue}}
+          @label="Category colors"
+          @setting={{setting}}
+          @value="f00|nope"
+        />
+      </template>
+    );
+
+    assert
+      .dom(".d-select__chip[data-value='f00'] .d-select__chip-label")
+      .hasText("f00", "a held value shows only itself");
+    assert
+      .dom(".d-select__chip [style]")
+      .doesNotExist("with nothing coloured beside it");
   });
 });

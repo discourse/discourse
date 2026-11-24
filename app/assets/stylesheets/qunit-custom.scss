@@ -25,6 +25,13 @@ body {
   transform-origin: top left;
 }
 
+// Under tests a select's list renders in place, so a growing list can make a modal scroll,
+// shrinking every width inside until it no longer does. Resize observers chase that in a loop.
+// A portaled list never does this, so keep the gutter while one is open.
+#ember-testing :is(.d-modal, .d-modal__body):has(.d-select__content) {
+  scrollbar-gutter: stable;
+}
+
 .discourse-root {
   background: var(--secondary);
 }

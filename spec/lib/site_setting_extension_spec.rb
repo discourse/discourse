@@ -1876,6 +1876,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.content_localization_supported_locales_map).to eq(%w[ja pt_BR])
     end
 
+    it "handles splitting color list settings" do
+      SiteSetting.category_colors = "FF0000|00FF00"
+      expect(SiteSetting.category_colors_map).to eq(%w[FF0000 00FF00])
+    end
+
     it "handles splitting list settings with no type" do
       SiteSetting.post_menu = "read|like"
       expect(SiteSetting.post_menu_map).to eq(%w[read like])

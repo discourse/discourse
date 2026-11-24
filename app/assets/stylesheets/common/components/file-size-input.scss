@@ -10,7 +10,8 @@
     flex: 0 0 8em;
   }
 
-  .select-kit .select-kit-header {
+  .select-kit .select-kit-header,
+  .d-select__trigger {
     border-left: 0;
   }
 }

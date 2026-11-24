@@ -1,0 +1,56 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { i18n } from "discourse-i18n";
+import { notificationLevels } from "../../../../../lib/select-fixtures.js";
+
+export default class NotificationsSelectExample extends Component {
+  @tracked actionCount = 0;
+  @tracked value = "watching";
+
+  get event() {
+    if (this.actionCount > 0) {
+      return i18n(
+        "styleguide.sections.select.showcases.notifications.action_count",
+        { count: this.actionCount }
+      );
+    }
+
+    return i18n(
+      "styleguide.sections.select.showcases.notifications.event_idle"
+    );
+  }
+
+  get items() {
+    return notificationLevels(this.manage);
+  }
+
+  @action
+  manage() {
+    this.actionCount++;
+  }
+
+  @action
+  update(value) {
+    this.value = value;
+  }
+
+  <template>
+    <DSelect
+      @iconField="icon"
+      @identifier="sg-notifications"
+      @labelField="title"
+      @onChange={{this.update}}
+      @options={{this.items}}
+      @placement="top-start"
+      @value={{this.value}}
+      @valueField="level"
+      @variant="static"
+    />
+
+    <output class="styleguide-example__result" data-test-notification-event>
+      {{~this.event~}}
+    </output>
+  </template>
+}

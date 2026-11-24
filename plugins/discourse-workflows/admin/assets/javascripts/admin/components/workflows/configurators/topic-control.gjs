@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
@@ -10,6 +11,7 @@ import { searchForTerm } from "discourse/lib/search";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import TopicRow from "discourse/select-kit/components/topic-row";
+import DSelectTopic from "discourse/ui-kit/select/recipes/topics/d-select-topic";
 import { i18n } from "discourse-i18n";
 import {
   integerIdsFromValue,
@@ -54,16 +56,42 @@ class TopicSelector extends MultiSelect {
   }
 }
 
+/** Names a stored id whose topic is gone or hidden, so it can still be removed. */
+function unavailableTopic({ id }) {
+  return i18n("discourse_workflows.topic_control.unavailable_topic", { id });
+}
+
 export default class TopicControl extends Component {
+  @service siteSettings;
+
   @tracked selectedTopics = [];
 
   constructor() {
     super(...arguments);
-    this.hydrateSelectedTopics();
+    // TODO (select-kit-replacement-cleanup): The new picker looks stored topics up itself.
+    if (!this.siteSettings.enable_new_select_controls) {
+      this.hydrateSelectedTopics();
+    }
   }
 
   get topicIds() {
     return integerIdsFromValue(this.args.field.value);
+  }
+
+  /**
+   * What the search offers, following the trigger's topic type: regular topics, or messages
+   * (every user's, since only admins configure workflows). Without a type, or with "all", it
+   * searches every topic and finds a message by its id or URL.
+   */
+  get search() {
+    switch (this.args.configuration?.topic_type) {
+      case "topics":
+        return { archetype: "regular" };
+      case "personal_messages":
+        return { archetype: "private_message", filters: "in:all-pms" };
+      default:
+        return { archetype: null };
+    }
   }
 
   @action
@@ -77,6 +105,11 @@ export default class TopicControl extends Component {
   @action
   handleChange(topicIds, topics) {
     this.selectedTopics = makeArray(topics);
+    this.args.field.set(topicIds);
+  }
+
+  @action
+  setTopicIds(topicIds) {
     this.args.field.set(topicIds);
   }
 
@@ -126,13 +159,26 @@ export default class TopicControl extends Component {
       @session={{@session}}
       @supportsExpression={{@supportsExpression}}
     >
-      <TopicSelector
-        @content={{this.selectedTopics}}
-        @onChange={{this.handleChange}}
-        @options={{hash translatedNone=@placeholder}}
-        @value={{this.topicIds}}
-        {{didUpdate this.hydrateSelectedTopics @field.value}}
-      />
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy picker after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        <DSelectTopic
+          class="topic-selector"
+          @additionalFilters={{this.search.filters}}
+          @archetype={{this.search.archetype}}
+          @multiple={{true}}
+          @onChange={{this.setTopicIds}}
+          @texts={{hash placeholder=@placeholder unresolved=unavailableTopic}}
+          @value={{this.topicIds}}
+        />
+      {{else}}
+        <TopicSelector
+          @content={{this.selectedTopics}}
+          @onChange={{this.handleChange}}
+          @options={{hash translatedNone=@placeholder}}
+          @value={{this.topicIds}}
+          {{didUpdate this.hydrateSelectedTopics @field.value}}
+        />
+      {{/if}}
     </ExpressionWrapper>
   </template>
 }

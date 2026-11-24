@@ -5,7 +5,12 @@ module PageObjects
       MODAL_SELECTOR = ".topic-bulk-actions-modal"
 
       def category_selector
-        PageObjects::Components::SelectKit.new(".category-chooser")
+        selector = ".category-chooser"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def click_bulk_topics_confirm
@@ -30,20 +35,30 @@ module PageObjects
         end
       end
 
-      def pin_in_category_date_selector
-        PageObjects::Components::SelectKit.new(
-          "#{MODAL_SELECTOR} .feature-section:first-of-type .future-date-input-selector",
-        )
+      def pin_in_category_until(value)
+        pick_pin_date("#{MODAL_SELECTOR} .feature-section:first-of-type", value)
       end
 
       def click_pin_in_category
         find("#{MODAL_SELECTOR} .feature-section:first-of-type .btn-primary").click
       end
 
-      def pin_globally_date_selector
-        PageObjects::Components::SelectKit.new(
-          "#{MODAL_SELECTOR} .feature-section:last-of-type .future-date-input-selector",
-        )
+      def pin_globally_until(value)
+        pick_pin_date("#{MODAL_SELECTOR} .feature-section:last-of-type", value)
+      end
+
+      def pick_pin_date(section, value)
+        if SiteSetting.enable_new_select_controls
+          return(
+            PageObjects::Components::UiKit::DSelect.at(
+              "#{section} .future-date-input .d-select",
+            ).select_value(value)
+          )
+        end
+
+        select = PageObjects::Components::SelectKit.new("#{section} .future-date-input-selector")
+        select.expand
+        select.select_row_by_value(value)
       end
 
       def click_pin_globally

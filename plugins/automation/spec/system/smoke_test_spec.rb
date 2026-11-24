@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "DiscourseAutomation | smoke test" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "test") }
   fab!(:badge) { Fabricate(:badge, name: "badge") }

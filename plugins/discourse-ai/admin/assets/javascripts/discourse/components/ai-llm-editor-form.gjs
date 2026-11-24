@@ -623,6 +623,7 @@ export default class AiLlmEditorForm extends Component {
         >
           <field.Control>
             <AiLlmAttachmentTypes
+              @id={{field.id}}
               @onChange={{field.set}}
               @value={{field.value}}
             />

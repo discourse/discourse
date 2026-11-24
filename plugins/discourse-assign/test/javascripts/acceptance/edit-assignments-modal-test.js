@@ -1,9 +1,15 @@
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
+import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts.js";
 
 const topic = topicWithAssignedPosts();
@@ -161,4 +167,40 @@ acceptance("Edit assignments modal", function (needs) {
   async function submitModal() {
     await click(".d-modal__footer .btn-primary");
   }
+});
+
+acceptance("Edit assignments modal - new select controls", function (needs) {
+  needs.user({ can_assign: true });
+  needs.settings({ assign_enabled: true, enable_new_select_controls: true });
+  needs.pretender((server, helper) => {
+    server.get("/t/44.json", () => helper.response(topic));
+    server.get("/assign/suggestions", () =>
+      helper.response({ groups: [], suggestions: [] })
+    );
+  });
+  needs.hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
+    this.counter = sinon.stub(DeprecationCounter.prototype, "incrementCount");
+  });
+  needs.hooks.afterEach(function () {
+    enableRaiseOnDeprecation();
+  });
+
+  test("the assignee picker reports no legacy render", async function (assert) {
+    await visit("/t/assignment-topic/44");
+    await click("#topic-footer-dropdown-reassign .btn");
+    await click(`li[data-value='reassign']`);
+
+    assert.dom(".d-modal #assignee-chooser").exists();
+    assert.strictEqual(
+      this.counter
+        .getCalls()
+        .filter(
+          (call) =>
+            call.args[0] === "discourse.select-kit-rollout.legacy-render"
+        ).length,
+      0,
+      "the assignee picker stays on select-kit until the engine opens on render"
+    );
+  });
 });

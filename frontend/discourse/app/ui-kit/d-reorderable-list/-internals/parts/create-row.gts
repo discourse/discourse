@@ -6,6 +6,7 @@ import type { ModifierLike } from "@glint/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/ui-kit/d-button";
 import { TABLE_CREATE_COLSPAN } from "discourse/ui-kit/d-reorderable-list/-internals/constants";
+import HandleSlotPart from "discourse/ui-kit/d-reorderable-list/-internals/parts/handle-slot";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import { i18n } from "discourse-i18n";
 
@@ -13,6 +14,9 @@ interface CreateRowSignature {
   Args: {
     itemTag: string;
     onCreate?: (value: string) => void;
+
+    /** Whether the rows hold a handle's place, so the input starts where their content does. */
+    reservesHandleSlot?: boolean;
   };
 }
 
@@ -104,6 +108,9 @@ export default class CreateRow extends Component<CreateRowSignature> {
             />
           </td>
         {{else}}
+          {{#if @reservesHandleSlot}}
+            <HandleSlotPart />
+          {{/if}}
           <CreateControls
             @captureInput={{this.captureInput}}
             @onKeydown={{this.onKeydown}}

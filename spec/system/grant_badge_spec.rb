@@ -22,15 +22,41 @@ describe "Granting Badges" do
       topic_page.click_post_admin_action_button(post, :grant_badge)
     end
 
-    it "grants badge with the correct badge reason which links the right post" do
-      visit_topic_and_open_badge_modal(post)
-      badge_modal.select_badge(badge_to_grant.name)
-      badge_modal.grant
+    shared_examples "granting from the post" do
+      it "grants badge with the correct badge reason which links the right post" do
+        visit_topic_and_open_badge_modal(post)
+        badge_modal.select_badge(badge_to_grant.name)
+        badge_modal.grant
 
-      expect(badge_modal).to have_success_flash_visible
-      granted_badge = UserBadge.last
-      expect(granted_badge.badge_id).to eq badge_to_grant.id
-      expect(granted_badge.post_id).to eq post.id
+        expect(badge_modal).to have_success_flash_visible
+        granted_badge = UserBadge.last
+        expect(granted_badge.badge_id).to eq badge_to_grant.id
+        expect(granted_badge.post_id).to eq post.id
+      end
+    end
+
+    include_examples "granting from the post"
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      include_examples "granting from the post"
+
+      it "describes each badge, and clears the picked one instead of listing none" do
+        badge_to_grant.update!(description: "Thanks for <strong>helping</strong> out")
+        visit_topic_and_open_badge_modal(post)
+
+        expect(badge_modal).to have_badge_description(badge_to_grant.name, "Thanks for helping out")
+        expect(badge_modal).to have_no_none_option
+
+        badge_modal.select_badge(badge_to_grant.name)
+        expect(badge_modal).to have_grant_enabled
+
+        badge_modal.badge_select.clear
+
+        expect(badge_modal.badge_select).to have_no_selected_name(badge_to_grant.name)
+        expect(badge_modal).to have_grant_disabled
+      end
     end
   end
 

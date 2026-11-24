@@ -35,7 +35,8 @@ module PageObjects
 
       def portal_with_identifier_selector
         if @identifier.nil?
-          "#d-menu-portals"
+          # A menu opened inside a modal dialog renders in the dialog's own outlet.
+          ":is(#d-menu-portals, [data-float-outlet]):has(.fk-d-menu)"
         else
           "[data-content][data-identifier=\"#{@identifier}\"]"
         end

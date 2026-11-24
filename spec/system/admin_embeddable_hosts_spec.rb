@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Admin EmbeddableHost Management" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:author, :admin)
   fab!(:author_2, :admin)

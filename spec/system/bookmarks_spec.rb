@@ -101,17 +101,27 @@ describe "Bookmarking posts and topics" do
       expect(bookmark.reload.name).to eq("something important")
     end
 
-    it "allows to set a relative time" do
-      bookmark = Fabricate(:bookmark, bookmarkable: topic, user: current_user)
-      topic_page.visit_topic(topic)
-      topic_page.click_topic_bookmark_button
-      bookmark_menu.click_menu_option("edit")
-      bookmark_modal.select_relative_time_duration(10)
-      bookmark_modal.select_relative_time_interval("days")
+    shared_examples "setting a relative time" do
+      it "allows to set a relative time" do
+        bookmark = Fabricate(:bookmark, bookmarkable: topic, user: current_user)
+        topic_page.visit_topic(topic)
+        topic_page.click_topic_bookmark_button
+        bookmark_menu.click_menu_option("edit")
+        bookmark_modal.select_relative_time_duration(10)
+        bookmark_modal.select_relative_time_interval("days")
 
-      expect(bookmark_modal.custom_time_picker.value).to eq(
-        bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
-      )
+        expect(bookmark_modal.custom_time_picker.value).to eq(
+          bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
+        )
+      end
+    end
+
+    include_examples "setting a relative time"
+
+    context "with the new select controls" do
+      with_select_controls(true)
+
+      include_examples "setting a relative time"
     end
 
     it "updates the topic status and footer button when using the keyboard shortcut" do

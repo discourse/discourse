@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { classNameBindings } from "@ember-decorators/component";
+import { selectControl } from "discourse/lib/select-control";
 
 @classNameBindings(":user-field", "field.field_type", "customFieldClass")
 export default class UserFieldBase extends Component {
@@ -24,9 +25,9 @@ export default class UserFieldBase extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    let element = this.element.querySelector(
-      ".user-field.dropdown .select-kit-header"
-    );
+    let element = this.element.matches(".user-field.dropdown")
+      ? selectControl(this.element)
+      : null;
     element = element || this.element.querySelector("input");
     this.field.element = element;
   }

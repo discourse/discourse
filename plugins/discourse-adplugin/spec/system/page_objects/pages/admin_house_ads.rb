@@ -37,7 +37,12 @@ module PageObjects
       end
 
       def has_selected_category?(category)
-        has_css?(".house-ad-form .category-selector .formatted-selection", text: category.name)
+        selector = ".house-ad-form .category-selector"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          has_css?("#{selector} .d-select__chip[data-value='#{category.id}']")
+        else
+          has_css?("#{selector} .formatted-selection", text: category.name)
+        end
       end
 
       def click_delete

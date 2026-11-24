@@ -3,16 +3,21 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import legacyPickOne from "discourse/lib/legacy-pick-one";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
+import DSelectUser from "discourse/ui-kit/select/recipes/users/d-select-user";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeOwnerModal extends Component {
+  @service siteSettings;
+
   @tracked saving = false;
 
   /** @type {string | null | undefined} */
@@ -89,17 +94,31 @@ export default class ChangeOwnerModal extends Component {
           }}
         </span>
 
-        <EmailGroupUserChooser
-          @autofocus={{true}}
-          @onChange={{this.updateNewOwner}}
-          @options={{hash
-            maximum=1
-            filterPlaceholder="topic.change_owner.placeholder"
-            filterIcon="magnifying-glass"
-            useHeaderFilter=true
-          }}
-          @value={{this.newOwner}}
-        />
+        {{! TODO (select-kit-replacement-cleanup) }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectUser
+            @clearable={{true}}
+            @onChange={{legacyPickOne this.updateNewOwner}}
+            @texts={{hash
+              placeholder=(i18n "topic.change_owner.placeholder")
+              searchPlaceholder=(i18n "topic.change_owner.placeholder")
+            }}
+            @value={{this.newOwner}}
+          />
+        {{else}}
+          {{! TODO (select-kit-replacement-cleanup) }}
+          <EmailGroupUserChooser
+            @autofocus={{true}}
+            @onChange={{this.updateNewOwner}}
+            @options={{hash
+              maximum=1
+              filterPlaceholder="topic.change_owner.placeholder"
+              filterIcon="magnifying-glass"
+              useHeaderFilter=true
+            }}
+            @value={{this.newOwner}}
+          />
+        {{/if}}
       </:body>
       <:footer>
         <DButton

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin upcoming changes" do
+  with_select_controls(false)
+
   fab!(:current_user, :admin)
   let(:upcoming_changes_page) { PageObjects::Pages::AdminUpcomingChanges.new }
 
@@ -385,6 +387,65 @@ describe "Admin upcoming changes" do
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       expect(item).to be_enabled
       expect(item).to have_groups("staff")
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    def mock_with_allow(allow)
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+            allow_enabled_for: allow,
+          },
+        },
+      )
+    end
+
+    it "lets an admin refine the default audience by saving group changes" do
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle
+      expect(item).to have_groups("admins")
+      expect(item).to have_editable_audience
+      item.add_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+
+      upcoming_changes_page.visit
+      expect(item).to have_groups("admins", "trust_level_4")
+      item.remove_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+      expect(item).to have_groups("admins")
+    end
+
+    it "keeps staff locked while letting an admin include additional groups" do
+      mock_with_allow(%i[staff specific_groups])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.toggle
+      expect(item).to be_enabled
+      expect(item).to have_locked_group("staff")
+      item.add_group("trust_level_4")
+      item.save_groups
+      expect(upcoming_changes_page).to have_groups_updated_success_toast
+
+      upcoming_changes_page.visit
+      expect(item).to have_groups("staff", "trust_level_4")
+      expect(item).to have_locked_group("staff")
+    end
+
+    it "shows staff as a locked audience for changes limited to staff" do
+      mock_with_allow([:staff])
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      expect(item).to have_locked_audience("staff")
     end
   end
 

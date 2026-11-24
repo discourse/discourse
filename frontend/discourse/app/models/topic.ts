@@ -366,6 +366,10 @@ export function loadTopicView(
 }
 
 export const ID_CONSTRAINT = /^\d+$/;
+
+/** The most ids one `/topics/lookup` request may carry, as the server allows. */
+const LOOKUP_BATCH_SIZE = 50;
+
 const _customLastUnreadUrlCallbacks: ((
   topic: Topic
 ) => string | null | undefined)[] = [];
@@ -695,6 +699,30 @@ export default class Topic extends RestModel {
 
   static idForSlug(slug: string): globalThis.Promise<unknown> {
     return ajax(`/t/id_for/${slug}`);
+  }
+
+  /**
+   * Loads the topics behind the given ids that the current user can see,
+   * including muted ones, in the shape of a search result. Missing and hidden
+   * topics are left out.
+   */
+  static async findByIds(ids: number[]): globalThis.Promise<Topic[]> {
+    const batches: number[][] = [];
+    for (let index = 0; index < ids.length; index += LOOKUP_BATCH_SIZE) {
+      batches.push(ids.slice(index, index + LOOKUP_BATCH_SIZE));
+    }
+
+    const responses = await globalThis.Promise.all(
+      batches.map((topic_ids) =>
+        ajax<{ topics: Partial<TopicFields>[] }>("/topics/lookup.json", {
+          data: { topic_ids },
+        })
+      )
+    );
+
+    return responses.flatMap((response) =>
+      response.topics.map((topic) => Topic.create(topic))
+    );
   }
 
   static setSlowMode(
@@ -1526,7 +1554,7 @@ export default class Topic extends RestModel {
   ): globalThis.Promise<{ tags?: TopicTag[] } | null> {
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
-      data: { tags: tags || [] },
+      data: { tags: serializeTags(tags || []) },
     }).then((result: { tags?: TopicTag[] } | null) => {
       if (result?.tags) {
         this.set("tags", result.tags);

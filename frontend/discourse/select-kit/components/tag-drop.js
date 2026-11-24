@@ -15,8 +15,11 @@ import { i18n } from "discourse-i18n";
 import TagDropHeader from "./tag-drop/tag-drop-header.gjs";
 import TagRow from "./tag-row.gjs";
 
-export const NO_TAG_ID = "no-tags";
+/** Shortcut for clearing the tag filter. */
 export const ALL_TAGS_ID = "all-tags";
+
+/** Shortcut for topics without tags. */
+export const NO_TAG_ID = "no-tags";
 
 export const NONE_TAG = "none";
 

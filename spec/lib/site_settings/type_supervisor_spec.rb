@@ -770,4 +770,52 @@ RSpec.describe SiteSettings::TypeSupervisor do
       end
     end
   end
+
+  describe "color lists" do
+    class AnyColorListTestValidator
+      def initialize(opts = {})
+      end
+
+      def valid_value?(_value)
+        true
+      end
+
+      def error_message
+        ""
+      end
+    end
+
+    before do
+      settings.setting(:type_color_list, "", type: "list", list_type: "color")
+      settings.setting(
+        :type_color_list_own_validator,
+        "",
+        type: "list",
+        list_type: "color",
+        validator: "AnyColorListTestValidator",
+      )
+      settings.refresh!
+    end
+
+    it "takes 6-digit hex colors in either case, or none" do
+      expect {
+        settings.type_supervisor.to_db_value(:type_color_list, "ff0000|00FF00")
+      }.not_to raise_error
+      expect { settings.type_supervisor.to_db_value(:type_color_list, "") }.not_to raise_error
+    end
+
+    it "refuses anything else" do
+      %w[FF0000|nope #FF0000 F00].each do |value|
+        expect { settings.type_supervisor.to_db_value(:type_color_list, value) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+
+    it "lets a setting name its own validator instead" do
+      expect {
+        settings.type_supervisor.to_db_value(:type_color_list_own_validator, "nope")
+      }.not_to raise_error
+    end
+  end
 end

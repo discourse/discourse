@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Managing LLM configurations" do
+  with_select_controls(false)
+
   fab!(:admin)
   fab!(:ai_secret) { Fabricate(:ai_secret, name: "Test API Key", secret: "abcd") }
 

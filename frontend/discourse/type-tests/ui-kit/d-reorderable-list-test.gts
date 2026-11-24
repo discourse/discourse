@@ -95,6 +95,19 @@ const Test = <template>
     <:empty>Nothing yet</:empty>
   </DReorderableList>
 
+  {{! A custom create block, holding the handle's place }}
+  <DReorderableList
+    @allowCreate={{true}}
+    @items={{sections}}
+    @label={{label}}
+    @onMove={{applyMove}}
+  >
+    <:row as |section|>{{section.name}}</:row>
+    <:create as |create|>
+      <li><create.handleSlot />New section</li>
+    </:create>
+  </DReorderableList>
+
   {{! A member list routes its moves through the group instead }}
   <DReorderableListGroup @onMove={{applyMove}} as |groupApi|>
     <DReorderableList

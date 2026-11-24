@@ -117,7 +117,11 @@ module(
         '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__permission';
       assert
         .dom(ownerPermission)
-        .isDisabled("keeps owner controls disabled without the capability");
+        .hasAttribute(
+          "aria-disabled",
+          "true",
+          "keeps owner controls disabled without the capability"
+        );
 
       board.can_manage_acl_owner = true;
 
@@ -129,7 +133,10 @@ module(
 
       assert
         .dom(ownerPermission)
-        .isEnabled("enables owner controls with the capability");
+        .doesNotHaveAttribute(
+          "aria-disabled",
+          "enables owner controls with the capability"
+        );
     });
 
     test("does not offer additional owners while creating a board", async function (assert) {
@@ -155,8 +162,9 @@ module(
         '.d-access-control__row[data-row-type="user"][data-row-id="7"] .d-access-control__permission'
       );
 
+      assert.dom("[role='listbox']").exists("the permission list is open");
       assert
-        .dom('.d-access-control__permission-option[data-permission-id="owner"]')
+        .dom("[role='option'][data-value='owner']")
         .doesNotExist("does not offer Owner during board creation");
     });
 

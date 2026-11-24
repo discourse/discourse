@@ -50,6 +50,29 @@ module("Unit | Service | tag-utils", function (hooks) {
     );
   });
 
+  test("createContentFromInput cleans like the server", function (assert) {
+    assert.strictEqual(
+      this.tagUtils.createContentFromInput("rock🎸"),
+      "rock",
+      "an emoji is removed, as clean_tag does"
+    );
+  });
+
+  test("sortSearchResults keeps an exact match of the filter first", function (assert) {
+    this.tagUtils.siteSettings.tags_sort_alphabetically = true;
+
+    const results = [
+      { name: "rock-band" },
+      { name: "rock" },
+      { name: "alpha" },
+    ];
+
+    assert.deepEqual(
+      this.tagUtils.sortSearchResults(results, "rock").map((r) => r.name),
+      ["rock", "alpha", "rock-band"]
+    );
+  });
+
   test("sortSearchResults keeps usable tags before disabled ones when sorting alphabetically", function (assert) {
     this.tagUtils.siteSettings.tags_sort_alphabetically = true;
 

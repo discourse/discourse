@@ -797,6 +797,69 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
         "the scheduled load is cancelled rather than running against a dead component"
       );
     });
+
+    test("a function decides per evaluation from the previous and next context", async function (assert) {
+      const seen = [];
+      const transitions = [];
+      const currentContext = tracked("first");
+
+      const load = (context) => {
+        seen.push(context);
+        return context;
+      };
+      const debounce = (previous, next) => {
+        transitions.push([previous, next]);
+        return next === "slow";
+      };
+
+      await render(
+        <template>
+          <DAsyncContent
+            @asyncData={{load}}
+            @context={{currentContext.value}}
+            @debounce={{debounce}}
+          >
+            <:content as |data|>
+              <div class="content">{{data}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert.deepEqual(
+        transitions,
+        [],
+        "the first evaluation is never debounced, so it is not asked"
+      );
+
+      currentContext.value = "fast";
+      await rerender();
+
+      assert
+        .dom(".content")
+        .hasText("fast", "a transition answered false takes the direct path");
+
+      currentContext.value = "slow";
+      await rerender();
+
+      assert.deepEqual(
+        seen,
+        ["first", "fast"],
+        "a transition answered true waits for the debounce"
+      );
+
+      await settled();
+
+      assert.dom(".content").hasText("slow");
+      assert.deepEqual(
+        transitions,
+        [
+          ["first", "fast"],
+          ["fast", "slow"],
+        ],
+        "each evaluation is asked with the context it moves from and to"
+      );
+    });
   });
 
   module("<:loading>", function () {

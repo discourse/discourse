@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import booleanString from "discourse/helpers/boolean-string";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import type { DTabsTabSignature } from "discourse/ui-kit/d-tabs/types";
 
@@ -52,7 +51,7 @@ export default class Tab extends Component<DTabsTabSignature> {
       ...attributes
       aria-controls={{@tabs.panelDomId}}
       aria-disabled={{if @disabled "true"}}
-      aria-selected={{booleanString this.isActive omitFalse=false}}
+      aria-selected={{if this.isActive "true" "false"}}
       data-d-tab={{@key}}
       id={{this.domId}}
       role="tab"

@@ -3,6 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AutomationField from "discourse/plugins/automation/admin/components/automation-field";
 import AutomationFabricators from "discourse/plugins/automation/admin/lib/fabricators";
@@ -101,5 +102,36 @@ module("Integration | Component | DaGroupsField", function (hooks) {
     await selectKit().deselectItemByValue(1);
 
     assert.strictEqual(this.field.metadata.value, undefined);
+  });
+
+  module("with the new select controls", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+    });
+
+    test("sets the loaded groups' ids, up to the maximum", async function (assert) {
+      this.field = new AutomationFabricators(getOwner(this)).field({
+        component: "groups",
+        extra: { maximum: 1 },
+      });
+      this.field.metadata.value = undefined;
+
+      await render(
+        <template>
+          <AutomationField
+            @automation={{this.automation}}
+            @field={{this.field}}
+          />
+        </template>
+      );
+
+      const groups = dSelect(".group-field .d-select");
+      await groups.select(1);
+
+      assert.deepEqual(this.field.metadata.value, [1]);
+      assert
+        .dom("[role='option'][data-value='2']")
+        .hasAttribute("aria-disabled", "true");
+    });
   });
 });

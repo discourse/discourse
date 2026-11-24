@@ -1,7 +1,15 @@
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
+import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { findAll, render, settled } from "@ember/test-helpers";
+import { trustHTML } from "@ember/template";
+import {
+  find,
+  findAll,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
@@ -97,5 +105,53 @@ module("Integration | ui-kit | DVirtualList | stable key", function (hooks) {
         `row ${id} keeps its DOM element after fresh objects replace the item array`
       );
     }
+  });
+
+  test("a row keeps its drawn content when another row leaves the mounted set", async function (assert) {
+    const items = buildRows(100);
+    // A new function per change, as a consumer passes one per cursor move.
+    const kept = trackedObject({ rows: () => [0] });
+
+    await render(
+      <template>
+        {{! eslint-disable-next-line ember/template-no-forbidden-elements }}
+        <style>
+          .d-virtual-list {
+            height: 400px;
+            overflow-y: auto;
+          }
+        </style>
+        <DVirtualList
+          @estimateSize={{estimateSize}}
+          @items={{items}}
+          @keepMounted={{kept.rows}}
+          @key="id"
+          as |item|
+        >
+          <div class="row" data-row-id={{item.id}} style="height: 40px">
+            {{trustHTML (concat "<b class='drawn'>" item.text "</b>")}}
+          </div>
+        </DVirtualList>
+      </template>
+    );
+    const viewport = find(".d-virtual-list");
+    viewport.scrollTop = ROW_HEIGHT * 50;
+    await triggerEvent(viewport, "scroll");
+
+    const drawn = find(".row[data-row-id='52'] .drawn");
+    assert.dom(".row[data-row-id='0']").exists("the kept row is mounted");
+    assert.true(!!drawn, "a row in the window is drawn");
+
+    // Moving the kept row into the window drops the old one, as a press on a row does.
+    kept.rows = () => [52];
+    await settled();
+
+    assert
+      .dom(".row[data-row-id='0']")
+      .doesNotExist("the old kept row has left the mounted set");
+    assert.true(
+      drawn.isConnected,
+      "the drawn content of an unchanged row is not rebuilt"
+    );
   });
 });

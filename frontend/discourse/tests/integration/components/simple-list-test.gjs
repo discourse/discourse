@@ -10,6 +10,7 @@ import {
 import { module, test } from "qunit";
 import SimpleList from "discourse/admin/components/simple-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 
 module("Integration | Component | SimpleList", function (hooks) {
   setupRenderingTest(hooks);
@@ -61,6 +62,102 @@ module("Integration | Component | SimpleList", function (hooks) {
     assert
       .dom(".values .value")
       .exists({ count: 3 }, "adds the value to the list of values");
+  });
+
+  test("adds a choice through a select that holds nothing, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const values = tracked("vinkas\nosama");
+    const changes = [];
+    const onChange = (collection) => {
+      changes.push([...collection]);
+      values.value = collection.join("\n");
+    };
+    const choices = ["vinkas", "osama", "kris", "jeff"];
+
+    await render(
+      <template>
+        <SimpleList
+          @allowAny={{false}}
+          @choices={{choices}}
+          @onChange={{onChange}}
+          @values={{values.value}}
+        />
+      </template>
+    );
+
+    const picker = ".simple-list-input .d-select";
+    assert.dom(".simple-list-input .select-kit").doesNotExist();
+    assert
+      .dom(`${picker} input[role='combobox']`)
+      .hasAria("label", "Add item…", "named after what it does");
+
+    await dSelect(picker).open();
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']")].map((row) =>
+        row.textContent.trim()
+      ),
+      ["kris", "jeff"],
+      "offers only the choices the list doesn't hold"
+    );
+
+    await dSelect(picker).select("jeff");
+    assert.deepEqual(changes, [["vinkas", "osama", "jeff"]], "adds the pick");
+    assert
+      .dom(`${picker} input[role='combobox']`)
+      .hasValue("", "and holds nothing afterwards");
+
+    await dSelect(picker).open();
+    assert.deepEqual(
+      [...document.querySelectorAll("[role='option']")].map((row) =>
+        row.textContent.trim()
+      ),
+      ["kris"]
+    );
+  });
+
+  test("says when a typed value isn't a choice, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const choices = ["latest", "new"];
+    const noop = () => {};
+
+    await render(
+      <template>
+        <SimpleList
+          @allowAny={{false}}
+          @choices={{choices}}
+          @onChange={{noop}}
+          @values=""
+        />
+      </template>
+    );
+
+    await dSelect(".simple-list-input .d-select").search("hot");
+    assert
+      .dom(".d-select__empty")
+      .hasText(
+        "No choice matches “hot”. This setting only takes its listed choices."
+      );
+  });
+
+  test("hides the picker once every choice is held, with the new select controls", async function (assert) {
+    this.siteSettings.enable_new_select_controls = true;
+    const choices = ["latest", "new"];
+    const values = "latest\nnew";
+    const noop = () => {};
+
+    await render(
+      <template>
+        <SimpleList
+          @allowAny={{false}}
+          @choices={{choices}}
+          @onChange={{noop}}
+          @values={{values}}
+        />
+      </template>
+    );
+
+    assert.dom(".simple-list-input .d-select").doesNotExist();
+    assert.dom(".simple-list-input .select-kit").doesNotExist();
   });
 
   test("changing a value", async function (assert) {

@@ -91,6 +91,7 @@ export default class Assignment extends Component {
         {{if this.showAssigneeIeEmptyError 'assignee-error'}}"
     >
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
+      {{! TODO (select-kit-replacement-cleanup): Move to the new select controls once the engine can open on render; until then this picker is not a third-party render. }}
       <EmailGroupUserChooser
         autocomplete="off"
         @id="assignee-chooser"
@@ -106,6 +107,7 @@ export default class Assignment extends Component {
           caretDownIcon="magnifying-glass"
         }}
         @showUserStatus={{true}}
+        @skipLegacyRenderDeprecation={{true}}
         @value={{this.assignee}}
         {{on "keydown" this.handleKeydown capture=true}}
       />

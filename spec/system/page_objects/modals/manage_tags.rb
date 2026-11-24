@@ -7,7 +7,7 @@ module PageObjects
       ROOT_SELECTOR = ".manage-tags-form"
 
       def add_tag_selector
-        tag_selector("[data-name='add_tags'] .tag-chooser")
+        tag_selector("[data-name='add_tags'] .form-kit__control-tag-chooser")
       end
 
       def add_tags(*tag_names)
@@ -56,28 +56,42 @@ module PageObjects
       end
 
       def has_no_remove_tag_selector?
-        has_no_css?("#{ROOT_SELECTOR} [data-name='remove_tags'] .tag-chooser")
+        has_no_css?("#{ROOT_SELECTOR} [data-name='remove_tags'] .form-kit__control-tag-chooser")
       end
 
       private
 
       def tag_selector(scope)
-        PageObjects::Components::SelectKit.new("#{ROOT_SELECTOR} #{scope}")
+        selector = "#{ROOT_SELECTOR} #{scope}"
+        if find(selector).matches_css?(".d-select", wait: 0)
+          PageObjects::Components::UiKit::DSelect.at(selector)
+        else
+          PageObjects::Components::SelectKit.new(selector)
+        end
       end
 
       def remove_tag_selector
-        tag_selector("[data-name='remove_tags'] .tag-chooser")
+        tag_selector("[data-name='remove_tags'] .form-kit__control-tag-chooser")
       end
 
       def replace_from_selector(index = 0)
-        tag_selector("[data-name='replace_rows.#{index}.from'] .tag-chooser")
+        tag_selector("[data-name='replace_rows.#{index}.from'] .form-kit__control-tag-chooser")
       end
 
       def replace_to_selector(index = 0)
-        tag_selector("[data-name='replace_rows.#{index}.to'] .tag-chooser")
+        tag_selector("[data-name='replace_rows.#{index}.to'] .form-kit__control-tag-chooser")
       end
 
       def select_tags(selector, tag_names)
+        if selector.is_a?(PageObjects::Components::UiKit::DSelect)
+          tag_names.each do |name|
+            selector.search(name)
+            selector.select_name(name)
+          end
+          selector.close
+          return
+        end
+
         selector.expand
         tag_names.each do |name|
           selector.search(name)

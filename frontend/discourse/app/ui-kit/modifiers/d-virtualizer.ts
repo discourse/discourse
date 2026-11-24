@@ -2,15 +2,17 @@ import { DEBUG } from "@glimmer/env";
 import { assert } from "@ember/debug";
 import { isDestroying, registerDestructor } from "@ember/destroyable";
 import type Owner from "@ember/owner";
-import { cancel, schedule } from "@ember/runloop";
+import { cancel, join, schedule } from "@ember/runloop";
+import { buildWaiter } from "@ember/test-waiters";
 import Modifier, { type ArgsFor } from "ember-modifier";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import {
   createElementVirtualizer,
+  isDeliveringResize,
   isVirtualizationEnabled,
   keyFor,
   pushScrollOffset,
-  rangeExtractorWithPins,
+  rangeExtractorKeepingMounted,
   remeasureViewport,
   updateElementVirtualizer,
   type VirtualItem,
@@ -45,7 +47,7 @@ const EDGE_HYSTERESIS = 4;
  */
 const SCROLL_EPSILON = 1.5;
 
-type PinnedIndices = (
+type KeepMounted = (
   indices: readonly number[],
   range: VirtualRange
 ) => readonly number[];
@@ -116,9 +118,12 @@ interface DVirtualizerSignature<T> {
       /**
        * Extends the default window with extra absolute indices to keep mounted.
        * Invalid and duplicate extras are discarded, and the result stays in
-       * ascending index order. See {@link rangeExtractorWithPins}.
+       * ascending index order. See {@link rangeExtractorKeepingMounted}.
        */
-      pinnedIndices?: PinnedIndices;
+      keepMounted?: KeepMounted;
+
+      /** Number of leading rows kept mounted and sticky at the top. */
+      stickyCount?: number;
 
       /** Receives newly published virtualizer state. */
       onState?: (state: PublishedState) => void;
@@ -177,6 +182,9 @@ interface DVirtualizerSignature<T> {
  * - Teardown calls the cleanup returned by `_didMount()` and cancels any pending
  *   flush; every path that could write is fenced by destruction state.
  */
+/** Keeps `settled()` waiting for an engine change deferred to the next frame. */
+const FRAME_FLUSH_WAITER = buildWaiter("d-virtualizer:frame-flush");
+
 export default class DVirtualizer<T> extends Modifier<
   DVirtualizerSignature<T>
 > {
@@ -184,6 +192,7 @@ export default class DVirtualizer<T> extends Modifier<
   #element: HTMLDivElement | null = null;
   #flushScheduled = false;
   #flushTimer: ReturnType<typeof schedule> | null = null;
+  #frameFlush: { handle: number; token: unknown } | null = null;
   #getItemKey: ((index: number) => VirtualKey) | null = null;
   #getItemKeyEstimate: ((item: T, index: number) => number) | null = null;
   #getItemKeyField: string | undefined;
@@ -191,6 +200,7 @@ export default class DVirtualizer<T> extends Modifier<
   #lastSignature: StateSignature | null = null;
   #lastEmittedRange: VisibleRange | null = null;
   #named: DVirtualizerSignature<T>["Args"]["Named"] | null = null;
+  #stickyHeight = 0;
   #virtualizer: VirtualizerApi | null = null;
   #warnedZeroHeight = false;
 
@@ -374,8 +384,8 @@ export default class DVirtualizer<T> extends Modifier<
    * longer has: shrinking the sizer makes the browser clamp `scrollTop`, but that
    * clamp does not reach the engine's offset observer, so it keeps computing the
    * window from a stale, now out-of-range offset. On its own that only mis-scrolls
-   * the window; combined with pinned indices it surfaces as a visible gap — the
-   * pinned row renders at its true offset while the window sits far below it, and
+   * the window; combined with kept-mounted indices it surfaces as a visible gap — the
+   * kept-mounted row renders at its true offset while the window sits far below it, and
    * the rows between are absent. Adopt the element's real `scrollTop` whenever the
    * two disagree so the window tracks the actual position.
    *
@@ -568,7 +578,7 @@ export default class DVirtualizer<T> extends Modifier<
   #buildOptions(
     named: DVirtualizerSignature<T>["Args"]["Named"]
   ): VirtualizerOptions {
-    const { items, estimateSize, overscan, key, pinnedIndices } = named;
+    const { items, estimateSize, overscan, key, keepMounted } = named;
     // Fractional and non-finite ranges can permanently poison engine memoization;
     // negative ranges leave viewport gaps.
     const normalizedOverscan =
@@ -610,12 +620,18 @@ export default class DVirtualizer<T> extends Modifier<
       estimateSize: (index) => estimateSize(items[index]!, index),
       getItemKey: this.#getItemKey,
       overscan: normalizedOverscan,
-      onChange: () => this.#scheduleFlush(),
+      // A size the browser reported is applied in the next frame (see #scheduleFrameFlush);
+      // scrolling, jumps and mount measurement keep the same-render flush they rely on.
+      onChange: () =>
+        isDeliveringResize(this.#virtualizer)
+          ? this.#scheduleFrameFlush()
+          : this.#scheduleFlush(),
       // Only a bottom-anchored list tracks the live edge. The engine gates this
       // on the reader having been within `scrollEndThreshold` of the end BEFORE
       // the append, so a reader who has scrolled up to read history is never
       // yanked down by arriving rows.
       followOnAppend: named.anchor === "bottom",
+      scrollPaddingStart: this.#stickyHeight,
     };
 
     // Left unset the engine keeps its own 1px default. `setOptions` skips
@@ -625,11 +641,14 @@ export default class DVirtualizer<T> extends Modifier<
       options.scrollEndThreshold = named.scrollEndThreshold;
     }
 
-    // Set the extractor only when there is something to pin, so the engine keeps
-    // its own default path when there isn't — and so dropping `@pinnedIndices`
+    // Set the extractor only when there is something to keep mounted, so the engine keeps
+    // its own default path when there isn't — and so dropping `@keepMounted`
     // reverts cleanly rather than installing a pass-through.
-    if (pinnedIndices != null) {
-      options.rangeExtractor = rangeExtractorWithPins(pinnedIndices);
+    if (keepMounted != null || (named.stickyCount ?? 0) > 0) {
+      options.rangeExtractor = rangeExtractorKeepingMounted(
+        keepMounted,
+        named.stickyCount
+      );
     }
 
     return options;
@@ -668,6 +687,22 @@ export default class DVirtualizer<T> extends Modifier<
     this.#resyncScrollOffset();
 
     const virtualItems = this.#virtualizer.getVirtualItems();
+    const stickyHeight =
+      virtualItems.find(
+        (item) =>
+          item.index === Math.min(this.#named?.stickyCount ?? 0, count) - 1
+      )?.end ?? 0;
+    if (stickyHeight !== this.#stickyHeight) {
+      this.#stickyHeight = stickyHeight;
+      // Measurement follows option construction, so publish the measured zone again.
+      updateElementVirtualizer(
+        this.#virtualizer,
+        this.#buildOptions(this.#named!)
+      );
+    }
+    if (this.#element) {
+      this.#element.style.scrollPaddingTop = `${stickyHeight}px`;
+    }
     const totalSize = this.#virtualizer.getTotalSize();
     const range = this.#virtualizer.range;
 
@@ -929,6 +964,29 @@ export default class DVirtualizer<T> extends Modifier<
     this.#flushTimer = schedule("afterRender", this, this.#flush);
   }
 
+  /**
+   * Flushes an engine-reported change in the next animation frame.
+   *
+   * The engine reports row resizes from inside the browser's ResizeObserver delivery. A flush
+   * there can shift the window and mount new rows, whose first size notifications the browser
+   * cannot deliver in the same frame, so it raises a window error. The new window lands one
+   * frame later, which is the catch-up the browser would force anyway.
+   */
+  #scheduleFrameFlush() {
+    if (this.#frameFlush || isDestroying(this)) {
+      return;
+    }
+    const token = FRAME_FLUSH_WAITER.beginAsync();
+    const handle = requestAnimationFrame(() => {
+      this.#frameFlush = null;
+      FRAME_FLUSH_WAITER.endAsync(token);
+      if (!isDestroying(this)) {
+        join(this, this.#flush);
+      }
+    });
+    this.#frameFlush = { handle, token };
+  }
+
   #signaturesMatch(
     current: StateSignature,
     previous: StateSignature | null
@@ -977,6 +1035,11 @@ export default class DVirtualizer<T> extends Modifier<
       cancel(this.#flushTimer);
     }
     this.#flushScheduled = false;
+    if (this.#frameFlush) {
+      cancelAnimationFrame(this.#frameFlush.handle);
+      FRAME_FLUSH_WAITER.endAsync(this.#frameFlush.token);
+      this.#frameFlush = null;
+    }
     this.#cleanup?.();
     this.#cleanup = null;
     this.#virtualizer = null;

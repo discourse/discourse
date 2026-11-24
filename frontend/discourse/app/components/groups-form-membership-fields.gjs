@@ -3,8 +3,10 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
+import GroupsFormEmailDomains from "discourse/components/groups-form-email-domains";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -13,6 +15,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DRadioButton from "discourse/ui-kit/d-radio-button";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const JoinMethodOption = <template>
@@ -31,6 +34,8 @@ const JoinMethodOption = <template>
 
 @tagName("")
 export default class GroupsFormMembershipFields extends Component {
+  @service siteSettings;
+
   tokenSeparator = "|";
 
   trustLevelOptions = [
@@ -311,17 +316,27 @@ export default class GroupsFormMembershipFields extends Component {
             }}
           </label>
 
-          <ListSetting
-            class="group-form-automatic-membership-automatic"
-            @choices={{this.emailDomains}}
-            @name="automatic_membership"
-            @nameProperty={{null}}
-            @onChange={{this.onChangeEmailDomainsSetting}}
-            @options={{hash allowAny=true}}
-            @settingName="name"
-            @value={{this.emailDomains}}
-            @valueProperty={{null}}
-          />
+          {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+          {{#if this.siteSettings.enable_new_select_controls}}
+            <GroupsFormEmailDomains
+              class="group-form-automatic-membership-automatic input-xxlarge"
+              @domains={{this.emailDomains}}
+              @id="automatic_membership"
+              @onChange={{this.onChangeEmailDomainsSetting}}
+            />
+          {{else}}
+            <ListSetting
+              class="group-form-automatic-membership-automatic"
+              @choices={{this.emailDomains}}
+              @name="automatic_membership"
+              @nameProperty={{null}}
+              @onChange={{this.onChangeEmailDomainsSetting}}
+              @options={{hash allowAny=true}}
+              @settingName="name"
+              @value={{this.emailDomains}}
+              @valueProperty={{null}}
+            />
+          {{/if}}
 
           <div class="control-instructions">
             {{i18n
@@ -336,16 +351,29 @@ export default class GroupsFormMembershipFields extends Component {
               }}
             </label>
 
-            <ListSetting
-              class="group-form-automatic-membership-associated-groups"
-              @choices={{this.associatedGroups}}
-              @name="automatic_membership_associated_groups"
-              @nameProperty="label"
-              @onChange={{fn (mut this.model.associated_group_ids)}}
-              @settingName="name"
-              @value={{this.model.associatedGroupIds}}
-              @valueProperty="id"
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelect
+                class="group-form-automatic-membership-associated-groups input-xxlarge"
+                @id="automatic_membership_associated_groups"
+                @labelField="label"
+                @multiple={{true}}
+                @onChange={{fn (mut this.model.associated_group_ids)}}
+                @options={{this.associatedGroups}}
+                @value={{this.model.associatedGroupIds}}
+              />
+            {{else}}
+              <ListSetting
+                class="group-form-automatic-membership-associated-groups"
+                @choices={{this.associatedGroups}}
+                @name="automatic_membership_associated_groups"
+                @nameProperty="label"
+                @onChange={{fn (mut this.model.associated_group_ids)}}
+                @settingName="name"
+                @value={{this.model.associatedGroupIds}}
+                @valueProperty="id"
+              />
+            {{/if}}
           {{/if}}
         </div>
 

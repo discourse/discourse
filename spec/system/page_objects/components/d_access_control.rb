@@ -16,11 +16,11 @@ module PageObjects
       end
 
       def add_group(group)
-        add_grantee(type: "group", id: group.id)
+        add_grantee(type: "group", id: group.id, name: group.name)
       end
 
       def add_user(user)
-        add_grantee(type: "user", id: user.id, search: user.username)
+        add_grantee(type: "user", id: user.id, name: user.username, search: user.username)
       end
 
       def has_row?(type:, id:)
@@ -61,7 +61,14 @@ module PageObjects
         form.field(FIELD_NAME).component.find(".d-access-control")
       end
 
-      def add_grantee(type:, id:, search: nil)
+      def add_grantee(type:, id:, name:, search: nil)
+        if SiteSetting.enable_new_select_controls
+          chooser = PageObjects::Components::UiKit::DSelect.at(new_grantee_chooser_selector)
+          chooser.search(search) if search
+          chooser.select_value(name)
+          return
+        end
+
         chooser = grantee_chooser
         chooser.expand
         chooser.search(search) if search
@@ -71,6 +78,10 @@ module PageObjects
       def grantee_chooser
         chooser = component.find(".d-access-control__chooser")
         PageObjects::Components::SelectKit.new("##{chooser["id"]}")
+      end
+
+      def new_grantee_chooser_selector
+        "##{form.field(FIELD_NAME).component["id"]} .d-access-control__chooser.d-select"
       end
 
       def row_selector(type:, id:)

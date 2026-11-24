@@ -111,20 +111,20 @@ const result = await this.modal.show(MyModal);
 
 ### Arguments
 
-| Arg                          | Purpose                                                                                                       |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `@closeModal`                | Required for dismiss UI to appear at all.                                                                     |
-| `@title`                     | Renders `<h1 id="discourse-modal-title">`; wires `aria-labelledby`.                                           |
-| `@subtitle`                  | Small text below the title.                                                                                   |
-| `@flash` / `@flashType`      | Inline alert at top of modal (`DFlashMessage`).                                                               |
-| `@hideHeader`, `@hideFooter` | Hide whole regions.                                                                                           |
-| `@headerClass`, `@bodyClass` | Extra class on header/body wrappers.                                                                          |
-| `@dismissable`               | Default true when `@closeModal` set. Disables Esc / backdrop click / X.                                       |
-| `@autofocus`                 | Default true. Auto-focuses first focusable element via `dTrapTab`.                                            |
-| `@submitOnEnter`             | Default true. Enter clicks `.d-modal__footer .btn-primary` unless focus is in a form / textarea / select-kit. |
-| `@beforeClose`               | `async ({ initiatedBy }) => boolean`. Return `false` to cancel close (e.g. dirty-form confirm).               |
-| `@hidden`                    | Pauses keyboard handling; used when a nested modal is on top.                                                 |
-| `@tagName`                   | `"div"` (default) or `"form"`. Use `"form"` for forms so native submit works.                                 |
+| Arg                          | Purpose                                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `@closeModal`                | Required for dismiss UI to appear at all.                                                                                |
+| `@title`                     | Renders `<h1 id="discourse-modal-title">`; wires `aria-labelledby`.                                                      |
+| `@subtitle`                  | Small text below the title.                                                                                              |
+| `@flash` / `@flashType`      | Inline alert at top of modal (`DFlashMessage`).                                                                          |
+| `@hideHeader`, `@hideFooter` | Hide whole regions.                                                                                                      |
+| `@headerClass`, `@bodyClass` | Extra class on header/body wrappers.                                                                                     |
+| `@dismissable`               | Default true when `@closeModal` set. Disables Esc / backdrop click / X. Esc in a search field with text clears it first. |
+| `@autofocus`                 | Default true. Auto-focuses first focusable element via `dTrapTab`.                                                       |
+| `@submitOnEnter`             | Default true. Enter clicks `.d-modal__footer .btn-primary` unless focus is in a form / textarea / select-kit.            |
+| `@beforeClose`               | `async ({ initiatedBy }) => boolean`. Return `false` to cancel close (e.g. dirty-form confirm).                          |
+| `@hidden`                    | Pauses keyboard handling; used when a nested modal is on top.                                                            |
+| `@tagName`                   | `"div"` (default) or `"form"`. Use `"form"` for forms so native submit works.                                            |
 
 ### Blocks
 

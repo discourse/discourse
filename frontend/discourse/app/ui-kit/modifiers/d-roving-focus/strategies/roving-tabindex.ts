@@ -86,6 +86,7 @@ export default class RovingTabindexStrategy {
     let preferred: HTMLElement | undefined;
     if (this.#config.tabStop) {
       const navigable = (item: HTMLElement) => this.#scope.isNavigable(item);
+      const seedable = (item: HTMLElement) => this.#scope.isActivatable(item);
       // Anchoring to selection is a standing reseed: honouring a surviving cursor is exactly what
       // it exists to prevent, so the entry policy alone decides where the stop sits.
       const fresh = reseed || anchorsToSelection(this.#config);
@@ -98,10 +99,10 @@ export default class RovingTabindexStrategy {
               (item) => item.getAttribute("tabindex") === "0" && navigable(item)
             )) ??
         (prefersSelected(this.#config)
-          ? findMarked(all, navigable)
+          ? findMarked(all, seedable)
           : undefined) ??
         (fallsBackToFirst(this.#config)
-          ? this.#firstSeed(all, navigable)
+          ? this.#firstSeed(all, seedable)
           : undefined);
     }
     for (const item of all) {

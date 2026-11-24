@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Boards Board Viewer" do
+  with_select_controls(false)
+
   fab!(:user)
   fab!(:admin)
   fab!(:manager, :user)
@@ -810,6 +812,85 @@ describe "Boards Board Viewer" do
 
       expect(board_viewer).to have_card_in_column("Fast", "My fast car topic for testing")
       expect(board_viewer).to have_no_card_in_column("Fast", "My fast animal topic for testing")
+    end
+  end
+
+  context "with the new select controls" do
+    with_select_controls(true)
+
+    before { SiteSetting.tagging_enabled = true }
+
+    def create_floater_board(card_title: nil)
+      result =
+        create_board(
+          {},
+          write_groups: [write_group],
+          with_columns: [{ title: "To Do", position: 0 }],
+        )
+      if card_title
+        result.board.cards.create!(
+          card_type: :floater,
+          title: card_title,
+          column_id: result.column("To Do").id,
+          position: 0,
+          created_by_id: admin.id,
+        )
+      end
+      result.board
+    end
+
+    it "persists tags when creating a floater card with the new select controls" do
+      board = create_floater_board
+
+      sign_in(admin)
+      board_viewer.visit_board(board)
+
+      board_viewer.click_add_card("To Do")
+      board_viewer.fill_card_title("Tagged task")
+      board_viewer.select_card_detail_tag(tag1.name)
+      board_viewer.submit_card
+
+      expect(board_viewer).to have_floater_card_in_column("To Do", "Tagged task")
+      expect(board_viewer).to have_card_tag("Tagged task", tag1.name)
+      expect(Boards::Card.find_by!(title: "Tagged task").tag_ids).to eq([tag1.id])
+    end
+
+    it "adds tags to a card with the new select controls" do
+      Tag.find_or_create_by!(name: "urgent")
+      board = create_floater_board(card_title: "Tag me")
+
+      sign_in(admin)
+      board_viewer.visit_board(board)
+
+      board_viewer.click_floater_card("Tag me")
+      expect(board_viewer).to have_card_detail_modal
+
+      board_viewer.select_card_detail_tag("urgent")
+      expect(board_viewer).to have_card_detail_tag("urgent")
+
+      board_viewer.save_card_detail
+      expect(board_viewer).to have_card_tag("Tag me", "urgent")
+    end
+
+    it "creates a new tag from the card detail modal with the new select controls" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:logged_in_users]
+      board = create_floater_board(card_title: "Needs new tag")
+
+      sign_in(admin)
+      board_viewer.visit_board(board)
+
+      board_viewer.click_floater_card("Needs new tag")
+      expect(board_viewer).to have_card_detail_modal
+
+      board_viewer.create_card_detail_tag("brand-new-tag")
+      expect(board_viewer).to have_card_detail_tag("brand-new-tag")
+
+      board_viewer.save_card_detail
+
+      expect(board_viewer).to have_card_tag("Needs new tag", "brand-new-tag")
+      tag = Tag.find_by(name: "brand-new-tag")
+      expect(tag).to be_present
+      expect(Boards::Card.find_by!(title: "Needs new tag").tag_ids).to include(tag.id)
     end
   end
 end
