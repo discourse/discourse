@@ -23,14 +23,7 @@ RSpec.describe "Support Category Type Setup" do
 
     # Preload basic data for this category type
     expect(form.field("name").value).to eq("Support")
-    expect(
-      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-        "checked"
-      ],
-    ).to eq(true)
-    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq(
-      "red_question_mark",
-    )
+    expect(category_page).to have_style_emoji("red_question_mark")
 
     expect(banner).to be_visible
     banner.click_save
@@ -126,11 +119,7 @@ RSpec.describe "Support Category Type Setup" do
 
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "support"))
       expect(form.field("name").value).to eq("")
-      expect(
-        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-          "checked"
-        ],
-      ).to eq(nil)
+      expect(category_page).to have_no_style_emoji
     end
 
     it "can edit the settings of the support category in a tab" do

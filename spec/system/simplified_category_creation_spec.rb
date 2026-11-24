@@ -69,7 +69,7 @@ describe "Simplified Category Creation" do
       category_page.visit_new_category
 
       form.field("name").fill_in("Test Category")
-      form.field("color").fill_in("FF5733")
+      category_page.set_style_color("FF5733")
       category_page.save_settings
 
       created_category = Category.find_by(name: "Test Category")
@@ -89,7 +89,7 @@ describe "Simplified Category Creation" do
     it "changes category color" do
       category_page.visit_general(category)
 
-      form.field("color").fill_in("123ABC")
+      category_page.set_style_color("123ABC")
       category_page.save_settings
 
       expect(category.reload.color).to eq("123ABC")
@@ -145,10 +145,10 @@ describe "Simplified Category Creation" do
     it "shows error when color is invalid" do
       category_page.visit_general(category)
 
-      form.field("color").fill_in("GGGGGG")
+      category_page.set_style_color("GGGGGG")
       category_page.save_settings
 
-      expect(form.field("color")).to have_errors(
+      expect(form.field("style_type")).to have_errors(
         I18n.t("js.category.color_validations.non_hexdecimal"),
       )
     end

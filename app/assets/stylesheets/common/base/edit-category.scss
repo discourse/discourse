@@ -73,15 +73,6 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
-  .form-kit__conditional-display-content {
-    // prevent content shift when changing style options
-    min-height: 2.6em;
-
-    &:has(.badge-category__wrapper) {
-      justify-content: center;
-    }
-  }
-
   .--radio-cards {
     .form-kit__container-title {
       max-width: var(--form-kit-max-input);
@@ -97,13 +88,6 @@ $number-input-width: var(--form-kit-small-input);
 
   .add-required-tag-group {
     align-self: start;
-  }
-
-  #control-icon,
-  #control-emoji {
-    &.form-kit__field .form-kit__container-content {
-      width: auto;
-    }
   }
 
   .edit-category-page-header {
@@ -268,20 +252,170 @@ $number-input-width: var(--form-kit-small-input);
   }
 }
 
+.fk-d-menu.category-style-content {
+  box-sizing: border-box;
+  width: 24rem;
+
+  .fk-d-menu__inner-content {
+    width: 100%;
+  }
+}
+
+.category-name-style {
+  width: 100%;
+
+  &__name,
+  &__row {
+    width: 100%;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+
+    .form-kit__control-input-wrapper {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .category-name {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+  }
+
+  &__trigger.btn {
+    --d-button-default-bg-color: var(--token-color-background-input);
+    --d-button-default-bg-color--hover: var(--primary-very-low);
+    --d-button-default-border: 1px solid var(--primary-low-mid);
+    --d-button-default-border--hover: var(--d-button-default-border);
+    --d-button-default-icon-color: var(--icon-color, var(--primary-high));
+    --d-button-default-icon-color--hover: var(--d-button-default-icon-color);
+    flex: 0 0 auto;
+    height: var(--space-9);
+    margin-inline-end: -1px;
+    border-radius: var(--d-input-border-radius);
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    padding: 0 var(--space-3);
+
+    &:focus-visible {
+      outline: 2px solid var(--d-input-focused-color);
+      outline-offset: -2px;
+    }
+  }
+
+  &__preview {
+    display: inline-flex;
+    font-size: var(--font-up-1);
+
+    .d-icon,
+    .emoji,
+    .category-name-style__square {
+      width: 1em;
+      height: 1em;
+      color: var(--icon-color, var(--primary-high));
+    }
+  }
+
+  &__square {
+    background: currentcolor;
+    border-radius: 0.15em;
+  }
+
+  &__tabs {
+    flex: 1;
+    padding: var(--space-2) var(--space-3) var(--space-3);
+
+    .d-tabs__strip {
+      margin-block-end: var(--space-2);
+    }
+
+    .d-icon-grid-picker__filter-container {
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+      height: auto;
+      background: transparent;
+    }
+
+    .d-icon-grid-picker__filter {
+      flex: 1 1 6em;
+      min-width: 0;
+      margin: 0;
+      border-color: var(--primary-low-mid);
+
+      .filter-input {
+        padding-inline-start: 0;
+      }
+    }
+  }
+
+  &__color-warning.btn {
+    --d-button-transparent-icon-color: var(--danger);
+    --d-button-transparent-text-color--hover: var(--danger);
+    flex: 1;
+    padding: 0;
+  }
+
+  &__color {
+    width: auto;
+
+    .form-kit__control-color-input {
+      gap: 0;
+    }
+
+    .form-kit__control-color-input-prefix {
+      flex: none;
+      justify-content: center;
+      inline-size: 2em;
+      margin: 0;
+      padding-inline: 0;
+
+      .fk-d-tooltip__trigger,
+      .fk-d-tooltip__trigger-container {
+        flex: 1;
+        align-self: stretch;
+      }
+    }
+
+    .form-kit__control-color-input-hex {
+      --hex-input-width: calc(8ch + 1em);
+      flex: 0 0 var(--hex-input-width);
+      max-width: var(--hex-input-width);
+      font-family: var(--d-font-family--monospace);
+    }
+
+    .form-kit__control-color-picker-wrapper {
+      margin-inline-start: var(--space-2);
+    }
+
+    .form-kit__container-content {
+      width: auto;
+    }
+  }
+
+  &__tabs .d-tabs__panel > &__color {
+    .form-kit__container-content,
+    .form-kit__control-color-input-picker {
+      width: 100%;
+    }
+
+    .form-kit__control-color-picker-wrapper {
+      flex: 1;
+    }
+  }
+}
+
 .edit-category-description-container {
   .readonly-field {
     width: 100%;
     font-size: var(--font-down-1);
     color: var(--primary-high);
 
-    // field renders as an excerpt, so these hit nothing of importance atm
-    // > :first-child {
-    //   margin-top: 0;
-    // }
-
-    // > :last-child {
-    //   margin-bottom: 0;
-    // }
+    p {
+      margin: 0;
+    }
   }
 
   .description-content {

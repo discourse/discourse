@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { categoryStyleErrors } from "discourse/admin/lib/category-style-validation";
 import {
   completeOnboardingStep,
   CREATE_CATEGORY_STEP,
@@ -73,7 +74,7 @@ const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 const DISCUSSION_TYPE_ID = "discussion";
 
 /**
- * @typedef {Record<string, unknown> & { name?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
+ * @typedef {Record<string, unknown> & { name?: string, color?: string, style_type?: string, emoji?: string | null, icon?: string | null }} CategoryFormData
  */
 /**
  * @typedef {Object} CategoryFormApi
@@ -275,7 +276,7 @@ export default class EditCategoryTabsController extends Controller {
 
   /**
    * Runs all registered validators, then performs built-in validation for
-   * required fields (name, emoji, icon) when submitting from a non-general tab.
+   * the category name and style, including controls absent from the current tab.
    * Both `addError` and `removeError` are passed to validators so they can
    * manage errors bidirectionally.
    *
@@ -287,17 +288,17 @@ export default class EditCategoryTabsController extends Controller {
    */
   @action
   validateForm(data, { addError, removeError }) {
+    removeError("style_type");
     for (const validator of this.validators) {
       validator(data, { addError, removeError });
     }
 
-    if (this.selectedTab === "general") {
-      return;
-    }
-
     let hasGeneralTabErrors = false;
-
-    if (!data.name) {
+    if (
+      this.selectedTab !== "general" &&
+      !this.model.isUncategorizedCategory &&
+      !data.name
+    ) {
       hasGeneralTabErrors = true;
       addError("name", {
         title: i18n("category.name"),
@@ -305,20 +306,10 @@ export default class EditCategoryTabsController extends Controller {
       });
     }
 
-    if (data.style_type === "emoji" && !data.emoji) {
+    // The popover's controls can be unmounted when the form is submitted.
+    for (const error of categoryStyleErrors(data)) {
       hasGeneralTabErrors = true;
-      addError("emoji", {
-        title: i18n("category.emoji"),
-        message: i18n("category.validations.emoji_required"),
-      });
-    }
-
-    if (data.style_type === "icon" && !data.icon) {
-      hasGeneralTabErrors = true;
-      addError("icon", {
-        title: i18n("category.icon"),
-        message: i18n("category.validations.icon_required"),
-      });
+      addError("style_type", error);
     }
 
     if (hasGeneralTabErrors) {
