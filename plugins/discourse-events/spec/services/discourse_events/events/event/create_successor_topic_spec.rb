@@ -213,6 +213,59 @@ RSpec.describe DiscourseEvents::Events::Event::CreateSuccessorTopic do
     expect(post.last_editor_id).to eq(author.id)
   end
 
+  it "skips missed occurrences when a rollover runs late" do
+    freeze_time Time.utc(2026, 10, 1, 12)
+
+    starts_at = Time.utc(2026, 10, 2, 12)
+    ends_at = starts_at + 1.hour
+    title = "Delayed weekly rollover"
+
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+      [event start="2026-10-02 12:00" end="2026-10-02 13:00" status="public" timezone="UTC" recurrence="every_week"]
+      Weekly meeting.
+      [/event]
+    RAW
+    event_date = post.reload.event.event_dates.pending.first
+
+    # October 9 and 16 have passed. The next occurrence is October 23.
+    freeze_time Time.utc(2026, 10, 20, 12)
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.to change(Topic, :count).by(1)
+
+    successor = Topic.where(title:).where.not(id: post.topic_id).sole
+    expect(successor.first_post.reload.event.original_starts_at).to eq_time(
+      Time.utc(2026, 10, 23, 12),
+    )
+    expect(post.reload.event.recurrence).to be_nil
+  end
+
+  it "archives the final occurrence without a successor when the series has ended" do
+    freeze_time Time.utc(2026, 10, 1, 12)
+
+    title = "Expired weekly rollover"
+    post = PostCreator.create!(author, title:, category: category.id, raw: <<~RAW)
+      [event start="2026-10-02 12:00" end="2026-10-02 13:00" status="public" timezone="UTC" recurrence="every_week" recurrence-until="2026-10-16 12:00"]
+      Weekly meeting.
+      [/event]
+    RAW
+    event_date = post.reload.event.event_dates.pending.first
+
+    # The final scheduled occurrence has already passed.
+    freeze_time Time.utc(2026, 10, 24, 12)
+
+    expect do
+      result = described_class.call(params: { event_date_id: event_date.id })
+      expect(result).to run_successfully
+    end.not_to change(Topic, :count)
+
+    expect(post.reload.event.recurrence).to be_nil
+    expect(post.raw).not_to include('recurrence="every_week"')
+    expect(post.raw).not_to include("recurrence-until=")
+  end
+
   it "preserves the original last-Monday rule when listing successor occurrences" do
     freeze_time Time.utc(2026, 8, 1, 12)
 

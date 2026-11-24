@@ -106,9 +106,9 @@ module DiscourseEvents
         context[:invitees] = snapshot_invitees
         context[:successor_post] = nil
         context[:recurrence_anchor] = event.recurrence_anchor_starts_at
-        context[:next_occurrence] = event.calculate_next_occurrence_from(
-          event_date.starts_at + 1.second,
-        )
+        # Skip missed occurrences when the rollover job runs late.
+        next_from = [event_date.starts_at + 1.second, Time.current].max
+        context[:next_occurrence] = event.calculate_next_occurrence_from(next_from)
       end
 
       def archive_occurrence(

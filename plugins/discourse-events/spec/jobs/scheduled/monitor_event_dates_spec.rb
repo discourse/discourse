@@ -886,7 +886,8 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
 
         expect(event_date.starts_at).to eq_time(starts_at)
 
-        # The March occurrence was not processed until after April 26.
+        # The March occurrence was processed after April 26.
+        # Skip the missed April occurrence while retaining the March anchor.
         freeze_time(Time.utc(2027, 5, 1, 14, 0))
 
         expect { job.execute({}) }.to change(Topic, :count).by(1)
@@ -894,7 +895,8 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
         successor_topic = Topic.where(title:).where.not(id: original_topic_id).sole
         successor_event = successor_topic.first_post.reload.event
 
-        expect(successor_event.original_starts_at).to eq_time(Time.utc(2027, 4, 26, 12, 0))
+        expect(successor_event.original_starts_at).to eq_time(Time.utc(2027, 5, 31, 12, 0))
+        expect(successor_event.original_starts_at).to be > Time.current
 
         expect(successor_topic.reload.custom_fields[anchor_field]).to eq(starts_at.iso8601)
         initializing_field =
