@@ -14,8 +14,7 @@ import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import getURL from "discourse/lib/get-url";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import DiscourseURL, { getEditCategoryUrl } from "discourse/lib/url";
-import Category from "discourse/models/category";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const SIMPLIFIED_FIELD_LIST = [
@@ -426,10 +425,10 @@ export default class EditCategoryTabsController extends Controller {
       const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
       // A reload is needed when site texts change
       if (typeWasAdded || siteTextsChanged) {
-        if (this.model.id) {
-          window.location.reload();
+        if (isNew) {
+          DiscourseURL.redirectAbsolute(updatedModel.url);
         } else {
-          DiscourseURL.redirectAbsolute(getEditCategoryUrl(updatedModel));
+          window.location.reload();
         }
 
         // Never resolves: keeps the form busy until the page unloads
@@ -444,11 +443,9 @@ export default class EditCategoryTabsController extends Controller {
         data: { message: i18n("saved") },
       });
 
-      if (!this.model.id) {
-        this.router.transitionTo(
-          "editCategory",
-          Category.slugFor(updatedModel)
-        );
+      if (isNew) {
+        this.router.transitionTo(updatedModel.path);
+        return;
       }
 
       // ensure breadcrumbs contain the updated category model

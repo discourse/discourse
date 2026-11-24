@@ -334,7 +334,7 @@ RSpec.describe Admin::Config::DesignWizardController do
               base_font: "lato",
               heading_font: "merriweather",
               homepage: "categories",
-              category_page_style: "categories_boxes",
+              category_page_style: "categories_and_latest_topics",
             }
 
         expect(response.status).to eq(200)
@@ -344,7 +344,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.base_font).to eq("lato")
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
-        expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
+        expect(SiteSetting.desktop_category_page_style).to eq("categories_and_latest_topics")
         expect(light.reload.user_selectable).to eq(true)
       end
 

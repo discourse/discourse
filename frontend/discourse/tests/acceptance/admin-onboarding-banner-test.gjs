@@ -273,7 +273,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await fillIn("input.category-name", "testing");
     await click("#save-category");
-    assert.strictEqual(currentURL(), "/c/testing/edit/general");
+    assert.strictEqual(currentURL(), "/c/testing/11");
     assert.deepEqual(
       loggedEvents,
       [{ event: "step_completed", step: "create_category" }],

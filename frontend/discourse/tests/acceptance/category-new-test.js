@@ -80,8 +80,8 @@ acceptance("Category New", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/c/testing/edit/general",
-      "it transitions to the category edit route"
+      "/c/testing/11",
+      "it transitions to the new category's page"
     );
 
     await visit("/c/testing/edit/tags");
@@ -110,7 +110,7 @@ acceptance("Category New", function (needs) {
       .exists("it can switch to the settings tab");
   });
 
-  test("Keeps the save button busy while redirecting to the edit page", async function (assert) {
+  test("Keeps the save button busy while redirecting to the new category", async function (assert) {
     const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
     category.category_types.support = category.available_category_types[0];
     pretender.post("/categories", () => response({ category }));
@@ -122,7 +122,7 @@ acceptance("Category New", function (needs) {
     document.querySelector("#save-category").click();
     await settled();
 
-    assert.true(redirectAbsolute.calledWith("/c/testing/edit"));
+    assert.true(redirectAbsolute.calledWith("/c/testing/11"));
     assert.dom("#save-category").isDisabled();
     assert.strictEqual(
       pretender.handledRequests.filter(

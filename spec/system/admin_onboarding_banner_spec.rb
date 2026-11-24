@@ -76,7 +76,7 @@ describe "Admin Onboarding Banner" do
 
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
-      expect(page).to have_current_path("/c/announcements/edit/general")
+      expect(page).to have_current_path(%r{\A/c/announcements/\d+\z})
 
       try_until_success { expect(create_category_step_logged?).to eq(true) }
 
@@ -285,6 +285,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "previews and applies the design choices and marks step complete" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       visit("/")
       banner.click_step_action("select_theme")
 
@@ -334,7 +335,7 @@ describe "Admin Onboarding Banner" do
       open_category_form_from_banner
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
-      expect(page).to have_current_path("/c/announcements/edit/general")
+      expect(page).to have_current_path(%r{\A/c/announcements/\d+\z})
       visit("/")
 
       expect(banner.step_completed?("create_category")).to eq(true)

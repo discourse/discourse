@@ -28,8 +28,7 @@ RSpec.describe "Support Category Type Setup" do
     expect(banner).to be_visible
     banner.click_save
 
-    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Support"))
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    expect(page).to have_current_path(%r{\A/c/support/\d+\z})
     expect(SiteSetting.solved_enabled).to eq(true)
     expect(SiteSetting.show_filter_by_solved_status).to eq(true)
     category = Category.find_by(name: "Support")
@@ -55,7 +54,7 @@ RSpec.describe "Support Category Type Setup" do
     category_type_selector.option(".category-type-selector__result.--category-type-support").click
     banner.click_save
 
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-support")
+    expect(page).to have_current_path(%r{\A/c/discussion-support/\d+\z})
     category = Category.find_by(name: "Discussion + Support")
     expect(category.category_types.keys).to include(:discussion, :support)
     expect(category.enable_accepted_answers?).to eq(true)
