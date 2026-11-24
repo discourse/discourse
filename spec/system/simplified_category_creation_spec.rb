@@ -18,6 +18,7 @@ describe "Simplified Category Creation" do
       category_page.visit_new_category
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
       expect(page).to have_current_path("/new-category/general")
+      expect(page).to have_no_css(".category-type-selector")
     end
 
     context "when multiple types are available" do
@@ -77,17 +78,13 @@ describe "Simplified Category Creation" do
       expect(created_category.color).to eq("FF5733")
     end
 
-    it "edits an existing category name" do
+    it "edits an existing category name and color" do
       category_page.visit_general(category)
 
       form.field("name").fill_in("Updated Name")
       category_page.save_settings
 
       expect(category.reload.name).to eq("Updated Name")
-    end
-
-    it "changes category color" do
-      category_page.visit_general(category)
 
       category_page.set_style_color("123ABC")
       category_page.save_settings
@@ -191,7 +188,7 @@ describe "Simplified Category Creation" do
       )
     end
 
-    it "automatically switches to private when selecting a restricted parent" do
+    it "switches to private and shows inherited groups when selecting a restricted parent" do
       restricted_parent =
         Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
 
@@ -202,17 +199,6 @@ describe "Simplified Category Creation" do
       parent_chooser.select_row_by_value(restricted_parent.id)
 
       expect(page).to have_css(".group-chooser")
-    end
-
-    it "shows inherited groups when selecting a restricted parent" do
-      restricted_parent =
-        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
-
-      category_page.visit_new_category
-
-      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
-      parent_chooser.expand
-      parent_chooser.select_row_by_value(restricted_parent.id)
 
       group_chooser = PageObjects::Components::SelectKit.new(".group-chooser")
       expect(group_chooser).to have_selected_name(group.name)
@@ -265,12 +251,6 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-description-container .readonly-field")
       expect(page).to have_content("Updated category description")
       expect(toasts).to have_success(I18n.t("js.category.description_updated"))
-    end
-
-    it "does not allow selecting other category types when creating a new category" do
-      category_page.visit_new_category
-      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
-      expect(page).to have_no_css(".category-type-selector")
     end
   end
 
@@ -393,17 +373,13 @@ describe "Simplified Category Creation" do
       SiteSetting.authorized_extensions_for_staff = "jpg|jpeg|png"
     end
 
-    it "sets default view to latest" do
+    it "sets default view to latest and uploads a category logo" do
       category_page.visit_appearance(category)
 
       form.field("default_view").select("latest")
       category_page.save_settings
 
       expect(category.reload.default_view).to eq("latest")
-    end
-
-    it "uploads a category logo" do
-      category_page.visit_appearance(category)
 
       attach_file(
         "category-logo-uploader__input",
@@ -431,7 +407,7 @@ describe "Simplified Category Creation" do
       tag_group.save!
     end
 
-    it "restricts allowed tags" do
+    it "restricts allowed tags, sets minimum required tags, and sets required tag groups" do
       category_page.visit_tags(category)
 
       form.field("allowed_tags").select("tag1")
@@ -442,19 +418,11 @@ describe "Simplified Category Creation" do
       category_page.visit_tags(category)
 
       expect(form.field("allowed_tags")).to have_selected_names("tag1")
-    end
-
-    it "sets minimum required tags" do
-      category_page.visit_tags(category)
 
       form.field("minimum_required_tags").fill_in("2")
       category_page.save_settings
 
       expect(category.reload.minimum_required_tags).to eq(2)
-    end
-
-    it "sets required tag groups" do
-      category_page.visit_tags(category)
 
       allowed_tag_groups_chooser.expand
       allowed_tag_groups_chooser.select_row_by_name("My Group")
