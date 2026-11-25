@@ -1025,10 +1025,14 @@ module DiscourseTagging
     failed = {}
     existing_names = Set.new
 
+    listed_tag_ids = McpContentRule.listed_tag_ids
     candidates.each do |c|
       existing_names << c.name.downcase
       if c.has_synonyms
         failed[c.name] = I18n.t("tags.synonyms_exist")
+      elsif listed_tag_ids.include?(c.id)
+        # A synonym stops being its own tag, which would change what the rule covers.
+        failed[c.name] = I18n.t("tags.synonym_used_by_mcp_content_rule")
       else
         valid_ids << c.id
       end

@@ -363,6 +363,8 @@ class CategoriesController < ApplicationController
     CategoryDestroyer.destroy(guardian, @category)
 
     render json: success_json
+  rescue ActiveRecord::RecordNotDestroyed
+    render_json_error(@category, status: :unprocessable_entity)
   end
 
   def find_by_slug

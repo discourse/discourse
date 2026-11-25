@@ -46,7 +46,10 @@ module DiscourseMcp
     def plain(host)
       return ipv6(host) if host.start_with?("[")
 
-      host = CGI.unescape(host).downcase.chomp(".")
+      host = CGI.unescape(host)
+      return if !host.valid_encoding?
+
+      host = host.downcase.chomp(".")
       return if !host.match?(HOST_NAME)
       # Browsers read a host whose last label is numeric as an IPv4 address,
       # in decimal, octal or hexadecimal parts.

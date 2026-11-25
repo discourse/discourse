@@ -35,6 +35,7 @@ class Tag < ActiveRecord::Base
             .where(staff_topic_count: 0, pm_topic_count: 0)
             .joins("LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id")
             .where("tgm.tag_id IS NULL")
+            .where.not(id: McpContentRule.protected_tag_ids.to_a)
         end
 
   scope :used_tags_in_regular_topics,
@@ -50,6 +51,12 @@ class Tag < ActiveRecord::Base
         end
 
   scope :browsable, ->(guardian) { base_tags.visible(guardian) }
+
+  before_save :cook_description
+  after_update :enqueue_tag_hashtag_remap, if: :saved_change_to_name?
+  # Prepended so it runs before the dependent records below are destroyed. It
+  # raises rather than aborting, so an outer transaction can't swallow it.
+  before_destroy :ensure_not_listed_in_mcp_content_rule, prepend: true
 
   has_many :tag_users, dependent: :destroy # notification settings
 
@@ -70,9 +77,6 @@ class Tag < ActiveRecord::Base
   has_many :embeddable_host_tags
   has_many :embeddable_hosts, through: :embeddable_host_tags
 
-  before_save :cook_description
-
-  after_update :enqueue_tag_hashtag_remap, if: :saved_change_to_name?
   after_save :index_search
   after_save :update_synonym_associations
 
@@ -328,6 +332,12 @@ class Tag < ActiveRecord::Base
   end
 
   private
+
+  def ensure_not_listed_in_mcp_content_rule
+    return if McpContentRule.listed_tag_ids.exclude?(id)
+
+    raise Discourse::InvalidParameters.new(I18n.t("tags.used_by_mcp_content_rule"))
+  end
 
   def ensure_slug
     self.slug ||= ""

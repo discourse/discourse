@@ -146,6 +146,9 @@ class Category < ActiveRecord::Base
   before_validation :normalize_default_top_period
   before_validation :normalize_minimum_required_tags
 
+  before_save :ensure_stays_in_denied_mcp_subtree,
+              prepend: true,
+              if: -> { persisted? && will_save_change_to_parent_category_id? }
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
@@ -159,6 +162,9 @@ class Category < ActiveRecord::Base
   after_update :run_plugin_category_update_param_callbacks
   after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
   after_update :clear_page_not_found_topics_cache, if: :saved_change_to_read_restricted?
+  # Prepended so they run before any other callback changes or removes records.
+  before_destroy :ensure_not_protected_by_mcp_content_rule, prepend: true
+
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -1411,6 +1417,27 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_not_protected_by_mcp_content_rule
+    return if McpContentRule.protected_category_ids.exclude?(id)
+
+    errors.add(:base, I18n.t("category.errors.used_by_mcp_content_rule"))
+    throw :abort
+  end
+
+  # Moving a category out of a denied category would make its topics
+  # accessible. Moving it into one, or out of an allowed one, only shrinks
+  # access and stays allowed.
+  def ensure_stays_in_denied_mcp_subtree
+    denied = McpContentRule.denied_category_ids
+    return if denied.empty? || denied.include?(id)
+
+    subtree = McpContentRule.denied_subtree_ids
+    return if subtree.exclude?(id) || subtree.include?(parent_category_id)
+
+    errors.add(:base, I18n.t("category.errors.moved_out_of_mcp_content_rule"))
+    throw :abort
+  end
 
   def run_plugin_category_update_param_callbacks
     DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, opts|
