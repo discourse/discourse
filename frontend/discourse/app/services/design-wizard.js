@@ -90,12 +90,24 @@ export default class DesignWizardService extends Service {
   #originalSiteSettings;
   #originalHomepageSettings;
   #originalColorSchemeLinks;
+  #systemDarkQuery;
   #prefetched = false;
   // what the server holds, so a step save only writes choices that differ from it
   #savedSelections;
   // until the admin or a theme switch picks one, the shown homepage may only be
   // the fallback for one the wizard can't offer, which must not be saved
   #homepageChosen = false;
+
+  // the preview pins the page to one mode, so a system mode switch no longer
+  // reaches the stylesheets on its own
+  #followSystemColorMode = () => {
+    const previousMode = this.effectiveColorMode;
+    this.colorMode = renderedColorMode(this.#originalColorSchemeLinks);
+
+    if (this.effectiveColorMode !== previousMode) {
+      this.#previewSelections();
+    }
+  };
 
   // with room for both, the page reflows beside the panel instead of under it
   get docked() {
@@ -331,6 +343,11 @@ export default class DesignWizardService extends Service {
     this.active = true;
     this.#starting = false;
     this.#originalColorSchemeLinks = captureColorSchemeLinks();
+    this.#systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    this.#systemDarkQuery.addEventListener(
+      "change",
+      this.#followSystemColorMode
+    );
 
     this.#previewSiteSettings();
     await this.#previewSelections();
@@ -546,6 +563,11 @@ export default class DesignWizardService extends Service {
       }
       this.#refreshCategoriesPage();
     }
+    this.#systemDarkQuery?.removeEventListener(
+      "change",
+      this.#followSystemColorMode
+    );
+    this.#systemDarkQuery = undefined;
     restoreColorSchemeLinks(this.#originalColorSchemeLinks);
     this.#reset();
 

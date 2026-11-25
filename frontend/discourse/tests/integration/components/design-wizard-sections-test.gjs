@@ -135,6 +135,46 @@ module(
         )
         .exists("shows progress on the theme being applied");
     });
+
+    test("screenshots follow the previewed color mode", async function (assert) {
+      const lightScreenshot = `${SCREENSHOT}#light`;
+      const darkScreenshot = `${SCREENSHOT}#dark`;
+      const themes = [
+        {
+          id: -1,
+          name: "Foundation",
+          screenshot_light_url: lightScreenshot,
+          screenshot_dark_url: darkScreenshot,
+        },
+      ];
+      const designWizard = this.owner.lookup("service:design-wizard");
+      designWizard.colorMode = "light";
+
+      await render(
+        <template>
+          <ThemeSection
+            @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__theme-screenshot-image")
+        .hasAttribute("src", lightScreenshot, "shows the light screenshot");
+
+      designWizard.colorMode = "dark";
+      await settled();
+
+      assert
+        .dom(".design-wizard__theme-screenshot-image")
+        .hasAttribute(
+          "src",
+          darkScreenshot,
+          "switches to the dark screenshot with the mode"
+        );
+    });
   }
 );
 
