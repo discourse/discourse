@@ -800,3 +800,45 @@ body.has-page-shell {
     }
   }
 }
+
+.context-topic {
+  overflow-wrap: anywhere;
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block: var(--space-4);
+
+    dt {
+      color: var(--primary-high);
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  .topic-map__users-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+
+    .poster {
+      position: relative;
+    }
+
+    .post-count {
+      margin-inline-start: var(--space-1);
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__links {
+    .domain {
+      color: var(--primary-high);
+      display: block;
+      font-size: var(--font-down-1);
+    }
+  }
+}

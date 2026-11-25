@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import ContextAbout from "discourse/components/page-shell/context-about";
+import ContextTopic from "discourse/components/page-shell/context-topic";
 import discourseDebounce from "discourse/lib/debounce";
 import EmbedMode from "discourse/lib/embed-mode";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -20,6 +21,13 @@ const ABOUT_CONTEXT_VIEW = {
   id: "about",
   label: "about.simple_title",
   component: ContextAbout,
+};
+
+/** @type {ContextView} */
+const TOPIC_CONTEXT_VIEW = {
+  id: "topic",
+  label: "page_shell.context_topic",
+  component: ContextTopic,
 };
 
 const STORAGE_KEY = "page-shell-panels";
@@ -64,6 +72,7 @@ function parsePanelPreference(name, stored, fallbackMode = "open") {
 
 export default class PageShell extends Service {
   @service currentUser;
+  @service header;
   @service keyValueStore;
   @service router;
   @service sessionStore;
@@ -132,10 +141,12 @@ export default class PageShell extends Service {
   /** @returns {ContextView[]} */
   @cached
   get contextViews() {
-    return [
-      ABOUT_CONTEXT_VIEW,
-      ...applyValueTransformer("page-shell-context-view", []),
-    ];
+    const views = [ABOUT_CONTEXT_VIEW];
+    if (this.canOpenContext && this.header.topicInfo) {
+      views.push(TOPIC_CONTEXT_VIEW);
+    }
+
+    return [...views, ...applyValueTransformer("page-shell-context-view", [])];
   }
 
   get selectedContextView() {

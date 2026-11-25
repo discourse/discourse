@@ -254,6 +254,39 @@ acceptance("Page shell | regions", function (needs) {
       .doesNotHaveClass("title--minimized", "keeps the full logo");
   });
 
+  test("the Topic view follows the current discussion", async function (assert) {
+    const picker = ".page-shell__header-context select";
+    const panel = "#page-shell-context .context-topic";
+
+    await visit("/t/internationalization-localization/280");
+    const option = `${picker} option[value="topic"]`;
+    await waitFor(option);
+    assert.dom(option).hasText("Topic summary", "labels the view");
+
+    assert
+      .dom(picker)
+      .hasValue("about", "opening a topic keeps the existing view");
+    await fillIn(picker, "topic");
+
+    assert
+      .dom(panel)
+      .hasAttribute("data-topic-id", "280", "shows the open topic");
+    assert.dom(".context-topic__stats").exists("shows topic statistics");
+    assert.dom(`${panel} h2`).doesNotExist("omits the repeated topic title");
+
+    await visit("/t/130");
+
+    assert.dom(picker).hasValue("topic", "keeps Topic summary selected");
+    assert.dom(panel).hasAttribute("data-topic-id", "130", "updates the topic");
+
+    await visit("/latest");
+
+    assert
+      .dom(`${picker} option[value="topic"]`)
+      .doesNotExist("removes Topic off a discussion");
+    assert.dom(picker).hasValue("about", "falls back to About");
+  });
+
   test("Preferences has no header Context button", async function (assert) {
     await visit("/u/eviltrout/preferences/tracking");
 

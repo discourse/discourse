@@ -24,6 +24,51 @@ import {
 } from "../../lib/ai-errors.js";
 import SmoothStreamer from "../../lib/smooth-streamer.gjs";
 
+const AiSummaryBody = <template>
+  <div class="ai-summary-container" {{didInsert @summary.generateSummary}}>
+    <article
+      class={{dConcatClass
+        "ai-summary-box"
+        "streamable-content"
+        (if @summary.smoothStreamer.isStreaming "streaming")
+      }}
+    >
+      {{#if @summary.loading}}
+        <AiSummarySkeleton />
+      {{else}}
+        <div class="generated-summary cooked">
+          <DCookText @rawText={{@summary.smoothStreamer.renderedText}} />
+        </div>
+      {{/if}}
+    </article>
+  </div>
+</template>;
+
+const AiSummaryFooter = <template>
+  <p class="summarized-on">
+    {{i18n "summary.summarized_on" date=@summary.summarizedOn}}
+    <DTooltip @placements={{array "top-end"}}>
+      <:trigger>
+        {{dIcon "circle-info"}}
+      </:trigger>
+      <:content>
+        {{i18n "summary.model_used" model=@summary.summarizedBy}}
+      </:content>
+    </DTooltip>
+  </p>
+  {{#if @summary.outdated}}
+    <p class="summary-outdated">{{@summary.outdatedSummaryWarningText}}</p>
+  {{/if}}
+  {{#if @summary.canRegenerate}}
+    <DButton
+      @action={{@summary.regenerateSummary}}
+      @icon="arrows-rotate"
+      @label="summary.buttons.regenerate"
+      @title="summary.buttons.regenerate"
+    />
+  {{/if}}
+</template>;
+
 export default class AiSummaryModal extends Component {
   @service messageBus;
   @service currentUser;
@@ -41,6 +86,8 @@ export default class AiSummaryModal extends Component {
     () => this.text,
     (newValue) => (this.text = newValue)
   );
+
+  #channel;
 
   get outdatedSummaryWarningText() {
     let outdatedText = i18n("summary.outdated");
@@ -77,23 +124,27 @@ export default class AiSummaryModal extends Component {
     this.outdated = false;
     this.canRegenerate = false;
     this.loading = false;
-    this._channel = null;
   }
 
   @bind
   subscribe() {
-    const channel = `/discourse-ai/summaries/topic/${this.args.model.topic.id}`;
-    this._channel = channel;
+    const channel = `/discourse-ai/summaries/topic/${this.topicId}`;
+    if (this.#channel === channel) {
+      return;
+    }
+
+    this.unsubscribe();
+    this.#channel = channel;
     this.messageBus.subscribe(channel, this._updateSummary);
   }
 
   @bind
   unsubscribe() {
-    this.messageBus.unsubscribe(
-      "/discourse-ai/summaries/topic/*",
-      this._updateSummary
-    );
-    this.resetSummary();
+    if (this.#channel) {
+      this.messageBus.unsubscribe(this.#channel, this._updateSummary);
+      this.#channel = null;
+      this.resetSummary();
+    }
   }
 
   @action
@@ -146,14 +197,23 @@ export default class AiSummaryModal extends Component {
     this.loading = true;
     this.summarizedOn = null;
 
+    const topicId = this.topicId;
     return ajax(url, ajaxOpts)
       .then((data) => {
-        if (data?.ai_topic_summary?.summarized_text) {
+        if (
+          !this.isDestroying &&
+          topicId === this.topicId &&
+          data?.ai_topic_summary?.summarized_text
+        ) {
           data.done = true;
           this._updateSummary(data);
         }
       })
       .catch((error) => {
+        if (this.isDestroying || topicId !== this.topicId) {
+          return;
+        }
+
         this.loading = false;
         if (isAiCreditLimitError(error)) {
           popupAiCreditLimitError(error);
@@ -193,60 +253,36 @@ export default class AiSummaryModal extends Component {
   }
 
   <template>
-    <DModal
-      class="ai-summary-modal"
-      @bodyClass="ai-summary-modal__body"
-      @closeModal={{this.handleClose}}
-      @hideFooter={{not this.summarizedOn}}
-      @title={{i18n "discourse_ai.summarization.topic.title"}}
-      {{didInsert this.subscribe @model.topic.id}}
-      {{didUpdate this.subscribe @model.topic.id}}
-      {{willDestroy this.unsubscribe}}
-    >
-      <:body>
-        {{htmlClass "scrollable-modal"}}
-        <div class="ai-summary-container" {{didInsert this.generateSummary}}>
-          <article
-            class={{dConcatClass
-              "ai-summary-box"
-              "streamable-content"
-              (if this.smoothStreamer.isStreaming "streaming")
-            }}
-          >
-            {{#if this.loading}}
-              <AiSummarySkeleton />
-            {{else}}
-              <div class="generated-summary cooked">
-                <DCookText @rawText={{this.smoothStreamer.renderedText}} />
-              </div>
-            {{/if}}
-          </article>
-        </div>
-      </:body>
-      <:footer>
-        <p class="summarized-on">
-          {{i18n "summary.summarized_on" date=this.summarizedOn}}
-          <DTooltip @placements={{array "top-end"}}>
-            <:trigger>
-              {{dIcon "circle-info"}}
-            </:trigger>
-            <:content>
-              {{i18n "summary.model_used" model=this.summarizedBy}}
-            </:content>
-          </DTooltip>
-        </p>
-        {{#if this.outdated}}
-          <p class="summary-outdated">{{this.outdatedSummaryWarningText}}</p>
+    {{#if @inline}}
+      <div
+        class="ai-summary-inline"
+        {{didInsert this.subscribe}}
+        {{willDestroy this.unsubscribe}}
+      >
+        <AiSummaryBody @summary={{this}} />
+        {{#if this.summarizedOn}}
+          <AiSummaryFooter @summary={{this}} />
         {{/if}}
-        {{#if this.canRegenerate}}
-          <DButton
-            @action={{this.regenerateSummary}}
-            @icon="arrows-rotate"
-            @label="summary.buttons.regenerate"
-            @title="summary.buttons.regenerate"
-          />
-        {{/if}}
-      </:footer>
-    </DModal>
+      </div>
+    {{else}}
+      <DModal
+        class="ai-summary-modal"
+        @bodyClass="ai-summary-modal__body"
+        @closeModal={{this.handleClose}}
+        @hideFooter={{not this.summarizedOn}}
+        @title={{i18n "discourse_ai.summarization.topic.title"}}
+        {{didInsert this.subscribe}}
+        {{didUpdate this.subscribe @model.topic.id}}
+        {{willDestroy this.unsubscribe}}
+      >
+        <:body>
+          {{htmlClass "scrollable-modal"}}
+          <AiSummaryBody @summary={{this}} />
+        </:body>
+        <:footer>
+          <AiSummaryFooter @summary={{this}} />
+        </:footer>
+      </DModal>
+    {{/if}}
   </template>
 }

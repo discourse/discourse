@@ -1,4 +1,4 @@
-import { click, visit, waitFor } from "@ember/test-helpers";
+import { click, fillIn, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -81,6 +81,44 @@ acceptance("Topic - Summary", function (needs) {
     assert
       .dom(".ai-summary-modal .summarized-on")
       .exists("summary metadata exists");
+  });
+
+  test("shows a summary inline in the Topic Context view", async function (assert) {
+    this.siteSettings.enable_page_shell_prototype = true;
+    this.siteSettings.enable_main_outlet_grid_layout_change = true;
+    const picker = ".page-shell__header-context select";
+    const panel = "#page-shell-context";
+
+    await visit("/t/-/1");
+    await waitFor(`${picker} option[value="topic"]`);
+    await fillIn(picker, "topic");
+
+    const openSummary = click(`${panel} .ai-summarization-button`);
+    await waitFor(`${panel} .ai-summary__container`);
+
+    await publishToMessageBus("/discourse-ai/summaries/topic/1", {
+      done: true,
+      ai_topic_summary: {
+        summarized_text: "A summary of the current topic.",
+        summarized_on: "2023-01-01T04:00:00.000Z",
+        algorithm: "OpenAI GPT-4",
+      },
+    });
+
+    await openSummary;
+
+    assert
+      .dom(`${panel} .generated-summary p`)
+      .hasText(
+        "A summary of the current topic.",
+        "renders the result in Context"
+      );
+    assert.dom(".ai-summary-modal").doesNotExist("keeps the modal closed");
+
+    await visit("/latest");
+    assert
+      .dom(`${panel} .generated-summary`)
+      .doesNotExist("clears the summary off the topic");
   });
 
   test("clicking summary links", async function (assert) {

@@ -18,6 +18,7 @@ export default class AiSummaryTrigger extends Component {
 
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
+  @tracked showInlineSummary = false;
 
   creditLimitTooltipModifier = modifier((element) => {
     if (!this.isDisabled) {
@@ -76,10 +77,15 @@ export default class AiSummaryTrigger extends Component {
   }
 
   @action
-  openAiSummaryModal() {
+  openAiSummary() {
     if (this.isDisabled) {
       return;
     }
+    if (this.args.inline) {
+      this.showInlineSummary = true;
+      return;
+    }
+
     this.modal.show(AiSummaryModal, {
       model: {
         topic: this.args.outletArgs.topic,
@@ -97,13 +103,23 @@ export default class AiSummaryTrigger extends Component {
           {{didUpdate this.checkCredits @outletArgs.topic.id}}
           {{this.creditLimitTooltipModifier}}
         >
-          <DButton
-            class="btn-default ai-summarization-button"
-            @action={{this.openAiSummaryModal}}
-            @disabled={{this.isDisabled}}
-            @icon="discourse-sparkles"
-            @label="summary.buttons.generate"
-          />
+          {{#if this.showInlineSummary}}
+            <AiSummaryModal
+              @inline={{true}}
+              @model={{hash
+                topic=@outletArgs.topic
+                postStream=@outletArgs.postStream
+              }}
+            />
+          {{else}}
+            <DButton
+              class="btn-default ai-summarization-button"
+              @action={{this.openAiSummary}}
+              @disabled={{this.isDisabled}}
+              @icon="discourse-sparkles"
+              @label="summary.buttons.generate"
+            />
+          {{/if}}
         </section>
       {{/if}}
     {{/unless}}

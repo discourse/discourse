@@ -16,6 +16,7 @@ en:
       context_before_main: "Before main"
       context_after_main: "After main"
       context_view: "Context view"
+      context_topic: "Topic summary"
       navigation_width: "Navigation width"
       context_width: "Context width"
       open: "Open"
