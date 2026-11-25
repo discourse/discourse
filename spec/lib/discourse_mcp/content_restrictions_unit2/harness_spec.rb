@@ -233,6 +233,18 @@ describe McpContentRestrictionsUnit2 do
 
   def capture_seed(configuration, plugins: false)
     calls = []
+    existing_categories = [
+      double(id: 1, name: "Uncategorized", slug: "uncategorized", description: nil),
+      double(id: 2, name: "Existing category", slug: "existing-category", description: nil),
+    ]
+    categories = double
+    allow(categories).to receive(:to_a) do
+      existing_categories +
+        calls.filter_map do |kind, _, record|
+          record if %i[category category_with_definition].include?(kind)
+        end
+    end
+    stub_harness_constant("Category", double(all: categories, reset_voting_cache: nil))
     stub_harness_constant("SearchIndexer", double(index: nil))
     stub_harness_constant("TopicAllowedUser", double(find_or_create_by!: nil))
     stub_harness_constant("UploadReference", double(create!: nil))
@@ -240,7 +252,6 @@ describe McpContentRestrictionsUnit2 do
     stub_harness_constant("UserAction::REPLY", 5)
     if plugins
       stub_harness_constant("DiscourseTopicVoting::CategorySetting", double(create!: nil))
-      stub_harness_constant("Category", double(reset_voting_cache: nil))
       stub_harness_constant("DiscourseDataExplorer::Query", double(create!: double(id: 101)))
       stub_harness_constant("Chat::Channel", Class.new)
     else
@@ -257,6 +268,9 @@ describe McpContentRestrictionsUnit2 do
     end
     allow(SiteSetting).to receive(:title).and_return("Forum")
     data = McpContentRestrictionsUnit2::CanaryData.allocate
+    unless defined?(Discourse)
+      stub_harness_constant("Discourse", double(base_url: "https://example.com"))
+    end
     allow(data).to receive(:Fabricate) do |kind, **attributes|
       tags = []
       tag_association = double
@@ -264,10 +278,16 @@ describe McpContentRestrictionsUnit2 do
       allow(tag_association).to receive(:exists?) { |id:| tags.any? { |tag| tag.id == id } }
       record =
         double(
-          id: attributes.fetch(:id, calls.length + 1),
-          name: "Fixture #{calls.length}",
+          id: attributes.fetch(:id, 90_000_000 + calls.length + 1),
+          name: attributes.fetch(:name, "Fixture #{calls.length}"),
+          slug: attributes.fetch(:name, "Fixture #{calls.length}").parameterize,
+          description: attributes[:description],
+          parent_category_id: attributes[:parent_category]&.id,
           username: "fixture#{calls.length}",
           email: "fixture#{calls.length}@example.com",
+          url: "/fixtures/#{calls.length}",
+          relative_url: "/fixtures/#{calls.length}",
+          short_url: "upload://fixture#{calls.length}",
           effective_locale: "en",
           destination_fingerprint: "fingerprint",
           tags: tag_association,
@@ -318,6 +338,132 @@ describe McpContentRestrictionsUnit2 do
     channel = calls.find { |kind, _, _| kind == :category_channel }.last
     expect(data.resolve("$channel_id")).to eq(channel.id)
     expect(data.resolve("$query_id")).to eq(101)
+  end
+
+  it "[cr-u2] harness: treats every category outside the selected subtrees as restricted, including empty and existing categories" do
+    data, calls = capture_seed("allowlist")
+    permitted_ids = data.forum_config.fetch(:allow).fetch(:category_ids)
+    empty = calls.find { |_, _, record| record.id == data.values.fetch("empty_category_id") }.last
+    permitted_ids << empty.id if permitted_ids.include?(empty.parent_category_id)
+    categories = Category.all.to_a
+    excluded = categories.reject { |category| permitted_ids.include?(category.id) }
+    expect(data.targets("category")).to match_array(
+      excluded.map { |category| [category.id, McpContentRestrictionsUnit2::MISSING_ID] },
+    )
+    expect(data.targets("categories")).to match_array(
+      excluded.map { |category| [[category.id], [McpContentRestrictionsUnit2::MISSING_ID]] },
+    )
+    expect(data.restricted_ids & categories.map(&:id)).to match_array(excluded.map(&:id))
+    excluded.each do |category|
+      [category.name, category.slug, category.description].compact_blank.each do |text|
+        expect { expect_clean(draft_response("unrelated", category: text), data) }.to raise_error(
+          RSpec::Expectations::ExpectationNotMetError,
+        ),
+        text
+      end
+    end
+  end
+
+  it "[cr-u2] harness: uses permitted targets for every category-bearing usable fixture under the allowlist" do
+    data, calls = capture_seed("allowlist")
+    allowed_ids = data.forum_config.fetch(:allow).fetch(:category_ids)
+    empty = calls.find { |_, _, record| record.id == data.values.fetch("empty_category_id") }.last
+    expect(allowed_ids).to include(empty.parent_category_id)
+    expect(data.targets("category").map(&:first)).not_to include(empty.id)
+    McpContentRestrictionsUnit2::FIXTURES.each do |key, fixture|
+      next unless fixture.fetch("availability").fetch("allowlist") == "usable"
+      arguments = fixture.fetch("arguments")
+      fixture
+        .fetch("ids")
+        .each do |field, classification|
+          next if %w[category categories].exclude?(classification["target"])
+          next unless arguments.key?(field)
+          Array(data.resolve(arguments.fetch(field))).each do |id|
+            expect(allowed_ids + [empty.id]).to include(id), "#{key} #{field}"
+          end
+        end
+      if key == "tool:discourse_create_category"
+        expect(data.resolve(arguments.fetch("parent_category_id", nil))).to be_in(allowed_ids)
+      end
+    end
+  end
+
+  it "[cr-u2] harness: catches restricted ancestor ids side-loaded with an allowed topic" do
+    data, = capture_seed("allowlist")
+    category = data.allowed_post.topic.category
+    expect(data.forum_config.fetch(:allow).fetch(:category_ids)).to include(category.id)
+    expect(category.parent_category_id).to be_present
+    expect(data.targets("category").map(&:first)).to include(category.parent_category_id)
+    expect_clean(
+      draft_response("unrelated", topic_id: data.allowed_post.topic_id, category_id: category.id),
+      data,
+    )
+    [
+      { parent_category_id: category.parent_category_id },
+      { category_ids: [category.id, category.parent_category_id] },
+      { categories: [{ id: category.id, parent_category_id: category.parent_category_id }] },
+      { categories: [{ id: category.parent_category_id }] },
+    ].each do |leak|
+      expect do
+        expect_clean(
+          draft_response("unrelated", topic_id: data.allowed_post.topic_id, **leak),
+          data,
+        )
+      end.to raise_error(RSpec::Expectations::ExpectationNotMetError),
+      leak.inspect
+    end
+  end
+
+  it "[cr-u2] harness: distinguishes existing category ids from protocol ids and counters while scanning every category surface" do
+    data, = capture_seed("allowlist")
+    category = Category.all.to_a.find { |record| record.name == "Uncategorized" }
+    expect(data.restricted_ids).to include(category.id)
+    clean = draft_response("unrelated", topic_id: data.allowed_post.topic_id, count: category.id)
+    clean["body"]["id"] = category.id
+    expect_clean(clean, data)
+    [
+      { category_id: category.id },
+      { parent_category_id: category.id },
+      { category_ids: [data.allowed_post.topic.category_id, category.id] },
+      { categories: [{ id: category.id }] },
+      { category: { id: category.id } },
+      { categories: { category.id.to_s => { name: "Redacted" } } },
+    ].each do |leak|
+      response = draft_response("unrelated", **leak)
+      json_text = response.dig("body", "result", "content", 0, "text")
+      [
+        response,
+        response.deep_dup.tap { |copy| copy["body"]["result"].delete("structuredContent") },
+        response.deep_dup.tap { |copy| copy["body"]["result"].delete("content") },
+        {
+          "status" => 200,
+          "headers" => {
+          },
+          "body" => {
+            "result" => {
+              "contents" => [{ "text" => json_text }],
+            },
+          },
+        },
+        {
+          "status" => 200,
+          "headers" => {
+          },
+          "body" => {
+            "result" => {
+              "messages" => [{ "content" => { "text" => json_text } }],
+            },
+          },
+        },
+        { "status" => 200, "headers" => {}, "body" => { "error" => leak } },
+        { "status" => 200, "headers" => { "X-Category-Id" => category.id.to_s }, "body" => {} },
+      ].each do |surface|
+        expect { expect_clean(surface, data) }.to raise_error(
+          RSpec::Expectations::ExpectationNotMetError,
+        ),
+        surface.inspect
+      end
+    end
   end
 
   it "[cr-u2] harness: classifies nested tag selectors and theme field identifiers" do
@@ -417,11 +563,13 @@ describe McpContentRestrictionsUnit2 do
         data.posts.keys.select { |name| data.restricted_tokens.include?(data.tokens.fetch(name)) }
       expect(data.restricted_tokens).to include(data.tokens.fetch(:redirect_target))
       restrictions =
-        Struct.new(:restricted_tokens, :restricted_urls, :restricted_ids).new(
-          data.restricted_tokens,
-          [],
-          [],
-        )
+        Struct.new(
+          :restricted_tokens,
+          :restricted_urls,
+          :restricted_ids,
+          :restricted_category_text,
+          :contextual_category_ids,
+        ).new(data.restricted_tokens, [], [], [], [])
       data.restricted_tokens.each do |token_value|
         marker = token_value.split.last
         variants = [
@@ -459,7 +607,13 @@ describe McpContentRestrictionsUnit2 do
     data, = capture_seed("pm_off")
     token_value = data.tokens.fetch(:redirect_target)
     restrictions =
-      Struct.new(:restricted_tokens, :restricted_urls, :restricted_ids).new([token_value], [], [])
+      Struct.new(
+        :restricted_tokens,
+        :restricted_urls,
+        :restricted_ids,
+        :restricted_category_text,
+        :contextual_category_ids,
+      ).new([token_value], [], [], [], [])
     marker = token_value.split.last
     fullwidth = marker.chars.map { |character| (character.ord + 0xfee0).chr(Encoding::UTF_8) }.join
     escaped = JSON.generate({ "title" => fullwidth }, ascii_only: true)
@@ -491,11 +645,13 @@ describe McpContentRestrictionsUnit2 do
     data, = capture_seed("pm_off")
     response = draft_response("unrelated", title: data.tokens.fetch(:redirect_target))
     restrictions =
-      Struct.new(:restricted_tokens, :restricted_urls, :restricted_ids).new(
-        [data.tokens.fetch(:redirect_target)],
-        [],
-        [],
-      )
+      Struct.new(
+        :restricted_tokens,
+        :restricted_urls,
+        :restricted_ids,
+        :restricted_category_text,
+        :contextual_category_ids,
+      ).new([data.tokens.fetch(:redirect_target)], [], [], [], [])
     label = "pm_off tool:discourse_get_user_summary"
     expect do
       aggregate_failures("pm_off") do

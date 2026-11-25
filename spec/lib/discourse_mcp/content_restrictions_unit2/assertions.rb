@@ -18,12 +18,20 @@ module McpContentRestrictionsUnit2
         end
       expect(leaked_tokens).to eq([]),
       "[cr-u2] #{cell}: RED restricted canary tokens #{leaked_tokens.inspect}"
+      data.restricted_category_text.each do |text|
+        expect(normalized).not_to include(a_string_including(normalize_canary_text(text))),
+        "#{cell}: restricted category text #{text.inspect}"
+      end
       data.restricted_urls.each do |url|
         expect(serialized).not_to include(url), "#{cell}: restricted URL #{url}"
       end
-      data.restricted_ids.each do |id|
+      (data.restricted_ids - data.contextual_category_ids).each do |id|
         expect(serialized).not_to match(/(?<!\d)#{id}(?!\d)/), "#{cell}: restricted ID #{id}"
       end
+      leaked_category_ids =
+        category_identifiers(response) & data.contextual_category_ids.map(&:to_s)
+      expect(leaked_category_ids).to eq([]),
+      "#{cell}: restricted category IDs #{leaked_category_ids.inspect}"
     end
 
     def expect_blocked(response, server_version:)
@@ -112,6 +120,39 @@ module McpContentRestrictionsUnit2
     end
 
     private
+
+    # Existing category IDs can also be protocol IDs or counters; seeded high IDs retain the full-response check.
+    def category_identifiers(value, in_category: false)
+      case value
+      when Hash
+        value.flat_map do |key, child|
+          normalized_key = normalize_canary_text(key.to_s)
+          if normalized_key.match?(/categor(?:y|ies)ids?\z/) || (in_category && key.to_s == "id")
+            JSON.generate(child).scan(/\d+/)
+          else
+            indexed_category = in_category && key.to_s.match?(/\A\d+\z/)
+            identifiers = indexed_category ? [key.to_s] : []
+            identifiers +
+              category_identifiers(
+                child,
+                in_category: indexed_category || %w[category categories].include?(normalized_key),
+              )
+          end
+        end
+      when Array
+        value.flat_map { |child| category_identifiers(child, in_category:) }
+      when String
+        begin
+          category_identifiers(JSON.parse(value), in_category:)
+        rescue JSON::ParserError
+          []
+        end
+      when Integer
+        in_category ? [value.to_s] : []
+      else
+        []
+      end
+    end
 
     def normalize_canary_text(value)
       CGI.unescapeHTML(value).unicode_normalize(:nfkc).downcase.gsub(/[^[:alnum:]]/, "")

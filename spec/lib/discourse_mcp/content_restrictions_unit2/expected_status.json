@@ -1,5 +1,15 @@
 {
   "status": "Plan-derived availability; predictions for the current unit 1 implementation. Local verification and per-row derivation are recorded in AVAILABILITY_AUDIT.md. RED/GREEN are matrix cells, not RSpec examples.",
+  "category_restriction_decision": {
+    "restricted_when_any": [
+      "Category is in a denied category subtree.",
+      "Allow mode is selected and the category is outside every allowed subtree, including empty and uncategorized categories.",
+      "The category definition topic has a denied tag."
+    ],
+    "target_contract": "Get/update/delete/create-parent/create-topic restricted category targets answer exactly like missing targets.",
+    "allowed_topic_contract": "Selecting a child does not select its parent; allowed topics must not reveal restricted ancestor IDs or side-loaded categories.",
+    "prediction_impact": "Additional probes within existing cells; unit 1 predicted RED counts stay 3/88/88/88/88/82 (437 total). Concurrent unit 3 implementation not evaluated."
+  },
   "reasons": {
     "forum_content_orphan": "forum_content is unregistered at unit 1; its stored orphan row vetoes every non-:none primitive. The plan requires this fixture to remain usable.",
     "crawled_title": "Verified unrestricted admin get_user_summary.top_links contains the labeled-link URL and exact restricted redirect title. The PM-off matrix also leaks the redirect token; retain RED.",

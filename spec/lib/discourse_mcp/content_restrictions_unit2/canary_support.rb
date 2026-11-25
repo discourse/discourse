@@ -24,12 +24,17 @@ module McpContentRestrictionsUnit2
       @tokens = {}
       @related = {}
       @serial = 0
-      @allowed = Fabricate(:category_with_definition, user: admin)
-      @outside = Fabricate(:category_with_definition, user: admin, id: 91_000_001)
-      @denied = Fabricate(:category_with_definition, user: admin, id: 91_000_002)
-      @child =
-        Fabricate(:category_with_definition, user: admin, parent_category: @denied, id: 91_000_003)
-      @definition = Fabricate(:category, user: admin, id: 91_000_004)
+      @existing_category_ids = Category.all.to_a.map(&:id)
+      @allowed = add_category(:allowed)
+      @outside = add_category(:outside, id: 91_000_001)
+      @denied = add_category(:denied, id: 91_000_002)
+      @child = add_category(:denied_child, parent_category: @denied, id: 91_000_003)
+      @definition = add_category(:definition, definition: false, id: 91_000_004)
+      @outside_empty = add_category(:excluded_empty, definition: false, id: 91_000_008)
+      @selected_child = add_category(:selected_child, parent_category: @outside, id: 91_000_009)
+      empty_category = add_category(:allowed_empty, definition: false, parent_category: @allowed)
+      @categories = Category.all.to_a
+      @allowed_category_ids = [@allowed.id, empty_category.id, @selected_child.id]
       @tag = Fabricate(:tag, name: "legal-hold", id: 91_000_005)
       @recipient = Fabricate(:user, refresh_auto_groups: true)
       @invitee = Fabricate(:user, refresh_auto_groups: true)
@@ -38,11 +43,11 @@ module McpContentRestrictionsUnit2
         Fabricate(
           :post,
           user: admin,
-          topic: Fabricate(:topic, user: admin, category: @allowed),
+          topic: Fabricate(:topic, user: admin, category: @selected_child),
           raw: "cru2needle allowed public evidence",
         )
       if defined?(DiscourseTopicVoting::CategorySetting)
-        DiscourseTopicVoting::CategorySetting.create!(category: @allowed)
+        DiscourseTopicVoting::CategorySetting.create!(category: @selected_child)
         Category.reset_voting_cache
       end
       reply = Fabricate(:post, user: @recipient, topic: allowed_post.topic)
@@ -59,7 +64,6 @@ module McpContentRestrictionsUnit2
       theme.set_field(target: :translations, name: :en, value: "en:\n  cr_u2_label: Original label")
       theme.save!
       tag_group = Fabricate(:tag_group)
-      empty_category = Fabricate(:category)
       moderation_user = Fabricate(:user, refresh_auto_groups: true)
       inactive_user = Fabricate(:user, active: false)
       add_post(:outside_allowlist, category: @outside)
@@ -219,7 +223,7 @@ module McpContentRestrictionsUnit2
       {
         allow: {
           mode: configuration == "allowlist" ? "selected" : "all",
-          category_ids: configuration == "allowlist" ? [@allowed.id] : [],
+          category_ids: configuration == "allowlist" ? [@allowed.id, @selected_child.id] : [],
           tag_ids: [],
         },
         deny: {
@@ -253,7 +257,7 @@ module McpContentRestrictionsUnit2
             denied_tag = config[:deny][:tag_ids].present? && post.topic.tags.exists?(id: @tag.id)
             excluded =
               config[:allow][:mode] == "selected" && !post.topic.private_message? &&
-                post.topic.category_id != @allowed.id
+                !@allowed_category_ids.include?(post.topic.category_id)
             (private_messages_off? && post.topic.private_message?) || denied_category ||
               denied_tag || excluded
           end
@@ -262,6 +266,31 @@ module McpContentRestrictionsUnit2
 
     def restricted_tokens
       posts.filter_map { |name, post| tokens.fetch(name) if restricted_posts.include?(post) }
+    end
+
+    def restricted_categories
+      case configuration
+      when "pm_off"
+        []
+      when "allowlist"
+        @categories.reject { |category| @allowed_category_ids.include?(category.id) }
+      when "denied_category"
+        [@denied, @child]
+      when "denied_tag"
+        [@definition]
+      when "combined", "pm_off_and_forum"
+        [@denied, @child, @definition]
+      end
+    end
+
+    def restricted_category_text
+      restricted_categories
+        .flat_map { |category| [category.name, category.slug, category.description].compact_blank }
+        .uniq
+    end
+
+    def contextual_category_ids
+      restricted_categories.map(&:id) & @existing_category_ids
     end
 
     def restricted_ids
@@ -321,19 +350,7 @@ module McpContentRestrictionsUnit2
           end
         end
       when "category", "categories"
-        return [] if configuration == "pm_off"
-        categories =
-          case configuration
-          when "allowlist"
-            [@outside, @denied, @child, @definition]
-          when "denied_category"
-            [@denied, @child]
-          when "denied_tag"
-            [@definition]
-          when "combined", "pm_off_and_forum"
-            [@denied, @child, @definition]
-          end
-        categories.map do |category|
+        restricted_categories.map do |category|
           kind == "categories" ? [[category.id], [MISSING_ID]] : [category.id, MISSING_ID]
         end
       when "tag", "tags"
@@ -361,6 +378,17 @@ module McpContentRestrictionsUnit2
     end
 
     private
+
+    def add_category(label, definition: true, **attributes)
+      marker = "cru2 #{label.to_s.tr("_", " ")} #{SecureRandom.hex(6)}"
+      Fabricate(
+        definition ? :category_with_definition : :category,
+        user: @admin,
+        name: marker,
+        description: "Description for #{marker}",
+        **attributes,
+      )
+    end
 
     def next_token(name)
       @tokens[name] = "cru2 #{name.to_s.tr("_", " ")} #{SecureRandom.hex(6)}"

@@ -2256,7 +2256,8 @@
   "tool:discourse_create_category": {
     "arguments": {
       "name": "Fresh category",
-      "description": "Fresh category description"
+      "description": "Fresh category description",
+      "parent_category_id": "$category_id"
     },
     "ids": {
       "parent_category_id": {

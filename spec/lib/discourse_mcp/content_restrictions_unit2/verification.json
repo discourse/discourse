@@ -1,4 +1,65 @@
 {
+  "category_oracle_recheck": {
+    "date": "2026-11-25",
+    "scope": "This amendment changes only unit 2 oracle files; no implementation files inspected as stable or edited. Only the authorized harness and bin/lint were run through hc; no migrations, service operations, or full matrix run.",
+    "command": "LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec spec/lib/discourse_mcp/content_restrictions_unit2/harness_spec.rb",
+    "runner": "hc with the Ruby installation directory reported by command -v on PATH; pnpm and Node installation directories also added for bin/lint.",
+    "test_first": {
+      "category_semantics": {
+        "seed": 25241,
+        "examples": 20,
+        "failures": 3,
+        "observed": "Old oracle omitted excluded empty and pre-existing categories, used a top-level empty deletion target, and lacked an allowed-topic fixture with a restricted parent."
+      },
+      "existing_id_collision": {
+        "seed": 37930,
+        "examples": 21,
+        "failures": 1,
+        "observed": "Global numeric scan incorrectly rejected a clean response whose protocol ID and counter were 1, the excluded uncategorized category ID."
+      }
+    },
+    "mutation_checks": {
+      "skip_category_json_text_decoding": {
+        "initial_seed": 567,
+        "initial_result": "21 examples, 0 failures. Found a regression-fixture gap: deep_merge with an empty hash retained structuredContent, so the text-only surface was not isolated.",
+        "fixture_correction": "Delete structuredContent or content explicitly in separate copies; also exercise isolated resource, prompt, error and header surfaces.",
+        "seed": 51990,
+        "examples": 21,
+        "failures": 1,
+        "observed": "Weaker scanner accepted category_id:1 in JSON text with structuredContent absent.",
+        "restored": true
+      }
+    },
+    "final_harness": {
+      "seed": 37183,
+      "examples": 21,
+      "failures": 0,
+      "duration_seconds": 1.12,
+      "load_seconds": 2.74
+    },
+    "transient_run": "One intermediate harness load failed with NameError: uninitialized constant DiscourseMcp::TopicQuery while implementation files were changing. No implementation changes made; later authorized harness runs completed.",
+    "lint": {
+      "command": "bin/lint --fix spec/lib/discourse_mcp/content_restrictions_unit2/assertions.rb spec/lib/discourse_mcp/content_restrictions_unit2/canary_support.rb spec/lib/discourse_mcp/content_restrictions_unit2/harness_spec.rb",
+      "result": "Passed; one invertible-unless offense corrected. bin/lint has no core linter for the changed oracle JSON/Markdown files; JSON parsing and git diff --check were checked separately."
+    },
+    "fixture_rows": {
+      "tool:discourse_delete_category": "$empty_category_id and $empty_category_name now refer to an empty child of @allowed; excluded top-level empty category retained as a restricted target.",
+      "tool:discourse_create_category": "Added parent_category_id:$category_id, targeting @allowed.",
+      "shared_topic_and_post_targets": "Allowed topic/post now in @selected_child, explicitly selected under allowlist although its @outside parent remains restricted; voting setting follows the topic category.",
+      "retained_category_targets": "create_topic, save_draft, get_category and update_category keep $category_id in @allowed. Harness checks every usable row with an explicit governed category argument."
+    },
+    "predicted_red": {
+      "baseline": "Unit 1, unchanged; concurrent unit 3 implementation not evaluated.",
+      "pm_off": 3,
+      "allowlist": 88,
+      "denied_category": 88,
+      "denied_tag": 88,
+      "combined": 88,
+      "pm_off_and_forum": 82,
+      "total_red": 437,
+      "total_green": 259
+    }
+  },
   "restricted_output_recheck": {
     "date": "2026-11-25",
     "runner": "hc, from this worktree; installed Ruby added to PATH",

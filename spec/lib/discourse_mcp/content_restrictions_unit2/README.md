@@ -73,6 +73,41 @@ rather than invented “restricted” counterparts. An unrelated account does no
 because all its posts are restricted. Governed topic/post/category/draft/reviewable/upload targets,
 including optional IDs and post-ID arrays, get restricted/missing variants.
 
+## Category restriction decision
+
+A category is restricted when **any** of these conditions holds:
+
+- It belongs to a denied category's subtree.
+- Allow mode is `selected` and it is outside every selected category's subtree.
+- Its definition topic carries a denied tag.
+
+This applies even when the category is empty. Its name, slug, description and identifiers must
+not reach the agent. Get, update, delete, create-category parent and create-topic category targets
+must answer exactly like missing targets; the matrix retains each restricted/missing comparison.
+Selecting a child does not select its ancestors. An allowed topic must not disclose a restricted
+ancestor through `parent_category_id`, category-ID arrays or side-loaded category records.
+
+The allowlist selects the original allowed category and a child of the excluded `@outside` category.
+The shared allowed topic now belongs to that selected child, exercising the restricted-parent case
+through all topic reads, resources, prompts and writes that use `$topic_id` or `$post_id`.
+`discourse_create_topic`, `discourse_save_draft`, `discourse_get_category` and
+`discourse_update_category` retain their permitted `$category_id` target. Two fixtures change:
+
+- `discourse_delete_category`: `$empty_category_id` / `$empty_category_name` resolve to an empty
+  child of the original allowed category. A separate excluded top-level empty category remains a
+  restricted/missing target.
+- `discourse_create_category`: adds `parent_category_id: "$category_id"`, so the prospective new
+  category belongs to an allowed subtree.
+
+The allowlist's category targets and restricted IDs include **all** categories in the seeded database
+outside these permitted subtrees, including uncategorized and other pre-existing categories. Their
+names, slugs and descriptions are checked across normalized response strings and decoded JSON text.
+All original fixed canary IDs retain their full-response absence check. Newly covered pre-existing
+category IDs additionally use category-field context, including headers, nested records and ID-keyed
+maps: ID `1` in a category field is a leak, while protocol request ID `1` or counter `1` is not.
+This avoids false positives without exempting any previously covered canary or altering the
+restricted/missing response comparison.
+
 The availability table is independent of `primitive_usable?` and `ContentPolicy`: a usable fixture must
 succeed, and a blocked fixture must return the policy-blocked error. Accepting any error, deriving
 expected availability from the gate under test, disabling the tripwire, and broadly replacing IDs
@@ -124,6 +159,10 @@ identifier, URL and restricted/missing assertions remain active.
 | `combined` | 88 | 28 |
 | `pm_off_and_forum` | 82 | 34 |
 
+The category decision adds probes within existing cells, so these unit 1 predictions remain unchanged
+(437 RED and 259 GREEN across 696 cells). They are not predictions of the concurrently changing unit 3
+implementation; only the harness was rerun for this amendment.
+
 PM-off predicts the crawled-title leak, content-free `signups` report blocked, and webhook ping
 blocked. Every forum row predicts the orphan veto for each planned-usable non-`:none` primitive,
 including reactions, solved, voting, and events. Exit-path writes are blocked under any rule;
@@ -168,11 +207,13 @@ bundle exec rspec --options /dev/null -Ilib \
   spec/lib/discourse_mcp/content_restrictions_unit2/harness_spec.rb
 ```
 
-Its seventeen examples cover text quality, explicit draft seeds, plugin presence/absence,
+Its twenty-one examples cover text quality, explicit draft seeds, plugin presence/absence,
 schema identifier coverage, strict caller-echo substitution, every plan-based availability row,
 both legitimate blocked response envelopes with malformed/extra-content rejection cases, every
 canary's normalized title/slug/excerpt forms across all six configurations, isolated response
-surfaces with escaped JSON text, and attribution of a single output failure to its matrix cell.
+surfaces with escaped JSON text, attribution of a single output failure to its matrix cell,
+complete excluded-category coverage, permitted category fixtures, restricted parent IDs alongside
+allowed topics, and pre-existing category IDs on each response surface without counter/protocol collisions.
 The constant helper explicitly dispatches to RSpec's two-argument constant stubbing API, avoiding
 Discourse's three-argument helper. The I18n stub also avoids the Mocha/RSpec `anything` collision.
 
