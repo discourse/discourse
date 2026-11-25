@@ -370,7 +370,7 @@ describe DiscourseMcp::Server, "#call" do
           end
         end
         activate!
-        if restriction == :hash_tags
+        if %i[payload_category hash_tags].include?(restriction)
           assert_concealed_approval(args)
         else
           assert_reference_write("discourse_perform_reviewable_action", args)
