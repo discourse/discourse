@@ -2922,28 +2922,61 @@ module(
       this.nameOf = await loadAccessibleName();
     });
 
-    for (const variant of ["button", "static"]) {
-      test(`a ${variant} trigger is named by the caption, then the value`, async function (assert) {
-        const held = tracked(null);
-        await render(
-          <template>
-            <span id="fruit-caption">Fruit</span>
-            <DSelect
-              @ariaLabelledBy="fruit-caption"
-              @options={{ITEMS}}
-              @value={{held.value}}
-              @variant={{variant}}
-            />
-          </template>
-        );
+    test("a button trigger is named by the caption, then the value", async function (assert) {
+      const held = tracked(null);
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @ariaLabelledBy="fruit-caption"
+            @options={{ITEMS}}
+            @value={{held.value}}
+            @variant="button"
+          />
+        </template>
+      );
 
-        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
-        held.value = 1;
-        await settled();
-        assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
-        assert.dom(".d-select").doesNotHaveAttribute("aria-label");
-      });
-    }
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
+      held.value = 1;
+      await settled();
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+      assert.dom(".d-select").doesNotHaveAttribute("aria-label");
+    });
+
+    test("a static trigger is named by the caption alone, since its contents are its value", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @ariaLabelledBy="fruit-caption"
+            @options={{ITEMS}}
+            @value={{1}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit");
+      assert.dom(".d-select .d-select__value").hasText("Apple");
+      assert.dom(".d-select").doesNotHaveAttribute("aria-label");
+    });
+
+    test("a disabled static trigger is named by the caption, then the value", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @ariaLabelledBy="fruit-caption"
+            @disabled={{true}}
+            @options={{ITEMS}}
+            @value={{1}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+    });
 
     test("a typeahead's input and list are named by the caption", async function (assert) {
       await render(
@@ -2958,6 +2991,22 @@ module(
       assert.strictEqual(this.nameOf(find("[role='listbox']")), "Fruit");
       assert.dom("[role='combobox']").doesNotHaveAttribute("aria-label");
       assert.dom("[role='listbox']").doesNotHaveAttribute("aria-label");
+    });
+
+    test("a typeahead's input is named by the caption alone, since it holds the value", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @ariaLabelledBy="fruit-caption"
+            @options={{ITEMS}}
+            @value={{1}}
+          />
+        </template>
+      );
+
+      assert.dom("[role='combobox']").hasValue("Apple");
+      assert.strictEqual(this.nameOf(find("[role='combobox']")), "Fruit");
     });
 
     test("a searchable panel's field is named by the caption", async function (assert) {
@@ -3498,7 +3547,7 @@ module("Integration | ui-kit | select | DSelect (none held)", function (hooks) {
       .hasAttribute("aria-label", "Fruit, (none)");
   });
 
-  test("a labelled static control reads the none label as its value", async function (assert) {
+  test("a labelled static control is named by its caption and shows the none label as its value", async function (assert) {
     await render(
       <template>
         <span id="fruit-caption">Fruit</span>
@@ -3514,7 +3563,8 @@ module("Integration | ui-kit | select | DSelect (none held)", function (hooks) {
       .getAttribute("aria-labelledby")
       .split(" ")
       .map((id) => document.getElementById(id)?.textContent.trim());
-    assert.deepEqual(names, ["Fruit", "(none)"]);
+    assert.deepEqual(names, ["Fruit"]);
+    assert.dom(".d-select__trigger .d-select__value").hasText("(none)");
   });
 
   test("on mobile, the field shows the none label", async function (assert) {

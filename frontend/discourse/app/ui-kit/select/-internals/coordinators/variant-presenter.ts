@@ -375,7 +375,8 @@ export default class VariantPresenter
   /**
    * What a caption named by `@ariaLabelledBy` is followed by: the held value of a single select, or
    * the count of a compact multiple one. The caption replaces `label`, so the value the composed
-   * names carry has to be spoken after it.
+   * names carry has to be spoken after it. A focusable static combobox already exposes its value,
+   * so it gets none, as in {@link triggerRootLabel}.
    */
   get labelledValue(): string | undefined {
     if (this.#getArgs().multiple) {
@@ -389,7 +390,10 @@ export default class VariantPresenter
         }) || undefined
       );
     }
-    return this.showsValue ? this.fallbackSelectionLabel : undefined;
+    if (!this.showsValue || (this.isStatic && !this.isDisabled)) {
+      return undefined;
+    }
+    return this.fallbackSelectionLabel;
   }
 
   get selectionLabel(): string | undefined {

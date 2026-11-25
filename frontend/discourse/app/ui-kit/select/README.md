@@ -774,7 +774,7 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   `@groupFooter`.
 - **Naming the control:** use the `ariaLabel` text, or `@ariaLabelledBy` with the id of a caption already
   on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
-  list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption; an id missing from the page warns
+  list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption, except on an enabled static trigger, whose contents already are its value; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
   happens to come first (a chip's remove control, or the clear control). Without it, clicking a
