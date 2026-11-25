@@ -935,7 +935,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 30, 1.hour).performed!
     RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 6, 1.minute).performed!
 
-    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    invite = login_code_invite
     email = (invite&.email.presence || params[:email]).to_s.strip.downcase
     if email.present?
       RateLimiter.new(
@@ -1235,10 +1235,18 @@ class SessionController < ApplicationController
   end
 
   def login_code_verification_params
-    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    invite = login_code_invite
     email = invite&.email.presence || params[:email]
 
     service_params.deep_merge(params: params.to_unsafe_h.merge(email:))
+  end
+
+  # Login code requests must resolve the invite from the same normalised key the
+  # invite services validate, otherwise the per-address rate limit can be keyed
+  # to a different address (or skipped) than the one the code is mailed to.
+  def login_code_invite
+    invite_key = params[:invite_key].to_s.strip
+    Invite.find_by(invite_key:) if invite_key.present?
   end
 
   def process_verified_invite_login_code(matched_user)

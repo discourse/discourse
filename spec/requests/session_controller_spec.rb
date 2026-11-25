@@ -804,6 +804,36 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(429)
       end
+
+      it "counts codes against the invite's address when the invite key is padded" do
+        freeze_time
+        invite = Fabricate(:invite, email: "invited@example.com")
+
+        3.times do
+          post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+          expect(response.status).to eq(200)
+          freeze_time 2.minutes.from_now
+        end
+
+        post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+
+        expect(response.status).to eq(429)
+
+        [
+          { invite_key: "#{invite.invite_key} " },
+          { invite_key: " #{invite.invite_key}\n" },
+          { invite_key: " #{invite.invite_key}", email: "attacker@example.com" },
+        ].each do |padded_params|
+          expect_not_enqueued_with(
+            job: :send_email_login_code,
+            args: {
+              to_address: invite.email,
+            },
+          ) { post "/session/login-code.json", params: honeypot_magic(padded_params) }
+
+          expect(response.status).to eq(429)
+        end
+      end
     end
   end
 
