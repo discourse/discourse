@@ -153,7 +153,10 @@ module DiscourseDataExplorer
     def public_run
       return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
 
-      run
+      typed = request.format.json? && params[:typed] == "true"
+      raise Discourse::InvalidParameters.new(:download) if typed && params[:download]
+
+      run(typed:)
     end
 
     def create
@@ -274,7 +277,7 @@ module DiscourseDataExplorer
     # columns - array of strings. Titles of the returned columns, in order.
     # explain - string. (Optional - pass explain=true in the request) Postgres query plan, UNIX newlines.
     # rows - array of array of strings. Results of the query. In the same order as 'columns'.
-    def run
+    def run(typed: false)
       rate_limit_query_runs!
 
       query = Query.find(params[:id].to_i)
@@ -290,7 +293,7 @@ module DiscourseDataExplorer
           max: QUERY_RESULT_MAX_LIMIT,
         )
 
-      result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:)
+      result = QueryRunner.run(query, params[:params], current_user:, explain:, limit:, typed:)
 
       if result[:error]
         render json: format_query_error(result[:error]), status: :unprocessable_entity
