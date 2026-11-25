@@ -5,7 +5,20 @@
 class McpContentRule < ActiveRecord::Base
   belongs_to :updated_by, class_name: "User", optional: true
 
+  # Serializes rule saves with the deletes and moves the rule guards check,
+  # so a target can't disappear between a rule's check and its commit.
+  GUARD_LOCK_KEY = 7_304_118_552
+
   validates :rule_kind, presence: true, uniqueness: true, length: { maximum: 200 }
+  validate :listed_targets_exist, if: -> { rule_kind == DiscourseMcp::ForumContentRule::NAME }
+
+  # Takes the lock that serializes rule saves with guarded deletes and moves,
+  # held until the current transaction ends.
+  #
+  # @returns [void]
+  def self.lock_guarded_targets!
+    DB.exec("SELECT pg_advisory_xact_lock(:key)", key: GUARD_LOCK_KEY)
+  end
 
   # Tags that a rule lists, plus the tags they are synonyms of. Removing one,
   # or turning it into a synonym, would silently change what the rule covers.
@@ -47,12 +60,18 @@ class McpContentRule < ActiveRecord::Base
   end
 
   def self.listed_ids(key)
-    forum_configs
-      .flat_map { |config| Array(config.dig("allow", key)) + Array(config.dig("deny", key)) }
-      .map(&:to_i)
-      .to_set
+    forum_configs.map { |config| config_ids(config, key) }.reduce(Set.new, :|)
   end
   private_class_method :listed_ids
+
+  # @param config [Hash, nil] A forum_content config.
+  # @param key [String] "tag_ids" or "category_ids".
+  # @returns [Set<Integer>] The ids that config lists under both sides.
+  def self.config_ids(config, key)
+    return Set.new if !config.is_a?(Hash)
+
+    %w[allow deny].flat_map { |side| Array(config.dig(side, key)) }.map(&:to_i).to_set
+  end
 
   def self.forum_configs
     where(rule_kind: DiscourseMcp::ForumContentRule::NAME)
@@ -60,6 +79,21 @@ class McpContentRule < ActiveRecord::Base
       .select { |config| config.is_a?(Hash) }
   end
   private_class_method :forum_configs
+
+  private
+
+  # Only targets added by this save are checked, so a rule that already lists
+  # a missing target can still be edited.
+  def listed_targets_exist
+    self.class.lock_guarded_targets!
+    previous = new_record? ? nil : config_in_database
+    { Tag => "tag_ids", Category => "category_ids" }.each do |model, key|
+      added = (self.class.config_ids(config, key) - self.class.config_ids(previous, key)).to_a
+      next if added.empty? || model.where(id: added).count == added.size
+
+      errors.add(:config, I18n.t("mcp.errors.content_rule_target_missing"))
+    end
+  end
 end
 
 # == Schema Information

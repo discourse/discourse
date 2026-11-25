@@ -69,6 +69,7 @@ en:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      content_rule_target_missing: "A tag or category in this content restriction no longer exists."
       author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
       authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
       category_create_failed: "Category could not be created"

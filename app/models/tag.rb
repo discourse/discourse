@@ -294,6 +294,8 @@ class Tag < ActiveRecord::Base
       errors.add(:target_tag_id, I18n.t("tags.synonyms_exist"))
     elsif target_tag&.synonym?
       errors.add(:target_tag_id, I18n.t("tags.invalid_target_tag"))
+    elsif target_tag_id && persisted? && listed_in_mcp_content_rule?
+      errors.add(:target_tag_id, I18n.t("tags.synonym_used_by_mcp_content_rule"))
     end
   end
 
@@ -333,8 +335,13 @@ class Tag < ActiveRecord::Base
 
   private
 
+  def listed_in_mcp_content_rule?
+    McpContentRule.lock_guarded_targets!
+    McpContentRule.listed_tag_ids.include?(id)
+  end
+
   def ensure_not_listed_in_mcp_content_rule
-    return if McpContentRule.listed_tag_ids.exclude?(id)
+    return if !listed_in_mcp_content_rule?
 
     raise Discourse::InvalidParameters.new(I18n.t("tags.used_by_mcp_content_rule"))
   end

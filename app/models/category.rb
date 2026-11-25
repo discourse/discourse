@@ -1419,6 +1419,7 @@ class Category < ActiveRecord::Base
   private
 
   def ensure_not_protected_by_mcp_content_rule
+    McpContentRule.lock_guarded_targets!
     return if McpContentRule.protected_category_ids.exclude?(id)
 
     errors.add(:base, I18n.t("category.errors.used_by_mcp_content_rule"))
@@ -1429,6 +1430,7 @@ class Category < ActiveRecord::Base
   # accessible. Moving it into one, or out of an allowed one, only shrinks
   # access and stays allowed.
   def ensure_stays_in_denied_mcp_subtree
+    McpContentRule.lock_guarded_targets!
     denied = McpContentRule.denied_category_ids
     return if denied.empty? || denied.include?(id)
 
