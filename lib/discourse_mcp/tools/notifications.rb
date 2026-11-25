@@ -32,6 +32,20 @@ module DiscourseMcp
         )
       SQL
 
+      # A consolidated like counts likes on every post, personal messages
+      # included, and only names one of them, so only the fields describing that
+      # post and the actor are kept.
+      CONSOLIDATED_LIKE_DATA_KEYS = %i[
+        topic_title
+        original_post_id
+        original_post_type
+        original_username
+        revision_number
+        display_username
+        display_name
+        username
+      ].freeze
+
       # Consolidated notifications keep the title and post id of the notification
       # they replaced but carry no topic, so the topic join above can't see them.
       # One that names a topic is kept only when its post is outside personal
@@ -85,13 +99,20 @@ module DiscourseMcp
         notifications = filter_reviewable_mentions_by_scope(notifications, request_context)
         notifications = Notification.filter_disabled_badge_notifications(notifications)
         notifications = Notification.populate_acting_user(notifications)
+        private_messages_denied = ToolHelpers.private_messages_denied?(request_context)
         serialized =
           notifications.map do |notification|
-            NotificationSerializer.new(
-              notification,
-              scope: request_context.guardian,
-              root: false,
-            ).as_json
+            json =
+              NotificationSerializer.new(
+                notification,
+                scope: request_context.guardian,
+                root: false,
+              ).as_json
+            if private_messages_denied &&
+                 notification.notification_type == Notification.types[:liked_consolidated]
+              json[:data] = json[:data].to_h.symbolize_keys.slice(*CONSOLIDATED_LIKE_DATA_KEYS)
+            end
+            json
           end
         ToolHelpers.text_and_structured(notifications: serialized)
       end

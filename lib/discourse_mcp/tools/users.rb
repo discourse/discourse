@@ -479,7 +479,34 @@ module DiscourseMcp
         result[:most_replied_to_users] = serialized[:most_replied_to_users] || []
         result[:top_categories] = serialized[:top_categories] || []
         result[:badges] = serialized[:badges] || []
+        if ToolHelpers.private_messages_denied?(request_context)
+          result[:badges] = without_private_message_references(result[:badges])
+        end
         ToolHelpers.text_and_structured(result)
+      end
+
+      # A badge granted for a post in a personal message keeps the badge but
+      # loses the post and topic it points at.
+      def self.without_private_message_references(badges)
+        topic_ids = badges.filter_map { |badge| badge[:topic_id] }
+        private_topic_ids =
+          Topic.with_deleted.where(id: topic_ids, archetype: Archetype.private_message).pluck(:id)
+        post_ids = badges.filter_map { |badge| badge[:post_id] }
+        private_post_ids =
+          Post
+            .with_deleted
+            .joins("JOIN topics ON topics.id = posts.topic_id")
+            .where(id: post_ids, topics: { archetype: Archetype.private_message })
+            .pluck(:id)
+
+        badges.map do |badge|
+          if private_topic_ids.include?(badge[:topic_id]) ||
+               private_post_ids.include?(badge[:post_id])
+            badge.except(:post_id, :post_number, :topic_id)
+          else
+            badge
+          end
+        end
       end
     end
 

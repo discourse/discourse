@@ -167,7 +167,21 @@ describe DiscourseMcp::Server, "#call [cr-u1] round 3 regressions" do
             expect(result).to eq(notifications: native.fetch(:notifications).first(limit))
             expect(JSON.generate(response.body)).to include(message.topic.title)
           else
-            expect(result).to eq(notifications: [native.fetch(:notifications).last])
+            native_notification = native.fetch(:notifications).last
+            representative_data =
+              native_notification.fetch(:data).slice(
+                :topic_title,
+                :original_post_id,
+                :original_post_type,
+                :original_username,
+                :revision_number,
+                :display_username,
+                :display_name,
+                :username,
+              )
+            expect(result).to eq(
+              notifications: [native_notification.merge(data: representative_data)],
+            )
             expect(JSON.generate(response.body)).not_to include(message.topic.title)
           end
         end
