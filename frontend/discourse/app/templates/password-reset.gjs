@@ -21,6 +21,9 @@ export default <template>
     <form class="change-password-form login-left-side">
       {{#if @controller.successMessage}}
         <p>{{@controller.successMessage}}</p>
+        {{#if @controller.loginError}}
+          <p class="alert alert-error">{{@controller.loginError}}</p>
+        {{/if}}
 
         {{#if @controller.requiresApproval}}
           <p>{{i18n "login.not_approved"}}</p>
