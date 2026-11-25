@@ -39,16 +39,16 @@ module DiscourseMcp
       TOPICLESS_TYPES = %w[ReviewableUser ReviewableQueuedPost].freeze
 
       # While a rule is active, a reviewable with a topic follows that topic. A
-      # queued post without one is judged by its category and the tags in its
-      # payload; a personal message without a topic, by its tags while
-      # personal messages are allowed. Other reviewable types without a topic can't be
-      # judged, so they're left out.
+      # queued post without one is judged by the category and tags it would be
+      # created with; a personal message without a topic, by its tags while
+      # personal messages are allowed. Other reviewable types without a topic
+      # can't be judged, so they're left out.
       def allowed_by_policy(scope, policy)
         condition = policy.topic_condition("mcp_reviewable_topics")
         return scope if condition.nil?
 
         restricted_categories = policy.restricted_category_ids.to_a.presence || [-1]
-        restricted_queued = restricted_queued_post_ids(policy).presence || [-1]
+        restricted_queued = restricted_queued_post_ids(scope, policy).presence || [-1]
         scope.where(
           <<~SQL.squish,
             (
@@ -63,7 +63,16 @@ module DiscourseMcp
                   AND (
                     (
                       COALESCE(reviewables.payload->>'archetype', '') <> :private_message
-                      AND COALESCE(reviewables.category_id, :uncategorized) NOT IN (:restricted_categories)
+                      AND (
+                        reviewables.category_id IS NOT NULL
+                        OR reviewables.payload->>'category' IS NULL
+                        OR reviewables.payload->>'category' ~ '^[0-9]{1,9}$'
+                      )
+                      AND COALESCE(
+                        reviewables.category_id,
+                        CASE WHEN reviewables.payload->>'category' ~ '^[0-9]{1,9}$' THEN (reviewables.payload->>'category')::integer END,
+                        :uncategorized
+                      ) NOT IN (:restricted_categories)
                     ) OR (
                       reviewables.payload->>'archetype' = :private_message AND NOT :private_messages_denied
                     )
@@ -81,27 +90,63 @@ module DiscourseMcp
         )
       end
 
-      # Queued posts without a topic whose payload tags name a restricted tag
-      # once cleaned the way topic creation cleans them. Tags are stored as
-      # names or as tag objects; any other shape counts as restricted.
-      def restricted_queued_post_ids(policy)
-        restricted = policy.restricted_tag_names.map(&:downcase).to_set
-        ReviewableQueuedPost
-          .where(topic_id: nil)
-          .where("reviewables.payload::jsonb->'tags' IS NOT NULL")
-          .pluck(:id, Arel.sql("(reviewables.payload::jsonb->'tags')::text"))
-          .filter_map do |id, tags|
-            tags = JSON.parse(tags)
-            next id if !tags.is_a?(Array)
+      # The SQL value of a queued tag entry's name: the string, or an object's
+      # "name" string; NULL for any other shape.
+      QUEUED_TAG_NAME_SQL = <<~SQL.squish
+        CASE jsonb_typeof(queued_tags.tag)
+        WHEN 'string' THEN queued_tags.tag #>> '{}'
+        WHEN 'object' THEN
+          CASE jsonb_typeof(queued_tags.tag->'name') WHEN 'string' THEN queued_tags.tag->>'name' END
+        END
+      SQL
 
-            restricted_tag =
-              tags.any? do |tag|
-                name = tag.is_a?(Hash) ? tag["name"] : tag
-                !name.is_a?(String) ||
-                  restricted.include?(DiscourseTagging.clean_tag(name).downcase)
-              end
-            id if restricted_tag
-          end
+      # Queued posts in the scope whose payload tags would give the topic a
+      # restricted tag. Topic creation keeps an existing tag's name as written
+      # and cleans any other name, so both forms are checked. Tags are stored
+      # as names or as tag objects; any other shape counts as restricted.
+      #
+      # Cleaning only drops or replaces characters and truncates, so a name can
+      # only become a restricted tag when its ASCII letters and digits start
+      # with that tag's. SQL keeps those candidates, plus any name with other
+      # characters or any other shape, and Ruby applies the exact check to them.
+      def restricted_queued_post_ids(scope, policy)
+        restricted = policy.restricted_tag_names.map(&:downcase).to_set
+        skeletons = restricted.map { |name| name.gsub(/[^a-z0-9]/, "") }.uniq.presence || ["-"]
+        tags_sql = "reviewables.payload::jsonb->'tags'"
+
+        scope
+          .unscope(:order, :limit, :offset, :select, :includes, :preload, :eager_load)
+          .where(type: "ReviewableQueuedPost", topic_id: nil)
+          .where("#{tags_sql} IS NOT NULL")
+          .where(<<~SQL.squish, skeletons:)
+            jsonb_typeof(#{tags_sql}) <> 'array'
+            OR EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements(
+                CASE jsonb_typeof(#{tags_sql}) WHEN 'array' THEN #{tags_sql} ELSE '[]'::jsonb END
+              ) AS queued_tags(tag)
+              CROSS JOIN LATERAL (SELECT #{QUEUED_TAG_NAME_SQL} AS name) queued_names
+              WHERE queued_names.name IS NULL
+                OR queued_names.name !~ '^[ -~]*$'
+                OR EXISTS (
+                  SELECT 1 FROM unnest(ARRAY[:skeletons]::text[]) AS restricted(skeleton)
+                  WHERE regexp_replace(LOWER(queued_names.name), '[^a-z0-9]', '', 'g')
+                    LIKE restricted.skeleton || '%'
+                )
+            )
+          SQL
+          .pluck(:id, Arel.sql("(#{tags_sql})::text"))
+          .filter_map { |id, tags| id if restricted_queued_tags?(JSON.parse(tags), restricted) }
+      end
+
+      def restricted_queued_tags?(tags, restricted)
+        return true if !tags.is_a?(Array)
+
+        tags.any? do |tag|
+          name = tag.is_a?(Hash) ? tag["name"] : tag
+          !name.is_a?(String) || restricted.include?(name.downcase) ||
+            restricted.include?(DiscourseTagging.clean_tag(name).downcase)
+        end
       end
 
       # Conversation posts are side-loaded on their own, keyed by post id.
@@ -276,11 +321,10 @@ module DiscourseMcp
       def find_reviewable!(reviewable_id, request_context)
         scope =
           allowed_by_policy(
-            Reviewable.viewable_by(request_context.user),
+            Reviewable.viewable_by(request_context.user).where(id: reviewable_id),
             request_context.content_policy,
           )
-        scope.find_by(id: reviewable_id) or
-          raise ToolError, I18n.t("mcp.errors.reviewable_not_found")
+        scope.first or raise ToolError, I18n.t("mcp.errors.reviewable_not_found")
       end
 
       # While any content rule is active, agents can't delete accounts, because
@@ -516,14 +560,17 @@ module DiscourseMcp
         ModerationSupport.ensure_queue_access!(guardian)
         offset = arguments.fetch("offset", 0)
         limit = arguments.fetch("limit", 100)
+        # Narrowed first, so the content policy only judges reviewables this
+        # list can show.
         reviewable_scope =
-          ModerationSupport
-            .without_private_messages(
-              Reviewable.viewable_by(request_context.user, preload: false),
-              request_context,
-            )
-            .pending
-            .where("score >= ?", Reviewable.min_score_for_priority)
+          ModerationSupport.without_private_messages(
+            Reviewable
+              .viewable_by(request_context.user, preload: false)
+              .pending
+              .where("score >= ?", Reviewable.min_score_for_priority)
+              .where.not(topic_id: nil),
+            request_context,
+          )
         visible_topic_ids =
           reviewable_scope.reorder(nil).where.not(topic_id: nil).select(:topic_id).distinct
         topic_scope = Topic.where(id: visible_topic_ids).order(reviewable_score: :desc, id: :desc)
