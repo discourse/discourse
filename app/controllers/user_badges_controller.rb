@@ -63,7 +63,8 @@ class UserBadgesController < ApplicationController
       UserBadgesSerializer,
       root: :user_badge_info,
       include_long_description: true,
-      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
+      allowed_user_badge_topic_ids:
+        guardian.can_discover_topic_ids(topic_ids: user_badges_topic_ids),
     )
   end
 
@@ -91,7 +92,8 @@ class UserBadgesController < ApplicationController
     render_serialized(
       user_badges,
       DetailedUserBadgeSerializer,
-      allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
+      allowed_user_badge_topic_ids:
+        guardian.can_discover_topic_ids(topic_ids: user_badges_topic_ids),
       root: :user_badges,
     )
   end

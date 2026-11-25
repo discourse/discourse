@@ -75,10 +75,11 @@ module Boards
         Card.transaction do
           snapshot = fetch_sync_snapshot(topic)
 
+          # Unlisted topics are not placed automatically, same as in the backfill
           plan =
             compute_sync_plan(
               existing_cards: snapshot[:existing_cards],
-              matching_placements: snapshot[:matching_placements],
+              matching_placements: topic.visible? ? snapshot[:matching_placements] : [],
             )
           next if plan[:remove_card_ids].blank? && plan[:create_targets].blank?
 
