@@ -426,8 +426,20 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     (2026-11-24) that draws each group's flair before its name, in the list and in the field,
     through the shared `d-select__glyph` the badge recipe also uses. "(none)" is the none option,
     which clears the flair, and the "Flair" label names the field.
-  - ☐ `ColorPalettePicker` (the theme page, the color scheme modal and interface preferences)
-    and `ColorPalettes` (the wizard). Rows show swatches.
+  - ☑ `ColorPalettePicker`, 5 sites: the theme page's light and dark palettes, interface
+    preferences' light and dark palettes, and the new palette modal. Each branches on the flag to
+    the new `DSelectColorPalette` recipe (2026-11-24). The legacy component stays for third-party
+    callers.
+    - Each row shows the palette's preview, its name and a strip of four colors (background,
+      text, accent, selected). The field shows a smaller preview and the strip. Lists mixing light
+      and dark palettes are grouped, light first.
+    - "Active" marks the palette in use, not the one held: the theme's saved palette, the user's
+      saved palette, and in the modal the default theme's palettes. The old picker marked the
+      held one.
+    - Interface preferences put the mode first, with its hint beside it, then the two palettes
+      stacked at the form's width. The theme page's pickers drop the paintbrush icon the old
+      picker never drew.
+  - ☐ `ColorPalettes` (the wizard). Rows show swatches.
   - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
     - ☑ The font list setting (2026-11-19): `setting-field/font-list` and the older
       `site-settings/font-list` render the shared `SelectFont` (`setting-field/-internals/`), a

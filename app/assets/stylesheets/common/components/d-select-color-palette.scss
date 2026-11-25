@@ -1,0 +1,89 @@
+.d-select-color-palette__option,
+.d-select-color-palette__selection {
+  flex: 1;
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.d-select-color-palette__details {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.d-select-color-palette__swatches {
+  // Mixed from the text color, so a square the page's own color keeps its edge in either mode.
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent);
+  border-radius: var(--d-border-radius);
+  display: inline-flex;
+  flex: none;
+  overflow: hidden;
+
+  .d-select-color-palette__selection > & {
+    margin-inline-start: auto;
+  }
+}
+
+.d-select-color-palette__swatch {
+  height: 1rem;
+  width: 1rem;
+}
+
+.d-select-color-palette__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.d-select-color-palette__selection .d-select-color-palette__name {
+  @include ellipsis;
+}
+
+.d-select-color-palette__preview {
+  background: var(--secondary--preview, #fff);
+  flex-shrink: 0;
+  line-height: 0;
+  padding: 5px;
+
+  svg {
+    height: 40px;
+    width: auto;
+  }
+
+  // As tall as the name's line, so the field keeps its height when its search replaces it.
+  &.--mini {
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    padding: 1px;
+
+    svg {
+      height: 1em;
+    }
+  }
+}
+
+// "Active" is the row's description, drawn as a badge over the palette's preview.
+.d-select__content.--kind-select-color-palette {
+  --d-select-menu-min-width: 20em;
+
+  .d-select__option-content {
+    position: relative;
+  }
+
+  .d-select__option-description {
+    background-color: var(--tertiary);
+    border-radius: 4px;
+    color: var(--secondary);
+    font-size: var(--font-down-6);
+    inset-block-start: 0.25em;
+    inset-inline-start: 0.25em;
+    letter-spacing: 0.25px;
+    line-height: normal;
+    padding: 0.07rem 0.15rem;
+    position: absolute;
+    text-transform: uppercase;
+  }
+}

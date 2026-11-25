@@ -30,11 +30,15 @@ export default class PreferencesInterface extends RestrictedUserRoute {
       controller.setProperties({
         selectedColorSchemeId: controller.getSelectedColorSchemeId(),
         selectedDarkColorSchemeId: controller.session.userDarkSchemeId,
+        activeColorSchemeId: controller.getSelectedColorSchemeId(),
+        activeDarkColorSchemeId: controller.session.userDarkSchemeId,
       });
     } else {
       controller.setProperties({
         selectedColorSchemeId: user.get("user_option.color_scheme_id"),
         selectedDarkColorSchemeId: user.get("user_option.dark_scheme_id"),
+        activeColorSchemeId: user.get("user_option.color_scheme_id"),
+        activeDarkColorSchemeId: user.get("user_option.dark_scheme_id"),
       });
     }
   }

@@ -945,6 +945,41 @@
     margin-right: 1em;
   }
 
+  .color-scheme.--mode-first {
+    > .controls {
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .control-subgroup > .instructions:first-child {
+      color: var(--primary-high);
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+    }
+
+    .interface-color-mode {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1) var(--space-3);
+      margin-bottom: var(--space-2);
+
+      > .instructions:first-child {
+        flex-basis: 100%;
+        margin-bottom: 0;
+      }
+
+      > .instructions:last-child {
+        flex: 1 1 18em;
+      }
+    }
+
+    .light-color-scheme,
+    .dark-color-scheme {
+      margin-right: 0;
+    }
+  }
+
   .success-back {
     display: flex;
     align-items: center;

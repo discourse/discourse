@@ -8,6 +8,7 @@ import {
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import pretender from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -194,62 +195,68 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
   });
 });
 
+/** Serves a theme holding palette 1 (light) and 2 (dark), and records what it saves. */
+function setupColorPalettes(needs) {
+  const savedThemes = [];
+
+  needs.pretender((server, helper) => {
+    const theme = {
+      id: 7,
+      name: "Palette theme",
+      default: false,
+      component: false,
+      color_scheme_id: 1,
+      dark_color_scheme_id: 2,
+      user_selectable: false,
+      auto_update: false,
+      remote_theme_id: null,
+      settings: [],
+      supported: true,
+      enabled: true,
+      theme_fields: [],
+      system: false,
+      color_scheme: null,
+      child_themes: [],
+      parent_themes: [],
+      remote_theme: null,
+      translations: [],
+    };
+
+    server.get("/admin/themes", () => {
+      return helper.response({
+        themes: [theme],
+        extras: {
+          color_schemes: [
+            { id: 1, name: "Morning" },
+            { id: 2, name: "Night", is_dark: true },
+            { id: 3, name: "Noon" },
+            { id: 4, name: "Midnight", is_dark: true },
+          ],
+        },
+      });
+    });
+
+    server.put("/admin/themes/7", (request) => {
+      const saved = JSON.parse(request.requestBody).theme;
+      savedThemes.push(saved);
+      return helper.response({ theme: { ...theme, ...saved } });
+    });
+
+    server.get("/admin/config/customize/themes", () => {
+      return helper.response({ themes: [] });
+    });
+  });
+
+  needs.hooks.beforeEach(() => (savedThemes.length = 0));
+  return savedThemes;
+}
+
 acceptance(
   "Admin - Customize - Themes - Show - Color palettes",
   function (needs) {
     needs.user();
 
-    let savedThemes = [];
-
-    needs.pretender((server, helper) => {
-      const theme = {
-        id: 7,
-        name: "Palette theme",
-        default: false,
-        component: false,
-        color_scheme_id: 1,
-        dark_color_scheme_id: 2,
-        user_selectable: false,
-        auto_update: false,
-        remote_theme_id: null,
-        settings: [],
-        supported: true,
-        enabled: true,
-        theme_fields: [],
-        system: false,
-        color_scheme: null,
-        child_themes: [],
-        parent_themes: [],
-        remote_theme: null,
-        translations: [],
-      };
-
-      server.get("/admin/themes", () => {
-        return helper.response({
-          themes: [theme],
-          extras: {
-            color_schemes: [
-              { id: 1, name: "Morning" },
-              { id: 2, name: "Night", is_dark: true },
-              { id: 3, name: "Noon" },
-              { id: 4, name: "Midnight", is_dark: true },
-            ],
-          },
-        });
-      });
-
-      server.put("/admin/themes/7", (request) => {
-        const saved = JSON.parse(request.requestBody).theme;
-        savedThemes.push(saved);
-        return helper.response({ theme: { ...theme, ...saved } });
-      });
-
-      server.get("/admin/config/customize/themes", () => {
-        return helper.response({ themes: [] });
-      });
-    });
-
-    needs.hooks.beforeEach(() => (savedThemes = []));
+    const savedThemes = setupColorPalettes(needs);
 
     test("saves the selected light color palette", async function (assert) {
       await visit("/admin/customize/themes/7");
@@ -554,6 +561,59 @@ acceptance(
       await click(".customize-show-schema__back");
 
       assert.dom(".theme-translation textarea").hasValue(greeting);
+    });
+  }
+);
+
+acceptance(
+  "Admin - Customize - Themes - Show - Color palettes with the new select controls",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_new_select_controls: true });
+
+    const savedThemes = setupColorPalettes(needs);
+
+    test("saves the light color palette picked with the new select", async function (assert) {
+      await visit("/admin/customize/themes/7");
+
+      const field =
+        ".theme-settings__light-color-scheme .d-select[data-trigger]";
+      assert.dSelect(field).hasName("Morning");
+
+      const select = dSelect(field);
+      await select.open();
+
+      assert.dom(".d-select__content").includesText("Light (default)");
+      await select.select(3);
+
+      assert.dSelect(field).hasName("Noon");
+      await select.open();
+      assert
+        .dom("[role='option'][data-value='1'] .d-select__option-description")
+        .hasText(
+          "Active",
+          "the saved palette stays marked until the pick is saved"
+        );
+      await select.close();
+
+      await click(".submit-light-edit");
+
+      assert.deepEqual(savedThemes, [{ color_scheme_id: 3 }]);
+    });
+
+    test("saves the dark color palette picked with the new select", async function (assert) {
+      await visit("/admin/customize/themes/7");
+
+      const field =
+        ".theme-settings__dark-color-scheme .d-select[data-trigger]";
+      assert.dSelect(field).hasName("Night");
+
+      const select = dSelect(field);
+      await select.open();
+      await select.select(4);
+      await click(".submit-dark-edit");
+
+      assert.deepEqual(savedThemes, [{ dark_color_scheme_id: 4 }]);
     });
   }
 );

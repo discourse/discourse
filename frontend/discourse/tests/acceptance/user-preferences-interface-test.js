@@ -6,6 +6,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -399,6 +400,124 @@ acceptance(
       assert
         .dom("link#cs-preview-light", document.body)
         .doesNotExist("stylesheet not loaded");
+    });
+  }
+);
+
+acceptance(
+  "User Preferences Color Schemes with the new select controls",
+  function (needs) {
+    needs.user();
+    needs.settings({ enable_new_select_controls: true });
+    needs.pretender((server, helper) => {
+      server.get("/color-scheme-stylesheet/2/2.json", () =>
+        helper.response({ success: "OK" })
+      );
+      server.get("/color-scheme-stylesheet/3/2.json", () =>
+        helper.response({ new_href: "3.css" })
+      );
+      server.get("/u/charlie.json", () =>
+        helper.response(userFixtures["/u/charlie.json"])
+      );
+    });
+
+    needs.hooks.beforeEach(() => {
+      const meta = document.createElement("meta");
+      meta.name = "discourse_theme_id";
+      meta.content = "2";
+      document.head.appendChild(meta);
+    });
+
+    needs.hooks.afterEach(() => {
+      document
+        .querySelectorAll("meta[name='discourse_theme_id']")
+        .forEach((el) => el.remove());
+      removeCookie("color_scheme_id");
+      removeCookie("dark_scheme_id");
+    });
+
+    const LIGHT = ".light-color-scheme .d-select[data-trigger]";
+    const DARK = ".dark-color-scheme .d-select[data-trigger]";
+
+    test("puts the mode first, with its hint under it, then the two palettes", async function (assert) {
+      const site = Site.current();
+      const session = Session.current();
+      session.userColorSchemeId = null;
+      session.userDarkSchemeId = 1;
+
+      site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
+      site.set("user_color_schemes", [
+        { id: 2, name: "Cool Breeze" },
+        { id: 3, name: "Dark Night", is_dark: true },
+      ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      assert.deepEqual(
+        [...document.querySelectorAll(".color-scheme .control-subgroup")].map(
+          (group) => group.classList[1]
+        ),
+        ["interface-color-mode", "light-color-scheme", "dark-color-scheme"],
+        "read in the order they are shown"
+      );
+
+      const hint = i18n("user.color_schemes.interface_mode_instructions");
+      assert.dom(".interface-color-mode").includesText(hint);
+      assert.strictEqual(
+        [...document.querySelectorAll(".color-scheme .instructions")].filter(
+          (element) => element.textContent.includes(hint)
+        ).length,
+        1,
+        "the hint is shown once"
+      );
+    });
+
+    test("marks the palettes in use while another is picked, until it's saved", async function (assert) {
+      const site = Site.current();
+      const session = Session.current();
+      session.userColorSchemeId = null;
+      session.userDarkSchemeId = 1; // the site's default dark palette
+
+      site.set("default_dark_color_scheme", { id: 1, name: "Dark" });
+      site.set("user_color_schemes", [
+        { id: 2, name: "Cool Breeze" },
+        { id: 3, name: "Dark Night", is_dark: true },
+      ]);
+
+      await visit("/u/eviltrout/preferences/interface");
+
+      assert
+        .dSelect(LIGHT)
+        .hasName("Theme default", "nothing chosen reads as the theme's");
+      assert
+        .dSelect(DARK)
+        .hasName("Theme default", "so does the site's default dark palette");
+
+      const light = dSelect(LIGHT);
+      await light.open();
+      await light.select(2);
+
+      assert.dSelect(LIGHT).hasName("Cool Breeze");
+      await light.open();
+      assert
+        .dom("[role='option'][data-value='-1'] .d-select__option-description")
+        .hasText("Active", "the palette in use until the pick is saved");
+      assert
+        .dom("[role='option'][data-value='2'] .d-select__option-description")
+        .doesNotExist();
+      await light.close();
+
+      await click(".save-changes");
+
+      await light.open();
+      assert
+        .dom("[role='option'][data-value='2'] .d-select__option-description")
+        .hasText("Active", "saved, the pick is the palette in use");
+      await light.close();
+
+      const dark = dSelect(DARK);
+      await dark.open();
+      assert.dSelect(DARK).hasOptions([-1, 3], "only dark palettes");
     });
   }
 );

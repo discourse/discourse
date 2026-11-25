@@ -1467,6 +1467,23 @@ without fetching again. `@value` and `@onChange` use the template's id, or an ar
 `@multiple`. The picker is named "Form template", or "Form templates" when it holds several, and
 says "No form templates yet" when there are none at all.
 
+#### Color palette recipe
+
+**`DSelectColorPalette`** (kind `select-color-palette`) picks a color palette. `@palettes` takes
+the palettes as the server sends them, `{ id, name, colors, is_dark }`. `@value` and `@onChange`
+use the palette's id, or `null` for the none option.
+
+- Each option shows the palette's preview, its name and a strip of four colors: background, text,
+  accent and selected. A palette lacking one of them gets no strip, never a shorter one, so the
+  squares line up across palettes. The field shows a smaller preview and the strip.
+- A list holding both light and dark palettes is grouped under "Light" and "Dark", light first.
+  A palette that is neither, such as "Theme default", leads without a heading.
+- `@activeIds` names the palettes in use. They show an "Active" description whatever the field
+  holds, so a pick not yet saved doesn't move it.
+
+The picker is named "Color palette" unless the caller's texts name it. Until cleanup it defaults
+`@legacyKind` to `color-palette-picker`.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 

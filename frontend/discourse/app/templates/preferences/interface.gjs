@@ -8,11 +8,27 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import DButton from "discourse/ui-kit/d-button";
 import DSaveControls from "discourse/ui-kit/d-save-controls";
+import DSelectColorPalette from "discourse/ui-kit/select/recipes/color-palettes/d-select-color-palette";
 import { i18n } from "discourse-i18n";
 
 function updateTheme(controller, value) {
   controller.set("themeId", value);
 }
+
+/** The light/dark mode control; a block shows under it. */
+const InterfaceColorMode = <template>
+  <div class="control-subgroup interface-color-mode">
+    <div class="instructions">{{i18n "user.color_schemes.interface_mode"}}</div>
+    <div class="controls">
+      <ComboBox
+        @content={{@controller.interfaceColorModes}}
+        @onChange={{@controller.selectColorMode}}
+        @value={{@controller.selectedInterfaceColorMode}}
+      />
+    </div>
+    {{yield}}
+  </div>
+</template>;
 
 export default <template>
   <span>
@@ -51,23 +67,50 @@ export default <template>
   {{/if}}
 
   {{#if @controller.showColorSchemeSelector}}
+    {{! TODO (select-kit-replacement-cleanup): Keep only the mode-first layout after rollout. }}
     <fieldset
-      class="control-group color-scheme"
+      class="control-group color-scheme
+        {{if
+          @controller.siteSettings.enable_new_select_controls
+          '--mode-first'
+        }}"
       data-setting-name="user-color-scheme"
     >
       <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
       <div class="controls">
+        {{#if @controller.siteSettings.enable_new_select_controls}}
+          {{#if @controller.showInterfaceColorModeSelector}}
+            <InterfaceColorMode @controller={{@controller}}>
+              {{#if @controller.showDarkColorSchemeSelector}}
+                <div class="instructions">
+                  {{i18n "user.color_schemes.interface_mode_instructions"}}
+                </div>
+              {{/if}}
+            </InterfaceColorMode>
+          {{/if}}
+        {{/if}}
         {{#if @controller.showLightColorSchemeSelector}}
           <div class="control-subgroup light-color-scheme">
             <div class="instructions">{{i18n
                 "user.color_schemes.regular"
               }}</div>
             <div class="controls">
-              <ColorPalettePicker
-                @content={{@controller.userSelectableColorSchemes}}
-                @onChange={{@controller.loadColorScheme}}
-                @value={{@controller.selectedColorSchemeId}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelectColorPalette
+                  @activeIds={{@controller.activeColorSchemeIds}}
+                  @onChange={{@controller.loadColorScheme}}
+                  @palettes={{@controller.userSelectableColorSchemes}}
+                  @texts={{hash ariaLabel=(i18n "user.color_schemes.regular")}}
+                  @value={{@controller.heldColorSchemeId}}
+                />
+              {{else}}
+                <ColorPalettePicker
+                  @content={{@controller.userSelectableColorSchemes}}
+                  @onChange={{@controller.loadColorScheme}}
+                  @value={{@controller.selectedColorSchemeId}}
+                />
+              {{/if}}
             </div>
           </div>
         {{/if}}
@@ -75,28 +118,30 @@ export default <template>
           <div class="control-subgroup dark-color-scheme">
             <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
             <div class="controls">
-              <ColorPalettePicker
-                @content={{@controller.userSelectableDarkColorSchemes}}
-                @onChange={{@controller.loadDarkColorScheme}}
-                @value={{@controller.selectedDarkColorSchemeId}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelectColorPalette
+                  @activeIds={{@controller.activeDarkColorSchemeIds}}
+                  @onChange={{@controller.loadDarkColorScheme}}
+                  @palettes={{@controller.userSelectableDarkColorSchemes}}
+                  @texts={{hash ariaLabel=(i18n "user.color_schemes.dark")}}
+                  @value={{@controller.heldDarkColorSchemeId}}
+                />
+              {{else}}
+                <ColorPalettePicker
+                  @content={{@controller.userSelectableDarkColorSchemes}}
+                  @onChange={{@controller.loadDarkColorScheme}}
+                  @value={{@controller.selectedDarkColorSchemeId}}
+                />
+              {{/if}}
             </div>
           </div>
         {{/if}}
-        {{#if @controller.showInterfaceColorModeSelector}}
-          <div class="control-subgroup interface-color-mode">
-            <div class="instructions">{{i18n
-                "user.color_schemes.interface_mode"
-              }}</div>
-            <div class="controls">
-              <ComboBox
-                @content={{@controller.interfaceColorModes}}
-                @onChange={{@controller.selectColorMode}}
-                @value={{@controller.selectedInterfaceColorMode}}
-              />
-            </div>
-          </div>
-        {{/if}}
+        {{#unless @controller.siteSettings.enable_new_select_controls}}
+          {{#if @controller.showInterfaceColorModeSelector}}
+            <InterfaceColorMode @controller={{@controller}} />
+          {{/if}}
+        {{/unless}}
       </div>
       {{#if @controller.previewingColorScheme}}
         {{#if @controller.previewingColorScheme}}
@@ -115,9 +160,16 @@ export default <template>
         </div>
       {{/if}}
       {{#if @controller.showDarkColorSchemeSelector}}
-        <div class="instructions">
-          {{i18n "user.color_schemes.interface_mode_instructions"}}
-        </div>
+        {{#unless
+          (and
+            @controller.siteSettings.enable_new_select_controls
+            @controller.showInterfaceColorModeSelector
+          )
+        }}
+          <div class="instructions">
+            {{i18n "user.color_schemes.interface_mode_instructions"}}
+          </div>
+        {{/unless}}
       {{/if}}
     </fieldset>
   {{/if}}

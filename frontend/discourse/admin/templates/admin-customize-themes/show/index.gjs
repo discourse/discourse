@@ -1,4 +1,4 @@
-import { fn, hash } from "@ember/helper";
+import { array, fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
 import InlineEditCheckbox from "discourse/admin/components/inline-edit-checkbox";
@@ -18,6 +18,7 @@ import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translatio
 import DUserLink from "discourse/ui-kit/d-user-link";
 import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectColorPalette from "discourse/ui-kit/select/recipes/color-palettes/d-select-color-palette";
 import { i18n } from "discourse-i18n";
 
 function updateColorScheme(controller, field, value) {
@@ -164,19 +165,36 @@ export default <template>
 
           <div class="setting-value">
             <div class="color-palette-input-group">
-              <ColorPalettePicker
-                @content={{@controller.filteredColorSchemes}}
-                @icon="paintbrush"
-                @onChange={{fn updateColorScheme @controller "colorSchemeId"}}
-                @options={{hash
-                  filterable=true
-                  translatedNone=(unless
-                    @controller.model.only_theme_color_schemes
-                    (i18n "admin.customize.theme.default_light_scheme")
-                  )
-                }}
-                @value={{@controller.colorSchemeId}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelectColorPalette
+                  @activeIds={{array @controller.model.color_scheme_id}}
+                  @noneOption={{not @controller.model.only_theme_color_schemes}}
+                  @onChange={{fn updateColorScheme @controller "colorSchemeId"}}
+                  @palettes={{@controller.filteredColorSchemes}}
+                  @texts={{hash
+                    ariaLabel=(i18n "admin.customize.theme.color_scheme")
+                    noneLabel=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
+                  @value={{@controller.colorSchemeId}}
+                />
+              {{else}}
+                <ColorPalettePicker
+                  @content={{@controller.filteredColorSchemes}}
+                  @icon="paintbrush"
+                  @onChange={{fn updateColorScheme @controller "colorSchemeId"}}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(unless
+                      @controller.model.only_theme_color_schemes
+                      (i18n "admin.customize.theme.default_light_scheme")
+                    )
+                  }}
+                  @value={{@controller.colorSchemeId}}
+                />
+              {{/if}}
             </div>
 
             <div class="desc">{{i18n
@@ -220,23 +238,44 @@ export default <template>
 
           <div class="setting-value">
             <div class="color-palette-input-group">
-              <ColorPalettePicker
-                @content={{@controller.filteredColorSchemes}}
-                @icon="paintbrush"
-                @onChange={{fn
-                  updateColorScheme
-                  @controller
-                  "darkColorSchemeId"
-                }}
-                @options={{hash
-                  filterable=true
-                  translatedNone=(unless
-                    @controller.model.only_theme_color_schemes
-                    (i18n "admin.customize.theme.default_light_scheme")
-                  )
-                }}
-                @value={{@controller.darkColorSchemeId}}
-              />
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if @controller.siteSettings.enable_new_select_controls}}
+                <DSelectColorPalette
+                  @activeIds={{array @controller.model.dark_color_scheme_id}}
+                  @noneOption={{not @controller.model.only_theme_color_schemes}}
+                  @onChange={{fn
+                    updateColorScheme
+                    @controller
+                    "darkColorSchemeId"
+                  }}
+                  @palettes={{@controller.filteredColorSchemes}}
+                  @texts={{hash
+                    ariaLabel=(i18n "admin.customize.theme.dark_color_scheme")
+                    noneLabel=(i18n
+                      "admin.customize.theme.default_light_scheme"
+                    )
+                  }}
+                  @value={{@controller.darkColorSchemeId}}
+                />
+              {{else}}
+                <ColorPalettePicker
+                  @content={{@controller.filteredColorSchemes}}
+                  @icon="paintbrush"
+                  @onChange={{fn
+                    updateColorScheme
+                    @controller
+                    "darkColorSchemeId"
+                  }}
+                  @options={{hash
+                    filterable=true
+                    translatedNone=(unless
+                      @controller.model.only_theme_color_schemes
+                      (i18n "admin.customize.theme.default_light_scheme")
+                    )
+                  }}
+                  @value={{@controller.darkColorSchemeId}}
+                />
+              {{/if}}
             </div>
 
             <div class="desc">

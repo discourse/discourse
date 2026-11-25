@@ -217,6 +217,10 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
 
     this.modal.show(ColorSchemeSelectBaseModal, {
       model: {
+        activeColorSchemeIds: [
+          this.defaultTheme?.color_scheme_id,
+          this.defaultTheme?.dark_color_scheme_id,
+        ].filter((id) => id != null),
         colorSchemes: deduplicatedColorPalettes,
         newColorSchemeWithBase: this.newColorSchemeWithBase,
       },

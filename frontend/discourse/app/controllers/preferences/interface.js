@@ -44,6 +44,8 @@ const USER_HOMES = {
 };
 
 const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
+/** The id `listColorSchemes` gives its "Theme default" entry. */
+const THEME_DEFAULT_SCHEME_ID = -1;
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default class InterfaceController extends Controller {
@@ -58,6 +60,10 @@ export default class InterfaceController extends Controller {
 
   /** @type {number | null | undefined} */
   selectedDarkColorSchemeId = null;
+
+  /** The palettes in use, as last loaded or saved, which the pickers mark "Active". */
+  activeColorSchemeId = null;
+  activeDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
   subpageTitle = i18n("user.preferences_nav.interface");
 
@@ -339,6 +345,43 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @computed("activeColorSchemeId", "userSelectableColorSchemes")
+  get activeColorSchemeIds() {
+    return [
+      this.#listedScheme(
+        this.userSelectableColorSchemes,
+        this.activeColorSchemeId
+      ),
+    ];
+  }
+
+  @computed("activeDarkColorSchemeId", "userSelectableDarkColorSchemes")
+  get activeDarkColorSchemeIds() {
+    return [
+      this.#listedScheme(
+        this.userSelectableDarkColorSchemes,
+        this.activeDarkColorSchemeId
+      ),
+    ];
+  }
+
+  /** The held light palette as the picker lists it, so one it doesn't list reads as the theme's. */
+  @computed("selectedColorSchemeId", "userSelectableColorSchemes")
+  get heldColorSchemeId() {
+    return this.#listedScheme(
+      this.userSelectableColorSchemes,
+      this.selectedColorSchemeId
+    );
+  }
+
+  @computed("selectedDarkColorSchemeId", "userSelectableDarkColorSchemes")
+  get heldDarkColorSchemeId() {
+    return this.#listedScheme(
+      this.userSelectableDarkColorSchemes,
+      this.selectedDarkColorSchemeId
+    );
+  }
+
   @computed("userSelectableColorSchemes", "userSelectableDarkColorSchemes")
   get showColorSchemeSelector() {
     return (
@@ -504,6 +547,10 @@ export default class InterfaceController extends Controller {
       .save(this.saveAttrNames)
       .then(() => {
         this.set("saved", true);
+        this.setProperties({
+          activeColorSchemeId: this.selectedColorSchemeId,
+          activeDarkColorSchemeId: this.selectedDarkColorSchemeId,
+        });
 
         if (this.isViewingOwnProfile) {
           if (makeThemeDefault) {
@@ -777,5 +824,15 @@ export default class InterfaceController extends Controller {
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, false);
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
     }
+  }
+
+  /** A palette id as the list holds it: one it doesn't list stands for "Theme default". */
+  #listedScheme(schemes, id) {
+    if (!schemes || schemes.some((scheme) => scheme.id === id)) {
+      return id;
+    }
+    return schemes.some((scheme) => scheme.id === THEME_DEFAULT_SCHEME_ID)
+      ? THEME_DEFAULT_SCHEME_ID
+      : id;
   }
 }
