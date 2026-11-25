@@ -138,13 +138,21 @@ module DiscourseMcp
           text: "#{submitted_title} #{arguments.fetch("raw")}",
         )
         submission =
-          ToolHelpers.submit_post!(
-            user,
-            title: submitted_title,
-            raw: arguments.fetch("raw"),
-            category: category_id,
-            tags: Array(arguments["tags"]),
-          )
+          ToolHelpers.write_allowed_topic!(
+            request_context,
+            error: "content_policy_output_blocked",
+            topic_of: ->(submitted) do
+              ToolHelpers.queued?(submitted) ? nil : submitted.post&.topic
+            end,
+          ) do
+            ToolHelpers.submit_post!(
+              user,
+              title: submitted_title,
+              raw: arguments.fetch("raw"),
+              category: category_id,
+              tags: Array(arguments["tags"]),
+            )
+          end
         ToolHelpers.text_and_structured(
           **topic_fields(submission, submitted_title, request_context.content_policy),
           **ToolHelpers.author_fields(arguments, user),

@@ -279,7 +279,12 @@ module DiscourseMcp
           private_message: true,
           error: "content_policy_blocked",
         )
-        post = PostCreator.create!(request_context.user, options)
+        post =
+          ToolHelpers.write_allowed_topic!(
+            request_context,
+            error: "content_policy_blocked",
+            topic_of: ->(created) { created.topic },
+          ) { PostCreator.create!(request_context.user, options) }
         ToolHelpers.text_and_structured(
           id: post.id,
           topic_id: post.topic_id,

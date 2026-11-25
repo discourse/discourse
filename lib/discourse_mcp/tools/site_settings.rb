@@ -70,24 +70,36 @@ module DiscourseMcp
             value.to_i.positive? && Topic.exists?(id: value.to_i) &&
               !policy.allows_topic_id?(value.to_i)
           else
-            items.any? { |item| local_url?(item) }
+            url_setting =
+              projected[:setting].to_s.match?(/_urls?\z/) || projected[:type] == "url_list"
+            items.any? { |item| local_url?(item, url_setting:) }
           end
         end
       end
 
       # A URL on this site is redacted whatever it points to: what a local URL
       # leads to depends on routing, controllers, permalinks and redirects that
-      # can't all be judged, so none is shown while a rule is active. Relative
-      # references count as local, and so do the site's CDN and upload hosts.
-      def local_url?(item)
-        item = item.to_s.strip
-        return true if item.start_with?("./", "../")
-        return false if !item.start_with?("/") && !item.match?(%r{\A[a-z][a-z0-9+.\-]*://}i)
-        return true if item.start_with?("/") && !item.start_with?("//")
+      # can't all be judged, so none is shown while a rule is active. A value
+      # counts as local unless it is an absolute URL to another host, judged as
+      # a browser reads it. Outside URL settings, only values written as URL
+      # references count, so plain text stays visible.
+      def local_url?(item, url_setting:)
+        # Browsers drop tabs and newlines inside URLs, and read backslashes as
+        # slashes in web URLs.
+        item = item.to_s.strip.delete("\t\n\r")
+        return false if item.blank?
+        return true if item.include?("\\")
 
-        uri = URI.parse(item.start_with?("//") ? "https:#{item}" : item)
-        InternalHosts.include?(uri)
-      rescue URI::Error
+        if item.match?(%r{\A(?:[a-z][a-z0-9+.\-]*:)?//}i)
+          uri = Addressable::URI.parse(item.start_with?("//") ? "https:#{item}" : item)
+          return uri.host.blank? || InternalHosts.include?(uri)
+        end
+        return true if item.match?(%r{\A(?:/|\./|\.\./|\?|#)})
+        # A web scheme without `//` resolves against the page's own site.
+        return true if item.match?(/\A(?:https?|wss?|ftp):/i)
+
+        url_setting
+      rescue Addressable::URI::InvalidURIError
         true
       end
 

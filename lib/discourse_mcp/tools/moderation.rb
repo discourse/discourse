@@ -751,7 +751,13 @@ module DiscourseMcp
           )
 
         result =
-          reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)
+          ToolHelpers.write_allowed_topic!(
+            request_context,
+            error: "content_policy_blocked",
+            topic_of: ->(performed) { performed.success? ? performed.created_post_topic : nil },
+          ) do
+            reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)
+          end
         if !result.success?
           raise ToolError,
                 result.errors&.full_messages&.join(", ").presence ||

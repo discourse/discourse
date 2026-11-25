@@ -361,6 +361,26 @@ module DiscourseMcp
       end
     end
 
+    # Runs a write that may create a topic and, while a rule is active, rolls
+    # it back when the stored topic ends restricted. Saving can add tags that
+    # no prediction fully mirrors, so the stored topic is what's judged. The
+    # prospective check stays as an early refusal.
+    #
+    # @param error [String] The `mcp.errors` key of the refusal.
+    # @param topic_of [Proc] Returns the topic the write's result created, or nil.
+    # @returns [Object] The write's result.
+    def write_allowed_topic!(request_context, error:, topic_of:)
+      policy = request_context.content_policy
+      return yield if !policy.active?
+
+      ActiveRecord::Base.transaction do
+        result = yield
+        topic = topic_of.call(result)
+        raise_prospective_refusal!(error) if topic && !policy.allows_topic_id?(topic.id)
+        result
+      end
+    end
+
     # Tags may be given as names or, in queued payloads, as `{ id:, name: }`
     # hashes, which saving reads by id first.
     def tag_param_names(tag_params)

@@ -7,10 +7,11 @@ module DiscourseMcp
   module InternalHosts
     module_function
 
-    # @param uri [URI::Generic]
+    # @param uri [URI::Generic, Addressable::URI]
     # @returns [Boolean]
     def include?(uri)
-      uri.host.present? && hosts.include?(uri.host.downcase)
+      host = canonical(uri.host)
+      host.present? && hosts.include?(host)
     end
 
     # @returns [Set<String>]
@@ -21,7 +22,22 @@ module DiscourseMcp
         GlobalSetting.cdn_url,
         SiteSetting.s3_cdn_url,
         (Discourse.store.absolute_base_url if Discourse.store.external?),
-      ].compact_blank.filter_map { |value| host_of(value) }.map(&:downcase).to_set
+      ].compact_blank.filter_map { |value| canonical(host_of(value)) }.to_set
+    end
+
+    # Browsers treat percent-encoded, Unicode, uppercase and trailing-dot
+    # spellings of a host as the same host, so hosts are compared in one
+    # spelling.
+    #
+    # @param host [String, nil]
+    # @returns [String, nil]
+    def canonical(host)
+      return if host.blank?
+
+      Addressable::IDNA.to_ascii(CGI.unescape(host.to_s)).downcase.chomp(".").presence
+      # The IDNA backends raise different errors for malformed input.
+    rescue StandardError
+      host.to_s.downcase
     end
 
     # Upload stores give protocol-relative base URLs, such as `//bucket.host`.
@@ -29,8 +45,8 @@ module DiscourseMcp
       value = value.to_s
       return value if !value.include?("/")
 
-      URI.parse(value.start_with?("//") ? "https:#{value}" : value).host
-    rescue URI::Error
+      Addressable::URI.parse(value.start_with?("//") ? "https:#{value}" : value).host
+    rescue Addressable::URI::InvalidURIError
       nil
     end
   end
