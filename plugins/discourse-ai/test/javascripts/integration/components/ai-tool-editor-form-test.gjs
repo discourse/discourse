@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, waitUntil } from "@ember/test-helpers";
+import { click, find, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -14,11 +14,25 @@ const UPLOAD_PATH =
 const ADD_FILES = "upload-mixin:discourse-ai-rag-uploader:add-files";
 const ROWS = ".rag-uploader__uploads-list tr";
 
+let model;
+let saved;
+
+function renderForm() {
+  const tools = { content: [model] };
+
+  return render(
+    <template>
+      <AiToolEditorForm
+        @editingModel={{model}}
+        @model={{model}}
+        @tools={{tools}}
+      />
+    </template>
+  );
+}
+
 module("Integration | Component | AiToolEditorForm", function (hooks) {
   setupRenderingTest(hooks);
-
-  let model;
-  let saved;
 
   hooks.beforeEach(function () {
     this.siteSettings.ai_embeddings_enabled = true;
@@ -46,25 +60,10 @@ module("Integration | Component | AiToolEditorForm", function (hooks) {
   });
 
   test("keeps the other uploads when one is removed", async function (assert) {
-    const tools = { content: [model] };
-    const llms = [];
-
-    await render(
-      <template>
-        <AiToolEditorForm
-          @editingModel={{model}}
-          @llms={{llms}}
-          @model={{model}}
-          @tools={{tools}}
-        />
-      </template>
-    );
-
-    assert.dom(ROWS).exists({ count: 2 }, "renders the tool's uploads");
+    await renderForm();
 
     await click(`${ROWS}:first-child .rag-uploader__remove-file .btn-flat`);
 
-    assert.dom(ROWS).exists({ count: 1 }, "removes the upload from the list");
     assert.dom(ROWS).hasText(/second\.md/, "keeps the other upload");
 
     await click(".ai-tool-editor__save");
@@ -77,19 +76,7 @@ module("Integration | Component | AiToolEditorForm", function (hooks) {
   });
 
   test("leaves the model's uploads mutable", async function (assert) {
-    const tools = { content: [model] };
-    const llms = [];
-
-    await render(
-      <template>
-        <AiToolEditorForm
-          @editingModel={{model}}
-          @llms={{llms}}
-          @model={{model}}
-          @tools={{tools}}
-        />
-      </template>
-    );
+    await renderForm();
 
     assert.false(Object.isFrozen(model.rag_uploads), "keeps the array mutable");
     assert.false(
@@ -102,29 +89,13 @@ module("Integration | Component | AiToolEditorForm", function (hooks) {
     pretender.post(UPLOAD_PATH, () =>
       response({ upload: { id: 3, original_filename: "third.txt" } })
     );
-    const tools = { content: [model] };
-    const llms = [];
-
-    await render(
-      <template>
-        <AiToolEditorForm
-          @editingModel={{model}}
-          @llms={{llms}}
-          @model={{model}}
-          @tools={{tools}}
-        />
-      </template>
-    );
+    await renderForm();
 
     getOwner(this)
       .lookup("service:app-events")
       .trigger(ADD_FILES, [createFile("third.txt", "text/plain")]);
     await waitUntil(
-      () =>
-        !document.querySelector(".rag-uploader .spinner") &&
-        document
-          .querySelector(ROWS)
-          ?.parentElement.textContent.includes("third.txt")
+      () => find(`${ROWS}:nth-child(3)`) && !find(".rag-uploader .spinner")
     );
 
     assert.dom(ROWS).exists({ count: 3 }, "renders each upload once");

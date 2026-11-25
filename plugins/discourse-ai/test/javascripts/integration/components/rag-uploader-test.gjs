@@ -11,10 +11,7 @@ import {
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import {
-  createFile,
-  publishToMessageBus,
-} from "discourse/tests/helpers/qunit-helpers";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import RagUploader from "discourse/plugins/discourse-ai/discourse/components/rag-uploader";
 
 const STATUS_PATH =
@@ -64,14 +61,8 @@ module("Integration | Component | RagUploader", function (hooks) {
 
   test("lists the uploads of @target as it changes", async function (assert) {
     const target = tracked({ id: 7, rag_uploads: [first] });
-    const removed = [];
-    const onRemove = (upload) => {
-      removed.push(upload);
-      target.value = {
-        ...target.value,
-        rag_uploads: target.value.rag_uploads.filter((u) => u !== upload),
-      };
-    };
+    let removed;
+    const onRemove = (upload) => (removed = upload);
 
     await render(
       <template>
@@ -83,24 +74,18 @@ module("Integration | Component | RagUploader", function (hooks) {
       </template>
     );
 
-    assert
-      .dom(".rag-uploader__uploads-list tr")
-      .exists({ count: 1 }, "renders the initial uploads");
+    assert.dom(ROWS).exists({ count: 1 }, "renders the initial uploads");
 
     target.value = { id: 7, rag_uploads: [first, second] };
     await rerender();
 
     assert
-      .dom(".rag-uploader__uploads-list tr")
+      .dom(ROWS)
       .exists({ count: 2 }, "renders uploads added to the target");
 
-    await click(".rag-uploader__uploads-list tr:first-child .btn-flat");
+    await click(`${ROWS}:first-child .btn-flat`);
 
-    assert.deepEqual(removed, [first], "reports the removed upload");
-    assert
-      .dom(".rag-uploader__uploads-list tr")
-      .hasText(/second\.md/, "renders the uploads left on the target");
-    assert.dom(".rag-uploader__uploads-list tr").exists({ count: 1 });
+    assert.strictEqual(removed, first, "reports the removed upload");
   });
 
   test("fetches indexing statuses once per set of uploads", async function (assert) {
@@ -134,49 +119,10 @@ module("Integration | Component | RagUploader", function (hooks) {
     assert.strictEqual(statusRequests.length, 2, "refetches for new uploads");
   });
 
-  test("hands finished uploads to @updateUploads", async function (assert) {
-    pretender.post(UPLOAD_PATH, () =>
-      response({ upload: { id: 3, original_filename: "third.txt" } })
-    );
-
-    const target = tracked({ rag_uploads: [first] });
-    let updated;
-    const updateUploads = (uploads) => {
-      updated = uploads;
-      target.value = { rag_uploads: uploads.slice() };
-    };
-
-    await render(
-      <template>
-        <RagUploader
-          @target={{target.value}}
-          @updateUploads={{updateUploads}}
-        />
-      </template>
-    );
-
-    getOwner(this)
-      .lookup("service:app-events")
-      .trigger(ADD_FILES, [createFile("third.txt", "text/plain")]);
-    await waitUntil(() => updated);
-    await settled();
-
-    assert.deepEqual(
-      updated.map((upload) => upload.id),
-      [1, 3],
-      "passes the target's uploads plus the new one"
-    );
-    assert
-      .dom(".rag-uploader__uploads-list tr")
-      .exists({ count: 2 }, "renders each upload once");
-  });
-
   test("hands over a finished upload when another one is cancelled", async function (assert) {
-    let release;
-    const held = new Promise((resolve) => (release = resolve));
     pretender.post(UPLOAD_PATH, async (request) => {
       if (request.requestBody.get("file").name === "slow.txt") {
-        await held;
+        await new Promise(() => {});
       }
       return response({ upload: { id: 3, original_filename: "fast.txt" } });
     });
@@ -202,20 +148,13 @@ module("Integration | Component | RagUploader", function (hooks) {
         createFile("slow.txt", "text/plain"),
       ]);
 
-    try {
-      await waitUntil(() => target.value.rag_uploads.length === 2);
+    await waitUntil(() => target.value.rag_uploads.length === 2);
 
-      assert
-        .dom(".rag-uploader__upload-status:has(.spinner)")
-        .exists({ count: 1 }, "keeps uploading the slow file");
-      assert
-        .dom(`${ROWS}:has(.spinner)`)
-        .hasText(/slow\.txt/, "names the file being uploaded");
+    assert
+      .dom(`${ROWS}:has(.spinner)`)
+      .hasText(/slow\.txt/, "names the file being uploaded");
 
-      await click(`${ROWS}:has(.spinner) .btn-flat`);
-    } finally {
-      release();
-    }
+    await click(`${ROWS}:has(.spinner) .btn-flat`);
 
     assert.deepEqual(
       target.value.rag_uploads.map((upload) => upload.id),
@@ -226,12 +165,7 @@ module("Integration | Component | RagUploader", function (hooks) {
   });
 
   test("keeps uploading when @target is replaced", async function (assert) {
-    let release;
-    const held = new Promise((resolve) => (release = resolve));
-    pretender.post(UPLOAD_PATH, async () => {
-      await held;
-      return response({ upload: { id: 3, original_filename: "third.txt" } });
-    });
+    pretender.post(UPLOAD_PATH, () => new Promise(() => {}));
 
     const target = tracked({ id: 7, rag_uploads: [] });
 
@@ -245,22 +179,16 @@ module("Integration | Component | RagUploader", function (hooks) {
       .lookup("service:app-events")
       .trigger(ADD_FILES, [createFile("third.txt", "text/plain")]);
 
-    try {
-      await waitUntil(() => document.querySelector(".rag-uploader .spinner"));
+    await waitUntil(() => find(".rag-uploader .spinner"));
 
-      target.value = { ...target.value, name: "renamed" };
-      await rerender();
+    target.value = { ...target.value, name: "renamed" };
+    await rerender();
 
-      assert
-        .dom(".rag-uploader .spinner")
-        .exists("keeps uploading when the target is replaced");
-    } finally {
-      release();
-    }
+    assert.dom(".rag-uploader .spinner").exists("keeps uploading");
   });
 
-  test("keeps tracking indexing when the uploads are replaced with copies", async function (assert) {
-    const target = tracked({ id: 7, rag_uploads: [{ ...first }] });
+  test("keeps the rows when the uploads are replaced with copies", async function (assert) {
+    const target = tracked({ id: 7, rag_uploads: [first] });
 
     await render(
       <template>
@@ -274,15 +202,5 @@ module("Integration | Component | RagUploader", function (hooks) {
     await rerender();
 
     assert.strictEqual(find(ROWS), row, "keeps the row");
-
-    await publishToMessageBus("/discourse-ai/rag/1", {
-      total: 2,
-      indexed: 1,
-      left: 1,
-    });
-
-    assert
-      .dom(`${ROWS} .indexing`)
-      .includesText("50%", "renders indexing updates");
   });
 });

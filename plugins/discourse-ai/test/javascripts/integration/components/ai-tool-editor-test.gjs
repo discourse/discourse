@@ -8,22 +8,15 @@ module("Integration | Component | AiToolEditor", function (hooks) {
 
   test("passes the RAG settings to the form", async function (assert) {
     this.siteSettings.ai_embeddings_enabled = true;
-    const model = {
-      id: 5,
-      isNew: false,
-      name: "Weather",
-      parameters: [],
-      rag_uploads: [],
-    };
-    const llms = [];
+    const model = { isNew: false };
+    const presets = [];
     const settings = { rag_images_enabled: true };
 
     await render(
       <template>
         <AiToolEditor
-          @llms={{llms}}
           @model={{model}}
-          @presets={{llms}}
+          @presets={{presets}}
           @settings={{settings}}
         />
       </template>
