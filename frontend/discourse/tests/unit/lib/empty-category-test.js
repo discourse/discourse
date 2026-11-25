@@ -39,10 +39,10 @@ module("Unit | Utility | empty-category", function (hooks) {
     assert.true(isEmptyCategoryList({ category: this.category, list }));
   });
 
-  test("ignores topics started by system or bot accounts", function (assert) {
+  test("is not empty once a system or bot account starts a topic", function (assert) {
     const list = this.list([this.topic(10, 5), this.topic(11, -1)]);
 
-    assert.true(isEmptyCategoryList({ category: this.category, list }));
+    assert.false(isEmptyCategoryList({ category: this.category, list }));
   });
 
   test("is not empty once a member starts a topic", function (assert) {
