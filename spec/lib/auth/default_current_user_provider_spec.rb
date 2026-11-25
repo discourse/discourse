@@ -251,6 +251,28 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
     after { user.clear_last_seen_cache!(@orig) }
 
+    it "records the visit as mobile for a mobile user agent" do
+      provider(
+        "/",
+        "HTTP_COOKIE" => "_t=#{cookie}",
+        "HTTP_USER_AGENT" =>
+          "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36",
+      ).current_user
+
+      expect(user.visit_record_for(Date.current).mobile).to eq(true)
+    end
+
+    it "records the visit as desktop for a desktop user agent" do
+      provider(
+        "/",
+        "HTTP_COOKIE" => "_t=#{cookie}",
+        "HTTP_USER_AGENT" =>
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+      ).current_user
+
+      expect(user.visit_record_for(Date.current).mobile).to eq(false)
+    end
+
     it "does not update last seen for suspended users" do
       provider2 = provider("/", "HTTP_COOKIE" => "_t=#{cookie}")
       u = provider2.current_user
