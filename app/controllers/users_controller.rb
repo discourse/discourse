@@ -856,12 +856,9 @@ class UsersController < ApplicationController
       # add them to the review queue if they need to be approved
       user.activate if user.active?
 
-      render json: {
-               success: true,
-               active: user.active?,
-               message: activation.message,
-               login_error: activation.login_error,
-             }.merge(SiteSetting.hide_email_address_taken ? {} : { user_id: user.id })
+      render json: { success: true, active: user.active?, message: activation.message }.merge(
+               SiteSetting.hide_email_address_taken ? {} : { user_id: user.id },
+             )
     elsif SiteSetting.hide_email_address_taken &&
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
       server_session["user_created_message"] = activation.success_message

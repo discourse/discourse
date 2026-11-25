@@ -1189,66 +1189,6 @@ RSpec.describe UsersController do
       post "/u.json", params: post_user_params.merge(extra_params)
     end
 
-    context "with verified OAuth email and the admin IP allowlist" do
-      before do
-        SiteSetting.use_admin_ip_allowlist = true
-        ScreenedIpAddress.all.destroy_all
-        Fabricate(
-          :screened_ip_address,
-          ip_address: "198.51.100.7",
-          action_type: ScreenedIpAddress.actions[:allow_admin],
-        )
-        Rails.configuration.stubs(:developer_emails).returns([@user.email])
-        server_session[:authentication] = { email: @user.email, email_valid: true }
-      end
-
-      it "creates an active account without promoting or logging in a denied developer" do
-        post "/u.json",
-             params: post_user_params.merge(password: "verifiedOAuthLongPassword123"),
-             headers: {
-               "REMOTE_ADDR" => "203.0.113.9",
-             }
-
-        created_user = User.find_by_email(@user.email)
-        expect(session[:current_user_id]).to be_blank
-        expect(created_user.admin?).to eq(false)
-        expect(response.parsed_body["success"]).to eq(true)
-        expect(response.parsed_body["active"]).to eq(true)
-        expect(response.parsed_body["login_error"]).to eq(
-          I18n.t("login.admin_not_allowed_from_ip_address", username: created_user.username),
-        )
-        expect(server_session["user_created_message"]).to eq(response.parsed_body["login_error"])
-        expect(created_user.active?).to eq(true)
-      end
-
-      it "promotes and logs in a developer from an allowed IP" do
-        post "/u.json",
-             params: post_user_params.merge(password: "verifiedOAuthLongPassword123"),
-             headers: {
-               "REMOTE_ADDR" => "198.51.100.7",
-             }
-
-        created_user = User.find_by_email(@user.email)
-        expect(response.parsed_body["login_error"]).to be_nil
-        expect(created_user.admin?).to eq(true)
-        expect(session[:current_user_id]).to eq(created_user.id)
-      end
-
-      it "logs in an ordinary user from an IP outside the allowlist" do
-        Rails.configuration.stubs(:developer_emails).returns([])
-        post "/u.json",
-             params: post_user_params.merge(password: "verifiedOAuthLongPassword123"),
-             headers: {
-               "REMOTE_ADDR" => "203.0.113.9",
-             }
-
-        created_user = User.find_by_email(@user.email)
-        expect(response.parsed_body["login_error"]).to be_nil
-        expect(created_user.admin?).to eq(false)
-        expect(session[:current_user_id]).to eq(created_user.id)
-      end
-    end
-
     it "rejects signup from a logged-in browser session" do
       sign_in(user1)
 

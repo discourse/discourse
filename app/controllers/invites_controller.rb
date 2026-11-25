@@ -448,11 +448,7 @@ class InvitesController < ApplicationController
       end
 
       if !redeeming_user && user.active? && user.guardian.can_access_forum?
-        if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
-          login_error = I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
-        else
-          log_on_user(user, replay_anonymous_action: true)
-        end
+        log_on_user(user, replay_anonymous_action: true)
       end
 
       user.update_timezone_if_missing(params[:timezone])
@@ -462,9 +458,7 @@ class InvitesController < ApplicationController
       topic = invite.topics.first
       response = {}
 
-      if login_error
-        response[:message] = login_error
-      elsif user.present?
+      if user.present?
         if user.active? && user.guardian.can_access_forum?
           response[:message] = I18n.t("invite.existing_user_success") if redeeming_user
 
