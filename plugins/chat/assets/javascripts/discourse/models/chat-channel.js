@@ -223,10 +223,6 @@ export default class ChatChannel {
     return this.unicodeTitle ?? this.title;
   }
 
-  get escapedDescription() {
-    return escapeExpression(this.description?.trim());
-  }
-
   get slugifiedTitle() {
     return this.slug || slugifyChannel(this);
   }
