@@ -468,7 +468,10 @@ module DiscourseAi
           ],
         )
 
-        Topic.where(id: post.topic_id).update_all(visible: false) if post.post_number == 1
+        if post.post_number == 1
+          Topic.where(id: post.topic_id).update_all(visible: false, excerpt: nil)
+          TopicLocalization.where(topic_id: post.topic_id).update_all(excerpt: nil)
+        end
       end
 
       def self.post_has_existing_flag?(post)

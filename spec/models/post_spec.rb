@@ -1653,7 +1653,41 @@ RSpec.describe Post do
 
     after { Discourse.redis.flushdb }
 
-    it "should not run post validations" do
+    it "clears the topic excerpt of a first post until the post is unhidden" do
+      post.sync_first_post_caches
+      excerpt = post.topic.excerpt
+
+      post.hide!(PostActionType.types[:off_topic])
+      post.sync_first_post_caches
+      expect(post.topic.reload.excerpt).to be_nil
+
+      post.unhide!
+      expect(post.topic.reload.excerpt).to eq(excerpt)
+    end
+
+    it "clears localized topic excerpts of a first post until the post is unhidden" do
+      post_localization = Fabricate(:post_localization, post: post, locale: "ja")
+      topic_localization = Fabricate(:topic_localization, topic: post.topic, locale: "ja")
+      topic_localization.update_excerpt(cooked: post_localization.cooked)
+      excerpt = topic_localization.excerpt
+
+      post.hide!(PostActionType.types[:off_topic])
+      expect(topic_localization.reload.excerpt).to be_nil
+
+      post.unhide!
+      expect(topic_localization.reload.excerpt).to eq(excerpt)
+    end
+
+    it "keeps the topic excerpt when a reply is hidden" do
+      post.sync_first_post_caches
+      reply = Fabricate(:post, topic: post.topic)
+
+      expect { reply.hide!(PostActionType.types[:off_topic]) }.not_to change {
+        post.topic.reload.excerpt
+      }
+    end
+
+    it "does not run post validations" do
       PostValidator.any_instance.expects(:validate).never
 
       expect { post.hide!(PostActionType.types[:off_topic]) }.to change { post.reload.hidden }.from(

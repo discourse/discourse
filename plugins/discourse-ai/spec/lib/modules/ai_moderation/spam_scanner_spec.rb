@@ -300,6 +300,25 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       )
     end
 
+    it "clears the cached topic excerpts when hiding a first post" do
+      spam_post.sync_first_post_caches
+      topic_localization =
+        Fabricate(:topic_localization, topic: spam_post.topic, excerpt: "A localized excerpt")
+
+      described_class.hide_post(spam_post)
+
+      expect(spam_post.topic.reload.excerpt).to be_nil
+      expect(topic_localization.reload.excerpt).to be_nil
+    end
+
+    it "keeps the cached topic excerpt when hiding a reply" do
+      spam_post.sync_first_post_caches
+
+      expect { described_class.hide_post(second_spam_post) }.not_to change {
+        spam_post.topic.reload.excerpt
+      }
+    end
+
     it "doesn't hide the topic for non-first posts" do
       described_class.hide_post(second_spam_post)
 
