@@ -428,6 +428,50 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#can_discover_topic?" do
+    fab!(:unlisted_topic) { Fabricate(:topic, category: category, visible: false) }
+
+    it "is allowed for listed topics the user can see" do
+      expect(user.guardian.can_discover_topic?(topic)).to eq(true)
+      expect(Guardian.new.can_discover_topic?(topic)).to eq(true)
+    end
+
+    it "is not allowed for topics the user cannot see" do
+      expect(user.guardian.can_discover_topic?(private_topic)).to eq(false)
+    end
+
+    it "is only allowed for unlisted topics when the user can see unlisted topics or is the author" do
+      expect(moderator.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(tl4_user.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(unlisted_topic.user.guardian.can_discover_topic?(unlisted_topic)).to eq(true)
+      expect(tl3_user.guardian.can_discover_topic?(unlisted_topic)).to eq(false)
+      expect(Guardian.new.can_discover_topic?(unlisted_topic)).to eq(false)
+    end
+  end
+
+  describe "#can_discover_topic_ids" do
+    fab!(:unlisted_topic) { Fabricate(:topic, category: category, visible: false) }
+
+    let(:topic_ids) { [topic.id, unlisted_topic.id, private_topic.id] }
+
+    it "excludes unlisted topics and topics the user cannot see" do
+      expect(tl3_user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(topic.id)
+      expect(Guardian.new.can_discover_topic_ids(topic_ids:)).to contain_exactly(topic.id)
+    end
+
+    it "includes unlisted topics for the author and for users who can see unlisted topics" do
+      expect(unlisted_topic.user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(
+        topic.id,
+        unlisted_topic.id,
+      )
+      expect(tl4_user.guardian.can_discover_topic_ids(topic_ids:)).to contain_exactly(
+        topic.id,
+        unlisted_topic.id,
+      )
+      expect(admin.guardian.can_discover_topic_ids(topic_ids:)).to match_array(topic_ids)
+    end
+  end
+
   # The test cases here are intentionally kept brief because majority of the cases are already handled by
   # `TopicGuardianCanSeeConsistencyCheck` which we run to ensure that the implementation between `TopicGuardian#can_see_topic_ids`
   # and `TopicGuardian#can_see_topic?` is consistent.

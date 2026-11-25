@@ -392,9 +392,8 @@ module Boards
         topic_ids = cards.select(&:topic?).map(&:topic_id).uniq
         return [] if topic_ids.empty?
 
-        Topic
-          .listable_topics
-          .secured(guardian)
+        guardian
+          .discoverable_topic_scope(Topic.listable_topics.secured(guardian))
           .where(id: topic_ids)
           .where.not(id: Category.where.not(topic_id: nil).select(:topic_id))
           .pluck(:id)

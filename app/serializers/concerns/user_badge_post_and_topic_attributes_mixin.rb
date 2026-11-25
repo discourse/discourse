@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 # Post and topic attributes are only included when the `allowed_user_badge_topic_ids` option is provided. The caller of the
-# serializer is responsible for ensuring that the topic ids in the options can be seen by the scope of the user by passing
-# the result of `Guardian#can_see_topic_ids` to the `allowed_user_badge_topic_ids` option.
+# serializer is responsible for ensuring that the topic ids in the options can be discovered by the scope of the user by passing
+# the result of `Guardian#can_discover_topic_ids` to the `allowed_user_badge_topic_ids` option.
 module UserBadgePostAndTopicAttributesMixin
   private
 

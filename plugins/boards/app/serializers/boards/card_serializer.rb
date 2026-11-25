@@ -101,7 +101,7 @@ module Boards
     end
 
     def topic_visible?
-      scope.present? && scope.can_see?(object.topic)
+      scope.present? && scope.can_discover_topic?(object.topic)
     end
   end
 end

@@ -274,6 +274,30 @@ module TopicGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
+  # Unlisted topics stay readable by direct link, so `can_see_topic?` ignores `visible`.
+  # Use this instead whenever a topic is offered to a user who did not ask for it by id
+  # (lists, feeds, data attached to other records).
+  def can_discover_topic?(topic)
+    return false if !can_see_topic?(topic)
+    topic.visible? || can_see_unlisted_topics? || is_my_own?(topic)
+  end
+
+  # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can discover.
+  def can_discover_topic_ids(topic_ids: [])
+    topic_ids = can_see_topic_ids(topic_ids:)
+    return topic_ids if topic_ids.blank? || can_see_unlisted_topics?
+
+    discoverable_topic_scope(Topic.unscoped.where(id: topic_ids)).pluck(:id)
+  end
+
+  # Narrows a topic scope the user can already see to the topics they can discover.
+  def discoverable_topic_scope(scope)
+    return scope if can_see_unlisted_topics?
+
+    listed = scope.where(visible: true)
+    authenticated? ? listed.or(scope.where(user_id: @user.id)) : listed
+  end
+
   def filter_allowed_categories(records, category_id_column: "topics.category_id")
     return records if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
 
