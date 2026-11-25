@@ -1,0 +1,101 @@
+{
+  "description": "Closed word lists for Discourse CSS variable names. Single source for the docs site, the checker and the lint rule. How the words combine: docs/slots.html.",
+  "prefixes": {
+    "d-sys": "system",
+    "d-comp": "core component",
+    "t": "theme",
+    "tc": "theme component",
+    "p": "plugin"
+  },
+  "categories": {
+    "color": {
+      "properties": {
+        "text": { "roles": ["default", "muted", "faint", "inverse", "link", "accent", "danger", "success", "warning", "info"], "variant": "strength" },
+        "icon": { "roles": ["default", "muted", "faint", "strong", "inverse", "accent", "danger", "success", "warning", "info", "love"], "variant": "strength" },
+        "background": { "roles": ["default", "neutral", "raised", "sunken", "overlay", "input", "inverse", "backdrop", "highlight", "accent", "danger", "success", "warning", "info", "love"], "variant": "strength" },
+        "border": { "roles": ["default", "muted", "strong", "input", "accent", "danger", "success", "warning"], "variant": "strength" },
+        "outline": { "roles": ["default", "danger"] }
+      }
+    },
+    "font": {
+      "properties": {
+        "family": { "roles": ["body", "heading", "monospace"] },
+        "size": { "variant": "size" },
+        "weight": { "variant": "weight" },
+        "line-height": { "roles": ["none", "heading", "body", "prose"] },
+        "letter-spacing": { "roles": ["default", "heading"] }
+      },
+      "componentProperties": ["align"]
+    },
+    "shadow": {
+      "roles": ["overflow", "raised", "overlay", "dialog"]
+    },
+    "space": {
+      "properties": {
+        "gap": { "variant": "step" },
+        "padding": { "variant": "step" },
+        "margin": { "variant": "step" }
+      }
+    },
+    "size": {
+      "properties": {
+        "icon": { "variant": "size" },
+        "avatar": { "variant": "size" },
+        "control": { "variant": "size" },
+        "container": { "variant": "size" }
+      },
+      "componentProperties": ["inline", "block", "min-inline", "max-inline", "min-block", "max-block"]
+    },
+    "border": {
+      "properties": {
+        "radius": { "variant": "size", "extraVariants": ["full"] },
+        "width": { "variant": "size" },
+        "style": { "roles": ["default"] }
+      }
+    },
+    "outline": {
+      "properties": {
+        "width": { "roles": ["default"] },
+        "offset": { "roles": ["default"] },
+        "style": { "roles": ["default"] }
+      }
+    },
+    "opacity": {
+      "roles": ["backdrop"],
+      "roleOptional": true
+    },
+    "motion": {
+      "properties": {
+        "duration": { "variant": "size" },
+        "easing": { "roles": ["standard", "enter", "exit"] }
+      },
+      "componentProperties": ["transition"]
+    }
+  },
+  "intents": ["accent", "danger", "success", "warning", "info", "highlight", "love"],
+  "axes": ["inline", "block", "inline-start", "inline-end", "block-start", "block-end"],
+  "variants": {
+    "size": ["3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl"],
+    "step": ["half", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+    "strength": ["subtlest", "subtle", "bold"],
+    "weight": ["regular", "medium", "semibold", "bold"]
+  },
+  "states": {
+    "condition": ["selected", "checked", "current", "expanded", "disabled", "invalid", "visited", "read"],
+    "interaction": ["hovered", "pressed", "focused"]
+  },
+  "patterns": ["Input", "NavPills", "Table", "CodeBlock", "InlineCode", "FloatKit"],
+  "parts": {
+    "CodeBlock": ["addition", "attr", "attribute", "comment", "deletion", "keyword", "name", "number", "punctuation", "string", "symbol", "tag", "title", "variable"],
+    "DButton": ["count"],
+    "DModal": ["header"],
+    "NavPills": ["underline"],
+    "PostMenu": ["button"],
+    "PostMetaData": ["wiki"],
+    "Poll": ["bar"]
+  },
+  "kinds": {
+    "DButton": ["default", "primary", "danger", "success", "flat", "transparent", "close"],
+    "UserBadge": ["gold", "silver", "bronze"]
+  }
+}

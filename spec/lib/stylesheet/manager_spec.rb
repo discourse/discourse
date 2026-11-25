@@ -1200,9 +1200,10 @@ RSpec.describe Stylesheet::Manager do
       end
     end
 
-    it "includes the variable rename map in its inputs" do
+    it "includes the variable rename and border split maps in its inputs" do
       expect(Stylesheet::Manager.send(:list_files)).to include(
         Stylesheet::Manager::VARIABLE_RENAMES_PATH.to_s,
+        Stylesheet::Manager::VARIABLE_BORDER_SPLITS_PATH.to_s,
       )
     end
   end
