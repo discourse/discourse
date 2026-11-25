@@ -195,16 +195,18 @@
   font-size: var(--font-down-2);
   text-decoration: none;
 
-  html.discourse-no-touch a&:hover {
-    background-color: var(--primary-low);
-    color: var(--primary);
-  }
-
   &.--current {
     background-color: var(--tertiary-low);
     border-color: var(--tertiary-medium);
     color: var(--tertiary-high);
     font-weight: 600;
+  }
+}
+
+a.ai-concept-pill {
+  html.discourse-no-touch &:hover {
+    background-color: var(--primary-low);
+    color: var(--primary);
   }
 }
 
