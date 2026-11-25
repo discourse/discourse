@@ -224,6 +224,16 @@ body.has-full-page-chat {
   }
 }
 
+body.has-page-shell.has-full-page-chat #main-outlet .full-page-chat {
+  --main-outlet-offset: var(
+    --_chat-page-offset,
+    var(--_page-shell-body-offset, var(--header-offset, 0px))
+  );
+  --chat-content-offset: 0px;
+
+  @include chat-height;
+}
+
 // a zero-height region right above the message list: whatever it holds flows
 // in normal order below the status, filter and pinned bars, and overflows
 // downward over the list, which keeps its full height underneath

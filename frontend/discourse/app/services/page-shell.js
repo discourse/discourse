@@ -86,26 +86,12 @@ export default class PageShell extends Service {
     return Math.min(this.contextWidth, this.contextMaxWidth);
   }
 
-  get prototypeEnabled() {
+  get enabled() {
     return (
       this.siteSettings.enable_page_shell_prototype &&
       this.siteSettings.enable_main_outlet_grid_layout_change &&
       !EmbedMode.enabled
     );
-  }
-
-  get enabled() {
-    if (!this.prototypeEnabled) {
-      return false;
-    }
-
-    for (let route = this.router.currentRoute; route; route = route.parent) {
-      if (route.metadata?.usePageShell === false) {
-        return false;
-      }
-    }
-
-    return true;
   }
 
   get hasContextPanel() {

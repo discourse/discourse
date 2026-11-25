@@ -1,4 +1,13 @@
-import { currentURL, fillIn, visit, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  fillIn,
+  find,
+  select,
+  visit,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -59,23 +68,49 @@ acceptance("Chat | New message", function (needs) {
     );
   });
 
-  test("full-page Chat uses its own layout and restores the shell on exit", async function (assert) {
+  test("full-page Chat fits Main as content above it changes height", async function (assert) {
     this.siteSettings.enable_page_shell_prototype = true;
     this.siteSettings.enable_main_outlet_grid_layout_change = true;
 
     await visit(`/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`);
-    assert.dom("#main-outlet .full-page-chat").exists("renders full-page Chat");
-    assert
-      .dom("#main-outlet-wrapper")
-      .hasClass("wrap", "uses Chat's regular page wrapper");
-    assert
-      .dom(".page-shell")
-      .doesNotExist("keeps Chat out of the prototype grid");
+    const chatPage = ".page-shell__main .full-page-chat";
+    assert.dom(chatPage).exists("renders full-page Chat inside Main");
+
+    const layout = find(chatPage);
+    const channel = find(`${chatPage} .chat-channel`);
+    await waitUntil(() => layout.style.getPropertyValue("--_chat-page-offset"));
+
+    const chatTop = () => layout.getBoundingClientRect().top + window.scrollY;
+    const initialTop = chatTop();
+    await click(".page-shell-controls summary");
+    assert.true(chatTop() > initialTop, "the expanded controls move Chat down");
+
+    const footer = find(".page-shell__footer");
+    for (const placement of ["content", "row", "off"]) {
+      await select('.page-shell-controls select[name="footer"]', placement);
+      await waitUntil(() => {
+        const reserved = parseFloat(
+          layout.style.getPropertyValue("--_chat-page-offset")
+        );
+        return (
+          Math.abs(
+            reserved - chatTop() - footer.getBoundingClientRect().height
+          ) < 1
+        );
+      });
+      assert.true(
+        channel.getBoundingClientRect().bottom +
+          window.scrollY +
+          footer.getBoundingClientRect().height <=
+          window.innerHeight + 1,
+        `fits the viewport with the footer placement set to ${placement}`
+      );
+    }
 
     await visit("/latest");
     assert
       .dom("#main-outlet-wrapper.page-shell")
-      .exists("restores the forum shell");
+      .exists("keeps the forum shell on exit");
   });
 
   test("pre-fills the composer when visiting with channel_id and message", async function (assert) {

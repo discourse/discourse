@@ -3,6 +3,7 @@ import htmlClass from "discourse/helpers/html-class";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChannelsList from "discourse/plugins/chat/discourse/components/channels-list";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
+import measurePageOffset from "discourse/plugins/chat/discourse/modifiers/chat/measure-page-offset";
 
 export default <template>
   {{bodyClass "has-chat" "has-full-page-chat"}}
@@ -15,6 +16,7 @@ export default <template>
       "full-page-chat"
       (if @controller.shouldUseCoreSidebar "full-page-chat-sidebar-enabled")
     }}
+    {{measurePageOffset}}
   >
     {{#if @controller.shouldUseChatSidebar}}
       <ChannelsList />

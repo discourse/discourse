@@ -22,10 +22,6 @@ export default class ChatRoute extends DiscourseRoute {
   @service designWizard;
   @service siteSettings;
 
-  buildRouteInfoMetadata() {
-    return { usePageShell: false };
-  }
-
   titleToken() {
     return i18n("chat.title_capitalized");
   }
