@@ -56,13 +56,18 @@ module DiscourseMcp
       eligible_scopes = eligible_scopes(user).to_set
       return false if eligible_scopes.empty?
 
+      # The user keeps their eligible scopes while the content policy revokes
+      # some; they only can't use them, so they don't count here.
+      content_policy = ContentPolicy.load
+      usable_scopes = eligible_scopes - content_policy.revoked_scopes
+
       McpPrimitive
         .exposed
         .pluck(:kind, :identifier)
         .any? do |kind, identifier|
           primitive = DiscourseMcp.registry.find(kind, identifier)
-          primitive&.available? &&
-            primitive.required_scopes.all? { |scope| eligible_scopes.include?(scope) }
+          primitive&.available? && DiscourseMcp.primitive_usable?(primitive, content_policy:) &&
+            primitive.required_scopes.all? { |scope| usable_scopes.include?(scope) }
         end
     end
 

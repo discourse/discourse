@@ -59,6 +59,13 @@ module DiscourseMcp
 
     class ListThemes
       REQUIRED_SCOPES = [Scopes::THEMES_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           themes: OutputSchema::OBJECT_ARRAY,
@@ -82,6 +89,13 @@ module DiscourseMcp
 
     class DeleteTheme
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(theme_id: OutputSchema::INTEGER, deleted: OutputSchema::BOOLEAN)
 
@@ -100,6 +114,13 @@ module DiscourseMcp
 
     class InstallTheme
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           theme: OutputSchema::OBJECT,
@@ -180,6 +201,13 @@ module DiscourseMcp
 
     class SyncRemoteTheme
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           theme: OutputSchema::OBJECT,
@@ -221,6 +249,13 @@ module DiscourseMcp
 
     class UploadThemeAsset
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(upload_id: OutputSchema::INTEGER, attached: OutputSchema::BOOLEAN)
 
@@ -244,6 +279,13 @@ module DiscourseMcp
 
     class UpdateThemeSetting
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(name: OutputSchema::STRING, value: OutputSchema::ANY)
 
       def self.call(arguments:, request_context:)
@@ -291,6 +333,13 @@ module DiscourseMcp
 
     class UpdateThemeTranslations
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(locale: OutputSchema::STRING, translations: OutputSchema::OBJECT_ARRAY)
 

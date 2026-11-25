@@ -4,6 +4,8 @@ module DiscourseMcp
   class Primitive
     KINDS = %i[tool resource resource_template prompt].freeze
     RISKS = %i[read write destructive moderation administration external_side_effect].freeze
+    CONTENT_LEVELS = %i[enforced untouched unenforced].freeze
+    CONTENT_DATA_KIND = /\A(?:[a-z0-9][a-z0-9_-]*:)?[a-z][a-z0-9_]*\z/
 
     attr_reader :identifier,
                 :kind,
@@ -16,8 +18,17 @@ module DiscourseMcp
                 :risk,
                 :provider,
                 :implementation,
-                :availability
+                :availability,
+                :content
 
+    # @param content [nil, Symbol, Hash] What governed data the primitive touches,
+    #   read by the content policy gate. `nil` is undeclared and blocked while any
+    #   content rule is active. `:none` touches no governed data, now or later.
+    #   `:unbounded` has unrestricted data access, such as arbitrary SQL, and is
+    #   blocked while any rule is active. A Hash maps each data kind name to
+    #   `:enforced` (the primitive applies the policy to it), `:untouched` (it
+    #   never surfaces that data) or `:unenforced` (it surfaces that data without
+    #   applying the policy, so rules governing that kind block it).
     def initialize(
       identifier:,
       kind:,
@@ -31,7 +42,8 @@ module DiscourseMcp
       risk: :read,
       provider: :core,
       availability: nil,
-      defer: false
+      defer: false,
+      content: nil
     )
       @identifier = identifier.to_s
       @kind = kind.to_sym
@@ -46,6 +58,7 @@ module DiscourseMcp
       @provider = provider.to_s
       @availability = availability
       @defer = defer
+      @content = normalize_content(content)
       validate!
       freeze
     end
@@ -63,6 +76,32 @@ module DiscourseMcp
     end
 
     private
+
+    # Only the declaration's shape is checked here. Whether its keys name
+    # registered data kinds is up to the gate, because plugins can register
+    # their data kinds after the primitives that mention them.
+    def normalize_content(content)
+      return content if content.nil? || content == :none || content == :unbounded
+      raise ArgumentError, "invalid MCP primitive content declaration" if !content.is_a?(Hash)
+
+      content
+        .each_with_object({}) do |(data_kind, level), normalized|
+          if !(data_kind.is_a?(String) || data_kind.is_a?(Symbol)) ||
+               !data_kind.to_s.match?(CONTENT_DATA_KIND)
+            raise ArgumentError, "invalid MCP primitive content data kind"
+          end
+          level = level.to_sym if level.is_a?(String) || level.is_a?(Symbol)
+          if !CONTENT_LEVELS.include?(level)
+            raise ArgumentError, "invalid MCP primitive content level"
+          end
+          if normalized.key?(data_kind.to_s)
+            raise ArgumentError, "duplicate MCP primitive content data kind"
+          end
+
+          normalized[data_kind.to_s] = level
+        end
+        .freeze
+    end
 
     def validate!
       raise ArgumentError, "invalid MCP primitive kind" if !KINDS.include?(kind)

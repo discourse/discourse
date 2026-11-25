@@ -1574,11 +1574,13 @@ en:
       failed: "The change couldn't be made."
       enabled: "AI apps can now build themes on this site. Connect an app to the MCP server to start."
       enabled_except_blocked: "The rest is turned on, but AI apps can't build themes yet. These theme tools are blocked in an emergency: %{tools}. An administrator can unblock them under MCP capabilities: %{url}"
+      enabled_except_restricted: "The rest is turned on, but AI apps can't build themes yet. The site's AI content restrictions turn off these theme tools: %{tools}. An administrator can change them under MCP content restrictions: %{url}"
       "on": "On"
       "off": "Off"
       none: "none"
       request_placeholder: "(describe what you want)"
       blocked_tool: "%{tool} is blocked in an emergency. An administrator can unblock it under MCP capabilities: %{url}"
+      restricted_tool: "%{tool} is turned off by the site's AI content restrictions. An administrator can change them under MCP content restrictions: %{url}"
       changes:
         server: "MCP server"
         tools: "Tools apps can use"

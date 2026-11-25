@@ -193,6 +193,7 @@ module DiscourseMcp
 
     class SourceVersion
       REQUIRED_SCOPES = [Scopes::REPOSITORY_READ].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA = OutputSchema.object(source: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
@@ -203,6 +204,7 @@ module DiscourseMcp
 
     class ReadSource
       REQUIRED_SCOPES = [Scopes::REPOSITORY_READ].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA =
         OutputSchema.object(
           source: OutputSchema::OBJECT,
@@ -250,6 +252,7 @@ module DiscourseMcp
 
     class SearchSource
       REQUIRED_SCOPES = [Scopes::REPOSITORY_READ].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA =
         OutputSchema.object(
           source: OutputSchema::OBJECT,

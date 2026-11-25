@@ -4,6 +4,13 @@ module DiscourseReactions
   module McpTools
     class SetReaction
       REQUIRED_SCOPES = %w[discourse-reactions:write].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           post_id: DiscourseMcp::OutputSchema::INTEGER,

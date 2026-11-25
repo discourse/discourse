@@ -100,6 +100,13 @@ module DiscourseMcp
 
     class SearchTagGroups
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           results: {
@@ -132,6 +139,13 @@ module DiscourseMcp
 
     class ListTagGroups
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           tag_groups: {
@@ -160,6 +174,13 @@ module DiscourseMcp
 
     class GetTagGroup
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(tag_group: TagGroupSupport::GROUP_SCHEMA)
 
       def self.call(arguments:, request_context:)
@@ -172,6 +193,13 @@ module DiscourseMcp
 
     class CreateTagGroup
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = GetTagGroup::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -185,6 +213,13 @@ module DiscourseMcp
 
     class UpdateTagGroup
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = GetTagGroup::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -201,6 +236,13 @@ module DiscourseMcp
 
     class DeleteTagGroup
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(deleted: OutputSchema::BOOLEAN, tag_group_id: OutputSchema::INTEGER)
 

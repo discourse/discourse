@@ -4,6 +4,13 @@ module DiscourseTopicVoting
   module McpTools
     class SetVote
       REQUIRED_SCOPES = %w[discourse-topic-voting:write].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           topic_id: DiscourseMcp::OutputSchema::INTEGER,
@@ -11,6 +18,11 @@ module DiscourseTopicVoting
         )
 
       def self.call(arguments:, request_context:)
+        DiscourseMcp::ToolHelpers.visible_topic!(
+          arguments.fetch("topic_id"),
+          request_context,
+          access: :write,
+        )
         service =
           (
             if arguments.fetch("voted")

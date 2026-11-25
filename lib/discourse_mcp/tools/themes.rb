@@ -189,6 +189,13 @@ module DiscourseMcp
 
     class SetThemeCode
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(theme: OutputSchema::OBJECT, verification: OutputSchema::OBJECT)
       JAVASCRIPT_NAME = "discourse/api-initializers/mcp-theme-code.js"
@@ -263,6 +270,13 @@ module DiscourseMcp
 
     class GetTheme
       REQUIRED_SCOPES = [Scopes::THEMES_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(theme: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
@@ -276,6 +290,13 @@ module DiscourseMcp
 
     class CreateTheme
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(theme: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
@@ -304,6 +325,13 @@ module DiscourseMcp
 
     class UpdateTheme
       REQUIRED_SCOPES = [Scopes::THEMES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(theme: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)

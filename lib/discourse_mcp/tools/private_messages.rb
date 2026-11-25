@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class ListPrivateMessages
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MAILBOXES = %w[inbox sent archive unread new].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -142,6 +149,13 @@ module DiscourseMcp
 
     class ReadPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -215,6 +229,13 @@ module DiscourseMcp
 
     class CreatePrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -272,6 +293,13 @@ module DiscourseMcp
 
     class ReplyPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -307,6 +335,13 @@ module DiscourseMcp
 
     class InviteToPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[group notifications_requested user participant_added outcome_confirmed],

@@ -1157,6 +1157,7 @@ after_initialize do
     title: "List events",
     description: "Lists upcoming events whose posts are visible to the authenticated user.",
     implementation: DiscourseEvents::McpTools::ListEvents,
+    content: DiscourseEvents::McpTools::ListEvents::CONTENT,
     input_schema: {
       type: "object",
       properties: {

@@ -6,16 +6,26 @@ module DiscourseMcp
       @request_context = request_context
     end
 
+    # The primitives this request can use: exposed by the admin, allowed by the
+    # content policy and covered by the request's scopes.
     def list(kind)
-      exposed(kind).select { |primitive| request_context.has_scopes?(primitive.required_scopes) }
+      exposed(kind).select do |primitive|
+        usable?(primitive) && request_context.has_scopes?(primitive.required_scopes)
+      end
     end
 
     def find(kind, identifier)
       list(kind).find { |primitive| primitive.identifier == identifier.to_s }
     end
 
+    # Ignores the content policy and scopes, so callers can tell a blocked
+    # primitive apart from an unknown one.
     def find_exposed(kind, identifier)
       exposed(kind).find { |primitive| primitive.identifier == identifier.to_s }
+    end
+
+    def usable?(primitive)
+      request_context.content_policy.allows_primitive?(primitive)
     end
 
     private

@@ -10,7 +10,12 @@ describe DiscourseMcp::Tools::UpdateTheme do
   def invoke(arguments = {}, actor: admin, **fields)
     described_class.call(
       arguments: { "theme_id" => theme.id }.merge(arguments).merge(fields),
-      request_context: instance_double(DiscourseMcp::RequestContext, guardian: actor.guardian),
+      request_context:
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          guardian: actor.guardian,
+        ),
     )[
       :structuredContent
     ][

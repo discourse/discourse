@@ -79,6 +79,13 @@ module DiscourseMcp
 
     class CreateCategory
       REQUIRED_SCOPES = [Scopes::CATEGORIES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MAX_NAME_LENGTH = 50
       MAX_DESCRIPTION_LENGTH = CategoryCreator::MAX_DESCRIPTION_LENGTH
       MAX_STYLE_VALUE_LENGTH = 100
@@ -110,6 +117,13 @@ module DiscourseMcp
 
     class GetCategory
       REQUIRED_SCOPES = [Scopes::CATEGORIES_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(category: CategorySupport::CATEGORY_SCHEMA)
 
       def self.call(arguments:, request_context:)
@@ -122,6 +136,13 @@ module DiscourseMcp
 
     class UpdateCategory
       REQUIRED_SCOPES = [Scopes::CATEGORIES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MAX_NAME_LENGTH = CreateCategory::MAX_NAME_LENGTH
       MAX_DESCRIPTION_LENGTH = CategoryUpdater::MAX_DESCRIPTION_LENGTH
       MAX_STYLE_VALUE_LENGTH = CreateCategory::MAX_STYLE_VALUE_LENGTH
@@ -146,6 +167,13 @@ module DiscourseMcp
 
     class DeleteCategory
       REQUIRED_SCOPES = [Scopes::CATEGORIES_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(deleted: OutputSchema::BOOLEAN, category_id: OutputSchema::INTEGER)
 

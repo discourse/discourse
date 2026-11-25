@@ -121,11 +121,26 @@ module DiscourseMcp
         }
       end
 
-      def group_detail_json(group, guardian)
+      # Whether a group has personal messages, and how many, describes those
+      # messages, so both are left out while agent access to them is off.
+      PRIVATE_MESSAGE_FIELDS = %i[has_messages message_count].freeze
+
+      def group_detail_json(group, request_context)
+        fields = SAFE_DETAIL_FIELDS
+        fields -= PRIVATE_MESSAGE_FIELDS if ToolHelpers.private_messages_denied?(request_context)
+
         GroupShowSerializer
-          .new(group, scope: guardian, root: false)
+          .new(group, scope: request_context.guardian, root: false)
           .as_json
-          .slice(*SAFE_DETAIL_FIELDS)
+          .slice(*fields)
+      end
+
+      # Membership requests and their reasons become personal messages, so agents
+      # can't make or act on them while agent access to personal messages is off.
+      def ensure_private_messages_allowed!(request_context)
+        return if !ToolHelpers.private_messages_denied?(request_context)
+
+        raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
       end
 
       def filter_users(users, filter, guardian)
@@ -142,6 +157,13 @@ module DiscourseMcp
 
     class ListGroups
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(groups: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -200,18 +222,32 @@ module DiscourseMcp
 
     class GetGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(group: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)
         group = GroupSupport.find_visible!(arguments, request_context.guardian)
         ToolHelpers.text_and_structured(
-          group: GroupSupport.group_detail_json(group, request_context.guardian),
+          group: GroupSupport.group_detail_json(group, request_context),
         )
       end
     end
 
     class ListGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(members: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -268,6 +304,13 @@ module DiscourseMcp
 
     class ListGroupMembershipRequests
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(requests: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -296,7 +339,8 @@ module DiscourseMcp
                 user_id: request.user_id,
                 username: request.user.username,
                 name: SiteSetting.enable_names? ? request.user.name : nil,
-                reason: request.reason,
+                # The reason is the body of the request's personal message.
+                reason: request_context.content_policy.active? ? nil : request.reason,
                 requested_at: request.created_at.iso8601,
               }
             end,
@@ -312,6 +356,13 @@ module DiscourseMcp
 
     class CreateGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       # The MCP registry is built before app models are loadable, so these
       # mirror Group.visibility_levels, Group::ALIAS_LEVELS and
       # GroupUser.notification_levels. A spec guards them against drift.
@@ -358,6 +409,13 @@ module DiscourseMcp
 
     class UpdateGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MAX_NAME_LENGTH = CreateGroup::MAX_NAME_LENGTH
       MAX_BIO_LENGTH = CreateGroup::MAX_BIO_LENGTH
       MAX_TEMPLATE_LENGTH = CreateGroup::MAX_TEMPLATE_LENGTH
@@ -383,7 +441,7 @@ module DiscourseMcp
         end
 
         ToolHelpers.text_and_structured(
-          group: GroupSupport.group_detail_json(group.reload, guardian),
+          group: GroupSupport.group_detail_json(group.reload, request_context),
         )
       rescue GroupUpdater::ExistingUsersConfirmationRequired => error
         raise ToolError,
@@ -393,6 +451,13 @@ module DiscourseMcp
 
     class DeleteGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(deleted: OutputSchema::BOOLEAN, group_id: OutputSchema::INTEGER)
 
@@ -418,6 +483,13 @@ module DiscourseMcp
 
     class ManageGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTIONS = %w[add remove].freeze
       MAX_SELECTED_USERS = 100
       OUTPUT_SCHEMA =
@@ -464,6 +536,13 @@ module DiscourseMcp
 
     class InviteGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MAX_EMAILS = 50
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -499,6 +578,13 @@ module DiscourseMcp
 
     class ManageGroupOwners
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTIONS = %w[add remove].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -533,6 +619,13 @@ module DiscourseMcp
 
     class ManageGroupMembership
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTIONS = %w[join leave request].freeze
       MAX_REASON_LENGTH = 1_000
       OUTPUT_SCHEMA =
@@ -559,6 +652,7 @@ module DiscourseMcp
           else
             reason = arguments["reason"].to_s.strip
             raise ToolError, I18n.t("mcp.errors.group_request_reason_required") if reason.blank?
+            GroupSupport.ensure_private_messages_allowed!(request_context)
 
             topic_id = GroupMembershipRequester.request(guardian, group, reason).topic_id
             true
@@ -578,6 +672,13 @@ module DiscourseMcp
 
     class HandleGroupMembershipRequest
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTIONS = %w[approve deny].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -591,6 +692,7 @@ module DiscourseMcp
         guardian = request_context.guardian
         group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
         guardian.ensure_can_edit!(group)
+        GroupSupport.ensure_private_messages_allowed!(request_context)
 
         user = User.find_by_username(arguments.fetch("username"))
         raise ToolError, I18n.t("mcp.errors.user_not_found") if user.blank?
@@ -613,6 +715,13 @@ module DiscourseMcp
 
     class ListGroupPosts
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 

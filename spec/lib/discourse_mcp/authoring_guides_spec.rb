@@ -28,7 +28,11 @@ RSpec.describe DiscourseMcp::Tools do
   before { Rails.stubs(:root).returns(@root) }
 
   def request_context(user)
-    instance_double(DiscourseMcp::RequestContext, guardian: user.guardian)
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: user.guardian,
+    )
   end
 
   describe ".call" do

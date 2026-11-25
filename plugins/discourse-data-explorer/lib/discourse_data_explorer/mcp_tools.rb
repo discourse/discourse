@@ -39,6 +39,7 @@ module DiscourseDataExplorer
 
     class GetQuery
       REQUIRED_SCOPES = [READ_SCOPE].freeze
+      CONTENT = :none
       PARAMETER_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           identifier: DiscourseMcp::OutputSchema::STRING,
@@ -84,6 +85,8 @@ module DiscourseDataExplorer
 
     class RunQuery
       REQUIRED_SCOPES = [READ_SCOPE].freeze
+      # Runs arbitrary SQL, so no content rule can be enforced on it.
+      CONTENT = :unbounded
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           optional: %w[explain relations],

@@ -176,6 +176,13 @@ module DiscourseMcp
 
     class ListSiteSettings
       REQUIRED_SCOPES = [Scopes::SITE_SETTINGS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(site_settings: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -212,6 +219,13 @@ module DiscourseMcp
 
     class UpdateSiteSetting
       REQUIRED_SCOPES = [Scopes::SITE_SETTINGS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           updated: OutputSchema::BOOLEAN,

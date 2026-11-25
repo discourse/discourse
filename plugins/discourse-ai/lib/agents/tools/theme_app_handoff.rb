@@ -106,13 +106,23 @@ module DiscourseAi
         end
 
         def blocked_tools
-          McpThemeAccess.blocked_theme_tool_ids.map do |primitive_id|
-            I18n.t(
-              "discourse_ai.mcp_theme_access.blocked_tool",
-              tool: McpThemeAccess.tool_title(primitive_id),
-              url: "#{Discourse.base_url}/admin/config/mcp/capabilities",
-            )
-          end
+          blocked =
+            McpThemeAccess.blocked_theme_tool_ids.map do |primitive_id|
+              I18n.t(
+                "discourse_ai.mcp_theme_access.blocked_tool",
+                tool: McpThemeAccess.tool_title(primitive_id),
+                url: "#{Discourse.base_url}/admin/config/mcp/capabilities",
+              )
+            end
+          restricted =
+            McpThemeAccess.restricted_theme_tool_ids.map do |primitive_id|
+              I18n.t(
+                "discourse_ai.mcp_theme_access.restricted_tool",
+                tool: McpThemeAccess.tool_title(primitive_id),
+                url: "#{Discourse.base_url}/admin/config/mcp/content-restrictions",
+              )
+            end
+          blocked + restricted
         end
 
         def starter_message

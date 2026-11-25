@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class ReadTopicPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       SELECTION_KEYS = {
         "latest" => %w[limit replies_only],
         "earliest" => %w[limit replies_only],
@@ -26,7 +33,12 @@ module DiscourseMcp
         if topic.blank? || !guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :read,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
 
         selection_mode = arguments.fetch("selection_mode")
         limit = arguments.fetch("limit", 20)
@@ -140,6 +152,13 @@ module DiscourseMcp
 
     class GetPostReplies
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       DIRECT_REPLIES_LIMIT = 20
       MODES = %w[reply_ids direct_replies reply_history].freeze
       OUTPUT_SCHEMA =
@@ -257,6 +276,13 @@ module DiscourseMcp
 
     class ListLatestPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -302,6 +328,13 @@ module DiscourseMcp
 
     class GetTopicViewStats
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -314,7 +347,12 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :read,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
 
         from = arguments["from"] ? parse_date(arguments["from"]) : 30.days.ago.to_date
         to = arguments["to"] ? parse_date(arguments["to"]) : Date.current
@@ -350,6 +388,13 @@ module DiscourseMcp
 
     class GetTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -372,7 +417,12 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :read,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
 
         limit = arguments.fetch("post_limit", 5)
         start_post_number = arguments.fetch("start_post_number", 1)
@@ -403,6 +453,13 @@ module DiscourseMcp
 
     class GetPost
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[accepted_answer topic_accepted_answer],
@@ -439,6 +496,13 @@ module DiscourseMcp
 
     class ListTopics
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -457,6 +521,13 @@ module DiscourseMcp
 
     class ListCategories
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(categories: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
@@ -478,11 +549,23 @@ module DiscourseMcp
 
     class ListTags
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(tags: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
         column = Tag.topic_count_column(request_context.guardian)
-        tags = Tag.order(column => :desc).limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
+        tags = Tag.order(column => :desc)
+        # A tag only personal messages use would reveal that those messages exist.
+        if ToolHelpers.private_messages_denied?(request_context)
+          tags = tags.where("NOT (tags.pm_topic_count > 0 AND tags.#{column} = 0)")
+        end
+        tags = tags.limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
         visible = DiscourseTagging.filter_visible(tags, request_context.guardian)
         ToolHelpers.text_and_structured(
           tags:

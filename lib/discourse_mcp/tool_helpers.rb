@@ -142,18 +142,54 @@ module DiscourseMcp
       topic = Topic.with_deleted.find_by(id: post&.topic_id)
       post.association(:topic).target = topic if post && topic
 
+      not_found = I18n.t("mcp.errors.post_not_found")
       if post.blank? || topic.blank? || !guardian.can_see?(topic) || !guardian.can_see?(post)
-        raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
+        raise DiscourseMcp::ToolError, not_found
       end
 
-      ensure_private_message_scope!(topic, request_context, access:)
+      ensure_private_message_scope!(topic, request_context, access:, not_found:)
       post
     end
 
-    def ensure_private_message_scope!(topic, request_context, access:)
+    # Finds a topic the request may use, answering exactly like a missing topic
+    # when Guardian or the personal-message policy hides it.
+    #
+    # @param access [Symbol] :read or :write, for the personal-message scope.
+    # @returns [Topic]
+    def visible_topic!(topic_id, request_context, access: :read)
+      topic = Topic.find_by(id: topic_id)
+      not_found = I18n.t("mcp.errors.topic_not_found")
+      raise ToolError, not_found if topic.blank? || !request_context.guardian.can_see?(topic)
+
+      ensure_private_message_scope!(topic, request_context, access:, not_found:)
+      topic
+    end
+
+    # Requires the personal-message scope for a personal message. When the
+    # content policy turned agent access to personal messages off, the caller's
+    # not-found error is raised instead, so the message looks like it doesn't exist.
+    #
+    # @param not_found [String] The caller's not-found message.
+    def ensure_private_message_scope!(topic, request_context, access:, not_found:)
       return unless topic.private_message?
 
-      request_context.ensure_scopes!("mcp:private-messages:#{access}")
+      request_context.ensure_scopes!("mcp:private-messages:#{access}", not_found:)
+    end
+
+    # @returns [Boolean] Whether the content policy denies agents every personal message.
+    def private_messages_denied?(request_context)
+      request_context.content_policy.denies_all?(ContentPolicy::PRIVATE_MESSAGES)
+    end
+
+    def private_message_draft?(draft_key, action: nil, archetype: nil)
+      topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+
+      draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) || action == PRIVATE_MESSAGE_DRAFT_ACTION ||
+        archetype == Archetype.private_message ||
+        (
+          topic_id.present? &&
+            Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
+        )
     end
 
     def ensure_private_message_draft_scope!(
@@ -161,22 +197,15 @@ module DiscourseMcp
       request_context,
       access:,
       action: nil,
-      archetype: nil
+      archetype: nil,
+      not_found: nil
     )
-      topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
-      private_message_draft =
-        draft_key.start_with?(Draft::NEW_PRIVATE_MESSAGE) ||
-          action == PRIVATE_MESSAGE_DRAFT_ACTION || archetype == Archetype.private_message ||
-          (
-            topic_id &&
-              Topic.with_deleted.exists?(id: topic_id.to_i, archetype: Archetype.private_message)
-          )
-      return if !private_message_draft
+      return if !private_message_draft?(draft_key, action:, archetype:)
 
-      request_context.ensure_scopes!("mcp:private-messages:#{access}")
+      request_context.ensure_scopes!("mcp:private-messages:#{access}", not_found:)
     end
 
-    def ensure_private_message_stored_draft_scope!(draft, request_context, access:)
+    def ensure_private_message_stored_draft_scope!(draft, request_context, access:, not_found: nil)
       return if draft.blank?
 
       ensure_private_message_draft_scope!(
@@ -185,7 +214,52 @@ module DiscourseMcp
         access:,
         action: draft_action(draft),
         archetype: draft_archetype(draft),
+        not_found:,
       )
+    end
+
+    # While agent access to personal messages is off, a draft keyed to a topic
+    # can only be written while that topic exists and is visible, so a personal
+    # message's draft key answers like a missing topic's.
+    #
+    # @returns [String, nil] The not-found message for a topic key, or nil when
+    #   the key doesn't name a topic or personal messages aren't denied.
+    def ensure_draft_topic!(draft_key, request_context)
+      return if !private_messages_denied?(request_context)
+
+      topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+      return if topic_id.blank?
+
+      not_found = I18n.t("mcp.errors.topic_not_found")
+      topic = Topic.with_deleted.find_by(id: topic_id.to_i)
+      raise ToolError, not_found if topic.blank? || !request_context.guardian.can_see?(topic)
+
+      not_found
+    end
+
+    # While any content rule is active, a tool can't point at an upload that
+    # already exists, because the upload may belong to restricted content and
+    # nothing yet ties it to what this authorization uploaded.
+    #
+    # @param references [Array<Object>] Upload ids or upload URLs from the arguments.
+    def ensure_no_upload_references!(request_context, *references)
+      return if !request_context.content_policy.active? || references.all?(&:blank?)
+
+      raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+    end
+
+    # Drops bookmarks on personal messages and their posts, deleted ones included.
+    #
+    # @param bookmarks [ActiveRecord::Relation<Bookmark>]
+    # @returns [ActiveRecord::Relation<Bookmark>]
+    def without_private_message_bookmarks(bookmarks)
+      private_topic_ids = Topic.with_deleted.where(archetype: Archetype.private_message).select(:id)
+      bookmarks
+        .where.not(bookmarkable_type: "Topic", bookmarkable_id: private_topic_ids)
+        .where.not(
+          bookmarkable_type: "Post",
+          bookmarkable_id: Post.with_deleted.where(topic_id: private_topic_ids).select(:id),
+        )
     end
 
     def draft_action(draft)

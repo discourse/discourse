@@ -451,6 +451,7 @@ after_initialize do
     title: "Set post reaction",
     description: "Adds, changes, or removes the authenticated user's reaction to a visible post.",
     implementation: DiscourseReactions::McpTools::SetReaction,
+    content: DiscourseReactions::McpTools::SetReaction::CONTENT,
     input_schema: {
       type: "object",
       properties: {

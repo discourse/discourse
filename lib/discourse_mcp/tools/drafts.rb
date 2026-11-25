@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class GetDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[sequence data],
@@ -16,6 +23,11 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
+        absent = ToolHelpers.text_and_structured(draft_key:, found: false)
+        # While agent access to personal messages is off, a personal-message
+        # draft reads exactly like a missing one.
+        private_messages_denied = ToolHelpers.private_messages_denied?(request_context)
+        return absent if private_messages_denied && ToolHelpers.private_message_draft?(draft_key)
         ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :read)
 
         sequence =
@@ -26,10 +38,18 @@ module DiscourseMcp
           end
         draft = Draft.get(user, draft_key, sequence)
 
-        return ToolHelpers.text_and_structured(draft_key:, found: false) if draft.blank?
+        return absent if draft.blank?
 
         parsed = JSON.parse(draft)
         parsed = {} if !parsed.is_a?(Hash)
+        if private_messages_denied &&
+             ToolHelpers.private_message_draft?(
+               draft_key,
+               action: parsed["action"],
+               archetype: parsed["archetypeId"],
+             )
+          return absent
+        end
         ToolHelpers.ensure_private_message_draft_scope!(
           draft_key,
           request_context,
@@ -70,6 +90,13 @@ module DiscourseMcp
 
     class SaveDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           draft_key: OutputSchema::STRING,
@@ -81,16 +108,19 @@ module DiscourseMcp
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
         action = arguments["action"] || default_action(draft_key)
+        not_found = ToolHelpers.ensure_draft_topic!(draft_key, request_context)
         ToolHelpers.ensure_private_message_draft_scope!(
           draft_key,
           request_context,
           access: :write,
           action:,
+          not_found:,
         )
         ToolHelpers.ensure_private_message_stored_draft_scope!(
           Draft.find_by(user_id: user.id, draft_key:),
           request_context,
           access: :write,
+          not_found:,
         )
 
         if !Draft.exists?(user_id: user.id, draft_key:) &&
@@ -129,17 +159,31 @@ module DiscourseMcp
 
     class DeleteDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(draft_key: OutputSchema::STRING, deleted: OutputSchema::BOOLEAN)
 
       def self.call(arguments:, request_context:)
         user = request_context.user or raise Discourse::InvalidAccess
         draft_key = arguments.fetch("draft_key")
-        ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :write)
+        not_found = ToolHelpers.ensure_draft_topic!(draft_key, request_context)
+        ToolHelpers.ensure_private_message_draft_scope!(
+          draft_key,
+          request_context,
+          access: :write,
+          not_found:,
+        )
         ToolHelpers.ensure_private_message_stored_draft_scope!(
           Draft.find_by(user_id: user.id, draft_key:),
           request_context,
           access: :write,
+          not_found:,
         )
         Draft.clear(user, draft_key, arguments.fetch("sequence"))
         ToolHelpers.text_and_structured(draft_key:, deleted: true)

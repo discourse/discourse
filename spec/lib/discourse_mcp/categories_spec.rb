@@ -2,7 +2,13 @@
 
 describe DiscourseMcp::Tools::CreateCategory do
   fab!(:admin)
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: admin.guardian) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: admin.guardian,
+    )
+  end
 
   describe ".call" do
     it "stores canonical emoji names on creation and update" do

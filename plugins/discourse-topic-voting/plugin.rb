@@ -267,6 +267,7 @@ after_initialize do
     title: "Set topic vote",
     description: "Casts or removes the authenticated user's vote on a visible votable topic.",
     implementation: DiscourseTopicVoting::McpTools::SetVote,
+    content: DiscourseTopicVoting::McpTools::SetVote::CONTENT,
     input_schema: {
       type: "object",
       properties: {

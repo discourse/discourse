@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class SetTopicClosed
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -17,7 +24,12 @@ module DiscourseMcp
         unless topic && guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :write,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
         guardian.ensure_can_close_topic!(topic)
         closed = arguments.fetch("closed")
         raise Discourse::InvalidParameters.new(:closed) if [true, false].exclude?(closed)
@@ -34,6 +46,13 @@ module DiscourseMcp
 
     class SetTopicPin
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           topic_id: OutputSchema::INTEGER,
@@ -48,7 +67,12 @@ module DiscourseMcp
         unless topic && guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :write,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
         mode = arguments.fetch("mode")
         raise Discourse::InvalidParameters.new(:mode) if %w[category global unpin].exclude?(mode)
         if mode == "global"
@@ -74,6 +98,13 @@ module DiscourseMcp
 
     class CreateTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           queued: OutputSchema::BOOLEAN,
@@ -124,6 +155,13 @@ module DiscourseMcp
 
     class ReplyTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           queued: OutputSchema::BOOLEAN,
@@ -142,7 +180,12 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :write,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
         submission =
           ToolHelpers.submit_post!(
             user,
@@ -170,6 +213,13 @@ module DiscourseMcp
 
     class EditPost
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -186,7 +236,12 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
         end
 
-        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :write)
+        ToolHelpers.ensure_private_message_scope!(
+          post.topic,
+          request_context,
+          access: :write,
+          not_found: I18n.t("mcp.errors.post_not_found"),
+        )
         fields = { raw: arguments.fetch("raw") }
         fields[:edit_reason] = arguments["edit_reason"] if arguments["edit_reason"].present?
         success = PostRevisor.new(post, post.topic).revise!(request_context.user, fields)
@@ -205,6 +260,13 @@ module DiscourseMcp
 
     class UpdateTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       MUTABLE_FIELDS = %w[title category_id tags featured_link].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -219,8 +281,13 @@ module DiscourseMcp
         raise ToolError, I18n.t("mcp.errors.topic_not_found") if topic.blank?
 
         guardian = request_context.guardian
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :write,
+          not_found: I18n.t("mcp.errors.topic_not_found"),
+        )
         guardian.ensure_can_edit!(topic)
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :write)
         verify_original_values!(topic, arguments, guardian)
         changes = requested_changes(topic, arguments, guardian)
         shared_draft = topic.shared_draft
@@ -314,6 +381,13 @@ module DiscourseMcp
 
     class SetPostDeleted
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(post_id: OutputSchema::INTEGER, deleted: OutputSchema::BOOLEAN)
 
@@ -322,6 +396,12 @@ module DiscourseMcp
         post = posts.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
         raise DiscourseMcp::ToolError, "Post not found" if post.blank?
         post.topic ||= Topic.with_deleted.find_by(id: post.topic_id)
+        ToolHelpers.ensure_private_message_scope!(
+          post.topic,
+          request_context,
+          access: :write,
+          not_found: "Post not found",
+        )
 
         if arguments.fetch("deleted")
           if !request_context.guardian.can_delete_post_or_topic?(post)
@@ -330,7 +410,6 @@ module DiscourseMcp
         else
           raise Discourse::InvalidAccess if !request_context.guardian.can_recover_post?(post)
         end
-        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :write)
 
         if arguments.fetch("deleted")
           PostDestroyer.new(request_context.user, post).destroy

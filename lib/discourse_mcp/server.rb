@@ -35,6 +35,7 @@ module DiscourseMcp
 
       Response.new(http_status: 200, body: success(id, result), headers: {})
     rescue DiscourseMcp::Error => error
+      @content_policy_blocked = error.is_a?(ContentPolicyBlocked)
       Response.new(
         http_status: error.http_status,
         body: failure(payload&.dig("id"), error),
@@ -62,6 +63,14 @@ module DiscourseMcp
       duration_ms = ((Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at) * 1000).round
       tool_error =
         mcp_response.body&.dig(:result, :isError) || mcp_response.body&.dig("result", "isError")
+      outcome =
+        if @content_policy_blocked
+          "content_policy_blocked"
+        elsif mcp_response.http_status < 400 && !tool_error
+          "success"
+        else
+          "error"
+        end
       McpAuditLog.create!(
         occurred_at: Time.zone.now,
         user_id: request_context.user_id,
@@ -69,7 +78,7 @@ module DiscourseMcp
         request_id: payload["id"].to_s.presence,
         method: payload["method"],
         tool: payload.dig("params", "name").to_s.first(255),
-        outcome: mcp_response.http_status < 400 && !tool_error ? "success" : "error",
+        outcome:,
         http_status: mcp_response.http_status,
         duration_ms: duration_ms,
       )
@@ -304,6 +313,7 @@ module DiscourseMcp
       uri = params["uri"].to_s
       resource = catalog.find_exposed(:resource_template, resource_identifier(uri))
       raise Error.new("Resource not found", code: -32_602) if resource.blank?
+      ensure_usable!(resource)
       ensure_scopes!(resource)
 
       content = resource.implementation.call(uri: uri, request_context: request_context)
@@ -432,8 +442,15 @@ module DiscourseMcp
       primitive = catalog.find_exposed(kind, identifier)
       raise Error.new(not_found_message, code: -32_602) if primitive.blank?
 
+      ensure_usable!(primitive)
       ensure_scopes!(primitive)
       primitive
+    end
+
+    # Runs before the scope check, so a blocked primitive never gets a
+    # WWW-Authenticate challenge that authorizing again couldn't satisfy.
+    def ensure_usable!(primitive)
+      raise ContentPolicyBlocked if !catalog.usable?(primitive)
     end
 
     def ensure_scopes!(primitive)

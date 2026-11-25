@@ -4,6 +4,13 @@ module DiscourseSolved
   module McpTools
     class SetSolution
       REQUIRED_SCOPES = %w[discourse-solved:write].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           post_id: DiscourseMcp::OutputSchema::INTEGER,
@@ -11,6 +18,11 @@ module DiscourseSolved
         )
 
       def self.call(arguments:, request_context:)
+        DiscourseMcp::ToolHelpers.visible_post!(
+          arguments.fetch("post_id"),
+          request_context,
+          access: :write,
+        )
         service =
           (
             if arguments.fetch("accepted")

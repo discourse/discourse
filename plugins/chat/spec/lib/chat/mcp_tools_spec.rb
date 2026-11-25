@@ -11,7 +11,12 @@ describe Chat::McpTools::ListMessages do
   end
 
   let(:request_context) do
-    instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      user:,
+      guardian: user.guardian,
+    )
   end
 
   before do

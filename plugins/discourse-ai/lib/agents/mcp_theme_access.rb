@@ -68,6 +68,17 @@ module DiscourseAi
         end
       end
 
+      # Theme tools the site's MCP content restrictions turn off. They stay off
+      # whatever is enabled, until an administrator changes the restrictions.
+      def self.restricted_theme_tool_ids
+        content_policy = DiscourseMcp::ContentPolicy.load
+        THEME_TOOL_IDS.select do |primitive_id|
+          kind, identifier = primitive_id.split(":", 2)
+          primitive = DiscourseMcp.registry.find(kind, identifier)
+          primitive.present? && !DiscourseMcp.primitive_usable?(primitive, content_policy:)
+        end
+      end
+
       # Until access rules are saved for administrators, they get every scope,
       # so that's what they have. Reading this never saves any rules; only an
       # approved enable! does.
@@ -92,7 +103,7 @@ module DiscourseAi
       end
 
       def self.ready?
-        changes.empty? && blocked_theme_tool_ids.empty?
+        changes.empty? && blocked_theme_tool_ids.empty? && restricted_theme_tool_ids.empty?
       end
 
       # Turns on the MCP server, lets apps use the theme tools and gives

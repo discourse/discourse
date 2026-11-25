@@ -4,6 +4,13 @@ module DiscourseEvents
   module McpTools
     class ListEvents
       REQUIRED_SCOPES = %w[discourse-calendar:read].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         DiscourseMcp::OutputSchema.object(
           events: {

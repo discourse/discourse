@@ -42,6 +42,7 @@ module DiscourseMcp
 
     class ListAuthoringGuides
       REQUIRED_SCOPES = [Scopes::REPOSITORY_READ].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA =
         OutputSchema.object(
           skills: OutputSchema::OBJECT_ARRAY,
@@ -84,6 +85,7 @@ module DiscourseMcp
 
     class ReadAuthoringGuide
       REQUIRED_SCOPES = [Scopes::REPOSITORY_READ].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA =
         OutputSchema.object(
           path: OutputSchema::STRING,

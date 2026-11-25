@@ -39,6 +39,7 @@ module DiscourseMcp
         implementation:,
         output_schema: implementation::OUTPUT_SCHEMA,
         required_scopes: implementation::REQUIRED_SCOPES,
+        content: implementation::CONTENT,
         **attributes,
       )
     end
@@ -48,6 +49,7 @@ module DiscourseMcp
         identifier,
         implementation:,
         required_scopes: implementation::REQUIRED_SCOPES,
+        content: implementation::CONTENT,
         **attributes,
       )
     end
@@ -57,12 +59,14 @@ module DiscourseMcp
         identifier,
         implementation:,
         required_scopes: implementation::REQUIRED_SCOPES,
+        content: implementation::CONTENT,
         **attributes,
       )
     end
 
     def register!
       registry = DiscourseMcp.registry
+      register_content_kinds(registry)
       register_read_tools(registry)
       register_write_tools(registry)
       register_moderation_tools(registry)
@@ -79,6 +83,30 @@ module DiscourseMcp
       register_user_administration_tools(registry)
       register_resources(registry)
       register_prompts(registry)
+    end
+
+    # The data kinds every primitive declares, and the rule that turns agent
+    # access to personal messages off. While that rule's row exists, the
+    # personal-message scopes are dropped from every request.
+    def register_content_kinds(registry)
+      %w[topics categories tags exit_paths].each do |name|
+        registry.register_content_data_kind(name, provider: Registry::CORE_PROVIDER)
+      end
+      registry.register_content_data_kind(
+        ContentPolicy::PRIVATE_MESSAGES,
+        provider: Registry::CORE_PROVIDER,
+        scopes: [Scopes::PRIVATE_MESSAGES_READ, Scopes::PRIVATE_MESSAGES_WRITE],
+      )
+      registry.register_content_rule_kind(
+        ContentPolicy::PRIVATE_MESSAGES,
+        provider: Registry::CORE_PROVIDER,
+        affected_data_kinds: [ContentPolicy::PRIVATE_MESSAGES],
+        config_contract: {
+          type: "object",
+          additionalProperties: false,
+        },
+        compile: ->(_config) { ContentPolicy::DENY_ALL },
+      )
     end
 
     def register_source_tools(registry)
@@ -3437,6 +3465,13 @@ module DiscourseMcp
   module Resources
     class Topic
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
 
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://topic/").to_i
@@ -3444,7 +3479,12 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Resource not found"
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :read,
+          not_found: "Resource not found",
+        )
         {
           uri: uri,
           mimeType: "application/json",
@@ -3455,6 +3495,13 @@ module DiscourseMcp
 
     class Post
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
 
       def self.call(uri:, request_context:)
         id = uri.delete_prefix("discourse://post/").to_i
@@ -3462,7 +3509,12 @@ module DiscourseMcp
         if post.blank? || !request_context.guardian.can_see?(post)
           raise ToolError, "Resource not found"
         end
-        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          post.topic,
+          request_context,
+          access: :read,
+          not_found: "Resource not found",
+        )
         { uri: uri, mimeType: "application/json", text: JSON.generate(ToolHelpers.post_json(post)) }
       end
     end
@@ -3471,6 +3523,7 @@ module DiscourseMcp
   module Prompts
     class ResearchTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = :none
 
       def self.call(arguments:, request_context:)
         {
@@ -3491,13 +3544,25 @@ module DiscourseMcp
 
     class DraftReply
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
 
       def self.call(arguments:, request_context:)
         topic = ::Topic.find_by(id: arguments.fetch("topic_id").to_i)
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Topic not found"
         end
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access: :read,
+          not_found: "Topic not found",
+        )
         {
           description: "Draft a reply to #{topic.title}",
           messages: [

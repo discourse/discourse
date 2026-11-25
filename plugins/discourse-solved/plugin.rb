@@ -495,6 +495,7 @@ after_initialize do
     title: "Set accepted solution",
     description: "Accepts or unaccepts a post as the topic solution when permitted.",
     implementation: DiscourseSolved::McpTools::SetSolution,
+    content: DiscourseSolved::McpTools::SetSolution::CONTENT,
     input_schema: {
       type: "object",
       properties: {

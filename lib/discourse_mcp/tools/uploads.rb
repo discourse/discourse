@@ -7,6 +7,13 @@ module DiscourseMcp
   module Tools
     class UploadFile
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       UPLOAD_TYPES = %w[avatar profile_background card_background composer].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -40,21 +47,42 @@ module DiscourseMcp
           SiteSetting.max_uploads_per_minute,
           1.minute,
         ).performed!
+        # A download follows redirects, so it could fetch a restricted upload
+        # from this site.
+        if arguments["url"].present? && request_context.content_policy.active?
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
         file = uploaded_file(arguments)
-        upload =
-          UploadsController.create_upload(
-            current_user: user,
-            file:,
-            url: arguments["url"],
-            type: arguments.fetch("upload_type"),
-            for_private_message: false,
-            for_site_setting: false,
-            pasted: false,
-            is_api: true,
-            retain_hours: 0,
-          )
-        if !upload.is_a?(Upload)
-          raise ToolError, Array(upload[:errors] || upload["errors"]).join(", ")
+        upload = nil
+        Upload.transaction do
+          started_at = Time.zone.now
+          upload =
+            UploadsController.create_upload(
+              current_user: user,
+              file:,
+              url: arguments["url"],
+              type: arguments.fetch("upload_type"),
+              for_private_message: false,
+              for_site_setting: false,
+              pasted: false,
+              is_api: true,
+              retain_hours: 0,
+            )
+          if !upload.is_a?(Upload)
+            raise ToolError, Array(upload[:errors] || upload["errors"]).join(", ")
+          end
+
+          # Identical bytes return the upload that already has them, with its
+          # metadata, and that upload may belong to restricted content. Only an
+          # upload this call stored for the caller passes: deduplication loads
+          # the existing row without saving it. Raising rolls back the ownership
+          # row the deduplication added.
+          fresh =
+            upload.saved_change_to_url? && upload.user_id == user.id &&
+              upload.created_at >= started_at
+          if !fresh && request_context.content_policy.active?
+            raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+          end
         end
 
         serialized = UploadsController.serialize_upload(upload).deep_symbolize_keys

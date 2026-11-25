@@ -6,6 +6,7 @@ module DiscourseMcp
   module Tools
     class CurrentUser
       REQUIRED_SCOPES = [DiscourseMcp::INITIAL_SCOPE].freeze
+      CONTENT = :none
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -35,6 +36,13 @@ module DiscourseMcp
 
     class ListUsers
       REQUIRED_SCOPES = [Scopes::USERS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       QUERIES = %w[active new staff suspended silenced pending staged].freeze
       ORDERS = %w[created last_emailed seen username trust_level days_visited posts].freeze
       OUTPUT_SCHEMA =
@@ -105,6 +113,13 @@ module DiscourseMcp
 
     class CreateUser
       REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           created: OutputSchema::BOOLEAN,
@@ -118,6 +133,7 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
+        ToolHelpers.ensure_no_upload_references!(request_context, arguments["upload_id"])
         user = UserCreator.create(request_context.guardian, arguments)
         if !user.persisted? || user.errors.present?
           message =
@@ -143,6 +159,13 @@ module DiscourseMcp
 
     class ManageUserActivation
       REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTIONS = %w[activate approve activate_and_approve deactivate].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -193,6 +216,16 @@ module DiscourseMcp
 
     class ListDirectoryItems
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
+      # Columns that count topics viewed and posts read, personal messages
+      # included, so they're left out while agent access to them is off.
+      PRIVATE_MESSAGE_COLUMNS = %i[topics_entered posts_read].freeze
       PAGE_SIZE = ::DirectoryItemsQuery::PAGE_SIZE
       PAGE_LIMIT = ::DirectoryItemsQuery::PAGE_LIMIT
       OUTPUT_SCHEMA =
@@ -201,6 +234,12 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         unless SiteSetting.enable_user_directory?
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.user_directory_disabled")
+        end
+
+        private_messages_denied = ToolHelpers.private_messages_denied?(request_context)
+        if private_messages_denied &&
+             PRIVATE_MESSAGE_COLUMNS.include?(arguments["order"].to_s.to_sym)
+          raise DiscourseMcp::ToolError, I18n.t("mcp.errors.content_policy_blocked")
         end
 
         period = arguments.fetch("period")
@@ -231,7 +270,10 @@ module DiscourseMcp
         end
         rows =
           query_result.items.map do |item|
-            item_json(item, period_type, query_result.active_column_names)
+            row = item_json(item, period_type, query_result.active_column_names)
+            next row if !private_messages_denied
+
+            row.merge(PRIVATE_MESSAGE_COLUMNS.index_with(nil), time_read: nil)
           end
         has_more = (page + 1) * limit < query_result.total
 
@@ -279,6 +321,13 @@ module DiscourseMcp
 
     class GetUser
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           id: OutputSchema::INTEGER,
@@ -310,6 +359,13 @@ module DiscourseMcp
 
     class ListUserPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(posts: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -341,6 +397,13 @@ module DiscourseMcp
 
     class GetUserSummary
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       METRICS = %i[
         likes_given
         likes_received
@@ -354,6 +417,18 @@ module DiscourseMcp
         bookmark_count
         can_see_summary_stats
         can_see_user_actions
+      ].freeze
+      # Activity counters that reading, liking or deleting personal messages
+      # feeds, so they're left out while agent access to them is off.
+      PRIVATE_MESSAGE_METRICS = %i[
+        likes_given
+        likes_received
+        topics_entered
+        posts_read_count
+        time_read
+        recent_time_read
+        topic_count
+        post_count
       ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
@@ -388,6 +463,14 @@ module DiscourseMcp
         serialized = summary.as_json.deep_symbolize_keys
         result = { username: user.username }
         METRICS.each { |metric| result[metric] = serialized[metric] }
+        if ToolHelpers.private_messages_denied?(request_context)
+          PRIVATE_MESSAGE_METRICS.each { |metric| result[metric] = nil }
+          if !result[:bookmark_count].nil?
+            result[:bookmark_count] = BookmarkQuery
+              .new(user:, guardian:)
+              .count_all { |bookmarks| ToolHelpers.without_private_message_bookmarks(bookmarks) }
+          end
+        end
         result[:top_topics] = serialized[:topics] || []
         result[:top_replies] = serialized[:replies] || []
         result[:top_links] = serialized[:links] || []
@@ -402,6 +485,13 @@ module DiscourseMcp
 
     class ListUserActions
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       ACTION_TYPES = {
         "likes" => 1,
         "was_liked" => 2,
@@ -504,6 +594,13 @@ module DiscourseMcp
 
     class UpdateUser
       REQUIRED_SCOPES = [Scopes::PROFILE_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       PROFILE_FIELDS = %w[
         name
         bio_raw
@@ -529,6 +626,12 @@ module DiscourseMcp
         raise Discourse::InvalidAccess if user.blank? || user.id != request_context.user_id
 
         attributes = arguments.slice(*PROFILE_FIELDS).symbolize_keys
+        ToolHelpers.ensure_no_upload_references!(
+          request_context,
+          arguments["upload_id"],
+          attributes[:profile_background_upload_url],
+          attributes[:card_background_upload_url],
+        )
         upload = avatar_upload(arguments["upload_id"], user, request_context.guardian)
         if attributes.empty? && upload.blank?
           raise ToolError, I18n.t("mcp.errors.user_update_required")
@@ -586,6 +689,13 @@ module DiscourseMcp
 
     class SetUserStatus
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(success: OutputSchema::BOOLEAN)
 
       def self.call(arguments:, request_context:)

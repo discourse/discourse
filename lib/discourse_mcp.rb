@@ -49,6 +49,15 @@ module DiscourseMcp
     end
   end
 
+  # Raised when the content policy blocks a primitive, or when a call needs a
+  # scope the content policy revoked. It never carries a WWW-Authenticate
+  # challenge: authorizing again can't restore what the site policy removed.
+  class ContentPolicyBlocked < Error
+    def initialize
+      super(I18n.t("mcp.errors.content_policy_blocked"), code: -32_602)
+    end
+  end
+
   class ToolError < StandardError
   end
 
@@ -70,6 +79,16 @@ module DiscourseMcp
       @registry = Registry.new
       CorePrimitives.register!
       @registry
+    end
+
+    # Whether the site's content policy lets agents use a primitive at all.
+    #
+    # @param primitive [DiscourseMcp::Primitive]
+    # @param content_policy [DiscourseMcp::ContentPolicy, nil] A policy already
+    #   loaded for this request. A fresh one is loaded when omitted.
+    # @returns [Boolean]
+    def primitive_usable?(primitive, content_policy: nil)
+      (content_policy || ContentPolicy.load).allows_primitive?(primitive)
     end
 
     def resource_url

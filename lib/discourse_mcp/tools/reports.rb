@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class ListReports
       REQUIRED_SCOPES = [Scopes::REPORTS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           reports: {
@@ -32,6 +39,13 @@ module DiscourseMcp
       MAX_RANGE_DAYS = 366
       MAX_LIMIT = 50
       REQUIRED_SCOPES = ListReports::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(report: OutputSchema::OBJECT)
 
       def self.call(arguments:, request_context:)

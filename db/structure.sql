@@ -8502,6 +8502,39 @@ ALTER SEQUENCE public.mcp_audit_logs_id_seq OWNED BY public.mcp_audit_logs.id;
 
 
 --
+-- Name: mcp_content_rules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_content_rules (
+    id bigint NOT NULL,
+    rule_kind character varying NOT NULL,
+    config jsonb DEFAULT '{}'::jsonb NOT NULL,
+    updated_by_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_content_rules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_content_rules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_content_rules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_content_rules_id_seq OWNED BY public.mcp_content_rules.id;
+
+
+--
 -- Name: mcp_group_scopes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15980,6 +16013,13 @@ ALTER TABLE ONLY public.mcp_audit_logs ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: mcp_content_rules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_content_rules ALTER COLUMN id SET DEFAULT nextval('public.mcp_content_rules_id_seq'::regclass);
+
+
+--
 -- Name: mcp_group_scopes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18836,6 +18876,14 @@ ALTER TABLE ONLY public.llm_quotas
 
 ALTER TABLE ONLY public.mcp_audit_logs
     ADD CONSTRAINT mcp_audit_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_content_rules mcp_content_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_content_rules
+    ADD CONSTRAINT mcp_content_rules_pkey PRIMARY KEY (id);
 
 
 --
@@ -23833,6 +23881,13 @@ CREATE INDEX index_mcp_audit_logs_on_occurred_at_and_id ON public.mcp_audit_logs
 
 
 --
+-- Name: index_mcp_content_rules_on_rule_kind; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_content_rules_on_rule_kind ON public.mcp_content_rules USING btree (rule_kind);
+
+
+--
 -- Name: index_mcp_group_scopes_on_group_id_and_scope; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26961,6 +27016,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125051916'),
 ('20261124173030'),
 ('20261124170000'),
 ('20261124152608'),

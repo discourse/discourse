@@ -7,6 +7,7 @@ describe DiscourseMcp::Tools do
       user:,
       user_id: user.id,
       guardian: user.guardian,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
     ).tap do |context|
       allow(context).to receive(:has_scopes?).and_return(true)
       allow(context).to receive(:ensure_scopes!)

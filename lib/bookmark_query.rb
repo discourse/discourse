@@ -34,10 +34,16 @@ class BookmarkQuery
     @per_page = per_page ? per_page.to_i : 20
   end
 
-  def count_all
+  # Counts every bookmark the list would show.
+  #
+  # @yieldparam results [ActiveRecord::Relation] The bookmarks, to narrow before counting.
+  # @returns [Integer]
+  def count_all(&blk)
     queries = list_queries
     return 0 if queries.empty?
-    Bookmark.from("(#{queries.join(" UNION ")}) AS bookmarks").count
+    results = Bookmark.from("(#{queries.join(" UNION ")}) AS bookmarks")
+    results = blk&.call(results) || results
+    results.count
   end
 
   def list_all(&blk)

@@ -4,6 +4,13 @@ module DiscourseMcp
   module Tools
     class Search
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -32,6 +39,13 @@ module DiscourseMcp
     class FilterTopics
       TOP_PERIODS = %w[daily weekly monthly quarterly yearly all].freeze
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(results: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -100,6 +114,13 @@ module DiscourseMcp
 
     class SearchPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           posts: OutputSchema::OBJECT_ARRAY,

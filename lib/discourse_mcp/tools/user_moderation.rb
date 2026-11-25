@@ -28,6 +28,10 @@ module DiscourseMcp
         unless arguments["confirm"] == true
           raise ToolError, I18n.t("mcp.errors.moderation_confirmation_required")
         end
+        # The custom message is sent to the user as a personal message.
+        if arguments["message"].present? && ToolHelpers.private_messages_denied?(request_context)
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
 
         user.with_lock do
           raise Discourse::InvalidAccess unless guardian.public_send(permission, user)
@@ -114,6 +118,13 @@ module DiscourseMcp
 
     class SuspendUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -123,6 +134,13 @@ module DiscourseMcp
 
     class UnsuspendUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -132,6 +150,13 @@ module DiscourseMcp
 
     class SilenceUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -141,6 +166,13 @@ module DiscourseMcp
 
     class UnsilenceUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)

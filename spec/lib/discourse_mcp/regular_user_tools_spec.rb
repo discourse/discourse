@@ -2,7 +2,13 @@
 
 describe DiscourseMcp::Tools do
   def request_context(user)
-    instance_double(DiscourseMcp::RequestContext, user:, user_id: user.id, guardian: user.guardian)
+    instance_double(
+      DiscourseMcp::RequestContext,
+      user:,
+      user_id: user.id,
+      guardian: user.guardian,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+    )
   end
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }

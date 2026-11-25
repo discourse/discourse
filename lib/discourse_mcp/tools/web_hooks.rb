@@ -277,6 +277,13 @@ module DiscourseMcp
 
     class ListWebhooks
       REQUIRED_SCOPES = [Scopes::WEBHOOKS_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[catalog],
@@ -327,6 +334,13 @@ module DiscourseMcp
 
     class GetWebhook
       REQUIRED_SCOPES = ListWebhooks::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           optional: %w[catalog],
@@ -344,6 +358,13 @@ module DiscourseMcp
 
     class ListWebhookEvents
       REQUIRED_SCOPES = ListWebhooks::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           webhook_id: OutputSchema::INTEGER,
@@ -408,6 +429,13 @@ module DiscourseMcp
 
     class CreateWebhook
       REQUIRED_SCOPES = [Scopes::WEBHOOKS_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(webhook: WebHookSupport::HOOK_SCHEMA)
 
       def self.call(arguments:, request_context:)
@@ -429,6 +457,13 @@ module DiscourseMcp
 
     class UpdateWebhook
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA = CreateWebhook::OUTPUT_SCHEMA
 
       def self.call(arguments:, request_context:)
@@ -452,6 +487,13 @@ module DiscourseMcp
 
     class DeleteWebhook
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(deleted: OutputSchema::BOOLEAN, webhook_id: OutputSchema::INTEGER)
 
@@ -471,6 +513,13 @@ module DiscourseMcp
 
     class PingWebhook
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :untouched,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           webhook_id: OutputSchema::INTEGER,
@@ -501,6 +550,13 @@ module DiscourseMcp
 
     class RedeliverWebhookEvent
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :unenforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :unenforced,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           webhook_id: OutputSchema::INTEGER,

@@ -37,7 +37,12 @@ module DiscourseMcp
         topic = reviewable.topic || Topic.unscoped.find_by(id: reviewable.topic_id)
         return if topic.blank?
 
-        ToolHelpers.ensure_private_message_scope!(topic, request_context, access:)
+        ToolHelpers.ensure_private_message_scope!(
+          topic,
+          request_context,
+          access:,
+          not_found: I18n.t("mcp.errors.reviewable_not_found"),
+        )
       end
 
       def with_deleted_content(guardian, &block)
@@ -99,7 +104,38 @@ module DiscourseMcp
           end
 
         side_loads.each_value { |value| value.uniq! if value.is_a?(Array) }
-        [bounded(serialized), bounded(side_loads).deep_symbolize_keys]
+        serialized = serialized.map(&:deep_symbolize_keys)
+        side_loads = side_loads.deep_symbolize_keys
+        if request_context.content_policy.active?
+          serialized = without_content_counters(serialized)
+          side_loads = without_content_counters(side_loads)
+        end
+        [bounded(serialized), bounded(side_loads)]
+      end
+
+      # Per-user counters in reviewable payloads that restricted content feeds:
+      # flag outcomes count flags on every post, personal messages included.
+      CONTENT_COUNTER_KEYS = %i[
+        agree_stats
+        flags_agreed
+        flags_disagreed
+        flags_ignored
+        post_count
+        topic_count
+        rejected_posts_count
+      ].freeze
+
+      def without_content_counters(value)
+        case value
+        when Array
+          value.map { |item| without_content_counters(item) }
+        when Hash
+          value
+            .except(*CONTENT_COUNTER_KEYS)
+            .transform_values { |item| without_content_counters(item) }
+        else
+          value
+        end
       end
 
       def serialize_reviewable(reviewable, request_context)
@@ -123,6 +159,20 @@ module DiscourseMcp
       def find_reviewable!(reviewable_id, user)
         Reviewable.viewable_by(user).find_by(id: reviewable_id) or
           raise ToolError, I18n.t("mcp.errors.reviewable_not_found")
+      end
+
+      # While any content rule is active, agents can't delete accounts, because
+      # that deletes everything the user wrote, restricted content included. Nor
+      # can they pass extra fields, which reach the user as a personal message.
+      def ensure_action_respects_content_policy!(action, additional_fields, request_context)
+        return if !request_context.content_policy.active?
+
+        server_action = action.server_action.to_s
+        deletes_account =
+          server_action.start_with?("delete_user") || server_action == "delete_and_block_user"
+        if deletes_account || additional_fields.present?
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
       end
 
       def find_visible_post!(post_id, guardian)
@@ -190,6 +240,13 @@ module DiscourseMcp
 
     class GetReviewQueueCount
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           count: OutputSchema::INTEGER,
@@ -214,6 +271,13 @@ module DiscourseMcp
 
     class ListReviewables
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
 
       def self.call(arguments:, request_context:)
@@ -249,6 +313,13 @@ module DiscourseMcp
 
     class ListReviewableTopics
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY, meta: OutputSchema::OBJECT)
 
@@ -319,6 +390,13 @@ module DiscourseMcp
 
     class GetReviewable
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
 
       def self.call(arguments:, request_context:)
@@ -336,7 +414,19 @@ module DiscourseMcp
             access: :read,
           )
           result = ModerationSupport.serialize_reviewable(reviewable, request_context)
-          result[:explanation] = reviewable.explain_score if arguments["include_explanation"]
+          if arguments["include_explanation"]
+            # Decimal columns would serialize as strings.
+            explanation =
+              reviewable.explain_score.map do |row|
+                row.to_h.symbolize_keys.transform_values do |value|
+                  value.is_a?(BigDecimal) ? value.to_f : value
+                end
+              end
+            if request_context.content_policy.active?
+              explanation = ModerationSupport.without_content_counters(explanation)
+            end
+            result[:explanation] = explanation
+          end
           ToolHelpers.text_and_structured(ModerationSupport.bounded(result))
         end
       end
@@ -344,8 +434,25 @@ module DiscourseMcp
 
     class GetUserModerationSummary
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
+      # Counters derived from what the user wrote, flagged or was warned about
+      # (warnings are personal messages), which restricted content feeds.
+      CONTENT_COUNTERS = %i[
+        deleted_posts
+        flags_received
+        flags_given
+        warnings_received
+        rejected_posts
+      ].freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
+          optional: CONTENT_COUNTERS.map(&:to_s),
           username: OutputSchema::STRING,
           deleted_posts: OutputSchema::INTEGER,
           flags_received: OutputSchema::INTEGER,
@@ -361,7 +468,7 @@ module DiscourseMcp
         raise ToolError, I18n.t("mcp.errors.user_not_found") if user.blank?
 
         request_context.guardian.ensure_can_see_staff_info!(user)
-        ToolHelpers.text_and_structured(
+        result = {
           username: user.username,
           deleted_posts: user.number_of_deleted_posts,
           flags_received: user.number_of_flags,
@@ -370,19 +477,33 @@ module DiscourseMcp
           suspensions: user.number_of_suspensions,
           warnings_received: user.warnings_received_count,
           rejected_posts: user.number_of_rejected_posts,
-        )
+        }
+        result = result.except(*CONTENT_COUNTERS) if request_context.content_policy.active?
+        ToolHelpers.text_and_structured(result)
       end
     end
 
     class GetPostRevision
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         ModerationSupport.ensure_queue_access!(guardian)
         post = ModerationSupport.find_visible_post!(arguments.fetch("post_id"), guardian)
-        ToolHelpers.ensure_private_message_scope!(post.topic, request_context, access: :read)
+        ToolHelpers.ensure_private_message_scope!(
+          post.topic,
+          request_context,
+          access: :read,
+          not_found: I18n.t("mcp.errors.post_not_found"),
+        )
 
         finder = PostRevision.where(post_id: post.id)
         finder = finder.where(hidden: false) if !guardian.can_view_hidden_post_revisions?
@@ -408,6 +529,13 @@ module DiscourseMcp
 
     class PerformReviewableAction
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
 
       def self.call(arguments:, request_context:)
@@ -426,6 +554,11 @@ module DiscourseMcp
           raise ToolError, I18n.t("mcp.errors.reviewable_conflict")
         end
         additional_fields = arguments.fetch("additional_fields", {})
+        ModerationSupport.ensure_action_respects_content_policy!(
+          action,
+          additional_fields,
+          request_context,
+        )
         action_arguments =
           ModerationSupport.action_arguments(reviewable, action, additional_fields).merge(
             version: reviewable.version,
@@ -441,7 +574,14 @@ module DiscourseMcp
         end
 
         serialized =
-          ReviewablePerformResultSerializer.new(result, root: false, scope: guardian).as_json
+          ReviewablePerformResultSerializer
+            .new(result, root: false, scope: guardian)
+            .as_json
+            .deep_symbolize_keys
+        # The queue counts include reviewables the policy hides.
+        if request_context.content_policy.active?
+          serialized = serialized.except(:reviewable_count, :unseen_reviewable_count)
+        end
         ToolHelpers.text_and_structured(
           ModerationSupport
             .bounded(serialized)

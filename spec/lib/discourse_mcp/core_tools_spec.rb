@@ -6,7 +6,12 @@ describe DiscourseMcp::Tools::GetUser do
 
   it "hides full names when names are disabled" do
     SiteSetting.enable_names = false
-    request_context = instance_double(DiscourseMcp::RequestContext, guardian: viewer.guardian)
+    request_context =
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        guardian: viewer.guardian,
+      )
 
     result = described_class.call(arguments: { "username" => user.username }, request_context:)
 
@@ -38,7 +43,12 @@ describe DiscourseMcp::Tools::FilterTopics do
 
     expectations.each do |user, expected_ids|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          user:,
+          guardian: user.guardian,
+        )
       result =
         described_class.call(
           arguments: {
@@ -55,7 +65,12 @@ describe DiscourseMcp::Tools::FilterTopics do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: admin,
+        guardian: admin.guardian,
+      )
 
     result =
       described_class.call(
@@ -74,7 +89,12 @@ describe DiscourseMcp::Tools::FilterTopics do
     second_topic = Fabricate(:topic)
     TopTopic.create!(topic: second_topic, weekly_score: 1, daily_score: 2)
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     first_page =
       described_class.call(
@@ -123,7 +143,12 @@ describe DiscourseMcp::Tools::FilterTopics do
 
   it "rejects options that do not belong to the selected view" do
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     expect do
       described_class.call(arguments: { "view" => "filtered" }, request_context:)
@@ -174,6 +199,7 @@ describe DiscourseMcp::Tools::SearchPosts do
       request_context =
         instance_double(
           DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
           user:,
           guardian: user.guardian,
           has_scopes?: true,
@@ -198,6 +224,7 @@ describe DiscourseMcp::Tools::SearchPosts do
     request_context =
       instance_double(
         DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
         user: admin,
         guardian: admin.guardian,
         has_scopes?: true,
@@ -217,6 +244,7 @@ describe DiscourseMcp::Tools::SearchPosts do
     request_context =
       instance_double(
         DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
         user: viewer,
         guardian: viewer.guardian,
         has_scopes?: true,
@@ -268,6 +296,7 @@ describe DiscourseMcp::Tools::SearchPosts do
       request_context =
         instance_double(
           DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
           user:,
           guardian: user.guardian,
           has_scopes?: true,
@@ -288,6 +317,7 @@ describe DiscourseMcp::Tools::SearchPosts do
     request_context =
       instance_double(
         DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
         user: viewer,
         guardian: viewer.guardian,
         has_scopes?: true,
@@ -319,7 +349,12 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          user:,
+          guardian: user.guardian,
+        )
       operation =
         lambda do
           described_class.call(
@@ -342,7 +377,12 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: admin,
+        guardian: admin.guardian,
+      )
 
     expect do
       described_class.call(
@@ -363,6 +403,7 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
       request_context =
         instance_double(
           DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
           user:,
           guardian: user.guardian,
           ensure_scopes!: nil,
@@ -395,7 +436,12 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
     expectations.each do |user, allowed|
       aggregate_failures(user.username) do
         request_context =
-          instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+          instance_double(
+            DiscourseMcp::RequestContext,
+            content_policy: DiscourseMcp::ContentPolicy.new([]),
+            user:,
+            guardian: user.guardian,
+          )
         operation =
           lambda do
             described_class.call(
@@ -437,9 +483,19 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
     deleted_post = Fabricate(:post, topic:, user: author, raw: "deleted evidence")
     deleted_post.trash!(admin)
     viewer_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
     moderator_context =
-      instance_double(DiscourseMcp::RequestContext, user: moderator, guardian: moderator.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: moderator,
+        guardian: moderator.guardian,
+      )
 
     earliest =
       described_class.call(
@@ -514,7 +570,12 @@ describe DiscourseMcp::Tools::ReadTopicPosts do
 
   it "rejects options from another selection mode" do
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     expect do
       described_class.call(
@@ -550,7 +611,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          user:,
+          guardian: user.guardian,
+        )
       operation =
         lambda do
           described_class.call(
@@ -573,7 +639,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: admin,
+        guardian: admin.guardian,
+      )
 
     expect do
       described_class.call(
@@ -596,6 +667,7 @@ describe DiscourseMcp::Tools::GetPostReplies do
       request_context =
         instance_double(
           DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
           user:,
           guardian: user.guardian,
           ensure_scopes!: nil,
@@ -633,7 +705,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
             "mode" => "direct_replies",
           },
           request_context:
-            instance_double(DiscourseMcp::RequestContext, user: user, guardian: user.guardian),
+            instance_double(
+              DiscourseMcp::RequestContext,
+              content_policy: DiscourseMcp::ContentPolicy.new([]),
+              user: user,
+              guardian: user.guardian,
+            ),
         ).fetch(:structuredContent)
       expected = user == viewer ? visible_replies : hidden_replies.first(20)
       expect(result[:posts].pluck(:id)).to eq(expected.map(&:id))
@@ -664,7 +741,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
     PostReply.create!(post: direct_reply, reply: child_reply)
     SiteSetting.max_reply_history = 2
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     ids =
       described_class.call(
@@ -692,7 +774,12 @@ describe DiscourseMcp::Tools::GetPostReplies do
         request_context:,
       ).fetch(:structuredContent)
     moderator_context =
-      instance_double(DiscourseMcp::RequestContext, user: moderator, guardian: moderator.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: moderator,
+        guardian: moderator.guardian,
+      )
     staff_direct =
       described_class.call(
         arguments: {
@@ -738,7 +825,12 @@ describe DiscourseMcp::Tools::ListLatestPosts do
 
     expectations.each do |user, expected_ids|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          user:,
+          guardian: user.guardian,
+        )
       result = described_class.call(arguments: {}, request_context:).fetch(:structuredContent)
 
       expect(result[:posts].pluck(:id)).to eq(expected_ids)
@@ -752,7 +844,12 @@ describe DiscourseMcp::Tools::ListLatestPosts do
     first_post = Fabricate(:post, topic:)
     reply = Fabricate(:post, topic:)
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     result =
       described_class.call(
@@ -776,7 +873,12 @@ describe DiscourseMcp::Tools::ListLatestPosts do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: admin,
+        guardian: admin.guardian,
+      )
 
     result = described_class.call(arguments: {}, request_context:).fetch(:structuredContent)
 
@@ -802,7 +904,12 @@ describe DiscourseMcp::Tools::GetTopicViewStats do
 
     expectations.each do |user, allowed|
       request_context =
-        instance_double(DiscourseMcp::RequestContext, user:, guardian: user.guardian)
+        instance_double(
+          DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
+          user:,
+          guardian: user.guardian,
+        )
       operation =
         lambda { described_class.call(arguments: { "topic_id" => topic.id }, request_context:) }
 
@@ -825,7 +932,12 @@ describe DiscourseMcp::Tools::GetTopicViewStats do
     included = Fabricate(:topic_view_stat, topic:, viewed_at: 3.days.ago)
     Fabricate(:topic_view_stat, topic:, viewed_at: 10.days.ago)
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: member, guardian: member.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: member,
+        guardian: member.guardian,
+      )
 
     result =
       described_class.call(
@@ -853,7 +965,12 @@ describe DiscourseMcp::Tools::GetTopicViewStats do
   it "honors the setting that removes automatic admin access to secured categories" do
     SiteSetting.suppress_secured_categories_from_admin = true
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: admin, guardian: admin.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: admin,
+        guardian: admin.guardian,
+      )
 
     expect do
       described_class.call(arguments: { "topic_id" => topic.id }, request_context:)
@@ -870,6 +987,7 @@ describe DiscourseMcp::Tools::GetTopicViewStats do
       request_context =
         instance_double(
           DiscourseMcp::RequestContext,
+          content_policy: DiscourseMcp::ContentPolicy.new([]),
           user:,
           guardian: user.guardian,
           ensure_scopes!: nil,
@@ -917,7 +1035,12 @@ describe DiscourseMcp::Tools::ListDirectoryItems do
   it "returns bounded directory metrics and truthful continuation" do
     target.user_stat.update!(time_read: 120)
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     result =
       described_class.call(
@@ -964,7 +1087,12 @@ describe DiscourseMcp::Tools::ListDirectoryItems do
       value: "alpha",
     )
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     result =
       described_class.call(
@@ -983,9 +1111,19 @@ describe DiscourseMcp::Tools::ListDirectoryItems do
 
   it "requires access to a requested group's membership list" do
     denied_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
     allowed_context =
-      instance_double(DiscourseMcp::RequestContext, user: member, guardian: member.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: member,
+        guardian: member.guardian,
+      )
 
     expect do
       described_class.call(
@@ -1010,7 +1148,12 @@ describe DiscourseMcp::Tools::ListDirectoryItems do
 
   it "ignores exclusions for groups whose membership is not visible to the caller" do
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     result =
       described_class.call(
@@ -1027,7 +1170,12 @@ describe DiscourseMcp::Tools::ListDirectoryItems do
   it "is unavailable when the user directory is disabled" do
     SiteSetting.enable_user_directory = false
     request_context =
-      instance_double(DiscourseMcp::RequestContext, user: viewer, guardian: viewer.guardian)
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        user: viewer,
+        guardian: viewer.guardian,
+      )
 
     expect do
       described_class.call(arguments: { "period" => "all" }, request_context:)
@@ -1039,7 +1187,13 @@ describe DiscourseMcp::Tools::GetDraft do
   fab!(:user)
   fab!(:other_user, :user)
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, user:) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      user:,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+    )
+  end
 
   it "returns the authenticated user's draft in the compatibility format" do
     draft_data = {
@@ -1096,7 +1250,13 @@ describe DiscourseMcp::Tools::SaveDraft do
   fab!(:user)
   fab!(:topic)
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, user:) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      user:,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+    )
+  end
 
   it "creates and updates a topic reply draft" do
     draft_key = "topic_#{topic.id}"
@@ -1181,7 +1341,13 @@ end
 describe DiscourseMcp::Tools::DeleteDraft do
   fab!(:user)
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, user:) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      user:,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+    )
+  end
 
   it "deletes only the draft at the current sequence" do
     sequence = Draft.set(user, Draft::NEW_TOPIC, 0, { reply: "First version" }.to_json)
@@ -1216,7 +1382,13 @@ describe DiscourseMcp::Tools::ListUserPosts do
   fab!(:user)
   fab!(:topic) { Fabricate(:topic, user:) }
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: viewer.guardian) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: viewer.guardian,
+    )
+  end
 
   it "returns a permission-aware page of the user's topics and replies" do
     first_post = Fabricate(:post, topic:, user:, raw: "First post", created_at: 2.minutes.ago)
@@ -1287,7 +1459,13 @@ describe DiscourseMcp::Tools::GetUserSummary do
   fab!(:viewer, :user)
   fab!(:user)
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: viewer.guardian) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: viewer.guardian,
+    )
+  end
 
   it "returns profile-visible summary metrics without private bookmark counts" do
     user.user_stat.update!(post_count: 3, topic_count: 2, days_visited: 7)
@@ -1321,7 +1499,13 @@ describe DiscourseMcp::Tools::ListUserActions do
   fab!(:topic) { Fabricate(:topic, user:) }
   fab!(:post) { Fabricate(:post, topic:, user:, raw: "Visible reply") }
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: viewer.guardian) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: viewer.guardian,
+    )
+  end
 
   before do
     user.user_stat.update!(post_count: 1)

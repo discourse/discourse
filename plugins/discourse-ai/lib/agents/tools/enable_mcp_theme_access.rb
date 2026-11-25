@@ -129,6 +129,22 @@ module DiscourseAi
             )
           end
 
+          restricted = McpThemeAccess.restricted_theme_tool_ids
+          if restricted.present?
+            return(
+              {
+                status: "partial",
+                message:
+                  I18n.t(
+                    "discourse_ai.mcp_theme_access.enabled_except_restricted",
+                    tools: restricted.map { |id| McpThemeAccess.tool_title(id) }.join(", "),
+                    url: "#{Discourse.base_url}/admin/config/mcp/content-restrictions",
+                  ),
+                mcp_url: DiscourseMcp.resource_url,
+              }
+            )
+          end
+
           {
             status: "success",
             message: I18n.t("discourse_ai.mcp_theme_access.enabled"),

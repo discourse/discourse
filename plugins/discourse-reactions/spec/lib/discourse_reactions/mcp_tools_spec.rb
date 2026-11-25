@@ -4,7 +4,13 @@ describe DiscourseReactions::McpTools::SetReaction do
   fab!(:user)
   fab!(:post)
 
-  let(:request_context) { instance_double(DiscourseMcp::RequestContext, guardian: user.guardian) }
+  let(:request_context) do
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: user.guardian,
+    )
+  end
 
   before do
     SiteSetting.discourse_reactions_enabled = true

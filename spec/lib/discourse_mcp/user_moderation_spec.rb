@@ -13,7 +13,11 @@ describe DiscourseMcp::Tools::UserModerationSupport do
         "duration_days" => 2,
         "reason" => "Repeated abuse",
       }.merge(arguments.stringify_keys),
-      instance_double(DiscourseMcp::RequestContext, guardian: actor.guardian),
+      instance_double(
+        DiscourseMcp::RequestContext,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
+        guardian: actor.guardian,
+      ),
       operation,
     )
   end

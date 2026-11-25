@@ -44,6 +44,7 @@ after_initialize do
     description:
       "Returns the definition of a saved Data Explorer query. Requires an admin account.",
     implementation: DiscourseDataExplorer::McpTools::GetQuery,
+    content: DiscourseDataExplorer::McpTools::GetQuery::CONTENT,
     input_schema: {
       type: "object",
       properties: {
@@ -72,6 +73,7 @@ after_initialize do
     title: "Run Data Explorer query",
     description: "Runs a saved Data Explorer query that the authenticated user can access.",
     implementation: DiscourseDataExplorer::McpTools::RunQuery,
+    content: DiscourseDataExplorer::McpTools::RunQuery::CONTENT,
     input_schema: {
       type: "object",
       properties: {

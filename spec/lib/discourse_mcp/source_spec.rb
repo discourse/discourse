@@ -46,7 +46,11 @@ RSpec.describe DiscourseMcp::Tools do
   end
 
   def request_context(actor = admin)
-    instance_double(DiscourseMcp::RequestContext, guardian: actor.guardian)
+    instance_double(
+      DiscourseMcp::RequestContext,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
+      guardian: actor.guardian,
+    )
   end
 
   describe ".call" do

@@ -1213,11 +1213,42 @@ class Plugin::Instance
 
   def register_mcp_primitive(kind, identifier, **attributes)
     configured_availability = attributes.delete(:availability)
-    attributes[:provider] ||= name || directory_name
+    attributes[:provider] ||= name_for_mcp
     attributes[:availability] = -> do
       enabled? && (configured_availability.nil? || configured_availability.call)
     end
     DiscourseMcp.registry.public_send("register_#{kind}", identifier, **attributes)
+  end
+
+  # Register a kind of data that MCP content rules can govern. The name must be
+  # prefixed with this plugin's name, as in "my-plugin:messages". List any other
+  # provider's primitives that surface this data in `touched_by`.
+  #
+  # A primitive that touches governed data declares it with `content:` when it is
+  # registered; see DiscourseMcp::Primitive.
+  def register_mcp_content_data_kind(name, touched_by: [], scopes: [])
+    DiscourseMcp.registry.register_content_data_kind(
+      name,
+      provider: name_for_mcp,
+      touched_by:,
+      scopes:,
+    )
+  end
+
+  # Register a kind of MCP content rule. Its name must be prefixed with this
+  # plugin's name. While the plugin is disabled, stored rules of this kind are
+  # orphaned, so only MCP primitives declared `content: :none` stay usable.
+  # See DiscourseMcp::Registry#register_content_rule_kind for the attributes.
+  def register_mcp_content_rule_kind(name, **attributes)
+    configured_availability = attributes.delete(:availability)
+    attributes[:availability] = -> do
+      enabled? && (configured_availability.nil? || configured_availability.call)
+    end
+    DiscourseMcp.registry.register_content_rule_kind(name, provider: name_for_mcp, **attributes)
+  end
+
+  def name_for_mcp
+    name || directory_name
   end
 
   # Register a route which can be authenticated using an api key or user api key

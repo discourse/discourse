@@ -4,11 +4,50 @@ module DiscourseMcp
   module Tools
     class ListNotifications
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
+      CONTENT = {
+        topics: :unenforced,
+        private_messages: :enforced,
+        categories: :unenforced,
+        tags: :unenforced,
+        exit_paths: :untouched,
+      }.freeze
       # Chat content is delegated separately from forum content; this notification
       # type embeds the watched thread's root message text.
       CHAT_READ_SCOPE = "chat:read"
       CHAT_NOTIFICATION_TYPES = %i[chat_watched_thread].freeze
       OUTPUT_SCHEMA = OutputSchema.object(notifications: OutputSchema::OBJECT_ARRAY)
+
+      # Mentions in a reviewable note carry the reviewable's id but no topic. When
+      # the reviewable belongs to a personal message, the mention is filtered in
+      # the query, so it can't take a place in the page. The data column is plain
+      # text, so the id is matched rather than parsed as JSON.
+      PRIVATE_REVIEWABLE_MENTION_SQL = <<~SQL
+        notifications.notification_type = :mentioned
+        AND EXISTS (
+          SELECT 1
+          FROM reviewables
+          JOIN topics private_topics ON private_topics.id = reviewables.topic_id
+          WHERE reviewables.id::text = substring(notifications.data from '"reviewable_id":\\s*"?([0-9]+)')
+            AND private_topics.archetype = :private_message
+        )
+      SQL
+
+      # Consolidated notifications keep the title and post id of the notification
+      # they replaced but carry no topic, so the topic join above can't see them.
+      # One that names a topic is kept only when its post is outside personal
+      # messages. Reviewable mentions are checked by their reviewable instead.
+      TOPICLESS_PRIVATE_MESSAGE_SQL = <<~SQL
+        notifications.topic_id IS NULL
+        AND notifications.data LIKE '%"topic_title"%'
+        AND notifications.data NOT LIKE '%"reviewable_id"%'
+        AND NOT EXISTS (
+          SELECT 1
+          FROM posts public_posts
+          JOIN topics public_topics ON public_topics.id = public_posts.topic_id
+          WHERE public_posts.id::text = substring(notifications.data from '"original_post_id":\s*"?([0-9]+)')
+            AND public_topics.archetype <> :private_message
+        )
+      SQL
 
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 50).to_i.clamp(1, 100)
@@ -26,6 +65,12 @@ module DiscourseMcp
               .where.not(notification_type: Notification.types[:group_message_summary])
               .left_joins(:topic)
               .where("topics.id IS NULL OR topics.archetype <> ?", Archetype.private_message)
+              .where.not(
+                PRIVATE_REVIEWABLE_MENTION_SQL,
+                mentioned: Notification.types[:mentioned],
+                private_message: Archetype.private_message,
+              )
+              .where.not(TOPICLESS_PRIVATE_MESSAGE_SQL, private_message: Archetype.private_message)
         end
         notifications =
           Notification.filter_inaccessible_topic_notifications(
