@@ -96,7 +96,21 @@ class McpContentRuleUpdater
 
       config[side]["tag_ids"] = names.map { |name| tags.fetch(name.downcase) }.uniq
     end
+    ensure_integer_ids!(config)
     canonicalize_tag_ids(config)
+  end
+
+  # The contract counts a whole float such as 103.0 as an integer, but stored
+  # ids are compared as integers, so anything else is refused here.
+  def ensure_integer_ids!(config)
+    %w[allow deny]
+      .product(%w[tag_ids category_ids])
+      .each do |side, key|
+        ids = config[side].is_a?(Hash) ? config[side][key] : nil
+        next if !ids.is_a?(Array) || ids.all? { |id| id.is_a?(Integer) }
+
+        raise Discourse::InvalidParameters.new(key)
+      end
   end
 
   # Stores a synonym's id as the tag it stands for. Ids that match no tag are

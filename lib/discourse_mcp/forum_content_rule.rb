@@ -68,7 +68,7 @@ module DiscourseMcp
       deny = config.fetch("deny")
       @selected = allow.fetch("mode") == ALLOW_SELECTED
       @allowed_category_ids = subtree(allow.fetch("category_ids"))
-      @allowed_tag_ids = allow.fetch("tag_ids").to_set.freeze
+      @allowed_tag_ids = with_synonyms(allow.fetch("tag_ids"))
       @denied_category_ids = subtree(deny.fetch("category_ids"))
       @denied_tag_ids = with_synonyms(deny.fetch("tag_ids"))
     end
@@ -171,10 +171,13 @@ module DiscourseMcp
       DB.query_single(SUBTREE_SQL, ids: ids.map(&:to_i)).to_set.freeze
     end
 
+    # A listed tag covers its synonyms, and a listed synonym covers the tag it
+    # stands for, because topics carry that tag instead.
     def with_synonyms(ids)
       return Set.new.freeze if ids.empty?
 
       ids = ids.map(&:to_i)
+      ids |= Tag.where(id: ids).where.not(target_tag_id: nil).pluck(:target_tag_id)
       Tag.where(id: ids).or(Tag.where(target_tag_id: ids)).pluck(:id).to_set.freeze
     end
   end
