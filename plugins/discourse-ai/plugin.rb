@@ -135,6 +135,14 @@ after_initialize do
     DiscourseAi::AdminDashboard::AskAi.build(start_date:, end_date:, current_user:)
   end
 
+  register_modifier(:discourse_workflows_stats_summary) do |stats, context|
+    if SiteSetting.discourse_ai_enabled && context[:workflow_id].present?
+      stats.merge(ai_usage: DiscourseAi::WorkflowUsage.for(**context))
+    else
+      stats
+    end
+  end
+
   register_modifier(:site_setting_result) do |setting_result|
     if setting_result[:setting] == :ai_discover_enabled && !SiteSetting.ai_discover_enabled
       setting_result[:disabled] = true
