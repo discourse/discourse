@@ -39,6 +39,33 @@
   }
 }
 
+.empty-state__container.--blog-setup {
+  margin-top: var(--space-4);
+  padding: var(--space-8) var(--space-4);
+  border: 2px dashed var(--primary-low);
+  border-radius: var(--d-border-radius);
+
+  .empty-state__image {
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-up-6);
+  }
+
+  .empty-state__title {
+    margin-bottom: var(--space-2);
+    font-family: var(--heading-font-family);
+    font-size: var(--font-up-3);
+    font-weight: var(--heading-font-weight);
+  }
+
+  .empty-state__body {
+    color: var(--primary-medium);
+  }
+
+  .empty-state__cta {
+    margin-top: var(--space-4);
+  }
+}
+
 .blog-settings {
   // The blog's address prefixes the custom format and reads as one piece.
   .form-kit__before-input {

@@ -11,6 +11,7 @@ module ::Blog
       render json: {
                blogs: serialize_data(blogs, InstanceSerializer, article_counts:),
                can_add_blog: Instance.addable?,
+               needs_setup: blogs.one? && blogs.first.default_identity?,
              }
     end
 

@@ -34,6 +34,28 @@ RSpec.describe "Blogs admin", type: :request do
 
       expect(response.status).to eq(403)
     end
+
+    it "flags a lone blog as needing setup until it has a name or a tagline" do
+      sign_in(admin)
+      blog = Blog::Instance.find_by!(is_default: true)
+
+      blog.update!(name: Blog::Instance::DEFAULT_NAME, description: "")
+      get "/admin/plugins/blog/blogs.json"
+      expect(response.parsed_body["needs_setup"]).to eq(true)
+
+      blog.update!(description: "Ideas worth sharing")
+      get "/admin/plugins/blog/blogs.json"
+      expect(response.parsed_body["needs_setup"]).to eq(false)
+
+      blog.update!(name: "Field notes", description: "")
+      get "/admin/plugins/blog/blogs.json"
+      expect(response.parsed_body["needs_setup"]).to eq(false)
+
+      blog.update!(name: Blog::Instance::DEFAULT_NAME)
+      Blog::Instance.create!(name: "Engineering", slug: "engineering")
+      get "/admin/plugins/blog/blogs.json"
+      expect(response.parsed_body["needs_setup"]).to eq(false)
+    end
   end
 
   it "renders the admin app when a blogs page is reloaded" do

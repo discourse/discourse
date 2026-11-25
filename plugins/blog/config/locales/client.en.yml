@@ -83,6 +83,9 @@ en:
         blogs_tab_description: Edit a blog to change its name, theme and settings
         themes_tab_description: Browse and manage the themes available to your blog
         add_blog: Add blog
+        setup_title: "Hey %{name}, let's set up your blog"
+        setup_description: Give it a name and tagline, pick a theme, then write your first article
+        setup_button: Create my blog
         new_blog: New blog
         new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
         create_blog: Create blog
