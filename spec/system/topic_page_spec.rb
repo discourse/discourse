@@ -20,6 +20,29 @@ describe "Topic page" do
     expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
   end
 
+  context "with a long author name" do
+    fab!(:author) do
+      Fabricate(:user, name: "An exceptionally long full name for testing clipped post authors")
+    end
+    fab!(:author_post) { Fabricate(:post, topic:, user: author) }
+
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:post_with_long_name) { PageObjects::Components::Post.new(author_post.post_number) }
+
+    it "keeps the author link focus outline within the name row", mobile: true do
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+
+      resize_window(width: 320) do
+        topic_page.visit_topic(topic)
+        page.send_keys(:tab)
+        post_with_long_name.focus_primary_author_link
+
+        expect(post_with_long_name).to have_author_focus_outline_within_name_row
+      end
+    end
+  end
+
   context "with links to an anchor in another topic" do
     fab!(:source_topic, :topic)
 

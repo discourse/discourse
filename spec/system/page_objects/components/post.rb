@@ -38,6 +38,27 @@ module PageObjects
         post.find(".contents > .cooked")
       end
 
+      def focus_primary_author_link
+        find("#{post_id} .names .first > a").execute_script("this.focus()")
+      end
+
+      def has_author_focus_outline_within_name_row?
+        has_css?("#{post_id} .names .first > a:focus-visible") do |link|
+          link.evaluate_script(<<~JS)
+            (() => {
+              const { outlineWidth, outlineOffset } = getComputedStyle(this);
+              const bounds = this.getBoundingClientRect();
+              const name = this.parentElement.getBoundingClientRect();
+              const row = this.closest(".names").getBoundingClientRect();
+              return parseFloat(outlineWidth) > 0 &&
+                parseFloat(outlineOffset) <= -parseFloat(outlineWidth) &&
+                bounds.left >= Math.max(name.left, row.left) &&
+                bounds.right <= Math.min(name.right, row.right);
+            })()
+          JS
+        end
+      end
+
       def click_category_hashtag(category)
         post.find("a.hashtag-cooked[data-type='category'][data-id='#{category.id}']").click
       end
