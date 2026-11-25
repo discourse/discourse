@@ -1,7 +1,9 @@
+import { getOwner } from "@ember/owner";
 import {
   click,
   fillIn,
   findAll,
+  settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -166,6 +168,20 @@ acceptance("Page shell | regions", function (needs) {
         "open",
         "The toggle restores Navigation"
       );
+  });
+
+  test("keeps the full logo when the topic title appears in the shell header", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    getOwner(this).lookup("service:header").mainTopicTitleVisible = false;
+    await settled();
+
+    assert
+      .dom(".page-shell__header-main .header-title")
+      .exists("shows the topic title in the header");
+    assert
+      .dom(".page-shell__header-start .title")
+      .doesNotHaveClass("title--minimized", "keeps the full logo");
   });
 
   test("Preferences has no header Context button", async function (assert) {
