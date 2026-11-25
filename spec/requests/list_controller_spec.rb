@@ -38,6 +38,83 @@ RSpec.describe ListController do
       end
     end
 
+    context "when a relisted topic has a hidden first post" do
+      fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
+
+      before do
+        SiteSetting.always_include_topic_excerpts = true
+        first_post.sync_first_post_caches
+      end
+
+      def hide_first_post_and_relist
+        first_post.hide!(PostActionType.types[:off_topic])
+        topic.update_status(
+          "visible",
+          true,
+          Discourse.system_user,
+          visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+        )
+      end
+
+      def listed_excerpt
+        response.parsed_body["topic_list"]["topics"].find { |listed| listed["id"] == topic.id }[
+          "excerpt"
+        ]
+      end
+
+      it "omits the localized excerpt from the JSON topic list" do
+        SiteSetting.content_localization_enabled = true
+        topic.update!(locale: "ja")
+        localization =
+          Fabricate(:topic_localization, topic: topic, locale: "en", excerpt: "A localized excerpt")
+        hide_first_post_and_relist
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(localization.reload.excerpt).to be_nil
+        expect(listed_excerpt).to be_nil
+      end
+
+      context "when the excerpts were cached before the first post was hidden" do
+        fab!(:localization) do
+          Fabricate(:topic_localization, topic: topic, locale: "en", excerpt: "A localized excerpt")
+        end
+
+        before do
+          first_post.update_columns(hidden: true, hidden_at: Time.zone.now)
+          topic.update_columns(
+            locale: "ja",
+            pinned_at: 1.hour.ago,
+            pinned_globally: true,
+            pinned_until: 1.week.from_now,
+          )
+        end
+
+        it "omits the cached excerpts from the JSON topic list" do
+          get "/latest.json"
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.excerpt).to be_present
+          expect(listed_excerpt).to be_nil
+
+          SiteSetting.content_localization_enabled = true
+          get "/latest.json"
+
+          expect(localization.reload.excerpt).to be_present
+          expect(listed_excerpt).to be_nil
+        end
+
+        it "omits the cached excerpt from the pinned crawler topic list" do
+          get "/latest", params: { _escaped_fragment_: "true" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(topic.title)
+          expect(response.body).not_to include(topic.excerpt)
+        end
+      end
+    end
+
     context "when params are invalid" do
       it "returns a 400 response when `page` param is a string that represent a negative integer" do
         get "/latest?page=-1"

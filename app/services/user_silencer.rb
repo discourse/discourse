@@ -91,7 +91,8 @@ class UserSilencer
         .where("created_at > ?", 24.hours.ago)
         .pluck(:topic_id)
     unless topic_ids.empty?
-      Topic.where(id: topic_ids).update_all(visible: false)
+      Topic.where(id: topic_ids).update_all(visible: false, excerpt: nil)
+      TopicLocalization.where(topic_id: topic_ids).update_all(excerpt: nil)
       CategoryFeaturedTopic.where(topic_id: topic_ids).delete_all
     end
   end
