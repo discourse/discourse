@@ -40,7 +40,7 @@ export default {
             get mobileTab() {
               return {
                 label,
-                icon: "boards",
+                icon: "table-columns",
                 url: "/boards",
                 ownsRoute: ({ name }) =>
                   name === "boards" || name.startsWith("boardsBoard"),
