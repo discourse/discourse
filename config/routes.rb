@@ -2010,6 +2010,7 @@ Discourse::Application.routes.draw do
 
     get "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#show", :as => :oauth2_mcp_authorize
     post "/oauth2/mcp/authorize" => "mcp_oauth_authorizations#create"
+    post "/oauth2/mcp/register" => "mcp_oauth_registrations#create"
     post "/oauth2/mcp/token" => "mcp_oauth_tokens#create"
     post "/oauth2/mcp/revoke" => "mcp_oauth_tokens#revoke"
 

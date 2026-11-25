@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class McpOauthClient < ActiveRecord::Base
-  REGISTRATION_TYPES = %w[pre_registered cimd].freeze
+  REGISTRATION_TYPES = %w[pre_registered cimd dcr].freeze
   TRUST_STATES = %w[pending approved blocked].freeze
   LOOPBACK_IP_HOSTS = %w[127.0.0.1 ::1].freeze
   LOCAL_REDIRECT_HOSTS = ["localhost", *LOOPBACK_IP_HOSTS].freeze

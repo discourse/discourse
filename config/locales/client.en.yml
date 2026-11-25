@@ -7265,6 +7265,7 @@ en:
             registration_type:
               pre_registered: "Pre-registered"
               cimd: "Client ID metadata"
+              dcr: "Dynamic registration"
             authorization_status:
               active: "Active"
               server_disabled: "Server disabled"

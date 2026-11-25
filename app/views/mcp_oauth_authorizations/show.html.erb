@@ -3,6 +3,9 @@
 <div class="mcp-consent">
   <h1><%= t("mcp.oauth.authorize_title") %></h1>
   <p><%= t("mcp.oauth.client_request", client_name: @client.name, site_name: SiteSetting.title) %></p>
+  <% if @client.registration_type == "dcr" %>
+    <div class="alert alert-warning mcp-consent__unverified"><%= t("mcp.oauth.unverified_client", client_name: @client.name) %></div>
+  <% end %>
 
   <dl>
     <dt><%= t("mcp.oauth.client_id") %></dt>

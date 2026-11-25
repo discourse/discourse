@@ -18,6 +18,7 @@ module Jobs
         .where("occurred_at < ?", SiteSetting.mcp_audit_log_retention_days.days.ago)
         .in_batches(of: BATCH_SIZE)
         .delete_all
+      DiscourseMcp::OAuth::ClientRegistration.unused.in_batches(of: BATCH_SIZE).delete_all
     end
   end
 end
