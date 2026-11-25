@@ -69,4 +69,26 @@ module("Integration | Component | Workflows | Stats", function (hooks) {
         "hides AI usage again"
       );
   });
+
+  test("AI usage tiles are visible with no recent executions", async function (assert) {
+    const stats = {
+      total: 0,
+      failed: 0,
+      failure_rate: "0%",
+      avg_duration: "0ms",
+      ai_usage: { requests: 0, tokens: 0, estimated_cost: 0 },
+    };
+    const workflow = { nodes: [{ type: "action:ai_agent" }] };
+
+    await render(
+      <template><Stats @stats={{stats}} @workflow={{workflow}} /></template>
+    );
+
+    assert
+      .dom(".d-stat-tiles")
+      .includesText(
+        i18n("discourse_workflows.stats.ai_requests"),
+        "shows zero AI usage"
+      );
+  });
 });

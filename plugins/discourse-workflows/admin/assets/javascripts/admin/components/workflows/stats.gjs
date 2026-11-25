@@ -11,7 +11,7 @@ export default class WorkflowStats extends Component {
   }
 
   <template>
-    {{#if @stats.total}}
+    {{#if (or @stats.total this.showAiUsage)}}
       <DStatTiles
         title={{i18n "discourse_workflows.stats.period"}}
         @format="compact"
