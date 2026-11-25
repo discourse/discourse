@@ -116,12 +116,12 @@ export default class BlogEditPage extends Component {
             @route="adminPlugins.show.discourse-blog-blogs.edit.about"
           />
           <DNavItem
-            @label="blog.admin.settings_tab"
-            @route="adminPlugins.show.discourse-blog-blogs.edit.settings"
-          />
-          <DNavItem
             @label="blog.admin.theme_tab"
             @route="adminPlugins.show.discourse-blog-blogs.edit.theme"
+          />
+          <DNavItem
+            @label="blog.admin.settings_tab"
+            @route="adminPlugins.show.discourse-blog-blogs.edit.settings"
           />
         </DHorizontalOverflowNav>
       </div>

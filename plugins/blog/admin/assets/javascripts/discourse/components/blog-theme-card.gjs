@@ -161,7 +161,7 @@ export default class BlogThemeCard extends Component {
                 <div class="theme-card__controls">
                   {{#if this.isOutdated}}
                     <DButton
-                      class="btn-primary theme-card__button update"
+                      class="btn-primary blog-theme-card__button update"
                       @action={{this.activate}}
                       @disabled={{this.activationLocked}}
                       @translatedLabel={{i18n
@@ -174,7 +174,7 @@ export default class BlogThemeCard extends Component {
                     {{! A blog only picks a theme; the library is edited on the Themes tab. }}
                     {{#unless this.isActive}}
                       <DButton
-                        class="btn-default theme-card__button activate"
+                        class="btn-default blog-theme-card__button activate"
                         @action={{this.activate}}
                         @disabled={{this.activationLocked}}
                         @translatedLabel={{i18n "blog.admin.select_theme"}}
@@ -182,7 +182,7 @@ export default class BlogThemeCard extends Component {
                     {{/unless}}
                     {{#if this.canPreviewOnBlog}}
                       <a
-                        class="btn btn-transparent theme-card__button preview"
+                        class="btn btn-transparent blog-theme-card__button preview"
                         href={{@theme.preview_url}}
                         rel="noopener noreferrer"
                         target="_blank"
@@ -192,20 +192,20 @@ export default class BlogThemeCard extends Component {
                   {{else if @theme.preset}}
                     {{#if this.customLocked}}
                       <DButton
-                        class="btn-default theme-card__button customize"
+                        class="btn-default blog-theme-card__button customize"
                         @disabled={{true}}
                         @translatedLabel={{i18n "blog.admin.customize"}}
                       />
                     {{else}}
                       <LinkTo
-                        class="btn btn-default btn-text theme-card__button customize"
+                        class="btn btn-default btn-text blog-theme-card__button customize"
                         @query={{hash from=@theme.id}}
                         @route="adminPlugins.show.discourse-blog-themes.new"
                       >{{i18n "blog.admin.customize"}}</LinkTo>
                     {{/if}}
                   {{else}}
                     <DButton
-                      class="btn-default theme-card__button edit"
+                      class="btn-default blog-theme-card__button edit"
                       @disabled={{this.customLocked}}
                       @preventFocus={{true}}
                       @route="adminPlugins.show.discourse-blog-themes.edit"
@@ -228,7 +228,7 @@ export default class BlogThemeCard extends Component {
                             {{#unless @hideActivate}}
                               <dropdown.item>
                                 <DButton
-                                  class="theme-card__button btn-transparent activate"
+                                  class="blog-theme-card__button btn-transparent activate"
                                   @action={{this.activate}}
                                   @disabled={{this.activateDisabled}}
                                   @icon="play"
@@ -243,7 +243,7 @@ export default class BlogThemeCard extends Component {
                             {{#if @theme.source}}
                               <dropdown.item>
                                 <DButton
-                                  class="theme-card__button btn-transparent pull"
+                                  class="blog-theme-card__button btn-transparent pull"
                                   @action={{this.pull}}
                                   @disabled={{this.customLocked}}
                                   @icon="cloud-arrow-down"
@@ -257,7 +257,7 @@ export default class BlogThemeCard extends Component {
 
                             <dropdown.item>
                               <a
-                                class="btn btn-transparent theme-card__button preview"
+                                class="btn btn-transparent blog-theme-card__button preview"
                                 href={{@theme.preview_url}}
                                 rel="noopener noreferrer"
                                 target="_blank"
@@ -268,14 +268,14 @@ export default class BlogThemeCard extends Component {
                             {{#unless @theme.preset}}
                               <dropdown.item>
                                 <a
-                                  class="btn btn-transparent theme-card__button export"
+                                  class="btn btn-transparent blog-theme-card__button export"
                                   href={{this.exportUrl}}
                                 >{{dIcon "download"}}
                                   {{i18n "blog.admin.export"}}</a>
                               </dropdown.item>
                               <dropdown.item>
                                 <DButton
-                                  class="theme-card__button btn-transparent --danger"
+                                  class="blog-theme-card__button btn-transparent --danger"
                                   @action={{this.remove}}
                                   @disabled={{this.isInUse}}
                                   @icon="trash-can"

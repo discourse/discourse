@@ -34,10 +34,7 @@ export default class BlogThemesIndex extends Component {
         @label={{i18n "blog.admin.themes"}}
         @path="/admin/plugins/blog/themes"
       />
-      <DPageSubheader
-        @descriptionLabel={{i18n "blog.admin.themes_index_description"}}
-        @titleLabel={{i18n "blog.admin.themes"}}
-      >
+      <DPageSubheader @titleLabel={{i18n "blog.admin.themes"}}>
         <:actions as |actions|>
           {{! actions.Default cannot be disabled. }}
           <actions.Wrapped as |wrapped|>
@@ -62,6 +59,9 @@ export default class BlogThemesIndex extends Component {
       {{#if this.customThemesLocked}}
         <PluginOutlet @name="blog-admin-custom-themes-unavailable" />
       {{/if}}
+      <p class="d-page-subheader__description">{{i18n
+          "blog.admin.themes_index_description"
+        }}</p>
       <div class="themes-cards-container">
         {{#each @model.themes key="id" as |theme|}}
           <BlogThemeCard
