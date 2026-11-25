@@ -465,4 +465,116 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
       expect(described_class.status).to be_nil
     end
   end
+
+  describe "#seed_wave!" do
+    it "processes one wave per job, chains remaining waves by run_id, and ignores duplicate/stale runs" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "First queued wave discussion",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Second queued wave discussion",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ).and_return(
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "WaveChainedTheme",
+              description: "Created during chained waves",
+              parent_concept_id: nil,
+            },
+          ],
+        },
+      )
+
+      queued = described_class.mark_queued!
+      wave_seeder = described_class.new(concurrency: 1, wave_size: 1)
+
+      first_state = nil
+      expect do
+        first_state = wave_seeder.seed_wave!(limit: 2, run_id: queued["run_id"], enqueue_next: true)
+      end.to change { Jobs::SeedInferredConcepts.jobs.size }.by(1)
+
+      expect(first_state["status"]).to eq("running")
+      expect(first_state["processed"]).to eq(1)
+      expect(first_state["total"]).to eq(2)
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(1)
+      expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(queued["run_id"])
+      expect(curator).not_to have_received(:curate!)
+
+      second_state = nil
+      expect do
+        second_state = wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
+      end.not_to change { Jobs::SeedInferredConcepts.jobs.size }
+
+      expect(second_state["status"]).to eq("completed")
+      expect(second_state["processed"]).to eq(2)
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(0)
+      expect(curator).to have_received(:curate!).once
+
+      duplicate_state = wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
+      expect(duplicate_state["status"]).to eq("skipped")
+    end
+  end
+
+  describe ".resume_if_stalled!" do
+    after { Discourse.redis.del(described_class::MUTEX_KEY) }
+
+    it "re-enqueues stalled runs without a lock and ignores fresh or actively locked runs" do
+      state = described_class.mark_queued!
+      expect(described_class.resume_if_stalled!).to eq(false)
+
+      stalled_time = (described_class::WAVE_STALE_AFTER + 1.minute).ago.iso8601
+      Discourse.redis.set(
+        described_class::STATE_KEY,
+        state.merge("status" => "running", "updated_at" => stalled_time).to_json,
+      )
+
+      Discourse.redis.set(described_class::MUTEX_KEY, "locked")
+      expect(described_class.resume_if_stalled!).to eq(false)
+
+      Discourse.redis.del(described_class::MUTEX_KEY)
+      expect do expect(described_class.resume_if_stalled!).to eq(true) end.to change {
+        Jobs::SeedInferredConcepts.jobs.size
+      }.by(1)
+      expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(state["run_id"])
+      expect(described_class.resume_if_stalled!).to eq(false)
+    end
+  end
 end
