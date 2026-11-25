@@ -279,3 +279,40 @@ Observed the exact-line example RED before editing: six assertion failures at fi
 | `lib/discourse_mcp/tools/themes.rb` | 247 → 254, 350 → 357, 387 → 394 | Preceding theme support shifted SetThemeCode/CreateTheme/UpdateTheme. Re-read their compilation, service and save bodies; their cooking edges and unenforced declarations remain. SetThemeCode occurs twice because it also anchors the shared theme_code path. |
 
 The machine-readable moves and row reviews are under `unit4_refresh_review`. Before/after run receipts are recorded in [unit 4 verification](../content_restrictions_unit4/verification.json).
+
+## Round 3 evidence refresh at `6a77b9b3e85`
+
+Observed the exact-line example RED before editing: **19 stale evidence occurrences
+at 18 distinct locations**. UpdateGroup appears twice, once for bio/membership and
+once for rename rewrites. Re-read every moved declaration or call in its current
+body and reviewed `ae8d882a477..6a77b9b3e85`, including the shared Server input gate,
+prospective-topic checks and upload grants. Historical review notes above and in
+the inventory describe their named revisions; `round3_review` records this HEAD.
+
+| Evidence file | Prior → current lines | Re-review and unit 4 behavior |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/topic_writes.rb` | ReplyTopic 166 → 172; EditPost 224 → 230; UpdateTopic 271 → 282; SetPostDeleted 405 → 436; submission `category: category_id` 139 → 145 | Reply still uses NewPostManager. Creation now checks prospective category/effective tags, including word-watcher tags and required parents. EditPost refuses non-regular cook methods under active rules. UpdateTopic checks stored first-post raw and effective targets, and refuses category changes with secure uploads enabled. Recovery checks current raw and the previous deletion-revision raw for user-deleted posts. Blog remains excluded: the submission allowlist still does not forward `blog_id`. |
+| `lib/discourse_mcp/tools/moderation.rb` | PerformReviewableAction 653 → 683; `reviewable.perform` 692 → 723 | Before dispatch, publishing actions check queued title/raw; restoring actions check stored target-post raw. Earlier account-deletion and additional-fields refusals remain. Shared `reviewable_action`, `queued_approve`, `recover` and `reviewable_feedback` paths retain their native edges after these gates. This does not certify arbitrary plugin actions or generated templates. |
+| `lib/discourse_mcp/tools/groups.rb` | CreateGroup 401 → 416; UpdateGroup 455 → 470 (twice); DeleteGroup 498 → 514; ManageGroupMembers 530 → 546; InviteGroupMembers 583 → 599; ManageGroupOwners 625 → 641; ManageGroupMembership 666 → 682; HandleGroupMembershipRequest 719 → 735 | UpdateGroup now checks unchanged stored bio when no replacement is supplied and refuses changed names under active rules. The MCP `group_rename` path is suppressed under those rules; `group_bio` remains after text validation. Re-read all other mutation branches, service calls, confirmation checks and acceptance callback: their native membership/notification/destruction behavior is unchanged. Supplied group fields and membership-request reasons now also pass the shared Server text gate. |
+| `lib/discourse_mcp/tools/drafts.rb` | DeleteDraft 169 → 193 | SaveDraft additions move DeleteDraft, whose checks and Draft.clear remain unchanged. SaveDraft checks supplied effective tags and passes `backup: false` under every active rule; every `draft_backup` creation/fast-update/revision branch is suppressed for those calls. Ordinary draft storage and unrestricted backups remain. |
+| `app/models/draft.rb` | `cooked: PrettyText.cook(draft_body)` 299 → 301 | The fast-update branch itself is unchanged. Draft.set's new `backup:` argument gates entry to the whole backup path, including this call. Other callers retain the default `backup: true`. |
+| `lib/discourse_mcp/tools/users.rb` | SetUserStatus 751 → 753 | Status set/clear still cooks nothing; the Server now checks supplied descriptions. Preceding CreateUser/UpdateUser upload checks now accept usable authorization grants instead of refusing every upload reference under active rules. Profile/save/event paths remain after the text and grant checks. |
+
+Some behavior changed without moving existing evidence. The following table
+records those entry conditions as well; the inventory has matching operation/path
+notes. Native renderer, job and event bodies were not changed by this diff.
+
+| Current source | Affected paths | Unit 4 change |
+| --- | --- | --- |
+| `lib/discourse_mcp/server.rb` `call_tool`; `lib/discourse_mcp/authored_text.rb` `AUTHORED_ARGUMENTS` / `allowed?` | MCP entry to `post_create`, `revision`, `category_create`, `category_update`, `group_bio`, `membership_request`, `profile`, `user_events`, `system_message`, `silence`, `suspend` and draft storage | Supplied fields selected by the explicit tool/argument allowlist pass authored-text validation while any rule is active. The check cooks with `onebox_limit: "none"` to inspect references before implementation dispatch. This adds a render pass; it does not check every stored/generated template or remove native downstream edges. Labelled external links can still reach `link_extract` / `crawl`. |
+| `lib/discourse_mcp/tool_helpers.rb` `ensure_prospective_topic!` / `prospective_tag_ids!`; `lib/discourse_mcp/tools/topic_writes.rb` CreateTopic / UpdateTopic | `post_create`, `queued_approve`, `revision`, `upload_security` | Creation/update check prospective category and effective tags; UpdateTopic additionally checks stored first-post text. Category moves cannot reach upload-security rebakes while both secure uploads and a rule are active. |
+| `lib/discourse_mcp/tools/uploads.rb` UploadFile; `lib/discourse_mcp/upload_grants.rb`; `lib/discourse_mcp/tools/users.rb` CreateUser / UpdateUser | `upload`, `profile`, `user_events` and checked media in authored text | Fresh MCP uploads now receive an authorization grant. Reuse/assignment requires a grant with no reference outside recorded targets. Server records new reference targets after implementation. URL-source and freshness/deduplication refusals already existed at the baseline; they are not new unit 4 behavior. |
+| `lib/discourse_mcp/server.rb` `tool_error_text` | Tool-error output for every path | Active-rule tool errors pass only fixed server messages; other text becomes a generic refusal. This output change does not prove that a preceding mutation or job was safe. |
+
+All **245 exact evidence occurrences** and graph references are revalidated after
+refresh. Both enrichment examples pass. The inventory retains **56 operation rows,
+55 distinct write primitives, 116 native paths and three exclusions**. Conditional
+edges remain for unrestricted calls and other native callers; changed MCP entry
+conditions are recorded rather than erased from the graph. The complete 19-move
+list is in `enrichment_inventory.json` → `round3_review.moves`. Run receipts and the
+new URL examples are in [the unit 3 round-3 report](../content_restrictions_unit3/ROUND3.md).
