@@ -98,7 +98,6 @@ export default class ImageNodeView extends Component {
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
   @tracked uploadProgress = 0;
-  #altMenuNode;
   #progressEvent;
 
   constructor() {
@@ -188,12 +187,15 @@ export default class ImageNodeView extends Component {
 
     return (
       opener &&
-      (() =>
+      (() => {
+        const imageNode = this.args.node;
         opener({
-          alt: this.args.node.attrs.alt ?? "",
+          alt: imageNode.attrs.alt ?? "",
           image: this.image,
-          onSaveAlt: this.saveAltTextFromModal,
-        }))
+          onSaveAlt: (altText) =>
+            this.#saveAltTextFromModal(imageNode, altText),
+        });
+      })
     );
   }
 
@@ -293,8 +295,6 @@ export default class ImageNodeView extends Component {
       return;
     }
 
-    this.#altMenuNode = this.args.node;
-
     this.altMenuInstance = this.menu.newInstance(this.args.dom, {
       identifier: "composer-image-alt-text",
       component: ImageAltTextInput,
@@ -352,33 +352,6 @@ export default class ImageNodeView extends Component {
     if (forceFocus) {
       this.args.view.focus();
     }
-  }
-
-  @action
-  saveAltTextFromModal(altText) {
-    const { view } = this.args;
-
-    if (this.isDestroying || !view.editable) {
-      return false;
-    }
-
-    const imageNode = this.#altMenuNode;
-    const pos = this.args.getPos();
-    const node = view.state.doc.nodeAt(pos);
-    const isResolvedUpload =
-      imageNode.attrs.originalSrc?.startsWith("upload://") &&
-      node.type === imageNode.type &&
-      Object.entries(imageNode.attrs).every(
-        ([key, value]) => key === "src" || node.attrs[key] === value
-      );
-
-    if (node !== imageNode && !isResolvedUpload) {
-      return false;
-    }
-
-    this.saveAltText(altText);
-    this.#altMenuNode = view.state.doc.nodeAt(pos);
-    return true;
   }
 
   @action
@@ -744,6 +717,34 @@ export default class ImageNodeView extends Component {
     }
 
     return null;
+  }
+
+  #saveAltTextFromModal(imageNode, altText) {
+    const { view } = this.args;
+
+    if (this.isDestroying || !view.editable) {
+      return false;
+    }
+
+    const pos = this.args.getPos();
+    const node = pos == null ? null : view.state.doc.nodeAt(pos);
+    if (!node) {
+      return false;
+    }
+
+    const isResolvedUpload =
+      imageNode.attrs.originalSrc?.startsWith("upload://") &&
+      node.type === imageNode.type &&
+      Object.entries(imageNode.attrs).every(
+        ([key, value]) => key === "src" || node.attrs[key] === value
+      );
+
+    if (node !== imageNode && !isResolvedUpload) {
+      return false;
+    }
+
+    this.saveAltText(altText);
+    return true;
   }
 
   <template>

@@ -129,9 +129,11 @@ describe "Edit AI post image captions" do
     topic_page.click_post_action_button(second_post, :edit)
     composer.toggle_rich_editor unless composer.editor_toggle_switch["data-rich-editor"]
 
-    find(".composer-image-node img[alt='second cat']").click
+    find(".composer-image-node img[alt='second cat'][src='#{second_cat_upload.url}']").click
     expect(page).to have_css(".composer-image-toolbar__zoom-in")
     expect(page).to have_css(".composer-image-toolbar__trash")
+    find(".composer-image-toolbar__zoom-out").click
+    expect(page).to have_css(".composer-image-node img[alt='second cat'][data-scale='75']")
     find(".composer-image-node .image-alt-text-input__display[aria-haspopup=dialog]").click
 
     within(".image-descriptions-modal") do
