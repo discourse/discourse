@@ -23,7 +23,8 @@
         }
       ],
       "unit3_review": "Unit 3 now rejects missing/restricted category targets before submission and redacts identifiers if the stored new topic becomes restricted; NewPostManager and its creation/queue paths remain.",
-      "round3_review": "Adds prospective-topic validation before NewPostManager: explicit/word-watcher tags resolve to existing targets plus required parents, and the effective category/tag set must be allowed. Creation/queue edges remain after that gate."
+      "round3_review": "Adds prospective-topic validation before NewPostManager: explicit/word-watcher tags resolve to existing targets plus required parents, and the effective category/tag set must be allowed. Creation/queue edges remain after that gate.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "tool": "discourse_create_post",
@@ -41,12 +42,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 172,
+          "line": 180,
           "source": "class ReplyTopic"
         }
       ],
       "unit3_review": "Unit 3 checks the target topic against content policy before submission; the NewPostManager creation/queue paths remain.",
-      "round3_review": "Declaration moved after CreateTopic additions. ReplyTopic still checks topic access then calls submit_post!/NewPostManager; its body and creation/queue edges are unchanged apart from the shared Server authored-text gate."
+      "round3_review": "Declaration moved after CreateTopic additions. ReplyTopic still checks topic access then calls submit_post!/NewPostManager; its body and creation/queue edges are unchanged apart from the shared Server authored-text gate.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "tool": "discourse_create_private_message",
@@ -70,7 +72,8 @@
       ],
       "unit3_review": "Unit 3 certifies forum enforcement; creation still calls PostCreator directly. The new Server egress tripwire can refuse the returned restricted topic identifiers after creation.",
       "round3_review": "Shared Server authored-text checks now precede this unchanged PostCreator body; existing creation/event paths remain conditional on accepted text.",
-      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: declaration stays at 238, but CreatePrivateMessage now checks prospective tags from watched words and private-message policy before PostCreator. The native creation/event edges remain after that gate."
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: declaration stays at 238, but CreatePrivateMessage now checks prospective tags from watched words and private-message policy before PostCreator. The native creation/event edges remain after that gate.",
+      "unit4_review5_refresh": "CreatePrivateMessage now wraps PostCreator in a stored-topic policy transaction. ReplyPrivateMessage and InviteToPrivateMessage move five lines and retain their existing lookup, creation and invitation paths."
     },
     {
       "tool": "discourse_reply_private_message",
@@ -88,13 +91,14 @@
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 310,
+          "line": 315,
           "source": "class ReplyPrivateMessage"
         }
       ],
       "unit3_review": "Unit 3 checks the PM target through the policy-aware private_message_topic! lookup before PostCreator.",
       "round3_review": "Shared Server authored-text checks now precede this unchanged policy-aware PM lookup/PostCreator body.",
-      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: ReplyPrivateMessage moves 302 to 310 because CreatePrivateMessage now checks prospective category/effective tags, including watched words, before PostCreator. Reply still performs the policy-aware PM lookup and PostCreator call; its native post/event paths remain conditional."
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: ReplyPrivateMessage moves 302 to 310 because CreatePrivateMessage now checks prospective category/effective tags, including watched words, before PostCreator. Reply still performs the policy-aware PM lookup and PostCreator call; its native post/event paths remain conditional.",
+      "unit4_review5_refresh": "CreatePrivateMessage now wraps PostCreator in a stored-topic policy transaction. ReplyPrivateMessage and InviteToPrivateMessage move five lines and retain their existing lookup, creation and invitation paths."
     },
     {
       "tool": "discourse_update_post",
@@ -111,12 +115,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 230,
+          "line": 238,
           "source": "class EditPost"
         }
       ],
       "unit3_review": "Unit 3 checks the existing topic against content policy before PostRevisor; the revision/cooking path is unchanged.",
-      "round3_review": "Adds an active-rule refusal for non-regular cook_method before PostRevisor. Regular revisions remain reachable after the Server authored-text and topic-access gates."
+      "round3_review": "Adds an active-rule refusal for non-regular cook_method before PostRevisor. Regular revisions remain reachable after the Server authored-text and topic-access gates.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "tool": "discourse_update_topic",
@@ -134,12 +139,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 282,
+          "line": 290,
           "source": "class UpdateTopic"
         }
       ],
       "unit3_review": "Unit 3 rejects restricted destination categories and rolls back a move/retag that makes the stored topic restricted. Permitted edits still use first-post PostRevisor and upload-security hooks.",
-      "round3_review": "Adds stored first-post raw checking, refuses category changes with secure uploads enabled, and checks the complete prospective category/effective tags before revision. Existing stored-result rollback remains. The upload-security path from MCP category moves is suppressed while both a rule and secure uploads are active."
+      "round3_review": "Adds stored first-post raw checking, refuses category changes with secure uploads enabled, and checks the complete prospective category/effective tags before revision. Existing stored-result rollback remains. The upload-security path from MCP category moves is suppressed while both a rule and secure uploads are active.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "tool": "discourse_post_set_deleted",
@@ -161,12 +167,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 436,
+          "line": 444,
           "source": "class SetPostDeleted"
         }
       ],
       "unit3_review": "Unit 3 checks topic access before PostDestroyer destroy/recover; the recovery/revision/event paths remain conditional on that check.",
-      "round3_review": "Recovery checks current raw and, for a user-deleted post, the latest revision previous raw before PostDestroyer.recover. Deletion remains unchanged; native recovery/revision/event edges remain conditional."
+      "round3_review": "Recovery checks current raw and, for a user-deleted post, the latest revision previous raw before PostDestroyer.recover. Deletion remains unchanged; native recovery/revision/event edges remain conditional.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "tool": "discourse_create_category",
@@ -303,7 +310,8 @@
       "round3_review": "Before dispatch, publishing actions check queued title/raw; restoring actions check stored target-post raw. Existing account-deletion/additional_fields refusals remain. Native queued/recovery/unhide/feedback edges are retained conditionally, not certified for arbitrary plugin actions.",
       "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional.",
-      "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb."
+      "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb.",
+      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap."
     },
     {
       "tool": "discourse_update_user",
@@ -687,7 +695,7 @@
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 349,
+          "line": 354,
           "source": "class InviteToPrivateMessage"
         },
         {
@@ -703,7 +711,8 @@
       ],
       "unit3_review": "Unit 3 checks the PM target through the policy-aware lookup before recipient changes and generated invite content.",
       "round3_review": "Shared Server authored-text checks now cover custom_message before this unchanged invitation body.",
-      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: InviteToPrivateMessage moves 341 to 349 after the preceding PM creation gate. Re-read recipient validation, policy-aware PM lookup and invite/notification branches: their native edges remain unchanged."
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: InviteToPrivateMessage moves 341 to 349 after the preceding PM creation gate. Re-read recipient validation, policy-aware PM lookup and invite/notification branches: their native edges remain unchanged.",
+      "unit4_review5_refresh": "CreatePrivateMessage now wraps PostCreator in a stored-topic policy transaction. ReplyPrivateMessage and InviteToPrivateMessage move five lines and retain their existing lookup, creation and invitation paths."
     },
     {
       "tool": "discourse_save_draft",
@@ -965,7 +974,7 @@
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 277,
+          "line": 289,
           "source": "class UpdateSiteSetting"
         }
       ],
@@ -974,7 +983,8 @@
       "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
       "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: read-side URL guarding grew; UpdateSiteSetting remains unenforced and still calls SiteSettingSupport.update!, preserving its native setting-change/rebake edges.",
-      "unit4_review4_refresh": "Re-read at 6bb81ffd390: read-side URL checks now use an origin boundary and no longer infer routes/models; UpdateSiteSetting retains its unenforced declarations, confirmation/dependency/current-value checks and SiteSetting::Update call. Native setting/rebake edges remain conditional."
+      "unit4_review4_refresh": "Re-read at 6bb81ffd390: read-side URL checks now use an origin boundary and no longer infer routes/models; UpdateSiteSetting retains its unenforced declarations, confirmation/dependency/current-value checks and SiteSetting::Update call. Native setting/rebake edges remain conditional.",
+      "unit4_review5_refresh": "Read-side browser URL handling shifts UpdateSiteSetting and its update! call twelve lines. The write remains unenforced and retains SiteSetting::Update, confirmation, dependency, conflict and verification checks and native setting/rebake paths."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -1576,7 +1586,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 754,
+          "line": 759,
           "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
         }
       ],
@@ -1593,7 +1603,8 @@
       "round3_review": "Dispatch moved to the refreshed line. In addition to earlier policy/action guards, queued publishing and target-post restoring actions now check stored text before reviewable.perform.",
       "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional.",
-      "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb."
+      "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb.",
+      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap."
     },
     "category_create": {
       "trigger": "Category#create_category_definition",
@@ -1832,7 +1843,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 340,
+          "line": 352,
           "source": "SiteSettingSupport.update!("
         }
       ],
@@ -1845,7 +1856,8 @@
       "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
       "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: read-side URL guarding grew; UpdateSiteSetting remains unenforced and still calls SiteSettingSupport.update!, preserving its native setting-change/rebake edges.",
-      "unit4_review4_refresh": "Re-read at 6bb81ffd390: read-side URL checks now use an origin boundary and no longer infer routes/models; UpdateSiteSetting retains its unenforced declarations, confirmation/dependency/current-value checks and SiteSetting::Update call. Native setting/rebake edges remain conditional."
+      "unit4_review4_refresh": "Re-read at 6bb81ffd390: read-side URL checks now use an origin boundary and no longer infer routes/models; UpdateSiteSetting retains its unenforced declarations, confirmation/dependency/current-value checks and SiteSetting::Update call. Native setting/rebake edges remain conditional.",
+      "unit4_review5_refresh": "Read-side browser URL handling shifts UpdateSiteSetting and its update! call twelve lines. The write remains unenforced and retains SiteSetting::Update, confirmation, dependency, conflict and verification checks and native setting/rebake paths."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",
@@ -3011,11 +3023,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 145,
+          "line": 152,
           "source": "category: category_id,"
         }
       ],
-      "round3_review": "Re-read the moved explicit submission allowlist: category remains forwarded, blog_id still is not. Prospective-topic validation precedes submission but does not add blog_id; the exclusion remains valid."
+      "round3_review": "Re-read the moved explicit submission allowlist: category remains forwarded, blog_id still is not. Prospective-topic validation precedes submission but does not add blog_id; the exclusion remains valid.",
+      "unit4_review5_refresh": "CreateTopic now wraps submission in a stored-topic policy transaction. Its submission allowlist still excludes blog_id. ReplyTopic, EditPost, UpdateTopic and SetPostDeleted move eight lines; their native submission/revision/deletion/recovery paths remain."
     },
     {
       "candidate": "Boards::ConstraintFixer",
@@ -3459,5 +3472,81 @@
       }
     ],
     "review": "Seed 84019 observed stale moderation evidence at 704, followed by an out-of-range site-settings reference at 479 before refresh. Direct inspection found four stale live occurrences: moderation 704/744 to 714/754 and site settings 479/542 to 277/340. Current bodies and 9568245c408..6bb81ffd390 were re-read. Historical metadata remains unchanged; classifications and graph edges are retained."
+  },
+  "unit4_review5_refresh": {
+    "revision": "e775091f75f4d75fa7e53aa848402d97abfd303f",
+    "moves": [
+      {
+        "entry": "operation:discourse_create_post",
+        "file": "lib/discourse_mcp/tools/topic_writes.rb",
+        "previous_line": 172,
+        "current_line": 180,
+        "source": "class ReplyTopic"
+      },
+      {
+        "entry": "operation:discourse_reply_private_message",
+        "file": "lib/discourse_mcp/tools/private_messages.rb",
+        "previous_line": 310,
+        "current_line": 315,
+        "source": "class ReplyPrivateMessage"
+      },
+      {
+        "entry": "operation:discourse_update_post",
+        "file": "lib/discourse_mcp/tools/topic_writes.rb",
+        "previous_line": 230,
+        "current_line": 238,
+        "source": "class EditPost"
+      },
+      {
+        "entry": "operation:discourse_update_topic",
+        "file": "lib/discourse_mcp/tools/topic_writes.rb",
+        "previous_line": 282,
+        "current_line": 290,
+        "source": "class UpdateTopic"
+      },
+      {
+        "entry": "operation:discourse_post_set_deleted",
+        "file": "lib/discourse_mcp/tools/topic_writes.rb",
+        "previous_line": 436,
+        "current_line": 444,
+        "source": "class SetPostDeleted"
+      },
+      {
+        "entry": "operation:discourse_invite_to_private_message",
+        "file": "lib/discourse_mcp/tools/private_messages.rb",
+        "previous_line": 349,
+        "current_line": 354,
+        "source": "class InviteToPrivateMessage"
+      },
+      {
+        "entry": "operation:discourse_update_site_setting",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "previous_line": 277,
+        "current_line": 289,
+        "source": "class UpdateSiteSetting"
+      },
+      {
+        "entry": "path:reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 754,
+        "current_line": 759,
+        "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
+      },
+      {
+        "entry": "path:settings",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "previous_line": 340,
+        "current_line": 352,
+        "source": "SiteSettingSupport.update!("
+      },
+      {
+        "entry": "exclusion:0",
+        "file": "lib/discourse_mcp/tools/topic_writes.rb",
+        "previous_line": 145,
+        "current_line": 152,
+        "source": "category: category_id,"
+      }
+    ],
+    "review": "Seed 85019 observed ten stale live evidence occurrences at ten distinct locations before refresh; no IndexError occurred at this HEAD. Re-read each current declaration/call and the 8a32e9ce84d..e775091f75f diff. Stored-topic transactions narrow creation and approval reachability; URL read projection changes precede the setting write. Native conditional graph edges and classifications are retained. Historical refresh metadata is unchanged."
   }
 }

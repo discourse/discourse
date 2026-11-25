@@ -385,3 +385,28 @@ edges remain **245 evidence occurrences, 56 operation rows, 55 distinct write
 primitives, 116 paths and three exclusions**. Both enrichment examples pass in
 the combined review-4 run. Names, RED signatures, calibration limits and run
 receipts are recorded in [REVIEW4.md](../content_restrictions_unit4/REVIEW4.md).
+
+## Unit 4 review 5 evidence refresh at `e775091f75f`
+
+Seed **85019** observed ten stale live evidence occurrences at ten distinct
+locations before editing: **2 examples, 1 failure**. This HEAD did not reproduce
+an `IndexError`. Each current declaration/call and the
+`8a32e9ce84d..e775091f75f` diff were read before refreshing:
+
+| Source | Evidence moves | Re-review |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/moderation.rb` | `reviewable.perform` 754 → 759 | Dispatch now runs in a stored-topic transaction using `created_post_topic`. Native approval/recovery/feedback paths remain conditional. Revise/reject's system PM does not populate that field; the new review-5 spec pins the PM-rule bypass. |
+| `lib/discourse_mcp/tools/private_messages.rb` | ReplyPrivateMessage 310 → 315; InviteToPrivateMessage 349 → 354 | CreatePrivateMessage gains a stored-topic transaction around PostCreator. Reply and invitation bodies retain their native paths. |
+| `lib/discourse_mcp/tools/site_settings.rb` | UpdateSiteSetting 277 → 289; update! call 340 → 352 | Browser-oriented read-side URL handling shifts the write, whose unenforced declarations, service checks and native setting/rebake paths remain. |
+| `lib/discourse_mcp/tools/topic_writes.rb` | submission category 145 → 152; ReplyTopic 172 → 180; EditPost 230 → 238; UpdateTopic 282 → 290; SetPostDeleted 436 → 444 | CreateTopic gains a stored-topic transaction. Subsequent write bodies and conditional graph edges remain; the explicit submission fields still exclude `blog_id`. |
+
+`unit4_review5_refresh` records these moves and entry conditions; historical
+reviews remain intact. All **245 live evidence occurrences** and graph references
+were checked twice after refreshing. Counts remain **56 operation rows, 55
+distinct write primitives, 116 native paths and three exclusions**.
+
+Both enrichment examples pass in the combined seed-85019 run, with no
+`IndexError`. The combined run has 40 examples and 21 intentional regression
+failures from the new review-5 specs. Exact new example names, observed RED
+signatures, GREEN controls and run receipts are in
+[REVIEW5.md](../content_restrictions_unit4/REVIEW5.md).
