@@ -804,6 +804,36 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(429)
       end
+
+      it "counts codes against the invite's address when the invite key is padded" do
+        freeze_time
+        invite = Fabricate(:invite, email: "invited@example.com")
+
+        3.times do
+          post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+          expect(response.status).to eq(200)
+          freeze_time 2.minutes.from_now
+        end
+
+        post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+
+        expect(response.status).to eq(429)
+
+        [
+          { invite_key: "#{invite.invite_key} " },
+          { invite_key: " #{invite.invite_key}\n" },
+          { invite_key: " #{invite.invite_key}", email: "attacker@example.com" },
+        ].each do |padded_params|
+          expect_not_enqueued_with(
+            job: :send_email_login_code,
+            args: {
+              to_address: invite.email,
+            },
+          ) { post "/session/login-code.json", params: honeypot_magic(padded_params) }
+
+          expect(response.status).to eq(429)
+        end
+      end
     end
   end
 
@@ -2314,6 +2344,48 @@ RSpec.describe SessionController do
       end
     end
 
+    context "when the admin IP allowlist is enabled" do
+      before do
+        SiteSetting.use_admin_ip_allowlist = true
+        ScreenedIpAddress.all.destroy_all
+        Fabricate(
+          :screened_ip_address,
+          ip_address: "198.51.100.7",
+          action_type: ScreenedIpAddress.actions[:allow_admin],
+        )
+        Fabricate(:single_sign_on_record, user: admin, external_id: "admin-external-id")
+      end
+
+      def admin_sso_params
+        sso = get_sso("/")
+        sso.external_id = "admin-external-id"
+        sso.email = admin.email
+        sso.username = admin.username
+        Rack::Utils.parse_query(sso.payload)
+      end
+
+      it "does not log in the admin from an IP outside the allowlist" do
+        get "/session/sso_login",
+            params: admin_sso_params,
+            headers: headers.merge("REMOTE_ADDR" => "203.0.113.9")
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(response.status).to eq(403)
+        expect(logged_on_user).to be_nil
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "logs in the admin from an IP inside the allowlist" do
+        get "/session/sso_login",
+            params: admin_sso_params,
+            headers: headers.merge("REMOTE_ADDR" => "198.51.100.7")
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(response.status).to eq(302)
+        expect(logged_on_user).to eq(admin)
+      end
+    end
+
     context "when in staff writes only mode" do
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
@@ -2995,6 +3067,36 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(302)
         expect(response).to redirect_to(topic_invite.topic.relative_url)
+      end
+
+      it "does not redirect to the topic associated to the invite when the user cannot see it" do
+        topic = Fabricate(:topic, title: "Planning thread for the autumn community meetup")
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        topic.update!(title: "Confidential: venue contract dispute with Harbour Hall")
+
+        login_with_sso_and_invite
+
+        redeemer = User.find_by_email("bob@bob.com")
+        expect(redeemer.guardian.can_see?(topic)).to eq(false)
+
+        expect(response.status).to eq(302)
+        expect(response.location).not_to include(topic.reload.slug)
+        expect(response).to redirect_to("/")
+      end
+
+      it "redirects to the topic when the invite's groups give the user access to it" do
+        group = Fabricate(:group)
+        topic = Fabricate(:topic, category: Fabricate(:private_category, group: group))
+        email_invite = Fabricate(:invite, email: "bob@bob.com", invited_by: admin)
+        TopicInvite.create!(invite: email_invite, topic: topic)
+        InvitedGroup.create!(invite: email_invite, group: group)
+
+        login_with_sso_and_invite(email_invite.invite_key)
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(topic.relative_url)
       end
 
       it "adds the user to the appropriate invite groups" do
@@ -4817,6 +4919,40 @@ RSpec.describe SessionController do
           get "/session/current.json"
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
+        end
+
+        context "when the admin IP allowlist is enabled" do
+          let(:token) { SecureRandom.hex }
+
+          before do
+            SiteSetting.use_admin_ip_allowlist = true
+            ScreenedIpAddress.all.destroy_all
+            Fabricate(
+              :screened_ip_address,
+              ip_address: "198.51.100.7",
+              action_type: ScreenedIpAddress.actions[:allow_admin],
+            )
+            Discourse.redis.setex "otp_#{token}", 10.minutes, admin.username
+          end
+
+          it "does not log in the admin from an IP outside the allowlist" do
+            post "/session/otp/#{token}", headers: { "REMOTE_ADDR" => "203.0.113.9" }
+
+            expect(response.status).to eq(200)
+            expect(CGI.unescapeHTML(response.body)).to include(
+              I18n.t("login.admin_not_allowed_from_ip_address", username: admin.username),
+            )
+            expect(session[:current_user_id]).to be_blank
+            expect(Discourse.redis.get("otp_#{token}")).to eq(admin.username)
+          end
+
+          it "logs in the admin from an IP inside the allowlist" do
+            post "/session/otp/#{token}", headers: { "REMOTE_ADDR" => "198.51.100.7" }
+
+            expect(response.status).to eq(302)
+            expect(session[:current_user_id]).to eq(admin.id)
+            expect(Discourse.redis.get("otp_#{token}")).to be_nil
+          end
         end
       end
     end

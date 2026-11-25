@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AiUsageSerializer < ApplicationSerializer
-  attributes :data, :features, :feature_models, :models, :users, :summary, :period
+  attributes :data, :features, :feature_models, :models, :users, :workflows, :summary, :period
 
   def data
     object.tokens_by_period.map do |row|
@@ -94,6 +94,15 @@ class AiUsageSerializer < ApplicationSerializer
         total_spending: user.total_spending,
       }
     end
+  end
+
+  def workflows
+    DiscourseAi::WorkflowUsage.breakdown(
+      start_date: object.start_date,
+      end_date: object.end_date,
+      feature: object.feature_filter,
+      model: object.model_filter,
+    )
   end
 
   def summary

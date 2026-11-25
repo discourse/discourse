@@ -99,7 +99,8 @@
     }
   }
 
-  &__users {
+  &__users,
+  &__workflows {
     grid-column: span 2;
   }
 
@@ -136,7 +137,8 @@
 
   &__features-table,
   &__users-table,
-  &__models-table {
+  &__models-table,
+  &__workflows-table {
     width: 100%;
     border-collapse: collapse;
 
@@ -149,7 +151,8 @@
 
   &__features-row,
   &__users-row,
-  &__models-row {
+  &__models-row,
+  &__workflows-row {
     &:hover {
       background: var(--primary-low);
     }
@@ -169,7 +172,8 @@
 
   &__features-cell,
   &__users-cell,
-  &__models-cell {
+  &__models-cell,
+  &__workflows-cell {
     padding: 0.5em;
     border-bottom: 1px solid var(--primary-low);
     overflow-wrap: anywhere;

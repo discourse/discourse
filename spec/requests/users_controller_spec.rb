@@ -96,6 +96,73 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when the admin IP allowlist is enabled" do
+        before do
+          user_deferred.update!(admin: true, active: false)
+          SiteSetting.use_admin_ip_allowlist = true
+          ScreenedIpAddress.all.destroy_all
+          Fabricate(
+            :screened_ip_address,
+            ip_address: "198.51.100.7",
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
+        end
+
+        it "does not log in the admin from an IP outside the allowlist" do
+          put "/u/activate-account/#{email_token.token}",
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("login.admin_not_allowed_from_ip_address", username: user_deferred.username)],
+          )
+          expect(session[:current_user_id]).to be_blank
+        end
+
+        it "does not log in an account that login promotes from a developer email" do
+          user_deferred.update!(admin: false)
+          Rails.configuration.stubs(:developer_emails).returns([user_deferred.email])
+
+          put "/u/activate-account/#{email_token.token}",
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("login.admin_not_allowed_from_ip_address", username: user_deferred.username)],
+          )
+          expect(session[:current_user_id]).to be_blank
+          expect(user_deferred.reload.admin?).to eq(false)
+        end
+
+        it "logs in an account promoted from a developer email at an IP inside the allowlist" do
+          user_deferred.update!(admin: false)
+          Rails.configuration.stubs(:developer_emails).returns([user_deferred.email])
+
+          put "/u/activate-account/#{email_token.token}",
+              headers: {
+                "REMOTE_ADDR" => "198.51.100.7",
+              }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(user_deferred.id)
+          expect(user_deferred.reload.admin?).to eq(true)
+        end
+
+        it "logs in the admin from an IP inside the allowlist" do
+          put "/u/activate-account/#{email_token.token}",
+              headers: {
+                "REMOTE_ADDR" => "198.51.100.7",
+              }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(user_deferred.id)
+        end
+      end
+
       context "with honeypot" do
         it "raises an error if the honeypot is invalid" do
           UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(true)
@@ -465,6 +532,84 @@ RSpec.describe UsersController do
         put "/u/password-reset/#{email_token.token}", params: { password: "test123987AsdfXYZ" }
         expect(user1.reload.confirm_password?("hg9ow8yHG32O")).to eq(true)
         expect(user1.user_auth_tokens.count).to eq(1)
+      end
+
+      context "when the admin IP allowlist is enabled" do
+        before do
+          SiteSetting.use_admin_ip_allowlist = true
+          ScreenedIpAddress.all.destroy_all
+          Fabricate(
+            :screened_ip_address,
+            ip_address: "198.51.100.7",
+            action_type: ScreenedIpAddress.actions[:allow_admin],
+          )
+          user1.update!(admin: true)
+        end
+
+        it "changes the password without logging the admin in from an IP outside the allowlist" do
+          Wizard.stubs(:user_requires_completion?).returns(true)
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yhg98oLongEnough",
+              },
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(response.parsed_body["requires_approval"]).to eq(false)
+          expect(response.parsed_body["login_error"]).to eq(
+            I18n.t("login.admin_not_allowed_from_ip_address", username: user1.username),
+          )
+          expect(response.parsed_body["redirect_to"]).to be_nil
+          expect(user1.reload.confirm_password?("hg9ow8yhg98oLongEnough")).to eq(true)
+          expect(session[:current_user_id]).to be_blank
+        end
+
+        it "does not redirect a denied password reset to the wizard" do
+          Wizard.stubs(:user_requires_completion?).returns(true)
+          put "/u/password-reset/#{email_token.token}",
+              params: {
+                password: "hg9ow8yhg98oLongEnough",
+              },
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to be_blank
+          expect(user1.reload.confirm_password?("hg9ow8yhg98oLongEnough")).to eq(true)
+        end
+
+        it "logs the admin in from an IP inside the allowlist" do
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yhg98oLongEnough",
+              },
+              headers: {
+                "REMOTE_ADDR" => "198.51.100.7",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(session[:current_user_id]).to eq(user1.id)
+        end
+
+        it "logs in a non-admin from an IP outside the allowlist" do
+          user1.update!(admin: false)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yhg98oLongEnough",
+              },
+              headers: {
+                "REMOTE_ADDR" => "203.0.113.9",
+              }
+
+          expect(response.status).to eq(200)
+          expect(session[:current_user_id]).to eq(user1.id)
+        end
       end
 
       it "doesn't redirect to wizard on get" do
@@ -902,6 +1047,24 @@ RSpec.describe UsersController do
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
+    end
+
+    it "does not promote a developer email account switching back from an IP outside the admin IP allowlist" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.use_admin_ip_allowlist = true
+      Fabricate(
+        :screened_ip_address,
+        ip_address: "198.51.100.7",
+        action_type: ScreenedIpAddress.actions[:allow_admin],
+      )
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      Rails.configuration.stubs(:developer_emails).returns([user.email])
+
+      2.times { post "/u/toggle-anon.json", headers: { "REMOTE_ADDR" => "203.0.113.9" } }
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(user.id)
+      expect(user.reload.admin?).to eq(false)
     end
 
     it "does not let an in-flight request with a replaced cookie clear the new session" do
@@ -6588,6 +6751,82 @@ RSpec.describe UsersController do
           expect(approved_user).not_to be_approved
           expect(approved_user.approved_by).to be_nil
           expect(approved_user.approved_at).to be_nil
+        end
+
+        context "when approval came from an auto-approved email domain" do
+          before { SiteSetting.auto_approve_email_domains = "example.com" }
+
+          def sign_up(email)
+            post "/u.json",
+                 params: {
+                   username: "domainuser",
+                   password: "strongpassword1",
+                   email: email,
+                 }
+            expect(response.status).to eq(200)
+
+            User.find_by(username: "domainuser").tap { |user| expect(user).to be_approved }
+          end
+
+          def change_activation_email(email)
+            put "/u/update-activation-email.json",
+                params: {
+                  username: "domainuser",
+                  password: "strongpassword1",
+                  email: email,
+                }
+            expect(response.status).to eq(200)
+          end
+
+          it "requires staff approval after moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email("someone@other.com")
+
+            raw_token =
+              Jobs::CriticalUserEmail
+                .jobs
+                .map { |job| job["args"].first }
+                .find { |args| args["to_address"] == "someone@other.com" }[
+                "email_token"
+              ]
+
+            put "/u/activate-account/#{raw_token}.json"
+
+            user.reload
+            expect(user).to be_active
+            expect(user).not_to be_approved
+            expect(response.parsed_body["needs_approval"]).to eq(true)
+            expect(session[:current_user_id]).to be_blank
+          end
+
+          it "preserves approval given by staff when moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+            user.update!(approved_by: admin)
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).to be_approved
+          end
+
+          it "requires staff approval when the domain stopped qualifying before the move" do
+            user = sign_up("someone@example.com")
+            SiteSetting.auto_approve_email_domains = "another.com"
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).not_to be_approved
+          end
+
+          it "preserves approval when correcting the email within a qualifying domain" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email(" Corrected@Example.com ")
+
+            user.reload
+            expect(user.email).to eq("corrected@example.com")
+            expect(user).to be_approved
+          end
         end
       end
 

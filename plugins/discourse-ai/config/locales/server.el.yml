@@ -151,6 +151,8 @@ el:
           action_failed: "Αποτυχία ενημέρωσης της κατάστασης επίλυσης."
         success: "Η κατάσταση επίλυσης ενημερώθηκε με επιτυχία."
     appearance_authoring:
+      component_on: "Ενεργό"
+      component_off: "Ανενεργό"
       default_theme: "Προεπιλεγμένο θέμα"
       colors:
         light:

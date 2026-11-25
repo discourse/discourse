@@ -232,6 +232,25 @@ nb_NO:
         edit: "Rediger"
         delete: "Slett"
         embedding: "Innbygging"
+      concepts:
+        edit: "Rediger"
+        delete: "Slett"
+        columns:
+          status: "Status"
+          topics: "Emner"
+          posts: "Innlegg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Navn"
+          description: "Beskrivelse"
+          status: "Status"
+        tagged_topics: "Emner med stikkord"
+        topic_columns:
+          topic: "Emne"
+          primary: "Primær"
+          relevance: "Relevanse"
+        primary_badge: "Primær"
       decision_models:
         no_preset: "Ingen"
         display_name: "Navn"

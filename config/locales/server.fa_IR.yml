@@ -2937,6 +2937,8 @@ fa_IR:
       approve_post:
         title: "بله"
         complete: "نوشته تایید شده."
+      deny_and_delete_post:
+        complete: "نوشته حذف شده."
       approve_post_closed:
         title: "بله"
         complete: "نوشته تایید شده."

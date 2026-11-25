@@ -240,6 +240,24 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      concepts:
+        edit: "Uredi"
+        delete: "Izbriši"
+        columns:
+          status: "Status"
+          topics: "Tem"
+          posts: "Prispevki"
+        statuses:
+          active: "Aktivni"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Status"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Pomembnosti"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Brez"
         display_name: "Ime"

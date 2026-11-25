@@ -460,7 +460,6 @@ fr:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
         admin_assistant:
-          name: "Assistant d'administration Discourse"
           description: "Bot d'IA qui répond aux questions sur Discourse et aide les administrateurs à gérer les paramètres du site"
         web_artifact_creator:
           name: "Créateur d'artefacts Web"
@@ -957,6 +956,8 @@ fr:
           secret: "Le paramètre du site « %{setting_name} » contient un secret et ne peut pas être lu ici."
           themeable: "Le paramètre du site « %{setting_name} » nécessite un thème et ne peut pas être lu ici."
     appearance_authoring:
+      component_on: "Activé"
+      component_off: "Désactivé"
       default_theme: "Thème par défaut"
       colors:
         light:

@@ -262,6 +262,25 @@ da:
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      concepts:
+        edit: "Rediger"
+        delete: "Slet"
+        columns:
+          status: "Status"
+          topics: "Emner"
+          posts: "Indlæg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Navn"
+          description: "Beskrivelse"
+          status: "Status"
+        tagged_topics: "Markerede emner"
+        topic_columns:
+          topic: "Emne"
+          primary: "Primær"
+          relevance: "Relevans"
+        primary_badge: "Primær"
       decision_models:
         no_preset: "Ingen"
         display_name: "Navn"

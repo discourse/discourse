@@ -4423,7 +4423,6 @@ fi:
       dracula: "Dracula"
       grey_amber: "Harmaa ambra"
       latte: "Latte"
-      dark_rose: "Tumma ruusu"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -4660,6 +4659,8 @@ fi:
       approve_post:
         title: "Kyllä"
         complete: "Viesti hyväksytty."
+      deny_and_delete_post:
+        complete: "Viesti poistettu."
       approve_post_closed:
         title: "Kyllä"
         confirm: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"

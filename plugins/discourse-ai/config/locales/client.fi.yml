@@ -625,6 +625,25 @@ fi:
         delete: "Poista"
         embedding: "Upottaminen"
         tool: "Työkalu"
+      concepts:
+        edit: "Muokkaa"
+        delete: "Poista"
+        columns:
+          status: "Tila"
+          topics: "Aiheet"
+          posts: "Viestejä"
+        statuses:
+          active: "Aktiivinen"
+        form:
+          name: "Nimi"
+          description: "Kuvaus"
+          status: "Tila"
+        tagged_topics: "Tunnisteelliset ketjut"
+        topic_columns:
+          topic: "Ketju"
+          primary: "Ensisijainen"
+          relevance: "Osuvuus"
+        primary_badge: "Ensisijainen"
       decision_models:
         no_preset: "Ei valittu"
         display_name: "Nimi"

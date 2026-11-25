@@ -29,6 +29,20 @@ Ungrouped tools added by `admin_assistant_tools` remain immediately available fo
 backward compatibility; removing a tool through that modifier still excludes it from
 loaded groups. Keep new built-in domain tools in `AdminAssistant::TOOL_GROUPS`.
 
+### Workflow AI usage
+
+The AI agent workflow action tags each LLM audit entry with its workflow ID, including
+requests made by subagents and context compression. A workflow's stats panel displays the number of AI requests,
+request, response, and cache tokens, and estimated USD cost for the last seven days. These
+figures count requests rather than workflow executions; multiple items or tool calls can
+produce multiple requests. Only retained audit logs are counted, so reducing audit-log
+retention below seven days also shortens the available usage history. Older workflow runs
+and other AI nodes without workflow attribution are not included. AI logs identify
+existing workflows by name and link to their editor. The main AI usage report shows a
+workflow breakdown below users only when attributed audit entries exist for a workflow
+in the selected date, feature, and model filters. Unlike the overall report, this
+breakdown cannot include audit entries after their retention window expires.
+
 ### Evals
 
 The directory `evals` contains AI evals for the Discourse AI plugin.

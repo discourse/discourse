@@ -57,7 +57,8 @@ RSpec.describe Admin::Config::DesignWizardController do
           DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["light"]).to be_nil
+        expect(dracula["light"]["name"]).to eq("Dracula Light")
+        expect(dracula["dark"]["name"]).to eq("Dracula")
       end
 
       it "offers Concord for installation by default without creating a theme" do

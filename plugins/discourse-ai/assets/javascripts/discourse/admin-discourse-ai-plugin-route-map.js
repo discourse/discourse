@@ -40,6 +40,10 @@ export default {
       this.route("mcp-server-edit", { path: "/mcp-servers/:id/edit" });
     });
     this.route("discourse-ai-spam", { path: "ai-spam" });
+    this.route("discourse-ai-concepts", { path: "ai-concepts" }, function () {
+      this.route("new");
+      this.route("edit", { path: "/:id/edit" });
+    });
     this.route("discourse-ai-translations", { path: "ai-translations" });
     this.route("discourse-ai-usage", { path: "ai-usage" });
     this.route("discourse-ai-logs", { path: "ai-logs" });

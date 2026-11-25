@@ -800,39 +800,49 @@ discourse_ai:
 
   inferred_concepts_enabled:
     default: false
-    client: true
-    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
-    area: "ai-features/inference"
-  inferred_concepts_background_match:
-    default: false
     client: false
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_daily_topics_limit:
     default: 20
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_posts:
     default: 5
+    min: 1
+    max: 1000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_likes:
     default: 10
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_views:
     default: 100
+    min: 0
+    max: 1000000
     client: false
     area: "ai-features/inference"
   inferred_concepts_lookback_days:
     default: 30
+    min: 1
+    max: 3650
     client: false
     area: "ai-features/inference"
   inferred_concepts_daily_posts_limit:
     default: 30
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_post_min_likes:
     default: 5
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_generate_agent:
@@ -849,6 +859,31 @@ discourse_ai:
     default: "-17"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_match_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_backfill_maximum_topics_per_hour:
+    default: 240
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_backfill_max_age_days:
+    default: 365
+    min: 0
+    max: 36500
+    area: "ai-features/inference"
+  inferred_concepts_backfill_minimum_word_count:
+    default: 50
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_seed_topics_limit:
+    default: 200
+    min: 10
+    max: 20000
     area: "ai-features/inference"
   ai_artifact_kv_value_max_length:
     default: 5000

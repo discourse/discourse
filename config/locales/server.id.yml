@@ -1657,6 +1657,8 @@ id:
       approve_post:
         title: "Ya"
         complete: "Post disetujui."
+      deny_and_delete_post:
+        complete: "Pos dihapus."
       approve_post_closed:
         title: "Ya"
         complete: "Post disetujui."

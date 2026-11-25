@@ -221,6 +221,22 @@ bs_BA:
         edit: "Izmijeni"
         delete: "Delete"
         embedding: "Embedding"
+      concepts:
+        edit: "Izmijeni"
+        delete: "Delete"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Objave"
+        statuses:
+          active: "Active"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Status"
+        topic_columns:
+          topic: "Topic"
+          relevance: "Bitnost"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime"

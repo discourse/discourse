@@ -1117,8 +1117,12 @@ class User < ActiveRecord::Base
     user_visits.find_by(visited_at: date)
   end
 
-  def update_visit_record!(date)
-    create_visit_record!(date) unless visit_record_for(date)
+  def update_visit_record!(date, mobile: false)
+    if visit = visit_record_for(date)
+      visit.update_columns(mobile: true) if mobile && !visit.mobile
+    else
+      create_visit_record!(date, mobile:)
+    end
   rescue ActiveRecord::RecordNotUnique
     # concurrent "Updating Last Seen" defer block already inserted
   end
@@ -1216,13 +1220,13 @@ class User < ActiveRecord::Base
     )
   end
 
-  def update_last_seen!(now = Time.zone.now, force: false)
+  def update_last_seen!(now = Time.zone.now, force: false, mobile: false)
     if !force
       return if !User.should_update_last_seen?(id, now)
     end
 
     previous_seen_at = last_seen_at
-    update_previous_visit(now)
+    update_previous_visit(now, mobile:)
     # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
     update_column(:first_seen_at, now) unless first_seen_at
@@ -2515,8 +2519,8 @@ class User < ActiveRecord::Base
     seen_before? && (last_seen_at < (timestamp - SiteSetting.previous_visit_timeout_hours.hours))
   end
 
-  def update_previous_visit(timestamp)
-    update_visit_record!(timestamp.to_date)
+  def update_previous_visit(timestamp, mobile: false)
+    update_visit_record!(timestamp.to_date, mobile:)
     update_column(:previous_visit_at, last_seen_at) if previous_visit_at_update_required?(timestamp)
   end
 

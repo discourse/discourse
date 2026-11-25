@@ -135,6 +135,8 @@ cs:
         errors:
           not_found: "Téma nenalezeno."
     appearance_authoring:
+      component_on: "Zapnuto"
+      component_off: "Vypnuto"
       default_theme: "Výchozí motiv"
       colors:
         light:

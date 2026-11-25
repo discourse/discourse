@@ -19,7 +19,6 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
     SiteSetting.inferred_concepts_min_views = 100
     SiteSetting.inferred_concepts_post_min_likes = 5
     SiteSetting.inferred_concepts_lookback_days = 30
-    SiteSetting.inferred_concepts_background_match = false
   end
 
   describe "#execute" do
@@ -107,30 +106,6 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
       end
     end
 
-    it "enqueues a single classify pass per item type without duplicate delayed jobs" do
-      SiteSetting.inferred_concepts_background_match = true
-
-      expect_enqueued_with(
-        job: :generate_inferred_concepts,
-        args: {
-          item_type: "topics",
-          item_ids: [topic.id],
-          batch_size: 10,
-        },
-      ) do
-        expect_enqueued_with(
-          job: :generate_inferred_concepts,
-          args: {
-            item_type: "posts",
-            item_ids: [post.id],
-            batch_size: 10,
-          },
-        ) { job.execute({}) }
-      end
-
-      expect(Jobs::GenerateInferredConcepts.jobs.size).to eq(2)
-    end
-
     it "does not schedule jobs when no candidates found" do
       expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
         :find_candidate_topics,
@@ -194,38 +169,15 @@ RSpec.describe Jobs::GenerateConceptsFromPopularItems do
       end
     end
 
-    it "handles nil site setting values gracefully" do
-      Discourse.expects(:deprecate).times(6)
-      SiteSetting.inferred_concepts_daily_topics_limit = nil
-      SiteSetting.inferred_concepts_daily_posts_limit = nil
-      SiteSetting.inferred_concepts_min_posts = nil
-      SiteSetting.inferred_concepts_min_likes = nil
-      SiteSetting.inferred_concepts_min_views = nil
-      SiteSetting.inferred_concepts_post_min_likes = nil
-      # Keep lookback_days at default so .days.ago doesn't fail
+    it "skips querying when daily topic and post limits are 0" do
+      SiteSetting.inferred_concepts_daily_topics_limit = 0
+      SiteSetting.inferred_concepts_daily_posts_limit = 0
+      allow(DiscourseAi::InferredConcepts::Manager).to receive(:new)
 
-      freeze_time do
-        expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
-          :find_candidate_topics,
-        ).with(
-          limit: 0, # nil becomes 0
-          min_posts: 0, # nil becomes 0
-          min_likes: 0, # nil becomes 0
-          min_views: 0, # nil becomes 0
-          created_after: 30.days.ago, # default from before block
-        ).and_return([])
+      job.execute({})
 
-        expect_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
-          :find_candidate_posts,
-        ).with(
-          limit: 0, # nil becomes 0
-          min_likes: 0, # nil becomes 0
-          exclude_first_posts: true,
-          created_after: 30.days.ago, # default from before block
-        ).and_return([])
-
-        job.execute({})
-      end
+      expect(DiscourseAi::InferredConcepts::Manager).not_to have_received(:new)
+      expect(Jobs::GenerateInferredConcepts.jobs).to be_empty
     end
 
     it "processes both topics and posts in the same run" do

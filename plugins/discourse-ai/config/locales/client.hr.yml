@@ -251,6 +251,25 @@ hr:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Ugrađivanje"
+      concepts:
+        edit: "Uredi"
+        delete: "Izbriši"
+        columns:
+          status: "Statust"
+          topics: "Tema"
+          posts: "Postovi"
+        statuses:
+          active: "Aktivno"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Statust"
+        tagged_topics: "Tagirane teme"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Relevantnost"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime"

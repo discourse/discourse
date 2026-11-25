@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -33,31 +34,36 @@ export default class BlogThemesIndex extends Component {
         @label={{i18n "blog.admin.themes"}}
         @path="/admin/plugins/blog/themes"
       />
-      <DPageSubheader
-        @descriptionLabel={{i18n "blog.admin.themes_index_description"}}
-        @titleLabel={{i18n "blog.admin.themes"}}
-      >
-        <:actions as |actions|>
-          {{! actions.Default cannot be disabled. }}
-          <actions.Wrapped as |wrapped|>
-            <DButton
-              class={{if
-                wrapped.buttonClass
-                wrapped.buttonClass
-                "d-page-action-button btn-small btn-default"
-              }}
+      <div class="blog-admin-intro">
+        <p class="blog-admin-intro__description">{{i18n
+            "blog.admin.themes_tab_description"
+          }}</p>
+        <DPageSubheader>
+          <:actions as |actions|>
+            {{! actions.Default cannot be disabled. }}
+            <actions.Wrapped as |wrapped|>
+              <DButton
+                class={{if
+                  wrapped.buttonClass
+                  wrapped.buttonClass
+                  "d-page-action-button btn-small btn-default"
+                }}
+                @disabled={{this.customThemesLocked}}
+                @label="blog.admin.import"
+                @route="adminPlugins.show.discourse-blog-themes.import"
+              />
+            </actions.Wrapped>
+            <actions.Primary
               @disabled={{this.customThemesLocked}}
-              @label="blog.admin.import"
-              @route="adminPlugins.show.discourse-blog-themes.import"
+              @label="blog.admin.new_theme_short"
+              @route="adminPlugins.show.discourse-blog-themes.new"
             />
-          </actions.Wrapped>
-          <actions.Primary
-            @disabled={{this.customThemesLocked}}
-            @label="blog.admin.new_theme_short"
-            @route="adminPlugins.show.discourse-blog-themes.new"
-          />
-        </:actions>
-      </DPageSubheader>
+          </:actions>
+        </DPageSubheader>
+      </div>
+      {{#if this.customThemesLocked}}
+        <PluginOutlet @name="blog-admin-custom-themes-unavailable" />
+      {{/if}}
       <div class="themes-cards-container">
         {{#each @model.themes key="id" as |theme|}}
           <BlogThemeCard

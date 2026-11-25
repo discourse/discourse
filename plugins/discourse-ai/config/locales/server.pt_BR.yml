@@ -631,6 +631,8 @@ pt_BR:
         errors:
           not_found: "Tópico não encontrado."
     appearance_authoring:
+      component_on: "Ligado"
+      component_off: "Desligado"
       default_theme: "Tema padrão"
       colors:
         light:

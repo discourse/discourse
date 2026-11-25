@@ -271,11 +271,12 @@ class Auth::DefaultCurrentUserProvider
       ip = request.ip
       user_id = current_user.id
       old_ip = current_user.ip_address
+      mobile = MobileDetection.mobile_device?(request.user_agent)
 
       Scheduler::Defer.later "Updating Last Seen" do
         if User.should_update_last_seen?(user_id)
           if u = User.find_by(id: user_id)
-            u.update_last_seen!(Time.zone.now, force: true)
+            u.update_last_seen!(Time.zone.now, force: true, mobile:)
           end
         end
         User.update_ip_address!(user_id, new_ip: ip, old_ip: old_ip)
@@ -418,7 +419,9 @@ class Auth::DefaultCurrentUserProvider
   # for signup flow, since all admin emails are stored in
   # DISCOURSE_DEVELOPER_EMAILS for self-hosters.
   def make_developer_admin(user)
-    if user.active? && !user.admin && Developer.configured_email?(user.email)
+    # Not every caller checks the admin IP allowlist before logging a user on.
+    if user.active? && !user.admin && Developer.configured_email?(user.email) &&
+         !ScreenedIpAddress.block_admin_login?(user, @request.ip)
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)

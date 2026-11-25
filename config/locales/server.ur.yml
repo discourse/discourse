@@ -3591,7 +3591,6 @@ ur:
       dracula: "ڈریکولا"
       grey_amber: "گرے امبر"
       latte: "لا ٹَیے"
-      dark_rose: "گہرا گلابی"
   wizard:
     title: "ڈِسکورس سَیٹ اَپ"
     step:
@@ -3732,6 +3731,8 @@ ur:
         title: "جی ہاں"
       approve_post:
         title: "جی ہاں"
+      deny_and_delete_post:
+        complete: "دھاگہ مٹا دیا."
       approve_post_closed:
         title: "جی ہاں"
         confirm: "یہ ٹاپک بند ہے۔ کیا آپ پھر بھی پوسٹ بنانا چاہتے ہیں؟"

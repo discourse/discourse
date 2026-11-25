@@ -3173,19 +3173,14 @@ ko:
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
       validations:
         icon_required: "아이콘 선택."
+      icon_search_placeholder: "검색…"
       description: "설명"
-      icon: "아이콘"
-      emoji: "이모티콘"
       background_color: "색상"
       color_validations:
         cant_be_empty: "필수 작성"
       styles:
         icon: "아이콘"
         emoji: "이모티콘"
-        options:
-          icon: "아이콘"
-          emoji: "이모티콘"
-      color_placeholder: "모든 웹 색상"
       delete_confirm: "이 카테고리를 삭제할까요?"
       delete_error: "카테고리를 삭제하는 중에 오류가 발생했습니다."
       no_description: "이 카테고리에 대한 설명을 추가하세요."

@@ -283,6 +283,23 @@ ro:
         edit: "Editează"
         delete: "Șterge"
         embedding: "Înglobare"
+      concepts:
+        edit: "Editează"
+        delete: "Șterge"
+        columns:
+          status: "Stare"
+          topics: "Discuții"
+          posts: "Articole"
+        statuses:
+          active: "Activă"
+        form:
+          name: "Nume"
+          description: "Descriere"
+          status: "Stare"
+        tagged_topics: "Subiecte etichetate"
+        topic_columns:
+          topic: "Subiect"
+          relevance: "Relevanță"
       decision_models:
         no_preset: "Nimic"
         display_name: "Nume"

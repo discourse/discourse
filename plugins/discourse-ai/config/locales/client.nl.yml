@@ -878,6 +878,26 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      concepts:
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Berichten"
+        statuses:
+          all: "Alle statussen"
+          active: "Actief"
+        form:
+          name: "Naam"
+          description: "Beschrijving"
+          status: "Status"
+        tagged_topics: "Topics met tags"
+        topic_columns:
+          topic: "Topic"
+          primary: "Primair"
+          relevance: "Relevantie"
+        primary_badge: "Primair"
       decision_models:
         no_preset: "Geen"
         display_name: "Naam"

@@ -707,4 +707,29 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
       .dom("#custom-tooltip-portal .fk-d-tooltip__content")
       .exists("tooltip renders in custom portal outlet");
   });
+
+  test("closing an unregistered tooltip does not probe the registry", async function (assert) {
+    const tooltip = getOwner(this).lookup("service:tooltip");
+    const instance = new DTooltipInstance(getOwner(this));
+    let probes = 0;
+
+    // A tracked set strongly retains any absent key passed to `has()`, and
+    // nothing else exposes that retention, so the probe itself is asserted.
+    tooltip.registeredTooltips = new Proxy(tooltip.registeredTooltips, {
+      get(target, prop, receiver) {
+        if (prop === "has") {
+          probes++;
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+
+    await tooltip.close(instance);
+
+    assert.strictEqual(
+      probes,
+      0,
+      "the registry is not probed for an absent tooltip"
+    );
+  });
 });

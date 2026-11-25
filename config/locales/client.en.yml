@@ -4869,7 +4869,8 @@ en:
         replies_short: "%{current} / %{total}"
 
       progress:
-        title: topic progress
+        title: "Topic progress"
+        position: "Topic progress, %{current} of %{total}"
         jump_prompt: "jump to…"
         jump_prompt_of:
           one: "of %{count} post"
@@ -6505,7 +6506,6 @@ en:
       create: "Create"
       menu: "Menu"
       more: "More"
-      edit_topic: "Edit title, category and tags"
       menu_with_reviewables:
         one: "Menu, %{count} item to review"
         other: "Menu, %{count} items to review"

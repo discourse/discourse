@@ -2662,7 +2662,6 @@ lt:
       summer: "Vasara"
       grey_amber: "Pilkas Gintaras"
       latte: "Latte"
-      dark_rose: "Tamsi rožė"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2788,6 +2787,8 @@ lt:
         title: "Taip"
       approve_post:
         title: "Taip"
+      deny_and_delete_post:
+        complete: "Įrašas ištrintas."
       approve_post_closed:
         title: "Taip"
         complete: "Įrašas patvirtintas."

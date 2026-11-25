@@ -27,6 +27,7 @@ register_asset "stylesheets/common/ai-decoded-transcript.scss"
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 register_asset "stylesheets/admin/ai-logs.scss", :admin
 register_asset "stylesheets/admin/ai-tool-arguments.scss", :admin
+register_asset "stylesheets/admin/ai-concepts.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -132,6 +133,14 @@ after_initialize do
     enabled: -> { SiteSetting.ai_ask_ai_enabled },
   ) do |start_date:, end_date:, current_user:|
     DiscourseAi::AdminDashboard::AskAi.build(start_date:, end_date:, current_user:)
+  end
+
+  register_modifier(:discourse_workflows_stats_summary) do |stats, context|
+    if SiteSetting.discourse_ai_enabled && context[:workflow_id].present?
+      stats.merge(ai_usage: DiscourseAi::WorkflowUsage.for(**context))
+    else
+      stats
+    end
   end
 
   register_modifier(:site_setting_result) do |setting_result|
@@ -367,6 +376,7 @@ after_initialize do
     face-angry
     circle-info
     discourse-ai
+    code-merge
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 

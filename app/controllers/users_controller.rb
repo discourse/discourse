@@ -1034,7 +1034,7 @@ class UsersController < ApplicationController
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
-        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+        return redirect_to(wizard_path) if !@login_error && Wizard.user_requires_completion?(@user)
 
         render "password_reset"
       end
@@ -1054,7 +1054,9 @@ class UsersController < ApplicationController
                    success: true,
                    message: @success,
                    requires_approval: !Guardian.new(@user).can_access_forum?,
-                   redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil,
+                   login_error: @login_error,
+                   redirect_to:
+                     !@login_error && Wizard.user_requires_completion?(@user) ? wizard_path : nil,
                  }
         end
       end
@@ -1069,13 +1071,15 @@ class UsersController < ApplicationController
 
   def logon_after_password_reset
     message =
-      if Guardian.new(@user).can_access_forum?
-        # Log in the user
-        log_on_user(@user, replay_anonymous_action: true)
-        "password_reset.success"
-      else
+      if !Guardian.new(@user).can_access_forum?
         @requires_approval = true
         "password_reset.success_unapproved"
+      elsif ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        @login_error = I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username)
+        "password_reset.success_unapproved"
+      else
+        log_on_user(@user, replay_anonymous_action: true)
+        "password_reset.success"
       end
 
     @success = I18n.t(message)
@@ -1215,6 +1219,15 @@ class UsersController < ApplicationController
     raise Discourse::NotFound if current_user.present?
 
     if @user = EmailToken.confirm(params[:token], scope: EmailToken.scopes[:signup])
+      if ScreenedIpAddress.block_admin_login?(@user, request.remote_ip)
+        return(
+          render_json_error(
+            I18n.t("login.admin_not_allowed_from_ip_address", username: @user.username),
+            status: 403,
+          )
+        )
+      end
+
       # Log in the user unless they need to be approved or have a second factor
       if !Guardian.new(@user).can_access_forum?
         @needs_approval = true
@@ -1297,6 +1310,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new if @user.active?
 
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+      # Automatic approval only holds while the unconfirmed address would still be
+      # auto-approved; staff approvals stand.
+      auto_approved =
+        SiteSetting.must_approve_users? && @user.approved? &&
+          (@user.approved_by_id.blank? || @user.approved_by_id == Discourse::SYSTEM_USER_ID)
 
       primary_email = @user.primary_email
       primary_email.email = params[:email]
@@ -1311,7 +1329,9 @@ class UsersController < ApplicationController
                 )
         end
 
-        @user.revoke_approval! if revoke_approval
+        if revoke_approval || (auto_approved && !EmailValidator.can_auto_approve_user?(@user.email))
+          @user.revoke_approval!
+        end
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)

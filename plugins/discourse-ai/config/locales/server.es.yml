@@ -833,6 +833,8 @@ es:
           not_allowed: "No tienes permiso para acceder a la cola de revisión"
           not_found: "No se ha encontrado el elemento en la cola de revisión"
     appearance_authoring:
+      component_on: "Activado"
+      component_off: "Desactivado"
       default_theme: "Tema predeterminado"
       colors:
         light:

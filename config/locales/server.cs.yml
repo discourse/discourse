@@ -4273,7 +4273,6 @@ cs:
       dracula: "Drákula"
       grey_amber: "Šedý jantar"
       latte: "Latte"
-      dark_rose: "Temná růže"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4490,6 +4489,8 @@ cs:
       approve_post:
         title: "Ano"
         complete: "Příspěvek schválen."
+      deny_and_delete_post:
+        complete: "Příspěvek smazán."
       approve_post_closed:
         title: "Ano"
         confirm: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"

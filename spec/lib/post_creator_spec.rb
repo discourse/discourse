@@ -77,6 +77,7 @@ RSpec.describe PostCreator do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(hri)
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.excerpt).to be_nil
       expect(post.user.topic_count).to eq(0)
       expect(post.user.post_count).to eq(0)
     end

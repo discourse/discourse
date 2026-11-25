@@ -515,9 +515,6 @@ hu:
       fonts:
         base_font: "Törzs"
         heading_font: "Címsorok"
-      logo:
-        description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
-        help_text: "Az ajánlott méret 600×80 képpont."
       homepage:
         topics: "Témák"
         categories: "Kategóriák"
@@ -963,7 +960,6 @@ hu:
         suspect_user: "Ez felhasználói spam?"
         approve_post: "Jóváhagyod ezt a bejegyzést?"
         approve_topic: "Jóváhagyod ezt a témát?"
-        something_wrong_with_post: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -4472,7 +4468,7 @@ hu:
         emoji_required: "Válassz egy emojit."
         icon_required: "Válasszon ikont."
       name: "Kategória neve"
-      untitled: "Névtelen kategória"
+      icon_search_placeholder: "Keresés…"
       description: "Leírás"
       logo: "Kategória logója"
       logo_dark: "Sötét mód kategória logóképe"
@@ -4480,9 +4476,6 @@ hu:
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
       style: "Stílus"
-      icon: "Ikon"
-      emoji: "Hangulatjel"
-      select_emoji: "Válasszon emojit"
       background_color: "Szín"
       foreground_color: "Szöveg színe"
       color_validations:
@@ -4490,18 +4483,11 @@ hu:
         incorrect_length: "#RRGGBB vagy #RGB formátumnak kell lennie"
         non_hexdecimal: "csak hexadecimális karaktereket tartalmazhat (0-9, AF)"
       styles:
-        type: "Stílus"
         icon: "Ikon"
         emoji: "Emodzsi"
         square: "Négyzet"
-        options:
-          square: "Négyzet"
-          icon: "Ikon"
-          emoji: "Emodzsi"
       color_used: "Használt szín"
-      predefined_colors: "Előre definiált színválaszték"
       name_placeholder: "Egy-két szó ajánlott"
-      color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztos, hogy törli ezt a kategóriát?"
       delete_error: "Hiba történt a kategória törlése során."
       list: "Kategóriák felsorolása"
@@ -7324,8 +7310,6 @@ hu:
           title: "Színek"
           edit: "Szerkesztés"
           view: "Megtekintés"
-          set_default_light: "Beállítás világos palettának az alapértelmezett témán (%{theme})"
-          set_default_dark: "Sötét paletta beállítása az alapértelmezett témán (%{theme})"
           set_default_success: "%{schemeName} beállítva alapértelmezett palettának %{themeName} számára"
           saved_refreshing: "Mentve! Frissítő színek..."
           from_theme: "Téma forrása: %{name}"

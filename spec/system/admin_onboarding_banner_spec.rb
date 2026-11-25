@@ -119,6 +119,13 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "select theme step" do
+    let(:dark_only_palette) do
+      ColorScheme.create_from_base(
+        name: "Midnight",
+        base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+      )
+    end
+
     it "docks to the bottom edge on a narrow viewport, leaving the preview visible" do
       admin.update!(uploaded_avatar: Fabricate(:image_upload, width: 100, height: 100))
       visit("/")
@@ -178,6 +185,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "saves a light only site" do
+      dark_only_palette
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
@@ -185,9 +193,11 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_palette_mode("both")
       expect(design_wizard_panel).to have_selected_palette("default")
 
-      design_wizard_panel.select_palette_mode("light")
+      design_wizard_panel.select_palette_mode("dark")
+      expect(design_wizard_panel).to have_palette("custom_#{dark_only_palette.id}")
 
-      expect(design_wizard_panel).to have_no_palette("dracula")
+      design_wizard_panel.select_palette_mode("light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{dark_only_palette.id}")
 
       design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step
@@ -219,12 +229,13 @@ describe "Admin Onboarding Banner" do
     end
 
     it "saves both palettes of the pair picked for light and dark" do
+      dark_only_palette
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
-      expect(design_wizard_panel).to have_no_palette("dracula")
-      expect(design_wizard_panel).to have_no_palette("neutral")
+      expect(design_wizard_panel).to have_palette("dracula")
+      expect(design_wizard_panel).to have_no_palette("custom_#{dark_only_palette.id}")
 
       design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step

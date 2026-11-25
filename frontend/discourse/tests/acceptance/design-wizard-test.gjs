@@ -555,6 +555,60 @@ acceptance("Design wizard - admin launch", function (needs) {
       .hasAria("pressed", "true");
   });
 
+  test("follows a system color mode switch while open", async function (assert) {
+    let systemDark = false;
+    const systemDarkQuery = new EventTarget();
+    Object.defineProperty(systemDarkQuery, "matches", {
+      get: () => systemDark,
+    });
+    const matchMedia = window.matchMedia.bind(window);
+    sinon.stub(window, "matchMedia").callsFake((query) => {
+      if (query === "(prefers-color-scheme: dark)") {
+        return systemDarkQuery;
+      }
+      if (query === "(prefers-color-scheme: light)") {
+        return { matches: !systemDark };
+      }
+      return matchMedia(query);
+    });
+
+    const lightLink = document.createElement("link");
+    lightLink.rel = "stylesheet";
+    lightLink.className = "light-scheme";
+    lightLink.media = "(prefers-color-scheme: light)";
+    const darkLink = document.createElement("link");
+    darkLink.rel = "stylesheet";
+    darkLink.className = "dark-scheme";
+    darkLink.media = "(prefers-color-scheme: dark)";
+    document.head.prepend(lightLink, darkLink);
+
+    try {
+      await visit("/admin");
+      await click(APPEARANCE_LAUNCH_BUTTON);
+      await click(".design-wizard__next");
+
+      assert
+        .dom(".design-wizard__palette-row")
+        .hasAttribute("data-mode", "light", "starts in the system's mode");
+
+      systemDark = true;
+      systemDarkQuery.dispatchEvent(new Event("change"));
+      await waitUntil(() => darkLink.media === "all");
+
+      assert
+        .dom(".design-wizard__palette-row")
+        .hasAttribute("data-mode", "dark", "switches the swatches");
+      assert.strictEqual(
+        lightLink.media,
+        "none",
+        "stops rendering the light stylesheet"
+      );
+    } finally {
+      lightLink.remove();
+      darkLink.remove();
+    }
+  });
+
   test("installs a remote theme before navigating to its preview", async function (assert) {
     const remoteUrl = "https://github.com/discourse/discourse-concord-theme";
     wizardData.themes.push({

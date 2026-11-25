@@ -457,6 +457,14 @@ RSpec.describe ScreenedIpAddress do
             false,
           )
         end
+
+        it "returns true for a regular user whose configured developer email is promoted to admin on login" do
+          Rails.configuration.stubs(:developer_emails).returns(["dev@example.com"])
+          user = Fabricate.build(:user, email: "dev@example.com")
+
+          expect(described_class.block_admin_login?(user, "123.12.12.12")).to eq(true)
+          expect(described_class.block_admin_login?(user, permitted_ip_address)).to eq(false)
+        end
       end
     end
   end

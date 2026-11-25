@@ -758,7 +758,7 @@ acceptance("Blog themes", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-candidate"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button'
       )
       .exists(
         { count: 5 },
@@ -779,7 +779,9 @@ acceptance("Blog themes", function (needs) {
 
     await click(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`);
     assert
-      .dom('[data-identifier="blog-theme-actions-live"] .theme-card__button')
+      .dom(
+        '[data-identifier="blog-theme-actions-live"] .blog-theme-card__button'
+      )
       .exists({ count: 4 }, "a design without a Git source cannot be pulled");
     assert
       .dom('[data-identifier="blog-theme-actions-live"] .preview')
@@ -905,7 +907,7 @@ acceptance("Blog themes", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-discourse-blog"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-discourse-blog"] .blog-theme-card__button'
       )
       .exists({ count: 2 }, "a preset offers only activate and preview");
     assert
@@ -1046,7 +1048,7 @@ acceptance("Blog themes", function (needs) {
     );
     const loadsBeforeActivating = listLoads;
     await click(
-      '[data-identifier="blog-theme-actions-candidate"] .theme-card__button:not([disabled])'
+      '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button:not([disabled])'
     );
     assert.verifySteps([], "opening the confirmation changes nothing");
     await click(".dialog-footer .btn-primary");

@@ -142,6 +142,16 @@ RSpec.describe InferredConcept do
 
       expect(child.reload.parent_id).to be_nil
     end
+
+    it "rejects multi-hop cycles in parent_id" do
+      grandparent = Fabricate(:inferred_concept, name: "Infrastructure")
+      parent = Fabricate(:inferred_concept, name: "Containers", parent: grandparent)
+      child = Fabricate(:inferred_concept, name: "Kubernetes", parent: parent)
+
+      grandparent.parent = child
+      expect(grandparent).not_to be_valid
+      expect(grandparent.errors[:parent_id]).to be_present
+    end
   end
 
   describe "#text_for_embedding" do

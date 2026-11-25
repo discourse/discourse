@@ -471,6 +471,28 @@ lt:
         delete: "Pašalinti"
         embedding: "Įterpimai"
         tool: "Įrankis"
+      concepts:
+        edit: "Redaguoti"
+        delete: "Pašalinti"
+        columns:
+          status: "Statusas"
+          topics: "Temos"
+          posts: "Pranešimai"
+        statuses:
+          all: "Visos būsenos"
+          active: "Aktyvus"
+        form:
+          name: "Vardas"
+          description: "Aprašymas"
+          aliases: "Aliasai"
+          status: "Statusas"
+        tagged_topics: "Prisegtos temos"
+        topic_columns:
+          topic: "Tema"
+          primary: "Pagrindinė"
+          relevance: "Tinkamumas"
+        primary_badge: "Pagrindinė"
+        secondary_badge: "Antrinis"
       decision_models:
         no_preset: "Nieko"
         display_name: "Vardas"
