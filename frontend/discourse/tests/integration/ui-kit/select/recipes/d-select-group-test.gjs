@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { click, find, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -7,6 +7,7 @@ import loadAccessibleName from "discourse/lib/load-accessible-name";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { DSelect } from "discourse/tests/helpers/d-select-helper";
 import DSelectGroup from "discourse/ui-kit/select/recipes/groups/d-select-group";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 
 const SITE_GROUPS = [
@@ -242,6 +243,42 @@ module(
       await render(<template><DSelectGroup /></template>);
 
       assert.dom(".d-select").hasClass("group-chooser");
+    });
+
+    test("forwards the caller's extra options and caret icons", async function (assert) {
+      const changes = [];
+      const onChange = (value) => changes.push(value);
+      const extraOptions = () => [
+        selectOption({ name: "*all" }, { label: "All groups" }),
+      ];
+
+      await render(
+        <template>
+          <DSelectGroup
+            @caretIcon={{hash open="angle-down" closed="angle-right"}}
+            @emit="names"
+            @extraOptions={{extraOptions}}
+            @onChange={{onChange}}
+            @value="support"
+            @variant="button"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select__caret").hasClass("d-icon-angle-right");
+
+      await new DSelect().open();
+
+      assert.dom(".d-select__caret").hasClass("d-icon-angle-down");
+      assert.strictEqual(
+        findAll("[role='option']")[0].textContent.trim(),
+        "All groups",
+        "the extra option leads the list"
+      );
+
+      await click(findAll("[role='option']")[0]);
+
+      assert.deepEqual(changes, ["*all"]);
     });
   }
 );

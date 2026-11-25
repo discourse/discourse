@@ -1386,7 +1386,8 @@ The people family has two recipes, one per data source:
   leave those groups out, `@exclude` lists group ids never offered, and `@only` lists the only
   ones offered. `@options` replaces the site's groups for a call site with its own list, as group
   records or options; the other filters still apply, to action options too. Held names
-  match their groups in any case.
+  match their groups in any case. The group page's switcher passes the page's groups as
+  `@options`, leads with an "All groups" extra option, and navigates in its call site.
 
 Without an `ariaLabel` text or `@ariaLabelledBy`, a user picker is named for what it offers,
 one whole string per case ("User", "User or group", "User or email", "User, group or email"),

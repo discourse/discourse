@@ -50,7 +50,9 @@ export const GroupOption: TOC<{
     {{#if @icon}}
       {{dIcon "users"}}
     {{/if}}
-    <span class="d-group-option__name">{{recordName @record}}</span>
+    <span class="d-group-option__name">
+      {{~if @option @option.label (recordName @record)~}}
+    </span>
     {{#if (disabledReason @record @option)}}
       <span class="d-group-option__reason">
         {{~dIcon "ban"~}}

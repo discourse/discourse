@@ -1,6 +1,8 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import GroupFixtures from "discourse/tests/fixtures/group-fixtures";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { acceptance, paste } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -78,6 +80,79 @@ acceptance("Group - Anonymous", function (needs) {
       .doesNotExist("does not show group messages navigation link");
   });
 });
+
+acceptance(
+  "Group - Switching groups with the new select controls",
+  function (needs) {
+    needs.settings({
+      enable_group_directory: true,
+      enable_new_select_controls: true,
+    });
+    needs.pretender((server, helper) => {
+      server.get("/groups/discourse.json", () => {
+        const json = cloneJSON(GroupFixtures["/groups/discourse.json"]);
+        json.extras.visible_group_names = ["discourse", "support"];
+        return helper.response(json);
+      });
+      server.get("/groups/support/members.json", () =>
+        helper.response({
+          owners: [],
+          members: [],
+          meta: { total: 0, limit: 50, offset: 0 },
+        })
+      );
+    });
+
+    const SWITCHER = ".group-dropdown";
+
+    /** The switcher's rows, as they read. */
+    function rows() {
+      return findAll("[role='option']").map((row) => row.textContent.trim());
+    }
+
+    /** The switcher's row that reads `text`. */
+    function rowReading(text) {
+      return findAll("[role='option']").find(
+        (row) => row.textContent.trim() === text
+      );
+    }
+
+    test("goes to the picked group, or to all groups", async function (assert) {
+      await visit("/g/discourse");
+
+      assert.dSelect(SWITCHER).hasName("discourse", "it holds the group shown");
+      assert
+        .dom(`${SWITCHER} .d-select__caret`)
+        .hasClass("d-icon-angle-right", "it keeps the old caret");
+
+      await dSelect(SWITCHER).open();
+
+      assert
+        .dom(".d-select__filter")
+        .exists("it can be searched, however short");
+      assert.deepEqual(rows(), [
+        i18n("groups.index.all"),
+        "discourse",
+        "support",
+      ]);
+
+      await click(rowReading("support"));
+      assert.strictEqual(currentURL(), "/g/support");
+
+      await dSelect(SWITCHER).open();
+      await click(rowReading(i18n("groups.index.all")));
+      assert.strictEqual(currentURL(), "/g");
+    });
+
+    test("offers all groups only with the group directory, or to staff", async function (assert) {
+      this.siteSettings.enable_group_directory = false;
+      await visit("/g/discourse");
+      await dSelect(SWITCHER).open();
+
+      assert.deepEqual(rows(), ["discourse", "support"]);
+    });
+  }
+);
 
 acceptance("Group - Authenticated", function (needs) {
   setupGroupTest(needs);

@@ -24,6 +24,10 @@
       margin-right: 0.5em;
       max-width: 20ch;
 
+      &.d-select {
+        width: auto;
+      }
+
       .name {
         display: inline-block;
 
@@ -1624,4 +1628,9 @@
     align-items: center;
     gap: 0.5em;
   }
+}
+
+// The switcher's trigger fits the group's name, so the list needs its own floor.
+.d-select__content[data-identifier="group-dropdown"] {
+  --d-select-menu-min-width: 16em;
 }

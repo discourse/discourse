@@ -16,7 +16,6 @@ import {
   groupFullName,
   GroupOption,
   type GroupShape,
-  recordName,
 } from "discourse/ui-kit/select/recipes/groups/-internals/group-renderers";
 import {
   type SelectCoreTexts,
@@ -36,9 +35,11 @@ interface DSelectGroupSignature {
   Args: Pick<
     DSelectSignature["Args"],
     | "ariaLabelledBy"
+    | "caretIcon"
     | "clearable"
     | "describedBy"
     | "disabled"
+    | "extraOptions"
     | "icon"
     | "id"
     | "invalid"
@@ -154,9 +155,11 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
     <DSelect
       ...attributes
       @ariaLabelledBy={{@ariaLabelledBy}}
+      @caretIcon={{@caretIcon}}
       @clearable={{@clearable}}
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
+      @extraOptions={{@extraOptions}}
       @icon={{@icon}}
       @id={{@id}}
       @identifier={{@identifier}}
@@ -191,7 +194,7 @@ export default class DSelectGroup extends Component<DSelectGroupSignature> {
         {{#if (has-block "selection")}}
           {{yield option config to="selection"}}
         {{else}}
-          {{recordName option.record}}
+          {{option.label}}
         {{/if}}
       </:selection>
       <:footer as |state config|>
