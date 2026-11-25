@@ -5,6 +5,8 @@ module DiscourseWorkflows
     option :trigger_type
     option :dependency_type, default: -> { "node_type" }
     option :dependency_key, default: -> { trigger_type }
+    option :workflow_id, optional: true
+    option :node_id, optional: true
     option :filter, optional: true
 
     def call
@@ -31,12 +33,9 @@ module DiscourseWorkflows
     def workflow_node_pairs
       @workflow_node_pairs ||=
         WorkflowDependency
-          .joins(:workflow)
+          .on_active_version
           .where(dependency_type: dependency_type, dependency_key: dependency_key.to_s)
-          .where(
-            "discourse_workflows_workflows.active_version_id = " \
-              "discourse_workflows_workflow_dependencies.workflow_version_id",
-          )
+          .where({ workflow_id:, node_id: }.compact)
           .pluck(:workflow_id, :workflow_version_id, :node_id)
     end
 

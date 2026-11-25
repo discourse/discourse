@@ -10,6 +10,7 @@ import {
   nodeTypeInputLabel,
   nodeTypeInputs,
   nodeTypeInputUsesConnectionIndexes,
+  nodeTypeLaunchPath,
   nodeTypeOperationLabel,
   nodeTypeOutputKeys,
   nodeTypePaletteGroup,
@@ -35,6 +36,75 @@ module("Unit | Utility | workflows node types", function () {
       "discourse_ai.discourse_workflows"
     );
     assert.strictEqual(nodeTypeI18nScope(nodeType), "ai_agent");
+  });
+
+  test("fills the launch path capability with the workflow and node ids", function (assert) {
+    const nodeType = {
+      identifier: "trigger:launchable",
+      capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+    };
+
+    assert.strictEqual(
+      nodeTypeLaunchPath(nodeType, null, { workflowId: 7, nodeId: "node-1" }),
+      "/launch/7/node-1"
+    );
+    assert.strictEqual(
+      nodeTypeLaunchPath(nodeType, null, {
+        workflowId: "7",
+        nodeId: "a node/1",
+        draft: true,
+      }),
+      "/launch/7/a%20node%2F1?draft=true",
+      "encodes the node id and flags the draft"
+    );
+  });
+
+  test("reads the launch path from the requested node type version", function (assert) {
+    const nodeType = {
+      identifier: "trigger:launchable",
+      versions: {
+        "1.0": { capabilities: {} },
+        "2.0": { capabilities: { launch_path: "/v2/:workflow_id/:node_id" } },
+      },
+    };
+    const target = { workflowId: 7, nodeId: "node-1" };
+
+    assert.strictEqual(
+      nodeTypeLaunchPath(nodeType, "2.0", target),
+      "/v2/7/node-1"
+    );
+    assert.strictEqual(nodeTypeLaunchPath(nodeType, "1.0", target), null);
+  });
+
+  test("has no launch path without the capability or without both ids", function (assert) {
+    const launchable = {
+      capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+    };
+
+    assert.strictEqual(
+      nodeTypeLaunchPath({ capabilities: {} }, null, {
+        workflowId: 7,
+        nodeId: "node-1",
+      }),
+      null
+    );
+    assert.strictEqual(
+      nodeTypeLaunchPath("trigger:launchable", null, {
+        workflowId: 7,
+        nodeId: "node-1",
+      }),
+      null,
+      "an identifier carries no capabilities"
+    );
+    assert.strictEqual(
+      nodeTypeLaunchPath(launchable, null, { nodeId: "node-1" }),
+      null
+    );
+    assert.strictEqual(
+      nodeTypeLaunchPath(launchable, null, { workflowId: 7 }),
+      null
+    );
+    assert.strictEqual(nodeTypeLaunchPath(launchable), null);
   });
 
   test("reads operation labels and palette groups from the descriptor", function (assert) {

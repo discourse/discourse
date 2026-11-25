@@ -179,6 +179,15 @@ after_initialize do
 
   add_to_class(:guardian, :can_manage_workflows?) { is_admin? }
 
+  on(:chat_message_created) do |message, channel, user|
+    # A workflow chat is always a group DM and the chatable is already loaded, so bots and
+    # other channels cost no query.
+    next if user.bot? || !channel.direct_message_channel? || !channel.chatable.group?
+    next if !DiscourseWorkflows::ChatConversation.exists?(channel_id: channel.id, user_id: user.id)
+
+    Jobs.enqueue(Jobs::DiscourseWorkflows::RunChatConversation, message_id: message.id)
+  end
+
   nodes_dir = File.join(File.dirname(__FILE__), "lib/discourse_workflows/nodes")
   Dir.glob(File.join(nodes_dir, "**/*.rb")).each { |f| Rails.autoloaders.main.load_file(f) }
 

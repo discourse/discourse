@@ -41,6 +41,32 @@ module("Unit | Utility | workflows canvas manual trigger", function (hooks) {
     );
   });
 
+  test("opens the draft launch path of a trigger that declares one", async function (assert) {
+    sinon.stub(window, "open");
+    const toasts = { success: sinon.stub(), error: sinon.stub() };
+
+    await runManualTrigger({
+      node: { type: "trigger:launchable", typeVersion: "1.0" },
+      nodeType: {
+        capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+      },
+      clientId: "trigger-1",
+      workflowId: 7,
+      toasts,
+    });
+
+    assert.true(
+      window.open.calledOnceWithExactly(
+        "http://localhost:3000/launch/7/trigger-1?draft=true",
+        "_blank",
+        "noopener"
+      ),
+      "opens the draft in a new tab"
+    );
+    assert.true(toasts.success.notCalled, "shows no success toast");
+    assert.true(toasts.error.notCalled, "shows no error toast");
+  });
+
   test("starts a webhook test listener instead of opening the production webhook URL", async function (assert) {
     sinon.stub(window, "open");
     const toasts = { success: sinon.stub() };

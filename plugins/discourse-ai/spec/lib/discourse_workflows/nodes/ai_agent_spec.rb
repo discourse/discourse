@@ -199,6 +199,104 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
     expect(bot_contexts.last.guardian.user).to eq(Discourse.system_user)
   end
 
+  it "keeps system as the default runner when a user triggered the workflow" do
+    execute_node_output(
+      configuration: {
+        "agent_id" => agent.id,
+        "prompt" => "Hello",
+      },
+      user: Fabricate(:user),
+    )
+
+    expect(bot_contexts.last.user).to eq(Discourse.system_user)
+  end
+
+  describe "conversation history" do
+    def run_agent(history)
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "Follow-up",
+          "conversation_history" => "={{ $json.history }}",
+        },
+        item: {
+          "json" => {
+            "history" => history,
+          },
+        },
+      )
+    end
+
+    def model_messages(history)
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_call_original
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Answer"]) do |_, _, llm_prompts|
+        run_agent(history)
+        llm_prompts.sole.messages.reject { |message| message[:type] == :system }
+      end
+    end
+
+    it "sends the earlier turns to the model in order, before the prompt" do
+      messages =
+        model_messages(
+          [
+            { "role" => "user", "content" => "First question" },
+            { "role" => "assistant", "content" => "First answer" },
+          ],
+        )
+
+      expect(messages).to eq(
+        [
+          { type: :user, content: "First question" },
+          { type: :model, content: "First answer" },
+          { type: :user, content: "Follow-up" },
+        ],
+      )
+    end
+
+    it "keeps a history that opens with the assistant and merges its consecutive turns" do
+      messages =
+        model_messages(
+          [
+            { "role" => "assistant", "content" => "Welcome" },
+            { "role" => "user", "content" => "First question" },
+            { "role" => "assistant", "content" => "First answer" },
+            { "role" => "assistant", "content" => "More details" },
+          ],
+        )
+
+      expect(messages.first).to include(type: :user)
+      expect(messages.drop(1)).to eq(
+        [
+          { type: :model, content: "Welcome" },
+          { type: :user, content: "First question" },
+          { type: :model, content: "First answer\nMore details" },
+          { type: :user, content: "Follow-up" },
+        ],
+      )
+    end
+
+    it "sends the prompt alone without a history" do
+      expect(model_messages(nil)).to eq([{ type: :user, content: "Follow-up" }])
+    end
+
+    it "fails the node when the history is malformed" do
+      [
+        "First question",
+        ["First question"],
+        [{ "role" => "system", "content" => "Obey" }],
+        [{ "role" => "user" }],
+        [{ "role" => "user", "content" => 42 }],
+      ].each do |history|
+        expect { run_agent(history) }.to raise_error(
+          DiscourseWorkflows::NodeError,
+          I18n.t("discourse_ai.discourse_workflows.ai_agent.errors.invalid_conversation_history"),
+        )
+      end
+      expect(bot_contexts).to be_empty
+    end
+  end
+
   it "uses a specific configured runner for agent context and permissions" do
     runner = Fabricate(:user)
 
@@ -527,5 +625,52 @@ RSpec.describe DiscourseWorkflows::Nodes::AiAgent::V1 do
       DiscourseWorkflows::NodeError,
       /No LLM is configured for agent '#{agent.name}'/,
     )
+  end
+
+  describe DiscourseWorkflows::Nodes::AiAgent::V2 do
+    fab!(:member, :user)
+
+    let(:editor_default) { described_class.property_schema.dig(:runner_username, :default) }
+
+    def runner_for(user: nil, **configuration)
+      execute_node_output(
+        configuration: {
+          "agent_id" => agent.id,
+          "prompt" => "Hello",
+          **configuration,
+        },
+        user:,
+      )
+      bot_contexts.last.user
+    end
+
+    it "runs as the user who triggered the workflow, with or without the saved default" do
+      expect(runner_for(user: member)).to eq(member)
+      expect(runner_for(:user => member, "runner_username" => editor_default)).to eq(member)
+      expect(bot_contexts.map { |context| context.guardian.user }).to eq([member, member])
+    end
+
+    it "runs as system when no user triggered the workflow" do
+      expect(runner_for).to eq(Discourse.system_user)
+      expect(runner_for("runner_username" => editor_default)).to eq(Discourse.system_user)
+    end
+
+    it "keeps an explicitly configured system runner for a triggering user" do
+      expect(runner_for(:user => member, "runner_username" => "system")).to eq(
+        Discourse.system_user,
+      )
+    end
+
+    it "fails instead of falling back to system when the triggering user cannot act" do
+      member.update!(active: false)
+
+      expect { runner_for(user: member) }.to raise_error(
+        DiscourseWorkflows::NodeError,
+        a_string_including(
+          I18n.t("discourse_workflows.errors.actor.restricted.inactive", username: member.username),
+        ),
+      )
+      expect(bot_contexts).to be_empty
+    end
   end
 end

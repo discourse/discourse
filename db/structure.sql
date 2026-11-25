@@ -5836,6 +5836,42 @@ ALTER SEQUENCE public.discourse_workflows_ai_authoring_sessions_id_seq OWNED BY 
 
 
 --
+-- Name: discourse_workflows_chat_conversations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_chat_conversations (
+    id bigint NOT NULL,
+    channel_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    bot_user_id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    trigger_node_id character varying(100) NOT NULL,
+    draft boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_chat_conversations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_chat_conversations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_chat_conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_chat_conversations_id_seq OWNED BY public.discourse_workflows_chat_conversations.id;
+
+
+--
 -- Name: discourse_workflows_credentials; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -15490,6 +15526,13 @@ ALTER TABLE ONLY public.discourse_workflows_ai_authoring_sessions ALTER COLUMN i
 
 
 --
+-- Name: discourse_workflows_chat_conversations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_chat_conversations ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_chat_conversations_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_credentials id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18260,6 +18303,14 @@ ALTER TABLE ONLY public.discourse_templates_usage_count
 
 ALTER TABLE ONLY public.discourse_workflows_ai_authoring_sessions
     ADD CONSTRAINT discourse_workflows_ai_authoring_sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_chat_conversations discourse_workflows_chat_conversations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_chat_conversations
+    ADD CONSTRAINT discourse_workflows_chat_conversations_pkey PRIMARY KEY (id);
 
 
 --
@@ -22923,6 +22974,13 @@ CREATE UNIQUE INDEX index_discourse_templates_usage_count_on_topic_id ON public.
 
 
 --
+-- Name: index_discourse_workflows_chat_conversations_on_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_discourse_workflows_chat_conversations_on_channel_id ON public.discourse_workflows_chat_conversations USING btree (channel_id);
+
+
+--
 -- Name: index_dismissed_topic_users_on_user_id_and_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26961,6 +27019,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125233633'),
 ('20261124173030'),
 ('20261124170000'),
 ('20261124152608'),

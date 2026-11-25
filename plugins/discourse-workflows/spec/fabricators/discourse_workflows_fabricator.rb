@@ -126,3 +126,16 @@ Fabricator(
   latest_response { {} }
   proposed_patch { {} }
 end
+
+Fabricator(
+  :discourse_workflows_chat_conversation,
+  class_name: "DiscourseWorkflows::ChatConversation",
+) do
+  user
+  bot_user { Discourse.system_user }
+  channel do |attrs|
+    Fabricate(:direct_message_channel, users: [attrs[:user], attrs[:bot_user]], group: true)
+  end
+  workflow_id { Fabricate(:discourse_workflows_workflow).id }
+  trigger_node_id "chat"
+end

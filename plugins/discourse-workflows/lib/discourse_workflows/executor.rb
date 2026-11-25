@@ -590,6 +590,7 @@ module DiscourseWorkflows
         execution_id: @store.execution&.id,
         resume_token: @context.resume_token,
         node_id: node.id.to_s,
+        trigger_node_id: @trigger_node_id,
         node_name: node.name.to_s,
         node_identifier: node.type,
         execution_mode: @options.execution_mode,

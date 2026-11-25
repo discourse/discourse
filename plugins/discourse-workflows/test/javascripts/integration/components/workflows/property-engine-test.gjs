@@ -41,6 +41,7 @@ async function renderEngine(context, { withFormApi = false } = {}) {
           @nodes={{context.nodes}}
           @nodeType={{context.nodeType}}
           @nodeTypes={{context.nodeTypes}}
+          @onBeforeStartTestSession={{context.onBeforeStartTestSession}}
           @onChange={{context.onChange}}
           @schema={{context.schema}}
           @session={{context.session}}
@@ -1509,6 +1510,83 @@ module("Integration | Component | workflows property engine", function (hooks) {
     assert
       .dom(".workflows-url-preview__status")
       .includesText("Listening for test event");
+  });
+
+  test("renders launch URL and test controls for a trigger with a launch path", async function (assert) {
+    sinon.stub(window, "open");
+    this.onBeforeStartTestSession = sinon.stub().resolves();
+    this.configuration = {};
+    this.node = { clientId: "launch-1", type: "trigger:launchable" };
+    this.nodeType = "trigger:launchable";
+    this.nodeTypes = [
+      {
+        name: "trigger:launchable",
+        capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+      },
+    ];
+    this.schema = {
+      url_preview: {
+        type: "custom",
+        ui: {
+          control: "url_preview",
+        },
+      },
+    };
+
+    await renderEngine(this);
+
+    assert.dom(".workflows-url-preview-mode__button").exists({ count: 2 });
+    assert
+      .dom(".workflows-url-preview code")
+      .hasText("http://localhost:3000/launch/7/launch-1");
+
+    await click(".workflows-url-preview-mode__button:first-child");
+    assert
+      .dom(".workflows-url-preview code")
+      .hasText("Test in a new tab", "offers to test instead of listening");
+
+    await click(".workflows-url-preview");
+
+    assert.true(
+      this.onBeforeStartTestSession.calledBefore(window.open),
+      "saves the workflow before opening the test"
+    );
+    assert.true(
+      window.open.calledOnceWithExactly(
+        "http://localhost:3000/launch/7/launch-1?draft=true",
+        "_blank",
+        "noopener"
+      ),
+      "opens the draft in a new tab"
+    );
+  });
+
+  test("asks to save the workflow before showing the launch URL", async function (assert) {
+    this.session = new WorkflowEditorSession({ lastExecutionRunData: {} });
+    this.configuration = {};
+    this.node = { clientId: "launch-1", type: "trigger:launchable" };
+    this.nodeType = "trigger:launchable";
+    this.nodeTypes = [
+      {
+        name: "trigger:launchable",
+        capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+      },
+    ];
+    this.schema = {
+      url_preview: {
+        type: "custom",
+        ui: {
+          control: "url_preview",
+        },
+      },
+    };
+
+    await renderEngine(this);
+
+    assert.dom(".workflows-url-preview").doesNotExist();
+    assert
+      .dom(".workflows-url-preview__hint")
+      .hasText("Save the workflow to generate this URL");
   });
 
   test("renders icon fields with the form-kit icon control", async function (assert) {

@@ -54,6 +54,41 @@ module("Unit | Component | Workflows | Canvas | WorkflowNode", function () {
     );
   });
 
+  test("enables a trigger with a launch path once the workflow is saved", function (assert) {
+    const node = {
+      name: "Launchable",
+      type: "trigger:launchable",
+      typeVersion: "1.0",
+    };
+    const nodeType = {
+      capabilities: { launch_path: "/launch/:workflow_id/:node_id" },
+    };
+    const session = {
+      workflowId: 7,
+      isNodePinned() {
+        return false;
+      },
+    };
+
+    assert.true(shouldEnableManualTrigger(node, nodeType, session));
+    assert.false(
+      shouldEnableManualTrigger(node, nodeType, {
+        ...session,
+        workflowId: null,
+      }),
+      "needs a saved workflow"
+    );
+    assert.false(
+      shouldEnableManualTrigger(
+        node,
+        { ...nodeType, available: false },
+        session
+      ),
+      "needs an available node type"
+    );
+    assert.false(shouldEnableManualTrigger(node, undefined, session));
+  });
+
   test("shows execute step only for non-trigger nodes", function (assert) {
     assert.true(
       shouldShowExecuteStep({

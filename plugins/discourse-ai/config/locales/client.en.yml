@@ -379,6 +379,7 @@ en:
         saved: "AI image caption saved"
       discourse_workflows:
         ai_agent:
+          deprecated_v1: "The newer version runs the agent as the user who triggered the workflow unless Run as is set, instead of always defaulting to system. Set Run as before upgrading to keep it fixed."
           agent_id: "Agent"
           forced_llm_notice_description: "This agent is locked to its configured default LLM. The workflow cannot override it."
           llm_model_id: "LLM model"
@@ -389,6 +390,8 @@ en:
           mode_run_once_for_each_item: "Run once for each item"
           mode_run_once_for_all_items: "Run once for all items"
           prompt: "Prompt"
+          conversation_history: "Conversation history"
+          conversation_history_tooltip: "Optional earlier messages as an array of objects with role (user or assistant) and content."
           runner_username: "Run as"
           runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
           upload_ids: "Upload IDs"

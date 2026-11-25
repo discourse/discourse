@@ -7,4 +7,7 @@ export default function () {
     path: "/workflows/form-test/:token",
     bundleName: "workflows-form",
   });
+  this.route("workflows-chat", {
+    path: "/workflows/chat/:workflow_id/:node_id",
+  });
 }

@@ -3,6 +3,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import {
+  nodeTypeLaunchPath,
+  typeVersionForNode,
+} from "../../../lib/workflows/node-types.js";
 
 async function createFormTestSession(workflowId, triggerNodeId) {
   return await ajax(
@@ -16,12 +20,23 @@ async function createFormTestSession(workflowId, triggerNodeId) {
 
 export async function runManualTrigger({
   node,
+  nodeType,
   clientId,
   workflowId,
   toasts,
   router,
   session,
 }) {
+  const draftLaunchPath = nodeTypeLaunchPath(
+    nodeType,
+    typeVersionForNode(node),
+    { workflowId, nodeId: clientId, draft: true }
+  );
+  if (draftLaunchPath) {
+    window.open(getAbsoluteURL(draftLaunchPath), "_blank", "noopener");
+    return;
+  }
+
   if (node?.type === "trigger:form") {
     const result = await createFormTestSession(workflowId, clientId);
     window.open(getAbsoluteURL(result.test_url), "_blank");

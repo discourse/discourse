@@ -56,8 +56,10 @@ en:
       node_unavailable:
         default: "This node is currently unavailable"
         short: "Unavailable"
+        chat_disabled: "Requires chat to be enabled"
       node_deprecated:
         notice: "A newer version of this node is available. Its output changes: %{changes}. Expressions using the old keys must be updated after upgrading."
+        notice_without_output_changes: "A newer version of this node is available."
         upgrade: "Upgrade"
         user_is_post_author: "In the newer version, user is the post author instead of whoever acted."
         user_is_topic_author: "In the newer version, user is the topic author instead of whoever acted."
@@ -358,6 +360,8 @@ en:
         "action:markdown_table": "Markdown table"
         "action:template": "Template"
         "action:respond_to_webhook": "Respond to webhook"
+        "action:respond_to_chat": "Respond to chat"
+        "trigger:workflow_chat": "Chat trigger"
         "trigger:topic_admin_button": "Topic admin button"
         "trigger:post_button": "Post button"
         "trigger:composer_paused": "Composer paused"
@@ -449,6 +453,8 @@ en:
         "action:markdown_table": "Build a markdown table from a list of items"
         "action:template": "Render text with a template"
         "action:respond_to_webhook": "Send a custom HTTP response to the webhook caller"
+        "action:respond_to_chat": "Reply in the chat that started the workflow"
+        "trigger:workflow_chat": "Run a workflow for each message in a chat"
         "trigger:topic_admin_button": "Adds a button to the topic admin menu that triggers this workflow"
         "trigger:post_button": "Adds a button to the post actions menu that triggers this workflow"
         "trigger:composer_paused": "Fires while a user writes a topic or reply"
@@ -1450,6 +1456,22 @@ en:
         submitting: "Submitting..."
         submit: "Submit"
         save_for_url: "Save the workflow to generate a form URL"
+      respond_to_chat:
+        message: "Message"
+        message_description: "Posted by the chat's bot in the conversation that started this run."
+      workflow_chat:
+        url_preview: "Chat URL"
+        url_preview_description: "Publish the workflow before sharing this link. Each member of an allowed group who opens it starts a separate DM."
+        chat_title: "Chat title"
+        welcome_message: "Welcome message"
+        chat_bot_id: "Chat bot"
+        chat_bot_id_description: "This bot joins the DM with the signed-in member who opens the chat."
+        group_ids: "Allowed groups"
+        group_ids_description: "Members of these groups can start a chat with the published workflow. With no group selected, nobody can. Review the permissions of any actions the workflow can execute."
+      chat_conversation:
+        title: "Start a chat"
+        body: "This opens a new private conversation."
+        start: "Start chat"
       respond_to_webhook:
         response_type: "Respond with"
         response_type_json: "JSON"
@@ -1696,6 +1718,9 @@ en:
         view_execution: "View execution"
         listening: "Listening for test webhook event"
         needs_pin_data: "Pin sample data on this trigger before running it manually."
+        test_in_new_tab: "Test in a new tab"
+      trigger_url:
+        save_for_url: "Save the workflow to generate this URL"
       execute_step:
         run: "Execute step"
         triggered: "Step execution started"

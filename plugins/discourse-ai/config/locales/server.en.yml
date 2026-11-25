@@ -381,6 +381,7 @@ en:
           llm_not_found: "LLM model with id %{llm_model_id} not found"
           no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
           uploads_not_sent: "Agent '%{agent}' did not receive every upload"
+          invalid_conversation_history: "Conversation history must be an array of messages with a user or assistant role and text content."
       classify:
         errors:
           decision_model_not_found: "Decision model with id %{id} not found"

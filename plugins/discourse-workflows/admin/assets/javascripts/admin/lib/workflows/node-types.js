@@ -159,6 +159,41 @@ export function nodeTypeCapabilities(nodeTypeOrIdentifier, typeVersion = null) {
   };
 }
 
+/**
+ * Resolves the page where a member starts a trigger, for node types that declare a
+ * `launch_path` capability: a path with `:workflow_id` and `:node_id` placeholders. The
+ * editor shows it as the trigger's address, and opens it with `draft=true` to test the
+ * unpublished draft instead of the published workflow.
+ *
+ * @param {Object|string} nodeTypeOrIdentifier
+ * @param {string|null} typeVersion
+ * @param {Object} target
+ * @param {number|string} target.workflowId
+ * @param {string} target.nodeId
+ * @param {boolean} [target.draft]
+ * @returns {string|null} The path, or null without the capability or without both ids.
+ */
+export function nodeTypeLaunchPath(
+  nodeTypeOrIdentifier,
+  typeVersion = null,
+  { workflowId, nodeId, draft = false } = {}
+) {
+  const { launch_path: launchPath } = nodeTypeCapabilities(
+    nodeTypeOrIdentifier,
+    typeVersion
+  );
+
+  if (!launchPath || !workflowId || !nodeId) {
+    return null;
+  }
+
+  const path = launchPath
+    .replace(":workflow_id", encodeURIComponent(workflowId))
+    .replace(":node_id", encodeURIComponent(nodeId));
+
+  return draft ? `${path}?draft=true` : path;
+}
+
 export function nodeTypeIsManuallyTriggerable(
   nodeTypeOrIdentifier,
   typeVersion = null

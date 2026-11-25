@@ -7,9 +7,9 @@ export function deprecationMessage(deprecation) {
     .map(([from, to]) => `${from} → ${to}`)
     .join(", ");
 
-  const notice = i18n("discourse_workflows.node_deprecated.notice", {
-    changes,
-  });
+  const notice = changes
+    ? i18n("discourse_workflows.node_deprecated.notice", { changes })
+    : i18n("discourse_workflows.node_deprecated.notice_without_output_changes");
   if (!deprecation.notice_key) {
     return notice;
   }

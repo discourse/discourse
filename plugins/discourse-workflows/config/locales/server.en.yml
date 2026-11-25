@@ -66,7 +66,12 @@ en:
         using_tool: "Using %{tool}"
         tool_finished: "Finished %{tool}"
         summarizing: "Preparing workflow authoring response"
+    workflow_chat:
+      draft_notice: "This chat is a test of your draft workflow. Any actions it takes are real."
     errors:
+      respond_to_chat:
+        no_conversation: "This run was not started from an open chat conversation, so there is nowhere to reply."
+        failed: "The reply could not be posted: %{reason}"
       access_control:
         invalid_groups: "Groups from input must resolve to an array of valid group IDs."
         missing_groups: "Groups from input contains groups that no longer exist."

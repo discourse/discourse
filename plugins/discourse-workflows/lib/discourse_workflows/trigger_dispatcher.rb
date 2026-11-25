@@ -25,17 +25,21 @@ module DiscourseWorkflows
       Jobs.enqueue(Jobs::DiscourseWorkflows::ExecuteWorkflow, args)
     end
 
-    def self.execute(published_trigger, trigger_data:, user: nil, webhook_context: nil)
+    # A draft trigger runs as a manual execution of the unpublished graph.
+    def self.execute(trigger, trigger_data:, user: nil, webhook_context: nil, job_id: nil)
       options =
         DiscourseWorkflows::Executor::ExecutionOptions.new(
-          user: user,
-          workflow_version: published_trigger.workflow_version,
-          webhook_context: webhook_context,
+          user:,
+          execution_mode: trigger.draft? ? :manual : :normal,
+          draft_execution: trigger.draft?,
+          workflow_version: trigger.workflow_version,
+          webhook_context:,
+          job_id:,
         )
 
       DiscourseWorkflows::Executor.new(
-        published_trigger.workflow,
-        published_trigger.trigger_node_id,
+        trigger.workflow,
+        trigger.trigger_node_id,
         trigger_data,
         options,
       ).run

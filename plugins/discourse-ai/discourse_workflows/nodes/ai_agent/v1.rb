@@ -137,6 +137,14 @@ if defined?(DiscourseWorkflows)
                   control: :textarea,
                 },
               },
+              conversation_history: {
+                type: :array,
+                required: false,
+                ui: {
+                  control: :multi_input,
+                  expression: true,
+                },
+              },
               upload_ids: {
                 type: :array,
                 required: false,
@@ -147,6 +155,11 @@ if defined?(DiscourseWorkflows)
                 },
               },
             },
+          )
+
+          deprecated(
+            superseded_by: "2.0",
+            notice_key: "discourse_ai.discourse_workflows.ai_agent.deprecated_v1",
           )
 
           def self.output_schemas(configuration = {}, input_schemas: [])
@@ -265,6 +278,8 @@ if defined?(DiscourseWorkflows)
           def item_config(exec_ctx, item_index)
             {
               "prompt" => exec_ctx.get_node_parameter("prompt", item_index),
+              "conversation_history" =>
+                exec_ctx.get_node_parameter("conversation_history", item_index),
               "upload_ids" => exec_ctx.get_node_parameter("upload_ids", item_index),
             }
           end
@@ -379,6 +394,28 @@ if defined?(DiscourseWorkflows)
             I18n.t("discourse_ai.discourse_workflows.uploads.#{key}", **args)
           end
 
+          def conversation_messages(history, content)
+            history = [] if history.nil?
+
+            unless history.is_a?(Array)
+              raise_node_error!(error_text("invalid_conversation_history"))
+            end
+
+            builder = DiscourseAi::Completions::PromptMessagesBuilder.new
+            builder.preserve_history = true
+            history.each do |message|
+              unless message.is_a?(Hash) && %w[user assistant].include?(message["role"]) &&
+                       message["content"].is_a?(String)
+                raise_node_error!(error_text("invalid_conversation_history"))
+              end
+
+              type = message["role"] == "assistant" ? :model : :user
+              builder.push(type:, content: message["content"])
+            end
+            builder.push(type: :user, content:)
+            builder.to_a
+          end
+
           def run_agent(agent, exec_ctx, item_index, cancel_manager)
             config = item_config(exec_ctx, item_index)
             runner = runner(exec_ctx, item_index)
@@ -394,13 +431,14 @@ if defined?(DiscourseWorkflows)
 
             content =
               prompt_content(prompt, config["upload_ids"], agent_record, llm_model, runner, log)
+            messages = conversation_messages(config["conversation_history"], content)
 
             execution_context = DiscourseAi::Completions::ExecutionContext.new
             bot_context =
               DiscourseAi::Agents::BotContext.new(
                 user: runner,
                 guardian: runner.guardian,
-                messages: [{ type: :user, content: content }],
+                messages:,
                 feature_name: "workflow",
                 execution_context: execution_context,
                 cancel_manager: cancel_manager,

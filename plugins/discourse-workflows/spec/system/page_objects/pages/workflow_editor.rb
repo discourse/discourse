@@ -335,6 +335,10 @@ module PageObjects
           self
         end
 
+        def has_launch_url?(path)
+          page.has_css?(".workflows-url-preview code", exact_text: "#{page.server_url}#{path}")
+        end
+
         def has_connection_count?(count)
           page.has_css?(".workflow-connection", count: count)
         end

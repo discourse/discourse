@@ -18,11 +18,12 @@
     {
       "id": "ai-agent",
       "type": "action:ai_agent",
-      "typeVersion": "1.0",
+      "typeVersion": "2.0",
       "name": "AI agent",
       "parameters": {
         "agent_id": -1,
         "agent_name": "Forum Helper",
+        "runner_username": "system",
         "prompt": "=You help the community team triage new topics. Your reply is posted as a whisper that only staff can see.\n\nTopic: {{ $json.topic.title }} ({{ $json.topic.url }})\nAuthor: **{{ $json.post.username }}**\n\n{{ $json.post.raw }}\n\n## What to do\n\n1. Identify the core question or issue and how urgent it is.\n2. Search the community for topics that already answer it, and for official documentation. Use exact error messages, feature names, or technical terms. Search again with other terms if the first results are not relevant.\n3. Collect only the most relevant findings.\n\n## Response format\n\n### Summary\n- **Core issue**: one or two sentences\n- **Priority**: Critical / High / Medium / Low\n\n### Related topics and docs\n- [Title](URL) - why it is relevant\n(Include only the most relevant results. Do not include this topic itself.)\n\n### Suggested reply\nA draft reply that a staff member could send as is, based on what you found.\n\n### Notes for staff\nAdditional context that helps staff but should not be sent to the member, such as missing information to ask for or signs of a wider problem.\n\n## Guidelines\n\n- Be concise; staff need quick, actionable information.\n- Link directly to the topics and docs you used.\n- Do not @mention anyone; use bold for usernames instead.\n- Do not include personal information."
       },
       "credentials": {},

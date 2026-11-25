@@ -11,6 +11,11 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import {
+  nodeTypeCapabilities,
+  nodeTypeLaunchPath,
+  typeVersionForNode,
+} from "../../../lib/workflows/node-types.js";
 import ExpressionWrapper from "./expression-wrapper.gjs";
 
 export default class UrlPreview extends Component {
@@ -30,12 +35,21 @@ export default class UrlPreview extends Component {
     return this.args.node?.type === "trigger:form";
   }
 
+  get hasLaunchPath() {
+    return Boolean(
+      nodeTypeCapabilities(
+        this.args.nodeDefinition,
+        typeVersionForNode(this.args.node)
+      ).launch_path
+    );
+  }
+
   get isWebhookTrigger() {
     return this.args.node?.type === "trigger:webhook";
   }
 
   get isTestableTrigger() {
-    return this.isFormTrigger || this.isWebhookTrigger;
+    return this.isFormTrigger || this.isWebhookTrigger || this.hasLaunchPath;
   }
 
   get isTestMode() {
@@ -52,7 +66,17 @@ export default class UrlPreview extends Component {
     return value || "<path>";
   }
 
+  get testActionLabel() {
+    return this.hasLaunchPath
+      ? i18n("discourse_workflows.manual_trigger.test_in_new_tab")
+      : i18n("discourse_workflows.form.listen_for_test_event");
+  }
+
   get productionUrl() {
+    if (this.hasLaunchPath) {
+      return getAbsoluteURL(this.launchPath());
+    }
+
     const webhookId = this.args.node?.webhookId;
     if (this.isFormTrigger && webhookId) {
       return getAbsoluteURL(`/workflows/form/${webhookId}`);
@@ -89,7 +113,7 @@ export default class UrlPreview extends Component {
 
   get previewText() {
     if (this.isTestMode && !this.activeTestUrl) {
-      return i18n("discourse_workflows.form.listen_for_test_event");
+      return this.testActionLabel;
     }
 
     return this.previewUrl;
@@ -97,7 +121,11 @@ export default class UrlPreview extends Component {
 
   get previewIcon() {
     if (this.isTestMode && !this.activeTestUrl) {
-      return this.isStartingTestSession ? "spinner" : "arrow-pointer";
+      if (this.isStartingTestSession) {
+        return "spinner";
+      }
+
+      return this.hasLaunchPath ? "up-right-from-square" : "arrow-pointer";
     }
 
     return this.copied ? "check" : "copy";
@@ -105,13 +133,17 @@ export default class UrlPreview extends Component {
 
   get previewTitle() {
     if (this.isTestMode && !this.activeTestUrl) {
-      return i18n("discourse_workflows.form.listen_for_test_event");
+      return this.testActionLabel;
     }
 
     return i18n("discourse_workflows.webhook.click_to_copy");
   }
 
   get hint() {
+    if (this.hasLaunchPath) {
+      return i18n("discourse_workflows.trigger_url.save_for_url");
+    }
+
     if (this.isFormTrigger) {
       return i18n("discourse_workflows.form.save_for_url");
     }
@@ -120,6 +152,10 @@ export default class UrlPreview extends Component {
   }
 
   get hasUrl() {
+    if (this.hasLaunchPath) {
+      return Boolean(this.launchPath());
+    }
+
     if (this.isFormTrigger) {
       return !!this.args.node?.webhookId;
     }
@@ -154,6 +190,18 @@ export default class UrlPreview extends Component {
     });
   }
 
+  launchPath({ draft = false } = {}) {
+    return nodeTypeLaunchPath(
+      this.args.nodeDefinition,
+      typeVersionForNode(this.args.node),
+      {
+        workflowId: this.args.session?.workflowId,
+        nodeId: this.args.node?.clientId,
+        draft,
+      }
+    );
+  }
+
   @action
   setMode(mode) {
     this.mode = mode;
@@ -177,6 +225,12 @@ export default class UrlPreview extends Component {
           this.args.node.clientId
         );
         this.startCountdown();
+      } else if (this.hasLaunchPath) {
+        window.open(
+          getAbsoluteURL(this.launchPath({ draft: true })),
+          "_blank",
+          "noopener"
+        );
       } else {
         const result = await ajax(
           `/admin/plugins/discourse-workflows/workflows/${this.args.session.workflowId}/form-test-sessions.json`,

@@ -162,6 +162,7 @@ after_initialize do
 
   if respond_to?(:register_discourse_workflows_node)
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V1 }
+    register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiAgent::V2 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::AiTool::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::McpTool::V1 }
     register_discourse_workflows_node { DiscourseWorkflows::Nodes::Classify::V1 }

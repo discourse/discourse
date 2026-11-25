@@ -135,6 +135,19 @@ DiscourseWorkflows::Engine.routes.draw do
     post "/:uuid" => "forms#create", :constraints => { uuid: /[0-9a-f-]{36}/ }
   end
 
+  get "/workflows/chat/:workflow_id/:node_id" => "chat_conversations#show",
+      :constraints => {
+        workflow_id: /\d+/,
+        node_id: %r{[^/]+},
+      },
+      :defaults => {
+        format: :html,
+      }
+  post "/workflows/chat-conversations" => "chat_conversations#create",
+       :defaults => {
+         format: :json,
+       }
+
   scope "/workflows/form-test", defaults: { format: :json } do
     get "/:token" => "forms#test_show",
         :constraints => {

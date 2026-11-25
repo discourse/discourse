@@ -7,6 +7,7 @@ RSpec.describe DiscourseWorkflows::NodeType do
         DiscourseWorkflows::Registry.nodes(include_disabled_plugins: true).select(&:deprecated?)
 
       expect(deprecated.map(&:name)).to contain_exactly(
+        "DiscourseWorkflows::Nodes::AiAgent::V1",
         "DiscourseWorkflows::Nodes::Assigned::V1",
         "DiscourseWorkflows::Nodes::CardMoved::V1",
         "DiscourseWorkflows::Nodes::PostDestroyed::V1",

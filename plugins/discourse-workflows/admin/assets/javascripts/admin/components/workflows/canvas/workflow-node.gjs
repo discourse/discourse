@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 import formatNodeIssue from "../../../lib/workflows/format-node-issue.js";
 import getNodeIssues from "../../../lib/workflows/node-issues.js";
 import {
+  nodeTypeCapabilities,
   nodeTypeIcon,
   nodeTypeInputLabel,
   nodeTypeIsManuallyTriggerable,
@@ -65,9 +66,21 @@ export function shouldShowExecuteStep(node) {
   return Boolean(node?.type) && !node.type.startsWith("trigger:");
 }
 
+function hasLaunchPath(node, nodeType) {
+  return Boolean(
+    nodeTypeCapabilities(nodeType, typeVersionForNode(node)).launch_path
+  );
+}
+
 export function shouldEnableManualTrigger(node, nodeType, session) {
   if (!node?.type?.startsWith("trigger:")) {
     return false;
+  }
+
+  if (hasLaunchPath(node, nodeType)) {
+    return Boolean(
+      session?.workflowId && nodeType && nodeType.available !== false
+    );
   }
 
   return Boolean(
@@ -188,6 +201,10 @@ export default class WorkflowNode extends Component {
   }
 
   get manualTriggerLabel() {
+    if (hasLaunchPath(this.data, this.resolvedNodeType)) {
+      return i18n("discourse_workflows.manual_trigger.test_in_new_tab");
+    }
+
     return this.isManuallyTriggerable
       ? i18n("discourse_workflows.manual_trigger.run")
       : i18n("discourse_workflows.manual_trigger.needs_pin_data");

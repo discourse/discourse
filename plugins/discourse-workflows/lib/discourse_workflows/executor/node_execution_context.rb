@@ -81,6 +81,7 @@ module DiscourseWorkflows
                   :vars,
                   :execution_id,
                   :node_id,
+                  :trigger_node_id,
                   :webhook_ctx,
                   :workflow_call_stack,
                   :deadline
@@ -104,6 +105,7 @@ module DiscourseWorkflows
         execution_id: nil,
         resume_token: nil,
         node_id: nil,
+        trigger_node_id: nil,
         node_name: nil,
         node_identifier: nil,
         execution_mode: :normal,
@@ -140,6 +142,7 @@ module DiscourseWorkflows
         @execution_id = execution_id
         @resume_token = resume_token
         @node_id = node_id
+        @trigger_node_id = trigger_node_id
         @node_name = node_name.presence&.to_s
         @node_identifier = node_identifier.presence&.to_s
         @webhook_id = split[DiscourseWorkflows::WorkflowDocument.node_webhook_id_key]

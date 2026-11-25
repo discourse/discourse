@@ -41,6 +41,23 @@ module(
         .includesText(i18n("discourse_workflows.node_deprecated.topic_v1"));
     });
 
+    test("drops the output sentence when the newer version only changes behavior", async function (assert) {
+      const deprecation = {
+        superseded_by: "2.0",
+        notice_key: "discourse_workflows.node_deprecated.topic_v1",
+      };
+
+      await render(
+        <template><DeprecationNotice @deprecation={{deprecation}} /></template>
+      );
+
+      assert
+        .dom(".workflows-deprecation-notice .alert")
+        .hasText(
+          `${i18n("discourse_workflows.node_deprecated.notice_without_output_changes")} ${i18n("discourse_workflows.node_deprecated.topic_v1")}`
+        );
+    });
+
     test("upgrades the node", async function (assert) {
       const upgrade = () => assert.step("upgrade");
 
