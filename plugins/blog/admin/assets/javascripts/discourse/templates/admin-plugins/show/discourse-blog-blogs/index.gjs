@@ -16,25 +16,30 @@ function firstProblem(blog) {
 
 export default <template>
   <section class="blog-blogs">
-    <DPageSubheader @titleLabel={{i18n "blog.admin.blogs_tab"}}>
-      <:actions as |actions|>
-        <PluginOutlet
-          @name="blog-admin-add-blog-button"
-          @outletArgs={{lazyHash
-            actions=actions
-            canAddBlog=@model.can_add_blog
-          }}
-        >
-          {{#if @model.can_add_blog}}
-            <actions.Primary
-              @icon="plus"
-              @label="blog.admin.add_blog"
-              @route="adminPlugins.show.discourse-blog-blogs.new"
-            />
-          {{/if}}
-        </PluginOutlet>
-      </:actions>
-    </DPageSubheader>
+    <div class="blog-admin-intro">
+      <p class="blog-admin-intro__description">{{i18n
+          "blog.admin.blogs_tab_description"
+        }}</p>
+      <DPageSubheader>
+        <:actions as |actions|>
+          <PluginOutlet
+            @name="blog-admin-add-blog-button"
+            @outletArgs={{lazyHash
+              actions=actions
+              canAddBlog=@model.can_add_blog
+            }}
+          >
+            {{#if @model.can_add_blog}}
+              <actions.Primary
+                @icon="plus"
+                @label="blog.admin.add_blog"
+                @route="adminPlugins.show.discourse-blog-blogs.new"
+              />
+            {{/if}}
+          </PluginOutlet>
+        </:actions>
+      </DPageSubheader>
+    </div>
     <table class="d-table blog-blogs__table">
       <thead class="d-table__header">
         <tr class="d-table__row">
