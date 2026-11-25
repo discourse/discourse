@@ -233,7 +233,8 @@
 
 // Suggest Titles Related
 .showing-ai-suggestions {
-  #edit-title {
+  #edit-title,
+  .edit-title__wrapper .expanding-text-area::after {
     padding-right: 2em;
   }
 }

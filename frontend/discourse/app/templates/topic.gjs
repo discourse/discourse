@@ -214,6 +214,7 @@ export default <template>
                     @bufferedTitle={{@controller.buffered.title}}
                     @isEditingLocalization={{@controller.editingTopicLocalization}}
                     @model={{@controller.model}}
+                    @onTranslationTitleChange={{@controller.updateTranslationTitle}}
                     @translationLocale={{@controller.translationLocale}}
                     @translationTitle={{@controller.translationTitle}}
                   />
