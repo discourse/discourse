@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Admin MCP content restrictions page" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
   fab!(:tag) { Fabricate(:tag, name: "legal-hold") }
 

@@ -133,6 +133,7 @@ export default class AdminMcpForumContentRule extends Component {
           <form.Field
             @format="large"
             @name="allow_mode"
+            @showOptional={{false}}
             @title={{i18n
               "admin.config.mcp.content_restrictions.forum_content.allow"
             }}
