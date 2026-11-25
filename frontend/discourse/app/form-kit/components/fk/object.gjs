@@ -30,6 +30,7 @@ export default class FKObject extends Component {
             unregisterField=@unregisterField
             triggerRevalidationFor=@triggerRevalidationFor
             parentName=this.name
+            layout=@layout
           )
           Object=(component
             FKObject
@@ -41,6 +42,7 @@ export default class FKObject extends Component {
             unregisterField=@unregisterField
             triggerRevalidationFor=@triggerRevalidationFor
             parentName=this.name
+            layout=@layout
             remove=@remove
           )
           Collection=(component
@@ -53,6 +55,7 @@ export default class FKObject extends Component {
             unregisterField=@unregisterField
             triggerRevalidationFor=@triggerRevalidationFor
             parentName=this.name
+            layout=@layout
             remove=@remove
           )
         )
