@@ -300,7 +300,7 @@ RSpec.describe ListController do
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "with #{filter}" do
-        it "succeeds" do
+        it "returns the requested topic filter" do
           get "/#{filter}"
           expect(response.status).to eq(200)
         end
@@ -1280,7 +1280,7 @@ RSpec.describe ListController do
       end
 
       context "with access to see the category" do
-        it "succeeds" do
+        it "returns the category topic list" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1291,7 +1291,7 @@ RSpec.describe ListController do
 
         before { SiteSetting.slug_generation_method = "encoded" }
 
-        it "succeeds" do
+        it "returns the topic list for an encoded category slug" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1301,7 +1301,7 @@ RSpec.describe ListController do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
         context "with valid slug" do
-          it "succeeds" do
+          it "returns the child category topic list" do
             get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
@@ -1338,7 +1338,7 @@ RSpec.describe ListController do
         let(:sub_category) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
         context "when parent and child are requested" do
-          it "succeeds" do
+          it "returns the subcategory topic list" do
             get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
@@ -1765,7 +1765,7 @@ RSpec.describe ListController do
     end
 
     context "when logged in" do
-      it "succeeds" do
+      it "returns the read topic list" do
         sign_in(user)
         get "/read"
         expect(response.status).to eq(200)
@@ -1774,7 +1774,7 @@ RSpec.describe ListController do
   end
 
   describe "best_periods_for" do
-    it "works" do
+    it "returns available periods based on the supplied date" do
       expect(ListController.best_periods_for(nil)).to eq([:all])
       expect(ListController.best_periods_for(5.years.ago)).to eq([:all])
       expect(ListController.best_periods_for(2.years.ago)).to eq(%i[yearly all])
