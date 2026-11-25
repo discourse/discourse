@@ -12,14 +12,12 @@ import { i18n } from "discourse-i18n";
 const LOADING_ROUTE = /(^|[._-])loading$/;
 
 const MAX_TABS = 4;
-const HUB_TAB = "hub";
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
 /** Remembers navigation within sidebar panels that provide a `mobileTab`. */
 @disableImplicitInjections
 export default class MobileTabBar extends Service {
   @service appEvents;
-  @service capabilities;
   @service currentUser;
   @service header;
   @service routeHistory;
@@ -84,11 +82,21 @@ export default class MobileTabBar extends Service {
     return this.enabled && this.#titledPage.value;
   }
 
-  /** @returns {Array<Object>} The tabs, in the order the bar shows them. */
+  /** @returns {Array<Object>} The sections in navigation order. */
   get tabs() {
-    const sections = this.#sectionTabs;
-    const hubTab = this.#hubTab;
-    return hubTab ? [...sections, hubTab] : sections;
+    const panelTabs = this.sidebarState.panels
+      .map((panel) => panel.mobileTab && { key: panel.key, ...panel.mobileTab })
+      .filter(Boolean);
+    const byKey = (key) => panelTabs.find((tab) => tab.key === key);
+    const fixed = [MAIN_PANEL, ADMIN_PANEL];
+    const sections = panelTabs.filter((tab) => !fixed.includes(tab.key));
+
+    return [
+      byKey(MAIN_PANEL),
+      ...sections.filter((tab) => tab.primary),
+      ...sections.filter((tab) => !tab.primary),
+      byKey(ADMIN_PANEL),
+    ].filter(Boolean);
   }
 
   /** @returns {Array<Object>} The tabs shown on the bar itself. */
@@ -102,20 +110,13 @@ export default class MobileTabBar extends Service {
   }
 
   get tabLayout() {
-    const tabs = this.#sectionTabs;
-    const hubTab = this.#hubTab;
-    const sectionLimit = hubTab ? MAX_TABS - 1 : MAX_TABS;
-    const visibleCount =
-      tabs.length > sectionLimit ? sectionLimit - 1 : tabs.length;
-    const onlyTopics =
-      !hubTab && tabs.length === 1 && tabs[0].key === MAIN_PANEL;
-    const sectionTabs = onlyTopics ? [] : tabs.slice(0, visibleCount);
+    const tabs = this.tabs;
+    const visibleCount = tabs.length > MAX_TABS ? MAX_TABS - 1 : tabs.length;
+    const onlyTopics = tabs.length === 1 && tabs[0].key === MAIN_PANEL;
 
     return {
-      sectionTabs,
+      barTabs: onlyTopics ? [] : tabs.slice(0, visibleCount),
       moreTabs: tabs.slice(visibleCount),
-      hubTab,
-      barTabs: hubTab ? [...sectionTabs, hubTab] : sectionTabs,
     };
   }
 
@@ -129,7 +130,7 @@ export default class MobileTabBar extends Service {
    * way to start something new, the current section's first, then drafts.
    */
   get createActions() {
-    const tabs = this.#sectionTabs;
+    const tabs = this.tabs;
     const current = tabs.filter((tab) => tab.key === this.sectionTabKey);
     const others = tabs.filter((tab) => tab.key !== this.sectionTabKey);
     const actions = [...current, ...others].flatMap(
@@ -150,28 +151,6 @@ export default class MobileTabBar extends Service {
 
   get isMenuOpen() {
     return this.header.hamburgerVisible;
-  }
-
-  get #hubTab() {
-    return this.capabilities.isAppWebview
-      ? { key: HUB_TAB, label: i18n("mobile_tab_bar.hub"), icon: "eject" }
-      : null;
-  }
-
-  get #sectionTabs() {
-    const panelTabs = this.sidebarState.panels
-      .map((panel) => panel.mobileTab && { key: panel.key, ...panel.mobileTab })
-      .filter(Boolean);
-    const byKey = (key) => panelTabs.find((tab) => tab.key === key);
-    const fixed = [MAIN_PANEL, ADMIN_PANEL];
-    const sections = panelTabs.filter((tab) => !fixed.includes(tab.key));
-
-    return [
-      byKey(MAIN_PANEL),
-      ...sections.filter((tab) => tab.primary),
-      ...sections.filter((tab) => !tab.primary),
-      byKey(ADMIN_PANEL),
-    ].filter(Boolean);
   }
 
   /**
@@ -213,7 +192,7 @@ export default class MobileTabBar extends Service {
       return false;
     }
 
-    return this.#sectionTabs.some(
+    return this.tabs.some(
       (tab) => tab.key !== MAIN_PANEL && tab.ownsRoute?.(routeInfo)
     );
   }
@@ -267,11 +246,6 @@ export default class MobileTabBar extends Service {
   selectTab(key) {
     this.closeMenu();
 
-    if (key === HUB_TAB) {
-      postRNWebviewMessage("dismiss", true);
-      return;
-    }
-
     const tab = this.#tab(key);
     if (key !== this.sectionTabKey) {
       DiscourseURL.routeTo(this.#lastURLs.get(key) || tab.url);
@@ -288,6 +262,12 @@ export default class MobileTabBar extends Service {
   @bind
   goBack() {
     this.#returnToList(this.#tab(this.sectionTabKey));
+  }
+
+  @bind
+  returnToHub() {
+    this.closeMenu();
+    postRNWebviewMessage("dismiss", true);
   }
 
   @bind
@@ -317,7 +297,7 @@ export default class MobileTabBar extends Service {
   // their own conversations, so they're asked before the forum
   #ownerOf(route) {
     const owns = (tab) => tab.ownsRoute?.(route);
-    const tabs = this.#sectionTabs;
+    const tabs = this.tabs;
 
     return (
       tabs.find((tab) => tab.key !== MAIN_PANEL && owns(tab)) ??
@@ -326,7 +306,7 @@ export default class MobileTabBar extends Service {
   }
 
   #tab(key) {
-    return this.#sectionTabs.find((tab) => tab.key === key);
+    return this.tabs.find((tab) => tab.key === key);
   }
 
   // Stepping back through history keeps the list's scroll position

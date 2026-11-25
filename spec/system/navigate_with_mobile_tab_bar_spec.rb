@@ -98,8 +98,10 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".category-breadcrumb:not(.hidden) .category-drop")
     expect(page).to have_no_css(".navigation-controls .bulk-select")
 
-    find(".mobile-tab-bar__views .navigation-options__trigger").click
-    find(".navigation-options__bulk-select").click
+    within(".mobile-tab-bar__views") do
+      expect(page).to have_css(".navigation-options__bulk-select .d-icon-list")
+      click_button(I18n.t("js.topics.bulk.select"))
+    end
 
     expect(topic_list).to have_bulk_select_enabled
 
@@ -234,6 +236,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(docked_title, text: topic.title)
     expect(page).to have_no_css(actions)
     expect(page).to have_css(back)
+    expect(page).to have_no_css(".d-header .title")
 
     page.execute_script(
       "document.querySelector('.mobile-tab-bar__menu').focus({ preventScroll: true })",
@@ -324,6 +327,23 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css("#topic-progress-wrapper:not(.docked) #topic-progress .nums")
   end
 
+  it "shows topic progress only after the first reply, even with pin history" do
+    sign_in(other_user)
+    topic = Fabricate(:post, raw: "Scrollable post content\n\n" * 50).topic
+    Fabricate(:small_action, topic: topic, action_code: "pinned.enabled")
+
+    visit(topic.url)
+
+    expect(page).to have_css(".mobile-tab-bar.--no-tabs .mobile-tab-bar__menu")
+    expect(page).to have_no_css(".mobile-tab-bar__views #topic-progress-wrapper", visible: :all)
+    expect(page).to have_no_css("#topic-progress")
+
+    Fabricate(:post, topic: topic)
+    page.refresh
+
+    expect(page).to have_css(".mobile-tab-bar__views #topic-progress")
+  end
+
   it "keeps the timeline between the footer actions while reading when Topics is the only section" do
     sign_in(other_user)
     topic = Fabricate(:topic)
@@ -378,10 +398,9 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     sign_in(Fabricate(:moderator, refresh_auto_groups: true))
 
     visit("/categories")
-    find(".mobile-tab-bar__views .navigation-options__trigger").click
+    within(".mobile-tab-bar__views") { click_button(I18n.t("js.categories.reorder.title")) }
 
-    expect(page).to have_css(".navigation-options__reorder-categories")
-    expect(page).to have_no_css(".navigation-options__page-layout")
+    expect(page).to have_css(".reorder-categories")
   end
 
   it "lets the user start a topic in the category they're looking at from the create button" do
@@ -418,7 +437,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_current_path(category.url)
   end
 
-  it "shows the full logo on a section's top level and a back button below it" do
+  it "shows the full logo on the topic list and beside the back button in a topic" do
     category = Fabricate(:category)
     topic = Fabricate(:post, topic: Fabricate(:topic, category:)).topic
     visit(category.url)
@@ -431,7 +450,7 @@ RSpec.describe "Navigate with mobile tab bar", mobile: true do
     expect(page).to have_css(".mobile-tab-bar-back")
     expect(PageObjects::Pages::Topic.new).to have_topic_title(topic.title)
     expect(page).to have_no_css(".d-header .extra-info-wrapper")
-    expect(page).to have_css(".d-header .title--minimized")
+    expect(page).to have_css(".d-header .title:not(.title--minimized)")
 
     find(".mobile-tab-bar-back").click
 

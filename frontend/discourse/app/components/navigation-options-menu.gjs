@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -19,172 +19,144 @@ import { i18n } from "discourse-i18n";
 const PAGE_LAYOUT_SETTINGS_URL =
   "/admin/config/category-management/settings?filter=category_page_style";
 
-/**
- * A list's actions, gathered behind one button beside its views in the mobile
- * tab bar: on topic lists dismissing (`@showDismissRead`, `@showResetNew`) and
- * bulk select, and on the category list reordering (`@canReorderCategories`)
- * and its site settings (`@canChangeCategorySettings`).
- */
 export default class NavigationOptionsMenu extends Component {
   @service currentUser;
   @service modal;
   @service siteSettings;
 
-  get hasOptions() {
-    return (
-      this.args.showDismissRead ||
-      this.args.showResetNew ||
-      this.args.showBulkSelect ||
-      this.args.canReorderCategories ||
-      this.args.canChangeCategorySettings
-    );
-  }
+  get options() {
+    const options = [];
+    const selectedCount = this.args.bulkSelectHelper?.selected.length ?? 0;
 
-  get selectedCount() {
-    return this.args.bulkSelectHelper?.selected.length ?? 0;
-  }
-
-  get newListSubset() {
-    return newListSubset(this.args.model);
-  }
-
-  get dismissReadLabel() {
-    return dismissReadLabel(this.selectedCount);
-  }
-
-  get dismissNewLabel() {
-    return dismissNewLabel({
-      unifiedNew: this.currentUser?.unified_new_enabled,
-      subset: this.newListSubset,
-      selectedCount: this.selectedCount,
-    });
-  }
-
-  get showDismissNewAndStopTracking() {
-    return (
-      this.args.showNewDismissCombo &&
-      canDismissNewAndStopTracking(this.newListSubset)
-    );
-  }
-
-  get pageLayoutURL() {
-    return getURL(PAGE_LAYOUT_SETTINGS_URL);
-  }
-
-  @action
-  run(option, menu) {
-    menu.close();
-    option();
-  }
-
-  @action
-  dismissRead(menu) {
-    menu.close();
-    showDismissReadModal(this.modal, {
-      selectedCount: this.selectedCount,
-      dismissRead: this.args.dismissRead,
-    });
-  }
-
-  // Only the combined new list dismisses by what's showing
-  @action
-  dismissNew(menu, untrack = false) {
-    menu.close();
-
-    if (this.args.showNewDismissCombo) {
-      this.args.resetNew({ ...dismissNewOptions(this.newListSubset), untrack });
-    } else {
-      this.args.resetNew();
+    if (this.args.showDismissRead) {
+      options.push({
+        id: "dismiss-read",
+        icon: "check",
+        label: dismissReadLabel(selectedCount),
+        title: i18n("topics.bulk.dismiss_tooltip"),
+        action: () =>
+          showDismissReadModal(this.modal, {
+            selectedCount,
+            dismissRead: this.args.dismissRead,
+          }),
+      });
     }
+
+    if (this.args.showResetNew) {
+      const subset = newListSubset(this.args.model);
+      const dismissNew = (untrack) => {
+        if (this.args.showNewDismissCombo) {
+          this.args.resetNew({ ...dismissNewOptions(subset), untrack });
+        } else {
+          this.args.resetNew();
+        }
+      };
+
+      options.push({
+        id: "dismiss-new",
+        icon: "check",
+        label: dismissNewLabel({
+          unifiedNew: this.currentUser?.unified_new_enabled,
+          subset,
+          selectedCount,
+        }),
+        action: () => dismissNew(false),
+      });
+
+      if (
+        this.args.showNewDismissCombo &&
+        canDismissNewAndStopTracking(subset)
+      ) {
+        options.push({
+          id: "dismiss-new-stop-tracking",
+          icon: "bell-slash",
+          label: i18n("topics.bulk.dismiss_and_stop_tracking"),
+          action: () => dismissNew(true),
+        });
+      }
+    }
+
+    if (this.args.showBulkSelect) {
+      options.push({
+        id: "bulk-select",
+        icon: "list",
+        label: i18n("topics.bulk.select"),
+        pressed: this.args.bulkSelectHelper.bulkSelectEnabled,
+        action: this.args.bulkSelectHelper.toggleBulkSelect,
+      });
+    }
+
+    if (this.args.canReorderCategories) {
+      options.push({
+        id: "reorder-categories",
+        icon: "shuffle",
+        label: i18n("categories.reorder.title"),
+        action: () =>
+          this.args.reorderCategories({
+            enableFixedPositions: !this.siteSettings.fixed_category_positions,
+          }),
+      });
+    }
+
+    if (this.args.canChangeCategorySettings) {
+      options.push({
+        id: "page-layout",
+        icon: "table-columns",
+        label: i18n("categories.page_layout"),
+        href: getURL(PAGE_LAYOUT_SETTINGS_URL),
+      });
+    }
+
+    return options;
   }
 
   @action
-  async reorderCategories(menu) {
+  async run(option, menu) {
     await menu.close();
-    this.args.reorderCategories({
-      enableFixedPositions: !this.siteSettings.fixed_category_positions,
-    });
+    option.action();
   }
 
   <template>
-    {{#if this.hasOptions}}
-      <DMenu
-        @ariaLabel={{i18n "topics.list_options"}}
-        @icon="ellipsis-vertical"
-        @identifier="navigation-options"
-        @modalForMobile={{true}}
-        @triggerClass="btn-transparent navigation-options__trigger"
-      >
-        <:content as |menu|>
-          <DDropdownMenu as |dropdown|>
-            {{#if @showDismissRead}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent navigation-options__dismiss-read"
-                  @action={{fn this.dismissRead menu}}
-                  @icon="check"
-                  @title="topics.bulk.dismiss_tooltip"
-                  @translatedLabel={{this.dismissReadLabel}}
-                />
-              </dropdown.item>
-            {{/if}}
-            {{#if @showResetNew}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent navigation-options__dismiss-new"
-                  @action={{fn this.dismissNew menu false}}
-                  @icon="check"
-                  @translatedLabel={{this.dismissNewLabel}}
-                />
-              </dropdown.item>
-              {{#if this.showDismissNewAndStopTracking}}
+    {{#let this.options as |options|}}
+      {{#if (eq options.length 1)}}
+        {{#let (get options "0") as |option|}}
+          <DButton
+            class="btn-transparent navigation-options__trigger navigation-options__{{option.id}}"
+            @action={{option.action}}
+            @ariaPressed={{option.pressed}}
+            @href={{option.href}}
+            @icon={{option.icon}}
+            @translatedAriaLabel={{option.label}}
+            @translatedTitle={{or option.title option.label}}
+          />
+        {{/let}}
+      {{else if options.length}}
+        <DMenu
+          @ariaLabel={{i18n "topics.list_options"}}
+          @icon="ellipsis-vertical"
+          @identifier="navigation-options"
+          @modalForMobile={{true}}
+          @triggerClass="btn-transparent navigation-options__trigger"
+        >
+          <:content as |menu|>
+            <DDropdownMenu as |dropdown|>
+              {{#each options key="id" as |option|}}
                 <dropdown.item>
                   <DButton
-                    class="btn-transparent navigation-options__dismiss-new-stop-tracking"
-                    @action={{fn this.dismissNew menu true}}
-                    @icon="bell-slash"
-                    @label="topics.bulk.dismiss_and_stop_tracking"
+                    class="btn-transparent navigation-options__{{option.id}}"
+                    @action={{if option.action (fn this.run option menu)}}
+                    @ariaPressed={{option.pressed}}
+                    @href={{option.href}}
+                    @icon={{option.icon}}
+                    @translatedLabel={{option.label}}
+                    @translatedTitle={{option.title}}
                   />
                 </dropdown.item>
-              {{/if}}
-            {{/if}}
-            {{#if @showBulkSelect}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent navigation-options__bulk-select"
-                  @action={{fn
-                    this.run
-                    @bulkSelectHelper.toggleBulkSelect
-                    menu
-                  }}
-                  @icon="list"
-                  @label="topics.bulk.select"
-                />
-              </dropdown.item>
-            {{/if}}
-            {{#if @canReorderCategories}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent navigation-options__reorder-categories"
-                  @action={{fn this.reorderCategories menu}}
-                  @icon="shuffle"
-                  @label="categories.reorder.title"
-                />
-              </dropdown.item>
-            {{/if}}
-            {{#if @canChangeCategorySettings}}
-              <dropdown.item>
-                <DButton
-                  class="btn-transparent navigation-options__page-layout"
-                  @href={{this.pageLayoutURL}}
-                  @icon="table-columns"
-                  @label="categories.page_layout"
-                />
-              </dropdown.item>
-            {{/if}}
-          </DDropdownMenu>
-        </:content>
-      </DMenu>
-    {{/if}}
+              {{/each}}
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      {{/if}}
+    {{/let}}
   </template>
 }
