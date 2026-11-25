@@ -106,12 +106,10 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
         if (this.channel.chatable.group) {
           return this.channel.displayTitle;
         } else {
-          const username = this.channel.escapedTitle.replaceAll("@", "");
-          return trustHTML(
-            `${escapeExpression(username)}${decorateUsername(
-              escapeExpression(username)
-            )}`
+          const username = escapeExpression(
+            (this.channel.title ?? "").replaceAll("@", "")
           );
+          return trustHTML(`${username}${decorateUsername(username)}`);
         }
       } else {
         return trustHTML(emojiUnescape(this.channel.escapedTitle));
@@ -122,17 +120,18 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
       if (this.isDM) {
         if (this.channel.chatable.group) {
           return i18n("chat.placeholder_channel", {
-            channelName: this.channel.escapedTitle,
+            channelName: this.channel.title,
           });
         } else {
           return i18n("chat.placeholder_users", {
-            commaSeparatedNames: this.channel.escapedTitle,
+            commaSeparatedNames: this.channel.title,
           });
         }
       } else {
-        return this.channel.escapedDescription
-          ? trustHTML(this.channel.escapedDescription)
-          : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
+        return (
+          this.channel.description?.trim() ||
+          `${this.channel.title} ${i18n("chat.title")}`
+        );
       }
     }
 
@@ -669,9 +668,10 @@ export default {
               }
 
               get title() {
-                return this.channel.escapedDescription
-                  ? trustHTML(this.channel.escapedDescription)
-                  : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
+                return (
+                  this.channel.description?.trim() ||
+                  `${this.channel.title} ${i18n("chat.title")}`
+                );
               }
 
               get prefixBadge() {
@@ -924,11 +924,11 @@ export default {
               get title() {
                 if (this.channel.chatable.group) {
                   return i18n("chat.placeholder_channel", {
-                    channelName: this.channel.escapedTitle,
+                    channelName: this.channel.title,
                   });
                 } else {
                   return i18n("chat.placeholder_users", {
-                    commaSeparatedNames: this.channel.escapedTitle,
+                    commaSeparatedNames: this.channel.title,
                   });
                 }
               }
@@ -937,15 +937,10 @@ export default {
                 if (this.channel.chatable.group) {
                   return this.channel.displayTitle;
                 } else {
-                  const username = this.channel.escapedTitle.replaceAll(
-                    "@",
-                    ""
+                  const username = escapeExpression(
+                    (this.channel.title ?? "").replaceAll("@", "")
                   );
-                  return trustHTML(
-                    `${escapeExpression(username)}${decorateUsername(
-                      escapeExpression(username)
-                    )}`
-                  );
+                  return trustHTML(`${username}${decorateUsername(username)}`);
                 }
               }
 
