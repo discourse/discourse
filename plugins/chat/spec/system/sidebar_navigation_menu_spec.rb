@@ -117,16 +117,15 @@ RSpec.describe "Sidebar navigation menu" do
     context "when channel description contains malicious content" do
       before { channel_1.update!(description: "<script>alert('hello')</script>") }
 
-      it "escapes the title attribute using it" do
+      it "uses it as plain text in the title attribute" do
         visit("/")
 
-        expect(
+        link =
           sidebar_page.channels_section.find(
             ".sidebar-section-link[data-link-name='#{channel_1.slug}']",
-          )[
-            "title"
-          ],
-        ).to eq("&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;")
+          )
+        expect(link["title"]).to eq("<script>alert('hello')</script>")
+        expect(link).to have_no_css("script")
       end
     end
   end
@@ -215,12 +214,13 @@ RSpec.describe "Sidebar navigation menu" do
         other_user.save!(validate: false)
       end
 
-      it "escapes the title attribute using it" do
+      it "uses it as plain text in the link and title attribute" do
         visit("/")
 
-        expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
-          "Chat with &lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
-        )
+        link = sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")
+        expect(link["title"]).to eq("Chat with <script>alert('hello')</script>")
+        expect(link).to have_text("<script>alert('hello')</script>")
+        expect(link).to have_no_css("script")
       end
     end
 
