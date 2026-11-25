@@ -868,6 +868,94 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
     ensure
       Discourse.redis.del(described_class::MUTEX_KEY)
     end
+
+    it "publishes admin-scoped MessageBus updates across wave transitions and suppresses them on lock loss" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "First MessageBus wave topic",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Second MessageBus wave topic",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ).and_return(
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "LiveProgressTheme",
+              description: "Broadcast over MessageBus",
+              parent_concept_id: nil,
+            },
+          ],
+        },
+      )
+
+      wave_seeder = described_class.new(concurrency: 1, wave_size: 1)
+
+      messages =
+        MessageBus.track_publish(described_class::MESSAGE_BUS_CHANNEL) do
+          queued = described_class.mark_queued!
+          wave_seeder.seed_wave!(limit: 2, run_id: queued["run_id"], enqueue_next: true)
+          wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
+        end
+
+      expect(messages.map { |m| m.data["status"] }).to eq(%w[queued running running completed])
+      expect(messages[2].data["processed"]).to eq(1)
+      expect(messages[3].data["processed"]).to eq(2)
+      expect(messages.map(&:group_ids)).to all(eq([Group::AUTO_GROUPS[:admins]]))
+
+      InferredConceptTopic.delete_all
+      described_class.reset_status!
+      queued2 = described_class.mark_queued!
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(:classify) do
+        Discourse.redis.set(described_class::MUTEX_KEY, "other-worker-token", ex: 60)
+        { matches: [], proposed_new: [] }
+      end
+
+      suppressed_messages =
+        MessageBus.track_publish(described_class::MESSAGE_BUS_CHANNEL) do
+          wave_seeder.seed_wave!(limit: 2, run_id: queued2["run_id"], enqueue_next: true)
+        end
+
+      expect(suppressed_messages.map { |m| m.data["status"] }).to eq(["running"])
+    ensure
+      Discourse.redis.del(described_class::MUTEX_KEY)
+    end
   end
 
   describe ".resume_if_stalled!" do

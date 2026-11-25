@@ -12,6 +12,7 @@ module DiscourseAi
       WAVE_STALE_AFTER = 5.minutes
       QUEUE_TTL = STALE_AFTER
       TERMINAL_STATE_TTL = 24.hours
+      MESSAGE_BUS_CHANNEL = "/discourse-ai/admin/inferred-concepts/seed"
       RECENT_WINDOW = 2.years
       MIN_WORD_COUNT = 50
       MAX_SEED_TOPICS = 20_000
@@ -98,6 +99,12 @@ module DiscourseAi
         Discourse.redis.del(STATE_KEY, QUEUE_KEY)
       end
 
+      def self.publish_status(state)
+        return if state.blank?
+
+        MessageBus.publish(MESSAGE_BUS_CHANNEL, state, group_ids: [Group::AUTO_GROUPS[:admins]])
+      end
+
       def self.with_lock(renew: true, heartbeat_interval: LOCK_HEARTBEAT_INTERVAL)
         redis = Discourse.redis
         token = SecureRandom.hex(16)
@@ -182,7 +189,10 @@ module DiscourseAi
               ],
               [lock_token, refreshed_state.to_json, STALE_AFTER.to_i.to_s, QUEUE_TTL.to_i.to_s],
             )
-          run_id_to_enqueue = state["run_id"] if updated == 1
+          if updated == 1
+            publish_status(refreshed_state)
+            run_id_to_enqueue = state["run_id"]
+          end
         end
 
         return false if run_id_to_enqueue.blank?
@@ -195,6 +205,7 @@ module DiscourseAi
         ttl =
           %w[queued running].include?(state["status"]) ? STALE_AFTER.to_i : TERMINAL_STATE_TTL.to_i
         Discourse.redis.set(STATE_KEY, state.to_json, ex: ttl)
+        publish_status(state)
         state
       end
       private_class_method :write_state
@@ -384,6 +395,7 @@ module DiscourseAi
           tx.set(STATE_KEY, initial_state.to_json, ex: STALE_AFTER.to_i)
         end
 
+        self.class.publish_status(initial_state)
         initial_state
       end
 
@@ -503,7 +515,10 @@ module DiscourseAi
             ],
             [lock_token, count.to_s, QUEUE_TTL.to_i.to_s, state.to_json, STALE_AFTER.to_i.to_s],
           )
-        updated == 1
+        return false if updated != 1
+
+        self.class.publish_status(state)
+        true
       end
 
       def finalize_state(state, lock_token:, error: nil)
@@ -533,7 +548,10 @@ module DiscourseAi
             [lock_token, final_state.to_json, TERMINAL_STATE_TTL.to_i.to_s],
           )
 
-        updated == 1 ? final_state : { "status" => "skipped" }
+        return { "status" => "skipped" } if updated != 1
+
+        self.class.publish_status(final_state)
+        final_state
       end
 
       def write_terminal_error_state(state, error_message, lock_token:)
@@ -552,15 +570,18 @@ module DiscourseAi
         }
 
         redis = Discourse.redis
-        FINALIZE_RUN_SCRIPT.eval(
-          redis,
-          [
-            redis.namespace_key(MUTEX_KEY),
-            redis.namespace_key(QUEUE_KEY),
-            redis.namespace_key(STATE_KEY),
-          ],
-          [lock_token, error_state.to_json, TERMINAL_STATE_TTL.to_i.to_s],
-        )
+        updated =
+          FINALIZE_RUN_SCRIPT.eval(
+            redis,
+            [
+              redis.namespace_key(MUTEX_KEY),
+              redis.namespace_key(QUEUE_KEY),
+              redis.namespace_key(STATE_KEY),
+            ],
+            [lock_token, error_state.to_json, TERMINAL_STATE_TTL.to_i.to_s],
+          )
+        self.class.publish_status(error_state) if updated == 1
+        updated
       end
 
       def prepare_wave(wave_ids, applier:, retriever:)
