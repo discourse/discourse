@@ -125,8 +125,12 @@ await exec("go to categories page", () => {
   return page.goto(new URL("categories", url).href);
 });
 
-await exec("can see categories on the page", () => {
-  return page.waitForSelector(".category-list");
+await exec("can see category boxes on the page", () => {
+  return page.waitForSelector(".category-boxes");
+});
+
+await exec("go to latest page", () => {
+  return page.goto(new URL("latest", url).href);
 });
 
 await exec("navigate to 1st topic", () => {
