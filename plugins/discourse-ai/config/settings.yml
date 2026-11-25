@@ -850,6 +850,31 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/inference"
+  inferred_concepts_match_decision_model:
+    default: ""
+    type: enum
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+    area: "ai-features/inference"
+  inferred_concepts_backfill_maximum_topics_per_hour:
+    default: 0
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_backfill_max_age_days:
+    default: 365
+    min: 0
+    max: 36500
+    area: "ai-features/inference"
+  inferred_concepts_backfill_minimum_word_count:
+    default: 50
+    min: 0
+    max: 10000
+    area: "ai-features/inference"
+  inferred_concepts_seed_topics_limit:
+    default: 200
+    min: 10
+    max: 2000
+    area: "ai-features/inference"
   ai_artifact_kv_value_max_length:
     default: 5000
     hidden: true

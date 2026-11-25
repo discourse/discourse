@@ -28,6 +28,7 @@ export default class AiConceptsList extends Component {
   @service toasts;
 
   #filterDebounce = null;
+  #isStartingSeed = tracked(false);
   #overrideConcepts = tracked(null);
   #overrideMeta = tracked(null);
 
@@ -66,6 +67,32 @@ export default class AiConceptsList extends Component {
 
   get canRunCuration() {
     return Boolean(this.meta.enabled && this.meta.embeddings_enabled);
+  }
+
+  get isStartingSeed() {
+    return this.#isStartingSeed.value;
+  }
+
+  get seedStatus() {
+    return this.meta.seed_status || null;
+  }
+
+  get isSeeding() {
+    return (
+      this.seedStatus?.status === "queued" ||
+      this.seedStatus?.status === "running"
+    );
+  }
+
+  get seedProgressMessage() {
+    if (this.seedStatus?.total) {
+      return i18n("discourse_ai.concepts.seed.running_progress", {
+        processed: this.seedStatus.processed || 0,
+        total: this.seedStatus.total,
+      });
+    }
+
+    return i18n("discourse_ai.concepts.seed.queued");
   }
 
   get selectedStatus() {
@@ -185,6 +212,43 @@ export default class AiConceptsList extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
+  }
+
+  @action
+  async startSeed() {
+    if (this.#isStartingSeed.value) {
+      return;
+    }
+
+    this.#isStartingSeed.value = true;
+
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-ai/ai-concepts/seed.json",
+        {
+          type: "POST",
+        }
+      );
+
+      this.#overrideMeta.value = {
+        ...this.meta,
+        seed_status: response.seed_status,
+      };
+
+      this.toasts.success({
+        data: { message: i18n("discourse_ai.concepts.seed.enqueued") },
+        duration: "short",
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.#isStartingSeed.value = false;
+    }
+  }
+
+  @action
+  refreshList() {
+    return this.#refreshList();
   }
 
   @action
@@ -356,6 +420,18 @@ export default class AiConceptsList extends Component {
       {{/unless}}
 
       {{#if this.hasAnyConcepts}}
+        {{#if this.isSeeding}}
+          <div class="alert alert-info ai-concepts-list__seed-banner">
+            <span>{{this.seedProgressMessage}}</span>
+            <DButton
+              class="btn-default btn-small ai-concepts-list__refresh-btn"
+              @action={{this.refreshList}}
+              @icon="arrows-rotate"
+              @label="discourse_ai.concepts.seed.refresh"
+            />
+          </div>
+        {{/if}}
+
         <div class="ai-concepts-list__controls">
           <DFilterControls
             @array={{this.concepts}}
@@ -559,10 +635,56 @@ export default class AiConceptsList extends Component {
         {{/if}}
       {{else}}
         <AdminConfigAreaEmptyList
-          @ctaLabel="discourse_ai.concepts.new"
-          @ctaRoute="adminPlugins.show.discourse-ai-concepts.new"
+          class="ai-concepts-list__empty"
+          @ctaLabel={{unless this.canRunCuration "discourse_ai.concepts.new"}}
+          @ctaRoute={{unless
+            this.canRunCuration
+            "adminPlugins.show.discourse-ai-concepts.new"
+          }}
           @emptyLabel="discourse_ai.concepts.empty"
-        />
+        >
+          {{#if this.canRunCuration}}
+            <p class="ai-concepts-list__empty-description">
+              {{i18n "discourse_ai.concepts.empty_description"}}
+            </p>
+
+            {{#if this.isSeeding}}
+              <div class="alert alert-info ai-concepts-list__seed-status">
+                {{this.seedProgressMessage}}
+              </div>
+            {{else if (eq this.seedStatus.status "failed")}}
+              <div class="alert alert-error ai-concepts-list__seed-error">
+                {{i18n "discourse_ai.concepts.seed.failed"}}
+              </div>
+            {{/if}}
+
+            <div class="ai-concepts-list__empty-actions">
+              {{#if this.isSeeding}}
+                <DButton
+                  class="btn-default ai-concepts-list__refresh-btn"
+                  @action={{this.refreshList}}
+                  @icon="arrows-rotate"
+                  @label="discourse_ai.concepts.seed.refresh"
+                />
+              {{else}}
+                <DButton
+                  class="btn-primary ai-concepts-list__seed-btn"
+                  @action={{this.startSeed}}
+                  @disabled={{this.isStartingSeed}}
+                  @icon="discourse-ai"
+                  @label="discourse_ai.concepts.seed.action"
+                />
+              {{/if}}
+
+              <DButton
+                class="btn-default ai-concepts-list__empty-new-btn"
+                @icon="plus"
+                @label="discourse_ai.concepts.new"
+                @route="adminPlugins.show.discourse-ai-concepts.new"
+              />
+            </div>
+          {{/if}}
+        </AdminConfigAreaEmptyList>
       {{/if}}
     </section>
   </template>

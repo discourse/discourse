@@ -141,4 +141,26 @@ describe "Admin AI concepts" do
     expect(k8s_dup.reload).to be_retired
     expect(kubernetes.reload.aliases).to include("k8s")
   end
+
+  it "explains and starts initial concept seeding from the empty state" do
+    InferredConceptTopic.delete_all
+    InferredConceptPost.delete_all
+    InferredConcept.update_all(parent_id: nil)
+    InferredConcept.delete_all
+    DiscourseAi::InferredConcepts::Seeder.reset_status!
+
+    visit "/admin/plugins/discourse-ai/ai-concepts"
+
+    expect(page).to have_css(".ai-concepts-list__empty-description")
+    expect(page).to have_css(".ai-concepts-list__seed-btn")
+
+    expect do
+      find(".ai-concepts-list__seed-btn").click
+      expect(page).to have_css(".ai-concepts-list__seed-status")
+    end.to change { Jobs::SeedInferredConcepts.jobs.size }.by(1)
+
+    expect(page).to have_css(".ai-concepts-list__refresh-btn")
+  ensure
+    DiscourseAi::InferredConcepts::Seeder.reset_status!
+  end
 end

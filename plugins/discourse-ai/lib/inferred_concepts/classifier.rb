@@ -7,17 +7,33 @@ module DiscourseAi
       MAX_NAME_LENGTH = 80
       MAX_DESCRIPTION_LENGTH = 1000
 
+      def self.resolve_agent(allow_new: true)
+        agent_id =
+          if allow_new
+            SiteSetting.inferred_concepts_generate_agent.to_i
+          else
+            SiteSetting.inferred_concepts_match_agent.to_i
+          end
+
+        AiAgent.all_agents(enabled_only: false).find { |agent| agent.id == agent_id }&.new
+      end
+
+      def self.resolve_llm(allow_new: true, agent: resolve_agent(allow_new:))
+        return nil if agent.nil?
+
+        LlmModel.find_by(
+          id: agent.class.default_llm_id.presence || SiteSetting.ai_default_llm_model,
+        )
+      end
+
       def classify(content, candidates: [], allow_new: true)
         empty = { matches: [], proposed_new: [] }
         return empty if content.blank? || (!allow_new && candidates.blank?)
 
-        agent = resolve_agent(allow_new:)
+        agent = self.class.resolve_agent(allow_new:)
         return empty if agent.nil?
 
-        llm =
-          LlmModel.find_by(
-            id: agent.class.default_llm_id.presence || SiteSetting.ai_default_llm_model,
-          )
+        llm = self.class.resolve_llm(allow_new:, agent:)
         return empty if llm.nil?
 
         payload = {
@@ -54,17 +70,6 @@ module DiscourseAi
       end
 
       private
-
-      def resolve_agent(allow_new:)
-        agent_id =
-          if allow_new
-            SiteSetting.inferred_concepts_generate_agent.to_i
-          else
-            SiteSetting.inferred_concepts_match_agent.to_i
-          end
-
-        AiAgent.all_agents(enabled_only: false).find { |agent| agent.id == agent_id }&.new
-      end
 
       def sanitize_matches(raw_matches, valid_ids)
         by_id = {}

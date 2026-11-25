@@ -50,6 +50,33 @@
     justify-content: center;
     margin-top: var(--space-4);
   }
+
+  &__seed-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  &__empty-description {
+    margin: var(--space-2) 0 var(--space-4);
+    max-width: 65ch;
+    color: var(--primary-high);
+  }
+
+  &__seed-status,
+  &__seed-error {
+    margin-bottom: var(--space-3);
+  }
+
+  &__empty-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
 }
 
 .ai-concept-status {

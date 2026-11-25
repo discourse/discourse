@@ -213,6 +213,11 @@ en:
     ai_translation_backfill_start_date: "The UTC date from which historical posts and topics will be sent for translation backfilling. Leave blank to disable backfilling. New content will continue to be translated."
     ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
     ai_translation_backfill_parallel_jobs: "The number of parallel post localization jobs to run per backfill cycle. Higher values increase throughput but consume more resources."
+    inferred_concepts_match_decision_model: "Optional decision model used to match topics and posts to existing concepts during matching and historical backfill. Faster and cheaper than a language model; leave blank to use {{setting:inferred_concepts_match_agent}}."
+    inferred_concepts_backfill_maximum_topics_per_hour: "Maximum number of historical topics to match against active concepts per hour during backfill. Set to 0 to disable historical backfill. Requires existing topic embeddings and at least one active concept."
+    inferred_concepts_backfill_max_age_days: "Only backfill topics created within this many days. Set to 0 to include topics of any age."
+    inferred_concepts_backfill_minimum_word_count: "Minimum word count required for a topic to be included in historical concept backfill."
+    inferred_concepts_seed_topics_limit: "Maximum number of high-engagement topics sampled across categories when seeding initial concepts from the admin Concepts page."
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
     ai_audit_logs_detailed_retention_days: "Keep raw AI request and response payloads for this many days. Set to 0 to keep payloads until the summary log is deleted. Raw payloads can contain private or sensitive content. Cleanup continues while the AI plugin is disabled."
     ai_audit_logs_purge_after_days: "Keep AI API audit log summaries for this many days before deleting the entire log. Set to 0 to keep summaries forever. Cleanup continues while the AI plugin is disabled."
@@ -1785,6 +1790,8 @@ en:
         invalid_parent: "Parent concept must exist and cannot be retired."
         invalid_merge: "Select a valid non-retired target concept to merge into."
         curation_unavailable: "Enable inferred concepts and AI embeddings before running curation."
+        seed_unavailable: "Enable inferred concepts and AI embeddings before seeding concepts."
+        seed_in_progress: "Concept seeding is already in progress."
 
     llm_credit_allocation:
       limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
