@@ -1297,6 +1297,11 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new if @user.active?
 
       revoke_approval = SiteSetting.must_approve_users? && @user.approved? && @user.email_confirmed?
+      # Automatic approval only holds while the unconfirmed address would still be
+      # auto-approved; staff approvals stand.
+      auto_approved =
+        SiteSetting.must_approve_users? && @user.approved? &&
+          (@user.approved_by_id.blank? || @user.approved_by_id == Discourse::SYSTEM_USER_ID)
 
       primary_email = @user.primary_email
       primary_email.email = params[:email]
@@ -1311,7 +1316,9 @@ class UsersController < ApplicationController
                 )
         end
 
-        @user.revoke_approval! if revoke_approval
+        if revoke_approval || (auto_approved && !EmailValidator.can_auto_approve_user?(@user.email))
+          @user.revoke_approval!
+        end
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
         EmailToken.enqueue_signup_email(@email_token, to_address: @user.email)
