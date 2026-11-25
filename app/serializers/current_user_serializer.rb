@@ -90,6 +90,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :impersonation_expires_at,
              :can_change_post_owner,
              :show_site_owner_onboarding,
+             :admin_onboarding_completed_steps,
+             :admin_onboarding_channel_position,
              :can_run_design_wizard,
              :can_use_dsa_account_email
 
@@ -201,13 +203,31 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_show_site_owner_onboarding?
-    SiteSetting.enable_site_owner_onboarding && object.admin? &&
-      User.where(admin: true).human_users.minimum(:id) == object.id &&
-      object.created_at.after?(SiteSetting.site_owner_onboarding_max_days.days.ago)
+    return @show_site_owner_onboarding if defined?(@show_site_owner_onboarding)
+    @show_site_owner_onboarding = AdminOnboarding.shown_to?(object)
   end
 
   def show_site_owner_onboarding
     true
+  end
+
+  def include_admin_onboarding_completed_steps?
+    include_show_site_owner_onboarding?
+  end
+
+  def admin_onboarding_completed_steps
+    UserHistory
+      .where(action: UserHistory.actions[:admin_onboarding_step_completed])
+      .distinct
+      .pluck(:subject)
+  end
+
+  def include_admin_onboarding_channel_position?
+    include_show_site_owner_onboarding?
+  end
+
+  def admin_onboarding_channel_position
+    MessageBus.last_id(AdminOnboarding::STEP_COMPLETED_CHANNEL)
   end
 
   def include_has_unseen_features?

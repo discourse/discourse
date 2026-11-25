@@ -222,6 +222,7 @@ en:
         one: "The following permission will be granted"
         other: "The following permissions will be granted"
       guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
+      data_notice: "Anything %{client_name} reads through this connection is sent to it. You can disconnect it at any time under MCP Apps in your security preferences."
       deny: "Deny"
       approve: "Authorize"
     admin:

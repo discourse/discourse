@@ -80,6 +80,9 @@ describe McpOauthAuthorizationsController do
     expect(response.status).to eq(200)
     labels = Nokogiri.HTML5(response.body).css("dt").map(&:text)
     expect(labels).to include(I18n.t("mcp.oauth.resource"))
+    expect(Nokogiri.HTML5(response.body).text).to include(
+      I18n.t("mcp.oauth.data_notice", client_name: "Consent page client"),
+    )
   end
 
   it "prevents the authorization page from being framed when site embedding is enabled" do

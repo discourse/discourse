@@ -17,6 +17,9 @@ class UserHistory < ActiveRecord::Base
   # Subjects logged alongside the :admin_onboarding_step_completed action, one
   # per step of the admin onboarding panel.
   ADMIN_ONBOARDING_STEPS = %w[select_theme create_category invite_collaborators].freeze
+  # Logged like a step when an AI agent first uses the setup guide, but it's not
+  # part of the checklist or its progress.
+  ADMIN_ONBOARDING_AGENT_STEP = "connect_agent"
   # Steps the panel no longer offers but older sites have already logged, kept
   # so the onboarding stats still report them.
   RETIRED_ADMIN_ONBOARDING_STEPS = %w[start_posting].freeze

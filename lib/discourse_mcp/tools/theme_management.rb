@@ -279,6 +279,7 @@ module DiscourseMcp
           end
         end
         ThemeSettingUpdater.update(guardian, theme, name, value)
+        ThemeSupport.record_site_customization(theme, guardian.user)
         ToolHelpers.text_and_structured(name:, value: theme.reload.cached_settings[name.to_sym])
       rescue Discourse::NotFound
         raise ToolError, I18n.t("mcp.errors.theme_setting_not_found")

@@ -980,6 +980,85 @@ describe DiscourseMcp::Tools do
     end
   end
 
+  describe "customizing the site during admin onboarding" do
+    fab!(:live_theme) { Fabricate(:theme, user: admin) }
+
+    before do
+      SiteSetting.enable_site_owner_onboarding = true
+      live_theme.set_default!
+    end
+
+    def run_tool(tool, arguments)
+      tool.call(arguments:, request_context: request_context(admin))
+    end
+
+    def customize_step_logged?
+      UserHistory.exists?(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        subject: "select_theme",
+        acting_user_id: admin.id,
+      )
+    end
+
+    it "completes the step when the default theme gets a new palette" do
+      run_tool(
+        DiscourseMcp::Tools::UpdateTheme,
+        "theme_id" => live_theme.id,
+        "color_scheme_id" => Fabricate(:color_scheme).id,
+      )
+
+      expect(customize_step_logged?).to eq(true)
+    end
+
+    it "completes the step when a component of the default theme gets new code" do
+      component = Fabricate(:theme, user: admin, component: true)
+      live_theme.add_relative_theme!(:child, component)
+
+      run_tool(
+        DiscourseMcp::Tools::SetThemeCode,
+        "theme_id" => component.id,
+        "expected_code_revision" => DiscourseMcp::Tools::ThemeSupport.code_revision(component),
+        "css" => ".d-header { background: red; }",
+      )
+
+      expect(customize_step_logged?).to eq(true)
+    end
+
+    it "completes the step when a default theme setting changes" do
+      live_theme.set_field(target: :settings, name: "yaml", value: "accent: blue\n")
+      live_theme.save!
+
+      run_tool(
+        DiscourseMcp::Tools::UpdateThemeSetting,
+        "theme_id" => live_theme.id,
+        "name" => "accent",
+        "operation" => "set",
+        "value" => "red",
+      )
+
+      expect(customize_step_logged?).to eq(true)
+    end
+
+    it "completes the step when a new theme becomes the default" do
+      run_tool(DiscourseMcp::Tools::CreateTheme, "name" => "Brand", "default" => true)
+
+      expect(customize_step_logged?).to eq(true)
+    end
+
+    it "leaves the step open for themes visitors don't see" do
+      draft = Fabricate(:theme, user: admin)
+
+      run_tool(
+        DiscourseMcp::Tools::UpdateTheme,
+        "theme_id" => draft.id,
+        "color_scheme_id" => Fabricate(:color_scheme).id,
+      )
+      run_tool(DiscourseMcp::Tools::CreateTheme, "name" => "Another draft")
+
+      expect(customize_step_logged?).to eq(false)
+    end
+  end
+
   it "registers the selected tools under separate read and write scopes" do
     expected = {
       "discourse_get_review_queue_count" => [DiscourseMcp::Scopes::MODERATION_READ],

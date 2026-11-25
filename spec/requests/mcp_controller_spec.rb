@@ -653,6 +653,50 @@ describe "MCP transport" do
     )
   end
 
+  describe "server instructions" do
+    def initialize_with(scopes)
+      grant =
+        DiscourseMcp::OAuth::AuthorizationGrant.create!(
+          user: admin,
+          client: client,
+          redirect_uri: client.redirect_uris.first,
+          requested_scopes: scopes,
+        )
+      token = McpOauthAccessToken.issue!(authorization: grant)
+      post "/mcp",
+           params: initialize_payload.to_json,
+           headers: {
+             "HTTP_AUTHORIZATION" => "Bearer #{token}",
+             "CONTENT_TYPE" => "application/json",
+             "HTTP_ACCEPT" => "application/json, text/event-stream",
+           }
+      expect(response.status).to eq(200)
+      response.parsed_body.dig("result", "instructions")
+    end
+
+    before do
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
+    end
+
+    it "points to the setup guide when the connection can use it" do
+      expect(initialize_with(%w[mcp:profile:read mcp:site-settings:read])).to eq(
+        DiscourseMcp::Server::SETUP_GUIDE_INSTRUCTIONS,
+      )
+    end
+
+    it "adds the instructions the site's admins wrote" do
+      SiteSetting.mcp_server_instructions = "Write in a friendly tone."
+
+      expect(initialize_with(%w[mcp:profile:read mcp:site-settings:read])).to eq(
+        "#{DiscourseMcp::Server::SETUP_GUIDE_INSTRUCTIONS}\n\nWrite in a friendly tone.",
+      )
+    end
+
+    it "leaves the setup guide out when the connection can't use it" do
+      expect(initialize_with(%w[mcp:profile:read])).to be_nil
+    end
+  end
+
   it "keeps legacy initialization on the classic protocol for an unsupported version" do
     unsupported_initialize_payload =
       initialize_payload.deep_merge(params: { protocolVersion: "2025-06-18" })

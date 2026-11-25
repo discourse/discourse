@@ -26,6 +26,7 @@
   </ul>
 
   <p><%= t("mcp.oauth.guardian_notice") %></p>
+  <p><%= t("mcp.oauth.data_notice", client_name: @client.name) %></p>
 
   <%= form_with url: oauth2_mcp_authorize_path, method: :post do |form| %>
     <% %i[client_id redirect_uri response_type code_challenge code_challenge_method resource scope state].each do |key| %>

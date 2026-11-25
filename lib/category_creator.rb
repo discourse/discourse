@@ -36,7 +36,10 @@ class CategoryCreator
     end
 
     Category.transaction do
-      StaffActionLogger.new(guardian.user).log_category_creation(category) if category.save
+      if category.save
+        StaffActionLogger.new(guardian.user).log_category_creation(category)
+        AdminOnboarding.complete_step("create_category", guardian.user)
+      end
     end
 
     category

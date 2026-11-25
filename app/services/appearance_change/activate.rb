@@ -37,6 +37,8 @@ class AppearanceChange::Activate
     only_if(:replaces_version) { step :replace_previous_version }
   end
 
+  step :complete_onboarding_step
+
   private
 
   def fetch_appearance_change(params:)
@@ -138,5 +140,13 @@ class AppearanceChange::Activate
       },
       guardian:,
     ) { on_failure { fail!("failed to update site settings") } }
+  end
+
+  # Completes the admin's "Customize your site" step when visitors see the
+  # change: it's on the default theme, or it changes the site's fonts.
+  def complete_onboarding_step(appearance_change:, guardian:)
+    if appearance_change.palette_theme.default? || appearance_change.site_settings.present?
+      AdminOnboarding.complete_step("select_theme", guardian.user)
+    end
   end
 end

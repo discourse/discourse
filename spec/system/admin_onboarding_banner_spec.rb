@@ -10,6 +10,7 @@ describe "Admin Onboarding Banner" do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:category_form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   # plugins can register more category types, which adds a type step first
   def open_category_form_from_banner
@@ -336,6 +337,154 @@ describe "Admin Onboarding Banner" do
           acting_user_id: admin.id,
         ).pluck(:subject),
       ).to eq(["select_theme"])
+    end
+  end
+
+  describe "AI agent tab" do
+    it "starts on the step by step tab" do
+      visit("/")
+
+      expect(banner.tab("Step by step")["aria-selected"]).to eq("true")
+      expect(banner.step_names).to eq(%w[select_theme create_category invite_collaborators])
+    end
+
+    it "gives the admin a prompt that points their agent at this site" do
+      cdp.allow_clipboard
+      visit("/")
+
+      banner.tab("With an AI agent").click
+      expect(banner.agent_panel).to have_css(
+        ".admin-onboarding-agent__prompt-text",
+        text: "#{Discourse.base_url}/mcp",
+      )
+
+      banner.agent_panel.find(".admin-onboarding-agent__copy-prompt").click
+
+      cdp.clipboard_has_text?(
+        I18n.t(
+          "js.admin_onboarding_banner.agent.prompt",
+          site_url: Discourse.base_url,
+          mcp_url: "#{Discourse.base_url}/mcp",
+          instructions_url: "#{Discourse.base_url}/agent-setup.md",
+        ),
+      )
+    end
+
+    it "can be hidden for good" do
+      visit("/")
+
+      banner.tab("With an AI agent").click
+      banner.agent_panel.find(".admin-onboarding-agent__hide").click
+
+      expect(banner).to have_no_tabs
+      expect(banner.step_names).to eq(%w[select_theme create_category invite_collaborators])
+
+      visit("/")
+      expect(banner).to be_visible
+      expect(banner).to have_no_tabs
+    end
+
+    it "shows when an agent has connected and folds the prompt away" do
+      StaffActionLogger.new(admin).log_admin_onboarding_step_completed("connect_agent")
+
+      visit("/")
+      banner.tab("With an AI agent").click
+
+      expect(banner.agent_panel).to have_css(
+        ".admin-onboarding-agent__connected",
+        text: I18n.t("js.admin_onboarding_banner.agent.connected"),
+      )
+      expect(banner.agent_panel).to have_no_css(".admin-onboarding-agent__prompt")
+
+      banner.agent_panel.find(".admin-onboarding-agent__toggle-prompt").click
+
+      expect(banner.agent_panel).to have_css(
+        ".admin-onboarding-agent__prompt-text",
+        text: "#{Discourse.base_url}/mcp",
+      )
+    end
+
+    it "links to where the admin can disconnect agents" do
+      client =
+        McpOauthClient.create!(
+          client_id: "onboarding-agent",
+          name: "Onboarding agent",
+          registration_type: "pre_registered",
+          trust_state: "approved",
+          redirect_uris: ["http://127.0.0.1/callback"],
+        )
+      McpOauthAuthorization.create!(
+        user: admin,
+        client:,
+        resource: DiscourseMcp.resource_url,
+        consented_at: Time.zone.now,
+        status: "active",
+      )
+
+      visit("/")
+      banner.tab("With an AI agent").click
+      banner.agent_panel.find(".admin-onboarding-agent__note a").click
+
+      expect(page).to have_current_path("/u/#{admin.username}/preferences/security")
+      expect(page).to have_css(".user-mcp-authorizations", text: "Onboarding agent")
+    end
+
+    it "isn't offered when the MCP server is disabled" do
+      SiteSetting.mcp_server_enabled = false
+
+      visit("/")
+
+      expect(banner).to be_visible
+      expect(banner).to have_no_tabs
+    end
+  end
+
+  describe "steps completed away from the banner" do
+    def log_steps(*steps)
+      steps.each { |step| StaffActionLogger.new(admin).log_admin_onboarding_step_completed(step) }
+    end
+
+    def onboarding_completed_logged?
+      UserHistory.exists?(
+        action: UserHistory.actions[:admin_onboarding_completed],
+        acting_user_id: admin.id,
+      )
+    end
+
+    it "ticks a step the admin's AI agent completes while the banner is open" do
+      visit("/")
+      expect(banner.step_not_completed?("create_category")).to eq(true)
+
+      CategoryCreator.create(admin.guardian, name: "Made by an agent")
+
+      expect(banner.step_completed?("create_category")).to eq(true)
+      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
+    end
+
+    it "finishes onboarding when the agent completes the last step" do
+      log_steps("select_theme", "invite_collaborators")
+      visit("/")
+      expect(banner).to be_visible
+
+      CategoryCreator.create(admin.guardian, name: "Made by an agent")
+
+      expect(banner).to be_not_visible
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.admin_onboarding_banner.congrats_onboarding_complete"),
+      )
+      try_until_success do
+        expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
+        expect(onboarding_completed_logged?).to eq(true)
+      end
+    end
+
+    it "finishes onboarding on the next visit when every step was done elsewhere" do
+      log_steps("select_theme", "create_category", "invite_collaborators")
+
+      visit("/")
+
+      expect(banner).to be_not_visible
+      try_until_success { expect(onboarding_completed_logged?).to eq(true) }
     end
   end
 

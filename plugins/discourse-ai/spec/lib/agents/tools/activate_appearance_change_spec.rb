@@ -107,6 +107,20 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     ).to have_attributes(acting_user_id: other_admin.id)
   end
 
+  it "completes the onboarding step to customize the site, as the approver" do
+    SiteSetting.enable_site_owner_onboarding = true
+
+    build_reviewable(appearance_change).perform(other_admin, :approve)
+
+    expect(
+      UserHistory.exists?(
+        action: UserHistory.actions[:admin_onboarding_step_completed],
+        subject: "select_theme",
+        acting_user_id: other_admin.id,
+      ),
+    ).to eq(true)
+  end
+
   it "tells the administrator to refresh the page after making it live" do
     result = approve_as(other_admin, build_reviewable(appearance_change))
 

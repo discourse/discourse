@@ -39,6 +39,22 @@ module PageObjects
       def click_step_action(step_id)
         find("div##{step_id} .onboarding-step__action .btn").click
       end
+
+      def has_tabs?
+        has_css?(".admin-onboarding-banner [role='tablist']")
+      end
+
+      def has_no_tabs?
+        has_no_css?(".admin-onboarding-banner [role='tablist']")
+      end
+
+      def tab(label)
+        find(".admin-onboarding-banner [role='tab']", text: label)
+      end
+
+      def agent_panel
+        find(".admin-onboarding-agent")
+      end
     end
   end
 end

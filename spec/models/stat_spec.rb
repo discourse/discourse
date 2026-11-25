@@ -12,6 +12,8 @@ RSpec.describe Stat do
         :panel_completed,
         :panel_dismissed,
         :minutes_to_select_theme,
+        :agent_connected,
+        :agent_minutes_to_connected,
       )
     end
 
@@ -22,7 +24,17 @@ RSpec.describe Stat do
     end
 
     it "keeps the site setup stats out of the public API stats" do
-      expect(Stat.api_stats.keys).not_to include(:onboarding, :category_types)
+      expect(Stat.api_stats.keys).not_to include(:onboarding, :category_types, :mcp)
+    end
+
+    it "groups the MCP stats under their stat type" do
+      expect(Stat.all_stats[:mcp].keys).to include(
+        :server_enabled,
+        :server_active_authorizations,
+        :tool_calls_7_days,
+        :tool_call_errors_30_days,
+        :active_users_30_days,
+      )
     end
 
     context "when display_eu_visitor_stats is enabled" do

@@ -174,7 +174,58 @@ class Statistics
       .merge(completed: minutes_between(signed_up_at, completed_at))
   end
 
+  def self.onboarding_agent
+    connected_at =
+      onboarding_events(:admin_onboarding_step_completed).where(
+        subject: UserHistory::ADMIN_ONBOARDING_AGENT_STEP,
+      ).minimum(:created_at)
+    signed_up_at = first_admin_created_at
+
+    {
+      connected: connected_at ? 1 : 0,
+      minutes_to_connected: signed_up_at && minutes_between(signed_up_at, connected_at),
+    }
+  end
+
+  # `enabled` is 1/0 rather than a boolean, to match the integer shape of every other stat.
+  def self.mcp_server
+    active_authorizations = McpOauthAuthorization.active
+
+    {
+      enabled: SiteSetting.mcp_server_enabled ? 1 : 0,
+      exposed_tools: McpPrimitive.exposed.where(kind: "tool").count,
+      active_authorizations: active_authorizations.count,
+      authorized_users: active_authorizations.distinct.count(:user_id),
+    }
+  end
+
+  def self.mcp_tool_calls
+    {
+      last_day: mcp_tool_calls_since(1.day.ago, "success").count,
+      "7_days": mcp_tool_calls_since(7.days.ago, "success").count,
+      "30_days": mcp_tool_calls_since(30.days.ago, "success").count,
+    }
+  end
+
+  def self.mcp_tool_call_errors
+    {
+      "7_days": mcp_tool_calls_since(7.days.ago, "error").count,
+      "30_days": mcp_tool_calls_since(30.days.ago, "error").count,
+    }
+  end
+
+  def self.mcp_active_users
+    {
+      "7_days": mcp_tool_calls_since(7.days.ago, "success").distinct.count(:user_id),
+      "30_days": mcp_tool_calls_since(30.days.ago, "success").distinct.count(:user_id),
+    }
+  end
+
   private
+
+  def self.mcp_tool_calls_since(since, outcome)
+    McpAuditLog.where(method: "tools/call", outcome:).where("occurred_at > ?", since)
+  end
 
   def self.onboarding_events(action)
     UserHistory.where(action: UserHistory.actions[action])

@@ -566,6 +566,25 @@ RSpec.describe CurrentUserSerializer do
       payload = admin_serializer.as_json
       expect(payload).not_to have_key(:show_site_owner_onboarding)
     end
+
+    it "includes where to start listening for steps completed elsewhere" do
+      expect(admin_serializer.as_json[:admin_onboarding_channel_position]).to eq(
+        MessageBus.last_id(AdminOnboarding::STEP_COMPLETED_CHANNEL),
+      )
+    end
+
+    it "includes the steps completed so far, wherever they were completed" do
+      StaffActionLogger.new(another_admin).log_admin_onboarding_step_completed("connect_agent")
+
+      expect(admin_serializer.as_json[:admin_onboarding_completed_steps]).to eq(["connect_agent"])
+    end
+
+    it "leaves out the completed steps when onboarding isn't shown" do
+      serializer2 =
+        described_class.new(another_admin, scope: Guardian.new(another_admin), root: false)
+
+      expect(serializer2.as_json).not_to have_key(:admin_onboarding_completed_steps)
+    end
   end
 
   describe "#can_run_design_wizard" do

@@ -7,7 +7,11 @@ import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  publishToMessageBus,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 
 const designWizardData = () => ({
   themes: [
@@ -139,6 +143,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
   needs.settings({
     enable_site_owner_onboarding: true,
+    mcp_server_enabled: false,
   });
 
   needs.hooks.beforeEach(function () {
@@ -276,8 +281,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.strictEqual(currentURL(), "/c/testing/11");
     assert.deepEqual(
       loggedEvents,
-      [{ event: "step_completed", step: "create_category" }],
-      "logs the completion from the category form"
+      [],
+      "leaves the record to the server, which completes the step with the category"
     );
 
     await visit("/");
@@ -321,10 +326,78 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert
       .dom(".admin-onboarding-banner")
       .doesNotExist("ends onboarding on returning to the banner");
-    assert.deepEqual(loggedEvents, [
-      { event: "step_completed", step: "create_category" },
-      { event: "completed" },
-    ]);
+    assert.deepEqual(loggedEvents, [{ event: "completed" }]);
+  });
+
+  test("it ticks a step completed outside this browser", async function (assert) {
+    const step = withStep("create_category", assert);
+    await visit("/");
+    step.isNotChecked();
+
+    await publishToMessageBus("/admin-onboarding/step-completed", {
+      step: "create_category",
+    });
+
+    step.isChecked();
+    await click(".admin-onboarding-banner .btn-minimize");
+    assert
+      .dom(".admin-onboarding-banner__subtitle")
+      .hasText("1 of 3 steps completed", "counts the step");
+    assert.deepEqual(loggedEvents, [], "leaves the record to the server");
+  });
+
+  test("it finishes onboarding when the last step is completed outside this browser", async function (assert) {
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    keyValueStore.set({ key: "onboarding_step_select_theme", value: true });
+    keyValueStore.set({
+      key: "onboarding_step_invite_collaborators",
+      value: true,
+    });
+
+    await visit("/");
+    assert.dom(".admin-onboarding-banner").exists();
+
+    await publishToMessageBus("/admin-onboarding/step-completed", {
+      step: "create_category",
+    });
+
+    assert.dom(".admin-onboarding-banner").doesNotExist();
+    assert.deepEqual(loggedEvents, [{ event: "completed" }]);
+  });
+
+  test("it finishes onboarding when another tab completed the last step", async function (assert) {
+    const keyValueStore = this.container.lookup("service:key-value-store");
+    keyValueStore.set({ key: "onboarding_step_select_theme", value: true });
+    keyValueStore.set({
+      key: "onboarding_step_invite_collaborators",
+      value: true,
+    });
+
+    await visit("/");
+    // tabs share storage, so the other tab already marked it here
+    keyValueStore.set({ key: "onboarding_step_create_category", value: true });
+
+    await publishToMessageBus("/admin-onboarding/step-completed", {
+      step: "create_category",
+    });
+
+    assert.dom(".admin-onboarding-banner").doesNotExist();
+    assert.deepEqual(loggedEvents, [{ event: "completed" }]);
+  });
+
+  test("it finishes onboarding when the banner appears with every step already done", async function (assert) {
+    updateCurrentUser({
+      admin_onboarding_completed_steps: [
+        "select_theme",
+        "create_category",
+        "invite_collaborators",
+      ],
+    });
+
+    await visit("/");
+
+    assert.dom(".admin-onboarding-banner").doesNotExist();
+    assert.deepEqual(loggedEvents, [{ event: "completed" }]);
   });
 
   test("a registered step can stand in for `create_category`", async function (assert) {
@@ -756,3 +829,120 @@ acceptance("Admin - Onboarding Banner - registered homepage", function (needs) {
       .doesNotExist("keeps onboarding off other pages");
   });
 });
+
+const agentTab = () =>
+  [...document.querySelectorAll(".admin-onboarding-banner [role='tab']")].find(
+    (tab) => tab.textContent.includes("With an AI agent")
+  );
+
+acceptance("Admin - Onboarding Banner - AI agent tab", function (needs) {
+  needs.user({
+    admin: true,
+    show_site_owner_onboarding: true,
+  });
+
+  needs.settings({
+    enable_site_owner_onboarding: true,
+    mcp_server_enabled: true,
+  });
+
+  test("starts on the step by step tab", async function (assert) {
+    await visit("/");
+
+    assert
+      .dom(".admin-onboarding-banner [role='tab'][aria-selected='true']")
+      .hasText("Step by step");
+    assert.dom(".onboarding-step").exists({ count: 3 });
+  });
+
+  test("offers a prompt that points the agent at this site", async function (assert) {
+    await visit("/");
+    await click(agentTab());
+
+    assert
+      .dom(".admin-onboarding-agent__prompt-text")
+      .includesText("/mcp", "names the MCP server")
+      .includesText("/agent-setup.md", "links the setup instructions")
+      .includesText("discourse_get_setup_guide", "names the setup guide");
+    assert.dom(".admin-onboarding-agent__connected").doesNotExist();
+    assert
+      .dom(".admin-onboarding-agent__toggle-prompt")
+      .doesNotExist(
+        "shows the prompt without a toggle until an agent connects"
+      );
+  });
+
+  test("can hide the tab", async function (assert) {
+    await visit("/");
+    await click(agentTab());
+    await click(".admin-onboarding-agent__hide");
+
+    assert.dom(".admin-onboarding-banner [role='tablist']").doesNotExist();
+    assert.dom(".onboarding-step").exists({ count: 3 });
+  });
+
+  test("shows the moment an agent connects", async function (assert) {
+    await visit("/");
+    await click(agentTab());
+    assert.dom(".admin-onboarding-agent__prompt").exists();
+
+    await publishToMessageBus("/admin-onboarding/step-completed", {
+      step: "connect_agent",
+    });
+
+    assert.dom(".admin-onboarding-agent__connected").exists();
+    assert
+      .dom(".admin-onboarding-agent__prompt")
+      .doesNotExist("folds the prompt away once the agent connects");
+  });
+});
+
+acceptance(
+  "Admin - Onboarding Banner - AI agent already connected",
+  function (needs) {
+    needs.user({
+      admin: true,
+      show_site_owner_onboarding: true,
+      admin_onboarding_completed_steps: ["connect_agent"],
+    });
+
+    needs.settings({
+      enable_site_owner_onboarding: true,
+      mcp_server_enabled: true,
+    });
+
+    test("shows that the agent is connected", async function (assert) {
+      await visit("/");
+      await click(agentTab());
+
+      assert.dom(".admin-onboarding-agent__connected").exists();
+      assert.dom(".onboarding-step").doesNotExist();
+    });
+
+    test("keeps the prompt folded away until it's asked for", async function (assert) {
+      await visit("/");
+      await click(agentTab());
+
+      assert.dom(".admin-onboarding-agent__intro").doesNotExist();
+      assert.dom(".admin-onboarding-agent__prompt").doesNotExist();
+      assert
+        .dom(".admin-onboarding-agent__toggle-prompt")
+        .hasText("Show prompt")
+        .hasAria("expanded", "false");
+
+      await click(".admin-onboarding-agent__toggle-prompt");
+
+      assert
+        .dom(".admin-onboarding-agent__prompt-text")
+        .includesText("/mcp", "shows the prompt again");
+      assert
+        .dom(".admin-onboarding-agent__toggle-prompt")
+        .hasText("Hide prompt")
+        .hasAria("expanded", "true");
+
+      await click(".admin-onboarding-agent__toggle-prompt");
+
+      assert.dom(".admin-onboarding-agent__prompt").doesNotExist();
+    });
+  }
+);

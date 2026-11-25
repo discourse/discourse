@@ -10,7 +10,7 @@ class Admin::OnboardingEventsController < Admin::AdminController
     when "step_completed"
       step = params.require(:step)
       raise Discourse::InvalidParameters.new(:step) if !STEPS.include?(step)
-      logger.log_admin_onboarding_step_completed(step)
+      AdminOnboarding.complete_step(step, current_user)
     when "completed"
       logger.log_admin_onboarding_completed
     when "dismissed"
