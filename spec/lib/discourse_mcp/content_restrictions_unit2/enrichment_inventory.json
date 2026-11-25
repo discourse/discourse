@@ -373,11 +373,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 400,
+          "line": 401,
           "source": "class CreateGroup"
         }
       ],
-      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule; group creation, bio cooking and membership hooks otherwise remain."
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule; group creation, bio cooking and membership hooks otherwise remain.",
+      "round2_review": "The class moved one line after the expanded PRIVATE_MESSAGE_FIELDS comment. The creation body still guards notification defaults, invokes Groups::Create and returns id/name/full_name; bio and membership cooking paths are unchanged."
     },
     {
       "tool": "discourse_update_group",
@@ -395,11 +396,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 454,
+          "line": 455,
           "source": "class UpdateGroup"
         }
       ],
-      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain."
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain.",
+      "round2_review": "The mutation body and bio/membership/rename paths are unchanged. Its group_detail_json response now omits message counters under any active rule; serialized tag defaults now use ContentPolicy.allows_tag? hash handling. Both earlier group leaks have new output behavior."
     },
     {
       "tool": "discourse_update_group",
@@ -416,11 +418,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 454,
+          "line": 455,
           "source": "class UpdateGroup"
         }
       ],
-      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain."
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain.",
+      "round2_review": "The mutation body and bio/membership/rename paths are unchanged. Its group_detail_json response now omits message counters under any active rule; serialized tag defaults now use ContentPolicy.allows_tag? hash handling. Both earlier group leaks have new output behavior."
     },
     {
       "tool": "discourse_manage_group_members",
@@ -438,11 +441,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 529,
+          "line": 530,
           "source": "class ManageGroupMembers"
         }
       ],
-      "unit3_review": "Unit 3 classifies forum data as untouched; membership mutation and optional notification paths remain unchanged."
+      "unit3_review": "Unit 3 classifies forum data as untouched; membership mutation and optional notification paths remain unchanged.",
+      "round2_review": "The class moved one line; the same add/remove services and optional notify_users path remain. No new cooking or reachability change in this body."
     },
     {
       "tool": "discourse_invite_group_members",
@@ -460,11 +464,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 582,
+          "line": 583,
           "source": "class InviteGroupMembers"
         }
       ],
-      "unit3_review": "Unit 3 classifies forum data as untouched; matching/inviting accounts and membership notification paths remain unchanged."
+      "unit3_review": "Unit 3 classifies forum data as untouched; matching/inviting accounts and membership notification paths remain unchanged.",
+      "round2_review": "The class moved one line; GroupMemberAdder, email-visibility guard and invite options remain unchanged."
     },
     {
       "tool": "discourse_manage_group_owners",
@@ -482,11 +487,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 624,
+          "line": 625,
           "source": "class ManageGroupOwners"
         }
       ],
-      "unit3_review": "Unit 3 classifies forum data as untouched; owner mutation and optional notification paths remain unchanged."
+      "unit3_review": "Unit 3 classifies forum data as untouched; owner mutation and optional notification paths remain unchanged.",
+      "round2_review": "The class moved one line; the same add/remove owner services and optional notifications remain."
     },
     {
       "tool": "discourse_manage_group_membership",
@@ -504,11 +510,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 665,
+          "line": 666,
           "source": "class ManageGroupMembership"
         }
       ],
-      "unit3_review": "Unit 3 certifies forum enforcement; join/leave/request dispatch and the PM-off request guard remain. New Server output filtering applies to a returned request topic_id."
+      "unit3_review": "Unit 3 certifies forum enforcement; join/leave/request dispatch and the PM-off request guard remain. New Server output filtering applies to a returned request topic_id.",
+      "round2_review": "The class moved one line; join/leave/request dispatch, PM-off guard and membership/request-PM paths remain unchanged."
     },
     {
       "tool": "discourse_handle_group_membership_request",
@@ -525,11 +532,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 718,
+          "line": 719,
           "source": "class HandleGroupMembershipRequest"
         }
       ],
-      "unit3_review": "Unit 3 passes a topic-policy callback to GroupMembershipRequestHandler: approval still adds membership and removes the request, but skips the acceptance reply when its stored request PM is restricted."
+      "unit3_review": "Unit 3 passes a topic-policy callback to GroupMembershipRequestHandler: approval still adds membership and removes the request, but skips the acceptance reply when its stored request PM is restricted.",
+      "round2_review": "The class moved one line; the existing reply_allowed policy callback still skips the acceptance PM reply while preserving membership and request removal."
     },
     {
       "tool": "discourse_delete_group",
@@ -544,12 +552,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 497,
+          "line": 498,
           "source": "class DeleteGroup"
         }
       ],
       "cooks_nothing": true,
-      "unit3_review": "Unit 3 classifies forum data as untouched; destruction still has no direct cooking path."
+      "unit3_review": "Unit 3 classifies forum data as untouched; destruction still has no direct cooking path.",
+      "round2_review": "The class moved one line; confirmation, GroupDestroyer and the no-direct-cooking classification remain unchanged."
     },
     {
       "tool": "discourse_silence_user",
@@ -922,11 +931,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 269,
+          "line": 270,
           "source": "class UpdateSiteSetting"
         }
       ],
-      "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks."
+      "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks.",
+      "round2_review": "The class and update! call moved one line because read-side redaction now uses any active policy, including PM-only. UpdateSiteSetting itself retains unenforced declarations, its validation/update body and setting/rebake hooks."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -943,10 +953,11 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 190,
+          "line": 247,
           "source": "class SetThemeCode"
         }
-      ]
+      ],
+      "round2_review": "Typed category/tag value/default redaction was added before this class. Compilation and UpdateTheme dispatch remain; returned theme_json now receives policy. The write remains unenforced under active rules; no new cooking path was added."
     },
     {
       "tool": "discourse_create_theme",
@@ -963,10 +974,11 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 291,
+          "line": 350,
           "source": "class CreateTheme"
         }
-      ]
+      ],
+      "round2_review": "Themes::Create and its supplied fields remain unchanged. The returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules."
     },
     {
       "tool": "discourse_update_theme",
@@ -983,10 +995,11 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 326,
+          "line": 387,
           "source": "class UpdateTheme"
         }
-      ]
+      ],
+      "round2_review": "The existing mutation transaction, relation/default handling, field updates and logging remain. Returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules."
     },
     {
       "tool": "discourse_delete_theme",
@@ -1756,7 +1769,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 332,
+          "line": 333,
           "source": "SiteSettingSupport.update!("
         }
       ],
@@ -1764,7 +1777,8 @@
         "rebake",
         "setting_hooks"
       ],
-      "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules."
+      "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules.",
+      "round2_review": "Only the MCP read-side redaction guard added a preceding line; the write still invokes SiteSettingSupport.update! and the native SiteSetting::Update service. Setting hooks/rebake edges remain unchanged, and the write remains blocked by unenforced declarations under active rules."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",
@@ -1772,12 +1786,13 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 190,
+          "line": 247,
           "source": "class SetThemeCode"
         }
       ],
       "downstream": [],
-      "note": "Blocked as exit_paths under every active rule; not claimed to cook nothing."
+      "note": "Blocked as exit_paths under every active rule; not claimed to cook nothing.",
+      "round2_review": "SetThemeCode still compiles CSS/JavaScript and delegates mutation to UpdateTheme. Shared theme_json now applies policy-aware typed category/tag redaction to write responses as well as GetTheme; mutation and cooking graph edges are unchanged. Topic/post object references remain the separately tested round-2 gap."
     },
     "create_events": {
       "trigger": "PostCreator emits topic_created and post_created",
@@ -2971,5 +2986,119 @@
     "moved_evidence_unique_locations": 85,
     "scope": "Re-read moved declarations in their current implementation context, checked registry implementation bindings and the unit 3 diff, and retained the graph of conditional cooking reachability. Operation/path unit3_review notes record changes in policy gates or reachability; unchanged excluded Blog/username candidates were rechecked against current allowlists. Exact move list is in README.md.",
     "egress": "Unit 3 Server tools/call invokes ContentPolicy.filter_tool_result after the implementation returns, before result completion. It can refuse returned restricted topic/post identifiers or redact recognized category/tag identifier fields; this is an output boundary, not proof that writes or downstream cooking are safe."
+  },
+  "round2_review": {
+    "baseline": "3af1cfab93a",
+    "reviewed_revision": "c560ace5708",
+    "moved_evidence_occurrences": 15,
+    "moved_evidence_unique_locations": 13,
+    "scope": "Re-read every moved declaration/call in its current body and reviewed the 3af1cfab93a..c560ace5708 diff for groups, site settings, themes and shared tag handling. Original classifications and graph edges remain; row/path round2_review notes distinguish output changes from unchanged cooking reachability. Previous unit3_review notes describe their historical revision.",
+    "moves": [
+      {
+        "entry": "operation:discourse_create_group",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 400,
+        "line": 401,
+        "source": "class CreateGroup"
+      },
+      {
+        "entry": "operation:discourse_update_group",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 454,
+        "line": 455,
+        "source": "class UpdateGroup"
+      },
+      {
+        "entry": "operation:discourse_update_group",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 454,
+        "line": 455,
+        "source": "class UpdateGroup"
+      },
+      {
+        "entry": "operation:discourse_manage_group_members",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 529,
+        "line": 530,
+        "source": "class ManageGroupMembers"
+      },
+      {
+        "entry": "operation:discourse_invite_group_members",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 582,
+        "line": 583,
+        "source": "class InviteGroupMembers"
+      },
+      {
+        "entry": "operation:discourse_manage_group_owners",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 624,
+        "line": 625,
+        "source": "class ManageGroupOwners"
+      },
+      {
+        "entry": "operation:discourse_manage_group_membership",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 665,
+        "line": 666,
+        "source": "class ManageGroupMembership"
+      },
+      {
+        "entry": "operation:discourse_handle_group_membership_request",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 718,
+        "line": 719,
+        "source": "class HandleGroupMembershipRequest"
+      },
+      {
+        "entry": "operation:discourse_delete_group",
+        "file": "lib/discourse_mcp/tools/groups.rb",
+        "old_line": 497,
+        "line": 498,
+        "source": "class DeleteGroup"
+      },
+      {
+        "entry": "operation:discourse_update_site_setting",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "old_line": 269,
+        "line": 270,
+        "source": "class UpdateSiteSetting"
+      },
+      {
+        "entry": "operation:discourse_set_theme_code",
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "old_line": 190,
+        "line": 247,
+        "source": "class SetThemeCode"
+      },
+      {
+        "entry": "operation:discourse_create_theme",
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "old_line": 291,
+        "line": 350,
+        "source": "class CreateTheme"
+      },
+      {
+        "entry": "operation:discourse_update_theme",
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "old_line": 326,
+        "line": 387,
+        "source": "class UpdateTheme"
+      },
+      {
+        "entry": "path:settings",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "old_line": 332,
+        "line": 333,
+        "source": "SiteSettingSupport.update!("
+      },
+      {
+        "entry": "path:theme_code",
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "old_line": 190,
+        "line": 247,
+        "source": "class SetThemeCode"
+      }
+    ]
   }
 }

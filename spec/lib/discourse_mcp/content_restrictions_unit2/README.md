@@ -254,3 +254,17 @@ Re-reviewed 91 moved evidence occurrences (85 distinct file/line locations) agai
 | `lib/group_membership_request_handler.rb` | 50 → 55 | New reply_allowed callback suppresses the acceptance post for a restricted request PM while preserving membership/request handling. |
 
 Changed reachability is recorded on the affected operations and on shared paths `reviewable_action`, `membership_accept` and `settings` using `unit3_review`. The generic Server egress change is recorded once in the inventory metadata. Native cooking/job/event implementations retain their graph edges; these remain conditional paths, not a claim that unit 3 makes every path safe. Theme code and copied raw source remain open boundaries. The Blog and UpdateUsername exclusions remain valid; Boards evidence did not move.
+
+## Round 2 evidence refresh at `c560ace5708`
+
+Observed the exact-line example RED before editing: 15 stale evidence occurrences, first `groups.rb:400`. Re-read all 15 against the current method bodies and the `3af1cfab93a..c560ace5708` diff. There are 13 distinct locations: UpdateGroup appears twice, and SetThemeCode is also the shared `theme_code` path. The 56 operation rows, 55 write primitives, 116 paths and three exclusions remain unchanged.
+
+| Evidence file | Prior → current lines | Review result |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/groups.rb` | 400 → 401, 454 → 455, 497 → 498, 529 → 530, 582 → 583, 624 → 625, 665 → 666, 718 → 719 | Expanded PM-field comment shifts declarations by one line. Group write bodies and downstream paths remain. UpdateGroup detail output now omits message metadata under any active rule, and shared tag-hash filtering changes notification-default output. |
+| `lib/discourse_mcp/tools/site_settings.rb` | 269 → 270, 332 → 333 | The read-side guard now also redacts PM URLs under PM-only policy, shifting the write by one line. UpdateSiteSetting and native setting/rebake hooks remain unchanged and uncertified under active rules. |
+| `lib/discourse_mcp/tools/themes.rb` | 190 → 247, 291 → 350, 326 → 387 | New typed category/tag redaction precedes the declarations. SetThemeCode/CreateTheme/UpdateTheme pass policy into shared theme_json; compilation, mutations and cooking edges remain unchanged. These writes remain uncertified under active rules. |
+
+The inventory records every affected row and exact move under `round2_review`; it preserves the previous review as historical evidence. Shared `settings` and `theme_code` paths have explicit re-review notes. The new round-2 oracle separately tests the remaining typed topic/post and local-route URL gaps.
+
+Validation at `c560ace5708`, seed `20914`: both enrichment examples pass after the refresh. All 245 exact evidence occurrences and graph references were also rechecked directly. See [round-2 verification](../content_restrictions_unit3/round2_verification.json) for the before/after results.

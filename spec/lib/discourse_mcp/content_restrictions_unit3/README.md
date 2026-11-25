@@ -91,3 +91,7 @@ and all other fields remain unchanged.
 
 The inventory refresh and its complete old/current evidence-line table live in the
 [unit 2 README](../content_restrictions_unit2/README.md#unit-3-evidence-refresh-at-3af1cfab93a).
+
+## Round 2 at `c560ace5708`
+
+See [ROUND2.md](ROUND2.md) for the eight new typed topic/post and local-route URL examples, their observed RED signatures, the missing-record decision and the current full-run results. The earlier run recorded above remains historical.
