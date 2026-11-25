@@ -122,7 +122,8 @@ module DiscourseMcp
       end
 
       # Whether a group has personal messages, and how many, describes those
-      # messages, so both are left out while agent access to them is off.
+      # messages. Both are left out while any rule is active: PM access may be
+      # off, and a denied tag restricts the messages that carry it.
       PRIVATE_MESSAGE_FIELDS = %i[has_messages message_count].freeze
       # The group's notification defaults for categories and tags.
       DEFAULT_CATEGORY_FIELDS = %i[
@@ -142,7 +143,7 @@ module DiscourseMcp
 
       def group_detail_json(group, request_context)
         fields = SAFE_DETAIL_FIELDS
-        fields -= PRIVATE_MESSAGE_FIELDS if ToolHelpers.private_messages_denied?(request_context)
+        fields -= PRIVATE_MESSAGE_FIELDS if request_context.content_policy.active?
 
         json =
           GroupShowSerializer

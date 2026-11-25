@@ -316,10 +316,20 @@ module DiscourseMcp
         end
     end
 
-    # @param tag [Tag, String] A tag or a tag name.
+    # Serialized tags (hashes with an `id` or a `name`) are accepted too. A
+    # hash that carries neither can't be checked, so it isn't allowed.
+    #
+    # @param tag [Tag, Hash, String] A tag, a serialized tag or a tag name.
     # @returns [Boolean]
     def allows_tag?(tag)
       return restricted_tag_ids.exclude?(tag.id) if tag.is_a?(Tag)
+
+      if tag.is_a?(Hash)
+        tag = tag.with_indifferent_access
+        return false if tag[:id].blank? && tag[:name].blank?
+        return false if tag[:id].present? && restricted_tag_ids.include?(tag[:id].to_i)
+        return tag[:name].blank? || allows_tag?(tag[:name].to_s)
+      end
 
       restricted_tag_names.none? { |name| name.casecmp?(tag.to_s) }
     end

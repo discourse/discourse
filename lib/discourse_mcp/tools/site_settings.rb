@@ -40,10 +40,11 @@ module DiscourseMcp
         setting[:themeable] == true || UNSUPPORTED_TYPES.include?(setting[:type].to_s)
       end
 
-      # While a rule narrows topics, a setting's value and default are redacted
-      # when they name a restricted category, tag or topic, or link to one.
+      # While any rule is active, a setting's value and default are redacted
+      # when they name a restricted category, tag or topic, or link to one. A
+      # personal message is such a topic while agent access to them is off.
       def redact(projected, policy)
-        return projected if !policy.restricts_forum?
+        return projected if !policy.active?
 
         values = %i[value default].map { |key| projected[key] }
         restricted = values.any? { |value| restricted_value?(projected, value, policy) }
@@ -221,7 +222,7 @@ module DiscourseMcp
       REQUIRED_SCOPES = [Scopes::SITE_SETTINGS_READ].freeze
       CONTENT = {
         topics: :enforced,
-        private_messages: :untouched,
+        private_messages: :enforced,
         categories: :enforced,
         tags: :enforced,
         exit_paths: :untouched,

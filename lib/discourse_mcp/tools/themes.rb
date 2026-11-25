@@ -102,7 +102,60 @@ module DiscourseMcp
         end
       end
 
-      def theme_json(theme)
+      # Theme settings can name categories and tags: list settings of those
+      # types, and objects settings with categories or tags properties. While a
+      # rule narrows topics, a setting that names a restricted one in its value
+      # or default has both left out.
+      def redact_setting(setting, json, policy)
+        return json if !policy.restricts_forum?
+
+        restricted =
+          [json[:value], json[:default]].any? do |value|
+            restricted_setting_value?(setting, value, policy)
+          end
+        restricted ? json.merge(value: nil, default: nil, redacted: true) : json
+      end
+
+      def restricted_setting_value?(setting, value, policy)
+        return false if value.blank?
+
+        case setting.type_name
+        when :list
+          items = value.to_s.split("|")
+          case setting.list_type
+          when "category"
+            items.any? { |id| !policy.allows_category_id?(id.to_i) }
+          when "tag"
+            items.any? { |name| !policy.allows_tag?(name) }
+          else
+            false
+          end
+        when :objects
+          objects = Array(value).select { |object| object.is_a?(Hash) }
+          objects = objects.map { |object| object.deep_stringify_keys.with_indifferent_access }
+          schema = setting.schema.deep_symbolize_keys
+          category_ids =
+            SchemaSettingsObjectValidator.property_values_of_type(
+              schema:,
+              objects:,
+              type: "categories",
+            )
+          tags =
+            SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "tags")
+          category_ids.any? { |id| !policy.allows_category_id?(id.to_i) } ||
+            tags.any? do |tag|
+              if tag.is_a?(Integer)
+                policy.restricted_tag_ids.include?(tag)
+              else
+                !policy.allows_tag?(tag)
+              end
+            end
+        else
+          false
+        end
+      end
+
+      def theme_json(theme, policy)
         {
           id: theme.id,
           name: theme.name,
@@ -133,7 +186,11 @@ module DiscourseMcp
           code_revision: code_revision(theme),
           settings:
             theme.settings.values.map do |setting|
-              ThemeSettingsSerializer.new(setting, root: false).as_json
+              redact_setting(
+                setting,
+                ThemeSettingsSerializer.new(setting, root: false).as_json,
+                policy,
+              )
             end,
           translations:
             theme.translations.map do |translation|
@@ -253,7 +310,7 @@ module DiscourseMcp
             end
           end
           ToolHelpers.text_and_structured(
-            theme: ThemeSupport.theme_json(theme),
+            theme: ThemeSupport.theme_json(theme, request_context.content_policy),
             verification: {
               saved: true,
               compilation_checked: true,
@@ -273,8 +330,8 @@ module DiscourseMcp
       CONTENT = {
         topics: :untouched,
         private_messages: :untouched,
-        categories: :untouched,
-        tags: :untouched,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(theme: OutputSchema::OBJECT)
@@ -284,7 +341,9 @@ module DiscourseMcp
         theme = ::Theme.include_relations.find_by(id: arguments.fetch("theme_id"))
         raise ToolError, I18n.t("mcp.errors.theme_not_found") if theme.blank?
 
-        ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(theme))
+        ToolHelpers.text_and_structured(
+          theme: ThemeSupport.theme_json(theme, request_context.content_policy),
+        )
       end
     end
 
@@ -319,7 +378,9 @@ module DiscourseMcp
 
         ThemeSupport.raise_create_failure!(result) if result.failure?
 
-        ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(result.theme))
+        ToolHelpers.text_and_structured(
+          theme: ThemeSupport.theme_json(result.theme, request_context.content_policy),
+        )
       end
     end
 
@@ -400,7 +461,9 @@ module DiscourseMcp
           end
         end
 
-        ToolHelpers.text_and_structured(theme: ThemeSupport.theme_json(theme))
+        ToolHelpers.text_and_structured(
+          theme: ThemeSupport.theme_json(theme, request_context.content_policy),
+        )
       rescue Discourse::InvalidParameters,
              ::Theme::InvalidFieldTargetError,
              ::Theme::InvalidFieldTypeError => error

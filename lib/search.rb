@@ -628,6 +628,7 @@ class Search
       SQL
 
       found = DB.query(sql, matches: matches.keys)
+      found = found.reject { |row| hidden_category_ids.include?(row.id) }
 
       if found.present?
         found.each do |row|
@@ -656,23 +657,24 @@ class Search
       exact = false
     end
 
+    categories = Category.where.not(id: hidden_category_ids.to_a)
     category_id =
       if subcategory_slug
-        Category
+        categories
           .where(
             "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
             subcategory_slug,
           )
           .where(
             parent_category_id:
-              Category.where(
+              categories.where(
                 "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
                 category_slug,
               ).select(:id),
           )
           .pick(:id)
       else
-        Category
+        categories
           .where(
             "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
             category_slug,
@@ -1127,6 +1129,12 @@ class Search
 
     @results.add(post)
     @results
+  end
+
+  # Categories that category selectors treat as if they didn't exist, so naming
+  # one answers like naming an unknown slug.
+  def hidden_category_ids
+    @hidden_category_ids ||= @opts[:hidden_category_ids].to_a.to_set
   end
 
   def secure_category_ids

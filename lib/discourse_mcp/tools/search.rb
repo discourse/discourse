@@ -24,6 +24,7 @@ module DiscourseMcp
             guardian: request_context.guardian,
             exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
             restrict_posts: policy.topic_condition("topics"),
+            hidden_category_ids: policy.restricted_category_ids,
           )
         allowed = policy.allowed_topic_ids(results.posts.map(&:topic_id))
         topics =
@@ -161,6 +162,7 @@ module DiscourseMcp
             blurb_length: 300,
             exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
             restrict_posts: policy.topic_condition("topics"),
+            hidden_category_ids: policy.restricted_category_ids,
           )
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_search_query") if results.blank?
 

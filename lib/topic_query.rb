@@ -1350,12 +1350,7 @@ class TopicQuery
   end
 
   def filter_results(query = @options[:q])
-    topics_filter =
-      TopicsFilter.new(
-        guardian: @guardian,
-        scope: latest_results(include_muted: false, skip_ordering: true),
-        loaded_topic_users_reference: @guardian.authenticated?,
-      )
+    topics_filter = build_topics_filter(latest_results(include_muted: false, skip_ordering: true))
 
     results = topics_filter.filter_from_query_string(query)
 
@@ -1364,6 +1359,17 @@ class TopicQuery
     end
 
     [results, topics_filter]
+  end
+
+  # Builds the filter that parses a query string. A subclass can override it to
+  # pass the filter more options.
+  def build_topics_filter(scope, **options)
+    TopicsFilter.new(
+      guardian: @guardian,
+      scope:,
+      loaded_topic_users_reference: @guardian.authenticated?,
+      **options,
+    )
   end
 
   def apply_max_age_limit(results, options)

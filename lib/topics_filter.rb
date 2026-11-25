@@ -3,8 +3,16 @@
 class TopicsFilter
   attr_reader :topic_ids, :topic_notification_levels, :invalid_filters
 
-  def initialize(guardian:, scope: nil, loaded_topic_users_reference: false)
+  # `hidden_category_ids` lists categories that category selectors treat as if
+  # they didn't exist, so naming one answers like naming an unknown slug.
+  def initialize(
+    guardian:,
+    scope: nil,
+    loaded_topic_users_reference: false,
+    hidden_category_ids: nil
+  )
     @loaded_topic_users_reference = loaded_topic_users_reference
+    @hidden_category_ids = hidden_category_ids.to_a.to_set
     @guardian = guardian || Guardian.new
     @scope = scope || Topic.secured(@guardian)
     @topic_notification_levels = Set.new
@@ -718,10 +726,37 @@ class TopicsFilter
     (values - IN_VALUES).each { |value| invalid_filter!("in:#{value}") }
   end
 
+  # A slug path such as `parent:child` names every category along it, so the
+  # path resolves to nothing when any of them is hidden.
+  def unhidden_category_ids_from_slug(slug)
+    path = slug.include?(":")
+    Category
+      .where(id: Category.ids_from_slugs([slug]))
+      .reject do |category|
+        @hidden_category_ids.include?(category.id) || (path && hidden_ancestor?(category))
+      end
+      .map(&:id)
+  end
+
+  def hidden_ancestor?(category)
+    seen = Set.new
+    parent_id = category.parent_category_id
+    while parent_id && seen.add?(parent_id)
+      return true if @hidden_category_ids.include?(parent_id)
+      parent_id = Category.where(id: parent_id).pick(:parent_category_id)
+    end
+    false
+  end
+
   def category_ids_from_slugs(slugs, exclude_subcategories: false)
     return [] if slugs.empty?
 
-    category_ids = Category.ids_from_slugs(slugs)
+    category_ids =
+      if @hidden_category_ids.empty?
+        Category.ids_from_slugs(slugs)
+      else
+        slugs.flat_map { |slug| unhidden_category_ids_from_slug(slug) }
+      end
 
     category_ids =
       Category

@@ -22,5 +22,13 @@ module DiscourseMcp
         @content_policy.scope_topics(relation)
       end
     end
+
+    private
+
+    # Category selectors in a query string treat restricted categories as
+    # missing, so a selector can't reveal that one exists.
+    def build_topics_filter(scope, **options)
+      super(scope, hidden_category_ids: @content_policy.restricted_category_ids, **options)
+    end
   end
 end
