@@ -17,8 +17,8 @@ import { i18n } from "discourse-i18n";
  */
 export default class AdminMcpForumContentRule extends Component {
   /**
-   * The initial form values, built from the stored config. Tags are edited by
-   * name, and categories as category records.
+   * The initial form values, built from the stored config. Tags are edited as
+   * tag records and saved by name, and categories as category records.
    *
    * @returns {Object}
    */
@@ -29,9 +29,9 @@ export default class AdminMcpForumContentRule extends Component {
     return {
       allow_mode: config.allow?.mode ?? "all",
       allow_categories: this.#categories(config.allow?.category_ids),
-      allow_tags: this.#tagNames(config.allow?.tag_ids),
+      allow_tags: this.#tags(config.allow?.tag_ids),
       deny_categories: this.#categories(config.deny?.category_ids),
-      deny_tags: this.#tagNames(config.deny?.tag_ids),
+      deny_tags: this.#tags(config.deny?.tag_ids),
     };
   }
 
@@ -85,13 +85,13 @@ export default class AdminMcpForumContentRule extends Component {
             ? (data.allow_categories ?? []).map((category) => category.id)
             : [],
         tag_names:
-          data.allow_mode === "selected" ? (data.allow_tags ?? []) : [],
+          data.allow_mode === "selected" ? this.#tagNames(data.allow_tags) : [],
       },
       deny: {
         category_ids: (data.deny_categories ?? []).map(
           (category) => category.id
         ),
-        tag_names: data.deny_tags ?? [],
+        tag_names: this.#tagNames(data.deny_tags),
       },
     });
   }
@@ -100,11 +100,18 @@ export default class AdminMcpForumContentRule extends Component {
     return Category.findByIds(ids ?? []);
   }
 
-  #tagNames(ids) {
+  #tags(ids) {
     const listed = new Set(ids ?? []);
-    return (this.args.ruleKind.references?.tags ?? [])
-      .filter((tag) => listed.has(tag.id))
-      .map((tag) => tag.name);
+    return (this.args.ruleKind.references?.tags ?? []).filter((tag) =>
+      listed.has(tag.id)
+    );
+  }
+
+  /** The chooser holds tag records, or names for tags typed in. */
+  #tagNames(tags) {
+    return (tags ?? []).map((tag) =>
+      typeof tag === "string" ? tag : tag.name
+    );
   }
 
   <template>

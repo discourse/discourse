@@ -18,7 +18,7 @@ module DiscourseMcp
     # @param policy [ContentPolicy]
     # @returns [Array<String>] Primitive ids in the "<kind>:<identifier>" form.
     def blocked_ids(policy)
-      exposed.reject { |primitive| policy.allows_primitive?(primitive) }.map { |p| id_of(p) }
+      exposed.reject { |primitive| policy.usable_by_agents?(primitive) }.map { |p| id_of(p) }
     end
 
     # @returns [Hash]
@@ -67,8 +67,8 @@ module DiscourseMcp
     def newly_disabled_ids(kind)
       added = ContentPolicy.new(pairs(@rows) + [[kind.name, {}]], registry: @registry)
       exposed
-        .select { |primitive| @current.allows_primitive?(primitive) }
-        .reject { |primitive| added.allows_primitive?(primitive) }
+        .select { |primitive| @current.usable_by_agents?(primitive) }
+        .reject { |primitive| added.usable_by_agents?(primitive) }
         .map { |primitive| id_of(primitive) }
     end
 

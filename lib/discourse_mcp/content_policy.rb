@@ -172,13 +172,23 @@ module DiscourseMcp
       @usable[primitive] = declaration_allows?(primitive)
     end
 
+    # Whether agents can use a primitive at all under the active rules: its
+    # declaration must pass the gate, and none of the OAuth scopes it requires
+    # may be revoked.
+    #
+    # @param primitive [DiscourseMcp::Primitive]
+    # @returns [Boolean]
+    def usable_by_agents?(primitive)
+      allows_primitive?(primitive) && !revoked_scopes.intersect?(primitive.required_scopes.to_set)
+    end
+
     # Whether a primitive stays usable under the active rules and filters what
     # it returns by them, because it enforces a data kind they govern.
     #
     # @param primitive [DiscourseMcp::Primitive]
     # @returns [Boolean]
     def enforces?(primitive)
-      return false if !active? || !allows_primitive?(primitive)
+      return false if !active? || !usable_by_agents?(primitive)
 
       declaration = primitive.content
       declaration.is_a?(Hash) &&

@@ -36,11 +36,17 @@ class McpContentRuleUpdater
       before = report.blocked_ids(DiscourseMcp::ContentPolicy.load)
 
       rule = McpContentRule.find_or_initialize_by(rule_kind:)
+      previous = rule.persisted? ? rule.config : nil
       rule.assign_attributes(config:, updated_by: actor, updated_at: Time.zone.now)
       rule.save!
 
       disabled = report.blocked_ids(DiscourseMcp::ContentPolicy.load) - before
-      log("mcp_content_rule_updated", disabled_primitives: disabled.join(", "))
+      log(
+        "mcp_content_rule_updated",
+        disabled_primitives: disabled.join(", "),
+        previous_value: previous&.to_json,
+        new_value: rule.config.to_json,
+      )
       rule
     end
   end
@@ -51,7 +57,7 @@ class McpContentRuleUpdater
       raise Discourse::NotFound if rule.nil?
 
       rule.destroy!
-      log("mcp_content_rule_deleted")
+      log("mcp_content_rule_deleted", previous_value: rule.config.to_json)
     end
   end
 
@@ -60,15 +66,27 @@ class McpContentRuleUpdater
   attr_reader :actor, :rule_kind
 
   # The forum rule's lists name tags, which are stored by id. An unknown name
-  # is refused rather than created.
+  # is refused rather than created. A synonym is stored as the tag it stands
+  # for, because topics carry that tag instead.
   def normalize(config)
     return config if rule_kind != DiscourseMcp::ForumContentRule::NAME
 
     %w[allow deny].each do |side|
       next if !config[side].is_a?(Hash) || !config[side].key?("tag_names")
 
-      names = Array(config[side].delete("tag_names")).map(&:to_s)
-      tags = Tag.where_name(names).pluck(:name, :id).to_h { |name, id| [name.downcase, id] }
+      names = config[side].delete("tag_names")
+      # Names replace the ids, so sending both, or anything but a list of
+      # names, would silently drop part of the rule.
+      if config[side].key?("tag_ids") || !names.is_a?(Array) ||
+           !names.all? { |name| name.is_a?(String) }
+        raise Discourse::InvalidParameters.new(:tag_names)
+      end
+
+      tags =
+        Tag
+          .where_name(names)
+          .pluck(:name, :id, :target_tag_id)
+          .to_h { |name, id, target_id| [name.downcase, target_id || id] }
       missing = names.reject { |name| tags.key?(name.downcase) }
       if missing.present?
         raise Discourse::InvalidParameters.new(

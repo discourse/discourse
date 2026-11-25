@@ -9,8 +9,8 @@ class Admin::McpController < Admin::AdminController
         next if !primitive&.available?
         primitive
       end
-    blocked = exposed.count { |primitive| !content_policy.allows_primitive?(primitive) }
-    exposed = exposed.select { |primitive| content_policy.allows_primitive?(primitive) }
+    blocked = exposed.count { |primitive| !content_policy.usable_by_agents?(primitive) }
+    exposed = exposed.select { |primitive| content_policy.usable_by_agents?(primitive) }
     warnings = []
     if blocked.positive?
       warnings << I18n.t("mcp.admin.content_restrictions_blocking", count: blocked)
@@ -134,7 +134,7 @@ class Admin::McpController < Admin::AdminController
           .map do |primitive|
             primitive_record = primitive_records[[kind.to_s, primitive.identifier]]
             primitive_payload(primitive, primitive_record).merge(
-              restricted: !content_policy.allows_primitive?(primitive),
+              restricted: !content_policy.usable_by_agents?(primitive),
             )
           end
       end
