@@ -3713,6 +3713,7 @@ hy:
       share: "Կիսվել"
       dismiss: "Չեղարկել"
     mobile_tab_bar:
+      new_topic: "Նոր Թեմա"
       create: "Ստեղծել"
       more: "Ավելին"
       back: "Ետ"

@@ -10,8 +10,15 @@ de:
       choice_title: "Es ist rechtswidrig"
       go_back: "Zurück"
       title: "Illegale Inhalte melden"
+      name: "Vollständiger Name oder Organisationsname"
       email: "E-Mail-Adresse"
+      declaration_section: "Erklärung"
+      submit: "Bericht absenden"
+      get_email_code: "E-Mail-Code abrufen"
       resend_email_code: "Code erneut senden"
+      email_verified: "Verifiziert"
+      verification_code: "Bestätigungscode"
+      received: "Bericht erhalten"
     code_editor:
       search:
         replace: "Ersetzen"

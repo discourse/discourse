@@ -2825,6 +2825,7 @@ lv:
       share: "Dalīties"
       dismiss: "Nerādīt"
     mobile_tab_bar:
+      new_topic: "Jauna tēma"
       create: "Izveidot"
       more: "Vairāk"
       back: "Atpakaļ"

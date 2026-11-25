@@ -17,6 +17,15 @@ nl:
         desktop: Desktop
         mobile: Mobiel
         save: Opslaan
+        about_tab: Over
+        blog_slug: Slug
+        general_heading: Algemeen
+        settings_tab: Instellingen
+        theme_tab: Thema
+        column_name: Naam
+        column_category: Categorie
+        column_status: Status
+        needs_attention: Vereist aandacht
         path_formats:
           custom: Aangepast
         back_to_themes: Terug naar thema's

@@ -7127,6 +7127,7 @@ lt:
         enabled: "Įgalinti?"
         show_image: "Rodyti vaizdą"
         feedback: "Atsiliepimai"
+        toggle: "Įjungti %{name}"
         groups_updated: "Grupės atnaujintos!"
         save_groups: "Išsaugoti grupes"
         add_groups_to_enable: "Pridėkite grupes, kad įgalintumėte šią funkciją"
@@ -8358,13 +8359,67 @@ lt:
           reorder_down: "Perkelti %{label} žemyn"
           drag_handle: "Vilkite, kad pakeistumėte tvarką %{label}"
           toggle_visibility: "Rodyti %{label} suvestinėje"
+          empty_state_admin: "Nėra rodomų skyrių. Atidarykite „Konfigūruoti“, kad įjungtumėte vieną iš jų."
+          empty_state_moderator: "Nėra įgalintų skyrių. Paprašykite administratoriaus, kad jį įjungtų."
         highlights:
+          fetch_error: "Nepavyko įkelti svarbiausių elementų. Pabandykite atnaujinti puslapį."
           kpi:
+            new_signups:
+              label: "Naujos registracijos"
+              tooltip: "Sukurtos paskyros, įskaitant neaktyvuotas ir etapais sukurtas paskyras."
             dau_mau:
               label: "DAU / MAU sugrįžtamumo rodiklis"
               tooltip: 'Mėnesinių aktyvių vartotojų, kurie grįžo į bendruomenę, dalis. Tai rodo, kiek „įklimpusi“ yra jūsų bendruomenė, atsižvelgiant į tai, kaip dažnai žmonės grįžta.'
+            new_contributors:
+              label: "Nauji bendraautoriai"
+              tooltip: "Pirmą įrašą paskelbusių narių skaičius."
+            daily_engaged_users:
+              label: "Kasdien įsitraukę"
+              tooltip: "Vidutinis narių, kurie kasdien bendruomenėje spaudė „patinka“ arba rašė pranešimus, skaičius."
+          comparison:
+            last_7_days: "palyginti su pastarosiomis 7 dienomis"
+            last_30_days: "palyginti su pastarosiomis 30 dienų"
+            last_3_months: "palyginti su paskutiniais 3 mėnesiais"
+            previous_period: "palyginti su ankstesniu laikotarpiu"
         site_traffic:
+          fetch_error: "Nepavyko įkelti svetainės srauto. Pabandykite atnaujinti puslapį."
+          headline:
+            last_7_days:
+              one: "%{formatted_count} puslapio peržiūra per pastarąsias 7 dienas"
+              few: "%{formatted_count} puslapio peržiūros per pastarąsias 7 dienas"
+              many: "%{formatted_count} puslapio peržiūrų per pastarąsias 7 dienas"
+              other: "%{formatted_count} puslapio peržiūrų per pastarąsias 7 dienas"
+            last_30_days:
+              one: "%{formatted_count} puslapio peržiūra per pastarąsias 30 dienų"
+              few: "%{formatted_count} puslapio peržiūros per pastarąsias 30 dienų"
+              many: "%{formatted_count} puslapio peržiūrų per pastarąsias 30 dienų"
+              other: "%{formatted_count} puslapio peržiūrų per pastarąsias 30 dienų"
+            last_3_months:
+              one: "%{formatted_count} puslapio peržiūra per pastaruosius 3 mėnesius"
+              few: "%{formatted_count} puslapio peržiūros per pastaruosius 3 mėnesius"
+              many: "%{formatted_count} puslapio peržiūrų per pastaruosius 3 mėnesius"
+              other: "%{formatted_count} puslapio peržiūrų per pastaruosius 3 mėnesius"
+            selected_period:
+              one: "%{formatted_count} puslapio peržiūra pasirinktu laikotarpiu"
+              few: "%{formatted_count} puslapio peržiūros pasirinktu laikotarpiu"
+              many: "%{formatted_count} puslapio peržiūrų pasirinktu laikotarpiu"
+              other: "%{formatted_count} puslapio peržiūrų pasirinktu laikotarpiu"
+          trend:
+            up: "pakilo %{percent}"
+            down: "nukrito %{percent}"
+          comparison_tooltip:
+            previous_7_days: "Palyginti su ankstesnėmis 7 dienomis (%{start} – %{end})"
+            previous_30_days: "Palyginti su ankstesnėmis 30 dienų (%{start} – %{end})"
+            previous_3_months: "Palyginti su ankstesniais 3 mėnesiais (%{start} – %{end})"
+            previous_days:
+              one: "Palyginti su ankstesne diena (%{start} – %{end})"
+              few: "Palyginti su ankstesnėmis %{count} dienomis (%{start} – %{end})"
+              many: "Palyginti su ankstesnėmis %{count} dienų (%{start} – %{end})"
+              other: "Palyginti su ankstesnėmis %{count} dienų (%{start} – %{end})"
           kpi:
+            logged_in_share:
+              label: "Bendrinimas prisijungus"
+              tooltip: "Prisijungusių narių peržiūrų dalis."
             direct_traffic:
               label: "Tiesioginis srautas"
               tooltip: "Tų puslapio peržiūrų dalis, kurios buvo atliktos tiesiogiai jūsų bendruomenėje, pavyzdžiui, įvedus URL adresą arba pasinaudojus naršyklės žymėmis."
@@ -8393,9 +8448,27 @@ lt:
             anonymous: "Anonimas"
             embedded: "Įterptieji puslapių peržiūrų skaičiai"
             crawlers: "Paieškos robotai"
+          see_details: "Žr. išsamią informaciją"
           crawler_learn_more: "Sužinoti daugiau"
         reports:
           trend_title: "%{percent} pokytis. Šiuo metu %{current}, buvo %{prev} ankstesniame laikotarpyje."
+          percent_change_tooltip: "%{percent} pokytis."
+          percent_change_tooltip_previous_value:
+            yesterday:
+              one: "Buvo %{count} prieš dvi dienas."
+              few: "Buvo %{count} prieš dvi dienas."
+              many: "Buvo %{count} prieš dvi dienas."
+              other: "Buvo %{count} prieš dvi dienas."
+            two_weeks_ago:
+              one: "Buvo %{count} prieš dvi savaites."
+              few: "Buvo %{count} prieš dvi savaites."
+              many: "Buvo %{count} prieš dvi savaites."
+              other: "Buvo %{count} prieš dvi savaites."
+            thirty_days_ago:
+              one: "Buvo %{count} per pastarąsias 30 dienų."
+              few: "Buvo %{count} per pastarąsias 30 dienų."
+              many: "Buvo %{count} per pastarąsias 30 dienų."
+              other: "Buvo %{count} per pastarąsias 30 dienų."
           today: "Šiandien"
           yesterday: "Vakar"
           last_7_days: "Paskutinės 7"
@@ -8410,13 +8483,17 @@ lt:
           daily: Kasdien
           monthly: Kas mėnesį
           weekly: Kas savaitę
+          chart_group_period: "Pasirinkite laikotarpį"
+          value_so_far: "%{value} (kol kas)"
           dates: "Datos (UTC)"
           groups: "Visos grupės"
           disabled: "Ši ataskaita išjungta"
+          totals_for_sample: "Imties bendrieji skaičiai"
           average_for_sample: "Pavyzdžio vidurkis"
           total: "Visas laikas iš viso"
           no_data: "Nėra rodomų duomenų."
           posters_by_member_type_members:
+            title: "%{name} — %{users} · %{posts}"
             users_count:
               one: "%{count} vartotojas"
               few: "%{count} vartotojų"
@@ -8427,7 +8504,11 @@ lt:
               few: "%{count} pranešimai"
               many: "%{count} pranešimų"
               other: "%{count} pranešimų"
+            deselect: "Atšaukti žymėjimą %{name}"
+            fetch_error: "Nepavyko įkelti šios grupės naudotojų."
+          average_chart_label: Rodomi vidurkiai, o ne bendri skaičiai
           sort_button: "Rūšiuoti pagal %{column}"
+          sort_button_current: "Rūšiuota pagal %{column}, %{direction}"
           sort_ascending: "didėjantis"
           sort_descending: "mažėjantis"
           filters:
@@ -8439,10 +8520,16 @@ lt:
               label: Kategorija
             include_subcategories:
               label: "Įtraukti subkategorijas"
+            type_of_web_hook_event:
+              label: "Renginio tipas"
       flags:
         title: "Moderavimas"
         description: "Aprašymas"
         enabled: "Galimas?"
+        more_options:
+          title: "Daugiau parinkčių"
+          move_up: "Perkelti aukštyn"
+          move_down: "Perkelti žemyn"
       groups:
         new:
           title: "Nauja Grupė"
@@ -8450,6 +8537,7 @@ lt:
           name:
             too_short: "Grupės pavadinimas per trumpas"
             too_long: "Grupės pavadinimas per ilgas"
+            checking: "Tikrinamas grupės pavadinimo prieinamumas…"
             available: "Grupės pavadinimas galimas"
             not_available: "Grupės pavadinimas negalimas"
             blank: "Grupės pavadinimas negali būti tuščias"
@@ -8458,6 +8546,7 @@ lt:
             email: El. paštas
             incoming_email: "Išskirtiniai ateinantys el. pašto adresai"
             incoming_email_placeholder: "įveskite elektoninio pašto adresą"
+            incoming_email_tooltip: "Kelis el. pašto adresus galite atskirti simboliu |."
             visibility_levels:
               title: "Kas gali matyti šia grupę?"
               public: "Visi"
@@ -8468,15 +8557,27 @@ lt:
               description: "Administratoriai gali matyti visas grupes."
             members_visibility_levels:
               title: "Kas gali matyti šios grupės narius?"
+              description: "Administratoriai gali matyti visų grupių narius. „Flair“ matoma visiems vartotojams."
             publish_read_state: "Grupės pranešimuose paskelbkite grupės skaitymo būseną"
           membership:
             automatic: Automatini
+            automatic_tooltip: "Ši grupė yra automatinė, jos negalima ištrinti, o nariai pridedami ir pašalinami automatiškai."
             trust_levels_title: "Pasitikėjimo lygis automatiškai suteikiamas nariui kai jis prideda:"
             effects: Efektai
             trust_levels_none: "Nieko"
             automatic_membership_email_domains: "Vartotojai, kurie užsiregistravo su el. paštu, kuris sutampa su šiame sąraše esančiu el. paštu bus automatiškai pridėti į šią grupę:"
+            automatic_membership_email_domains_instructions: "Kiekvieną domeną įveskite atskirai, pavyzdžiui, discourse.org."
+            automatic_membership_user_count:
+              one: "%{count} vartotojas turi naujus el. pašto domenus ir bus pridėtas prie grupės."
+              few: "%{count} vartotojai turi naujus el. pašto domenus ir bus įtraukti į grupę."
+              many: "%{count} vartotojų turi naujus el. pašto domenus ir bus įtraukti į grupę."
+              other: "%{count} vartotojų turi naujus el. pašto domenus ir bus įtraukti į grupę."
+            automatic_membership_user_unknown_count: "Vartotojai, turintys vieną iš naujų el. pašto domenų, bus pridėti prie grupės."
             automatic_membership_associated_groups: "Vartotojai, kurie yra čia išvardytos paslaugos grupės nariai, bus automatiškai įtraukti į šią grupę, kai jie prisijungs prie paslaugos."
             primary_group: "Automatiškai nustatyk pagrindinę grupę"
+          alert:
+            primary_group: "Kadangi tai yra pirminė grupė, pavadinimas „%{group_name}“ bus naudojamas CSS klasėse, kurias gali peržiūrėti visi."
+            flair_group: "Kadangi ši grupė turi \"Flair\" savo nariams, pavadinimas '%{group_name}' bus matomas bet kam."
         name_placeholder: "Grupės pavadinimas, be tarpų, taisyklės kaip ir slapyvardžiui"
         primary: "Pagrindinė Grupė"
         no_primary: "(jokios pagrindinės grupės)"
@@ -8486,6 +8587,18 @@ lt:
         about: "Čia galite redaguoti savo grupių narystę ir pavadinimus"
         group_members: "Grupės nariai"
         delete: "Ištrinti"
+        delete_confirm: "Ar tikrai norite ištrinti „ %{group}“?"
+        delete_details:
+          one: "%{count} asmuo praras prieigą prie šios grupės"
+          few: "%{count} asmenys praras prieigą prie šios grupės"
+          many: "%{count} asmenų praras prieigą prie šios grupės"
+          other: "%{count} asmenų praras prieigą prie šios grupės"
+        delete_with_messages_confirm:
+          one: "%{count} žinutė taps nepasiekiama grupės nariams"
+          few: "%{count} žinutės taps nepasiekiama grupės nariams"
+          many: "%{count} žinučių taps nepasiekiama grupės nariams"
+          other: "%{count} žinučių taps nepasiekiama grupės nariams"
+        delete_warning: "Ištrintų grupių atkurti negalima"
         delete_failed: "Negalima ištrinti grupės. Jei tai yra automatinė grupė, jos negalima ištrinti."
         delete_automatic_group: Tai yra automatinė grupė ir jos negalima ištrinti.
         delete_owner_confirm: "Ar nori pašalinti valdytojo privilegijas '%{username}'?"
@@ -8499,6 +8612,9 @@ lt:
         none_selected: "Norėdami pradėti, pasirinkite grupę"
         no_custom_groups: "Sukurti naują pasirinktinę grupę"
       api_keys:
+        title: "API raktai"
+        description: "API raktų funkcija leidžia saugiai integruoti „Discourse“ su išorinėmis sistemomis ir automatizuoti veiksmus. Administratoriai gali kurti raktus su konkrečiais taikymo sritimis, kad galėtų kontroliuoti prieigą prie išteklių ir jautrių duomenų. Taikymo sritys riboja funkcionalumą, užtikrindamos didesnį saugumą."
+        add: "Pridėti API raktą"
         edit: "Redaguoti"
         save: "Išsaugoti"
         cancel: "Atšaukti"
@@ -9768,6 +9884,7 @@ lt:
         nav:
           hosts: "Prieglobos serveris"
           settings: "Nustatymai"
+          posts_and_topics: "Įrašai ir temos"
           crawlers: "Paieškos robotai"
       permalink:
         title: "Laikinos Nuorodos"

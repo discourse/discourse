@@ -68,11 +68,14 @@ vi:
           text_color: "màu chữ"
         approve_label: "Đồng ý"
         reject_label: "Không"
+        category_access_levels:
+          readonly: "Xem"
       agents:
         smart_dates:
           name: "Ngày thông minh"
       tool_summary:
         create_category: "Tạo chuyên mục"
+        delete_category: "Xóa chuyên mục"
         search: "Tìm kiếm"
         time: "Thời gian"
         summarize: "Tóm tắt"
@@ -99,6 +102,12 @@ vi:
         errors:
           not_found: "Không tìm thấy chủ đề."
       edit_category:
+        errors:
+          not_found: "Không tìm thấy chuyên mục."
+      set_category_permissions:
+        errors:
+          not_found: "Không tìm thấy chuyên mục."
+      delete_category:
         errors:
           not_found: "Không tìm thấy chuyên mục."
       change_topic_category:

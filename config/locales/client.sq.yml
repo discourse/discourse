@@ -3922,6 +3922,7 @@ sq:
       share: "Shpërndaje"
       dismiss: "Hiqe"
     mobile_tab_bar:
+      new_topic: "Temë e re"
       create: "Krijo"
       more: "Më shumë"
       back: "Kthehu mbrapa"

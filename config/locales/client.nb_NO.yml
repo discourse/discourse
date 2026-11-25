@@ -4224,6 +4224,7 @@ nb_NO:
       share: "Del"
       dismiss: "Avslå"
     mobile_tab_bar:
+      new_topic: "Nytt emne"
       create: "Opprett"
       more: "Mer"
       back: "Forrige"

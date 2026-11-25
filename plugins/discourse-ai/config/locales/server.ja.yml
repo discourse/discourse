@@ -298,6 +298,8 @@ ja:
           text_color: "テキストの色"
         approve_label: "はい"
         reject_label: "いいえ"
+        category_access_levels:
+          readonly: "閲覧"
         empty_value: "空"
       agents:
         cannot_have_duplicate_tools: "重複するツールは使用できません"
@@ -459,6 +461,7 @@ ja:
         suspend_user: "ユーザーを凍結する"
         silence_user: "ユーザーを投稿禁止にする"
         edit_post: "投稿を編集する"
+        delete_category: "カテゴリを削除する"
         search: "検索"
         tags: "タグをリスト"
         time: "時刻"

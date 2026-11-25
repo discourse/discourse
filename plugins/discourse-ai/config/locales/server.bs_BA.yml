@@ -49,6 +49,8 @@ bs_BA:
           color: "color"
         approve_label: "Da"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Vidi"
       tool_summary:
         search: "Pretraži"
         time: "Vrijeme"

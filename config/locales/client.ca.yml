@@ -3028,6 +3028,7 @@ ca:
       share: "Comparteix"
       dismiss: "Descarta-ho"
     mobile_tab_bar:
+      new_topic: "Tema nou"
       create: "Crea"
       more: "Més"
       back: "Enrere"

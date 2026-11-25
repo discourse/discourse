@@ -38,6 +38,12 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      review_bulk:
+        refresh: "Թարմացնել"
+        columns:
+          user: "Օգտատեր"
+          created: "Ստեղծված"
+          status: "Ստատուս"
       copied: "Պատճենված է"
       ai_decoded_transcript:
         type: "Տիպ"

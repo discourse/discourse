@@ -1971,6 +1971,7 @@ be:
       back: "Назад"
       share: "Абагуліць"
     mobile_tab_bar:
+      new_topic: "Новая тэма"
       create: "Ствараць"
       more: "Яшчэ"
       back: "Назад"

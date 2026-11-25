@@ -3336,6 +3336,7 @@ gl:
       share: "Compartir"
       dismiss: "Desbotar"
     mobile_tab_bar:
+      new_topic: "Novo tema"
       create: "Crear"
       more: "Máis"
       back: "Volver"

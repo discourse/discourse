@@ -52,6 +52,15 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      review_bulk:
+        refresh: "يېڭىلا"
+        columns:
+          user: "ئىشلەتكۈچى"
+          reason: "پاش قىلىنغان"
+          created: "قۇرغان ۋاقتى"
+          status: "ھالەت"
+        status:
+          applying: "قوللىنىۋاتىدۇ…"
       copied: "كۆچۈرۈلدى"
       ai_decoded_transcript:
         arguments: "ئۆزگەرگۈچى"

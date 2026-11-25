@@ -4056,6 +4056,7 @@ te:
       share: "షేర్ చేయండి"
       dismiss: "తీసివేయండి"
     mobile_tab_bar:
+      new_topic: "కొత్త విషయం"
       create: "సృష్టించండి"
       more: "ఇంకా"
       back: "వెనుకకు"

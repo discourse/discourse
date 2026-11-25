@@ -4552,6 +4552,7 @@ fa_IR:
       share: "اشتراک‌گذاری"
       dismiss: "نخواستیم"
     mobile_tab_bar:
+      new_topic: "موضوع جدید"
       create: "ایجاد"
       more: "بیشتر"
       back: "بازگشت"
