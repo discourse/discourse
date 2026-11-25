@@ -38,6 +38,25 @@ RSpec.describe SimilarTopicsController do
       expect(json["similar_topics"].size).to eq(0)
     end
 
+    it "omits the blurb of a relisted topic whose first post is hidden" do
+      SiteSetting.minimum_topics_similar = 0
+      post.hide!(PostActionType.types[:off_topic])
+      topic.update_status(
+        "visible",
+        true,
+        Discourse.system_user,
+        visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+      )
+      reindex_posts
+
+      get "/topics/similar_to.json", params: { title: title, raw: raw }
+
+      expect(response.status).to eq(200)
+      similar_topic = response.parsed_body["similar_topics"].first
+      expect(similar_topic["topic_id"]).to eq(topic.id)
+      expect(similar_topic["blurb"]).to be_blank
+    end
+
     describe "minimum_topics_similar" do
       before { SiteSetting.minimum_topics_similar = 30 }
 

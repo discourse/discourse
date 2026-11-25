@@ -42,7 +42,12 @@ module DiscourseRewind
 
       def self.filter_for_viewer(report, guardian:, **)
         topic_ids = guardian.can_see_topic_ids(topic_ids: report[:data].pluck(:topic_id))
-        eligible_topic_ids = publicly_visible_topics.where(id: topic_ids).pluck(:id)
+        hidden_topic_ids = Post.where(topic_id: topic_ids, post_number: 1, hidden: true)
+        eligible_topic_ids =
+          publicly_visible_topics
+            .where(id: topic_ids)
+            .where.not(id: hidden_topic_ids.select(:topic_id))
+            .pluck(:id)
 
         report.merge(
           data: report[:data].select { |topic| topic[:topic_id].in?(eligible_topic_ids) },

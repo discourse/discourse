@@ -54,5 +54,15 @@ RSpec.describe DiscourseRewind::Action::BestTopics do
 
       expect(filtered[:data]).to contain_exactly(topic_id: topic_1.id)
     end
+
+    it "drops a topic whose first post is hidden" do
+      Fabricate(:post, topic: topic_1, user:, hidden: true)
+      report = { data: [{ topic_id: topic_1.id }, { topic_id: topic_2.id }] }
+
+      filtered =
+        described_class.filter_for_viewer(report, guardian: viewer.guardian, for_user: user)
+
+      expect(filtered[:data]).to contain_exactly(topic_id: topic_2.id)
+    end
   end
 end

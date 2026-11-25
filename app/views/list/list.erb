@@ -79,7 +79,7 @@
                 </div>
               <% end %>
             </div>
-            <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt %>
+            <% if t.pinned_until && (t.pinned_until > Time.zone.now) && (t.pinned_globally || @list.category) && t.excerpt && !t.first_post&.hidden? %>
               <p class='excerpt'>
                 <%= t.excerpt.html_safe %>
               </p>

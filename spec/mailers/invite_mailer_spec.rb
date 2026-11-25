@@ -237,6 +237,14 @@ RSpec.describe InviteMailer do
           expect(message.body.to_s).not_to include(topic.title)
           expect(message.body.to_s).not_to include(topic.slug)
         end
+
+        it "omits an excerpt cached before the first post was hidden" do
+          Fabricate(:post, topic:, user: topic.user, hidden: true)
+          topic.update_columns(excerpt: "Stale excerpt of the hidden first post")
+
+          expect(invite_mail.body.to_s).to include(topic.title)
+          expect(invite_mail.body.to_s).not_to include(topic.excerpt)
+        end
       end
 
       context "with custom invite message" do

@@ -719,6 +719,11 @@ class Post < ActiveRecord::Base
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
+      if is_first_post?
+        topic.update_excerpt(nil)
+        topic.localizations.update_all(excerpt: nil)
+      end
+
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
@@ -770,6 +775,7 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       update!(hidden: false)
+      restore_topic_excerpts if is_first_post?
       should_update_user_stat = true
 
       # NOTE: We have to consider `nil` a valid reason here because historically
@@ -1282,6 +1288,14 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def restore_topic_excerpts
+    topic.update_excerpt(excerpt_for_topic)
+    topic.localizations.each do |topic_localization|
+      cooked = localizations.find_by(locale: topic_localization.locale)&.cooked
+      topic_localization.update_excerpt(cooked:)
+    end
+  end
 
   def system_message_recipient_ids
     return [] if !system_message?
