@@ -305,6 +305,7 @@ export default class GlobalNotice extends Component {
                 <DButton
                   class="btn-transparent close"
                   @action={{fn this.dismissNotice notice}}
+                  @ariaLabel="close"
                   @icon="xmark"
                 />
               {{/if}}

@@ -10,6 +10,10 @@
     display: inline-block;
     min-width: 7em;
     text-align: center;
+
+    @include viewport.until(md) {
+      min-width: 0;
+    }
   }
 
   #revision {

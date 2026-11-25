@@ -84,4 +84,9 @@ html.footer-nav-ipad {
   .d-header-wrap {
     top: var(--footer-nav-height);
   }
+
+  .menu-panel.slide-in {
+    top: var(--footer-nav-height);
+    height: calc(100dvh - var(--footer-nav-height));
+  }
 }
