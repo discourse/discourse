@@ -69,7 +69,8 @@
         }
       ],
       "unit3_review": "Unit 3 certifies forum enforcement; creation still calls PostCreator directly. The new Server egress tripwire can refuse the returned restricted topic identifiers after creation.",
-      "round3_review": "Shared Server authored-text checks now precede this unchanged PostCreator body; existing creation/event paths remain conditional on accepted text."
+      "round3_review": "Shared Server authored-text checks now precede this unchanged PostCreator body; existing creation/event paths remain conditional on accepted text.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: declaration stays at 238, but CreatePrivateMessage now checks prospective tags from watched words and private-message policy before PostCreator. The native creation/event edges remain after that gate."
     },
     {
       "tool": "discourse_reply_private_message",
@@ -87,12 +88,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 302,
+          "line": 310,
           "source": "class ReplyPrivateMessage"
         }
       ],
       "unit3_review": "Unit 3 checks the PM target through the policy-aware private_message_topic! lookup before PostCreator.",
-      "round3_review": "Shared Server authored-text checks now precede this unchanged policy-aware PM lookup/PostCreator body."
+      "round3_review": "Shared Server authored-text checks now precede this unchanged policy-aware PM lookup/PostCreator body.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: ReplyPrivateMessage moves 302 to 310 because CreatePrivateMessage now checks prospective category/effective tags, including watched words, before PostCreator. Reply still performs the policy-aware PM lookup and PostCreator call; its native post/event paths remain conditional."
     },
     {
       "tool": "discourse_update_post",
@@ -293,12 +295,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 683,
+          "line": 702,
           "source": "class PerformReviewableAction"
         }
       ],
       "unit3_review": "Unit 3 filters reviewables by topic or queued category/tags, blocks account-deletion actions and any additional_fields while a rule is active, and removes queue counters. Permitted actions still dispatch Reviewable.perform; feedback paths are no longer unconditionally reachable under active rules.",
-      "round3_review": "Before dispatch, publishing actions check queued title/raw; restoring actions check stored target-post raw. Existing account-deletion/additional_fields refusals remain. Native queued/recovery/unhide/feedback edges are retained conditionally, not certified for arbitrary plugin actions."
+      "round3_review": "Before dispatch, publishing actions check queued title/raw; restoring actions check stored target-post raw. Existing account-deletion/additional_fields refusals remain. Native queued/recovery/unhide/feedback edges are retained conditionally, not certified for arbitrary plugin actions.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety."
     },
     {
       "tool": "discourse_update_user",
@@ -682,7 +685,7 @@
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 341,
+          "line": 349,
           "source": "class InviteToPrivateMessage"
         },
         {
@@ -697,7 +700,8 @@
         }
       ],
       "unit3_review": "Unit 3 checks the PM target through the policy-aware lookup before recipient changes and generated invite content.",
-      "round3_review": "Shared Server authored-text checks now cover custom_message before this unchanged invitation body."
+      "round3_review": "Shared Server authored-text checks now cover custom_message before this unchanged invitation body.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: InviteToPrivateMessage moves 341 to 349 after the preceding PM creation gate. Re-read recipient validation, policy-aware PM lookup and invite/notification branches: their native edges remain unchanged."
     },
     {
       "tool": "discourse_save_draft",
@@ -1558,7 +1562,8 @@
       "downstream": [
         "post_create"
       ],
-      "round3_review": "PerformReviewableAction now checks stored queued title/raw for approve_post/revise_and_reject_post before dispatch. Native approval/PostCreator behavior is unchanged."
+      "round3_review": "PerformReviewableAction now checks stored queued title/raw for approve_post/revise_and_reject_post before dispatch. Native approval/PostCreator behavior is unchanged.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety."
     },
     "reviewable_action": {
       "trigger": "Reviewable.perform dispatches server action, including revise/reject feedback",
@@ -1566,7 +1571,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 723,
+          "line": 742,
           "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
         }
       ],
@@ -1580,7 +1585,8 @@
         "reviewable_feedback"
       ],
       "unit3_review": "The dispatch remains at moderation.rb:692, but policy-aware lookup and action guards now precede it. Restricted reviewables answer as missing; account deletion and additional_fields are refused under any active rule. Downstream paths describe permitted dispatch, not unconditional feedback reachability.",
-      "round3_review": "Dispatch moved to the refreshed line. In addition to earlier policy/action guards, queued publishing and target-post restoring actions now check stored text before reviewable.perform."
+      "round3_review": "Dispatch moved to the refreshed line. In addition to earlier policy/action guards, queued publishing and target-post restoring actions now check stored text before reviewable.perform.",
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety."
     },
     "category_create": {
       "trigger": "Category#create_category_definition",
@@ -3342,5 +3348,39 @@
         "source": "category: category_id,"
       }
     ]
+  },
+  "unit4_review2_refresh": {
+    "revision": "cc81b6c5ea250b33751da2851861af27a89a93fa",
+    "moves": [
+      {
+        "entry": "operation:discourse_reply_private_message",
+        "file": "lib/discourse_mcp/tools/private_messages.rb",
+        "previous_line": 302,
+        "current_line": 310,
+        "source": "class ReplyPrivateMessage"
+      },
+      {
+        "entry": "operation:discourse_perform_reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 683,
+        "current_line": 702,
+        "source": "class PerformReviewableAction"
+      },
+      {
+        "entry": "operation:discourse_invite_to_private_message",
+        "file": "lib/discourse_mcp/tools/private_messages.rb",
+        "previous_line": 341,
+        "current_line": 349,
+        "source": "class InviteToPrivateMessage"
+      },
+      {
+        "entry": "path:reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 723,
+        "current_line": 742,
+        "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
+      }
+    ],
+    "review": "Four stale exact-line occurrences confirmed RED before refresh. Re-read all four current declarations/calls and 446abae79e3..cc81b6c5ea2. PM creation and queued-topic approval gain prospective-tag gates; native graph edges and classifications remain conditional."
   }
 }

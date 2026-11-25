@@ -330,3 +330,21 @@ round 3 URL resolution changes precede these entries and move both by 84 lines.
 Both enrichment examples pass after the refresh. Historical move records are
 retained; the live evidence entries and `unit4_review1_refresh` describe this
 revision. See [unit 4 review 1](../content_restrictions_unit4/REVIEW1.md) for run receipts.
+
+## Unit 4 review 2 evidence refresh at `cc81b6c5ea2`
+
+The baseline exact-line example (seed `28553`) failed at exactly four stale
+occurrences. Re-read each current declaration/call and its surrounding body,
+and reviewed `446abae79e3..cc81b6c5ea2` before updating the live evidence.
+
+| Evidence file | Prior → current lines | Re-review result |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/moderation.rb` | PerformReviewableAction 683 → 702; `reviewable.perform` 723 → 742 | Publishing now includes `approve_post_closed`; queued new topics check prospective category/effective tags before dispatch. Stored-text, lookup, account-deletion and additional-fields guards remain. Native approval/recovery/unhide/feedback edges remain conditional on these gates; arbitrary plugin actions are not certified. |
+| `lib/discourse_mcp/tools/private_messages.rb` | ReplyPrivateMessage 302 → 310; InviteToPrivateMessage 341 → 349 | Preceding CreatePrivateMessage now checks prospective watched-word tags and PM policy before PostCreator. Reply retains its policy-aware PM lookup and PostCreator; invitation retains recipient validation, lookup and invite/notification branches. Native graph edges and classifications remain. |
+
+The inventory preserves historical reviews and adds `unit4_review2_refresh` to
+these operations, PM creation and the shared approval/dispatch paths. All 245
+live exact evidence occurrences and graph references were rechecked directly;
+56 operation rows, 55 distinct primitives, 116 paths and three exclusions remain.
+The post-refresh spec receipt is recorded in
+[review 2](../content_restrictions_unit4/REVIEW2.md).
