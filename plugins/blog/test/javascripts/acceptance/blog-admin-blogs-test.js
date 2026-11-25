@@ -255,21 +255,23 @@ acceptance("Blog admin with one blog", function (needs) {
         "themes are added and edited in the library"
       );
     assert
-      .dom('[data-theme-id="candidate"] .theme-card__button.edit')
+      .dom('[data-theme-id="candidate"] .blog-theme-card__button.edit')
       .doesNotExist("a blog only picks a theme");
     assert
-      .dom('[data-theme-id="candidate"] .theme-card__button.preview')
+      .dom('[data-theme-id="candidate"] .blog-theme-card__button.preview')
       .exists("another theme can be previewed on this blog");
     assert
       .dom('[data-theme-id="default"]')
       .exists("the blog's active theme is listed");
     assert
-      .dom('[data-theme-id="default"] .theme-card__button.preview')
+      .dom('[data-theme-id="default"] .blog-theme-card__button.preview')
       .doesNotExist("the blog already shows its active theme");
     assert
       .dom(".blog-edit__nav .active")
       .hasText("Theme", "the tab names the one theme this blog uses");
-    await click('[data-theme-id="candidate"] .theme-card__button.activate');
+    await click(
+      '[data-theme-id="candidate"] .blog-theme-card__button.activate'
+    );
     await click(".dialog-footer .btn-primary");
 
     assert.strictEqual(listedFor, "1", "previews are built for this blog");
@@ -451,7 +453,7 @@ acceptance("Blog admin with several blogs", function (needs) {
 
     await click('[data-theme-id="candidate"] .theme-card__footer-menu');
     assert
-      .dom(".theme-card__button.activate")
+      .dom(".blog-theme-card__button.activate")
       .doesNotExist("each blog picks its theme on its own page");
   });
 
