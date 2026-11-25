@@ -1,0 +1,132 @@
+{
+  "--d-sys-border-radius-sm": {
+    "value": "calc(var(--d-sys-border-radius-md) / 2)",
+    "file": "app/assets/stylesheets/common/foundation/base.scss",
+    "after": "--d-sys-border-radius-md"
+  },
+  "--d-sys-font-weight-bold": {
+    "value": "700",
+    "file": "app/assets/stylesheets/common/tokens.scss",
+    "after": "--d-sys-font-weight-semibold"
+  },
+  "--d-sys-color-text-danger": {
+    "value": "var(--danger)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-danger": {
+    "value": "var(--danger)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-border-danger": {
+    "value": "var(--danger)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-text-success": {
+    "value": "var(--success)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-icon-success": {
+    "value": "var(--success)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-success": {
+    "value": "var(--success)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-border-success": {
+    "value": "var(--success)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-icon-love": {
+    "value": "var(--love)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-love": {
+    "value": "var(--love)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-icon-accent": {
+    "value": "var(--tertiary)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-icon-inverse": {
+    "value": "var(--secondary)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-highlight": {
+    "value": "var(--highlight)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-highlight-bold": {
+    "value": "var(--highlight-high)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-sunken": {
+    "value": "var(--primary-very-low)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-border-muted": {
+    "value": "var(--primary-very-low)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-border-strong": {
+    "value": "var(--primary-low-mid)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-text-default-disabled": {
+    "value": "var(--primary-low-mid)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-background-accent-hovered": {
+    "value": "var(--tertiary-hover)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-sys-color-text-link-hovered": {
+    "value": "var(--tertiary-hover)",
+    "file": "app/assets/stylesheets/common/tokens.scss"
+  },
+  "--d-comp-Header-color-background": {
+    "value": "var(--header_background)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-background-neutral": {
+    "value": "var(--header_primary-low)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-text-muted": {
+    "value": "var(--header_primary-high)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-icon-default": {
+    "value": "var(--header_primary-low-mid)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-icon-strong": {
+    "value": "var(--header_primary-medium)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-border-default": {
+    "value": "var(--header_primary-low)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-border-strong": {
+    "value": "var(--header_primary-low-mid)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-Header-color-border-strong-hovered": {
+    "value": "var(--header_primary-medium)",
+    "file": "app/assets/stylesheets/common/base/header.scss"
+  },
+  "--d-comp-UserBadge-color-icon-gold": {
+    "value": "var(--gold)",
+    "file": "app/assets/stylesheets/common/base/user-badges.scss"
+  },
+  "--d-comp-UserBadge-color-icon-silver": {
+    "value": "var(--silver)",
+    "file": "app/assets/stylesheets/common/base/user-badges.scss"
+  },
+  "--d-comp-UserBadge-color-icon-bronze": {
+    "value": "var(--bronze)",
+    "file": "app/assets/stylesheets/common/base/user-badges.scss"
+  }
+}
