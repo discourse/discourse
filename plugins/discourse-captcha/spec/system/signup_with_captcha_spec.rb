@@ -42,20 +42,30 @@ RSpec.describe "Signup with captcha" do
         Jobs.run_immediately!
       end
 
-      it "shows the hCaptcha widget when choosing a username after email verification" do
-        signup_page.open
-        find(".code-login-form__email-step input[type='email']").fill_in(with: "test@example.com")
+      it "requires the hCaptcha before emailing a code" do
+        stub_request(:post, "https://hcaptcha.com/siteverify").to_return(
+          status: 200,
+          body: { success: true }.to_json,
+        )
+        code_signup.open
+
+        expect(captcha).to have_hcaptcha_widget
+        screenshot_marker(label: "code-signup-captcha", only: :desktop)
+
+        code_signup.submit_email("test@example.com")
+
+        expect(code_signup).to have_error(I18n.t("js.discourse_captcha.missing_token"))
+        expect(ActionMailer::Base.deliveries).to be_empty
+
+        captcha.complete_hcaptcha
         find(".code-login-form__continue").click
 
         expect(page).to have_css(".code-login-form__code-step")
-        expect(captcha).to have_no_hcaptcha_container
-
         code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
-        find(".d-otp-input").fill_in(with: code)
+        code_signup.submit_code(code)
 
         expect(page).to have_css(".code-login-form__signup-details-step")
-        expect(captcha).to have_hcaptcha_widget
-        screenshot_marker(label: "deferred-signup-captcha", only: :desktop)
+        expect(captcha).to have_no_hcaptcha_container
       end
     end
 
@@ -68,7 +78,7 @@ RSpec.describe "Signup with captcha" do
       end
     end
 
-    it "lets the user complete CAPTCHA and retry signup for approval" do
+    it "submits a code signup for approval without a second CAPTCHA" do
       SiteSetting.enable_local_logins_via_email = true
       SiteSetting.enable_local_logins_via_code = true
       SiteSetting.must_approve_users = true
@@ -81,23 +91,16 @@ RSpec.describe "Signup with captcha" do
         },
       )
 
-      code_signup.open.submit_email("approval@example.com")
+      code_signup.open
+      captcha.complete_hcaptcha
+      code_signup.submit_email("approval@example.com")
       wait_for { ActionMailer::Base.deliveries.any? }
       code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
       code_signup.submit_code(code)
 
       expect(code_signup).to have_account_details
-      expect(captcha).to have_hcaptcha_widget
+      expect(captcha).to have_no_hcaptcha_container
       code_signup.fill_username("approval-user")
-      screenshot_marker(label: "approval-signup-captcha", only: :desktop)
-
-      code_signup.submit_for_approval
-
-      expect(code_signup).to have_error(I18n.t("js.discourse_captcha.missing_token"))
-      expect(code_signup).to have_username("approval-user")
-      expect(page).to have_current_path("/signup")
-
-      captcha.complete_hcaptcha
       code_signup.submit_for_approval
 
       expect(code_signup).to have_pending_approval
@@ -263,25 +266,27 @@ RSpec.describe "Signup with captcha" do
       expect(page).to have_current_path("/u/account-created")
     end
 
-    it "lets the user retry signup for approval after verifying a login code" do
+    it "fetches a new token when retrying a login code request" do
       SiteSetting.enable_local_logins_via_email = true
       SiteSetting.enable_local_logins_via_code = true
       SiteSetting.must_approve_users = true
       Jobs.run_immediately!
 
       code_signup.open.submit_email("approval@example.com")
+      expect(code_signup).to have_error(I18n.t("captcha_verification_failed"))
+      expect(ActionMailer::Base.deliveries).to be_empty
+
+      find(".code-login-form__continue").click
       wait_for { ActionMailer::Base.deliveries.any? }
       code = ActionMailer::Base.deliveries.last.subject[/(\d{6})/, 1]
       code_signup.submit_code(code)
 
       expect(code_signup).to have_account_details
       code_signup.fill_username("approval-user")
-      expect(page.evaluate_script("window.captchaExecutions")).to eq(0)
-      code_signup.submit_for_approval
-      expect(code_signup).to have_error(I18n.t("captcha_verification_failed"))
       code_signup.submit_for_approval
 
       expect(code_signup).to have_pending_approval
+      expect(page.evaluate_script("window.captchaExecutions")).to eq(2)
     end
   end
 

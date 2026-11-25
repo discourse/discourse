@@ -452,7 +452,9 @@ export default class CodeLoginForm extends Component {
         });
       const result =
         this.isSignupDetailsStep && !this.isInvite
-          ? await applyBehaviorTransformer("create-account", verify)
+          ? await applyBehaviorTransformer("create-account", verify, {
+              codeLogin: true,
+            })
           : await verify();
 
       if (this.isDestroying) {
@@ -773,11 +775,14 @@ export default class CodeLoginForm extends Component {
     });
 
     try {
-      const result = await applyBehaviorTransformer("create-account", () =>
-        ajax("/session/login-code/verify", {
-          type: "POST",
-          data,
-        })
+      const result = await applyBehaviorTransformer(
+        "create-account",
+        () =>
+          ajax("/session/login-code/verify", {
+            type: "POST",
+            data,
+          }),
+        { codeLogin: true, data }
       );
 
       if (result?.success === false && result.message) {
@@ -872,21 +877,33 @@ export default class CodeLoginForm extends Component {
         return true;
       }
 
-      const honeypot = await ajax("/session/hp.json");
-      const result = await ajax("/session/login-code", {
-        type: "POST",
-        data: {
-          email: this.email,
-          signup: this.isSignup,
-          invite_key: this.isInvite ? this.args.inviteKey : undefined,
-          signup_context:
-            this.isSignup && this.args.signupContext
-              ? this.args.signupContext
-              : undefined,
-          password_confirmation: honeypot.value,
-          challenge: honeypot.challenge.split("").reverse().join(""),
+      const resend = this.isCodeStep;
+      const result = await applyBehaviorTransformer(
+        "request-login-code",
+        async () => {
+          const honeypot = await ajax("/session/hp.json");
+          return ajax("/session/login-code", {
+            type: "POST",
+            data: {
+              email: this.email,
+              signup: this.isSignup,
+              invite_key: this.isInvite ? this.args.inviteKey : undefined,
+              signup_context:
+                this.isSignup && this.args.signupContext
+                  ? this.args.signupContext
+                  : undefined,
+              password_confirmation: honeypot.value,
+              challenge: honeypot.challenge.split("").reverse().join(""),
+            },
+          });
         },
-      });
+        { context: this.args.context, isInvite: this.isInvite, resend }
+      );
+
+      if (result?.success === false && result.message) {
+        this.codeError = result.message;
+        return false;
+      }
 
       if (result?.error) {
         this.codeError = result.error;
