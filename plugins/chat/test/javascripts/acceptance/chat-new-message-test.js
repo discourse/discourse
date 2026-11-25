@@ -59,6 +59,25 @@ acceptance("Chat | New message", function (needs) {
     );
   });
 
+  test("full-page Chat uses its own layout and restores the shell on exit", async function (assert) {
+    this.siteSettings.enable_page_shell_prototype = true;
+    this.siteSettings.enable_main_outlet_grid_layout_change = true;
+
+    await visit(`/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`);
+    assert.dom("#main-outlet .full-page-chat").exists("renders full-page Chat");
+    assert
+      .dom("#main-outlet-wrapper")
+      .hasClass("wrap", "uses Chat's regular page wrapper");
+    assert
+      .dom(".page-shell")
+      .doesNotExist("keeps Chat out of the prototype grid");
+
+    await visit("/latest");
+    assert
+      .dom("#main-outlet-wrapper.page-shell")
+      .exists("restores the forum shell");
+  });
+
   test("pre-fills the composer when visiting with channel_id and message", async function (assert) {
     await visit(
       `/chat/new-message?channel_id=${CHANNEL_ID}&message=hello%20world`
