@@ -1245,6 +1245,48 @@ RSpec.describe SessionController do
       end
     end
 
+    context "when the admin IP allowlist is enabled" do
+      before do
+        SiteSetting.use_admin_ip_allowlist = true
+        ScreenedIpAddress.all.destroy_all
+        Fabricate(
+          :screened_ip_address,
+          ip_address: "198.51.100.7",
+          action_type: ScreenedIpAddress.actions[:allow_admin],
+        )
+        Fabricate(:single_sign_on_record, user: admin, external_id: "admin-external-id")
+      end
+
+      def admin_sso_params
+        sso = get_sso("/")
+        sso.external_id = "admin-external-id"
+        sso.email = admin.email
+        sso.username = admin.username
+        Rack::Utils.parse_query(sso.payload)
+      end
+
+      it "does not log in the admin from an IP outside the allowlist" do
+        get "/session/sso_login",
+            params: admin_sso_params,
+            headers: headers.merge("REMOTE_ADDR" => "203.0.113.9")
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(response.status).to eq(403)
+        expect(logged_on_user).to be_nil
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it "logs in the admin from an IP inside the allowlist" do
+        get "/session/sso_login",
+            params: admin_sso_params,
+            headers: headers.merge("REMOTE_ADDR" => "198.51.100.7")
+
+        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+        expect(response.status).to eq(302)
+        expect(logged_on_user).to eq(admin)
+      end
+    end
+
     context "when in staff writes only mode" do
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
@@ -3635,6 +3677,40 @@ RSpec.describe SessionController do
           get "/session/current.json"
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
+        end
+
+        context "when the admin IP allowlist is enabled" do
+          let(:token) { SecureRandom.hex }
+
+          before do
+            SiteSetting.use_admin_ip_allowlist = true
+            ScreenedIpAddress.all.destroy_all
+            Fabricate(
+              :screened_ip_address,
+              ip_address: "198.51.100.7",
+              action_type: ScreenedIpAddress.actions[:allow_admin],
+            )
+            Discourse.redis.setex "otp_#{token}", 10.minutes, admin.username
+          end
+
+          it "does not log in the admin from an IP outside the allowlist" do
+            post "/session/otp/#{token}", headers: { "REMOTE_ADDR" => "203.0.113.9" }
+
+            expect(response.status).to eq(200)
+            expect(CGI.unescapeHTML(response.body)).to include(
+              I18n.t("login.admin_not_allowed_from_ip_address", username: admin.username),
+            )
+            expect(session[:current_user_id]).to be_blank
+            expect(Discourse.redis.get("otp_#{token}")).to eq(admin.username)
+          end
+
+          it "logs in the admin from an IP inside the allowlist" do
+            post "/session/otp/#{token}", headers: { "REMOTE_ADDR" => "198.51.100.7" }
+
+            expect(response.status).to eq(302)
+            expect(session[:current_user_id]).to eq(admin.id)
+            expect(Discourse.redis.get("otp_#{token}")).to be_nil
+          end
         end
       end
     end
