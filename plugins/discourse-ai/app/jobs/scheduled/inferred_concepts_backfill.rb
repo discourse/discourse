@@ -17,6 +17,8 @@ module Jobs
       return unless SiteSetting.discourse_ai_enabled
       return unless SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
 
+      DiscourseAi::InferredConcepts::Seeder.resume_if_stalled!
+
       base_budget = SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour
       return if base_budget <= 0
       return unless InferredConcept.active.exists?
