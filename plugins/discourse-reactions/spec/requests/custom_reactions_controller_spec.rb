@@ -262,19 +262,15 @@ describe DiscourseReactions::CustomReactionsController do
     end
 
     it "does not return reactions in private messages shared with non-admin viewers" do
-      shared_topic = Fabricate(:private_message_topic, user: user_2, recipient: user_1)
-      TopicAllowedUser.create!(topic: shared_topic, user: moderator)
-      shared_post = Fabricate(:post, topic: shared_topic)
-      shared_reaction = Fabricate(:reaction, post: shared_post, reaction_value: "laughing")
-      Fabricate(:reaction_user, reaction: shared_reaction, user: user_2, post: shared_post)
+      TopicAllowedUser.create!(topic: private_topic, user: user_1)
+      TopicAllowedUser.create!(topic: private_topic, user: moderator)
 
       [user_1, moderator].each do |viewer|
         sign_in(viewer)
-
         get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
 
         expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
-          shared_post.id,
+          private_post.id,
         )
       end
     end
@@ -322,60 +318,29 @@ describe DiscourseReactions::CustomReactionsController do
       )
     end
 
-    describe "reactions in unlisted topics" do
-      fab!(:unlisted_topic) do
-        Fabricate(:topic, title: "UNLISTED-DRAFT: pricing change proposal", user: user_3)
-      end
-      fab!(:unlisted_op) { Fabricate(:post, topic: unlisted_topic, user: user_3) }
-      fab!(:unlisted_reply) do
-        Fabricate(
-          :post,
-          topic: unlisted_topic,
-          user: user_3,
-          raw: "UNLISTED-BODY: second post, the numbers are in the attached sheet.",
-        )
-      end
-      fab!(:unlisted_reaction) do
-        Fabricate(:reaction, post: unlisted_reply, reaction_value: "laughing")
-      end
-      fab!(:unlisted_reaction_user) do
-        Fabricate(:reaction_user, reaction: unlisted_reaction, user: user_2, post: unlisted_reply)
-      end
+    it "only returns reactions in unlisted topics to the owner and staff" do
+      unlisted_topic = Fabricate(:topic, user: user_3, visible: false)
+      unlisted_post =
+        Fabricate(:post, topic: unlisted_topic, user: user_3, raw: "unlisted topic post body")
+      unlisted_reaction = Fabricate(:reaction, post: unlisted_post, reaction_value: "laughing")
+      Fabricate(:reaction_user, reaction: unlisted_reaction, user: user_2, post: unlisted_post)
 
-      before { unlisted_topic.update!(visible: false) }
+      sign_in(user_1)
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
 
-      it "does not return another user's reactions in unlisted topics" do
-        sign_in(user_1)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
+        unlisted_post.id,
+      )
+      expect(response.body).not_to include(unlisted_topic.title, unlisted_post.excerpt)
 
-        get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
-          unlisted_reply.id,
-        )
-        expect(response.body).not_to include(unlisted_topic.title, unlisted_reply.excerpt)
-      end
-
-      it "returns your own reactions in unlisted topics" do
-        sign_in(user_2)
-
+      [user_2, moderator, admin].each do |viewer|
+        sign_in(viewer)
         get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
 
         expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
-          unlisted_reply.id,
+          unlisted_post.id,
         )
-      end
-
-      it "returns reactions in unlisted topics to staff" do
-        [moderator, admin].each do |staff_user|
-          sign_in(staff_user)
-
-          get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
-
-          expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
-            unlisted_reply.id,
-          )
-        end
       end
     end
 
