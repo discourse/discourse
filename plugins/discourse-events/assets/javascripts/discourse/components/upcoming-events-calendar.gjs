@@ -11,6 +11,10 @@ import { i18n } from "discourse-i18n";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper.js";
 import formatEventForCalendar from "../lib/format-event-for-calendar.js";
 import openEventComposer from "../lib/open-event-composer.js";
+import {
+  checkPersonalEvents,
+  knownPersonalEvents,
+} from "../lib/personal-events-check.js";
 import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 import FullCalendar from "./full-calendar.gjs";
 
@@ -27,10 +31,6 @@ const eventViews = [
   },
 ];
 
-// Checked once per user rather than per date range, so the view tabs stay put
-// while paging through the calendar and switching between views
-const personalEventsChecks = new WeakMap();
-
 export default class UpcomingEventsCalendar extends Component {
   @service composer;
   @service currentUser;
@@ -40,8 +40,7 @@ export default class UpcomingEventsCalendar extends Component {
   @service siteSettings;
   @service discoursePostEventApi;
 
-  @tracked
-  hasPersonalEvents = personalEventsChecks.get(this.currentUser)?.value;
+  @tracked hasPersonalEvents = knownPersonalEvents(this.currentUser);
 
   constructor() {
     super(...arguments);
@@ -220,18 +219,10 @@ export default class UpcomingEventsCalendar extends Component {
       return;
     }
 
-    let check = personalEventsChecks.get(user);
-    if (!check) {
-      check = {};
-      check.promise = this.discoursePostEventApi
-        .hasEvents({ attending_user: user.username })
-        // Offering an empty view beats hiding one the user has events in
-        .catch(() => true)
-        .then((hasEvents) => (check.value = hasEvents));
-      personalEventsChecks.set(user, check);
-    }
-
-    const hasEvents = await check.promise;
+    const hasEvents = await checkPersonalEvents(
+      this.discoursePostEventApi,
+      user
+    );
     if (!this.isDestroying) {
       this.hasPersonalEvents = hasEvents;
     }

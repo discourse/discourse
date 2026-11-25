@@ -255,6 +255,26 @@ acceptance("Upcoming events in the mobile footer", function (needs) {
       .exists("leaves a way back to All events");
   });
 
+  test("offers My events once the user first RSVPs", async function (assert) {
+    stubCalendarOccurrences([], { hasPersonalEvents: false });
+    await visit("/upcoming-events/day/2026/5/12");
+    assert.dom(`${footerViews} a`).doesNotExist("My events would be empty");
+
+    await visit("/latest");
+    stubCalendarOccurrences(["10:00"]);
+    this.container
+      .lookup("service:app-events")
+      .trigger("calendar:create-invitee-status", {
+        status: "going",
+        postId: 42,
+      });
+    await visit("/upcoming-events/day/2026/5/12");
+
+    assert
+      .dom(`${footerViews} a[href*="/mine/"]`)
+      .exists("rechecks for the user's own events");
+  });
+
   test("keeps the view tabs while paging to a day without personal events", async function (assert) {
     stubCalendarOccurrences([], { hasPersonalEvents: true });
     await visit("/upcoming-events/mine/day/2026/5/12");

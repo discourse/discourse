@@ -1,6 +1,10 @@
 import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
+import {
+  ATTENDANCE_CHANGE_EVENTS,
+  forgetPersonalEvents,
+} from "../lib/personal-events-check.js";
 import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 
 export default {
@@ -40,6 +44,14 @@ export default {
               }
             }
         );
+
+        const currentUser = api.getCurrentUser();
+        if (currentUser) {
+          const appEvents = container.lookup("service:app-events");
+          ATTENDANCE_CHANGE_EVENTS.forEach((event) =>
+            appEvents.on(event, () => forgetPersonalEvents(currentUser))
+          );
+        }
       });
     }
   },
