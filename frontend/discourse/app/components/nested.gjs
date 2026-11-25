@@ -54,8 +54,6 @@ export default class Nested extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked cloakAbove = 0;
-  @tracked cloakBelow = 0;
   @tracked focusDirection = "forward";
   @tracked focusedPath = [];
 
@@ -274,12 +272,6 @@ export default class Nested extends Component {
 
   postLevelScrollAnchor(anchor) {
     return Number.isFinite(anchor?.scrollY) ? null : anchor;
-  }
-
-  @action
-  setCloakingBoundaries(above, below) {
-    this.cloakAbove = above;
-    this.cloakBelow = below;
   }
 
   @action
@@ -852,7 +844,6 @@ export default class Nested extends Component {
         eyeline=false
         headerOffset=this.header.headerOffset
         screenTrack=this.screenTrack
-        setCloakingBoundaries=this.setCloakingBoundaries
         topicId=@topic.id
       }}
     >
@@ -939,8 +930,6 @@ export default class Nested extends Component {
                 @changeNotice={{@changeNotice}}
                 @changePostOwner={{@changePostOwner}}
                 @children={{focusedNode.children}}
-                @cloakAbove={{this.cloakAbove}}
-                @cloakBelow={{this.cloakBelow}}
                 @collapseFromDepth={{this.collapseFromDepth}}
                 @deletePost={{@deletePost}}
                 @depth={{0}}
@@ -1079,8 +1068,6 @@ export default class Nested extends Component {
               @changeNotice={{@changeNotice}}
               @changePostOwner={{@changePostOwner}}
               @children={{node.children}}
-              @cloakAbove={{this.cloakAbove}}
-              @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{this.collapseFromDepth}}
               @deletePost={{@deletePost}}
               @depth={{0}}
