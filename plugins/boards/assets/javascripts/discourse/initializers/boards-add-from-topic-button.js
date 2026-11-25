@@ -11,10 +11,16 @@ export default {
   initialize() {
     registerTopicFooterButton({
       id: BUTTON_ID,
-      icon: "boards",
+      icon: "table-columns",
       label: "boards.topic_footer.add_to_board",
       title: "boards.topic_footer.add_to_board",
-      classNames: ["boards-add-from-topic-button"],
+      classNames() {
+        const classes = ["boards-add-from-topic-button"];
+        if (this.topic.board_memberships?.length) {
+          classes.push("is-on-board");
+        }
+        return classes;
+      },
       displayed() {
         if (!this.currentUser) {
           return false;

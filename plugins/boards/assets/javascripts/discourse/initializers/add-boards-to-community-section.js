@@ -15,7 +15,7 @@ export default {
 
     withPluginApi((api) => {
       if (currentUser) {
-        if (!currentUser.can_see_any_boards) {
+        if (!currentUser.can_manage_boards && !currentUser.can_see_any_boards) {
           return;
         }
       } else if (!PreloadStore.get("boards:visibility")?.can_see_any_boards) {
@@ -26,7 +26,7 @@ export default {
       api.addCommunitySectionLink({
         name: "boards",
         route: "boards",
-        icon: "boards",
+        icon: "table-columns",
         text: label,
         title: label,
       });
@@ -40,7 +40,7 @@ export default {
             get mobileTab() {
               return {
                 label,
-                icon: "boards",
+                icon: "table-columns",
                 url: "/boards",
                 ownsRoute: ({ name }) =>
                   name === "boards" || name.startsWith("boardsBoard"),

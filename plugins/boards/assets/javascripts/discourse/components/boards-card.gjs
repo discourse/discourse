@@ -26,7 +26,6 @@ import { i18n } from "discourse-i18n";
 import { loadCategory } from "../lib/boards-categories.js";
 import { boardsBoardUrl, boardsCardUrl } from "../lib/boards-urls.js";
 import AutoLinkedText from "./auto-linked-text.gjs";
-import BoardsCardDetailModal from "./modal/boards-card-detail.gjs";
 import BoardsFloaterAssignModal from "./modal/boards-floater-assign.gjs";
 import BoardsTopicCardDetailModal from "./modal/boards-topic-card-detail.gjs";
 
@@ -265,13 +264,11 @@ export default class BoardsCard extends Component {
 
     DiscourseURL.replaceState(cardUrlPath);
 
-    this.modal
-      .show(BoardsCardDetailModal, {
-        model: {
-          card: this.args.card,
-          board: this.args.board,
-          onUpdateCard: this.args.onUpdateCard,
-        },
+    this.args
+      .onOpenCardDetail({
+        card: this.args.card,
+        board: this.args.board,
+        onUpdateCard: this.args.onUpdateCard,
       })
       .finally(() => {
         if (!this.isDestroying) {
