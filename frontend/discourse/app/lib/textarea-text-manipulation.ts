@@ -234,45 +234,36 @@ export default class TextareaTextManipulation implements TextManipulation {
     opts: ReplaceTextOptions = {}
   ): void {
     const val = this.value;
-    const needleStart = val.indexOf(oldVal);
+    let needleStart = val.indexOf(oldVal);
+    let needleLength = oldVal.length;
+
+    if (opts.index !== undefined && opts.regex) {
+      if (!opts.regex.global) {
+        throw new Error("Regex must be global");
+      }
+
+      const match = [...val.matchAll(opts.regex)][opts.index];
+      if (!match) {
+        return;
+      }
+      needleStart = match.index;
+      needleLength = match[0].length;
+    }
 
     if (needleStart === -1) {
-      // Nothing to replace.
       return;
     }
 
-    // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
       selection: {
         start: this.textarea.selectionStart,
         end: this.textarea.selectionEnd,
       },
-      needle: { start: needleStart, end: needleStart + oldVal.length },
+      needle: { start: needleStart, end: needleStart + needleLength },
       replacement: { start: needleStart, end: needleStart + newVal.length },
     });
 
-    if (opts.index && opts.regex) {
-      if (!opts.regex.global) {
-        throw new Error("Regex must be global");
-      }
-
-      const regex = new RegExp(opts.regex);
-      let match;
-      for (let i = 0; i <= opts.index; i++) {
-        match = regex.exec(val);
-      }
-
-      if (match) {
-        this._insertAt(
-          match.index,
-          match.index + match[0].length,
-          newVal,
-          opts
-        );
-      }
-    } else {
-      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
-    }
+    this._insertAt(needleStart, needleStart + needleLength, newVal, opts);
 
     if (
       (opts.forceFocus || this.textarea === document.activeElement) &&
