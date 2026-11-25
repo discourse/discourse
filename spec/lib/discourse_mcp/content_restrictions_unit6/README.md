@@ -204,3 +204,158 @@ run caught an RSpec/ExpectActual style offense; both were corrected. No tests
 were run against the core database, no migration was run, and no service was
 started/stopped. HEAD remained `6bb68077df8`; concurrent frontend work in the
 shared worktree was not edited by this oracle job.
+
+
+## Review round 2: accepted findings, 2026-11-25
+
+This section supersedes the original oracle's open mixed-input precedence and
+config-audit decisions above. The historical seed/baseline receipts remain above;
+the current results below concern the four accepted review findings for
+`cc9cbf5b31c..385046637ba`. Actual execution HEAD was
+**`b031cd231c97a29d944f83a63358773dae608c78`**, unchanged by this task.
+Only `review2_spec.rb` (new) and this README were edited by this task.
+
+The new file adds **24 request examples: 22 regression REDs and 2 GREEN controls**.
+The final post-lint seed **68325** run has **56 examples / 22 expected failures /
+0 pending / 0 errors outside examples**: all **32 pre-existing unit 6 examples
+pass**, including legitimate PUTs, unknown-name refusals, existing payloads,
+authorization, consent, and deletion controls. Every regression failure is an
+RSpec expectation failure for the stated symptom, not a fixture/parser error.
+Top-level failure aggregation allows both create/replace and preview/active
+phases to execute even after an earlier failed expectation.
+
+### New example names and observed signatures
+
+| Exact example name (all in `review2_spec.rb`) | Observed result at HEAD |
+| --- | --- |
+| [cr-u6] applies allow synonym names to topics carrying the canonical tag | PUT 200; policy-visible IDs are `[]`, expected `[114620003]` (canonical-tag topic). |
+| [cr-u6] refuses allow null tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses allow scalar tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses allow object tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses allow mixed names and ids tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] applies deny synonym names to topics carrying the canonical tag | PUT 200; policy-visible IDs are `[114620003, 114620004]`, expected `[114620004]` (only the untagged topic). |
+| [cr-u6] refuses deny null tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses deny scalar tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses deny object tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] refuses deny mixed names and ids tag input on create and replace without storage or logs | Both create and replace return 200 instead of 400, omit errors, change stored row attributes and append an update log. Both named refusal aggregations executed. |
+| [cr-u6] controls valid names empty arrays numeric ids and unknown or non-string scalar names | GREEN: legitimate name arrays (case-insensitive, duplicate names), empty name arrays, numeric-ID saves, and refusal of mixed known/unknown names, nonempty object, number and boolean on both sides. |
+| [cr-u6] logs a new forum rule's normalized stored config | PUT 200 and stored normalized IDs pass; audit `new_value` is nil instead of the stored config. |
+| [cr-u6] logs previous and new stored configs when a forum rule is relaxed | Both PUTs return 200; replacement config and one new log pass. Both audit `previous_value` and `new_value` are nil instead of the old/new stored configs; zero newly disabled IDs passes. |
+| [cr-u6] logs the removed stored config when a forum rule is deleted | PUT 200, DELETE 204, row removal and delete-log actor/type pass; audit `previous_value` is nil instead of removed config. |
+| [cr-u6] reports revoked-scope primitives as disabled rather than restricted for private_messages | Preview `disables`/`newly_disables` and active `disables` omit all five scoped exposed IDs; preview and active `restricts` incorrectly include `tool:u6r2_filtered_write` and `prompt:u6r2_multi`. |
+| [cr-u6] marks revoked-scope primitives restricted in capabilities under private_messages | HTTP 200; all eight scoped fixtures report `restricted: false`, expected true. Exposure flags and the ordinary profile-only `u6_none` control pass. |
+| [cr-u6] marks revoked-scope primitives restricted in access under private_messages | HTTP 200; all eight scoped fixtures report `restricted: false`, expected true. Exposure flags and the ordinary profile-only `u6_none` control pass. |
+| [cr-u6] counts revoked-scope primitives as blocked and removes them from the private_messages catalog | HTTP 200; blocked is 6, expected 11; catalog tools/resources/prompts is 6/3/1, expected 4/1/0. |
+| [cr-u6] reports revoked-scope primitives as disabled rather than restricted for u6:review2_offline | Preview `disables`/`newly_disables` and active `disables` omit `tool:u6r2_none_read` and `resource_template:u6r2_none_write`; active newly-disables empty and restricts empty pass. |
+| [cr-u6] marks revoked-scope primitives restricted in capabilities under u6:review2_offline | HTTP 200; `u6r2_none_read`, `u6r2_none_write`, and emergency-blocked `u6r2_emergency` report `restricted: false`, expected true; other scoped entries and ordinary `u6_none` control pass. |
+| [cr-u6] marks revoked-scope primitives restricted in access under u6:review2_offline | HTTP 200; `u6r2_none_read`, `u6r2_none_write`, and emergency-blocked `u6r2_emergency` report `restricted: false`, expected true; other scoped entries and ordinary `u6_none` control pass. |
+| [cr-u6] counts revoked-scope primitives as blocked and removes them from the u6:review2_offline catalog | HTTP 200; blocked is 13, expected 15; catalog tools/resources/prompts is 2/1/0, expected 1/0/0. |
+| [cr-u6] logs exactly newly disabled ids including revoked scopes and respects an existing orphan | PUT 200; update log contains only six declaration-blocked IDs, missing all five scoped exposed IDs. Subsequent PUT with an existing orphan correctly logs no newly disabled IDs. |
+| [cr-u6] controls scoped primitives with no rule a forum-only rule and after PM removal | GREEN: no-rule, forum-only, and PM removal states preserve false restricted flags for all eight scoped fixtures in both payloads and the expected catalog/blocked counts. |
+
+### Decisions and reasons
+
+- **Synonym contract:** save through PUT, then observe the loaded stored policy's
+  `scope_topics` result for an actual canonical-tag topic and an untagged topic.
+  This is the promised restriction's effect. It leaves canonicalization at save
+  time versus synonym-aware evaluation free; no exact stored synonym ID is
+  required. Separate allow/deny cases prevent a blanket allow/deny workaround.
+  Uppercase synonym input also retains case-insensitive lookup coverage.
+- **Invalid input:** either side must reject JSON null, a valid name sent as a
+  scalar, an empty object, and simultaneous valid names/valid IDs. The two mixed
+  representations identify different tags, so ignoring either representation
+  cannot silently satisfy the contract. New-row and replacement requests each
+  require 400 with errors, identical complete row attributes (including actor
+  and timestamps), and unchanged content-rule staff-log IDs. Nonempty objects,
+  numbers, booleans, and a known-plus-unknown array already refuse and remain
+  GREEN controls. Empty arrays and duplicate/case-varied known names remain
+  legitimate saves.
+- **Scope impact:** use the existing registry API with actual
+  `mcp:private-messages:read` and `mcp:private-messages:write` scopes. Five new
+  exposed fixtures cover a content-free read tool, filtered write tool,
+  untouched read resource, content-free write resource template, and a filtered
+  prompt requiring both profile and PM-read. Three more scoped tools are
+  disabled, emergency-blocked, or unavailable. None of their implementations
+  may execute. Expectations are explicit, not computed from the policy gate.
+  A revoked requirement disables even `:none` content and a mixed-scope primitive
+  with another retained scope; otherwise the primitive is unusable despite the
+  admin claiming it is available. Ordinary profile-only `u6_none` stays usable.
+- **Orphan fixture:** an unavailable registered provider kind is used so the
+  orphan also has an existing content-restrictions entry whose independent and
+  marginal impact can be observed. Its stored row is arranged as a fixture
+  because the legitimate PUT contract refuses unavailable kinds. All impact
+  observations are GET responses. The PM rule itself is saved through PUT.
+- **Exposure versus restriction:** capabilities/access must flag all eight scoped
+  fixtures restricted, independent of their admin exposure choices. Only the
+  five exposed, available fixtures enter impact/log lists and overview counts.
+  With these fixtures there are 16 exposed primitives: PM-off must block 11
+  (catalog 4/1/0), and the orphan must block 15 (catalog 1/0/0). A forum-only
+  rule retains PM scopes (catalog 5/3/1); no rule gives catalog 10/4/2. Removing
+  PM-off while retaining forum-only restrictions restores its counts.
+- **Newly disabled audit IDs:** a first PM PUT must log precisely the baseline
+  six declaration-blocked IDs plus all five scoped exposed IDs. With an orphan
+  already active, adding PM-off must log no newly disabled IDs. This distinguishes
+  independent impact from marginal impact and avoids double counting.
+- **Config audit contract:** use the established `UserHistory.previous_value`
+  and `new_value` fields, JSON-decoded rather than compared as formatted strings.
+  These existing staff-audit fields give previous/new direction without a new
+  production field or helper. Creation has no previous value and records the
+  normalized stored config as new; update records both full snapshots; deletion
+  records the removed snapshot as previous. The relaxation changes selected to
+  all, clears both category sides and an allowed tag, removes one denied tag,
+  and retains another. Logging only added/removed IDs, the request's tag names,
+  or newly disabled primitives cannot reconstruct this transition. Actor and
+  rule identity must remain present. JSON key order/whitespace are unconstrained.
+
+### Fixture range and weaker implementations
+
+Reserved range: **114_620_000..114_620_999**. Before writing the file, a recursive
+filesystem scan of **2,739 Ruby/JSON files under `spec/`**, including ignored
+paths and underscored/plain decimal literals, found no literal in that range.
+This covers the unit suites and their support files; the existing unit 2
+computed ID bases were also read (91/92/93/94 million). Used IDs in this file:
+tags 114_620_001..002, 011..012, 021, 031..035; topics 003..004; categories
+041..043. Existing unit 6 uses its separate 114_600_000..114_609_999 range.
+
+The observed HEAD failures reject the current weaker behaviors directly:
+lookup of the alias row alone, `Array(...)` coercion of null/scalars/empty
+objects, overwriting IDs with names, declaration-only impact, unconditional
+`:none` exemption despite revoked scopes, and logs containing only rule/disabled
+IDs. The fixtures additionally discriminate against blanket rejection of names,
+rejecting valid empty arrays, accepting unknown names alongside a known one,
+blanket disabling all scopes under any rule, requiring every required scope to
+be revoked instead of any one, including non-exposed records in counts, omitting restricted entries from the
+capabilities/access payloads, and logging total rather than marginal impact. Those additional alternatives were
+checked against the assertions and controls, not installed as temporary
+production mutations; the edit boundary forbids that experiment.
+
+### Receipts and limits
+
+```sh
+hc run --bg --name cr-u6-review2-final --cwd "$PWD" \
+  'PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:$PATH \
+  LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit6 \
+  --seed 68325 --format documentation \
+  --format json --out /tmp/cr-u6-review2-68325.json'
+```
+
+Final JSON receipt: `/tmp/cr-u6-review2-68325.json`. Seed 68324 had the same 56/22 result before the final payload-presence
+assertion; its receipt remains `/tmp/cr-u6-review2-68324.json`. Earlier seeds
+68322/68323 are calibration receipts only: the first found a provider-prefix fixture error
+and an empty-object coercion mistakenly included among controls; the final run
+also uses the verified hyphenated PM scope names. These were fixture corrections,
+not changes to production behavior.
+
+Targeted `bin/lint --fix --verbose` passed RuboCop (one file, no offenses) and
+Syntax Tree under repo Ruby 4.0.7 / Bundler 4.0.23. The first two lint launches
+failed to locate pnpm; the successful launch supplied its installed directory
+`/Users/saquetim/.local/share/mise/installs/pnpm/10.28.0` on PATH, alongside Node
+24.14.0 and Ruby. No commit/stash/checkout/reset/amend/push, migration, core DB
+access, or service start/stop was performed.
+
+All four requested findings are pinned at request/public-policy/audit boundaries.
+The unavailable orphan row is fixture setup rather than an impossible PUT.
+No implementation fix or GREEN-after-fix claim is made. Frontend rendering,
+concurrency, large-config audit truncation and logger-failure atomicity are not
+established by these focused requests. No requested behavior was left unpinned.
