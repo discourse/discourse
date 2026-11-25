@@ -18,7 +18,10 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     styleguide's group nav pills example still renders the old one. Seven theme and plugin
     stylesheets restyle `.select-kit.combo-box.group-dropdown`, and one customer plugin records
     analytics on clicks on its `.select-kit-row`, which needs a customer port.
-  - ☐ Composer translation selector.
+  - ☑ Composer translation selector (`components/composer-container.gjs`). A plain `DSelect`
+    at the call site, with no recipe. It is required, because emptying it blanked the typed
+    translation; the old control's "Select translation" row did the same. The system specs
+    still drive the old control, since they run with the new controls off.
   - ☐ Sidebar edit filter.
 - ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
   category and tag admin dropdowns, bulk-select bookmarks, and the admin "New bot" button

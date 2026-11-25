@@ -3833,6 +3833,7 @@ en:
       translations:
         title: "Translating post"
         select: "Select translation"
+        language: "Translation language"
         save: "Save translation"
         original_content: "Original post"
         translation_preview: "Translation preview"

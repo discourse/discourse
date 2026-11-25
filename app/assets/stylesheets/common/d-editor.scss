@@ -451,6 +451,18 @@
   }
 
   .translation-selector-dropdown {
+    &.d-select {
+      flex-shrink: 0;
+      width: auto;
+      font-size: var(--font-down-1);
+      background: transparent;
+      border-color: var(--primary-low-mid);
+
+      &:hover {
+        background: var(--primary-low);
+      }
+    }
+
     .select-kit-header {
       --d-button-default-bg-color: transparent;
       --d-button-default-bg-color--hover: var(--primary-low);

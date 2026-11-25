@@ -41,6 +41,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import DSelect from "discourse/ui-kit/select/d-select";
 import DSelectCategory from "discourse/ui-kit/select/recipes/categories/d-select-category";
 import DSelectTag from "discourse/ui-kit/select/recipes/tags/d-select-tag";
 import { i18n } from "discourse-i18n";
@@ -369,22 +370,43 @@ export default class ComposerContainer extends Component {
                 <ComposerActionTitle @model={{this.composer.model}} />
 
                 {{#if this.composer.showTranslationSelector}}
-                  <DropdownSelectBox
-                    class="translation-selector-dropdown btn-small"
-                    @content={{this.availableContentLocalizationLocales}}
-                    @nameProperty="name"
-                    @onChange={{this.updateSelectedTranslationLocale}}
-                    @options={{hash
-                      icon="language"
-                      showCaret=true
-                      filterable=true
-                      disabled=this.composer.loading
-                      placement="bottom-start"
-                      translatedNone=(i18n "composer.translations.select")
-                    }}
-                    @value={{this.composer.selectedTranslationLocale}}
-                    @valueProperty="value"
-                  />
+                  {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+                  {{#if this.siteSettings.enable_new_select_controls}}
+                    <DSelect
+                      class="translation-selector-dropdown"
+                      @disabled={{this.composer.loading}}
+                      @icon="language"
+                      @labelField="name"
+                      @onChange={{this.updateSelectedTranslationLocale}}
+                      @options={{this.availableContentLocalizationLocales}}
+                      @placement="bottom-start"
+                      @required={{true}}
+                      @texts={{hash
+                        ariaLabel=(i18n "composer.translations.language")
+                        placeholder=(i18n "composer.translations.select")
+                      }}
+                      @value={{this.composer.selectedTranslationLocale}}
+                      @valueField="value"
+                      @variant="button"
+                    />
+                  {{else}}
+                    <DropdownSelectBox
+                      class="translation-selector-dropdown btn-small"
+                      @content={{this.availableContentLocalizationLocales}}
+                      @nameProperty="name"
+                      @onChange={{this.updateSelectedTranslationLocale}}
+                      @options={{hash
+                        icon="language"
+                        showCaret=true
+                        filterable=true
+                        disabled=this.composer.loading
+                        placement="bottom-start"
+                        translatedNone=(i18n "composer.translations.select")
+                      }}
+                      @value={{this.composer.selectedTranslationLocale}}
+                      @valueProperty="value"
+                    />
+                  {{/if}}
                 {{/if}}
 
                 <PluginOutlet
