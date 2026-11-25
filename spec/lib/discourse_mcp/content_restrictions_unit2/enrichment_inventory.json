@@ -1,0 +1,2922 @@
+{
+  "version": 1,
+  "scope": "Core and in-repo plugin MCP writes, regardless of current policy blocking. Paths describe conditional reachability, not proof a job ran. Cycles are intentional (bot/workflow replies are ordinary posts). No changes to production code.",
+  "operations": [
+    {
+      "tool": "discourse_create_topic",
+      "trigger": "Submit via NewPostManager; immediate creation or stored review queue payload",
+      "raw": "Agent raw, title and effective topic context",
+      "paths": [
+        "post_create",
+        "queued_approve"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1396,
+          "source": "\"discourse_create_topic\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 99,
+          "source": "class CreateTopic"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_post",
+      "trigger": "Submit via NewPostManager; immediate creation or stored review queue payload",
+      "raw": "Agent raw, title and effective topic context",
+      "paths": [
+        "post_create",
+        "queued_approve"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1437,
+          "source": "\"discourse_create_post\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 156,
+          "source": "class ReplyTopic"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_private_message",
+      "trigger": "Submit via NewPostManager; immediate creation or stored review queue payload",
+      "raw": "Agent raw, title and effective topic context",
+      "paths": [
+        "post_create",
+        "queued_approve"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1651,
+          "source": "\"discourse_create_private_message\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/private_messages.rb",
+          "line": 230,
+          "source": "class CreatePrivateMessage"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_reply_private_message",
+      "trigger": "Submit via NewPostManager; immediate creation or stored review queue payload",
+      "raw": "Agent raw, title and effective topic context",
+      "paths": [
+        "post_create",
+        "queued_approve"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1707,
+          "source": "\"discourse_reply_private_message\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/private_messages.rb",
+          "line": 294,
+          "source": "class ReplyPrivateMessage"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_post",
+      "trigger": "PostRevisor raw update",
+      "raw": "Submitted replacement raw, plus stored context",
+      "paths": [
+        "revision"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1471,
+          "source": "\"discourse_update_post\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 214,
+          "source": "class EditPost"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_topic",
+      "trigger": "PostRevisor on FIRST post for title/category/tags/featured_link",
+      "raw": "Existing first_post.raw even when no raw argument exists",
+      "paths": [
+        "revision",
+        "upload_security"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1499,
+          "source": "\"discourse_update_topic\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 261,
+          "source": "class UpdateTopic"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_post_set_deleted",
+      "trigger": "deleted:false recovery / deleted:true soft delete or author revision",
+      "raw": "Historical deletion revision raw on user recovery; generated deletion placeholder and hooks on delete",
+      "paths": [
+        "recover",
+        "revision",
+        "bot",
+        "workflow",
+        "post_delete",
+        "link_extract"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1787,
+          "source": "\"discourse_post_set_deleted\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 382,
+          "source": "class SetPostDeleted"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_category",
+      "trigger": "CategoryCreator saves category and definition post",
+      "raw": "Agent description or generated default template",
+      "paths": [
+        "category_create"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 694,
+          "source": "\"discourse_create_category\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/categories.rb",
+          "line": 80,
+          "source": "class CreateCategory"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_category",
+      "trigger": "CategoryUpdater saves category and revises definition",
+      "raw": "Agent description or existing definition raw; category events",
+      "paths": [
+        "category_update"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 742,
+          "source": "\"discourse_update_category\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/categories.rb",
+          "line": 137,
+          "source": "class UpdateCategory"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_delete_category",
+      "trigger": "Trash definition; category destroyed events",
+      "raw": "No raw is cooked by CategoryDestroyer: it trashes the definition and clears category settings.",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 799,
+          "source": "\"discourse_delete_category\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/categories.rb",
+          "line": 168,
+          "source": "class DeleteCategory"
+        },
+        {
+          "file": "lib/category_destroyer.rb",
+          "line": 9,
+          "source": "category.destroy!"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_set_topic_closed",
+      "trigger": "TopicStatusUpdater",
+      "raw": "Generated localized moderator/small-action raw",
+      "paths": [
+        "status"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1939,
+          "source": "\"discourse_set_topic_closed\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 5,
+          "source": "class SetTopicClosed"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_set_topic_pin",
+      "trigger": "TopicStatusUpdater",
+      "raw": "Generated localized moderator/small-action raw",
+      "paths": [
+        "status"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1915,
+          "source": "\"discourse_set_topic_pin\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 47,
+          "source": "class SetTopicPin"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_perform_reviewable_action",
+      "trigger": "Reviewable.perform including approve, restore, unhide, rejection feedback, user moderation",
+      "raw": "Stored queued payload raw/cook_method; stored deletion raw; generated PM raw",
+      "paths": [
+        "reviewable_action",
+        "reviewable_feedback"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2191,
+          "source": "\"discourse_perform_reviewable_action\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/moderation.rb",
+          "line": 530,
+          "source": "class PerformReviewableAction"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_user",
+      "trigger": "UserUpdater profile save",
+      "raw": "Submitted bio_raw OR stored bio_raw on version refresh; external background/media URLs",
+      "paths": [
+        "profile",
+        "user_events",
+        "profile_rebake"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1554,
+          "source": "\"discourse_update_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 622,
+          "source": "class UpdateUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_user",
+      "trigger": "UserCreator registers account; welcome/group/user_created hooks",
+      "raw": "Generated welcome PM templates and configured automation/workflow raw",
+      "paths": [
+        "system_message",
+        "user_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3300,
+          "source": "\"discourse_create_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 114,
+          "source": "class CreateUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_manage_user_activation",
+      "trigger": "UserActivator/approval path; user update hooks",
+      "raw": "Generated activation/welcome notices; configured graph/script raw",
+      "paths": [
+        "user_events",
+        "system_message"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3364,
+          "source": "\"discourse_manage_user_activation\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 160,
+          "source": "class ManageUserActivation"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_group",
+      "trigger": "Group save and membership setup",
+      "raw": "Submitted OR existing group.bio_raw on every save",
+      "paths": [
+        "group_bio",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2986,
+          "source": "\"discourse_create_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 357,
+          "source": "class CreateGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_group",
+      "trigger": "Group save and membership setup",
+      "raw": "Submitted OR existing group.bio_raw on every save",
+      "paths": [
+        "group_bio",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3025,
+          "source": "\"discourse_update_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 410,
+          "source": "class UpdateGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_group",
+      "trigger": "Name changes queue UpdateGroupMentions",
+      "raw": "Existing raw of ALL matching posts, including unrelated/restricted topics",
+      "paths": [
+        "group_rename"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3025,
+          "source": "\"discourse_update_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 410,
+          "source": "class UpdateGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_manage_group_members",
+      "trigger": "Group membership mutation; optional notify_users / owner notice",
+      "raw": "Generated group membership PM body and configured workflow templates",
+      "paths": [
+        "group_notify",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3079,
+          "source": "\"discourse_manage_group_members\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 484,
+          "source": "class ManageGroupMembers"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_invite_group_members",
+      "trigger": "Group membership mutation; optional notify_users / owner notice",
+      "raw": "Generated group membership PM body and configured workflow templates",
+      "paths": [
+        "group_notify",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3106,
+          "source": "\"discourse_invite_group_members\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 537,
+          "source": "class InviteGroupMembers"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_manage_group_owners",
+      "trigger": "Group membership mutation; optional notify_users / owner notice",
+      "raw": "Generated group membership PM body and configured workflow templates",
+      "paths": [
+        "group_notify",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3138,
+          "source": "\"discourse_manage_group_owners\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 579,
+          "source": "class ManageGroupOwners"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_manage_group_membership",
+      "trigger": "request creates PM; join/leave emit membership events",
+      "raw": "Agent reason OR configured event-driven text",
+      "paths": [
+        "membership_request",
+        "membership_events"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3164,
+          "source": "\"discourse_manage_group_membership\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 620,
+          "source": "class ManageGroupMembership"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_handle_group_membership_request",
+      "trigger": "approve replies to stored request PM; deny removes request",
+      "raw": "Localized acceptance body; group name interpolated",
+      "paths": [
+        "membership_accept"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3191,
+          "source": "\"discourse_handle_group_membership_request\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 673,
+          "source": "class HandleGroupMembershipRequest"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_delete_group",
+      "trigger": "Group destroy / group_destroyed hook",
+      "raw": "No direct raw cook; existing cooked group mentions are not recooked by this tool",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 3053,
+          "source": "\"discourse_delete_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/groups.rb",
+          "line": 452,
+          "source": "class DeleteGroup"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_silence_user",
+      "trigger": "UserSilencer",
+      "raw": "Generated system PM raw with agent reason/message where supplied",
+      "paths": [
+        "silence"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2005,
+          "source": "\"discourse_#{operation}_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/user_moderation.rb",
+          "line": 151,
+          "source": "class SilenceUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_unsilence_user",
+      "trigger": "UserSilencer",
+      "raw": "Generated system PM raw with agent reason/message where supplied",
+      "paths": [
+        "silence"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2005,
+          "source": "\"discourse_#{operation}_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/user_moderation.rb",
+          "line": 167,
+          "source": "class UnsilenceUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_suspend_user",
+      "trigger": "UserSuspender / moderation events",
+      "raw": "No direct Markdown cook; message/reason email and configured workflow raw",
+      "paths": [
+        "suspend"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2005,
+          "source": "\"discourse_#{operation}_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/user_moderation.rb",
+          "line": 119,
+          "source": "class SuspendUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_unsuspend_user",
+      "trigger": "UserSuspender / moderation events",
+      "raw": "No direct Markdown cook; message/reason email and configured workflow raw",
+      "paths": [
+        "suspend"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2005,
+          "source": "\"discourse_#{operation}_user\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/user_moderation.rb",
+          "line": 135,
+          "source": "class UnsuspendUser"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_invite_to_private_message",
+      "trigger": "Topic invite user/group/email",
+      "raw": "Generated participant/group-invitation small-action raw; email invite custom_message is sent as invitation content, not cooked as post raw.",
+      "paths": [
+        "post_create"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1740,
+          "source": "\"discourse_invite_to_private_message\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/private_messages.rb",
+          "line": 336,
+          "source": "class InviteToPrivateMessage"
+        },
+        {
+          "file": "app/models/topic.rb",
+          "line": 2370,
+          "source": "add_small_action(invited_by, \"invited_user\", target_user.username) if !user_in_allowed_group"
+        },
+        {
+          "file": "app/models/topic.rb",
+          "line": 1371,
+          "source": "add_small_action(user, \"invited_group\", group.name)"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_save_draft",
+      "trigger": "Draft.set / backup_draft branches",
+      "raw": "Draft reply indented into generated PM raw; existing backup post raw replaced",
+      "paths": [
+        "draft_backup"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1801,
+          "source": "\"discourse_save_draft\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/drafts.rb",
+          "line": 91,
+          "source": "class SaveDraft"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_delete_draft",
+      "trigger": "Draft.clear",
+      "raw": "No raw is cooked or reprocessed",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1853,
+          "source": "\"discourse_delete_draft\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/drafts.rb",
+          "line": 160,
+          "source": "class DeleteDraft"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_user_status_set",
+      "trigger": "UserStatus set/clear",
+      "raw": "Plain status text/emoji, no markdown raw is cooked",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1877,
+          "source": "\"discourse_user_status_set\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 717,
+          "source": "class SetUserStatus"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_upload_file",
+      "trigger": "Upload controller / UploadCreator",
+      "raw": "No Markdown raw; submitted/downloaded bytes and metadata",
+      "paths": [
+        "upload"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 1614,
+          "source": "\"discourse_upload_file\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/uploads.rb",
+          "line": 8,
+          "source": "class UploadFile"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_tag_group",
+      "trigger": "Tag-group creator/updater/destroyer; optional tag creation event",
+      "raw": "No direct Markdown cook; tag_created can run workflow nodes",
+      "paths": [
+        "workflow"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 637,
+          "source": "\"discourse_create_tag_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/tag_groups.rb",
+          "line": 194,
+          "source": "class CreateTagGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_tag_group",
+      "trigger": "Tag-group creator/updater/destroyer; optional tag creation event",
+      "raw": "No direct Markdown cook; tag_created can run workflow nodes",
+      "paths": [
+        "workflow"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 649,
+          "source": "\"discourse_update_tag_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/tag_groups.rb",
+          "line": 214,
+          "source": "class UpdateTagGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_delete_tag_group",
+      "trigger": "Tag-group creator/updater/destroyer; optional tag creation event",
+      "raw": "No direct Markdown cook; tag_created can run workflow nodes",
+      "paths": [
+        "workflow"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 661,
+          "source": "\"discourse_delete_tag_group\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/tag_groups.rb",
+          "line": 237,
+          "source": "class DeleteTagGroup"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_webhook",
+      "trigger": "Webhook settings mutation, ping queue or stored delivery replay",
+      "raw": "No Markdown raw is cooked; redelivery can send stored serialized post content off-site",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 423,
+          "source": "\"discourse_create_webhook\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/web_hooks.rb",
+          "line": 430,
+          "source": "class CreateWebhook"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_update_webhook",
+      "trigger": "Webhook settings mutation, ping queue or stored delivery replay",
+      "raw": "No Markdown raw is cooked; redelivery can send stored serialized post content off-site",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 439,
+          "source": "\"discourse_update_webhook\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/web_hooks.rb",
+          "line": 458,
+          "source": "class UpdateWebhook"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_delete_webhook",
+      "trigger": "Webhook settings mutation, ping queue or stored delivery replay",
+      "raw": "No Markdown raw is cooked; redelivery can send stored serialized post content off-site",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 466,
+          "source": "\"discourse_delete_webhook\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/web_hooks.rb",
+          "line": 488,
+          "source": "class DeleteWebhook"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_ping_webhook",
+      "trigger": "Webhook settings mutation, ping queue or stored delivery replay",
+      "raw": "No Markdown raw is cooked; redelivery can send stored serialized post content off-site",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 482,
+          "source": "\"discourse_ping_webhook\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/web_hooks.rb",
+          "line": 514,
+          "source": "class PingWebhook"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_redeliver_webhook_event",
+      "trigger": "Webhook settings mutation, ping queue or stored delivery replay",
+      "raw": "No Markdown raw is cooked; redelivery can send stored serialized post content off-site",
+      "paths": [],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 497,
+          "source": "\"discourse_redeliver_webhook_event\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/web_hooks.rb",
+          "line": 551,
+          "source": "class RedeliverWebhookEvent"
+        }
+      ],
+      "cooks_nothing": true
+    },
+    {
+      "tool": "discourse_update_site_setting",
+      "trigger": "Apply setting then native change hooks",
+      "raw": "Stored raw during deferred/version rebakes and configured hook jobs",
+      "paths": [
+        "settings"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2312,
+          "source": "\"discourse_update_site_setting\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/site_settings.rb",
+          "line": 220,
+          "source": "class UpdateSiteSetting"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_set_theme_code",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2353,
+          "source": "\"discourse_set_theme_code\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/themes.rb",
+          "line": 190,
+          "source": "class SetThemeCode"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_create_theme",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2434,
+          "source": "\"discourse_create_theme\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/themes.rb",
+          "line": 291,
+          "source": "class CreateTheme"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_theme",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2476,
+          "source": "\"discourse_update_theme\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/themes.rb",
+          "line": 326,
+          "source": "class UpdateTheme"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_delete_theme",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2581,
+          "source": "\"discourse_delete_theme\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 90,
+          "source": "class DeleteTheme"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_install_theme",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2596,
+          "source": "\"discourse_install_theme\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 115,
+          "source": "class InstallTheme"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_sync_remote_theme",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2631,
+          "source": "\"discourse_sync_remote_theme\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 202,
+          "source": "class SyncRemoteTheme"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_upload_theme_asset",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2660,
+          "source": "\"discourse_upload_theme_asset\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 250,
+          "source": "class UploadThemeAsset"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_theme_setting",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2673,
+          "source": "\"discourse_update_theme_setting\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 280,
+          "source": "class UpdateThemeSetting"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_update_theme_translations",
+      "trigger": "Theme code/settings/assets/translation/import mutation",
+      "raw": "No bounded Markdown input: code and migrations are an exit path",
+      "paths": [
+        "theme_code"
+      ],
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/core_primitives.rb",
+          "line": 2706,
+          "source": "\"discourse_update_theme_translations\","
+        },
+        {
+          "file": "lib/discourse_mcp/tools/theme_management.rb",
+          "line": 334,
+          "source": "class UpdateThemeTranslations"
+        }
+      ]
+    },
+    {
+      "tool": "chat_message_create",
+      "trigger": "Chat::CreateMessage",
+      "raw": "Agent chat message plus live thread context",
+      "paths": [
+        "chat"
+      ],
+      "evidence": [
+        {
+          "file": "plugins/chat/plugin.rb",
+          "line": 788,
+          "source": "\"chat_message_create\","
+        },
+        {
+          "file": "plugins/chat/lib/chat/mcp_tools.rb",
+          "line": 21,
+          "source": "def self.call(arguments:, request_context:)"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_reactions_post_reaction_set",
+      "trigger": "Toggle reaction",
+      "raw": "No direct cook; selected post in event/workflow context",
+      "paths": [
+        "reaction"
+      ],
+      "evidence": [
+        {
+          "file": "plugins/discourse-reactions/plugin.rb",
+          "line": 450,
+          "source": "\"discourse_reactions_post_reaction_set\","
+        },
+        {
+          "file": "plugins/discourse-reactions/lib/discourse_reactions/mcp_tools.rb",
+          "line": 20,
+          "source": "def self.call(arguments:, request_context:)"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_solved_solution_set",
+      "trigger": "Accept/unaccept solution",
+      "raw": "No direct cook; selected answer and previous accepted answer in events",
+      "paths": [
+        "solution"
+      ],
+      "evidence": [
+        {
+          "file": "plugins/discourse-solved/plugin.rb",
+          "line": 494,
+          "source": "\"discourse_solved_solution_set\","
+        },
+        {
+          "file": "plugins/discourse-solved/lib/discourse_solved/mcp_tools.rb",
+          "line": 20,
+          "source": "def self.call(arguments:, request_context:)"
+        }
+      ]
+    },
+    {
+      "tool": "discourse_topic_voting_vote_set",
+      "trigger": "Cast/remove vote",
+      "raw": "No direct cook; selected topic and badge/workflow context",
+      "paths": [
+        "vote"
+      ],
+      "evidence": [
+        {
+          "file": "plugins/discourse-topic-voting/plugin.rb",
+          "line": 266,
+          "source": "\"discourse_topic_voting_vote_set\","
+        },
+        {
+          "file": "plugins/discourse-topic-voting/lib/discourse_topic_voting/mcp_tools.rb",
+          "line": 20,
+          "source": "def self.call(arguments:, request_context:)"
+        }
+      ]
+    }
+  ],
+  "paths": {
+    "post_cook": {
+      "trigger": "Post before_create / raw-dirty before_save",
+      "raw": "New or changed Post.raw, including nonstandard cook methods",
+      "evidence": [
+        {
+          "file": "app/models/post.rb",
+          "line": 998,
+          "source": "self.cooked = cook(raw, topic_id: topic_id) if !new_record?"
+        }
+      ],
+      "downstream": [
+        "render"
+      ]
+    },
+    "render": {
+      "trigger": "Post#cook uses PostAnalyzer and renderer options",
+      "raw": "Post.raw in its topic/user/cook_method context",
+      "evidence": [
+        {
+          "file": "app/models/post.rb",
+          "line": 413,
+          "source": "post_analyzer.cook(raw, options) { |url, onebox, doc| onebox_allowed?(url, onebox, doc) }"
+        }
+      ],
+      "downstream": [
+        "post_hooks"
+      ]
+    },
+    "post_create": {
+      "trigger": "PostCreator.before_create_tasks",
+      "raw": "Submitted raw; also generated system/status/PM raw",
+      "evidence": [
+        {
+          "file": "lib/post_creator.rb",
+          "line": 315,
+          "source": "post.cooked ||= post.cook(post.raw, cooking_options.symbolize_keys)"
+        }
+      ],
+      "downstream": [
+        "render",
+        "post_enqueue",
+        "create_events",
+        "link_extract"
+      ]
+    },
+    "post_enqueue": {
+      "trigger": "PostJobsEnqueuer queues process_post",
+      "raw": "Persisted post raw/cooked after commit",
+      "evidence": [
+        {
+          "file": "lib/post_jobs_enqueuer.rb",
+          "line": 41,
+          "source": "@post.trigger_post_process(new_post: true)"
+        }
+      ],
+      "downstream": [
+        "process_post"
+      ]
+    },
+    "process_post": {
+      "trigger": "Jobs::ProcessPost optionally recooks, always post-processes",
+      "raw": "Live post.raw when cook is set; current post.cooked otherwise",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/process_post.rb",
+          "line": 19,
+          "source": "recooked = post.cook(post.raw, cooking_options.symbolize_keys)"
+        }
+      ],
+      "downstream": [
+        "processor",
+        "hotlinks",
+        "link_extract"
+      ]
+    },
+    "processor": {
+      "trigger": "CookedPostProcessor#post_process",
+      "raw": "Existing cooked document, quote targets, media and onebox URLs",
+      "evidence": [
+        {
+          "file": "lib/cooked_post_processor.rb",
+          "line": 33,
+          "source": "def post_process(new_post: false)"
+        },
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/badge_granted/v1.rb",
+          "line": 15,
+          "source": "event: :user_badge_granted,"
+        }
+      ],
+      "downstream": [
+        "onebox",
+        "quote",
+        "cooked_hooks",
+        "workflow"
+      ]
+    },
+    "onebox": {
+      "trigger": "CookedProcessorMixin oneboxes / inline oneboxes",
+      "raw": "Candidate URLs from cooked raw, including redirects and local handlers",
+      "evidence": [
+        {
+          "file": "lib/cooked_processor_mixin.rb",
+          "line": 9,
+          "source": "Oneboxer.apply("
+        }
+      ],
+      "downstream": [
+        "inline_onebox",
+        "boards_onebox",
+        "ai_onebox",
+        "chat_onebox",
+        "live_onebox"
+      ]
+    },
+    "inline_onebox": {
+      "trigger": "InlineOneboxer local-topic lookup or remote metadata",
+      "raw": "Candidate URL and target title/metadata",
+      "evidence": [
+        {
+          "file": "lib/inline_oneboxer.rb",
+          "line": 45,
+          "source": "if topic = Oneboxer.local_topic(url, route, opts)"
+        }
+      ],
+      "downstream": []
+    },
+    "quote": {
+      "trigger": "CookedPostProcessor compares quoted target",
+      "raw": "Quote attributes plus quoted post raw/cooked",
+      "evidence": [
+        {
+          "file": "lib/cooked_post_processor.rb",
+          "line": 78,
+          "source": "QuoteComparer.new("
+        }
+      ],
+      "downstream": []
+    },
+    "link_extract": {
+      "trigger": "TopicLink extracts URLs; external links enqueue title crawl",
+      "raw": "Post.cooked URLs; labeled links remain eligible",
+      "evidence": [
+        {
+          "file": "app/models/topic_link.rb",
+          "line": 178,
+          "source": "Jobs.enqueue(:crawl_topic_link, topic_link_id: topic_link_id)"
+        }
+      ],
+      "downstream": [
+        "crawl"
+      ]
+    },
+    "crawl": {
+      "trigger": "CrawlTopicLink resolves TopicEmbed or RetrieveTitle redirects",
+      "raw": "Existing TopicEmbed.topic.title or remote HTML title, including redirected local topics",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/crawl_topic_link.rb",
+          "line": 45,
+          "source": "title = RetrieveTitle.crawl(topic_link.url)"
+        }
+      ],
+      "downstream": []
+    },
+    "hotlinks": {
+      "trigger": "PullHotlinkedImages downloads remote media then schedules raw rewrite",
+      "raw": "Existing cooked media URLs; downloaded metadata",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/pull_hotlinked_images.rb",
+          "line": 85,
+          "source": "Jobs.enqueue_in(update_raw_delay, :update_hotlinked_raw, post_id: post.id)"
+        }
+      ],
+      "downstream": [
+        "hotlink_revise"
+      ]
+    },
+    "hotlink_revise": {
+      "trigger": "UpdateHotlinkedRaw replaces URLs and revises",
+      "raw": "Existing Post.raw rewritten with downloaded uploads",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/update_hotlinked_raw.rb",
+          "line": 26,
+          "source": "post.revise("
+        }
+      ],
+      "downstream": [
+        "revision"
+      ]
+    },
+    "revision": {
+      "trigger": "PostRevisor#revise! saves and triggers post processing",
+      "raw": "Merged post raw, which can be unchanged on topic-only edits",
+      "evidence": [
+        {
+          "file": "lib/post_revisor.rb",
+          "line": 883,
+          "source": "def post_process_post"
+        },
+        {
+          "file": "lib/post_revisor.rb",
+          "line": 223,
+          "source": "tags_changed_raw(added: added_tags, removed: removed_tags),"
+        }
+      ],
+      "downstream": [
+        "post_cook",
+        "process_post",
+        "edit_events",
+        "link_extract",
+        "post_create"
+      ],
+      "note": "Category/tag changes may additionally create a moderator/whisper post from localized templates, stored previous/new category/tag names and generated hashtags. This is additional generated raw."
+    },
+    "rebake": {
+      "trigger": "Post#rebake! and version-driven rebake_old",
+      "raw": "Stored Post.raw, current settings/renderer; stored localizations also reprocessed",
+      "evidence": [
+        {
+          "file": "app/models/post.rb",
+          "line": 926,
+          "source": "new_cooked = cook(raw, topic_id:, invalidate_oneboxes:)"
+        }
+      ],
+      "downstream": [
+        "render",
+        "process_post",
+        "localization"
+      ]
+    },
+    "localization": {
+      "trigger": "Post#rebake_localizations! queues process_localized_cooked",
+      "raw": "Stored PostLocalization.raw with recook:true",
+      "evidence": [
+        {
+          "file": "app/models/post.rb",
+          "line": 958,
+          "source": "Jobs.enqueue(:process_localized_cooked, post_localization_id: localization.id, recook: true)"
+        },
+        {
+          "file": "app/jobs/regular/process_localized_cooked.rb",
+          "line": 20,
+          "source": "recooked = post.post_analyzer.cook(post_localization.raw, post.cooking_options || {})"
+        }
+      ],
+      "downstream": [
+        "cooked_hooks"
+      ]
+    },
+    "recover": {
+      "trigger": "PostDestroyer#recover; user recovery restores the deletion revision",
+      "raw": "Stored deletion_revision.modifications[raw][0], not necessarily current raw; staff recovery dispatches plugin hooks",
+      "evidence": [
+        {
+          "file": "lib/post_destroyer.rb",
+          "line": 326,
+          "source": "{ raw: deletion_revision.modifications[\"raw\"][0] },"
+        },
+        {
+          "file": "app/models/post.rb",
+          "line": 309,
+          "source": "def recover!"
+        }
+      ],
+      "downstream": [
+        "revision",
+        "recover_events",
+        "link_extract"
+      ]
+    },
+    "unhide": {
+      "trigger": "ReviewablePost approve_and_unhide / Post#unhide!",
+      "raw": "No unconditional cook: existing raw only if a callback changes it; status/hook fanout still applies",
+      "evidence": [
+        {
+          "file": "app/models/reviewable_post.rb",
+          "line": 113,
+          "source": "post.unhide!"
+        }
+      ],
+      "downstream": [
+        "status"
+      ],
+      "note": "Post#unhide! saves hidden:false; it does not call rebake! or trigger_post_process directly."
+    },
+    "status": {
+      "trigger": "TopicStatusUpdater creates moderator status post",
+      "raw": "Generated localized status raw or empty small-action raw",
+      "evidence": [
+        {
+          "file": "app/services/topic_status_updater.rb",
+          "line": 115,
+          "source": "topic.add_moderator_post(user, message || message_for(status), options_for(status, opts))"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "status_events"
+      ]
+    },
+    "queued_approve": {
+      "trigger": "ReviewableQueuedPost#perform_approve_post",
+      "raw": "Stored payload.raw, title, cooking_options and cook_method; skip_validations:true",
+      "evidence": [
+        {
+          "file": "app/models/reviewable_queued_post.rb",
+          "line": 133,
+          "source": "creator = PostCreator.new(target_created_by, opts)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "reviewable_action": {
+      "trigger": "Reviewable.perform dispatches server action, including revise/reject feedback",
+      "raw": "Stored queued raw or target raw/revision, plus agent-supplied additional_fields and moderation message fields",
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/tools/moderation.rb",
+          "line": 569,
+          "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
+        }
+      ],
+      "downstream": [
+        "queued_approve",
+        "recover",
+        "unhide",
+        "silence",
+        "system_message",
+        "reviewable_events",
+        "reviewable_feedback"
+      ]
+    },
+    "category_create": {
+      "trigger": "Category#create_category_definition",
+      "raw": "Submitted description or generated post_template; post.save!(validate:false)",
+      "evidence": [
+        {
+          "file": "app/models/category.rb",
+          "line": 638,
+          "source": "post = t.posts.build(raw: description || post_template, user: user)"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "category_events"
+      ]
+    },
+    "category_update": {
+      "trigger": "Category#revise_category_definition",
+      "raw": "Category.description passed as definition post raw; stored raw if no raw update but other post callbacks fire",
+      "evidence": [
+        {
+          "file": "app/models/category.rb",
+          "line": 652,
+          "source": "topic.first_post.revise(user, { raw: description }, skip_validations: true)"
+        }
+      ],
+      "downstream": [
+        "revision",
+        "category_events"
+      ]
+    },
+    "profile": {
+      "trigger": "UserProfile before_save cooking",
+      "raw": "Submitted/changed UserProfile.bio_raw on save; unchanged stored bio_raw on later UserProfile.rebake_old / rebake!",
+      "evidence": [
+        {
+          "file": "app/models/user_profile.rb",
+          "line": 169,
+          "source": "PrettyText.cook("
+        }
+      ],
+      "downstream": [
+        "profile_hotlinks",
+        "user_events",
+        "profile_rebake"
+      ]
+    },
+    "profile_hotlinks": {
+      "trigger": "UserProfile#pull_hotlinked_image / delayed download job",
+      "raw": "Stored bio_cooked image URLs, then rewritten bio_raw saved/cooked",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/pull_user_profile_hotlinked_images.rb",
+          "line": 55,
+          "source": "user_profile.save!"
+        }
+      ],
+      "downstream": []
+    },
+    "group_bio": {
+      "trigger": "Group before_save :cook_bio",
+      "raw": "Group.bio_raw on EVERY save, including unchanged existing raw",
+      "evidence": [
+        {
+          "file": "app/models/group.rb",
+          "line": 393,
+          "source": "self.bio_cooked = PrettyText.cook(bio_raw)"
+        }
+      ],
+      "downstream": []
+    },
+    "group_rename": {
+      "trigger": "Group after_save enqueues UpdateGroupMentions",
+      "raw": "Every matching existing post.raw, including restricted topics; save!(validate:false) recooks",
+      "evidence": [
+        {
+          "file": "app/services/group_mentions_updater.rb",
+          "line": 13,
+          "source": "post.save!(validate: false)"
+        }
+      ],
+      "downstream": [
+        "post_cook"
+      ]
+    },
+    "membership_request": {
+      "trigger": "GroupMembershipRequester creates request PM",
+      "raw": "Agent-supplied reason becomes PM.raw",
+      "evidence": [
+        {
+          "file": "lib/group_membership_requester.rb",
+          "line": 37,
+          "source": "raw: reason,"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "membership_events"
+      ]
+    },
+    "membership_accept": {
+      "trigger": "GroupMembershipRequestHandler replies to request PM",
+      "raw": "Localized acceptance template interpolated with stored group name",
+      "evidence": [
+        {
+          "file": "lib/group_membership_request_handler.rb",
+          "line": 50,
+          "source": "PostCreator.new("
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "membership_events"
+      ]
+    },
+    "group_notify": {
+      "trigger": "NotifyUsersAddedToGroup -> Group#notify_added_to_group",
+      "raw": "Localized group-added/owner notice interpolated with stored group name",
+      "evidence": [
+        {
+          "file": "app/jobs/regular/notify_users_added_to_group.rb",
+          "line": 15,
+          "source": ".find_each { |user| group.notify_added_to_group(user, owner: args[:owner] == true) }"
+        }
+      ],
+      "downstream": [
+        "system_message",
+        "membership_events"
+      ]
+    },
+    "silence": {
+      "trigger": "UserSilencer silence / unsilence",
+      "raw": "System message template plus reason/custom message; unsilence template",
+      "evidence": [
+        {
+          "file": "app/services/user_silencer.rb",
+          "line": 64,
+          "source": "SystemMessage.create(@user, message_type, silence_message_params)"
+        }
+      ],
+      "downstream": [
+        "system_message",
+        "user_events"
+      ]
+    },
+    "system_message": {
+      "trigger": "SystemMessage.create builds a PM through PostCreator",
+      "raw": "Localized template body with parameters; may include stored content or agent fields",
+      "evidence": [
+        {
+          "file": "lib/system_message.rb",
+          "line": 74,
+          "source": "creator = PostCreator.new(*post_creator_args)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "suspend": {
+      "trigger": "UserSuspender queues suspension email; event hooks may create content",
+      "raw": "Custom agent message/reason goes to email; no automatic Post.raw in core suspension path",
+      "evidence": [
+        {
+          "file": "app/services/user_suspender.rb",
+          "line": 24,
+          "source": "DiscourseEvent.trigger(:user_unsuspended, user: user, by_user: actor)"
+        }
+      ],
+      "downstream": [
+        "user_events"
+      ]
+    },
+    "draft_backup": {
+      "trigger": "Draft.set -> backup_draft: create, fast update, or PostRevisor",
+      "raw": "Stored/submitted reply indented into PM raw plus sequence/key footer",
+      "evidence": [
+        {
+          "file": "app/models/draft.rb",
+          "line": 299,
+          "source": "cooked: PrettyText.cook(draft_body),"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "revision"
+      ]
+    },
+    "upload": {
+      "trigger": "UploadFile uses upload controller; URL source may follow redirects",
+      "raw": "No Markdown raw; remote bytes, dedup metadata, image transforms/thumbnails",
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/tools/uploads.rb",
+          "line": 60,
+          "source": "UploadsController.create_upload("
+        }
+      ],
+      "downstream": []
+    },
+    "upload_security": {
+      "trigger": "Topic category change enqueues upload security manager",
+      "raw": "Existing posts in the moved topic may have cooked upload URLs rewritten and be rebaked",
+      "evidence": [
+        {
+          "file": "app/models/topic.rb",
+          "line": 1227,
+          "source": "DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: id) }"
+        },
+        {
+          "file": "lib/topic_upload_security_manager.rb",
+          "line": 42,
+          "source": "post.rebake!"
+        }
+      ],
+      "downstream": [
+        "rebake"
+      ]
+    },
+    "settings": {
+      "trigger": "UpdateSiteSetting applies arbitrary permitted setting; change hooks / rebake settings",
+      "raw": "Stored raw affected by renderer settings on later rebake; plugin setting hooks are configurable",
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/tools/site_settings.rb",
+          "line": 283,
+          "source": "SiteSettingSupport.update!("
+        }
+      ],
+      "downstream": [
+        "rebake",
+        "setting_hooks"
+      ]
+    },
+    "theme_code": {
+      "trigger": "Theme writes install/update code and run permitted migrations",
+      "raw": "No bounded raw: arbitrary installed theme code/migrations and plugin callbacks can produce content",
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/tools/themes.rb",
+          "line": 190,
+          "source": "class SetThemeCode"
+        }
+      ],
+      "downstream": [],
+      "note": "Blocked as exit_paths under every active rule; not claimed to cook nothing."
+    },
+    "create_events": {
+      "trigger": "PostCreator emits topic_created and post_created",
+      "raw": "New post raw and complete topic context",
+      "evidence": [
+        {
+          "file": "lib/post_creator.rb",
+          "line": 280,
+          "source": "DiscourseEvent.trigger(:post_created, @post, @opts, @user, continue_on_error: true)"
+        }
+      ],
+      "downstream": [
+        "bot",
+        "automation",
+        "workflow",
+        "poll",
+        "events",
+        "assign",
+        "github",
+        "ai_bot",
+        "ai_translation",
+        "ai_moderation",
+        "ai_embeddings",
+        "ai_summary",
+        "boards",
+        "chat_integration"
+      ]
+    },
+    "edit_events": {
+      "trigger": "PostRevisor emits post_edited",
+      "raw": "Live edited post raw and topic changes; can include existing raw",
+      "evidence": [
+        {
+          "file": "lib/post_revisor.rb",
+          "line": 886,
+          "source": "DiscourseEvent.trigger(:post_edited, @post, topic_changed?, self)"
+        }
+      ],
+      "downstream": [
+        "bot",
+        "automation",
+        "workflow",
+        "events",
+        "assign",
+        "github",
+        "ai_translation",
+        "ai_moderation",
+        "ai_embeddings",
+        "ai_summary",
+        "ai_sentiment",
+        "voting_hooks"
+      ]
+    },
+    "recover_events": {
+      "trigger": "post_recovered dispatch",
+      "raw": "Recovered post and topic raw",
+      "evidence": [
+        {
+          "file": "lib/post_destroyer.rb",
+          "line": 142,
+          "source": "DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)"
+        }
+      ],
+      "downstream": [
+        "bot",
+        "workflow",
+        "events_recover",
+        "assign"
+      ]
+    },
+    "status_events": {
+      "trigger": "topic_status_updated and topic_closed dispatch",
+      "raw": "Topic context / stored first post, generated script text",
+      "evidence": [
+        {
+          "file": "app/services/topic_status_updater.rb",
+          "line": 24,
+          "source": ":topic_status_updated,"
+        }
+      ],
+      "downstream": [
+        "automation",
+        "workflow",
+        "assign",
+        "voting_hooks",
+        "boards"
+      ]
+    },
+    "post_hooks": {
+      "trigger": "Validation and after_post_cook filters",
+      "raw": "Actual raw being rendered, plugin validation inputs and first-post context",
+      "evidence": [
+        {
+          "file": "app/models/post.rb",
+          "line": 387,
+          "source": "def cook(raw, opts = {})"
+        }
+      ],
+      "downstream": [
+        "automation",
+        "poll_validate",
+        "policy_validate",
+        "calendar_validate"
+      ]
+    },
+    "cooked_hooks": {
+      "trigger": "before_post_process_cooked / post_process_cooked",
+      "raw": "Live cooked tree and Post context",
+      "evidence": [
+        {
+          "file": "lib/cooked_post_processor.rb",
+          "line": 49,
+          "source": "DiscourseEvent.trigger(:post_process_cooked, @doc, @post)"
+        }
+      ],
+      "downstream": [
+        "footnote",
+        "local_dates",
+        "affiliate",
+        "github_permalinks",
+        "events_calendar",
+        "policy",
+        "ai_captions",
+        "ai_moderation"
+      ]
+    },
+    "user_events": {
+      "trigger": "user_updated and user_created / moderation events",
+      "raw": "Stored user context; configured automation/workflow bodies",
+      "evidence": [
+        {
+          "file": "app/services/user_updater.rb",
+          "line": 286,
+          "source": "DiscourseEvent.trigger(:user_updated, user, changed_columns(user, user_profile))"
+        }
+      ],
+      "downstream": [
+        "automation",
+        "workflow"
+      ]
+    },
+    "membership_events": {
+      "trigger": "user_added_to_group / removed and group notifications",
+      "raw": "Stored account/group context, configured workflow bodies",
+      "evidence": [
+        {
+          "file": "app/models/group.rb",
+          "line": 937,
+          "source": "DiscourseEvent.trigger(:user_added_to_group, user, self, automatic: automatic)"
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "category_events": {
+      "trigger": "category_created / category_edited hooks",
+      "raw": "Stored category and definition raw; configured script bodies",
+      "evidence": [
+        {
+          "file": "app/models/category.rb",
+          "line": 1230,
+          "source": "DiscourseEvent.trigger(event, self)"
+        }
+      ],
+      "downstream": [
+        "automation"
+      ]
+    },
+    "reviewable_events": {
+      "trigger": "reviewable transitions / created hooks",
+      "raw": "Reviewable payload and generated script bodies",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/reviewable_status_changed/v1.rb",
+          "line": 16,
+          "source": "event: :reviewable_transitioned_to,"
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "setting_hooks": {
+      "trigger": "Plugin site_setting_changed handlers can invalidate or enqueue rebakes",
+      "raw": "Existing raw governed by changed renderer/metadata settings",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/ai_bot/entry_point.rb",
+          "line": 473,
+          "source": "plugin.on(:site_setting_changed) do |name, old_value, new_value|"
+        }
+      ],
+      "downstream": [
+        "rebake"
+      ]
+    },
+    "automation": {
+      "trigger": "Configured post/user/category/tag/close/after_cook automation dispatch",
+      "raw": "Stored automation templates, selected destination posts/topics, triggering post raw",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/event_handlers.rb",
+          "line": 5,
+          "source": "def self.handle_post_created_edited(post, action)"
+        }
+      ],
+      "downstream": [
+        "automation_post",
+        "automation_topic",
+        "automation_pm",
+        "automation_revise",
+        "automation_append",
+        "chat_integration_reference",
+        "automation_responder",
+        "automation_checked",
+        "ai_automation",
+        "random_assign_post"
+      ]
+    },
+    "automation_post": {
+      "trigger": "Automation post script",
+      "raw": "Interpolated stored post template; may reply to a different existing topic",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/post.rb",
+          "line": 65,
+          "source": "post_creator = PostCreator.new(creator, topic_id:, raw: post_raw)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "automation_topic": {
+      "trigger": "Automation topic script",
+      "raw": "Interpolated stored title/raw and configured category/tags",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/topic.rb",
+          "line": 63,
+          "source": "post_creator = PostCreator.new(creator, raw: topic_raw, title:, category: category.id, tags:)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "automation_pm": {
+      "trigger": "Scriptable send_pm / auto responder",
+      "raw": "Stored PM templates or auto responder body with triggering record interpolation",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scriptable.rb",
+          "line": 377,
+          "source": "creator = PostCreator.new(sender_user, pm)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "automation_revise": {
+      "trigger": "Automation remove_upload_markup_from_deleted_posts",
+      "raw": "Stored raw of selected posts, rewritten to remove upload markup",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/remove_upload_markup_from_deleted_posts.rb",
+          "line": 56,
+          "source": "PostRevisor.new(post, topic).revise!("
+        }
+      ],
+      "downstream": [
+        "revision"
+      ]
+    },
+    "automation_append": {
+      "trigger": "Automation after_post_cook append scripts",
+      "raw": "Stored append template and actor text appended to cooked output",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/append_last_edited_by.rb",
+          "line": 26,
+          "source": "PrettyText.cook("
+        }
+      ],
+      "downstream": []
+    },
+    "workflow": {
+      "trigger": "Registered workflow event listener dispatches configured graph",
+      "raw": "Configured node expressions/templates can select other posts and stored raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/plugin_node_registration.rb",
+          "line": 64,
+          "source": "EventListener.handle(current_class, *args, event_name:)"
+        }
+      ],
+      "downstream": [
+        "workflow_post",
+        "workflow_edit",
+        "workflow_pm",
+        "workflow_render",
+        "chat_integration_reference",
+        "workflow_modal"
+      ]
+    },
+    "workflow_post": {
+      "trigger": "Workflow Topic node",
+      "raw": "Node-resolved raw/title and chosen topic/category, possibly unrelated to trigger",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/topic/v1.rb",
+          "line": 323,
+          "source": "post_creator = PostCreator.new(author, **args)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "workflow_edit": {
+      "trigger": "Workflow executor edit_post",
+      "raw": "Resolved raw for arbitrary selected existing post",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/executor/node_execution_context.rb",
+          "line": 424,
+          "source": "if !PostRevisor.new(post).revise!(user, { raw: raw }, opts)"
+        }
+      ],
+      "downstream": [
+        "revision"
+      ]
+    },
+    "workflow_pm": {
+      "trigger": "Workflow SendPersonalMessage node",
+      "raw": "Resolved sender/body and target account/group",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/send_personal_message/v1.rb",
+          "line": 104,
+          "source": "post = PostCreator.new(sender, post_args).create!"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "workflow_render": {
+      "trigger": "Workflow ComposerMessage / Modal nodes",
+      "raw": "Stored/resolved node body rendered with PrettyText",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/composer_message/v1.rb",
+          "line": 55,
+          "source": "body: PrettyText.cook(exec_ctx.get_node_parameter(\"body\", 0).to_s),"
+        }
+      ],
+      "downstream": []
+    },
+    "bot": {
+      "trigger": "Narrative bot event handlers enqueue bot_input",
+      "raw": "Triggering post raw and narrative state; generated replies can quote stored text",
+      "evidence": [
+        {
+          "file": "plugins/discourse-narrative-bot/plugin.rb",
+          "line": 88,
+          "source": "on(:post_created) do |post, options|"
+        },
+        {
+          "file": "plugins/discourse-narrative-bot/plugin.rb",
+          "line": 120,
+          "source": "add_model_callback(PostAction, :after_commit, on: :create) do"
+        }
+      ],
+      "downstream": [
+        "bot_reply"
+      ]
+    },
+    "bot_reply": {
+      "trigger": "Narrative Actions enqueue/create/revise response",
+      "raw": "Generated narrative raw and interpolated stored narrative/post state",
+      "evidence": [
+        {
+          "file": "plugins/discourse-narrative-bot/lib/discourse_narrative_bot/actions.rb",
+          "line": 29,
+          "source": "new_post = PostCreator.create!(discobot_user, default_opts.merge(opts))"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "poll": {
+      "trigger": "Poll post_created schedules open/close jobs",
+      "raw": "Existing poll option data extracted from raw; no separate input raw",
+      "evidence": [
+        {
+          "file": "plugins/poll/plugin.rb",
+          "line": 134,
+          "source": "DiscoursePoll::Poll.schedule_jobs(post)"
+        }
+      ],
+      "downstream": []
+    },
+    "poll_validate": {
+      "trigger": "Poll validation/revision parser",
+      "raw": "Candidate new raw in its topic/user context",
+      "evidence": [
+        {
+          "file": "plugins/poll/lib/poll.rb",
+          "line": 449,
+          "source": "cooked = PrettyText.cook(raw, topic_id: topic_id, user_id: user_id)"
+        }
+      ],
+      "downstream": []
+    },
+    "events": {
+      "trigger": "Post-created/edited event sync parses post.raw",
+      "raw": "Live raw (including unchanged first-post/event raw); event URLs can fetch oneboxes",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/plugin.rb",
+          "line": 485,
+          "source": "sync_event_from_post.call(post)"
+        }
+      ],
+      "downstream": [
+        "events_parser",
+        "events_onebox",
+        "livestream_transcript"
+      ]
+    },
+    "events_parser": {
+      "trigger": "Events::Parser.extract_events / cook_inline",
+      "raw": "Live post.raw; event name/location scalar markdown",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/lib/discourse_events/events/parser.rb",
+          "line": 40,
+          "source": "cooked = PrettyText.cook(raw, topic_id: post.topic_id, user_id: post.user_id)"
+        }
+      ],
+      "downstream": []
+    },
+    "events_onebox": {
+      "trigger": "Event model fetches livestream/recording onebox",
+      "raw": "Stored livestream_url or recording_link parsed from raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/app/models/discourse_events/events/event.rb",
+          "line": 168,
+          "source": "Oneboxer.onebox(url)"
+        }
+      ],
+      "downstream": [
+        "onebox"
+      ]
+    },
+    "events_calendar": {
+      "trigger": "Cooked hook calendar/timezone extraction",
+      "raw": "Stored post.raw recooked, then dates may be aggregated from other topic replies",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/lib/discourse_events/calendar/extractor.rb",
+          "line": 9,
+          "source": "cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)"
+        }
+      ],
+      "downstream": [
+        "calendar_validate"
+      ]
+    },
+    "events_recover": {
+      "trigger": "Recovery calendar extraction and event restoration",
+      "raw": "Recovered post.raw, first post calendar configuration",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/plugin.rb",
+          "line": 666,
+          "source": "DiscourseEvents::Calendar::Extractor.update(post)"
+        }
+      ],
+      "downstream": [
+        "events_calendar"
+      ]
+    },
+    "calendar_validate": {
+      "trigger": "Calendar validation counts dates",
+      "raw": "Candidate post.raw; reads first post custom_fields, without recooking first post here",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/lib/discourse_events/calendar/event_validator.rb",
+          "line": 33,
+          "source": "cooked = PrettyText.cook(post.raw, topic_id: post.topic_id, user_id: post.user_id)"
+        }
+      ],
+      "downstream": []
+    },
+    "assign": {
+      "trigger": "Automatic assignment from raw mentions; notices and small actions",
+      "raw": "Stored mentioned usernames/groups and assignment templates; may enqueue PM notifications",
+      "evidence": [
+        {
+          "file": "plugins/discourse-assign/lib/assigner.rb",
+          "line": 105,
+          "source": "mentions = post.raw_mentions"
+        }
+      ],
+      "downstream": [
+        "assign_small_action",
+        "assign_notice",
+        "assign_reminder"
+      ]
+    },
+    "assign_notice": {
+      "trigger": "Assigner enqueues notification",
+      "raw": "No Markdown cooking in AssignNotification; Notification rows are created; assigned/unassigned events can run workflows",
+      "evidence": [
+        {
+          "file": "plugins/discourse-assign/app/models/assignment.rb",
+          "line": 84,
+          "source": "DiscourseAssign::CreateNotification.call("
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "github": {
+      "trigger": "GitHub linkback handler enqueues crawl/linkback work",
+      "raw": "Post raw/cooked GitHub links and external issue context",
+      "evidence": [
+        {
+          "file": "plugins/discourse-github/plugin.rb",
+          "line": 45,
+          "source": "GithubLinkback.new(post).enqueue"
+        }
+      ],
+      "downstream": []
+    },
+    "github_permalinks": {
+      "trigger": "Before processing GitHub permalink replacements revise raw",
+      "raw": "Stored post raw with external GitHub URLs resolved to permalinks",
+      "evidence": [
+        {
+          "file": "plugins/discourse-github/plugin.rb",
+          "line": 57,
+          "source": "GithubPermalinks.replace_github_non_permalinks(post)"
+        }
+      ],
+      "downstream": [
+        "github_revise"
+      ]
+    },
+    "github_revise": {
+      "trigger": "Delayed replace_github_non_permalinks revises post",
+      "raw": "Existing raw after external permalink replacement",
+      "evidence": [
+        {
+          "file": "plugins/discourse-github/app/jobs/regular/replace_github_non_permalinks.rb",
+          "line": 53,
+          "source": "post.revise(Discourse.system_user, changes, bypass_bump: true)"
+        }
+      ],
+      "downstream": [
+        "revision"
+      ]
+    },
+    "footnote": {
+      "trigger": "Before-cooked footnote hook",
+      "raw": "Cooked footnote anchors rewritten with live post ID",
+      "evidence": [
+        {
+          "file": "plugins/footnote/plugin.rb",
+          "line": 18,
+          "source": "on(:before_post_process_cooked) do |doc, post|"
+        }
+      ],
+      "downstream": []
+    },
+    "local_dates": {
+      "trigger": "Before-cooked local-date hook",
+      "raw": "Cooked local-date attributes persisted to post custom fields",
+      "evidence": [
+        {
+          "file": "plugins/discourse-local-dates/plugin.rb",
+          "line": 24,
+          "source": "on(:before_post_process_cooked) do |doc, post|"
+        }
+      ],
+      "downstream": []
+    },
+    "affiliate": {
+      "trigger": "Cooked affiliate hook",
+      "raw": "Cooked link destinations rewritten using affiliate configuration",
+      "evidence": [
+        {
+          "file": "plugins/discourse-affiliate/plugin.rb",
+          "line": 17,
+          "source": "on(:post_process_cooked) { |doc| AffiliateProcessor.apply_to_doc(doc) }"
+        }
+      ],
+      "downstream": []
+    },
+    "policy": {
+      "trigger": "Cooked policy extraction",
+      "raw": "Cooked policy markup and group references",
+      "evidence": [
+        {
+          "file": "plugins/discourse-policy/plugin.rb",
+          "line": 71,
+          "source": "on(:post_process_cooked) do |doc, post|"
+        }
+      ],
+      "downstream": []
+    },
+    "policy_validate": {
+      "trigger": "Policy post validator recooks candidate raw",
+      "raw": "new_raw, not just changed policy attributes",
+      "evidence": [
+        {
+          "file": "plugins/discourse-policy/lib/post_validator.rb",
+          "line": 13,
+          "source": "new_policies = extract_policies(PrettyText.cook(new_raw, {}))"
+        }
+      ],
+      "downstream": []
+    },
+    "ai_captions": {
+      "trigger": "AI cooked image-caption hook / later caption completion rebake",
+      "raw": "Existing image upload captions and current raw; upload metadata may predate this post",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/plugin.rb",
+          "line": 311,
+          "source": "DiscourseAi::PostImageCaptions.process_cooked("
+        }
+      ],
+      "downstream": [
+        "ai_caption_rebake"
+      ]
+    },
+    "ai_caption_rebake": {
+      "trigger": "Caption completion rebakes posts",
+      "raw": "Existing post.raw using newly generated/reused image captions",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/post_image_captions.rb",
+          "line": 667,
+          "source": "post.rebake!(skip_publish_rebaked_changes: true)"
+        }
+      ],
+      "downstream": [
+        "rebake"
+      ]
+    },
+    "ai_translation": {
+      "trigger": "Post/topic created and edited translate jobs",
+      "raw": "Stored post raw and topic title/excerpt; generated localization raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/translation/entry_point.rb",
+          "line": 7,
+          "source": "plugin.on(:post_created) do |post, opts|"
+        }
+      ],
+      "downstream": [
+        "localization"
+      ]
+    },
+    "ai_moderation": {
+      "trigger": "SpamScanner after creation/edit/cooked",
+      "raw": "Stored raw/cooked and topic context sent for analysis; may flag/create reviewable",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/ai_moderation/entry_point.rb",
+          "line": 14,
+          "source": "DiscourseAi::AiModeration::SpamScanner.after_cooked_post(post)"
+        }
+      ],
+      "downstream": [
+        "reviewable_events"
+      ]
+    },
+    "ai_embeddings": {
+      "trigger": "Embedding event callback queues representation jobs",
+      "raw": "Stored post/topic body represented later",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/embeddings/entry_point.rb",
+          "line": 70,
+          "source": "plugin.on(:post_created, &callback)"
+        }
+      ],
+      "downstream": []
+    },
+    "ai_summary": {
+      "trigger": "Summary invalidation after create/edit; later regenerate",
+      "raw": "Stored topic posts used for generated summary; summary text cooked when serialized",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/summarization/entry_point.rb",
+          "line": 126,
+          "source": "plugin.on(:post_created) do |post|"
+        }
+      ],
+      "downstream": [
+        "ai_summary_cook"
+      ]
+    },
+    "ai_summary_cook": {
+      "trigger": "AiSummary cooked summary output",
+      "raw": "Generated stored summarized_text",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/app/models/ai_summary.rb",
+          "line": 146,
+          "source": "{ summarized_cooked: PrettyText.cook(summarized_text, topic_id: target_id) }"
+        }
+      ],
+      "downstream": []
+    },
+    "ai_sentiment": {
+      "trigger": "Edited post classification jobs",
+      "raw": "Live edited post body used for generated classification",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/sentiment/entry_point.rb",
+          "line": 14,
+          "source": "plugin.on(:post_edited, &sentiment_analysis_cb)"
+        }
+      ],
+      "downstream": []
+    },
+    "ai_bot": {
+      "trigger": "AI post-created/chat-created auto reply scheduling",
+      "raw": "Trigger raw plus surrounding conversation / selected agent context",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/ai_bot/entry_point.rb",
+          "line": 435,
+          "source": "DiscourseAi::AiBot::Playground.schedule_reply("
+        }
+      ],
+      "downstream": [
+        "ai_bot_reply"
+      ]
+    },
+    "ai_bot_reply": {
+      "trigger": "AI Playground generates/streams replies and revisions",
+      "raw": "Generated reply raw, sometimes previously stored conversation raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/ai_bot/playground.rb",
+          "line": 905,
+          "source": "reply_post.cooked = PrettyText.cook(reply)"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "revision"
+      ]
+    },
+    "boards": {
+      "trigger": "Board topic/status/tag/recovery hooks synchronize cards, without revising the topic",
+      "raw": "No raw cooking in TopicSync: copies topic metadata into matching board cards; ConstraintFixer is a separate UI operation.",
+      "evidence": [
+        {
+          "file": "plugins/boards/plugin.rb",
+          "line": 146,
+          "source": "on(:topic_created) do |topic|"
+        },
+        {
+          "file": "plugins/boards/app/services/boards/topic_sync.rb",
+          "line": 85,
+          "source": "execute_sync_changes("
+        }
+      ],
+      "downstream": []
+    },
+    "boards_onebox": {
+      "trigger": "Board onebox renders card notes and hashtags",
+      "raw": "Stored card.notes and generated tag/category hashtag raw, plus topic metadata",
+      "evidence": [
+        {
+          "file": "plugins/boards/lib/boards/onebox_handler.rb",
+          "line": 56,
+          "source": "PrettyText.cook(card.notes),"
+        }
+      ],
+      "downstream": []
+    },
+    "ai_onebox": {
+      "trigger": "Registered AI shared-conversation local onebox",
+      "raw": "Stored shared conversation metadata/content",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/ai_bot/entry_point.rb",
+          "line": 267,
+          "source": "Oneboxer.register_local_handler("
+        }
+      ],
+      "downstream": []
+    },
+    "chat_onebox": {
+      "trigger": "Registered chat local onebox",
+      "raw": "Existing chat message/channel content selected by URL",
+      "evidence": [
+        {
+          "file": "plugins/chat/plugin.rb",
+          "line": 184,
+          "source": "Oneboxer.register_local_handler(\"chat/chat\") do |url, route|"
+        }
+      ],
+      "downstream": []
+    },
+    "live_onebox": {
+      "trigger": "Registered livestream local onebox",
+      "raw": "Existing room description and metadata selected by URL",
+      "evidence": [
+        {
+          "file": "plugins/live/plugin.rb",
+          "line": 140,
+          "source": "Oneboxer.register_local_handler(\"live/page\") do |url, route|"
+        }
+      ],
+      "downstream": []
+    },
+    "voting_hooks": {
+      "trigger": "Vote release/reclaim on topic status/category edit",
+      "raw": "No raw cooking directly; badge/workflow follow-on can generate content",
+      "evidence": [
+        {
+          "file": "plugins/discourse-topic-voting/plugin.rb",
+          "line": 192,
+          "source": "on(:topic_status_updated) do |topic, status, enabled|"
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "reaction": {
+      "trigger": "Reaction toggle service publishes post_reaction_toggled",
+      "raw": "No direct raw; selected existing post context can enter configured workflow",
+      "evidence": [
+        {
+          "file": "plugins/discourse-reactions/app/services/discourse_reactions/post_reaction/toggle.rb",
+          "line": 50,
+          "source": "reaction_manager.toggle!"
+        },
+        {
+          "file": "plugins/discourse-reactions/app/services/discourse_reactions/reaction_manager.rb",
+          "line": 128,
+          "source": "PostActionCreator.like(@user, @post, silent)"
+        }
+      ],
+      "downstream": [
+        "workflow",
+        "bot"
+      ]
+    },
+    "solution": {
+      "trigger": "Accept/unaccept updates solution and emits accepted_solution/unaccepted_solution",
+      "raw": "No direct raw; complete existing post reaches webhook/workflow handlers",
+      "evidence": [
+        {
+          "file": "plugins/discourse-solved/app/services/discourse_solved/accept_answer.rb",
+          "line": 189,
+          "source": "DiscourseEvent.trigger(:accepted_solution, post, acting_user: guardian.user)"
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "vote": {
+      "trigger": "Vote cast/remove emits vote event and queues badge backfill",
+      "raw": "No direct raw; existing topic context in workflow; badges may trigger workflow",
+      "evidence": [
+        {
+          "file": "plugins/discourse-topic-voting/app/services/discourse_topic_voting/votes/cast.rb",
+          "line": 78,
+          "source": "DiscourseEvent.trigger(:topic_voting_vote_created, vote)"
+        }
+      ],
+      "downstream": [
+        "workflow"
+      ]
+    },
+    "chat": {
+      "trigger": "Chat::CreateMessage -> message cook/process and hooks",
+      "raw": "Agent message, thread context and stored chat message raw on later rebake",
+      "evidence": [
+        {
+          "file": "plugins/chat/app/models/chat/message.rb",
+          "line": 352,
+          "source": "cooked = PrettyText.cook(message_to_cook, markdown_options(opts))"
+        }
+      ],
+      "downstream": [
+        "chat_process",
+        "workflow",
+        "ai_bot"
+      ]
+    },
+    "chat_process": {
+      "trigger": "Chat message Oneboxer path",
+      "raw": "Cooked chat URLs and remote/local onebox metadata",
+      "evidence": [
+        {
+          "file": "plugins/chat/app/models/chat/message.rb",
+          "line": 356,
+          "source": "Oneboxer.apply(cooked) do |url|"
+        }
+      ],
+      "downstream": [
+        "onebox"
+      ]
+    },
+    "assign_small_action": {
+      "trigger": "Assigner add_small_action_post",
+      "raw": "Generated assignment note/whisper raw and stored assignee metadata",
+      "evidence": [
+        {
+          "file": "plugins/discourse-assign/lib/assigner.rb",
+          "line": 538,
+          "source": "def add_small_action_post(action_code, assign_to, text)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "profile_rebake": {
+      "trigger": "UserProfile.rebake_old -> rebake!",
+      "raw": "Stored UserProfile.bio_raw under current renderer settings",
+      "evidence": [
+        {
+          "file": "app/models/user_profile.rb",
+          "line": 99,
+          "source": "update_columns(bio_cooked: cooked, bio_cooked_version: BAKED_VERSION)"
+        }
+      ],
+      "downstream": []
+    },
+    "reviewable_feedback": {
+      "trigger": "ReviewableQueuedPost revise_and_reject_post sends SystemMessage",
+      "raw": "Stored payload.raw interpolated as original_post alongside agent feedback/reason; topic title and URL are also interpolated",
+      "evidence": [
+        {
+          "file": "app/models/reviewable_queued_post.rb",
+          "line": 226,
+          "source": "original_post: payload[\"raw\"],"
+        }
+      ],
+      "downstream": [
+        "system_message"
+      ]
+    },
+    "post_delete": {
+      "trigger": "PostDestroyer user deletion overwrites raw via revision where applicable",
+      "raw": "Generated deletion placeholder; subsequent recovery may restore the previous raw; destruction events dispatch bot/workflow handlers",
+      "evidence": [
+        {
+          "file": "lib/post_destroyer.rb",
+          "line": 289,
+          "source": "{ raw: I18n.t(key) },"
+        }
+      ],
+      "downstream": [
+        "revision",
+        "bot",
+        "workflow"
+      ]
+    },
+    "chat_integration": {
+      "trigger": "Post-created hook queues notify_chats; workflow/automation can send reference posts",
+      "raw": "Post raw/cooked exported to configured provider; synthesized reference raw may render hashtags and context",
+      "evidence": [
+        {
+          "file": "plugins/discourse-chat-integration/plugin.rb",
+          "line": 50,
+          "source": ":notify_chats,"
+        }
+      ],
+      "downstream": [
+        "chat_integration_reference"
+      ]
+    },
+    "chat_integration_reference": {
+      "trigger": "Chat integration reference-post excerpt rendering",
+      "raw": "Synthesized stored-template/raw context, tag hashtags or agent/script raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-chat-integration/lib/discourse_chat_integration/chat_integration_reference_post.rb",
+          "line": 65,
+          "source": "cooked = PrettyText.cook(raw, { user_id: user.id })"
+        }
+      ],
+      "downstream": []
+    },
+    "automation_responder": {
+      "trigger": "Automation auto_responder creates reply",
+      "raw": "Stored reply template interpolated with triggering post context",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/auto_responder.rb",
+          "line": 76,
+          "source": "PostCreator.new("
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "automation_checked": {
+      "trigger": "Automation append_last_checked_by after-cook rendering",
+      "raw": "Stored last-checked template and actor data appended to cooked output",
+      "evidence": [
+        {
+          "file": "plugins/automation/lib/discourse_automation/scripts/append_last_checked_by.rb",
+          "line": 31,
+          "source": "PrettyText.cook("
+        }
+      ],
+      "downstream": []
+    },
+    "ai_automation": {
+      "trigger": "Configured AI automation triage/tagger/report scripts can write content",
+      "raw": "Stored selected topic raw or generated report/triage result and templates; configured destinations may differ from triggering topic",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/automation/llm_tagger.rb",
+          "line": 192,
+          "source": "first_post.revise("
+        }
+      ],
+      "downstream": [
+        "revision",
+        "ai_automation_report",
+        "ai_automation_triage"
+      ]
+    },
+    "ai_automation_report": {
+      "trigger": "AI automation report runner posts/cooks report",
+      "raw": "Generated result plus stored report template and selected topic context",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/automation/report_runner.rb",
+          "line": 235,
+          "source": "cooked = PrettyText.cook(raw, sanitize: false)"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "ai_automation_triage": {
+      "trigger": "AI automation triage creates posts or revises first post",
+      "raw": "Generated or configured message/raw; existing selected first-post raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-ai/lib/automation/llm_triage.rb",
+          "line": 219,
+          "source": "first_post.revise("
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "revision"
+      ]
+    },
+    "workflow_modal": {
+      "trigger": "Workflow Modal node renders Markdown body",
+      "raw": "Stored/resolved modal node body",
+      "evidence": [
+        {
+          "file": "plugins/discourse-workflows/lib/discourse_workflows/nodes/modal/v1.rb",
+          "line": 121,
+          "source": "cooked_body: markdown && body.present? ? PrettyText.cook(body) : nil,"
+        }
+      ],
+      "downstream": []
+    },
+    "livestream_transcript": {
+      "trigger": "Scheduled PublishLivestreamChatTranscript after event lifecycle",
+      "raw": "Existing event post raw plus chat transcript derived from live chat messages",
+      "evidence": [
+        {
+          "file": "plugins/discourse-events/app/services/discourse_events/livestream/publish_chat_transcript.rb",
+          "line": 155,
+          "source": "PostRevisor.new(event.post).revise!("
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "revision"
+      ]
+    },
+    "assign_reminder": {
+      "trigger": "Pending assignment reminder scheduled later",
+      "raw": "Generated PM template containing links/titles of other assigned topics visible to reminder recipient",
+      "evidence": [
+        {
+          "file": "plugins/discourse-assign/lib/pending_assigns_reminder.rb",
+          "line": 21,
+          "source": "raw: reminder_body(user, assigned_topics_count, newest_topics, oldest_topics),"
+        }
+      ],
+      "downstream": [
+        "post_create"
+      ]
+    },
+    "random_assign_post": {
+      "trigger": "Configured assignment automation creates a post template before assigning",
+      "raw": "Stored automation post_template, not triggering post raw",
+      "evidence": [
+        {
+          "file": "plugins/discourse-assign/lib/random_assign_utils.rb",
+          "line": 103,
+          "source": "raw: post_template,"
+        }
+      ],
+      "downstream": [
+        "post_create",
+        "assign"
+      ]
+    }
+  },
+  "unresolved": [
+    "Configured automation/workflow destinations and templates are runtime data, so their exact raw/targets cannot be enumerated statically. Paths identify those open boundaries; no MCP write tool remains unclassified.",
+    "The canaries exercise immediate output and one explicit crawl. They do not drain all conditional plugin jobs or prove safety of arbitrary configured automation/theme code."
+  ],
+  "excluded_candidates": [
+    {
+      "candidate": "Blog topic_created -> StartOnBlog",
+      "reason": "Requires opts[:blog_id]; MCP ToolHelpers only permits its explicit create fields and does not forward blog_id.",
+      "evidence": [
+        {
+          "file": "plugins/blog/plugin.rb",
+          "line": 120,
+          "source": "next if opts[:blog_id].blank? || user.nil?"
+        },
+        {
+          "file": "lib/discourse_mcp/tools/topic_writes.rb",
+          "line": 135,
+          "source": "category: category_id,"
+        }
+      ]
+    },
+    {
+      "candidate": "Boards::ConstraintFixer",
+      "reason": "Separate board action invokes it; TopicSync called by MCP-reachable hooks synchronizes cards and does not call ConstraintFixer.",
+      "evidence": [
+        {
+          "file": "plugins/boards/app/services/boards/constraint_fixer.rb",
+          "line": 13,
+          "source": "def self.apply!(fix:, board:, topic:, guardian:)"
+        },
+        {
+          "file": "plugins/boards/app/services/boards/topic_sync.rb",
+          "line": 85,
+          "source": "execute_sync_changes("
+        }
+      ]
+    },
+    {
+      "candidate": "Jobs::UpdateUsername",
+      "reason": "MCP UpdateUser uses username as the target selector and does not allow username changes in its mutation field set.",
+      "evidence": [
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 622,
+          "source": "class UpdateUser"
+        },
+        {
+          "file": "lib/discourse_mcp/tools/users.rb",
+          "line": 655,
+          "source": "attributes = arguments.slice(*PROFILE_FIELDS).symbolize_keys"
+        }
+      ]
+    }
+  ]
+}
