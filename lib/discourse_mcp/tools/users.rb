@@ -133,7 +133,7 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
-        ToolHelpers.ensure_no_upload_references!(request_context, arguments["upload_id"])
+        ToolHelpers.ensure_granted_uploads!(request_context, upload_ids: [arguments["upload_id"]])
         user = UserCreator.create(request_context.guardian, arguments)
         if !user.persisted? || user.errors.present?
           message =
@@ -687,11 +687,13 @@ module DiscourseMcp
         raise Discourse::InvalidAccess if user.blank? || user.id != request_context.user_id
 
         attributes = arguments.slice(*PROFILE_FIELDS).symbolize_keys
-        ToolHelpers.ensure_no_upload_references!(
+        ToolHelpers.ensure_granted_uploads!(
           request_context,
-          arguments["upload_id"],
-          attributes[:profile_background_upload_url],
-          attributes[:card_background_upload_url],
+          upload_ids: [arguments["upload_id"]],
+          upload_urls: [
+            attributes[:profile_background_upload_url],
+            attributes[:card_background_upload_url],
+          ],
         )
         upload = avatar_upload(arguments["upload_id"], user, request_context.guardian)
         if attributes.empty? && upload.blank?

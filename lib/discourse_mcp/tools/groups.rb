@@ -167,6 +167,21 @@ module DiscourseMcp
         json
       end
 
+      # Saving a group recooks its bio, even when unchanged, so the stored bio
+      # must pass the agent text check. Renaming rewrites and recooks every post
+      # that mentions the group, which agents can't trigger while a rule is
+      # active.
+      def ensure_safe_save!(group, arguments, request_context)
+        return if !request_context.content_policy.active?
+
+        if arguments["name"].present? && arguments["name"] != group.name
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
+        if !arguments.key?("bio_raw")
+          request_context.authored_text.ensure_allowed!(group.bio_raw.to_s)
+        end
+      end
+
       # Setting notification defaults to categories or tags can't be checked
       # against restrictions without revealing which ones are restricted, so
       # agents can't set them while a rule narrows topics.
@@ -470,6 +485,7 @@ module DiscourseMcp
         guardian = request_context.guardian
         group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
         GroupSupport.ensure_defaults_unrestricted!(arguments, request_context)
+        GroupSupport.ensure_safe_save!(group, arguments, request_context)
         attributes = arguments.slice(*GroupUpdater.permitted_names(guardian, group:))
         raise ToolError, I18n.t("mcp.errors.group_update_required") if attributes.empty?
 

@@ -132,63 +132,8 @@ module DiscourseTagging
 
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
-
-        parent_tags_sql =
-          +"
-          SELECT tgm.tag_id, tg.parent_tag_id
-            FROM tag_groups tg
-          INNER JOIN tag_group_memberships tgm
-              ON tgm.tag_group_id = tg.id
-           WHERE tg.parent_tag_id IS NOT NULL
-             AND tgm.tag_id IN (:tag_ids)
-        "
-
-        query_params = { tag_ids: }
-
-        if category
-          if category.has_restricted_tags?
-            if category.allow_global_tags
-              # include parent tags from tag groups that are not restricted to any category
-              # AND tag groups restricted to the current category
-              parent_tags_sql << "
-                 AND (
-                   tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
-                   OR tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
-                 )
-              "
-            else
-              # only include parent tags from tag groups restricted to the current category
-              parent_tags_sql << "
-                 AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
-              "
-            end
-            query_params[:category_id] = category.id
-          else
-            # category has no tag restrictions,
-            # so only include parent tags from tag groups not restricted to any category
-            parent_tags_sql << "
-               AND tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
-            "
-          end
-        end
-
-        parent_tags_map =
-          DB
-            .query(parent_tags_sql, query_params)
-            .inject({}) do |h, v|
-              h[v.tag_id] ||= []
-              h[v.tag_id] << v.parent_tag_id
-              h
-            end
-
-        missing_parent_tag_ids =
-          parent_tags_map
-            .flat_map do |_, parent_tag_ids|
-              (tag_ids & parent_tag_ids).size == 0 ? parent_tag_ids : []
-            end
-            .uniq
-
-        missing_parent_tags = Tag.where(id: missing_parent_tag_ids).all
+        parent_tags_map = parent_tags_map(tag_ids, category)
+        missing_parent_tags = Tag.where(id: missing_parent_tag_ids(tag_ids, parent_tags_map)).all
 
         tags = tags + missing_parent_tags unless missing_parent_tags.empty?
 
@@ -284,6 +229,75 @@ module DiscourseTagging
       topic.errors.add(:base, I18n.t("tags.user_not_permitted"))
       false
     end
+  end
+
+  # Maps each of the given tags to the parent tags that its tag groups require,
+  # counting only the tag groups that apply in the category.
+  #
+  # @param tag_ids [Array<Integer>]
+  # @param category [Category, nil]
+  # @returns [Hash{Integer => Array<Integer>}]
+  def self.parent_tags_map(tag_ids, category)
+    parent_tags_sql =
+      +"
+      SELECT tgm.tag_id, tg.parent_tag_id
+        FROM tag_groups tg
+      INNER JOIN tag_group_memberships tgm
+          ON tgm.tag_group_id = tg.id
+       WHERE tg.parent_tag_id IS NOT NULL
+         AND tgm.tag_id IN (:tag_ids)
+    "
+
+    query_params = { tag_ids: }
+
+    if category
+      if category.has_restricted_tags?
+        if category.allow_global_tags
+          # include parent tags from tag groups that are not restricted to any category
+          # AND tag groups restricted to the current category
+          parent_tags_sql << "
+             AND (
+               tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+               OR tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+             )
+          "
+        else
+          # only include parent tags from tag groups restricted to the current category
+          parent_tags_sql << "
+             AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+          "
+        end
+        query_params[:category_id] = category.id
+      else
+        # category has no tag restrictions,
+        # so only include parent tags from tag groups not restricted to any category
+        parent_tags_sql << "
+           AND tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+        "
+      end
+    end
+
+    parent_tags_map =
+      DB
+        .query(parent_tags_sql, query_params)
+        .inject({}) do |h, v|
+          h[v.tag_id] ||= []
+          h[v.tag_id] << v.parent_tag_id
+          h
+        end
+
+    parent_tags_map
+  end
+
+  # The required parent tags that none of the given tags already provides.
+  #
+  # @param tag_ids [Array<Integer>]
+  # @param parent_tags_map [Hash{Integer => Array<Integer>}] From `parent_tags_map`.
+  # @returns [Array<Integer>]
+  def self.missing_parent_tag_ids(tag_ids, parent_tags_map)
+    parent_tags_map
+      .flat_map { |_, parent_tag_ids| (tag_ids & parent_tag_ids).empty? ? parent_tag_ids : [] }
+      .uniq
   end
 
   def self.tag_topic_by_ids(topic, guardian, tag_ids, append: false)

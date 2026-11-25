@@ -269,6 +269,22 @@ class WordWatcher
     text
   end
 
+  # The tag names that watched words add to a topic whose title and raw make up
+  # this text.
+  #
+  # @returns [Array<String>]
+  def tag_names
+    WordWatcher
+      .words_for_action(:tag)
+      .flat_map do |_, opts|
+        if word_matches?(opts[:word], case_sensitive: opts[:case_sensitive])
+          opts[:replacement].split(",")
+        else
+          []
+        end
+      end
+  end
+
   def requires_approval?
     word_matches_for_action?(:require_approval)
   end

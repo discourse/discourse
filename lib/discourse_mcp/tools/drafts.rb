@@ -137,6 +137,10 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, I18n.t("draft.too_many_drafts.title")
         end
 
+        if request_context.content_policy.active? && arguments["tags"].present?
+          ensure_allowed_tags!(arguments["tags"], request_context)
+        end
+
         data = { reply: arguments.fetch("reply") }
         data[:action] = action if action.present?
         data[:title] = arguments["title"] if arguments.key?("title")
@@ -152,11 +156,31 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.draft_too_long")
         end
 
-        sequence = Draft.set(user, draft_key, arguments.fetch("sequence", 0), serialized_data)
+        # The backup copy is a personal message written as a side effect, so it
+        # isn't made while a rule is active.
+        sequence =
+          Draft.set(
+            user,
+            draft_key,
+            arguments.fetch("sequence", 0),
+            serialized_data,
+            backup: !request_context.content_policy.active?,
+          )
         ToolHelpers.text_and_structured(draft_key:, sequence:, saved: true)
       rescue Draft::OutOfSequence
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.draft_sequence_conflict")
       end
+
+      # Draft tags are only names until a later save publishes them, so they
+      # must resolve to tags that exist and aren't denied. Both refusals look
+      # the same.
+      def self.ensure_allowed_tags!(tag_names, request_context)
+        tag_ids = ToolHelpers.prospective_tag_ids!(request_context, tag_names:, category_id: nil)
+        if tag_ids.intersect?(request_context.content_policy.restricted_tag_ids)
+          ToolHelpers.raise_prospective_refusal!
+        end
+      end
+      private_class_method :ensure_allowed_tags!
 
       def self.default_action(draft_key)
         return "createTopic" if draft_key == Draft::NEW_TOPIC

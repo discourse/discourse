@@ -131,6 +131,12 @@ module DiscourseMcp
           end
         end
         submitted_title = arguments.fetch("title")
+        ToolHelpers.ensure_prospective_topic!(
+          request_context,
+          tag_names: arguments["tags"],
+          category_id:,
+          text: "#{submitted_title} #{arguments.fetch("raw")}",
+        )
         submission =
           ToolHelpers.submit_post!(
             user,
@@ -252,6 +258,11 @@ module DiscourseMcp
           access: :write,
           not_found: I18n.t("mcp.errors.post_not_found"),
         )
+        # Raw HTML and email posts don't use the renderer that agent text is
+        # checked with, so agents can't edit them while a rule is active.
+        if request_context.content_policy.active? && post.cook_method != Post.cook_methods[:regular]
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
         fields = { raw: arguments.fetch("raw") }
         fields[:edit_reason] = arguments["edit_reason"] if arguments["edit_reason"].present?
         success = PostRevisor.new(post, post.topic).revise!(request_context.user, fields)
@@ -311,6 +322,7 @@ module DiscourseMcp
              !policy.allows_category_id?(destination_category_id)
           raise ToolError, I18n.t("category.errors.not_found")
         end
+        ensure_safe_update!(topic, changes, request_context) if policy.active?
 
         Topic.transaction do
           shared_draft.update!(category_id: destination_category_id) if destination_category_id
@@ -358,6 +370,25 @@ module DiscourseMcp
           },
         )
       end
+
+      # Revising recooks the first post, so its stored raw must pass the same
+      # check as agent text. Moving a topic while secure uploads are on rebakes
+      # other posts, which agents can't trigger. The stored topic must also stay
+      # allowed with its new category and complete effective tags.
+      def self.ensure_safe_update!(topic, changes, request_context)
+        request_context.authored_text.ensure_allowed!(topic.first_post&.raw.to_s)
+        if changes.key?("category_id") && SiteSetting.secure_uploads?
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
+
+        ToolHelpers.ensure_prospective_topic!(
+          request_context,
+          tag_names: changes.fetch("tags") { topic.tags.map(&:name) },
+          category_id: changes["category_id"] || topic.category_id,
+          private_message: topic.private_message?,
+        )
+      end
+      private_class_method :ensure_safe_update!
 
       def self.verify_original_values!(topic, arguments, guardian)
         if arguments.key?("original_title") && arguments["original_title"] != topic.title
@@ -437,10 +468,24 @@ module DiscourseMcp
         if arguments.fetch("deleted")
           PostDestroyer.new(request_context.user, post).destroy
         else
+          ensure_recoverable_raw!(post, request_context)
           PostDestroyer.new(request_context.user, post).recover
         end
         ToolHelpers.text_and_structured(post_id: post.id, deleted: arguments.fetch("deleted"))
       end
+
+      # Recovering a post recooks it, and recovering one its author deleted
+      # restores the raw it had before, so both must pass the agent text check.
+      def self.ensure_recoverable_raw!(post, request_context)
+        return if !request_context.content_policy.active?
+
+        raws = [post.raw]
+        if post.user_deleted?
+          raws << post.revisions.order(:number).last&.modifications&.dig("raw", 0)
+        end
+        request_context.authored_text.ensure_allowed!(*raws.compact)
+      end
+      private_class_method :ensure_recoverable_raw!
     end
   end
 end

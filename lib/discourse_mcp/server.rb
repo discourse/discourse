@@ -42,7 +42,8 @@ module DiscourseMcp
         headers: error.headers,
       )
     rescue DiscourseMcp::ToolError => error
-      result = complete_result(content: [{ type: "text", text: error.message }], isError: true)
+      result =
+        complete_result(content: [{ type: "text", text: tool_error_text(error) }], isError: true)
       Response.new(http_status: 200, body: success(payload&.dig("id"), result), headers: {})
     rescue Discourse::InvalidAccess
       error = Error.new("Not authorized", code: -32_001, http_status: 403)
@@ -56,6 +57,18 @@ module DiscourseMcp
     end
 
     attr_reader :request, :request_context, :catalog
+
+    # While a content rule is active, a tool error passes through only when it
+    # is one of the server's own fixed messages. Any other text, such as a
+    # validation message, may name or link another record, so it becomes the
+    # generic error. Which message is chosen never depends on what the error
+    # text contains.
+    def tool_error_text(error)
+      policy = request_context&.content_policy
+      return error.message if !policy&.active? || ToolError.fixed_message?(error.message)
+
+      I18n.t("mcp.errors.content_policy_output_blocked")
+    end
 
     def record_audit(payload, mcp_response, started_at)
       return if !payload.is_a?(Hash) || payload["method"] != "tools/call"
@@ -276,7 +289,18 @@ module DiscourseMcp
       errors = argument_validation_errors(tool.input_schema, arguments)
       raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: }) if errors.present?
 
+      started_at = Time.zone.now
+      if request_context.content_policy.active?
+        request_context.authored_text.ensure_allowed!(
+          *AuthoredText.values_for(tool.identifier, arguments),
+        )
+      end
       result = tool.implementation.call(arguments: arguments, request_context: request_context)
+      UploadGrants.record_written!(
+        request_context.authored_text.granted_upload_ids,
+        request_context,
+        since: started_at,
+      )
       result =
         request_context.content_policy.filter_tool_result(
           result.symbolize_keys,

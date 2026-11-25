@@ -271,7 +271,23 @@ module DiscourseMcp
       # While any content rule is active, agents can't delete accounts, because
       # that deletes everything the user wrote, restricted content included. Nor
       # can they pass extra fields, which reach the user as a personal message.
-      def ensure_action_respects_content_policy!(action, additional_fields, request_context)
+      # Actions that publish a queued post or show a hidden or deleted post
+      # again, which cooks the post's stored raw.
+      PUBLISHING_ACTIONS = %w[approve_post revise_and_reject_post].freeze
+      RESTORING_ACTIONS = %w[
+        approve_and_restore
+        approve_and_unhide
+        agree_and_restore
+        disagree
+        disagree_and_restore
+      ].freeze
+
+      def ensure_action_respects_content_policy!(
+        reviewable,
+        action,
+        additional_fields,
+        request_context
+      )
         return if !request_context.content_policy.active?
 
         server_action = action.server_action.to_s
@@ -279,6 +295,20 @@ module DiscourseMcp
           server_action.start_with?("delete_user") || server_action == "delete_and_block_user"
         if deletes_account || additional_fields.present?
           raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
+
+        request_context.authored_text.ensure_allowed!(*stored_texts(reviewable, server_action))
+      end
+
+      # The stored text that an action would cook, which must pass the same
+      # check as agent text.
+      def stored_texts(reviewable, server_action)
+        if PUBLISHING_ACTIONS.include?(server_action) && reviewable.is_a?(ReviewableQueuedPost)
+          [reviewable.payload["title"], reviewable.payload["raw"]].compact
+        elsif RESTORING_ACTIONS.include?(server_action) && reviewable.target_type == "Post"
+          [Post.with_deleted.find_by(id: reviewable.target_id)&.raw].compact
+        else
+          []
         end
       end
 
@@ -678,6 +708,7 @@ module DiscourseMcp
         end
         additional_fields = arguments.fetch("additional_fields", {})
         ModerationSupport.ensure_action_respects_content_policy!(
+          reviewable,
           action,
           additional_fields,
           request_context,

@@ -83,6 +83,9 @@ module DiscourseMcp
           if !fresh && request_context.content_policy.active?
             raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
           end
+          # Only bytes this call stored are granted, so a grant never covers an
+          # upload that someone else made first.
+          UploadGrants.grant!(upload, request_context) if fresh
         end
 
         serialized = UploadsController.serialize_upload(upload).deep_symbolize_keys

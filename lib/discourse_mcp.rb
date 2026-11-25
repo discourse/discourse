@@ -59,6 +59,27 @@ module DiscourseMcp
   end
 
   class ToolError < StandardError
+    # Whether a message is one of the server's fixed error messages. Those have
+    # no placeholders, so they never carry anything from the records an
+    # operation touched.
+    #
+    # @param message [String]
+    # @returns [Boolean]
+    def self.fixed_message?(message)
+      fixed_messages(I18n.t("mcp.errors", default: {})).include?(message)
+    end
+
+    def self.fixed_messages(value)
+      case value
+      when Hash
+        value.values.flat_map { |nested| fixed_messages(nested) }
+      when String
+        value.include?("%{") ? [] : [value]
+      else
+        []
+      end
+    end
+    private_class_method :fixed_messages
   end
 
   class AuthenticationError < StandardError

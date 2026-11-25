@@ -43,6 +43,17 @@ module DiscourseMcp
         nil
       end
 
+      # Whether a topic that doesn't exist yet would be allowed. A rule that
+      # narrows topics but can't judge one before it's stored fails closed.
+      #
+      # @param category_id [Integer]
+      # @param tag_ids [Set<Integer>] The topic's complete effective tags.
+      # @param private_message [Boolean]
+      # @returns [Boolean]
+      def allows_prospective_topic?(category_id:, tag_ids:, private_message:)
+        topic_sql("topics").nil?
+      end
+
       # @returns [Set<Integer>]
       def restricted_category_ids
         EMPTY_IDS
@@ -192,6 +203,27 @@ module DiscourseMcp
       end
       conditions.compact!
       conditions.map { |condition| "(#{condition})" }.join(" AND ").presence
+    end
+
+    # Whether a topic with this category and these effective tags would be
+    # allowed once stored. It mirrors `topic_condition` for a topic that doesn't
+    # exist yet.
+    #
+    # @param category_id [Integer, nil] Nil means the uncategorized category.
+    # @param tag_ids [Enumerable<Integer>] The topic's complete effective tags.
+    # @param private_message [Boolean]
+    # @returns [Boolean]
+    def allows_prospective_topic?(category_id:, tag_ids:, private_message: false)
+      return true if !active?
+      return false if orphaned? || denies_all?(TOPICS)
+      return false if private_message && denies_all?(PRIVATE_MESSAGES)
+
+      category_id = (category_id.presence || SiteSetting.uncategorized_category_id).to_i
+      tag_ids = tag_ids.to_set
+      @rules.all? do |rule|
+        rule.kind.affected_data_kinds.exclude?(TOPICS) ||
+          rule.evaluator.allows_prospective_topic?(category_id:, tag_ids:, private_message:)
+      end
     end
 
     # @param relation [ActiveRecord::Relation<Topic>] A relation on the topics table.

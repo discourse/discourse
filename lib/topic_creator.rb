@@ -238,15 +238,9 @@ class TopicCreator
       end
     end
 
-    watched_words = WordWatcher.words_for_action(:tag)
-    if watched_words.present?
-      word_watcher = WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}")
-      word_watcher_tags = topic.tags.map(&:name)
-      watched_words.each do |_, opts|
-        if word_watcher.word_matches?(opts[:word], case_sensitive: opts[:case_sensitive])
-          word_watcher_tags += opts[:replacement].split(",")
-        end
-      end
+    if WordWatcher.words_for_action(:tag).present?
+      word_watcher_tags =
+        topic.tags.map(&:name) + WordWatcher.new("#{@opts[:title]} #{@opts[:raw]}").tag_names
       DiscourseTagging.tag_topic_by_names(topic, Discourse.system_user.guardian, word_watcher_tags)
     end
   end

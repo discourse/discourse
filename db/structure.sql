@@ -8835,6 +8835,71 @@ ALTER SEQUENCE public.mcp_primitives_id_seq OWNED BY public.mcp_primitives.id;
 
 
 --
+-- Name: mcp_upload_grant_targets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_upload_grant_targets (
+    id bigint NOT NULL,
+    mcp_upload_grant_id bigint NOT NULL,
+    target_type character varying NOT NULL,
+    target_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_upload_grant_targets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_upload_grant_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_upload_grant_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_upload_grant_targets_id_seq OWNED BY public.mcp_upload_grant_targets.id;
+
+
+--
+-- Name: mcp_upload_grants; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.mcp_upload_grants (
+    id bigint NOT NULL,
+    upload_id bigint NOT NULL,
+    mcp_oauth_authorization_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: mcp_upload_grants_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.mcp_upload_grants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mcp_upload_grants_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.mcp_upload_grants_id_seq OWNED BY public.mcp_upload_grants.id;
+
+
+--
 -- Name: message_bus; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -16076,6 +16141,20 @@ ALTER TABLE ONLY public.mcp_primitives ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: mcp_upload_grant_targets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_upload_grant_targets ALTER COLUMN id SET DEFAULT nextval('public.mcp_upload_grant_targets_id_seq'::regclass);
+
+
+--
+-- Name: mcp_upload_grants id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_upload_grants ALTER COLUMN id SET DEFAULT nextval('public.mcp_upload_grants_id_seq'::regclass);
+
+
+--
 -- Name: message_bus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18951,6 +19030,22 @@ ALTER TABLE ONLY public.mcp_primitives
 
 
 --
+-- Name: mcp_upload_grant_targets mcp_upload_grant_targets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_upload_grant_targets
+    ADD CONSTRAINT mcp_upload_grant_targets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mcp_upload_grants mcp_upload_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.mcp_upload_grants
+    ADD CONSTRAINT mcp_upload_grants_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: message_bus message_bus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -21113,6 +21208,13 @@ CREATE UNIQUE INDEX idx_on_llm_model_id_feature_name_2b0b794b27 ON public.llm_fe
 --
 
 CREATE INDEX idx_on_mcp_oauth_authorization_id_d749d8a9de ON public.mcp_oauth_authorization_codes USING btree (mcp_oauth_authorization_id);
+
+
+--
+-- Name: idx_on_mcp_oauth_authorization_id_upload_id_e1afc85612; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_mcp_oauth_authorization_id_upload_id_e1afc85612 ON public.mcp_upload_grants USING btree (mcp_oauth_authorization_id, upload_id);
 
 
 --
@@ -23955,6 +24057,20 @@ CREATE INDEX index_mcp_oauth_refresh_tokens_on_mcp_oauth_authorization_id ON pub
 --
 
 CREATE UNIQUE INDEX index_mcp_oauth_refresh_tokens_on_token_hash ON public.mcp_oauth_refresh_tokens USING btree (token_hash);
+
+
+--
+-- Name: index_mcp_upload_grant_targets_on_grant_and_target; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_mcp_upload_grant_targets_on_grant_and_target ON public.mcp_upload_grant_targets USING btree (mcp_upload_grant_id, target_type, target_id);
+
+
+--
+-- Name: index_mcp_upload_grants_on_upload_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_mcp_upload_grants_on_upload_id ON public.mcp_upload_grants USING btree (upload_id);
 
 
 --
@@ -27016,6 +27132,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125134657'),
 ('20261125051916'),
 ('20261124173030'),
 ('20261124170000'),

@@ -265,15 +265,77 @@ module DiscourseMcp
       draft_key.match(/\A#{Draft::EXISTING_TOPIC}(\d+)\z/)&.captures&.first&.to_i
     end
 
-    # While any content rule is active, a tool can't point at an upload that
-    # already exists, because the upload may belong to restricted content and
-    # nothing yet ties it to what this authorization uploaded.
+    # The tags a topic would carry once a write stores it: the named tags with
+    # synonyms resolved to their targets, the parent tags their tag groups add,
+    # and, when `text` is given, the tags its watched words add.
     #
-    # @param references [Array<Object>] Upload ids or upload URLs from the arguments.
-    def ensure_no_upload_references!(request_context, *references)
-      return if !request_context.content_policy.active? || references.all?(&:blank?)
+    # While a rule is active, no tag may be created implicitly, so a name that
+    # doesn't resolve is refused. The refusal is the same generic error as for
+    # a restricted result, so it never tells a missing tag from a denied one.
+    #
+    # @param tag_names [Array<String>, nil]
+    # @param category_id [Integer, nil]
+    # @param text [String, nil] The title and raw of a topic being created.
+    # @returns [Set<Integer>]
+    def prospective_tag_ids!(request_context, tag_names:, category_id:, text: nil)
+      names = Array(tag_names).map(&:to_s)
+      names += WordWatcher.new(text).tag_names if text.present?
+      names = names.map { |name| DiscourseTagging.clean_tag(name) }.compact_blank.uniq
+      return Set.new if names.empty?
 
-      raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+      tags = Tag.where_name(names).to_a
+      if tags.map { |tag| tag.name.downcase }.uniq.size < names.map(&:downcase).uniq.size
+        raise_prospective_refusal!
+      end
+
+      tag_ids = tags.map { |tag| tag.target_tag_id || tag.id }.uniq
+      category = Category.find_by(id: category_id)
+      parent_tags_map = DiscourseTagging.parent_tags_map(tag_ids, category)
+      (tag_ids + DiscourseTagging.missing_parent_tag_ids(tag_ids, parent_tags_map)).to_set
+    end
+
+    # Refuses a write whose stored topic would be restricted, with the same
+    # error a missing category gets.
+    #
+    # @param tag_names [Array<String>, nil]
+    # @param category_id [Integer, nil]
+    # @param text [String, nil] The title and raw of a topic being created.
+    # @param private_message [Boolean]
+    # @returns [void]
+    def ensure_prospective_topic!(
+      request_context,
+      tag_names:,
+      category_id:,
+      text: nil,
+      private_message: false
+    )
+      policy = request_context.content_policy
+      return if !policy.active?
+
+      tag_ids = prospective_tag_ids!(request_context, tag_names:, category_id:, text:)
+      if !policy.allows_prospective_topic?(category_id:, tag_ids:, private_message:)
+        raise_prospective_refusal!
+      end
+    end
+
+    def raise_prospective_refusal!
+      raise ToolError, I18n.t("mcp.errors.content_policy_output_blocked")
+    end
+
+    # While any content rule is active, a tool may only point at uploads
+    # granted to the caller's authorization, because any other upload may
+    # belong to restricted content. Unknown and ungranted uploads get the same
+    # error.
+    #
+    # @param upload_ids [Array<Object>] Upload ids from the arguments.
+    # @param upload_urls [Array<Object>] Upload URLs from the arguments.
+    def ensure_granted_uploads!(request_context, upload_ids: [], upload_urls: [])
+      return if !request_context.content_policy.active?
+
+      uploads =
+        upload_ids.compact_blank.map { |id| Upload.find_by(id: id.to_i) } +
+          upload_urls.compact_blank.map { |url| Upload.get_from_url(url.to_s) }
+      uploads.each { |upload| request_context.authored_text.ensure_granted_upload!(upload) }
     end
 
     # Drops bookmarks on personal messages and their posts, deleted ones included.

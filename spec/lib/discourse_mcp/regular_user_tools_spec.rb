@@ -7,6 +7,7 @@ describe DiscourseMcp::Tools do
       user:,
       user_id: user.id,
       guardian: user.guardian,
+      authorization_id: 1,
       content_policy: DiscourseMcp::ContentPolicy.new([]),
     )
   end

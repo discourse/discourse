@@ -49,6 +49,14 @@ module DiscourseMcp
       McpOauthClient.find(oauth_client_id)
     end
 
+    # The checker for text and uploads an agent writes in this request. It
+    # remembers the granted uploads the request used.
+    #
+    # @returns [AuthoredText]
+    def authored_text
+      @authored_text ||= AuthoredText.new(self)
+    end
+
     def authorization
       McpOauthAuthorization.find(authorization_id)
     end

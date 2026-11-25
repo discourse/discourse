@@ -16,11 +16,13 @@ class Draft < ActiveRecord::Base
   class OutOfSequence < StandardError
   end
 
-  def self.set(user, key, sequence, data, owner = nil, force_save: false)
+  # `backup: false` skips the personal-message copy that long drafts get, for
+  # callers that must not create posts as a side effect of saving.
+  def self.set(user, key, sequence, data, owner = nil, force_save: false, backup: true)
     return 0 if !User.human_user_id?(user.id)
     force_save = force_save.to_s == "true"
 
-    if SiteSetting.backup_drafts_to_pm_length > 0 &&
+    if backup && SiteSetting.backup_drafts_to_pm_length > 0 &&
          SiteSetting.backup_drafts_to_pm_length < data.length
       backup_draft(user, key, sequence, data)
     end

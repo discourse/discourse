@@ -90,6 +90,19 @@ module DiscourseMcp
       SQL
     end
 
+    # @param category_id [Integer]
+    # @param tag_ids [Set<Integer>] The topic's complete effective tags.
+    # @param private_message [Boolean]
+    # @returns [Boolean]
+    def allows_prospective_topic?(category_id:, tag_ids:, private_message:)
+      return false if tag_ids.intersect?(@denied_tag_ids)
+      return true if private_message
+      return false if @denied_category_ids.include?(category_id)
+      return true if !@selected
+
+      @allowed_category_ids.include?(category_id) || tag_ids.intersect?(@allowed_tag_ids)
+    end
+
     # A category is restricted when it lies in a denied subtree, when the
     # allowlist is selective and the category is outside every allowed subtree,
     # or when its definition topic carries a denied tag. A restricted category's
