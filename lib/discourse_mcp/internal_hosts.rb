@@ -7,11 +7,19 @@ module DiscourseMcp
   module InternalHosts
     module_function
 
+    HOST_NAME = /\A[a-z0-9](?:[a-z0-9.\-]*[a-z0-9])?\z/
+    FULL_STOPS = /[\u3002\uFF0E\uFF61]/
+
+    # A host that isn't a plain name after canonicalization counts as internal,
+    # because browsers map more spellings onto a host than can be mirrored.
+    #
     # @param uri [URI::Generic, Addressable::URI]
     # @returns [Boolean]
     def include?(uri)
+      return false if uri.host.blank?
+
       host = canonical(uri.host)
-      host.present? && hosts.include?(host)
+      host.blank? || !host.match?(HOST_NAME) || hosts.include?(host)
     end
 
     # @returns [Set<String>]
@@ -34,7 +42,9 @@ module DiscourseMcp
     def canonical(host)
       return if host.blank?
 
-      Addressable::IDNA.to_ascii(CGI.unescape(host.to_s)).downcase.chomp(".").presence
+      host = CGI.unescape(host.to_s).gsub(FULL_STOPS, ".")
+      host = host.gsub(/\p{Default_Ignorable_Code_Point}/, "").unicode_normalize(:nfkc)
+      Addressable::IDNA.to_ascii(host).downcase.chomp(".").presence
       # The IDNA backends raise different errors for malformed input.
     rescue StandardError
       host.to_s.downcase

@@ -296,6 +296,11 @@ module DiscourseMcp
         if deletes_account || additional_fields.present?
           raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
         end
+        # Revising and rejecting sends the author a personal message.
+        if server_action == "revise_and_reject_post" &&
+             request_context.content_policy.denies_all?(ContentPolicy::PRIVATE_MESSAGES)
+          raise ToolError, I18n.t("mcp.errors.content_policy_blocked")
+        end
 
         request_context.authored_text.ensure_allowed!(*stored_texts(reviewable, server_action))
         ensure_prospective_queued_topic!(reviewable, server_action, request_context)
