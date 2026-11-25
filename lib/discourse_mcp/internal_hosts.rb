@@ -8,18 +8,23 @@ module DiscourseMcp
     module_function
 
     HOST_NAME = /\A[a-z0-9](?:[a-z0-9.\-]*[a-z0-9])?\z/
-    FULL_STOPS = /[\u3002\uFF0E\uFF61]/
+    NUMERIC_LABEL = /\A(?:0x[0-9a-f]*|[0-9]+)\z/
+    DOTTED_QUAD =
+      /\A(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\z/
 
-    # A host that isn't a plain name after canonicalization counts as internal,
-    # because browsers map more spellings onto a host than can be mirrored.
+    # Browsers map many spellings onto one host (Unicode, IDNA mappings,
+    # numeric shorthands for IP addresses), more than can be mirrored. So a
+    # host counts as external only when it is written in a plain form: an
+    # ASCII name, a dotted IPv4 address or an IPv6 literal. Any other spelling
+    # counts as internal.
     #
     # @param uri [URI::Generic, Addressable::URI]
     # @returns [Boolean]
     def include?(uri)
       return false if uri.host.blank?
 
-      host = canonical(uri.host)
-      host.blank? || !host.match?(HOST_NAME) || hosts.include?(host)
+      host = plain(uri.host)
+      host.nil? || hosts.include?(host)
     end
 
     # @returns [Set<String>]
@@ -30,24 +35,46 @@ module DiscourseMcp
         GlobalSetting.cdn_url,
         SiteSetting.s3_cdn_url,
         (Discourse.store.absolute_base_url if Discourse.store.external?),
-      ].compact_blank.filter_map { |value| canonical(host_of(value)) }.to_set
+      ].compact_blank.filter_map { |value| configured(host_of(value)) }.to_set
     end
 
-    # Browsers treat percent-encoded, Unicode, uppercase and trailing-dot
-    # spellings of a host as the same host, so hosts are compared in one
-    # spelling.
+    # The host in its plain, comparable form, or nil when it is written any
+    # other way.
     #
-    # @param host [String, nil]
+    # @param host [String]
     # @returns [String, nil]
-    def canonical(host)
-      return if host.blank?
+    def plain(host)
+      return ipv6(host) if host.start_with?("[")
 
-      host = CGI.unescape(host.to_s).gsub(FULL_STOPS, ".")
-      host = host.gsub(/\p{Default_Ignorable_Code_Point}/, "").unicode_normalize(:nfkc)
+      host = CGI.unescape(host).downcase.chomp(".")
+      return if !host.match?(HOST_NAME)
+      # Browsers read a host whose last label is numeric as an IPv4 address,
+      # in decimal, octal or hexadecimal parts.
+      return if host.split(".").last.match?(NUMERIC_LABEL) && !host.match?(DOTTED_QUAD)
+
+      host
+    end
+
+    def ipv6(host)
+      return if !host.end_with?("]")
+
+      address = IPAddr.new(host[1..-2])
+      return if !address.ipv6?
+      # An IPv4-mapped address reaches the IPv4 host.
+      address.ipv4_mapped? ? address.native.to_s : "[#{address}]"
+    rescue IPAddr::Error
+      nil
+    end
+
+    # Configured hosts may be written in Unicode.
+    def configured(host)
+      return if host.blank?
+      return ipv6(host) if host.start_with?("[")
+
       Addressable::IDNA.to_ascii(host).downcase.chomp(".").presence
       # The IDNA backends raise different errors for malformed input.
     rescue StandardError
-      host.to_s.downcase
+      host.downcase
     end
 
     # Upload stores give protocol-relative base URLs, such as `//bucket.host`.
