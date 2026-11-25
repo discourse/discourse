@@ -24,8 +24,8 @@ acceptance("Boards sidebar - enabled", function (needs) {
       .hasText(i18n("boards.manage.title"), "displays the Boards label")
       .hasAttribute("href", "/boards", "links to the boards index");
     assert
-      .dom(`${BOARDS_LINK} .d-icon-boards`)
-      .exists("displays the Boards icon");
+      .dom(`${BOARDS_LINK} .d-icon-table-columns`)
+      .exists("displays the table-columns icon");
 
     await click(BOARDS_LINK);
 
@@ -52,8 +52,28 @@ acceptance("Boards sidebar - anonymous", function (needs) {
   });
 });
 
-acceptance("Boards sidebar - user without visible boards", function (needs) {
+acceptance("Boards sidebar - manager without visible boards", function (needs) {
   needs.user({ can_manage_boards: true, can_see_any_boards: false });
+  needs.settings({ boards_enabled: true, navigation_menu: "sidebar" });
+  needs.pretender((server, helper) => {
+    server.get("/boards/api/boards.json", () =>
+      helper.response({ boards: [] })
+    );
+  });
+
+  test("can reach the empty boards index to create the first board", async function (assert) {
+    await visit("/");
+    await click(BOARDS_LINK);
+
+    assert.strictEqual(currentURL(), "/boards", "opens the boards index");
+    assert
+      .dom(".discourse-boards-manage__new-board")
+      .isVisible("offers to create the first board");
+  });
+});
+
+acceptance("Boards sidebar - user without visible boards", function (needs) {
+  needs.user({ can_manage_boards: false, can_see_any_boards: false });
   needs.settings({ boards_enabled: true, navigation_menu: "sidebar" });
   needs.hooks.beforeEach(() => {
     PreloadStore.store("boards:visibility", { can_see_any_boards: true });
@@ -83,7 +103,7 @@ acceptance(
 );
 
 acceptance("Boards sidebar - disabled", function (needs) {
-  needs.user({ can_see_any_boards: true });
+  needs.user({ can_manage_boards: true, can_see_any_boards: true });
   needs.settings({ boards_enabled: false, navigation_menu: "sidebar" });
 
   test("hides the link when boards are disabled", async function (assert) {

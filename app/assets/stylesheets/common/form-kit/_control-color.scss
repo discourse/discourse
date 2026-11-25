@@ -138,6 +138,16 @@
   }
 }
 
+// The control can sit in a modal, or in a menu raised above one.
+.fk-d-menu.color-swatches-menu-content {
+  z-index: z("modal", "dialog");
+}
+
+// The mobile sheet opens from inside such a menu, so it must cover it.
+.fk-d-menu-modal.color-swatches-menu-content {
+  z-index: calc(z("modal", "dialog") + 1);
+}
+
 .color-swatches-menu-content {
   .fk-d-menu__inner-content {
     display: flex;

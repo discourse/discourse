@@ -15,7 +15,7 @@ export default {
 
     withPluginApi((api) => {
       if (currentUser) {
-        if (!currentUser.can_see_any_boards) {
+        if (!currentUser.can_manage_boards && !currentUser.can_see_any_boards) {
           return;
         }
       } else if (!PreloadStore.get("boards:visibility")?.can_see_any_boards) {
@@ -25,7 +25,7 @@ export default {
       api.addCommunitySectionLink({
         name: "boards",
         route: "boards",
-        icon: "boards",
+        icon: "table-columns",
         text: i18n("boards.manage.title"),
         title: i18n("boards.manage.title"),
       });

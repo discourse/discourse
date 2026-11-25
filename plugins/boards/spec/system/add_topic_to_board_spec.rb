@@ -39,6 +39,44 @@ describe "Add topic to board from topic footer menu" do
   before { enable_current_plugin }
 
   context "when logged in" do
+    it "opens the selected board only after tapping View board", mobile: true do
+      Fabricate(
+        :boards_topic_card,
+        topic:,
+        board: product_board,
+        column: product_board.columns.first,
+      )
+      sign_in(product_board.created_by)
+      topic_page.visit_topic(topic)
+
+      add_from_topic.tap_board(product_board)
+
+      expect(add_from_topic).to have_column_sheet_for(product_board)
+      add_from_topic.tap_view_board
+      expect(page).to have_current_path("/boards/#{product_board.slug}/#{product_board.id}")
+    end
+
+    it "highlights the footer icon on Horizon when the topic belongs to a board" do
+      SystemThemesManager.sync_theme!("horizon")
+      Theme.horizon_theme.set_default!
+      Fabricate(:bookmark, user: admin, bookmarkable: topic, reminder_at: nil)
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+
+      bookmark_color = find(".topic-footer-button.bookmarked .d-icon").style("color")
+      expect(add_from_topic.icon_color).not_to eq(bookmark_color)
+
+      Fabricate(
+        :boards_topic_card,
+        topic:,
+        board: product_board,
+        column: product_board.columns.first,
+      )
+      topic_page.visit_topic(topic)
+
+      expect(add_from_topic.icon_color).to eq(bookmark_color)
+    end
+
     it "adds the topic to a board column" do
       column = product_board.columns.first
 

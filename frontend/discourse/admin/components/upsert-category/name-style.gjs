@@ -10,7 +10,6 @@ import {
   categoryStyleErrors,
 } from "discourse/admin/lib/category-style-validation";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
-import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import FKErrors from "discourse/form-kit/components/fk/errors";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
@@ -23,6 +22,7 @@ import {
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import DButton from "discourse/ui-kit/d-button";
 import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
+import DNameStyleInput from "discourse/ui-kit/d-name-style-input";
 import DTabs from "discourse/ui-kit/d-tabs";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -203,96 +203,91 @@ export default class CategoryNameStyle extends Component {
         @validation="required"
         as |field|
       >
-        <div class="category-name-style__row">
-          <DMenu
-            aria-describedby={{style.describedBy}}
-            aria-invalid={{if style.error "true"}}
-            style={{this.iconColorStyle}}
-            @ariaLabel={{this.triggerTitle}}
-            @identifier="category-style"
-            @inlineTabOrder={{true}}
-            @title={{this.triggerTitle}}
-            @triggerClass="btn-default category-name-style__trigger"
-          >
-            <:trigger>
-              <span class="category-name-style__preview">
-                {{#if (eq this.styleType "emoji")}}
-                  {{#if @data.emoji}}
-                    {{dEmoji @data.emoji}}
-                  {{else}}
-                    {{dIcon "far-face-smile"}}
-                  {{/if}}
-                {{else if (eq this.styleType "icon")}}
-                  {{dIcon (or @data.icon "square-full") ignoreMissing=true}}
-                {{else}}
-                  <span class="category-name-style__square"></span>
-                {{/if}}
-              </span>
-            </:trigger>
-            <:content as |menu|>
-              {{#let
-                (component
-                  ColorField
-                  form=@form
-                  category=@category
-                  onBlur=(fn this.revalidateStyle style)
-                  onSet=(fn this.setColor style)
-                  colors=this.backgroundColors
-                  usedColors=this.usedBackgroundColors
-                )
-                as |Color|
-              }}
-                <DTabs
-                  class="category-name-style__tabs"
-                  @active={{this.styleType}}
-                  @label={{i18n "category.style"}}
-                  @onActivate={{fn this.setStyleValue style "style_type"}}
-                  as |tabs|
-                >
-                  <tabs.Tab @key="icon" @label={{i18n "category.styles.icon"}}>
-                    <DIconGridPickerContent
-                      @iconColorStyle={{this.iconColorStyle}}
-                      @onSelect={{fn this.setStyleValue style "icon"}}
-                      @searchPlaceholder={{i18n
-                        "category.icon_search_placeholder"
-                      }}
-                      @showNames={{true}}
-                      @value={{@data.icon}}
-                    >
-                      <Color />
-                    </DIconGridPickerContent>
-                  </tabs.Tab>
-                  {{#if this.siteSettings.enable_emoji}}
-                    <tabs.Tab
-                      @key="emoji"
-                      @label={{i18n "category.styles.emoji"}}
-                    >
-                      <EmojiPickerContent
-                        @close={{menu.close}}
-                        @compact={{true}}
-                        @context="topic"
-                        @didSelectEmoji={{fn this.setStyleValue style "emoji"}}
-                        @selected={{@data.emoji}}
-                      />
-                    </tabs.Tab>
-                  {{/if}}
-                  <tabs.Tab
-                    @key="square"
-                    @label={{i18n "category.styles.square"}}
+        <DNameStyleInput
+          @color={{@data.color}}
+          @identifier="category-style"
+          @styleDescribedBy={{style.describedBy}}
+          @styleInvalid={{if style.error true false}}
+          @styleLabel={{this.triggerTitle}}
+        >
+          <:preview>
+            {{#if (eq this.styleType "emoji")}}
+              {{#if @data.emoji}}
+                {{dEmoji @data.emoji}}
+              {{else}}
+                {{dIcon "far-face-smile"}}
+              {{/if}}
+            {{else if (eq this.styleType "icon")}}
+              {{dIcon (or @data.icon "square-full") ignoreMissing=true}}
+            {{else}}
+              <span class="category-name-style__square"></span>
+            {{/if}}
+          </:preview>
+          <:content as |menu|>
+            {{#let
+              (component
+                ColorField
+                form=@form
+                category=@category
+                onBlur=(fn this.revalidateStyle style)
+                onSet=(fn this.setColor style)
+                colors=this.backgroundColors
+                usedColors=this.usedBackgroundColors
+              )
+              as |Color|
+            }}
+              <DTabs
+                class="category-name-style__tabs"
+                @active={{this.styleType}}
+                @label={{i18n "category.style"}}
+                @onActivate={{fn this.setStyleValue style "style_type"}}
+                as |tabs|
+              >
+                <tabs.Tab @key="icon" @label={{i18n "category.styles.icon"}}>
+                  <DIconGridPickerContent
+                    @iconColorStyle={{this.iconColorStyle}}
+                    @onSelect={{fn this.setStyleValue style "icon"}}
+                    @searchPlaceholder={{i18n
+                      "category.icon_search_placeholder"
+                    }}
+                    @showNames={{true}}
+                    @value={{@data.icon}}
                   >
                     <Color />
+                  </DIconGridPickerContent>
+                </tabs.Tab>
+                {{#if this.siteSettings.enable_emoji}}
+                  <tabs.Tab
+                    @key="emoji"
+                    @label={{i18n "category.styles.emoji"}}
+                  >
+                    <EmojiPickerContent
+                      @close={{menu.close}}
+                      @compact={{true}}
+                      @context="topic"
+                      @didSelectEmoji={{fn this.setStyleValue style "emoji"}}
+                      @selected={{@data.emoji}}
+                    />
                   </tabs.Tab>
-                </DTabs>
-              {{/let}}
-            </:content>
-          </DMenu>
-          <field.Control
-            class="category-name"
-            data-1p-ignore
-            placeholder={{i18n "category.name_placeholder"}}
-            @maxlength="50"
-          />
-        </div>
+                {{/if}}
+                <tabs.Tab
+                  @key="square"
+                  @label={{i18n "category.styles.square"}}
+                >
+                  <Color />
+                </tabs.Tab>
+              </DTabs>
+            {{/let}}
+          </:content>
+          <:default>
+            <field.Control
+              class="category-name"
+              data-1p-ignore
+              placeholder={{i18n "category.name_placeholder"}}
+              @maxlength="50"
+            />
+          </:default>
+        </DNameStyleInput>
       </@form.Field>
     </@form.Field>
   </template>

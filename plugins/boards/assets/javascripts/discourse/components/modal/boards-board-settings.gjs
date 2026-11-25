@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import AdvancedModeToggle from "discourse/components/advanced-mode-toggle";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,7 +13,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { slugify } from "discourse/lib/utilities";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 import { buildDefaultBoardAcl } from "../../lib/boards-access-control.js";
@@ -432,15 +432,10 @@ export default class BoardsBoardSettings extends Component {
               />
             {{/unless}}
 
-            <DButton
-              class="btn-default show-advanced"
-              @action={{this.toggleAdvanced}}
-              @icon="gear"
-              @title={{if
-                this.showAdvanced
-                "boards.manage.columns.hide_advanced"
-                "boards.manage.columns.show_advanced"
-              }}
+            <AdvancedModeToggle
+              class="show-advanced"
+              @active={{this.showAdvanced}}
+              @onToggle={{this.toggleAdvanced}}
             />
           </form.Actions>
         </Form>

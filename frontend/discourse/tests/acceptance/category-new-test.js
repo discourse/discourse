@@ -204,8 +204,8 @@ acceptance("Category color", function (needs) {
   });
 
   function previewColor() {
-    return getComputedStyle(find(".category-name-style__preview"))
-      .getPropertyValue("--icon-color")
+    return getComputedStyle(find(".d-name-style-input__preview"))
+      .getPropertyValue("--d-name-style-input-color")
       .trim();
   }
 
