@@ -16,6 +16,10 @@ import AiConceptMergeModal from "discourse/plugins/discourse-ai/discourse/compon
 
 const CONCEPT_STATUSES = ["active", "candidate", "retired"];
 
+function formatSimilarity(value) {
+  return `${Math.round((Number(value) || 0) * 100)}%`;
+}
+
 export default class AiConceptEditor extends Component {
   @service dialog;
   @service modal;
@@ -54,6 +58,40 @@ export default class AiConceptEditor extends Component {
     return this.args.model.isNew
       ? "discourse_ai.concepts.new"
       : "discourse_ai.concepts.edit_heading";
+  }
+
+  get coOccurringConcepts() {
+    return this.args.model.coOccurringConcepts || [];
+  }
+
+  get neighborConcepts() {
+    return this.args.model.neighborConcepts || [];
+  }
+
+  get topicsTotal() {
+    return (
+      this.args.model.topicsTotal ??
+      this.concept.topics_count ??
+      (this.args.model.topics || []).length
+    );
+  }
+
+  get taggedTopicsHeading() {
+    return i18n("discourse_ai.concepts.tagged_topics_count", {
+      count: this.topicsTotal,
+    });
+  }
+
+  get topicsSummary() {
+    const displayed = (this.args.model.topics || []).length;
+    if (displayed > 0 && this.topicsTotal > displayed) {
+      return i18n("discourse_ai.concepts.showing_top_topics", {
+        shown: displayed,
+        total: this.topicsTotal,
+      });
+    }
+
+    return null;
   }
 
   @cached
@@ -327,9 +365,77 @@ export default class AiConceptEditor extends Component {
           </AdminConfigAreaCard>
         {{/if}}
 
+        <div class="ai-concept-editor__related-row">
+          <AdminConfigAreaCard
+            class="ai-concept-editor__neighbors-card"
+            @description="discourse_ai.concepts.neighbor_concepts_description"
+            @heading="discourse_ai.concepts.neighbor_concepts"
+          >
+            <:content>
+              {{#if this.neighborConcepts.length}}
+                <ul class="ai-concept-editor__related-list">
+                  {{#each this.neighborConcepts as |neighbor|}}
+                    <li class="ai-concept-editor__related-item">
+                      <LinkTo
+                        class="ai-concept-editor__related-link"
+                        @model={{neighbor.id}}
+                        @route="adminPlugins.show.discourse-ai-concepts.edit"
+                      >
+                        {{neighbor.name}}
+                      </LinkTo>
+                      <span class="ai-concept-editor__related-metric">
+                        {{formatSimilarity neighbor.similarity}}
+                      </span>
+                    </li>
+                  {{/each}}
+                </ul>
+              {{else}}
+                <p class="ai-concept-editor__empty-related">
+                  {{i18n "discourse_ai.concepts.no_neighbor_concepts"}}
+                </p>
+              {{/if}}
+            </:content>
+          </AdminConfigAreaCard>
+
+          <AdminConfigAreaCard
+            class="ai-concept-editor__co-occurring-card"
+            @description="discourse_ai.concepts.co_occurring_concepts_description"
+            @heading="discourse_ai.concepts.co_occurring_concepts"
+          >
+            <:content>
+              {{#if this.coOccurringConcepts.length}}
+                <ul class="ai-concept-editor__related-list">
+                  {{#each this.coOccurringConcepts as |related|}}
+                    <li class="ai-concept-editor__related-item">
+                      <LinkTo
+                        class="ai-concept-editor__related-link"
+                        @model={{related.id}}
+                        @route="adminPlugins.show.discourse-ai-concepts.edit"
+                      >
+                        {{related.name}}
+                      </LinkTo>
+                      <span class="ai-concept-editor__related-metric">
+                        {{i18n
+                          "discourse_ai.concepts.shared_topics_count"
+                          count=related.shared_topics_count
+                        }}
+                      </span>
+                    </li>
+                  {{/each}}
+                </ul>
+              {{else}}
+                <p class="ai-concept-editor__empty-related">
+                  {{i18n "discourse_ai.concepts.no_co_occurring_concepts"}}
+                </p>
+              {{/if}}
+            </:content>
+          </AdminConfigAreaCard>
+        </div>
+
         <AdminConfigAreaCard
           class="ai-concept-editor__topics-card"
-          @heading="discourse_ai.concepts.tagged_topics"
+          @translatedDescription={{this.topicsSummary}}
+          @translatedHeading={{this.taggedTopicsHeading}}
         >
           <:content>
             {{#if @model.topics.length}}
@@ -356,6 +462,25 @@ export default class AiConceptEditor extends Component {
                             {{topic.title}}
                           </span>
                         </a>
+                        {{#if topic.concepts.length}}
+                          <div class="ai-concept-editor__topic-concepts">
+                            {{#each topic.concepts as |topicConcept|}}
+                              {{#if (eq topicConcept.id this.concept.id)}}
+                                <span class="ai-concept-pill --current">
+                                  {{topicConcept.name}}
+                                </span>
+                              {{else}}
+                                <LinkTo
+                                  class="ai-concept-pill"
+                                  @model={{topicConcept.id}}
+                                  @route="adminPlugins.show.discourse-ai-concepts.edit"
+                                >
+                                  {{topicConcept.name}}
+                                </LinkTo>
+                              {{/if}}
+                            {{/each}}
+                          </div>
+                        {{/if}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">

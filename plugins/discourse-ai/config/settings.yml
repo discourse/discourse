@@ -834,7 +834,7 @@ discourse_ai:
     client: false
     area: "ai-features/inference"
   inferred_concepts_daily_posts_limit:
-    default: 30
+    default: 0
     min: 0
     max: 500
     client: false

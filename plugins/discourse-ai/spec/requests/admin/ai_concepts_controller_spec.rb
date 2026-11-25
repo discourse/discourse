@@ -53,6 +53,11 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
       expect(json["meta"]["counts"]).to eq({ "active" => 1, "candidate" => 1, "retired" => 1 })
       expect(json["meta"]["enabled"]).to eq(true)
       expect(json["meta"]["embeddings_enabled"]).to eq(true)
+      expect(json["meta"]["posts_enabled"]).to eq(false)
+
+      SiteSetting.inferred_concepts_daily_posts_limit = 10
+      get "/admin/plugins/discourse-ai/ai-concepts.json"
+      expect(response.parsed_body["meta"]["posts_enabled"]).to eq(true)
     end
 
     it "filters by status, search query across aliases, and orders by name" do
@@ -112,8 +117,74 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
       expect(json["ai_concept"]["parent_name"]).to eq("Infrastructure")
       expect(json["ai_concept"]["children_count"]).to eq(1)
       expect(json["children"].map { |c| c["id"] }).to eq([child.id])
+      expect(json["topics_total"]).to eq(1)
       expect(json["topics"].map { |t| t["id"] }).to eq([public_topic.id])
       expect(json["topics"].first["primary"]).to eq(true)
+    end
+
+    it "returns topic concept pills, neighbor concepts by cosine similarity, and co-occurring concepts" do
+      dim = vector_def.dimensions
+      concept = Fabricate(:inferred_concept, name: "Kubernetes", status: :active)
+      docker = Fabricate(:inferred_concept, name: "Docker", status: :active)
+      helm = Fabricate(:inferred_concept, name: "Helm", status: :candidate)
+      retired = Fabricate(:inferred_concept, name: "Legacy VM", status: :retired)
+
+      topic1 = Fabricate(:topic, title: "Kubernetes and Docker with Helm")
+      topic2 = Fabricate(:topic, title: "Kubernetes and Helm Overview")
+      pm_topic = Fabricate(:private_message_topic, title: "Hidden Private Message Topic")
+      deleted_topic =
+        Fabricate(:topic, title: "Deleted Concept Test Topic", deleted_at: Time.zone.now)
+
+      [topic1, topic2, pm_topic, deleted_topic].each do |t|
+        InferredConceptTopic.create!(inferred_concept: concept, topic: t, primary: true)
+      end
+      [topic1, topic2].each do |t|
+        InferredConceptTopic.create!(inferred_concept: helm, topic: t, primary: false)
+      end
+      [topic1, pm_topic, deleted_topic].each do |t|
+        InferredConceptTopic.create!(inferred_concept: docker, topic: t, primary: false)
+      end
+      InferredConceptTopic.create!(inferred_concept: retired, topic: topic1, primary: false)
+
+      schema = DiscourseAi::Embeddings::Schema.for(InferredConcept)
+      schema.store(concept, [1.0] + [0.0] * (dim - 1), "k8s")
+      schema.store(docker, [0.9, 0.4359] + [0.0] * (dim - 2), "docker")
+      schema.store(helm, [0.4, 0.9165] + [0.0] * (dim - 2), "helm")
+      schema.store(retired, [1.0] + [0.0] * (dim - 1), "retired")
+
+      get "/admin/plugins/discourse-ai/ai-concepts/#{concept.id}.json"
+      expect(response.status).to eq(200)
+
+      json = response.parsed_body
+      expect(json["topics_total"]).to eq(2)
+
+      topic1_payload = json["topics"].find { |t| t["id"] == topic1.id }
+      expect(topic1_payload["concepts"].map { |c| c["name"] }).to contain_exactly(
+        "Kubernetes",
+        "Docker",
+        "Helm",
+      )
+
+      expect(json["neighbor_concepts"].map { |c| c["name"] }).to eq(%w[Docker Helm])
+      expect(json["neighbor_concepts"].first["similarity"]).to be >
+        json["neighbor_concepts"].second["similarity"]
+
+      expect(json["co_occurring_concepts"]).to eq(
+        [
+          {
+            "id" => helm.id,
+            "name" => "Helm",
+            "status" => "candidate",
+            "shared_topics_count" => 2,
+          },
+          {
+            "id" => docker.id,
+            "name" => "Docker",
+            "status" => "active",
+            "shared_topics_count" => 1,
+          },
+        ],
+      )
     end
   end
 

@@ -3,6 +3,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import AiConceptsList from "discourse/plugins/discourse-ai/discourse/components/ai-concepts-list";
 
 class AdminPluginNavManagerStub extends Service {
@@ -253,5 +254,208 @@ module("Integration | Component | AiConceptsList", function (hooks) {
     assert
       .dom(".ai-concepts-list__seed-btn")
       .doesNotExist("hides Seed concepts button when feature is disabled");
+  });
+
+  test("hides posts column when posts_enabled is false and shows it when true", async function (assert) {
+    const baseConcept = {
+      id: 1,
+      name: "Kubernetes",
+      aliases: [],
+      status: "active",
+      topics_count: 14,
+      posts_count: 3,
+    };
+
+    const hiddenPostsModel = {
+      ai_concepts: [baseConcept],
+      meta: {
+        total: 1,
+        page: 1,
+        per_page: 50,
+        has_more: false,
+        counts: { active: 1, candidate: 0, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        posts_enabled: false,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{hiddenPostsModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__table thead th")
+      .exists({ count: 4 }, "omits posts header when posts_enabled is false");
+    assert
+      .dom('[data-concept-id="1"] td')
+      .exists({ count: 4 }, "omits posts cell when posts_enabled is false");
+
+    const shownPostsModel = {
+      ...hiddenPostsModel,
+      meta: {
+        ...hiddenPostsModel.meta,
+        posts_enabled: true,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{shownPostsModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__table thead th")
+      .exists({ count: 5 }, "shows posts header when posts_enabled is true");
+    assert
+      .dom('[data-concept-id="1"] td')
+      .exists({ count: 5 }, "shows posts cell when posts_enabled is true");
+  });
+
+  test("updates seeding progress and refreshes concepts live via MessageBus", async function (assert) {
+    let refreshCount = 0;
+
+    pretender.get("/admin/plugins/discourse-ai/ai-concepts.json", () => {
+      refreshCount += 1;
+
+      if (refreshCount === 1) {
+        return response(200, {
+          ai_concepts: [
+            {
+              id: 10,
+              name: "Live Concept",
+              aliases: [],
+              status: "candidate",
+              topics_count: 5,
+              posts_count: 0,
+            },
+          ],
+          meta: {
+            total: 1,
+            page: 1,
+            per_page: 50,
+            has_more: false,
+            counts: { active: 0, candidate: 1, retired: 0 },
+            enabled: true,
+            embeddings_enabled: true,
+            posts_enabled: false,
+            seed_status: {
+              status: "running",
+              run_id: "run-1",
+              processed: 15,
+              total: 50,
+            },
+          },
+        });
+      }
+
+      return response(200, {
+        ai_concepts: [
+          {
+            id: 10,
+            name: "Live Concept",
+            aliases: [],
+            status: "active",
+            topics_count: 12,
+            posts_count: 0,
+          },
+        ],
+        meta: {
+          total: 1,
+          page: 1,
+          per_page: 50,
+          has_more: false,
+          counts: { active: 1, candidate: 0, retired: 0 },
+          enabled: true,
+          embeddings_enabled: true,
+          posts_enabled: false,
+          seed_status: {
+            status: "completed",
+            run_id: "run-1",
+            processed: 50,
+            total: 50,
+          },
+        },
+      });
+    });
+
+    const emptyModel = {
+      ai_concepts: [],
+      meta: {
+        counts: { active: 0, candidate: 0, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        posts_enabled: false,
+        seed_status: {
+          status: "queued",
+          run_id: "run-1",
+          processed: 0,
+          total: 0,
+        },
+      },
+    };
+
+    await render(<template><AiConceptsList @model={{emptyModel}} /></template>);
+
+    assert
+      .dom(".ai-concepts-list__seed-status")
+      .exists("renders initial queued seeding banner in empty state");
+
+    await publishToMessageBus("/discourse-ai/admin/inferred-concepts/seed", {
+      status: "running",
+      run_id: "run-1",
+      processed: 15,
+      total: 50,
+    });
+
+    assert
+      .dom(".ai-concepts-list__table")
+      .exists("refreshes from empty state to concepts table after first wave");
+    assert
+      .dom(".ai-concepts-list__seed-banner")
+      .includesText("15 / 50", "displays live processed count in banner");
+
+    await publishToMessageBus("/discourse-ai/admin/inferred-concepts/seed", {
+      status: "running",
+      run_id: "run-1",
+      processed: 5,
+      total: 50,
+    });
+
+    assert
+      .dom(".ai-concepts-list__seed-banner")
+      .includesText("15 / 50", "ignores out-of-order lower processed counts");
+
+    await publishToMessageBus("/discourse-ai/admin/inferred-concepts/seed", {
+      status: "running",
+      run_id: "run-1",
+      processed: 30,
+      total: 50,
+    });
+
+    assert
+      .dom(".ai-concepts-list__seed-banner")
+      .includesText("30 / 50", "updates banner progress on subsequent waves");
+
+    await publishToMessageBus("/discourse-ai/admin/inferred-concepts/seed", {
+      status: "completed",
+      run_id: "run-1",
+      processed: 50,
+      total: 50,
+    });
+
+    assert
+      .dom(".ai-concepts-list__seed-banner")
+      .doesNotExist("hides progress banner once seeding completes");
+    assert
+      .dom('[data-concept-id="10"]')
+      .includesText(
+        "Live Concept",
+        "renders refreshed concepts after completion"
+      );
+    assert.strictEqual(
+      refreshCount,
+      2,
+      "refreshes list on first non-empty wave and completion"
+    );
   });
 });
