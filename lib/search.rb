@@ -1267,6 +1267,11 @@ class Search
       posts = posts.joins("LEFT JOIN categories ON categories.id = topics.category_id")
     end
 
+    # A caller can narrow the posts further with an SQL condition on `posts`
+    # and `topics`. It only ever adds to the WHERE clause, so it can't widen what
+    # the guardian may see.
+    posts = posts.where(@opts[:restrict_posts]) if @opts[:restrict_posts].present?
+
     is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
     posts = posts.where("topics.visible") unless is_topic_search || @include_invisible
 

@@ -5,10 +5,10 @@ module DiscourseSolved
     class SetSolution
       REQUIRED_SCOPES = %w[discourse-solved:write].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =

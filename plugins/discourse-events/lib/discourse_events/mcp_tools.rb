@@ -5,10 +5,10 @@ module DiscourseEvents
     class ListEvents
       REQUIRED_SCOPES = %w[discourse-calendar:read].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -40,6 +40,9 @@ module DiscourseEvents
         if !request_context.has_scopes?(DiscourseMcp::Scopes::PRIVATE_MESSAGES_READ)
           events = events.where.not(topics: { archetype: Archetype.private_message })
         end
+        # The finder joins each event's topic, so the policy narrows it in SQL.
+        condition = request_context.content_policy.topic_condition("topics")
+        events = events.where(condition) if condition
         events = events.preload(post: :topic)
         values =
           events.map do |event|

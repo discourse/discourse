@@ -40,6 +40,49 @@ module DiscourseMcp
         setting[:themeable] == true || UNSUPPORTED_TYPES.include?(setting[:type].to_s)
       end
 
+      # While a rule narrows topics, a setting's value and default are redacted
+      # when they name a restricted category, tag or topic, or link to one.
+      def redact(projected, policy)
+        return projected if !policy.restricts_forum?
+
+        values = %i[value default].map { |key| projected[key] }
+        restricted = values.any? { |value| restricted_value?(projected, value, policy) }
+        return projected if !restricted
+
+        projected.merge(value: nil, default: nil, redacted: true)
+      end
+
+      def restricted_value?(projected, value, policy)
+        return false if value.blank?
+
+        items = value.to_s.split("|")
+        case projected[:type]
+        when "category"
+          items.any? { |id| !policy.allows_category_id?(id.to_i) }
+        when "category_list"
+          items.any? { |id| !policy.allows_category_id?(id.to_i) }
+        when "tag_list"
+          items.any? { |name| !policy.allows_tag?(name) }
+        else
+          if projected[:setting].end_with?("_topic_id")
+            value.to_i.positive? && Topic.exists?(id: value.to_i) &&
+              !policy.allows_topic_id?(value.to_i)
+          else
+            items.any? { |item| restricted_topic_url?(item, policy) }
+          end
+        end
+      end
+
+      def restricted_topic_url?(item, policy)
+        return false if !item.include?("/t/")
+
+        route = Discourse.route_for(item)
+        return false if route.blank? || route[:controller] != "topics"
+
+        topic_id = (route[:topic_id] || route[:id]).to_i
+        topic_id.positive? && Topic.exists?(id: topic_id) && !policy.allows_topic_id?(topic_id)
+      end
+
       def project(setting)
         blocked = blocked?(setting)
         {
@@ -177,10 +220,10 @@ module DiscourseMcp
     class ListSiteSettings
       REQUIRED_SCOPES = [Scopes::SITE_SETTINGS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -203,7 +246,13 @@ module DiscourseMcp
         page = rows.slice(offset, limit) || []
         has_more = offset + page.length < rows.length
         ToolHelpers.text_and_structured(
-          site_settings: page.map { |setting| SiteSettingSupport.project(setting) },
+          site_settings:
+            page.map do |setting|
+              SiteSettingSupport.redact(
+                SiteSettingSupport.project(setting),
+                request_context.content_policy,
+              )
+            end,
           meta: {
             offset:,
             limit:,

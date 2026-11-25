@@ -5,10 +5,10 @@ module DiscourseMcp
     class ListPrivateMessages
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       MAILBOXES = %w[inbox sent archive unread new].freeze
@@ -33,10 +33,12 @@ module DiscourseMcp
         end
 
         group = group_for(arguments["group_name"], mailbox, guardian)
-        list = message_list(target, mailbox, group, page, per_page, guardian)
+        policy = request_context.content_policy
+        list = message_list(target, mailbox, group, page, per_page, guardian, policy)
         topics = list.topics
         lookahead_page = (page + 1) * per_page
-        has_more = message_list(target, mailbox, group, lookahead_page, 1, guardian).topics.present?
+        has_more =
+          message_list(target, mailbox, group, lookahead_page, 1, guardian, policy).topics.present?
         preload_participants(topics, target)
         archive_state = archive_state(topics, target)
         topic_users =
@@ -75,8 +77,13 @@ module DiscourseMcp
       end
       private_class_method :group_for
 
-      def self.message_list(target, mailbox, group, page, per_page, guardian)
-        query = TopicQuery.new(target, page:, per_page:, group_name: group&.name, guardian:)
+      def self.message_list(target, mailbox, group, page, per_page, guardian, policy)
+        query =
+          PolicyTopicQuery.new(
+            target,
+            { page:, per_page:, group_name: group&.name, guardian: },
+            content_policy: policy,
+          )
         method_name = "list_private_messages"
         method_name += "_group" if group
         method_name += "_#{mailbox}" if mailbox != "inbox"
@@ -150,10 +157,10 @@ module DiscourseMcp
     class ReadPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -174,7 +181,7 @@ module DiscourseMcp
         )
 
       def self.call(arguments:, request_context:)
-        topic = private_message_topic!(arguments.fetch("topic_id"), request_context.guardian)
+        topic = private_message_topic!(arguments.fetch("topic_id"), request_context)
         start_post_number = arguments.fetch("start_post_number", 1)
         post_limit = arguments.fetch("post_limit", 5)
         posts =
@@ -210,9 +217,10 @@ module DiscourseMcp
         )
       end
 
-      def self.private_message_topic!(topic_id, guardian)
+      def self.private_message_topic!(topic_id, request_context)
         topic = Topic.includes(:allowed_users, :allowed_groups).find_by(id: topic_id)
-        if topic.blank? || !topic.private_message? || !guardian.can_see?(topic)
+        if topic.blank? || !topic.private_message? || !request_context.guardian.can_see?(topic) ||
+             !request_context.content_policy.allows_topic?(topic)
           raise ToolError, I18n.t("mcp.errors.private_message_not_found")
         end
         topic
@@ -230,10 +238,10 @@ module DiscourseMcp
     class CreatePrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -294,10 +302,10 @@ module DiscourseMcp
     class ReplyPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -312,10 +320,7 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         topic =
-          ReadPrivateMessage.private_message_topic!(
-            arguments.fetch("topic_id"),
-            request_context.guardian,
-          )
+          ReadPrivateMessage.private_message_topic!(arguments.fetch("topic_id"), request_context)
         post =
           PostCreator.create!(
             request_context.user,
@@ -336,10 +341,10 @@ module DiscourseMcp
     class InviteToPrivateMessage
       REQUIRED_SCOPES = [Scopes::PRIVATE_MESSAGES_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -358,10 +363,7 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         ToolHelpers.ensure_current_author!(arguments, request_context.user)
         topic =
-          ReadPrivateMessage.private_message_topic!(
-            arguments.fetch("topic_id"),
-            request_context.guardian,
-          )
+          ReadPrivateMessage.private_message_topic!(arguments.fetch("topic_id"), request_context)
         recipients = arguments.values_at("username", "group_name", "email_address").compact_blank
         if recipients.length != 1
           raise ToolError, I18n.t("mcp.errors.private_message_single_recipient")

@@ -5,10 +5,10 @@ module DiscourseMcp
     class GetDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -28,6 +28,7 @@ module DiscourseMcp
         # draft reads exactly like a missing one.
         private_messages_denied = ToolHelpers.private_messages_denied?(request_context)
         return absent if private_messages_denied && ToolHelpers.private_message_draft?(draft_key)
+        return absent if ToolHelpers.restricted_draft?(draft_key, request_context)
         ToolHelpers.ensure_private_message_draft_scope!(draft_key, request_context, access: :read)
 
         sequence =
@@ -50,6 +51,7 @@ module DiscourseMcp
              )
           return absent
         end
+        return absent if ToolHelpers.restricted_draft?(draft_key, request_context, data: parsed)
         ToolHelpers.ensure_private_message_draft_scope!(
           draft_key,
           request_context,
@@ -66,7 +68,14 @@ module DiscourseMcp
             title: parsed["title"],
             reply: parsed["reply"],
             category_id: parsed["categoryId"],
-            tags: parsed["tags"].is_a?(Array) ? parsed["tags"] : [],
+            tags:
+              (
+                if parsed["tags"].is_a?(Array)
+                  parsed["tags"].select { |tag| request_context.content_policy.allows_tag?(tag) }
+                else
+                  []
+                end
+              ),
             action: parsed["action"],
           },
         )
@@ -91,10 +100,10 @@ module DiscourseMcp
     class SaveDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -160,10 +169,10 @@ module DiscourseMcp
     class DeleteDraft
       REQUIRED_SCOPES = [Scopes::DRAFTS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =

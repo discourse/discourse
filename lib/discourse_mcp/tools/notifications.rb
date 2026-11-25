@@ -5,10 +5,10 @@ module DiscourseMcp
     class ListNotifications
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       # Chat content is delegated separately from forum content; this notification
@@ -86,6 +86,7 @@ module DiscourseMcp
               )
               .where.not(TOPICLESS_PRIVATE_MESSAGE_SQL, private_message: Archetype.private_message)
         end
+        notifications = allowed_notifications(notifications, request_context.content_policy)
         notifications =
           Notification.filter_inaccessible_topic_notifications(
             request_context.guardian,
@@ -108,7 +109,7 @@ module DiscourseMcp
                 scope: request_context.guardian,
                 root: false,
               ).as_json
-            if private_messages_denied &&
+            if (private_messages_denied || request_context.content_policy.restricts_forum?) &&
                  notification.notification_type == Notification.types[:liked_consolidated]
               json[:data] = json[:data].to_h.symbolize_keys.slice(*CONSOLIDATED_LIKE_DATA_KEYS)
             end
@@ -116,6 +117,51 @@ module DiscourseMcp
           end
         ToolHelpers.text_and_structured(notifications: serialized)
       end
+
+      # While a rule is active, a notification is listed only when the topic it
+      # belongs to is allowed. A notification without a topic that still names
+      # one (by title or post) is kept only when its post is in an allowed topic,
+      # and a reviewable mention only when its reviewable's topic is allowed.
+      def self.allowed_notifications(notifications, policy)
+        condition = policy.topic_condition("mcp_notification_topics")
+        return notifications if condition.nil?
+
+        notifications
+          .where(<<~SQL.squish)
+            notifications.topic_id IS NULL OR EXISTS (
+              SELECT 1 FROM topics mcp_notification_topics
+              WHERE mcp_notification_topics.id = notifications.topic_id AND #{condition}
+            )
+          SQL
+          .where.not(<<~SQL.squish, mentioned: Notification.types[:mentioned])
+            notifications.notification_type = :mentioned
+            AND notifications.data LIKE '%"reviewable_id"%'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM reviewables
+              JOIN topics mcp_notification_topics ON mcp_notification_topics.id = reviewables.topic_id
+              WHERE reviewables.id::text = substring(notifications.data from '"reviewable_id":\s*"?([0-9]+)')
+                AND #{condition}
+            )
+          SQL
+          .where.not(<<~SQL.squish)
+            notifications.topic_id IS NULL
+            AND (
+              notifications.data LIKE '%"topic_title"%'
+              OR notifications.data LIKE '%"original_post_id"%'
+              OR notifications.data LIKE '%"topic_id"%'
+            )
+            AND notifications.data NOT LIKE '%"reviewable_id"%'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM posts mcp_notification_posts
+              JOIN topics mcp_notification_topics ON mcp_notification_topics.id = mcp_notification_posts.topic_id
+              WHERE mcp_notification_posts.id::text = substring(notifications.data from '"original_post_id":\s*"?([0-9]+)')
+                AND #{condition}
+            )
+          SQL
+      end
+      private_class_method :allowed_notifications
 
       # Applied to the relation so chat notifications never consume the caller's
       # page, and later pages cannot reveal them either.

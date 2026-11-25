@@ -5,10 +5,10 @@ module DiscourseMcp
     class ReadTopicPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       SELECTION_KEYS = {
@@ -33,7 +33,7 @@ module DiscourseMcp
         if topic.blank? || !guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :read,
@@ -153,10 +153,10 @@ module DiscourseMcp
     class GetPostReplies
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       DIRECT_REPLIES_LIMIT = 20
@@ -277,10 +277,10 @@ module DiscourseMcp
     class ListLatestPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -289,9 +289,14 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         before_post_id = arguments["before_post_id"]
         posts =
-          LatestPostsQuery
-            .new(user: request_context.user, guardian: request_context.guardian)
-            .public_posts(before_post_id:)
+          request_context
+            .content_policy
+            .scope_posts(
+              LatestPostsQuery.new(
+                user: request_context.user,
+                guardian: request_context.guardian,
+              ).public_posts(before_post_id:),
+            )
             .to_a
         rows =
           (
@@ -329,10 +334,10 @@ module DiscourseMcp
     class GetTopicViewStats
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -347,7 +352,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :read,
@@ -389,10 +394,10 @@ module DiscourseMcp
     class GetTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -417,7 +422,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :read,
@@ -454,10 +459,10 @@ module DiscourseMcp
     class GetPost
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -497,17 +502,22 @@ module DiscourseMcp
     class ListTopics
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(topics: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
         limit = arguments.fetch("limit", 30).to_i.clamp(1, 50)
-        topics = TopicQuery.new(request_context.user).list_latest.topics.first(limit)
+        topics =
+          PolicyTopicQuery
+            .new(request_context.user, content_policy: request_context.content_policy)
+            .list_latest
+            .topics
+            .first(limit)
         ActiveRecord::Associations::Preloader.new(records: topics, associations: :tags).call
         visible_tag_ids = ToolHelpers.visible_tag_ids(topics, request_context.guardian)
         ToolHelpers.text_and_structured(
@@ -522,27 +532,33 @@ module DiscourseMcp
     class ListCategories
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(categories: OutputSchema::OBJECT_ARRAY)
 
       def self.call(arguments:, request_context:)
-        categories = Category.secured(request_context.guardian).order(:position, :id).limit(500)
+        policy = request_context.content_policy
+        categories =
+          policy.scope_categories(Category.secured(request_context.guardian)).order(:position, :id)
+        # A category's topic count would reveal how many restricted topics it holds.
+        counted = !policy.restricts_forum?
         ToolHelpers.text_and_structured(
           categories:
-            categories.map do |category|
-              {
-                id: category.id,
-                name: category.name,
-                slug: category.slug,
-                parent_category_id: category.parent_category_id,
-                topic_count: category.topic_count,
-              }
-            end,
+            categories
+              .limit(500)
+              .map do |category|
+                {
+                  id: category.id,
+                  name: category.name,
+                  slug: category.slug,
+                  parent_category_id: policy.redact_category_id(category.parent_category_id),
+                  topic_count: counted ? category.topic_count : nil,
+                }
+              end,
         )
       end
     end
@@ -550,10 +566,10 @@ module DiscourseMcp
     class ListTags
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(tags: OutputSchema::OBJECT_ARRAY)
@@ -565,12 +581,15 @@ module DiscourseMcp
         if ToolHelpers.private_messages_denied?(request_context)
           tags = tags.where("NOT (tags.pm_topic_count > 0 AND tags.#{column} = 0)")
         end
-        tags = tags.limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
+        policy = request_context.content_policy
+        tags = policy.scope_tags(tags).limit(arguments.fetch("limit", 100).to_i.clamp(1, 200))
         visible = DiscourseTagging.filter_visible(tags, request_context.guardian)
+        # A tag's topic count would reveal how many restricted topics carry it.
+        counted = !policy.restricts_forum?
         ToolHelpers.text_and_structured(
           tags:
             visible.map do |tag|
-              { id: tag.id, name: tag.name, topic_count: tag.public_send(column) }
+              { id: tag.id, name: tag.name, topic_count: counted ? tag.public_send(column) : nil }
             end,
         )
       end

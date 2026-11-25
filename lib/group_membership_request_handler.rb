@@ -1,20 +1,25 @@
 # frozen_string_literal: true
 
 class GroupMembershipRequestHandler
-  def self.handle(guardian, group, user, accept:)
-    new(guardian, group, user, accept:).handle
+  # @param reply_allowed [#call, nil] Receives the request's personal message
+  #   and returns whether the acceptance may be posted there. When it returns
+  #   false, the request is handled as if that message didn't exist.
+  def self.handle(guardian, group, user, accept:, reply_allowed: nil)
+    new(guardian, group, user, accept:, reply_allowed:).handle
   end
 
-  def initialize(guardian, group, user, accept:)
+  def initialize(guardian, group, user, accept:, reply_allowed: nil)
     @guardian = guardian
     @group = group
     @user = user
     @accept = accept
+    @reply_allowed = reply_allowed
   end
 
   def handle
     guardian.ensure_can_edit!(group)
     request_topic = accept ? find_request_topic : nil
+    request_topic = nil if request_topic && @reply_allowed && !@reply_allowed.call(request_topic)
 
     Group.transaction do
       if accept

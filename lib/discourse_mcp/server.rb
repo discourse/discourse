@@ -277,7 +277,12 @@ module DiscourseMcp
       raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: }) if errors.present?
 
       result = tool.implementation.call(arguments: arguments, request_context: request_context)
-      complete_result(**result.symbolize_keys)
+      result =
+        request_context.content_policy.filter_tool_result(
+          result.symbolize_keys,
+          identifier: tool.identifier,
+        )
+      complete_result(**result)
     rescue ActiveRecord::RecordInvalid => error
       raise ToolError, error.record.errors.full_messages.join(", ")
     rescue ActiveRecord::RecordNotSaved => error

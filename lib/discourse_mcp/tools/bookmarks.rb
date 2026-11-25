@@ -5,10 +5,10 @@ module DiscourseMcp
     class ListBookmarks
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(bookmarks: OutputSchema::OBJECT_ARRAY)
@@ -18,6 +18,7 @@ module DiscourseMcp
         if !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
           bookmarks = ToolHelpers.without_private_message_bookmarks(bookmarks)
         end
+        bookmarks = allowed_bookmarks(bookmarks, request_context.content_policy)
         bookmarks =
           bookmarks
             .includes(:bookmarkable)
@@ -37,6 +38,31 @@ module DiscourseMcp
           end
         ToolHelpers.text_and_structured(bookmarks: values)
       end
+
+      # While a rule is active, only bookmarks on topics and posts the policy
+      # allows are listed. Other bookmarkable types can't be judged, so they're
+      # left out.
+      def self.allowed_bookmarks(bookmarks, policy)
+        condition = policy.topic_condition("mcp_bookmark_topics")
+        return bookmarks if condition.nil?
+
+        bookmarks.where(<<~SQL.squish, topic: "Topic", post: "Post")
+          (
+            bookmarks.bookmarkable_type = :topic AND EXISTS (
+              SELECT 1 FROM topics mcp_bookmark_topics
+              WHERE mcp_bookmark_topics.id = bookmarks.bookmarkable_id AND #{condition}
+            )
+          ) OR (
+            bookmarks.bookmarkable_type = :post AND EXISTS (
+              SELECT 1
+              FROM posts mcp_bookmark_posts
+              JOIN topics mcp_bookmark_topics ON mcp_bookmark_topics.id = mcp_bookmark_posts.topic_id
+              WHERE mcp_bookmark_posts.id = bookmarks.bookmarkable_id AND #{condition}
+            )
+          )
+        SQL
+      end
+      private_class_method :allowed_bookmarks
     end
   end
 end

@@ -124,15 +124,58 @@ module DiscourseMcp
       # Whether a group has personal messages, and how many, describes those
       # messages, so both are left out while agent access to them is off.
       PRIVATE_MESSAGE_FIELDS = %i[has_messages message_count].freeze
+      # The group's notification defaults for categories and tags.
+      DEFAULT_CATEGORY_FIELDS = %i[
+        watching_category_ids
+        tracking_category_ids
+        watching_first_post_category_ids
+        regular_category_ids
+        muted_category_ids
+      ].freeze
+      DEFAULT_TAG_FIELDS = %i[
+        watching_tags
+        watching_first_post_tags
+        tracking_tags
+        regular_tags
+        muted_tags
+      ].freeze
 
       def group_detail_json(group, request_context)
         fields = SAFE_DETAIL_FIELDS
         fields -= PRIVATE_MESSAGE_FIELDS if ToolHelpers.private_messages_denied?(request_context)
 
-        GroupShowSerializer
-          .new(group, scope: request_context.guardian, root: false)
-          .as_json
-          .slice(*fields)
+        json =
+          GroupShowSerializer
+            .new(group, scope: request_context.guardian, root: false)
+            .as_json
+            .slice(*fields)
+        without_restricted_defaults(json, request_context.content_policy)
+      end
+
+      def without_restricted_defaults(json, policy)
+        return json if !policy.restricts_forum?
+
+        DEFAULT_CATEGORY_FIELDS.each do |field|
+          next if !json[field].is_a?(Array)
+          json[field] = json[field].select { |id| policy.allows_category_id?(id) }
+        end
+        DEFAULT_TAG_FIELDS.each do |field|
+          next if !json[field].is_a?(Array)
+          json[field] = json[field].select { |name| policy.allows_tag?(name) }
+        end
+        json
+      end
+
+      # Setting notification defaults to categories or tags can't be checked
+      # against restrictions without revealing which ones are restricted, so
+      # agents can't set them while a rule narrows topics.
+      def ensure_defaults_unrestricted!(arguments, request_context)
+        return if !request_context.content_policy.restricts_forum?
+
+        keys = (DEFAULT_CATEGORY_FIELDS + DEFAULT_TAG_FIELDS).map(&:to_s)
+        return if arguments.keys.none? { |key| keys.include?(key) }
+
+        request_context.content_policy.require_unrestricted!(ContentPolicy::CATEGORIES)
       end
 
       # Membership requests and their reasons become personal messages, so agents
@@ -158,10 +201,10 @@ module DiscourseMcp
     class ListGroups
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -223,10 +266,10 @@ module DiscourseMcp
     class GetGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(group: OutputSchema::OBJECT)
@@ -242,10 +285,10 @@ module DiscourseMcp
     class ListGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -305,10 +348,10 @@ module DiscourseMcp
     class ListGroupMembershipRequests
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -357,10 +400,10 @@ module DiscourseMcp
     class CreateGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       # The MCP registry is built before app models are loadable, so these
@@ -382,6 +425,7 @@ module DiscourseMcp
 
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
+        GroupSupport.ensure_defaults_unrestricted!(arguments, request_context)
         created = nil
         message = nil
 
@@ -410,10 +454,10 @@ module DiscourseMcp
     class UpdateGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       MAX_NAME_LENGTH = CreateGroup::MAX_NAME_LENGTH
@@ -424,6 +468,7 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         group = GroupSupport.find_managed!(arguments.fetch("group_id"), guardian)
+        GroupSupport.ensure_defaults_unrestricted!(arguments, request_context)
         attributes = arguments.slice(*GroupUpdater.permitted_names(guardian, group:))
         raise ToolError, I18n.t("mcp.errors.group_update_required") if attributes.empty?
 
@@ -452,10 +497,10 @@ module DiscourseMcp
     class DeleteGroup
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -484,10 +529,10 @@ module DiscourseMcp
     class ManageGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       ACTIONS = %w[add remove].freeze
@@ -537,10 +582,10 @@ module DiscourseMcp
     class InviteGroupMembers
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       MAX_EMAILS = 50
@@ -579,10 +624,10 @@ module DiscourseMcp
     class ManageGroupOwners
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       ACTIONS = %w[add remove].freeze
@@ -620,10 +665,10 @@ module DiscourseMcp
     class ManageGroupMembership
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       ACTIONS = %w[join leave request].freeze
@@ -673,10 +718,10 @@ module DiscourseMcp
     class HandleGroupMembershipRequest
       REQUIRED_SCOPES = [Scopes::GROUPS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       ACTIONS = %w[approve deny].freeze
@@ -702,7 +747,16 @@ module DiscourseMcp
 
         action = arguments.fetch("action")
         accepted = action == "approve"
-        GroupMembershipRequestHandler.handle(guardian, group, user, accept: accepted)
+        # Approving replies in the request's personal message. When the policy
+        # restricts that message, it's treated like a missing one: the user is
+        # added and no reply is posted.
+        GroupMembershipRequestHandler.handle(
+          guardian,
+          group,
+          user,
+          accept: accepted,
+          reply_allowed: ->(topic) { request_context.content_policy.allows_topic?(topic) },
+        )
 
         ToolHelpers.text_and_structured(
           group_id: group.id,
@@ -716,10 +770,10 @@ module DiscourseMcp
     class ListGroupPosts
       REQUIRED_SCOPES = [Scopes::GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -739,7 +793,11 @@ module DiscourseMcp
           before: arguments["before"],
           category_id: arguments["category_id"],
         }.compact
-        posts = group.posts_for(guardian, filters).limit(limit + 1).to_a
+        policy = request_context.content_policy
+        if !policy.allows_category_id?(filters[:category_id])
+          filters[:category_id] = ContentPolicy::MISSING_ID
+        end
+        posts = policy.scope_posts(group.posts_for(guardian, filters)).limit(limit + 1).to_a
         has_more = posts.length > limit
         posts = posts.first(limit)
 

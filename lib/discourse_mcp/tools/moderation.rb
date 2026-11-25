@@ -26,6 +26,7 @@ module DiscourseMcp
       end
 
       def without_private_messages(scope, request_context)
+        scope = allowed_by_policy(scope, request_context.content_policy)
         return scope if request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ)
 
         private_message_topic_ids =
@@ -33,11 +34,108 @@ module DiscourseMcp
         scope.where(topic_id: nil).or(scope.where.not(topic_id: private_message_topic_ids))
       end
 
+      # Reviewable types without a topic that the policy can judge: users, and
+      # queued posts by the category and tags they'd be created with.
+      TOPICLESS_TYPES = %w[ReviewableUser ReviewableQueuedPost].freeze
+
+      # While a rule is active, a reviewable with a topic follows that topic. A
+      # queued post without one is judged by its category and the tags in its
+      # payload; a personal message without a topic, by its tags while personal
+      # messages are allowed. Other reviewable types without a topic can't be
+      # judged, so they're left out.
+      def allowed_by_policy(scope, policy)
+        condition = policy.topic_condition("mcp_reviewable_topics")
+        return scope if condition.nil?
+
+        restricted_categories = policy.restricted_category_ids.to_a.presence || [-1]
+        restricted_tags = policy.restricted_tag_names.map(&:downcase).presence || [""]
+        scope.where(
+          <<~SQL.squish,
+            (
+              reviewables.topic_id IS NOT NULL AND EXISTS (
+                SELECT 1 FROM topics mcp_reviewable_topics
+                WHERE mcp_reviewable_topics.id = reviewables.topic_id AND #{condition}
+              )
+            ) OR (
+              reviewables.topic_id IS NULL AND (
+                reviewables.type = 'ReviewableUser' OR (
+                  reviewables.type = 'ReviewableQueuedPost'
+                  AND (
+                    (
+                      COALESCE(reviewables.payload->>'archetype', '') <> :private_message
+                      AND COALESCE(reviewables.category_id, :uncategorized) NOT IN (:restricted_categories)
+                    ) OR (
+                      reviewables.payload->>'archetype' = :private_message AND NOT :private_messages_denied
+                    )
+                  )
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements_text(
+                      CASE jsonb_typeof(reviewables.payload::jsonb->'tags')
+                      WHEN 'array' THEN reviewables.payload::jsonb->'tags'
+                      ELSE '[]'::jsonb END
+                    ) AS queued_tags(name)
+                    WHERE LOWER(queued_tags.name) IN (:restricted_tags)
+                  )
+                )
+              )
+            )
+          SQL
+          private_message: Archetype.private_message,
+          uncategorized: SiteSetting.uncategorized_category_id,
+          restricted_categories:,
+          restricted_tags:,
+          private_messages_denied: policy.denies_all?(ContentPolicy::PRIVATE_MESSAGES),
+        )
+      end
+
+      # Conversation posts are side-loaded on their own, keyed by post id.
+      def without_restricted_conversation_posts(side_loads, policy)
+        posts = side_loads[:conversation_posts]
+        return side_loads if !posts.is_a?(Array) || posts.empty?
+
+        topic_ids =
+          Post.with_deleted.where(id: posts.map { |post| post[:id] }).pluck(:id, :topic_id)
+        allowed = policy.allowed_topic_ids(topic_ids.map(&:last))
+        allowed_post_ids = topic_ids.filter_map { |id, topic_id| id if allowed.include?(topic_id) }
+        side_loads.merge(
+          conversation_posts: posts.select { |post| allowed_post_ids.include?(post[:id]) },
+        )
+      end
+
+      # A flag's conversation lives in its own topic, which can be restricted
+      # while the flagged post isn't. Such a conversation is left out, whether
+      # it's embedded, side-loaded or referenced by id. A conversation's id is
+      # its topic's id.
+      def without_restricted_conversations(value, policy)
+        case value
+        when Array
+          value.map { |item| without_restricted_conversations(item, policy) }
+        when Hash
+          value.each_with_object({}) do |(key, item), result|
+            case key
+            when :reviewable_conversation
+              next if item.is_a?(Hash) && !policy.allows_topic_id?(item[:id])
+            when :reviewable_conversations
+              if item.is_a?(Array)
+                item =
+                  item.select { |entry| !entry.is_a?(Hash) || policy.allows_topic_id?(entry[:id]) }
+              end
+            when :reviewable_conversation_id
+              item = nil if item.present? && !policy.allows_topic_id?(item)
+            end
+            result[key] = without_restricted_conversations(item, policy)
+          end
+        else
+          value
+        end
+      end
+
       def ensure_private_message_scope!(reviewable, request_context, access:)
         topic = reviewable.topic || Topic.unscoped.find_by(id: reviewable.topic_id)
         return if topic.blank?
 
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access:,
@@ -106,9 +204,13 @@ module DiscourseMcp
         side_loads.each_value { |value| value.uniq! if value.is_a?(Array) }
         serialized = serialized.map(&:deep_symbolize_keys)
         side_loads = side_loads.deep_symbolize_keys
-        if request_context.content_policy.active?
-          serialized = without_content_counters(serialized)
-          side_loads = without_content_counters(side_loads)
+        policy = request_context.content_policy
+        if policy.active?
+          serialized =
+            without_restricted_conversations(without_content_counters(serialized), policy)
+          side_loads =
+            without_restricted_conversations(without_content_counters(side_loads), policy)
+          side_loads = without_restricted_conversation_posts(side_loads, policy)
         end
         [bounded(serialized), bounded(side_loads)]
       end
@@ -156,8 +258,13 @@ module DiscourseMcp
         end
       end
 
-      def find_reviewable!(reviewable_id, user)
-        Reviewable.viewable_by(user).find_by(id: reviewable_id) or
+      def find_reviewable!(reviewable_id, request_context)
+        scope =
+          allowed_by_policy(
+            Reviewable.viewable_by(request_context.user),
+            request_context.content_policy,
+          )
+        scope.find_by(id: reviewable_id) or
           raise ToolError, I18n.t("mcp.errors.reviewable_not_found")
       end
 
@@ -241,10 +348,10 @@ module DiscourseMcp
     class GetReviewQueueCount
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -272,10 +379,10 @@ module DiscourseMcp
     class ListReviewables
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
@@ -314,10 +421,10 @@ module DiscourseMcp
     class ListReviewableTopics
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -391,10 +498,10 @@ module DiscourseMcp
     class GetReviewable
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
@@ -404,10 +511,7 @@ module DiscourseMcp
         ModerationSupport.ensure_queue_access!(guardian)
         ModerationSupport.with_deleted_content(guardian) do
           reviewable =
-            ModerationSupport.find_reviewable!(
-              arguments.fetch("reviewable_id"),
-              request_context.user,
-            )
+            ModerationSupport.find_reviewable!(arguments.fetch("reviewable_id"), request_context)
           ModerationSupport.ensure_private_message_scope!(
             reviewable,
             request_context,
@@ -435,10 +539,10 @@ module DiscourseMcp
     class GetUserModerationSummary
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       # Counters derived from what the user wrote, flagged or was warned about
@@ -486,10 +590,10 @@ module DiscourseMcp
     class GetPostRevision
       REQUIRED_SCOPES = [Scopes::MODERATION_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
@@ -498,7 +602,7 @@ module DiscourseMcp
         guardian = request_context.guardian
         ModerationSupport.ensure_queue_access!(guardian)
         post = ModerationSupport.find_visible_post!(arguments.fetch("post_id"), guardian)
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           post.topic,
           request_context,
           access: :read,
@@ -523,17 +627,36 @@ module DiscourseMcp
             .new(post_revision, root: false, scope: guardian)
             .as_json
             .deep_symbolize_keys
+        result = redact_topic_changes(result, request_context.content_policy)
         ToolHelpers.text_and_structured(ModerationSupport.bounded(result))
+      end
+
+      # A revision can record a move from or to a restricted category, or a
+      # restricted tag added or removed. Those sides of the diff are redacted.
+      def self.redact_topic_changes(result, policy)
+        return result if !policy.restricts_forum?
+
+        if (changes = result[:category_id_changes]).is_a?(Hash)
+          result[:category_id_changes] = changes.transform_values do |id|
+            policy.redact_category_id(id)
+          end
+        end
+        if (changes = result[:tags_changes]).is_a?(Hash)
+          result[:tags_changes] = changes.transform_values do |names|
+            Array(names).select { |name| policy.allows_tag?(name) }
+          end
+        end
+        result
       end
     end
 
     class PerformReviewableAction
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema::OBJECT
@@ -545,7 +668,7 @@ module DiscourseMcp
           raise ToolError, I18n.t("mcp.errors.reviewable_confirmation_required")
         end
         reviewable =
-          ModerationSupport.find_reviewable!(arguments.fetch("reviewable_id"), request_context.user)
+          ModerationSupport.find_reviewable!(arguments.fetch("reviewable_id"), request_context)
         ModerationSupport.ensure_private_message_scope!(reviewable, request_context, access: :read)
         ModerationSupport.ensure_private_message_scope!(reviewable, request_context, access: :write)
         ModerationSupport.ensure_claim_allows_action!(reviewable, request_context.user)

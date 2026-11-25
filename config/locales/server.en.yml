@@ -79,6 +79,7 @@ en:
       category_update_failed: "Category could not be updated"
       category_update_required: "At least one category field must be provided"
       content_policy_blocked: "This capability is turned off by the site's AI content restrictions"
+      content_policy_output_blocked: "The operation could not be completed with these parameters"
       draft_sequence_conflict: "Draft sequence conflict"
       draft_too_long: "Draft is too long"
       group_create_failed: "The group could not be created"

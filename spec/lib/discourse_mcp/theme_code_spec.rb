@@ -11,6 +11,7 @@ RSpec.describe DiscourseMcp::Tools::SetThemeCode do
       guardian: actor.guardian,
       user_id: actor.id,
       user: actor,
+      content_policy: DiscourseMcp::ContentPolicy.new([]),
     )
   end
 

@@ -37,10 +37,10 @@ module DiscourseMcp
     class ListUsers
       REQUIRED_SCOPES = [Scopes::USERS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       QUERIES = %w[active new staff suspended silenced pending staged].freeze
@@ -114,10 +114,10 @@ module DiscourseMcp
     class CreateUser
       REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -160,10 +160,10 @@ module DiscourseMcp
     class ManageUserActivation
       REQUIRED_SCOPES = [Scopes::USERS_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       ACTIONS = %w[activate approve activate_and_approve deactivate].freeze
@@ -217,15 +217,25 @@ module DiscourseMcp
     class ListDirectoryItems
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       # Columns that count topics viewed and posts read, personal messages
       # included, so they're left out while agent access to them is off.
       PRIVATE_MESSAGE_COLUMNS = %i[topics_entered posts_read].freeze
+      # Every column but days visited counts topics and posts, so only it
+      # stays while a rule narrows topics.
+      FORUM_COLUMNS = %i[
+        likes_received
+        likes_given
+        topics_entered
+        topic_count
+        post_count
+        posts_read
+      ].freeze
       PAGE_SIZE = ::DirectoryItemsQuery::PAGE_SIZE
       PAGE_LIMIT = ::DirectoryItemsQuery::PAGE_LIMIT
       OUTPUT_SCHEMA =
@@ -237,10 +247,22 @@ module DiscourseMcp
         end
 
         private_messages_denied = ToolHelpers.private_messages_denied?(request_context)
-        if private_messages_denied &&
-             PRIVATE_MESSAGE_COLUMNS.include?(arguments["order"].to_s.to_sym)
+        forum_restricted = request_context.content_policy.restricts_forum?
+        hidden_columns =
+          if forum_restricted
+            FORUM_COLUMNS
+          elsif private_messages_denied
+            PRIVATE_MESSAGE_COLUMNS
+          else
+            []
+          end
+        order = arguments["order"]
+        if hidden_columns.include?(order.to_s.to_sym)
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.content_policy_blocked")
         end
+        # The default order ranks by a counter; while those counters are hidden,
+        # the ranking would still reveal them.
+        order = "days_visited" if order.blank? && forum_restricted
 
         period = arguments.fetch("period")
         period_type = DirectoryItem.period_types[period.to_sym]
@@ -258,7 +280,7 @@ module DiscourseMcp
               group_name: arguments["group"],
               exclude_group_names: arguments["exclude_groups"],
               exclude_usernames: arguments["exclude_usernames"],
-              order: arguments["order"],
+              order:,
               ascending: arguments.fetch("ascending", false),
               name: arguments["name"],
               username: arguments["username"],
@@ -271,9 +293,9 @@ module DiscourseMcp
         rows =
           query_result.items.map do |item|
             row = item_json(item, period_type, query_result.active_column_names)
-            next row if !private_messages_denied
+            next row if hidden_columns.empty?
 
-            row.merge(PRIVATE_MESSAGE_COLUMNS.index_with(nil), time_read: nil)
+            row.merge(hidden_columns.index_with(nil), time_read: nil)
           end
         has_more = (page + 1) * limit < query_result.total
 
@@ -322,10 +344,10 @@ module DiscourseMcp
     class GetUser
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -360,10 +382,10 @@ module DiscourseMcp
     class ListUserPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -387,6 +409,7 @@ module DiscourseMcp
             action_types: [UserAction::NEW_TOPIC, UserAction::REPLY],
             guardian:,
             ignore_private_messages: true,
+            extra_where: request_context.content_policy.topic_condition("t"),
           ).to_a
         has_more = actions.length > limit
         posts = actions.first(limit).map { |action| ToolHelpers.user_post_json(action) }
@@ -398,10 +421,10 @@ module DiscourseMcp
     class GetUserSummary
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       METRICS = %i[
@@ -430,6 +453,9 @@ module DiscourseMcp
         topic_count
         post_count
       ].freeze
+      # Counters that every topic feeds, so they're left out while a rule
+      # narrows topics.
+      FORUM_METRICS = (PRIVATE_MESSAGE_METRICS + %i[bookmark_count]).freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
           username: OutputSchema::STRING,
@@ -458,12 +484,19 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         guardian = request_context.guardian
         user = ToolHelpers.visible_user!(arguments.fetch("username"), guardian)
+        policy = request_context.content_policy
         summary =
-          UserSummarySerializer.new(UserSummary.new(user, guardian), scope: guardian, root: false)
+          UserSummarySerializer.new(
+            PolicyUserSummary.new(user, guardian, content_policy: policy),
+            scope: guardian,
+            root: false,
+          )
         serialized = summary.as_json.deep_symbolize_keys
         result = { username: user.username }
         METRICS.each { |metric| result[metric] = serialized[metric] }
-        if ToolHelpers.private_messages_denied?(request_context)
+        if policy.restricts_forum?
+          FORUM_METRICS.each { |metric| result[metric] = nil }
+        elsif ToolHelpers.private_messages_denied?(request_context)
           PRIVATE_MESSAGE_METRICS.each { |metric| result[metric] = nil }
           if !result[:bookmark_count].nil?
             result[:bookmark_count] = BookmarkQuery
@@ -474,38 +507,38 @@ module DiscourseMcp
         result[:top_topics] = serialized[:topics] || []
         result[:top_replies] = serialized[:replies] || []
         result[:top_links] = serialized[:links] || []
+        # A crawled title comes from wherever the link led, which can be
+        # restricted content behind a redirect.
+        if policy.active?
+          result[:top_links] = result[:top_links].map { |link| link.merge(title: nil) }
+        end
         result[:most_liked_by_users] = serialized[:most_liked_by_users] || []
         result[:most_liked_users] = serialized[:most_liked_users] || []
         result[:most_replied_to_users] = serialized[:most_replied_to_users] || []
         result[:top_categories] = serialized[:top_categories] || []
         result[:badges] = serialized[:badges] || []
-        if ToolHelpers.private_messages_denied?(request_context)
-          result[:badges] = without_private_message_references(result[:badges])
-        end
+        result[:badges] = without_restricted_references(result[:badges], policy) if policy.active?
         ToolHelpers.text_and_structured(result)
       end
 
-      # A badge granted for a post in a personal message keeps the badge but
+      # A badge granted for a post in a restricted topic keeps the badge but
       # loses the post and topic it points at.
-      def self.without_private_message_references(badges)
-        topic_ids = badges.filter_map { |badge| badge[:topic_id] }
-        private_topic_ids =
-          Topic.with_deleted.where(id: topic_ids, archetype: Archetype.private_message).pluck(:id)
-        post_ids = badges.filter_map { |badge| badge[:post_id] }
-        private_post_ids =
+      def self.without_restricted_references(badges, policy)
+        post_topic_ids =
           Post
             .with_deleted
-            .joins("JOIN topics ON topics.id = posts.topic_id")
-            .where(id: post_ids, topics: { archetype: Archetype.private_message })
-            .pluck(:id)
+            .where(id: badges.filter_map { |badge| badge[:post_id] })
+            .pluck(:id, :topic_id)
+            .to_h
+        topic_ids = badges.filter_map { |badge| badge[:topic_id] } + post_topic_ids.values
+        allowed = policy.allowed_topic_ids(topic_ids)
 
         badges.map do |badge|
-          if private_topic_ids.include?(badge[:topic_id]) ||
-               private_post_ids.include?(badge[:post_id])
-            badge.except(:post_id, :post_number, :topic_id)
-          else
-            badge
-          end
+          post_topic_id = post_topic_ids[badge[:post_id]]
+          restricted =
+            (badge[:topic_id] && allowed.exclude?(badge[:topic_id])) ||
+              (badge[:post_id] && (post_topic_id.nil? || allowed.exclude?(post_topic_id)))
+          restricted ? badge.except(:post_id, :post_number, :topic_id) : badge
         end
       end
     end
@@ -513,10 +546,10 @@ module DiscourseMcp
     class ListUserActions
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       ACTION_TYPES = {
@@ -569,10 +602,11 @@ module DiscourseMcp
               arguments["action_types"].blank? ||
                 !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
             acting_username: arguments["acting_username"],
+            extra_where: request_context.content_policy.topic_condition("t"),
           ).to_a
         has_more = actions.length > limit
         rows = actions.first(limit).map { |action| action_json(action) }
-        categories = categories_json(actions.first(limit), guardian)
+        categories = categories_json(actions.first(limit), request_context)
 
         ToolHelpers.text_and_structured(
           actions: rows,
@@ -600,13 +634,13 @@ module DiscourseMcp
       end
       private_class_method :action_json
 
-      def self.categories_json(actions, guardian)
+      def self.categories_json(actions, request_context)
         category_ids = actions.filter_map(&:category_id).uniq
         return [] if category_ids.empty?
 
-        Category
-          .secured(guardian)
-          .with_parents(category_ids)
+        request_context
+          .content_policy
+          .scope_categories(Category.secured(request_context.guardian).with_parents(category_ids))
           .map do |category|
             {
               id: category.id,
@@ -622,10 +656,10 @@ module DiscourseMcp
     class UpdateUser
       REQUIRED_SCOPES = [Scopes::PROFILE_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       PROFILE_FIELDS = %w[
@@ -717,10 +751,10 @@ module DiscourseMcp
     class SetUserStatus
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(success: OutputSchema::BOOLEAN)

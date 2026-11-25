@@ -5,10 +5,10 @@ module DiscourseMcp
     class ListReports
       REQUIRED_SCOPES = [Scopes::REPORTS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -38,12 +38,32 @@ module DiscourseMcp
     class GetReport
       MAX_RANGE_DAYS = 366
       MAX_LIMIT = 50
+      # Reports built only from accounts, visits and traffic, which no content
+      # rule governs. Every other report counts or lists topics, posts, flags or
+      # messages, so it needs no rule to be active.
+      CONTENT_FREE_REPORTS = %w[
+        associated_accounts_by_provider
+        consolidated_api_requests
+        consolidated_page_views
+        consolidated_page_views_browser_detection
+        dau_by_mau
+        mobile_visits
+        profile_views
+        signups
+        top_countries_by_browser_pageviews
+        trust_level_growth
+        trust_level_pipeline
+        users_by_trust_level
+        users_by_type
+        visits
+        web_crawlers
+      ].freeze
       REQUIRED_SCOPES = ListReports::REQUIRED_SCOPES
       CONTENT = {
-        topics: :unenforced,
-        private_messages: :unenforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        topics: :enforced,
+        private_messages: :enforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(report: OutputSchema::OBJECT)
@@ -56,6 +76,7 @@ module DiscourseMcp
         unless Reports::ListQuery.call(guardian:).any? { |report| report[:type] == type }
           raise ToolError, I18n.t("mcp.errors.report_not_found")
         end
+        request_context.content_policy.require_unrestricted! if CONTENT_FREE_REPORTS.exclude?(type)
 
         options = report_options(arguments).merge(guardian:)
         payload = Report.find_cached(type, options) if arguments["cache"]

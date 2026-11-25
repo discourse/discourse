@@ -5,10 +5,10 @@ module DiscourseMcp
     class Search
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -17,13 +17,22 @@ module DiscourseMcp
       def self.call(arguments:, request_context:)
         query = arguments.fetch("query").to_s
         limit = arguments.fetch("max_results", 10)
+        policy = request_context.content_policy
         results =
           ::Search.execute(
             query,
             guardian: request_context.guardian,
             exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
+            restrict_posts: policy.topic_condition("topics"),
           )
-        topics = results.posts.filter_map(&:topic).uniq(&:id).first(limit + 1)
+        allowed = policy.allowed_topic_ids(results.posts.map(&:topic_id))
+        topics =
+          results
+            .posts
+            .select { |post| allowed.include?(post.topic_id) }
+            .filter_map(&:topic)
+            .uniq(&:id)
+            .first(limit + 1)
         has_more = topics.length > limit
         topics = topics.first(limit)
         ToolHelpers.text_and_structured(
@@ -40,10 +49,10 @@ module DiscourseMcp
       TOP_PERIODS = %w[daily weekly monthly quarterly yearly all].freeze
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -100,7 +109,12 @@ module DiscourseMcp
       def self.topic_page(view:, filter:, period:, page:, per_page:, request_context:)
         options = { page:, per_page: }
         options[:q] = filter if view == "filtered"
-        query = TopicQuery.new(request_context.user, options)
+        query =
+          PolicyTopicQuery.new(
+            request_context.user,
+            options,
+            content_policy: request_context.content_policy,
+          )
         list =
           if view == "filtered"
             query.list_filter
@@ -115,10 +129,10 @@ module DiscourseMcp
     class SearchPosts
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -136,6 +150,7 @@ module DiscourseMcp
         query = arguments.fetch("query")
         page = arguments.fetch("page", 1)
         guardian = request_context.guardian
+        policy = request_context.content_policy
         results =
           ::Search.execute(
             query,
@@ -145,10 +160,12 @@ module DiscourseMcp
             page:,
             blurb_length: 300,
             exclude_private_messages: !request_context.has_scopes?(Scopes::PRIVATE_MESSAGES_READ),
+            restrict_posts: policy.topic_condition("topics"),
           )
         raise DiscourseMcp::ToolError, I18n.t("mcp.errors.invalid_search_query") if results.blank?
 
-        posts = results.posts
+        allowed = policy.allowed_topic_ids(results.posts.map(&:topic_id))
+        posts = results.posts.select { |post| allowed.include?(post.topic_id) }
         ActiveRecord::Associations::Preloader.new(
           records: posts,
           associations: [:post_search_data, { user: :primary_group }, { topic: %i[category tags] }],
@@ -163,7 +180,7 @@ module DiscourseMcp
             end,
           topics: topics.map { |topic| search_topic_json(topic, visible_tag_ids) },
           users: users_json(posts),
-          categories: categories_json(topics),
+          categories: categories_json(topics, policy),
           groups: [],
           tags:
             topics
@@ -216,10 +233,11 @@ module DiscourseMcp
       end
       private_class_method :users_json
 
-      def self.categories_json(topics)
+      def self.categories_json(topics, policy)
         topics
           .filter_map(&:category)
           .uniq(&:id)
+          .select { |category| policy.allows_category_id?(category.id) }
           .map { |category| { id: category.id, name: category.name, slug: category.slug } }
       end
       private_class_method :categories_json

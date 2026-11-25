@@ -277,6 +277,10 @@ class UserAction < ActiveRecord::Base
 
     apply_common_filters(builder, user_id, guardian, ignore_private_messages)
 
+    # A caller can narrow the stream further with an SQL condition on the
+    # action's topic, aliased `t`. It only adds to the WHERE clause.
+    builder.where(opts[:extra_where]) if opts[:extra_where].present?
+
     if action_id
       builder.where("a.id = :id", id: action_id.to_i)
     else

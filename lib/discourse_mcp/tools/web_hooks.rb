@@ -278,10 +278,10 @@ module DiscourseMcp
     class ListWebhooks
       REQUIRED_SCOPES = [Scopes::WEBHOOKS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -335,10 +335,10 @@ module DiscourseMcp
     class GetWebhook
       REQUIRED_SCOPES = ListWebhooks::REQUIRED_SCOPES
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -359,10 +359,10 @@ module DiscourseMcp
     class ListWebhookEvents
       REQUIRED_SCOPES = ListWebhooks::REQUIRED_SCOPES
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -383,6 +383,8 @@ module DiscourseMcp
           WebHookSupport.confirmed!(arguments, "confirm_sensitive_content")
           # Delivery bodies can contain private messages without a reliable payload discriminator.
           request_context.ensure_scopes!([Scopes::PRIVATE_MESSAGES_READ])
+          # Nor can they be narrowed to the topics a content rule allows.
+          request_context.content_policy.require_unrestricted!
         end
         events =
           hook
@@ -488,10 +490,10 @@ module DiscourseMcp
     class DeleteWebhook
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =

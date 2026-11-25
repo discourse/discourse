@@ -60,10 +60,10 @@ module DiscourseMcp
     class ListThemes
       REQUIRED_SCOPES = [Scopes::THEMES_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =

@@ -39,6 +39,7 @@ describe DiscourseMcp::Tools do
               user:,
               guardian: user.guardian,
               has_scopes?: true,
+              content_policy: DiscourseMcp::ContentPolicy.new([]),
             ),
         ).fetch(:structuredContent)
 

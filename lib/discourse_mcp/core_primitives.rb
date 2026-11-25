@@ -85,9 +85,10 @@ module DiscourseMcp
       register_prompts(registry)
     end
 
-    # The data kinds every primitive declares, and the rule that turns agent
-    # access to personal messages off. While that rule's row exists, the
-    # personal-message scopes are dropped from every request.
+    # The data kinds every primitive declares, and the core rule kinds: one turns
+    # agent access to personal messages off (while its row exists, the
+    # personal-message scopes are dropped from every request), the other
+    # restricts topics and posts by category and tag.
     def register_content_kinds(registry)
       %w[topics categories tags exit_paths].each do |name|
         registry.register_content_data_kind(name, provider: Registry::CORE_PROVIDER)
@@ -106,6 +107,18 @@ module DiscourseMcp
           additionalProperties: false,
         },
         compile: ->(_config) { ContentPolicy::DENY_ALL },
+      )
+      registry.register_content_rule_kind(
+        ForumContentRule::NAME,
+        provider: Registry::CORE_PROVIDER,
+        affected_data_kinds: [
+          ContentPolicy::TOPICS,
+          ContentPolicy::PRIVATE_MESSAGES,
+          ContentPolicy::CATEGORIES,
+          ContentPolicy::TAGS,
+        ],
+        config_contract: ForumContentRule::CONFIG_CONTRACT,
+        compile: ForumContentRule.method(:compile),
       )
     end
 
@@ -3466,10 +3479,10 @@ module DiscourseMcp
     class Topic
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
 
@@ -3479,7 +3492,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Resource not found"
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :read,
@@ -3488,7 +3501,14 @@ module DiscourseMcp
         {
           uri: uri,
           mimeType: "application/json",
-          text: JSON.generate(ToolHelpers.topic_json(topic, request_context.guardian)),
+          # Resource text skips the tool-result filter, so the category is
+          # redacted here.
+          text:
+            JSON.generate(
+              ToolHelpers.topic_json(topic, request_context.guardian).merge(
+                category_id: request_context.content_policy.redact_category_id(topic.category_id),
+              ),
+            ),
         }
       end
     end
@@ -3496,10 +3516,10 @@ module DiscourseMcp
     class Post
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
 
@@ -3509,7 +3529,7 @@ module DiscourseMcp
         if post.blank? || !request_context.guardian.can_see?(post)
           raise ToolError, "Resource not found"
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           post.topic,
           request_context,
           access: :read,
@@ -3545,10 +3565,10 @@ module DiscourseMcp
     class DraftReply
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
 
@@ -3557,7 +3577,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, "Topic not found"
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :read,

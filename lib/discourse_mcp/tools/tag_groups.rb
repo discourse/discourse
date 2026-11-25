@@ -33,8 +33,22 @@ module DiscourseMcp
         TagGroup.find_by(id:) || raise(ToolError, I18n.t("mcp.errors.tag_group_not_found"))
       end
 
-      def json(group)
-        TagGroupSerializer.new(group, root: false).as_json
+      def json(group, policy)
+        without_restricted_tags(TagGroupSerializer.new(group, root: false).as_json, policy)
+      end
+
+      # Drops restricted tags from a serialized tag group's tag lists.
+      def without_restricted_tags(group, policy)
+        return group if policy.restricted_tag_ids.empty?
+
+        group = group.symbolize_keys
+        %i[tags parent_tag].each do |key|
+          next if !group[key].is_a?(Array)
+          group[key] = group[key].select do |tag|
+            policy.restricted_tag_ids.exclude?(tag.symbolize_keys[:id])
+          end
+        end
+        group
       end
 
       def attributes(arguments)
@@ -101,10 +115,10 @@ module DiscourseMcp
     class SearchTagGroups
       REQUIRED_SCOPES = [Scopes::CONTENT_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -133,6 +147,8 @@ module DiscourseMcp
             names: arguments["names"],
             limit:,
           )
+        policy = request_context.content_policy
+        results = results.map { |group| TagGroupSupport.without_restricted_tags(group, policy) }
         ToolHelpers.text_and_structured(results:, limit:, truncated: results.length == limit)
       end
     end
@@ -140,10 +156,10 @@ module DiscourseMcp
     class ListTagGroups
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -166,7 +182,10 @@ module DiscourseMcp
             .preload(:parent_tag, :base_tags, :tag_group_permissions)
             .to_a
         ToolHelpers.text_and_structured(
-          tag_groups: groups.first(limit).map { |group| TagGroupSupport.json(group) },
+          tag_groups:
+            groups
+              .first(limit)
+              .map { |group| TagGroupSupport.json(group, request_context.content_policy) },
           has_more: groups.length > limit,
         )
       end
@@ -175,10 +194,10 @@ module DiscourseMcp
     class GetTagGroup
       REQUIRED_SCOPES = [Scopes::TAG_GROUPS_READ].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = OutputSchema.object(tag_group: TagGroupSupport::GROUP_SCHEMA)
@@ -187,7 +206,9 @@ module DiscourseMcp
         request_context.guardian.ensure_is_staff!
         group = TagGroup.find_by(id: arguments.fetch("tag_group_id"))
         raise ToolError, I18n.t("mcp.errors.tag_group_not_found") unless group
-        ToolHelpers.text_and_structured(tag_group: TagGroupSupport.json(group))
+        ToolHelpers.text_and_structured(
+          tag_group: TagGroupSupport.json(group, request_context.content_policy),
+        )
       end
     end
 
@@ -207,7 +228,9 @@ module DiscourseMcp
         guardian.ensure_can_admin_tag_groups!
         group = TagGroupCreator.create(guardian, TagGroupSupport.attributes(arguments))
         raise ToolError, group.errors.full_messages.to_sentence unless group.persisted?
-        ToolHelpers.text_and_structured(tag_group: TagGroupSupport.json(group))
+        ToolHelpers.text_and_structured(
+          tag_group: TagGroupSupport.json(group, request_context.content_policy),
+        )
       end
     end
 
@@ -230,7 +253,9 @@ module DiscourseMcp
         unless TagGroupUpdater.update(guardian, group, attributes, partial: true)
           raise ToolError, group.errors.full_messages.to_sentence
         end
-        ToolHelpers.text_and_structured(tag_group: TagGroupSupport.json(group.reload))
+        ToolHelpers.text_and_structured(
+          tag_group: TagGroupSupport.json(group.reload, request_context.content_policy),
+        )
       end
     end
 

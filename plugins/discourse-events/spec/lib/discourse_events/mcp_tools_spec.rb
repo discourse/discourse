@@ -23,6 +23,7 @@ describe DiscourseEvents::McpTools::ListEvents do
         user:,
         guardian: user.guardian,
         has_scopes?: false,
+        content_policy: DiscourseMcp::ContentPolicy.new([]),
       )
 
     result = described_class.call(arguments: {}, request_context:)

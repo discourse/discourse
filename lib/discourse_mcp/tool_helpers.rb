@@ -147,12 +147,12 @@ module DiscourseMcp
         raise DiscourseMcp::ToolError, not_found
       end
 
-      ensure_private_message_scope!(topic, request_context, access:, not_found:)
+      ensure_topic_access!(topic, request_context, access:, not_found:)
       post
     end
 
     # Finds a topic the request may use, answering exactly like a missing topic
-    # when Guardian or the personal-message policy hides it.
+    # when Guardian or the content policy hides it.
     #
     # @param access [Symbol] :read or :write, for the personal-message scope.
     # @returns [Topic]
@@ -161,16 +161,19 @@ module DiscourseMcp
       not_found = I18n.t("mcp.errors.topic_not_found")
       raise ToolError, not_found if topic.blank? || !request_context.guardian.can_see?(topic)
 
-      ensure_private_message_scope!(topic, request_context, access:, not_found:)
+      ensure_topic_access!(topic, request_context, access:, not_found:)
       topic
     end
 
-    # Requires the personal-message scope for a personal message. When the
-    # content policy turned agent access to personal messages off, the caller's
-    # not-found error is raised instead, so the message looks like it doesn't exist.
+    # Checks a topic Guardian already lets the user see against the content
+    # policy, and requires the personal-message scope for a personal message.
+    # A restricted topic, and a personal message while agent access to them is
+    # off, raise the caller's not-found error, so they look like they don't exist.
     #
+    # @param access [Symbol] :read or :write, for the personal-message scope.
     # @param not_found [String] The caller's not-found message.
-    def ensure_private_message_scope!(topic, request_context, access:, not_found:)
+    def ensure_topic_access!(topic, request_context, access:, not_found:)
+      raise ToolError, not_found if !request_context.content_policy.allows_topic?(topic)
       return unless topic.private_message?
 
       request_context.ensure_scopes!("mcp:private-messages:#{access}", not_found:)
@@ -218,23 +221,48 @@ module DiscourseMcp
       )
     end
 
-    # While agent access to personal messages is off, a draft keyed to a topic
-    # can only be written while that topic exists and is visible, so a personal
-    # message's draft key answers like a missing topic's.
+    # While a content rule is active, a draft keyed to a topic can only be
+    # written while that topic exists and the request may see it, so a
+    # restricted topic's draft key answers like a missing topic's.
     #
     # @returns [String, nil] The not-found message for a topic key, or nil when
-    #   the key doesn't name a topic or personal messages aren't denied.
+    #   the key doesn't name a topic or no rule is active.
     def ensure_draft_topic!(draft_key, request_context)
-      return if !private_messages_denied?(request_context)
+      return if !request_context.content_policy.active?
 
-      topic_id = draft_key.match(/\Atopic_(\d+)\z/)&.captures&.first
+      topic_id = draft_topic_id(draft_key)
       return if topic_id.blank?
 
       not_found = I18n.t("mcp.errors.topic_not_found")
-      topic = Topic.with_deleted.find_by(id: topic_id.to_i)
-      raise ToolError, not_found if topic.blank? || !request_context.guardian.can_see?(topic)
+      topic = Topic.with_deleted.find_by(id: topic_id)
+      if topic.blank? || !request_context.guardian.can_see?(topic) ||
+           !request_context.content_policy.allows_topic?(topic)
+        raise ToolError, not_found
+      end
 
       not_found
+    end
+
+    # Whether a stored draft must read as missing: its key names a topic the
+    # policy restricts or that no longer exists, or its saved category does.
+    #
+    # @param draft_key [String]
+    # @param data [Hash, nil] The draft's parsed data.
+    # @returns [Boolean]
+    def restricted_draft?(draft_key, request_context, data: nil)
+      policy = request_context.content_policy
+      return false if !policy.active?
+
+      topic_id = draft_topic_id(draft_key)
+      return true if topic_id && !policy.allows_topic_id?(topic_id)
+      return false if !data.is_a?(Hash)
+
+      category_id = data["categoryId"]
+      category_id.is_a?(Integer) && !policy.allows_category_id?(category_id)
+    end
+
+    def draft_topic_id(draft_key)
+      draft_key.match(/\A#{Draft::EXISTING_TOPIC}(\d+)\z/)&.captures&.first&.to_i
     end
 
     # While any content rule is active, a tool can't point at an upload that

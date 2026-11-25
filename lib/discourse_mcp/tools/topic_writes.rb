@@ -5,10 +5,10 @@ module DiscourseMcp
     class SetTopicClosed
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -24,7 +24,7 @@ module DiscourseMcp
         unless topic && guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :write,
@@ -47,10 +47,10 @@ module DiscourseMcp
     class SetTopicPin
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -67,7 +67,7 @@ module DiscourseMcp
         unless topic && guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :write,
@@ -99,10 +99,10 @@ module DiscourseMcp
     class CreateTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -123,8 +123,12 @@ module DiscourseMcp
         category_id = arguments["category_id"]
         if category_id
           request_context.guardian.ensure_can_create!(Topic)
-          # NewPostManager raises ActiveRecord::RecordNotFound for a missing category.
-          raise Discourse::InvalidParameters.new(:category_id) if !Category.exists?(id: category_id)
+          # NewPostManager raises ActiveRecord::RecordNotFound for a missing category,
+          # and a restricted category answers like a missing one.
+          if !Category.exists?(id: category_id) ||
+               !request_context.content_policy.allows_category_id?(category_id)
+            raise Discourse::InvalidParameters.new(:category_id)
+          end
         end
         submitted_title = arguments.fetch("title")
         submission =
@@ -136,18 +140,24 @@ module DiscourseMcp
             tags: Array(arguments["tags"]),
           )
         ToolHelpers.text_and_structured(
-          **topic_fields(submission, submitted_title),
+          **topic_fields(submission, submitted_title, request_context.content_policy),
           **ToolHelpers.author_fields(arguments, user),
         )
       end
 
-      def self.topic_fields(submission, submitted_title)
+      # Server-side rules, such as handlers that retag a new topic, can leave
+      # the topic restricted. The agent wrote it, but gets nothing that locates it.
+      def self.topic_fields(submission, submitted_title, policy)
         if ToolHelpers.queued?(submission)
           { queued: true, id: nil, topic_id: nil, slug: nil, title: submitted_title }
         else
           post = submission.post
-          topic = post.topic
-          { queued: false, id: post.id, topic_id: topic.id, slug: topic.slug, title: topic.title }
+          topic = post.topic.reload
+          if policy.allows_topic?(topic)
+            { queued: false, id: post.id, topic_id: topic.id, slug: topic.slug, title: topic.title }
+          else
+            { queued: false, id: nil, topic_id: nil, slug: nil, title: submitted_title }
+          end
         end
       end
       private_class_method :topic_fields
@@ -156,10 +166,10 @@ module DiscourseMcp
     class ReplyTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -180,7 +190,7 @@ module DiscourseMcp
         if topic.blank? || !request_context.guardian.can_see?(topic)
           raise ToolError, I18n.t("mcp.errors.topic_not_found")
         end
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :write,
@@ -214,10 +224,10 @@ module DiscourseMcp
     class EditPost
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -236,7 +246,7 @@ module DiscourseMcp
           raise DiscourseMcp::ToolError, I18n.t("mcp.errors.post_not_found")
         end
 
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           post.topic,
           request_context,
           access: :write,
@@ -261,10 +271,10 @@ module DiscourseMcp
     class UpdateTopic
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       MUTABLE_FIELDS = %w[title category_id tags featured_link].freeze
@@ -281,7 +291,7 @@ module DiscourseMcp
         raise ToolError, I18n.t("mcp.errors.topic_not_found") if topic.blank?
 
         guardian = request_context.guardian
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           topic,
           request_context,
           access: :write,
@@ -295,6 +305,12 @@ module DiscourseMcp
         updated_fields = changes.keys
         updated_fields << "category_id" if destination_category_id
         raise ToolError, I18n.t("mcp.errors.topic_update_required") if updated_fields.empty?
+
+        policy = request_context.content_policy
+        if !policy.allows_category_id?(changes["category_id"]) ||
+             !policy.allows_category_id?(destination_category_id)
+          raise ToolError, I18n.t("category.errors.not_found")
+        end
 
         Topic.transaction do
           shared_draft.update!(category_id: destination_category_id) if destination_category_id
@@ -315,6 +331,13 @@ module DiscourseMcp
                       category_changed:,
                     ).join(", ")
             end
+          end
+
+          # Revising can move or retag the topic, so the result is checked as
+          # stored. A topic that would become restricted rolls the whole change back.
+          topic.reload
+          if !policy.allows_topic?(topic)
+            raise ToolError, I18n.t("mcp.errors.content_policy_output_blocked")
           end
         end
 
@@ -382,10 +405,10 @@ module DiscourseMcp
     class SetPostDeleted
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :enforced,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :enforced,
+        tags: :enforced,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
@@ -396,7 +419,7 @@ module DiscourseMcp
         post = posts.find_by(id: arguments.fetch("post_id").to_i, user_id: request_context.user_id)
         raise DiscourseMcp::ToolError, "Post not found" if post.blank?
         post.topic ||= Topic.with_deleted.find_by(id: post.topic_id)
-        ToolHelpers.ensure_private_message_scope!(
+        ToolHelpers.ensure_topic_access!(
           post.topic,
           request_context,
           access: :write,

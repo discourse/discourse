@@ -8,10 +8,10 @@ module DiscourseMcp
     class UploadFile
       REQUIRED_SCOPES = [Scopes::CONTENT_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       UPLOAD_TYPES = %w[avatar profile_background card_background composer].freeze

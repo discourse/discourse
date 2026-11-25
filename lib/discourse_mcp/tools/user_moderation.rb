@@ -119,10 +119,10 @@ module DiscourseMcp
     class SuspendUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
@@ -135,10 +135,10 @@ module DiscourseMcp
     class UnsuspendUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
@@ -151,10 +151,10 @@ module DiscourseMcp
     class SilenceUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
@@ -167,10 +167,10 @@ module DiscourseMcp
     class UnsilenceUser
       REQUIRED_SCOPES = [Scopes::MODERATION_WRITE].freeze
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :enforced,
-        categories: :unenforced,
-        tags: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
         exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA = UserModerationSupport::OUTPUT_SCHEMA
