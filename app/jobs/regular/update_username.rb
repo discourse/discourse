@@ -7,6 +7,13 @@ module Jobs
     # we are limiting it so only 1 per cluster runs
     cluster_concurrency 1
 
+    NOTIFICATION_USERNAME_NAME_PAIRS = {
+      original_username: :original_name,
+      display_username: :display_name,
+      username: :name,
+      username2: :name2,
+    }.freeze
+
     def execute(args)
       @user_id = args[:user_id]
       user = User.find_by(id: @user_id)
@@ -105,36 +112,72 @@ module Jobs
     end
 
     def update_notifications
-      params = { user_id: @user_id, old_username: @old_username, new_username: @new_username }
+      new_name = User.where(id: @user_id).pick(:name).presence
+      params = {
+        user_id: @user_id,
+        old_username: @old_username,
+        new_username: @new_username,
+        new_name: new_name,
+        collapsed_types: PostAlerter::COLLAPSED_NOTIFICATION_TYPES,
+      }
+
+      username_updates =
+        NOTIFICATION_USERNAME_NAME_PAIRS
+          .keys
+          .map do |k|
+            "'#{k}', CASE WHEN data::JSONB ->> '#{k}' = :old_username THEN :new_username END"
+          end
+          .join(",\n")
+
+      data_expr =
+        if new_name
+          name_updates =
+            NOTIFICATION_USERNAME_NAME_PAIRS
+              .map do |u_key, n_key|
+                "'#{n_key}', CASE WHEN data::JSONB ? '#{n_key}' AND data::JSONB ->> '#{u_key}' = :old_username THEN :new_name END"
+              end
+              .join(",\n")
+          "data::JSONB || jsonb_strip_nulls(jsonb_build_object(#{username_updates}, #{name_updates}))"
+        else
+          removals =
+            NOTIFICATION_USERNAME_NAME_PAIRS
+              .map do |u_key, n_key|
+                "CASE WHEN data::JSONB ->> '#{u_key}' = :old_username THEN ARRAY['#{n_key}'] ELSE ARRAY[]::text[] END"
+              end
+              .join(" || ")
+          "(data::JSONB || jsonb_strip_nulls(jsonb_build_object(#{username_updates}))) - (#{removals})"
+        end
+
+      where_clause =
+        NOTIFICATION_USERNAME_NAME_PAIRS
+          .keys
+          .map { |k| "data::JSONB ->> '#{k}' = :old_username" }
+          .join(" OR ")
 
       DB.exec(<<~SQL, params)
         UPDATE notifications
-        SET data = (data :: JSONB ||
-                    jsonb_strip_nulls(
-                        jsonb_build_object(
-                            'original_username', CASE data :: JSONB ->> 'original_username'
-                                                 WHEN :old_username
-                                                   THEN :new_username
-                                                 ELSE NULL END,
-                            'display_username', CASE data :: JSONB ->> 'display_username'
-                                                WHEN :old_username
-                                                  THEN :new_username
-                                                ELSE NULL END,
-                            'username', CASE data :: JSONB ->> 'username'
-                                        WHEN :old_username
-                                          THEN :new_username
-                                        ELSE NULL END,
-                            'username2', CASE data :: JSONB ->> 'username2'
-                                        WHEN :old_username
-                                          THEN :new_username
-                                        ELSE NULL END
-                        )
-                    )) :: JSON
-        WHERE
-          data :: JSONB ->> 'original_username' = :old_username OR
-          data :: JSONB ->> 'display_username' = :old_username OR
-          data :: JSONB ->> 'username' = :old_username OR
-          data :: JSONB ->> 'username2' = :old_username
+        SET data = (#{data_expr})::JSON
+        WHERE #{where_clause}
+      SQL
+
+      # Collapsed notifications store the first unread post's author in `display_name`,
+      # while `display_username` holds a translated count (e.g. "2 replies").
+      collapsed_data_expr =
+        if new_name
+          "notifications.data::JSONB || jsonb_build_object('display_name', :new_name)"
+        else
+          "notifications.data::JSONB - 'display_name'"
+        end
+
+      DB.exec(<<~SQL, params)
+        UPDATE notifications
+        SET data = (#{collapsed_data_expr})::JSON
+        FROM posts p
+        WHERE notifications.notification_type IN (:collapsed_types)
+          AND notifications.topic_id = p.topic_id
+          AND notifications.post_number = p.post_number
+          AND p.user_id = :user_id
+          AND notifications.data::JSONB ? 'display_name'
       SQL
     end
 

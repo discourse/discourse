@@ -53,6 +53,143 @@ RSpec.describe NotificationsController do
         expect(response.body).not_to include(reviewable.topic.title)
       end
     end
+
+    it "scrubs the former real name from notification data after the actor is anonymized" do
+      SiteSetting.enable_names = true
+      SiteSetting.enable_mentions = true
+      SiteSetting.full_name_requirement = "optional_at_signup"
+
+      admin = Fabricate(:admin)
+      actor = Fabricate(:user, name: "Secret Realname")
+      recipient = Fabricate(:user)
+      topic = Fabricate(:topic, user: actor)
+
+      notification =
+        Fabricate(
+          :notification,
+          user: recipient,
+          notification_type: Notification.types[:mentioned],
+          topic: topic,
+          post_number: 1,
+          data: {
+            topic_title: topic.title,
+            original_username: actor.username,
+            display_username: actor.username,
+            display_name: actor.name,
+          }.to_json,
+        )
+      expect(notification.data_hash[:display_name]).to eq("Secret Realname")
+
+      Jobs.run_immediately!
+      UserAnonymizer.make_anonymous(actor, admin)
+
+      sign_in(recipient)
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+
+      expect(response.body).not_to include("Secret Realname")
+      data = response.parsed_body["notifications"].first["data"]
+      expect(data["display_name"]).to be_blank
+    end
+
+    it "scrubs the former real name from a collapsed reply notification after the author is anonymized" do
+      SiteSetting.enable_names = true
+      SiteSetting.full_name_requirement = "optional_at_signup"
+
+      admin = Fabricate(:admin)
+      watcher = Fabricate(:user)
+      first_replier = Fabricate(:user, name: "Collapsed Secret Realname")
+      latest_replier = Fabricate(:user)
+      topic = Fabricate(:topic, user: watcher)
+      Fabricate(:post, topic: topic, user: watcher, post_number: 1)
+      first_reply =
+        Fabricate(:post, topic: topic, user: first_replier, post_number: 2, reply_to_post_number: 1)
+      latest_reply =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: latest_replier,
+          post_number: 3,
+          reply_to_post_number: 1,
+        )
+      PostAlerter.post_created(first_reply)
+      PostAlerter.post_created(latest_reply)
+
+      notification = watcher.notifications.find_by(notification_type: Notification.types[:replied])
+      expect(notification.data_hash[:display_username]).to eq(I18n.t("embed.replies", count: 2))
+      expect(notification.data_hash[:original_username]).to eq(latest_replier.username)
+      expect(notification.data_hash[:display_name]).to eq("Collapsed Secret Realname")
+
+      # A collapsed notification whose first unread post belongs to someone else must be left alone
+      other_collapsed =
+        Fabricate(
+          :notification,
+          user: watcher,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: latest_reply.post_number,
+          data: {
+            topic_title: topic.title,
+            original_username: latest_replier.username,
+            display_username: I18n.t("embed.replies", count: 2),
+            display_name: "Bystander Realname",
+          }.to_json,
+        )
+
+      Jobs.run_immediately!
+      UserAnonymizer.make_anonymous(first_replier, admin)
+      new_username = first_replier.reload.username
+
+      sign_in(watcher)
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Collapsed Secret Realname")
+      expect(response.body).to include("Bystander Realname")
+
+      data = response.parsed_body["notifications"].find { |n| n["id"] == notification.id }["data"]
+      expect(data["display_name"]).to be_blank
+      expect(data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
+      expect(data["original_username"]).to eq(latest_replier.username)
+      expect(data["original_username"]).not_to eq(new_username)
+      expect(other_collapsed.reload.data_hash[:display_name]).to eq("Bystander Realname")
+    end
+
+    it "replaces the former real name with the anonymized username when full name is required" do
+      SiteSetting.enable_names = true
+      SiteSetting.enable_mentions = true
+      SiteSetting.full_name_requirement = "required_at_signup"
+
+      admin = Fabricate(:admin)
+      actor = Fabricate(:user, name: "Required Secret Name")
+      recipient = Fabricate(:user)
+      topic = Fabricate(:topic, user: actor)
+
+      Fabricate(
+        :notification,
+        user: recipient,
+        notification_type: Notification.types[:mentioned],
+        topic: topic,
+        post_number: 1,
+        data: {
+          topic_title: topic.title,
+          original_username: actor.username,
+          display_username: actor.username,
+          display_name: actor.name,
+        }.to_json,
+      )
+
+      Jobs.run_immediately!
+      UserAnonymizer.make_anonymous(actor, admin)
+      new_username = actor.reload.username
+
+      sign_in(recipient)
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Required Secret Name")
+
+      data = response.parsed_body["notifications"].first["data"]
+      expect(data["display_name"]).to eq(new_username)
+    end
   end
 
   context "when logged in" do

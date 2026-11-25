@@ -787,6 +787,80 @@ RSpec.describe UsernameChanger do
         expect(notification_data(n09)).to eq(username_and_something_else("bob"))
         expect(notification_data(n10)).to eq(username_and_something_else("another_user"))
       end
+
+      it "refreshes paired name keys for the renamed user and leaves other actors untouched" do
+        renamed_user = Fabricate(:user, username: "alice", name: "Alice Admin")
+        notified_user = Fabricate(:user)
+        p1 = Fabricate(:post, post_number: 1, user: renamed_user)
+
+        multi_actor =
+          create_notification(
+            :liked,
+            notified_user,
+            p1,
+            {
+              username: "alice",
+              name: "Alice Admin",
+              username2: "carol",
+              name2: "Carol Crafter",
+              count: 2,
+            },
+          )
+        display =
+          create_notification(
+            :mentioned,
+            notified_user,
+            p1,
+            { display_username: "alice", display_name: "Old Alice Name" },
+          )
+        without_name_key =
+          create_notification(:mentioned, notified_user, p1, { display_username: "alice" })
+
+        UsernameChanger.change(renamed_user, "bob")
+
+        expect(notification_data(multi_actor)).to eq(
+          username: "bob",
+          name: "Alice Admin",
+          username2: "carol",
+          name2: "Carol Crafter",
+          count: 2,
+        )
+        expect(notification_data(display)).to eq(
+          display_username: "bob",
+          display_name: "Alice Admin",
+        )
+        expect(notification_data(without_name_key)).to eq(display_username: "bob")
+      end
+
+      it "drops paired name keys when the renamed user no longer has a name" do
+        renamed_user = Fabricate(:user, username: "alice", name: "Alice Admin")
+        notified_user = Fabricate(:user)
+        p1 = Fabricate(:post, post_number: 1, user: renamed_user)
+
+        multi_actor =
+          create_notification(
+            :liked,
+            notified_user,
+            p1,
+            {
+              username: "alice",
+              name: "Alice Admin",
+              username2: "carol",
+              name2: "Carol Crafter",
+              count: 2,
+            },
+          )
+
+        renamed_user.update!(name: nil)
+        UsernameChanger.change(renamed_user, "bob")
+
+        expect(notification_data(multi_actor)).to eq(
+          username: "bob",
+          username2: "carol",
+          name2: "Carol Crafter",
+          count: 2,
+        )
+      end
     end
   end
 
