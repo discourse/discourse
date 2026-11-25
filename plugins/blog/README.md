@@ -85,11 +85,11 @@ By default the blog is served under `/blog` on the community, for example
 can pick it as the site homepage.
 
 A blog can instead have its own hostname, such as `https://blog.example.com`, set
-as **Own domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
+as **Custom domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
 The hostname needs DNS, TLS and routing set up outside Discourse first. A host that
-offers own domains only on some plans turns off the hidden
-`blog_custom_domains_enabled` setting elsewhere: the field is then hidden and a new
-own domain is refused, while a blog that already has one keeps it. While a dedicated
+offers custom domains only on some plans turns off the hidden
+`blog_custom_domains_enabled` setting elsewhere: the field is then locked and a new
+custom domain is refused, while a blog that already has one keeps it. While a dedicated
 hostname is active,
 `/blog` on the community redirects to it with a temporary (302) redirect, so
 dropping the hostname later does not leave browsers stuck on the old one.
@@ -98,7 +98,7 @@ dropping the hostname later does not leave browsers stuck on the old one.
 
 A site can have more than one blog. **Add blog** on the **Blogs** tab asks for a name
 and a slug. The main blog stays at `/blog`; another blog lives at `/blog/<slug>`
-until it is given its own domain. Each blog has its own name, address, discussion
+until it is given a custom domain. Each blog has its own name, address, discussion
 category, article address format and theme. All blogs share the drafts category
 and the three role groups, so a writer chooses the blog for each draft: from the
 **New draft** menu in `/blog-editor`, or in the article's settings until it is
@@ -145,7 +145,7 @@ setting is hidden, so it can only be turned on from the Rails console (step 3).
    console: `SiteSetting.blog_enabled = true`. The blog's own admin pages only
    load once it is enabled, so enable first and configure second.
 4. Open **Admin → Plugins → Blog → Blogs** and edit the blog: its name, tagline
-   and About text on the About tab; its own domain (dedicated hostname only, no
+   and About text on the About tab; its custom domain (dedicated hostname only, no
    trailing slash or path), discussion category, articles per page and article
    address format on the Settings tab; its design on the Theme tab.
 5. Leave the categories to the plugin. It creates a private drafts category when the

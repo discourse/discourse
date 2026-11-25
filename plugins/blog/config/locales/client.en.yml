@@ -86,8 +86,9 @@ en:
         blog_slug: Slug
         blog_slug_description: "Used in its address on the community: /blog/<slug>."
         blog_slug_locked: This blog has published articles, so its slug is fixed to keep their addresses working.
-        blog_url: Own domain
+        blog_url: Custom domain
         blog_url_description: Serve the blog from its own HTTPS address, without a path. Point that hostname at this site first, at your DNS, proxy, and certificate. Leave empty to serve it on the community.
+        blog_url_unavailable: Custom domains are not available on this site.
         blog_category: Discussion category
         blog_category_description: Each published article gets a discussion topic here.
         blog_category_locked: This blog has published articles, so its discussion category is fixed to keep them public.
