@@ -562,7 +562,7 @@ discourse_ai:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/415171"
   ai_ask_ai_search_intent_decision_model:
