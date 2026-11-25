@@ -1134,6 +1134,23 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
     end
+
+    it "only makes the user into an admin from an IP inside the admin IP allowlist" do
+      SiteSetting.use_admin_ip_allowlist = true
+      Fabricate(
+        :screened_ip_address,
+        ip_address: "198.51.100.7",
+        action_type: ScreenedIpAddress.actions[:allow_admin],
+      )
+
+      outside_provider = provider("/", "REMOTE_ADDR" => "203.0.113.9")
+      outside_provider.log_on_user(user, {}, outside_provider.cookie_jar)
+      expect(user.reload.admin).to eq(false)
+
+      inside_provider = provider("/", "REMOTE_ADDR" => "198.51.100.7")
+      inside_provider.log_on_user(user, {}, inside_provider.cookie_jar)
+      expect(user.reload.admin).to eq(true)
+    end
   end
 
   describe "bootstrap first admin" do
