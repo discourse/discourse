@@ -247,8 +247,8 @@ class SessionController < ApplicationController
       if user = sso.lookup_or_create_user(request.remote_ip)
         raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
-        if user.suspended?
-          render_sso_error(text: failed_to_login(user)[:error], status: 403)
+        if payload = login_error_check(user)
+          render_sso_error(text: payload[:error], status: 403)
           return
         end
 
@@ -576,9 +576,13 @@ class SessionController < ApplicationController
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
-        log_on_user(user, replay_anonymous_action: true)
-        Discourse.redis.del "otp_#{params[:token]}"
-        return redirect_to path("/")
+        if payload = login_error_check(user)
+          @error = payload[:error]
+        else
+          log_on_user(user, replay_anonymous_action: true)
+          Discourse.redis.del "otp_#{params[:token]}"
+          return redirect_to path("/")
+        end
       else
         # Display the form
       end

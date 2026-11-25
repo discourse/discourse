@@ -100,7 +100,9 @@ class ScreenedIpAddress < ActiveRecord::Base
   def self.block_admin_login?(user, ip_address)
     return false unless SiteSetting.use_admin_ip_allowlist
     return false if user.nil?
-    return false if !user.admin?
+    # `log_on_user` promotes accounts with a configured developer email to admin,
+    # so they must pass the allowlist before that promotion happens.
+    return false if !user.admin? && !Developer.configured_email?(user.email)
     return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0
     return true if ip_address.nil?
     !exists_for_ip_address_and_action?(ip_address, actions[:allow_admin], record_match: false)
