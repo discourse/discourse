@@ -33,6 +33,7 @@ class PostMover
     @guardian.ensure_can_move_posts!(original_topic)
     topic = Topic.find_by_id(id)
     @guardian.ensure_can_create_post_on_topic!(topic)
+    ensure_destination_does_not_require_reply_review!(topic)
 
     @move_type = PostMover.move_types[:existing_topic]
     @creating_new_topic = false
@@ -52,6 +53,14 @@ class PostMover
   def to_new_topic(title, category_id = nil, tag_ids: nil, tags: nil)
     @guardian.ensure_can_move_posts!(original_topic)
     @guardian.ensure_can_create_topic_on_category!(category_id) if category_id.present?
+
+    if !@move_to_pm
+      # A regular topic created without a category is published into the
+      # default (uncategorized) category, so resolve the effective destination
+      # before checking its review policy.
+      effective_category_id = category_id.presence || SiteSetting.uncategorized_category_id
+      ensure_destination_does_not_require_topic_review!(Category.find_by(id: effective_category_id))
+    end
 
     @move_type = PostMover.move_types[:new_topic]
     @creating_new_topic = true
@@ -87,6 +96,36 @@ class PostMover
   end
 
   private
+
+  # Moving/splitting posts creates published topics and replies in the
+  # destination, bypassing NewPostManager. Mirror the category posting-review
+  # gate it enforces so a mover cannot publish content that would otherwise be
+  # queued for review in the destination category.
+  def ensure_destination_does_not_require_topic_review!(category)
+    return if @guardian.is_staff?
+    return if category.blank?
+    return if !@guardian.topic_posting_review_required?(category)
+    return if @guardian.is_category_group_moderator?(category)
+
+    raise Discourse::InvalidAccess.new(
+            "destination category requires new topics to be reviewed",
+            nil,
+            custom_message: "category.errors.move_posts_review_required",
+          )
+  end
+
+  def ensure_destination_does_not_require_reply_review!(topic)
+    return if @guardian.is_staff?
+    return if topic.blank?
+    return if !@guardian.reply_posting_review_required?(topic.category)
+    return if @guardian.can_review_topic?(topic)
+
+    raise Discourse::InvalidAccess.new(
+            "destination category requires replies to be reviewed",
+            nil,
+            custom_message: "category.errors.move_posts_review_required",
+          )
+  end
 
   def update_topic_excerpt(topic)
     topic.update_excerpt(topic.first_post.excerpt_for_topic)

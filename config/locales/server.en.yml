@@ -1240,6 +1240,7 @@ en:
       slug_contains_non_ascii_chars: "contains non-ascii characters"
       is_already_in_use: "is already in use"
       move_topic_to_category_disallowed: "You cannot move this topic to a category where you do not have permission to create new topics."
+      move_posts_review_required: "You cannot move these posts to a destination where your posts would require review before being published."
     cannot_delete:
       uncategorized: "This category is special. It is intended as a holding area for topics that have no category; it cannot be deleted."
       has_subcategories: "Can't delete this category because it has sub-categories."
