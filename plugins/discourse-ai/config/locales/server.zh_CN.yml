@@ -728,7 +728,6 @@ zh_CN:
           name: "Discourse 助手"
           description: "专门帮助处理 Discourse 相关任务的 AI 机器人"
         admin_assistant:
-          name: "Discourse 管理助手"
           description: "AI 机器人会回答 Discourse 问题，并帮助管理员管理站点设置"
         web_artifact_creator:
           name: "Web 工件创建工具"
@@ -1341,6 +1340,8 @@ zh_CN:
       not_allowed: "只有管理员才能更改网站的外观。"
       unavailable: "这里无法更改网站外观。"
       themes_unavailable: "本站不支持创建新主题。但我可以更改当前主题的颜色和字体。"
+      component_on: "开"
+      component_off: "关"
       name_required: "给调色板或主题起一个简短的名称。"
       brand_color_required: "提供品牌颜色，或者提供可以从中获取颜色的网站。"
       invalid_color: "请使用十六进制颜色代码，例如 #635bff。以下代码无效： %{colors}"

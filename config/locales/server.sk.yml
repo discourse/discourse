@@ -4738,7 +4738,6 @@ sk:
       dracula: "Dracula"
       grey_amber: "Šedý jantár"
       latte: "Laté"
-      dark_rose: "Tmavá ruža"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -4981,6 +4980,8 @@ sk:
       approve_post:
         title: "Áno"
         complete: "Príspevok schválený."
+      deny_and_delete_post:
+        complete: "Príspevok zmazaný."
       approve_post_closed:
         title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"

@@ -3722,7 +3722,6 @@ sv:
       dracula: "Dracula"
       grey_amber: "Grå bärnsten"
       latte: "Latte"
-      dark_rose: "Mörk ros"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -3919,6 +3918,8 @@ sv:
       approve_post:
         title: "Ja"
         complete: "Inlägget godkändes."
+      deny_and_delete_post:
+        complete: "Inlägg raderat."
       approve_post_closed:
         title: "Ja"
         confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"

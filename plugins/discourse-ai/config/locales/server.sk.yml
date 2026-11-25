@@ -556,6 +556,8 @@ sk:
         errors:
           not_found: "Téma sa nenašla."
     appearance_authoring:
+      component_on: "Zapnuté"
+      component_off: "Vypnuté"
       default_theme: "Predvolená téma"
       colors:
         light:

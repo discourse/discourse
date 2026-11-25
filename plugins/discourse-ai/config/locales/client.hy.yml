@@ -217,6 +217,25 @@ hy:
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      concepts:
+        edit: "Խմբագրել"
+        delete: "Ջնջել"
+        columns:
+          status: "Ստատուս"
+          topics: "Թեմաներ"
+          posts: "Գրառումներ"
+        statuses:
+          active: "Ակտիվ"
+        form:
+          name: "Անուն"
+          description: "Նկարագրություն"
+          status: "Ստատուս"
+        tagged_topics: "Թեգերով թեմաներ"
+        topic_columns:
+          topic: "Թեմա"
+          primary: "Հիմնական"
+          relevance: "Համապատասխանության"
+        primary_badge: "Հիմնական"
       decision_models:
         no_preset: "Ոչ մի"
         display_name: "Անուն"

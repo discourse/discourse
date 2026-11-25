@@ -625,6 +625,25 @@ it:
         delete: "Elimina"
         embedding: "Integrazione"
         tool: "Strumento"
+      concepts:
+        edit: "Modifica"
+        delete: "Elimina"
+        columns:
+          status: "Stato"
+          topics: "Argomenti"
+          posts: "Messaggi"
+        statuses:
+          active: "Attivi"
+        form:
+          name: "Nome"
+          description: "Descrizione"
+          status: "Stato"
+        tagged_topics: "Argomenti etichettati"
+        topic_columns:
+          topic: "Argomento"
+          primary: "Primario"
+          relevance: "Rilevanza"
+        primary_badge: "Primario"
       decision_models:
         no_preset: "Nessuna"
         display_name: "Nome"

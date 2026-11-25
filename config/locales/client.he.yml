@@ -583,9 +583,6 @@ he:
       fonts:
         base_font: "Body"
         heading_font: "כותרות"
-      logo:
-        description: "מופיע באזור הניווט העליון של האתר, כמו גם בחלק העליון של הודעות הדוא״ל של האתר."
-        help_text: "הגודל המומלץ הוא ‎600 × 80 פיקסלים."
       homepage:
         topics: "נושאים"
         categories: "קטגוריות"
@@ -1071,7 +1068,6 @@ he:
         suspect_user: "האם זה משתמש ספאם?"
         approve_post: "לאשר את הפוסט הזה?"
         approve_topic: "לאשר את הנושא הזה?"
-        something_wrong_with_post: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שסומן"
@@ -4793,6 +4789,8 @@ he:
         tag_group: "קבוצת תגיות"
       topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: "מחיקת קטגוריה"
+      empty_state:
+        edit_category: "עריכת קטגוריה"
       create: "קטגוריה חדשה"
       create_long: "יצירת קטגוריה חדשה"
       type_settings_schema:
@@ -4807,7 +4805,7 @@ he:
       validations:
         icon_required: "נא לבחור סמל."
       name: "שם קטגוריה"
-      untitled: "קטגוריה ללא שם"
+      icon_search_placeholder: "חיפוש…"
       description: "תיאור"
       logo: "תמונת לוגו לקטגוריה"
       logo_dark: "תמונת לוגו של קטגוריה במצב כהה"
@@ -4815,8 +4813,6 @@ he:
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
       style: "סגנון"
-      icon: "סמל"
-      emoji: "אמוג׳י"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
       color_validations:
@@ -4824,17 +4820,10 @@ he:
         incorrect_length: "חייב להתאים לתבנית ‎#RRGGBB‎ או ‎#RGB‎"
         non_hexdecimal: "יכול להכיל תווים הקסדצימליים בלבד (0-9, A-F)"
       styles:
-        type: "סגנון"
         icon: "סמל"
         emoji: "אמוג׳י"
         square: "מרובע"
-        options:
-          square: "מרובע"
-          icon: "סמל"
-          emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
-      predefined_colors: "אפשרויות צבע מוגדרות מראש"
-      color_placeholder: "כל צבע אינטרנטי"
       delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
       delete_error: "ארעה שגיאה במחיקת הקטגוריה."
       list: "הצגת קטגוריות"
@@ -7740,8 +7729,6 @@ he:
           title: "צבעים"
           edit: "עריכה"
           view: "תצוגה"
-          set_default_light: "הגדרה כערכת צבעים בהירה בערכת העיצוב של ברירת המחדל (%{theme})"
-          set_default_dark: "הגדרה כערכת צבעים כהה בערכת העיצוב של ברירת המחדל (%{theme})"
           set_default_success: "%{schemeName} הוגדרה כערכת ברירת מחדל עבור %{themeName}"
           saved_refreshing: "נשמרה! צבעים מרעננים…"
           from_theme: "מערכת העיצוב: %{name}"

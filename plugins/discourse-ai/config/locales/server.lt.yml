@@ -234,6 +234,8 @@ lt:
         errors:
           not_found: "Tema nerasta."
     appearance_authoring:
+      component_on: "Įjungta"
+      component_off: "Išjungta"
       colors:
         light:
           header_background: "Antraštė"

@@ -4466,7 +4466,6 @@ ug:
       dracula: "دراكۇلا"
       grey_amber: "ساغۇچ كۈلرەڭ"
       latte: "سۇس قوڭۇر"
-      dark_rose: "توق قىزىل"
   wizard:
     title: "Discourse تەڭشەك"
     step:
@@ -4704,6 +4703,8 @@ ug:
       approve_post:
         title: "ھەئە"
         complete: "يازما تەستىقلاندى."
+      deny_and_delete_post:
+        complete: "يازما ئۆچۈرۈلدى."
       approve_post_closed:
         title: "ھەئە"
         confirm: "بۇ تېما تاقالدى. تېمىنى قۇرۇۋېرەمسىز؟"

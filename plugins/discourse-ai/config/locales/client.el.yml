@@ -371,6 +371,24 @@ el:
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      concepts:
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        columns:
+          status: "Κατάσταση"
+          topics: "Θέματα"
+          posts: "Αναρτήσεις"
+        statuses:
+          all: "Όλες οι καταστάσεις"
+          active: "Ενεργό"
+        form:
+          name: "Όνομα"
+          description: "Περιγραφή"
+          status: "Κατάσταση"
+        tagged_topics: "Θέματα με ετικέτα"
+        topic_columns:
+          topic: "Νήμα"
+          relevance: "Συνάφεια"
       decision_models:
         no_preset: "Κανένα"
         display_name: "Όνομα"

@@ -690,9 +690,6 @@ ar:
       fonts:
         base_font: "النص الأساسي"
         heading_font: "العناوين"
-      logo:
-        description: "يظهر في شريط التنقل العلوي للموقع، وكذلك في الجزء العلوي من إشعارات البريد الإلكتروني الخاصة بالموقع."
-        help_text: "الحجم الموصى به هو 600 × 80 بكسل."
       homepage:
         topics: "الموضوعات"
         categories: "الفئات"
@@ -1291,7 +1288,6 @@ ar:
         suspect_user: "هل ينشر هذا المستخدم رسائل عشوائية؟"
         approve_post: "هل توافق على هذا المنشور؟"
         approve_topic: "هل توافق على هذا الموضوع؟"
-        something_wrong_with_post: "هل هناك خطأ في هذا المنشور؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
@@ -5940,6 +5936,8 @@ ar:
         delete_title: "حذف هذه الفئة"
         delete_description: "بمجرد الحذف، لا يمكن استعادة هذه الفئة أو إعداداتها. وسيلزم إعادة تعيين الموضوعات بداخلها قبل ذلك."
         delete_title_forbidden: "لا يمكن حذف هذه الفئة"
+      empty_state:
+        edit_category: "تعديل الفئة"
       create: "فئة جديدة"
       create_with_type: "الفئة %{typeName} الجديدة"
       create_long: "إنشاء فئة جديدة"
@@ -5968,7 +5966,7 @@ ar:
         icon_required: "تحديد أيقونة."
         groups_required: "يرجى تحديد مجموعة واحدة على الأقل لوضع نمط الموافقة هذا."
       name: "اسم الفئة"
-      untitled: "فئة بلا عنوان"
+      icon_search_placeholder: "البحث…"
       description: "الوصف"
       logo: "صورة شعار الفئة"
       logo_dark: "صورة شعار فئة الوضع الداكن"
@@ -5976,10 +5974,6 @@ ar:
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
       style: "النمط"
-      icon: "الأيقونة"
-      emoji: "الرمز التعبيري"
-      select_emoji: "اختيار رمز تعبيري"
-      select_icon: "تحديد أيقونة"
       background_color: "اللون"
       foreground_color: "لون النص"
       color_validations:
@@ -5987,22 +5981,15 @@ ar:
         incorrect_length: "يجب أن يتطابق مع التنسيق #RRGGBB أو #RGB"
         non_hexdecimal: "يجب أن يحتوي فقط على أحرف سداسية عشرية (0-9، AF)"
       styles:
-        type: "النمط"
         icon: "الأيقونة"
         emoji: "الرمز التعبيري"
         square: "مربع"
-        options:
-          square: "مربع"
-          icon: "الأيقونة"
-          emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
-      predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
       name_placeholder: "من المستحسن استخدام كلمة أو كلمتين"
       category_types: "أنواع الفئات"
       unknown_category_type: "نوع فئة غير معروف"
       unknown_category_type_description: "نوع الفئة \"%{categoryType}\" غير مدعوم أو غير مفعّل في هذه الفئة."
       category_types_no_results: "لا توجد أنواع فئات أخرى"
-      color_placeholder: "لون الويب"
       delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
       delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
       list: "إدراج الفئات"
@@ -9520,8 +9507,6 @@ ar:
           title: "الألوان"
           edit: "تعديل"
           view: "اعرض"
-          set_default_light: "تعيينها كلوحة ألوان فاتحة للسمة الافتراضية (%{theme})"
-          set_default_dark: "تعيينها كلوحة ألوان داكنة للسمة الافتراضية (%{theme})"
           set_default_success: "تم تعيين %{schemeName} كلوحة ألوان افتراضية للسمة %{themeName}"
           saved_refreshing: "تم الحفظ! جاري تحديث الألوان..."
           from_theme: "من السمة: %{name}"

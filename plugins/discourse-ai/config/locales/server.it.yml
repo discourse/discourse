@@ -538,6 +538,8 @@ it:
         errors:
           not_found: "Argomento non trovato."
     appearance_authoring:
+      component_on: "On"
+      component_off: "Off"
       default_theme: "Tema predefinito"
       colors:
         light:

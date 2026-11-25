@@ -793,6 +793,25 @@ ru:
         delete: "Удалить"
         embedding: "Встраивание"
         tool: "Инструмент"
+      concepts:
+        edit: "Изменить"
+        delete: "Удалить"
+        columns:
+          status: "Статус"
+          topics: "Новые темы"
+          posts: "Записи"
+        statuses:
+          active: "Активна"
+        form:
+          name: "Название"
+          description: "Описание"
+          status: "Статус"
+        tagged_topics: "Темы с тегами"
+        topic_columns:
+          topic: "Тема"
+          primary: "Основная"
+          relevance: "По соответствию"
+        primary_badge: "Основная"
       decision_models:
         no_preset: "Нет"
         display_name: "Название"

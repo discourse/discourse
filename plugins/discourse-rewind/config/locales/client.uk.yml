@@ -161,11 +161,28 @@ uk:
           message_5: "Ваші улюблені канали:"
           dancing_baby_alt: "Танцююча дитина"
         live_usage:
+          title: Рахунок за телефон
+          subtitle: Ваша заявка про голосовий дзвінок
+          subtitle_others: "%{username} голосові дзвінки"
+          total_airtime: Загальний ефірний час
+          call_count:
+            one: "через %{count} дзвінок"
+            few: "через %{count} дзвінки"
+            many: "через %{count} дзвінків"
+            other: "через %{count} дзвінків"
+          top_contacts: Найбільше спілкувалися з
+          top_rooms: Улюблені кімнати
+          hours:
+            one: "%{count} год"
+            few: "%{count} год"
+            many: "%{count} год"
+            other: "%{count} год"
           minutes:
             one: "%{count} хвилина"
             few: "%{count} хвилини"
             many: "%{count} хвилин"
             other: "%{count} хвилин"
+          amount_due: "Сума до сплати: нічого, дзвінки за рахунок будинку"
         invites:
           guest_book_title: Гостьова книга
           guest_book_subtitle: Ваші запрошення до спільноти

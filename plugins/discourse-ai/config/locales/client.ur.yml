@@ -311,6 +311,26 @@ ur:
         edit: "ترمیم کریں"
         delete: "مٹائیں"
         embedding: "اَیمبَیڈ کرنا"
+      concepts:
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        columns:
+          status: "حیثیت"
+          topics: "موضوعات"
+          posts: "دھاگے"
+        statuses:
+          active: "فعال"
+        form:
+          name: "نام"
+          description: "تفصیل"
+          aliases: "مستعاری اسماء"
+          status: "حیثیت"
+        tagged_topics: "ٹیگ ہوے ٹاپک"
+        topic_columns:
+          topic: "ٹاپک"
+          primary: "بنیادی"
+          relevance: "مطابقت"
+        primary_badge: "بنیادی"
       decision_models:
         no_preset: "کوئی نہیں"
         display_name: "نام"

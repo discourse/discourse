@@ -514,9 +514,6 @@ nl:
       fonts:
         base_font: "Inhoud"
         heading_font: "Koppen"
-      logo:
-        description: "Wordt weergegeven in de bovenste navigatiebalk van de site en bovenaan de e-mailmeldingen van de site."
-        help_text: "De aanbevolen grootte is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categorieën"
@@ -975,7 +972,6 @@ nl:
         suspect_user: "Is deze gebruiker een spammer?"
         approve_post: "Dit bericht goedkeuren?"
         approve_topic: "Dit topic goedkeuren?"
-        something_wrong_with_post: "Is er iets mis met dit bericht?"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -4611,6 +4607,8 @@ nl:
         tag_group: "Taggroep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       delete: "Categorie verwijderen"
+      empty_state:
+        edit_category: "Categorie bewerken"
       create: "Nieuwe categorie"
       create_with_type: "Nieuwe categorie %{typeName}"
       create_long: "Nieuwe categorie maken"
@@ -4635,7 +4633,7 @@ nl:
         icon_required: "Selecteer een pictogram."
         groups_required: "Selecteer minstens één groep voor deze goedkeuringsmodus."
       name: "Categorienaam"
-      untitled: "Categorie zonder titel"
+      icon_search_placeholder: "Zoeken…"
       description: "Beschrijving"
       logo: "Logoafbeelding categorie"
       logo_dark: "Logoafbeelding categorie donkere modus"
@@ -4643,10 +4641,6 @@ nl:
       background_image: "Achtergrondafbeelding categorie"
       background_image_dark: "Achtergrondafbeelding donkere categorie"
       style: "Stijl"
-      icon: "Pictogram"
-      emoji: "Emoji"
-      select_emoji: "Selecteer emoji"
-      select_icon: "Selecteer pictogram"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
       color_validations:
@@ -4654,18 +4648,11 @@ nl:
         incorrect_length: "moet voldoen aan de indeling #RRGGBB of #RGB"
         non_hexdecimal: "mag alleen hexadecimale tekens bevatten (0-9, A-F)"
       styles:
-        type: "Stijl"
         icon: "Pictogram"
         emoji: "Emoji"
         square: "Vierkant"
-        options:
-          square: "Vierkant"
-          icon: "Pictogram"
-          emoji: "Emoji"
       color_used: "Kleur in gebruik"
-      predefined_colors: "Voorgedefinieerde kleuropties"
       name_placeholder: "Eén of twee woorden aanbevolen"
-      color_placeholder: "Elke webkleur"
       delete_confirm: "Weet je zeker dat je deze categorie wilt verwijderen?"
       delete_error: "Er is een fout opgetreden bij het verwijderen van de categorie."
       list: "Categorieën weergeven"
@@ -7536,8 +7523,6 @@ nl:
           title: "Kleuren"
           edit: "Bewerken"
           view: "Bekijken"
-          set_default_light: "Instellen als licht palet voor standaardthema (%{theme})"
-          set_default_dark: "Instellen als donker palet voor standaardthema (%{theme})"
           set_default_success: "%{schemeName} instellen als standaard palet voor %{themeName}"
           saved_refreshing: "Opgeslagen! Kleuren vernieuwen..."
           from_theme: "Van thema: %{name}"

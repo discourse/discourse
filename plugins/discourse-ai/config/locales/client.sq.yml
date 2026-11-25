@@ -221,6 +221,24 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      concepts:
+        edit: "Redaktoni"
+        delete: "Fshij"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Postime"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Emri"
+          description: "Përshkrimi"
+          status: "Status"
+        topic_columns:
+          topic: "Topic"
+          primary: "Kryesor"
+          relevance: "Rëndësia"
+        primary_badge: "Kryesor"
       decision_models:
         no_preset: "Asnjë"
         display_name: "Emri"

@@ -226,6 +226,24 @@ bg:
         edit: "Редактирай"
         delete: "Изтрий"
         embedding: "Ембедване"
+      concepts:
+        edit: "Редактирай"
+        delete: "Изтрий"
+        columns:
+          status: "Статус"
+          topics: "Теми"
+          posts: "Публикации"
+        statuses:
+          active: "Активни"
+        form:
+          name: "Име"
+          description: "Описание"
+          status: "Статус"
+        topic_columns:
+          topic: "Тема"
+          primary: "Основен"
+          relevance: "Приложимост"
+        primary_badge: "Основен"
       decision_models:
         no_preset: "Без"
         display_name: "Име"

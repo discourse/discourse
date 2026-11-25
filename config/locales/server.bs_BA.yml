@@ -1179,6 +1179,8 @@ bs_BA:
         title: "Da"
       approve_post:
         title: "Da"
+      deny_and_delete_post:
+        complete: "Post izbrisan."
       approve_post_closed:
         title: "Da"
       reject_post_bundle:

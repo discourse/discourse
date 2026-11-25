@@ -2431,16 +2431,10 @@ lv:
       validations:
         icon_required: "Izvēlieties ikonu."
       description: "Apraksts"
-      icon: "Ikona"
-      emoji: "Smaidiņi"
       background_color: "Krāsa"
       styles:
         icon: "Ikona"
         emoji: "Smaidiņi"
-        options:
-          icon: "Ikona"
-          emoji: "Smaidiņi"
-      color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
       no_description: "Lūdzu, pievieno aprakstu šai sadaļai."
@@ -2825,6 +2819,7 @@ lv:
       share: "Dalīties"
       dismiss: "Nerādīt"
     mobile_tab_bar:
+      new_topic: "Jauna tēma"
       create: "Izveidot"
       more: "Vairāk"
       back: "Atpakaļ"

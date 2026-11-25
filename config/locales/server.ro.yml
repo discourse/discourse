@@ -2416,6 +2416,8 @@ ro:
       approve_post:
         title: "Da"
         complete: "Postarea a fost aprobată."
+      deny_and_delete_post:
+        complete: "Postarea a fost ștearsă."
       approve_post_closed:
         title: "Da"
         confirm: "Acest subiect este închis. Vrei să creezi postarea oricum?"
