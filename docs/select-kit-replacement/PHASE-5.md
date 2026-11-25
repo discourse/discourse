@@ -11,6 +11,8 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves* and *Promotion*. Re-sequenced 2026-10-14
 - ☐ **Wave 5:** port the 20 bundled plugin subclasses (e.g. chat channel chooser,
   discourse-assign, discourse-workflows, discourse-adplugin, discourse-subscriptions), the
   remaining plugin SCSS, and the remaining customer ports.
+- ☐ **Final accessibility and screen-reader pass** over the ported controls, working through the
+  "Still open" list in [`SANDBOX-A11Y-REMEDIATION.md`](SANDBOX-A11Y-REMEDIATION.md).
 - ☐ **Beta**, once every gate in `ROLLOUT.md` holds. Beta is the production rollout.
 - ☐ **Stable, then permanent** with group targeting cleared.
 - ☐ **Cleanup:** delete the `else` branches (`TODO (select-kit-replacement-cleanup)`) and

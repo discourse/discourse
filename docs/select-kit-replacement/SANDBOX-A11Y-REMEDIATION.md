@@ -404,6 +404,17 @@ the race the suite is otherwise blind to.
   on every focus, so it must be present only when there is a value that will actually be
   replaced; and it reaches every screen reader rather than only the one with the gap, so it needs
   no UA gate but does add a phrase for readers who did not need it.
+- **Static variant: no type-to-select, though VoiceOver says to type.** Found 2026-11-25 on the
+  nested replies sort and deferred to the final screen-reader pass. Chrome exposes the static
+  trigger's `role="combobox"` as a combo box, so VoiceOver ends with "Type text or, to display a
+  list of choices, press Control-Option-Space". A native `<select>` reads as a "menu pop up
+  button" instead. Typing does nothing, closed or open: the closed trigger handles only the
+  opening keys and Backspace or Delete (`interaction-coordinator.ts`), and the list matches no
+  letters. A native select and the APG select-only combobox both pick the first option starting
+  with the typed letters. The likely fix is type-to-select on the static variant: a letter opens
+  the list on the first match, quick typing extends the prefix, a repeated letter cycles, and
+  matching ignores case and accents. Switching the role to `button` was the other option; it
+  would move focus into the list while open, which changes the keyboard model.
 - **`filter_to_narrow`** — see the inventory above.
 - **K4** — tag chips are pruned by `role="button"` (children-presentational), and the chip
   roving, `tabindex` seeding and the arrow hint are all gated on `isDesktopTypeahead`, which
