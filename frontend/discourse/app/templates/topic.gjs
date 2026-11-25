@@ -431,6 +431,7 @@ export default <template>
                     @jumpToPost={{@controller.jumpToPost}}
                     @onExpandToggle={{toggleProgressExpansion}}
                     @prevEvent={{info.prevEvent}}
+                    @showNavigation={{info.withTopicProgress}}
                     @topic={{@controller.model}}
                   >
                     <PluginOutlet

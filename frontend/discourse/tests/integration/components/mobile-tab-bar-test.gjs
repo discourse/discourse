@@ -57,6 +57,9 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
 
     assert.deepEqual(tabKeys(), ["main", "one", "two", "three"]);
     assert.dom(".mobile-tab-bar__more").doesNotExist();
+    assert
+      .dom(".mobile-tab-bar__hub")
+      .doesNotExist("Eject is exclusive to Hub");
   });
 
   test("gathers the sections past three under More when they don't fit", async function (assert) {
@@ -102,43 +105,86 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       sinon
         .stub(this.owner.lookup("service:capabilities"), "isAppWebview")
         .value(true);
-      ["one", "two"].forEach((key) => addTabPanel(key));
     });
 
-    test("keeps Eject last when all four tabs fit", async function (assert) {
+    test("keeps Eject beside the bar when four sections fit", async function (assert) {
+      ["one", "two", "three"].forEach((key) => addTabPanel(key));
+
       await render(<template><MobileTabBar /></template>);
 
       assert.deepEqual(
         tabKeys(),
-        ["main", "one", "two", "hub"],
-        "all tabs fit with Eject last"
+        ["main", "one", "two", "three"],
+        "all four slots are available to sections"
       );
-      assert
-        .dom("[data-key='hub'] .d-icon-eject")
-        .exists("the final tab returns to Hub");
+      const bar = find(".mobile-tab-bar__controls");
+      const eject = find(".mobile-tab-bar__controls + .mobile-tab-bar__hub");
+      assert.dom(eject).hasAria("label", i18n("mobile_tab_bar.hub"));
+      assert.dom(".d-icon-eject", eject).exists("Eject uses its own button");
+      const barBox = bar.getBoundingClientRect();
+      const ejectBox = eject.getBoundingClientRect();
+      assert.true(
+        ejectBox.left > barBox.right,
+        "a gap separates Eject from the bar"
+      );
+      assert.strictEqual(ejectBox.top, barBox.top, "both controls share a row");
+      assert.strictEqual(
+        ejectBox.height,
+        barBox.height,
+        "both controls share a height"
+      );
     });
 
-    test("keeps Eject immediately after More when sections overflow", async function (assert) {
-      addTabPanel("three");
+    test("keeps Eject after Create when sections overflow", async function (assert) {
+      ["one", "two", "three", "four"].forEach((key) => addTabPanel(key));
       this.currentUser.set("can_create_topic", true);
 
       await render(<template><MobileTabBar /></template>);
 
       assert.deepEqual(
         tabKeys(),
-        ["main", "one", "more", "hub"],
-        "More precedes Eject"
+        ["main", "one", "two", "more"],
+        "More is the last tab"
       );
       assert
         .dom(".mobile-tab-bar__tabs + .mobile-tab-bar__create")
         .exists("Create follows the navigation tabs");
+      assert
+        .dom(".mobile-tab-bar__controls + .mobile-tab-bar__hub:last-child")
+        .exists("Eject follows the bar");
       await click(".mobile-tab-bar__more");
 
       assert.deepEqual(
         findAll(".mobile-tab-bar__more-item").map((item) => item.dataset.key),
-        ["two", "three"],
+        ["three", "four"],
         "More lists the remaining sections"
       );
+    });
+
+    test("returns to Hub from the Topics-only layout", async function (assert) {
+      this.currentUser.set("can_create_topic", true);
+      await render(<template><MobileTabBar /></template>);
+
+      assert
+        .dom(".mobile-tab-bar__tabs")
+        .doesNotExist("the redundant Topics tab is hidden");
+      const eject = find(
+        ".mobile-tab-bar__create + .mobile-tab-bar__hub:last-child"
+      );
+      assert.dom(eject).exists("Eject follows Create");
+
+      try {
+        window.ReactNativeWebView = {
+          postMessage: (message) => assert.step(message),
+        };
+        await click(eject);
+        assert.verifySteps(
+          ['{"dismiss":true}'],
+          "Eject asks the app to close the site"
+        );
+      } finally {
+        delete window.ReactNativeWebView;
+      }
     });
   });
 
@@ -381,6 +427,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
       "a file isn't a section's page"
     );
   });
+
   test("highlights the active view in an overflowing RTL strip", async function (assert) {
     await render(
       <template>

@@ -30,10 +30,10 @@ export default class Contents extends Component {
   }
 
   get minimized() {
-    // Below a section's top level, the logo makes room for the back button
     return applyValueTransformer(
       "home-logo-minimized",
-      this.args.topicInfoVisible || this.mobileTabBar.isNestedPage,
+      this.args.topicInfoVisible ||
+        (this.mobileTabBar.isNestedPage && !this.args.topicInfo),
       {
         topicInfo: this.args.topicInfo,
         sidebarEnabled: this.args.sidebarEnabled,

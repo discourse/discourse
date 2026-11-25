@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
@@ -49,6 +50,7 @@ export default class DEditorPreview extends Component {
       <DDecoratedHtml
         @className="d-editor-preview"
         @decorate={{@onPreviewUpdated}}
+        @decorateArgs={{hash rawText=@rawText}}
         @html={{trustHTML @preview}}
       />
       <span class="d-editor-plugin">

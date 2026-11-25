@@ -12,11 +12,13 @@ import Tab from "discourse/components/mobile-tab-bar/tab";
 import htmlClass from "discourse/helpers/html-class";
 import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { SCROLLED_DOWN } from "discourse/services/scroll-direction";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dOnResize from "discourse/ui-kit/modifiers/d-on-resize";
 import { i18n } from "discourse-i18n";
 
 export default class MobileTabBar extends Component {
+  @service capabilities;
   @service composer;
   @service mobileTabBar;
   @service router;
@@ -115,6 +117,7 @@ export default class MobileTabBar extends Component {
           class={{dConcatClass
             "mobile-tab-bar"
             (unless layout.barTabs.length "--no-tabs")
+            (if this.capabilities.isAppWebview "--with-hub")
             (if this.isTopic "--topic")
             (if this.viewsTucked "--views-tucked")
             (if
@@ -150,14 +153,11 @@ export default class MobileTabBar extends Component {
                     aria-hidden="true"
                     class="mobile-tab-bar__highlight"
                   ></span>
-                  {{#each layout.sectionTabs key="key" as |tab|}}
+                  {{#each layout.barTabs key="key" as |tab|}}
                     <Tab @tab={{tab}} />
                   {{/each}}
                   {{#if layout.moreTabs.length}}
                     <MoreTab />
-                  {{/if}}
-                  {{#if layout.hubTab}}
-                    <Tab @tab={{layout.hubTab}} />
                   {{/if}}
                 </div>
               </div>
@@ -165,6 +165,15 @@ export default class MobileTabBar extends Component {
             </div>
           {{else}}
             <CreateButton />
+          {{/if}}
+          {{#if this.capabilities.isAppWebview}}
+            <DButton
+              class="btn-default mobile-tab-bar__hub"
+              @action={{this.mobileTabBar.returnToHub}}
+              @ariaLabel="mobile_tab_bar.hub"
+              @icon="eject"
+              @title="mobile_tab_bar.hub"
+            />
           {{/if}}
         </nav>
       {{/let}}

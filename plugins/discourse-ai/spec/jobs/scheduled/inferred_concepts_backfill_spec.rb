@@ -144,4 +144,19 @@ RSpec.describe Jobs::InferredConceptsBackfill do
     job.execute({})
     expect(topic.inferred_concepts.reload).to be_empty
   end
+
+  it "resumes stalled seeding runs even when backfill budget is 0 and no active concepts exist" do
+    SiteSetting.inferred_concepts_backfill_maximum_topics_per_hour = 0
+    kubernetes.update!(status: :candidate)
+
+    queued = DiscourseAi::InferredConcepts::Seeder.mark_queued!
+    stalled_time = (DiscourseAi::InferredConcepts::Seeder::WAVE_STALE_AFTER + 1.minute).ago.iso8601
+    Discourse.redis.set(
+      DiscourseAi::InferredConcepts::Seeder::STATE_KEY,
+      queued.merge("status" => "running", "updated_at" => stalled_time).to_json,
+    )
+
+    expect do job.execute({}) end.to change { Jobs::SeedInferredConcepts.jobs.size }.by(1)
+    expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(queued["run_id"])
+  end
 end

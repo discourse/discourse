@@ -22,13 +22,33 @@ export default {
         return;
       }
 
+      const label = i18n("boards.manage.title");
       api.addCommunitySectionLink({
         name: "boards",
         route: "boards",
         icon: "table-columns",
-        text: i18n("boards.manage.title"),
-        title: i18n("boards.manage.title"),
+        text: label,
+        title: label,
       });
+
+      api.addSidebarPanel(
+        (BaseCustomSidebarPanel) =>
+          class BoardsSidebarPanel extends BaseCustomSidebarPanel {
+            hidden = true;
+            key = "boards";
+
+            get mobileTab() {
+              return {
+                label,
+                icon: "boards",
+                url: "/boards",
+                ownsRoute: ({ name }) =>
+                  name === "boards" || name.startsWith("boardsBoard"),
+                isNestedRoute: ({ name }) => name !== "boards",
+              };
+            }
+          }
+      );
     });
   },
 };

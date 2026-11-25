@@ -279,6 +279,10 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["seed_status"]["status"]).to eq("queued")
+      expect(response.parsed_body["seed_status"]["run_id"]).to be_present
+      expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(
+        response.parsed_body["seed_status"]["run_id"],
+      )
 
       get "/admin/plugins/discourse-ai/ai-concepts.json"
       expect(response.parsed_body["meta"]["seed_status"]["status"]).to eq("queued")

@@ -213,12 +213,12 @@ module DiscourseAi
         end
 
         RateLimiter.new(current_user, "seed-inferred-concepts", 1, 5.minutes).performed!
-        DiscourseAi::InferredConcepts::Seeder.mark_queued!
-        Jobs.enqueue(:seed_inferred_concepts)
+        seed_status = DiscourseAi::InferredConcepts::Seeder.mark_queued!
+        Jobs.enqueue(:seed_inferred_concepts, run_id: seed_status["run_id"])
 
         StaffActionLogger.new(current_user).log_custom("seed_ai_concepts")
 
-        render json: { seed_status: DiscourseAi::InferredConcepts::Seeder.status }
+        render json: { seed_status: seed_status }
       end
 
       private

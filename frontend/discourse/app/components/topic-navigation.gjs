@@ -148,7 +148,11 @@ export default class TopicNavigation extends Component {
 
   get footerProgressSlot() {
     const { viewsSlot } = this.mobileTabBar;
-    return viewsSlot && !this.mobileTabBar.barTabs.length ? viewsSlot : null;
+    return viewsSlot &&
+      this.info.withTopicProgress &&
+      !this.mobileTabBar.barTabs.length
+      ? viewsSlot
+      : null;
   }
 
   get #fitsTimeline() {
@@ -346,7 +350,7 @@ export default class TopicNavigation extends Component {
       }}
       ...attributes
       {{this.observeTopicEnd
-        (and this.mobileTabBar.enabled (not this.info.renderTimeline))
+        (and this.mobileTabBar.enabled this.info.withTopicProgress)
         this.footerProgressSlot
       }}
       {{this.setupSwipe}}

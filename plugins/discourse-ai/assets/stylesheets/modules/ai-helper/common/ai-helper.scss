@@ -440,22 +440,6 @@
   }
 }
 
-.ai-post-image-caption-editor {
-  display: contents;
-
-  &__button.btn-transparent {
-    color: var(--tertiary);
-    min-height: 0;
-    padding: 0;
-  }
-}
-
-.ai-post-image-caption-editor-modal {
-  &__textarea {
-    min-height: 7em;
-  }
-}
-
 // AI Helper Options List
 .ai-helper-options {
   margin: 0;
@@ -617,5 +601,38 @@
     border-right-color: transparent;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+  }
+}
+
+.image-descriptions-modal {
+  .form-kit {
+    gap: var(--space-4);
+  }
+
+  .form-kit__control-input,
+  .form-kit__control-textarea {
+    box-sizing: border-box;
+    inline-size: 100%;
+  }
+
+  .form-kit__control-textarea {
+    min-inline-size: 0;
+    min-block-size: 0;
+    block-size: auto;
+  }
+
+  &__field {
+    align-self: stretch;
+  }
+
+  &__label {
+    margin-block: 0 var(--space-2);
+    font-weight: var(--token-font-weight-semibold);
+  }
+
+  &__notice {
+    margin: 0;
+    padding: var(--space-3);
+    background: var(--primary-very-low);
   }
 }
