@@ -449,11 +449,12 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       `@groupHeader`, which it already passed to the engine. Without the chip, its search is
       described as "Selected …" (2026-11-25), which also resolves a held value no page lists, so
       the root's `data-name` is filled again.
-  - ☐ `ColorPalettes` (the wizard). Rows show swatches.
-  - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
+  - ☑ `ColorPalettes` (the wizard): nothing to port. Only the wizard's dropdown field renders it,
+    for a field the server no longer sends (see the wizard below). It stays on select-kit.
+  - ☑ `FontSelector`: the font list setting. The wizard's use is unreachable, like `ColorPalettes`.
     - ☑ The font list setting (2026-11-19): `setting-field/font-list` and the older
-      `site-settings/font-list` render the shared `SelectFont` (`setting-field/-internals/`), a
-      typeahead over the fonts sorted by name. Each row is drawn in its font, and the held font's
+      `site-settings/font-list` render the `DSelectFont` recipe (moved out of the settings as
+      `SelectFont` on 2026-11-25), a typeahead over the fonts sorted by name. Each row is drawn in its font, and the held font's
       class sits on the root, so the field and its input share one typeface and nothing shifts on
       focus. The `body-font-*` and `heading-font-*` classes set the same family
       (`lib/stylesheet/importer.rb:117-122`), so one class serves `base_font` and `heading_font`.
@@ -462,8 +463,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       it landed, so typing appended to the name ("Interplayfair"). Now the press that focuses the
       input selects the name once it ends, as keyboard focus does; a press in an input that
       already has focus still places the caret (`ComboboxQueryInput`'s `handleClick`).
-    - ☐ Extract `SelectFont` into a ui-kit recipe, so a font picker outside the settings can use
-      it (asked 2026-11-25).
+    - ☑ `SelectFont` became the `DSelectFont` recipe (2026-11-25), so a font picker outside the
+      settings can use it. It is named "Font" unless the caller's texts name it, and keeps the
+      old picker's `font-selector` name for its customizations.
   - ☑ The wizard's dropdown field (2026-11-25). The plan expected `ColorPalettes`,
     `FontSelector` and `ComboBox` here, but #32797 removed the styling step, so the server sends
     only the setup step's Language field. Under the flag, the field's default branch renders a

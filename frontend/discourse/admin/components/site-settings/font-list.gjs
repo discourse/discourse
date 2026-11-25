@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
-import SelectFont from "discourse/components/setting-field/-internals/select-font";
 import FontSelector from "discourse/select-kit/components/font-selector";
+import DSelectFont from "discourse/ui-kit/select/recipes/fonts/d-select-font";
 
 export default class FontList extends Component {
   @service siteSettings;
@@ -24,11 +25,11 @@ export default class FontList extends Component {
   <template>
     {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
     {{#if this.siteSettings.enable_new_select_controls}}
-      <SelectFont
-        @ariaLabel={{@label}}
-        @choices={{@setting.choices}}
+      <DSelectFont
         @disabled={{@disabled}}
+        @fonts={{@setting.choices}}
         @onChange={{@changeValueCallback}}
+        @texts={{hash ariaLabel=@label}}
         @value={{@value}}
       />
     {{else}}

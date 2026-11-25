@@ -1510,6 +1510,21 @@ zone's IANA name, such as `Europe/Lisbon`, or `null` when the field is emptied.
 The picker is named "Time zone" unless the caller's texts name it. Until cleanup it defaults
 `@legacyKind` to `timezone-input`.
 
+#### Font recipe
+
+**`DSelectFont`** (kind `select-font`) picks a font. `@fonts` takes the fonts as a font setting
+lists them, `{ value, name }`, and `@value` and `@onChange` use the font's key, such as
+`times_new_roman`.
+
+- The fonts are listed by name, each drawn in its own typeface through its `body-font-*` class.
+  The stylesheet gives a font's body and heading classes the same family, so one class serves
+  both settings.
+- The held font's class sits on the root, so the closed field and the input share one typeface
+  and nothing shifts when the input takes focus.
+
+The picker is named "Font" unless the caller's texts name it. Until cleanup it defaults
+`@legacyKind` to `font-selector`.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 

@@ -3490,6 +3490,8 @@ en:
       label: "Color palette"
       light: "Light"
       dark: "Dark"
+    font_picker:
+      label: "Font"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
