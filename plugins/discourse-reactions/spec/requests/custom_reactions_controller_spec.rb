@@ -183,6 +183,7 @@ describe DiscourseReactions::CustomReactionsController do
   end
 
   describe "#reactions_given" do
+    fab!(:moderator)
     fab!(:private_topic) { Fabricate(:private_message_topic, user: user_2) }
     fab!(:private_post) { Fabricate(:post, topic: private_topic) }
     fab!(:secure_group, :group)
@@ -260,19 +261,22 @@ describe DiscourseReactions::CustomReactionsController do
       )
     end
 
-    it "does not return reactions in private messages shared with the viewer" do
+    it "does not return reactions in private messages shared with non-admin viewers" do
       shared_topic = Fabricate(:private_message_topic, user: user_2, recipient: user_1)
+      TopicAllowedUser.create!(topic: shared_topic, user: moderator)
       shared_post = Fabricate(:post, topic: shared_topic)
       shared_reaction = Fabricate(:reaction, post: shared_post, reaction_value: "laughing")
       Fabricate(:reaction_user, reaction: shared_reaction, user: user_2, post: shared_post)
 
-      sign_in(user_1)
+      [user_1, moderator].each do |viewer|
+        sign_in(viewer)
 
-      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+        get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
 
-      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
-        shared_post.id,
-      )
+        expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
+          shared_post.id,
+        )
+      end
     end
 
     it "does not return reactions for secure categories" do
@@ -320,14 +324,14 @@ describe DiscourseReactions::CustomReactionsController do
 
     describe "reactions in unlisted topics" do
       fab!(:unlisted_topic) do
-        Fabricate(:topic, title: "UNLISTED-DRAFT: pricing change proposal", user: user_1)
+        Fabricate(:topic, title: "UNLISTED-DRAFT: pricing change proposal", user: user_3)
       end
-      fab!(:unlisted_op) { Fabricate(:post, topic: unlisted_topic, user: user_1) }
+      fab!(:unlisted_op) { Fabricate(:post, topic: unlisted_topic, user: user_3) }
       fab!(:unlisted_reply) do
         Fabricate(
           :post,
           topic: unlisted_topic,
-          user: user_1,
+          user: user_3,
           raw: "UNLISTED-BODY: second post, the numbers are in the attached sheet.",
         )
       end
@@ -363,13 +367,15 @@ describe DiscourseReactions::CustomReactionsController do
       end
 
       it "returns reactions in unlisted topics to staff" do
-        sign_in(admin)
+        [moderator, admin].each do |staff_user|
+          sign_in(staff_user)
 
-        get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+          get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
 
-        expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
-          unlisted_reply.id,
-        )
+          expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
+            unlisted_reply.id,
+          )
+        end
       end
     end
 
