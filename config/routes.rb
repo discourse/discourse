@@ -2018,6 +2018,15 @@ Discourse::Application.routes.draw do
       get "/access" => "admin/mcp#access"
       put "/access/:group_id" => "admin/mcp#update_access"
       delete "/access/:group_id" => "admin/mcp#destroy_access"
+      get "/content-restrictions" => "admin/mcp#content_restrictions"
+      put "/content-restrictions/:rule_kind" => "admin/mcp#update_content_restriction",
+          :constraints => {
+            rule_kind: /[a-z0-9_\-]+(?::[a-z0-9_\-]+)?/i,
+          }
+      delete "/content-restrictions/:rule_kind" => "admin/mcp#destroy_content_restriction",
+             :constraints => {
+               rule_kind: /[a-z0-9_\-]+(?::[a-z0-9_\-]+)?/i,
+             }
       get "/capabilities" => "admin/mcp#primitives"
       put "/capabilities" => "admin/mcp#update_primitives"
       put "/capabilities/emergency-block" => "admin/mcp#emergency_block"

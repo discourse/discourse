@@ -21,7 +21,12 @@
   <h2><%= t("mcp.oauth.granted_permissions", count: @granted_scopes.length) %></h2>
   <ul class="mcp-consent__granted-scopes">
     <% @granted_scopes.each do |scope| %>
-      <li><code><%= scope %></code></li>
+      <li>
+        <code><%= scope %></code>
+        <% if @policy_disabled_scopes.include?(scope) %>
+          <span class="mcp-consent__scope-disabled"><%= t("mcp.oauth.disabled_by_site_policy") %></span>
+        <% end %>
+      </li>
     <% end %>
   </ul>
 

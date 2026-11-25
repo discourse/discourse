@@ -1419,18 +1419,25 @@ class Category < ActiveRecord::Base
   private
 
   def ensure_not_protected_by_mcp_content_rule
-    McpContentRule.lock_guarded_targets!
+    lock_before_guard_check
     return if McpContentRule.protected_category_ids.exclude?(id)
 
     errors.add(:base, I18n.t("category.errors.used_by_mcp_content_rule"))
     throw :abort
   end
 
+  # The category's row is locked before the rule lock, the order that
+  # CategoryDestroyer already uses, so a delete and a move can't deadlock.
+  def lock_before_guard_check
+    Category.where(id: id).lock.pick(:id)
+    McpContentRule.lock_guarded_targets!
+  end
+
   # Moving a category out of a denied category would make its topics
   # accessible. Moving it into one, or out of an allowed one, only shrinks
   # access and stays allowed.
   def ensure_stays_in_denied_mcp_subtree
-    McpContentRule.lock_guarded_targets!
+    lock_before_guard_check
     denied = McpContentRule.denied_category_ids
     return if denied.empty? || denied.include?(id)
 

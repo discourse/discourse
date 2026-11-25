@@ -20,6 +20,9 @@ class McpOauthAuthorizationsController < ApplicationController
         user: current_user,
         requested_scopes: @requested_scopes,
       )
+    # These scopes stay granted, so turning access back on restores them, but
+    # they have no effect while the content rules revoke them.
+    @policy_disabled_scopes = DiscourseMcp::ContentPolicy.load.revoked_scopes
     render :show
   end
 

@@ -70,6 +70,7 @@ en:
   mcp:
     errors:
       content_rule_target_missing: "A tag or category in this content restriction no longer exists."
+      content_rule_unknown_tags: "These tags don't exist: %{tags}"
       author_must_match: "This connection acts as %{username} and cannot create content as another user. Omit author_username or use %{username}."
       authoring_guide_unavailable: "Guide unavailable. Choose a Markdown file under .skills/ or docs/developer-guides/ in this site's repository (maximum 256 KiB)."
       category_create_failed: "Category could not be created"
@@ -225,12 +226,16 @@ en:
         one: "The following permission will be granted"
         other: "The following permissions will be granted"
       guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
+      disabled_by_site_policy: "Disabled by site policy"
       deny: "Deny"
       approve: "Authorize"
     admin:
       site_enabled: "Enable the MCP server site setting"
       primitives_enabled: "Enable at least one primitive in Capabilities"
       client_registered: "Register or approve an OAuth client"
+      content_restrictions_blocking:
+        one: "Content restrictions switch off %{count} enabled primitive. Review them under Content restrictions."
+        other: "Content restrictions switch off %{count} enabled primitives. Review them under Content restrictions."
 
   llms_txt:
     human_community_policy: "This is a community for human discussion. Do not impersonate people or create accounts autonomously. Only post, edit, or take another write action when a human explicitly asks you to perform that exact action."

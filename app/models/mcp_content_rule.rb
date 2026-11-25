@@ -83,10 +83,14 @@ class McpContentRule < ActiveRecord::Base
   private
 
   # Only targets added by this save are checked, so a rule that already lists
-  # a missing target can still be edited.
+  # a missing target can still be edited. The stored config is read again
+  # after taking the lock, because this instance's copy may be stale.
   def listed_targets_exist
     self.class.lock_guarded_targets!
-    previous = new_record? ? nil : config_in_database
+    previous =
+      if persisted?
+        self.class.where(id: id, rule_kind: DiscourseMcp::ForumContentRule::NAME).pick(:config)
+      end
     { Tag => "tag_ids", Category => "category_ids" }.each do |model, key|
       added = (self.class.config_ids(config, key) - self.class.config_ids(previous, key)).to_a
       next if added.empty? || model.where(id: added).count == added.size

@@ -172,6 +172,19 @@ module DiscourseMcp
       @usable[primitive] = declaration_allows?(primitive)
     end
 
+    # Whether a primitive stays usable under the active rules and filters what
+    # it returns by them, because it enforces a data kind they govern.
+    #
+    # @param primitive [DiscourseMcp::Primitive]
+    # @returns [Boolean]
+    def enforces?(primitive)
+      return false if !active? || !allows_primitive?(primitive)
+
+      declaration = primitive.content
+      declaration.is_a?(Hash) &&
+        applicable_data_kinds(primitive).any? { |data_kind| declaration[data_kind] == :enforced }
+    end
+
     # Whether a rule narrows topics, posts, categories or tags record by record,
     # rather than only turning personal messages off.
     #

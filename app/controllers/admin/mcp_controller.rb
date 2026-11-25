@@ -2,12 +2,19 @@
 
 class Admin::McpController < Admin::AdminController
   def overview
+    content_policy = DiscourseMcp::ContentPolicy.load
     exposed =
       McpPrimitive.exposed.filter_map do |policy|
         primitive = DiscourseMcp.registry.find(policy.kind, policy.identifier)
         next if !primitive&.available?
         primitive
       end
+    blocked = exposed.count { |primitive| !content_policy.allows_primitive?(primitive) }
+    exposed = exposed.select { |primitive| content_policy.allows_primitive?(primitive) }
+    warnings = []
+    if blocked.positive?
+      warnings << I18n.t("mcp.admin.content_restrictions_blocking", count: blocked)
+    end
     enabled = SiteSetting.mcp_server_enabled
     metrics = {
       approved_oauth_clients: McpOauthClient.where(trust_state: "approved").count,
@@ -48,12 +55,39 @@ class Admin::McpController < Admin::AdminController
                  complete: metrics[:approved_oauth_clients].positive?,
                },
              ],
-             warnings: [],
+             content_restrictions: {
+               active: content_policy.active?,
+               blocked: blocked,
+             },
+             warnings: warnings,
            }
   end
 
   def access
-    render json: primitives_payload.merge(access_rules: access_rules_payload)
+    render json:
+             primitives_payload.merge(
+               access_rules: access_rules_payload,
+               private_message_scopes_overridden:
+                 content_policy.denies_all?(DiscourseMcp::ContentPolicy::PRIVATE_MESSAGES),
+             )
+  end
+
+  def content_restrictions
+    render json: DiscourseMcp::ContentRestrictionsReport.new.as_json
+  end
+
+  def update_content_restriction
+    config = params[:config]
+    config = config.respond_to?(:to_unsafe_h) ? config.to_unsafe_h : config
+    raise Discourse::InvalidParameters.new(:config) if !config.is_a?(Hash)
+
+    McpContentRuleUpdater.save!(actor: current_user, rule_kind: params[:rule_kind], config:)
+    content_restrictions
+  end
+
+  def destroy_content_restriction
+    McpContentRuleUpdater.delete!(actor: current_user, rule_kind: params[:rule_kind])
+    head :no_content
   end
 
   def primitives
@@ -99,7 +133,9 @@ class Admin::McpController < Admin::AdminController
           .all(kind)
           .map do |primitive|
             primitive_record = primitive_records[[kind.to_s, primitive.identifier]]
-            primitive_payload(primitive, primitive_record)
+            primitive_payload(primitive, primitive_record).merge(
+              restricted: !content_policy.allows_primitive?(primitive),
+            )
           end
       end
     {
@@ -107,6 +143,10 @@ class Admin::McpController < Admin::AdminController
       available_scopes: DiscourseMcp.registry.scopes,
       primitives: primitives,
     }
+  end
+
+  def content_policy
+    @content_policy ||= DiscourseMcp::ContentPolicy.load
   end
 
   def access_rules_payload
