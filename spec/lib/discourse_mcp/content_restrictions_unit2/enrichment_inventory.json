@@ -302,7 +302,7 @@
         },
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 714,
+          "line": 719,
           "source": "class PerformReviewableAction"
         }
       ],
@@ -311,7 +311,8 @@
       "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional.",
       "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb.",
-      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap."
+      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap.",
+      "unit4_review6_refresh": "At 763a20295f0, the PM-off refusal for revise_and_reject_post adds five lines before PerformReviewableAction and its dispatch. The stored-topic transaction, scoped lookup, authored/stored-text checks and permitted native approval/recovery/feedback edges remain. Fixed system notices to a poster are accepted under invariant 2 when no PM locator is returned; the revise/reject refusal remains a conservative extra."
     },
     {
       "tool": "discourse_update_user",
@@ -1586,7 +1587,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 759,
+          "line": 764,
           "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
         }
       ],
@@ -1604,7 +1605,8 @@
       "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
       "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional.",
       "unit4_review4_refresh": "Re-read at 6bb81ffd390: queued approval uses the staff reviewer or non-staff queued author guardian for prospective validation; permitted native dispatch remains conditional. Category-filtering and skip-validations fallback gaps are pinned separately in review4_spec.rb.",
-      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap."
+      "unit4_review5_refresh": "PerformReviewableAction now wraps reviewable.perform in a stored-topic policy transaction whose topic comes from created_post_topic. Native dispatch and approval/recovery/feedback edges remain conditional. Revise/reject creates its system PM without setting created_post_topic; review5_spec.rb pins the PM-policy gap.",
+      "unit4_review6_refresh": "At 763a20295f0, the PM-off refusal for revise_and_reject_post adds five lines before PerformReviewableAction and its dispatch. The stored-topic transaction, scoped lookup, authored/stored-text checks and permitted native approval/recovery/feedback edges remain. Fixed system notices to a poster are accepted under invariant 2 when no PM locator is returned; the revise/reject refusal remains a conservative extra."
     },
     "category_create": {
       "trigger": "Category#create_category_definition",
@@ -3548,5 +3550,25 @@
       }
     ],
     "review": "Seed 85019 observed ten stale live evidence occurrences at ten distinct locations before refresh; no IndexError occurred at this HEAD. Re-read each current declaration/call and the 8a32e9ce84d..e775091f75f diff. Stored-topic transactions narrow creation and approval reachability; URL read projection changes precede the setting write. Native conditional graph edges and classifications are retained. Historical refresh metadata is unchanged."
+  },
+  "unit4_review6_refresh": {
+    "revision": "763a20295f032a73d837f638bdea40d9bc42093f",
+    "moves": [
+      {
+        "entry": "operation:discourse_perform_reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 714,
+        "current_line": 719,
+        "source": "class PerformReviewableAction"
+      },
+      {
+        "entry": "path:reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 759,
+        "current_line": 764,
+        "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
+      }
+    ],
+    "review": "Seed 86019 observed the exact-line example RED with precisely two stale assertions, moderation.rb:714 and :759, before refresh; no IndexError occurred. Re-read both current bodies and the 78600db48de..763a20295f0 diff. The preceding PM-off revise/reject guard shifts the declaration to 719 and native dispatch to 764. Native conditional graph edges and classifications remain; historical refresh notes are retained."
   }
 }

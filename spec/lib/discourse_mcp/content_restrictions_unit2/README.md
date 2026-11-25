@@ -410,3 +410,22 @@ Both enrichment examples pass in the combined seed-85019 run, with no
 failures from the new review-5 specs. Exact new example names, observed RED
 signatures, GREEN controls and run receipts are in
 [REVIEW5.md](../content_restrictions_unit4/REVIEW5.md).
+
+## Unit 4 review 6 evidence refresh at `763a20295f0`
+
+The pre-refresh seed-86019 run observed **2 examples, 1 failure**: exactly two
+stale assertions at `moderation.rb:714` and `moderation.rb:759`. It did not raise
+an `IndexError`. Re-read the current declaration, dispatch body, policy guard
+and `78600db48de..763a20295f0` diff before refreshing:
+
+| Source | Evidence moves | Re-review |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/moderation.rb` | `PerformReviewableAction` 714 → 719; `reviewable.perform` 759 → 764 | The preceding PM-off refusal for `revise_and_reject_post` adds five lines. Scoped lookup, authored/stored-text checks, stored-topic transaction and permitted native dispatch remain. Fixed system notices to a poster do not violate invariant 2 when their PM locator is absent from agent output; the revise/reject refusal remains a conservative extra. |
+
+`unit4_review6_refresh` records the two moves and current entry conditions;
+earlier review metadata remains historical. All **245 live evidence occurrences**
+and graph references were checked twice after refresh. Counts remain **56
+operation rows, 55 distinct write primitives, 116 paths and three exclusions**.
+Both enrichment examples pass in the final seed-86019 combined run, with no
+`IndexError`. Exact example names, calibration limits and RED signatures are recorded in
+[REVIEW6.md](../content_restrictions_unit4/REVIEW6.md).
