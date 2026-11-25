@@ -359,3 +359,103 @@ The unavailable orphan row is fixture setup rather than an impossible PUT.
 No implementation fix or GREEN-after-fix claim is made. Frontend rendering,
 concurrency, large-config audit truncation and logger-failure atomicity are not
 established by these focused requests. No requested behavior was left unpinned.
+
+## Review round 3: synonym IDs and null array elements
+
+Review subject: **`7ba47e1dbd4`**, base **`1455a1e8b74`**. The new
+`review3_spec.rb` was run against actual **HEAD `a38c4afbf22`**, without
+changing production code. It reuses `support.rb`; all 14 examples are
+`type: :request` and have `[cr-u6]` in their names. Assertions observe responses,
+complete persisted rule attributes, `UserHistory` IDs, and stored-policy topic
+visibility through the same public policy entry point as round 2.
+
+### RED inventory
+
+Seed **68327**: **14 examples, 10 RED, 4 GREEN, 0 pending, 0 errors outside
+examples**. Each row below is an assertion failure rather than an exception
+from setup. All names have the prefix
+`Admin::McpController#update_content_restriction `.
+
+| Example name | Observed RED signature |
+| --- | --- |
+| `[cr-u6] applies allow synonym ids to topics carrying the canonical tag` | PUT 200 and row persistence pass; visible topic IDs are `[]`, expected `[114620053]`. |
+| `[cr-u6] applies deny synonym ids to topics carrying the canonical tag` | PUT 200 and row persistence pass; visible topic IDs are `[114620053, 114620054]`, expected `[114620054]`. |
+| `[cr-u6] refuses raw JSON allow null only on create without storage or logs` | Expected HTTP 400, got 200; errors absent; expected no rows, got a rule with `allow.tag_ids: []`; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON allow null only on replace without storage or logs` | Expected HTTP 400, got 200; errors absent; `allow.tag_ids` changes from `[114620072]` to `[]` and timestamp changes; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON allow known name then null on create without storage or logs` | Expected HTTP 400, got 200; errors absent; expected no rows, got a rule with `allow.tag_ids: [114620071]`; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON allow known name then null on replace without storage or logs` | Expected HTTP 400, got 200; errors absent; `allow.tag_ids` changes from `[114620072]` to `[114620071]` and timestamp changes; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON deny null only on create without storage or logs` | Expected HTTP 400, got 200; errors absent; expected no rows, got a rule with `deny.tag_ids: []`; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON deny null only on replace without storage or logs` | Expected HTTP 400, got 200; errors absent; `deny.tag_ids` changes from `[114620072]` to `[]` and timestamp changes; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON deny known name then null on create without storage or logs` | Expected HTTP 400, got 200; errors absent; expected no rows, got a rule with `deny.tag_ids: [114620071]`; one new `UserHistory` ID. |
+| `[cr-u6] refuses raw JSON deny known name then null on replace without storage or logs` | Expected HTTP 400, got 200; errors absent; `deny.tag_ids` changes from `[114620072]` to `[114620071]` and timestamp changes; one new `UserHistory` ID. |
+
+### GREEN controls
+
+These four examples passed in the same run, with the same name prefix:
+
+| Example name | Observed control |
+| --- | --- |
+| `[cr-u6] controls allow ordinary ids and refuses missing ids on create and replace` | Ordinary ID PUT 200, stored config unchanged from input, only canonical-tag topic visible in selected mode. Absent ID refused with 422 and errors on create/replace; all row attributes and `UserHistory` IDs unchanged. |
+| `[cr-u6] controls deny ordinary ids and refuses missing ids on create and replace` | Ordinary ID PUT 200, stored config unchanged from input, only other topic visible. Absent ID refused with 422 and errors on create/replace; all row attributes and `UserHistory` IDs unchanged. |
+| `[cr-u6] saves raw JSON allow empty names and clears an existing tag list` | Raw JSON `tag_names: []` returns 200 on create and replacement; stored `allow.tag_ids` is empty, replacing a verified nonempty list. |
+| `[cr-u6] saves raw JSON deny empty names and clears an existing tag list` | Raw JSON `tag_names: []` returns 200 on create and replacement; stored `deny.tag_ids` is empty, replacing a verified nonempty list. |
+
+### Decisions and fixture discrimination
+
+- Reuse the previously reserved **114_620_000..114_620_999** range. Before
+  creating the file, `rg --files --no-ignore spec -g '*.rb' -g '*.json'` plus a
+  numeric-literal scan (plain and underscored decimals) found no literals in
+  **114_620_050..114_620_099**. New fixtures use tags 051/052 (canonical/synonym),
+  061 (ordinary), 071/072 (known/retained), 081 (empty-list control), topics
+  053/054 and 063/064, all with the `114_620_` prefix. Absent tag 099 is also
+  explicitly checked with `Tag.exists?` before the refusal requests.
+- Synonym requests supply only `tag_ids`, with selected mode on allow. No
+  assertion requires a particular canonical storage representation: the
+  canonical-tag topic's visibility decides correctness. The second, untagged
+  topic distinguishes normalization from blanket acceptance or refusal.
+  Ordinary IDs have a separate successful request and the same visibility
+  check. Missing-ID controls accept any 4xx with errors, preserving refusal
+  without imposing a new status requirement; observed status is 422.
+- Null cases are eight separate examples: allow/deny times `[null]` or
+  `["u6r3-known", null]` times create/replace. They send `.to_json` strings with
+  explicit `Content-Type: application/json`, not form parameters. Every
+  replacement is first saved successfully through the PUT route with the
+  different retained tag. Each rejection requires exactly 400 and errors,
+  identical full rule rows (including timestamps/actor), and identical IDs
+  across all `UserHistory` rows, which also forbids a new staff log.
+- The mixed array's known tag differs from the retained tag, so silently
+  dropping null and saving the remaining name fails the replacement assertion.
+  The null-only case catches conversion to an empty list. Separate valid raw
+  JSON empty-list controls reject a blanket empty-list refusal or a no-op that
+  fails to clear the old list. These weaker alternatives were checked against
+  the fixtures and assertions; no temporary production mutation was permitted.
+
+### Receipts and limits
+
+```sh
+hc run --bg --name cr-u6-review3-final --cwd "$PWD" \
+  'PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:$PATH \
+  LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit6/review3_spec.rb \
+  --seed 68327 --format documentation \
+  --format json --out /tmp/cr-u6-review3-68327.json'
+```
+
+Final JSON receipt: `/tmp/cr-u6-review3-68327.json`. Seed 68326 was calibration:
+14 examples, 12 failures, with two extra failures because the missing-ID
+controls initially demanded 400 instead of preserving the existing 422 refusal.
+Those controls were corrected; both target findings had the same assertion
+signatures in that initial run. The earlier inventory sections remain historical
+receipts for their stated baselines; the counts above cover only round 3.
+
+Targeted `bin/lint --fix` passed RuboCop (one file, no offenses) and Syntax
+Tree with Ruby 4.0.7, pnpm 10.28.0, and Node 24.14.0 on PATH. The README was
+also supplied; `bin/lint` reported no core linter for that file. The seed-68327
+request run was repeated after lint formatted the JSON header hashes.
+
+Both requested findings are pinned through requests and stored-policy visibility.
+No requested behavior remains unpinned. These tests leave the internal fix and
+synonym storage representation open; no implementation or GREEN-after-fix claim
+is made. Only `review3_spec.rb` and this README were edited. No commit, Git
+history mutation, migration, core database access, or service start/stop was
+performed.
