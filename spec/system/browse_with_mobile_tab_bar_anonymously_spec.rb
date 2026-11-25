@@ -15,8 +15,8 @@ RSpec.describe "Browse with mobile tab bar anonymously", mobile: true do
   it "shows visitors the topic views and the path to sign-up through Log in" do
     visit("/latest")
 
-    expect(tab_bar).to have_tabs("main")
     expect(page).to have_css(".mobile-tab-bar__views #navigation-bar")
+    expect(page).to have_no_css(".mobile-tab-bar__tabs")
     expect(page).to have_no_css(".d-header .login-button")
     expect(tab_bar).to have_named_log_in
     expect(tab_bar).to have_no_sign_up

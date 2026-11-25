@@ -1,4 +1,6 @@
 html.mobile-tab-bar-visible {
+  --mobile-tab-bar-progress-width: 7rem;
+
   .navigation-controls {
     margin-left: auto;
 
@@ -64,6 +66,25 @@ html.mobile-tab-bar-visible {
     .navigation-controls {
       order: 2;
     }
+  }
+}
+
+html.mobile-tab-bar-visible
+  :is(.topic-navigation.with-topic-progress, .mobile-tab-bar__views)
+  #topic-progress-wrapper
+  #topic-progress {
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--d-nav-color--active);
+
+  .nums {
+    font-size: var(--font-down-1);
+  }
+
+  .bg {
+    background: var(--d-selected);
   }
 }
 
@@ -149,23 +170,10 @@ html.mobile-tab-bar-visible
 
   // Outweighs the progress's own look, set by both ids
   #topic-progress-wrapper #topic-progress {
-    min-width: 7rem;
+    min-width: var(--mobile-tab-bar-progress-width);
     height: var(--mobile-tab-bar-item-size);
     padding: 0 var(--space-3);
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 0;
     border-radius: var(--mobile-tab-bar-inner-radius);
-    background: transparent;
-    color: var(--d-nav-color--active);
-
-    .nums {
-      font-size: var(--font-down-1);
-    }
-
-    .bg {
-      background: var(--d-selected);
-    }
   }
 
   // Apart after the bubble, and out of its flow, so the bubble neither moves
@@ -201,6 +209,60 @@ html.mobile-tab-bar-visible
       overflow: hidden;
       clip-path: rect(0 0 0 0);
     }
+  }
+}
+
+.mobile-tab-bar__views:has(> #topic-progress-wrapper.docked) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.mobile-tab-bar__views #topic-progress-wrapper {
+  align-items: stretch;
+  height: var(
+    --mobile-tab-bar-progress-height,
+    var(--mobile-tab-bar-controls-height)
+  );
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: height 200ms ease;
+  }
+
+  &:not(:has(#topic-progress:not(.hidden))) {
+    display: none;
+  }
+
+  #topic-progress {
+    flex: 1 1 auto;
+    width: var(--mobile-tab-bar-progress-width);
+    min-width: 0;
+    padding: 0;
+    border-radius: 0;
+
+    .nums {
+      min-width: 0;
+    }
+  }
+
+  .topic-admin-menu-trigger,
+  .topic-content-language-preferences,
+  .progress-back {
+    height: 100%;
+    margin: 0;
+    padding: 0 var(--space-2);
+    border: 0;
+    border-radius: 0;
+  }
+
+  .topic-admin-menu-trigger,
+  .topic-content-language-preferences {
+    background: var(--header_background);
+    color: var(--header_primary);
+  }
+
+  .progress-back-container {
+    position: static;
+    margin: 0;
   }
 }
 

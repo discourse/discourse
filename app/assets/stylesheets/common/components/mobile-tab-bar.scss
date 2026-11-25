@@ -6,8 +6,7 @@ html.mobile-tab-bar-visible {
   --mobile-tab-bar-item-size: 2.25rem;
   --mobile-tab-bar-views-gap: var(--space-1);
   --mobile-tab-bar-views-height: calc(
-    var(--mobile-tab-bar-item-size) + var(--space-1) * 2 +
-      var(--mobile-tab-bar-views-gap)
+    var(--mobile-tab-bar-item-size) + var(--space-1)
   );
   --mobile-tab-bar-bottom-inset: max(
     var(--space-2),
@@ -70,10 +69,10 @@ html.mobile-tab-bar-visible {
     );
   }
 
-  &:has(.mobile-tab-bar__views > *) {
+  &:has(.mobile-tab-bar:not(.--no-tabs) > .mobile-tab-bar__views > *) {
     --footer-nav-height: calc(
       var(--mobile-tab-bar-controls-height) +
-        var(--mobile-tab-bar-views-height) +
+        var(--mobile-tab-bar-views-height) + var(--mobile-tab-bar-views-gap) +
         var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
     );
   }
@@ -94,6 +93,13 @@ html.mobile-tab-bar-visible {
   &.mobile-tab-bar-tucked:not(:has(.mobile-tab-bar :focus-visible)) {
     --mobile-tab-bar-current-height: var(--mobile-tab-bar-bottom-inset);
   }
+
+  &.mobile-tab-bar-actions-tucked:not(:has(.mobile-tab-bar :focus-visible)) {
+    --mobile-tab-bar-progress-height: var(--mobile-tab-bar-item-size);
+    --mobile-tab-bar-current-height: calc(
+      var(--mobile-tab-bar-progress-height) + var(--mobile-tab-bar-bottom-inset)
+    );
+  }
 }
 
 @mixin mobile-tab-bar-floating($fill: true) {
@@ -106,6 +112,7 @@ html.mobile-tab-bar-visible {
 }
 
 .mobile-tab-bar {
+  --mobile-tab-bar-inner-radius: 0;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -113,6 +120,7 @@ html.mobile-tab-bar-visible {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  gap: var(--mobile-tab-bar-views-gap);
   width: 100%;
   height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
   padding: 0 var(--mobile-tab-bar-side-inset) var(--mobile-tab-bar-bottom-inset);
@@ -134,6 +142,70 @@ html.mobile-tab-bar-visible {
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  &.--no-tabs {
+    --mobile-tab-bar-views-height: var(--mobile-tab-bar-controls-height);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    background: none;
+
+    .mobile-tab-bar__menu {
+      flex: none;
+      width: var(--mobile-tab-bar-controls-height);
+
+      @include mobile-tab-bar-floating($fill: false);
+    }
+
+    .mobile-tab-bar__views {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mobile-tab-bar__create::after {
+      @include mobile-tab-bar-floating($fill: false);
+    }
+
+    &.--topic {
+      display: grid;
+      grid-template-columns:
+        var(--mobile-tab-bar-controls-height) minmax(0, 1fr)
+        minmax(0, var(--mobile-tab-bar-progress-width))
+        minmax(0, 1fr) var(--mobile-tab-bar-controls-height);
+
+      .mobile-tab-bar__menu {
+        justify-self: start;
+      }
+
+      .mobile-tab-bar__views {
+        // The counter ends at the edge of the center column. The back button
+        // can grow into the space before it without moving the counter.
+        grid-column: 2 / 4;
+        place-self: end;
+      }
+
+      .mobile-tab-bar__create {
+        grid-column: 4 / 6;
+        justify-self: end;
+        max-width: 100%;
+      }
+
+      .mobile-tab-bar__menu,
+      .mobile-tab-bar__create {
+        transition: inherit;
+      }
+    }
+  }
+
+  &.--actions-tucked:not(:has(:focus-visible)) {
+    .mobile-tab-bar__menu,
+    .mobile-tab-bar__create {
+      opacity: 0;
+      transform: translateY(calc(100% + var(--mobile-tab-bar-bottom-inset)));
+      pointer-events: none;
+    }
   }
 
   // Off screen but still reachable from the keyboard, which brings it back
@@ -158,15 +230,15 @@ html.mobile-tab-bar-visible {
     display: flex;
     flex: none;
     align-items: center;
-    margin-block-end: var(--mobile-tab-bar-views-gap);
-    padding: var(--space-1);
     box-sizing: border-box;
+    overflow: clip;
     pointer-events: auto;
 
     @include mobile-tab-bar-floating;
     transition:
       transform 200ms ease,
-      opacity 200ms ease;
+      opacity 200ms ease,
+      visibility 200ms;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
@@ -199,7 +271,7 @@ html.mobile-tab-bar-visible {
     }
 
     > li > a {
-      min-height: var(--mobile-tab-bar-item-size);
+      min-height: var(--mobile-tab-bar-views-height);
       padding: var(--space-1) var(--space-3);
       border-radius: var(--mobile-tab-bar-inner-radius);
       color: var(--header_primary-high);
@@ -267,9 +339,8 @@ html.mobile-tab-bar-visible {
 
   &__views .navigation-options__trigger {
     flex: none;
-    width: var(--mobile-tab-bar-item-size);
-    height: var(--mobile-tab-bar-item-size);
-    margin-left: var(--space-2);
+    width: var(--mobile-tab-bar-views-height);
+    height: var(--mobile-tab-bar-views-height);
     padding: 0;
     border-radius: var(--mobile-tab-bar-inner-radius);
 
@@ -286,9 +357,7 @@ html.mobile-tab-bar-visible {
     display: flex;
     flex: none;
     align-items: center;
-    gap: var(--space-1);
     height: var(--mobile-tab-bar-controls-height);
-    padding-inline-start: var(--space-1);
     box-sizing: border-box;
     pointer-events: auto;
 
@@ -301,7 +370,7 @@ html.mobile-tab-bar-visible {
   &__tabs,
   &__create {
     flex: none;
-    height: var(--mobile-tab-bar-control-size);
+    height: var(--mobile-tab-bar-controls-height);
     pointer-events: auto;
     border-radius: var(--mobile-tab-bar-inner-radius);
   }
@@ -316,18 +385,24 @@ html.mobile-tab-bar-visible {
     }
   }
 
-  &__menu {
-    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
+  &__menu,
+  &__views .progress-back {
     --d-button-default-bg-color: var(--header_background);
     --d-button-default-bg-color--hover: var(--d-hover);
     --d-button-default-icon-color: var(--header_primary);
     --d-button-default-icon-color--hover: var(--header_primary);
     --d-button-default-border: 0;
     --d-button-default-border--hover: 0;
+  }
+
+  &__menu {
+    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
     position: relative;
     flex: 1 1 0;
     min-width: var(--mobile-tab-bar-control-size);
     padding: 0;
+    border-start-start-radius: var(--mobile-tab-bar-radius);
+    border-end-start-radius: var(--mobile-tab-bar-corner-radius);
 
     .mobile-tab-bar__badge {
       top: var(--space-2);
@@ -399,7 +474,6 @@ html.mobile-tab-bar-visible {
     position: relative;
     isolation: isolate;
     width: var(--mobile-tab-bar-controls-height);
-    height: var(--mobile-tab-bar-controls-height);
 
     &.btn-primary {
       border: 0;
@@ -448,6 +522,11 @@ html.mobile-tab-bar-visible {
     min-width: 0;
     box-sizing: border-box;
     overflow: hidden;
+
+    &:last-child {
+      border-start-end-radius: var(--mobile-tab-bar-radius);
+      border-end-end-radius: var(--mobile-tab-bar-corner-radius);
+    }
   }
 
   &__track {
@@ -547,13 +626,6 @@ html.mobile-tab-bar-visible {
 
     &__create .d-icon-pencil {
       transform: translate(-1px, -1px);
-    }
-
-    &__menu.btn-default {
-      border-end-start-radius: max(
-        var(--mobile-tab-bar-inner-radius),
-        calc(var(--mobile-tab-bar-corner-radius) - var(--space-1))
-      );
     }
   }
 }
