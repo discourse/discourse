@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import {
   click,
   currentURL,
@@ -10,7 +11,10 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  loggedInUser,
+} from "discourse/tests/helpers/qunit-helpers";
 
 const CHANNEL_ID = 11;
 const CHANNEL_SLUG = "my-channel";
@@ -335,5 +339,177 @@ acceptance("Chat | New message", function (needs) {
     assert
       .dom(".chat-composer__input")
       .hasValue("hello from DM", "pre-fills the chat composer");
+  });
+});
+
+function setupChatContext(needs, { restore = false } = {}) {
+  needs.user({ has_chat_enabled: true });
+  needs.settings({
+    chat_enabled: true,
+    enable_page_shell_prototype: true,
+    enable_main_outlet_grid_layout_change: true,
+  });
+
+  needs.hooks.beforeEach(function () {
+    const userId = loggedInUser().id;
+    this.sessionStore = this.owner.lookup("service:session-store");
+    this.chatContextURLKey = `chat-context-url:${userId}`;
+    this.contextViewKey = `page-shell-context-view:${userId}`;
+    if (restore) {
+      this.sessionStore.setItem(
+        this.chatContextURLKey,
+        `/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`
+      );
+      this.sessionStore.setItem(this.contextViewKey, "chat");
+    }
+  });
+
+  needs.hooks.afterEach(function () {
+    this.sessionStore.remove(this.chatContextURLKey);
+    this.sessionStore.remove(this.contextViewKey);
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/chat/api/me/channels", () =>
+      helper.response({
+        public_channels: [channelPayload()],
+        direct_message_channels: [],
+        meta: { message_bus_last_ids: {} },
+        tracking: {},
+      })
+    );
+    server.get(`/chat/api/channels/${CHANNEL_ID}/messages`, () =>
+      helper.response({ messages: [], meta: {} })
+    );
+    server.post(`/chat/api/channels/${CHANNEL_ID}/drafts`, () =>
+      helper.response({})
+    );
+  });
+}
+
+acceptance("Chat | Page shell Context", function (needs) {
+  setupChatContext(needs);
+
+  test("opens Chat in Context and keeps the channel when switching panel views", async function (assert) {
+    const owner = getOwner(this);
+    const pageShell = owner.lookup("service:page-shell");
+    const picker = ".page-shell__header-context select";
+    const chatInContext = "#page-shell-context .chat-drawer";
+    const floatingChat = ".chat-drawer-outlet .chat-drawer";
+
+    await visit("/latest");
+    await waitUntil(() => pageShell.canOpenContext);
+    await click(".chat-header-icon .btn");
+
+    assert.strictEqual(currentURL(), "/latest", "keeps the forum page open");
+    assert.dom(picker).hasValue("chat", "selects Chat in the header picker");
+    assert.dom(chatInContext).isVisible("opens Chat in Context");
+    assert.dom(floatingChat).doesNotExist("keeps the floating drawer closed");
+
+    await click(`${chatInContext} a[href*="/chat/c/${CHANNEL_SLUG}/"]`);
+    assert
+      .dom(chatInContext)
+      .hasAttribute(
+        "data-chat-channel-id",
+        String(CHANNEL_ID),
+        "opens the channel in Context"
+      );
+
+    await fillIn(picker, "about");
+
+    assert.dom(chatInContext).doesNotExist("hides Chat in About");
+    assert.dom(floatingChat).doesNotExist("leaves the floating drawer closed");
+
+    await fillIn(picker, "chat");
+
+    assert
+      .dom(chatInContext)
+      .hasAttribute(
+        "data-chat-channel-id",
+        String(CHANNEL_ID),
+        "restores the same channel"
+      );
+
+    await click("#toggle-context-panel");
+
+    assert.dom(chatInContext).doesNotExist("closes Chat with Context");
+    assert
+      .dom(floatingChat)
+      .doesNotExist("closing Context keeps the drawer hidden");
+
+    await click("#toggle-context-panel");
+
+    assert
+      .dom(chatInContext)
+      .hasAttribute(
+        "data-chat-channel-id",
+        String(CHANNEL_ID),
+        "reopening Context restores the channel"
+      );
+
+    assert.strictEqual(
+      this.sessionStore.getItem(this.chatContextURLKey),
+      `/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`,
+      "remembers the last panel channel in this tab"
+    );
+
+    await click(`${chatInContext} .c-navbar__close-drawer-button`);
+
+    assert.dom(picker).hasValue("about", "closing Chat shows the default view");
+    assert
+      .dom(`${picker} option[value="chat"]`)
+      .exists("keeps Chat in the picker");
+
+    await fillIn(picker, "chat");
+    assert
+      .dom(chatInContext)
+      .hasAttribute(
+        "data-chat-channel-id",
+        String(CHANNEL_ID),
+        "reopens the last channel after Chat was closed"
+      );
+
+    await click(`${chatInContext} .c-navbar__full-page-button`);
+
+    assert.strictEqual(
+      currentURL(),
+      `/chat/c/${CHANNEL_SLUG}/${CHANNEL_ID}`,
+      "expands to full-page Chat"
+    );
+    assert.dom(chatInContext).doesNotExist("leaves Context when expanded");
+    assert
+      .dom(".page-shell__main .full-page-chat")
+      .exists("full-page Chat opens in Main");
+
+    assert
+      .dom(".c-navbar__open-drawer-button")
+      .hasText("Panel view", "offers a way back to Context");
+    await click(".c-navbar__open-drawer-button");
+
+    assert.strictEqual(currentURL(), "/latest", "returns to the forum page");
+    assert
+      .dom(chatInContext)
+      .hasAttribute(
+        "data-chat-channel-id",
+        String(CHANNEL_ID),
+        "returns to the same channel in Context"
+      );
+    assert.dom(floatingChat).doesNotExist("does not open a floating drawer");
+  });
+});
+
+acceptance("Chat | Page shell Context after reload", function (needs) {
+  setupChatContext(needs, { restore: true });
+
+  test("restores the remembered channel when Chat was selected", async function (assert) {
+    await visit("/latest");
+
+    const drawer = `#page-shell-context .chat-drawer[data-chat-channel-id="${CHANNEL_ID}"]`;
+    await waitFor(drawer);
+
+    assert.dom(drawer).isVisible("shows the last channel in Context");
+    assert
+      .dom(".chat-drawer-outlet .chat-drawer")
+      .doesNotExist("keeps the floating drawer closed");
   });
 });

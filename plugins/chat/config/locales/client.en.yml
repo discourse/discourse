@@ -317,6 +317,7 @@ en:
       open: "Open chat"
       open_full_page: "Open full-screen chat"
       close_full_page: "Close full-screen chat"
+      panel_view: "Panel view"
       open_message: "Open message in chat"
       placeholder_self: "Jot something down"
       placeholder_channel: "Chat in %{channelName}"

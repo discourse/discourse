@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
+import { schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
-import { withoutPrefix } from "discourse/lib/get-url";
+import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import { discoveryHomepageRoute } from "discourse/lib/homepage-router-overrides";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -25,14 +26,17 @@ export function resetChatDrawerStateCallbacks() {
 
 export default class ChatStateManager extends Service {
   @service chat;
+  @service currentUser;
   @service chatChannelsManager;
+  @service pageShell;
   @service router;
+  @service sessionStore;
   @service site;
   @service chatDrawerRouter;
 
   @tracked isSidePanelExpanded = false;
-  @tracked isDrawerExpanded = false;
-  @tracked isDrawerActive = false;
+  @tracked isDrawerInContext = false;
+  @tracked contextDrawerSlot = null;
   @tracked hasPreloadedChannels = false;
 
   /**
@@ -41,10 +45,65 @@ export default class ChatStateManager extends Service {
    */
   @tracked headerNavbarSlot = null;
 
-  @tracked _chatURL = null;
-  @tracked _appURL = null;
+  #contextChatURL = tracked(null);
+  #drawerActive = tracked(false);
+  #drawerExpanded = tracked(false);
 
+  @tracked _chatURL = null;
+
+  @tracked _appURL = null;
   _store = new KeyValueStore(PREFERRED_MODE_STORE_NAMESPACE);
+
+  constructor() {
+    super(...arguments);
+    if (this.currentUser) {
+      this.#contextChatURL.value = this.sessionStore.getItem(
+        this.#contextChatStorageKey
+      );
+    }
+  }
+
+  get isDrawerActive() {
+    return (
+      this.#drawerActive.value &&
+      (!this.isDrawerInContext || this.isContextDrawerVisible)
+    );
+  }
+
+  set isDrawerActive(active) {
+    this.#drawerActive.value = active;
+  }
+
+  get isDrawerExpanded() {
+    return (
+      this.#drawerExpanded.value &&
+      (!this.isDrawerInContext || this.isContextDrawerVisible)
+    );
+  }
+
+  set isDrawerExpanded(expanded) {
+    this.#drawerExpanded.value = expanded;
+  }
+
+  get isContextDrawerVisible() {
+    return (
+      !!this.contextDrawerSlot &&
+      this.isDrawerInContext &&
+      this.canShowContextDrawer &&
+      this.pageShell.selectedContextView.id === "chat"
+    );
+  }
+
+  get canShowContextDrawer() {
+    return (
+      !!this.#contextChatURL.value &&
+      this.site.desktopView &&
+      this.canInteract &&
+      !this.isFullPageActive &&
+      this.pageShell.canOpenContext &&
+      this.pageShell.context === "open"
+    );
+  }
 
   get isFullPagePreferred() {
     return !!(
@@ -116,6 +175,10 @@ export default class ChatStateManager extends Service {
     return "/chat";
   }
 
+  get #contextChatStorageKey() {
+    return `chat-context-url:${this.currentUser.id}`;
+  }
+
   reset() {
     this._store.remove(PREFERRED_MODE_KEY);
     this._chatURL = null;
@@ -138,6 +201,22 @@ export default class ChatStateManager extends Service {
     this.isSidePanelExpanded = false;
   }
 
+  openDrawer(url) {
+    url ??= "/chat";
+    let route = this.router.recognize(getURL(url));
+    if (route?.localName === "index") {
+      route = route.parent;
+    }
+    if (!route || !this.chatDrawerRouter.canHandleRoute(route)) {
+      return;
+    }
+
+    this.chat.activeChannel = null;
+    const navigation = this.chatDrawerRouter.stateFor(route);
+    this.didOpenDrawer(url);
+    return navigation;
+  }
+
   didOpenDrawer(url = null) {
     withPluginApi((api) => {
       if (
@@ -153,8 +232,20 @@ export default class ChatStateManager extends Service {
       }
     });
 
+    this.isDrawerInContext =
+      !!this.currentUser &&
+      this.site.desktopView &&
+      this.pageShell.openContext();
     this.isDrawerActive = true;
     this.isDrawerExpanded = true;
+    if (this.isDrawerInContext) {
+      this.#contextChatURL.value = withoutPrefix(url || this.lastKnownChatURL);
+      this.sessionStore.setItem(
+        this.#contextChatStorageKey,
+        this.#contextChatURL.value
+      );
+      this.pageShell.selectContextView("chat");
+    }
 
     if (url) {
       this.storeChatURL(url);
@@ -189,6 +280,13 @@ export default class ChatStateManager extends Service {
       }
     });
 
+    if (
+      this.isDrawerInContext &&
+      this.pageShell.selectedContextView.id === "chat"
+    ) {
+      this.pageShell.selectContextView("about");
+    }
+    this.isDrawerInContext = false;
     this.chatDrawerRouter.currentRouteName = null;
     this.isDrawerActive = false;
     this.isDrawerExpanded = false;
@@ -209,9 +307,42 @@ export default class ChatStateManager extends Service {
   }
 
   didToggleDrawer() {
+    if (this.isDrawerInContext) {
+      return;
+    }
+
     this.isDrawerExpanded = !this.isDrawerExpanded;
     this.isDrawerActive = true;
     this.#publishStateChange();
+  }
+
+  registerContextDrawerSlot(element) {
+    schedule("afterRender", () => {
+      if (this.isDestroying || !element.isConnected) {
+        return;
+      }
+
+      this.contextDrawerSlot = element;
+      if (!this.isDrawerInContext) {
+        this.openDrawer(this.#contextChatURL.value);
+        return;
+      }
+
+      this.chat.updatePresence();
+      this.#publishStateChange();
+    });
+
+    return () => {
+      schedule("afterRender", () => {
+        if (this.isDestroying || this.contextDrawerSlot !== element) {
+          return;
+        }
+
+        this.contextDrawerSlot = null;
+        this.chat.updatePresence();
+        this.#publishStateChange();
+      });
+    };
   }
 
   storeAppURL(url = null) {

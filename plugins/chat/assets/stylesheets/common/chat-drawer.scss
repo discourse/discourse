@@ -122,3 +122,21 @@ html.rtl {
     flex-grow: 1;
   }
 }
+
+.chat-context-view {
+  block-size: 100%;
+
+  .chat-drawer.--in-context {
+    inline-size: 100%;
+    max-inline-size: none;
+    block-size: 100%;
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    .chat-drawer-container {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+}

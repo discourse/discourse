@@ -12,16 +12,33 @@ import bodyClass from "discourse/helpers/body-class";
 import htmlClass from "discourse/helpers/html-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
+const ChatDrawerContents = <template>
+  <PluginOutlet
+    @name="chat-drawer-before-content"
+    @outletArgs={{lazyHash
+      currentRouteName=@drawer.chatDrawerRouter.currentRouteName
+    }}
+  />
+
+  <@drawer.chatDrawerRouter.component
+    @close={{@drawer.close}}
+    @drawerActions={{@drawer.drawerActions}}
+    @model={{@drawer.chatDrawerRouter.model}}
+    @openInFullPage={{@drawer.openInFullPage}}
+    @openURL={{@drawer.openURL}}
+    @params={{@drawer.chatDrawerRouter.params}}
+    @toggleExpand={{@drawer.toggleExpand}}
+  />
+</template>;
+
 @tagName("")
 export default class ChatDrawer extends Component {
   @service chat;
-  @service router;
   @service chatDrawerSize;
   @service chatStateManager;
   @service chatDrawerRouter;
@@ -114,10 +131,8 @@ export default class ChatDrawer extends Component {
   }
 
   @action
-  openURL(url = null) {
-    this.chat.activeChannel = null;
-    this.chatDrawerRouter.stateFor(this._routeFromURL(url));
-    this.chatStateManager.didOpenDrawer(url);
+  openURL(url) {
+    return this.chatStateManager.openDrawer(url);
   }
 
   @action
@@ -274,28 +289,32 @@ export default class ChatDrawer extends Component {
     drawerContainer.classList.toggle("above-composer", aboveComposer);
   }
 
-  _routeFromURL(url) {
-    let route = this.router.recognize(getURL(url || "/"));
-
-    // ember might recognize the index subroute
-    if (route.localName === "index") {
-      route = route.parent;
-    }
-
-    return route;
-  }
-
   <template>
-    {{#if this.chatStateManager.isDrawerActive}}
+    {{#if this.chatStateManager.isContextDrawerVisible}}
+      {{htmlClass "has-chat"}}
+      {{bodyClass "has-chat"}}
+      {{#in-element this.chatStateManager.contextDrawerSlot insertBefore=null}}
+        <div
+          class="chat-drawer --in-context is-expanded"
+          data-chat-channel-id={{this.chatDrawerRouter.model.channel.id}}
+          data-chat-thread-id={{this.chatDrawerRouter.model.channel.activeThread.id}}
+        >
+          <div class="chat-drawer-container">
+            <ChatDrawerContents @drawer={{this}} />
+          </div>
+        </div>
+      {{/in-element}}
+    {{else if
+      (and
+        this.chatStateManager.isDrawerActive
+        (not this.chatStateManager.isDrawerInContext)
+      )
+    }}
       {{htmlClass "has-drawer-chat" "has-chat"}}
       {{bodyClass "has-drawer-chat" "has-chat" "chat-drawer-active"}}
-    {{/if}}
-
-    {{#if this.chatStateManager.isDrawerExpanded}}
-      {{bodyClass "chat-drawer-expanded"}}
-    {{/if}}
-
-    {{#if this.chatStateManager.isDrawerActive}}
+      {{#if this.chatStateManager.isDrawerExpanded}}
+        {{bodyClass "chat-drawer-expanded"}}
+      {{/if}}
       <div
         class={{dConcatClass
           "chat-drawer"
@@ -312,22 +331,7 @@ export default class ChatDrawer extends Component {
         <div class="chat-drawer-container">
           <div class="chat-drawer-resizer"></div>
 
-          <PluginOutlet
-            @name="chat-drawer-before-content"
-            @outletArgs={{lazyHash
-              currentRouteName=this.chatDrawerRouter.currentRouteName
-            }}
-          />
-
-          <this.chatDrawerRouter.component
-            @close={{this.close}}
-            @drawerActions={{this.drawerActions}}
-            @model={{this.chatDrawerRouter.model}}
-            @openInFullPage={{this.openInFullPage}}
-            @openURL={{this.openURL}}
-            @params={{this.chatDrawerRouter.params}}
-            @toggleExpand={{this.toggleExpand}}
-          />
+          <ChatDrawerContents @drawer={{this}} />
         </div>
       </div>
     {{/if}}

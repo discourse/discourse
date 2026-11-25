@@ -7,15 +7,17 @@ export default class ChatNavbarToggleDrawerButton extends Component {
   @service chatStateManager;
 
   <template>
-    <DButton
-      class="btn-transparent no-text c-navbar__toggle-drawer-button"
-      @action={{this.chat.toggleDrawer}}
-      @icon={{if this.chatStateManager.isDrawerExpanded "minus" "angles-up"}}
-      @title={{if
-        this.chatStateManager.isDrawerExpanded
-        "chat.collapse"
-        "chat.expand"
-      }}
-    />
+    {{#unless this.chatStateManager.isDrawerInContext}}
+      <DButton
+        class="btn-transparent no-text c-navbar__toggle-drawer-button"
+        @action={{this.chat.toggleDrawer}}
+        @icon={{if this.chatStateManager.isDrawerExpanded "minus" "angles-up"}}
+        @title={{if
+          this.chatStateManager.isDrawerExpanded
+          "chat.collapse"
+          "chat.expand"
+        }}
+      />
+    {{/unless}}
   </template>
 }

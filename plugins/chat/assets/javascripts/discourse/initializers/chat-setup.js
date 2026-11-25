@@ -13,6 +13,7 @@ import { buildGifPickHandler } from "discourse/plugins/chat/discourse/lib/gif-pi
 import groupChatTranscripts from "discourse/plugins/chat/discourse/lib/group-chat-transcripts";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import richEditorExtension from "../../lib/rich-editor-extension.js";
+import ChatContextView from "../components/chat/context-view.gjs";
 import ChatHeaderIcon from "../components/chat/header/icon.gjs";
 
 let _lastForcedRefreshAt;
@@ -113,6 +114,22 @@ class ChatSetupInit {
 
         return;
       }
+
+      const chatStateManager = owner.lookup("service:chat-state-manager");
+      api.registerValueTransformer("page-shell-context-view", ({ value }) => {
+        if (!chatStateManager.canShowContextDrawer) {
+          return value;
+        }
+
+        return [
+          ...value,
+          {
+            id: "chat",
+            label: "chat.title_capitalized",
+            component: ChatContextView,
+          },
+        ];
+      });
 
       api.onPageChange((path) => {
         const route = this.router.recognize(path);
@@ -225,6 +242,7 @@ class ChatSetupInit {
       }
 
       api.addCardClickListenerSelector(".chat-drawer-outlet");
+      api.addCardClickListenerSelector(".chat-context-view");
 
       if (this.chatService.userCanChat) {
         api.headerIcons.add("chat", ChatHeaderIcon, {
