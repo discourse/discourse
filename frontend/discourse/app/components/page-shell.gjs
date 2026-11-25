@@ -73,8 +73,7 @@ export default class PageShell extends Component {
               <PageShellPanelSeparator @panel="context" />
             {{/if}}
             <div class="page-shell__context-content">
-              <h2>{{i18n "page_shell.context"}}</h2>
-              <p>{{i18n "page_shell.context_description"}}</p>
+              <this.pageShell.selectedContextView.component />
             </div>
           </aside>
         {{/if}}
@@ -101,7 +100,12 @@ export default class PageShell extends Component {
       {{yield to="beforeHeader"}}
       {{yield to="header"}}
       {{yield to="beforeBody"}}
-      <div class="wrap" id="main-outlet-wrapper" role="main">
+      <div
+        class={{unless this.pageShell.isFullPage "wrap"}}
+        data-full-page={{if this.pageShell.isFullPage "true"}}
+        id="main-outlet-wrapper"
+        role="main"
+      >
         {{yield to="navigation"}}
         {{yield to="beforeMain"}}
         <div id="main-outlet">

@@ -15,7 +15,6 @@ en:
       context_position: "Context position"
       context_before_main: "Before main"
       context_after_main: "After main"
-      context_overview: "Overview"
       context_view: "Context view"
       navigation_width: "Navigation width"
       context_width: "Context width"
@@ -27,7 +26,6 @@ en:
       full_row: "Full row"
       expand_context: "Open context panel"
       hide_context: "Hide context panel"
-      context_description: "Temporary panel for checking shell geometry with real page content."
       footer_description: "Temporary footer for checking alignment and sticky panel boundaries."
     dsa_notice:
       choice_title: "It's Illegal"

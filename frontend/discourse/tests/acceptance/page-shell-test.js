@@ -6,8 +6,10 @@ import {
   settled,
   triggerKeyEvent,
   visit,
+  waitFor,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import AboutFixtures from "discourse/tests/fixtures/about";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Page shell | narrow screen menus", function (needs) {
@@ -63,6 +65,74 @@ acceptance("Page shell | regions", function (needs) {
     navigation_menu: "sidebar",
   });
 
+  let hasDescriptions;
+  needs.hooks.beforeEach(() => {
+    hasDescriptions = true;
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/about.json", () => {
+      const response = AboutFixtures["about.json"];
+      return helper.response({
+        ...response,
+        about: {
+          ...response.about,
+          stats: { ...response.about.stats, users_count: 42 },
+          site_creation_date: "2024-01-01",
+          description: hasDescriptions ? response.about.description : "",
+          extended_site_description: hasDescriptions
+            ? "<p>A place for community discussion.</p>"
+            : "",
+        },
+      });
+    });
+  });
+
+  test("About is the default Context view and uses the About page content", async function (assert) {
+    await visit("/");
+
+    const { title, description } = AboutFixtures["about.json"].about;
+    const panel = "#page-shell-context .context-about";
+    await waitFor(`${panel} .about__extended-description p`);
+    assert
+      .dom(".page-shell__header-context select option:checked")
+      .hasText("About", "selects About by default");
+    assert.dom(`${panel} h2`).hasText(title, "shows the community title");
+    assert
+      .dom(`${panel} .short-description`)
+      .hasText(description, "shows the description from the About page");
+    assert
+      .dom(`${panel} .about__extended-description p`)
+      .hasText(
+        "A place for community discussion.",
+        "renders the extended description"
+      );
+
+    assert
+      .dom(`${panel} .nav-pills`)
+      .doesNotExist("omits the standalone About navigation");
+    assert
+      .dom(`${panel} a[href="/about"]`)
+      .doesNotExist("omits the About page link");
+  });
+
+  test("About displays community information without custom descriptions", async function (assert) {
+    hasDescriptions = false;
+    await visit("/");
+
+    const panel = "#page-shell-context .context-about";
+    await waitFor(`${panel} .about__stats-item.members`);
+
+    assert
+      .dom(`${panel} .about__stats-item.members`)
+      .includesText("42", "shows the member count");
+    assert
+      .dom(`${panel} .short-description`)
+      .doesNotExist("has no custom description");
+    assert.dom(`${panel} .about__admins`).exists("shows the community admins");
+    assert.dom(`${panel} .about__activities`).exists("shows the site activity");
+  });
+
   test("the shell owns its page regions and composer directly", async function (assert) {
     await visit("/");
 
@@ -87,7 +157,7 @@ acceptance("Page shell | regions", function (needs) {
       .hasAttribute("aria-expanded", "true", "Context starts open");
     assert
       .dom(".page-shell__header-context select")
-      .hasValue("overview", "The Context selector is visible above the panel");
+      .hasValue("about", "The Context selector is visible above the panel");
 
     await click(toggle);
 

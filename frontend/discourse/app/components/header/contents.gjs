@@ -158,12 +158,15 @@ export default class Contents extends Component {
           <DNativeSelect
             aria-label={{i18n "page_shell.context_view"}}
             @includeNone={{false}}
-            @value="overview"
+            @onChange={{this.pageShell.selectContextView}}
+            @value={{this.pageShell.selectedContextView.id}}
             as |select|
           >
-            <select.Option @value="overview">
-              {{i18n "page_shell.context_overview"}}
-            </select.Option>
+            {{#each this.pageShell.contextViews key="id" as |view|}}
+              <select.Option @value={{view.id}}>
+                {{i18n view.label}}
+              </select.Option>
+            {{/each}}
           </DNativeSelect>
         </div>
       {{/if}}

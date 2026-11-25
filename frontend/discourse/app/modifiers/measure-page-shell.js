@@ -89,6 +89,11 @@ export default class MeasurePageShell extends Modifier {
         }
         const cannotOpenContext =
           availableWidth - PANEL_LIMITS.context.minWidth < minimumMainWidth;
+        const contextFits =
+          !cannotOpenContext && window.matchMedia("(width >= 1100px)").matches;
+        if (this.pageShell.contextFits !== contextFits) {
+          this.pageShell.contextFits = contextFits;
+        }
         element.toggleAttribute(
           "data-constrained-context",
           element.dataset.context === "open" && cannotOpenContext
@@ -174,6 +179,7 @@ export default class MeasurePageShell extends Modifier {
       window.removeEventListener("resize", measure);
       cancelAnimationFrame(frame);
       this.pageShell.compactLogo = false;
+      this.pageShell.contextFits = false;
       element.style.removeProperty("--_page-shell-document-offset");
       element.style.removeProperty("--_page-shell-body-offset");
       element.style.removeProperty("--_page-shell-footer-row-height");

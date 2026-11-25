@@ -8,6 +8,10 @@
   --d-comp-PageShell-color-border: var(--primary-low);
 }
 
+#main-outlet-wrapper[data-full-page] > #main-outlet {
+  padding: 0;
+}
+
 body.has-page-shell {
   .page-shell#main-outlet-wrapper {
     // Private layout values; component tokens above expose themeable styles.

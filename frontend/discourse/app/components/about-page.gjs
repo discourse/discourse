@@ -35,16 +35,16 @@ export default class AboutPage extends Component {
   }
 
   get stats() {
+    const { users_count: usersCount } = this.args.model.stats ?? {};
+
     return [
       {
         class: "members",
         icon: "users",
-        display: true,
+        display: typeof usersCount === "number",
         text: i18n("about.member_count", {
-          count: this.args.model.stats.users_count,
-          formatted_number: I18n.toNumber(this.args.model.stats.users_count, {
-            precision: 0,
-          }),
+          count: usersCount ?? 0,
+          formatted_number: I18n.toNumber(usersCount ?? 0, { precision: 0 }),
         }),
       },
       {
@@ -70,7 +70,7 @@ export default class AboutPage extends Component {
       {
         class: "site-creation-date",
         icon: "calendar-days",
-        display: true,
+        display: Boolean(this.args.model.site_creation_date),
         text: this.siteAgeString,
       },
     ];
@@ -237,7 +237,7 @@ export default class AboutPage extends Component {
   }
 
   <template>
-    {{#if this.currentUser.admin}}
+    {{#if (and this.currentUser.admin (not @inContext))}}
       <p>
         <LinkTo class="edit-about-page" @route="adminConfig.about">
           {{dIcon "pencil"}}
@@ -248,11 +248,17 @@ export default class AboutPage extends Component {
     <section class="about__header">
       {{#if @model.banner_image}}
         <div class="about__banner">
-          <img class="about__banner-img" src={{@model.banner_image}} />
+          <img alt="" class="about__banner-img" src={{@model.banner_image}} />
         </div>
       {{/if}}
-      <h1>{{@model.title}}</h1>
-      <p class="short-description">{{@model.description}}</p>
+      {{#if @inContext}}
+        <h2>{{@model.title}}</h2>
+      {{else}}
+        <h1>{{@model.title}}</h1>
+      {{/if}}
+      {{#if @model.description}}
+        <p class="short-description">{{@model.description}}</p>
+      {{/if}}
       <PluginOutlet
         @connectorTagName="section"
         @name="about-after-description"
@@ -274,7 +280,9 @@ export default class AboutPage extends Component {
 
         {{#if @model.extended_site_description}}
           <h2>{{i18n "about.simple_title"}}</h2>
-          <div>{{trustHTML @model.extended_site_description}}</div>
+          <div class="about__extended-description">{{trustHTML
+              @model.extended_site_description
+            }}</div>
         {{/if}}
 
         {{#if @model.admins.length}}
@@ -311,27 +319,29 @@ export default class AboutPage extends Component {
           <p class="about__contact-info">{{trustHTML this.contactInfo}}</p>
         {{/if}}
         <p>{{trustHTML (i18n "about.report_inappropriate_content")}}</p>
-        <h2>{{i18n "about.site_activity"}}</h2>
-        <div class="about__activities">
-          {{#each this.siteActivities as |activity|}}
-            <div class="about__activities-item {{activity.class}}">
-              <span class="about__activities-item-icon">{{dIcon
-                  activity.icon
-                }}</span>
-              <span class="about__activities-item-type">
-                <div
-                  class="about__activities-item-count"
-                >{{activity.activityText}}</div>
-                <div
-                  class="about__activities-item-period"
-                >{{activity.period}}</div>
-              </span>
-            </div>
-          {{/each}}
-        </div>
-        {{#if this.displayVisitorStats}}
-          <p class="about traffic-info-footer"><small
-            >{{this.trafficInfoFooter}}</small></p>
+        {{#if @model.stats}}
+          <h2>{{i18n "about.site_activity"}}</h2>
+          <div class="about__activities">
+            {{#each this.siteActivities as |activity|}}
+              <div class="about__activities-item {{activity.class}}">
+                <span class="about__activities-item-icon">{{dIcon
+                    activity.icon
+                  }}</span>
+                <span class="about__activities-item-type">
+                  <div
+                    class="about__activities-item-count"
+                  >{{activity.activityText}}</div>
+                  <div
+                    class="about__activities-item-period"
+                  >{{activity.period}}</div>
+                </span>
+              </div>
+            {{/each}}
+          </div>
+          {{#if this.displayVisitorStats}}
+            <p class="about traffic-info-footer"><small
+              >{{this.trafficInfoFooter}}</small></p>
+          {{/if}}
         {{/if}}
       </div>
     </div>

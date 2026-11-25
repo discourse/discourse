@@ -126,7 +126,7 @@ export default class ApplicationController extends Controller {
   }
 
   get sidebarEnabled() {
-    if (EmbedMode.enabled) {
+    if (EmbedMode.enabled || this.pageShell.isFullPage) {
       return false;
     }
 

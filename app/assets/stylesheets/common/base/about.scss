@@ -136,3 +136,21 @@
     width: 100%;
   }
 }
+
+.context-about {
+  overflow-wrap: anywhere;
+
+  .about__main-content {
+    display: block;
+  }
+
+  .about__stats {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .about__admins,
+  .about__moderators {
+    margin-block-start: var(--space-4);
+  }
+}

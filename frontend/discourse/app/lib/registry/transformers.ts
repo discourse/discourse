@@ -112,6 +112,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "navigation-bar-dropdown-mode",
   "navigation-items",
   "notifications-tracking-description",
+  "page-shell-context-view",
   "parent-category-row-class",
   "parent-category-row-class-mobile",
   "post-article-class",

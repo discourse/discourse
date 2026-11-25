@@ -1,9 +1,26 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import ContextAbout from "discourse/components/page-shell/context-about";
 import discourseDebounce from "discourse/lib/debounce";
 import EmbedMode from "discourse/lib/embed-mode";
+import { applyValueTransformer } from "discourse/lib/transformer";
+
+/**
+ * @typedef {object} ContextView
+ * @property {string} id
+ * @property {string} label Translation key for the picker option.
+ * @property {import("@glint/template").ComponentLike} component
+ * @property {boolean} [preferred] Selects the view when the tab has no saved choice.
+ */
+
+/** @type {ContextView} */
+const ABOUT_CONTEXT_VIEW = {
+  id: "about",
+  label: "about.simple_title",
+  component: ContextAbout,
+};
 
 const STORAGE_KEY = "page-shell-panels";
 const STORAGE_VERSION = 1;
@@ -45,11 +62,11 @@ function parsePanelPreference(name, stored, fallbackMode = "open") {
   return { mode, width };
 }
 
-// Temporary layout controls. This is deliberately not the route/panel API.
-// Only panel visibility and size persist.
 export default class PageShell extends Service {
+  @service currentUser;
   @service keyValueStore;
   @service router;
+  @service sessionStore;
   @service siteSettings;
 
   @tracked width = "full";
@@ -63,14 +80,19 @@ export default class PageShell extends Service {
   @tracked navigationMaxWidth = PANEL_LIMITS.navigation.maxWidth;
   @tracked contextMaxWidth = Math.max(200, Math.min(1000, window.innerWidth));
   @tracked compactLogo = false;
+  @tracked contextFits = false;
   @tracked closingContext = false;
   @tracked animatingPanels = false;
 
   #animationTimer;
+  #selectedContextViewId = tracked(null);
 
   constructor() {
     super(...arguments);
     this.#load();
+    this.#selectedContextViewId.value = this.sessionStore.getItem(
+      this.#contextViewStorageKey
+    );
   }
 
   willDestroy() {
@@ -86,16 +108,64 @@ export default class PageShell extends Service {
     return Math.min(this.contextWidth, this.contextMaxWidth);
   }
 
+  get isFullPage() {
+    return this.router.currentRoute?.metadata?.fullPage === true;
+  }
+
   get enabled() {
     return (
       this.siteSettings.enable_page_shell_prototype &&
       this.siteSettings.enable_main_outlet_grid_layout_change &&
-      !EmbedMode.enabled
+      !EmbedMode.enabled &&
+      !this.isFullPage
     );
   }
 
   get hasContextPanel() {
     return !this.router.currentRouteName?.includes("preferences");
+  }
+
+  get canOpenContext() {
+    return this.enabled && this.hasContextPanel && this.contextFits;
+  }
+
+  /** @returns {ContextView[]} */
+  @cached
+  get contextViews() {
+    return [
+      ABOUT_CONTEXT_VIEW,
+      ...applyValueTransformer("page-shell-context-view", []),
+    ];
+  }
+
+  get selectedContextView() {
+    const selectedId = this.#selectedContextViewId.value;
+    return (
+      (selectedId
+        ? this.contextViews.find((view) => view.id === selectedId)
+        : this.contextViews.find((view) => view.preferred)) ??
+      ABOUT_CONTEXT_VIEW
+    );
+  }
+
+  get #contextViewStorageKey() {
+    return `page-shell-context-view:${this.currentUser?.id ?? "anonymous"}`;
+  }
+
+  @action
+  selectContextView(id) {
+    this.#selectedContextViewId.value = id;
+    this.sessionStore.setItem(this.#contextViewStorageKey, id);
+  }
+
+  openContext() {
+    if (!this.canOpenContext) {
+      return false;
+    }
+
+    this.#setPanelMode("context", "open");
+    this.#save();
+    return true;
   }
 
   /**
