@@ -959,13 +959,14 @@
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 327,
+          "line": 411,
           "source": "class UpdateSiteSetting"
         }
       ],
       "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks.",
       "round2_review": "The class and update! call moved one line because read-side redaction now uses any active policy, including PM-only. UpdateSiteSetting itself retains unenforced declarations, its validation/update body and setting/rebake hooks.",
-      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
+      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -1818,7 +1819,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 390,
+          "line": 474,
           "source": "SiteSettingSupport.update!("
         }
       ],
@@ -1828,7 +1829,8 @@
       ],
       "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules.",
       "round2_review": "Only the MCP read-side redaction guard added a preceding line; the write still invokes SiteSettingSupport.update! and the native SiteSetting::Update service. Setting hooks/rebake edges remain unchanged, and the write remains blocked by unenforced declarations under active rules.",
-      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
+      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",

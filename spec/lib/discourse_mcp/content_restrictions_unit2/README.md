@@ -316,3 +316,17 @@ edges remain for unrestricted calls and other native callers; changed MCP entry
 conditions are recorded rather than erased from the graph. The complete 19-move
 list is in `enrichment_inventory.json` → `round3_review.moves`. Run receipts and the
 new URL examples are in [the unit 3 round-3 report](../content_restrictions_unit3/ROUND3.md).
+
+## Unit 4 review 1 evidence refresh at `ec0c8a3ac52`
+
+The exact-line example failed at the two site-setting locations before this
+refresh. Re-read both current bodies and the `ec0c8a3ac52` diff: the unit 3
+round 3 URL resolution changes precede these entries and move both by 84 lines.
+
+| Evidence file | Prior → current lines | Re-review result |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/site_settings.rb` | UpdateSiteSetting 327 → 411; `SiteSettingSupport.update!` 390 → 474 | The write retains its unenforced declarations, confirmation/dependency/current-value checks, service update and verification. The shared update! helper still calls SiteSetting::Update. Native setting hooks and later rebakes retain their classification; only preceding read-side URL resolution changed. |
+
+Both enrichment examples pass after the refresh. Historical move records are
+retained; the live evidence entries and `unit4_review1_refresh` describe this
+revision. See [unit 4 review 1](../content_restrictions_unit4/REVIEW1.md) for run receipts.
