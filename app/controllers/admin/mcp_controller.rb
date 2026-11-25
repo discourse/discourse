@@ -77,8 +77,7 @@ class Admin::McpController < Admin::AdminController
   end
 
   def update_content_restriction
-    config = params[:config]
-    config = config.respond_to?(:to_unsafe_h) ? config.to_unsafe_h : config
+    config = content_rule_config
     raise Discourse::InvalidParameters.new(:config) if !config.is_a?(Hash)
 
     McpContentRuleUpdater.save!(actor: current_user, rule_kind: params[:rule_kind], config:)
@@ -123,6 +122,23 @@ class Admin::McpController < Admin::AdminController
   end
 
   private
+
+  # Parameter parsing drops nulls inside JSON arrays, which would turn a
+  # malformed tag list into a valid empty one, so JSON bodies are read raw.
+  def content_rule_config
+    if request.media_type == "application/json"
+      body =
+        begin
+          JSON.parse(request.raw_post)
+        rescue JSON::ParserError
+          nil
+        end
+      return body["config"] if body.is_a?(Hash)
+    end
+
+    config = params[:config]
+    config.respond_to?(:to_unsafe_h) ? config.to_unsafe_h : config
+  end
 
   def primitives_payload
     primitive_records = McpPrimitive.all.index_by { |record| [record.kind, record.identifier] }

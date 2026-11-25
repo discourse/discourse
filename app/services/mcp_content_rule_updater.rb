@@ -96,6 +96,19 @@ class McpContentRuleUpdater
 
       config[side]["tag_ids"] = names.map { |name| tags.fetch(name.downcase) }.uniq
     end
+    canonicalize_tag_ids(config)
+  end
+
+  # Stores a synonym's id as the tag it stands for. Ids that match no tag are
+  # kept, so validation still reports them as missing.
+  def canonicalize_tag_ids(config)
+    %w[allow deny].each do |side|
+      ids = config[side].is_a?(Hash) ? config[side]["tag_ids"] : nil
+      next if !ids.is_a?(Array) || !ids.all? { |id| id.is_a?(Integer) }
+
+      targets = Tag.where(id: ids).where.not(target_tag_id: nil).pluck(:id, :target_tag_id).to_h
+      config[side]["tag_ids"] = ids.map { |id| targets.fetch(id, id) }.uniq
+    end
     config
   end
 
