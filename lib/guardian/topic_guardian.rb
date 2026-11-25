@@ -284,14 +284,16 @@ module TopicGuardian
 
   # Accepts an array of `Topic#id` and returns an array of `Topic#id` which the user can discover.
   def can_discover_topic_ids(topic_ids: [])
-    topic_ids = can_see_topic_ids(topic_ids:)
-    return topic_ids if topic_ids.blank? || can_see_unlisted_topics?
+    topic_ids = topic_ids.compact
+    return [] if topic_ids.blank?
 
     discoverable_topic_scope(Topic.unscoped.where(id: topic_ids)).pluck(:id)
   end
 
-  # Narrows a topic scope the user can already see to the topics they can discover.
+  # Applies the rules of `can_discover_topic?` to a topic scope, including the rules
+  # of `can_see_topic?`, without removing the caller's conditions.
   def discoverable_topic_scope(scope)
+    scope = visible_topic_scope(scope)
     return scope if can_see_unlisted_topics?
 
     listed = scope.where(visible: true)

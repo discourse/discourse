@@ -470,6 +470,44 @@ RSpec.describe TopicGuardian do
       )
       expect(admin.guardian.can_discover_topic_ids(topic_ids:)).to match_array(topic_ids)
     end
+
+    it "returns the same topics as #can_discover_topic? for every kind of viewer" do
+      group_member = Fabricate(:user, groups: [group])
+      pm_recipient = Fabricate(:user)
+      topics = [
+        topic,
+        unlisted_topic,
+        private_topic,
+        Fabricate(:topic, category: private_category, visible: false),
+        Fabricate(:topic, category: category, user: group_member, visible: false),
+        Fabricate(:topic, category: category, deleted_at: 1.day.ago),
+        private_message_topic,
+        Fabricate(:private_message_topic, recipient: pm_recipient, visible: false),
+      ]
+      viewers = [
+        nil,
+        user,
+        tl3_user,
+        tl4_user,
+        moderator,
+        admin,
+        group_member,
+        pm_recipient,
+        unlisted_topic.user,
+        private_message_topic.user,
+      ]
+
+      viewers.each do |viewer|
+        guardian = Guardian.new(viewer)
+        expected_ids =
+          topics.select { |candidate| guardian.can_discover_topic?(candidate) }.map(&:id)
+
+        expect(guardian.can_discover_topic_ids(topic_ids: topics.map(&:id))).to match_array(
+          expected_ids,
+        ),
+        "mismatch for #{viewer&.username || "anonymous"}"
+      end
+    end
   end
 
   # The test cases here are intentionally kept brief because majority of the cases are already handled by
