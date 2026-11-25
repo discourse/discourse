@@ -2121,6 +2121,10 @@ class User < ActiveRecord::Base
   def notifications_state
     # publish last notification json with the message so we can apply an update
     notification = notifications.visible.order(created_at: :desc, id: :desc).first
+    if notification&.reviewable_mention?
+      notification =
+        Notification.filter_inaccessible_reviewable_notifications(guardian, [notification]).first
+    end
     json = NotificationSerializer.new(notification).as_json if notification
 
     sql = <<~SQL
