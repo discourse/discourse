@@ -52,6 +52,11 @@ function render(tokens, idx, options, env, slf, md) {
   const tokenInfo = extractTokenInfo(token.info, md);
   const tag = tokenInfo?.tag || md.options.discourse.defaultCodeLang;
   const attributes = tokenInfo?.attributes || {};
+  if (tokenInfo?.tag) {
+    attributes.language = tokenInfo.tag;
+  } else {
+    delete attributes.language;
+  }
 
   let className;
 

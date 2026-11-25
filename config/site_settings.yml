@@ -1710,6 +1710,10 @@ posting:
     client: true
     default: true
     hidden: true
+  show_codeblock_language_labels:
+    default: false
+    client: true
+    area: "posts_and_topics"
   delete_old_hidden_posts:
     default: true
     area: "posts_and_topics"

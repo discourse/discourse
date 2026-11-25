@@ -83,12 +83,26 @@ describe "Topic page" do
       ```
       echo "hello world"
       ```
+      ```javascript
+      alert("hello");
+      ```
       RAW
 
     it "includes the copy button" do
       visit("/t/#{topic.slug}/#{topic.id}")
 
       expect(page).to have_css(".codeblock-button-wrapper")
+      expect(page).to have_no_css(".codeblock-language")
+    end
+
+    it "shows the explicit language when enabled even with copy controls off" do
+      SiteSetting.show_codeblock_language_labels = true
+      SiteSetting.show_copy_button_on_codeblocks = false
+
+      visit("/t/#{topic.slug}/#{topic.id}")
+
+      expect(page).to have_css(".codeblock-language", text: "javascript", count: 1)
+      expect(page).to have_no_css(".codeblock-button-wrapper")
     end
   end
 

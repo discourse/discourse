@@ -8,6 +8,15 @@ import discourseLater from "discourse/lib/later";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
+const NO_LANGUAGE_LABEL = new Set([
+  "auto",
+  "mermaid",
+  "nohighlight",
+  "plaintext",
+  "text",
+  "txt",
+]);
+
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains
 // a pre > code HTML structure.
@@ -48,6 +57,7 @@ export default class CodeblockButtons {
 
     this.showFullscreen = opts.showFullscreen;
     this.showCopy = opts.showCopy;
+    this.showLanguage = opts.showLanguage ?? false;
   }
 
   attachToPost(post, postElement) {
@@ -87,6 +97,23 @@ export default class CodeblockButtons {
     this._fadeCopyCodeblocksRunners = {};
   }
 
+  #addLanguageLabel(codeBlock, pre) {
+    const language = pre.dataset.codeLanguage;
+    if (
+      !language ||
+      !/^[\w+-]+$/.test(language) ||
+      NO_LANGUAGE_LABEL.has(language.toLowerCase()) ||
+      pre.querySelector(":scope > .codeblock-language")
+    ) {
+      return;
+    }
+
+    const label = document.createElement("span");
+    label.className = "codeblock-language";
+    label.textContent = language;
+    codeBlock.before(label);
+  }
+
   _storeClickHandler(identifier, element) {
     if (this._codeblockButtonClickHandlers[identifier]) {
       this._codeblockButtonClickHandlers[identifier].removeEventListener(
@@ -111,6 +138,13 @@ export default class CodeblockButtons {
 
     codeBlocks.forEach((codeBlock) => {
       const pre = codeBlock.parentElement;
+      if (this.showLanguage) {
+        this.#addLanguageLabel(codeBlock, pre);
+      }
+      if (!this.showCopy && !this.showFullscreen) {
+        return;
+      }
+
       const badge = pre.querySelector(":scope > .ai-badge");
       const wrapperEl = document.createElement("div");
       wrapperEl.classList.add("codeblock-button-wrapper");
