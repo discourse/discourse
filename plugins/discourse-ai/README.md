@@ -12,6 +12,23 @@ Tool results belong to outstanding calls in the same exchange. Parallel results 
 
 Recovery warnings include the stage, message index, adjacent roles, and reason, not message bodies or tool payloads. Compression reads historical evidence without inserting separators. Replay preserves the current request by position; when no position was saved, the bot, compression, and resume code all skip recovery markers and internal budget hints.
 
+### Admin Assistant tool loading
+
+The Admin Assistant initially exposes website lookup, Meta search, local navigation,
+Upcoming Changes, and `load_admin_tools`. Domain schemas are exposed only after the
+model loads `settings`, `categories_tags`, `moderation`, or `appearance`; a request can
+load several groups. Discovery returns the available tool names and their workflow
+instructions. The next completion receives their schemas, without restarting the turn.
+Loading tools does not execute an administrative action or bypass approval.
+
+Loaded groups live on the conversation context. New contexts restore them from discovery
+results and domain tool calls in retained history, including approval follow-ups. If
+history trimming or compression removes that evidence, the model can load the group
+again. Availability is rechecked against the current site, user, and plugin restrictions.
+Ungrouped tools added by `admin_assistant_tools` remain immediately available for
+backward compatibility; removing a tool through that modifier still excludes it from
+loaded groups. Keep new built-in domain tools in `AdminAssistant::TOOL_GROUPS`.
+
 ### Evals
 
 The directory `evals` contains AI evals for the Discourse AI plugin.

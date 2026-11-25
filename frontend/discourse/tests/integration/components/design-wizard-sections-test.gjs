@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
@@ -9,7 +10,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
 const noop = () => {};
-const NO_PAIRS = [];
 
 const PAIRS = [
   {
@@ -135,6 +135,46 @@ module(
         )
         .exists("shows progress on the theme being applied");
     });
+
+    test("screenshots follow the previewed color mode", async function (assert) {
+      const lightScreenshot = `${SCREENSHOT}#light`;
+      const darkScreenshot = `${SCREENSHOT}#dark`;
+      const themes = [
+        {
+          id: -1,
+          name: "Foundation",
+          screenshot_light_url: lightScreenshot,
+          screenshot_dark_url: darkScreenshot,
+        },
+      ];
+      const designWizard = this.owner.lookup("service:design-wizard");
+      designWizard.colorMode = "light";
+
+      await render(
+        <template>
+          <ThemeSection
+            @onSelect={{noop}}
+            @selectedThemeId={{-1}}
+            @themes={{themes}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__theme-screenshot-image")
+        .hasAttribute("src", lightScreenshot, "shows the light screenshot");
+
+      designWizard.colorMode = "dark";
+      await settled();
+
+      assert
+        .dom(".design-wizard__theme-screenshot-image")
+        .hasAttribute(
+          "src",
+          darkScreenshot,
+          "switches to the dark screenshot with the mode"
+        );
+    });
   }
 );
 
@@ -145,66 +185,62 @@ module(
 
     test("palette cards expose their selected state and preview colors", async function (assert) {
       const selections = [];
-      const select = (mode, key) => selections.push([mode, key]);
+      const select = (key) => selections.push(key);
 
       await render(
         <template>
           <ColorsSection
-            @darkPairs={{PAIRS}}
-            @lightPairs={{PAIRS}}
+            @availableModes={{array "both" "light" "dark"}}
+            @colorMode="light"
             @onSelectPalette={{select}}
+            @pairs={{PAIRS}}
             @paletteMode="both"
-            @selectedDarkKey="alternate"
-            @selectedLightKey="default"
-            @showsDarkPalettes={{true}}
-            @showsLightPalettes={{true}}
+            @selectedKey="default"
           />
         </template>
       );
 
-      const LIGHT = ".design-wizard__palette-row[data-mode='light']";
-      const DARK = ".design-wizard__palette-row[data-mode='dark']";
-
       assert
-        .dom(`${LIGHT} [data-pair-key='default']`)
-        .hasAria("pressed", "true", "exposes the selected light palette");
+        .dom(".design-wizard__palette-row")
+        .exists({ count: 1 }, "shows a single row")
+        .hasAria("label", "Palette", "labels the row");
       assert
-        .dom(`${LIGHT} [data-pair-key='alternate']`)
-        .hasAria("pressed", "false", "exposes an unselected light palette");
+        .dom("[data-pair-key='default']")
+        .hasAria("pressed", "true", "exposes the selected palette");
       assert
-        .dom(`${DARK} [data-pair-key='alternate']`)
-        .hasAria("pressed", "true", "selects each row independently");
+        .dom("[data-pair-key='alternate']")
+        .hasAria("pressed", "false", "exposes an unselected palette");
       assert
-        .dom(`${LIGHT} .design-wizard__palette-row-selected`)
-        .hasText("Default", "names the selected light palette");
-      assert
-        .dom(`${DARK} .design-wizard__palette-row-selected`)
-        .hasText("Alternate", "names the selected dark palette");
-
-      assert
-        .dom(
-          `${LIGHT} [data-pair-key='default'] .design-wizard__palette-preview`
-        )
+        .dom("[data-pair-key='default'] .design-wizard__palette-preview")
         .hasAttribute("style", /#0088cc/, "previews the palette's own colors");
-      assert
-        .dom(
-          `${DARK} [data-pair-key='default'] .design-wizard__palette-preview`
-        )
-        .hasAttribute(
-          "style",
-          /#00aaff/,
-          "the dark row previews the dark palette"
-        );
 
-      await click(`${DARK} [data-pair-key='default']`);
-      assert.deepEqual(
-        selections,
-        [["dark", "default"]],
-        "reports the row and palette picked"
-      );
+      await click("[data-pair-key='alternate']");
+      assert.deepEqual(selections, ["alternate"], "reports the palette picked");
     });
 
-    test("the color mode control picks which rows are shown", async function (assert) {
+    test("swatches follow the previewed color mode", async function (assert) {
+      await render(
+        <template>
+          <ColorsSection
+            @availableModes={{array "both" "light" "dark"}}
+            @colorMode="dark"
+            @onSelectPalette={{noop}}
+            @pairs={{PAIRS}}
+            @paletteMode="both"
+            @selectedKey="default"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__palette-row")
+        .hasAttribute("data-mode", "dark");
+      assert
+        .dom("[data-pair-key='default'] .design-wizard__palette-preview")
+        .hasAttribute("style", /#00aaff/, "previews the dark palette");
+    });
+
+    test("the color mode control reports the mode picked", async function (assert) {
       const darkPairs = [...PAIRS, DRACULA_PAIR];
       const modes = [];
       const selectMode = (mode) => modes.push(mode);
@@ -212,14 +248,13 @@ module(
       await render(
         <template>
           <ColorsSection
-            @darkPairs={{darkPairs}}
-            @lightPairs={{PAIRS}}
+            @availableModes={{array "both" "light" "dark"}}
+            @colorMode="dark"
             @onSelectPalette={{noop}}
             @onSelectPaletteMode={{selectMode}}
+            @pairs={{darkPairs}}
             @paletteMode="dark"
-            @selectedDarkKey="dracula"
-            @showsDarkPalettes={{true}}
-            @showsLightPalettes={{false}}
+            @selectedKey="dracula"
           />
         </template>
       );
@@ -230,14 +265,7 @@ module(
       assert
         .dom(".design-wizard__palette-modes input[value='dark']")
         .isChecked("reflects the selected mode");
-      assert
-        .dom(".design-wizard__palette-row[data-mode='light']")
-        .doesNotExist("hides the light row on a dark-only site");
-      assert
-        .dom(
-          ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='dracula']"
-        )
-        .hasAria("pressed", "true");
+      assert.dom("[data-pair-key='dracula']").hasAria("pressed", "true");
 
       await click(".design-wizard__palette-modes input[value='both']");
       assert.deepEqual(modes, ["both"], "reports the mode picked");
@@ -247,14 +275,13 @@ module(
       await render(
         <template>
           <ColorsSection
-            @darkPairs={{NO_PAIRS}}
-            @lightPairs={{PAIRS}}
+            @availableModes={{array "light"}}
+            @colorMode="light"
             @onSelectPalette={{noop}}
             @onSelectPaletteMode={{noop}}
+            @pairs={{PAIRS}}
             @paletteMode="light"
-            @selectedLightKey="default"
-            @showsDarkPalettes={{false}}
-            @showsLightPalettes={{true}}
+            @selectedKey="default"
           />
         </template>
       );
@@ -268,6 +295,25 @@ module(
       assert
         .dom(".design-wizard__palette-modes input[value='dark']")
         .isDisabled();
+    });
+
+    test("links to the color palettes page", async function (assert) {
+      await render(
+        <template>
+          <ColorsSection
+            @availableModes={{array "both"}}
+            @colorMode="light"
+            @onSelectPalette={{noop}}
+            @pairs={{PAIRS}}
+            @paletteMode="both"
+            @selectedKey="default"
+          />
+        </template>
+      );
+
+      assert
+        .dom(".design-wizard__manage-palettes-link")
+        .hasText("Manage color palettes");
     });
   }
 );

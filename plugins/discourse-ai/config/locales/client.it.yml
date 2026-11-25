@@ -163,6 +163,13 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Aggiorna"
+        columns:
+          user: "Utente"
+          reason: "Contrassegnato come"
+          created: "Creato"
+          status: "Stato"
       dsa_classification:
         suggest: "Suggerisci con l'IA"
       copied: "Copiato"

@@ -410,6 +410,8 @@ fr:
           text_color: "couleur du texte"
         approve_label: "Oui"
         reject_label: "Non"
+        category_access_levels:
+          readonly: "Voir"
         empty_value: "Vide"
         approved: "Approuvé par @%{username}."
         rejected: "Rejeté par @%{username}."
@@ -457,7 +459,7 @@ fr:
         discourse_helper:
           name: "Assistant Discourse"
           description: "Robot IA spécialisé dans l'aide aux tâches liées à Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Assistant d'administration Discourse"
           description: "Bot d'IA qui répond aux questions sur Discourse et aide les administrateurs à gérer les paramètres du site"
         web_artifact_creator:
@@ -624,6 +626,7 @@ fr:
         edit_tag: "Modifier l'étiquette"
         create_category: "Créer une catégorie"
         edit_category: "Modifier la catégorie"
+        delete_category: "Supprimer la catégorie"
         set_topic_timer: "Définir le minuteur du sujet"
         set_slow_mode: "Définir le mode lent"
         move_posts: "Déplacer les publications"
@@ -844,6 +847,12 @@ fr:
         errors:
           tagging_disabled: "L'étiquetage n'est pas activé sur ce site."
       edit_category:
+        errors:
+          not_found: "Catégorie introuvable."
+      set_category_permissions:
+        errors:
+          not_found: "Catégorie introuvable."
+      delete_category:
         errors:
           not_found: "Catégorie introuvable."
       change_topic_category:

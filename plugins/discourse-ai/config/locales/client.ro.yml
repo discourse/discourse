@@ -55,6 +55,13 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      review_bulk:
+        refresh: "Reîmprospătează"
+        columns:
+          user: "Utilizator"
+          reason: "Semnalat ca"
+          created: "Creat"
+          status: "Stare"
       copied: "Copiat"
       ai_decoded_transcript:
         arguments: "Argumente"

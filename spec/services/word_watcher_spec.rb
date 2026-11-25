@@ -93,6 +93,47 @@ RSpec.describe WordWatcher do
     it "returns nil when no watched words exist for the action" do
       expect(described_class.regexps_for_action(:replace)).to be_nil
     end
+
+    context "when cache is enabled" do
+      before do
+        described_class.enable_cache
+        described_class.clear_cache!
+      end
+
+      after do
+        described_class.disable_cache
+        described_class.clear_cache!
+      end
+
+      it "caches regexps in memory, freezes entries, and invalidates on setting or word changes" do
+        watched_word =
+          Fabricate(
+            :watched_word,
+            action: WatchedWord.actions[:replace],
+            word: "hello",
+            replacement: "hi",
+          )
+
+        first = described_class.regexps_for_action(:replace)
+        queries =
+          track_sql_queries { expect(described_class.regexps_for_action(:replace)).to equal(first) }
+        expect(queries.grep(/watched_words/)).to be_empty
+        expect(first).to be_frozen
+        expect(first.values.first).to be_frozen
+
+        expect(described_class.regexps_for_action(:link)).to be_nil
+        empty_queries =
+          track_sql_queries { expect(described_class.regexps_for_action(:link)).to be_nil }
+        expect(empty_queries.grep(/watched_words/)).to be_empty
+
+        SiteSetting.watched_words_regular_expressions = false
+        non_regexp = described_class.regexps_for_action(:replace)
+        expect(non_regexp).not_to equal(first)
+
+        watched_word.destroy!
+        expect(described_class.regexps_for_action(:replace)).to be_nil
+      end
+    end
   end
 
   describe ".compiled_regexps_for_action" do
@@ -624,6 +665,52 @@ RSpec.describe WordWatcher do
           text = "to replace and\thttps://notdiscourse.org"
           expected = "replaced and\thttps://discourse.org"
           expect(described_class.apply_to_text(text)).to eq(expected)
+        end
+      end
+
+      context "when cache is enabled" do
+        before do
+          described_class.enable_cache
+          described_class.clear_cache!
+        end
+
+        after do
+          described_class.disable_cache
+          described_class.clear_cache!
+        end
+
+        it "reuses cached replacement regexes and invalidates when watched words change" do
+          expect(described_class.replace_text("a word to replace meow")).to eq(
+            "a word replaced meow",
+          )
+          expect(described_class.replace_link("visit https://notdiscourse.org")).to eq(
+            "visit https://discourse.org",
+          )
+
+          queries =
+            track_sql_queries do
+              expect(described_class.replace_text("another word to replace")).to eq(
+                "another word replaced",
+              )
+              expect(described_class.replace_link("visit https://notdiscourse.org")).to eq(
+                "visit https://discourse.org",
+              )
+            end
+          expect(queries.grep(/watched_words/)).to be_empty
+
+          extra =
+            Fabricate(
+              :watched_word,
+              word: "CaseWord",
+              replacement: "ExactMatch",
+              case_sensitive: true,
+              action: WatchedWord.actions[:replace],
+            )
+
+          expect(described_class.replace_text("CaseWord caseword")).to eq("ExactMatch caseword")
+
+          extra.destroy!
+          expect(described_class.replace_text("CaseWord caseword")).to eq("CaseWord caseword")
         end
       end
     end

@@ -64,6 +64,8 @@ fa_IR:
           color: "رنگ"
         approve_label: "بله"
         reject_label: "خیر"
+        category_access_levels:
+          readonly: "دیدن"
       agents:
         dall_e3:
           name: "DALL-E 3"
@@ -71,6 +73,7 @@ fa_IR:
         categories: "فهرست دسته‌بندی‌ها"
         users: "فهرست کاربران"
         suspend_user: "کاربر تعلیق شده"
+        delete_category: "حذف دسته‌بندی"
         search: "جستجو"
         tags: "فهرست برچسب‌ها"
         time: "زمان"
@@ -104,6 +107,12 @@ fa_IR:
         errors:
           not_found: "موضوع پیدا نشد."
       edit_category:
+        errors:
+          not_found: "دسته یافت نشد."
+      set_category_permissions:
+        errors:
+          not_found: "دسته یافت نشد."
+      delete_category:
         errors:
           not_found: "دسته یافت نشد."
       change_topic_category:

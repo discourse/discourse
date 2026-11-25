@@ -13,7 +13,10 @@ module DiscourseAi
 
       def index
         relation =
-          Reviewable.list_for(current_user, status: :pending).joins(:ai_reviewable_suggestion)
+          Reviewable
+            .list_for(current_user, status: :pending)
+            .joins(:ai_reviewable_suggestion)
+            .merge(AiReviewableSuggestion.actionable)
         reviewables = relation.limit(LIMIT).to_a
         claimed_user_ids = claimed_user_ids_for(reviewables)
 

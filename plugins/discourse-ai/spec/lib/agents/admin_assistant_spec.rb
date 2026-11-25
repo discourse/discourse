@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
+RSpec.describe DiscourseAi::Agents::AdminAssistant do
   subject(:assistant) { described_class.new }
 
   fab!(:admin)
@@ -9,7 +9,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
   before { enable_current_plugin }
 
   it "combines Discourse knowledge, general administration, and site-setting tools" do
-    expect(assistant.tools).to start_with(
+    expect(assistant.tools).to include(
       *[
         DiscourseAi::Agents::Tools::LoadDiscourseWebsitePage,
         DiscourseAi::Agents::Tools::DiscourseMetaSearch,
@@ -96,10 +96,7 @@ RSpec.describe DiscourseAi::Agents::DiscourseAdminAssistant do
 
     prompt = assistant.craft_prompt(DiscourseAi::Agents::BotContext.new(user: admin))
 
-    expect(prompt.system_message_text).to include(
-      restriction,
-      "You are the Discourse Admin Assistant",
-    )
+    expect(prompt.system_message_text).to include(restriction, "You are the Admin Assistant")
   ensure
     if plugin && modifier
       DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_system_prompt, &modifier)

@@ -85,6 +85,49 @@ RSpec.describe DiscourseAi::AiModeration::ReviewableSuggestionsController do
       expect(response.parsed_body["suggestions"]).to be_empty
     end
 
+    it "omits refusals and filters by ai_reviewable_action_min_confidence" do
+      refused = Fabricate(:reviewable_flagged_post)
+      AiReviewableSuggestion.create!(
+        reviewable: refused,
+        decision_model:,
+        action_name: nil,
+        confidence: nil,
+      )
+      low_confidence =
+        AiReviewableSuggestion.create!(
+          reviewable:,
+          decision_model:,
+          action_name: "post-agree_and_hide",
+          confidence: 0.75,
+        )
+      sign_in(moderator)
+
+      get "/review/bulk.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total"]).to eq(0)
+      expect(response.parsed_body["suggestions"]).to be_empty
+
+      get "/review.json"
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["reviewables"].map { |item| item["ai_suggested_action_name"] },
+      ).to all(be_nil)
+
+      SiteSetting.ai_reviewable_action_min_confidence = 0.75
+
+      get "/review/bulk.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total"]).to eq(1)
+      expect(response.parsed_body["suggestions"].map { |item| item["id"] }).to contain_exactly(
+        low_confidence.reviewable_id,
+      )
+
+      get "/review.json"
+      expect(response.status).to eq(200)
+      returned = response.parsed_body["reviewables"].find { |item| item["id"] == reviewable.id }
+      expect(returned["ai_suggested_action_name"]).to eq("post-agree_and_hide")
+    end
+
     it "blocks actions that need input from the moderator" do
       suggest("post-agree_and_edit")
       sign_in(moderator)

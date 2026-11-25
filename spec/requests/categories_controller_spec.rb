@@ -16,6 +16,7 @@ RSpec.describe CategoriesController do
     end
 
     it "properly preloads topic list" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
@@ -42,6 +43,7 @@ RSpec.describe CategoriesController do
     end
 
     it "does not build a topic list for crawlers" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
 

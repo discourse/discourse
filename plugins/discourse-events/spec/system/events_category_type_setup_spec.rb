@@ -3,6 +3,7 @@
 RSpec.describe "Events Category Type Setup" do
   fab!(:admin)
 
+  let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:banner) { PageObjects::Components::DFloatingControlBar.new }
@@ -20,20 +21,12 @@ RSpec.describe "Events Category Type Setup" do
     expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "events"))
 
     expect(form.field("name").value).to eq("Events")
-    expect(
-      form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-        "checked"
-      ],
-    ).to eq(true)
-    expect(form.field("style_type").find("#control-emoji").find("img.emoji")["title"]).to eq(
-      "spiral_calendar",
-    )
+    expect(category_page).to have_style_emoji("spiral_calendar")
 
     expect(banner).to be_visible
     banner.click_save
 
-    expect(page).to have_content(I18n.t("js.category.edit_dialog_title", categoryName: "Events"))
-    expect(page).to have_css(".d-nav-submenu__tabs .edit-category-events")
+    expect(page).to have_current_path(%r{\A/c/events/\d+\z})
     expect(SiteSetting.discourse_events_enabled).to eq(true)
     expect(SiteSetting.discourse_post_event_enabled).to eq(true)
 
@@ -60,11 +53,7 @@ RSpec.describe "Events Category Type Setup" do
 
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "events"))
       expect(form.field("name").value).to eq("")
-      expect(
-        form.field("style_type").find(".form-kit__control-radio[type='radio'][value='emoji']")[
-          "checked"
-        ],
-      ).to eq(nil)
+      expect(category_page).to have_no_style_emoji
     end
 
     it "persists category_settings edits (Default calendar view, Display weekends)" do

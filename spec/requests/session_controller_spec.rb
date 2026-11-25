@@ -804,6 +804,36 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(429)
       end
+
+      it "counts codes against the invite's address when the invite key is padded" do
+        freeze_time
+        invite = Fabricate(:invite, email: "invited@example.com")
+
+        3.times do
+          post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+          expect(response.status).to eq(200)
+          freeze_time 2.minutes.from_now
+        end
+
+        post "/session/login-code.json", params: honeypot_magic(invite_key: invite.invite_key)
+
+        expect(response.status).to eq(429)
+
+        [
+          { invite_key: "#{invite.invite_key} " },
+          { invite_key: " #{invite.invite_key}\n" },
+          { invite_key: " #{invite.invite_key}", email: "attacker@example.com" },
+        ].each do |padded_params|
+          expect_not_enqueued_with(
+            job: :send_email_login_code,
+            args: {
+              to_address: invite.email,
+            },
+          ) { post "/session/login-code.json", params: honeypot_magic(padded_params) }
+
+          expect(response.status).to eq(429)
+        end
+      end
     end
   end
 
@@ -1986,6 +2016,95 @@ RSpec.describe SessionController do
         end
       end
 
+      context "when a dropdown user field is shown at signup" do
+        fab!(:dropdown_field) do
+          Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Engineering")
+            field.user_field_options.create!(value: "Sales")
+          end
+        end
+
+        let(:field_key) { dropdown_field.id.to_s }
+
+        it "ignores a value that is not one of the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username: "chosen-name",
+                 user_fields: {
+                   field_key => "Staff",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com").user_fields[field_key]).to be_nil
+        end
+
+        it "keeps a value that is one of the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username: "chosen-name",
+                 user_fields: {
+                   field_key => "Sales",
+                 },
+               }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(User.find_by_email("newuser@example.com").user_fields[field_key]).to eq("Sales")
+        end
+
+        context "when the field is required at signup" do
+          before { dropdown_field.update!(requirement: "on_signup") }
+
+          it "rejects a value that is not one of the configured options" do
+            post "/session/login-code/verify.json",
+                 params: {
+                   email: "newuser@example.com",
+                   code:,
+                   username: "chosen-name",
+                   user_fields: {
+                     field_key => "Staff",
+                   },
+                 }
+
+            expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_user_field"))
+            expect(User.find_by_email("newuser@example.com")).to be_nil
+            expect(session[:current_user_id]).to be_nil
+            expect(login_code.reload.consumed_at).to be_nil
+          end
+        end
+      end
+
+      context "when a multiselect user field is shown at signup" do
+        fab!(:multiselect_field) do
+          Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Axe")
+            field.user_field_options.create!(value: "Sword")
+          end
+        end
+
+        it "keeps only the configured options" do
+          post "/session/login-code/verify.json",
+               params: {
+                 email: "newuser@example.com",
+                 code:,
+                 username: "chosen-name",
+                 user_fields: {
+                   multiselect_field.id.to_s => %w[Axe Juice Sword],
+                 },
+               }
+
+          expect(response.parsed_body["account_created"]).to eq(true)
+          expect(
+            User.find_by_email("newuser@example.com").user_fields[multiselect_field.id.to_s],
+          ).to eq(%w[Axe Sword])
+        end
+      end
+
       context "when a full name is required at signup" do
         before { SiteSetting.full_name_requirement = "required_at_signup" }
 
@@ -2906,6 +3025,36 @@ RSpec.describe SessionController do
 
         expect(response.status).to eq(302)
         expect(response).to redirect_to(topic_invite.topic.relative_url)
+      end
+
+      it "does not redirect to the topic associated to the invite when the user cannot see it" do
+        topic = Fabricate(:topic, title: "Planning thread for the autumn community meetup")
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        topic.update!(title: "Confidential: venue contract dispute with Harbour Hall")
+
+        login_with_sso_and_invite
+
+        redeemer = User.find_by_email("bob@bob.com")
+        expect(redeemer.guardian.can_see?(topic)).to eq(false)
+
+        expect(response.status).to eq(302)
+        expect(response.location).not_to include(topic.reload.slug)
+        expect(response).to redirect_to("/")
+      end
+
+      it "redirects to the topic when the invite's groups give the user access to it" do
+        group = Fabricate(:group)
+        topic = Fabricate(:topic, category: Fabricate(:private_category, group: group))
+        email_invite = Fabricate(:invite, email: "bob@bob.com", invited_by: admin)
+        TopicInvite.create!(invite: email_invite, topic: topic)
+        InvitedGroup.create!(invite: email_invite, group: group)
+
+        login_with_sso_and_invite(email_invite.invite_key)
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(topic.relative_url)
       end
 
       it "adds the user to the appropriate invite groups" do

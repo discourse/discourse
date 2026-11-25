@@ -57,7 +57,8 @@ RSpec.describe Admin::Config::DesignWizardController do
           DesignWizard::PalettePairs::BUILT_IN_PAIRS.map { |pair| pair[:key] },
         )
         dracula = foundation["palette_pairs"].find { |pair| pair["key"] == "dracula" }
-        expect(dracula["light"]).to be_nil
+        expect(dracula["light"]["name"]).to eq("Dracula Light")
+        expect(dracula["dark"]["name"]).to eq("Dracula")
       end
 
       it "offers Concord for installation by default without creating a theme" do
@@ -334,7 +335,7 @@ RSpec.describe Admin::Config::DesignWizardController do
               base_font: "lato",
               heading_font: "merriweather",
               homepage: "categories",
-              category_page_style: "categories_boxes",
+              category_page_style: "categories_and_latest_topics",
             }
 
         expect(response.status).to eq(200)
@@ -344,7 +345,7 @@ RSpec.describe Admin::Config::DesignWizardController do
         expect(SiteSetting.base_font).to eq("lato")
         expect(SiteSetting.heading_font).to eq("merriweather")
         expect(SiteSetting.default_homepage).to eq("categories")
-        expect(SiteSetting.desktop_category_page_style).to eq("categories_boxes")
+        expect(SiteSetting.desktop_category_page_style).to eq("categories_and_latest_topics")
         expect(light.reload.user_selectable).to eq(true)
       end
 

@@ -696,7 +696,7 @@ en:
           title: "Look & feel"
           description: "Choose your fonts and what members see first."
       sections:
-        colors: "Site color modes"
+        colors: "Default color modes"
         fonts: "Fonts"
         logo: "Logo"
         homepage: "Homepage"
@@ -705,9 +705,9 @@ en:
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
-        light_palette: "Light palette"
-        dark_palette: "Dark palette"
+        palette: "Palette"
+        manage_palettes_prompt: "Want a custom palette or to control which palettes members can choose?"
+        manage_palettes: "Manage color palettes"
         modes:
           label: "Color modes"
           both: "Light & dark"
@@ -716,9 +716,6 @@ en:
       fonts:
         base_font: "Body"
         heading_font: "Headings"
-      logo:
-        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
-        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
@@ -1237,6 +1234,10 @@ en:
         all:
           title: "Everything"
 
+      pending_post_approval: "Post approval"
+      pending_topic_approval: "Topic approval"
+      pending_account_approval: "Account approval"
+      account_review: "Account review"
       context_question:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
@@ -1245,9 +1246,6 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
-        something_wrong_with_post: "Is there something wrong with this post?"
-        something_wrong_with_topic: "Is there something wrong with this topic?"
-        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -5578,6 +5576,7 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
+      back_to_categories: "Back to categories"
       general: "General"
       settings: "Settings"
       moderation: "Moderation"
@@ -5620,6 +5619,11 @@ en:
         delete_title: "Delete this category"
         delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
         delete_title_forbidden: "Can't delete this category"
+      empty_state:
+        title: "Start the conversation"
+        body: "New topics in this category will show up here."
+        create_topic: "Create the first topic"
+        edit_category: "Edit category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -5649,7 +5653,12 @@ en:
         icon_required: "Select an icon."
         groups_required: "Select at least one group for this approval mode."
       name: "Category name"
-      untitled: "Untitled category"
+      name_and_style: "Category name and style"
+      choose_style: "Choose category style (currently %{style})"
+      choose_style_with_icon: "Choose category style (currently the %{name} icon)"
+      choose_style_with_emoji: "Choose category style (currently the %{name} emoji)"
+      choose_style_with_emoji_tone: "Choose category style (currently the %{name} emoji, %{tone})"
+      icon_search_placeholder: "Search…"
       description: "Description"
       logo: "Category logo image"
       logo_dark: "Dark mode category logo image"
@@ -5657,10 +5666,6 @@ en:
       background_image: "Category background image"
       background_image_dark: "Dark category background image"
       style: "Style"
-      icon: "Icon"
-      emoji: "Emoji"
-      select_emoji: "Select emoji"
-      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -5668,22 +5673,15 @@ en:
         incorrect_length: "must match the format #RRGGBB or #RGB"
         non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
-        type: "Style"
         icon: "Icon"
         emoji: "Emoji"
         square: "Square"
-        options:
-          square: "Square"
-          icon: "Icon"
-          emoji: "Emoji"
       color_used: "Color in use"
-      predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
       category_types: "Category types"
       unknown_category_type: "Unknown category type"
       unknown_category_type_description: "The category type '%{categoryType}' is not supported or not enabled on this category."
       category_types_no_results: "No other category types found"
-      color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       list: "List categories"
@@ -9410,8 +9408,8 @@ en:
           title: "Colors"
           edit: "Edit"
           view: "View"
-          set_default_light: "Set as light palette on default theme (%{theme})"
-          set_default_dark: "Set as dark palette on default theme (%{theme})"
+          set_default_light: "Set as light"
+          set_default_dark: "Set as dark"
           set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
@@ -9706,6 +9704,7 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            approve_account_review: "approved account review"
             removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"

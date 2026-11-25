@@ -144,6 +144,15 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Atnaujinti"
+        columns:
+          user: "Narys"
+          reason: "Pažymėta kaip"
+          created: "Sukurta"
+          status: "Statusas"
+        status:
+          applying: "Pritaikoma…"
       copied: "Nukopijuota"
       ai_decoded_transcript:
         tool: "Įrankis"

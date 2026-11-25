@@ -119,6 +119,7 @@ expectTypeOf(reviewable.score).toEqualTypeOf<number>();
 expectTypeOf(reviewable.version).toEqualTypeOf<number>();
 expectTypeOf(reviewable.can_edit).toEqualTypeOf<boolean>();
 expectTypeOf(reviewable.created_from_flag).toEqualTypeOf<boolean>();
+expectTypeOf(reviewable.signup_approval).toEqualTypeOf<boolean | undefined>();
 // The store swaps side-loaded ids for records, or null when a record is missing.
 expectTypeOf(reviewable.created_by).toEqualTypeOf<User | null>();
 expectTypeOf(reviewable.topic).toEqualTypeOf<Topic | null | undefined>();

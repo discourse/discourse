@@ -243,6 +243,13 @@ fr:
               description: "Autoriser l'étiquetage des publications créées par l'utilisateur système"
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Actualiser"
+        columns:
+          user: "Utilisateur"
+          reason: "Signalé comme"
+          created: "Création"
+          status: "Statut"
       dsa_classification:
         suggest: "Suggérer avec l'IA"
       copied: "Copié "

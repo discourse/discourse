@@ -337,7 +337,7 @@ RSpec.describe DesignWizard::Apply do
           base_font: "arial",
           heading_font: "oxanium",
           homepage: "categories",
-          category_page_style: "categories_boxes",
+          category_page_style: "categories_and_latest_topics",
         }
       end
 
@@ -361,7 +361,7 @@ RSpec.describe DesignWizard::Apply do
       it "updates the homepage and category page style" do
         expect { result }.to change { SiteSetting.default_homepage }.to("categories").and change {
                 SiteSetting.desktop_category_page_style
-              }.to("categories_boxes")
+              }.to("categories_and_latest_topics")
       end
     end
 
@@ -675,7 +675,7 @@ RSpec.describe DesignWizard::Apply do
       it { is_expected.to run_successfully }
 
       it "materializes all built-in palettes as user selectable" do
-        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(13)
+        expect { result }.to change { ColorScheme.where(via_wizard: true).count }.by(20)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(true))
       end
 
@@ -693,7 +693,7 @@ RSpec.describe DesignWizard::Apply do
         result
         described_class.call(params: params.merge(palettes_user_selectable: false), **dependencies)
 
-        expect(ColorScheme.where(via_wizard: true).count).to eq(13)
+        expect(ColorScheme.where(via_wizard: true).count).to eq(20)
         expect(ColorScheme.where(via_wizard: true).pluck(:user_selectable)).to all(eq(false))
       end
     end

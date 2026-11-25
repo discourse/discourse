@@ -57,6 +57,16 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
         )
       end
     end
+
+    describe "when post contains characters Slack reserves" do
+      before { post.update!(raw: "AT&T `<!here>` [a>b](https://example.com)") }
+
+      it "escapes them without breaking links" do
+        expect(described_class.excerpt(post)).to eq(
+          "AT&amp;T &lt;!here&gt; <https://example.com|a&gt;b>",
+        )
+      end
+    end
   end
 
   describe ".valid_slack_incoming_webhook_url?" do

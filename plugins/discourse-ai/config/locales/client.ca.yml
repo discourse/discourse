@@ -38,6 +38,12 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualitza"
+        columns:
+          user: "Usuari"
+          created: "Creat"
+          status: "Estat"
       copied: "Copiat"
       ai_decoded_transcript:
         type: "Tipus"

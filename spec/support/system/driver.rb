@@ -29,13 +29,12 @@ module SystemDrivers
     Array(example.metadata[:allow_network]).map(&:to_s).map(&:strip).reject(&:empty?).uniq.sort
   end
 
-  # Builds the registered driver name for the example. Mobile vs desktop, plus a
-  # suffix for the `allow_network:` host set so each set gets its own browser
-  # (host-resolver-rules are a launch arg and can't be changed per-test).
+  # Include the browser mode in the key so a recorded or headed example can't
+  # reuse the faster, persistent headless context from a previous example.
   def self.driver_for(example)
     driver = [:playwright]
     driver << :mobile if example.metadata[:mobile]
-    driver << :chrome
+    driver << (use_headless_shell?(example) ? :headless_shell : :chrome)
 
     hosts = allow_network_hosts(example)
     driver << "net#{Digest::SHA1.hexdigest(hosts.join(","))[0, 10]}" if hosts.any?
@@ -43,11 +42,24 @@ module SystemDrivers
     driver.join("_").to_sym
   end
 
+  def self.headless?
+    (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0"
+  end
+
+  def self.use_headless_shell?(example)
+    ENV["DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL"] == "1" && headless? &&
+      ENV["CAPYBARA_REMOTE_DRIVER_URL"].blank? && ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] != "0" &&
+      ENV["PLAYWRIGHT_DEVTOOLS"] != "1" && ENV["SELENIUM_DEVTOOLS"] != "1" &&
+      ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].blank? && !example.metadata[:video] &&
+      !example.metadata[:trace]
+  end
+
   def self.register!(example)
+    use_shell = use_headless_shell?(example)
     base_options = {
       browser_type: :chromium,
-      channel: :chromium,
-      headless: (ENV["PLAYWRIGHT_HEADLESS"].presence || ENV["SELENIUM_HEADLESS"].presence) != "0",
+      channel: use_shell ? :"chromium-headless-shell" : :chromium,
+      headless: headless?,
       acceptDownloads: true,
       downloadsPath: Downloads::FOLDER,
       slowMo: ENV["PLAYWRIGHT_SLOW_MO_MS"].to_i, # https://playwright.dev/docs/api/class-browsertype#browser-type-launch-option-slow-mo
@@ -65,27 +77,33 @@ module SystemDrivers
       base_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
     end
 
+    chrome_args = { use_script_cache: use_shell }
     register_chrome(
-      :playwright_mobile_chrome,
+      use_shell ? :playwright_mobile_headless_shell : :playwright_mobile_chrome,
       **base_options,
-      args: apply_base_chrome_args,
+      args: apply_base_chrome_args(**chrome_args),
       mobile: true,
     )
-    register_chrome(:playwright_chrome, **base_options, args: apply_base_chrome_args, mobile: false)
+    desktop_driver = use_shell ? :playwright_headless_shell : :playwright_chrome
+    register_chrome(
+      desktop_driver,
+      **base_options,
+      args: apply_base_chrome_args(**chrome_args),
+      mobile: false,
+    )
 
-    # Specs that need a specific external host register their own browser, with
-    # those hosts excluded from the request block (see apply_base_chrome_args).
+    # Host resolver rules apply to the entire browser, so opted-in hosts need their own driver.
     hosts = allow_network_hosts(example)
     if hosts.any?
       register_chrome(
         driver_for(example),
         **base_options,
-        args: apply_base_chrome_args(allow_network: hosts),
+        args: apply_base_chrome_args(allow_network: hosts, **chrome_args),
         mobile: !!example.metadata[:mobile],
       )
     end
 
-    Capybara.default_driver = :playwright_chrome
+    Capybara.default_driver = desktop_driver
   end
 
   def self.register_chrome(name, mobile:, **options)
@@ -132,7 +150,7 @@ module SystemDrivers
     )
   end
 
-  def self.apply_base_chrome_args(args = [], allow_network: [])
+  def self.apply_base_chrome_args(args = [], allow_network: [], use_script_cache: false)
     # A custom --disable-features replaces the generated list. Keep the browser
     # safeguards relevant to Chromium in our Linux test image alongside our flags.
     disabled_features = [
@@ -164,6 +182,9 @@ module SystemDrivers
       # Avoid creating the companion AI Mode popup page when tests replace pages.
       "WebUIOmniboxAimPopup",
     ]
+
+    # Chromium only consumes its compiled module cache without streaming compilation.
+    disabled_features << "ScriptStreaming" if use_script_cache
 
     base_args = %W[
       --disable-search-engine-choice-screen

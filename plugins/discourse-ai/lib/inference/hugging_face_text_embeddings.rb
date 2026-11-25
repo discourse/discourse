@@ -53,7 +53,7 @@ module DiscourseAi
         JSON.parse(response.body, symbolize_names: true)
       end
 
-      def perform!(content)
+      def perform!(content, task: nil)
         response = request(content)
         if response.status != 200
           raise EmbeddingInferenceError.from_response(

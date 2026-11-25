@@ -61,6 +61,8 @@ pt:
           text_color: "cor do texto"
         approve_label: "Sim"
         reject_label: "Não"
+        category_access_levels:
+          readonly: "Ver"
       agents:
         custom_prompt:
           name: "Janela personalizada"

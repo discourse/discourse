@@ -150,6 +150,9 @@ lt:
         question: "Ar norite atlikti šį pakeitimą?"
         category_question: "Ar norite atlikti šį pakeitimą %{category}?"
         category_change: "Keičiamas `%{field}` iš %{before} į %{after}"
+        category_access_levels:
+          readonly: "Peržiūrėti"
+        category_group_access_change: "Keičiamas `%{group}` iš %{before} į %{after}"
         empty_value: "Tuščia"
       agents:
         custom_prompt:
@@ -172,6 +175,7 @@ lt:
         flag_post: "Vėliavų stulpas"
         suspend_user: "Sustabdyti naudotojo"
         silence_user: "Nutildyti vartotoją"
+        delete_category: "Ištrinti kategoriją"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"
@@ -207,6 +211,12 @@ lt:
       edit_category:
         errors:
           not_found: "Kategorijos nėra."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorija nerasta."
+      delete_category:
+        errors:
+          not_found: "Kategorija nerasta."
       change_topic_category:
         errors:
           not_found: "Tema nerasta."

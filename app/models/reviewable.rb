@@ -72,8 +72,6 @@ class Reviewable < ActiveRecord::Base
     types.select(&:approval_style?)
   end
 
-  # Whether the reviewer sees approval-style questions framed so "Yes" confirms
-  # a problem, matching flag-style ones.
   def self.consistent_answers_for?(guardian)
     !!guardian.user&.upcoming_change_enabled?(:review_queue_consistent_answers)
   end

@@ -53,6 +53,9 @@ interface DEmptyStateSignature {
   Element: HTMLDivElement;
 
   Blocks: {
+    /** Further actions, rendered after the call-to-action button. */
+    actions: [];
+
     /** Custom content for the tip, rendered in place of `@tipText`. */
     tip: [];
   };
@@ -121,17 +124,20 @@ export default class DEmptyState extends Component<DEmptyStateSignature> {
           </div>
         {{/if}}
 
-        {{#if @ctaLabel}}
+        {{#if (or @ctaLabel (has-block "actions"))}}
           <div class="empty-state__cta">
-            <DButton
-              class="btn-primary"
-              @action={{@ctaAction}}
-              @disabled={{@ctaDisabled}}
-              @href={{@ctaHref}}
-              @icon={{@ctaIcon}}
-              @route={{@ctaRoute}}
-              @translatedLabel={{@ctaLabel}}
-            />
+            {{#if @ctaLabel}}
+              <DButton
+                class="btn-primary"
+                @action={{@ctaAction}}
+                @disabled={{@ctaDisabled}}
+                @href={{@ctaHref}}
+                @icon={{@ctaIcon}}
+                @route={{@ctaRoute}}
+                @translatedLabel={{@ctaLabel}}
+              />
+            {{/if}}
+            {{yield to="actions"}}
           </div>
         {{/if}}
 

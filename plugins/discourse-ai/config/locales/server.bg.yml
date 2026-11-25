@@ -46,6 +46,8 @@ bg:
           color: "цвят"
         approve_label: "Да"
         reject_label: "Не"
+        category_access_levels:
+          readonly: "Виж"
       tool_summary:
         suspend_user: "Спиране на потребителя"
         silence_user: "Заглушаване на потребителя"

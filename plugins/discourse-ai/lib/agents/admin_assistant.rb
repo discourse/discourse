@@ -2,8 +2,52 @@
 
 module DiscourseAi
   module Agents
-    class DiscourseAdminAssistant < Agent
+    class AdminAssistant < Agent
       SYSTEM_PROMPT_MODIFIER = :admin_assistant_system_prompt
+
+      TOOL_GROUPS = {
+        "settings" => [
+          Tools::SettingContext,
+          Tools::SearchSettings,
+          Tools::ReadSiteSetting,
+          Tools::ChangeSiteSetting,
+        ],
+        "categories_tags" => [
+          Tools::ListCategories,
+          Tools::FindCategory,
+          Tools::ListTags,
+          Tools::CreateCategory,
+          Tools::EditCategory,
+          Tools::SetCategoryPermissions,
+          Tools::DeleteCategory,
+          Tools::ChangeTopicCategory,
+          Tools::CreateTag,
+          Tools::EditTag,
+          Tools::ChangeTopicTags,
+        ],
+        "moderation" => [
+          Tools::ListReviewables,
+          Tools::CloseTopic,
+          Tools::LockPost,
+          Tools::UnlistTopic,
+          Tools::DeleteTopic,
+          Tools::EditPost,
+          Tools::MovePosts,
+          Tools::SuspendUser,
+          Tools::SilenceUser,
+          Tools::MarkAsSolved,
+        ],
+        "appearance" => [
+          Tools::GenerateAppearanceChange,
+          Tools::SaveAppearanceChange,
+          Tools::ActivateAppearanceChange,
+          Tools::RevertAppearanceChange,
+          Tools::ListAppearanceChanges,
+          Tools::InstallPopularTheme,
+          Tools::ThemeAppHandoff,
+          Tools::EnableMcpThemeAccess,
+        ],
+      }.freeze
 
       def thinking_effort
         "low"
@@ -17,50 +61,57 @@ module DiscourseAi
         base_tools = [
           Tools::LoadDiscourseWebsitePage,
           Tools::DiscourseMetaSearch,
-          Tools::ListCategories,
-          Tools::FindCategory,
-          Tools::ListTags,
-          Tools::SettingContext,
-          Tools::SearchSettings,
           Tools::SearchDiscourseNavigation,
-          Tools::ReadSiteSetting,
-          Tools::ChangeSiteSetting,
           Tools::ListUpcomingChanges,
-          Tools::ListReviewables,
-          Tools::CloseTopic,
-          Tools::LockPost,
-          Tools::UnlistTopic,
-          Tools::DeleteTopic,
-          Tools::EditPost,
-          Tools::CreateCategory,
-          Tools::EditCategory,
-          Tools::SetCategoryPermissions,
-          Tools::DeleteCategory,
-          Tools::ChangeTopicCategory,
-          Tools::CreateTag,
-          Tools::EditTag,
-          Tools::ChangeTopicTags,
-          Tools::MovePosts,
-          Tools::SuspendUser,
-          Tools::SilenceUser,
-          Tools::MarkAsSolved,
-          Tools::GenerateAppearanceChange,
-          Tools::SaveAppearanceChange,
-          Tools::ActivateAppearanceChange,
-          Tools::RevertAppearanceChange,
-          Tools::ListAppearanceChanges,
-          Tools::InstallPopularTheme,
-          Tools::ThemeAppHandoff,
-          Tools::EnableMcpThemeAccess,
+          Tools::LoadAdminTools,
+          *TOOL_GROUPS.values.flatten,
         ]
 
         DiscoursePluginRegistry.apply_modifier(:admin_assistant_tools, base_tools, self).uniq
       end
 
+      def runtime_tools(llm: nil, context: nil)
+        loaded_groups = context&.admin_assistant_tool_groups || []
+        loaded_groups |= tool_groups_from_history(context&.messages || [])
+        context.admin_assistant_tool_groups = loaded_groups if context
+        deferred_tools =
+          TOOL_GROUPS.values.flatten - loaded_groups.flat_map { TOOL_GROUPS.fetch(it, []) }
+
+        super.reject { deferred_tools.include?(it) }
+      end
+
+      def prepare_next_completion(prompt:, context:, llm:)
+        tools = runtime_tools(llm: llm, context: context)
+        return if tools == context.runtime_tools
+
+        (tools - Array(context.runtime_tools)).each do |tool|
+          tool.inject_prompt(prompt: prompt, context: context, agent: self)
+        end
+        context.runtime_tools = tools
+        context.runtime_tools_llm_model_id = llm&.llm_model&.id
+        prompt.tools = tools.map(&:signature)
+      end
+
+      def load_tool_groups(groups, context:, llm:)
+        if !groups.is_a?(Array) || groups.empty? || (groups - TOOL_GROUPS.keys).any?
+          return { error: "Unknown tool group. Choose: #{TOOL_GROUPS.keys.join(", ")}" }
+        end
+
+        context.admin_assistant_tool_groups = Array(context.admin_assistant_tool_groups) | groups
+        selected_tools = groups.flat_map { TOOL_GROUPS.fetch(it) }
+        tools = runtime_tools(llm: llm, context: context).intersection(selected_tools)
+        {
+          loaded_groups: groups,
+          tools: tools.map { it.signature[:name] },
+          instructions: tools.map(&:custom_system_message).compact_blank.join("\n"),
+        }
+      end
+
       def system_prompt
         prompt = <<~PROMPT
-          You are the Discourse Admin Assistant, an AI bot tasked with helping Discourse administrators. Always frame your responses with this in mind, that you are here to help administrators set up and manage their Discourse community.
+          You are the Admin Assistant, an AI bot tasked with helping Discourse administrators. Always frame your responses with this in mind, that you are here to help administrators set up and manage their Discourse community.
 
+          - Administration tools are loaded on demand. Before using a tool that is not currently available, call `load_admin_tools` with the relevant groups: `settings` for site settings, `categories_tags` for categories and tags, `moderation` for review queues, topics, posts and users, and `appearance` for colors, fonts, themes and theme-app access. Load multiple groups for mixed requests. Then use the newly available tools; loading a group does not submit or apply any changes. If a tool remains unavailable, respect that restriction.
           - For questions about public Discourse hosting plans and pricing, call `load_discourse_website_page` with `page_name` set to `pricing` and treat its result as the primary source. Do not search Meta unless the pricing page does not answer the question.
           - For managing this site's hosting account, subscription, invoices, or billing, use `search_discourse_navigation` to find an available local destination. The public pricing page does not manage this site's account.
           - For general questions about Discourse, call `search_meta_discourse` twice before answering: first with precise keywords, then with a broader query. Always support answers with actual search results, even if the information is in your training data. The search function is restricted to Discourse-specific discussions, so do not include the word "Discourse" in searches.
@@ -94,6 +145,29 @@ module DiscourseAi
         PROMPT
 
         DiscoursePluginRegistry.apply_modifier(SYSTEM_PROMPT_MODIFIER, prompt, self)
+      end
+
+      private
+
+      def tool_groups_from_history(messages)
+        messages
+          .flat_map do |message|
+            if message[:type] == :tool && message[:name] == Tools::LoadAdminTools.name
+              begin
+                result = JSON.parse(message[:content])
+                result.is_a?(Hash) ? Array(result["loaded_groups"]) & TOOL_GROUPS.keys : []
+              rescue JSON::ParserError, TypeError
+                []
+              end
+            elsif message[:type] == :tool_call
+              TOOL_GROUPS.filter_map do |group, tools|
+                group if tools.any? { it.signature[:name] == message[:name] }
+              end
+            else
+              []
+            end
+          end
+          .uniq
       end
     end
   end

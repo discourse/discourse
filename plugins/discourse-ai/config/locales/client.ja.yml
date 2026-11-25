@@ -212,6 +212,13 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "更新"
+        columns:
+          user: "ユーザー"
+          reason: "通報:"
+          created: "作成"
+          status: "ステータス"
       dsa_classification:
         suggest: "AI で提案"
       ai_decoded_transcript:
