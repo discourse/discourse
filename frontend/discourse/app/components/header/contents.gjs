@@ -40,7 +40,7 @@ export default class Contents extends Component {
       this.pageShell.compactLogo ||
       applyValueTransformer(
         "home-logo-minimized",
-        this.args.topicInfoVisible ||
+        (!this.pageShell.enabled && this.args.topicInfoVisible) ||
           (this.mobileTabBar.isNestedPage && !this.args.topicInfo),
         {
           topicInfo: this.args.topicInfo,
