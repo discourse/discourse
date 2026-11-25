@@ -845,6 +845,10 @@ class Topic < ActiveRecord::Base
     archetype == Archetype.default
   end
 
+  def like_stats_excluded?
+    SiteSetting.exclude_categories_from_like_stats_map.include?(category_id)
+  end
+
   # Single source of truth for "this topic renders as nested." Both
   # TopicListItemSerializer and TopicViewSerializer delegate here.
   #
@@ -1231,6 +1235,11 @@ class Topic < ActiveRecord::Base
         # have the topic removed from their tracking state
         if SiteSetting.experimental_topic_category_change_notification
           DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
+        end
+
+        if like_stats_excluded? !=
+             SiteSetting.exclude_categories_from_like_stats_map.include?(old_category&.id)
+          DB.after_commit { Jobs.enqueue(:refresh_category_like_stats, topic_ids: [id]) }
         end
 
         DiscourseEvent.trigger(:topic_category_changed, self, old_category)

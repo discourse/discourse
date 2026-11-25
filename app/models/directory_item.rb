@@ -181,6 +181,7 @@ class DirectoryItem < ActiveRecord::Base
       new_topic_type: UserAction::NEW_TOPIC,
       reply_type: UserAction::REPLY,
       regular_post_type: Post.types[:regular],
+      excluded_like_category_ids: SiteSetting.exclude_categories_from_like_stats_map,
     }
   end
 
@@ -194,15 +195,15 @@ class DirectoryItem < ActiveRecord::Base
           AND t.archetype = 'regular'
       ),
       visible_posts AS (
-        SELECT p.id
+        SELECT p.id, #{UserStat::COUNTABLE_LIKE_CATEGORY_CONDITION} AS countable_like
         FROM posts p
         JOIN topics t ON t.id = p.topic_id
         WHERE #{UserStat::COUNTABLE_POST_CONDITIONS}
       )
       SELECT
         ua.user_id,
-        SUM(CASE WHEN ua.action_type = 2 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS likes_received,
-        SUM(CASE WHEN ua.action_type = 1 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS likes_given,
+        SUM(CASE WHEN ua.action_type = :was_liked_type AND vp.countable_like THEN 1 ELSE 0 END) AS likes_received,
+        SUM(CASE WHEN ua.action_type = :like_type AND vp.countable_like THEN 1 ELSE 0 END) AS likes_given,
         SUM(CASE WHEN ua.action_type = 5 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS post_count,
         SUM(CASE WHEN ua.action_type = 4 AND vt.id IS NOT NULL THEN 1 ELSE 0 END) AS topic_count
       FROM user_actions ua

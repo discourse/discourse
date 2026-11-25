@@ -23,6 +23,9 @@ class UserStat < ActiveRecord::Base
     AND t.archetype = 'regular'
   SQL
 
+  COUNTABLE_LIKE_CATEGORY_CONDITION =
+    "NOT COALESCE(t.category_id IN (:excluded_like_category_ids), FALSE)"
+
   def self.recalculate_likes!(user_ids)
     DB.exec(
       <<~SQL,
@@ -35,6 +38,7 @@ class UserStat < ActiveRecord::Base
       like_type: UserAction::LIKE,
       was_liked_type: UserAction::WAS_LIKED,
       regular_post_type: Post.types[:regular],
+      excluded_like_category_ids: SiteSetting.exclude_categories_from_like_stats_map,
     )
   end
 
@@ -47,6 +51,7 @@ class UserStat < ActiveRecord::Base
       WHERE ua.user_id = user_stats.user_id
         AND ua.action_type = :#{action_type}
         AND #{COUNTABLE_POST_CONDITIONS}
+        AND #{COUNTABLE_LIKE_CATEGORY_CONDITION}
     SQL
   end
   private_class_method :countable_user_actions_count_sql

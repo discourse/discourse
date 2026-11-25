@@ -444,6 +444,17 @@ RSpec.describe TrustLevel3Requirements do
       expect(tl3_requirements.num_likes_given).to eq(2)
     end
 
+    it "excludes likes in the selected categories" do
+      category = Fabricate(:category)
+      excluded_post = Fabricate(:post, topic: Fabricate(:topic, category:))
+      like_at(user, recent_post1, 2.hours.ago)
+      like_at(user, excluded_post, 2.hours.ago)
+
+      SiteSetting.exclude_categories_from_like_stats = category.id.to_s
+
+      expect(tl3_requirements.num_likes_given).to eq(1)
+    end
+
     it "excludes private messages" do
       like_at(user, recent_post1, 2.hours.ago)
       like_at(user, private_post, 2.hours.ago)
@@ -469,6 +480,19 @@ RSpec.describe TrustLevel3Requirements do
 
     let(:liker) { Fabricate(:user) }
     let(:liker2) { Fabricate(:user) }
+
+    it "excludes likes and their dates and senders in the selected categories" do
+      category = Fabricate(:category)
+      excluded_post = Fabricate(:post, user:, topic: Fabricate(:topic, user:, category:))
+      like_at(liker, recent_post1, 2.hours.ago)
+      like_at(liker2, excluded_post, 5.days.ago)
+
+      SiteSetting.exclude_categories_from_like_stats = category.id.to_s
+
+      expect(tl3_requirements.num_likes_received).to eq(1)
+      expect(tl3_requirements.num_likes_received_days).to eq(1)
+      expect(tl3_requirements.num_likes_received_users).to eq(1)
+    end
 
     it "counts likes received in the last 100 days" do
       like_at(liker, recent_post1, 2.hours.ago)
