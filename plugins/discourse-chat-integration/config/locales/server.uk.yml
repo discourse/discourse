@@ -64,6 +64,7 @@ uk:
   dashboard:
     problem:
       channel_errors: "У деяких каналах інтеграції чату є помилки. Відвідайте <a href='%{base_path}/admin/plugins/discourse-chat-integration'>розділ інтеграції чату</a> , щоб дізнатися більше."
+      telegram_webhook_secret_missing: "Команди Telegram зі слешем перестали працювати, оскільки змінився токен доступу Telegram або інтеграцію чату було вимкнено. Вимкніть постачальника Telegram та налаштуйте його знову в <a href='%{base_path}/admin/plugins/discourse-chat-integration'>розділі інтеграції чату</a>."
   discourse_automation:
     scriptables:
       send_slack_message:

@@ -2366,6 +2366,7 @@ sw:
       share: "Shirikisha"
       dismiss: "Ondosha"
     mobile_tab_bar:
+      new_topic: "Mada Mpya"
       create: "Tengeneza"
       more: "Zaidi"
       back: "Iliyopita"

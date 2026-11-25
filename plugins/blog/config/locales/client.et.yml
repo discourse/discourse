@@ -14,6 +14,13 @@ et:
         desktop: Töölaud
         mobile: Mobiil
         save: Salvesta
+        about_tab: Teave
+        general_heading: Üldine
+        settings_tab: Seaded
+        theme_tab: Kujundusteema
+        column_name: Nimi
+        column_category: Kategooriad
+        column_status: Staatus
         path_formats:
           custom: Individuaalne
         themes: Kujundused

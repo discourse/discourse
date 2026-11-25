@@ -111,6 +111,12 @@ id:
       edit_category:
         errors:
           not_found: "Kategori tidak ditemukan."
+      set_category_permissions:
+        errors:
+          not_found: "Kategori tidak ditemukan."
+      delete_category:
+        errors:
+          not_found: "Kategori tidak ditemukan."
       change_topic_category:
         errors:
           not_found: "Tidak ada topik."

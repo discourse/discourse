@@ -3385,6 +3385,7 @@ bg:
       share: "Споделяне"
       dismiss: "Отмени"
     mobile_tab_bar:
+      new_topic: "Нова тема"
       create: "Създай"
       more: "Повече"
       back: "Назад"

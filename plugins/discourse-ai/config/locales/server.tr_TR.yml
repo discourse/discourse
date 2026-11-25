@@ -363,6 +363,8 @@ tr_TR:
           text_color: "metin rengi"
         approve_label: "Evet"
         reject_label: "Hayır"
+        category_access_levels:
+          readonly: "Bak"
         empty_value: "Boş"
         unexpected_error: "beklenmedik bir hata oluştu"
       agents:
@@ -552,6 +554,7 @@ tr_TR:
         edit_tag: "Etiketi düzenle"
         create_category: "Kategori oluştur"
         edit_category: "Kategoriyi düzenle"
+        delete_category: "Kategoriyi sil"
         set_topic_timer: "Konu zamanlayıcısını ayarla"
         set_slow_mode: "Yavaş modu ayarla"
         move_posts: "Gönderileri taşı"
@@ -745,6 +748,12 @@ tr_TR:
         errors:
           tagging_disabled: "Bu sitede etiketleme özelliği etkin değildir."
       edit_category:
+        errors:
+          not_found: "Kategori bulunamadı."
+      set_category_permissions:
+        errors:
+          not_found: "Kategori bulunamadı."
+      delete_category:
         errors:
           not_found: "Kategori bulunamadı."
       change_topic_category:

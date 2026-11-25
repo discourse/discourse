@@ -4165,6 +4165,7 @@ sv:
       share: "Dela"
       dismiss: "Avfärda"
     mobile_tab_bar:
+      new_topic: "Nytt ämne"
       create: "Skapa"
       more: "Mer"
       back: "Tillbaka"

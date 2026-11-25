@@ -239,6 +239,13 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Volver a cargar"
+        columns:
+          user: "Usuario"
+          reason: "Marcado como"
+          created: "Creada"
+          status: "Estado"
       dsa_classification:
         suggest: "Sugerir con IA"
       ai_decoded_transcript:

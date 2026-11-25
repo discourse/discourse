@@ -2300,6 +2300,7 @@ id:
     footer_nav:
       dismiss: "Bubar"
     mobile_tab_bar:
+      new_topic: "Topik Baru"
       create: "Buat"
       more: "Selengkapnya"
       back: "Kembali"

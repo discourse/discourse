@@ -2720,6 +2720,7 @@ sr:
       share: "Podeli"
       dismiss: "Odbaci"
     mobile_tab_bar:
+      new_topic: "Nova Tema"
       create: "Kreiraj"
       more: "Više"
       back: "Nazad"

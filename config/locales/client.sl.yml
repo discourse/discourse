@@ -3617,6 +3617,7 @@ sl:
       share: "Deli"
       dismiss: "Opusti"
     mobile_tab_bar:
+      new_topic: "Nova tema"
       create: "Ustvari"
       more: "Več"
       back: "Nazaj"

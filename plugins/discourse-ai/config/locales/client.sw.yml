@@ -38,6 +38,11 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      review_bulk:
+        refresh: "Rudisha Tena"
+        columns:
+          user: "Mtumiaji"
+          created: "Imetengenezwa"
       ai_decoded_transcript:
         type: "Aina"
         error: "Hitilafu"

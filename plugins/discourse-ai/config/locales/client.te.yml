@@ -40,6 +40,12 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      review_bulk:
+        refresh: "రిఫ్రెష్ చేయండి"
+        columns:
+          user: "సభ్యుడు"
+          created: "సృష్టించిన"
+          status: "స్థితి"
       ai_decoded_transcript:
         type: "రకం"
         error: "లోపం"

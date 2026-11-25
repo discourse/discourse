@@ -50,6 +50,8 @@ te:
           color: "రంగు"
         approve_label: "అవును"
         reject_label: "లేదు"
+        category_access_levels:
+          readonly: "చూడు"
       tool_summary:
         suspend_user: "సభ్యుడిని సస్పెండు చేయండి"
         silence_user: "సభ్యుని నిశ్శబ్దం చేయండి"

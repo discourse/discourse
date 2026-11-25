@@ -37,6 +37,12 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      review_bulk:
+        refresh: "Абнавіць"
+        columns:
+          user: "Карыстальнік"
+          created: "Створана"
+          status: "Статус"
       ai_decoded_transcript:
         type: "Тып"
         error: "памылка"

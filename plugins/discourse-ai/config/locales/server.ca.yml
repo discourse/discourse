@@ -50,6 +50,8 @@ ca:
           color: "color"
         approve_label: "Sí"
         reject_label: "No"
+        category_access_levels:
+          readonly: "Mira"
       tool_summary:
         search: "Cerca"
         time: "Hora"
@@ -68,6 +70,12 @@ ca:
         errors:
           not_found: "Tema no trobat."
       edit_category:
+        errors:
+          not_found: "Categoria no trobada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoria no trobada."
+      delete_category:
         errors:
           not_found: "Categoria no trobada."
       change_topic_category:

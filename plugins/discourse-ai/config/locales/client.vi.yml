@@ -97,6 +97,13 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      review_bulk:
+        refresh: "Làm mới"
+        columns:
+          user: "Người dùng"
+          reason: "Báo cáo như"
+          created: "Đã tạo"
+          status: "Trạng thái"
       copied: "Đã sao chép"
       ai_decoded_transcript:
         type: "Loại"

@@ -2677,6 +2677,7 @@ et:
       share: "Jaga"
       dismiss: "Ignoreeri"
     mobile_tab_bar:
+      new_topic: "Uus teema"
       create: "Loo"
       more: "Veel"
       back: "Tagasi"

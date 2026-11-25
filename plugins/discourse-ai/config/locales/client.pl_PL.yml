@@ -321,6 +321,50 @@ pl_PL:
     discourse_ai:
       title: "AI"
       apply_review_suggestion: "Zastosuj sugestię AI: %{action}"
+      review_bulk:
+        title: "Sugestie AI"
+        description: "Te elementy mają działanie sugerowane przez AI. Usuń zaznaczenie wszystkich, z którymi się nie zgadzasz, a następnie zastosuj resztę razem."
+        more_pending:
+          one: "%{count} sugestia więcej pojawi się po obsłużeniu tych kwestii."
+          few: "%{count} sugestie więcej pojawi się po obsłużeniu tych kwestii."
+          many: "%{count} sugestii więcej pojawi się po obsłużeniu tych kwestii."
+          other: "%{count} sugestii więcej pojawi się po obsłużeniu tych kwestii."
+        apply:
+          one: "Zastosuj %{count} sugestię"
+          few: "Zastosuj %{count} sugestie"
+          many: "Zastosuj %{count} sugestii"
+          other: "Zastosuj %{count} sugestii"
+        refresh: "Odśwież"
+        select_all: "Wybierz wszystkie sugestie"
+        select_item: "Wybierz element przeglądu %{id}"
+        untitled: "Przejrzyj element %{id}"
+        confidence: "%{percent}% pewności"
+        none: "Nie ma żadnych pozycji oczekujących na przegląd, które miałyby sugestię AI."
+        confirm:
+          one: "Czy zastosować sugerowaną czynność do %{count} elementu przeglądu?"
+          few: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu?"
+          many: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu?"
+          other: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu?"
+        confirm_destructive:
+          one: "Czy zastosować sugerowaną czynność do %{count} elementu przeglądu? Nie można cofnąć %{destructive} z wybranych czynności."
+          few: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu? Nie można cofnąć %{destructive} z wybranych czynności."
+          many: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu? Nie można cofnąć %{destructive} z wybranych czynności."
+          other: "Czy zastosować sugerowane czynności do %{count} elementów przeglądu? Nie można cofnąć %{destructive} z wybranych czynności."
+        columns:
+          item: "Element"
+          user: "Użytkownik"
+          reason: "Oflagowano jako"
+          created: "Utworzono"
+          action: "Sugerowana czynność"
+          status: "Status"
+        status:
+          applying: "Zastosowanie…"
+          applied: "Zastosowano"
+          handled: "Już obsłużone"
+        blocked:
+          needs_input: "Potrzeba więcej informacji. Otwórz element, aby go zastosować."
+          must_claim: "Nieodebrane. Otwórz element, aby odebrać jego temat i złożyć wniosek."
+          claimed_by_other: "Zostało to już zarezerwowane przez innego użytkownika. Otwórz element, żeby zobaczyć szczegóły."
       dsa_classification:
         suggest: "Zasugeruj za pomocą AI"
         suggested_by_ai: "Propozycja od AI"

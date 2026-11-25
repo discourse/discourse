@@ -2578,6 +2578,7 @@ th:
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
     mobile_tab_bar:
+      new_topic: "กระทู้ใหม่"
       create: "สร้าง"
       more: "อื่น"
       back: "กลับ"
