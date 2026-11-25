@@ -6,10 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::CreateCategory do
   let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
   fab!(:admin)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin) }
 

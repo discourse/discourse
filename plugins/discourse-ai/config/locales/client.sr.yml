@@ -37,11 +37,19 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Osveži"
+        columns:
+          user: "Korisnik"
+          created: "Napravljeno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
       discourse_workflows:
+        ai_tool:
+          list_item: "Predmet popisa"
         classify:
           upload_ids: "Slike"
           name: "Ime foruma"
@@ -70,7 +78,6 @@ sr:
         nav:
           enabled: "Omogućeno"
         filters:
-          all: "Sve"
           reset: "Reset"
         sentiment:
           enabled: "Omogućeno"
@@ -78,6 +85,9 @@ sr:
           name: "Pretraži"
         admin_dashboard:
           highlights: "Istaknuto"
+        review_queue:
+          setting_groups:
+            settings: "Podešavanje"
         image_caption:
           setting_groups:
             settings: "Podešavanje"

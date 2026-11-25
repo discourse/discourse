@@ -3,7 +3,12 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import domFromString from "discourse/lib/dom-from-string";
 import { helperContext } from "discourse/lib/helpers";
-import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import {
+  categoryBadgeHTML,
+  categoryLinkHTML,
+  defaultCategoryLinkRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/ui-kit/helpers/d-category-link";
 
 module("Unit | Utility | category-badge", function (hooks) {
   setupTest(hooks);
@@ -232,5 +237,147 @@ module("Unit | Utility | category-badge", function (hooks) {
       badge.includes("read-only"),
       "read-only badge is present in the output"
     );
+  });
+
+  module("options", function (nestedHooks) {
+    let category;
+
+    nestedHooks.beforeEach(function () {
+      category = getOwner(this)
+        .lookup("service:store")
+        .createRecord("category", {
+          name: "hello",
+          id: 123,
+          slug: "hello",
+          color: "ff0",
+        });
+    });
+
+    function badge(opts) {
+      return domFromString(categoryBadgeHTML(category, opts))[0];
+    }
+
+    test("links to the given url", function (assert) {
+      assert.dom(badge({ url: "/gizmo" })).hasAttribute("href", "/gizmo");
+      assert
+        .dom(badge())
+        .hasAttribute("href", "/c/hello/123", "links to the category");
+    });
+
+    test("renders a span without a link", function (assert) {
+      const span = badge({ link: false });
+
+      assert.strictEqual(span.tagName, "SPAN");
+      assert.dom(span).doesNotHaveAttribute("href");
+      assert.strictEqual(badge({ link: "false" }).tagName, "SPAN");
+    });
+
+    test("adds the extra classes to the wrapper", function (assert) {
+      assert.dom(badge({ extraClasses: "gizmo" })).hasClass("gizmo");
+    });
+
+    test("sets the badge color with previewColor", function (assert) {
+      assert
+        .dom(".badge-category", badge({ previewColor: true }))
+        .hasAttribute("style", "--category-badge-color: #ff0");
+      assert
+        .dom(".badge-category", badge())
+        .doesNotHaveAttribute("style", "only with previewColor");
+    });
+
+    test("marks a restricted category", function (assert) {
+      category.read_restricted = true;
+
+      assert.dom(".badge-category", badge()).hasClass("restricted");
+      assert.dom(".badge-category svg", badge()).exists();
+    });
+
+    test("shows the topic count", function (assert) {
+      assert.dom(".topic-count", badge({ topicCount: 20 })).hasText("× 20");
+    });
+
+    test("shows the subcategories and read-only indicators", function (assert) {
+      const wrapper = badge({ hasSubcategories: true, readOnly: true });
+
+      assert.dom(".plus-subcategories", wrapper).exists();
+      assert.dom(".read-only", wrapper).exists();
+      assert.dom(".plus-subcategories", badge()).doesNotExist();
+      assert.dom(".read-only", badge()).doesNotExist();
+    });
+
+    test("shows the topic count on the category only, not its ancestors", function (assert) {
+      const parent = getOwner(this)
+        .lookup("service:store")
+        .createRecord("category", { name: "parent", id: 1 });
+
+      const html = categoryBadgeHTML(category, {
+        ancestors: [parent],
+        topicCount: 20,
+      });
+
+      assert.strictEqual((html.match(/topic-count/g) || []).length, 1);
+    });
+
+    test("replaceCategoryLinkRenderer replaces the renderer", function (assert) {
+      try {
+        replaceCategoryLinkRenderer(
+          (c, opts) => `${c.name}:${opts.extraClasses}`
+        );
+
+        assert.strictEqual(
+          categoryBadgeHTML(category, { extraClasses: "gizmo" }),
+          "hello:gizmo"
+        );
+      } finally {
+        replaceCategoryLinkRenderer(defaultCategoryLinkRenderer);
+      }
+    });
+
+    test("categoryLinkHTML passes on the supported options", function (assert) {
+      const wrapper = domFromString(
+        categoryLinkHTML(category, {
+          link: false,
+          extraClasses: "gizmo",
+          previewColor: true,
+          styleType: "icon",
+          icon: "book",
+          url: "/ignored",
+        }).toString()
+      )[0];
+
+      assert.strictEqual(wrapper.tagName, "SPAN");
+      assert.dom(wrapper).hasClass("gizmo");
+      assert
+        .dom(".badge-category", wrapper)
+        .hasClass("--style-icon")
+        .hasAttribute("style", "--category-badge-color: #ff0");
+      assert.dom(".d-icon-book", wrapper).exists();
+    });
+
+    test("categoryLinkHTML reads the options from a hash", function (assert) {
+      const wrapper = domFromString(
+        categoryLinkHTML(category, {
+          hash: { extraClasses: "gizmo" },
+        }).toString()
+      )[0];
+
+      assert.dom(wrapper).hasClass("gizmo");
+    });
+
+    test("categoryLinkHTML passes on allowUncategorized and the emoji", function (assert) {
+      helperContext().site.set("uncategorized_category_id", 123);
+
+      assert.strictEqual(categoryLinkHTML(category).toString(), "");
+
+      const wrapper = domFromString(
+        categoryLinkHTML(category, {
+          allowUncategorized: true,
+          styleType: "emoji",
+          emoji: "wave",
+        }).toString()
+      )[0];
+
+      assert.dom(".emoji[title='wave']", wrapper).exists();
+    });
   });
 });

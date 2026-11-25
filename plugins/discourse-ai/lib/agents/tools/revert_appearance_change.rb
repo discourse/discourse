@@ -44,13 +44,25 @@ module DiscourseAi
               after: previous_palettes,
             )
           changes += AppearanceAuthoring.font_changes(previous_state["site_settings"])
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             changes << AppearanceAuthoring.default_theme_change(
               from: appearance_change.theme,
               to: previous_default_theme,
             )
           end
-          changes
+          changes + component_changes
+        end
+
+        # The component turns off, and the earlier ones it replaced back on.
+        def component_changes
+          return [] if !appearance_change.kind_component?
+
+          [
+            AppearanceAuthoring.component_change(appearance_change.theme, enabled: false),
+            *Theme
+              .where(id: previous_state["enabled_component_ids"].to_a)
+              .map { |component| AppearanceAuthoring.component_change(component, enabled: true) },
+          ]
         end
 
         def approval_details
@@ -136,8 +148,12 @@ module DiscourseAi
         # The palettes switching back restores: the theme's previous palettes,
         # or the previous default theme's.
         def previous_palettes
-          if appearance_change.kind_theme?
+          if appearance_change.new_default_theme?
             return AppearanceAuthoring.theme_palettes(previous_default_theme)
+          end
+          # a component that brought no palettes leaves its theme's alone
+          if !appearance_change.assigns_palettes?
+            return AppearanceAuthoring.change_palettes(appearance_change)
           end
 
           light = ColorScheme.find_by(id: previous_state["color_scheme_id"])

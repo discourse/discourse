@@ -22,6 +22,7 @@ class Blog::BlogTheme::ListSampleArticles
   def fetch_publications
     Blog::Publication
       .publicly_visible
+      .articles
       .newest
       .limit(MAX_SAMPLES)
       .includes(:published_revision, discussion_topic: %i[first_post user image_upload tags])

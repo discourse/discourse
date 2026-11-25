@@ -327,4 +327,13 @@ RSpec.describe "translate accelerator" do
       end
     end
   end
+
+  it "returns the same results for string and symbol keys on cached lookups" do
+    I18n.locale = :en
+    I18n.t("foo")
+
+    expect(I18n.t("foo")).to eq("Foo in :en")
+    expect(I18n.t(:foo)).to eq("Foo in :en")
+    expect(I18n.fallbacks[:en]).to be_frozen
+  end
 end

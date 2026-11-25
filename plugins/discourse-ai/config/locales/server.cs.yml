@@ -71,6 +71,8 @@ cs:
           text_color: "barva textu"
         approve_label: "Ano"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Prohlížet"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"
@@ -83,6 +85,7 @@ cs:
         silence_user: "Ztišit uživatele"
         edit_post: "Upravit příspěvek"
         create_category: "Vytvořit kategorii"
+        delete_category: "Smazat kategorii"
         move_posts: "Přesunout příspěvky"
         search: "Vyhledávání"
         tags: "Seznam značek"
@@ -107,6 +110,12 @@ cs:
         errors:
           not_found: "Téma nenalezeno."
       edit_category:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
+      delete_category:
         errors:
           not_found: "Kategorie nebyla nalezena."
       change_topic_category:

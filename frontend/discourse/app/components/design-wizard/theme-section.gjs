@@ -12,8 +12,7 @@ const SCREENSHOT_WIDTH = 800;
 const SCREENSHOT_HEIGHT = 500;
 
 class ThemeCard extends Component {
-  @service interfaceColor;
-  @service session;
+  @service designWizard;
 
   @tracked screenshotLoaded = false;
 
@@ -33,11 +32,7 @@ class ThemeCard extends Component {
   }
 
   get #showDarkScreenshot() {
-    return (
-      this.interfaceColor?.colorModeIsDark ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches ||
-      this.session?.defaultColorSchemeIsDark
-    );
+    return this.designWizard.colorMode === "dark";
   }
 
   // a broken screenshot should still clear the skeleton

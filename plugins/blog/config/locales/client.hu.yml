@@ -17,6 +17,14 @@ hu:
         desktop: Asztali
         mobile: Mobil
         save: Mentés
+        about_tab: Névjegy
+        blog_slug: URL slug
+        general_heading: Általános
+        settings_tab: Beállítások
+        theme_tab: Téma
+        column_name: Név
+        column_category: Kategória
+        column_status: Állapot
         path_formats:
           custom: Egyéni
         back_to_themes: Vissza a témákhoz
@@ -56,7 +64,11 @@ hu:
         edit: Szerkesztés
         status: Állapot
         replies: Válaszok
+        title: Cím
+        page: Oldal
+      all: Összes
       drafts: Vázlatok
+      pages: Oldalak
       preview: Előnézet
       unpublish: Közzététel visszavonása
       appearance_link: Megjelenés

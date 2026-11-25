@@ -688,19 +688,6 @@ de:
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
       flagging:
         action: "Nachricht melden"
-      emoji_picker:
-        favorites: "Häufig verwendet"
-        smileys_&_emotion: "Smileys und Emotionen"
-        objects: "Objekte"
-        people_&_body: "Mensch und Körper"
-        travel_&_places: "Reisen und Orte"
-        animals_&_nature: "Tiere und Natur"
-        food_&_drink: "Essen und Trinken"
-        activities: "Aktivitäten"
-        flags: "Flaggen"
-        symbols: "Symbole"
-        search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
-        no_results: "Keine Ergebnisse"
       thread:
         title: "Titel"
         view_thread: Thread aufrufen

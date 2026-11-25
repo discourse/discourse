@@ -14,6 +14,13 @@ bs_BA:
         desktop: Desktop
         mobile: Mobilno
         save: Sačuvaj
+        about_tab: O nama
+        general_heading: General
+        settings_tab: Postavke
+        theme_tab: Izgled
+        column_name: Ime
+        column_category: Kategorija
+        column_status: Status
         path_formats:
           custom: Custom
         themes: Teme
@@ -45,6 +52,8 @@ bs_BA:
         edit: Izmijeni
         status: Status
         replies: Odgovori
+        title: Naslov
+      all: Sve
       drafts: Skice
       preview: Pregled
       appearance_link: Izgled

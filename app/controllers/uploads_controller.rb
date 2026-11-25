@@ -22,6 +22,7 @@ class UploadsController < ApplicationController
   before_action(only: %i[_show_secure_deprecated show_secure]) { external_store_check }
 
   SECURE_REDIRECT_GRACE_SECONDS = 5
+  MAX_LOOKUP_SHORT_URLS = 100
 
   def create
     # capture current user for block later on
@@ -96,10 +97,20 @@ class UploadsController < ApplicationController
 
   def lookup_urls
     params.permit(short_urls: [])
+    short_urls = params[:short_urls]&.uniq
     uploads = []
 
-    if params[:short_urls] && params[:short_urls].length > 0
-      upload_urls = PrettyText::Helpers.lookup_upload_urls(params[:short_urls])
+    if short_urls && short_urls.length > MAX_LOOKUP_SHORT_URLS
+      return(
+        render_json_error(
+          I18n.t("upload.too_many_short_urls", count: MAX_LOOKUP_SHORT_URLS),
+          status: :payload_too_large,
+        )
+      )
+    end
+
+    if short_urls.present?
+      upload_urls = PrettyText::Helpers.lookup_upload_urls(short_urls)
       uploads_by_sha1 =
         Upload.where(
           sha1:

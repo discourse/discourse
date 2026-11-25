@@ -1650,12 +1650,6 @@ sw:
     account_suspended_forever:
       title: "Akaunti Imesimamishwa"
       subject_template: "[%{email_prefix}] Akaunti yako imesimamishwa"
-    account_silenced:
-      title: "Akaunti imenyamazishwa"
-      subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
-    account_silenced_forever:
-      title: "Akaunti imenyamazishwa"
-      subject_template: "[%{email_prefix}] Akaunti yako imenyamazishwa"
     account_exists:
       title: "Akaunti tayari ipo"
       subject_template: "[%{email_prefix}] Akaunti tayari ipo"
@@ -2062,6 +2056,10 @@ sw:
     sensitivity:
       disabled: "Imezuiwa"
     actions:
+      answer_yes:
+        title: "Ndio"
+      answer_no:
+        title: "Hapana"
       agree:
         title: "Ndio"
       agree_and_suspend:

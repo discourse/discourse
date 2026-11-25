@@ -5,6 +5,15 @@
 #
 
 class TextCleaner
+  ASCII_LOWERCASE_REGEXP = /[a-z]/
+  ASCII_UPPERCASE_START_REGEXP = /\A[A-Z]/
+  TRAILING_PERIODS_REGEXP = /([^.])\.+(\s*)\z/
+  EXTRANEOUS_SPACE_REGEXP = /\s+([!?]\s*)\z/
+  private_constant :ASCII_LOWERCASE_REGEXP,
+                   :ASCII_UPPERCASE_START_REGEXP,
+                   :TRAILING_PERIODS_REGEXP,
+                   :EXTRANEOUS_SPACE_REGEXP
+
   def self.title_options
     # cf. http://meta.discourse.org/t/should-we-have-auto-replace-rules-in-titles/5687
     {
@@ -33,37 +42,44 @@ class TextCleaner
     text.scrub!("")
 
     # Replace !!!!! with a single !
-    text.gsub!(/!+/, "!") if opts[:deduplicate_exclamation_marks]
+    text.squeeze!("!") if opts[:deduplicate_exclamation_marks] && text.include?("!!")
 
     # Replace ????? with a single ?
-    text.gsub!(/\?+/, "?") if opts[:deduplicate_question_marks]
+    text.squeeze!("?") if opts[:deduplicate_question_marks] && text.include?("??")
 
     # Replace all-caps text with regular case letters
-    text = downcase(text, opts) if opts[:replace_all_upper_case] && (text == upcase(text, opts))
+    if opts[:replace_all_upper_case] && !ASCII_LOWERCASE_REGEXP.match?(text) &&
+         (text == upcase(text, opts))
+      text = downcase(text, opts)
+    end
 
     # Capitalize first letter, but only when entire first word is lowercase
-    first, rest = text.split(" ", 2)
-    if first && opts[:capitalize_first_letter] && first == downcase(first, opts)
-      text = +"#{capitalize(first, opts)}#{rest ? " " + rest : ""}"
+    if opts[:capitalize_first_letter] && !ASCII_UPPERCASE_START_REGEXP.match?(text)
+      first, rest = text.split(" ", 2)
+      if first && first == downcase(first, opts)
+        text = +"#{capitalize(first, opts)}#{rest ? " " + rest : ""}"
+      end
     end
 
     # Remove unnecessary periods at the end
-    text.sub!(/([^.])\.+(\s*)\z/, '\1\2') if opts[:remove_all_periods_from_the_end]
+    if opts[:remove_all_periods_from_the_end] && text.include?(".")
+      text.sub!(TRAILING_PERIODS_REGEXP, '\1\2')
+    end
 
     # Remove extraneous space before the end punctuation
-    text.sub!(/\s+([!?]\s*)\z/, '\1') if opts[:remove_extraneous_space]
+    text.sub!(EXTRANEOUS_SPACE_REGEXP, '\1') if opts[:remove_extraneous_space]
 
     # Fixes interior spaces
-    text.gsub!(/ +/, " ") if opts[:fixes_interior_spaces]
+    text.squeeze!(" ") if opts[:fixes_interior_spaces] && text.include?("  ")
 
-    # Normalize whitespaces
-    text = normalize_whitespaces(text)
+    # Normalize whitespaces in place (text is already duplicated above)
+    text.gsub!(@@whitespaces_regexp, " ")
 
     # Strip whitespaces
     text.strip! if opts[:strip_whitespaces]
 
     # Strip zero width spaces
-    text.gsub!(/\u200b/, "") if opts[:strip_zero_width_spaces]
+    text.delete!("\u200b") if opts[:strip_zero_width_spaces] && text.include?("\u200b")
 
     text
   end

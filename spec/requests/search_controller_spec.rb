@@ -304,6 +304,17 @@ RSpec.describe SearchController do
       expect(log.term).to eq("wookie")
     end
 
+    it "returns results without logging a derived query" do
+      SiteSetting.log_search_queries = true
+      term = "awesome topic:#{awesome_topic.id}"
+
+      get "/search/query.json", params: { term: term, skip_search_log: true }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["posts"].pluck("id")).to eq([awesome_post.id])
+      expect(SearchLog.where(term: term)).to be_empty
+    end
+
     it "logs the pageview session the search was made from" do
       SiteSetting.log_search_queries = true
       session_id = SecureRandom.alphanumeric(32)
@@ -561,6 +572,25 @@ RSpec.describe SearchController do
               q: "awesome",
               context: "tag",
               context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn’t work for tags restricted to a private category" do
+        category_tag = Fabricate(:tag)
+        awesome_topic.tags << category_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: category_tag,
+        )
+
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: category_tag.name,
               skip_context: false,
             }
 

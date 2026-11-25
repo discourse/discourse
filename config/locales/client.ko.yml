@@ -2085,6 +2085,8 @@ ko:
       to: 끝
     emoji_picker:
       filter_placeholder: 이모티콘 검색
+      search_placeholder: "이모티콘 이름과 별칭으로 검색..."
+      no_results: "결과 없음"
       smileys_&_emotion: 웃는 얼굴과 감정
       people_&_body: 사람 및 몸
       animals_&_nature: 동물 및 자연
@@ -2115,6 +2117,10 @@ ko:
     composer:
       emoji: "이모티콘 :)"
       options: "옵션"
+      ai_content:
+        code: "코드"
+        quote: "인용하기"
+        details: "세부 정보"
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       add_warning: "공식 경고입니다."
@@ -2913,10 +2919,8 @@ ko:
           label: "선택됨"
           title: "클릭하여 선택에서 게시물 제거"
         select_replies:
-          label: "선택 + 댓글"
           title: "게시물과 모든 댓글을 선택에 추가"
         select_below:
-          label: "선택 + 이후 게시물"
           title: "게시물 및 이후 게시물 선택에 추가"
         delete: 선택 삭제됨
         cancel: 선택을 취소
@@ -3679,6 +3683,14 @@ ko:
       forward: "앞으로 가기"
       share: "공유"
       dismiss: "읽음으로 표시"
+    mobile_tab_bar:
+      new_topic: "새 글"
+      create: "만들기"
+      more: "더 보기"
+      back: "뒤로"
+      topics: "글"
+      drafts:
+        other: "임시 보관함 (%{count})"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -5211,7 +5223,6 @@ ko:
         silence_modal_title: "사용자 차단"
         silence_duration: "이 사용자를 언제까지 차단할까요?"
         silence_reason_placeholder: "차단 이유"
-        silence_message: "메시지 이메일 전송"
         suspended_until: "(%{until}까지)"
         cant_suspend: "이 사용자는 정지할 수 없습니다."
         delete_posts_failed: "게시물을 삭제하는 중에 문제가 발생했습니다."
@@ -5441,6 +5452,8 @@ ko:
           multiselect: "다중 선택"
       site_text:
         search_label: "검색"
+        preview:
+          default: "기본"
         theme_disabled: "비활성"
         filters: "필터"
         edit: "편집"
@@ -5535,7 +5548,7 @@ ko:
           modal_title: 배지 그룹화
         granted_by: 배지 부여자
         granted_at: 배지 부여일
-        reason_help: (글 또는 게시물 링크)
+        reason_help: 글 또는 게시물 링크
         save: 저장
         delete: 삭제
         delete_confirm: 이 배지를 삭제할까요?

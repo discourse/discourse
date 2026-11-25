@@ -133,7 +133,15 @@ class AssetProcessor
   def self.v8_call(*args)
     mutex.synchronize do
       result = v8.call_await(*args)
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      collect = GlobalSetting.mini_racer_single_threaded
+      if collect && Rails.env.test? && ENV["DISCOURSE_SYSTEM_TEST_BATCH_V8_GC"] == "1"
+        # Amortize explicit collections in short-lived system test workers;
+        # the context's automatic and idle GC still run between notifications.
+        @v8_calls_since_gc ||= 0
+        collect = @v8_calls_since_gc.zero?
+        @v8_calls_since_gc = (@v8_calls_since_gc + 1) % 256
+      end
+      v8.low_memory_notification if collect
       result
     end
   rescue MiniRacer::ScriptTerminatedError => e

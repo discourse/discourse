@@ -148,9 +148,12 @@ module UpcomingChanges
     data
   end
 
+  EMPTY_METADATA = {}.freeze
+  private_constant :EMPTY_METADATA
+
   def self.change_metadata(change_setting_name)
     change_setting_name = change_setting_name.to_sym
-    settings_provider.upcoming_change_metadata[change_setting_name] || {}
+    settings_provider.upcoming_change_metadata[change_setting_name] || EMPTY_METADATA
   end
 
   def self.not_yet_stable?(change_setting_name)
@@ -182,7 +185,7 @@ module UpcomingChanges
   end
 
   def self.exists?(change_setting_name)
-    change_metadata(change_setting_name.to_sym).present?
+    !change_metadata(change_setting_name).empty?
   end
 
   # An upcoming change owned by a plugin that is not configurable on this site,
@@ -219,8 +222,8 @@ module UpcomingChanges
     return true if plugin.nil?
 
     # Recursion guard: a change that is its own plugin's enabled_site_setting
-    # must opt out with requires_plugin_enabled: false (enforced by the
-    # integrity spec), but if that metadata is forgotten, plugin.enabled? below
+    # must opt out with requires_plugin_enabled: false (enforced by
+    # script/upcoming_changes_lint.rb), but if that metadata is forgotten, plugin.enabled? below
     # would read the change setting, which resolves back through
     # UpcomingChanges.enabled? and recurses infinitely.
     return true if plugin.enabled_site_setting&.to_sym == change_setting_name

@@ -25,6 +25,12 @@ const SENTIMENT_SETTING_LABELS = {
 
 // Choice settings whose options must be created elsewhere first.
 const CREATE_CHOICE_LINKS = {
+  ai_reviewable_action_decision_model: {
+    route: "adminPlugins.show.discourse-ai-models.new",
+    query: { type: "decision" },
+    labelKey: "discourse_ai.features.review_queue.add_model",
+    descriptionKey: "discourse_ai.features.review_queue.no_models",
+  },
   ai_embeddings_selected_model: {
     route: "adminPlugins.show.discourse-ai-models.new",
     query: { type: "embedding" },

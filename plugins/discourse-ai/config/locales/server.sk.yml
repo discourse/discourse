@@ -81,6 +81,11 @@ sk:
     ai_discord_app_public_key: "Verejný kľúč aplikácie Discord, ku ktorej chcete prepojiť vyhľadávanie Discord"
     ai_discord_search_mode: "Vyberte režim vyhľadávania, ktorý chcete použiť na vyhľadávanie v službe Discord"
     ai_discord_allowed_guilds: "Discord cechy (servery), kde môže bot vyhľadávať"
+    keywords:
+      ai_default_llm_model: "predvolený jazykový model"
+      ai_discord_search_enabled: "integrácia služby Discord"
+      ai_summarization_enabled: "súhrny"
+      ai_summary_gists_enabled: "krátke zhrnutia zoznamu tém"
   reviewables:
     reasons:
       flagged_by_toxicity: Plugin AI to označil po tom, čo to klasifikoval ako toxické.
@@ -256,6 +261,8 @@ sk:
           text_color: "farba textu"
         approve_label: "Áno"
         reject_label: "Nie"
+        category_access_levels:
+          readonly: "Zobraz"
       agents:
         cannot_have_duplicate_tools: "Nemôže mať duplicitné nástroje"
         github_helper:
@@ -524,6 +531,12 @@ sk:
         errors:
           not_found: "Téma sa nenašla."
       edit_category:
+        errors:
+          not_found: "Kategória sa nenašla."
+      set_category_permissions:
+        errors:
+          not_found: "Kategória sa nenašla."
+      delete_category:
         errors:
           not_found: "Kategória sa nenašla."
       change_topic_category:

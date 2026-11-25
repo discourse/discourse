@@ -11,13 +11,13 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("subject", selectKit());
+      this.subject = selectKit();
     });
 
     test("renders a multi-select dropdown with choices", async function (assert) {
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
 
-      this.set("choices", choices);
+      this.choices = choices;
 
       await render(
         <template>
@@ -50,8 +50,8 @@ module(
         filterable: true,
       };
 
-      this.set("choices", choices);
-      this.set("attributes", attributes);
+      this.choices = choices;
+      this.attributes = attributes;
 
       await render(
         <template>
@@ -73,7 +73,7 @@ module(
 
     test("doesn't render a label when attribute is missing", async function (assert) {
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
-      this.set("choices", choices);
+      this.choices = choices;
 
       await render(
         <template>

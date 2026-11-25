@@ -988,6 +988,7 @@ tr_TR:
         suspect_user: "Bu kullanıcı spam mı?"
         approve_post: "Bu gönderiyi onaylıyor musunuz?"
         approve_topic: "Bu konuyu onaylıyor musunuz?"
+        something_wrong_with_post: "Bu gönderiyle ilgili bir sorun mu var?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
@@ -2536,6 +2537,7 @@ tr_TR:
       no_results: "Sonuç yok"
       search: "Ara…"
       label: "Seçenekleri belirleyin"
+      remove_item: "%{name} öğesini kaldır"
     d_otp:
       screen_reader:
         one: Bir sayı girin
@@ -2947,6 +2949,9 @@ tr_TR:
         size_too_small: "%{provided_file_size} izin verilen min. %{min_file_size} değerinden küçük."
     emoji_picker:
       filter_placeholder: Emoji ara
+      search_placeholder: "Emoji adına ve takma ada göre arama yapın..."
+      no_results: "Sonuç yok"
+      favorites: "Sık kullanılan"
       smileys_&_emotion: İfadeler ve Duygu
       people_&_body: İnsanlar ve Vücut
       animals_&_nature: Hayvanlar ve Doğa
@@ -2999,6 +3004,10 @@ tr_TR:
       emoji: "Emoji :)"
       more_emoji: "daha fazla…"
       options: "Seçenekler"
+      ai_content:
+        code: "Kod"
+        quote: "Alıntı"
+        details: "Detaylar"
       whisper: "fısıltı"
       unlist: "listelenmedi"
       add_warning: "Bu resmi bir uyarıdır."
@@ -4236,10 +4245,8 @@ tr_TR:
           label: "seçili"
           title: "Gönderiyi seçimden kaldırmak için tıklayın"
         select_replies:
-          label: "+yanıtları seçin"
           title: "Gönderiyi ve tüm yanıtlarını seçime ekleyin"
         select_below:
-          label: "+aşağıdan seçin"
           title: "Gönderiyi ve ondan sonraki her şeyi seçime ekle"
         delete: seçilenleri sil
         cancel: seçimi iptal et
@@ -4268,6 +4275,7 @@ tr_TR:
         actions: "Toplu eylemler"
     post:
       accessible_heading: "%{username} tarafından gönderildi %{date}"
+      ai_generated: "YZ"
       heading_anchor: "Başlık bağlantısı"
       confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"
@@ -5378,9 +5386,17 @@ tr_TR:
       forward: "İleri"
       share: "Paylaş"
       dismiss: "Kapat"
+    mobile_tab_bar:
+      new_topic: "Yeni konu"
+      create: "Oluştur"
+      more: "Daha fazla"
+      back: "Geri"
+      topics: "Konular"
+      drafts:
+        one: "Taslaklar (%{count})"
+        other: "Taslaklar (%{count})"
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
-    theme_preview_notice: "Şu anda bir temayı ön izliyorsunuz, normal site yapılandırmanıza dönmek için bu tarayıcı sekmesini veya penceresini kapatın."
     theme_preview_failed: "Tema mevcut olmadığı veya erişim izniniz olmadığı için önizleme yapılamadı."
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
@@ -6983,14 +6999,6 @@ tr_TR:
           company_name: "Ad"
           company_url: "Web sitesi"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Geçerli kanun"
-          governing_law_placeholder: "İl, Eyalet veya Ülke"
-          governing_law_help: |
-            Sitenin yasal koşulları için yargı alanını, genellikle şirketin kayıtlı olduğu veya faaliyet gösterdiği yeri belirtin.
-          city_for_disputes: "Anlaşmazlıklar için şehir"
-          city_for_disputes_placeholder: "Şehir"
-          city_for_disputes_help: |
-            Bu forumla ilgili yasal anlaşmazlıkların çözümü için şehri belirtin.
           extra_groups:
             heading: "Grup listesi"
             description: "Hakkında sayfasında gösterilecek ekstra gruplar."
@@ -8195,7 +8203,6 @@ tr_TR:
         silence_duration: "Kullanıcı ne kadar süreyle susturulacak?"
         silence_reason_title: "Susturulma sebebi"
         silence_reason_placeholder: "Susturulma Nedeni"
-        silence_message: "E-posta Mesajı"
         suspended_until: "(şu zamana kadar: %{until})"
         suspend_forever: "Sonsuza kadar askıya al"
         cant_suspend: "Bu kullanıcı askıya alınamaz."
@@ -8509,6 +8516,8 @@ tr_TR:
       site_text:
         description: "Forumunuzdaki herhangi bir metni özelleştirebilirsiniz."
         search_label: "Ara"
+        preview:
+          default: "Varsayılan"
         theme_disabled: "Devre Dışı"
         filters: "Filtreler"
         status:
@@ -8682,7 +8691,7 @@ tr_TR:
           modal_title: Rozet Gruplamaları
         granted_by: 'Veren:'
         granted_at: 'Verme zamanı:'
-        reason_help: (Bir gönderi veya konuya bağlantı)
+        reason_help: Bir gönderi veya konuya bağlantı
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinizden emin misiniz?

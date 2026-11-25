@@ -16,11 +16,15 @@ module ::Blog
       respond_to do |format|
         format.html { render "default/empty" }
         format.json do
+          if params[:blog].present?
+            blog = Instance.find_cached(params[:blog].to_i) || raise(Discourse::NotFound)
+          end
           topics =
             EditorQuery.call(
               guardian,
               filter: params[:filter].presence || "all",
               query: params[:q] || "",
+              blog:,
             )
           @page = [params[:page].to_i, 0].max
           selected =
@@ -45,7 +49,7 @@ module ::Blog
             Publication.publicly_visible.where(topic_id: selected.map(&:id)).pluck(:topic_id).to_set
           render json: {
                    error: Readiness.new.error,
-                   blog_url: Configuration.base_url,
+                   blog_url: Configuration.base_url(blog || Instance.default_blog),
                    more: selected.size > PAGE_SIZE,
                    topics:
                      selected
@@ -65,6 +69,25 @@ module ::Blog
       render json: serialize_publication(find_editable_publication)
     end
 
+    def drafts_category
+      EnsureDraftsCategory.call do
+        on_success do |category:|
+          Category.preload_user_fields!(guardian, [category])
+          render json: SiteCategorySerializer.new(category, scope: guardian, root: false)
+        end
+        on_model_errors(:category) { |category| raise ActiveRecord::RecordInvalid.new(category) }
+        on_model_not_found(:category) { |result| raise result.exception if result.exception }
+        on_failed_policy(:category_private) do
+          render_json_error I18n.t("blog.errors.drafts_category_public"),
+                            status: :unprocessable_entity
+        end
+        on_failure do
+          render_json_error I18n.t("blog.errors.drafts_category_unavailable"),
+                            status: :unprocessable_entity
+        end
+      end
+    end
+
     def update
       Publication::UpdateMetadata.call(
         service_params.deep_merge(params: { metadata: metadata_params }),
@@ -81,6 +104,10 @@ module ::Blog
           raise ActiveRecord::RecordInvalid.new(publication)
         end
         on_failed_policy(:can_edit_article) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_use_cover_upload) { raise Discourse::InvalidAccess }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
@@ -99,7 +126,13 @@ module ::Blog
         on_failed_policy(:blog_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failed_policy(:blog_published) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
         on_failed_step(:submit_current_draft) { raise Discourse::InvalidAccess }
+        on_failed_step(:ensure_public_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_failed_step(:approve_current_draft) do |step|
           raise Discourse::InvalidParameters.new(step.error)
         end
@@ -151,6 +184,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_errors(:publication) do |publication|
           raise ActiveRecord::RecordInvalid.new(publication)
         end
@@ -170,6 +206,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_errors(:publication) do |publication|
           raise ActiveRecord::RecordInvalid.new(publication)
         end
@@ -215,6 +254,9 @@ module ::Blog
         on_failed_policy(:blog_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
         end
+        on_failed_policy(:blog_published) do |policy|
+          raise Discourse::InvalidParameters.new(policy.reason)
+        end
         on_model_not_found(:revision) { raise Discourse::NotFound }
         on_failed_policy(:revision_is_approved) do
           raise Discourse::InvalidParameters.new(I18n.t("blog.editorial.approval_required"))
@@ -256,6 +298,9 @@ module ::Blog
           raise Discourse::InvalidParameters.new(contract.errors.full_messages.first)
         end
         on_model_not_found(:topic) { raise Discourse::NotFound }
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
+        end
         on_model_not_found(:publication) { raise Discourse::NotFound }
         on_failed_policy(:can_publish_article) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_ready) do |policy|
@@ -268,6 +313,7 @@ module ::Blog
 
     def preview
       @publication = find_editable_publication
+      @blog = @publication.blog
       @topic = @publication.topic
       @preview = true
       @canonical_url = @publication.url
@@ -283,6 +329,7 @@ module ::Blog
       @article_metadata = ArticleMetadata.new(@publication, revision:, description: @description)
       @template_variables =
         TemplateVariables.new(
+          blog: @blog,
           title: @page_title,
           article: ArticleVariables.new(@publication, revision:, topic: @topic),
         )
@@ -314,7 +361,19 @@ module ::Blog
     def metadata_params
       params
         .require(:publication)
-        .permit(:path, :excerpt, :featured, :published_at, :meta_description, :canonical_url)
+        .permit(
+          :path,
+          :excerpt,
+          :featured,
+          :published_at,
+          :meta_description,
+          :canonical_url,
+          :cover_upload_id,
+          :cover_alt,
+          :co_authors,
+          :page,
+          :blog_id,
+        )
         .to_h
     end
   end

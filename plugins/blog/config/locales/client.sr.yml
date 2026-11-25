@@ -11,6 +11,13 @@ sr:
         overridden: Posebna
         preview_archive: Arhiviraj
         save: Sačuvaj
+        about_tab: O nama
+        general_heading: Opšti
+        settings_tab: Podešavanje
+        column_name: Ime foruma
+        column_category: Kategorija
+        column_status: Status
+        select_theme: Izaberi temu
         path_formats:
           custom: Posebna
         edit: Izmeni
@@ -36,4 +43,6 @@ sr:
         edit: Izmeni
         status: Status
         replies: Odgovori
+        title: Naslov
+      all: Sve
       drafts: Skice

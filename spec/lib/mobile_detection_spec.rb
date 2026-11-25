@@ -54,4 +54,21 @@ RSpec.describe MobileDetection do
       )
     end
   end
+
+  describe ".mobile_device?" do
+    it "returns true for phones, false for iPads, desktops, and nil" do
+      expect(MobileDetection.mobile_device?(modern_user_agents.first)).to eq(true)
+      expect(
+        MobileDetection.mobile_device?(
+          "Mozilla/5.0 (iPad; CPU OS 17_1 like Mac OS X) Mobile/15E148 Safari/604.1",
+        ),
+      ).to eq(false)
+      expect(
+        MobileDetection.mobile_device?(
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/131.0.0.0 Safari/537.36",
+        ),
+      ).to eq(false)
+      expect(MobileDetection.mobile_device?(nil)).to eq(false)
+    end
+  end
 end

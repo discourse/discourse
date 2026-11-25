@@ -197,6 +197,26 @@ RSpec.describe Live::AdminRoomsController do
       expect(response.parsed_body["room"]["room_type"]).to eq("stage")
     end
 
+    it "broadcasts a speak requests change even when the room type is unchanged" do
+      sign_in(admin)
+      room.update!(room_type: Live::Room::ROOM_TYPE_STAGE)
+
+      messages =
+        MessageBus.track_publish(Live.room_index_channel) do
+          put "/admin/plugins/live/rooms/#{room.id}.json",
+              params: {
+                room: {
+                  speak_requests_enabled: false,
+                },
+              }
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages.size).to eq(1)
+      expect(messages.first.data[:type]).to eq(:updated)
+      expect(messages.first.data[:room][:speak_requests_enabled]).to eq(false)
+    end
+
     it "keeps a stage room's type when an update rejects an unknown room_type" do
       sign_in(admin)
       room.update!(room_type: Live::Room::ROOM_TYPE_STAGE)
@@ -235,6 +255,20 @@ RSpec.describe Live::AdminRoomsController do
       room.reload
       expect(room.chat_channel_id).to eq(channel.id)
       expect(room.chat_idle_minutes).to eq(2)
+    end
+
+    it "kicks present participants who no longer qualify when the room is made private" do
+      Live::ParticipantTracker.add(room.id, user.id)
+      sign_in(admin)
+
+      messages =
+        MessageBus.track_publish(Live.room_channel(room.id)) do
+          put "/admin/plugins/live/rooms/#{room.id}.json", params: { room: { public: false } }
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages.select { |m| m.data[:type] == "kicked" }.map(&:user_ids)).to eq([[user.id]])
+      expect(Live::ParticipantTracker.user_ids(room.id)).to be_empty
     end
 
     it "returns 404 for non-existent room" do

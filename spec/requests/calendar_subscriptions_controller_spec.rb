@@ -38,6 +38,23 @@ RSpec.describe CalendarSubscriptionsController do
       expect(response.status).to eq(403)
     end
 
+    it "lets a shadow revoke a subscription but not regenerate it" do
+      SiteSetting.allow_anonymous_mode = true
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      sign_in_and_switch_to_anonymous_mode(master)
+      shadow = master.shadow_user
+      key = Fabricate(:bookmarks_calendar_user_api_key, user: shadow)
+      SiteSetting.allow_anonymous_mode = false
+
+      expect { post "/calendar-subscriptions.json" }.not_to change { shadow.user_api_keys.count }
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_nil
+
+      delete "/calendar-subscriptions.json"
+      expect(response.status).to eq(204)
+      expect(key.reload.revoked_at).to be_present
+    end
+
     it "creates a key and returns bookmarks URL" do
       sign_in(user)
       post "/calendar-subscriptions.json"

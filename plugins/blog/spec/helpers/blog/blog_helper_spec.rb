@@ -22,7 +22,7 @@ RSpec.describe Blog::BlogHelper, type: :helper do
 
   describe "#blog_theme" do
     it "defaults to the active theme" do
-      expect(helper.blog_theme).to eq(Blog::BlogTheme.active)
+      expect(helper.blog_theme).to eq(Blog::BlogTheme.active_for(Blog::Instance.default_blog))
     end
   end
 
@@ -76,7 +76,7 @@ RSpec.describe Blog::BlogHelper, type: :helper do
       output = helper.blog_render_template("about")
 
       expect(output).to be_html_safe
-      expect(output).to eq("<p class=\"custom\">#{SiteSetting.blog_title}</p>")
+      expect(output).to eq("<p class=\"custom\">#{Blog::Instance.default_blog.name}</p>")
     end
 
     it "wraps page content in the layout" do
@@ -85,12 +85,15 @@ RSpec.describe Blog::BlogHelper, type: :helper do
       )
     end
 
-    it "uses the built-in template for article previews and in safe mode" do
+    it "uses the theme's template for article previews" do
       assign(:preview, true)
-      expect(helper.blog_render_template("about")).not_to include("class=\"custom\"")
 
-      assign(:preview, false)
+      expect(helper.blog_render_template("about")).to include("class=\"custom\"")
+    end
+
+    it "uses the built-in template in safe mode" do
       controller.params[:blog_safe_mode] = "1"
+
       expect(helper.blog_render_template("about")).not_to include("class=\"custom\"")
     end
 

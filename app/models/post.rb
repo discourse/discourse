@@ -117,8 +117,17 @@ class Post < ActiveRecord::Base
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
   scope :visible, -> { joins(:topic).where("topics.visible = true").where(hidden: false) }
-  scope :secured,
-        ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
+  # Adds the rules of Guardian#can_see_post? without removing existing conditions.
+  # Admins are unchanged, including whispers. Nil means anonymous.
+  # Use with_deleted to include permitted deleted posts.
+  # Assumes an unaliased posts table; predicate overrides in plugins are not reflected.
+  scope :secured, ->(guardian = nil) { (guardian || Guardian.new).filter_visible_posts(all) }
+
+  # Post types only: does not authorize topic access or hidden/deleted state.
+  scope :with_visible_post_types,
+        ->(guardian = nil) do
+          where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user))
+        end
 
   scope :for_mailing_list,
         ->(user, since) do
@@ -362,11 +371,14 @@ class Post < ActiveRecord::Base
 
     # A rule in our Markdown pipeline may have Guardian checks that require a
     # user to be present. The last editing user of the post will be more
-    # generally up to date than the creating user. For example, we use
-    # this when cooking #hashtags to determine whether we should render
-    # the found hashtag based on whether the user can access the category it
-    # is referencing.
+    # generally up to date than the creating user.
     options[:user_id] = last_editor_id
+    options[:hashtag_user_ids] = [
+      user_id,
+      last_editor_id,
+      *post_revisions.pluck(:user_id),
+      *system_message_recipient_ids,
+    ].compact
     options[:omit_nofollow] = true if omit_nofollow?
     options[:post_id] = id
     options
@@ -397,7 +409,8 @@ class Post < ActiveRecord::Base
       end
     end
 
-    cooked = post_analyzer.cook(raw, options)
+    cooked =
+      post_analyzer.cook(raw, options) { |url, onebox, doc| onebox_allowed?(url, onebox, doc) }
 
     new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
 
@@ -410,6 +423,13 @@ class Post < ActiveRecord::Base
     end
 
     new_cooked
+  end
+
+  def onebox_allowed?(url, onebox, doc)
+    return true if !PostAnalyzer.unvalidated_media?(onebox, url)
+
+    limit = unvalidated_media_limit
+    limit.nil? || PostAnalyzer.embedded_media_count(doc) < limit
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -601,6 +621,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def system_message?
+    is_first_post? && topic&.subtype == TopicSubtype.system_message
+  end
+
   def is_last_reply?
     topic.try(:highest_post_number) == post_number && post_number != 1
   end
@@ -683,7 +707,7 @@ class Post < ActiveRecord::Base
       topic_including_deleted.read_restricted_category?
   end
 
-  def hide!(post_action_type_id, reason = nil, custom_message: nil)
+  def hide!(post_action_type_id, reason = nil, custom_message: nil, message_options: {})
     return if hidden?
 
     reason ||=
@@ -724,28 +748,23 @@ class Post < ActiveRecord::Base
 
     # inform user
     if user.present?
+      message_type = (custom_message || (hiding_again ? :post_hidden_again : :post_hidden)).to_s
+      appeal_options =
+        message_type == "queued_by_staff" ? {} : Dsa::AppealInstructions.message_options
+
       options = {
-        **Dsa::AppealInstructions.message_options,
+        **appeal_options,
         url: url,
         edit_delay: SiteSetting.cooldown_minutes_after_hiding_posts,
-        flag_reason:
-          I18n.t(
-            "flag_reasons.#{post_action_type_view.types[post_action_type_id]}",
-            locale: SiteSetting.default_locale,
-            base_path: Discourse.base_path,
-            default: PostActionType.names[post_action_type_id],
-          ),
+        **message_options,
       }
 
-      message = custom_message
-      message = hiding_again ? :post_hidden_again : :post_hidden if message.nil?
-
-      Jobs.enqueue_in(
-        5.seconds,
-        :send_system_message,
-        user_id: user.id,
-        message_type: message.to_s,
+      ModerationNotice.enqueue(
+        delay: 5.seconds,
+        user: user,
+        message_type: message_type,
         message_options: options,
+        post_action_type_id:,
       )
     end
 
@@ -1267,6 +1286,26 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def system_message_recipient_ids
+    return [] if !system_message?
+
+    topic.topic_allowed_users.pluck(:user_id)
+  end
+
+  def unvalidated_media_limit
+    writer_ids = [user_id, last_editor_id, *post_revisions.pluck(:user_id)]
+
+    User.where(id: writer_ids).filter_map { |writer| embedded_media_limit(writer) }.min
+  end
+
+  def embedded_media_limit(writer)
+    return if writer.staff?
+    return 0 if !writer.guardian.can_embed_media?
+    return 0 if !writer.in_any_groups?(SiteSetting.skip_review_media_groups_map)
+
+    SiteSetting.newuser_max_embedded_media if writer.trust_level == TrustLevel[0]
+  end
 
   def ensure_edit_reason_length
     return if edit_reason.blank? || edit_reason.length <= MAX_EDIT_REASON_LENGTH

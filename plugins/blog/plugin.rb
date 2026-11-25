@@ -34,6 +34,9 @@ register_homepage(
 )
 
 after_initialize do
+  register_problem_check ProblemCheck::BlogNotReady
+  register_seedfu_fixtures(Rails.root.join("plugins/blog/db/fixtures"))
+
   if defined?(Rack::MiniProfiler)
     %w[/blog-highlight/ /blog/blog-highlight/].each do |path|
       Rack::MiniProfiler.config.skip_paths << "#{Discourse.base_path}#{path}"
@@ -42,9 +45,22 @@ after_initialize do
 
   add_to_serializer(
     :site,
-    :blog_base_url,
+    :blogs,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
-  ) { Blog::Configuration.base_url }
+  ) do
+    blogs = Blog::Instance.cached
+    blogs = blogs.select(&:published) if !scope.is_blog_contributor?
+    blogs.map do |blog|
+      {
+        id: blog.id,
+        name: blog.name,
+        base_url: Blog::Configuration.base_url(blog),
+        category_id: blog.category_id,
+        path_format: blog.path_format,
+        is_default: blog.is_default,
+      }
+    end
+  end
   add_to_serializer(:current_user, :can_blog_edit) { scope.is_blog_contributor? }
   reloadable_patch { ::Guardian.prepend(Blog::GuardianExtensions) }
   reloadable_patch { ::Topic.prepend(Blog::TopicExtensions) }
@@ -55,20 +71,25 @@ after_initialize do
 
   Rails.application.config.filter_parameters += [:review_token]
 
+  # Article titles like "Contact" are shorter than a forum topic title needs to be.
+  register_modifier(:min_topic_title_length) do |min_length, topic|
+    topic.blog_article_topic? ? 1 : min_length
+  end
+
   add_to_serializer(
     :post,
     :blog_article,
     include_condition: -> do
       object.is_first_post? && object.word_count.to_i >= 250 &&
         Blog::Configuration.public_enabled? &&
-        object.topic.category_id == SiteSetting.blog_category.to_i
+        Blog::Instance.category_ids.include?(object.topic.category_id)
     end,
   ) do
     if publication = object.topic.blog_live_publication
       {
         url: publication.url,
         excerpt: publication.display_excerpt,
-        blog_name: SiteSetting.blog_title,
+        blog_name: publication.blog.name,
       }
     end
   end
@@ -91,6 +112,23 @@ after_initialize do
         end
     end
     @blog_publication
+  end
+
+  # "New draft" sends the blog the editor was viewing.
+  add_permitted_post_create_param(:blog_id)
+  on(:topic_created) do |topic, opts, user|
+    next if opts[:blog_id].blank? || user.nil?
+    Blog::Publication::StartOnBlog.call(
+      params: {
+        topic_id: topic.id,
+        blog_id: opts[:blog_id],
+      },
+      guardian: user.guardian,
+    )
+  end
+
+  on(:site_setting_changed) do |name|
+    Blog::ManagedCategories.sync_role_access if Blog::Roles::SETTINGS.include?(name.to_sym)
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

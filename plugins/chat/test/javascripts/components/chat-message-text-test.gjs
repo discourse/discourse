@@ -7,7 +7,7 @@ module("Component | ChatMessageText", function (hooks) {
   setupRenderingTest(hooks);
 
   test("yields", async function (assert) {
-    this.set("cooked", "<p></p>");
+    this.cooked = "<p></p>";
 
     await render(
       <template>
@@ -21,10 +21,8 @@ module("Component | ChatMessageText", function (hooks) {
   });
 
   test("shows collapsed", async function (assert) {
-    this.set(
-      "cooked",
-      '<div class="youtube-onebox lazy-video-container" data-video-id="WaT_rLGuUr8" data-video-title="Japanese Katsu Curry (Pork Cutlet)" data-provider-name="youtube"/>'
-    );
+    this.cooked =
+      '<div class="youtube-onebox lazy-video-container" data-video-id="WaT_rLGuUr8" data-video-title="Japanese Katsu Curry (Pork Cutlet)" data-provider-name="youtube"/>';
 
     await render(
       <template>
@@ -36,7 +34,7 @@ module("Component | ChatMessageText", function (hooks) {
   });
 
   test("does not collapse a non-image onebox", async function (assert) {
-    this.set("cooked", '<p><a href="http://cat1.com" class="onebox"></a></p>');
+    this.cooked = '<p><a href="http://cat1.com" class="onebox"></a></p>';
 
     await render(
       <template><ChatMessageText @cooked={{this.cooked}} /></template>
@@ -46,7 +44,7 @@ module("Component | ChatMessageText", function (hooks) {
   });
 
   test("shows edits - regular message", async function (assert) {
-    this.set("cooked", "<p></p>");
+    this.cooked = "<p></p>";
 
     await render(
       <template>
@@ -58,10 +56,7 @@ module("Component | ChatMessageText", function (hooks) {
   });
 
   test("shows edits - collapsible message", async function (assert) {
-    this.set(
-      "cooked",
-      '<div class="youtube-onebox lazy-video-container"></div>'
-    );
+    this.cooked = '<div class="youtube-onebox lazy-video-container"></div>';
 
     await render(
       <template>

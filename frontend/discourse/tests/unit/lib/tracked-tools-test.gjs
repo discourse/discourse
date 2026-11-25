@@ -1,3 +1,4 @@
+/* eslint-disable discourse/no-tracked-state-class -- tests `@tracked` class fields */
 import { cached, tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
@@ -6,7 +7,6 @@ import { settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import {
   autoTrackedArray,
-  dedupeTracked,
   DeferredTrackedSet,
   enumerateTrackedEntries,
   enumerateTrackedKeys,
@@ -15,49 +15,6 @@ import {
 } from "discourse/lib/tracked-tools";
 
 module("Unit | tracked-tools", function () {
-  test("@dedupeTracked", async function (assert) {
-    class Pet {
-      initialsEvaluatedCount = 0;
-
-      @dedupeTracked name;
-
-      @cached
-      get initials() {
-        this.initialsEvaluatedCount++;
-        return this.name
-          ?.split(" ")
-          .map((n) => n[0])
-          .join("");
-      }
-    }
-
-    const pet = new Pet();
-    pet.name = "Scooby Doo";
-
-    assert.strictEqual(pet.initials, "SD", "Initials are correct");
-    assert.strictEqual(
-      pet.initialsEvaluatedCount,
-      1,
-      "Initials getter evaluated once"
-    );
-
-    pet.name = "Scooby Doo";
-    assert.strictEqual(pet.initials, "SD", "Initials are correct");
-    assert.strictEqual(
-      pet.initialsEvaluatedCount,
-      1,
-      "Initials getter not re-evaluated"
-    );
-
-    pet.name = "Fluffy";
-    assert.strictEqual(pet.initials, "F", "Initials are correct");
-    assert.strictEqual(
-      pet.initialsEvaluatedCount,
-      2,
-      "Initials getter re-evaluated"
-    );
-  });
-
   test("DeferredTrackedSet", async function (assert) {
     class Player {
       evaluationsCount = 0;
@@ -497,10 +454,10 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(result.length, 3, "returns correct number of keys");
     });
 
-    test("includes @dedupeTracked properties", function (assert) {
+    test("includes `@tracked({ equals })` properties", function (assert) {
       class TestClass {
         @tracked normalTracked = "normal";
-        @dedupeTracked dedupedTracked = "deduped";
+        @tracked({ equals: (a, b) => a === b }) dedupedTracked = "deduped";
         regularProp = "regular";
       }
 
@@ -513,7 +470,7 @@ module("Unit | tracked-tools", function () {
       );
       assert.true(
         result.includes("dedupedTracked"),
-        "includes @dedupeTracked property"
+        "includes `@tracked({ equals })` property"
       );
       assert.false(result.includes("regularProp"), "excludes regular property");
     });
@@ -703,10 +660,10 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(obj.third, "three");
     });
 
-    test("includes @dedupeTracked properties", function (assert) {
+    test("includes `@tracked({ equals })` properties", function (assert) {
       class TestClass {
         @tracked normalTracked = "normal";
-        @dedupeTracked dedupedTracked = "deduped";
+        @tracked({ equals: (a, b) => a === b }) dedupedTracked = "deduped";
         regularProp = "regular";
       }
 

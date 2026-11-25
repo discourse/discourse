@@ -82,6 +82,8 @@ class DiscoursePluginRegistry
   define_register :category_update_param_with_callback, Hash
   define_register :bot_creation_params, Hash
 
+  define_filtered_register :first_admin_bootstrap
+
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
 

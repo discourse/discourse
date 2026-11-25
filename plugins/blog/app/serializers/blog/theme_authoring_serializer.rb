@@ -4,7 +4,7 @@ module ::Blog
   # Reference material for the theme editor: the built-in templates, the public
   # articles a preview can use, and the variables templates receive.
   class ThemeAuthoringSerializer < ApplicationSerializer
-    attributes :templates, :articles, :variables
+    attributes :templates, :articles, :has_page, :variables
 
     def templates
       TemplateRenderer::PAGES.to_h { |page| ["template_#{page}", TemplateRenderer.builtin(page)] }
@@ -17,6 +17,11 @@ module ::Blog
         scope:,
         root: false,
       ).as_json
+    end
+
+    # Pages have no sample picker; the preview uses the newest one.
+    def has_page
+      Publication.publicly_visible.pages.exists?
     end
 
     def variables

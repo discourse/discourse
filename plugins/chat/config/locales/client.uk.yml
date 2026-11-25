@@ -829,19 +829,6 @@ uk:
         notify_moderators: "Це повідомлення вимагає уваги модераторів з іншої причини, не зазначеної вище."
       flagging:
         action: "Поскаржитись на повідомлення"
-      emoji_picker:
-        favorites: "Часто використовувані"
-        smileys_&_emotion: "Смайлики та емоції"
-        objects: "Objects"
-        people_&_body: "Люди та частини тіл"
-        travel_&_places: "Подорожі та місця"
-        animals_&_nature: "Тварини та природа"
-        food_&_drink: "Їжа та напої"
-        activities: "Діяльність"
-        flags: "Скарги"
-        symbols: "Атрибутика"
-        search_placeholder: "Пошук за назвою та псевдонімом emoji..."
-        no_results: "Немає результатів"
       thread:
         title: "Назва"
         view_thread: Відкрити діалог

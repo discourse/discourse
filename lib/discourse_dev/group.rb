@@ -30,8 +30,11 @@ module DiscourseDev
       end
     end
 
+    # Auto group rows (everyone, anonymous_users, logged_in_users, staff,
+    # trust levels, ...) are implicit populations, not real groups; granting
+    # them permissions or membership breaks validations and semantics.
     def self.random
-      super(::Group)
+      super(::Group.where.not(id: ::Group::AUTO_GROUPS.values))
     end
   end
 end

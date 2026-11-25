@@ -15,6 +15,14 @@ nb_NO:
         desktop: Skrivebord
         mobile: Mobil
         save: Lagre
+        about_tab: Om
+        blog_slug: Navn i URL
+        general_heading: Generelt
+        settings_tab: Innstillinger
+        theme_tab: Drakt
+        column_name: Navn
+        column_category: Kategori
+        column_status: Status
         path_formats:
           custom: Egendefinert
         themes: Drakter
@@ -49,6 +57,8 @@ nb_NO:
         edit: Rediger
         status: Status
         replies: Svar
+        title: Tittel
+      all: Alle
       drafts: Utkast
       preview: Forhåndsvis
       unpublish: Avpubliser

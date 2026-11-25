@@ -1,0 +1,121 @@
+.ai-concepts-list {
+  &__disabled-notice {
+    margin-bottom: var(--space-4);
+  }
+
+  &__controls {
+    margin-bottom: var(--space-4);
+  }
+
+  &__description {
+    margin-top: var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+  }
+
+  &__aliases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+  }
+
+  &__alias {
+    display: inline-block;
+    padding: 0.1em var(--space-2);
+    border-radius: var(--d-border-radius);
+    background-color: var(--primary-very-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
+  }
+
+  &__parent {
+    margin-top: var(--space-1);
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__no-results {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) 0;
+    color: var(--primary-medium);
+  }
+
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+}
+
+.ai-concept-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15em var(--space-2);
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+  font-weight: 600;
+  background-color: var(--primary-very-low);
+  color: var(--primary-high);
+
+  &[data-status="active"] {
+    background-color: var(--success-low);
+    color: var(--success);
+  }
+
+  &[data-status="candidate"] {
+    background-color: var(--highlight-low);
+    color: var(--primary-high);
+  }
+
+  &[data-status="retired"] {
+    background-color: var(--primary-low);
+    color: var(--primary-medium);
+  }
+}
+
+.ai-concept-editor {
+  &__children-card,
+  &__topics-card {
+    margin-top: var(--space-4);
+  }
+
+  &__children-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__child-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__empty-topics {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+}
+
+.ai-concept-chooser {
+  width: 100%;
+}
+
+.ai-concept-merge-modal {
+  &__description {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    color: var(--primary-high);
+  }
+}

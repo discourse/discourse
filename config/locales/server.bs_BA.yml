@@ -837,6 +837,8 @@ bs_BA:
       regex_mismatch: "Value doesn't match the required format."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
+    keywords:
+      company_url: "web stranica"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1150,6 +1152,10 @@ bs_BA:
       medium: "Srednije"
       high: "Visoko"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Da"
       agree_and_suspend:

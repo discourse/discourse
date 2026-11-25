@@ -156,5 +156,16 @@ RSpec.describe AppearanceChange::Revert do
         ).to(previous_default_theme_id)
       end
     end
+
+    context "with an installed theme" do
+      fab!(:appearance_change, :installed_theme_appearance_change)
+
+      it "makes the previous theme the default again, and keeps the installed one" do
+        expect { result }.to change { SiteSetting.default_theme_id }.from(
+          appearance_change.theme_id,
+        )
+        expect(Theme.exists?(appearance_change.theme_id)).to eq(true)
+      end
+    end
   end
 end

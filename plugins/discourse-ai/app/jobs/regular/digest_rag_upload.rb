@@ -222,17 +222,10 @@ module Jobs
         )
       end
 
-      store = Discourse.store
-
       @file ||=
-        if store.external?
-          # Upload#filesize could be approximate.
-          # add two extra Mbs to make sure that we'll be able to download the upload.
-          max_filesize = upload.filesize + 2.megabytes
-          path = store.download(upload, max_file_size_kb: max_filesize)
+        begin
+          path = Discourse.store.download(upload, max_file_size_kb: upload.filesize + 2.megabytes)
           File.open(path) if path
-        else
-          File.open(store.path_for(upload))
         end
     end
   end

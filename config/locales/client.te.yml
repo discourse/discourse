@@ -2206,6 +2206,7 @@ te:
         size_too_large: "%{provided_file_size} అనుమతించబడిన గరిష్టం కంటే ఎక్కువ %{max_file_size}"
     emoji_picker:
       filter_placeholder: ఎమోజి కోసం శోధించండి
+      no_results: "ఫలితాలు లేవు"
       smileys_&_emotion: స్మైలీస్ మరియు ఎమోషన్
       people_&_body: ప్రజలు మరియు శరీరం
       animals_&_nature: జంతువులు మరియు ప్రకృతి
@@ -2239,6 +2240,10 @@ te:
       emoji: "ఎమోజి :)"
       more_emoji: "మరిన్ని…"
       options: "ఎంపికలు"
+      ai_content:
+        code: "కోడ్"
+        quote: "కోట్"
+        details: "వివరాలు"
       whisper: "గుసగుసలు"
       unlist: "జాబితా నుంచి తొలగించిన"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
@@ -3185,10 +3190,8 @@ te:
           label: "ఎంపిక చేయబడినవి"
           title: "ఎంపిక నుండి పోస్ట్‌ని తీసివేయడానికి క్లిక్ చేయండి"
         select_replies:
-          label: "ఎంచుకున్నవి +ప్రత్యుత్తరాలు"
           title: "ఎంపికకు పోస్ట్ మరియు దాని అన్ని ప్రత్యుత్తరాలను జోడించండి"
         select_below:
-          label: "+క్రింద ఎంచుకోండి"
           title: "ఎంపికకు పోస్ట్ మరియు దాని తర్వాత అన్నింటినీ జోడించండి"
         delete: ఎంచుకున్నవాటిని తొలగించండి
         cancel: ఎంపిక రద్దు
@@ -4052,6 +4055,14 @@ te:
       forward: "ముందుకు"
       share: "షేర్ చేయండి"
       dismiss: "తీసివేయండి"
+    mobile_tab_bar:
+      create: "సృష్టించండి"
+      more: "ఇంకా"
+      back: "వెనుకకు"
+      topics: "విషయాలు"
+      drafts:
+        one: "చిత్తుప్రతులు (%{count})"
+        other: "చిత్తుప్రతులు (%{count})"
     safe_mode:
       enabled: "సురక్షిత మోడ్ ప్రారంభించబడింది. సురక్షిత మోడ్ నుండి నిష్క్రమించడానికి ఈ బ్రౌజర్ విండోను మూసివేయండి"
     image_removed: "(చిత్రం తీసివేయబడింది)"
@@ -5022,8 +5033,6 @@ te:
           company_name: "పేరు"
           company_url: "వెబ్సైట్"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "పాలక చట్టం"
-          city_for_disputes: "వివాదాలకు నగరం"
           extra_groups:
             groups: "సమూహాలు"
           locale_selector:
@@ -5875,7 +5884,6 @@ te:
         silence_modal_title: "సభ్యుని నిశ్శబ్దం చేయండి"
         silence_duration: "సభ్యుడు ఎంతకాలం నిశ్శబ్దం చేయబడతారు?"
         silence_reason_placeholder: "నిశ్శబ్దం కారణం"
-        silence_message: "ఇమెయిల్ సందేశం"
         suspended_until: "(%{until} వరకు)"
         suspend_forever: "శాశ్వతంగా నిలిపివేయండి"
         cant_suspend: "ఈ సభ్యుని సస్పెండ్ చేయడం సాధ్యం కాదు."
@@ -6129,6 +6137,8 @@ te:
           multiselect: "బహుళ ఎంపిక"
       site_text:
         search_label: "వెతుకు"
+        preview:
+          default: "అప్రమేయ"
         theme_disabled: "నిలిపివేయబడింది"
         edit: "సవరించండి"
         revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
@@ -6236,7 +6246,6 @@ te:
           modal_title: బ్యాడ్జ్ సమూహాలు
         granted_by: ద్వారా మంజూరు చేయబడింది
         granted_at: వద్ద మంజూరు చేయబడింది
-        reason_help: (పోస్ట్ లేదా విషయానికి లింక్)
         save: సేవ్ చేయండి
         delete: తొలగించండి
         delete_confirm: మీరు ఖచ్చితంగా ఈ బ్యాడ్జ్‌ని తొలగించాలనుకుంటున్నారా?

@@ -8,23 +8,68 @@ RSpec.describe TopicBookmarkable do
 
   let(:guardian) { Guardian.new(user) }
 
-  let!(:topic1) { Fabricate(:topic) }
-  let!(:topic2) { Fabricate(:topic) }
-  let!(:post) { Fabricate(:post, topic: topic1) }
-  let!(:post2) { Fabricate(:post, topic: topic2) }
-  let!(:bookmark1) do
+  fab!(:topic1, :topic)
+  fab!(:topic2, :topic)
+  fab!(:post) { Fabricate(:post, topic: topic1) }
+  fab!(:post2) { Fabricate(:post, topic: topic2) }
+  fab!(:bookmark1) do
     Fabricate(:bookmark, user: user, bookmarkable: topic1, name: "something i gotta do")
   end
-  let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: topic2) }
-  let!(:bookmark3) { Fabricate(:bookmark) }
-  let!(:topic_user1) { Fabricate(:topic_user, user: user, topic: topic1) }
-  let!(:topic_user2) { Fabricate(:topic_user, user: user, topic: topic2) }
+  fab!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: topic2) }
+  fab!(:bookmark3, :bookmark)
+  fab!(:topic_user1) { Fabricate(:topic_user, user: user, topic: topic1) }
+  fab!(:topic_user2) { Fabricate(:topic_user, user: user, topic: topic2) }
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
       expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
         [bookmark1.id, bookmark2.id],
       )
+    end
+
+    it "filters a hidden first post while retaining the author's and staff's bookmarks" do
+      post.update!(hidden: true)
+      expect(
+        registered_bookmarkable.perform_list_query(user, guardian).map(&:id),
+      ).to contain_exactly(bookmark2.id)
+      post.update!(user: user)
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+      post.update!(user: Fabricate(:user))
+      user.update!(moderator: true)
+      Group.refresh_automatic_groups_for_user!(user)
+      expect(
+        registered_bookmarkable.perform_list_query(user, Guardian.new(user)).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+    end
+
+    it "lists direct and group PM bookmarks without adding moderator-only access" do
+      [topic1, topic2].each do |topic|
+        topic.update!(archetype: Archetype.private_message, category: nil)
+      end
+      TopicAllowedUser.create!(topic: topic1, user: user)
+      group = Fabricate(:group, users: [user])
+      TopicAllowedGroup.create!(topic: topic2, group: group)
+      warning = Fabricate(:private_message_topic, subtype: TopicSubtype.moderator_warning)
+      Fabricate(:post, topic: warning)
+      Fabricate(:bookmark, user: user, bookmarkable: warning)
+      Fabricate(:topic_user, user: user, topic: warning)
+
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+
+      user.update!(moderator: true)
+      Group.refresh_automatic_groups_for_user!(user)
+      expect(user.guardian.can_see_topic?(warning)).to eq(true)
+      expect(
+        registered_bookmarkable.perform_list_query(user, user.guardian).map(&:id),
+      ).to contain_exactly(bookmark1.id, bookmark2.id)
+
+      TopicAllowedUser.where(topic: topic1, user: user).delete_all
+      group.remove(user)
+      expect(registered_bookmarkable.perform_list_query(user, user.guardian)).to be_empty
     end
 
     it "does not return bookmarks for posts where the user does not have access to the topic category" do

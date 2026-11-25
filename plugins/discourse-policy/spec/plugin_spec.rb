@@ -79,6 +79,20 @@ describe DiscoursePolicy do
       end
     end
 
+    context "when a policy is in a system message" do
+      let(:system_message) do
+        SystemMessage.create(user1, :plugin_notice, message_title: "Notice", message_raw: <<~MD)
+          [policy group=#{group.name}]
+          Text
+          [/policy]
+        MD
+      end
+
+      it "does not persist the policy" do
+        expect(PostPolicy.find_by(post: system_message)).to be_nil
+      end
+    end
+
     context "with add_users_to_group present" do
       fab!(:group2, :group)
       fab!(:post) { Fabricate(:post, user: moderator) }

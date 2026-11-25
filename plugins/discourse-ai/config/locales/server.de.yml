@@ -48,12 +48,6 @@ de:
         flagged_post_response: "Antwort des Modells: %{llm_response}"
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
-          body: |
-            Hallo @%{username},
-
-            dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
-
-            Referenz: %{post_url}
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
@@ -158,6 +152,12 @@ de:
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_backfill_parallel_jobs: "Die Anzahl der parallel auszuführenden Beitragslokalisierungsaufträge pro Backfill-Zyklus. Höhere Werte steigern den Durchsatz, verbrauchen aber mehr Ressourcen."
     ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
+    keywords:
+      ai_default_llm_model: "standard-Sprachmodell"
+      ai_discord_search_enabled: "discord-Integration"
+      ai_helper_automatic_chat_thread_title: "titel von Chat-Threads"
+      ai_summarization_enabled: "zusammenfassungen"
+      ai_summary_gists_enabled: "kurze Zusammenfassungen der Themenliste"
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
@@ -412,6 +412,8 @@ de:
           text_color: "textfarbe"
         approve_label: "Ja"
         reject_label: "Nein"
+        category_access_levels:
+          readonly: "Ansehen"
         empty_value: "Leer"
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."
@@ -459,7 +461,7 @@ de:
         discourse_helper:
           name: "Discourse-Helfer"
           description: "KI-Bot, der auf die Unterstützung bei Discourse-bezogenen Aufgaben spezialisiert ist"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Discourse Admin-Assistent"
           description: "Ein KI-Bot, der Fragen auf Discourse beantwortet und Administratoren bei der Verwaltung der Website-Einstellungen unterstützt"
         web_artifact_creator:
@@ -626,6 +628,7 @@ de:
         edit_tag: "Schlagwort bearbeiten"
         create_category: "Kategorie erstellen"
         edit_category: "Kategorie bearbeiten"
+        delete_category: "Kategorie löschen"
         set_topic_timer: "Themen-Timer einstellen"
         set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
@@ -846,6 +849,12 @@ de:
         errors:
           tagging_disabled: "Schlagwörter sind auf dieser Website nicht aktiviert."
       edit_category:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      delete_category:
         errors:
           not_found: "Kategorie nicht gefunden."
       change_topic_category:

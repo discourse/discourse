@@ -16,6 +16,14 @@ ug:
         desktop: ئۈستەل يۈزى
         mobile: كۆچمە
         save: ساقلا
+        about_tab: ھەققىدە
+        blog_slug: قىسقارتما
+        general_heading: ئادەتتىكى
+        settings_tab: تەڭشەك
+        theme_tab: ئۆرنەك
+        column_name: ئىسمى
+        column_category: سەھىپە
+        column_status: ھالەت
         path_formats:
           custom: ئىختىيارى
         back_to_themes: ئۆرنەككە قايت
@@ -54,7 +62,11 @@ ug:
         edit: تەھرىر
         status: ھالەت
         replies: جاۋاب
+        title: ئاتاق
+        page: بەت
+      all: ھەممىسى
       drafts: دەسلەپكى نۇسخا
+      pages: بەت
       preview: ئالدىن كۆزەت
       unpublish: تارقاتما
       appearance_link: كۆرۈنۈش

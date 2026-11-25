@@ -86,9 +86,7 @@ export default {
       ["mention", "mention-group"].some((name) =>
         link.classList.contains(name)
       ) ||
-      link.matches("[data-user-card], [data-group-card]") ||
-      (link.matches('a.hashtag-cooked[data-type="category"][data-id]') &&
-        owner?.lookup("service:site-settings")?.enable_category_hashtag_cards)
+      link.matches("[data-user-card], [data-group-card]")
     ) {
       return true;
     }

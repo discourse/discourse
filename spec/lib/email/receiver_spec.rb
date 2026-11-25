@@ -545,6 +545,28 @@ RSpec.describe Email::Receiver do
       expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
     end
 
+    it "does not update the bounce score when the bounce key was shared with other recipients" do
+      email_log.update!(cc_addresses: "someone@else.com")
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    it "does not update the bounce score when the address changed owner since it was sent" do
+      email_log.update!(user: Fabricate(:user))
+
+      expect { process(:hard_bounce_via_verp) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
+    it "does not update the bounce score without a matching email log" do
+      expect { process(:bounced_email) }.to raise_error(Email::Receiver::BouncedEmailError)
+
+      expect(user.user_stat.reload.bounce_score).to eq(0)
+    end
+
     it "sends a system message once they reach the 'bounce_score_threshold'" do
       expect(user.active).to eq(true)
 
@@ -588,6 +610,223 @@ RSpec.describe Email::Receiver do
         XoXo
         [/quote]
       RAW
+    end
+  end
+
+  describe "authentication of group inbox messages" do
+    fab!(:group) { Fabricate(:group, incoming_email: "team@bar.com") }
+    fab!(:victim) { Fabricate(:user, email: "victim@bar.com") }
+
+    before { SiteSetting.email_in_authserv_id = "mx.example.com" }
+
+    let(:mail) { Mail.new(<<~EMAIL) }
+        From: Attacker <attacker@example.com>
+        Reply-To: Victim <victim@bar.com>
+        X-Original-From: Victim <victim@bar.com>
+        Authentication-Results: mx.example.com; dmarc=pass
+        To: team@bar.com
+        Subject: A message to the support team
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Message-ID: <group-authentication@example.com>
+        Content-Type: text/plain; charset=UTF-8
+
+        This message must not be published as the victim.
+      EMAIL
+
+    it "rejects a substituted author instead of publishing a private message" do
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { Topic.count }.and not_change { Post.count }.and not_change {
+                          ReviewableQueuedPost.count
+                        }
+    end
+
+    it "rejects an authentication failure when replying to an existing private message" do
+      topic = Fabricate(:group_private_message_topic, user: victim, recipient_group: group)
+      post = Fabricate(:post, topic: topic, user: victim)
+      Fabricate(
+        :incoming_email,
+        post: post,
+        topic: topic,
+        message_id: "original-group-message@example.com",
+        from_address: victim.email,
+      )
+      mail.from = victim.email
+      mail[:authentication_results] = "mx.example.com; dmarc=fail"
+      mail.in_reply_to = "original-group-message@example.com"
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { Topic.count }.and not_change { Post.count }
+    end
+
+    it "rejects a forwarded private message with a different embedded author" do
+      SiteSetting.forwarded_emails_behaviour = "create_replies"
+      mail[:reply_to] = nil
+      mail[:x_original_from] = nil
+      mail.subject = "FW: A message to the support team"
+      mail.body = <<~BODY
+        From: Victim <victim@bar.com>
+        To: Attacker <attacker@example.com>
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Subject: A forwarded message
+
+        This forwarded message must not be published as the victim.
+      BODY
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { Topic.count }.and not_change { Post.count }
+    end
+
+    it "records the authentication rejection without emailing the claimed sender" do
+      expect { Email::Processor.process!(mail.to_s) }.to not_change { Topic.count }.and not_change {
+              Post.count
+            }.and not_change { EmailLog.count }
+
+      expect(IncomingEmail.last.error).to eq("Email::Receiver::AuthenticationFailedError")
+      expect(ActionMailer::Base.deliveries).to be_empty
+    end
+
+    it "accepts a passing message whose author matches From" do
+      mail.from = victim.email
+
+      post = Email::Receiver.new(mail.to_s).process!
+
+      expect(post.user).to eq(victim)
+      expect(post.topic).to be_private_message
+      expect(post.topic.allowed_groups).to contain_exactly(group)
+    end
+
+    it "preserves substitute author handling when authentication checks are disabled" do
+      SiteSetting.email_in_authserv_id = ""
+
+      post = Email::Receiver.new(mail.to_s).process!
+
+      expect(post.user).to eq(victim)
+      expect(post.topic.allowed_groups).to contain_exactly(group)
+    end
+
+    it "rejects a substituted author before changing their email preferences" do
+      victim.user_option.update!(email_messages_level: UserOption.email_level_types[:never])
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { victim.user_option.reload.email_messages_level }
+    end
+
+    it "rejects a substituted author before creating their attachments" do
+      SiteSetting.authorized_extensions = "txt"
+      mail.content_type = "multipart/mixed"
+      mail.text_part = Mail::Part.new(body: "A message with an attachment.")
+      mail.attachments["authentication-audit.txt"] = "An attachment from an unauthenticated sender."
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { Upload.where(user_id: victim.id).count }
+    end
+
+    it "rejects a substituted author before adding them to a group conversation" do
+      group.update!(allow_unknown_sender_topic_replies: true)
+      topic = Fabricate(:group_private_message_topic, recipient_group: group)
+      post = Fabricate(:post, topic: topic)
+      Fabricate(
+        :incoming_email,
+        post: post,
+        topic: topic,
+        message_id: "original-group-message@example.com",
+      )
+      mail.in_reply_to = "original-group-message@example.com"
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { topic.topic_allowed_users.where(user: victim).count }
+    end
+
+    it "rejects a substituted author before sending an unsubscribe confirmation" do
+      SiteSetting.unsubscribe_via_email = true
+      mail.body = "unsubscribe"
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+        Email::Receiver::AuthenticationFailedError,
+      ).and not_change { UnsubscribeKey.count }.and not_change { EmailLog.count }
+    end
+
+    context "with reply commands" do
+      fab!(:topic) { Fabricate(:group_private_message_topic, user: victim, recipient_group: group) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      before do
+        Fabricate(
+          :incoming_email,
+          post: post,
+          topic: topic,
+          message_id: "original-group-message@example.com",
+          from_address: victim.email,
+        )
+        TopicUser.change(victim.id, topic.id, notification_level: NotificationLevels.all[:watching])
+        mail.in_reply_to = "original-group-message@example.com"
+        mail.body = "mute"
+      end
+
+      it "rejects a substituted identity without muting the victim's conversation" do
+        topic_user = TopicUser.find_by(user: victim, topic: topic)
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::AuthenticationFailedError,
+        ).and not_change { topic_user.reload.notification_level }
+      end
+
+      it "rejects a substituted identity without creating a like as the victim" do
+        mail.body = "+1"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::AuthenticationFailedError,
+        ).and not_change { PostAction.count }
+      end
+
+      it "rejects a command from a From address that failed authentication" do
+        mail.from = victim.email
+        mail[:authentication_results] = "mx.example.com; dmarc=fail"
+        topic_user = TopicUser.find_by(user: victim, topic: topic)
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to raise_error(
+          Email::Receiver::AuthenticationFailedError,
+        ).and not_change { topic_user.reload.notification_level }
+      end
+
+      it "accepts a mute command when the author matches the passing From address" do
+        mail.from = victim.email
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(TopicUser.find_by(user: victim, topic: topic).notification_level).to eq(
+          NotificationLevels.all[:muted],
+        )
+      end
+
+      it "accepts a like command when the author matches the passing From address" do
+        mail.from = victim.email
+        mail.body = "+1"
+
+        expect { Email::Receiver.new(mail.to_s).process! }.to change {
+          PostAction.where(
+            user: victim,
+            post: post,
+            post_action_type_id: PostActionType.types[:like],
+          ).count
+        }.by(1)
+      end
+
+      it "preserves command handling when authentication checks are disabled" do
+        SiteSetting.email_in_authserv_id = ""
+
+        Email::Receiver.new(mail.to_s).process!
+
+        expect(TopicUser.find_by(user: victim, topic: topic).notification_level).to eq(
+          NotificationLevels.all[:muted],
+        )
+      end
     end
   end
 
@@ -644,6 +883,24 @@ RSpec.describe Email::Receiver do
       post = Email::Receiver.new(mail).process!
 
       expect(post.raw.length).to be <= SiteSetting.max_post_length
+    end
+
+    context "when a recipient address ends with a group address" do
+      subject(:invited_addresses) do
+        Email::Receiver.new(email_with_recipient).process!
+        Topic.last.allowed_users.joins(:user_emails).pluck(:"user_emails.email")
+      end
+
+      let(:recipient_address) { "xteam@bar.com" }
+      let(:email_with_recipient) do
+        email(:cc).sub("To: someone@else.com", "To: someone@else.com, #{recipient_address}")
+      end
+
+      before { configure_reply_by_email }
+
+      it "invites the recipient" do
+        expect(invited_addresses).to include(recipient_address)
+      end
     end
 
     context "with reply_by_email configured" do
@@ -925,6 +1182,22 @@ RSpec.describe Email::Receiver do
     end
 
     context "when a group forwards an email to its inbox" do
+      subject(:author_email) do
+        Email::Receiver.new(forwarded_email).process!
+        Topic.last.first_post.user.email
+      end
+
+      let(:forwarded_email) do
+        email(:forwarded_by_group_to_inbox).sub(
+          "From: Discourse Team <team@somesmtpaddress.com>",
+          "From: #{outer_from}",
+        )
+      end
+      let(:outer_from) { "Discourse Team <#{group_address}>" }
+      let(:group_address) { "team@somesmtpaddress.com" }
+      let(:stranger_address) { "stranger@evil.example" }
+      let(:embedded_sender_address) { "fred@bedrock.com" }
+
       before do
         group.update!(
           email_username: "team@somesmtpaddress.com",
@@ -1014,6 +1287,117 @@ RSpec.describe Email::Receiver do
             forwarded_small_post = topic.ordered_posts.last
             expect(forwarded_small_post.action_code).to eq("forwarded")
             expect(forwarded_small_post.user).to eq(staged_team_user)
+          end
+        end
+      end
+
+      context "when the outer sender has the group address in its display name" do
+        let(:outer_from) { %("#{group_address}" <#{stranger_address}>) }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the outer sender has the group address in a comment" do
+        let(:outer_from) { "#{stranger_address} (#{group_address})" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the group address follows the outer sender in the From header" do
+        let(:outer_from) { "#{stranger_address}, #{group_address}" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(stranger_address)
+        end
+      end
+
+      context "when the group address precedes another sender in the From header" do
+        let(:outer_from) { "#{group_address}, #{stranger_address}" }
+
+        it "attributes the topic to the group address" do
+          expect(author_email).to eq(group_address)
+        end
+      end
+
+      context "when the outer sender has the group address in a mailto link" do
+        let(:outer_from) { "#{stranger_address} <mailto:#{group_address}>" }
+
+        it "attributes the topic to the group address" do
+          expect(author_email).to eq(group_address)
+        end
+      end
+
+      context "when the domain of the outer sender starts with the group address" do
+        let(:outer_from) { "#{group_address}.evil.example" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(outer_from)
+        end
+      end
+
+      context "when the address of the outer sender ends with the group address" do
+        let(:outer_from) { "x#{group_address}" }
+
+        it "attributes the topic to the outer sender" do
+          expect(author_email).to eq(outer_from)
+        end
+      end
+
+      context "when the outer sender is the group address in a different case" do
+        let(:outer_from) { "Discourse Team <Team@SomeSmtpAddress.COM>" }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the outer sender matches only the email_username of the group" do
+        before { group.update!(incoming_email: "support+team@bar.com") }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the outer sender matches only an incoming email of the group" do
+        before { group.update!(email_username: "other@somesmtpaddress.com") }
+
+        it "attributes the topic to the embedded sender" do
+          expect(author_email).to eq(embedded_sender_address)
+        end
+      end
+
+      context "when the destination is a category that rejects strangers" do
+        subject(:process_email) { Email::Receiver.new(forwarded_email).process! }
+
+        fab!(:category) do
+          Fabricate(:category, email_in: "category@foo.com", email_in_allow_strangers: false)
+        end
+        fab!(:trusted_embedded_sender) do
+          Fabricate(:user, email: "fred@bedrock.com", trust_level: 2)
+        end
+
+        let(:forwarded_email) do
+          super().sub("To: support+team@bar.com", "To: #{category.email_in}")
+        end
+
+        context "when a stranger has the group address in its display name" do
+          let(:outer_from) { %("#{group_address}" <#{stranger_address}>) }
+
+          it "rejects the email" do
+            expect { process_email }.to raise_error(Email::Receiver::StrangersNotAllowedError)
+          end
+        end
+
+        context "when the outer sender is the group address" do
+          it "creates a topic by the embedded sender" do
+            expect { process_email }.to change {
+              category.topics.where(user: trusted_embedded_sender).count
+            }.by(1)
           end
         end
       end
@@ -1412,6 +1796,79 @@ RSpec.describe Email::Receiver do
         )
       end
 
+      let(:dmarc_pass_email) { <<~EMAIL }
+          Return-Path: <existing@bar.com>
+          Authentication-Results: example.com; dmarc=pass
+          From: Foo Bar <existing@bar.com>
+          To: category@bar.com
+          Subject: This is a topic from an existing user
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <dmarc-pass@foo.bar.mail>
+          Mime-Version: 1.0
+          Content-Type: text/plain; charset=UTF-8
+          Content-Transfer-Encoding: quoted-printable
+
+          Hey, this is a topic from an existing user ;)
+        EMAIL
+
+      let(:dmarc_pass_other_from_email) { <<~EMAIL }
+          Return-Path: <westernsupport@test.mailinglist.com>
+          Authentication-Results: example.com; dmarc=pass
+          From: Western Support <westernsupport@test.mailinglist.com>
+          Reply-To: Foo Bar <existing@bar.com>
+          X-Original-From: Foo Bar <existing@bar.com>
+          To: category@bar.com
+          Subject: This is a topic from an existing user
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <dmarc-pass-other-from@test.mailinglist.com>
+          Mime-Version: 1.0
+          Content-Type: text/plain; charset=UTF-8
+
+          Hey, this is a topic from an existing user ;)
+        EMAIL
+
+      let(:forwarded_dmarc_pass_email) { <<~EMAIL }
+          Return-Path: <existing@bar.com>
+          Authentication-Results: example.com; dmarc=pass
+          From: Foo Bar <existing@bar.com>
+          To: category@bar.com
+          Subject: FW: This is a topic from another user
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <dmarc-pass-forwarded@foo.bar.mail>
+          Mime-Version: 1.0
+          Content-Type: text/plain; charset=UTF-8
+
+          Can you have a look at this email below?
+
+          From: Victim User <victim@bar.com>
+          To: Foo Bar <existing@bar.com>
+          Date: Mon, 1 Dec 2016 00:13:37 +0100
+          Subject: Discoursing much?
+
+          Hey, this is a topic from an existing user ;)
+        EMAIL
+
+      let(:forwarded_dmarc_pass_same_sender_email) { <<~EMAIL }
+          Return-Path: <existing@bar.com>
+          Authentication-Results: example.com; dmarc=pass
+          From: Foo Bar <existing@bar.com>
+          To: category@bar.com
+          Subject: FW: This is a topic from an existing user
+          Date: Fri, 15 Jan 2016 00:12:43 +0100
+          Message-ID: <dmarc-pass-forwarded-same-sender@foo.bar.mail>
+          Mime-Version: 1.0
+          Content-Type: text/plain; charset=UTF-8
+
+          Can you have a look at this email below?
+
+          From: Foo Bar <existing@bar.com>
+          To: Foo Bar <existing@bar.com>
+          Date: Mon, 1 Dec 2016 00:13:37 +0100
+          Subject: Discoursing much?
+
+          Hey, this is a topic from an existing user ;)
+        EMAIL
+
       it "creates visible topic for ham" do
         SiteSetting.email_in_spam_header = "none"
 
@@ -1453,6 +1910,54 @@ RSpec.describe Email::Receiver do
 
         expect { process(:dmarc_fail) }.to change { ReviewableQueuedPost.count }.by(1)
         expect(user.reload.silenced?).to be(false)
+      end
+
+      it "creates the topic for a passing Authentication-Results header" do
+        SiteSetting.email_in_authserv_id = "example.com"
+
+        expect { Email::Receiver.new(dmarc_pass_email).process! }.to change { Topic.count }.by(1)
+        expect(Topic.last.user).to eq(user)
+      end
+
+      it "enqueues the post when the sender address is taken from a header the Authentication-Results verdict does not cover" do
+        SiteSetting.email_in_authserv_id = "example.com"
+
+        expect { Email::Receiver.new(dmarc_pass_other_from_email).process! }.to change {
+          ReviewableQueuedPost.count
+        }.by(1).and not_change { Topic.count }
+        expect(IncomingEmail.last.from_address).to eq("existing@bar.com")
+      end
+
+      context "with forwarded emails behaviour set to create replies" do
+        fab!(:other_user) do
+          Fabricate(
+            :user,
+            email: "victim@bar.com",
+            trust_level: TrustLevel[2],
+            refresh_auto_groups: true,
+          )
+        end
+
+        before do
+          SiteSetting.email_in_authserv_id = "example.com"
+          SiteSetting.forwarded_emails_behaviour = "create_replies"
+        end
+
+        it "enqueues a forwarded topic authored by an address the Authentication-Results verdict does not cover" do
+          expect { Email::Receiver.new(forwarded_dmarc_pass_email).process! }.to change {
+            ReviewableQueuedPost.count
+          }.by(1).and not_change { Topic.count }
+
+          expect(ReviewableQueuedPost.last.target_created_by).to eq(other_user)
+        end
+
+        it "creates the forwarded topic when the embedded sender matches the authenticated from address" do
+          expect {
+            Email::Receiver.new(forwarded_dmarc_pass_same_sender_email).process!
+          }.to change { Topic.count }.by(1)
+
+          expect(Topic.last.user).to eq(user)
+        end
       end
 
       it "enqueues the post when evaluating the Authentication-Results header fails" do
@@ -2145,6 +2650,65 @@ RSpec.describe Email::Receiver do
       expect(post.hidden).to eq(false)
       expect(post.hidden_reason_id).to be_nil
     end
+
+    it "allows a reply command from a substituted author on a mailing list mirror" do
+      SiteSetting.email_in_authserv_id = "example.com"
+      author = Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
+      topic =
+        Fabricate(:topic, category: category, user: Fabricate(:user, refresh_auto_groups: true))
+      post = Fabricate(:post, topic: topic)
+      Fabricate(:incoming_email, post: post, topic: topic, message_id: "mirror-target@example.com")
+
+      mail = Mail.new(<<~EMAIL)
+        From: Example List <list@ml.example.com>
+        X-Original-From: Bob <bob@bar.com>
+        Reply-To: Bob <bob@bar.com>
+        Authentication-Results: example.com; dmarc=pass
+        To: #{category.email_in}
+        Subject: Re: #{topic.title}
+        In-Reply-To: <mirror-target@example.com>
+        References: <mirror-target@example.com>
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Message-ID: <mirror-command@example.com>
+        Content-Type: text/plain; charset=UTF-8
+
+        mute
+      EMAIL
+
+      expect { Email::Receiver.new(mail.to_s).process! }.not_to raise_error
+
+      expect(TopicUser.find_by(user: author, topic: topic).notification_level).to eq(
+        NotificationLevels.topic_levels[:muted],
+      )
+    end
+
+    it "routes to a mailing list mirror when another destination is rejected as a private message" do
+      SiteSetting.email_in_authserv_id = "example.com"
+      Fabricate(:group, incoming_email: "team@bar.com")
+      Fabricate(:user, email: "bob@bar.com", refresh_auto_groups: true)
+
+      mail = Mail.new(<<~EMAIL)
+        From: Example List <list@ml.example.com>
+        X-Original-From: Bob <bob@bar.com>
+        Reply-To: Bob <bob@bar.com>
+        Authentication-Results: example.com; dmarc=pass
+        To: team@bar.com, #{category.email_in}
+        Subject: Cross-posted mailing list message
+        Date: Fri, 15 Jan 2016 00:12:43 +0100
+        Message-ID: <cross-posted-mirror@example.com>
+        Content-Type: text/plain; charset=UTF-8
+
+        This message is addressed to a group inbox and a mailing list mirror.
+      EMAIL
+
+      expect { Email::Receiver.new(mail.to_s).process! }.to change { Topic.count }.by(
+        1,
+      ).and not_change { Topic.where(archetype: Archetype.private_message).count }
+
+      topic = Topic.last
+      expect(topic.category).to eq(category)
+      expect(topic.private_message?).to be(false)
+    end
   end
 
   it "tries to fix unparsable email addresses in To and CC headers" do
@@ -2827,6 +3391,11 @@ RSpec.describe Email::Receiver do
 
         </details>
       MD
+      end
+
+      it "indents nested lists by a single step per level" do
+        expect { process(:html_reply_with_nested_list) }.to change { topic.posts.count }
+        expect(topic.posts.last.raw).to eq("- Fruits\n  - Apples\n    - Granny Smith")
       end
 
       it "keeps the lists and only elides the signature from word emails" do

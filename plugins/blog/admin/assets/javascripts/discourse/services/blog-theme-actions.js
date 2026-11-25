@@ -15,7 +15,7 @@ export default class BlogThemeActions extends Service {
 
   @tracked busy = false;
 
-  activate(theme, { onActivated } = {}) {
+  activate(theme, { blog, onActivated } = {}) {
     this.dialog.confirm({
       message: i18n("blog.admin.activate_confirm", {
         name: theme.name,
@@ -23,6 +23,7 @@ export default class BlogThemeActions extends Service {
       didConfirm: async () => {
         const active = await this.#request(`/${theme.id}/activate`, "POST", {
           revision: theme.revision,
+          blog_id: blog?.id,
         });
 
         if (active) {

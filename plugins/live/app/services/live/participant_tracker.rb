@@ -12,6 +12,7 @@ module Live
     # Must outlive one client heartbeat interval (10s) plus request latency,
     # so a beat already in flight when the user leaves can't resurrect them.
     LEFT_TOMBSTONE_TTL = 15
+    HAND_RAISE_COOLDOWN_SECONDS = 30
     # How long a client cut off from the server (a deploy, a network blip,
     # sleep) can stay silent and still resume its call. Mesh media keeps
     # flowing peer-to-peer meanwhile; leave/kick/takeover revoke explicitly.
@@ -338,8 +339,11 @@ module Live
       end
 
       def clear(room_id)
+        known_ids = redis.hkeys(metadata_key(room_id)).map(&:to_i).select(&:positive?)
+        known_ids.each { |user_id| redis.del(hand_raise_cooldown_key(room_id, user_id)) }
         redis.del(key(room_id))
         redis.del(metadata_key(room_id))
+        redis.del(session_speakers_key(room_id))
         redis.del(fingerprint_key(room_id))
         redis.del(transport_key(room_id))
         redis.del(recording_key(room_id))
@@ -363,6 +367,75 @@ module Live
 
         update_metadata(room_id, user_id, metadata)
         true
+      end
+
+      def set_hand_raise_cooldown(room_id, user_id, seconds: HAND_RAISE_COOLDOWN_SECONDS)
+        redis.setex(hand_raise_cooldown_key(room_id, user_id), seconds.to_i, "1")
+      end
+
+      def hand_raise_cooldown_remaining(room_id, user_id)
+        ttl = redis.ttl(hand_raise_cooldown_key(room_id, user_id)).to_i
+        ttl.positive? ? ttl : 0
+      end
+
+      def clear_hand_raise_cooldown(room_id, user_id)
+        redis.del(hand_raise_cooldown_key(room_id, user_id))
+      end
+
+      # Temporary stage speakers. The grant belongs to the room's live
+      # instance rather than to a presence, so it survives a leave and rejoin
+      # and ends when the room empties.
+      def add_session_speaker(room_id, user_id)
+        redis.sadd(session_speakers_key(room_id), user_id)
+        redis.expire(session_speakers_key(room_id), SAFETY_TTL)
+      end
+
+      def remove_session_speaker(room_id, user_id)
+        redis.srem(session_speakers_key(room_id), user_id).to_i > 0
+      end
+
+      def session_speaker?(room_id, user_id)
+        redis.sismember(session_speakers_key(room_id), user_id)
+      end
+
+      def clear_session_speakers(room_id)
+        redis.del(session_speakers_key(room_id))
+      end
+
+      # A pending invitation is part of the invitee's roster entry, so it
+      # ends with their presence and the roster never shows one that can no
+      # longer be accepted.
+      def set_speak_invitation(room_id, user_id, inviter:)
+        now = Time.now.to_f
+        metadata = get_metadata(room_id, user_id)
+        metadata[:speak_invited_at] = now
+        metadata[:speak_invited_by] = inviter.username
+        metadata[:speak_invited_by_id] = inviter.id
+        update_metadata(room_id, user_id, metadata)
+
+        { inviter_id: inviter.id, inviter_username: inviter.username, invited_at: now }
+      end
+
+      def speak_invitation(room_id, user_id)
+        metadata = get_metadata(room_id, user_id)
+        return nil if metadata[:speak_invited_at].blank?
+
+        {
+          inviter_id: metadata[:speak_invited_by_id],
+          inviter_username: metadata[:speak_invited_by],
+          invited_at: metadata[:speak_invited_at],
+        }
+      end
+
+      def clear_speak_invitation(room_id, user_id)
+        metadata = get_metadata(room_id, user_id)
+        had_invitation = [
+          metadata.delete(:speak_invited_at),
+          metadata.delete(:speak_invited_by),
+          metadata.delete(:speak_invited_by_id),
+        ].any?
+        update_metadata(room_id, user_id, metadata) if had_invitation
+        had_invitation
       end
 
       def update_metadata(room_id, user_id, metadata)
@@ -429,6 +502,7 @@ module Live
         # An active recording rides the same heartbeat: its TTL is only a
         # backstop for a room whose call died without a clean teardown.
         redis.expire(recording_key(room_id), SAFETY_TTL)
+        redis.expire(session_speakers_key(room_id), SAFETY_TTL)
       end
 
       def clear_transport_pin(room_id)
@@ -525,6 +599,14 @@ module Live
 
       def livekit_sid_key(room_id)
         "#{KEY_NAMESPACE}:#{room_id}:livekit_sids"
+      end
+
+      def hand_raise_cooldown_key(room_id, user_id)
+        "#{KEY_NAMESPACE}:#{room_id}:hand_cooldown:#{user_id}"
+      end
+
+      def session_speakers_key(room_id)
+        "#{KEY_NAMESPACE}:#{room_id}:session_speakers"
       end
     end
   end

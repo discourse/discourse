@@ -1071,6 +1071,7 @@ he:
         suspect_user: "האם זה משתמש ספאם?"
         approve_post: "לאשר את הפוסט הזה?"
         approve_topic: "לאשר את הנושא הזה?"
+        something_wrong_with_post: "משהו לא בסדר עם הפוסט הזה?"
       types:
         reviewable_flagged_post:
           title: "פוסט שסומן"
@@ -2370,6 +2371,7 @@ he:
         redeemed_tab_with_count: "נוצלו (%{count})"
         invited_via: "הזמנה"
         invited_via_link: "קישור %{key}‏ (%{count} / %{max} נוצלו)"
+        invited_via_link_without_key: "קישור (%{count} / %{max} נוצלו)"
         groups: "קבוצות"
         topic: "נושא"
         sent: "נוצרו/נשלחו לאחרונה"
@@ -2676,6 +2678,7 @@ he:
       no_results: "אין תוצאות"
       search: "חיפוש…"
       label: "בחירת אפשרויות"
+      remove_item: "הסרת %{name}"
     d_otp:
       screen_reader:
         one: נא למלא מספר
@@ -3107,6 +3110,7 @@ he:
         size_too_small: "%{provided_file_size} קטן מהגודל המזערי המותר %{min_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
+      no_results: "אין תוצאות"
       smileys_&_emotion: חייכנים ורגש
       people_&_body: אנשים וגוף
       animals_&_nature: חיות וטבע
@@ -3154,6 +3158,10 @@ he:
       emoji: "אמוג׳י :)"
       more_emoji: "עוד…"
       options: "אפשרויות"
+      ai_content:
+        code: "קוד"
+        quote: "ציטוט"
+        details: "פרטים"
       whisper: "לחישה"
       unlist: "לא-רשום"
       add_warning: "זוהי אזהרה רשמית."
@@ -4378,10 +4386,8 @@ he:
           label: "נבחרים"
           title: "הקליקו לביטול בחירת הפוסט"
         select_replies:
-          label: "בחירת +תגובות"
           title: "הוספת פוסט ואת כל התגובות שלו לבחירה"
         select_below:
-          label: "יש לבחור +להלן"
           title: "הוספת פוסט וכל מה שאחריו לבחירה"
         delete: מחק נבחרים
         cancel: בטל בחירה
@@ -4411,6 +4417,7 @@ he:
         actions: "פעולות במרוכז"
     post:
       accessible_heading: "פוסט מאת %{username} %{date}"
+      ai_generated: "בינה מלאכותית"
       heading_anchor: "קישור כותרת"
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
@@ -5549,9 +5556,18 @@ he:
       forward: "העברה"
       share: "לשתף"
       dismiss: "דחייה"
+    mobile_tab_bar:
+      new_topic: "נושא חדש"
+      create: "יצירה"
+      more: "עוד"
+      back: "חזרה"
+      topics: "נושאים"
+      drafts:
+        one: "טיוטות (%{count})"
+        two: "טיוטות (%{count})"
+        other: "טיוטות (%{count})"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
-    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
@@ -7158,14 +7174,6 @@ he:
           company_name: "שם"
           company_url: "אתר"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "החוק המחייב"
-          governing_law_placeholder: "מחוז, מדינה או ארץ"
-          governing_law_help: |
-            נא לציין את תחום השיפוט להליכים המשפטיים, בפרט איפה שהחברה רשומה ומתנהלת.
-          city_for_disputes: "עיר המחלוקת"
-          city_for_disputes_placeholder: "עיר"
-          city_for_disputes_help: |
-            נא לציין את העיר ליישוב סכסוכים משפטיים שקשורים בפורום הזה.
           extra_groups:
             heading: "רשימת קבוצות"
             description: "קבוצות נוספות להצגה בעמוד ‚על אודות’."
@@ -8375,7 +8383,6 @@ he:
         silence_duration: "למשך כמה זמן יושתק המשתמש?"
         silence_reason_title: "סיבת השתקה"
         silence_reason_placeholder: "סיבת השתקה"
-        silence_message: "הודעה בדוא״ל"
         suspended_until: "(עד %{until})"
         suspend_forever: "להשעות לעד"
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
@@ -8675,6 +8682,8 @@ he:
       site_text:
         description: "אפשר להתאים כל אחד ממקטעי הטקסט בפורום שלך."
         search_label: "חיפוש"
+        preview:
+          default: "ברירת מחדל"
         theme_disabled: "כבוי"
         filters: "מסננים"
         status:
@@ -8842,7 +8851,7 @@ he:
           modal_title: קבוצות עיטורים
         granted_by: הוענק ע"י
         granted_at: הוענק ב
-        reason_help: (קישור לפוסט או לנושא)
+        reason_help: קישור לפוסט או לנושא
         save: שמור
         delete: מחיקה
         delete_confirm: למחוק את העיטור הזה?

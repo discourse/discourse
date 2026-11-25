@@ -783,14 +783,15 @@ class UsersController < ApplicationController
       ensure_external_ids_allowed!
     end
 
-    user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
+    signup_email = new_user_params[:email].strip.downcase
+    user = User.where(staged: true).with_email(signup_email).first || User.new
+    authentication = UserAuthenticator.new(user, server_session)
 
-    if user
+    if user.staged?
       user.active = false
-      user.unstage!
+      authentication.unstage!(signup_email:)
     end
 
-    user ||= User.new
     user.attributes = new_user_params
 
     # Handle API approval and
@@ -821,8 +822,6 @@ class UsersController < ApplicationController
         associations << association
       end
     end
-
-    authentication = UserAuthenticator.new(user, server_session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins &&
          !(current_user&.admin? && is_api?)
@@ -996,7 +995,6 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
-        @user.user_auth_tokens.destroy_all
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1151,11 +1149,18 @@ class UsersController < ApplicationController
   end
 
   def toggle_anon
-    user =
-      AnonymousShadowCreator.get_master(current_user) || AnonymousShadowCreator.get(current_user)
+    return render json: failed_json, status: :forbidden unless SiteSetting.allow_anonymous_mode
 
-    if user
-      log_on_user(user)
+    target =
+      with_authenticated_session do |identity|
+        user = identity == current_user ? AnonymousShadowCreator.get(identity) : identity
+        next unless user&.active? && !user.suspended?
+
+        log_on_user(user, { anonymous_mode_exchange: identity })
+        user
+      end
+
+    if target
       render json: success_json
     else
       render json: failed_json, status: :forbidden
@@ -1298,6 +1303,14 @@ class UsersController < ApplicationController
       primary_email.skip_validate_email = false
 
       if primary_email.save
+        if primary_email.saved_change_to_email? && InvitedUser.exists?(user_id: @user.id)
+          raise Discourse::InvalidAccess.new(
+                  nil,
+                  nil,
+                  custom_message: "activation.email_change_not_allowed_after_invite",
+                )
+        end
+
         @user.revoke_approval! if revoke_approval
         @email_token =
           @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:signup])
@@ -1950,19 +1963,15 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:token_id]
-      token = UserAuthToken.find_by(id: params[:token_id], user_id: user.id)
-      # The user should not be able to revoke the auth token of current session.
-      if !token || guardian.auth_token == token.auth_token
-        raise Discourse::InvalidParameters.new(:token_id)
-      end
-      UserAuthToken.where(id: params[:token_id], user_id: user.id).each(&:destroy!)
+      UserAuthToken.revoke_device!(
+        user,
+        params[:token_id],
+        current_login_id: guardian.current_login_id,
+      )
 
       MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     else
-      UserAuthToken.transaction do
-        UserAuthToken.where(user_id: user.id).each(&:destroy!)
-        PushNotificationPusher.clear_subscriptions(user)
-      end
+      user.revoke_family_sessions!
     end
 
     render json: success_json

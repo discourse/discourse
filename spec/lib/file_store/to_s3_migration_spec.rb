@@ -34,5 +34,16 @@ RSpec.describe FileStore::ToS3Migration do
         fake_s3.bucket(SiteSetting.s3_upload_bucket).find_object("original/1X/a\nb.png"),
       ).to be_present
     end
+
+    it "rewrites inline images of known uploads to short urls" do
+      upload = Fabricate(:upload)
+      unknown = "![](/uploads/default/original/1X/#{"f" * 40}.png)"
+      post = Fabricate(:post)
+      post.update_columns(raw: "![](/uploads/default/original/1X/#{upload.sha1}.png) #{unknown}")
+
+      migrate
+
+      expect(post.reload.raw).to eq("![](#{upload.short_url}) #{unknown}")
+    end
   end
 end

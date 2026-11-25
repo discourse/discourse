@@ -151,7 +151,7 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     rescue Discourse::InvalidAccess => ex
       # If the user can't see the topic, clean up notifications for it.
-      Notification.remove_for(current_user.id, params[:topic_id]) if current_user
+      Notification.remove_for(current_user.id, ex.obj.id) if current_user && ex.obj
 
       deleted = deleted_for_permalink?(ex.obj)
 
@@ -1492,7 +1492,19 @@ class TopicsController < ApplicationController
 
     opts =
       params.slice(
-        *%i[page print filter_top_level_replies preview_theme_id include_raw],
+        *%i[
+          page
+          print
+          filter_top_level_replies
+          preview_theme_id
+          preview_color_scheme_id
+          preview_dark_color_scheme_id
+          preview_base_font
+          preview_heading_font
+          preview_component_ids
+          preview_hide_component_ids
+          include_raw
+        ],
         Discourse::LOCALE_PARAM,
         *additional_allowed_query_parameters,
       )

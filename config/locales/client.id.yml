@@ -590,6 +590,7 @@ id:
         is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
         something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
+        something_wrong_with_post: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
@@ -1675,6 +1676,9 @@ id:
     composer:
       emoji: "Emoji :)"
       options: "Pilihan"
+      ai_content:
+        code: "Kode"
+        details: "Detil"
       add_warning: "Ini adalah peringatan resmi."
       esc_label: "abaikan pesan"
       reference_topic_title: "RE: %{title}"
@@ -1974,12 +1978,16 @@ id:
       change_owner:
         placeholder: "username pemilik yang baru"
       multi_select:
+        select: "Pilih"
+        select_post:
+          label: "Pilih"
         selected_post:
           label: "dipilih"
         deselect_all: batalkan pilihan semua
     post_list:
       title: "Pos terbaru"
     post:
+      ai_generated: "AI"
       quote_edit: "Ubah"
       edit_reason: "Alasan:"
       collapse: "persempit"
@@ -2291,6 +2299,13 @@ id:
           new: "Anda tidak memiliki topik baru"
     footer_nav:
       dismiss: "Bubar"
+    mobile_tab_bar:
+      create: "Buat"
+      more: "Selengkapnya"
+      back: "Kembali"
+      topics: "Topik"
+      drafts:
+        other: "Rancangan (%{count})"
     trust_levels:
       names:
         newuser: "pengguna baru"
@@ -3092,6 +3107,8 @@ id:
           date: "Tanggal"
       site_text:
         search_label: "Cari"
+        preview:
+          default: "Asal"
         theme_disabled: "Dinonaktifkan"
         edit: "Ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

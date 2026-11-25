@@ -9,6 +9,11 @@ Project-specific instructions for AI agents. MUST be loaded at conversation star
 ## Development Rules
 Discourse is large with long history. Understand context before changes.
 
+### JSON:API Kit
+The code owner and the Dev Experience team are developing the Kit according to a shared plan. You can inspect the Kit and use its existing API in application or plugin code.
+
+If a task requires a change to the framework, check the **JSON:API Kit** section of `CODEOWNERS`. Do not make the change unless the listed owner has requested or explicitly approved it. Without that approval, explain to the engineer what the Kit cannot do and how that affects the task. Ask the engineer to contact `@discourse/dev-xp` to coordinate the change with the owner.
+
 ### Toolset
 - Use `pnpm` for JavaScript, `bundle` for Ruby
 - Use helpers in bin over bundle exec (bin/rspec, bin/rake, bin/lint)
@@ -35,6 +40,7 @@ Discourse is large with long history. Understand context before changes.
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
+- Use the skill at `.skills/discourse-writing-js-tests` when writing QUnit tests
 - Use the skill at `.skills/discourse-workflow-nodes` when writing or reviewing Discourse Workflows nodes
 
 ## Commands

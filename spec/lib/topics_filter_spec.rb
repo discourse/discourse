@@ -1546,6 +1546,15 @@ RSpec.describe TopicsFilter do
       it "returns no topics when the tag group is hidden from the user" do
         expect(filtered("tag_group:#{staff_tag_group.name}")).to eq([])
       end
+
+      it "ignores tags of the group restricted to categories the user can't see" do
+        CategoryTag.create!(category: Fabricate(:private_category, group:), tag: tag2)
+
+        expect(filtered("tag-group:#{tag_group.name}")).to contain_exactly(
+          topic_with_tag.id,
+          topic_with_tag_and_tag2.id,
+        )
+      end
     end
 
     describe "when filtering by tag_groups with special characters" do

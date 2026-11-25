@@ -341,6 +341,56 @@ RSpec.describe ListController do
       expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
+    it "leaves a search shorter than the minimum length unlimited" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      2.times { get "/latest.json", params: { search: "ke" } }
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not reveal topics that only match non-visible post content" do
+      visible_topic = Fabricate(:topic_with_op, raw: "The public prefix oracle content")
+      whisper_topic = Fabricate(:topic_with_op, raw: "A public topic")
+      hidden_topic = Fabricate(:topic_with_op, raw: "Another public topic")
+      deleted_topic = Fabricate(:topic_with_op, raw: "Yet another public topic")
+
+      whisper_post =
+        Fabricate(
+          :post,
+          topic: whisper_topic,
+          raw: "The staff prefix oracle content",
+          post_type: Post.types[:whisper],
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          raw: "The flagged prefix oracle content",
+          hidden: true,
+        )
+      deleted_post =
+        Fabricate(:post, topic: deleted_topic, raw: "The deleted prefix oracle content")
+
+      with_search_indexer_enabled do
+        [visible_topic, whisper_post, hidden_post, deleted_post].each do |record|
+          SearchIndexer.index(record, force: true)
+        end
+      end
+      deleted_post.trash!
+
+      get "/latest.json", params: { search: "prefix" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to contain_exactly(
+        visible_topic.id,
+      )
+      expect(response.body).not_to include(whisper_post.raw)
+      expect(response.body).not_to include(hidden_post.raw)
+      expect(response.body).not_to include(deleted_post.raw)
+    end
+
     it "shows correct title if topic list is set for homepage" do
       get "/latest"
 
@@ -720,7 +770,7 @@ RSpec.describe ListController do
     end
 
     describe "when user not in personal_message_enabled_groups group" do
-      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+      fab!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
@@ -823,17 +873,11 @@ RSpec.describe ListController do
   end
 
   describe "#group_topics" do
-    %i[user user2].each do |user|
-      let(user) do
-        user = Fabricate(:user)
-        group.add(user)
-        user
-      end
-    end
-
-    let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user2) }
-    let!(:another_topic) { Fabricate(:topic) }
+    fab!(:group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:other_group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:topic) { Fabricate(:topic, user: group_member) }
+    fab!(:topic2) { Fabricate(:topic, user: other_group_member) }
+    fab!(:another_topic, :topic)
 
     describe "when an invalid group name is given" do
       it "returns the expected response" do
@@ -911,7 +955,7 @@ RSpec.describe ListController do
     end
 
     describe "for a group user" do
-      before { sign_in(user) }
+      before { sign_in(group_member) }
 
       it "allows viewing topics started by group members" do
         get "/topics/groups/#{group.name}.json"
@@ -926,11 +970,49 @@ RSpec.describe ListController do
   end
 
   describe "RSS feeds" do
+    it "does not expose hidden first-post content from relisted topics" do
+      hidden_first_post =
+        Fabricate(:post, topic: topic, user: user, raw: "hidden first post latest RSS secret")
+      hidden_first_post.hide!(PostActionType.types[:off_topic])
+      topic.update_status(
+        "visible",
+        true,
+        Discourse.system_user,
+        visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+      )
+      visible_first_post =
+        Fabricate(
+          :post,
+          topic: Fabricate(:topic, user: user),
+          user: user,
+          raw: "visible first post latest RSS text",
+        )
+
+      get "/latest.rss"
+
+      expect(response.status).to eq(200)
+      expect(response.media_type).to eq("application/rss+xml")
+      expect(response.body).to include(topic.title)
+      expect(response.body).not_to include(hidden_first_post.raw)
+      expect(response.body).to include(visible_first_post.raw)
+    end
+
     it "renders latest RSS" do
       get "/latest.rss"
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "charges a keyword feed once against the search limit" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      get "/latest.rss", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:too_many_requests)
     end
 
     it "localizes latest RSS from Accept-Language for clients classified as crawlers" do
@@ -2179,6 +2261,42 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    context "when rate limited" do
+      before do
+        RateLimiter.enable
+        SiteSetting.rate_limit_search_anon_user_per_minute = 1
+      end
+
+      it "charges a keyword filter once against the shared search limit" do
+        get "/filter.json", params: { q: "keyword", search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/latest.json", params: { search: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "shares the user's search limit only with lists that search posts" do
+        SiteSetting.enable_unified_new = true
+        SiteSetting.rate_limit_search_user = 1
+        sign_in(user)
+
+        get "/topics/private-messages/#{user.username}.json", params: { search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/filter.json", params: { q: "keyword" }
+        expect(response).to have_http_status(:ok)
+
+        get "/search/query.json", params: { term: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "leaves filters without keywords unlimited" do
+        2.times { get "/filter.json", params: { q: "status:open" } }
+
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     it "keeps anonymous repeated negated filters from amplifying SQL" do

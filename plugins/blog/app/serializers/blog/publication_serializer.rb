@@ -23,7 +23,12 @@ module ::Blog
                :excerpt,
                :meta_description,
                :canonical_url,
+               :cover_upload_id,
+               :cover_url,
+               :cover_alt,
+               :co_authors,
                :featured,
+               :page,
                :published_at,
                :last_published_at,
                :published,
@@ -32,6 +37,8 @@ module ::Blog
                :draft,
                :replies,
                :can_publish,
+               :blog_id,
+               :can_change_blog,
                :review_feedback_count,
                :active_review_links,
                :awaiting_approval,
@@ -51,7 +58,7 @@ module ::Blog
       return "draft" if viewed_topic.id == working_copy&.id
       # Any public Blog-category topic is a discussion, whether or not it has been published yet.
       return "discussion" if viewed_topic.id == object.discussion_topic_id
-      return "discussion" if viewed_topic.category_id == SiteSetting.blog_category.to_i
+      return "discussion" if viewed_topic.category_id == object.blog.category_id
       "source"
     end
 
@@ -122,8 +129,31 @@ module ::Blog
       metadata["canonical_url"].to_s
     end
 
+    def cover_upload_id
+      metadata["cover_upload_id"]
+    end
+
+    def cover_url
+      Upload.find_by(id: cover_upload_id)&.url if cover_upload_id
+    end
+
+    def cover_alt
+      metadata["cover_alt"].to_s
+    end
+
+    def co_authors
+      ids = Array(metadata["co_author_ids"])
+      return [] if ids.empty?
+      usernames = User.where(id: ids).pluck(:id, :username).to_h
+      usernames.values_at(*ids).compact
+    end
+
     def featured
       metadata["featured"]
+    end
+
+    def page
+      metadata["page"].present?
     end
 
     def published_at
@@ -149,6 +179,10 @@ module ::Blog
 
     def can_publish
       scope.is_blog_publisher?
+    end
+
+    def can_change_blog
+      object.blog_movable?
     end
 
     def review_feedback_count

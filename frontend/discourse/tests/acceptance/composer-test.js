@@ -15,6 +15,7 @@ import {
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import LinkLookup from "discourse/lib/link-lookup";
 import { cloneJSON } from "discourse/lib/object";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -2361,5 +2362,114 @@ acceptance("Composer - Typing paused", function (needs) {
       ["Hello world.\n", "Hey, hello world.\n"],
       "fires after the pause"
     );
+  });
+});
+
+async function insertAiContent(type) {
+  await click(".toolbar-menu__options-trigger");
+  await click("[data-name='ai-content']");
+  await click(`[data-name='ai-content-${type}']`);
+  await waitUntil(() => !find(".toolbar-menu__options-content"), {
+    timeoutMessage: "the composer + menu closes after selecting AI content",
+  });
+}
+
+acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked code block and quote", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "Introduction");
+
+    await insertAiContent("code");
+    await waitUntil(() => find(".d-editor-input").value.includes("``` ai"));
+    const textarea = find(".d-editor-input");
+    const codeStart = "Introduction\n\n``` ai\n".length;
+    assert.deepEqual(
+      [textarea.selectionStart, textarea.selectionEnd],
+      [codeStart, codeStart],
+      "the cursor is on the blank line inside the code fence"
+    );
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value.includes("> [!AI]"));
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "Introduction\n\n``` ai\n\n```\n\n> [!AI]\n> AI content\n",
+        "the standalone code fence is empty and both blocks retain their AI markers"
+      );
+    assert
+      .dom(".toolbar-menu__ai-content-content")
+      .doesNotExist("the submenu closes after insertion");
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("the + menu closes after insertion");
+  });
+});
+
+acceptance("Composer - Insert AI content | rich editor", function (needs) {
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.rich,
+  });
+
+  test("inserts an empty editable code block with an AI badge", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+    await waitFor("#reply-control .ProseMirror");
+
+    await insertAiContent("code");
+    const code = await waitFor(".ProseMirror pre[data-code-ai='true'] code");
+    assert.dom(code).hasText("", "the AI-marked code block has no sample code");
+    assert.dom(".ProseMirror").isFocused("the editor is ready for typing");
+    document.execCommand("insertText", false, "echo hello");
+    await settled();
+    assert
+      .dom(".ProseMirror pre[data-code-ai='true'] code")
+      .hasText("echo hello", "typing lands inside the code block");
+  });
+
+  test("inserts a quote with an AI badge", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await waitFor("#reply-control .ProseMirror");
+
+    await insertAiContent("quote");
+    await waitFor(".ProseMirror blockquote");
+    assert
+      .dom(".ProseMirror blockquote[data-ai-generated='true'] p")
+      .hasText("AI content", "the AI-marked quote contains the placeholder");
+  });
+});
+
+acceptance("Composer - Insert AI content | mobile", function (needs) {
+  needs.mobileView();
+  needs.user({
+    "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.markdown,
+  });
+
+  test("inserts a marked quote from the submenu", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click(".topic-post[data-post-number='1'] button.reply");
+    await fillIn(".d-editor-input", "");
+    await insertAiContent("quote");
+    await waitUntil(() => find(".d-editor-input").value, {
+      timeoutMessage: "the mobile composer receives the AI quote",
+    });
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "> [!AI]\n> AI content\n",
+        "the mobile submenu inserts the quote"
+      );
+    assert
+      .dom(".toolbar-menu__options-content")
+      .doesNotExist("both menus close");
   });
 });

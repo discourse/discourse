@@ -33,7 +33,7 @@ class Blog::BlogTheme::Destroy
   end
 
   def theme_is_inactive(theme:)
-    !Blog::BlogTheme.active?(theme)
+    !Blog::BlogTheme.active_anywhere?(theme)
   end
 
   def destroy_theme(theme:)

@@ -3,7 +3,7 @@ import EmberObject, { computed, set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { next, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
-import { isHTMLSafe } from "@ember/template";
+import { isTrustedHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -885,13 +885,15 @@ export default class Composer extends RestModel {
   }
 
   /** TODO(typescript-pending): numeric settings casts can go when SiteSettingsService types its factory result. */
-  @computed("privateMessage")
+  @computed("privateMessage", "categoryId")
   get minimumTitleLength() {
-    if (this.privateMessage) {
-      return this.siteSettings.min_personal_message_title_length as number;
-    } else {
-      return this.siteSettings.min_topic_title_length as number;
-    }
+    const length = this.privateMessage
+      ? (this.siteSettings.min_personal_message_title_length as number)
+      : (this.siteSettings.min_topic_title_length as number);
+
+    return applyValueTransformer("composer-minimum-title-length", length, {
+      composer: this,
+    });
   }
 
   @computed("minimumPostLength", "replyLength", "canEditTopicFeaturedLink")
@@ -928,7 +930,7 @@ export default class Composer extends RestModel {
   @computed("title")
   get titleLength() {
     const title = this.title || "";
-    if (isHTMLSafe(title)) {
+    if (isTrustedHTML(title)) {
       return title.toString().length;
     }
     return title.replace(/\s+/gim, " ").trim().length;

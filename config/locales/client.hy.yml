@@ -2292,6 +2292,10 @@ hy:
     composer:
       emoji: "Էմոջի :)"
       options: "Տարբերակներ"
+      ai_content:
+        code: "Կոդ"
+        quote: "Մեջբերել"
+        details: "Մանրամասներ"
       whisper: "շշուկ"
       unlist: "չցուցակագրված"
       add_warning: "Սա պաշտոնական զգուշացում է:"
@@ -3012,10 +3016,8 @@ hy:
           label: "ընտրված"
           title: "Սեղմեք՝ գրառումն ընտրվածից հեռացնելու համար "
         select_replies:
-          label: "ընտրել+պատասխաններ"
           title: "Ավելացնել գրառումը և դրա բոլոր պատասխանները ընտրվածին"
         select_below:
-          label: "ընտրել+ներքև"
           title: "Ավելացնել գրառումը և դրանից հետո բոլորը ընտրվածին"
         delete: ջնջել ընտրվածը
         cancel: չեղարկել ընտրվածը
@@ -3710,6 +3712,14 @@ hy:
       forward: "Փոխանցել"
       share: "Կիսվել"
       dismiss: "Չեղարկել"
+    mobile_tab_bar:
+      create: "Ստեղծել"
+      more: "Ավելին"
+      back: "Ետ"
+      topics: "Թեմաներ"
+      drafts:
+        one: "Սևագրեր (%{count})"
+        other: "Սևագրեր (%{count})"
     safe_mode:
       enabled: "Անվտանգ ռեժիմը միացված է, փակեք բրաուզերի այս պատուհանը՝ անվտանգ ռեժիմից դուրս գալու համար:"
     pause_notifications:
@@ -5063,7 +5073,6 @@ hy:
         silence_modal_title: "Լռեցնել Օգտատիրոջը"
         silence_duration: "Որքա՞ն ժամանակ պետք է լռեցվի օգտատերը:"
         silence_reason_placeholder: "Լռեցման Պատճառը"
-        silence_message: "Էլ. Նամակ"
         suspended_until: "(մինչև %{until})"
         cant_suspend: "Այս օգտատերը չի կարող սառեցվել:"
         delete_posts_failed: "Գրառումները ջնջելիս խնդիր է առաջացել:"
@@ -5262,6 +5271,8 @@ hy:
           dropdown: "Բացվող Ցուցակ"
       site_text:
         search_label: "Որոնում"
+        preview:
+          default: "Լռելյայն"
         theme_disabled: "Անջատված"
         filters: "Ֆիլտրներ"
         edit: "Խմբագրել"
@@ -5344,7 +5355,7 @@ hy:
           modal_title: Կրծքանշանների Խմբավորումները
         granted_by: Շնորհող՝
         granted_at: Շնորհված
-        reason_help: (Գրառման կամ թեմայի հղում)
+        reason_help: Գրառման կամ թեմայի հղում
         save: Պահպանել
         delete: Ջնջել
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կրծքանշանը:'

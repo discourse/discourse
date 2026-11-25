@@ -1,4 +1,11 @@
-import { fillIn, render, settled, triggerEvent } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import {
+  fillIn,
+  render,
+  rerender,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDateInput from "discourse/ui-kit/d-date-input";
@@ -9,7 +16,7 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
+    this.date = DEFAULT_DATE;
 
     await render(<template><DDateInput @date={{this.date}} /></template>);
 
@@ -17,8 +24,8 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", () => {});
+    this.date = DEFAULT_DATE;
+    this.onChange = () => {};
 
     await render(
       <template>
@@ -33,30 +40,30 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    this.setProperties({ date: DEFAULT_DATE });
-    this.set("onChange", (date) => this.set("date", date));
+    const date = tracked(DEFAULT_DATE);
+    const onChange = (newDate) => (date.value = newDate);
 
     await render(
       <template>
-        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
+        <DDateInput @date={{date.value}} @onChange={{onChange}} />
       </template>
     );
 
     await fillIn(".date-picker", "2019-02-02");
     await triggerEvent(".date-picker", "change");
 
-    assert.true(this.date.isSame(moment("2019-02-02")));
+    assert.true(date.value.isSame(moment("2019-02-02")));
   });
 
   test("bounds the picker to the relative date and follows its changes", async function (assert) {
-    this.setProperties({
-      date: DEFAULT_DATE,
-      relativeDate: moment("2019-01-20"),
-    });
+    const relativeDate = tracked(moment("2019-01-20"));
 
     await render(
       <template>
-        <DDateInput @date={{this.date}} @relativeDate={{this.relativeDate}} />
+        <DDateInput
+          @date={{DEFAULT_DATE}}
+          @relativeDate={{relativeDate.value}}
+        />
       </template>
     );
 
@@ -64,14 +71,14 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
       .dom(".date-picker")
       .hasAttribute("min", "2019-01-20", "the bound is applied on load");
 
-    this.set("relativeDate", moment("2019-01-25"));
+    relativeDate.value = moment("2019-01-25");
     await settled();
 
     assert
       .dom(".date-picker")
       .hasAttribute("min", "2019-01-25", "the bound tracks the relative date");
 
-    this.set("relativeDate", null);
+    relativeDate.value = null;
     await settled();
 
     assert
@@ -80,20 +87,13 @@ module("Integration | ui-kit | DDateInput", function (hooks) {
   });
 
   test("always shows date in timezone of input timestamp", async function (assert) {
-    this.setProperties({
-      date: moment.tz("2023-05-05T10:00:00", "ETC/GMT-12"),
-    });
+    const date = tracked(moment.tz("2023-05-05T10:00:00", "ETC/GMT-12"));
 
-    await render(
-      <template>
-        <DDateInput @date={{this.date}} @onChange={{this.onChange}} />
-      </template>
-    );
+    await render(<template><DDateInput @date={{date.value}} /></template>);
     assert.dom(".date-picker").hasValue("2023-05-05");
 
-    this.setProperties({
-      date: moment.tz("2023-05-05T10:00:00", "ETC/GMT+12"),
-    });
+    date.value = moment.tz("2023-05-05T10:00:00", "ETC/GMT+12");
+    await rerender();
     assert.dom(".date-picker").hasValue("2023-05-05");
   });
 });

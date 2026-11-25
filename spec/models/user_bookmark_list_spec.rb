@@ -4,13 +4,7 @@ RSpec.describe UserBookmarkList do
   fab!(:user)
   let(:list) { UserBookmarkList.new(user: user, guardian: Guardian.new(user)) }
 
-  before do
-    register_test_bookmarkable
-
-    Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
-    Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)
-    user_bookmark
-  end
+  before { register_test_bookmarkable }
 
   after { DiscoursePluginRegistry.reset! }
 
@@ -19,6 +13,10 @@ RSpec.describe UserBookmarkList do
   let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
   it "returns all types of bookmarks" do
+    Fabricate(:topic_user, user: user, topic: post_bookmark.bookmarkable.topic)
+    Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)
+    user_bookmark
+
     queries = track_sql_queries { list.load }
     expect(queries.grep(/SELECT COUNT/)).to be_empty
     expect(queries.grep(/\ASELECT "bookmarks"\.\* FROM "bookmarks"/)).to be_empty
@@ -36,9 +34,12 @@ RSpec.describe UserBookmarkList do
 
   context "when the per_page param is too high" do
     it "does not allow more than X bookmarks to be requested per page" do
-      22.times do
-        bookmark = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
-        Fabricate(:topic_user, topic: bookmark.bookmarkable.topic, user: user)
+      topic = Fabricate(:topic, user: user)
+      Fabricate(:topic_user, topic: topic, user: user)
+
+      21.times do
+        post = Fabricate(:post, topic: topic, user: user)
+        Fabricate(:bookmark, user: user, bookmarkable: post)
       end
 
       list = UserBookmarkList.new(user: user, guardian: Guardian.new(user), per_page: 1000)

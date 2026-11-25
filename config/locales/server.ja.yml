@@ -474,10 +474,6 @@ ja:
   no_mentions_allowed_newuser: "新規ユーザーは他のユーザーをメンションできません。"
   too_many_mentions_newuser:
     other: "新規ユーザーは投稿につき %{count} 人のユーザーしかメンションできません。"
-  no_embedded_media_allowed_group: "投稿にメディア項目を埋め込むことはできません。"
-  no_embedded_media_allowed: "新規ユーザーは投稿にメディア項目を埋め込むことはできません。"
-  too_many_embedded_media:
-    other: "新規ユーザーは、ポストにつき %{count} 個のメディア項目しか埋め込めません。"
   no_attachments_allowed: "新規ユーザーは投稿に添付ファイルを追加できません。"
   too_many_attachments:
     other: "新規ユーザーは投稿につき %{count} 個のファイルしか添付できません。"
@@ -2321,8 +2317,6 @@ ja:
     automatically_clean_unused_tags: "どのトピックや個人メッセージにも使用されていないタグを毎日自動的に削除します。"
     default_watched_precedence_over_muted: "ミュートしているものも含み、ユーザーがウォッチ中のカテゴリまたはタグ内のトピックについてユーザーに通知する"
     company_name: "会社または組織の名前。"
-    governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
-    city_for_disputes: "このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。"
     shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
     shared_drafts_allowed_groups: "これらのグループのユーザーが共有下書きを閲覧して編集することを許可します。"
     push_notifications_prompt: "プッシュ通知のユーザー同意バナーを表示します。この設定によって、プッシュ通知を送信する許可をユーザーに求めるプロンプトがトリガーされます。プッシュ通知がまだ有効になっていない場合、ユーザーのデバイスがサポートしている場合、およびユーザーが投稿を行ったかプログレッシブウェブアプリ (PWA) を使用している場合にのみ表示されます。このプロンプトをユーザーがすでに閉じた場合、または許可を付与/拒否した場合には、再度表示されることはありません。"
@@ -2435,10 +2429,28 @@ ja:
       mediaconvert_output_subdirectory_required: "MediaConvert 出力サブディレクトリが必要です。"
       s3_credentials_required_for_video_conversion: "動画変換には S3 資格情報が必要です。S3 アクセスキーを構成するか、IAM プロファイルを有効にしてください。"
     keywords:
+      about_banner_image: "バナー画像"
+      about_page_extra_groups: "グループのリスト"
+      about_page_extra_groups_initial_members: "拡大メンバー"
+      about_page_extra_groups_order: "並べ替え順"
+      about_page_extra_groups_show_description: "説明を含める"
       clean_up_inactive_users_after_days: "有効化解除|非アクティブ|未有効化"
+      company_url: "ウェブサイト"
+      default_composition_mode: "rte|リッチテキスト|作成ツール|markdown|リッチエディター"
+      extended_site_description: "コミュニティーの説明"
+      large_icon: "正方形のアイコン"
+      logo: "プライマリーロゴ"
+      logo_dark: "プライマリーロゴ - ダーク"
+      logo_small: "小さいロゴ"
+      logo_small_dark: "小さいロゴ - ダーク"
       navigation_menu: "サイドバー|ヘッダードロップダウン"
       purge_unactivated_users_grace_period_days: "有効化解除|非アクティブ|未有効化"
-      default_composition_mode: "rte|リッチテキスト|作成ツール|markdown|リッチエディター"
+      short_site_description: "コミュニティーのタイトル"
+      site_contact_group_name: "サイトの連絡先グループ"
+      site_contact_username: "サイトの連絡先名"
+      site_description: "コミュニティーの概要"
+      title: "コミュニティー名"
+      welcome_banner_image: "背景画像"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2907,20 +2919,6 @@ ja:
       title: "非表示の投稿"
       preview: "コミュニティーメンバーによる通報により投稿は非表示になりました。"
       subject_template: "コミュニティー通報によって非表示にされた投稿"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になっていることをお知らせします。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        この投稿は、コミュニティーからの通報により非表示にされました。そのため、コミュニティーからのフィードバックを反映するようにあなたの投稿を書き直すことを検討してください。**%{edit_delay} 分後に編集を開始できます。編集が終わると、自動的に非表示状態が解除されます。**
-
-        ただし、投稿が再びコミュニティーによって非表示にされると、スタッフが処理するまで非表示のママとなります。
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     reviewable_queued_post_revise_and_reject:
       title: "あなたの投稿に対するフィードバック"
       subject_template: "%{topic_title} のあなたの投稿に対するフィードバック"
@@ -2931,31 +2929,9 @@ ja:
       title: "再度非表示"
       preview: "コミュニティーメンバーによって投稿は再度非表示になりました。"
       subject_template: "コミュニティー通報によって非表示にされた投稿、スタッフ通知済み"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が再び非表示になったことをお知らせします。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        コミュニティーがこの投稿を通報したため、非表示になっています。**この投稿は 2 回以上非表示となったため、スタッフメンバーが処理するまで非表示のままとなります。**
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     queued_by_staff:
       title: "承認待ちの投稿"
       subject_template: "スタッフが投稿を非表示にしました。承認待ち"
-      text_body_template: |
-        こんにちは。
-
-        これは %{site_name} からの自動メッセージです。あなたの投稿が非表示になったことをお知らせします。
-
-        <%{base_url}%{url}>
-
-        あなたの投稿は、スタッフがレビューするまで非表示のままとなります。
-
-        その他のガイダンスについては、[コミュニティーガイドライン](%{base_url}/guidelines)をご覧ください。
     flags_disagreed:
       title: "通報された投稿をスタッフが復元しました"
       subject_template: "通報された投稿をスタッフが復元しました"
@@ -3459,16 +3435,6 @@ ja:
     user_automatically_silenced_with_reason:
       title: "ユーザーは自動的に投稿禁止にされました"
       subject_template: "新規ユーザー %{username} はコミュニティー通報により投稿禁止になりました"
-      text_body_template: |
-        これは自動メッセージです。
-
-        新規ユーザー [%{username}](%{user_url}) は自動的に投稿禁止になりました。
-
-        理由 - %{reason}
-
-        [通報をレビュー](%{base_url}/review)してください。%{username} が誤って投稿禁止になっている場合は、[このユーザーの管理者ページ](%{user_url})で投稿禁止を解除ボタンをクリックしてください。
-
-        このしきい値は、`silence_new_user` サイト設定で変更できます。
     spam_post_blocked:
       title: "迷惑投稿はブロックされました"
       subject_template: "同一リンクの連続投稿により、新規ユーザー %{username} の投稿をブロック"
@@ -3791,12 +3757,6 @@ ja:
     account_suspended_forever:
       title: "アカウントが凍結されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは凍結されました"
-    account_silenced:
-      title: "アカウントが投稿禁止にされました"
-      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
-    account_silenced_forever:
-      title: "アカウントが投稿禁止にされました"
-      subject_template: "[%{email_prefix}] あなたのアカウントは投稿禁止にされました"
     account_deleted:
       title: "アカウントが削除されました"
       subject_template: "[%{email_prefix}] あなたのアカウントは削除されました"
@@ -3969,10 +3929,6 @@ ja:
     signup_after_reject:
       title: "登録 - 拒否後"
       subject_template: "%{site_name} での承認が拒否されました"
-      text_body_template: |
-        スタッフメンバーは %{site_name} のあなたのアカウントを拒否しました。
-
-        %{reject_reason}
     signup:
       title: "登録"
       preview: "アカウントを確認してください。"
@@ -4734,6 +4690,10 @@ ja:
       no_context:
         watched_word: "この投稿にはウォッチ語が含まれていました。%{link} をご覧ください。"
     actions:
+      answer_yes:
+        title: "はい"
+      answer_no:
+        title: "いいえ"
       agree:
         title: "はい"
       agree_and_keep:
@@ -4774,6 +4734,7 @@ ja:
       delete_and_ignore_replies:
         title: "投稿と返信を削除して通報を無視する"
         description: "キューから削除すると、投稿とそのすべての返信を削除して通報を無視します。最初の投稿である場合、トピックも削除されます"
+        confirm_title: "投稿と返信を削除して通報を無視する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4783,6 +4744,7 @@ ja:
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
+        confirm_title: "投稿と返信を削除する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:

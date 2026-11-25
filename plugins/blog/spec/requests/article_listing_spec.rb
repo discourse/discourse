@@ -6,7 +6,7 @@ RSpec.describe "Blog article listing", type: :request do
   fab!(:older_publication) { publish_blog_article(published_at: 2.days.ago) }
   fab!(:newer_publication) { publish_blog_article(published_at: 1.day.ago) }
 
-  before { SiteSetting.blog_posts_per_page = 1 }
+  before { update_default_blog(posts_per_page: 1) }
 
   it "pages through articles with canonical and neighbouring links" do
     get "https://blog.example.com/", params: { page: 0 }

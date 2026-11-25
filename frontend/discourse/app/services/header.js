@@ -10,6 +10,7 @@ const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {
+  @service mobileTabBar;
   @service scrollDirection;
   @service site;
 
@@ -77,7 +78,8 @@ export default class Header extends Service {
 
     if (
       this.site.mobileView &&
-      this.scrollDirection.lastScrollDirection === SCROLLED_UP
+      this.scrollDirection.lastScrollDirection === SCROLLED_UP &&
+      !this.mobileTabBar.enabled
     ) {
       return false;
     }

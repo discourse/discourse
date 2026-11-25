@@ -280,16 +280,13 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
   });
 
   test("correctly re-renders when args change", async function (assert) {
-    const state = new (class {
-      @tracked key = "hello";
-      @tracked options = {};
-    })();
+    const options = tracked({}, {});
 
     await render(
       <template>
         <DInterpolatedTranslation
-          @key={{state.key}}
-          @options={{state.options}}
+          @key="hello"
+          @options={{options.value}}
           as |Placeholder|
         >
           <Placeholder @name="username">
@@ -301,7 +298,7 @@ module("Integration | ui-kit | DInterpolatedTranslation", function (hooks) {
 
     assert.dom().hasText("Bonjour, pento");
 
-    state.options = { username: "admin" };
+    options.value = { username: "admin" };
     await settled();
 
     assert.dom().hasText("Bonjour, admin");

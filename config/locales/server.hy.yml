@@ -1503,6 +1503,8 @@ hy:
       reply_by_email_disabled: "Դուք պետք է սկզբում միացնեք 'reply by email'' ՝ մինչև այս կարգավորումը միացնելը"
       enable_local_logins_disabled: "Դուք պետք է սկզբում միացնեք 'enable local logins' ՝ մինչև այս կարգավորումը միացնելը"
       invalid_hex_value: "Գույների արժեքները պետք է լինեն 6-նիշանոց տասնվեցերորդական կոդեր:"
+    keywords:
+      company_url: "վեբ կայք"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2340,12 +2342,6 @@ hy:
     account_suspended_forever:
       title: "Հաշիվը Սառեցված է"
       subject_template: "[%{email_prefix}] Ձեր հաշիվը սառեցվել է"
-    account_silenced:
-      title: "Հաշիվը Լռեցված է"
-      subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
-    account_silenced_forever:
-      title: "Հաշիվը Լռեցված է"
-      subject_template: "[%{email_prefix}] Ձեր հաշիվը լռեցված է"
     account_exists:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"
@@ -2873,6 +2869,10 @@ hy:
         one: "%{count} վայրկյան"
         other: "%{count} վայրկյան"
     actions:
+      answer_yes:
+        title: "Այո"
+      answer_no:
+        title: "Ոչ"
       agree:
         title: "Այո"
       agree_and_suspend:

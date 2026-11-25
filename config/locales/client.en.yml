@@ -29,6 +29,7 @@ en:
       resize: "Resize code editor"
     code_editor:
       resize: "Resize code editor"
+      load_failed: "The code editor couldn't load. Reload the page to try again."
       tab_hint: "Press Escape, then Tab to move focus out of the editor."
       completions: "Completions"
       search:
@@ -695,7 +696,7 @@ en:
           title: "Look & feel"
           description: "Choose your fonts and what members see first."
       sections:
-        colors: "Site color modes"
+        colors: "Default color modes"
         fonts: "Fonts"
         logo: "Logo"
         homepage: "Homepage"
@@ -704,9 +705,9 @@ en:
         applying: "Applying…"
         custom_theme_notice: "Your site currently uses %{name} as its default theme. Choose a theme below to preview it. Saving will replace your current theme."
       colors:
-        description: "Set a default palette for each mode. Members' appearance preferences determine which one they see."
-        light_palette: "Light palette"
-        dark_palette: "Dark palette"
+        palette: "Palette"
+        manage_palettes_prompt: "Want a custom palette or to control which palettes members can choose?"
+        manage_palettes: "Manage color palettes"
         modes:
           label: "Color modes"
           both: "Light & dark"
@@ -715,9 +716,6 @@ en:
       fonts:
         base_font: "Body"
         heading_font: "Headings"
-      logo:
-        description: "Appears on the site's top navigation, as well as the top of the site's Email Notifications."
-        help_text: "Recommended size is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categories"
@@ -888,9 +886,9 @@ en:
           other: "Are you sure you want to delete these <b>%{count}</b> bookmarks?"
 
     copy_codeblock:
-      copied: "copied!"
-      copy: "copy code to clipboard"
-      fullscreen: "show code in full screen"
+      copied: "Copied!"
+      copy: "Copy code to clipboard"
+      fullscreen: "Show code in full screen"
       view_code: "View code"
 
     drafts:
@@ -999,13 +997,13 @@ en:
       none_found: "No topics found."
       title:
         search: "Search for a Topic"
-        placeholder: "type the topic title, url or id here"
+        placeholder: "Type the topic title, URL or ID here"
 
     choose_message:
       none_found: "No messages found."
       title:
         search: "Search for a Message"
-        placeholder: "type the message title, url or id here"
+        placeholder: "Type the message title, URL or ID here"
 
     dsa_statements:
       title: "DSA classification"
@@ -1236,6 +1234,10 @@ en:
         all:
           title: "Everything"
 
+      pending_post_approval: "Post approval"
+      pending_topic_approval: "Topic approval"
+      pending_account_approval: "Account approval"
+      account_review: "Account review"
       context_question:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
@@ -1244,9 +1246,6 @@ en:
         suspect_user: "Is this user spam?"
         approve_post: "Approve this post?"
         approve_topic: "Approve this topic?"
-        something_wrong_with_post: "Is there something wrong with this post?"
-        something_wrong_with_topic: "Is there something wrong with this topic?"
-        something_wrong_with_account: "Is there something wrong with this account?"
 
       types:
         reviewable_flagged_post:
@@ -1289,6 +1288,7 @@ en:
         target_deleted: "Post deleted"
         target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
         queued_post_deleted_by: "Queued post deleted by %{username} · %{relativeDate}"
+        queued_for_approval_by: "Queued for approval by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -1746,16 +1746,17 @@ en:
       "17": "Links"
 
     categories:
-      categories_label: "categories"
-      subcategories_label: "subcategories"
-      no_subcategories: "no subcategories"
-      remove_filter: "remove filter"
+      categories_label: "Categories"
+      subcategories_label: "Subcategories"
+      no_subcategories: "No subcategories"
+      remove_filter: "Remove filter"
       plus_more_count:
         one: "+%{count} more"
         other: "+%{count} more"
-      view_all: "view all"
+      view_all: "View all"
       category: "Category"
       category_list: "Display category list"
+      page_layout: "Categories page layout"
       reorder:
         title: "Reorder Categories"
         title_long: "Reorganize the category list"
@@ -3250,6 +3251,10 @@ en:
 
     login:
       header_title: "Welcome back"
+      invitation_gate:
+        title: "This community is invite-only"
+        description: "To join, open the invitation link you received. If you don’t have an invitation, contact the community owner to request one."
+        existing_member: "Already a member of this community? Log in below."
       title: "Log In"
       username: "User"
       password: "Password"
@@ -3376,6 +3381,7 @@ en:
       standard: Standard
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Noto 3D Emoji
       twemoji: Twemoji
 
     category_page_style:
@@ -3515,11 +3521,14 @@ en:
 
     emoji_picker:
       filter_placeholder: Search for emoji
-      smileys_&_emotion: Smileys and Emotion
-      people_&_body: People and Body
-      animals_&_nature: Animals and Nature
-      food_&_drink: Food and Drink
-      travel_&_places: Travel and Places
+      search_placeholder: "Search by emoji name and alias..."
+      no_results: "No results"
+      favorites: "Frequently used"
+      smileys_&_emotion: Smileys and emotion
+      people_&_body: People and body
+      animals_&_nature: Animals and nature
+      food_&_drink: Food and drink
+      travel_&_places: Travel and places
       activities: Activities
       objects: Objects
       symbols: Symbols
@@ -3655,6 +3664,12 @@ en:
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
+      ai_content:
+        menu: "Label AI content..."
+        code: "Code"
+        quote: "Quote"
+        details: "Details"
+        placeholder: "AI content"
       whisper: "whisper"
       unlist: "unlisted"
 
@@ -4365,6 +4380,7 @@ en:
 
     topics:
       new_messages_marker: "last visit"
+      list_options: "List options"
       bulk:
         select: "Bulk select"
         confirm: "Confirm"
@@ -5008,21 +5024,21 @@ en:
       invite_private:
         title: "Invite to Message"
         email_or_username: "Invitee's Email or Username"
-        email_or_username_placeholder: "email address or username"
+        email_or_username_placeholder: "Email address or username"
         action: "Invite"
         success: "We've invited that user to participate in this message."
         success_group: "We've invited that group to participate in this message."
         error: "Sorry, there was an error inviting that user."
         not_allowed: "Sorry, that user can't be invited."
-        group_name: "group name"
+        group_name: "Group name"
 
       controls: "Topic Controls"
 
       invite_reply:
         title: "Invite"
-        username_placeholder: "username"
+        username_placeholder: "Username"
         action: "Send Invite"
-        help: "invite others to this topic via email or notifications"
+        help: "Invite others to this topic via email or notifications"
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link."
         discourse_connect_enabled: "Enter the username of the person you'd like to invite to this topic."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
@@ -5046,14 +5062,14 @@ en:
 
       move_to:
         title: "Move to"
-        action: "move to"
+        action: "Move to"
         error: "There was an error moving posts."
 
       split_topic:
         title: "Move to New Topic"
-        action: "move to new topic"
+        action: "Move to new topic"
         topic_name: "New Topic Title"
-        radio_label: "New Topic"
+        radio_label: "New topic"
         error: "There was an error moving posts to the new topic."
         instructions:
           one: "You are about to create a new topic and populate it with the post you've selected."
@@ -5061,9 +5077,9 @@ en:
 
       merge_topic:
         title: "Move to Existing Topic"
-        action: "move to existing topic"
+        action: "Move to existing topic"
         error: "There was an error moving posts into that topic."
-        radio_label: "Existing Topic"
+        radio_label: "Existing topic"
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
@@ -5071,9 +5087,9 @@ en:
 
       move_to_new_message:
         title: "Move to New Message"
-        action: "move to new message"
+        action: "Move to new message"
         message_title: "New Message Title"
-        radio_label: "New Message"
+        radio_label: "New message"
         participants: "Participants"
         instructions:
           one: "You are about to create a new message and populate it with the post you've selected."
@@ -5081,8 +5097,8 @@ en:
 
       move_to_existing_message:
         title: "Move to Existing Message"
-        action: "move to existing message"
-        radio_label: "Existing Message"
+        action: "Move to existing message"
+        radio_label: "Existing message"
         participants: "Participants"
         instructions:
           one: "Please choose the message you'd like to move that post to."
@@ -5090,7 +5106,7 @@ en:
 
       merge_posts:
         title: "Merge Selected Posts"
-        action: "merge selected posts"
+        action: "Merge selected posts"
         error: "There was an error merging the selected posts."
 
       publish_page:
@@ -5110,9 +5126,9 @@ en:
 
       change_owner:
         title: "Change Owner"
-        action: "change ownership"
+        action: "Change ownership"
         error: "There was an error changing the ownership of the posts."
-        placeholder: "username of new owner"
+        placeholder: "Username of new owner"
         instructions:
           one: "Please choose a new owner for the post by <b>@%{old_user}</b>"
           other: "Please choose a new owner for the %{count} posts by <b>@%{old_user}</b>"
@@ -5128,24 +5144,24 @@ en:
         instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
 
       multi_select:
-        select: "select"
-        selected: "selected (%{count})"
+        select: "Select"
+        selected: "Selected (%{count})"
         select_post:
-          label: "select"
+          label: "Select"
           title: "Add post to selection"
         selected_post:
-          label: "selected"
+          label: "Selected"
           title: "Click to remove post from selection"
         select_replies:
-          label: "select +replies"
+          label: "Select & replies"
           title: "Add post and all its replies to selection"
         select_below:
-          label: "select +below"
+          label: "Select & below"
           title: "Add post and all after it to selection"
-        delete: delete selected
-        cancel: cancel selecting
-        select_all: select all
-        deselect_all: deselect all
+        delete: Delete selected
+        cancel: Cancel selecting
+        select_all: Select all
+        deselect_all: Deselect all
         description:
           one: You have selected <b>%{count}</b> post.
           other: "You have selected <b>%{count}</b> posts."
@@ -5171,6 +5187,8 @@ en:
 
     post:
       accessible_heading: "post by %{username} %{date}"
+      ai_generated: "AI"
+      ai_generated_title: "This content has been partially or fully generated by AI"
       heading_anchor: "Heading link"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
@@ -5312,6 +5330,7 @@ en:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         no_uploads_authorized: "Sorry, no files are authorized to be uploaded."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        media_upload_not_allowed: "Sorry, you are not allowed to upload images, videos, or audio."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
@@ -5557,6 +5576,7 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
+      back_to_categories: "Back to categories"
       general: "General"
       settings: "Settings"
       moderation: "Moderation"
@@ -5599,6 +5619,11 @@ en:
         delete_title: "Delete this category"
         delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
         delete_title_forbidden: "Can't delete this category"
+      empty_state:
+        title: "Start the conversation"
+        body: "New topics in this category will show up here."
+        create_topic: "Create the first topic"
+        edit_category: "Edit category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -5628,7 +5653,12 @@ en:
         icon_required: "Select an icon."
         groups_required: "Select at least one group for this approval mode."
       name: "Category name"
-      untitled: "Untitled category"
+      name_and_style: "Category name and style"
+      choose_style: "Choose category style (currently %{style})"
+      choose_style_with_icon: "Choose category style (currently the %{name} icon)"
+      choose_style_with_emoji: "Choose category style (currently the %{name} emoji)"
+      choose_style_with_emoji_tone: "Choose category style (currently the %{name} emoji, %{tone})"
+      icon_search_placeholder: "Search…"
       description: "Description"
       logo: "Category logo image"
       logo_dark: "Dark mode category logo image"
@@ -5636,10 +5666,6 @@ en:
       background_image: "Category background image"
       background_image_dark: "Dark category background image"
       style: "Style"
-      icon: "Icon"
-      emoji: "Emoji"
-      select_emoji: "Select emoji"
-      select_icon: "Select icon"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -5647,22 +5673,15 @@ en:
         incorrect_length: "must match the format #RRGGBB or #RGB"
         non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
-        type: "Style"
         icon: "Icon"
         emoji: "Emoji"
         square: "Square"
-        options:
-          square: "Square"
-          icon: "Icon"
-          emoji: "Emoji"
       color_used: "Color in use"
-      predefined_colors: "Predefined color options"
       name_placeholder: "One or two words recommended"
       category_types: "Category types"
       unknown_category_type: "Unknown category type"
       unknown_category_type_description: "The category type '%{categoryType}' is not supported or not enabled on this category."
       category_types_no_results: "No other category types found"
-      color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
       list: "List categories"
@@ -6287,10 +6306,10 @@ en:
       default_title: "Scheduled Event"
     tagging:
       all_tags: "All tags"
-      other_tags: "Other Tags"
-      selector_tags: "tags"
-      selector_no_tags: "no tags"
-      selector_remove_filter: "remove filter"
+      other_tags: "Other tags"
+      selector_tags: "Tags"
+      selector_no_tags: "No tags"
+      selector_remove_filter: "Remove filter"
       tags: "Tags"
       choose_for_topic: "Optional tags…"
       choose_for_topic_required:
@@ -6479,10 +6498,29 @@ en:
       share: "Share"
       dismiss: "Dismiss"
 
+    mobile_tab_bar:
+      label: "Site sections"
+      new_topic: "New topic"
+      new_personal_message: "New personal message"
+      create: "Create"
+      menu: "Menu"
+      more: "More"
+      edit_topic: "Edit title, category and tags"
+      menu_with_reviewables:
+        one: "Menu, %{count} item to review"
+        other: "Menu, %{count} items to review"
+      back: "Back"
+      topics: "Topics"
+      drafts:
+        one: "Drafts (%{count})"
+        other: "Drafts (%{count})"
+      hub: "Hub"
+
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
-    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_notice: "You are currently previewing a theme."
+    exit_theme_preview: "Exit preview"
     theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
@@ -8761,19 +8799,11 @@ en:
           site_contact_group_help: |
             The group that gets invited to all automatically sent personal messages.
           your_organization: "Your organization"
-          your_organization_description: "Details about who operates this site and under which jurisdiction."
+          your_organization_description: "Details about who operates this site."
           company_name: "Name"
           company_name_placeholder: "ExampleCo"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Governing law"
-          governing_law_placeholder: "Province, State, or Country"
-          governing_law_help: |
-            Specify the jurisdiction for the site's legal terms, typically where the company is registered or operates.
-          city_for_disputes: "City for disputes"
-          city_for_disputes_placeholder: "City"
-          city_for_disputes_help: |
-            Specify the city for resolving legal disputes related to this forum.
           extra_groups:
             heading: "Group listing"
             description: "Extra groups to show on the About page."
@@ -9337,6 +9367,7 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           theme_setting_saved: "Theme setting saved!"
+          setting_link_label: "Link to the %{name} setting"
           theme_site_setting_saved: "Theme site setting saved!"
 
         schema:
@@ -9359,6 +9390,7 @@ en:
                 one: "at least %{count} tag is required"
                 other: "at least %{count} tags are required"
             string:
+              invalid_translation_identifier: "Use at most 80 characters, starting with a lowercase letter and containing only lowercase letters, numbers, and underscores."
               too_short:
                 one: "must be at least %{count} character"
                 other: "must be at least %{count} characters"
@@ -9376,8 +9408,8 @@ en:
           title: "Colors"
           edit: "Edit"
           view: "View"
-          set_default_light: "Set as light palette on default theme (%{theme})"
-          set_default_dark: "Set as dark palette on default theme (%{theme})"
+          set_default_light: "Set as light"
+          set_default_dark: "Set as dark"
           set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
@@ -9608,6 +9640,7 @@ en:
             mcp_client_updated: "update MCP OAuth client"
             delete_user: "delete user"
             create_bot: "Create bot"
+            change_bot_interactivity: "Change bot interactivity"
             change_trust_level: "change trust level"
             change_username: "change username"
             change_site_setting: "change site setting"
@@ -9671,11 +9704,14 @@ en:
             change_name: "change name"
             topic_timestamps_changed: "topic timestamps changed"
             approve_user: "approved user"
+            approve_account_review: "approved account review"
             removed_avatar: "removed avatar"
             web_hook_create: "webhook create"
             web_hook_update: "webhook update"
             web_hook_destroy: "webhook destroy"
             web_hook_deactivate: "webhook deactivate"
+            web_hook_ping: "Webhook ping"
+            web_hook_redeliver: "Webhook redelivery"
             embeddable_host_create: "embeddable host create"
             embeddable_host_update: "embeddable host update"
             embeddable_host_destroy: "embeddable host destroy"
@@ -10024,6 +10060,9 @@ en:
               description: "An account for integrations, webhooks, or automated posting through the API."
           back: "Back to bots"
           help: "Bots are user accounts that can't log in, for integrations and automated posting."
+          interactive_bot: "Interactive"
+          interactive_column: "Interactive?"
+          interactive_bot_description: "Notify this bot about forum mentions, direct replies, and personal messages addressed to it. When chat is enabled, also show it in the direct message picker."
           generate_api_key: "Generate API key"
           generate_api_key_description: "Only needed for external services that act as this bot. Discourse plugins don't need one."
           scope_mode_description: "The key only has this bot's permissions."
@@ -10088,8 +10127,8 @@ en:
         silence_reason_hidden_label: "Why are you silencing? This text will only be visible to staff and this user. Keep it short."
         silence_reason_title: "Silence reason"
         silence_reason_placeholder: "Silence Reason"
-        silence_message: "Email Message"
-        silence_message_placeholder: "Optionally, provide more information about this action and it will be included in the email sent to the silenced user."
+        silence_notice_message: "Message to the user"
+        silence_notice_message_placeholder: "Optionally, add details to the message the silenced user receives."
         suspended_until: "(until %{until})"
         suspend_forever: "Suspend forever"
         cant_suspend: "This user cannot be suspended."
@@ -10433,6 +10472,7 @@ en:
           text: "Text"
           textarea: "Textarea"
           date: "Date"
+          number: "Number"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
@@ -10441,20 +10481,28 @@ en:
         description: "You can customize any of the text on your forum."
         search: "Search text or translation keys"
         search_label: "Search"
+        preview:
+          label: "Text preview for %{key}"
+          customized: "Your text"
+          default: "Default"
         theme: "Theme or component"
         all_themes: "All site texts"
         theme_disabled: "Disabled"
+        usable_keys: "Translation keys"
+        manage_translations: "Manage translations"
         filters: "Filters"
         filters_active:
           one: "Filters (%{count})"
           other: "Filters (%{count})"
         edit_title: "Edit site text"
         default_text: "Default text"
+        default_text_language: "Default text · %{language}"
         value_label: "Your text · %{language}"
         invalid_title: "Invalid interpolation placeholders"
         invalid_description: "This text uses unrecognized placeholders. Use the available interpolation keys below."
         status:
           customized: "Customized"
+          unknown: "Unknown baseline"
           outdated: "Outdated"
           invalid: "Invalid"
         title: "Site texts"
@@ -10474,6 +10522,10 @@ en:
         interpolation_key_insert: "Click to insert"
         interpolation_key_used: "Already used"
         interpolation_key_invalid: "Unknown key — will not be interpolated"
+        unknown:
+          title: "The previous default was not recorded"
+          description: "This customization predates default tracking. Review the current default below and acknowledge it to track future changes."
+          acknowledge: "Acknowledge current default"
         outdated:
           title: "This translation is outdated"
           description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
@@ -10518,9 +10570,9 @@ en:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."
         clear_filter: "Clear"
-        add_url: "add URL"
-        add_host: "add host"
-        add_group: "add group"
+        add_url: "Add URL"
+        add_host: "Add host"
+        add_group: "Add group"
         uploaded_image_list:
           label: "Edit list"
           empty: "There are no pictures yet. Please upload one."
@@ -10640,7 +10692,7 @@ en:
           modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
-        reason_help: (A link to a post or topic)
+        reason_help: A link to a post or topic
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?

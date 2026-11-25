@@ -38,12 +38,20 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      review_bulk:
+        refresh: "Pārlādēt"
+        columns:
+          user: "Lietotājs"
+          created: "Radīts"
+          status: "Statuss"
       copied: "Nokopēts"
       ai_decoded_transcript:
         type: "Tips"
         error: "Kļūda..."
         response: "Atbilde"
       discourse_workflows:
+        ai_tool:
+          list_item: "Saraksta punkts"
         classify:
           text: "Teksts"
           upload_ids: "Attēli"
@@ -73,12 +81,14 @@ lv:
         nav:
           enabled: "Ieslēgts"
         filters:
-          all: "Visi"
           reset: "Atlikt"
         sentiment:
           enabled: "Ieslēgts"
         search:
           name: "Meklēt"
+        review_queue:
+          setting_groups:
+            settings: "Iestatījumi"
         image_caption:
           setting_groups:
             settings: "Iestatījumi"

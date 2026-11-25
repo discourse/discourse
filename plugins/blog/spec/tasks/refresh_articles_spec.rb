@@ -21,7 +21,10 @@ RSpec.describe "blog:refresh_articles" do
     expect { invoke_rake_task("blog:refresh_articles") }.to output(
       "Refreshed 1 published article.\n",
     ).to_stdout
-    expect(publication.reload.article.cooked).to eq("<p>Rebaked after import.</p>")
+    expect(publication.reload).to have_attributes(
+      cooked: "<p>Rebaked after import.</p>",
+      word_count: 3,
+    )
     expect(draft.reload.cooked).to be_nil
   end
 end

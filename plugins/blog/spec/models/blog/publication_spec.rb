@@ -133,6 +133,75 @@ RSpec.describe Blog::Publication do
     end
   end
 
+  describe "blogs" do
+    fab!(:other_blog) do
+      Blog::Instance.create!(
+        name: "Engineering",
+        slug: "engineering",
+        url: "https://engineering.example.com",
+      )
+    end
+
+    it "belongs to the default blog unless another is chosen" do
+      expect(described_class.for_topic(topic).blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "lets each blog hold an article at the same path" do
+      first = described_class.create!(topic: Fabricate(:topic), path: "/shared-story")
+      first.paths.create!(path: "/shared-story")
+      other =
+        described_class.create!(topic: Fabricate(:topic), path: "/shared-story", blog: other_blog)
+      other.paths.create!(path: "/shared-story")
+
+      expect(described_class.new(topic: Fabricate(:topic), path: "/shared-story")).not_to be_valid
+      expect(other.paths.sole.blog_id).to eq(other_blog.id)
+    end
+
+    it "starts a topic in a blog's public category on that blog" do
+      engineering_category = Fabricate(:category)
+      other_blog.update!(category: engineering_category)
+
+      expect(
+        described_class.for_topic(Fabricate(:topic, category: engineering_category)).blog,
+      ).to eq(other_blog)
+    end
+
+    it "never matches a blog without a category to a topic without one" do
+      update_default_blog(category_id: Fabricate(:category).id)
+      message = Fabricate(:private_message_topic)
+
+      expect(other_blog.category_id).to be_nil
+      expect(described_class.for_topic(message).blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "falls back to the default blog when none is recorded" do
+      publication = described_class.new(topic:, path: "/story")
+      publication.blog_id = nil
+
+      expect(publication.blog).to eq(Blog::Instance.default_blog)
+    end
+
+    it "keeps the main blog's articles off paths that start with another blog's slug" do
+      publication = described_class.new(topic:, path: "/engineering/story")
+
+      expect(publication).not_to be_valid
+      expect(publication.errors[:path]).to eq([I18n.t("blog.errors.path_taken")])
+      expect(described_class.new(topic:, path: "/engineering/story", blog: other_blog)).to be_valid
+
+      clashing_topic = Fabricate(:topic)
+      clashing_topic.update_columns(slug: "engineering")
+      expect(described_class.default_path(clashing_topic)).to eq(
+        "/engineering-#{clashing_topic.id}",
+      )
+    end
+
+    it "builds its URL from its own blog" do
+      publication = described_class.new(topic:, path: "/story", blog: other_blog)
+
+      expect(publication.url).to eq("https://engineering.example.com/story")
+    end
+  end
+
   describe ".for_topic" do
     it "suffixes the topic id when the topic's slug is reserved" do
       reserved_topic = Fabricate(:topic)
@@ -179,6 +248,27 @@ RSpec.describe Blog::Publication do
 
       expect(publication.article.cooked).to eq(publication.published_revision.cooked)
     end
+
+    it "counts the article's words when it's published, so listings don't parse the HTML" do
+      expect(publication.word_count).to eq(
+        Blog::Revision.word_count(publication.published_revision.cooked),
+      )
+
+      publication.update_columns(word_count: 1200)
+      expect(publication.reload.article.reading_minutes).to eq(4)
+    end
+
+    it "shows at least a minute for a short article" do
+      publication.update_columns(word_count: 100)
+
+      expect(publication.reload.article.reading_minutes).to eq(1)
+    end
+
+    it "counts the words from the HTML until a count is stored" do
+      publication.update_columns(word_count: nil)
+
+      expect(publication.reload.article.reading_minutes).to eq(1)
+    end
   end
 
   describe ".default_path" do
@@ -189,7 +279,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year and month" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
 
       expect(described_class.default_path(topic)).to eq("/2026/11/#{topic.slug}")
       expect(described_class.default_path(topic, date: Time.utc(2025, 2, 3))).to eq(
@@ -198,7 +288,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year, month and day" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{day}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{day}/{slug}")
 
       expect(
         described_class.default_path(topic, date: Time.zone.parse("2026-11-07 02:00 +04:00")),
@@ -206,7 +296,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "suffixes a reserved slug wherever the format places it" do
-      SiteSetting.blog_path_format = "/{slug}/{id}"
+      update_default_blog(path_format: "/{slug}/{id}")
       topic.update_columns(slug: "about")
 
       path = described_class.default_path(topic)
@@ -240,7 +330,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "shortens a long slug to fit the format within the path limit" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
       topic.update_columns(slug: "a" * 235)
 
       path = described_class.default_path(topic)
@@ -250,7 +340,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "renders a custom format with a fixed prefix and the topic id" do
-      SiteSetting.blog_path_format = "/news/{id}-{slug}"
+      update_default_blog(path_format: "/news/{id}-{slug}")
 
       expect(described_class.default_path(topic)).to eq("/news/#{topic.id}-#{topic.slug}")
     end
@@ -263,7 +353,7 @@ RSpec.describe Blog::Publication do
 
     before do
       freeze_time Time.utc(2026, 11, 6)
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
     end
 
     it "moves a generated dated path to the new publication date" do

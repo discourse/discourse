@@ -27,6 +27,7 @@ class Blog::BlogTheme::ImportArchive
   end
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
   try(Blog::ThemeImporter::InvalidTheme) { step :read_archive }
   step :create_theme
 

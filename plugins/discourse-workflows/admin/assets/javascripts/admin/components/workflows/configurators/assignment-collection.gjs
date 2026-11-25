@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import randomUUID from "discourse/lib/random-uuid";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import {
@@ -100,7 +101,7 @@ export default class AssignmentCollection extends Component {
   @action
   emptyAssignment() {
     return {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       name: "",
       value: "",
       type: "string",

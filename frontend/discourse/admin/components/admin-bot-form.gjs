@@ -41,6 +41,7 @@ export default class AdminBotForm extends Component {
       name: "",
       username: "",
       trust_level: this.args.defaultTrustLevel,
+      interactive_bot: false,
       generate_api_key: false,
       scope_mode: "global",
       scopes: buildScopesFormData(this.args.apiKeyScopes.scopes),
@@ -89,6 +90,7 @@ export default class AdminBotForm extends Component {
           name: data.name,
           username: data.username,
           trust_level: Number(data.trust_level),
+          interactive_bot: Boolean(data.interactive_bot),
         },
         { data }
       ),
@@ -249,6 +251,17 @@ export default class AdminBotForm extends Component {
               </control.Option>
             {{/each}}
           </field.Control>
+        </form.Field>
+
+        <form.Field
+          @description={{i18n "admin.users.bots.interactive_bot_description"}}
+          @format="large"
+          @name="interactive_bot"
+          @title={{i18n "admin.users.bots.interactive_bot"}}
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control />
         </form.Field>
 
         <PluginOutlet

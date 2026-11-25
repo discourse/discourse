@@ -50,6 +50,9 @@ sk:
           title: "Systém typov písma"
         colors:
           title: "Farby"
+        design_variables:
+          type: "Typ"
+          default: "Predvolené"
         icons:
           title: "Ikony"
           full_list: "Zobraziť celý zoznam Font Awesome Icons"

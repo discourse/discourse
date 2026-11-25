@@ -38,12 +38,20 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      review_bulk:
+        refresh: "Last inn siden på nytt"
+        columns:
+          user: "Bruker"
+          created: "Opprettet"
+          status: "Status"
       copied: "Kopiert"
       ai_decoded_transcript:
         type: "Type"
         error: "Feil"
         response: "Svar"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listeelement"
         classify:
           text: "Tekst"
           upload_ids: "Bilder"
@@ -75,12 +83,14 @@ nb_NO:
         nav:
           enabled: "Aktivert"
         filters:
-          all: "Alle"
           reset: "Tilbakestill"
         sentiment:
           enabled: "Aktivert"
         search:
           name: "Søk"
+        review_queue:
+          setting_groups:
+            settings: "Innstillinger"
         image_caption:
           setting_groups:
             settings: "Innstillinger"

@@ -59,18 +59,16 @@ module("Component | PollResultsTabs", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders one tab for non-ranked-choice poll", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS,
-      pollName: "Two Choice Poll",
-      pollType: "single",
-      isPublic: true,
-      isRankedChoice: false,
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "single";
+    this.isPublic = true;
+    this.isRankedChoice = false;
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -93,19 +91,17 @@ module("Component | PollResultsTabs", function (hooks) {
   });
 
   test("Renders two tabs for public ranked choice poll", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS,
-      pollName: "Two Choice Poll",
-      pollType: "ranked_choice",
-      isPublic: true,
-      isRankedChoice: true,
-      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "ranked_choice";
+    this.isPublic = true;
+    this.isRankedChoice = true;
+    this.rankedChoiceOutcome = RANKED_CHOICE_OUTCOME;
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>
@@ -129,19 +125,17 @@ module("Component | PollResultsTabs", function (hooks) {
   });
 
   test("Renders one tab for private ranked choice poll", async function (assert) {
-    this.setProperties({
-      options: TWO_OPTIONS,
-      pollName: "Two Choice Poll",
-      pollType: "ranked_choice",
-      isPublic: false,
-      isRankedChoice: true,
-      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
-      postId: 123,
-      vote: ["1ddc47be0d2315b9711ee8526ca9d83f"],
-      voters: PRELOADEDVOTERS,
-      votersCount: 9,
-      fetchVoters: () => {},
-    });
+    this.options = TWO_OPTIONS;
+    this.pollName = "Two Choice Poll";
+    this.pollType = "ranked_choice";
+    this.isPublic = false;
+    this.isRankedChoice = true;
+    this.rankedChoiceOutcome = RANKED_CHOICE_OUTCOME;
+    this.postId = 123;
+    this.vote = ["1ddc47be0d2315b9711ee8526ca9d83f"];
+    this.voters = PRELOADEDVOTERS;
+    this.votersCount = 9;
+    this.fetchVoters = () => {};
 
     await render(
       <template>

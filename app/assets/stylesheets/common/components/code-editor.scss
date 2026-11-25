@@ -39,10 +39,32 @@
     /*! rtl:ignore */
     direction: ltr;
 
-    &.cm-focused {
-      outline: 2px solid var(--tertiary);
-      outline-offset: -1px;
+    // Inset, so gutters, scrollbars and a clipping host don't cover it.
+    &.cm-focused,
+    &:focus {
+      outline: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 400;
+        border: 2px solid var(--tertiary);
+        border-radius: inherit;
+        pointer-events: none;
+      }
     }
+  }
+
+  > .loading-container,
+  .codemirror-editor,
+  .cm-editor {
+    border-radius: inherit;
+  }
+
+  &:has(> .grippie) .cm-editor:is(.cm-focused, :focus)::after {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .cm-scroller {
@@ -123,7 +145,6 @@
 
   // The editor's base theme only styles tooltips for light mode.
   .cm-tooltip {
-    z-index: z("dropdown");
     background: var(--secondary);
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-border-radius);

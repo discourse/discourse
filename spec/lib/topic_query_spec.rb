@@ -53,6 +53,54 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "keyword search statement timeout" do
+    let(:timeout_error) { I18n.t("search.keyword_search_timeout") }
+    let(:slow_topics) { Topic.where("(SELECT true FROM pg_sleep(0.3))") }
+
+    it "limits only the keyword filter when reusing a topic query" do
+      query = TopicQuery.new(nil, q: "keyword")
+
+      stub_const(Topic::KeywordSearch, :STATEMENT_TIMEOUT_MS, 50) do
+        slow_topics.scoping do
+          expect { query.list_filter }.to raise_error(Discourse::InvalidParameters, timeout_error)
+          expect { query.list_latest }.not_to raise_error
+        end
+      end
+    end
+
+    it "lets a slow filter without keywords finish" do
+      stub_const(Topic::KeywordSearch, :STATEMENT_TIMEOUT_MS, 50) do
+        slow_topics.scoping { TopicQuery.new(nil, q: "status:open").list_filter }
+      end
+    end
+
+    it "bounds both the topic list and unified New membership inside an existing transaction" do
+      SiteSetting.enable_unified_new = true
+      SearchIndexer.enable
+      post = Fabricate(:post, raw: "cartography")
+      candidates = TopicTrackingState.report(user)
+      TopicTrackingState.stubs(:report).with(user).returns(candidates)
+      DB.exec("SET LOCAL statement_timeout = 0")
+
+      list =
+        Topic
+          .where("current_setting('statement_timeout') <> '0'")
+          .scoping { TopicQuery.new(user, q: "cartography").list_filter }
+
+      expect(list.topics.map(&:id)).to contain_exactly(post.topic_id)
+      expect(list.filter_new_topic_ids).to contain_exactly(post.topic_id)
+      expect(DB.query_single("SHOW statement_timeout")).to eq(["0"])
+    end
+
+    it "keeps a stricter database timeout for keyword searches on the latest list" do
+      DB.exec("SET LOCAL statement_timeout = 100")
+
+      expect {
+        slow_topics.scoping { TopicQuery.new(nil, search: "keyword").list_latest }
+      }.to raise_error(Discourse::InvalidParameters, timeout_error)
+    end
+  end
+
   describe "secure category" do
     it "filters categories out correctly" do
       category = Fabricate(:category_with_definition)
@@ -460,8 +508,8 @@ RSpec.describe TopicQuery do
 
       # Not used in assertions but fabricated to ensure we're not leaking topics
       # across categories
-      let!(:_category) { Fabricate(:category_with_definition) }
-      let!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
+      fab!(:_category, :category_with_definition)
+      fab!(:_subcategory) { Fabricate(:category_with_definition, parent_category_id: _category.id) }
 
       it "works with subcategories" do
         expect(
@@ -1909,6 +1957,15 @@ RSpec.describe TopicQuery do
               TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
             ).to eq([private_message])
           end
+
+          it "returns nothing for a tag hidden from the user" do
+            Fabricate(:topic_tag, topic: private_message, tag: tag)
+            create_hidden_tags([tag.name])
+
+            expect(
+              TopicQuery.new(user, tags: [tag.name]).list_private_messages_tag(user).topics,
+            ).to be_empty
+          end
         end
       end
 
@@ -1985,13 +2042,13 @@ RSpec.describe TopicQuery do
   describe "#list_group_topics" do
     fab!(:group)
 
-    let(:user) do
+    fab!(:user) do
       user = Fabricate(:user)
       group.add(user)
       user
     end
 
-    let(:user2) do
+    fab!(:user2) do
       user = Fabricate(:user)
       group.add(user)
       user
@@ -2001,13 +2058,13 @@ RSpec.describe TopicQuery do
 
     fab!(:private_category) { Fabricate(:private_category_with_definition, group: group) }
 
-    let!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
-    let!(:topic1) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
-    let!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
-    let!(:topic4) { Fabricate(:topic) }
-    let!(:topic5) { Fabricate(:topic, user: user, visible: false) }
-    let!(:topic6) { Fabricate(:topic, user: user2) }
+    fab!(:private_message_topic) { Fabricate(:private_message_post, user: user).topic }
+    fab!(:topic1) { Fabricate(:topic, user: user) }
+    fab!(:topic2) { Fabricate(:topic, user: user, category: Fabricate(:category_with_definition)) }
+    fab!(:topic3) { Fabricate(:topic, user: user, category: private_category) }
+    fab!(:topic4, :topic)
+    fab!(:topic5) { Fabricate(:topic, user: user, visible: false) }
+    fab!(:topic6) { Fabricate(:topic, user: user2) }
 
     it "returns the expected lists for an anonymous user" do
       topics = TopicQuery.new.list_group_topics(group).topics

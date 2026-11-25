@@ -540,19 +540,6 @@ fi:
         notify_moderators: "Tämä viesti vaatii henkilökunnan huomion muusta syystä, jota ei ole mainittu edellä."
       flagging:
         action: "Liputa viesti"
-      emoji_picker:
-        favorites: "Usein käytetyt"
-        smileys_&_emotion: "Hymiöt ja tunteet"
-        objects: "Esineet"
-        people_&_body: "Ihmiset ja keho"
-        travel_&_places: "Matkailu ja paikat"
-        animals_&_nature: "Eläimet ja luonto"
-        food_&_drink: "Ruoka ja juoma"
-        activities: "Aktiviteetit"
-        flags: "Liput"
-        symbols: "Symbolit"
-        search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
-        no_results: "Ei tuloksia"
       thread:
         title: "Otsikko"
         view_thread: Näytä ketju

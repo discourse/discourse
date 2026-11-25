@@ -12,6 +12,7 @@ module Jobs
     # @option args [Integer] :batch_size (100) Number of items to process in each batch
     # @option args [Boolean] :match_only (false) Only match against existing concepts without generating new ones
     def execute(args = {})
+      return unless DiscourseAi::Embeddings.enabled?
       return if args[:item_ids].blank? || args[:item_type].blank?
 
       if %w[topics posts].exclude?(args[:item_type])

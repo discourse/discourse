@@ -62,6 +62,7 @@ es:
     discourse_workflows:
       nodes:
         "action:ai_agent": "Agente de IA"
+        "action:ai_tool": "Herramienta de IA"
     discourse_automation:
       scriptables:
         llm_report:
@@ -238,6 +239,13 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Volver a cargar"
+        columns:
+          user: "Usuario"
+          reason: "Marcado como"
+          created: "Creada"
+          status: "Estado"
       dsa_classification:
         suggest: "Sugerir con IA"
       ai_decoded_transcript:
@@ -251,6 +259,15 @@ es:
         ai_agent:
           agent_id: "Agente"
           mode: "Modo"
+        ai_tool:
+          tool_ref: "Herramienta"
+          arguments: "Argumentos"
+          list_item: "Lista de elementos"
+          add_list_item: "Añadir elemento"
+        mcp_tool:
+          mcp_server_id: "Servidor MCP"
+          tool_name: "Herramienta"
+          arguments: "Argumentos"
         classify:
           text: "Texto"
           upload_ids: "Imágenes"
@@ -310,7 +327,6 @@ es:
         nav:
           enabled: "Activado"
         filters:
-          all: "Todo"
           no_results: "No se han encontrado características que coincidan con tus filtros."
           reset: "Restablecer"
         no_automations: "Aún no hay automatizaciones"
@@ -386,6 +402,9 @@ es:
             enabled_features: "Características activadas"
             automation: "Automatización"
             agents: "Agentes"
+        review_queue:
+          setting_groups:
+            settings: "Ajustes"
         image_caption:
           setting_groups:
             settings: "Ajustes"
@@ -1233,8 +1252,7 @@ es:
         filter_standalone: "Independiente"
       ai_bot:
         title: "Bot de IA"
-        agent: "Agente:"
-        llm: "Modelo:"
+        agent_menu_heading: "Agente"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
         try_again: "Intentar de nuevo"
@@ -1291,9 +1309,9 @@ es:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "IA"
           header: "¿En qué puedo ayudar?"
           submit: "Enviar pregunta"
-          disclaimer: "La IA generativa puede cometer errores. Verifica la información importante."
           placeholder: "Haz una pregunta..."
           new: "Nueva pregunta"
           min_input_length_message:

@@ -38,12 +38,20 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      review_bulk:
+        refresh: "Värskenda"
+        columns:
+          user: "Kasutaja"
+          created: "Loodud"
+          status: "Staatus"
       copied: "Kopeeritud"
       ai_decoded_transcript:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
       discourse_workflows:
+        ai_tool:
+          list_item: "Loendi element"
         classify:
           text: "Tekst"
           upload_ids: "Pildid"
@@ -73,12 +81,14 @@ et:
         nav:
           enabled: "Sisse lülitatud"
         filters:
-          all: "Kõik"
           reset: "Nulli"
         sentiment:
           enabled: "Sisse lülitatud"
         search:
           name: "Otsi"
+        review_queue:
+          setting_groups:
+            settings: "Seaded"
         image_caption:
           setting_groups:
             settings: "Seaded"

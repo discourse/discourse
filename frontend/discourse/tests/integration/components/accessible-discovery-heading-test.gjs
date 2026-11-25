@@ -7,7 +7,7 @@ module("Component | Discovery | AccessibleDiscoveryHeading", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders the correct label for categories filter", async function (assert) {
-    this.set("filter", "categories");
+    this.filter = "categories";
 
     await render(
       hbs`<Discovery::AccessibleDiscoveryHeading @filter={{this.filter}} />`
@@ -19,10 +19,8 @@ module("Component | Discovery | AccessibleDiscoveryHeading", function (hooks) {
   });
 
   test("it renders the correct label for a single tag", async function (assert) {
-    this.setProperties({
-      filter: "top",
-      tag: { id: 1, name: "javascript" },
-    });
+    this.filter = "top";
+    this.tag = { id: 1, name: "javascript" };
 
     await render(
       hbs`<Discovery::AccessibleDiscoveryHeading @filter={{this.filter}} @tag={{this.tag}} />`
@@ -37,11 +35,9 @@ module("Component | Discovery | AccessibleDiscoveryHeading", function (hooks) {
   });
 
   test("it renders the correct label for a category and tag", async function (assert) {
-    this.setProperties({
-      filter: "latest",
-      category: { name: "Development" },
-      tag: { id: 1, name: "javascript" },
-    });
+    this.filter = "latest";
+    this.category = { name: "Development" };
+    this.tag = { id: 1, name: "javascript" };
 
     await render(
       hbs`<Discovery::AccessibleDiscoveryHeading @filter={{this.filter}} @category={{this.category}} @tag={{this.tag}} />`

@@ -51,6 +51,18 @@ RSpec.describe Blog::TopicExtensions do
     end
   end
 
+  describe "#blog_article_topic?" do
+    it "is true in any blog's public category and in the drafts category" do
+      engineering = Fabricate(:category)
+      Blog::Instance.create!(name: "Engineering", slug: "engineering", category: engineering)
+
+      expect(Fabricate(:topic, category: engineering).blog_article_topic?).to eq(true)
+      expect(Fabricate(:topic, category:).blog_article_topic?).to eq(true)
+      expect(topic.blog_article_topic?).to eq(true)
+      expect(Fabricate(:topic, category: other_category).blog_article_topic?).to eq(false)
+    end
+  end
+
   describe "#blog_published_discussion?" do
     it "is true only for Blog-category topics whose publication has gone live" do
       live, _ = publish_discussion(path: "/live")
@@ -123,6 +135,18 @@ RSpec.describe Blog::TopicExtensions do
 
       expect(Blog::Review.where(id: review.id)).to exist
       expect(Blog::Publication.where(id: publication.id)).to exist
+    end
+  end
+
+  describe "#valid?" do
+    fab!(:user)
+
+    it "accepts short titles like a page's in the blog and drafts categories only" do
+      draft = Fabricate.build(:topic, category: drafts, user: user, title: "Contact")
+      article = Fabricate.build(:topic, category: category, user: user, title: "Contact")
+      elsewhere = Fabricate.build(:topic, category: other_category, user: user, title: "Contact")
+
+      expect([draft, article, elsewhere].select(&:valid?)).to contain_exactly(draft, article)
     end
   end
 

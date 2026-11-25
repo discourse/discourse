@@ -50,6 +50,9 @@ lt:
             delete_ai_embedding: "Ištrinti dirbtinio intelekto įterpimą"
             update_ai_spam_settings: "Atnaujinti dirbtinio intelekto šlamšto nustatymus"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_tool": "Dirbtinio intelekto įrankis"
     discourse_automation:
       scriptables:
         llm_report:
@@ -141,6 +144,15 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Atnaujinti"
+        columns:
+          user: "Narys"
+          reason: "Pažymėta kaip"
+          created: "Sukurta"
+          status: "Statusas"
+        status:
+          applying: "Pritaikoma…"
       copied: "Nukopijuota"
       ai_decoded_transcript:
         tool: "Įrankis"
@@ -148,6 +160,14 @@ lt:
         error: "Klaida"
         response: "Atsakymas"
       discourse_workflows:
+        ai_tool:
+          tool_ref: "Įrankis"
+          arguments: "Argumentai"
+          list_item: "Įkelti"
+        mcp_tool:
+          mcp_server_id: "MCP serveris"
+          tool_name: "Įrankis"
+          arguments: "Argumentai"
         classify:
           text: "Tekstas"
           upload_ids: "Paveiksliukai"
@@ -194,7 +214,6 @@ lt:
         nav:
           enabled: "Galimas"
         filters:
-          all: "Visi"
           reset: "Atstatyti"
         sentiment:
           emotion: "Emocija"
@@ -245,6 +264,9 @@ lt:
             access_permissions: "Prieiga ir leidimai"
             enabled_features: "Įjungtos funkcijos"
             automation: "Automatizavimas"
+        review_queue:
+          setting_groups:
+            settings: "Nustatymai"
         image_caption:
           setting_groups:
             settings: "Nustatymai"
@@ -603,7 +625,6 @@ lt:
         empty: "Kol kas nėra bendrinamų AI pokalbių."
         unavailable: "Šios pokalbio nuoroda nebėra pasiekiama. Vis dar galite ją atšaukti."
       ai_bot:
-        llm: "Modelis:"
         debug_ai_modal:
           duration_label: "Trukmė:"
           request: "Užklausa"
@@ -618,6 +639,7 @@ lt:
         bot_names:
           claude-2: "Claude 2"
         conversations:
+          tab_label: "AI"
           today: "Šiandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"

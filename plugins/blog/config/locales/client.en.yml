@@ -22,7 +22,6 @@ en:
         view_blog: View blog
         open_blog: Open blog
         safe_mode: Open without custom code
-        identity: Blog identity
         blog_title: Blog name
         tagline: Tagline
         accent: Accent color
@@ -51,6 +50,7 @@ en:
         retry_reference: Reload authoring reference
         working_preview_hint: Preview your unsaved changes without saving or activating them. Changing the page or sample article updates the preview.
         preview_article_unavailable: Article previews need a published article.
+        preview_page_unavailable: Page previews need a published standalone page.
         preview_page: Page to preview
         preview_home: Homepage
         preview_archive: Archive
@@ -62,6 +62,7 @@ en:
         template_layout: Site layout
         template_index: Homepage and archive
         template_article: Article
+        template_page: Standalone page
         template_about: About page
         template_not_found: Not found page
         code_warning:
@@ -75,8 +76,43 @@ en:
           another script by appending a script element (document.createElement("script")).
         save: Save
         saved: Blog settings saved. Reload the blog to see your changes.
-        identity_tab: Identity
-        identity_description: The name, introduction, About content, and article addresses shared by all blog themes.
+        about_tab: About
+        back_to_blogs: Back to blogs
+        blogs_tab: Blogs
+        add_blog: Add blog
+        new_blog: New blog
+        new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
+        create_blog: Create blog
+        blog_slug: Slug
+        blog_slug_description: "Used in its address on the community: /blog/<slug>."
+        blog_slug_locked: This blog has published articles, so its slug is fixed to keep their addresses working.
+        blog_url: Own domain
+        blog_url_description: Serve the blog from its own HTTPS address, without a path. Point that hostname at this site first, at your DNS, proxy, and certificate. Leave empty to serve it on the community.
+        blog_category: Discussion category
+        blog_category_description: Each published article gets a discussion topic here.
+        blog_category_locked: This blog has published articles, so its discussion category is fixed to keep them public.
+        posts_per_page: Articles per page
+        general_heading: General
+        settings_tab: Settings
+        theme_tab: Theme
+        theme_tab_description: "Choose the design this blog's readers see. Add or edit themes on the <a href='%{themes_url}'>Themes tab</a>."
+        published_status: Published
+        unpublished_status: Not published
+        publish_blog: Publish blog
+        unpublish_blog: Unpublish blog
+        publish_blog_confirm: Publish “%{name}”? Its pages, feed, and sitemap become public.
+        unpublish_blog_confirm: Unpublish “%{name}”? Readers lose access to its pages, but its articles are kept.
+        delete_blog: Delete blog
+        delete_blog_confirm: Delete “%{name}”? Its discussion category is kept.
+        blog_deleted: Blog deleted.
+        column_name: Name
+        column_address: Address
+        column_category: Category
+        column_status: Status
+        needs_attention: Needs attention
+        select_theme: Select theme
+        update_to_revision: Update to revision %{revision}
+        active_on: Active on %{blogs}
         article_urls: Article URLs
         path_format: Address format
         path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.
@@ -205,14 +241,17 @@ en:
           excerpt: excerpt
           meta_description: meta description
           canonical_url: canonical URL
+          cover: cover image
+          co_authors: co-authors
           featured: featured flag
+          page: standalone page
           tags: tags
           published_at: publication date
         show_diff: Show diff
         hide_diff: Hide diff
         diff_error: The change is too large to show as a diff. Use Preview instead.
         settings: Article settings
-        settings_hint: Path, excerpt, search, date, featured
+        settings_hint: Path, excerpt, cover, search, co-authors, date, featured, page
         feedback:
           none: No private feedback yet
           show: Show feedback
@@ -284,30 +323,36 @@ en:
       editor_title: Blog editor
       editor_description: Drafts stay private until you publish them. Edit an article to publish, schedule, or correct it.
       editor_table:
-        article: Article
+        blog: Blog
         edit: Edit
         status: Status
         published: Published
         replies: Replies
+        title: Title
         edits_pending: Edits pending
         edits_need_approval: Edits need approval
         more_actions: More actions
+        page: Page
         preview_changes: Preview changes
         view_on_blog: View on blog
       new_draft: New draft
       settings: Configure blog settings
-      all: All articles
+      all: All
+      all_blogs: All blogs
       drafts: Drafts
       published: Published
       visit_blog: Visit blog
       public_discussion: Public discussion
       not_published: Not on the blog
+      pages: Pages
       preview: Preview
       load_more: Load more
       unpublish_confirm:
         Remove this article from the blog? The topic and its replies
         will remain public in the community. Existing copies in feeds and search engines
         cannot be recalled.
+      blog_field: Blog
+      blog_field_hint: Until it is first published, an article can move to another blog.
       path: Article path
       path_hint:
         Start with / and use lowercase letters, numbers, hyphens, and optional
@@ -322,6 +367,21 @@ en:
       excerpt_hint:
         A short introduction for article cards and search previews. Leave
         blank to generate an excerpt from the article.
+      cover: Cover image
+      cover_hint:
+        Shown above the article and used for its card and link previews. Leave
+        blank to use the first image in the article.
+      cover_alt: Cover image alt text
+      cover_alt_hint:
+        Describes the cover image for people who can't see it.
+      page: Standalone page
+      page_hint:
+        For pages like About, Contact or Privacy. Left out of the article lists
+        and the feed, and shown without a byline, date, tags or discussion.
+      co_authors: Co-authors
+      co_authors_hint:
+        Credited beside the author in the byline, and listed on their own
+        author pages.
       meta_description: Meta description
       meta_description_hint:
         The summary search engines and link previews show. Leave blank to use

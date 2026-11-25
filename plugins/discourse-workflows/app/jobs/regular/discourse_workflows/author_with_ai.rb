@@ -20,12 +20,17 @@ module Jobs
         "For named group membership checks, use workflow_resolve_entity to resolve the group, then use action:group with operation check_membership, group_id set to the resolved group id, and username ={{ $json.user.username }} when the input schema includes user.username, otherwise use the exact username field from the current input schema. It adds group_membership.in_group while preserving the original item fields. Do not use a Code node for simple group membership.",
         "For personal messages, private messages, DMs, direct messages, or PM notifications, use action:send_personal_message with recipient_usernames or recipient_group_names as arrays, title, raw, and sender_username. Resolve named users with workflow_resolve_entity(kind: user), and named groups with workflow_resolve_entity(kind: group).",
       ].freeze
+      SLOW_GENERATION_SECONDS = 120
+
+      # Lets callers that run the job inline report progress, such as the Admin Assistant.
+      attr_writer :on_progress
 
       # Set when the run stopped because the LLM is out of AI credits, so callers that run
       # the job inline can report it instead of a generic failure.
       attr_reader :credit_limit_error
 
       def execute(args)
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
         @generation_id = args[:generation_id]
         @session = ::DiscourseWorkflows::AiAuthoringSession.find_by(id: args[:session_id])
         @user = User.find_by(id: args[:user_id])
@@ -77,9 +82,23 @@ module Jobs
           )
           publish_error(e.message)
         end
+      ensure
+        log_slow_generation(started_at)
       end
 
       private
+
+      def log_slow_generation(started_at)
+        return if @session.blank?
+
+        seconds = (Process.clock_gettime(Process::CLOCK_MONOTONIC) - started_at).round
+        return if seconds < SLOW_GENERATION_SECONDS
+
+        Rails.logger.warn(
+          "discourse-workflows: AI authoring took #{seconds}s " \
+            "(status: #{@session.status}, user_id: #{@user&.id}, session_id: #{@session.id})",
+        )
+      end
 
       def finish(parsed)
         parsed = ask_how_to_proceed(parsed) if parsed["status"] == "error"
@@ -626,14 +645,16 @@ module Jobs
       end
 
       def publish_progress(stage, details = {})
+        message = I18n.t("discourse_workflows.ai.progress.#{stage}")
         ::DiscourseWorkflows::Ai::ProgressPublisher.publish(
           generation_id: @generation_id,
           user: @user,
           status: "progress",
           stage: stage.to_s,
-          message: I18n.t("discourse_workflows.ai.progress.#{stage}"),
+          message:,
           details: details,
         )
+        @on_progress&.call(message)
       end
 
       def publish_agent_stream_progress(partial, raw, type)
@@ -687,6 +708,7 @@ module Jobs
           message: message,
           details: details.merge(key: key.to_s),
         )
+        @on_progress&.call(message)
       end
 
       def publish_error(message)

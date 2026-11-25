@@ -1,5 +1,6 @@
 <header class="blog__intro">
   <div class="blog__intro-copy">
+    {% if page.author %}<img class="blog__author-avatar" src="{{ page.author.avatar_url }}" alt="" width="96" height="96">{% endif %}
     <p class="blog__eyebrow">{{ page.eyebrow }}</p>
     <h1>{{ page.heading }}</h1>
     <div class="blog__description">{{ page.description_html }}</div>
@@ -24,7 +25,7 @@
       <div class="blog__meta"><time datetime="{{ article.published_at }}">{{ article.date }}</time><span>·</span><span>{{ article.reading_time }}</span>{% if article.featured %}<span class="blog__badge">{{ labels.featured }}</span>{% endif %}</div>
       <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
       <p class="blog-card__excerpt">{{ article.excerpt }}</p>
-      <div class="blog-card__footer"><span>{{ article.author }}</span><a href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a></div>
+      <div class="blog-card__footer"><span>{% for author in article.authors %}<a href="{{ author.url }}">{{ author.name }}</a>{{ author.separator }}{% endfor %}</span><a href="{{ article.url }}#discussion">{{ article.replies_label }} ↗</a></div>
     </div>
   </article>
   {% else %}<div class="blog__empty"><h2>{{ labels.empty_title }}</h2><p>{{ labels.empty_body }}</p></div>{% endfor %}

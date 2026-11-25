@@ -554,6 +554,40 @@ export default class ComposerService extends Service {
           action: "insertTable",
           icon: "table",
           label: "composer.insert_table",
+        }),
+        this._setupPopupMenuOption({
+          name: "ai-content",
+          icon: "discourse-sparkles",
+          label: "composer.ai_content.menu",
+          submenu: [
+            {
+              name: "ai-content-code",
+              action: () => {
+                this.appEvents.trigger(
+                  "composer:insert-block",
+                  "``` ai\n\n```",
+                  { moveCursorInside: true }
+                );
+              },
+              icon: "code",
+              label: "composer.ai_content.code",
+            },
+            {
+              name: "ai-content-quote",
+              action: () => {
+                const placeholder = i18n("composer.ai_content.placeholder");
+                this.appEvents.trigger(
+                  "composer:insert-block",
+                  `> [!AI]\n> ${placeholder}`
+                );
+              },
+              icon: "quote-right",
+              label: "composer.ai_content.quote",
+            },
+            ...customPopupMenuOptions.filter(
+              (option) => option.menu === "ai-content"
+            ),
+          ].map((option) => this._setupPopupMenuOption({ ...option })),
         })
       );
 
@@ -562,7 +596,7 @@ export default class ComposerService extends Service {
           this._setupPopupMenuOption({
             name: "change-reply-to",
             action: this.openChangeReplyToModal,
-            icon: "share",
+            icon: "reply",
             label: "composer.change_reply_to.open_from_menu",
           })
         );

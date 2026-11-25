@@ -17,7 +17,7 @@ describe "Admin Color Palette Config Area Page" do
     Stylesheet::Manager.cache.clear
   end
 
-  it "allows editing the palette name" do
+  it "lets an admin edit the palette name, user selectable field, and colors" do
     config_area.visit(color_scheme.id)
 
     config_area.edit_name_button.click
@@ -28,9 +28,37 @@ describe "Admin Color Palette Config Area Page" do
     config_area.form.submit
 
     expect(toasts).to have_success(I18n.t("js.saved"))
+    toasts.close_button.click
+    expect(toasts).to have_no_message
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.reload.name).to eq("Changed name 2.0")
     expect(config_area.name_heading.text).to eq("Changed name 2.0")
+
+    config_area.user_selectable_field.toggle
+
+    expect(config_area).to have_unsaved_changes_indicator
+
+    config_area.form.submit
+
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    toasts.close_button.click
+    expect(toasts).to have_no_message
+    expect(config_area).to have_no_unsaved_changes_indicator
+    expect(config_area.user_selectable_field.value).to eq(true)
+    expect(color_scheme.reload.user_selectable).to eq(true)
+
+    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
+
+    expect(config_area).to have_unsaved_changes_indicator
+
+    config_area.form.submit
+
+    expect(toasts).to have_success(I18n.t("js.saved"))
+    expect(config_area).to have_no_unsaved_changes_indicator
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
+
+    expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
   end
 
   it "allows quick-saving just the name without affecting other changes" do
@@ -59,38 +87,6 @@ describe "Admin Color Palette Config Area Page" do
     expect(config_area).to have_no_unsaved_changes_indicator
     expect(color_scheme.colors.reload.find_by(name: "primary").hex).to eq("abcdef")
     expect(color_scheme.reload.user_selectable).to eq(true)
-  end
-
-  it "allows changing the user selectable field" do
-    config_area.visit(color_scheme.id)
-
-    config_area.user_selectable_field.toggle
-
-    expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.form.submit
-
-    expect(toasts).to have_success(I18n.t("js.saved"))
-    expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.user_selectable_field.value).to eq(true)
-    expect(color_scheme.reload.user_selectable).to eq(true)
-  end
-
-  it "allows changing colors" do
-    config_area.visit(color_scheme.id)
-
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
-
-    expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.form.submit
-
-    expect(toasts).to have_success(I18n.t("js.saved"))
-    expect(config_area).to have_no_unsaved_changes_indicator
-
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
-
-    expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
   end
 
   it "supports pasting color codes with and without leading #" do

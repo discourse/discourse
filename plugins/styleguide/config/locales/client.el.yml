@@ -38,6 +38,9 @@ el:
           title: "Σύστημα γραμματοσειράς"
         colors:
           title: "Χρώματα"
+        design_variables:
+          type: "Τύπος"
+          default: "Προεπιλογή"
         dialog:
           title: "Διάλογος"
         drag_and_drop:

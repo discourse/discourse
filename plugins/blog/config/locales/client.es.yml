@@ -17,6 +17,15 @@ es:
         desktop: Escritorio
         mobile: Móvil
         save: Guardar
+        about_tab: Acerca de
+        blog_slug: Slug
+        general_heading: General
+        settings_tab: Ajustes
+        theme_tab: Tema
+        column_name: Nombre
+        column_category: Categoría
+        column_status: Estado
+        needs_attention: Requiere atención
         path_formats:
           custom: Personalizado
         back_to_themes: Volver a los temas
@@ -57,7 +66,11 @@ es:
         edit: Editar
         status: Estado
         replies: Respuestas
+        title: Título
+        page: Página
+      all: Todo
       drafts: Borradores
+      pages: Páginas
       preview: Vista previa
       unpublish: Despublicar
       appearance_link: Aspecto

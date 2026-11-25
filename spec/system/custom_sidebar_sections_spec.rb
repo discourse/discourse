@@ -10,10 +10,6 @@ describe "Custom sidebar sections" do
 
   shared_examples "creating custom sections" do |relative_root_url|
     it "allows the user to create custom section" do
-      visit("#{relative_root_url}/latest")
-
-      expect(sidebar).to have_no_add_section_button
-
       sign_in user
       visit("#{relative_root_url}/latest")
       sidebar.click_add_section_button
@@ -162,23 +158,11 @@ describe "Custom sidebar sections" do
     expect(page).to have_css("#navigation-bar .active a[href='/read']")
   end
 
-  it "allows typing in the icon picker filter input" do
+  it "lets the user filter icons and focuses the first input of a new link row" do
     sign_in user
     visit("/latest")
     sidebar.click_add_section_button
 
-    picker = section_modal.first_link_icon_picker
-    picker.expand.type_filter("globe")
-
-    expect(picker.filter_input.value).to eq("globe")
-    expect(picker).to have_icon("globe")
-  end
-
-  it "accessibility - when new row is added in custom section, first new input is focused" do
-    sign_in user
-    visit("/latest")
-
-    sidebar.click_add_section_button
     sidebar.click_add_link_button
 
     is_focused =
@@ -187,9 +171,15 @@ describe "Custom sidebar sections" do
       )
 
     expect(is_focused).to be true
+
+    picker = section_modal.first_link_icon_picker
+    picker.expand.type_filter("globe")
+
+    expect(picker.filter_input.value).to eq("globe")
+    expect(picker).to have_icon("globe")
   end
 
-  it "accessibility - when customization modal is closed, trigger is refocused" do
+  it "closes the customization modal with focus restored and validates custom section fields" do
     sign_in user
     visit("/latest")
 
@@ -201,6 +191,23 @@ describe "Custom sidebar sections" do
     is_focused = page.evaluate_script("document.activeElement.classList.contains('add-section')")
 
     expect(is_focused).to be true
+
+    sidebar.click_add_section_button
+
+    section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
+    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "https:")
+
+    expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
+    expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")
+    expect(page.find(".value.warning")).to have_content("Format is invalid")
+
+    section_modal.fill_name("")
+    section_modal.fill_link("", "")
+    expect(page.find(".title.warning")).to have_content("Title cannot be blank")
+    expect(page.find(".name.warning")).to have_content("Name cannot be blank")
+    expect(page.find(".value.warning")).to have_content("Link cannot be blank")
+
+    expect(section_modal).to have_disabled_save
   end
 
   it "allows the user to edit custom section" do
@@ -268,6 +275,7 @@ describe "Custom sidebar sections" do
   end
 
   it "does not allow to drag on mobile", mobile: true do
+    SiteSetting.enable_new_reordering_controls = false
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
@@ -1089,6 +1097,7 @@ describe "Custom sidebar sections" do
     Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
 
     visit("/latest")
+    expect(sidebar).to have_no_add_section_button
     expect(sidebar).to have_section("Public section")
     expect(sidebar).to have_section_link("Sidebar Tags")
     expect(sidebar).to have_section_link("Sidebar Categories")
@@ -1117,27 +1126,6 @@ describe "Custom sidebar sections" do
     expect(page).to have_current_path(
       "/tags/c/#{category.slug}/#{category.id}/#{tag.slug}/#{tag.id}?status=closed",
     )
-  end
-
-  it "validates custom section fields" do
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
-
-    section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
-    section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "https:")
-
-    expect(page.find(".title.warning")).to have_content("Title must be shorter than 30 characters")
-    expect(page.find(".name.warning")).to have_content("Name must be shorter than 80 characters")
-    expect(page.find(".value.warning")).to have_content("Format is invalid")
-
-    section_modal.fill_name("")
-    section_modal.fill_link("", "")
-    expect(page.find(".title.warning")).to have_content("Title cannot be blank")
-    expect(page.find(".name.warning")).to have_content("Name cannot be blank")
-    expect(page.find(".value.warning")).to have_content("Link cannot be blank")
-
-    expect(section_modal).to have_disabled_save
   end
 
   it "allows the user to expand/collapse section containing unicode titles separately" do

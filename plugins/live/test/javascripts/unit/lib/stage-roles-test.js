@@ -1,7 +1,9 @@
 import { module, test } from "qunit";
 import {
+  isStageSpeaker,
   participantEntitledToMedia,
   remoteTrackAllowed,
+  sortStageAudience,
 } from "discourse/plugins/live/discourse/lib/live/stage-roles";
 
 function room(participant) {
@@ -114,5 +116,28 @@ module("Live | Unit | Lib | stage-roles", function () {
   test("participantEntitledToMedia answers for a missing participant", function (assert) {
     assert.false(participantEntitledToMedia(undefined));
     assert.false(participantEntitledToMedia(null, { screenOnly: true }));
+  });
+
+  test("isStageSpeaker identifies moderators and speakers", function (assert) {
+    assert.true(isStageSpeaker({ role: "moderator" }));
+    assert.true(isStageSpeaker({ role: "speaker" }));
+    assert.false(isStageSpeaker({ role: "participant" }));
+    assert.false(isStageSpeaker({}));
+    assert.false(isStageSpeaker(null));
+  });
+
+  test("sortStageAudience prioritizes raised hands FIFO, then invitations", function (assert) {
+    const sorted = sortStageAudience([
+      { id: 1, username: "alice" },
+      { id: 2, username: "bob", speak_invited_at: 500 },
+      { id: 3, username: "cara", hand_raised_at: 300 },
+      { id: 4, username: "dan", hand_raised_at: 100 },
+    ]);
+
+    assert.deepEqual(
+      sorted.map((p) => p.id),
+      [4, 3, 2, 1],
+      "orders raised hands earliest-first, then invited, then remaining listeners"
+    );
   });
 });

@@ -793,6 +793,8 @@ sl:
     suppress_uncategorized_badge: "Ne prikaži značke za nerazvrščene teme na seznamih tem."
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
+    keywords:
+      company_url: "spletna stran"
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1581,12 +1583,6 @@ sl:
     account_suspended_forever:
       title: "Suspendiran račun"
       subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil suspendiran"
-    account_silenced:
-      title: "Utišan račun"
-      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
-    account_silenced_forever:
-      title: "Utišan račun"
-      subject_template: "[%{email_prefix}] Vaš uporabniški račun je bil utišan"
     account_exists:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
@@ -1697,10 +1693,6 @@ sl:
     signup_after_reject:
       title: "Prijava po zavrnitvi"
       subject_template: "Zavrnjeni ste bili na %{site_name}"
-      text_body_template: |
-        Član osebja je zavrnil vaš račun na %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registracija"
       subject_template: "[%{email_prefix}] Potrdite nov uporabniški račun"
@@ -2071,6 +2063,10 @@ sl:
         few: "%{count} sekunde"
         other: "%{count} sekund"
     actions:
+      answer_yes:
+        title: "Da"
+      answer_no:
+        title: "Ne"
       agree:
         title: "Ja"
       agree_and_suspend:

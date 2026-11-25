@@ -61,6 +61,8 @@ ug:
           text_color: "تېكىست رەڭگى"
         approve_label: "ھەئە"
         reject_label: "ياق"
+        category_access_levels:
+          readonly: "كۆرسەت"
         empty_value: "بوش"
       agents:
         titles_generator:
@@ -104,6 +106,7 @@ ug:
         suspend_user: "ئىشلەتكۈچىنى توختات"
         silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
+        delete_category: "سەھىپە ئۆچۈر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
         time: "ۋاقىت"
@@ -151,6 +154,12 @@ ug:
         errors:
           not_found: "تېما تېپىلمىدى."
       edit_category:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      set_category_permissions:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      delete_category:
         errors:
           not_found: "سەھىپە تېپىلمىدى."
       change_topic_category:

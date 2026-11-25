@@ -38,11 +38,19 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      review_bulk:
+        refresh: "Обнови"
+        columns:
+          user: "Потребител"
+          created: "Създадени"
+          status: "Статус"
       copied: "Копирано"
       ai_decoded_transcript:
         type: "Тип"
         error: "Грешка"
       discourse_workflows:
+        ai_tool:
+          list_item: "Списък"
         classify:
           text: "Текст"
           upload_ids: "Изображения"
@@ -73,12 +81,14 @@ bg:
         nav:
           enabled: "Да е включен"
         filters:
-          all: "Всички"
           reset: "Нулиране"
         sentiment:
           enabled: "Да е включен"
         search:
           name: "Търсене"
+        review_queue:
+          setting_groups:
+            settings: "Настройки"
         image_caption:
           setting_groups:
             settings: "Настройки"

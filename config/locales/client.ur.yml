@@ -2652,6 +2652,7 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+      remove_item: "%{name} ہٹائیں"
     d_otp:
       screen_reader:
         one: نمبر درج کریں
@@ -3120,6 +3121,7 @@ ur:
         size_too_small: "%{provided_file_size} اجازت دی گئی کم مقدار %{min_file_size}سےکم ہے"
     emoji_picker:
       filter_placeholder: اِیمَوجی تلاش کریں
+      no_results: "کوئی نتائج نہیں"
       smileys_&_emotion: سمائیلیاں اور جذبات
       people_&_body: لوگ اور جسم
       animals_&_nature: جانور اور قدرت
@@ -3193,6 +3195,10 @@ ur:
       emoji: "اِیمَوجی :)"
       more_emoji: "مزید۔۔۔"
       options: "اختیارات"
+      ai_content:
+        code: "کوڈ"
+        quote: "اقتباس کریں"
+        details: "تفصیلات"
       whisper: "سرگوشی"
       unlist: "غیر مندرج"
       add_warning: "یہ ایک آفیشل انتباہ ہے۔"
@@ -4495,10 +4501,8 @@ ur:
           label: "انتخاب"
           title: "انتخاب سے دھاگہ ہٹانے کے لیے کلک کریں"
         select_replies:
-          label: "منتخب +جوابات"
           title: "انتخاب میں دھاگہ اور اس کے تمام جوابات شامل کریں"
         select_below:
-          label: "منتخب+ذیل میں"
           title: "انتخاب میں دھاگہ اور اس کے بعد سب شامل کریں۔"
         delete: منتخب کو حذف کریں
         cancel: انتخاب کو منسوخ کریں
@@ -4527,6 +4531,7 @@ ur:
         actions: "حجمی عوامل"
     post:
       accessible_heading: "پوسٹ منجانب %{username} %{date}"
+      ai_generated: "مصنوعی ذہانت"
       heading_anchor: "ہیڈنگ لنک"
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
@@ -5644,9 +5649,17 @@ ur:
       forward: "آگے"
       share: "شیئر"
       dismiss: "بر خاست کریں"
+    mobile_tab_bar:
+      new_topic: "نیا موضوع"
+      create: "بنائیں"
+      more: "مزید "
+      back: "واپس"
+      topics: "موضوعات"
+      drafts:
+        one: "مسودات (%{count})"
+        other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
-    theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
     theme_preview_failed: "تھیم دکھانے میں ناکام رہا کیونکہ یہ موجود نہیں یا آپ کے پاس اس تک رسائی کی اجازت نہیں۔"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
@@ -7374,14 +7387,6 @@ ur:
           company_name: "نام"
           company_url: "ویب سائٹ"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "گورنمنٹ قانون"
-          governing_law_placeholder: "صوبہ، ریاست یا ملک"
-          governing_law_help: |
-            سائٹ کی قانونی شرائط کے لیے دائرہ اختیار کی وضاحت کریں، عام طور پر جہاں کمپنی رجسٹرڈ ہے یا کام کرتی ہے۔
-          city_for_disputes: "تنازعات کے لئے شہر"
-          city_for_disputes_placeholder: "شہر"
-          city_for_disputes_help: |
-            اس فورم سے متعلق قانونی تنازعات کے حل کے لیے شہر کی وضاحت کریں۔
           extra_groups:
             heading: "گروپ کی فہرست"
             description: "بارے میں صفحہ پر دکھانے کے لیے اضافی گروپس۔"
@@ -8452,7 +8457,6 @@ ur:
         silence_duration: "صارف کب تک خاموش رہے گا؟"
         silence_reason_title: "خاموش کرنے کی وجہ"
         silence_reason_placeholder: "خاموش کردینے کی وجہ"
-        silence_message: "ای میل پیغام"
         suspended_until: "(%{until} تک)"
         suspend_forever: "ہمیشہ کے لیے معطل کریں"
         cant_suspend: "یہ صارف معطل نہیں کیا جا سکتا۔"
@@ -8709,6 +8713,8 @@ ur:
       site_text:
         description: "آپ اپنے فورم پر کسی بھی متن کو اپنی مرضی کے مطابق بنا سکتے ہیں"
         search_label: "تلاش"
+        preview:
+          default: "ڈِیفالٹ"
         theme_disabled: "غیر فعال"
         filters: "فِلٹر"
         title: "سائٹ کے متون"
@@ -8850,7 +8856,7 @@ ur:
           modal_title: تمغات کے گروپ
         granted_by: کی طرف سے عطا کیا گیا
         granted_at: جس وقت پر عطا کیا گیا
-        reason_help: (کسی دھاگے یا موضوع کا ایک رابطہ)
+        reason_help: کسی دھاگے یا موضوع کا ایک رابطہ
         save: محفوظ کریں
         delete: حذف کریں
         delete_confirm: کیا آپ واقعی اس تمغہ کو حذف کرنا چاہتے ہیں؟

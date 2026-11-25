@@ -55,11 +55,13 @@ export default class Types extends Component {
       event.preventDefault();
       event.stopPropagation();
 
-      logSearchLinkClick({
-        searchLogId: this.args.searchLogId,
-        searchResultId: result.id,
-        searchResultType: resultType.type,
-      });
+      if (this.args.searchLogId) {
+        logSearchLinkClick({
+          searchLogId: this.args.searchLogId,
+          searchResultId: result.id,
+          searchResultType: resultType.type,
+        });
+      }
 
       const link = event.currentTarget.querySelector("a.search-link");
       if (link?.href) {

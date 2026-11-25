@@ -14,6 +14,7 @@ tr_TR:
     about: Hakkında
     community: Topluluk
     preview: Ön izle
+    author: Yazar
     search: Ara
     replies:
       one: "%{count} yanıt"

@@ -15,6 +15,14 @@ ko:
         desktop: 데스크톱
         mobile: 모바일
         save: 저장
+        about_tab: 소개
+        blog_slug: 강타
+        general_heading: 일반
+        settings_tab: 설정
+        theme_tab: 테마
+        column_name: 그룹명
+        column_category: 카테고리
+        column_status: 상태
         path_formats:
           custom: 사용자 정의
         themes: 테마
@@ -51,7 +59,10 @@ ko:
         edit: 편집
         status: 상태
         replies: 댓글
+        title: 제목
+      all: 모두
       drafts: 임시저장
+      pages: 페이지
       preview: 미리 보기
       unpublish: 게시 취소
       appearance_link: 외관

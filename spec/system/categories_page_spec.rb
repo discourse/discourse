@@ -15,6 +15,8 @@ RSpec.describe "Categories Page" do
       Fabricate(:category_with_definition, description: "Check out #important for more info")
     end
 
+    before { SiteSetting.desktop_category_page_style = "categories_only" }
+
     it "renders hashtag icons in category descriptions" do
       category_page.visit_categories
 

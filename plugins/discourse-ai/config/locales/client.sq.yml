@@ -37,11 +37,19 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      review_bulk:
+        refresh: "Rifresko"
+        columns:
+          user: "User"
+          created: "Krijuar"
+          status: "Status"
       copied: "Kopjuar"
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
       discourse_workflows:
+        ai_tool:
+          list_item: "Element liste"
         classify:
           text: "Tekst"
           upload_ids: "Imazhet"
@@ -74,12 +82,14 @@ sq:
         nav:
           enabled: "Aktivizuar"
         filters:
-          all: "Të gjitha"
           reset: "Rivendosni"
         sentiment:
           enabled: "Aktivizuar"
         search:
           name: "Kërko"
+        review_queue:
+          setting_groups:
+            settings: "Rregullimet"
         image_caption:
           setting_groups:
             settings: "Rregullimet"

@@ -1371,6 +1371,31 @@ RSpec.describe Live::RoomsController do
       expect(response.parsed_body["room"]["max_quality_profile"]).to eq("high")
     end
 
+    it "kicks participants who no longer qualify when the room is made private" do
+      resuming_user = Fabricate(:user)
+      room.update!(creator: room_owner)
+      room.room_memberships.create!(user: other_participant)
+      Live::ParticipantTracker.add(room.id, user.id)
+      Live::ParticipantTracker.add(room.id, other_participant.id)
+      Live::ParticipantTracker.add(room.id, resuming_user.id)
+      Live::ParticipantTracker.update_metadata(room.id, resuming_user.id, { role: "participant" })
+      Live::ParticipantTracker.create_participant_session!(room.id, resuming_user.id)
+      Live::ParticipantTracker.expire_presence(room.id, resuming_user.id)
+      sign_in(room_owner)
+
+      messages =
+        MessageBus.track_publish(Live.room_channel(room.id)) do
+          put "/live/rooms/#{room.id}.json", params: { room: { public: false } }
+        end
+
+      expect(response.status).to eq(200)
+      expect(
+        messages.select { |m| m.data[:type] == "kicked" }.flat_map(&:user_ids),
+      ).to contain_exactly(user.id, resuming_user.id)
+      expect(Live::ParticipantTracker.user_ids(room.id)).to contain_exactly(other_participant.id)
+      expect(Live::ParticipantTracker.participant_session?(room.id, resuming_user.id)).to eq(false)
+    end
+
     it "clears the room-level quality cap when set to site_default" do
       private_room.update!(max_quality_profile: Live::Room::QUALITY_PROFILES["standard"])
       sign_in(room_owner)
@@ -2258,6 +2283,30 @@ RSpec.describe Live::RoomsController do
     end
 
     describe "#chat_message" do
+      it "accepts attachments without text and returns the accepted message ID" do
+        SiteSetting.chat_allow_uploads = true
+        upload = Fabricate(:upload, user: user)
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { upload_ids: [upload.id] }
+
+        expect(response.status).to eq(200)
+        thread = Chat::Thread.find(response.parsed_body["thread_id"])
+        expect(response.parsed_body["message_id"]).to eq(thread.original_message_id)
+        expect(thread.original_message.uploads).to contain_exactly(upload)
+      end
+
+      it "rejects requests without content instead of creating an automatic opener" do
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { message: " " }
+
+        expect(response.status).to eq(422)
+        expect(channel.chat_messages).to be_empty
+      end
+
       it "requires authentication" do
         post "/live/rooms/#{room.id}/chat_message.json", params: { message: "hi" }
 

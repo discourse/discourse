@@ -98,6 +98,13 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      review_bulk:
+        refresh: "Ανανέωση"
+        columns:
+          user: "Χρήστης"
+          reason: "Αναφορά ως"
+          created: "Δημιουργήθηκε"
+          status: "Κατάσταση"
       copied: "Αντιγράφηκε"
       ai_decoded_transcript:
         arguments: "Παράμετροι"
@@ -107,6 +114,12 @@ el:
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
+        ai_tool:
+          arguments: "Παράμετροι"
+          list_item: "Στοιχείο Λίστας"
+          add_list_item: "Προσθήκη στοιχείου"
+        mcp_tool:
+          arguments: "Παράμετροι"
         classify:
           text: "Κείμενο"
           upload_ids: "Εικόνες"
@@ -150,7 +163,6 @@ el:
           enabled: "Ενεργοποιημένη"
           not_enabled: "Μη ενεργοποιημένη"
         filters:
-          all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
@@ -166,6 +178,9 @@ el:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        review_queue:
+          setting_groups:
+            settings: "Ρυθμίσεις"
         image_caption:
           setting_groups:
             settings: "Ρυθμίσεις"
@@ -484,7 +499,6 @@ el:
         filter_conversation: "Συνομιλία"
       ai_bot:
         title: "AI bot"
-        llm: "Μοντέλο:"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"

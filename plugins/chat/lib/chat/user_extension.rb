@@ -5,7 +5,6 @@ module Chat
     extend ActiveSupport::Concern
 
     prepended do
-      has_one :chat_discoverable_bot, class_name: "Chat::DiscoverableBot", dependent: :destroy
       has_many :user_chat_channel_memberships,
                class_name: "Chat::UserChatChannelMembership",
                dependent: :destroy

@@ -18,8 +18,20 @@ module PageObjects
         has_css?("[role='tooltip']", text: text)
       end
 
+      def has_no_classification_help?(text)
+        has_no_css?("[role='tooltip']", text: text)
+      end
+
       def has_dsa_learn_more_link?(url)
         has_css?("[role='tooltip'] a[href='#{url}'][target='_blank']", text: "Learn more…")
+      end
+
+      def click_category_help
+        within(full_modal_selector) { find("[data-name='category'] .form-kit__tooltip").click }
+      end
+
+      def hover_category_help
+        within(full_modal_selector) { find("[data-name='category'] .form-kit__tooltip").hover }
       end
 
       def open_rule_menu
@@ -34,25 +46,22 @@ module PageObjects
 
       def select_rule(ground)
         open_rule_menu
-        find(".form-kit__control-menu-content .btn", text: ground).click
+        find(".dsa-classification-option", text: ground).click
       end
 
-      def has_no_rule_menu?
-        has_no_css?(".dsa-classification-options")
+      def has_no_classification_menu?
+        has_no_css?(".dsa-classification-option")
       end
 
       def has_rule_option?(ground, explanation:)
         has_button?("#{ground} #{explanation}", exact: true, normalize_ws: true)
       end
 
-      def has_readable_rule?(ground)
-        has_css?(".dsa-classification-option", text: ground) do |option|
-          option.evaluate_script("this.scrollHeight <= this.clientHeight")
-        end
-      end
-
       def select_category(category)
-        within(full_modal_selector) { select(category, from: "Category") }
+        within(full_modal_selector) do
+          find("[data-name='category'] .form-kit__control-menu-trigger").click
+        end
+        find(".dsa-classification-option", text: category, exact_text: true).click
       end
 
       def continue
@@ -77,12 +86,6 @@ module PageObjects
 
       def has_no_cancel_button?
         within(full_modal_selector) { has_no_button?("Cancel", exact: true) }
-      end
-
-      def has_disabled_classification_fields?
-        within(full_modal_selector) do
-          has_css?(".dsa-classification-select:disabled") && has_select?("Category", disabled: true)
-        end
       end
 
       def has_disabled_button?(label)
@@ -115,6 +118,17 @@ module PageObjects
         within(full_modal_selector) { has_text?(message, normalize_ws: true) }
       end
 
+      def has_field_hint?(field, text)
+        has_css?(
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text",
+          text:,
+        )
+      end
+
+      def has_no_field_hint?(field)
+        has_no_css?("#{full_modal_selector} [data-name='#{field}'] .form-kit__container-help-text")
+      end
+
       def has_selected_rule?(ground)
         has_css?(
           "#{full_modal_selector} [data-name='community_rule'] .d-button-label",
@@ -123,22 +137,38 @@ module PageObjects
         )
       end
 
-      def has_accessible_rule_description?(ground)
+      def has_accessible_selection?(field, label)
         has_css?(
-          "#{full_modal_selector} [data-name='community_rule'] .dsa-classification-select",
-        ) { |trigger| trigger["aria-description"] == ground }
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger",
+        ) do |trigger|
+          trigger.evaluate_script(
+            "this.labels[0]?.querySelector('.dsa-classification-selected-label')?.textContent.trim()",
+          ) == label
+        end
       end
 
       def has_selected_category?(category)
-        within(full_modal_selector) { has_select?("Category", selected: category) }
+        has_css?(
+          "#{full_modal_selector} [data-name='category'] .d-button-label",
+          text: category,
+          exact_text: true,
+        )
       end
 
       def has_focused_step?(label)
         has_css?("#{full_modal_selector} [aria-current='step']:focus", text: label)
       end
 
-      def has_required_errors?
-        has_css?("#{full_modal_selector} .form-kit__errors", text: "Required")
+      def has_accessible_field_description?(field, text, invalid: false)
+        invalid_selector = invalid ? "[aria-invalid='true']" : ":not([aria-invalid='true'])"
+        has_css?(
+          "#{full_modal_selector} [data-name='#{field}'] .form-kit__control-menu-trigger#{invalid_selector}",
+        ) do |trigger|
+          trigger.evaluate_script(
+            "this.ariaDescribedByElements?.some((element) => element.textContent.trim() === arguments[0])",
+            text,
+          )
+        end
       end
     end
   end

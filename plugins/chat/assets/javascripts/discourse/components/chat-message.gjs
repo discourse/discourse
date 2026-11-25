@@ -37,11 +37,11 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/components/cha
 import ChatMessageSeparator from "discourse/plugins/chat/discourse/components/chat-message-separator";
 import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
 import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 export const MENTION_KEYWORDS = ["here", "all"];
-export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
   @service site;
@@ -203,6 +203,11 @@ export default class ChatMessage extends Component {
       return false;
     }
 
+    // Broadcast replies carry their own provenance annotation; never group them.
+    if (message.broadcasted) {
+      return false;
+    }
+
     const previousMessage = message.previousMessage;
 
     if (!previousMessage) {
@@ -246,6 +251,14 @@ export default class ChatMessage extends Component {
   }
 
   get hideReplyToInfo() {
+    if (this.siteSettings.chat_thread_improvements) {
+      return (
+        (!this.threadContext && this.threadingEnabled) ||
+        this.args.message?.inReplyTo?.id ===
+          this.args.message?.previousMessage?.id
+      );
+    }
+
     return (
       this.threadContext ||
       this.args.message?.inReplyTo?.id ===
@@ -258,7 +271,7 @@ export default class ChatMessage extends Component {
     return (
       (this.args.message?.channel?.threadingEnabled ||
         this.args.message?.thread?.force) &&
-      !!this.args.message?.thread
+      Boolean(this.args.message?.thread || this.args.message?.threadId)
     );
   }
 
@@ -266,8 +279,8 @@ export default class ChatMessage extends Component {
     return (
       !this.threadContext &&
       this.threadingEnabled &&
-      this.args.message?.thread &&
-      this.args.message?.thread.preview.replyCount > 0
+      this.args.message?.isOriginalThreadMessage &&
+      this.args.message?.thread?.preview?.replyCount > 0
     );
   }
 
@@ -733,7 +746,10 @@ export default class ChatMessage extends Component {
           {{else}}
             <div class="chat-message">
               {{#unless this.hideReplyToInfo}}
-                <ChatMessageInReplyToIndicator @message={{@message}} />
+                <ChatMessageInReplyToIndicator
+                  @context={{@context}}
+                  @message={{@message}}
+                />
               {{/unless}}
 
               {{#if this.hideUserInfo}}

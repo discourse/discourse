@@ -6,6 +6,7 @@ en:
         max_prompt_tokens: "Context window"
   dashboard:
     problem:
+      ai_spam_scan_errors: "AI spam detection could not scan posts because its AI model failed to respond. Check for model configuration, provider availability, or credit issues. <a href='%{base_path}/admin/plugins/discourse-ai/ai-spam'>Review spam detection settings</a>."
       ai_llm_status:
         one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. In the past hour, it failed to respond %{failed_calls} out of %{total_calls} times."
         other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> needs attention. Over the last %{count} hours, it failed to respond %{failed_calls} out of %{total_calls} times."
@@ -55,9 +56,7 @@ en:
           body: |
             Hi @%{username},
 
-            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
-
-            Reference: %{post_url}
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically and you can [view your post](%{base_url}%{post_url}) again.
       llm_report:
         title: Periodic report using AI
         description: "Periodic report based on a large language model"
@@ -202,6 +201,9 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
+    ai_reviewable_action_suggestions_enabled: "Generate action suggestions for pending review queue items."
+    ai_reviewable_action_decision_model: "Send pending review items, including flagged private content, to this decision model for action suggestions. Leave blank to disable."
+    ai_reviewable_action_min_confidence: "Minimum confidence required to show a suggested review action, from 0 to 1."
     ai_dsa_classification_decision_model: "Choose the model used to suggest community rules and categories during DSA classification. Leave blank to disable suggestions."
     ai_translation_locale_detector_decision_model: "Decision model that detects the language of content before it is translated. Content in a language it cannot place confidently is left to the locale detector agent. Leave blank to detect every language with the agent."
     ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
@@ -214,6 +216,28 @@ en:
     ai_usage_rollup_after_days: "Number of days to keep per-request AI usage stats before rolling them into daily aggregates. Set to 0 to disable rollups."
     ai_audit_logs_detailed_retention_days: "Keep raw AI request and response payloads for this many days. Set to 0 to keep payloads until the summary log is deleted. Raw payloads can contain private or sensitive content. Cleanup continues while the AI plugin is disabled."
     ai_audit_logs_purge_after_days: "Keep AI API audit log summaries for this many days before deleting the entire log. Set to 0 to keep summaries forever. Cleanup continues while the AI plugin is disabled."
+
+    keywords:
+      ai_default_llm_model: "default language model"
+      ai_discord_search_enabled: "discord integration"
+      ai_embeddings_semantic_quick_search_enabled: "ai results in quick search"
+      ai_embeddings_semantic_search_enabled: "ai search results"
+      ai_embeddings_semantic_search_use_hyde: "better search queries (hyde)"
+      ai_helper_automatic_chat_thread_title: "chat thread titles"
+      ai_sentiment_backfill_post_max_age_days: "post age limit (days)"
+      ai_sentiment_emotion_classification_strategy: "backend"
+      ai_sentiment_sentiment_classification_strategy: "backend"
+      ai_summarization_enabled: "summaries"
+      ai_summary_gists_enabled: "topic list's short summaries"
+      ai_translation_backfill_hourly_rate: "existing content per hour"
+      ai_translation_backfill_start_date: "translate existing content since"
+      ai_translation_categories: "selected categories"
+      ai_translation_include_bot_content: "translate content written by bots"
+      ai_translation_locale_detector_agent: "language detection agent"
+      ai_translation_locale_detector_decision_model: "language detection decision model"
+      ai_translation_post_raw_translator_agent: "post translation agent"
+      ai_translation_short_text_translator_agent: "short text translation agent"
+      ai_translation_topic_title_translator_agent: "topic title translation agent"
 
   reviewables:
     reasons:
@@ -343,6 +367,13 @@ en:
     multiple_models: "Multiple models"
 
     discourse_workflows:
+      ai_tool:
+        errors:
+          unavailable: "The selected AI tool is not available for workflow execution."
+          invalid_arguments: "The AI tool arguments are invalid"
+          invalid_schema: "The tool returned an argument schema that cannot be resolved."
+          llm_not_found: "The selected language model was not found."
+          failed: "The AI tool failed."
       ai_agent:
         errors:
           invalid_mode: "'%{mode}' is not a supported AI agent execution mode."
@@ -431,6 +462,15 @@ en:
         invalid_header_value: "Invalid MCP header value"
         invalid_annotated_argument: "Invalid MCP annotated tool argument"
         timeout: "The MCP server request timed out."
+        connection_failed: "The connection to the MCP server failed. If this was a write operation, check whether it completed before retrying."
+        connection_blocked: "The MCP server address resolves to a private or otherwise disallowed network address."
+        dns_lookup_failed: "The MCP server hostname could not be resolved."
+        reconnect_required: "This MCP connection needs an administrator to reconnect it."
+        too_many_tool_pages: "The MCP server returned more than %{max} pages of tools."
+        tool_catalog_too_large: "The MCP server tool catalog exceeded %{max} bytes."
+        too_many_tools: "The MCP server advertised more than %{max} tools."
+        repeated_tool_list_cursor: "The MCP server repeated a tool list pagination cursor."
+        failure_limit: "Repeated MCP failures stopped further calls for this turn. Explain the error and the unfinished work; do not claim success or retry again."
         oauth_authorization_required: "OAuth authorization is required before this MCP server can be used. Connect it to %{issuer} from the admin UI."
         oauth_discovery_failed: "Unable to discover OAuth authorization details for this MCP server."
         oauth_discovery_failed_with_status: "OAuth discovery failed with status %{status}."
@@ -625,17 +665,26 @@ en:
           palettes: "Save palettes: %{name}"
           existing_palettes: "Use palettes: %{name}"
           theme: "Save theme: %{name}"
+          component: "Save styles: %{name}"
         save_appearance_details:
           palettes: "Saves these colors without changing the site, so you can preview them first."
           existing_palettes: "Saves the choice of these palettes, which the site already has, without changing the site, so you can preview them first."
           theme: "Saves a new theme based on Foundation, core's default design, without making it the default theme, so you can preview it first."
+          component: "Saves these styles as a component of the current theme, turned off, so you can preview them first. The site keeps its theme and layout."
         save_appearance_question: "Do you want to save this?"
         activate_appearance_title: "Make live: %{name}"
         activate_appearance_details: "Everyone sees this as soon as you approve it. [Preview it first](%{preview_url}). You can switch back afterwards."
         activate_appearance_question: "Do you want to make this live?"
+        activate_component_details: "Turns the component on for everyone as soon as you approve it. %{theme} keeps its layout. [Preview it first](%{preview_url}). You can switch back afterwards."
         revert_appearance_title: "Switch back from: %{name}"
         revert_appearance_details: "Restores how the site looked before %{name} went live."
         revert_appearance_question: "Do you want to switch back?"
+        install_theme_title: "Install theme: %{name}"
+        install_theme_details: "%{description} Installs it from %{remote_url}, which Discourse maintains, without making it the default theme, so you can preview it first. It runs its own code and brings its own layout and palettes."
+        install_theme_question: "Do you want to install this theme?"
+        use_theme_title: "Use theme: %{name}"
+        use_theme_details: "%{name} is already installed on this site. Saves it as a change you can preview and then make the default theme, without changing the site now."
+        use_theme_question: "Do you want to use this theme?"
         topic_status_label: "Changing status:"
         topic_visibility_label: "Changing visibility:"
         topic_solution_label: "Changing solution:"
@@ -693,6 +742,19 @@ en:
         question: "Do you want to make this change?"
         category_question: "Do you want to make this change to %{category}?"
         category_change: "Changing `%{field}` from %{before} → %{after}"
+        category_group_access_label: "%{group}:"
+        category_access_levels:
+          full: "Create, reply, see"
+          create_post: "Reply, see"
+          readonly: "See"
+          none: "No access"
+        category_group_access_change: "Changing `%{group}` from %{before} → %{after}"
+        category_permissions_question: "Do you want to change who can access this category?"
+        category_make_private_question: "Do you want to make this category private?"
+        category_becomes_private: "The category becomes private. Only the listed groups and administrators will be able to see it."
+        delete_category_title: "Delete category: %{category}"
+        delete_category_details: "Permanently deletes this empty category. This can't be undone."
+        delete_category_question: "Do you want to delete this category?"
         empty_value: "Empty"
         approved: "Approved by @%{username}."
         rejected: "Rejected by @%{username}."
@@ -749,8 +811,8 @@ en:
         discourse_helper:
           name: "Discourse Helper"
           description: "AI Bot specialized in helping with Discourse related tasks"
-        discourse_admin_assistant:
-          name: "Discourse Admin Assistant"
+        admin_assistant:
+          name: "Admin Assistant"
           description: "AI Bot that answers Discourse questions and helps administrators manage site settings"
         web_artifact_creator:
           name: "Web Artifact Creator"
@@ -926,7 +988,9 @@ en:
           name: "Code execution (native)"
           help: "Lets the model write and run Python code in the provider's sandbox, when the agent is forced to a supported Gemini LLM."
       tool_summary:
+        load_admin_tools: "Load administration tools"
         theme_app_handoff: "Checking how to build themes with an AI app"
+        install_popular_theme: "Install theme"
         enable_mcp_theme_access: "Let AI apps build themes"
         load_discourse_website_page: "Load Discourse website page"
         read_artifact: "Read a web artifact"
@@ -941,6 +1005,7 @@ en:
         github_diff: "GitHub diff"
         random_picker: "Random Picker"
         categories: "List categories"
+        find_category: "Find category"
         users: "List users"
         flag_post: "Flag post"
         close_topic: "Close topic"
@@ -955,6 +1020,8 @@ en:
         edit_tag: "Edit tag"
         create_category: "Create category"
         edit_category: "Edit category"
+        set_category_permissions: "Set category permissions"
+        delete_category: "Delete category"
         change_topic_category: "Change topic category"
         set_topic_timer: "Set topic timer"
         set_slow_mode: "Set slow mode"
@@ -994,7 +1061,9 @@ en:
         researcher: "Researching"
         researcher_dry_run: "Preparing research"
       tool_help:
+        load_admin_tools: "Load the administration tools needed for a request."
         theme_app_handoff: "Explain how to build themes with an AI app through the MCP server"
+        install_popular_theme: "Install a ready-made theme maintained by Discourse without making it live"
         enable_mcp_theme_access: "Let AI apps build themes through the MCP server"
         load_discourse_website_page: "Load a named page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
@@ -1009,6 +1078,7 @@ en:
         github_diff: "Retrieve a GitHub pull request or commit diff"
         random_picker: "Pick a random number or a random element of a list"
         categories: "List all publicly visible categories on the forum"
+        find_category: "Find a category by name, including private categories, with its permissions"
         users: "List users on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
@@ -1023,6 +1093,8 @@ en:
         edit_tag: "Rename a tag or change its description"
         create_category: "Create a new category"
         edit_category: "Edit an existing category's name, description, or colors"
+        set_category_permissions: "Change which groups can see, reply to, or create topics in a category"
+        delete_category: "Delete an empty category"
         change_topic_category: "Move a topic to a different category"
         set_topic_timer: "Set a timer on a topic to close, open, delete, or bump it"
         set_slow_mode: "Enable or disable slow mode on a topic"
@@ -1061,6 +1133,7 @@ en:
         javascript_evaluator: "Evaluate JavaScript"
         researcher: "Research forum information using the AI Bot"
       tool_description:
+        load_admin_tools: "Loading administration tools"
         load_discourse_website_page: "Loaded the %{page_name} page from the official Discourse website"
         read_artifact: "Read a web artifact using the AI Bot"
         view_image: "Inspected an image available during this task"
@@ -1088,6 +1161,8 @@ en:
         edit_tag: "Editing tag '%{name}' (%{fields})"
         create_category: "Creating category '%{name}'"
         edit_category: "Editing %{fields} for %{category_name}"
+        set_category_permissions: "Changing access to %{category_name}"
+        delete_category: "Deleting %{category_name}"
         change_topic_category: "Moving topic %{topic_id} to category %{category_id}"
         set_topic_timer: "Setting %{timer_type} timer on topic %{topic_id} (%{duration_hours}h)"
         set_slow_mode: "Setting slow mode on topic %{topic_id} (%{slow_mode_seconds}s)"
@@ -1110,6 +1185,9 @@ en:
         categories:
           one: "Found %{count} category"
           other: "Found %{count} categories"
+        find_category:
+          one: "Found %{count} category matching '%{query}'"
+          other: "Found %{count} categories matching '%{query}'"
         users:
           one: "Found %{count} user"
           other: "Found %{count} users"
@@ -1270,6 +1348,39 @@ en:
           no_reason: "A reason is required to edit a category."
         success: "Category '%{name}' updated successfully."
 
+      find_category:
+        no_results: "No category you can manage matches '%{query}'."
+        errors:
+          no_query: "A category name or slug is required."
+          not_allowed: "Category lookup is only available to people who manage categories, in private conversations."
+
+      set_category_permissions:
+        errors:
+          unavailable: "Changing category permissions is not available on this site."
+          private_conversation_required: "Category permissions can only be changed in a private conversation with the assistant."
+          not_found: "Category not found."
+          not_allowed: "You are not allowed to change this category's permissions."
+          uncategorized: "The uncategorized category's permissions cannot be changed."
+          no_reason: "A reason is required to change category permissions."
+          no_groups: "At least one group must be given access. Use `everyone` to make the category public."
+          duplicate_groups: "Each group can only have one permission level, but these were listed more than once: %{groups}."
+          unknown_groups: "These groups do not exist: %{groups}. Available groups include: %{available}."
+          unchanged: "The category already has these permissions."
+        success: "Permissions for '%{name}' updated successfully."
+
+      delete_category:
+        errors:
+          not_found: "Category not found."
+          not_allowed: "You are not allowed to delete this category."
+          private_conversation_required: "Categories can only be deleted in a private conversation with the assistant."
+          no_reason: "A reason is required to delete a category."
+          uncategorized: "The uncategorized category cannot be deleted."
+          has_subcategories: "'%{name}' has subcategories, so it cannot be deleted. Delete or move its subcategories first, then delete it from its settings: %{url}"
+          has_topics:
+            one: "'%{name}' still contains %{count} topic, so it cannot be deleted. Move or delete the topic first, then delete the category from its settings: %{url}"
+            other: "'%{name}' still contains %{count} topics, so it cannot be deleted. Move or delete the topics first, then delete the category from its settings: %{url}"
+        success: "Category '%{name}' deleted successfully."
+
       change_topic_category:
         errors:
           not_found: "Topic not found."
@@ -1394,6 +1505,17 @@ en:
       not_allowed: "Only administrators can change how the site looks."
       unavailable: "Changing how the site looks isn't available here."
       themes_unavailable: "Creating new themes isn't available on this site. I can change the current theme's colors and fonts instead."
+      styles_unavailable: "Styles beyond colors and fonts aren't available on this site. I can change the current theme's colors and fonts instead."
+      styles_failed: "I couldn't write styles that pass the theme's safety checks. Ask the administrator to describe the change differently, or offer to build it with their own AI app."
+      more_styles: "More style changes"
+      theme_changed: "This theme has been changed since it was saved, so I can't make it live. Make it the default in Admin > Appearance > Themes instead, or ask me for a new version."
+      component_target: "Styles added to %{theme} as a component, so its layout stays"
+      component_version_target: "A new version of %{name}, added to %{theme} as a component. The current version is kept so you can switch back."
+      component_label: "Component: %{name}"
+      component_on: "On"
+      component_off: "Off"
+      new_version_target: "A new version of %{name}, saved as a draft until it's made live. The current version is kept so you can switch back."
+      styles_unsupported: "These styles can't make that change: %{requests}. Offer to build it with the administrator's own AI app instead."
       name_required: "Give the palettes or theme a short name."
       brand_color_required: "Give a brand color, or the website to take colors from."
       invalid_color: "Use hex colors, such as #635bff. These aren't valid: %{colors}"
@@ -1414,9 +1536,16 @@ en:
       not_live: "That appearance change isn't live."
       cannot_restore: "What that change replaced no longer exists, so the site can't switch back to it."
       failed: "The change couldn't be made."
+      installed: "Installed without making it the default theme. Share the preview link, then ask whether to make it live."
+      install_failed: "The theme couldn't be installed. Try again later, or install it from Admin > Appearance > Themes."
+      not_popular: "That isn't one of the ready-made themes I can install."
+      saved_existing_theme: "Saved without changing the site. Share the preview link, then ask whether to make it live."
+      already_default: "%{name} is already the default theme."
+      theme_already_default: "That theme is already the default theme."
+      theme_repo_not_allowed: "This site can't install that theme."
       saved: "Saved without changing the site. Share the preview link, then ask whether to make it live. Fonts change when it goes live."
-      live: "%{name} is live."
-      switched_back: "Switched back from %{name}."
+      live: "%{name} is live. Tell the administrator to refresh the page to see it, since pages already open keep the old look until they reload."
+      switched_back: "Switched back from %{name}. Tell the administrator to refresh the page to see it, since pages already open keep the old look until they reload."
       palettes_target: "New palettes for the current theme, %{theme}"
       existing_palettes_target: "The %{palette} palettes, the closest of the ones %{theme} can use"
       already_closest: "%{theme} already uses %{palette}, the closest of the palettes it can use, so its colors don't need to change. Fonts can still change through the base_font and heading_font settings."
@@ -1602,6 +1731,7 @@ en:
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
+        enable_embeddings_first: "You must enable AI embeddings and select an embedding model before enabling this feature."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     decision_models:
@@ -1649,6 +1779,13 @@ en:
         disabled: "The AI translation feature is not fully configured."
         all_posts_translated: "All posts in this topic are already translated."
 
+    concepts:
+      errors:
+        invalid_status: "Concept status must be active, candidate, or retired."
+        invalid_parent: "Parent concept must exist and cannot be retired."
+        invalid_merge: "Select a valid non-retired target concept to merge into."
+        curation_unavailable: "Enable inferred concepts and AI embeddings before running curation."
+
     llm_credit_allocation:
       limit_exceeded_user: "This community has reached its AI credit limit for today. Please try again after %{reset_time} or contact your site administrator for more information."
       limit_exceeded_admin: "You have reached your AI credit limit. Please try again after %{reset_time}."
@@ -1679,6 +1816,7 @@ en:
       no_pending_tool_calls: There are no pending tool calls for this resume token.
       missing_tool_results: "Missing tool results for tool_call_id(s): %{ids}"
       unexpected_tool_results: "Unexpected tool results for tool_call_id(s): %{ids}"
+      duplicate_tool_results: "Duplicate tool results for tool_call_id(s): %{ids}"
       invalid_tool_result_content: "The tool result for %{id} must include content"
       tool_result_content_too_large: "Each tool result content payload must be at most %{max} bytes."
       stream_reply_max_resume_rounds_reached: Reached maximum custom tool resume rounds (%{max}).

@@ -680,6 +680,8 @@ Common control arguments:
 - `@allowNamedColors`: allow named colors instead of only hex values
 - `@fallbackValue`: value to restore on blur when left blank
 
+The optional `<:prefix>` block replaces the `#` inside the hex prefix.
+
 **Example**
 
 ```hbs

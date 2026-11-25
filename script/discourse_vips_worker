@@ -64,6 +64,8 @@ class DiscourseVipsWorker
         animated(*arguments)
       when "svg-dimensions"
         svg_dimensions(*arguments)
+      when "gif-dimensions"
+        gif_dimensions(*arguments)
       when "heif-to-jpeg"
         heif_to_jpeg(input_path: arguments[0], output_path: arguments[1], quality: arguments[2])
       when "png-to-jpeg"
@@ -194,6 +196,20 @@ class DiscourseVipsWorker
       end
     end
     private_class_method :animated
+
+    def self.gif_dimensions(input_path)
+      new do
+        block_loaders(allowed: %w[VipsForeignLoadNsgif])
+
+        begin
+          image = Vips::Image.gifload(input_path, n: 1, access: :sequential)
+          [image.width, image.height]
+        rescue Vips::Error => error
+          raise InvalidImage, error.message
+        end
+      end
+    end
+    private_class_method :gif_dimensions
 
     def self.heif_to_jpeg(input_path:, output_path:, quality:)
       new do

@@ -516,6 +516,36 @@ RSpec.describe Jobs::DiscourseWorkflows::AuthorWithAi do
     )
   end
 
+  it "logs generations that take longer than expected" do
+    stub_const(described_class, :SLOW_GENERATION_SECONDS, 0) do
+      session =
+        Fabricate(
+          :discourse_workflows_ai_authoring_session,
+          user: admin,
+          messages: [{ "type" => "user", "content" => "Create a manual log workflow" }],
+        )
+      response = { status: "explanation", message: "No changes needed", questions: [] }
+      fake_bot = double
+      allow(fake_bot).to receive(:reply).and_return(authoring_result_raw_context(response))
+      allow(DiscourseAi::Agents::Bot).to receive(:as).and_return(fake_bot)
+
+      logger =
+        track_log_messages do
+          described_class.new.execute(
+            session_id: session.id,
+            user_id: admin.id,
+            generation_id: SecureRandom.hex,
+          )
+        end
+
+      expect(logger.warnings).to contain_exactly(
+        a_string_matching(
+          /AI authoring took \d+s \(status: drafting, user_id: #{admin.id}, session_id: #{session.id}\)/,
+        ),
+      )
+    end
+  end
+
   it "asks the admin how to proceed when authoring raises", :aggregate_failures do
     session =
       Fabricate(

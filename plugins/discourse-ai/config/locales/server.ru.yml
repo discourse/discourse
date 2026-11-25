@@ -28,12 +28,6 @@ ru:
         description: "Сортировка публикаций с использованием большой языковой модели"
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
-          body: |
-            Привет, @%{username},
-
-            . Ваше сообщение в разделе «%{topic_title}» временно удалено и помещено в очередь на рассмотрение модератору. В случае одобрения оно будет автоматически восстановлено.
-
-            Ссылка: %{post_url}
       llm_report:
         title: Периодический отчет с использованием AI
         description: "Периодический отчет на основе большой языковой модели"
@@ -110,6 +104,12 @@ ru:
     ai_discord_search_agent: "Агент для поиска в Discord."
     ai_discord_allowed_guilds: "Серверы Discord (гильдии), на которых боту разрешено выполнять поиск"
     ai_translation_personal_messages: "Управляет тем, какие личные сообщения будут переводиться. 'none' отключает перевод личных сообщений. 'group' переводит только групповые личные сообщения. 'all' переводит все личные сообщения."
+    keywords:
+      ai_default_llm_model: "языковая модель по умолчанию"
+      ai_discord_search_enabled: "интеграция с Discord"
+      ai_helper_automatic_chat_thread_title: "заголовки тем чата"
+      ai_summarization_enabled: "cводки"
+      ai_summary_gists_enabled: "краткие сводки по списку тем"
   reviewables:
     reasons:
       flagged_by_toxicity: Плагин AI определил этот контент как токсичный и отправил жалобу.
@@ -300,6 +300,8 @@ ru:
           text_color: "цвет текста"
         approve_label: "Да"
         reject_label: "Нет"
+        category_access_levels:
+          readonly: "Просматривать"
         empty_value: "Пустой"
       agents:
         cannot_have_duplicate_tools: "Не может быть дублирующихся инструментов"
@@ -455,6 +457,7 @@ ru:
         edit_post: "Редактировать пост"
         edit_tag: "Редактировать тег"
         create_category: "Создать категорию"
+        delete_category: "Удаление категории"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"
@@ -635,6 +638,12 @@ ru:
         errors:
           tagging_disabled: "На этом сайте функция добавления тегов отключена."
       edit_category:
+        errors:
+          not_found: "Категория не найдена."
+      set_category_permissions:
+        errors:
+          not_found: "Категория не найдена."
+      delete_category:
         errors:
           not_found: "Категория не найдена."
       change_topic_category:

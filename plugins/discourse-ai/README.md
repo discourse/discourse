@@ -4,6 +4,31 @@
 
 For more information, please see: https://meta.discourse.org/t/discourse-ai/259214?u=falco
 
+### Recovering invalid prompt turns
+
+`Prompt` repairs role-order problems as messages are loaded or appended. The history builder discards stored system entries before trimming or formatting, including in single-message chat and topic transcripts. Only the prompt's leading system message supplies system instructions. A missing user turn gets a neutral history marker, and consecutive assistant replies keep their own attachments and provider signatures.
+
+Tool results belong to outstanding calls in the same exchange. Parallel results may arrive in any order; a result from an earlier exchange cannot complete a new call with the same ID. Malformed historical exchanges are retained as labeled, non-executable evidence. A pending current call stays protected, even if that means the prompt cannot fit. Recovery does not retry the completion, run a tool, or create a missing result. Unknown roles and malformed content are still rejected.
+
+Recovery warnings include the stage, message index, adjacent roles, and reason, not message bodies or tool payloads. Compression reads historical evidence without inserting separators. Replay preserves the current request by position; when no position was saved, the bot, compression, and resume code all skip recovery markers and internal budget hints.
+
+### Admin Assistant tool loading
+
+The Admin Assistant initially exposes website lookup, Meta search, local navigation,
+Upcoming Changes, and `load_admin_tools`. Domain schemas are exposed only after the
+model loads `settings`, `categories_tags`, `moderation`, or `appearance`; a request can
+load several groups. Discovery returns the available tool names and their workflow
+instructions. The next completion receives their schemas, without restarting the turn.
+Loading tools does not execute an administrative action or bypass approval.
+
+Loaded groups live on the conversation context. New contexts restore them from discovery
+results and domain tool calls in retained history, including approval follow-ups. If
+history trimming or compression removes that evidence, the model can load the group
+again. Availability is rechecked against the current site, user, and plugin restrictions.
+Ungrouped tools added by `admin_assistant_tools` remain immediately available for
+backward compatibility; removing a tool through that modifier still excludes it from
+loaded groups. Keep new built-in domain tools in `AdminAssistant::TOOL_GROUPS`.
+
 ### Evals
 
 The directory `evals` contains AI evals for the Discourse AI plugin.

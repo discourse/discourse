@@ -50,6 +50,9 @@ it:
           title: "Sistema di caratteri"
         colors:
           title: "Colori"
+        design_variables:
+          type: "Tipo"
+          default: "Predefinito"
         icons:
           title: "Icone"
           full_list: "Vedi l'elenco completo delle icone Font Awesome"

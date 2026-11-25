@@ -2509,6 +2509,7 @@ el:
       no_results: "Δεν υπάρχουν αποτελέσματα"
       search: "Αναζήτηση…"
       label: "Επιλέξτε επιλογές"
+      remove_item: "Αφαίρεση %{name}"
     d_otp:
       screen_reader:
         one: Εισάγετε έναν αριθμό
@@ -2913,6 +2914,8 @@ el:
         size_too_small: "%{provided_file_size} είναι μικρότερο από το ελάχιστο επιτρεπόμενο %{min_file_size}"
     emoji_picker:
       filter_placeholder: Αναζήτησε για emoji
+      no_results: "Δεν υπάρχουν αποτελέσματα"
+      favorites: "Συχνά χρησιμοποιούμενα"
       smileys_&_emotion: Χαμόγελα και συγκίνηση
       people_&_body: Άνθρωποι και Σώμα
       animals_&_nature: Ζώα και Φύση
@@ -2970,6 +2973,10 @@ el:
       emoji: "Emoji :)"
       more_emoji: "περισσότερα…"
       options: "Επιλογές"
+      ai_content:
+        code: "Κωδικός"
+        quote: "Παράθεση"
+        details: "Λεπτομέρειες"
       whisper: "ψιθύρισμα"
       unlist: "κρυμμένο"
       add_warning: "Αυτή είναι μια επίσημη προειδοποίηση."
@@ -4229,10 +4236,8 @@ el:
           label: "επιλεγμένη"
           title: "Κάντε κλικ για να αφαιρέσετε την ανάρτηση από την επιλογή"
         select_replies:
-          label: "επίλεξε +απαντήσεις"
           title: "Προσθέστε την ανάρτηση και όλες τις απαντήσεις της στην επιλογή"
         select_below:
-          label: "επιλέξτε + παρακάτω"
           title: "Προσθέστε την ανάρτηση και όλες μετά από αυτήν στην επιλογή"
         delete: διαγραφή επιλεγμένων
         cancel: ακύρωση επιλογής
@@ -5378,6 +5383,15 @@ el:
       forward: "Μπροστά"
       share: "Κοινοποίηση"
       dismiss: "Παράβλεψη"
+    mobile_tab_bar:
+      new_topic: "Νέο θέμα"
+      create: "Δημιουργία"
+      more: "Περισσότερα"
+      back: "Πίσω"
+      topics: "Θέματα"
+      drafts:
+        one: "Πρόχειρα (%{count})"
+        other: "Πρόχειρα (%{count})"
     safe_mode:
       enabled: "Η ασφαλής λειτουργία είναι ενεργοποιημένη, για να εξέλθετε από την ασφαλή λειτουργία κλείστε αυτό το παράθυρο περίηγησης"
     image_removed: "(η εικόνα αφαιρέθηκε)"
@@ -6930,14 +6944,6 @@ el:
           company_name: "Όνομα"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Εφαρμοστέο δίκαιο"
-          governing_law_placeholder: "Επαρχία, Πολιτεία ή Χώρα"
-          governing_law_help: |
-            Προσδιορίστε τη δικαιοδοσία για τους νομικούς όρους του ιστότοπου, συνήθως εκεί όπου είναι εγγεγραμμένη ή λειτουργεί η εταιρεία.
-          city_for_disputes: "Πόλη για διαφορές"
-          city_for_disputes_placeholder: "Πόλη"
-          city_for_disputes_help: |
-            Ορίστε την πόλη για την επίλυση νομικών διαφορών που σχετίζονται με αυτό το φόρουμ.
           extra_groups:
             heading: "Κατάλογος ομάδων"
             description: "Επιπλέον ομάδες που θα εμφανίζονται στη σελίδα Σχετικά."
@@ -7998,7 +8004,6 @@ el:
         silence_modal_title: "Σίγαση Χρήστη"
         silence_duration: "Για πόσο χρονικό διάστημα ο χρήστης θα σιωπηθεί;"
         silence_reason_placeholder: "Αιτία σιώπησης"
-        silence_message: "Μήνυμα email"
         suspended_until: "(έως %{until})"
         suspend_forever: "Αναστολή για πάντα"
         cant_suspend: "Ο χρήστης αυτός δεν μπορεί να αποβληθεί."
@@ -8307,6 +8312,8 @@ el:
       site_text:
         description: "Μπορείτε να προσαρμόσετε οποιοδήποτε κείμενο στο φόρουμ σας."
         search_label: "Αναζήτηση"
+        preview:
+          default: "Προεπιλογή"
         theme_disabled: "Απενεργοποιημένος"
         filters: "Φίλτρα"
         title: "Κείμενα ιστότοπου"
@@ -8457,7 +8464,7 @@ el:
           modal_title: Ομαδοποίηση Παράσημων
         granted_by: Απονεμήθηκε από
         granted_at: Απονεμήθηκε στις
-        reason_help: (Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα)
+        reason_help: Ένας σύνδεσμος προς μια ανάρτηση ή ένα θέμα
         save: Αποθήκευση
         delete: Διαγραφή
         delete_confirm: Σίγουρα θέλετε να διαγράψετε αυτό το παράσημο;

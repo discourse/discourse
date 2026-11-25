@@ -59,12 +59,6 @@ uk:
           <b>Активується правилом <a href="%{base_path}/admin/plugins/automation/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Вашу публікацію тимчасово видалено для перевірки"
-          body: |
-            Привіт @%{username},
-
-            Ваша публікація в «%{topic_title}» була тимчасово видалена і розміщена в нашій черзі для перегляду модератором. Якщо її буде схвалено, вона буде відновлена автоматично.
-
-            Посилання: %{post_url}
       llm_report:
         title: Періодичний звіт з використанням ШІ
         description: "Періодичний звіт на основі великої мовної моделі"
@@ -180,6 +174,12 @@ uk:
     ai_usage_rollup_after_days: "Кількість днів для зберігання статистики використання ШІ для кожного запиту перед її перетворенням на щоденні зведені дані. Встановіть значення 0, щоб вимкнути зведення."
     ai_audit_logs_detailed_retention_days: "Зберігати необроблені корисні навантаження запитів і відповідей ШІ протягом певної кількості днів. Встановіть значення 0, щоб зберігати корисні навантаження, доки журнал підсумків не буде видалено. Необроблені корисні навантаження можуть містити приватний або конфіденційний контент. Очищення триває, навіть якщо плагін ШІ вимкнено."
     ai_audit_logs_purge_after_days: "Зберігати зведені дані журналу аудиту AI API протягом заданої кількості днів, перш ніж видаляти весь журнал. Встановіть значення 0, щоб зберігати зведені дані назавжди. Очищення продовжується, навіть якщо плагін AI вимкнено."
+    keywords:
+      ai_default_llm_model: "мовна модель за замовчуванням"
+      ai_discord_search_enabled: "інтеграція з Discord"
+      ai_helper_automatic_chat_thread_title: "назви тем чату"
+      ai_summarization_enabled: "підсумки"
+      ai_summary_gists_enabled: "короткий опис списку тем"
   reviewables:
     reasons:
       flagged_by_toxicity: Плагін ШІ позначив його, класифікувавши як токсичний.
@@ -482,6 +482,8 @@ uk:
           text_color: "колір тексту"
         approve_label: "Так"
         reject_label: "Ні"
+        category_access_levels:
+          readonly: "Переглянути"
         empty_value: "Порожній"
         approved: "Схвалено @%{username}."
         rejected: "Відхилено користувачем @%{username}."
@@ -537,7 +539,7 @@ uk:
         discourse_helper:
           name: "Discourse Помічник"
           description: "AI Bot спеціалізується на допомозі із завданнями, пов’язаними з Discourse"
-        discourse_admin_assistant:
+        admin_assistant:
           name: "Помічник адміністратора дискурсу"
           description: "ШІ-бот, який відповідає на запитання Discourse та допомагає адміністраторам керувати налаштуваннями сайту"
         web_artifact_creator:
@@ -737,6 +739,7 @@ uk:
         edit_tag: "Редагувати тег"
         create_category: "Створити категорію"
         edit_category: "Редагувати категорію"
+        delete_category: "Видалити категорію"
         change_topic_category: "Змінити категорію теми"
         set_topic_timer: "Встановити таймер теми"
         set_slow_mode: "Встановити повільний режим"
@@ -1034,6 +1037,12 @@ uk:
           nothing_to_edit: "Потрібно вказати принаймні один із параметрів: name (назва), description (опис), color (колір) або text_color (колір_тексту)."
           no_reason: "Для редагування категорії потрібна причина."
         success: "Категорія «%{name}» успішно оновлена."
+      set_category_permissions:
+        errors:
+          not_found: "Розділ не знайдено."
+      delete_category:
+        errors:
+          not_found: "Розділ не знайдено."
       change_topic_category:
         errors:
           not_found: "Тему не знайдено."

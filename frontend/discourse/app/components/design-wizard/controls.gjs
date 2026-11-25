@@ -108,8 +108,8 @@ export default class DesignWizardControls extends Component {
   }
 
   @action
-  selectPalette(mode, pairKey) {
-    this.designWizard.selectPalette(mode, pairKey);
+  selectPalette(pairKey) {
+    this.designWizard.selectPalette(pairKey);
   }
 
   @action
@@ -190,15 +190,13 @@ export default class DesignWizardControls extends Component {
             @type="colors"
           >
             <ColorsSection
-              @darkPairs={{this.designWizard.darkPairs}}
-              @lightPairs={{this.designWizard.lightPairs}}
+              @availableModes={{this.designWizard.availablePaletteModes}}
+              @colorMode={{this.designWizard.effectiveColorMode}}
               @onSelectPalette={{this.selectPalette}}
               @onSelectPaletteMode={{this.selectPaletteMode}}
+              @pairs={{this.designWizard.availablePairs}}
               @paletteMode={{this.designWizard.paletteMode}}
-              @selectedDarkKey={{this.designWizard.selectedDarkPair.key}}
-              @selectedLightKey={{this.designWizard.selectedLightPair.key}}
-              @showsDarkPalettes={{this.designWizard.showsDarkPalettes}}
-              @showsLightPalettes={{this.designWizard.showsLightPalettes}}
+              @selectedKey={{this.designWizard.selectedPair.key}}
             />
           </Section>
         {{else}}

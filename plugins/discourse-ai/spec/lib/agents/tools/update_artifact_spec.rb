@@ -16,10 +16,7 @@ RSpec.describe DiscourseAi::Agents::Tools::UpdateArtifact do
     )
   end
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   describe "#process" do
     it "ignores non-text completion events while updating artifact code" do

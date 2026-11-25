@@ -2,11 +2,12 @@
 
 RSpec.describe Blog::Article::List do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(page:, query:, tag_slug:, archive:) }
+    subject(:contract) { described_class.new(page:, query:, tag_slug:, author_username:, archive:) }
 
     let(:page) { nil }
     let(:query) { nil }
     let(:tag_slug) { nil }
+    let(:author_username) { nil }
     let(:archive) { nil }
 
     before { contract.validate }
@@ -51,6 +52,12 @@ RSpec.describe Blog::Article::List do
       it { is_expected.not_to be_featured_first }
     end
 
+    context "with an author" do
+      let(:author_username) { "jo" }
+
+      it { is_expected.not_to be_featured_first }
+    end
+
     context "with the archive" do
       let(:archive) { true }
 
@@ -59,7 +66,9 @@ RSpec.describe Blog::Article::List do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+    subject(:result) do
+      described_class.call(params: { blog_id: blog.id, **params }, **dependencies)
+    end
 
     include_context "with a public blog"
 
@@ -79,11 +88,32 @@ RSpec.describe Blog::Article::List do
       )
     end
 
+    let(:blog) { Blog::Instance.default_blog }
     let(:params) { {} }
     let(:dependencies) { { guardian: Guardian.new } }
 
     def publish_article_tagged(tag, **attributes)
       publish_blog_article(Fabricate(:topic, category: blog_category, tags: [tag]), **attributes)
+    end
+
+    context "when the requested author has no public articles" do
+      let(:params) { { author_username: private_publication.discussion_topic.user.username } }
+
+      it { is_expected.to fail_a_policy(:requested_author_has_articles) }
+    end
+
+    context "when the requested author is the system user" do
+      let(:params) { { author_username: Discourse.system_user.username } }
+
+      before { newer_publication.discussion_topic.update!(user: Discourse.system_user) }
+
+      it { is_expected.to fail_a_policy(:requested_author_has_articles) }
+    end
+
+    context "when the requested author doesn't exist" do
+      let(:params) { { author_username: "nobody-here" } }
+
+      it { is_expected.to fail_a_policy(:requested_author_has_articles) }
     end
 
     context "when the requested tag is not visible to everyone" do
@@ -95,10 +125,43 @@ RSpec.describe Blog::Article::List do
     context "when everything's ok" do
       it { is_expected.to run_successfully }
 
+      it "leaves out articles from other blogs" do
+        other_blog = Blog::Instance.create!(name: "Engineering", slug: "engineering")
+        newer_publication.update_columns(blog_id: other_blog.id)
+
+        expect(result.listing[:publications]).to eq([featured_publication, older_publication])
+      end
+
+      it "leaves out standalone pages" do
+        newer_publication.update_columns(page: true)
+
+        expect(result.listing[:publications]).to eq([featured_publication, older_publication])
+      end
+
       it "lists public articles with featured ones first, then newest first" do
         expect(result.listing).to eq(
           publications: [featured_publication, newer_publication, older_publication],
           has_more: false,
+        )
+      end
+    end
+
+    context "when an author is requested" do
+      let(:author) { featured_publication.discussion_topic.user }
+      let(:params) { { author_username: author.username.upcase } }
+
+      before { newer_publication.discussion_topic.update!(user: author) }
+
+      it "lists only their articles, newest first" do
+        expect(result.author).to eq(author)
+        expect(result.listing[:publications]).to eq([newer_publication, featured_publication])
+      end
+
+      it "includes articles they co-wrote" do
+        older_publication.update_columns(co_author_ids: [author.id])
+
+        expect(result.listing[:publications]).to eq(
+          [newer_publication, featured_publication, older_publication],
         )
       end
     end
@@ -133,7 +196,7 @@ RSpec.describe Blog::Article::List do
     context "with more articles than fit on a page" do
       let(:params) { { page: 2 } }
 
-      before { SiteSetting.blog_posts_per_page = 1 }
+      before { update_default_blog(posts_per_page: 1) }
 
       it "lists the requested page and reports that more follow" do
         expect(result.listing).to eq(publications: [newer_publication], has_more: true)

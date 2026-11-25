@@ -686,6 +686,20 @@ discourse_ai:
       - 2
       - 3
       - 4
+  ai_reviewable_action_suggestions_enabled:
+    default: false
+    client: true
+    area: "ai-features/review_queue"
+  ai_reviewable_action_decision_model:
+    area: "ai-features/review_queue"
+    type: enum
+    default: ""
+    enum: "DiscourseAi::Configuration::DecisionModelEnumerator"
+  ai_reviewable_action_min_confidence:
+    area: "ai-features/review_queue"
+    default: 0.9
+    min: 0
+    max: 1
   ai_dsa_classification_decision_model:
     type: enum
     default: ""
@@ -787,6 +801,7 @@ discourse_ai:
   inferred_concepts_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_background_match:
     default: false
