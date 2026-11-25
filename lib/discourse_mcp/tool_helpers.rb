@@ -285,23 +285,24 @@ module DiscourseMcp
       text: nil,
       error: "content_policy_output_blocked"
     )
-      # Queued payloads may hold tags as `{ "name" => ... }` hashes.
-      names =
-        Array(tag_names).map { |tag| tag.is_a?(Hash) ? tag.with_indifferent_access[:name] : tag }
-      names += WordWatcher.new(text).tag_names if text.present?
-      names = names.map { |name| name.to_s.strip }.compact_blank.uniq
+      # The names are resolved by the same steps that save them: the caller's
+      # tags first, then, for a new topic, the tags its watched words add on top.
+      names = DiscourseTagging.tags_for_saving(tag_param_names(tag_names), request_context.guardian)
+      names = Array(names)
+      if text.present? && WordWatcher.words_for_action(:tag).present?
+        names =
+          DiscourseTagging.tags_for_saving(
+            names + WordWatcher.new(text).tag_names,
+            Discourse.system_user.guardian,
+          )
+        names = Array(names)
+      end
       return Set.new if names.empty?
 
-      # Like saving tags, existing names match exactly before the rest are
-      # cleaned, so a stored name longer than the current limit still matches.
       tags = Tag.where_name(names).to_a
-      found = tags.map { |tag| tag.name.downcase }.to_set
-      remaining = names.reject { |name| found.include?(name.downcase) }
-      cleaned = remaining.map { |name| DiscourseTagging.clean_tag(name) }.compact_blank.uniq
-      tags += Tag.where_name(cleaned).to_a if cleaned.any?
-      found = tags.map { |tag| tag.name.downcase }.to_set
-      raise_prospective_refusal!(error) if cleaned.any? { |name| found.exclude?(name.downcase) }
-      raise_prospective_refusal!(error) if remaining.any? && cleaned.empty?
+      if tags.map { |tag| tag.name.downcase }.uniq.size < names.map(&:downcase).uniq.size
+        raise_prospective_refusal!(error)
+      end
 
       tag_ids = tags.map { |tag| tag.target_tag_id || tag.id }.uniq
       category = Category.find_by(id: category_id)
@@ -334,6 +335,18 @@ module DiscourseMcp
       if !policy.allows_prospective_topic?(category_id:, tag_ids:, private_message:)
         raise_prospective_refusal!(error)
       end
+    end
+
+    # Tags may be given as names or, in queued payloads, as `{ id:, name: }`
+    # hashes, which saving reads by id first.
+    def tag_param_names(tag_params)
+      tag_params = Array(tag_params)
+      return tag_params.map(&:to_s) if tag_params.empty? || !tag_params.first.is_a?(Hash)
+
+      tag_params = tag_params.map(&:with_indifferent_access)
+      ids = tag_params.filter_map { |tag| tag[:id]&.to_i }
+      tag_params.filter_map { |tag| tag[:id].blank? && tag[:name].presence } +
+        Tag.where(id: ids).pluck(:name)
     end
 
     def raise_prospective_refusal!(error = "content_policy_output_blocked")

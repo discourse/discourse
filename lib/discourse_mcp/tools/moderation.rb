@@ -308,13 +308,15 @@ module DiscourseMcp
         return if !PUBLISHING_ACTIONS.include?(server_action) || server_action.start_with?("revise")
         return if !reviewable.is_a?(ReviewableQueuedPost) || reviewable.topic_id.present?
 
-        payload = reviewable.payload
+        # Approval creates the topic from these options, so the check reads them
+        # the same way: hash tags by name, the reviewable's category first.
+        options = reviewable.create_options
         ToolHelpers.ensure_prospective_topic!(
           request_context,
-          tag_names: payload["tags"],
-          category_id: payload["category"].presence || reviewable.category_id,
-          text: "#{payload["title"]} #{payload["raw"]}",
-          private_message: payload["archetype"] == Archetype.private_message,
+          tag_names: options[:tags],
+          category_id: options[:category],
+          text: "#{options[:title]} #{options[:raw]}",
+          private_message: options[:archetype] == Archetype.private_message,
           error: "content_policy_blocked",
         )
       end

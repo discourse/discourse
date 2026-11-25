@@ -75,36 +75,43 @@ module DiscourseMcp
       end
 
       MAX_REDIRECTS = 5
+      JUDGED_PARAMS = %i[topic_id post_id category_id tag_id category_slug_path_with_id].freeze
+      RECORD_ID_CONTROLLERS = %w[topics posts categories tags].freeze
+      # Controllers whose identifiers name records no content rule governs.
+      UNGOVERNED_CONTROLLERS = %w[users groups badges].freeze
 
       # A local URL is restricted when anything it leads to on the site is: the
       # records its route names through any parameter that identifies one, the
-      # target of a permalink, or the destination of a redirect route. A local
-      # URL that the server doesn't recognize is restricted too, because the
-      # browser or a later redirect may still route it to restricted content. A
-      # recognized URL to a record that doesn't exist is kept: settings are
-      # written by admins, and agents can't change them while a rule is active.
+      # destination of a redirect route, or the target of a permalink. They are
+      # resolved in the order the router serves them, so a live route wins over
+      # a permalink with the same path. A local URL that the server doesn't
+      # serve is restricted too, because the browser or a later redirect may
+      # still route it to restricted content. A URL to a record that doesn't
+      # exist is kept: settings are written by admins, and agents can't change
+      # them while a rule is active.
       def restricted_local_url?(item, policy, hops: 0)
         item = item.to_s.strip
-        path = local_path(item)
+        path, query = local_path(item)
         return restricted_route?(Discourse.route_for(item), policy) if path.nil?
         return true if hops > MAX_REDIRECTS
 
-        if (permalink = Permalink.find_by_url(path))
-          target = permalink.target_url
-          return target.present? && restricted_local_url?(target, policy, hops: hops + 1)
-        end
-
+        full_path = query.present? ? "#{path}?#{query}" : path
         route = recognize(path)
-        return restricted_route?(route, policy) if route
+        return restricted_route?(route, policy) if route && route[:controller] != "permalinks"
 
-        destination = redirect_destination(path)
-        return true if destination.nil?
+        destination = redirect_destination(full_path)
+        return restricted_local_url?(destination, policy, hops: hops + 1) if destination
 
-        restricted_local_url?(destination, policy, hops: hops + 1)
+        # Permalinks match the full path, query included.
+        permalink = Permalink.find_by_url(full_path)
+        return true if permalink.nil?
+
+        target = permalink.target_url
+        target.present? && restricted_local_url?(target, policy, hops: hops + 1)
       end
 
-      # The path of a URL on this site, without the base path, or nil when the
-      # value isn't written as a URL to this site.
+      # The path of a URL on this site, without the base path, and its query,
+      # or nil when the value isn't written as a URL to this site.
       def local_path(item)
         return if !item.start_with?("/") && !item.match?(%r{\Ahttps?://}i)
 
@@ -113,7 +120,7 @@ module DiscourseMcp
 
         path = uri.path.to_s
         path = path.delete_prefix(Discourse.base_path) if path.start_with?(Discourse.base_path)
-        path.presence || "/"
+        [path.presence || "/", uri.query]
       rescue URI::Error
         nil
       end
@@ -156,7 +163,63 @@ module DiscourseMcp
         return false if route.blank?
 
         restricted_route_topic?(route, policy) || restricted_route_category?(route, policy) ||
-          restricted_route_tag?(route, policy)
+          restricted_route_tag?(route, policy) || restricted_route_record?(route, policy)
+      end
+
+      # Any other parameter that identifies a record is judged through the
+      # model its controller or name points to, by the topic, post or category
+      # that record belongs to. An identifier that can't be judged that way is
+      # treated as restricted.
+      def restricted_route_record?(route, policy)
+        controller = route[:controller].to_s
+        return false if UNGOVERNED_CONTROLLERS.include?(controller)
+
+        route.any? do |key, value|
+          key = key.to_s
+          next false if value.blank? || JUDGED_PARAMS.include?(key.to_sym)
+          next false if !key.match?(/(?:\A|_)id\z/)
+          next false if key == "id" && RECORD_ID_CONTROLLERS.include?(controller)
+          next false if key == "external_id" && controller == "topics"
+
+          restricted_record?(route_model(controller, key), value, policy)
+        end
+      end
+
+      def route_model(controller, key)
+        names =
+          if key == "id"
+            [controller.classify]
+          else
+            name = key.delete_suffix("_id").classify
+            namespace = controller.include?("/") ? controller.split("/")[0...-1].join("/") : nil
+            [("#{namespace.classify}::#{name}" if namespace), name].compact
+          end
+        names
+          .lazy
+          .map(&:safe_constantize)
+          .find { |model| model.is_a?(Class) && model < ActiveRecord::Base }
+      end
+
+      def restricted_record?(model, value, policy)
+        return true if model.nil?
+
+        record = model.find_by(model.primary_key => value.to_s)
+        return false if record.nil?
+
+        links =
+          %i[topic_id post_id category_id topic post category].select do |name|
+            record.respond_to?(name)
+          end
+        return true if links.empty?
+
+        topic_ids = [record.try(:topic_id), record.try(:topic)&.id]
+        post_ids = [record.try(:post_id), record.try(:post)&.id].compact
+        topic_ids.concat(Post.with_deleted.where(id: post_ids).pluck(:topic_id)) if post_ids.any?
+        category_ids = [record.try(:category_id), record.try(:category)&.id].compact
+
+        topic_ids.compact.uniq.any? do |topic_id|
+          Topic.with_deleted.exists?(id: topic_id) && !policy.allows_topic_id?(topic_id)
+        end || category_ids.any? { |category_id| !policy.allows_category_id?(category_id) }
       end
 
       def restricted_route_topic?(route, policy)
@@ -172,6 +235,11 @@ module DiscourseMcp
           id = route[:id].to_s
           topic_ids << id.to_i if numeric?(id)
           topic_ids.concat(Topic.with_deleted.where(slug: id).pluck(:id))
+        end
+        if route[:controller] == "topics" && route[:external_id].present?
+          topic_ids.concat(
+            Topic.with_deleted.where(external_id: route[:external_id].to_s).pluck(:id),
+          )
         end
 
         Topic

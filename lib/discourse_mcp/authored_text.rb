@@ -46,6 +46,7 @@ module DiscourseMcp
     # element. Anchors' own `href` is judged separately.
     URL_ATTRIBUTE = /(?:\A|-)(?:src|srcset|poster|href|url)\z|\Adata\z/
     MENTION_PATHS = { "mention" => "u", "mention-group" => "groups" }.freeze
+    MENTION_NAME = /\A[\p{L}\p{M}\p{N}_][\p{L}\p{M}\p{N}_.\-]*\z/
     CODE_ANCESTORS = %w[code pre].freeze
     ONEBOX_CLASSES = %w[onebox inline-onebox inline-onebox-loading].freeze
 
@@ -129,9 +130,14 @@ module DiscourseMcp
       mention_class = (classes & MENTION_PATHS.keys).first
       return genuine_mention?(anchor, mention_class) if mention_class
       href = anchor["href"].to_s.strip
-      upload = upload_for(anchor["data-orig-href"].presence || href)
-      return use_upload(upload) if upload
-      return false if anchor["data-orig-href"].present?
+      original = anchor["data-orig-href"].presence
+      upload = upload_for(original || href)
+      if upload
+        # A link that names an upload must lead to that same upload.
+        return false if original && upload_for(href) != upload
+        return use_upload(upload)
+      end
+      return false if original
 
       return true if href.start_with?("#")
       return true if href.downcase.start_with?("mailto:")
@@ -141,10 +147,12 @@ module DiscourseMcp
     end
 
     # A mention links to the profile of the user or group it names, and to
-    # nothing else.
+    # nothing else. The name must look like a user or group name, so it can't
+    # carry a path that the browser resolves somewhere else.
     def genuine_mention?(anchor, mention_class)
       name = anchor.text.delete_prefix("@")
-      return false if !anchor.text.start_with?("@") || name.blank? || anchor.element_children.any?
+      return false if !anchor.text.start_with?("@") || anchor.element_children.any?
+      return false if !name.match?(MENTION_NAME)
 
       expected = "#{Discourse.base_path}/#{MENTION_PATHS.fetch(mention_class)}/#{name}"
       CGI.unescape(anchor["href"].to_s).casecmp?(expected)
@@ -194,21 +202,26 @@ module DiscourseMcp
       value.split(",").filter_map { |candidate| candidate.strip.split(/\s+/).first.presence }
     end
 
-    # Emoji come from the site itself, its CDN, or the configured emoji host.
+    # Emoji come from the configured emoji host, or from the site itself or its
+    # CDN. The path may not step out of the emoji directory.
     def emoji_url?(src)
       return false if src.blank?
 
       uri = URI.parse(src)
-      if uri.host.blank?
-        uri.scheme.blank? && uri.path.to_s.start_with?("#{Discourse.base_path}/images/emoji/")
-      elsif internal_host?(uri)
-        uri.path.to_s.start_with?("#{Discourse.base_path}/images/emoji/")
-      else
-        emoji_host = SiteSetting.external_emoji_url.presence
-        emoji_host.present? && src.start_with?("#{emoji_host.chomp("/")}/")
-      end
+      return false if traversing_path?(uri.path)
+
+      emoji_host = SiteSetting.external_emoji_url.presence&.chomp("/")
+      return true if emoji_host && uri.host.present? && src.start_with?("#{emoji_host}/")
+
+      local = uri.host.blank? ? uri.scheme.blank? : internal_host?(uri)
+      local && uri.path.to_s.start_with?("#{Discourse.base_path}/images/emoji/")
     rescue URI::Error
       false
+    end
+
+    def traversing_path?(path)
+      decoded = CGI.unescape(path.to_s)
+      decoded.include?("\\") || decoded.split("/").any? { |segment| %w[. ..].include?(segment) }
     end
 
     def external_url?(href)
@@ -254,6 +267,12 @@ module DiscourseMcp
 
       if url.start_with?("upload://")
         sha1 = Upload.sha1_from_short_url(url)
+        return sha1 && Upload.find_by(sha1:)
+      end
+
+      uri = URI.parse(url)
+      if uri.path.to_s.include?("/uploads/short-url/") && (uri.host.blank? || internal_host?(uri))
+        sha1 = Upload.sha1_from_short_path(uri.path)
         return sha1 && Upload.find_by(sha1:)
       end
       Upload.get_from_url(url)
