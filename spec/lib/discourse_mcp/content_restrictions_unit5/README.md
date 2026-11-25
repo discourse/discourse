@@ -306,3 +306,107 @@ graph-reference check was repeated after the refresh, with no mismatches.
 Only the four authorized files changed. No production code, other spec,
 migration, core database, git history/index/ref mutation, or service management was
 part of this work; the new guards intentionally remain RED against HEAD.
+
+
+## Unit 5 review round 3 at `6bb68077df8`
+
+Accepted findings from `dbea3b5a59e..6bb68077df8` are pinned test-first in the
+new `review3_spec.rb`, with **10 `[cr-u5]` examples, all observed RED**. No
+production fix was made. The new fixture range **113_580_000..113_580_999** was
+checked against all 60 pre-existing Ruby/JSON files in units 1–5, including
+ignored files, before authoring; no numeric literal overlapped. Unit 2's
+generated ID formulas were also read and use separate 90–94 million ranges.
+
+### Stale config and rule-kind transitions
+
+Four stale-instance cases cover tags/categories on allow/deny sides. A separate
+instance removes the target from the persisted rule; the real target is then
+destroyed. The original loaded instance retains that target and changes the
+allow mode, ensuring it attempts an actual config write. Its save must return
+false with errors and leave the persisted target list empty. This specifically
+exposes comparison with the stale instance's old config: both the stale previous
+and stale new configs list T, while the current database row does not.
+
+Four further cases start with a non-forum row carrying a missing target, then
+change only `rule_kind` to `forum_content`. This distinguishes newly entering
+the guarded rule kind from editing an existing forum rule that already has a
+legacy missing reference. Each save must be refused, retain the original kind,
+and create no forum-content row. Tag/category and allow/deny coverage rejects
+fixes checking only one model or side. These fixtures demonstrate the weaker
+HEAD implementation failing; no production mutation was permitted by the scope.
+
+### Deterministic category delete/reparent interleaving
+
+Two cases use `CategoryDestroyer.destroy` and `CategoryUpdater.update` on two
+real connections with distinct PostgreSQL backend PIDs, outside transactional
+fixtures. One has no rules; the other has a valid `forum_content` row affecting
+no target. Thus either operation is permitted in isolation.
+
+The update thread loads its own category instance and waits at a queue latch.
+A thread-scoped SQL notification observer pauses delete immediately after its
+real `SELECT ... categories ... FOR UPDATE` finishes. It releases the updater,
+then polls `pg_blocking_pids` until PostgreSQL confirms the update is waiting
+on the delete connection. Only then does delete proceed. At HEAD this creates
+the real row-lock/advisory-lock cycle, without a sleep or mocking either
+service. The observer recognizes a SQL boundary, not a proposed lock helper.
+A lock-order fix that acquires the common guard before the category row can
+still reach this boundary; its updater may wait on that guard instead.
+
+The final assertions explicitly reject `ActiveRecord::Deadlocked` from either
+side, require delete to succeed, and require the category to be absent and its
+new-parent candidate to survive. A serialized updater may return a boolean or
+raise `ActiveRecord::RecordNotFound` after losing to delete. Other exceptions
+are rejected. Queue/statement deadlines fail loudly; ensure blocks unsubscribe,
+release/join the worker, remove the example's rule and clean up surviving rows.
+The final with-rule run uses a forum rule, rather than the earlier PM-only
+fixture. Both reproduce the same deadlock.
+
+### Exact new inventory and observed RED signatures
+
+All rows below are from the final post-lint seed-68321 run and refer to
+`review3_spec.rb`.
+
+| File | Full example name | Observed RED signature |
+| --- | --- | --- |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses a stale allow config reintroducing a destroyed category` | `save` returned true, errors were empty, and persisted config contained `[113580001]` instead of `[]`; destroyed target remained absent. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses a stale allow config reintroducing a destroyed tag` | `save` returned true, errors were empty, and persisted config contained `[113580001]` instead of `[]`; destroyed target remained absent. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses a stale deny config reintroducing a destroyed category` | `save` returned true, errors were empty, and persisted config contained `[113580001]` instead of `[]`; destroyed target remained absent. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses a stale deny config reintroducing a destroyed tag` | `save` returned true, errors were empty, and persisted config contained `[113580001]` instead of `[]`; destroyed target remained absent. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses switching to forum_content with a missing allow category` | `update` returned true, errors were empty, rule kind became `forum_content` instead of `review3:old`, and a forum row existed. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses switching to forum_content with a missing allow tag` | `update` returned true, errors were empty, rule kind became `forum_content` instead of `review3:old`, and a forum row existed. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses switching to forum_content with a missing deny category` | `update` returned true, errors were empty, rule kind became `forum_content` instead of `review3:old`, and a forum row existed. |
+| `review3_spec.rb` | `McpContentRule#save with obsolete target state [cr-u5] refuses switching to forum_content with a missing deny tag` | `update` returned true, errors were empty, rule kind became `forum_content` instead of `review3:old`, and a forum row existed. |
+| `review3_spec.rb` | `CategoryDestroyer.destroy racing CategoryUpdater.update [cr-u5] completes delete racing reparent with rule rows without deadlock` | Captured updater `ActiveRecord::Deadlocked` / `PG::TRDeadlockDetected`; PostgreSQL reported a transaction ShareLock ↔ advisory ExclusiveLock cycle. Delete completed and removed the category. |
+| `review3_spec.rb` | `CategoryDestroyer.destroy racing CategoryUpdater.update [cr-u5] completes delete racing reparent without rule rows without deadlock` | Captured updater `ActiveRecord::Deadlocked` / `PG::TRDeadlockDetected`; PostgreSQL reported a transaction ShareLock ↔ advisory ExclusiveLock cycle. Delete completed and removed the category. |
+
+### Receipts, inventory and remaining gates
+
+The focused seed-58319 run observed **10 examples, 10 assertion failures**,
+including both actual deadlocks. The combined seed-68320 and final post-lint
+seed-68321 runs each observed **129 examples, 42 expected failures**, zero
+pending and zero errors outside examples: these 10 pins and all 32 unit 6
+examples RED; all **85 pre-existing unit 5 examples** and both unit 2 inventory
+examples GREEN. The final run repeats the deterministic interleaving with a
+forum row, under a different example order. No latch timeout or setup exception
+occurred. Raw receipts are `/tmp/cr-u5-review3-58319.json`,
+`/tmp/cr-u6-combined-68320.json` and `/tmp/cr-u6-final-68321.json`.
+
+Two direct comparisons found all **245 unit 2 exact-line anchors** current at
+HEAD and all graph references valid. Its JSON needs no refresh. The standalone
+inventory run, seed 58319, passed **2 examples, 0 failures**. See the
+[unit 2 verification](../content_restrictions_unit2/README.md) and the
+[unit 6 run command and inventory](../content_restrictions_unit6/README.md).
+
+Final targeted `bin/lint --fix --verbose` passed RuboCop and Syntax Tree for
+all five new Ruby files (one unit 5, four unit 6). Specs ran only through `hc`
+with repo Ruby 4.0.7, Bundler 4, `LOAD_PLUGINS=1` and
+`RAILS_DB=discourse_test_mcp_content`. No migration, core database operation,
+service management or git history/index/ref change was performed.
+
+Neither accepted finding is deferred as a non-test gate. These two race pins
+prove a specific delete-row-lock-first interleaving, not every possible
+schedule. Implementation review must still verify global lock ordering,
+outer transactions, retry behavior and cross-process coordination. The
+request/UI gates and the documented raw-SQL/bulk-import trust boundary remain
+as recorded above. Concurrent frontend work belongs to the paired implementer
+and was not edited by this oracle job.

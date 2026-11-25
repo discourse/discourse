@@ -459,3 +459,30 @@ The post-lint full unit 5 + enrichment repeat (seed **57220**) also passed both
 enrichment examples without `IndexError`: **87 examples, 12 intentional new unit 5
 failures**, all 65 existing unit 5 examples GREEN. A second direct comparison of
 all 245 live evidence occurrences and graph references found no mismatch.
+
+## Unit 5 review 3 / unit 6 baseline verification at `6bb68077df8`
+
+Two direct source comparisons of all **245 live exact-line evidence occurrences**
+found **zero stale anchors**. Every graph reference resolves; counts remain
+**56 operation rows, 55 distinct write primitives, 116 paths and three exclusions**.
+No live evidence or historical refresh metadata needed changing, so
+`enrichment_inventory.json` is unchanged.
+
+The isolated inventory run, seed **58319**, passed **2 examples, 0 failures**.
+The combined unit 5 + unit 6 + inventory run, seed **68320**, also passed both
+inventory examples without `IndexError`: **129 examples, 42 intentional new
+regression failures**, zero pending and zero errors outside examples. All 85
+pre-existing unit 5 examples passed. The new pins and complete per-example RED
+inventories are recorded in the [unit 5 README](../content_restrictions_unit5/README.md)
+and [unit 6 README](../content_restrictions_unit6/README.md).
+
+Receipts: `/tmp/cr-u6-inventory-58319.json` and
+`/tmp/cr-u6-combined-68320.json`. All RSpec invocations used the repo Ruby 4.0.7,
+Bundler 4, `LOAD_PLUGINS=1`, and only `RAILS_DB=discourse_test_mcp_content` through
+`hc`. No migration or service management was performed.
+
+The final post-lint seed **68321** repeat again passed both inventory examples:
+**129 examples, 42 intentional failures**, all 85 existing unit 5 examples GREEN,
+zero pending, zero errors outside examples, and no `IndexError`. Receipt:
+`/tmp/cr-u6-final-68321.json`. The two source comparisons and both combined run
+receipts agree on the unchanged 245 evidence anchors and graph counts.
