@@ -173,12 +173,6 @@ acceptance("Blog admin with one blog", function (needs) {
     assert
       .dom(".blog-settings .form-kit__field[data-name='url'] input")
       .isDisabled("the field is locked");
-    assert
-      .dom(".blog-settings .form-kit__field[data-name='url']")
-      .includesText(
-        "Custom domains are not available on this site.",
-        "and says why"
-      );
 
     blog = { ...blog, url: "https://blog.example.com" };
     await visit("/admin/plugins/blog/blogs");
@@ -248,7 +242,7 @@ acceptance("Blog admin with one blog", function (needs) {
 
     await visit("/admin/plugins/blog/blogs/1/theme");
     assert
-      .dom(".blog-theme-picker .d-page-subheader a")
+      .dom(".blog-edit__links a")
       .hasAttribute(
         "href",
         "/admin/plugins/blog/themes",
@@ -470,7 +464,7 @@ acceptance("Blog admin with several blogs", function (needs) {
       .hasClass("is-disabled", "the category keeps published articles public");
     assert
       .dom(".blog-settings .form-kit__field[data-name='category_id']")
-      .includesText("is fixed", "with the reason beneath it");
+      .includesText("cannot be changed", "with the reason beneath it");
   });
 
   test("greys out Delete while a blog has articles", async function (assert) {

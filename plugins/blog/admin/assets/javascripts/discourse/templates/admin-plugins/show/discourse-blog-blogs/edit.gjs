@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
 import { ajax } from "discourse/lib/ajax";
@@ -9,11 +10,18 @@ import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DNavItem from "discourse/ui-kit/d-nav-item";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   removeSiteBlog,
   storeSiteBlog,
 } from "discourse/plugins/blog/discourse/lib/site-blogs";
+
+const TAB_DESCRIPTIONS = {
+  about: "blog.admin.about_tab_description",
+  theme: "blog.admin.theme_tab_description",
+  settings: "blog.admin.settings_tab_description",
+};
 
 export default class BlogEditPage extends Component {
   @service dialog;
@@ -27,6 +35,27 @@ export default class BlogEditPage extends Component {
 
   get deleteUnavailable() {
     return !this.blog.can_delete;
+  }
+
+  get currentTab() {
+    return this.router.currentRouteName?.split(".").at(-1);
+  }
+
+  get tabDescription() {
+    const key = TAB_DESCRIPTIONS[this.currentTab];
+    return key && i18n(key);
+  }
+
+  get onAboutTab() {
+    return this.currentTab === "about";
+  }
+
+  get onThemeTab() {
+    return this.currentTab === "theme";
+  }
+
+  get safeUrl() {
+    return `${this.blog.base_url}/?blog_safe_mode=1`;
   }
 
   @action
@@ -124,6 +153,33 @@ export default class BlogEditPage extends Component {
             @route="adminPlugins.show.discourse-blog-blogs.edit.settings"
           />
         </DHorizontalOverflowNav>
+      </div>
+      <div class="blog-admin-intro">
+        <p class="blog-admin-intro__description">{{this.tabDescription}}</p>
+        <div class="blog-edit__links">
+          {{#if this.onAboutTab}}
+            <a
+              class="btn btn-transparent btn-small"
+              href={{this.blog.base_url}}
+              rel="noopener noreferrer"
+              target="_blank"
+            >{{i18n "blog.admin.open_blog"}}
+              {{dIcon "up-right-from-square"}}</a>
+            <a
+              class="btn btn-transparent btn-small"
+              href={{this.safeUrl}}
+              rel="noopener noreferrer"
+              target="_blank"
+            >{{i18n "blog.admin.safe_mode"}}
+              {{dIcon "up-right-from-square"}}</a>
+          {{else if this.onThemeTab}}
+            <LinkTo
+              class="btn btn-transparent btn-small"
+              @route="adminPlugins.show.discourse-blog-themes"
+            >{{i18n "blog.admin.add_or_edit_themes"}}
+              {{dIcon "palette"}}</LinkTo>
+          {{/if}}
+        </div>
       </div>
       <div class="blog-edit__tab">{{outlet}}</div>
     </div>

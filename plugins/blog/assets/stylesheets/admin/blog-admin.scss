@@ -1,35 +1,45 @@
 @use "lib/viewport";
 
-.blog-about {
-  &__links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.25em;
+.blog-admin-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
 
-    .btn,
-    .btn .d-icon {
-      color: var(--tertiary);
-    }
+  // Tall enough for the links, so tabs without any start at the same height.
+  min-height: var(--space-8);
+  margin-top: var(--space-4);
+}
 
-    // The icon trails the label, so its gap goes on the other side.
-    .btn .d-icon {
-      margin: 0 0 0 0.35em;
-      font-size: var(--font-down-1);
-    }
+.blog-admin-intro__description {
+  margin: 0;
+}
+
+// The subheader only holds buttons here, so it sits in the row beside the text.
+.blog-admin-intro .d-page-subheader__title-row {
+  margin-bottom: 0;
+}
+
+.blog-edit__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25em;
+
+  .btn,
+  .btn .d-icon {
+    color: var(--tertiary);
   }
 
-  &__form > .admin-config-area-card {
-    align-self: stretch;
+  // The icon trails the label, so its gap goes on the other side.
+  .btn .d-icon {
+    margin: 0 0 0 0.35em;
+    font-size: var(--font-down-1);
   }
 }
 
 .blog-settings {
-  // FormKit lines its children up at the start, which would shrink the cards.
-  > .admin-config-area-card {
-    align-self: stretch;
-  }
-
   // The blog's address prefixes the custom format and reads as one piece.
   .form-kit__before-input {
     flex-shrink: 0;

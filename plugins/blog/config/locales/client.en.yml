@@ -77,8 +77,11 @@ en:
         save: Save
         saved: Blog settings saved. Reload the blog to see your changes.
         about_tab: About
+        about_tab_description: Set the name and tagline that introduce this blog to its readers
         back_to_blogs: Back to blogs
         blogs_tab: Blogs
+        blogs_tab_description: Edit a blog to change its name, theme and settings
+        themes_tab_description: Browse and manage the themes available to your blog
         add_blog: Add blog
         new_blog: New blog
         new_blog_description: The blog starts unpublished, so you can set it up before readers see it.
@@ -87,16 +90,16 @@ en:
         blog_slug_description: "Used in its address on the community: /blog/<slug>."
         blog_slug_locked: This blog has published articles, so its slug is fixed to keep their addresses working.
         blog_url: Custom domain
-        blog_url_description: Serve the blog from its own HTTPS address, without a path. Point that hostname at this site first, at your DNS, proxy, and certificate. Leave empty to serve it on the community.
-        blog_url_unavailable: Custom domains are not available on this site.
+        blog_url_description: Serve the blog from its own domain. The domain must already point to this site.
         blog_category: Discussion category
         blog_category_description: Each published article gets a discussion topic here.
-        blog_category_locked: This blog has published articles, so its discussion category is fixed to keep them public.
+        blog_category_locked: This blog has published articles, so its discussion category cannot be changed.
         posts_per_page: Articles per page
-        general_heading: General
         settings_tab: Settings
+        settings_tab_description: Choose where this blog lives and how its articles are addressed
         theme_tab: Theme
-        theme_tab_description: "Choose the design this blog's readers see. Add or edit themes on the <a href='%{themes_url}'>Themes tab</a>."
+        theme_tab_description: Select a suitable theme for your blog
+        add_or_edit_themes: Add or edit themes
         published_status: Published
         unpublished_status: Not published
         publish_blog: Publish blog
@@ -114,9 +117,8 @@ en:
         select_theme: Select theme
         update_to_revision: Update to revision %{revision}
         active_on: Active on %{blogs}
-        article_urls: Article URLs
         path_format: Address format
-        path_format_description: Applies to new articles. Until an article is first published, its address follows its title and the day it goes live. Published articles keep their addresses.
+        path_format_description: Applies to new articles. Published articles keep their addresses.
         path_format_sample_slug: my-article
         path_formats:
           slug: Article name
@@ -126,7 +128,6 @@ en:
         custom_path_format: Custom format
         custom_path_format_description: "Use {year}, {month}, {day}, {slug} and {id}, and include {slug} or {id} so every address is unique."
         custom_path_format_invalid: "Start with / and include {slug} or {id}. Only {year}, {month}, {day}, {slug} and {id} can be used."
-        themes_index_description: Choose the design readers see. Customize an included theme or edit your own; changes stay private until you activate them.
         thumbnail:
           journal: The journal
           headline: Stay curious.
