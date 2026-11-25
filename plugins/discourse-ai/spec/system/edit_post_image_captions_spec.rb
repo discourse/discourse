@@ -103,6 +103,7 @@ describe "Edit AI post image captions" do
     topic_page.expand_post_actions(second_post)
     topic_page.click_post_action_button(second_post, :edit)
     expect(composer).to be_opened
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
     expect(captions).to have_editor_button_count(count: 2)
 
     captions.edit_preview_image_caption(image: 2, description: edited_second_cat_caption)
@@ -118,6 +119,111 @@ describe "Edit AI post image captions" do
       description: edited_second_cat_caption,
     )
     expect(captions).to have_image_caption(third_post, image: 1, description: second_cat_caption)
+  end
+
+  it "keeps rich-text alt edits in the draft and saves AI edits separately" do
+    seed_english_descriptions
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    topic_page.expand_post_actions(second_post)
+    topic_page.click_post_action_button(second_post, :edit)
+    composer.toggle_rich_editor unless composer.editor_toggle_switch["data-rich-editor"]
+
+    find(".composer-image-node img[alt='second cat']").click
+    expect(page).to have_css(".composer-image-toolbar__zoom-in")
+    expect(page).to have_css(".composer-image-toolbar__trash")
+    find(".composer-image-node .image-alt-text-input__display[aria-haspopup=dialog]").click
+
+    within(".image-descriptions-modal") do
+      expect(page).to have_field("Alt text", with: "second cat")
+      expect(page).to have_field("AI description", with: second_cat_caption)
+      fill_in("Alt text", with: "A new second cat alt text")
+      fill_in("AI description", with: edited_second_cat_caption)
+      click_button("Apply", exact: true)
+    end
+
+    expect(page).to have_css(".composer-image-node img[alt='A new second cat alt text']")
+    expect(page).to have_css("#post_2 .cooked img[alt='second cat']")
+
+    expect(page).to have_css(
+      ".composer-image-node .image-alt-text-input__display[aria-haspopup=dialog]",
+      text: "A new second cat alt text",
+    )
+    find(".composer-image-node .image-alt-text-input__display[aria-haspopup=dialog]").click
+    within(".image-descriptions-modal") do
+      expect(page).to have_field("AI description", with: edited_second_cat_caption)
+      click_button("Cancel")
+    end
+
+    expect(page).to have_no_css(".image-descriptions-modal")
+
+    composer.submit
+    expect(composer).to be_closed
+    process_description_cooked(post_id: second_post.id, locale: "en")
+    topic_page.visit_topic(cat_topic)
+    expect(page).to have_css("#post_2 .cooked img[alt='A new second cat alt text']")
+    expect(captions).to have_image_caption(
+      second_post,
+      image: 2,
+      description: edited_second_cat_caption,
+    )
+  end
+
+  it "explains the pending state and keeps Markdown resize and remove actions inline" do
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    topic_page.expand_post_actions(second_post)
+    topic_page.click_post_action_button(second_post, :edit)
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
+
+    composer.toggle_rich_editor
+    expect(page).to have_css(".composer-image-node img[alt='first cat']")
+    composer.toggle_rich_editor
+
+    within(".d-editor-preview .image-wrapper", match: :first) do
+      expect(page).to have_css(".alt-text-edit-btn .d-icon-pencil")
+      expect(page).to have_css(".alt-text", text: "first cat")
+      expect(page).to have_css(".scale-btn", count: 3)
+      expect(page).to have_css(".delete-image-button")
+      find(".alt-text-edit-btn[aria-haspopup=dialog]").click
+    end
+    within(".image-descriptions-modal") do
+      expect(page).to have_text("AI descriptions are generated after posting.")
+      expect(page).to have_no_field("AI description")
+      fill_in("Alt text", with: "Draft cat description")
+      click_button("Apply", exact: true)
+    end
+
+    image = ".d-editor-preview .image-wrapper"
+    expect(page).to have_css("#{image} img[alt='Draft cat description']")
+    find("#{image} .scale-btn[data-scale='75']", match: :first).click
+    expect(page).to have_css("#{image} img[alt='Draft cat description'][data-scale='75']")
+
+    find("#{image} .delete-image-button", match: :first).click
+    expect(page).to have_no_css("#{image} img[alt='Draft cat description']")
+    expect(page).to have_css("#{image} img[alt='second cat']")
+  end
+
+  it "keeps the original controls in both editors when AI captions are disabled" do
+    SiteSetting.ai_post_image_captions_enabled = false
+    sign_in(admin)
+    topic_page.visit_topic(cat_topic)
+    topic_page.expand_post_actions(second_post)
+    topic_page.click_post_action_button(second_post, :edit)
+    composer.toggle_rich_editor if composer.editor_toggle_switch["data-rich-editor"]
+
+    expect(page).to have_css(".d-editor-preview .alt-text-edit-btn", count: 2)
+    expect(page).to have_no_css(
+      ".alt-text-edit-btn[aria-haspopup=dialog], .image-alt-text-input__display[aria-haspopup=dialog]",
+    )
+
+    composer.toggle_rich_editor
+    find(".composer-image-node img[alt='first cat']").click
+    expect(page).to have_css(".image-alt-text-input__display", text: "first cat")
+    expect(page).to have_css(".composer-image-toolbar__zoom-out")
+    expect(page).to have_no_css(
+      ".alt-text-edit-btn[aria-haspopup=dialog], .image-alt-text-input__display[aria-haspopup=dialog]",
+    )
   end
 
   it "shows locale-specific captions and original-locale fallback", :aggregate_failures do

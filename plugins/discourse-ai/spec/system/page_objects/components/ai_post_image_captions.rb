@@ -3,8 +3,8 @@
 module PageObjects
   module Components
     class AiPostImageCaptions < PageObjects::Components::Base
-      PREVIEW_EDITOR_BUTTON = ".d-editor-preview .ai-post-image-caption-editor__button"
-      MODAL = ".ai-post-image-caption-editor-modal"
+      PREVIEW_EDITOR_BUTTON = ".d-editor-preview .alt-text-edit-btn[aria-haspopup=dialog]"
+      MODAL = ".image-descriptions-modal"
 
       def has_post_image_count?(post, count:)
         post_component(post).cooked_content.has_css?("img", count: count, visible: :all)
@@ -23,7 +23,7 @@ module PageObjects
 
       def edit_preview_image_caption(image:, description:)
         all(PREVIEW_EDITOR_BUTTON)[image - 1].click
-        find("#{MODAL} textarea").fill_in(with: description)
+        find("#{MODAL} textarea[name=description]").fill_in(with: description)
         find("#{MODAL} .btn-primary").click
         has_no_css?(MODAL)
         self

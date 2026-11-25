@@ -372,11 +372,19 @@ en:
         error: "Error"
         response: "Response"
       post_image_captions:
-        edit: "Edit AI image caption"
-        title: "Edit AI image caption"
-        description: "Caption"
-        save: "Save caption"
         saved: "AI image caption saved"
+        image_descriptions:
+          title: "Image descriptions"
+          alt: "Alt text"
+          alt_updated: "Alt text updated in the draft."
+          alt_read_only: "Alt text cannot be edited from this preview."
+          alt_not_updated: "Alt text was not updated because the image changed. Reopen Image descriptions to try again."
+          ai: "AI description"
+          loading: "Loading the AI description…"
+          load_failed: "Could not load the AI description."
+          not_supported: "No AI description is available for this image."
+          pending: "Not available yet. AI descriptions are generated after posting."
+          apply: "Apply"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"

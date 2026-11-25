@@ -9,6 +9,7 @@ import { NodeSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { openLightbox } from "discourse/lib/lightbox";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import icon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ImageAltTextInput from "./image-alt-text-input.gjs";
@@ -97,6 +98,7 @@ export default class ImageNodeView extends Component {
   @tracked altMenuInstance;
   @tracked imageLoaded = false;
   @tracked uploadProgress = 0;
+  #altMenuNode;
   #progressEvent;
 
   constructor() {
@@ -171,6 +173,30 @@ export default class ImageNodeView extends Component {
     return !!this.altMenuInstance?.content?.contains(document.activeElement);
   }
 
+  get #openDescriptions() {
+    if (
+      !this.args.view.editable ||
+      !this.args.pluginParams.getContext().composerImageDescriptions
+    ) {
+      return null;
+    }
+
+    const opener = applyValueTransformer(
+      "composer-image-descriptions-opener",
+      null
+    );
+
+    return (
+      opener &&
+      (() =>
+        opener({
+          alt: this.args.node.attrs.alt ?? "",
+          image: this.image,
+          onSaveAlt: this.saveAltTextFromModal,
+        }))
+    );
+  }
+
   update(node) {
     if (this.#progressEvent && !node.attrs.placeholder) {
       this.args.dom.classList.remove(...PLACEHOLDER_CLASSES);
@@ -193,6 +219,10 @@ export default class ImageNodeView extends Component {
 
   @action
   async showToolbar() {
+    if (this.menuInstance) {
+      return;
+    }
+
     this.imageToolbar ??= new ImageToolbar({
       scaleDown: this.scaleDown.bind(this),
       scaleUp: this.scaleUp.bind(this),
@@ -211,7 +241,7 @@ export default class ImageNodeView extends Component {
       isInGrid: () => this.isInGrid,
     });
 
-    this.menuInstance = await this.menu.newInstance(this.args.dom, {
+    this.menuInstance = this.menu.newInstance(this.args.dom, {
       identifier: "composer-image-toolbar",
       component: ToolbarButtons,
       placement: "top-start",
@@ -243,7 +273,12 @@ export default class ImageNodeView extends Component {
       },
     });
 
-    await this.menuInstance.show();
+    const instance = this.menuInstance;
+    await instance.show();
+
+    if (this.menuInstance !== instance) {
+      await instance.close();
+    }
   }
 
   @action
@@ -254,7 +289,13 @@ export default class ImageNodeView extends Component {
 
   @action
   async showAltText() {
-    this.altMenuInstance = await this.menu.newInstance(this.args.dom, {
+    if (this.altMenuInstance) {
+      return;
+    }
+
+    this.#altMenuNode = this.args.node;
+
+    this.altMenuInstance = this.menu.newInstance(this.args.dom, {
       identifier: "composer-image-alt-text",
       component: ImageAltTextInput,
       placement: "bottom-start",
@@ -262,8 +303,10 @@ export default class ImageNodeView extends Component {
       padding: MENU_PADDING,
       data: {
         alt: this.args.node.attrs.alt,
+        getAlt: () => this.args.node.attrs.alt,
         onSave: this.saveAltText,
         onClose: () => this.args.view.focus(),
+        openDescriptions: this.#openDescriptions,
         view: this.args.view,
       },
       portalOutletElement: this.args.dom,
@@ -285,7 +328,12 @@ export default class ImageNodeView extends Component {
       },
     });
 
-    await this.altMenuInstance.show();
+    const instance = this.altMenuInstance;
+    await instance.show();
+
+    if (this.altMenuInstance !== instance) {
+      await instance.close();
+    }
   }
 
   @action
@@ -304,6 +352,33 @@ export default class ImageNodeView extends Component {
     if (forceFocus) {
       this.args.view.focus();
     }
+  }
+
+  @action
+  saveAltTextFromModal(altText) {
+    const { view } = this.args;
+
+    if (this.isDestroying || !view.editable) {
+      return false;
+    }
+
+    const imageNode = this.#altMenuNode;
+    const pos = this.args.getPos();
+    const node = view.state.doc.nodeAt(pos);
+    const isResolvedUpload =
+      imageNode.attrs.originalSrc?.startsWith("upload://") &&
+      node.type === imageNode.type &&
+      Object.entries(imageNode.attrs).every(
+        ([key, value]) => key === "src" || node.attrs[key] === value
+      );
+
+    if (node !== imageNode && !isResolvedUpload) {
+      return false;
+    }
+
+    this.saveAltText(altText);
+    this.#altMenuNode = view.state.doc.nodeAt(pos);
+    return true;
   }
 
   @action

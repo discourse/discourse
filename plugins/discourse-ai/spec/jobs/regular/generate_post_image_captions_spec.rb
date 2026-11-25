@@ -47,6 +47,7 @@ describe Jobs::GeneratePostImageCaptions do
     prompt = prompts.first
 
     expect(image_caption.description).to eq(description)
+    expect(image_caption).to be_ai
     expect(post.reload.post_search_data.raw_data).to include(description)
     expect(prompt.post_id).to eq(post.id)
     expect(prompt.topic_id).to eq(post.topic_id)
@@ -66,6 +67,7 @@ describe Jobs::GeneratePostImageCaptions do
       base62_sha1: upload.base62_sha1,
       locale: SiteSetting.default_locale,
       description: "A reusable description",
+      source: :ai,
       attempts: 1,
     )
 
@@ -83,6 +85,57 @@ describe Jobs::GeneratePostImageCaptions do
 
     expect(image_caption.description).to eq("A reusable description")
     expect(image_caption.attempts).to eq(0)
+    expect(image_caption).to be_ai
+  end
+
+  it "generates a fresh caption instead of copying a manual edit or a legacy caption",
+     :aggregate_failures do
+    original_post = Fabricate(:post, raw: post.raw)
+    original_post.link_post_uploads
+    caption =
+      AiPostImageCaption.create!(
+        post: original_post,
+        upload: upload,
+        locale: SiteSetting.default_locale,
+        base62_sha1: upload.base62_sha1,
+        description: "Original AI description",
+        source: :ai,
+      )
+    legacy_caption =
+      AiPostImageCaption.create!(
+        post: Fabricate(:post),
+        upload: upload,
+        locale: SiteSetting.default_locale,
+        base62_sha1: upload.base62_sha1,
+        description: "Legacy caption with no known source",
+      )
+    override = "A description specific to the original post"
+    DiscourseAi::PostImageCaptions.update_caption(
+      original_post,
+      SiteSetting.default_locale,
+      upload.base62_sha1,
+      override,
+    )
+
+    fresh_description = "A newly generated description for the other post"
+    DiscourseAi::Completions::Llm.with_prepared_responses([fresh_description]) do
+      described_class.new.execute(post_id: post.id, locale: SiteSetting.default_locale)
+    end
+
+    processed = CookedPostProcessor.new(original_post.reload)
+    processed.post_process
+    image = Nokogiri::HTML5.fragment(processed.html).at_css("img[data-base62-sha1]")
+
+    expect(image["aria-description"]).to eq(override)
+    expect(caption.reload).to have_attributes(description: override, source: "manual")
+    expect(legacy_caption.reload).to have_attributes(
+      description: "Legacy caption with no known source",
+      source: "unknown",
+    )
+    expect(AiPostImageCaption.find_by!(post:, upload:)).to have_attributes(
+      description: fresh_description,
+      source: "ai",
+    )
   end
 
   it "replaces retryable rows with reused descriptions", :aggregate_failures do
@@ -99,6 +152,7 @@ describe Jobs::GeneratePostImageCaptions do
       base62_sha1: upload.base62_sha1,
       locale: SiteSetting.default_locale,
       description: "A reusable retry description",
+      source: :ai,
       attempts: 1,
     )
 
@@ -126,9 +180,38 @@ describe Jobs::GeneratePostImageCaptions do
     image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
     expect(image_caption.description).to eq("A reusable retry description")
+    expect(image_caption).to be_ai
     expect(image_caption.attempts).to eq(0)
     expect(image_caption.last_attempted_at).to be_nil
     expect(image_caption.last_error).to be_nil
+  end
+
+  it "keeps a manual edit when an earlier generation finishes", :aggregate_failures do
+    captions = AiPostImageCaption.where(post:, upload:, locale: SiteSetting.default_locale)
+    override = "A description that belongs only to this post"
+    responses =
+      Hash.new do |_, _completion_index|
+        caption =
+          captions.create!(
+            base62_sha1: upload.base62_sha1,
+            description: "Earlier AI result",
+            source: :ai,
+          )
+        DiscourseAi::PostImageCaptions.update_caption(
+          post,
+          caption.locale,
+          caption.base62_sha1,
+          override,
+        )
+        "Late AI result"
+      end
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(responses) do |canned_response|
+      described_class.new.execute(post_id: post.id, locale: SiteSetting.default_locale)
+      expect(canned_response.completions).to eq(1)
+    end
+
+    expect(captions.sole).to have_attributes(description: override, source: "manual", attempts: 0)
   end
 
   it "ignores images that are no longer in the post" do
@@ -169,6 +252,7 @@ describe Jobs::GeneratePostImageCaptions do
     image_caption = AiPostImageCaption.find_by(post_id: post.id, upload_id: upload.id)
 
     expect(image_caption.description).to be_nil
+    expect(image_caption).to be_unknown
     expect(image_caption.attempts).to eq(1)
     expect(image_caption.last_error).to eq("blank_response")
 

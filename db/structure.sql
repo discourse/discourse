@@ -976,7 +976,8 @@ CREATE TABLE public.ai_post_image_captions (
     last_attempted_at timestamp(6) without time zone,
     last_error text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    source character varying DEFAULT 'unknown'::character varying NOT NULL
 );
 
 
@@ -26961,6 +26962,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124234323'),
 ('20261124173030'),
 ('20261124170000'),
 ('20261124152608'),
