@@ -3,15 +3,23 @@
 module DiscourseDataExplorer
   class QueryRunner
     class << self
-      def run(query, raw_params, current_user:, explain: false, limit: nil)
+      def run(query, raw_params, current_user:, explain: false, limit: nil, typed: false)
         query_params = parse_params(raw_params)
         opts = { current_user: }
         opts[:explain] = true if explain
         opts[:limit] = limit if limit
+        if typed
+          limit ||= SiteSetting.data_explorer_query_result_limit
+          opts[:limit] = limit.positive? ? limit + 1 : limit
+        end
 
         result = DataExplorer.run_query(query, query_params, opts)
 
         return { error: result[:error], duration_secs: result[:duration_secs] } if result[:error]
+
+        if typed
+          return ResultFormatConverter.convert(:typed_json, result, query_params:, explain:, limit:)
+        end
 
         result_json =
           ResultFormatConverter.convert(:json, result, query_params:, explain:, current_user:)
