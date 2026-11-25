@@ -4,9 +4,20 @@ describe "New Category" do
   fab!(:admin)
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
 
   before { sign_in(admin) }
+
+  it "lets the creator start the first topic immediately after saving a category" do
+    category_page.visit_new_category
+    form.field("name").fill_in("New Category")
+    category_page.save_settings
+
+    click_button I18n.t("js.category.empty_state.create_topic")
+
+    expect(composer.category_chooser).to have_selected_name("New Category")
+  end
 
   it "keeps the action bar clear of the Powered by Discourse badge" do
     SiteSetting.enable_powered_by_discourse = true

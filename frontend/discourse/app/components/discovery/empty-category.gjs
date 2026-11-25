@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import SvgEmptyTopicList from "discourse/components/svg/empty-topic-list";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
@@ -33,14 +34,22 @@ export default class EmptyCategory extends Component {
       @title={{i18n "category.empty_state.title"}}
     >
       <:actions>
-        {{#if this.editCategoryUrl}}
-          <a
+        <div class="empty-state__links">
+          {{#if this.editCategoryUrl}}
+            <a
+              class="empty-state__secondary-action"
+              href={{this.editCategoryUrl}}
+            >
+              {{i18n "category.empty_state.edit_category"}}
+            </a>
+          {{/if}}
+          <LinkTo
             class="empty-state__secondary-action"
-            href={{this.editCategoryUrl}}
+            @route="discovery.categories"
           >
-            {{i18n "category.empty_state.edit_category"}}
-          </a>
-        {{/if}}
+            {{i18n "category.all"}}
+          </LinkTo>
+        </div>
       </:actions>
     </DEmptyState>
   </template>
