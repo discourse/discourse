@@ -483,7 +483,7 @@ RSpec.describe UsersController do
         expect(response.body).to have_tag("script#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.text)
           expect(json["password_reset"]).to include(
-            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+            '{"is_developer":false,"admin":false,"second_factor_required":false,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_user_api_keys":false}',
           )
         end
 
@@ -525,6 +525,60 @@ RSpec.describe UsersController do
 
         expect(WebPush).not_to have_received(:payload_send)
         expect(user1.push_subscriptions).to be_empty
+      end
+
+      describe "authorized apps" do
+        fab!(:user_api_key) { Fabricate(:user_api_key, user: user1) }
+
+        it "reports whether the user has authorized apps" do
+          get "/u/password-reset/#{email_token.token}.json"
+
+          expect(response.parsed_body["has_user_api_keys"]).to eq(true)
+        end
+
+        it "keeps authorized apps unless the user asks to revoke them" do
+          put "/u/password-reset/#{email_token.token}.json", params: { password: "hg9ow8yHG32O" }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to be_nil
+        end
+
+        it "revokes authorized apps when requested" do
+          other_key = Fabricate(:user_api_key)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_user_api_keys: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_present
+          expect(other_key.reload.revoked_at).to be_nil
+          expect(
+            UserHistory
+              .where(action: UserHistory.actions[:change_password], target_user_id: user1.id)
+              .last
+              .details,
+          ).to eq("revoked_user_api_keys: 1")
+        end
+
+        it "keeps authorized apps when the new password is rejected" do
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "abc",
+                revoke_user_api_keys: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(user_api_key.reload.revoked_at).to be_nil
+        end
       end
 
       it "disallows double password reset" do
@@ -776,7 +830,7 @@ RSpec.describe UsersController do
           expect(response.body).to have_tag("script#data-preloaded") do |element|
             json = JSON.parse(element.current_scope.text)
             expect(json["password_reset"]).to include(
-              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false}',
+              '{"is_developer":false,"admin":false,"second_factor_required":true,"security_key_required":false,"backup_enabled":false,"multiple_second_factor_methods":false,"has_user_api_keys":false}',
             )
           end
 

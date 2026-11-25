@@ -568,10 +568,11 @@ class SessionController < ApplicationController
   end
 
   def one_time_password
-    @otp_username = otp_username = Discourse.redis.get "otp_#{params[:token]}"
+    user = one_time_password_user
+    @otp_username = user&.username
 
-    if otp_username && user = User.find_by_username(otp_username)
-      if current_user&.username == otp_username
+    if user
+      if current_user&.id == user.id
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
@@ -891,6 +892,16 @@ class SessionController < ApplicationController
   end
 
   private
+
+  def one_time_password_user
+    payload = JSON.parse(Discourse.redis.get("otp_#{params[:token]}").to_s)
+    return if !payload.is_a?(Hash)
+
+    user = User.find_by(id: payload["user_id"])
+    user if user && user.user_password&.password_salt == payload["password_salt"]
+  rescue JSON::ParserError
+    nil
+  end
 
   def connect_verbose_warn(&blk)
     Rails.logger.warn(blk.call) if SiteSetting.verbose_discourse_connect_logging

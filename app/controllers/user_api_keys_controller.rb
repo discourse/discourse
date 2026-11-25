@@ -119,7 +119,7 @@ class UserApiKeysController < ApplicationController
 
     if scopes.include?("one_time_password")
       # encrypt one_time_password separately to bypass 128 chars encryption limit
-      otp_payload = one_time_password(parsed_public_key, current_user.username)
+      otp_payload = one_time_password(parsed_public_key, current_user)
     end
 
     response_json =
@@ -424,7 +424,7 @@ class UserApiKeysController < ApplicationController
 
     raise Discourse::InvalidAccess unless can_authorize_key?
 
-    otp_payload = one_time_password(parsed_public_key, current_user.username)
+    otp_payload = one_time_password(parsed_public_key, current_user)
     uri = URI.parse(params[:auth_redirect])
     uri.query = [uri.query, "oneTimePassword=#{CGI.escape(otp_payload)}"].compact.join("&")
     redirect_path = uri.to_s
@@ -704,13 +704,19 @@ class UserApiKeysController < ApplicationController
   # as well as HTML, so this is relied on by non-browser (API key/User API
   # key) consumers, not just browser sessions. Don't restrict this to
   # session auth without accounting for those consumers first.
-  def one_time_password(public_key, username)
+  def one_time_password(public_key, user)
     unless UserApiKey.allowed_scopes.superset?(Set.new(["one_time_password"]))
       raise Discourse::InvalidAccess
     end
 
     otp = SecureRandom.hex
-    Discourse.redis.setex "otp_#{otp}", 10.minutes, username
+    # Bound to the password salt so a password change invalidates pending tokens
+    Discourse.redis.setex "otp_#{otp}",
+                          10.minutes,
+                          {
+                            user_id: user.id,
+                            password_salt: user.user_password&.password_salt,
+                          }.to_json
 
     Base64.encode64(
       UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, otp, padding: params[:padding]),

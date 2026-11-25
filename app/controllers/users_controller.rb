@@ -907,6 +907,7 @@ class UsersController < ApplicationController
         security_key_required: @user.security_keys_enabled?,
         backup_enabled: @user.backup_codes_enabled?,
         multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+        has_user_api_keys: UserApiKey.active.where(user_id: @user.id).exists?,
       }
     end
 
@@ -995,6 +996,10 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
+        revoke_user_api_keys = ActiveModel::Type::Boolean.new.cast(params[:revoke_user_api_keys])
+        @user.revoke_user_api_keys_on_password_change = revoke_user_api_keys
+        revoked_user_api_keys_count =
+          revoke_user_api_keys ? UserApiKey.active.where(user_id: @user.id).count : 0
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1005,10 +1010,15 @@ class UsersController < ApplicationController
             @user.user_associated_accounts.destroy_all
           end
 
+          if revoked_user_api_keys_count > 0
+            history_details = "revoked_user_api_keys: #{revoked_user_api_keys_count}"
+          end
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
             action: UserHistory.actions[:change_password],
+            details: history_details,
           )
 
           reset_csrf_token(request)
@@ -1030,6 +1040,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
+          has_user_api_keys: UserApiKey.active.where(user_id: @user.id).exists?,
         }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))

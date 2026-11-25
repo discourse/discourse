@@ -1226,7 +1226,10 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted)
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "preserves callback query parameters when returning an OTP" do
@@ -1243,7 +1246,10 @@ RSpec.describe UserApiKeysController do
       expect(query).to include("state" => "return-to-client", "oneTimePassword" => be_present)
 
       otp = decrypt_payload(Base64.decode64(query["oneTimePassword"]))
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "encrypts OTP with OAEP padding when requested" do
@@ -1256,7 +1262,10 @@ RSpec.describe UserApiKeysController do
 
       encrypted = extract_payload_from_redirect(response, key: "oneTimePassword")
       otp = decrypt_payload(encrypted, padding: "oaep")
-      expect(Discourse.redis.get("otp_#{otp}")).to eq(user.username)
+      expect(JSON.parse(Discourse.redis.get("otp_#{otp}"))).to eq(
+        "user_id" => user.id,
+        "password_salt" => user.user_password.password_salt,
+      )
     end
 
     it "rejects invalid padding parameter" do

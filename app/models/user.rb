@@ -281,6 +281,9 @@ class User < ActiveRecord::Base
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
 
+  # Set before saving a new password to also revoke the user's authorized apps
+  attr_accessor :revoke_user_api_keys_on_password_change
+
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
@@ -2401,7 +2404,10 @@ class User < ActiveRecord::Base
       next unless yield
 
       # A shadow shares the lock, but a password change is local maintenance.
-      revoke_credentials!(family: identity == self ? identity : nil)
+      revoke_credentials!(
+        family: identity == self ? identity : nil,
+        include_user_api_keys: revoke_user_api_keys_on_password_change,
+      )
       email_tokens.where("not expired").update_all(expired: true)
     end
   end
@@ -2417,14 +2423,17 @@ class User < ActiveRecord::Base
     with_credential_lock { |identity| revoke_credentials!(family: identity) if identity == self }
   end
 
-  def revoke_credentials!(family:)
+  def revoke_credentials!(family:, include_user_api_keys: false)
     # Without a family identity, revoke only credentials owned by this shadow.
     shadow_ids = family ? family.anonymous_user_shadows.pluck(:user_id) : [id]
     user_ids = family ? [family.id, *shadow_ids] : shadow_ids
 
     UserAuthToken.where(user_id: user_ids).find_each(&:destroy!)
-    if shadow_ids.present?
-      UserApiKey.where(user_id: shadow_ids, revoked_at: nil).update_all(revoked_at: Time.current)
+    api_key_user_ids = include_user_api_keys ? user_ids : shadow_ids
+    if api_key_user_ids.present?
+      UserApiKey.where(user_id: api_key_user_ids, revoked_at: nil).update_all(
+        revoked_at: Time.current,
+      )
     end
     PushSubscription.where(user_id: user_ids).delete_all
   end
