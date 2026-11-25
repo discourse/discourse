@@ -25,7 +25,7 @@
 
 .ai-agent-list-editor__duplicate-empty {
   padding: var(--space-3);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .ai-agent-list-editor {
@@ -41,7 +41,7 @@
         .--card-label {
           display: inline-block;
           font-size: var(--font-down-1);
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
         }
       }
     }
@@ -121,9 +121,9 @@
       display: grid;
       grid-template-rows: auto 1fr auto auto;
       grid-template-columns: 1fr auto;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: var(--space-2) var(--space-4) var(--space-4);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       .d-table__cell.--overview,
       .ai-agent-list__name-with-description {
@@ -176,7 +176,7 @@
       }
 
       .--card-label {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
         font-size: var(--font-down-1);
       }
     }
@@ -189,7 +189,7 @@
     }
 
     &__description {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     &__name {
@@ -197,7 +197,7 @@
       align-items: center;
       gap: var(--space-1);
       font-size: var(--font-up-0);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       margin: 0;
       padding: 0;
       line-height: var(--line-height-medium);
@@ -216,13 +216,13 @@
   }
 
   .ai-agent-list__feature-list {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
 .ai-agent-tool-option-editor {
   &__instructions {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
   }
@@ -284,7 +284,7 @@
 
   &__tool-options {
     padding: 1em;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     width: 480px;
   }
 
@@ -305,17 +305,17 @@
     align-items: center;
     padding: 0.2em 0;
     font-size: var(--font-down-1);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__tool-token-count {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__tool-context-cost {
     margin-bottom: var(--space-4);
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
 
     @include viewport.from(lg) {
       max-width: 480px;
@@ -323,14 +323,14 @@
 
     &:has(.--token:hover) {
       .ai-agent-editor__tool-context-cost-bar-indicator.--token {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         transform: translateX(-50%) scale(1.4);
       }
     }
 
     &:has(.--count:hover) {
       .ai-agent-editor__tool-context-cost-bar-indicator.--count {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         transform: translateX(-50%) scale(1.4);
       }
     }
@@ -343,7 +343,7 @@
   &__tool-context-cost-label {
     font-weight: bold;
     font-size: var(--font-down-1);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__tool-context-cost-legend {
@@ -351,7 +351,7 @@
     flex-wrap: wrap;
     gap: var(--space-2);
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__tool-context-cost-legend-item {
@@ -361,20 +361,20 @@
     cursor: default;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       transition: color 0.15s ease;
     }
 
     &:hover .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
     }
   }
 
   &__tool-context-cost-value {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     &.low {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.medium {
@@ -382,7 +382,7 @@
     }
 
     &.high {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -391,8 +391,8 @@
     border-radius: 1em;
     background: linear-gradient(
       in oklch to right,
-      var(--success),
-      var(--danger)
+      var(--d-sys-color-background-success),
+      var(--d-sys-color-background-danger)
     );
     position: relative;
     margin-block: var(--space-4) var(--space-6);
@@ -401,7 +401,7 @@
   &__tool-context-cost-bar-indicator {
     position: absolute;
     transform: translateX(-50%);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     transition:
       transform 0.15s ease,
       color 0.15s ease;
@@ -421,7 +421,7 @@
 
   &__tool-context-cost-warning {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     line-height: var(--line-height-large);
     margin-top: var(--space-4);
 
@@ -431,7 +431,7 @@
     }
 
     .--high & span {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -453,7 +453,7 @@
   &__mcp-server-summary {
     margin-bottom: var(--space-4);
     padding: var(--space-3);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     max-width: 480px;
   }
 
@@ -461,7 +461,7 @@
   &__mcp-server-help {
     margin: 0 0 var(--space-3);
     max-width: 480px;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -471,7 +471,7 @@
     gap: var(--space-2);
     align-items: flex-start;
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     & + & {
       margin-top: var(--space-2);
@@ -485,7 +485,7 @@
 
   &__mcp-server-name {
     font-weight: 700;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__mcp-server-meta {
@@ -493,7 +493,7 @@
     flex-wrap: wrap;
     gap: 0.35rem 0.9rem;
     align-items: center;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__mcp-server-action {
@@ -502,11 +502,11 @@
 
   &__mcp-server-health {
     &.--healthy {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.--unhealthy {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -517,10 +517,10 @@
     z-index: 1;
     flex-wrap: wrap;
     padding: var(--space-3);
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
     border: 1px solid var(--primary-300);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-card);
+    border-radius: var(--d-sys-border-radius-md);
+    box-shadow: var(--d-sys-shadow-raised);
   }
 }
 
@@ -536,7 +536,7 @@
   &__selection-summary,
   &__empty {
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__controls {
@@ -565,8 +565,8 @@
 
   &__tool {
     padding: 0.85rem 1rem;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__tool-header {
@@ -588,12 +588,12 @@
 
   &__tool-title {
     font-weight: 700;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__tool-name,
   &__tool-token-count {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -621,7 +621,7 @@
   &__remaining,
   &__empty {
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__list {
@@ -660,7 +660,7 @@
 
     &__search-icon {
       background: none !important;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &__input {
@@ -692,7 +692,7 @@
     padding-right: 0;
 
     .indexed {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     .uploaded,

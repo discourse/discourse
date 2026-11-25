@@ -19,11 +19,11 @@ $pd-th-color: var(--primary) !default;
 $pd-day-color: var(--primary) !default;
 $pd-day-bg: var(--secondary) !default;
 $pd-day-hover-color: var(--primary) !default;
-$pd-day-hover-bg: var(--tertiary-low) !default;
+$pd-day-hover-bg: var(--d-sys-color-background-accent-subtlest) !default;
 $pd-day-today-color: var(--tertiary) !default;
 $pd-day-selected-color: var(--secondary) !default;
 $pd-day-selected-bg: var(--tertiary) !default;
-$pd-day-selected-shadow: var(--tertiary-low) !default;
+$pd-day-selected-shadow: var(--d-sys-color-background-accent-subtlest) !default;
 $pd-day-disabled-color: var(--primary) !default;
 $pd-week-color: var(--primary) !default;
 
@@ -119,7 +119,7 @@ $pd-font-family: arial, sans-serif !default;
 
     &:hover, &:focus {
         opacity: 1;
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
     }
 
     &.is-disabled {
@@ -230,21 +230,21 @@ $pd-font-family: arial, sans-serif !default;
 }
 
 .is-startrange .pika-button {
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     background: #6CB31D;
     box-shadow: none;
     border-radius: 3px;
 }
 
 .is-endrange .pika-button {
-    color: var(--secondary);
-    background: var(--tertiary);
+    color: var(--d-sys-color-text-inverse);
+    background: var(--d-sys-color-background-accent);
     box-shadow: none;
     border-radius: 3px;
 }
 
 .pika-day {
     &:focus {
-        background-color: var(--tertiary-very-low);
+        background-color: var(--d-sys-color-background-accent-subtlest);
     }
 }

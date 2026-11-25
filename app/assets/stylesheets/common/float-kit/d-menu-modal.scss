@@ -35,7 +35,7 @@
         &:active {
           .discourse-touch & {
             background: transparent;
-            color: var(--primary);
+            color: var(--d-sys-color-text-default);
 
             .d-icon {
               color: inherit;
@@ -43,10 +43,10 @@
 
             &.btn-danger {
               background: transparent;
-              color: var(--danger);
+              color: var(--d-sys-color-text-danger);
 
               .d-icon {
-                color: var(--danger-hover);
+                color: var(--d-sys-color-background-danger-hovered);
               }
             }
           }

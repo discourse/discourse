@@ -17,7 +17,7 @@
         @include ellipsis;
 
         .d-icon {
-          color: var(--primary-low-mid);
+          color: var(--d-sys-color-icon-faint);
           min-width: 14px;
           text-align: center;
           margin: 0;
@@ -31,21 +31,21 @@
       }
 
       .d-icon-minus {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
         font-size: var(--font-down-3);
       }
 
       &.high-trending-up,
       &.trending-up {
         .d-icon {
-          color: var(--success);
+          color: var(--d-sys-color-icon-success);
         }
       }
 
       &.high-trending-down,
       &.trending-down {
         .d-icon {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }

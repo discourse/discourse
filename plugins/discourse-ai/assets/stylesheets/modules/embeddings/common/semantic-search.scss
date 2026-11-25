@@ -11,7 +11,7 @@
     }
 
     .ai-indicator-wave {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .semantic-search {
@@ -22,14 +22,14 @@
         &.in-progress,
         &.unavailable {
           .semantic-search__searching-text {
-            color: var(--primary-medium);
+            color: var(--d-sys-color-text-faint);
           }
         }
 
         .d-icon-discourse-sparkles,
         .d-icon-far-circle-question {
           font-size: var(--font-down-1);
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
 
@@ -63,21 +63,21 @@ body.ai-semantic-search-loading .no-results-container {
 
 .search-results {
   .ai-result {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .ai-result__icon {
       display: inline;
       margin-right: 0.5rem;
       margin-left: auto;
       font-size: var(--font-up-2);
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 }
 
 .semantic-search__searching-text {
   .badge-notification.--has-results {
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
   }
 }
 
@@ -111,7 +111,7 @@ body.ai-semantic-search-loading .no-results-container {
 .ai-quick-search-notice {
   display: flex;
   gap: var(--space-2);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1);
 }
 

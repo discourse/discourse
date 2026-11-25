@@ -163,8 +163,8 @@
     width: 144px;
     height: 144px;
     border-radius: 50%;
-    background: var(--primary-low);
-    color: var(--primary-medium);
+    background: var(--d-sys-color-background-neutral);
+    color: var(--d-sys-color-text-faint);
 
     .d-icon {
       width: 50%;
@@ -182,8 +182,8 @@
     width: 2em;
     height: 2em;
     border-radius: 50%;
-    background: var(--tertiary);
-    color: var(--secondary);
+    background: var(--d-sys-color-background-accent);
+    color: var(--d-sys-color-text-inverse);
 
     .d-icon {
       margin: 0;
@@ -260,17 +260,17 @@
 
   &__instructions {
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__field-instructions {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     overflow-wrap: anywhere;
   }
 
   &__error {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     &:empty {
       display: none;
@@ -279,7 +279,7 @@
 
   &__notice {
     margin: 0;
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   &__actions {

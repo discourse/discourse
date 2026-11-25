@@ -14,7 +14,7 @@
     margin-bottom: 1em;
 
     .fk-d-tooltip__trigger {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -82,39 +82,39 @@
     margin-bottom: 1.5em;
 
     &.is-spam {
-      background: var(--danger-low);
-      color: var(--danger);
-      border: 2px solid var(--danger-medium);
+      background: var(--d-sys-color-background-danger-subtlest);
+      color: var(--d-sys-color-text-danger);
+      border: 2px solid var(--d-sys-color-border-danger);
     }
 
     &.not-spam {
-      background: var(--success-low);
-      color: var(--success);
-      border: 2px solid var(--success-medium);
+      background: var(--d-sys-color-background-success-subtlest);
+      color: var(--d-sys-color-text-success);
+      border: 2px solid var(--d-sys-color-background-success-subtle);
     }
   }
 
   &__info-box {
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
     border-radius: 6px;
     margin-bottom: 1em;
     overflow: hidden;
 
     &--reason {
-      background: var(--highlight-bg);
-      border-color: var(--tertiary-low);
+      background: var(--d-sys-color-background-highlight-subtlest);
+      border-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   &__info-box-title {
     margin: 0;
     padding: 0.75em 1em;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     font-size: var(--font-0);
     font-weight: 600;
-    border-bottom: 1px solid var(--primary-low);
-    color: var(--primary-high);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__info-box-content {
@@ -150,7 +150,7 @@
   &__info-box--llm &__info-box-content {
     max-height: 60px;
     font-weight: 500;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__info-box--history &__info-box-content {

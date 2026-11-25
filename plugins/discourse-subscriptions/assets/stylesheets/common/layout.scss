@@ -48,7 +48,7 @@
   .product {
     display: flex;
     flex-flow: column nowrap;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--d-sys-color-border-default);
     padding: 1.5rem;
     margin: 1rem;
     width: calc(50% - 240px);
@@ -63,7 +63,7 @@
       justify-content: space-between;
 
       .purchased {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
       }
 
       .billing-link {

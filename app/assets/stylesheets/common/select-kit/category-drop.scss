@@ -13,7 +13,7 @@
 
       .category-drop-header {
         &[data-value=""] {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
         }
 
         &.is-none .selected-name {
@@ -22,7 +22,7 @@
       }
 
       .angle-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       &.has-selection {
@@ -37,13 +37,13 @@
 
         &[data-value="all-categories"],
         &[data-value="no-categories"] {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
           font-weight: 700;
         }
 
         .category-desc {
           font-weight: normal;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           margin-top: 2px;
         }
 
@@ -54,14 +54,14 @@
         .topic-count {
           margin-left: 0.5em;
           font-weight: normal;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           font-size: var(--font-down-1);
         }
       }
 
       .category-drop-footer {
         align-items: center;
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
         display: flex;
         font-size: var(--font-down-1);
         height: 30px;
@@ -70,7 +70,7 @@
 
         a,
         span {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
           margin: 0 10px;
 
           &.active {

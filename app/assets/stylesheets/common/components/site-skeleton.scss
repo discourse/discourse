@@ -2,12 +2,12 @@
   // Derived from the active color scheme so the skeleton matches any theme.
   --site-skeleton-accent: var(--tertiary);
   --site-skeleton-accent-soft: var(--tertiary-hover);
-  --site-skeleton-bg: var(--tertiary-low);
+  --site-skeleton-bg: var(--d-sys-color-background-accent-subtlest);
   --site-skeleton-content-bg: var(--secondary);
   --site-skeleton-muted: var(--primary-medium);
   --site-skeleton-border: var(--primary-low);
   --site-skeleton-sidebar-border: var(--primary-low);
-  --site-skeleton-sidebar-active: var(--tertiary-medium);
+  --site-skeleton-sidebar-active: var(--d-sys-color-background-accent-subtle);
   --site-skeleton-search-bg: var(--secondary);
 
   // Fixed lavender-grey placeholder tone (reads as neutral "text", so it
@@ -15,8 +15,8 @@
   // bars legible against the surface in either color mode.
   --site-skeleton-line: light-dark(#c3cbe0, #7b7f88);
   --site-skeleton-line-strong: light-dark(#aab4d2, #969aa3);
-  --site-skeleton-scrim: rgb(var(--secondary-rgb), 0.18);
-  --site-skeleton-sweep: rgb(var(--primary-rgb), 0.06);
+  --site-skeleton-scrim: color-mix(in srgb, var(--secondary) 18%, transparent);
+  --site-skeleton-sweep: color-mix(in srgb, var(--primary) 6%, transparent);
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -421,11 +421,11 @@
   height: 1.15rem;
   margin-top: 0.65rem;
   border-radius: 4px;
-  background: var(--tertiary-low);
+  background: var(--d-sys-color-background-accent-subtlest);
 }
 
 .site-skeleton__topic-tag.--staff {
-  background: var(--danger-low);
+  background: var(--d-sys-color-background-danger-subtlest);
 }
 
 .site-skeleton__topic-pin {

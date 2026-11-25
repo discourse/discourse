@@ -54,8 +54,13 @@
           height: 100%;
           background: linear-gradient(
             to right,
-            rgb(var(--secondary-rgb), 1) 0%,
-            rgb(var(--secondary-rgb), 0) 100%
+            var(--d-sys-color-background-default) 0%,
+            color-mix(
+                in srgb,
+                var(--d-sys-color-background-default) 0%,
+                transparent
+              )
+              100%
           );
         }
 
@@ -69,8 +74,13 @@
           height: 100%;
           background: linear-gradient(
             to right,
-            rgb(var(--secondary-rgb), 0) 0%,
-            rgb(var(--secondary-rgb), 1) 100%
+            color-mix(
+                in srgb,
+                var(--d-sys-color-background-default) 0%,
+                transparent
+              )
+              0%,
+            var(--d-sys-color-background-default) 100%
           );
         }
       }
@@ -85,22 +95,22 @@
     align-items: baseline;
     gap: var(--space-half);
     padding: 0 var(--space-1);
-    border: 1px dashed var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
+    border: 1px dashed var(--d-sys-color-border-strong);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
     font-family: var(--d-font-family--monospace);
 
     &.ProseMirror-selectednode {
       outline-offset: -2px;
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
     }
 
     .math-node-edit-button {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       padding: 0;
 
       &:hover {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
     }
 

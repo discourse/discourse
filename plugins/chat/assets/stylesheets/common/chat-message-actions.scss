@@ -20,7 +20,7 @@
 }
 
 .chat-message-actions {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   display: flex;
 
   :is(button, summary):focus-visible {
@@ -36,7 +36,7 @@
     &.copied {
       .d-icon {
         transform: scale(1.1);
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
   }
@@ -55,7 +55,7 @@
 
     &:focus-visible {
       .d-icon {
-        color: var(--primary);
+        color: var(--d-sys-color-icon-default);
       }
     }
 
@@ -65,10 +65,10 @@
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
 
       &.bookmark-icon__bookmarked {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
   }
@@ -88,16 +88,16 @@
       border-left-color: transparent;
       padding: 0.5em 0;
       width: 2.5em;
-      transition: var(--d-button-transition);
-      border-radius: var(--d-border-radius);
+      transition: var(--d-comp-DButton-motion-transition);
+      border-radius: var(--d-sys-border-radius-md);
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
       &:focus-visible {
-        background: var(--primary-low);
+        background: var(--d-sys-color-background-neutral);
 
         .select-kit-header-wrapper .d-icon {
-          color: var(--primary);
+          color: var(--d-sys-color-icon-default);
         }
       }
 
@@ -105,18 +105,18 @@
         justify-content: center;
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-icon-faint);
           margin: 0;
         }
       }
 
       &:hover {
-        background: var(--primary-low);
-        border-color: var(--primary-low-mid);
+        background: var(--d-sys-color-background-neutral);
+        border-color: var(--d-sys-color-border-strong);
 
         .select-kit-header-wrapper {
           .d-icon {
-            color: var(--primary);
+            color: var(--d-sys-color-icon-default);
           }
         }
       }
@@ -127,7 +127,7 @@
     }
 
     &:first-child .select-kit-header {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     .select-kit-row {
@@ -138,7 +138,7 @@
 
       .icons .d-icon {
         font-size: var(--font-0);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
   }
@@ -159,12 +159,12 @@
 
     &:first-child {
       border-left-color: var(--primary-300);
-      border-top-left-radius: var(--d-border-radius);
-      border-bottom-left-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-bottom-left-radius: var(--d-sys-border-radius-md);
     }
 
     &.reacted {
-      border-left-color: var(--tertiary-medium);
+      border-left-color: var(--d-sys-color-background-accent-subtle);
       z-index: 1;
     }
 

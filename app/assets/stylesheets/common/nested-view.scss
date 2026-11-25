@@ -28,10 +28,10 @@
   );
   --nested-sticky-avatar-top-gap: var(--space-1);
   --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   margin: 0 auto;
   padding: var(--space-4);
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   max-width: calc(
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
@@ -49,7 +49,7 @@
     overflow-wrap: break-word;
 
     a {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .edit-topic__wrapper {
@@ -131,7 +131,7 @@
   &__op > &__topic-map {
     margin: 0.75em 0 0;
     padding: 0.75em 0 0;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   #topic-footer-buttons.nested-view__topic-actions {
@@ -162,8 +162,8 @@
     box-sizing: border-box;
     min-height: var(--nested-controls-height);
     padding: 0.25em 0;
-    background: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-default);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__controls-left {
@@ -196,7 +196,7 @@
     font-size: var(--font-down-1);
 
     &__label {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     &__trigger.btn {
@@ -213,8 +213,8 @@
   &__op {
     margin-bottom: 1.5em;
     padding: 1em;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     // Establish a containing block for the absolutely-positioned
     // .read-state dot so it anchors to the post-infos right edge
@@ -236,16 +236,16 @@
       white-space: nowrap;
 
       button {
-        background-color: var(--primary-low);
-        color: var(--primary);
-        box-shadow: var(--shadow-dropdown);
+        background-color: var(--d-sys-color-background-neutral);
+        color: var(--d-sys-color-text-default);
+        box-shadow: var(--d-sys-shadow-overlay);
       }
     }
 
     &.selected .select-posts button.select-post {
-      background-color: var(--tertiary);
-      color: var(--secondary);
-      border-color: var(--tertiary);
+      background-color: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
+      border-color: var(--d-sys-color-border-accent);
     }
   }
 
@@ -306,7 +306,7 @@
 
   &__op-article.is-deleted {
     .nested-view__op-content > .cooked {
-      background-color: var(--danger-low-mid);
+      background-color: var(--d-sys-color-background-danger-subtle);
     }
   }
 
@@ -349,7 +349,7 @@
   &__empty {
     padding: 2em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-up-1);
   }
 
@@ -380,20 +380,20 @@
     }
 
     .select-kit.topic-notifications-button .select-kit-header {
-      box-shadow: var(--shadow-dropdown);
+      box-shadow: var(--d-sys-shadow-overlay);
       border-radius: 2em;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
 
     .topic-admin-menu-button-container .fk-d-menu__trigger {
-      box-shadow: var(--shadow-dropdown);
+      box-shadow: var(--d-sys-shadow-overlay);
       border-radius: 2em;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 
   &__floating-reply {
-    box-shadow: var(--shadow-dropdown);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 }
 
@@ -406,9 +406,9 @@
     gap: 0.5em;
     padding: 0.75em 1em;
     margin-bottom: 1em;
-    background: var(--tertiary-very-low);
-    border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-accent-subtlest);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     position: sticky;
     top: var(--header-offset, 0);
@@ -416,7 +416,7 @@
   }
 
   &__banner-icon {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     .d-icon {
       width: 1em;
@@ -425,7 +425,7 @@
   }
 
   &__banner-text {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin-right: auto;
   }
 
@@ -476,8 +476,10 @@
       height: calc(
         var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px // +5px visually centers the hook on the avatar
       );
-      border-left: var(--nested-line-width) solid var(--primary-low);
-      border-bottom: var(--nested-line-width) solid var(--primary-low);
+      border-left: var(--nested-line-width) solid
+        var(--d-sys-color-border-default);
+      border-bottom: var(--nested-line-width) solid
+        var(--d-sys-color-border-default);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -498,7 +500,7 @@
       );
       bottom: 0;
       width: var(--nested-line-width);
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
       transition: background-color 0.15s ease;
     }
   }
@@ -506,11 +508,11 @@
   // When the parent's depth-line is hovered, highlight child connectors
   &:not(.--depth-0).--parent-line-highlighted {
     &::before {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
     }
 
     &:not(:last-child)::after {
-      background: var(--tertiary);
+      background: var(--d-sys-color-background-accent);
     }
   }
 
@@ -599,7 +601,7 @@
       bottom: 0;
       width: var(--nested-line-width);
       border-radius: var(--nested-line-center-adjust);
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
       transition: background-color 0.15s ease;
     }
 
@@ -610,22 +612,22 @@
       outline: 2px solid transparent;
 
       &::after {
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
       }
 
       .nested-post__depth-line-icon .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
     @media (hover: hover) {
       &:hover {
         &::after {
-          background: var(--tertiary);
+          background: var(--d-sys-color-background-accent);
         }
 
         .nested-post__depth-line-icon .d-icon {
-          color: var(--tertiary);
+          color: var(--d-sys-color-icon-accent);
         }
       }
     }
@@ -666,8 +668,10 @@
         width: calc(var(--nested-avatar-size) / 2);
         transform: none;
         background: none;
-        border-left: var(--nested-line-width) solid var(--primary-low);
-        border-bottom: var(--nested-line-width) solid var(--primary-low);
+        border-left: var(--nested-line-width) solid
+          var(--d-sys-color-border-default);
+        border-bottom: var(--nested-line-width) solid
+          var(--d-sys-color-border-default);
         border-radius: 0 0 0 12px;
         transition: border-color 0.15s ease;
       }
@@ -676,7 +680,7 @@
         &:hover {
           &::after {
             background: none;
-            border-color: var(--tertiary);
+            border-color: var(--d-sys-color-border-accent);
           }
         }
       }
@@ -686,7 +690,7 @@
 
         &::after {
           background: none;
-          border-color: var(--tertiary);
+          border-color: var(--d-sys-color-border-accent);
         }
       }
     }
@@ -717,7 +721,7 @@
     height: 14px;
     padding: 1px;
     border-radius: 50%;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
 
     .d-icon {
       width: 100%;
@@ -749,17 +753,17 @@
       white-space: nowrap;
 
       button {
-        background-color: var(--primary-low);
-        color: var(--primary);
-        box-shadow: var(--shadow-dropdown);
+        background-color: var(--d-sys-color-background-neutral);
+        color: var(--d-sys-color-text-default);
+        box-shadow: var(--d-sys-shadow-overlay);
       }
     }
   }
 
   &.selected &__article .select-posts button.select-post {
-    background-color: var(--tertiary);
-    color: var(--secondary);
-    border-color: var(--tertiary);
+    background-color: var(--d-sys-color-background-accent);
+    color: var(--d-sys-color-text-inverse);
+    border-color: var(--d-sys-color-border-accent);
   }
 
   &__header {
@@ -785,7 +789,7 @@
       order: 1;
       margin-inline-start: auto;
       font-size: var(--font-down-2);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       transform: translateY(1px); // optical alignment with username baseline
     }
 
@@ -802,10 +806,10 @@
     font-size: var(--font-down-2);
     line-height: var(--line-height-small);
     font-weight: bold;
-    color: var(--tertiary);
-    background: var(--tertiary-very-low);
-    border: 1px solid var(--tertiary-low);
-    border-radius: var(--d-border-radius);
+    color: var(--d-sys-color-text-link);
+    background: var(--d-sys-color-background-accent-subtlest);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0.1em 0.4em;
     margin: 0.25em 0.25em 0.25em 0;
     transform: translateY(1px);
@@ -814,10 +818,10 @@
   &__pinned-badge {
     font-size: var(--font-down-2);
     font-weight: bold;
-    color: var(--success);
-    background: var(--success-low);
-    border: 1px solid var(--success-medium);
-    border-radius: var(--d-border-radius);
+    color: var(--d-sys-color-text-success);
+    background: var(--d-sys-color-background-success-subtlest);
+    border: 1px solid var(--d-sys-color-background-success-subtle);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0.1em 0.4em;
     line-height: 1;
   }
@@ -855,11 +859,11 @@
   }
 
   &__expand-replies.btn {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 
@@ -879,15 +883,15 @@
     padding: 0.15em 0.25em;
     border: none;
     background: none;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     cursor: pointer;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     white-space: nowrap;
     align-self: center;
 
     &:hover {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -900,7 +904,7 @@
   }
 
   &__collapsed-reply-count {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__placeholder {
@@ -927,13 +931,13 @@
   }
 
   &__placeholder-label {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     font-style: italic;
   }
 
   &__placeholder-reveal {
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
     padding: 0.5em;
     width: 100%;
   }
@@ -957,7 +961,7 @@
   &--whisper {
     .nested-post__content .cooked {
       font-style: italic;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -989,8 +993,8 @@
 
       &:hover:not(:disabled),
       &:focus-visible {
-        background-color: var(--primary-low);
-        color: var(--primary);
+        background-color: var(--d-sys-color-background-neutral);
+        color: var(--d-sys-color-text-default);
       }
 
       &:disabled {
@@ -1000,7 +1004,7 @@
   }
 
   &__continue-link {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     font-weight: bold;
   }
 }
@@ -1012,7 +1016,7 @@
 
   &__load-more {
     margin: 0.5em 0;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     font-size: var(--font-down-1);
     position: relative;
 
@@ -1027,8 +1031,10 @@
       top: -1em;
       height: calc(50% + 1em);
       width: var(--nested-line-offset);
-      border-left: var(--nested-line-width) solid var(--primary-low);
-      border-bottom: var(--nested-line-width) solid var(--primary-low);
+      border-left: var(--nested-line-width) solid
+        var(--d-sys-color-border-default);
+      border-bottom: var(--nested-line-width) solid
+        var(--d-sys-color-border-default);
       border-radius: 0 0 0 12px;
       transition: border-color 0.15s ease;
     }
@@ -1036,7 +1042,7 @@
     // When the parent's depth-line is hovered, highlight this hook to match
     // the sibling continuation lines above it.
     &.--parent-line-highlighted::before {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
     }
   }
 }
@@ -1048,7 +1054,7 @@
 
 @keyframes nested-post-highlight {
   0% {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   100% {
@@ -1069,7 +1075,7 @@
 
   &__item {
     &:not(:last-child) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     &.--synthetic {
@@ -1138,11 +1144,11 @@
   &__message {
     margin-top: 0.35em;
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-align: center;
     padding: 1em 0;
   }
@@ -1178,7 +1184,7 @@
 
   .nested-view__controls {
     flex-wrap: wrap;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     margin-left: -0.5em;
     margin-right: -0.5em;
     padding: 0.5em;
@@ -1197,7 +1203,7 @@
   }
 
   .nested-view__topic-map {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     margin-left: -0.5em;
     margin-right: -0.5em;
     padding: 0.5em;
@@ -1207,7 +1213,7 @@
   // OP rendered as a full-width white card
   .nested-view__op {
     padding: 0.5em;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border: none;
     border-radius: 0;
     margin-bottom: 0;
@@ -1235,8 +1241,8 @@
   .nested-view__mobile-ancestors {
     display: flex;
     flex-direction: column;
-    background: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-default);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .nested-view__mobile-focus-back,
@@ -1248,8 +1254,8 @@
     min-width: 0;
     min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 1em);
     padding: 0.5em;
-    color: var(--primary-medium);
-    background: var(--secondary);
+    color: var(--d-sys-color-text-faint);
+    background: var(--d-sys-color-background-default);
     border: 0;
     text-align: left;
     cursor: pointer;
@@ -1257,7 +1263,7 @@
     .d-icon {
       flex: 0 0 auto;
       width: 0.75em;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .topic-avatar {
@@ -1273,7 +1279,7 @@
   }
 
   .nested-view__mobile-ancestor {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     font-size: var(--font-down-1);
     min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 0.75em);
     padding-block: 0.375em;
@@ -1311,7 +1317,7 @@
   .nested-view__mobile-ancestor-excerpt {
     min-width: 0;
     overflow: hidden;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -1461,7 +1467,7 @@
     &.--depth-0 {
       grid-template-columns: 0 minmax(0, 1fr);
       column-gap: 0;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
       border-radius: 0;
       padding: var(--space-2);
       margin-top: 0;
@@ -1524,7 +1530,7 @@
             text-overflow: ellipsis;
             font-size: var(--font-down-2);
             font-weight: normal;
-            color: var(--primary-medium);
+            color: var(--d-sys-color-text-faint);
 
             a {
               color: inherit;

@@ -120,14 +120,14 @@ RSpec.describe AppearanceChange::DraftTheme do
       let(:styles) do
         {
           variables: {
-            "--d-border-radius" => "12px",
+            "--d-sys-border-radius-md" => "12px",
           },
           rules: [
             {
               area: "topic_list_item",
               state: "hover",
               declarations: {
-                "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+                "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
               },
             },
           ],
@@ -146,7 +146,7 @@ RSpec.describe AppearanceChange::DraftTheme do
           name: "scss",
           error: nil,
         )
-        expect(field.value).to include("--d-border-radius: 12px;")
+        expect(field.value).to include("--d-sys-border-radius-md: 12px;")
         expect(field.value).to include("body:not(.admin-interface) .topic-list-item:hover")
         expect(appearance_change.css).to eq(field.value)
         expect(appearance_change.styles).to eq(styles.deep_stringify_keys)

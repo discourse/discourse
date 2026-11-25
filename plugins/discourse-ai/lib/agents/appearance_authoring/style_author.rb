@@ -179,7 +179,7 @@ module DiscourseAi
             Values:
             - An area's text color doesn't reach the areas inside it that have their own text color. When you darken or lighten an area's background, give those a readable color in a rule too, except the ones with their own background, which keep theirs.
             - Palette colors swap in dark mode: var(--primary) is the text color and var(--secondary) the page background, so var(--secondary) is only white in light mode. Text on a background that stays the same in both modes needs light-dark() too.
-            - Colors must follow the palette, so dark mode keeps working: var(--primary), var(--tertiary-low) and the other palette variables, rgba(var(--primary-rgb), 0.1), color-mix(in srgb, var(--tertiary) 20%, var(--secondary)), or light-dark(#light, #dark) for a raw color. A raw hex outside light-dark() is rejected.
+            - Colors must follow the palette, so dark mode keeps working: var(--primary), var(--d-sys-color-background-accent-subtlest) and the other palette variables, color-mix(in srgb, var(--primary) 10%, transparent), color-mix(in srgb, var(--tertiary) 20%, var(--secondary)), or light-dark(#light, #dark) for a raw color. A raw hex outside light-dark() is rejected.
             - var() may only reference palette or design variables, without fallbacks.
             - Lengths use px, rem, em or %. No url(), no quotes, no !important, no comments.
             - Fonts are chosen elsewhere; font-family only takes var(--font-family) or var(--heading-font-family).

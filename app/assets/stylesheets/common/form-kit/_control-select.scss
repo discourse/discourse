@@ -2,7 +2,7 @@
 
 .form-kit__control-select {
   height: 2em;
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
 
   @include viewport.until(sm) {
     height: 2.25em;

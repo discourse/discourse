@@ -5,20 +5,20 @@
   }
 
   &.cooked-date {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     cursor: pointer;
     border-bottom: 1px dashed var(--primary-medium);
 
     .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
     }
 
     &.past {
-      border-bottom-color: var(--primary-low-mid);
+      border-bottom-color: var(--d-sys-color-border-strong);
     }
 
     &.past[data-countdown] {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 }
@@ -37,7 +37,7 @@
     }
 
     &.current {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 }
@@ -60,20 +60,20 @@
     padding: var(--space-half);
     line-height: 1;
     border: none;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: none;
     color: var(--primary-low-mid);
     cursor: pointer;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     // a fill rather than a ring: the chip already carries a blue outline when selected
     &:focus-visible {
       outline: none;
-      background: var(--d-hover);
-      color: var(--primary);
+      background: var(--d-sys-color-background-default-hovered);
+      color: var(--d-sys-color-text-default);
     }
   }
 }

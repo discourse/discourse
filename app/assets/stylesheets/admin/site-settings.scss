@@ -8,7 +8,7 @@
 
 .fk-d-menu-modal.admin-site-settings-category-nav-content {
   .admin-site-settings-category-nav__list a.active {
-    background: var(--d-selected);
+    background: var(--d-sys-color-background-default-selected);
   }
 }
 
@@ -23,7 +23,7 @@
     }
 
     .setting-description {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
     }
   }

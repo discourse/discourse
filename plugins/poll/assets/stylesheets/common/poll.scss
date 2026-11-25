@@ -9,7 +9,7 @@ div.poll-outer,
 .ProseMirror {
   div.poll {
     margin: 1em 0;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     display: grid;
     grid-template-areas: "poll" "info" "buttons";
 
@@ -26,7 +26,7 @@ div.poll-outer,
     }
 
     li[data-poll-option-id] {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       padding: 0.5em 0;
       word-break: break-word;
 
@@ -78,14 +78,14 @@ div.poll-outer,
           gap: 0.5em;
 
           .nav-btn {
-            background-color: var(--secondary);
+            background-color: var(--d-sys-color-background-default);
             border: none;
-            color: var(--primary-medium);
+            color: var(--d-sys-color-text-faint);
           }
 
           .active {
             .nav-btn {
-              color: var(--primary);
+              color: var(--d-sys-color-text-default);
             }
           }
         }
@@ -117,10 +117,10 @@ div.poll-outer,
       grid-area: info;
       display: flex;
       line-height: var(--line-height-medium);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       @include viewport.until(sm) {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
         flex-direction: row-reverse;
 
         &_counts,
@@ -132,7 +132,7 @@ div.poll-outer,
       @include viewport.from(sm) {
         gap: 0 1em;
         padding: var(--space-2);
-        border-left: 1px solid var(--content-border-color);
+        border-left: 1px solid var(--d-sys-color-border-default);
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -227,7 +227,7 @@ div.poll-outer,
           padding-top: 1.25em;
 
           &:not(:empty) {
-            border-top: 1px solid var(--content-border-color);
+            border-top: 1px solid var(--d-sys-color-border-default);
           }
         }
 
@@ -237,7 +237,7 @@ div.poll-outer,
           flex: 1 1 auto;
 
           &:not(:empty) {
-            border-right: 1px solid var(--content-border-color);
+            border-right: 1px solid var(--d-sys-color-border-default);
           }
         }
 
@@ -246,7 +246,7 @@ div.poll-outer,
           gap: 0.5em;
 
           &.vote-recorded .d-icon {
-            color: var(--success);
+            color: var(--d-sys-color-icon-success);
           }
 
           &:not(:last-child) {
@@ -318,7 +318,7 @@ div.poll-outer,
 
       .poll-voted-choices {
         &__title {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
 
         &__list {
@@ -340,15 +340,15 @@ div.poll-outer,
 
           .d-icon {
             margin-top: 0.3em;
-            color: var(--success);
+            color: var(--d-sys-color-icon-success);
           }
 
           .poll-voted-choices__rank {
             min-width: 1.5em;
             margin-top: 0.15em;
             text-align: center;
-            background: var(--primary-low);
-            border-radius: var(--d-border-radius);
+            background: var(--d-sys-color-background-neutral);
+            border-radius: var(--d-sys-border-radius-md);
             font-size: var(--font-down-1);
             line-height: 1.6em;
           }
@@ -357,7 +357,7 @@ div.poll-outer,
     }
 
     .poll-title {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       margin-bottom: 0.5em;
       padding-bottom: 0.5em;
     }
@@ -370,7 +370,7 @@ div.poll-outer,
       gap: 0.5em;
       width: 100%;
       padding: 1em;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       button {
         white-space: nowrap;
@@ -460,7 +460,7 @@ div.poll-outer,
       .percentage,
       .absolute {
         float: right;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         margin-left: 0.25em;
       }
 
@@ -566,7 +566,7 @@ div.poll-outer,
           margin-right: 0.75em;
           left: 0.2em;
           background: var(--primary-high);
-          border-radius: var(--d-button-border-radius);
+          border-radius: var(--d-comp-DButton-border-radius);
           border: none;
         }
 
@@ -575,8 +575,8 @@ div.poll-outer,
           position: absolute;
           height: 1.125em;
           width: 1.125em;
-          background: var(--primary-low);
-          border-radius: var(--d-button-border-radius);
+          background: var(--d-sys-color-background-neutral);
+          border-radius: var(--d-comp-DButton-border-radius);
         }
       }
     }
@@ -676,7 +676,7 @@ body.crawler {
 
   &.--untitled &__content > .poll-title::before {
     content: var(--poll-title-placeholder, "");
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     position: absolute;
     pointer-events: none;
   }
@@ -701,7 +701,7 @@ body.crawler {
       height: auto;
       border: none;
       border-radius: 0;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 }

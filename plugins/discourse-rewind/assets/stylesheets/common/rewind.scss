@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 .rewind-container {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   box-sizing: border-box;
   position: relative;
   display: flex;

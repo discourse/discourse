@@ -25,39 +25,39 @@
     justify-content: center;
 
     &.alert-success {
-      background-color: var(--success-low);
-      color: var(--primary);
+      background-color: var(--d-sys-color-background-success-subtlest);
+      color: var(--d-sys-color-text-default);
     }
 
     &.alert-error {
-      background-color: var(--danger-low);
-      color: var(--primary);
+      background-color: var(--d-sys-color-background-danger-subtlest);
+      color: var(--d-sys-color-text-default);
     }
 
     &.alert-warning {
-      background-color: var(--highlight-bg);
-      color: var(--primary);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
+      color: var(--d-sys-color-text-default);
     }
 
     &.alert-info {
-      background-color: var(--tertiary-low);
-      color: var(--primary);
+      background-color: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-text-default);
 
       &.clickable {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
         z-index: z("base");
       }
     }
 
     .-success & {
       .d-icon {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
     }
 
     .-error & {
       .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
     }
 
@@ -69,7 +69,7 @@
 
     .-info & {
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
   }
@@ -91,7 +91,7 @@
     top: 0;
     left: 0;
     position: absolute;
-    background-color: var(--success);
+    background-color: var(--d-sys-color-background-success);
     transform-origin: 0 0;
   }
 
@@ -124,6 +124,6 @@
 
   &__message {
     display: flex;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }

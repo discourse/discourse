@@ -11,11 +11,11 @@
 
   &__trend {
     &.--up {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.--down {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -57,7 +57,7 @@
   }
 
   &__name {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__link {
@@ -80,29 +80,29 @@
 
   &__list-shell {
     height: var(--db-traffic-card-min-height);
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
     background: linear-gradient(
       135deg,
-      var(--primary-very-low),
-      var(--primary-low)
+      var(--d-sys-color-background-sunken),
+      var(--d-sys-color-background-neutral)
     );
   }
 
   &__percent {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__count {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__list-empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
   }
 
   &__list-error {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-size: var(--font-down-1-rem);
   }
 
@@ -117,6 +117,6 @@
 
   &__learn-more,
   &__learn-more:visited {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }

@@ -18,13 +18,13 @@
   .posts-map {
     font-size: var(--font-up-1);
     font-weight: bold;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
 .latest-topic-list-item {
   padding: 1em;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -46,17 +46,17 @@
     a.title {
       padding: 15px 0;
       word-break: break-word;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .anon & {
       a.title:visited:not(.badge-notification) {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
     a.title.visited:not(.badge-notification) {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .top-row {

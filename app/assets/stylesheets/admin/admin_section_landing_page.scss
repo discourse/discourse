@@ -14,7 +14,7 @@
     gap: 0;
     margin-bottom: 2em;
     padding: var(--space-4);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     @include viewport.from(sm) {
       margin-bottom: 2em;
@@ -36,7 +36,7 @@
     &__tagline {
       font-size: var(--font-down-1);
       font-weight: normal;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       margin: 0;
       letter-spacing: 0.1px;
     }
@@ -47,7 +47,7 @@
     }
 
     &__description {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       margin: 0.25em 0 0.5em;
       line-height: var(--line-height-large);
       align-self: start;

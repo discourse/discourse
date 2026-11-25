@@ -389,7 +389,7 @@ module("Integration | Component | mobile-tab-bar", function (hooks) {
           <ul
             class="nav-pills"
             dir="rtl"
-            style="width: 160px; flex: none; padding: 0; --d-selected: rgb(240, 240, 240);"
+            style="width: 160px; flex: none; padding: 0; --d-sys-color-background-default-selected: rgb(240, 240, 240);"
             {{dScrollEdges}}
           >
             <li><a class="active" href="/latest">Latest topics</a></li>

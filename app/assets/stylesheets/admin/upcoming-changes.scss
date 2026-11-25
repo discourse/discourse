@@ -39,7 +39,7 @@
 
   &__depends-on-notice {
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__description {
@@ -75,10 +75,10 @@
     &:focus-visible,
     &:hover {
       .upcoming-change__badge-info {
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
 
         .d-icon {
-          color: var(--secondary);
+          color: var(--d-sys-color-icon-inverse);
         }
       }
     }
@@ -120,7 +120,7 @@
 
     .d-multi-select-trigger__selected-item .d-icon-lock {
       font-size: var(--font-down-1);
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 
@@ -139,7 +139,7 @@
 
   &__groups-description {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin-block: var(--space-2) 0;
   }
 
@@ -149,6 +149,6 @@
 
   &__status-notice {
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }

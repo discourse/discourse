@@ -63,7 +63,7 @@
     }
 
     p {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -87,7 +87,7 @@
     }
 
     .summary-outdated {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
       line-height: var(--line-height-medium);
     }

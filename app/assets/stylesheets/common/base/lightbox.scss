@@ -3,7 +3,7 @@
 }
 
 .onebox img.d-lazyload-hidden:not(.ytp-thumbnail-image) {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
 }
 
 .cooked img.d-lazyload:not(.animated) {
@@ -40,7 +40,7 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
       background: var(--primary);
       opacity: 0;
       transition: opacity 0.2s;
@@ -49,8 +49,8 @@
 
       @media (pointer: coarse) {
         align-items: center;
-        background: var(--secondary);
-        color: var(--primary-high);
+        background: var(--d-sys-color-background-default);
+        color: var(--d-sys-color-text-muted);
         height: 25px;
         width: 25px;
         bottom: 0;
@@ -78,7 +78,7 @@
   .d-icon {
     margin: var(--meta-element-margin);
     opacity: 0.8;
-    color: var(--secondary);
+    color: var(--d-sys-color-icon-inverse);
 
     + .filename {
       margin-left: 0;
@@ -106,7 +106,7 @@
 
   @media (pointer: coarse) {
     .d-icon-discourse-expand {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 }
@@ -118,8 +118,8 @@
 
   a.lightbox:hover {
     box-shadow:
-      0 2px 5px 0 rgb(var(--always-black-rgb), 0.2),
-      0 2px 10px 0 rgb(var(--always-black-rgb), 0.2);
+      0 2px 5px 0 color-mix(in srgb, black 20%, transparent),
+      0 2px 10px 0 color-mix(in srgb, black 20%, transparent);
   }
 }
 
@@ -170,7 +170,7 @@
   top: 0;
   left: 0;
   object-fit: contain;
-  background: rgb(var(--always-black-rgb));
+  background: black;
 }
 
 // photoswipe custom caption

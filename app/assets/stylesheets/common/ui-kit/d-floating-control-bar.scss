@@ -18,10 +18,10 @@ body.d-floating-control-bar-visible #main-outlet {
   position: fixed;
   bottom: var(--space-3);
   padding: var(--space-3);
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--d-sys-border-radius-md);
+  box-shadow: var(--d-sys-shadow-raised);
   z-index: 1;
 
   .footer-nav-visible & {

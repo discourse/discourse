@@ -45,16 +45,16 @@ $db-bar-height: var(--space-2);
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:visited {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &:hover,
     &:focus,
     &:active {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     @container db-support-outcomes (width < 22rem) {
@@ -64,30 +64,30 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
-    background: var(--primary-low);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-neutral);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--resolved {
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
     }
 
     &.--in-progress {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
 
     &.--unanswered {
-      background: var(--danger);
+      background: var(--d-sys-color-background-danger);
     }
   }
 
   &__share {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-variant-numeric: tabular-nums;
     text-align: end;
     line-height: 1;
@@ -102,7 +102,7 @@ $db-bar-height: var(--space-2);
   }
 
   .db-whos-posting__bar-fill {
-    background: var(--tertiary-medium);
+    background: var(--d-sys-color-background-accent-subtle);
 
     &.--staff {
       background: var(--primary-medium);
@@ -150,21 +150,24 @@ $db-bar-height: var(--space-2);
 
   &__track {
     height: $db-bar-height;
-    border-radius: var(--d-border-radius-fixed);
-    background: var(--primary-low);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-neutral);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: var(--d-border-radius-fixed);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--bucket-lt_1h {
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
     }
 
     &.--bucket-1_4h {
-      background: var(--success-medium, var(--success));
+      background: var(
+        --d-sys-color-background-success-subtle,
+        var(--d-sys-color-background-success)
+      );
     }
 
     &.--bucket-4_24h {
@@ -172,12 +175,12 @@ $db-bar-height: var(--space-2);
     }
 
     &.--bucket-gt_24h {
-      background: var(--danger);
+      background: var(--d-sys-color-background-danger);
     }
   }
 
   &__share {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-variant-numeric: tabular-nums;
     text-align: end;
     line-height: 1;

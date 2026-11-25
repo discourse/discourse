@@ -51,8 +51,8 @@
   }
 
   &__filter-apply-pending-count {
-    color: var(--tertiary);
-    background: var(--secondary);
+    color: var(--d-sys-color-text-link);
+    background: var(--d-sys-color-background-default);
     padding: 0.21em 0.42em;
     min-width: 0.6em;
     border-radius: 1em;
@@ -68,20 +68,20 @@
     max-width: 100%;
     white-space: nowrap;
     padding-inline-start: var(--space-3);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius-pill);
-    background: var(--primary-very-low);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-full);
+    background: var(--d-sys-color-background-sunken);
     font-size: var(--font-down-1-rem);
 
     &.is-pending {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       border-style: dashed;
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     .site-traffic-explorer__filter-pill-remaining,
     .d-icon-angle-down {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .fk-d-menu__trigger {
@@ -101,7 +101,7 @@
 
         .site-traffic-explorer__filter-pill-remaining,
         .d-icon-angle-down {
-          color: var(--primary);
+          color: var(--d-sys-color-icon-default);
         }
       }
 
@@ -112,12 +112,12 @@
   }
 
   &__filter-remove {
-    color: var(--primary-medium);
-    border-top-right-radius: var(--d-border-radius-pill);
-    border-bottom-right-radius: var(--d-border-radius-pill);
+    color: var(--d-sys-color-text-faint);
+    border-top-right-radius: var(--d-sys-border-radius-full);
+    border-bottom-right-radius: var(--d-sys-border-radius-full);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-left: 1px solid var(--primary-low);
+    border-left: 1px solid var(--d-sys-color-border-default);
   }
 
   &__filter-pill-values {
@@ -137,10 +137,10 @@
   }
 
   &__empty {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-3) var(--space-4);
-    border: 1px dashed var(--content-border-color);
-    background: var(--primary-very-low);
+    border: 1px dashed var(--d-sys-color-border-default);
+    background: var(--d-sys-color-background-sunken);
     text-align: center;
   }
 
@@ -201,7 +201,7 @@
 
       .db-skeleton__row-block:not(:last-child) {
         border-right: 0;
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -239,7 +239,7 @@
     flex-wrap: wrap;
     gap: 0 var(--space-4);
     min-width: 0;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     button {
       border: 0;
@@ -247,13 +247,13 @@
       padding-bottom: var(--space-2);
       padding-inline: 0;
       background: transparent;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1-rem);
       white-space: nowrap;
 
       &.is-active {
-        border-bottom-color: var(--tertiary);
-        color: var(--tertiary);
+        border-bottom-color: var(--d-sys-color-border-accent);
+        color: var(--d-sys-color-text-link);
       }
     }
   }
@@ -269,19 +269,19 @@
     align-items: center;
     gap: var(--space-1);
     margin-inline: calc(-1 * var(--space-2));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding-inline: var(--space-2);
     cursor: pointer;
 
     html.discourse-no-touch &:hover:not(:has(a:hover)) {
-      background: var(--token-color-surface-hovered);
+      background: var(--d-sys-color-background-default-hovered);
     }
   }
 
   &__row-count {
     flex-shrink: 0;
     margin-inline-start: auto;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__row-link {
@@ -297,7 +297,7 @@
 
     &:hover {
       .discourse-no-touch & {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
         text-decoration: underline;
       }
     }
@@ -307,7 +307,7 @@
     }
 
     &:focus-visible {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       text-decoration: underline;
     }
   }
@@ -329,7 +329,7 @@
 
   &__card-empty {
     padding-block: var(--space-3);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 

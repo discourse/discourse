@@ -39,17 +39,17 @@
     .form-kit__input,
     .form-kit__input-group > :not(:first-child) .form-kit__control-input,
     .form-kit__input-group > :not(:last-child) .form-kit__control-input {
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
     }
   }
 
   .ai-llm-editor-tests {
     &__failure {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
 
     &__success {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
   }
 }
@@ -87,7 +87,7 @@
     gap: 1em 2em;
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 3px solid var(--primary-low);
+    border-top: 3px solid var(--d-sys-color-border-default);
   }
 
   &-list-item {
@@ -103,7 +103,7 @@
   }
 
   .admin-section-landing-item__description {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin: 0.25em 0 0.5em;
     line-height: var(--line-height-large);
     align-self: start;
@@ -120,7 +120,7 @@
   h4 {
     font-size: var(--font-down-1);
     font-weight: normal;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin: 0;
     letter-spacing: 0.1px;
   }
@@ -141,8 +141,8 @@
   li {
     font-size: var(--font-down-2);
     border-radius: 0.25em;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
     padding: 1px 3px;
     margin-right: 0.5em;
     margin-bottom: 0.5em;
@@ -150,7 +150,7 @@
 }
 
 .ai-llm-list__seeded-model {
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   font-size: var(--font-down-1);
 }
 

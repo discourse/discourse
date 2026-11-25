@@ -1,18 +1,21 @@
 @use "lib/viewport";
 
 :where(.uc-modernize-foundation-theme) {
-  --d-button-default-bg-color: var(--secondary);
-  --d-button-default-border: 1px solid var(--primary-300);
-  --d-button-default-border--hover: 1px solid var(--primary-400);
-  --d-button-default-bg-color--hover: var(--primary-200);
-  --d-button-default-text-color--hover: var(--primary);
-  --d-button-default-icon-color--hover: var(--primary);
-  --d-button-default-text-color: var(--primary-900);
-  --d-button-default-icon-color: var(--primary-900);
+  --d-comp-DButton-color-background-default: var(
+    --d-sys-color-background-default
+  );
+  --d-comp-DButton-color-border-default: var(--primary-300);
+  --d-comp-DButton-border-width: 1px;
+  --d-comp-DButton-color-border-default-hovered: var(--primary-400);
+  --d-comp-DButton-color-background-default-hovered: var(--primary-200);
+  --d-comp-DButton-color-text-default-hovered: var(--d-sys-color-text-default);
+  --d-comp-DButton-color-icon-default-hovered: var(--d-sys-color-icon-default);
+  --d-comp-DButton-color-text-default: var(--primary-900);
+  --d-comp-DButton-color-icon-default: var(--primary-900);
 
   // button on /my/badges
   .favorite-btn {
-    border-color: var(--primary-low);
+    border-color: var(--d-sys-color-border-default);
     border-bottom: none;
     border-right: none;
 

@@ -17,22 +17,22 @@
   &__tip-item {
     padding: var(--space-2) var(--space-4);
     cursor: pointer;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     transition: background-color 0.15s;
 
     &:hover,
     &.--selected {
-      background-color: var(--d-hover);
+      background-color: var(--d-sys-color-background-default-hovered);
     }
   }
 
   &__tip-name {
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__tip-description {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__tip-item .badge-category__wrapper {

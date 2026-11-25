@@ -7,7 +7,7 @@
   container-type: inline-size;
 
   img {
-    background: var(--event-image-color, var(--primary-very-low));
+    background: var(--event-image-color, var(--d-sys-color-background-sunken));
     display: block;
     height: min(
       calc(100cqi * 9 / 16),
@@ -29,7 +29,8 @@
   width: 100%;
 
   img {
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
     max-height: none;
   }
 }
@@ -75,7 +76,7 @@ $show-interested: inherit;
 .discourse-post-event--preview .discourse-post-event-widget {
   box-shadow: 0 0 0 3px var(--primary-100);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   margin: var(--space-1) 0;
 }
 
@@ -116,8 +117,8 @@ $show-interested: inherit;
 
       // Only affects images taller than their box, where the subject tends to sit high
       object-position: 50% 0;
-      border-top-left-radius: var(--d-border-radius);
-      border-top-right-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-top-right-radius: var(--d-sys-border-radius-md);
     }
 
     &.--letterboxed {
@@ -133,7 +134,7 @@ $show-interested: inherit;
       width: 8rem;
 
       img {
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         display: block;
         height: auto;
         max-height: 12rem;
@@ -155,7 +156,7 @@ $show-interested: inherit;
 
   .discourse-post-event-widget {
     display: flex;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     flex-direction: column;
     flex: 1 0 auto;
     max-width: 100%;
@@ -165,7 +166,7 @@ $show-interested: inherit;
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       margin: 5px 0;
     }
 
@@ -184,7 +185,7 @@ $show-interested: inherit;
     }
 
     &.is-ended {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
 
       .event-image img {
         filter: grayscale(1);
@@ -192,22 +193,22 @@ $show-interested: inherit;
       }
 
       .event-date {
-        border-color: var(--primary-low-mid);
+        border-color: var(--d-sys-color-border-strong);
 
         .month,
         .day {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
 
       .event-info .name,
       .event-info .name a {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       .avatar-flair,
       .event-invitees-icon .going {
-        background: var(--primary-very-low);
+        background: var(--d-sys-color-background-sunken);
       }
     }
   }
@@ -242,13 +243,13 @@ $show-interested: inherit;
     height: 3em;
     margin: 0;
     padding: 0;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     flex-direction: column;
 
     .month {
       text-align: center;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -278,7 +279,7 @@ $show-interested: inherit;
     .status-and-creators {
       display: flex;
       align-items: center;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: var(--font-down-1);
       font-weight: 400;
       margin: 0;
@@ -299,7 +300,7 @@ $show-interested: inherit;
 
       .username {
         margin-inline-start: 0.25em;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         @include ellipsis;
       }
@@ -344,7 +345,7 @@ $show-interested: inherit;
       .status {
         &.expired,
         &.closed {
-          color: var(--danger-medium);
+          color: var(--d-sys-color-text-danger);
         }
       }
     }
@@ -356,7 +357,7 @@ $show-interested: inherit;
     align-items: center;
     padding: 0.75em;
     flex-wrap: wrap;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     &.event-status {
       margin: 0;
@@ -415,11 +416,11 @@ $show-interested: inherit;
         }
 
         &.status-going .avatar-flair .d-icon {
-          color: var(--success);
+          color: var(--d-sys-color-icon-success);
         }
 
         &.status-not_going .avatar-flair .d-icon {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
 
         &.status-interested .avatar-flair .d-icon {
@@ -447,7 +448,7 @@ $show-interested: inherit;
           bottom: 0;
 
           --avatar-flair-background: var(--secondary);
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           box-shadow: 0 0 0 1px var(--primary-100);
         }
       }
@@ -472,7 +473,7 @@ $show-interested: inherit;
     height: min-content;
 
     > .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       margin: 0 auto;
       padding: 0;
     }
@@ -514,11 +515,11 @@ $show-interested: inherit;
   }
 
   .event-recurrence {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding-top: 0;
 
     > .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       font-size: var(--font-down-1);
     }
 
@@ -549,7 +550,7 @@ $show-interested: inherit;
     a,
     .url,
     > .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -578,14 +579,14 @@ $show-interested: inherit;
     align-items: center;
 
     > .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       margin: 0 auto;
       padding: 0;
     }
   }
 
   p.no-rsvp-description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     font-weight: 400;
     grid-column-start: 2;
@@ -595,7 +596,7 @@ $show-interested: inherit;
     position: relative;
     display: flex;
     margin: 0 auto;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .event-invitees-icon .going {
@@ -603,18 +604,18 @@ $show-interested: inherit;
     position: absolute;
     right: 0;
     bottom: 0;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
 .discourse-post-event-going-menu-content {
   .--selected .d-icon {
-    color: var(--success);
+    color: var(--d-sys-color-icon-success);
   }
 }
 
@@ -633,8 +634,8 @@ $show-interested: inherit;
 .discourse-post-event {
   .event__placeholder {
     display: inline-block;
-    border-radius: var(--d-border-radius, 0.25em);
-    background-color: var(--primary-low);
+    border-radius: var(--d-sys-border-radius-md, 0.25em);
+    background-color: var(--d-sys-color-background-neutral);
   }
 
   .event__placeholder--text {
@@ -663,7 +664,7 @@ $show-interested: inherit;
   &__title {
     margin: 0;
     padding: 0.25em 1em 0.5em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     font-weight: 600;
     text-transform: uppercase;
@@ -681,11 +682,11 @@ $show-interested: inherit;
     align-items: center;
     gap: 0.75em;
     padding: 0.5em 1em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:hover,
     &:focus-visible {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
       text-decoration: none;
     }
   }
@@ -695,7 +696,7 @@ $show-interested: inherit;
   }
 
   &__username {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
 
     @include ellipsis;

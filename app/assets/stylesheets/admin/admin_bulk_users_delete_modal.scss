@@ -11,11 +11,11 @@
     overflow-anchor: none;
 
     &.-success {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.-error {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 

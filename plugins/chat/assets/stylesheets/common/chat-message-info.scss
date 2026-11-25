@@ -46,9 +46,9 @@
 .chat-message-info__bot-indicator {
   text-transform: uppercase;
   padding: 0.2rem 0.3rem;
-  background: var(--primary-low);
+  background: var(--d-sys-color-background-neutral);
   color: var(--primary-900);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-3);
   line-height: var(--line-height-medium);
   font-weight: 700;
@@ -56,13 +56,13 @@
 }
 
 .chat-message-info__date {
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   font-size: var(--font-down-1);
 
   &:hover,
   &:focus {
     .chat-time {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 }
@@ -74,7 +74,7 @@
 .chat-message-info__bookmark {
   .d-icon-discourse-bookmark-clock,
   .d-icon-bookmark {
-    color: var(--primary-low-mid);
+    color: var(--d-sys-color-icon-faint);
     font-size: var(--font-down-2);
   }
 }
@@ -95,10 +95,10 @@
   align-items: center;
   flex-wrap: wrap;
   font-size: var(--font-down-2);
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   gap: 0.5em;
   line-height: 1.2;
-  background: var(--tertiary-very-low);
+  background: var(--d-sys-color-background-accent-subtlest);
   padding: 0.25em 0.75em;
   border-radius: 8px;
 
@@ -107,7 +107,7 @@
   }
 
   .chat-channel-name {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   .chat-channel-icon {
@@ -117,7 +117,7 @@
     }
 
     &__restricted-category-icon {
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       height: 0.355em;
       width: 0.35em;
       margin-right: 0.4em;
@@ -131,7 +131,7 @@
 
   &__text,
   &__text:visited {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 }
 
@@ -143,6 +143,6 @@
   @include chat-message-info-chip;
 
   .d-icon {
-    color: var(--tertiary);
+    color: var(--d-sys-color-icon-accent);
   }
 }

@@ -2,7 +2,7 @@
   padding: 1rem 0;
 
   &__summary {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__section {
@@ -10,7 +10,7 @@
   }
 
   &__section-heading {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__section-count {
@@ -20,7 +20,7 @@
 
   &__section-description {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-bottom: 0.5rem;
   }
 
@@ -28,7 +28,7 @@
     display: block;
     font-size: var(--font-down-1);
     font-weight: normal;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-top: 0.15em;
   }
 
@@ -55,7 +55,7 @@
   &__existing-value {
     display: block;
     margin-top: 0.25rem;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__actions {
@@ -67,16 +67,16 @@
   &__error {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__badge {
     font-size: var(--font-down-1);
     padding: 0.2em 0.5em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--skip {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 

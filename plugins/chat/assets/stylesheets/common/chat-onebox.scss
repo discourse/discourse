@@ -6,18 +6,18 @@
     }
 
     .chat-onebox-description {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .chat-onebox-members-count {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-top: 1em;
       margin-bottom: 3px;
     }
 
     .chat-onebox-members {
       align-items: center;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       display: flex;
       flex-wrap: wrap;
 
@@ -43,7 +43,7 @@
 
 .chat-drawer-container .chat-message .onebox {
   width: 85%;
-  border: 2px solid var(--primary-low);
+  border: 2px solid var(--d-sys-color-border-default);
 
   header {
     margin-bottom: 0.5em;

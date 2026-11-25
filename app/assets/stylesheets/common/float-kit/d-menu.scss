@@ -48,17 +48,17 @@
 
   &__inner-content {
     display: flex;
-    border-radius: var(--d-border-radius);
-    background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
+    border-radius: var(--d-sys-border-radius-md);
+    background-color: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-overlay);
     overscroll-behavior: contain;
     overflow: auto;
   }
 
   .arrow {
     position: absolute;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   &[data-placement^="top"] {
@@ -112,7 +112,7 @@
   &__subheader {
     padding: var(--space-2) var(--d-sidebar-row-horizontal-padding)
       var(--space-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
     font-weight: bold;
   }

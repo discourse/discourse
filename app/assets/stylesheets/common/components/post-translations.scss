@@ -66,7 +66,7 @@
   }
 
   .post-language__disclaimer {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     margin-top: var(--space-1);
   }
@@ -77,6 +77,6 @@
     margin-left: var(--space-1);
     font-size: var(--font-down-2);
     text-transform: uppercase;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }

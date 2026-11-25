@@ -1,14 +1,14 @@
 body.crawler,
 body > noscript {
   .crawler-post {
-    border-top: 3px solid var(--primary-low);
+    border-top: 3px solid var(--d-sys-color-border-default);
   }
 
   .post-voting-comments {
     padding-top: var(--space-4);
 
     &__comment {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: var(--space-1) 0;
     }
 

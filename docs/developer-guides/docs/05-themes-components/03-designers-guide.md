@@ -371,7 +371,7 @@ This is fine, but I would like the bottom border to only extend as far as the te
   & > li a {
     padding: 0;
     margin-right: 20px;
-    color: var(--tertiary-high);
+    color: var(--d-sys-color-background-accent);
     border-bottom: 4px solid transparent;
 
     &.active {
@@ -401,7 +401,7 @@ So all of our navigation code should now look like so:
   & > li a {
     padding: 0;
     margin-right: 20px;
-    color: var(--tertiary-high);
+    color: var(--d-sys-color-background-accent);
     border-bottom: 4px solid transparent;
 
     &.active {

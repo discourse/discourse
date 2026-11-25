@@ -21,7 +21,7 @@
       position: absolute;
       inset-inline-end: -10%;
       bottom: -10%;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       &.rounded {
         --avatar-flair-size: 50%;
@@ -35,7 +35,7 @@
     .chat-user-presence-flair {
       box-sizing: border-box;
       position: absolute;
-      background-color: var(--success);
+      background-color: var(--d-sys-color-background-success);
       border: 1px solid var(--secondary);
       border-radius: 50%;
 

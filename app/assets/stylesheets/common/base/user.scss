@@ -17,7 +17,7 @@
     grid-row-end: 2;
 
     .horizontal-overflow-nav {
-      border-block: 1px solid var(--content-border-color);
+      border-block: 1px solid var(--d-sys-color-border-default);
     }
 
     .group-dropdown {
@@ -44,7 +44,7 @@
     grid-row-start: 2;
     grid-row-end: 3;
     font-size: var(--font-down-1);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .user-primary-navigation,
@@ -93,7 +93,10 @@
 .user-content {
   box-sizing: border-box;
   margin-top: 2em;
-  background: var(--d-content-background, var(--secondary));
+  background: var(
+    --d-content-background,
+    var(--d-sys-color-background-default)
+  );
 
   .list-actions {
     display: flex;
@@ -115,21 +118,21 @@
       gap: 0.5em;
 
       &.loading {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         cursor: default;
       }
     }
   }
 
   .d-icon-heart {
-    color: var(--love);
+    color: var(--d-sys-color-icon-love);
   }
 
   .user-notifications-filter {
     display: block;
     width: 100%;
     padding-bottom: var(--space-2);
-    border-bottom: 0.5px solid var(--content-border-color);
+    border-bottom: 0.5px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -176,7 +179,7 @@
     .secondary {
       display: inline-block;
       width: 100%;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       dl {
         margin: 0;
@@ -198,7 +201,7 @@
       dd {
         padding: 0;
         margin: 0 15px 0 0;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         &.groups {
           span:not(:last-of-type) {
@@ -229,8 +232,12 @@
     }
 
     .details {
-      background: rgb(var(--secondary-rgb), 0.8);
-      border-bottom: 1px solid var(--content-border-color);
+      background: color-mix(
+        in srgb,
+        var(--d-sys-color-background-default) 80%,
+        transparent
+      );
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       @include viewport.from(md) {
         img.avatar {
@@ -239,11 +246,11 @@
       }
 
       .suspended {
-        color: var(--danger);
+        color: var(--d-sys-color-text-danger);
       }
 
       .silenced {
-        color: var(--danger);
+        color: var(--d-sys-color-text-danger);
       }
 
       .primary {
@@ -346,7 +353,11 @@
 
       .details {
         margin-top: 0;
-        background: rgb(var(--secondary-rgb), 0.8);
+        background: color-mix(
+          in srgb,
+          var(--d-sys-color-background-default) 80%,
+          transparent
+        );
 
         @include viewport.until(md) {
           display: flex;
@@ -357,7 +368,7 @@
           position: relative;
           padding: 0;
           margin-top: 0;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
 
           .controls {
             display: flex;
@@ -431,7 +442,7 @@
 
   .staff-counters {
     background: var(--primary);
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     display: flex;
     flex-wrap: wrap;
     padding: var(--space-2);
@@ -444,7 +455,7 @@
       align-items: baseline;
       flex: 0 1 auto;
       margin: 0;
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
 
       span {
         display: inline-block;
@@ -463,7 +474,7 @@
   }
 
   .helpful-flags {
-    background-color: var(--success);
+    background-color: var(--d-sys-color-background-success);
   }
 
   .flags {
@@ -471,19 +482,19 @@
   }
 
   .warnings-received {
-    background-color: var(--danger-medium);
+    background-color: var(--d-sys-color-background-danger);
   }
 
   .deleted-posts {
-    background-color: var(--danger-medium);
+    background-color: var(--d-sys-color-background-danger);
   }
 
   .silencings {
-    background-color: var(--danger-medium);
+    background-color: var(--d-sys-color-background-danger);
   }
 
   .suspensions {
-    background-color: var(--danger);
+    background-color: var(--d-sys-color-background-danger);
   }
 
   .user-field {
@@ -497,7 +508,7 @@
       }
 
       .instructions {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: var(--font-down-1);
@@ -527,7 +538,7 @@
 .invites-show {
   .required {
     vertical-align: top;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-weight: bold;
     margin-left: 0.25em;
   }
@@ -568,8 +579,8 @@
     flex: 0 0 var(--avatar-choice-size);
     height: var(--avatar-choice-size);
     border-radius: 50%;
-    background: var(--primary-low);
-    color: var(--primary-medium);
+    background: var(--d-sys-color-background-neutral);
+    color: var(--d-sys-color-text-faint);
   }
 
   .selectable-avatar[aria-current="true"] {
@@ -634,7 +645,7 @@
   }
 
   .error {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -693,7 +704,7 @@
         width: 100%;
         height: 100%;
         display: block;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
     }
   }
@@ -704,7 +715,7 @@
   }
 
   .label {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -716,13 +727,13 @@
   }
 
   li {
-    border-left: var(--primary-low) solid 2px;
+    border-left: var(--d-sys-color-border-default) solid 2px;
     padding: 5px 8px;
     margin: 10px 0;
   }
 
   .topic-info {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .user-info .user-detail {
@@ -760,7 +771,7 @@
 .links-section {
   .domain {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -792,7 +803,7 @@
 
 .groups {
   .group-link {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 }
 
@@ -848,19 +859,19 @@
   }
 
   .static {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     display: inline-block;
   }
 
   .instructions {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
     display: block;
     margin-top: 0.25em;
 
     a[href] {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -869,9 +880,9 @@
   }
 
   .warning {
-    background-color: var(--danger-medium);
+    background-color: var(--d-sys-color-background-danger);
     padding: 5px 8px;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     width: 520px;
   }
 
@@ -915,7 +926,7 @@
 
     .associated-account__description {
       word-break: break-all;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -954,7 +965,7 @@
   }
 
   @mixin inactiveMode() {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .select-kit.combo-box .select-kit-header {
       border-color: var(--primary-medium);
@@ -973,7 +984,7 @@
 
   .pref-auth-tokens {
     .auth-token-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: 2.25em;
       float: left;
       margin-right: 10px;
@@ -988,10 +999,10 @@
     }
 
     .auth-token-second {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       .active {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
         font-weight: bold;
       }
     }
@@ -1004,7 +1015,7 @@
         background: transparent;
 
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -1014,12 +1025,12 @@
   .pref-auth-tokens,
   .pref-user-api-keys {
     .row {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: 0.5em 0;
       margin: 0.5em 0;
 
       &:last-child {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
     }
   }
@@ -1036,7 +1047,7 @@
 
       .row-passkey__created-date,
       .row-passkey__used-date {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
@@ -1050,7 +1061,7 @@
         background: transparent;
 
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -1075,7 +1086,7 @@
     }
 
     .user-api-key__dates {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .user-api-key__scopes-toggle {
@@ -1083,7 +1094,7 @@
       margin-top: 0.5em;
 
       a {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
         cursor: pointer;
 
         .d-icon {
@@ -1097,7 +1108,7 @@
       margin: 0.5em 0 0 1.5em;
       padding: 0;
       list-style: disc;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -1133,7 +1144,7 @@
     display: flex;
     gap: 1em;
     justify-content: space-between;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     margin: 0.25em 0;
     padding: 0.25em 0;
     align-items: center;
@@ -1143,13 +1154,13 @@
         background: transparent;
 
         &:hover .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
 
       &.is-expanded {
         .select-kit-header .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -1166,7 +1177,7 @@
 
   .wrapper {
     display: flex;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     width: 100%;
   }
 
@@ -1176,7 +1187,7 @@
     margin: 0;
     padding: 0.5em;
     height: auto;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border: 0;
     cursor: auto;
     outline: none;
@@ -1184,7 +1195,7 @@
 
     &:focus {
       box-shadow: none;
-      border-color: var(--primary-low);
+      border-color: var(--d-sys-color-border-default);
     }
   }
 
@@ -1258,7 +1269,7 @@
 
   .d-icon {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-icon-muted);
     margin-right: 0.33em;
   }
 }
@@ -1307,7 +1318,7 @@
 
     &__remove {
       visibility: hidden;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       position: absolute;
       bottom: 0;
       width: 100%;
@@ -1337,7 +1348,7 @@
     .d-table__cell {
       &.--overview {
         .d-icon {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-icon-faint);
           font-size: var(--font-down-1);
           margin-right: var(--space-1);
         }
@@ -1370,7 +1381,7 @@
       }
 
       .invite-description {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
         margin-top: var(--space-1);
       }
 
@@ -1394,14 +1405,14 @@
         font-size: var(--font-down-1);
 
         a {
-          color: var(--primary-very-high);
+          color: var(--d-sys-color-text-default);
         }
       }
 
       .invite-extra-item-link {
         display: inline-flex;
         align-items: center;
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
     }
   }
@@ -1530,7 +1541,7 @@
 
 .calendar-subscriptions {
   &__description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-bottom: 1em;
   }
 
@@ -1549,7 +1560,7 @@
     display: flex;
     align-items: center;
     gap: 0.5em;
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
     font-weight: bold;
     margin-bottom: 1em;
   }
@@ -1564,9 +1575,9 @@
 .calendar-subscription-url {
   padding: 0.75em 1em;
   margin-bottom: 0.75em;
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  background: var(--secondary);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-default);
 
   &__header {
     margin-bottom: 0.5em;
@@ -1577,7 +1588,7 @@
   }
 
   &__description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     margin-left: 0.25em;
   }

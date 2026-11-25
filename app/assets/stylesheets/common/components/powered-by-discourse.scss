@@ -4,11 +4,11 @@
   font-size: var(--font-down-1);
   letter-spacing: 0.2px; // extra spacing makes small text easier to read
   padding: 2px; // animated hover "border" width
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   border-radius: 0.75em;
   transition: all 0.25s ease-in-out;
   margin-bottom: 0.45em;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 
   .admin-area &,
   .has-full-page-chat &,
@@ -21,7 +21,7 @@
   }
 
   &:visited {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__content {
@@ -29,7 +29,7 @@
     align-items: center;
     gap: 0.5em;
     color: currentcolor;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border-radius: 0.62em;
     padding: 0.25em 0.65em 0.25em 0.5em;
   }
@@ -41,17 +41,17 @@
 
   .discourse-no-touch & {
     &:hover {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
 
       @media (prefers-reduced-motion: no-preference) {
         // secondary repeat is an intentional buffer
         background: linear-gradient(
           45deg,
-          var(--secondary),
-          var(--secondary),
-          var(--secondary),
-          var(--secondary),
-          var(--secondary),
+          var(--d-sys-color-background-default),
+          var(--d-sys-color-background-default),
+          var(--d-sys-color-background-default),
+          var(--d-sys-color-background-default),
+          var(--d-sys-color-background-default),
           #d0232b,
           #f15d22,
           #fff9ae,

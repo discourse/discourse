@@ -9,14 +9,14 @@
 
   .select-kit-row.email-group-user-chooser-row {
     .identifier {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       white-space: nowrap;
       line-height: var(--line-height-medium);
       margin-right: 0.5em;
     }
 
     .name {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
 
       @include ellipsis;
@@ -24,10 +24,10 @@
 
     .email-group-user-chooser__badge {
       font-size: var(--font-down-3);
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
       padding: var(--space-half) var(--space-1);
-      border-radius: var(--d-border-radius);
-      color: var(--primary-very-high);
+      border-radius: var(--d-sys-border-radius-md);
+      color: var(--d-sys-color-text-default);
 
       .d-icon {
         margin-right: 0;
@@ -39,14 +39,14 @@
       &.--username-first,
       &.--group-name-first {
         .identifier {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           white-space: nowrap;
           line-height: var(--line-height-medium);
           margin-right: 0.5em;
         }
 
         .name {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
           font-size: var(--font-down-1);
 
           @include ellipsis;
@@ -56,7 +56,7 @@
       &.--name-first,
       &.--group-full-name-first {
         .name {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           white-space: nowrap;
           line-height: var(--line-height-medium);
           font-size: var(--font-0);
@@ -64,7 +64,7 @@
         }
 
         .identifier {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
           font-size: var(--font-down-1);
 
           @include ellipsis;
@@ -81,7 +81,7 @@
     .email-group-user-chooser__group {
       &.--full-name-only {
         .name {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           white-space: nowrap;
           line-height: var(--line-height-medium);
           font-size: var(--font-down-0);
@@ -93,7 +93,7 @@
 
   .select-kit-header {
     .x-more-item {
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
       padding: 0.25em;
       flex: 1;
       align-items: center;

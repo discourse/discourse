@@ -8,7 +8,7 @@
 }
 
 @mixin separator {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 }
 
 :root {
@@ -22,7 +22,7 @@
     right: 0.35rem; // to compensate for cancel button padding
     top: 0;
     padding-block: var(--space-2);
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
     z-index: z("base");
   }
 }
@@ -56,7 +56,7 @@
     align-items: center;
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     padding: var(--space-1) 0;
 
     input.search-term__input {
@@ -100,14 +100,14 @@
       right: 0;
       top: unset;
       width: unset;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
   .results {
     display: flex;
     flex-direction: column;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .heading {
       padding: var(--space-2) 0 0 var(--space-4);
@@ -124,14 +124,14 @@
       }
 
       h4 {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         font-weight: normal;
         margin-bottom: 0;
       }
 
       .clear-recent-searches {
         cursor: pointer;
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
   }
@@ -153,7 +153,7 @@
     // and the focus/hover styles from the header in those cases wouldn't follow
     &:focus,
     &:hover {
-      background-color: var(--d-hover);
+      background-color: var(--d-sys-color-background-default-hovered);
     }
 
     @include viewport.until(sm) {
@@ -164,7 +164,7 @@
       display: inline-flex;
       align-items: baseline;
       gap: var(--space-2);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
 
       .d-icon {
         align-self: center;
@@ -188,7 +188,7 @@
 
     .topic-title {
       font-size: var(--font-up-1-rem);
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       overflow-wrap: anywhere;
     }
   }
@@ -220,7 +220,7 @@
       }
 
       .btn.clear-recent-searches {
-        --d-button-transparent-text-color: var(--tertiary);
+        --d-comp-DButton-color-text-transparent: var(--d-sys-color-text-link);
         padding-inline: var(--space-4);
         width: 100%;
         justify-content: start;
@@ -268,7 +268,7 @@
           overflow-wrap: break-word;
           word-break: break-word;
           hyphens: auto;
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
           font-size: var(--font-down-1);
         }
       }
@@ -294,7 +294,7 @@
 
     .avatar-flair {
       --avatar-flair-size: 1.6em;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       .d-icon {
         color: currentcolor;
@@ -364,7 +364,7 @@
   }
 
   .label-suffix {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .extra-hint {
@@ -395,10 +395,14 @@
 .search-random-quick-tip {
   padding: var(--space-3) var(--space-4);
   font-size: var(--font-down-2);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 
   .tip-label {
-    background-color: rgb(var(--tertiary-rgb), 0.1);
+    background-color: color-mix(
+      in srgb,
+      var(--d-sys-color-background-accent) 10%,
+      transparent
+    );
     margin-right: var(--space-1);
     padding: 2px 4px;
     display: inline-block;
@@ -428,13 +432,13 @@
   .show-advanced-search,
   .clear-search {
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     &:focus,
     &:hover {
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
     }
   }

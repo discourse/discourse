@@ -141,7 +141,7 @@
         width: auto !important;
         height: auto !important;
         object-fit: contain !important;
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
       }
     }
 
@@ -183,14 +183,14 @@
     border: 0;
     padding: 0;
     background: none;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     cursor: pointer;
     font-size: var(--font-down-1);
     touch-action: manipulation;
 
     &:hover {
       background: none;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &:disabled {
@@ -204,7 +204,7 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0.75rem;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 1rem;
   }
 
@@ -234,10 +234,10 @@
 
   &__counter {
     padding: 0.5rem 0.75rem;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 1rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-variant-numeric: tabular-nums;
     text-align: center;
   }

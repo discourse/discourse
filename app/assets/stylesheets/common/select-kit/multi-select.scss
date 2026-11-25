@@ -1,12 +1,12 @@
 .select-kit {
   &.multi-select {
     width: 300px;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
 
     .select-kit-filter {
       & + .selected-content,
       & + .select-kit-collection {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
       }
     }
 
@@ -19,7 +19,7 @@
       &:hover,
       &:focus-visible {
         .d-icon-xmark {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }
@@ -28,17 +28,17 @@
     // already signals they can't be removed.
     .tag-choice.disabled {
       opacity: 1;
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
 
     &.is-disabled {
       .multi-select-header {
         background: var(--d-input-bg-color--disabled);
-        border-color: var(--primary-low-mid);
-        color: var(--primary-medium);
+        border-color: var(--d-sys-color-border-strong);
+        color: var(--d-sys-color-text-faint);
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-icon-faint);
         }
       }
     }
@@ -49,7 +49,7 @@
       flex-wrap: wrap;
       justify-content: flex-start;
       box-sizing: border-box;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       padding: 0.25em 0.25em 0 0.25em;
 
       .disabled {
@@ -68,8 +68,8 @@
     }
 
     .multi-select-header {
-      background: var(--secondary);
-      border-color: var(--input-border-color);
+      background: var(--d-sys-color-background-default);
+      border-color: var(--d-sys-color-border-input);
 
       .formatted-selection {
         margin: 0;
@@ -91,7 +91,7 @@
           height: min-content;
           padding: var(--space-1);
           font-size: var(--font-down-1);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
 
           &.selected-choice-color {
             border-bottom: 2px solid transparent;

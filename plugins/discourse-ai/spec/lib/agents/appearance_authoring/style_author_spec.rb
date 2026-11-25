@@ -8,7 +8,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
   let(:palettes) { { light: ColorScheme.base_colors, dark: ColorScheme::BUILT_IN_SCHEMES[:Dark] } }
   let(:valid_answer) do
     {
-      "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+      "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "12px" }],
       "rules" => [
         {
           "area" => "topic_list_item",
@@ -16,7 +16,10 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
           "media" => "",
           "page" => "",
           "declarations" => [
-            { "property" => "box-shadow", "value" => "0 2px 8px rgba(var(--primary-rgb), 0.08)" },
+            {
+              "property" => "box-shadow",
+              "value" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
+            },
           ],
         },
       ],
@@ -83,25 +86,25 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
       expect(system_prompt).to include(
         "- category_title: Category headings on the categories page (inside category_box, has its own text color)",
       )
-      expect(system_prompt).to include("--d-border-radius: length, 0px to 32px")
+      expect(system_prompt).to include("--d-sys-border-radius-md: length, 0px to 32px")
       expect(system_prompt).not_to include("--d-skeleton")
     end
 
     expect(result.styles).to eq(
       "variables" => {
-        "--d-border-radius" => "12px",
+        "--d-sys-border-radius-md" => "12px",
       },
       "rules" => [
         {
           "area" => "topic_list_item",
           "state" => "hover",
           "declarations" => {
-            "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+            "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
           },
         },
       ],
     )
-    expect(result.changes.map(&:label)).to include("--d-border-radius")
+    expect(result.changes.map(&:label)).to include("--d-sys-border-radius-md")
     expect(result.unsupported).to eq(["Add a link to the shop in the header"])
   end
 
@@ -118,7 +121,7 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
       expect(repair[:content]).to include("rules[0].position: property is not allowed")
     end
 
-    expect(result.styles["variables"]).to eq("--d-border-radius" => "12px")
+    expect(result.styles["variables"]).to eq("--d-sys-border-radius-md" => "12px")
   end
 
   it "gives up with the last errors when the model can't get it right" do

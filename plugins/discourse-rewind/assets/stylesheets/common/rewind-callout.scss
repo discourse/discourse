@@ -7,7 +7,7 @@
 
 .rewind-callout__container {
   height: 47px;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   @media screen and (width <= 639px) {
     height: 40px;

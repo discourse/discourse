@@ -16,9 +16,9 @@
 .presence-users {
   // ideally you don't want to add padding or margin here,
   // because you may cause a layout shift on presence appearance
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   display: flex;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   gap: var(--space-1);
 
   span.presence-text {

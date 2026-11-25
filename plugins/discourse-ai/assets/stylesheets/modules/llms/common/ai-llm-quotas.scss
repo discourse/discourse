@@ -13,8 +13,8 @@
 
   &__item {
     padding: var(--space-3);
-    border: 1px solid var(--primary-low);
-    background: var(--secondary);
+    border: 1px solid var(--d-sys-color-border-default);
+    background: var(--d-sys-color-background-default);
   }
 
   &__item-header {
@@ -34,7 +34,7 @@
   }
 
   &__group-label {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-weight: 600;
   }
 
@@ -50,7 +50,7 @@
 
     .d-icon {
       flex: 0 0 auto;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -86,6 +86,6 @@
 
 .ai-llm-quota-modal {
   .fk-d-tooltip__icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }

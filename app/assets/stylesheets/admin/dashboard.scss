@@ -80,11 +80,11 @@
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   transition: background-color 0.5s ease;
 
   &.--highlighted {
-    background-color: var(--highlight-low);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   &:not(:first-child) {

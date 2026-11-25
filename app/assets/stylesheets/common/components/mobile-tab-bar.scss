@@ -13,7 +13,7 @@ html.mobile-tab-bar-visible {
     env(safe-area-inset-bottom)
   );
   --mobile-tab-bar-side-inset: var(--space-3);
-  --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-corner-radius: var(--d-comp-DButton-border-radius);
 
   @media (display-mode: standalone) {
     --mobile-tab-bar-side-inset: var(--space-5);
@@ -30,7 +30,7 @@ html.mobile-tab-bar-visible {
         min(env(safe-area-inset-bottom), var(--space-6))
       );
       --mobile-tab-bar-corner-radius: max(
-        var(--d-button-border-radius),
+        var(--d-comp-DButton-border-radius),
         min(
           env(safe-area-inset-bottom) * 100,
           calc(3.5rem - var(--mobile-tab-bar-side-inset))
@@ -42,9 +42,9 @@ html.mobile-tab-bar-visible {
   // Set here rather than on the bar, so the page's own bubbles over it match.
   // The theme's button radius, so containers match the buttons beside them;
   // items inside keep their corners parallel, never quite square
-  --mobile-tab-bar-radius: var(--d-button-border-radius);
+  --mobile-tab-bar-radius: var(--d-comp-DButton-border-radius);
   --mobile-tab-bar-inner-radius: max(
-    calc(var(--d-border-radius) / 2),
+    calc(var(--d-sys-border-radius-md) / 2),
     calc(var(--mobile-tab-bar-radius) - var(--space-1))
   );
 
@@ -107,7 +107,7 @@ html.mobile-tab-bar-visible {
   box-shadow: var(--mobile-tab-bar-shadow);
 
   @if $fill {
-    background: var(--header_background);
+    background: var(--d-comp-Header-color-background);
   }
 }
 
@@ -127,11 +127,14 @@ html.mobile-tab-bar-visible {
   box-sizing: border-box;
   background: linear-gradient(
     to bottom,
-    rgb(var(--secondary-rgb), 0),
-    rgb(var(--secondary-rgb), 0.2) 25%,
-    rgb(var(--secondary-rgb), 0.5) 50%,
-    rgb(var(--secondary-rgb), 0.75) 75%,
-    rgb(var(--secondary-rgb), 1)
+    color-mix(in srgb, var(--d-sys-color-background-default) 0%, transparent),
+    color-mix(in srgb, var(--d-sys-color-background-default) 20%, transparent)
+      25%,
+    color-mix(in srgb, var(--d-sys-color-background-default) 50%, transparent)
+      50%,
+    color-mix(in srgb, var(--d-sys-color-background-default) 75%, transparent)
+      75%,
+    var(--d-sys-color-background-default)
   );
   pointer-events: none;
 
@@ -274,7 +277,7 @@ html.mobile-tab-bar-visible {
       min-height: var(--mobile-tab-bar-views-height);
       padding: var(--space-1) var(--space-3);
       border-radius: var(--mobile-tab-bar-inner-radius);
-      color: var(--header_primary-high);
+      color: var(--d-comp-Header-color-text-muted);
       font-size: var(--font-down-1);
 
       &::after,
@@ -285,13 +288,13 @@ html.mobile-tab-bar-visible {
 
       &:not(.active) {
         @include hover {
-          background: var(--d-hover);
-          color: var(--header_primary);
+          background: var(--d-sys-color-background-default-hovered);
+          color: var(--d-comp-Header-color-text-default);
         }
       }
 
       &.active {
-        background: var(--d-selected);
+        background: var(--d-sys-color-background-default-selected);
         color: var(--d-nav-color--active);
         font-weight: bold;
       }
@@ -346,7 +349,7 @@ html.mobile-tab-bar-visible {
 
     .d-icon {
       margin: 0;
-      color: var(--header_primary-medium);
+      color: var(--d-comp-Header-color-icon-strong);
     }
   }
 
@@ -387,16 +390,21 @@ html.mobile-tab-bar-visible {
 
   &__menu,
   &__views .progress-back {
-    --d-button-default-bg-color: var(--header_background);
-    --d-button-default-bg-color--hover: var(--d-hover);
-    --d-button-default-icon-color: var(--header_primary);
-    --d-button-default-icon-color--hover: var(--header_primary);
-    --d-button-default-border: 0;
-    --d-button-default-border--hover: 0;
+    --d-comp-DButton-color-background-default: var(
+      --d-comp-Header-color-background
+    );
+    --d-comp-DButton-color-background-default-hovered: var(
+      --d-sys-color-background-default-hovered
+    );
+    --d-comp-DButton-color-icon-default: var(--header_primary);
+    --d-comp-DButton-color-icon-default-hovered: var(--header_primary);
+    --d-comp-DButton-border-width: 0;
   }
 
   &__menu {
-    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
+    --mobile-tab-bar-badge-background: var(
+      --d-comp-DButton-color-background-default
+    );
     position: relative;
     flex: 1 1 0;
     min-width: var(--mobile-tab-bar-control-size);
@@ -415,22 +423,24 @@ html.mobile-tab-bar-visible {
 
     &:focus-visible {
       --mobile-tab-bar-badge-background: var(
-        --d-button-default-bg-color--hover
+        --d-comp-DButton-color-background-default-hovered
       );
     }
 
     @include hover {
       --mobile-tab-bar-badge-background: var(
-        --d-button-default-bg-color--hover
+        --d-comp-DButton-color-background-default-hovered
       );
     }
 
     &[aria-expanded="true"].btn-default {
-      --mobile-tab-bar-badge-background: var(--d-selected);
-      background: var(--d-selected);
+      --mobile-tab-bar-badge-background: var(
+        --d-sys-color-background-default-selected
+      );
+      background: var(--d-sys-color-background-default-selected);
 
       @include hover {
-        background: var(--d-selected);
+        background: var(--d-sys-color-background-default-selected);
       }
 
       .d-icon {
@@ -470,7 +480,9 @@ html.mobile-tab-bar-visible {
   }
 
   &__create {
-    --mobile-tab-bar-create-background: var(--d-button-primary-bg-color);
+    --mobile-tab-bar-create-background: var(
+      --d-comp-DButton-color-background-primary
+    );
     position: relative;
     isolation: isolate;
     width: var(--mobile-tab-bar-controls-height);
@@ -505,13 +517,13 @@ html.mobile-tab-bar-visible {
 
     &:focus-visible {
       --mobile-tab-bar-create-background: var(
-        --d-button-primary-bg-color--hover
+        --d-comp-DButton-color-background-primary-hovered
       );
     }
 
     @include hover {
       --mobile-tab-bar-create-background: var(
-        --d-button-primary-bg-color--hover
+        --d-comp-DButton-color-background-primary-hovered
       );
     }
   }
@@ -544,7 +556,7 @@ html.mobile-tab-bar-visible {
     left: 0;
     width: var(--mobile-tab-bar-highlight-width, 0);
     border-radius: var(--mobile-tab-bar-inner-radius);
-    background: var(--d-selected);
+    background: var(--d-sys-color-background-default-selected);
     transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
     pointer-events: none;
 
@@ -609,8 +621,8 @@ html.mobile-tab-bar-visible {
     padding: 0 0.3em;
     box-sizing: border-box;
     border-radius: 999px;
-    background: var(--tertiary);
-    color: var(--secondary);
+    background: var(--d-sys-color-background-accent);
+    color: var(--d-sys-color-text-inverse);
     font-size: var(--font-down-3);
     font-weight: bold;
     line-height: 1rem;
@@ -641,7 +653,7 @@ html.keyboard-visible .mobile-tab-bar {
   }
 
   &.--active {
-    background: var(--d-selected);
+    background: var(--d-sys-color-background-default-selected);
     color: var(--d-nav-color--active);
 
     .d-icon {

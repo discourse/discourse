@@ -22,7 +22,7 @@
   }
 
   .error {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -49,12 +49,12 @@
 
   .error-message {
     .fa {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 
   .raw-error {
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
     padding: 5px;
   }
 
@@ -102,22 +102,23 @@
   .field-warning {
     margin-top: var(--space-2);
     margin-bottom: 0;
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
     padding: var(--space-2);
     white-space: pre-wrap;
   }
 
   .field-warning {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .field-info {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
     padding: 10px;
     margin: 10px 0 0;
     white-space: nowrap;
     overflow-x: auto;
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
   }
 
   .admin-container {
@@ -350,7 +351,7 @@
     align-items: center;
     font-size: var(--font-up-1);
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding-bottom: var(--space-2);
     gap: var(--space-2);
 
@@ -413,7 +414,8 @@
     .code-editor {
       min-height: 0;
       flex: 1 1 0;
-      border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+      border-radius: 0 0 var(--d-sys-border-radius-md)
+        var(--d-sys-border-radius-md);
     }
 
     &.maximized {
@@ -423,7 +425,7 @@
       left: 0;
       right: 0;
       z-index: z("fullscreen");
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
       padding: 0;
       margin: 0;
 
@@ -462,7 +464,7 @@
         }
 
         a.blank:not(.active) {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
     }
@@ -470,7 +472,7 @@
     .cm-placeholder {
       font-family: inherit;
       font-size: var(--font-up-1);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .status-actions {
@@ -490,7 +492,7 @@
         padding: 5px 0 0 0;
         margin-left: 10px;
         width: 80px;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
     }
   }
@@ -551,7 +553,7 @@
 
     .description {
       margin: 0.15em 0 0;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
       line-height: var(--line-height-medium);
     }
@@ -559,7 +561,7 @@
     .invalid .hex input {
       background-color: white;
       color: black;
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
     }
   }
 
@@ -578,7 +580,7 @@
 
       &.disabled-child {
         .child-link {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
 
           &:hover {
             text-decoration: underline;
@@ -621,7 +623,7 @@
     margin-bottom: 0.25em;
 
     + label {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -656,7 +658,7 @@
 
 .public-key-note {
   margin-top: 1em;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .admin-permalinks {
@@ -679,7 +681,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -719,7 +721,7 @@
       div.label {
         display: block;
         font-size: var(--font-down-1);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       td.controls,
@@ -783,19 +785,19 @@
   }
 
   .admin-embedding-index__full-app-toggle-description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
   .admin-embeddable-host-item__delete {
     &:hover {
       svg.d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
 
     svg.d-icon {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 }
@@ -808,7 +810,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .form-display {
       width: 25%;
@@ -835,7 +837,7 @@
 
 .robots-txt-edit {
   div.overridden {
-    background: var(--highlight-bg);
+    background: var(--d-sys-color-background-highlight-subtlest);
     padding: 7px;
     margin-bottom: 7px;
   }
@@ -864,7 +866,7 @@
   .email-templates-list {
     &__row {
       &.overridden {
-        border-left: 3px solid var(--highlight-medium);
+        border-left: 3px solid var(--d-sys-color-background-highlight-subtle);
       }
     }
   }
@@ -896,7 +898,7 @@
     .code-editor {
       height: calc(100vh - 450px);
       min-height: 200px;
-      box-shadow: var(--shadow-footer-nav);
+      box-shadow: var(--d-sys-shadow-overflow);
       border-radius: 4px;
     }
 
@@ -932,7 +934,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--content-border-color);
+        border-right: 1px solid var(--d-sys-color-border-default);
       }
     }
   }

@@ -6,7 +6,7 @@
 
 .ai-features-module-row {
   &.--expanded {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   &:not(.--enabled) .ai-features-module-row__expand {
@@ -16,20 +16,20 @@
   &__expand.btn {
     padding: 0;
     font-weight: bold;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     text-align: left;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       width: 1em;
     }
 
     &:hover,
     &:focus-visible {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
 
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
   }
@@ -37,7 +37,7 @@
   &__description.d-table__overview-about {
     margin-top: var(--space-1);
     padding-left: calc(1em + var(--space-2));
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -49,7 +49,7 @@
   &__status-note {
     margin-top: var(--space-1);
     padding-left: calc(0.5em + var(--space-2));
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__llms {
@@ -62,7 +62,7 @@
 
   a#{&}__status-note {
     display: block;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__controls {
@@ -70,7 +70,7 @@
   }
 
   &__features-row {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   &__features-cell.ai-features-module-row__features-cell {
@@ -83,9 +83,9 @@
   }
 
   &__features {
-    background: var(--secondary);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
 
     @include viewport.until(md) {
@@ -97,13 +97,13 @@
 
   &__empty {
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
 .ai-features-feature-row {
   @include viewport.until(md) {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
   }
 
   &__name {
@@ -119,34 +119,34 @@
 
   &__empty,
   &__backend {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-weight: normal;
   }
 
   &__decision-model-label {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__setup-note {
     display: block;
     margin-top: var(--space-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     white-space: nowrap;
   }
 
   a#{&}__setup-note {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__not-configured {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__agent-link,
   &__llm-link {
     &:not(:last-child)::after {
       content: ", ";
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -168,7 +168,7 @@
   align-items: center;
   gap: var(--space-2);
   white-space: nowrap;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 
   &__dot {
     flex: 0 0 auto;
@@ -179,15 +179,15 @@
   }
 
   &.--on {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .ai-features-status__dot {
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
     }
   }
 
   &.--setup .ai-features-status__dot {
-    background: var(--highlight-high);
+    background: var(--d-sys-color-background-highlight-bold);
   }
 }
 
@@ -195,12 +195,12 @@
   &__missing-choices {
     margin-block: 1.5rem;
     padding: var(--space-3);
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border-radius: var(--d-sys-border-radius-md);
 
     p {
       margin: var(--space-1) 0 var(--space-2);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -209,7 +209,7 @@
   }
 
   &__header {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .setting {
@@ -218,7 +218,7 @@
 
   .setting-label {
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     a[title="View change history"],
     .history-icon {
@@ -273,15 +273,15 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-4);
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
   padding: var(--space-2) var(--space-3);
   margin-block: var(--space-3);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
 
   &__title {
     margin: 0;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
   }
 
@@ -299,14 +299,14 @@
   &__description {
     flex: 1 1 20em;
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
 .ai-features-chatbot-agents {
-  background: var(--secondary);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-default);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
 
   @include viewport.until(md) {
@@ -317,7 +317,7 @@
 
   &__row.--off &__name,
   &__row.--off &__places {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__name {
@@ -325,7 +325,7 @@
   }
 
   &__any-llm {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__toggle.d-table__cell {
@@ -350,11 +350,11 @@
   &__shared,
   &__warning {
     margin: var(--space-1) 0 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__warning {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__actions {
@@ -374,7 +374,7 @@
 
   &__description {
     margin: 0 0 var(--space-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__list {
@@ -383,6 +383,6 @@
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }

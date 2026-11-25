@@ -5,7 +5,7 @@
 }
 
 .poll-breakdown-sidebar {
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
   box-sizing: border-box;
   padding: 1rem;
 }
@@ -69,7 +69,7 @@
 
 .poll-breakdown-body-header {
   align-items: center;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   display: flex;
   flex: 0 0 auto;
   padding-bottom: 0.5rem;

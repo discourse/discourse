@@ -2,7 +2,7 @@
   .templates-filter-bar {
     display: flex;
     max-width: var(--modal-max-width);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     margin-bottom: 1em;
     padding-top: 1px;
     padding-bottom: 1em;
@@ -36,7 +36,7 @@
         align-items: center;
 
         &:hover {
-          background-color: var(--highlight-medium);
+          background-color: var(--d-sys-color-background-highlight-subtle);
           cursor: pointer;
         }
 
@@ -59,7 +59,7 @@
   }
 
   .templates-content {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     padding: 0.75em;
     margin-top: 0.5em;
     box-sizing: border-box;
@@ -74,15 +74,15 @@
   }
 
   .template-item-source-link {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
     display: block;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     &:hover {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 }

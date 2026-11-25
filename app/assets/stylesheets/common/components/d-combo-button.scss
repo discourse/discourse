@@ -26,13 +26,15 @@
     // and bottom border unpainted across it; those halves overlap onto one shared
     // line instead. :where() adds no specificity, so theme overrides still win.
     .d-combo-button-button:where(.btn-default) {
-      border-right: var(--d-button-default-border);
+      border-right: var(--d-comp-DButton-border-width) solid
+        var(--d-comp-DButton-color-border-default);
     }
 
     // Both facing edges stay painted and overlap exactly, so they coincide into a
     // single 1px divider instead of stacking into a 2px double line.
     .d-combo-button-menu:where(.btn-default) {
-      border-left: var(--d-button-default-border);
+      border-left: var(--d-comp-DButton-border-width) solid
+        var(--d-comp-DButton-color-border-default);
       margin-left: -1px;
     }
   }

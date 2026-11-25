@@ -15,9 +15,9 @@
     align-items: center;
     gap: var(--space-2);
     border: 0;
-    border-radius: var(--d-border-radius);
-    background: var(--secondary);
-    color: var(--primary-medium);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
     padding: var(--space-1) var(--space-2);
     cursor: pointer;
@@ -38,22 +38,22 @@
       }
 
       &:not(:first-child) {
-        border-inline-start: 1px solid var(--content-border-color);
+        border-inline-start: 1px solid var(--d-sys-color-border-default);
       }
     }
 
     html.discourse-no-touch &:hover:not(:disabled, .is-active) {
-      color: var(--primary);
-      background-color: var(--d-hover);
+      color: var(--d-sys-color-text-default);
+      background-color: var(--d-sys-color-background-default-hovered);
     }
 
     &:active:not(:disabled) {
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
 
     &.is-active {
-      background-color: var(--tertiary-low);
-      color: var(--tertiary);
+      background-color: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-text-link);
     }
 
     &:focus-visible {

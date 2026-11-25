@@ -9,21 +9,21 @@
 
   &__dropdown {
     border: 1px solid var(--primary-medium);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     padding: 0.5em 0.65em;
     font-size: var(--font-0);
   }
 
   &__multi-select {
     border: 1px solid var(--primary-medium);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     padding: 0.5em 0.65em;
     font-size: var(--font-0);
   }
 
   // END of what should be removed after updating dropdown/multi-select to use select-kit
   &__required-indicator {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     margin-left: 0.5em;
     font-size: var(--font-down-4);
   }
@@ -35,9 +35,9 @@
     li {
       padding: 0.5rem;
       margin-block: 0.25rem;
-      border: 1px solid var(--primary-low-mid);
-      background: var(--primary-low);
-      border-radius: var(--d-border-radius);
+      border: 1px solid var(--d-sys-color-border-strong);
+      background: var(--d-sys-color-background-neutral);
+      border-radius: var(--d-sys-border-radius-md);
       display: flex;
       align-items: center;
 
@@ -47,14 +47,14 @@
       }
 
       span {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
         margin-left: auto;
         font-size: var(--font-down-1);
       }
     }
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
       margin-right: 0.5rem;
     }
   }
@@ -67,7 +67,7 @@
     display: inline-block;
     margin-bottom: 0.25rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__upload-hidden-input,

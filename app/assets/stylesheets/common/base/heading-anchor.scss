@@ -24,7 +24,7 @@
   // so we can't change the color of the icon itself
   // but we can change the color of the anchor text
   &:has(a.anchor:focus-visible) {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   // show when hovering where icon should be

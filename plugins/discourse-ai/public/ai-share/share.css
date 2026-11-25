@@ -1,5 +1,5 @@
 :root {
-  --shadow-header: 0 2px 30px -1px rgba(0, 0, 0, 0.05);
+  --d-sys-shadow-overflow: 0 2px 30px -1px rgba(0, 0, 0, 0.05);
   --shadow-content: 0 12px 32px -28px rgba(0, 0, 0, 0.35);
 
   --primary: #333;
@@ -66,7 +66,7 @@ body {
   margin: 0;
   font-size: 1.125em; /* root scale */
   line-height: 1.8;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   background: var(--page-background);
 }
 
@@ -78,8 +78,8 @@ body {
   top: 0;
   padding: 0 1em;
   align-items: center;
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-header);
+  background-color: var(--d-sys-color-background-default);
+  box-shadow: var(--d-sys-shadow-overflow);
   z-index: 2;
   @media screen and (max-width: 768px) {
     grid-template-areas: "logo site" "logo llm";
@@ -112,7 +112,7 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .d-logo-black {
-    fill: var(--primary);
+    fill: var(--d-sys-color-icon-default);
   }
 }
 
@@ -141,7 +141,7 @@ body {
 .site-title {
   grid-area: site;
   font-size: var(--font-up-2);
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   padding: 0 1em;
   transition: color 0.25s ease-in-out;
   text-decoration: none;
@@ -184,7 +184,7 @@ body {
 section {
   max-width: 900px;
   margin: 4em auto 8em;
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   border: 1px solid var(--primary-200);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-content);
@@ -306,7 +306,7 @@ h1 h2 h3 h4 h5 h6 {
 
 .post__content {
   line-height: 1.6;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   overflow: hidden;
 }
 
@@ -322,7 +322,7 @@ h1 h2 h3 h4 h5 h6 {
 .post__content h6 {
   margin: 1.4em 0 0.6em;
   line-height: 1.25;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
 }
 
 .post__content > :first-child {
@@ -342,7 +342,7 @@ h1 h2 h3 h4 h5 h6 {
   border-collapse: collapse;
   border-spacing: 0;
   line-height: 1.5;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   font-variant-numeric: tabular-nums;
 }
 
@@ -397,7 +397,7 @@ summary {
   padding: 1em;
   border-radius: var(--border-radius-small);
   cursor: pointer;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   outline: none;
 }
 
@@ -430,18 +430,18 @@ details p {
 }
 
 details[open] summary {
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   border-radius: var(--border-radius-small) var(--border-radius-small) 0 0;
 }
 
 a {
   text-decoration: none;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   transition: color 0.25s ease-in-out;
 }
 
 a:hover {
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   text-decoration: underline;
 }
 
@@ -535,7 +535,7 @@ aside .title .avatar {
   --hljs-blue: var(--tertiary); /* already has a dark variant at root */
 
   background:var(--primary-50);
-  color:var(--primary);
+  color:var(--d-sys-color-text-default);
 }
 
 pre code.hljs{
@@ -560,7 +560,7 @@ code.hljs{
 }
 
 .hljs-comment{
-  color: var(--hljs-comment);
+  color: var(--d-comp-CodeBlock-comment-color-text);
 }
 
 .hljs-punctuation,.hljs-tag{

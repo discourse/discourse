@@ -41,7 +41,7 @@
     margin-bottom: 0.25rem;
     width: 70px;
     height: 20px;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
@@ -67,7 +67,7 @@
     background-color: var(--primary-100);
     width: 32px;
     height: 18px;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     & + & {
       margin-left: 0.5rem;
@@ -82,7 +82,7 @@
 
   &__message-msg {
     height: 10px;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     margin: 2px 0;
 
     .chat-skeleton__body:nth-of-type(odd) & {
@@ -96,7 +96,7 @@
 
   &__message-img {
     height: 80px;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     margin: 2px 0;
     width: 200px;
     background-color: var(--primary-100);

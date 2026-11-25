@@ -8,17 +8,17 @@
     display: flex;
     flex-direction: column;
     padding: 1em;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 0.25em;
 
     &__label {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: 0.875em;
       margin-bottom: 0.5em;
     }
 
     &__value {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-size: 1.5em;
       font-weight: bold;
     }

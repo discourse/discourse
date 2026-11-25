@@ -26,7 +26,10 @@ module AppearanceStyles
     ].freeze
 
     # The CSS variable core uses for a base color, where it isn't --<name>.
-    BASE_VARIABLES = { "selected" => "--d-selected", "hover" => "--d-hover" }.freeze
+    BASE_VARIABLES = {
+      "selected" => "--d-sys-color-background-default-selected",
+      "hover" => "--d-sys-color-background-default-hovered",
+    }.freeze
 
     # variable => [color, compared with, lightness, darkness], as
     # dark-light-diff(color, compared with, lightness, darkness).
@@ -67,17 +70,17 @@ module AppearanceStyles
       "--tertiary-800" => ["tertiary", "secondary", 0.3, -0.31],
       "--tertiary-900" => ["tertiary", "secondary", 0.2, -0.25],
       "--quaternary-low" => ["quaternary", "secondary", 0.7, -0.7],
-      "--highlight-low" => ["highlight", "secondary", 0.7, -0.8],
-      "--highlight-medium" => ["highlight", "secondary", 0.5, -0.55],
+      "--d-sys-color-background-highlight-subtlest" => ["highlight", "secondary", 0.7, -0.8],
+      "--d-sys-color-background-highlight-subtle" => ["highlight", "secondary", 0.5, -0.55],
       "--highlight-high" => ["highlight", "secondary", -0.5, -0.1],
-      "--danger-low" => ["danger", "secondary", 0.9, -0.68],
+      "--d-sys-color-background-danger-subtlest" => ["danger", "secondary", 0.9, -0.68],
       "--danger-medium" => ["danger", "secondary", 0.3, -0.35],
-      "--danger-hover" => ["danger", "secondary", -0.2, -0.2],
-      "--success-very-low" => ["success", "secondary", 0.9, -0.7],
-      "--success-medium" => ["success", "secondary", 0.5, -0.4],
-      "--success-hover" => ["success", "secondary", -0.2, -0.2],
-      "--love-low" => ["love", "secondary", 0.85, -0.6],
-      "--d-selected-hover" => ["selected", "secondary", 0.2, 0.2],
+      "--d-sys-color-background-danger-hovered" => ["danger", "secondary", -0.2, -0.2],
+      "--d-sys-color-background-success-subtlest" => ["success", "secondary", 0.9, -0.7],
+      "--d-sys-color-background-success-subtle" => ["success", "secondary", 0.5, -0.4],
+      "--d-sys-color-background-success-hovered" => ["success", "secondary", -0.2, -0.2],
+      "--d-sys-color-background-love-subtlest" => ["love", "secondary", 0.85, -0.6],
+      "--d-sys-color-background-default-selected-hovered" => ["selected", "secondary", 0.2, 0.2],
     }.freeze
 
     # variable => [diff in a light palette, diff in a dark palette], as
@@ -106,14 +109,17 @@ module AppearanceStyles
       "--primary-low-mid-or-secondary-high" => %w[--primary-low-mid --secondary-high],
       "--primary-low-mid-or-secondary-low" => %w[--primary-low-mid --secondary-low],
       "--primary-or-primary-low-mid" => %w[--primary --primary-low-mid],
-      "--highlight-low-or-medium" => %w[--highlight-low --highlight-medium],
+      "--highlight-low-or-medium" => %w[
+        --d-sys-color-background-highlight-subtlest
+        --d-sys-color-background-highlight-subtle
+      ],
       "--tertiary-or-tertiary-low" => %w[--tertiary $tertiary-low],
       "--tertiary-low-or-tertiary-high" => %w[$tertiary-low $tertiary-high],
       "--tertiary-med-or-tertiary" => %w[$tertiary-medium --tertiary],
       "--secondary-or-primary" => %w[--secondary --primary],
     }.freeze
 
-    ALIASES = { "--d-selected-text-color" => "--primary" }.freeze
+    ALIASES = { "--d-sys-color-text-default-selected" => "--primary" }.freeze
 
     # colors: a palette's colors by name ({ "primary" => "222222", ... }).
     # Missing base colors fall back to core's defaults, as they do for a

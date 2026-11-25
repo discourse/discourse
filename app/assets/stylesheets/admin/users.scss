@@ -16,14 +16,14 @@
   display: flex;
   align-items: center;
   padding: 10px 5px;
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
 
   &:nth-of-type(1) {
     border-top: 0;
   }
 
   &.highlight-danger {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
   }
 
   &::before,
@@ -119,7 +119,7 @@
 
   .users-list {
     .username .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 }
@@ -236,7 +236,7 @@
 
     &__column-header-wrapper {
       display: flex;
-      border-bottom: 1px solid var(--table-border-color);
+      border-bottom: 1px solid var(--d-comp-Table-color-border);
 
       // The wrapper's border runs under the bulk-select buttons too.
       .directory-table__column-header {

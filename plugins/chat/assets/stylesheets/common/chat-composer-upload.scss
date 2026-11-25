@@ -2,10 +2,10 @@
   display: inline-flex;
   height: 64px;
   padding: 0.5rem;
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
   margin-right: 0.5em;
   position: relative;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   box-sizing: border-box;
 
   &--with-preview {
@@ -52,11 +52,23 @@
   }
 
   &__remove-btn {
-    --d-button-flat-bg-color: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-bg-color--hover: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-bg-color--focus: rgb(var(--always-black-rgb), 0.9);
-    --d-button-flat-icon-color: #fff;
-    --d-button-flat-icon-color--hover: #fff;
+    --d-comp-DButton-color-background-flat: color-mix(
+      in srgb,
+      black 90%,
+      transparent
+    );
+    --d-comp-DButton-color-background-flat-hovered: color-mix(
+      in srgb,
+      black 90%,
+      transparent
+    );
+    --d-comp-DButton-color-background-flat-focused: color-mix(
+      in srgb,
+      black 90%,
+      transparent
+    );
+    --d-comp-DButton-color-icon-flat: #fff;
+    --d-comp-DButton-color-icon-flat-hovered: #fff;
     position: absolute;
     top: -8px;
     right: -8px;
@@ -97,7 +109,7 @@
     transform: translate(-50%, -50%);
     font-size: var(--font-up-1);
     color: #fff;
-    background: rgb(var(--always-black-rgb), 0.6);
+    background: color-mix(in srgb, black 60%, transparent);
     border-radius: 100%;
     padding: 0.35em;
     pointer-events: none;
@@ -120,7 +132,7 @@
     .preview-video {
       object-position: center;
       object-fit: cover;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -130,7 +142,7 @@
     justify-content: center;
     line-height: var(--line-height-medium);
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     .top-data,
     .bottom-data {
@@ -158,8 +170,8 @@
     }
 
     .extension-pill {
-      background: var(--primary-low);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-neutral);
+      border-radius: var(--d-sys-border-radius-md);
       font-size: var(--font-down-2-rem);
       padding: 0.1em 0.4em;
     }

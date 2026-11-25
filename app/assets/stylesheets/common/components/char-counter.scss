@@ -7,12 +7,12 @@
 
   &.exceeded {
     > textarea {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
       outline-color: var(--danger);
     }
 
     &__ratio {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 }

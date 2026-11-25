@@ -12,14 +12,14 @@
   width: 100%;
   opacity: 0;
   transition: opacity var(--fade-out-duration) ease var(--done-duration);
-  background-color: var(--primary-low);
+  background-color: var(--d-sys-color-background-neutral);
 
   .loading-indicator {
     height: 100%;
     width: 100%;
     transform: scaleX(0);
     transform-origin: left;
-    background-color: var(--tertiary);
+    background-color: var(--d-sys-color-background-accent);
   }
 
   &.loading,

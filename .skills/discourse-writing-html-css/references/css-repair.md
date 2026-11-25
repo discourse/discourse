@@ -207,7 +207,7 @@ var(--space-*)
 var(--font-*)
 var(--line-height-*)
 var(--d-input-border)
-var(--content-border-color)
+var(--d-sys-color-border-default)
 var(--primary-medium)
 var(--secondary)
 var(--token-color-*)
@@ -230,7 +230,7 @@ Better:
 
 ```scss
 padding: var(--space-3);
-border-radius: var(--d-border-radius);
+border-radius: var(--d-sys-border-radius-md);
 color: var(--primary-medium);
 gap: var(--space-4);
 z-index: z("dropdown");

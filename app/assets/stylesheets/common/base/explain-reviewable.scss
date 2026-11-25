@@ -23,7 +23,7 @@
 
   tr.total {
     td {
-      background-color: var(--primary-low);
+      background-color: var(--d-sys-color-background-neutral);
       font-weight: bold;
     }
   }
@@ -33,7 +33,7 @@
   }
 
   .score-value-type {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .op:first-of-type {

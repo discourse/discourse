@@ -8,11 +8,11 @@
   }
 
   .status {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     span.no-problem-found,
     span.approved {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
 
       .d-icon {
         color: currentcolor;
@@ -21,7 +21,7 @@
 
     span.problem-confirmed,
     span.rejected {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       .d-icon {
         color: currentcolor;
@@ -130,7 +130,7 @@
         order: 1;
         padding: 0.5em 1em 1em 1em;
         width: 100%;
-        background-color: var(--primary-very-low);
+        background-color: var(--d-sys-color-background-sunken);
 
         .reviewable-filter {
           .filter-label {
@@ -208,7 +208,7 @@
     }
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     .name {
@@ -230,7 +230,7 @@
       width: 6em;
       height: 6em;
       object-fit: cover;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 }
@@ -246,8 +246,8 @@
 .reviewable-filters {
   padding: var(--space-4) var(--space-6);
   margin-bottom: var(--space-4);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
 
   .reviewable-filter {
     display: flex;
@@ -303,23 +303,23 @@
     margin-right: 0.25em;
 
     &.agreed {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
 
       + .d-icon {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
     }
 
     &.disagreed {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       + .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
     }
 
     &.ignored {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -329,7 +329,7 @@
 }
 
 .reviewable-item {
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
   padding: 1.5rem;
   margin-block: 3rem;
   padding-bottom: 1em;
@@ -339,7 +339,7 @@
   }
 
   .show-raw-email {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
   }
 
@@ -388,7 +388,11 @@
         bottom: 0;
         height: 25%;
         width: 100%;
-        background: linear-gradient(to bottom, transparent, var(--secondary));
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--d-sys-color-background-default)
+        );
       }
 
       + .post-body__toggle-btn {
@@ -401,24 +405,24 @@
     }
 
     &__toggle-btn {
-      background: var(--primary-very-low);
-      color: var(--primary-high);
+      background: var(--d-sys-color-background-sunken);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-2);
-      box-shadow: var(--shadow-dropdown);
+      box-shadow: var(--d-sys-shadow-overlay);
       margin-left: 50%;
       transform: translateX(-50%);
       border-radius: 4px;
 
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
 
       &:hover {
-        background: var(--primary-very-low);
-        color: var(--tertiary);
+        background: var(--d-sys-color-background-sunken);
+        color: var(--d-sys-color-text-link);
 
         .d-icon {
-          color: var(--tertiary);
+          color: var(--d-sys-color-icon-accent);
         }
       }
     }
@@ -440,12 +444,12 @@
 
   .post-topic {
     width: 100%;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-bottom: 0.75em;
 
     .title-text {
       font-weight: bold;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       display: block;
       font-size: var(--font-up-2);
       margin-right: 0.75em;
@@ -482,7 +486,7 @@
       padding: 0.25em 0.5em;
       text-transform: uppercase;
       font-size: var(--font-down-2);
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
       border-radius: 8px;
       background-color: var(--secondary-high);
     }
@@ -544,13 +548,13 @@
 .reviewable-scores {
   margin-top: 1rem;
   min-width: 50%;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 
   @include viewport.until(sm) {
     display: flex;
     width: 100%;
     overflow-x: auto;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__table-wrapper {
@@ -572,7 +576,7 @@
 
   .d-icon {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .badge-notification {
@@ -582,12 +586,12 @@
 
   .approved,
   .approved svg {
-    color: var(--success);
+    color: var(--d-sys-color-icon-success);
   }
 
   .rejected,
   .rejected svg {
-    color: var(--danger);
+    color: var(--d-sys-color-icon-danger);
   }
 
   @include viewport.until(sm) {

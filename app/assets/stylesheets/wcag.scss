@@ -2,7 +2,7 @@
 
 // Global
 ::placeholder {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   opacity: 1;
 }
 
@@ -12,24 +12,26 @@
 
 html.discourse-no-touch {
   .btn-default {
-    --d-button-default-icon-color: var(--primary-medium);
-    --d-button-default-icon-color--hover: var(--secondary);
+    --d-comp-DButton-color-icon-default: var(--d-sys-color-icon-faint);
+    --d-comp-DButton-color-icon-default-hovered: var(
+      --d-sys-color-icon-inverse
+    );
   }
 
   .btn-primary {
-    --d-button-primary-icon-color: var(--secondary);
+    --d-comp-DButton-color-icon-primary: var(--d-sys-color-icon-inverse);
   }
 
   .btn-icon.ok,
   .btn-icon.cancel,
   .btn-danger:not(.btn-flat, .btn-transparent, .popup-menu-btn-danger) {
     .d-icon {
-      color: var(--secondary);
+      color: var(--d-sys-color-icon-inverse);
     }
   }
 
   .btn-flat.delete:hover {
-    background: var(--danger);
+    background: var(--d-sys-color-background-danger);
   }
 
   .select-kit.single-select .select-kit-header:focus {
@@ -40,17 +42,17 @@ html.discourse-no-touch {
 html {
   // html parent adds some additional specificity to override core styles
   .nav-pills > li > a:not(.active):hover {
-    background: var(--tertiary-low);
-    color: var(--primary);
+    background: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-default);
   }
 
   .d-editor-button-bar {
     .btn-icon.btn-default .d-icon {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
 
       .discourse-no-touch & {
         &:hover {
-          color: var(--secondary);
+          color: var(--d-sys-color-icon-inverse);
         }
       }
     }
@@ -67,30 +69,32 @@ html {
   .menu-panel li a.widget-link:focus,
   .menu-panel li.heading a.widget-link:hover,
   .menu-panel li.heading a.widget-link:focus {
-    color: var(--primary);
-    background-color: var(--highlight-medium);
+    color: var(--d-sys-color-text-default);
+    background-color: var(--d-sys-color-background-highlight-subtle);
 
     .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
     }
   }
 
   .d-header-icons .d-icon,
   .header-sidebar-toggle button .d-icon {
-    color: var(--primary-low-mid);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .d-header-icons .unread-notifications {
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
   }
 
   .extra-info-wrapper {
     --header_primary-high: var(--header_primary);
+    --d-comp-Header-color-text-muted: var(--header_primary-high);
+    --d-comp-Header-color-icon-strong: var(--header_primary-high);
   }
 
   // Topic list
   table th {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .heatmap-high,
@@ -99,7 +103,7 @@ html {
   .heatmap-med a,
   .heatmap-low,
   .heatmap-low a {
-    color: var(--primary-medium) !important;
+    color: var(--d-sys-color-text-faint) !important;
   }
 
   .badge-notification {
@@ -107,7 +111,7 @@ html {
   }
 
   .badge-notification.unread-posts {
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
   }
 
   .select-kit.dropdown-select-box.period-chooser
@@ -117,7 +121,7 @@ html {
   .select-kit.dropdown-select-box.period-chooser
     .period-chooser-row
     .top-date-string {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .topic-list .posters a:first-child .avatar.latest:not(.single) {
@@ -125,11 +129,11 @@ html {
   }
 
   .topic-list .topic-list-item-separator .topic-list-data span {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   .discourse-tag.box {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   // Posts
@@ -138,16 +142,16 @@ html {
   }
 
   .topic-body .reply-to-tab {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .d-icon {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
   .timeline-container .topic-timeline {
     .timeline-scrollarea {
-      border-color: var(--primary-low-mid);
+      border-color: var(--d-sys-color-border-strong);
     }
 
     .timeline-handle {
@@ -157,25 +161,25 @@ html {
 
   .quote-controls,
   .quote-controls .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .meta .d-icon + .filename,
   .meta .informations {
-    color: var(--secondary);
+    color: var(--d-sys-color-icon-inverse);
   }
 
   #topic-footer-buttons .bookmark.bookmarked:hover .d-icon-bookmark {
-    color: var(--secondary);
+    color: var(--d-sys-color-icon-inverse);
   }
 
   .gap {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   a[data-clicks]::before,
   a[data-clicks]::after {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   nav.post-controls {
@@ -188,17 +192,17 @@ html {
   .table-heading,
   .category-list td,
   .category-list th {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .alert.alert-success a {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     text-decoration: underline;
   }
 
   .latest-topic-list .table-heading,
   .top-topic-list .table-heading {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .latest-topic-list-item .topic-last-activity a,
@@ -214,11 +218,11 @@ html {
   // User Preferences
   .user-menu.revamped .quick-access-panel li.unread,
   .user-menu.revamped .quick-access-panel li.pending {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   .user-main .deleted-posts {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .user-main .flags {
@@ -226,11 +230,11 @@ html {
   }
 
   .uploaded-file-preview .expand-overlay .file-uploader-lightbox-btn .d-icon {
-    color: var(--primary);
+    color: var(--d-sys-color-icon-default);
   }
 
   .settings .setting .setting-value .uploaded-file-preview {
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
   }
 
   // Notifications
@@ -239,18 +243,18 @@ html {
   }
 
   .user-stream .notification.unread {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   .user-stream .time {
-    color: var(--primary-very-high);
+    color: var(--d-sys-color-text-default);
   }
 
   // Admin Settings
   .admin-controls {
     .nav-pills > li > a:not(.active):hover {
       background: var(--primary-medium);
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
     }
   }
 
@@ -260,25 +264,25 @@ html {
   }
 
   .settings .setting.overridden h3::before {
-    background-color: var(--tertiary);
+    background-color: var(--d-sys-color-background-accent);
   }
 
   .admin-controls .controls {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   .admin-contents.admin-plugins td.version .commit-hash {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .chat-notices__notice,
   .chat-notices .chat-retention-reminder {
-    background-color: var(--tertiary-very-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   // Review
   .reviewable-item .reviewable-meta-data .created-at a {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .reviewable-item {
@@ -287,7 +291,7 @@ html {
 
   .reviewable .status span.no-problem-found,
   .reviewable .status span.approved {
-    color: var(--success-hover);
+    color: var(--d-sys-color-background-success-hovered);
   }
 }
 
@@ -297,7 +301,7 @@ html {
   .chat-message:hover
   .chat-message-react-btn:hover {
   .d-icon {
-    color: var(--primary) !important;
+    color: var(--d-sys-color-icon-default) !important;
   }
 }
 
@@ -306,31 +310,31 @@ html {
   .sidebar-sections
   .sidebar-section-link-suffix.icon.unread
   svg {
-  color: var(--tertiary);
+  color: var(--d-sys-color-icon-accent);
 }
 
 // Modernize Foundation Theme specific WCAG overrides
 html.discourse-no-touch :where(.uc-modernize-foundation-theme) {
   .btn-default {
     .d-icon {
-      color: var(--d-button-default-icon-color);
+      color: var(--d-comp-DButton-color-icon-default);
     }
 
     &:hover,
     &.btn-hover,
     &:focus {
       .d-icon {
-        color: var(--d-button-default-icon-color);
+        color: var(--d-comp-DButton-color-icon-default);
       }
     }
   }
 
   // Composer button bar icons should match the modernize theme
   .d-editor-button-bar .btn-icon.btn-default .d-icon {
-    color: var(--d-button-default-icon-color);
+    color: var(--d-comp-DButton-color-icon-default);
 
     &:hover {
-      color: var(--d-button-default-icon-color);
+      color: var(--d-comp-DButton-color-icon-default);
     }
   }
 }

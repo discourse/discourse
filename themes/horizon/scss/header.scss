@@ -7,7 +7,7 @@
 
 .search-menu .search-input,
 .search-menu-container .search-input {
-  border-color: var(--header_primary-low-mid);
+  border-color: var(--d-comp-Header-color-border-strong);
 }
 
 .user-menu .quick-access-panel,
@@ -15,12 +15,12 @@
   li {
     &.pending,
     &.unread {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
 
       .discourse-no-touch & {
         &:hover,
         &:focus {
-          background: var(--d-selected);
+          background: var(--d-sys-color-background-default-selected);
         }
       }
     }
@@ -42,12 +42,12 @@
   .-expanded
   > .d-icon,
 .discourse-no-touch .header-sidebar-toggle button:hover .d-icon {
-  color: var(--header_primary-medium);
+  color: var(--d-comp-Header-color-icon-strong);
 }
 
 .discourse-no-touch .interface-color-selector-content {
   border: none;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .btn {
     border: none;

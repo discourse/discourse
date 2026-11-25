@@ -1,7 +1,7 @@
 .c-navbar-container {
   position: relative;
-  border-bottom: 1px solid var(--content-border-color);
-  background: var(--secondary);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
+  background: var(--d-sys-color-background-default);
   box-sizing: border-box;
   display: flex;
   padding: 0 0.67em;
@@ -72,19 +72,19 @@
 
 .c-navbar__star-channel-button {
   height: var(--chat-header-offset);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 
   &:hover,
   &:focus {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &.--starred {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     &:hover,
     &:focus {
-      color: var(--tertiary-hover);
+      color: var(--d-sys-color-text-link-hovered);
     }
   }
 }
@@ -139,7 +139,7 @@
   .c-navbar__filter {
     &.active {
       .d-icon {
-        color: var(--d-button-transparent-text-color--hover);
+        color: var(--d-comp-DButton-color-text-transparent-hovered);
       }
     }
   }

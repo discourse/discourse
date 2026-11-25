@@ -24,18 +24,18 @@
   }
 
   .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
 
     &:hover {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .is-focused & {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
 
     .is-disabled & {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
       cursor: not-allowed;
     }
   }
@@ -69,7 +69,7 @@
 
     .d-icon {
       .is-send-enabled.is-focused & {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
@@ -91,7 +91,7 @@
 
     .d-icon {
       .is-focused & {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
   }

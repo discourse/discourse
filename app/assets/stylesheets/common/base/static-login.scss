@@ -1,5 +1,5 @@
 body.static-login {
-  background-color: var(--primary-very-low);
+  background-color: var(--d-sys-color-background-sunken);
 
   .d-header {
     display: none;
@@ -10,7 +10,7 @@ body.static-login {
   }
 
   .logo-container {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding-bottom: 1em;
     margin-bottom: 1em;
     display: block;
@@ -31,11 +31,11 @@ body.static-login {
   }
 
   .login-welcome {
-    background-color: var(--secondary);
-    border: 1px solid var(--content-border-color);
+    background-color: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
     text-align: center;
     padding: 2em;
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -44,7 +44,7 @@ body.static-login {
 
     &__text {
       order: 4;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .body-page-button-container {

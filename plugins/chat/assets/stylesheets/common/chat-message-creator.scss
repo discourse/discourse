@@ -32,7 +32,7 @@
       width: 24px;
 
       .d-icon.d-icon-user-group {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
     }
 
@@ -43,8 +43,8 @@
       .d-icon-user-group {
         padding: 5px 5px;
         box-sizing: border-box;
-        color: var(--primary-high);
-        background: var(--primary-low);
+        color: var(--d-sys-color-icon-muted);
+        background: var(--d-sys-color-background-neutral);
         border-radius: 100%;
         width: 24px;
         height: 24px;
@@ -95,7 +95,7 @@
       display: flex;
       flex-grow: 1;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       margin-bottom: var(--space-4);
     }
 
@@ -119,7 +119,7 @@
     &-container {
       display: flex;
       flex-grow: 1;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -136,14 +136,14 @@
     gap: 0.5rem;
     border: var(--d-input-border);
     box-sizing: border-box;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus-within {
       @include default-focus;
     }
 
     .d-icon-magnifying-glass {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
 
     &-container {
@@ -164,10 +164,10 @@
 
   &__members-count {
     white-space: nowrap;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     &.-reached-limit {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -176,7 +176,7 @@
     flex-grow: 1;
     justify-content: flex-end;
     padding-top: 1rem;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     &-container {
       display: flex;
@@ -201,14 +201,14 @@
       align-items: center;
 
       &:not(:last-of-type) {
-        border-bottom: 1px solid var(--content-border-color);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
 
       .d-icon-users {
         padding: 4px 4px;
         box-sizing: border-box;
-        color: var(--tertiary);
-        background: var(--primary-low);
+        color: var(--d-sys-color-icon-accent);
+        background: var(--d-sys-color-background-neutral);
         border-radius: 100%;
         width: 24px;
         height: 22px;
@@ -219,7 +219,7 @@
       }
 
       &.-highlighted {
-        background: var(--d-hover);
+        background: var(--d-sys-color-background-default-hovered);
       }
     }
 
@@ -240,7 +240,7 @@
         .user-status-message-description {
           @include ellipsis;
           font-size: var(--font-down-2-rem);
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
           margin: 0;
         }
       }
@@ -259,7 +259,7 @@
     flex-wrap: wrap;
 
     span[class^="chat-user-display-name__"]:not(.-first) {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1-rem);
     }
 
@@ -282,7 +282,7 @@
     box-sizing: border-box;
     height: var(--d-control-height);
     padding: 0 0.5rem;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus,
     &:focus-within {
@@ -296,7 +296,7 @@
 
     &__search-icon {
       background: none !important;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &__input {

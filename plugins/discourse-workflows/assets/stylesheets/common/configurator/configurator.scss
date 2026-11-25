@@ -5,7 +5,7 @@
 .workflows-configurator {
   &__tabs {
     display: flex;
-    border-bottom: 2px solid var(--primary-low);
+    border-bottom: 2px solid var(--d-sys-color-border-default);
     margin-bottom: var(--space-4);
   }
 
@@ -15,17 +15,17 @@
     background: transparent;
     cursor: pointer;
     font-size: var(--font-0);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.is-active {
-      color: var(--tertiary);
-      border-bottom-color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
+      border-bottom-color: var(--d-sys-color-border-accent);
     }
   }
 
@@ -47,7 +47,7 @@
 
   &__hint {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin: 0 0 var(--space-2);
   }
 
@@ -142,13 +142,13 @@
 
   &__dynamic-hint {
     margin: var(--space-1) 0 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     line-height: var(--line-height-small);
   }
 
   &__control-wrapper[data-supports-expression] {
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     html[data-dragging-variable] & {
       outline: 2px dashed var(--tertiary);
@@ -157,7 +157,7 @@
 
     &.is-drag-over input,
     &.is-drag-over textarea {
-      border-color: var(--tertiary) !important;
+      border-color: var(--d-sys-color-border-accent) !important;
       background: var(--tertiary-50);
     }
 
@@ -172,10 +172,10 @@
 
   &__collection-row {
     position: relative;
-    border: 1px dashed var(--primary-low);
+    border: 1px dashed var(--d-sys-color-border-default);
     padding: var(--space-5) var(--space-2) var(--space-4);
-    border-radius: var(--d-border-radius-large);
-    background: var(--primary-very-low);
+    border-radius: var(--d-sys-border-radius-lg);
+    background: var(--d-sys-color-background-sunken);
   }
 
   &__collection-delete {
@@ -186,16 +186,16 @@
     padding: var(--space-half);
     border-radius: 6px;
     font-size: var(--font-down-1-rem);
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-strong);
 
     &:hover {
       .discourse-no-touch & {
-        background: var(--secondary);
-        border: 1px solid var(--primary-low-mid);
+        background: var(--d-sys-color-background-default);
+        border: 1px solid var(--d-sys-color-border-strong);
 
         .d-icon {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }
@@ -214,8 +214,8 @@
     padding: var(--space-half);
     border-radius: 6px;
     font-size: var(--font-down-1-rem);
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-strong);
   }
 
   &__collection-fields {
@@ -234,7 +234,7 @@
   &__block-field-label {
     font-size: var(--font-down-1);
     font-weight: 700;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__block-actions {
@@ -254,7 +254,7 @@
     align-items: center;
     gap: var(--space-2);
     padding-bottom: var(--space-2);
-    border-bottom: 1px dashed var(--primary-low);
+    border-bottom: 1px dashed var(--d-sys-color-border-default);
 
     .form-kit__container {
       flex: 1;
@@ -347,7 +347,7 @@
   padding-inline: 0;
 
   + .workflows-property-engine__collection-row:has(.workflows-summarize-row) {
-    border-block-start: 1px solid var(--primary-low);
+    border-block-start: 1px solid var(--d-sys-color-border-default);
   }
 
   .workflows-property-engine__collection-delete {
@@ -392,7 +392,7 @@
 
     &--label {
       text-align: end;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -436,14 +436,14 @@
   margin-block-end: var(--space-3);
 
   &__truncated {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
   &__table-wrapper {
     overflow-x: auto;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__table {

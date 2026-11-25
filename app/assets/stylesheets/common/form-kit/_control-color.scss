@@ -16,15 +16,16 @@
 }
 
 .form-kit__control-color-input-prefix {
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
   border-right: 0;
   padding-inline: var(--space-2);
   box-sizing: border-box;
-  background: var(--primary-low);
+  background: var(--d-sys-color-background-neutral);
   display: flex;
   align-items: center;
   margin-right: -0.25em;
-  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius) 0 0
+    var(--d-comp-Input-border-radius);
   align-self: stretch;
 }
 
@@ -34,7 +35,8 @@
   min-width: auto !important;
 
   .form-kit__control-color-input-prefix + & {
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-radius: 0 var(--d-comp-Input-border-radius)
+      var(--d-comp-Input-border-radius) 0;
     border-left: none;
   }
 
@@ -44,7 +46,7 @@
   }
 
   .form-kit__field.has-error & {
-    border-color: var(--danger);
+    border-color: var(--d-sys-color-border-danger);
   }
 }
 
@@ -75,8 +77,8 @@
   width: var(--color-button-width);
   height: var(--color-button-height);
   padding: 0;
-  border: var(--color-input-border-width) solid var(--primary-low-mid);
-  border-radius: var(--d-button-border-radius);
+  border: var(--color-input-border-width) solid var(--d-sys-color-border-strong);
+  border-radius: var(--d-comp-DButton-border-radius);
   cursor: pointer;
 
   &::-webkit-color-swatch-wrapper {
@@ -86,21 +88,21 @@
   &::-webkit-color-swatch {
     border: none;
     border-radius: calc(
-      var(--d-button-border-radius) - var(--color-input-border-width)
+      var(--d-comp-DButton-border-radius) - var(--color-input-border-width)
     );
   }
 
   &::-moz-color-swatch {
     border: none;
     border-radius: calc(
-      var(--d-button-border-radius) - var(--color-input-border-width)
+      var(--d-comp-DButton-border-radius) - var(--color-input-border-width)
     );
   }
 
   &:focus,
   &:focus-visible {
     &:not(:disabled) {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }

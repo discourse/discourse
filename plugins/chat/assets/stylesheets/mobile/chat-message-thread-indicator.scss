@@ -1,6 +1,6 @@
 .chat-message-thread-indicator {
   .c-routes.--threads & {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
   }
   grid-template-areas:
     "avatar info info participants"

@@ -19,7 +19,7 @@ describe "Appearance change styles" do
         dark_colors:,
         styles: {
           variables: {
-            "--d-button-border-radius" => "20px",
+            "--d-comp-DButton-border-radius" => "20px",
           },
           rules: [
             {
@@ -50,14 +50,14 @@ describe "Appearance change styles" do
     visit("/latest?preview_theme_id=#{appearance_change.theme_id}")
     expect(page).to have_css(".topic-list, .no-topics-footer, #main-outlet")
     expect(computed(".d-header", "background-image")).to start_with("linear-gradient")
-    expect(computed(":root", "--d-button-border-radius")).to eq("20px")
+    expect(computed(":root", "--d-comp-DButton-border-radius")).to eq("20px")
 
     visit("/admin?preview_theme_id=#{appearance_change.theme_id}")
     expect(page).to have_css("body.admin-interface")
     # the theme's CSS is on the page, but doesn't apply here
     expect(page).to have_css("link[data-theme-id='#{appearance_change.theme_id}']", visible: false)
     expect(computed(".d-header", "background-image")).to eq("none")
-    expect(computed(":root", "--d-button-border-radius")).not_to eq("20px")
+    expect(computed(":root", "--d-comp-DButton-border-radius")).not_to eq("20px")
   end
 
   it "renders a theme from its database-cached stylesheet when the files are missing" do
@@ -67,7 +67,7 @@ describe "Appearance change styles" do
     theme.set_field(
       target: :common,
       name: :scss,
-      value: ":root { --d-button-border-radius: 27px; }",
+      value: ":root { --d-comp-DButton-border-radius: 27px; }",
     )
     theme.save!
 
@@ -84,7 +84,7 @@ describe "Appearance change styles" do
 
     visit("/latest?preview_theme_id=#{theme.id}")
 
-    expect(computed(":root", "--d-button-border-radius")).to eq("27px")
+    expect(computed(":root", "--d-comp-DButton-border-radius")).to eq("27px")
     expect(File.binread(css_path)).to eq(cached.content.b)
     expect(File.binread(map_path)).to eq(cached.source_map.b)
   ensure

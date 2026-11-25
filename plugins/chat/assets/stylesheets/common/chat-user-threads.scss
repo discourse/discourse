@@ -1,7 +1,7 @@
 .c-user-thread {
   padding-block: 1.25rem;
   margin-inline: 1rem;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   .chat-message-thread-indicator {
     margin-left: 0;
@@ -23,7 +23,7 @@
       word-break: break-word;
 
       &:hover {
-        color: var(--primary-very-high);
+        color: var(--d-sys-color-text-default);
       }
     }
   }
@@ -34,11 +34,11 @@
 
   .chat-channel-name {
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .chat-channel-title__name {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 }
@@ -56,7 +56,7 @@
   justify-content: center;
   padding: 1.25rem 1rem;
   font-size: var(--font-up-1-rem);
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
 }
 
 // sidebar

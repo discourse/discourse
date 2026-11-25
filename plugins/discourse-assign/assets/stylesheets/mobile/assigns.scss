@@ -44,7 +44,11 @@
 }
 
 .select-kit-row[data-value="unassign-mobile-header"] {
-  background: rgb(var(--primary-low-rgb), 0.5);
+  background: color-mix(
+    in srgb,
+    var(--d-sys-color-background-neutral) 50%,
+    transparent
+  );
   pointer-events: none;
 }
 
@@ -62,7 +66,7 @@
 
       .username {
         font-size: var(--font-down-1);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
   }

@@ -13,9 +13,24 @@ const SvgEmptyTopicList = <template>
       ry="15.5"
     />
 
-    <circle cx="26" cy="122" fill="var(--tertiary-low)" r="10" />
-    <circle cx="397.5" cy="205.5" fill="var(--tertiary-low)" r="13.5" />
-    <circle cx="381.5" cy="245.5" fill="var(--tertiary-medium)" r="6.5" />
+    <circle
+      cx="26"
+      cy="122"
+      fill="var(--d-sys-color-background-accent-subtlest)"
+      r="10"
+    />
+    <circle
+      cx="397.5"
+      cy="205.5"
+      fill="var(--d-sys-color-background-accent-subtlest)"
+      r="13.5"
+    />
+    <circle
+      cx="381.5"
+      cy="245.5"
+      fill="var(--d-sys-color-background-accent-subtle)"
+      r="6.5"
+    />
 
     <rect
       fill="var(--secondary)"

@@ -1,6 +1,6 @@
 .chat-modal-thread-settings {
   .thread-title-length {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-bottom: 1rem;
     text-align: right;
   }
@@ -8,8 +8,8 @@
   .discourse-ai-cta {
     padding: 1rem 1.25rem;
     border-radius: 0.25rem;
-    background-color: var(--primary-very-low);
-    border: 1px solid var(--content-border-color);
+    background-color: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
     margin-top: 5rem;
 
     p {

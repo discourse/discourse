@@ -11,10 +11,10 @@
   width: 100%;
   padding: 2em 2.5em;
   box-sizing: border-box;
-  background: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
+  background: var(--d-sys-color-background-sunken);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 12px;
-  box-shadow: var(--shadow-footer-nav);
+  box-shadow: var(--d-sys-shadow-overflow);
   align-self: flex-start;
 
   &__header {
@@ -26,9 +26,9 @@
     margin: 0 0 var(--space-4);
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--workflow-status-running);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--workflow-status-running-low);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     text-align: center;
   }
@@ -39,7 +39,7 @@
   }
 
   &__description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin: 0;
   }
 
@@ -66,7 +66,7 @@
 
   &__completion-message,
   &__completion-text {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:has(table, pre) {
       text-align: left;

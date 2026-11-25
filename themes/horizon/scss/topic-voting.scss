@@ -1,12 +1,15 @@
 @use "lib/viewport";
 
 .voting .voting-wrapper {
-  --d-button-border-radius: var(--d-border-radius-small);
-  --primary-100: var(--d-selected);
-  --primary-low: var(--d-selected);
+  --d-comp-DButton-border-radius: var(--d-sys-border-radius-sm);
+  --primary-100: var(--d-sys-color-background-default-selected);
+  --primary-low: var(--d-sys-color-background-default-selected);
+  --d-sys-color-border-default: var(--primary-low);
+  --d-sys-color-background-neutral: var(--primary-low);
+  --d-sys-color-background-default-pressed: var(--primary-low);
 
   &__button {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
   }
 
   .discourse-no-touch & {
@@ -18,7 +21,7 @@
 
       &:not(.btn-success) {
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -27,9 +30,11 @@
 
 .voting.header-title-voting .voting-wrapper {
   --primary-high: var(--header_primary-high);
+  --d-sys-color-text-muted: var(--primary-high);
+  --d-sys-color-icon-muted: var(--primary-high);
 
   @include viewport.from(lg) {
     --secondary: var(--background-color);
-    --content-border-color: var(--d-sidebar-border-color);
+    --d-sys-color-border-default: var(--d-sidebar-border-color);
   }
 }

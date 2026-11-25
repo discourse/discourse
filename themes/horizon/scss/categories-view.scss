@@ -45,14 +45,14 @@
       gap: var(--space-4);
       padding: var(--space-4) var(--space-6);
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       box-shadow: 0 0 12px 1px var(--topic-card-shadow);
     }
 
     td.category {
       display: contents;
-      border-top-left-radius: var(--d-border-radius-large);
-      border-bottom-left-radius: var(--d-border-radius-large);
+      border-top-left-radius: var(--d-sys-border-radius-lg);
+      border-bottom-left-radius: var(--d-sys-border-radius-lg);
       border-width: 2px;
       padding: 1em 1.5rem;
     }
@@ -117,7 +117,7 @@
       .badge-category__wrapper {
         background-color: var(--badge-category-bg);
         padding: 0.25em 0.5rem;
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
       }
 
       .badge-category__name {
@@ -150,7 +150,7 @@
       text-overflow: ellipsis;
       padding: 0.75em 1rem;
       border: 1px solid var(--primary-300);
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       margin-top: 1em;
     }
 
@@ -172,7 +172,7 @@
     }
 
     .badge-category__wrapper {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       padding: 0.25em 0.5rem;
       background-color: var(--badge-category-bg);
 
@@ -220,7 +220,7 @@
       .avatar {
         height: 24px;
         width: 24px;
-        border-radius: var(--d-border-radius-small);
+        border-radius: var(--d-sys-border-radius-sm);
       }
     }
   }
@@ -287,7 +287,7 @@
     border: 0;
 
     &-box-inner {
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       border: 1px solid var(--primary-300);
       background: var(--d-content-background);
       box-shadow: 0 0 12px 1px var(--topic-card-shadow);
@@ -334,7 +334,7 @@
           aspect-ratio: 1 / 1;
           height: auto;
           width: 13%;
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
         }
 
         &__name {

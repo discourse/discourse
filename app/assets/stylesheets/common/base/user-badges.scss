@@ -1,3 +1,9 @@
+:root {
+  --d-comp-UserBadge-color-icon-gold: var(--gold);
+  --d-comp-UserBadge-color-icon-silver: var(--silver);
+  --d-comp-UserBadge-color-icon-bronze: var(--bronze);
+}
+
 /* Default badge styles. */
 .show-badge {
   background: var(--d-content-background);
@@ -5,12 +11,12 @@
 
 .user-badge {
   padding: 3px 8px;
-  color: var(--primary);
-  border: 1px solid var(--content-border-color);
+  color: var(--d-sys-color-text-default);
+  border: 1px solid var(--d-sys-color-border-default);
   line-height: var(--line-height-large);
   display: inline-flex;
   align-items: center;
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
 
   img {
     height: 16px;
@@ -22,20 +28,20 @@
   }
 
   &.badge-type-gold .fa {
-    color: var(--gold) !important;
+    color: var(--d-comp-UserBadge-color-icon-gold) !important;
   }
 
   &.badge-type-silver .fa {
-    color: var(--silver) !important;
+    color: var(--d-comp-UserBadge-color-icon-silver) !important;
   }
 
   &.badge-type-bronze .fa {
-    color: var(--bronze) !important;
+    color: var(--d-comp-UserBadge-color-icon-bronze) !important;
   }
 
   &.disabled {
-    color: var(--primary-medium);
-    background-color: var(--primary-very-low);
+    color: var(--d-sys-color-text-faint);
+    background-color: var(--d-sys-color-background-sunken);
 
     .fa {
       opacity: 0.4;
@@ -131,10 +137,10 @@
 }
 
 .badge-card {
-  background-color: var(--d-badge-card-background-color);
-  border: 1px solid var(--content-border-color);
+  background-color: var(--d-comp-DBadgeCard-color-background);
+  border: 1px solid var(--d-sys-color-border-default);
   position: relative;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .check-display {
     position: absolute;
@@ -145,18 +151,18 @@
   .badge-granted {
     display: block;
     margin-top: 0.5em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
   .grant-count {
     font-weight: bold;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     line-height: 1;
   }
 
   .grant-text {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -165,8 +171,8 @@
     right: 0;
     bottom: 0;
     z-index: 1;
-    border-radius: var(--d-button-border-radius) 0 var(--d-button-border-radius)
-      0;
+    border-radius: var(--d-comp-DButton-border-radius) 0
+      var(--d-comp-DButton-border-radius) 0;
   }
 
   .badge-contents {
@@ -176,7 +182,7 @@
     padding: 1.5em 1.5em;
 
     .badge-link {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       display: inline-block;
       line-height: var(--line-height-medium);
 
@@ -233,7 +239,7 @@
 
     .badge-info {
       min-width: 0;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       h3 {
         margin-bottom: 0.25em;
@@ -328,13 +334,13 @@
   .badge-set-title {
     flex: 0 1 auto;
     padding: 1.5em;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
 
     .badge-title {
       height: 100%;
 
       &__saved {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
       }
     }
 
@@ -377,16 +383,16 @@
 
   .d-icon {
     font-size: var(--font-down-2);
-    color: var(--secondary);
+    color: var(--d-sys-color-icon-inverse);
   }
 }
 
 .check-display.status-checked {
-  background-color: var(--success);
+  background-color: var(--d-sys-color-background-success);
 }
 
 .check-display.status-unchecked {
-  background-color: var(--danger);
+  background-color: var(--d-sys-color-background-danger);
 }
 
 .hyperlink {

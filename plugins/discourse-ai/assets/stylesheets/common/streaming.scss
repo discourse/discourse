@@ -27,7 +27,7 @@
   animation: flashing 1.5s 3s infinite;
   display: inline-block;
   font-size: 1rem;
-  color: var(--tertiary-medium);
+  color: var(--d-sys-color-background-accent-subtle);
 }
 
 .streamable-content.streaming .cooked p:last-child::after {
@@ -213,7 +213,7 @@ article.streaming .cooked {
   }
 
   50% {
-    border-color: var(--highlight-high);
+    border-color: var(--d-sys-color-background-highlight-bold);
   }
 }
 
@@ -228,7 +228,7 @@ article.streaming .cooked {
 }
 
 mark.highlight {
-  background-color: var(--highlight-high);
+  background-color: var(--d-sys-color-background-highlight-bold);
   animation: fade-in-highlight 0.5s ease-in-out forwards;
 }
 

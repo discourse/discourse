@@ -22,7 +22,7 @@
       }
 
       .schema-setting-editor__tree {
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
         overflow: auto;
         margin: 0 0 2em 0;
 
@@ -31,7 +31,7 @@
           margin: 0 0 1em;
 
           li:hover {
-            background: var(--primary-very-low);
+            background: var(--d-sys-color-background-sunken);
           }
 
           &.--is-hidden {
@@ -55,12 +55,12 @@
         .schema-setting-editor__tree-node.--back-btn {
           cursor: pointer;
           width: 100%;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           color: var(--primary-700);
 
           &:hover {
             color: var(--primary-800);
-            background: var(--primary-very-low);
+            background: var(--d-sys-color-background-sunken);
           }
 
           .schema-setting-editor__tree-node-text {
@@ -76,7 +76,7 @@
 
         .schema-setting-editor__tree-node-text {
           padding: var(--schema-space);
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           display: flex;
           align-items: center;
 
@@ -96,11 +96,11 @@
 
           &.--active {
             > .schema-setting-editor__tree-node-text {
-              background-color: var(--tertiary);
-              color: var(--secondary);
+              background-color: var(--d-sys-color-background-accent);
+              color: var(--d-sys-color-text-inverse);
 
               .d-icon {
-                color: var(--secondary);
+                color: var(--d-sys-color-icon-inverse);
               }
             }
           }
@@ -110,16 +110,16 @@
 
             &:not(:has(ul)) {
               &:hover {
-                background: var(--primary-very-low);
+                background: var(--d-sys-color-background-sunken);
               }
             }
 
             &.--active {
-              border: 2px solid var(--tertiary);
+              border: 2px solid var(--d-sys-color-border-accent);
             }
 
             &.--add-button {
-              border-top: 1px solid var(--content-border-color);
+              border-top: 1px solid var(--d-sys-color-border-default);
             }
           }
 
@@ -129,7 +129,7 @@
             }
 
             &:hover {
-              background: var(--primary-very-low);
+              background: var(--d-sys-color-background-sunken);
             }
           }
 
@@ -145,7 +145,7 @@
       }
 
       .schema-setting-editor__tree-add-button {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
         width: 100%;
         line-height: 1.4; // match li height
         justify-content: start;
@@ -157,8 +157,8 @@
         }
 
         &:hover {
-          background: var(--primary-very-low);
-          color: var(--tertiary-hover);
+          background: var(--d-sys-color-background-sunken);
+          color: var(--d-sys-color-text-link-hovered);
 
           .d-icon {
             color: currentcolor;

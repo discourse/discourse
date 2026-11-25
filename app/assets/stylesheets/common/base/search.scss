@@ -37,10 +37,10 @@
   }
 
   .warning {
-    background-color: var(--danger-medium);
+    background-color: var(--d-sys-color-background-danger);
     padding: 5px 8px;
     margin-block: 0.5rem;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   .search-types {
@@ -67,7 +67,7 @@
         position: absolute;
         inset-inline-end: 0.5em;
         display: flex;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
@@ -126,7 +126,7 @@
       margin: 0 10%;
       padding-block-start: var(--space-4);
       font-size: var(--font-up-2);
-      font-weight: var(--token-font-weight-semibold);
+      font-weight: var(--d-sys-font-weight-semibold);
 
       @include viewport.until(lg) {
         margin: 0;
@@ -139,7 +139,7 @@
       }
 
       span.term {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
     }
 
@@ -149,8 +149,10 @@
       align-items: center;
       margin: 0 10%;
       padding-block: var(--space-4);
-      background: var(--secondary); // needs background for bulk select sticky
-      border-top: 1px solid var(--content-border-color);
+      background: var(
+        --d-sys-color-background-default
+      ); // needs background for bulk select sticky
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       @include viewport.until(lg) {
         padding: 1rem 0 0 0;
@@ -199,9 +201,9 @@
 
   .search-notice .fps-invalid {
     padding: 0.5em;
-    background-color: var(--danger-low);
-    border: 1px solid var(--danger-medium);
-    color: var(--danger);
+    background-color: var(--d-sys-color-background-danger-subtlest);
+    border: 1px solid var(--d-sys-color-border-danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   .search-context {
@@ -237,7 +239,7 @@
       gap: var(--space-1);
 
       .badge-notification {
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
         top: 0;
       }
 
@@ -247,8 +249,8 @@
 
       &:hover {
         .badge-notification {
-          background: var(--secondary);
-          color: var(--primary-high);
+          background: var(--d-sys-color-background-default);
+          color: var(--d-sys-color-text-muted);
         }
       }
     }
@@ -268,9 +270,9 @@
 
     .search-advanced-filters {
       margin-top: var(--space-4);
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: var(--space-6);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       min-width: 0;
 
       .second-search-button {
@@ -423,37 +425,37 @@
   .blurb {
     font-size: var(--font-0);
     line-height: var(--line-height-large);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .date {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .search-highlight {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
   .like-count {
     display: block;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin-top: 0.25em;
 
     .d-icon {
-      color: var(--love);
+      color: var(--d-sys-color-icon-love);
       font-size: var(--font-down-1);
     }
   }
 
   a.search-link.visited .topic-title {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .search-link {
     .topic-title {
       font-size: var(--font-up-1);
       line-height: var(--line-height-medium);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .topic-statuses {
@@ -461,7 +463,7 @@
       flex-shrink: 0;
       font-size: 1.1em;
       line-height: var(--line-height-medium);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       span {
         line-height: 1;

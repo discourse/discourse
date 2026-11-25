@@ -2,7 +2,7 @@
   &.tag-chooser,
   &.mini-tag-chooser,
   &.tag-drop {
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     .select-kit-row {
       display: flex;
@@ -15,7 +15,7 @@
 
       .synonym-hint {
         margin-left: 0.5em;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       &.disabled {
@@ -28,7 +28,7 @@
         .disabled-reason {
           width: 100%;
           font-size: var(--font-down-1);
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           font-style: italic;
         }
       }

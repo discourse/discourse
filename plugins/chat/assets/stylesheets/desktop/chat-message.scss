@@ -10,14 +10,14 @@
 
     &:first-child {
       border-left-color: var(--primary-300);
-      border-top-left-radius: var(--d-border-radius);
-      border-bottom-left-radius: var(--d-border-radius);
+      border-top-left-radius: var(--d-sys-border-radius-md);
+      border-bottom-left-radius: var(--d-sys-border-radius-md);
     }
 
     &:hover {
-      background: var(--primary-low);
-      border-color: var(--primary-low-mid);
-      color: var(--primary-medium);
+      background: var(--d-sys-color-background-neutral);
+      border-color: var(--d-sys-color-border-strong);
+      color: var(--d-sys-color-text-faint);
       z-index: 1;
     }
   }

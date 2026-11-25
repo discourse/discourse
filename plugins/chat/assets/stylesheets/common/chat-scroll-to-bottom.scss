@@ -18,7 +18,7 @@
       transform 0.5s ease;
     transform: scale(0.1);
     z-index: z("dropdown");
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
 
     .d-icon {
       color: inherit;
@@ -32,7 +32,7 @@
     &:active,
     &:focus {
       .d-icon {
-        color: var(--secondary) !important;
+        color: var(--d-sys-color-icon-inverse) !important;
       }
     }
 

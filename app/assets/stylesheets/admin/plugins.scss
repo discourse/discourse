@@ -27,7 +27,7 @@
     }
 
     .admin-plugins-list__row-admin-search-filtered {
-      background-color: var(--primary-low);
+      background-color: var(--d-sys-color-background-neutral);
     }
   }
 
@@ -42,13 +42,13 @@
     }
 
     &__badge {
-      --d-border-radius: var(--space-4);
+      --d-sys-border-radius-md: var(--space-4);
       font-weight: 400;
       font-size: var(--font-down-2);
-      background-color: var(--primary-low);
-      color: var(--primary-high);
+      background-color: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-muted);
       padding: var(--space-1) var(--space-2);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
 
       & + .admin-plugins-list__badge {
         margin-left: var(--space-1);
@@ -65,7 +65,7 @@
     }
 
     &__preinstalled {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 }
@@ -91,7 +91,7 @@
 
   .d-nav-submenu {
     background: transparent;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .horizontal-overflow-nav {
       background: transparent;
@@ -114,12 +114,12 @@
         padding: var(--space-2) var(--space-3) var(--space-3);
 
         &:hover {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
           background-color: transparent;
         }
 
         &.active {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
           background-color: transparent;
         }
       }

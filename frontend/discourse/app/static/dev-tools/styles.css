@@ -64,13 +64,13 @@
   &.gripper {
     cursor: grab;
     padding-block: 0;
-    border-bottom: 1px dotted var(--primary-low-mid);
+    border-bottom: 1px dotted var(--d-sys-color-border-strong);
     color: var(--primary-500);
   }
 
   &.--active {
     background-color: var(--primary-100);
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     .d-icon {
       font-weight: bold;
@@ -325,11 +325,11 @@
   opacity: 0.6;
 
   .--passed {
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   .--failed {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -342,7 +342,7 @@
   font-size: 11px;
   font-style: italic;
   opacity: 0.7;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--d-sys-color-border-default);
   padding-top: 8px;
 }
 
@@ -356,13 +356,13 @@
 
   &.--passed {
     .block-debug-condition__type {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
   }
 
   &.--failed {
     .block-debug-condition__type {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 }
@@ -406,7 +406,7 @@
     font-size: 13px;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     input[type="checkbox"] {
@@ -437,7 +437,7 @@
   display: flex;
   gap: 5px;
   padding-bottom: 8px;
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   margin-bottom: 8px;
 
   .title {
@@ -448,7 +448,7 @@
   }
 
   .github-link {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   /* Type-specific heading colors */
@@ -488,7 +488,7 @@
   font-size: 11px;
   font-weight: bold;
   text-transform: uppercase;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   letter-spacing: 0.5px;
 }
 
@@ -496,12 +496,12 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 }
 
 .outlet-info__empty {
   font-style: italic;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .outlet-info__status {
@@ -540,10 +540,10 @@ pre.outlet-info__error-message {
   align-items: center;
   gap: 6px;
   padding: 6px 8px;
-  background: var(--danger-low);
-  border: 1px solid var(--danger-medium);
+  background: var(--d-sys-color-background-danger-subtlest);
+  border: 1px solid var(--d-sys-color-border-danger);
   border-radius: 4px;
-  color: var(--danger);
+  color: var(--d-sys-color-text-danger);
   font-size: 12px;
   line-height: 1.4;
 
@@ -553,7 +553,7 @@ pre.outlet-info__error-message {
 }
 
 .outlet-info__since {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: 11px;
 }
 
@@ -568,7 +568,7 @@ pre.outlet-info__error-message {
   code {
     font-size: 12px;
     padding: 1px 4px;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 3px;
   }
 }
@@ -583,7 +583,7 @@ pre.outlet-info__error-message {
   display: flex;
   align-items: center;
   gap: 4px;
-  color: var(--danger);
+  color: var(--d-sys-color-text-danger);
   font-size: 11px;
 
   .d-icon {
@@ -599,7 +599,7 @@ pre.outlet-info__error-message {
 
   &.--empty {
     font-style: italic;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -617,12 +617,12 @@ pre.outlet-info__error-message {
   color: inherit;
 
   &:hover {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   &.--deprecated {
     .outlet-args-table__key {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       text-decoration: line-through;
     }
   }
@@ -638,7 +638,7 @@ pre.outlet-info__error-message {
 }
 
 .outlet-args-table__deprecated-badge {
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   font-size: 10px;
 
   .d-icon {
@@ -665,7 +665,7 @@ pre.outlet-info__error-message {
 .outlet-args-table__deprecation-info {
   font-size: 11px;
   font-style: italic;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   padding-left: 8px;
   margin-top: -2px;
   margin-bottom: 4px;

@@ -20,8 +20,8 @@
       justify-content: center;
 
       .chat-message-separator__text {
-        color: var(--danger-medium);
-        background-color: var(--secondary);
+        color: var(--d-sys-color-text-danger);
+        background-color: var(--d-sys-color-background-default);
         padding: 0.25rem 0.5rem;
         font-size: var(--font-down-1);
       }
@@ -32,7 +32,7 @@
     }
 
     .chat-message-separator__line {
-      border-top: 1px solid var(--danger-medium);
+      border-top: 1px solid var(--d-sys-color-border-danger);
     }
   }
 
@@ -50,7 +50,7 @@
     &.with-last-visit {
       & + .chat-message-separator__line-container {
         .chat-message-separator__line {
-          border-color: var(--danger-medium);
+          border-color: var(--d-sys-color-border-danger);
         }
       }
     }
@@ -66,7 +66,7 @@
       &.is-force-pinned {
         .chat-message-separator__text {
           border: 1px solid var(--primary-200);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
 
@@ -91,7 +91,7 @@
 
     .chat-message-separator__text {
       @include unselectable;
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
       border: 1px solid transparent;
       color: var(--secondary-low);
       font-size: var(--font-down-1);
@@ -104,7 +104,7 @@
       .no-touch & {
         &:hover {
           border: 1px solid var(--secondary-high);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
         }
@@ -113,7 +113,7 @@
       .touch & {
         &:active {
           border: 1px solid var(--secondary-high);
-          border-radius: var(--d-border-radius);
+          border-radius: var(--d-sys-border-radius-md);
           color: var(--primary-800);
           background: var(--primary-50);
         }
@@ -129,7 +129,7 @@
       box-sizing: border-box;
 
       .chat-message-separator__line {
-        border-top: 1px solid var(--content-border-color);
+        border-top: 1px solid var(--d-sys-color-border-default);
         margin: 0 0 -1px;
       }
     }

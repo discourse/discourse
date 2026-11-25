@@ -3,8 +3,8 @@
 // --------------------------------------------------
 #banner {
   padding: 1em;
-  background: var(--tertiary-low);
-  color: var(--primary);
+  background: var(--d-sys-color-background-accent-subtlest);
+  color: var(--d-sys-color-text-default);
   z-index: z("base") + 1;
   margin-bottom: 1em;
   max-height: 20vh;
@@ -17,17 +17,17 @@
     > .btn {
       padding-top: 0;
       padding-bottom: 0;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
 
       &:hover {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }

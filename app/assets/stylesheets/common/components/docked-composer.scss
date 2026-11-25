@@ -8,7 +8,7 @@
   position: sticky;
   bottom: 0;
   z-index: 50;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   padding: 0.75em 0 max(env(safe-area-inset-bottom), 0.75em);
   margin-top: 1em;
   display: flex;
@@ -23,7 +23,11 @@
     right: 0;
     top: -2.5em;
     height: 2.5em;
-    background: linear-gradient(to bottom, transparent, var(--secondary));
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--d-sys-color-background-default)
+    );
     pointer-events: none;
   }
 
@@ -47,7 +51,7 @@
       content: "";
       width: 2em;
       height: 3px;
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
       border-radius: 3px;
       transition: background 0.15s ease-in-out;
     }
@@ -98,7 +102,7 @@
     .d-editor-textarea-column {
       position: relative;
       border: var(--d-input-border);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       background: var(--d-input-bg-color);
       transition: border-color 0.15s ease-in-out;
 
@@ -196,20 +200,20 @@
     min-width: auto;
     min-height: auto;
     padding: 0.35em 0.5em;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
     background: transparent !important;
 
     .d-icon {
-      color: var(--tertiary) !important;
+      color: var(--d-sys-color-icon-accent) !important;
       font-size: var(--font-up-1);
     }
 
     &:hover:not(:disabled),
     &:focus-visible {
-      background: var(--primary-very-low) !important;
+      background: var(--d-sys-color-background-sunken) !important;
 
       .d-icon {
-        color: var(--tertiary-hover, var(--tertiary)) !important;
+        color: var(--tertiary-hover, var(--d-sys-color-icon-accent)) !important;
       }
     }
 
@@ -218,7 +222,7 @@
       cursor: not-allowed;
 
       .d-icon {
-        color: var(--primary-low-mid) !important;
+        color: var(--d-sys-color-icon-faint) !important;
       }
     }
   }
@@ -238,10 +242,10 @@
   &__upload {
     display: flex;
     align-items: center;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--d-sys-color-border-default);
     border-radius: 10em;
     padding-left: 0.75em;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-2);
 
     &-progress {
@@ -250,7 +254,7 @@
 
     &-remove:hover .d-icon,
     &-cancel:hover .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 }

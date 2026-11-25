@@ -1,7 +1,7 @@
 .chat-thread-participants {
   &__other-count {
     font-size: var(--font-down-2);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     white-space: nowrap;
     margin-left: 0.25rem;
   }
@@ -37,7 +37,7 @@
         }
 
         .avatar {
-          border: 1px solid var(--primary-very-low);
+          border: 1px solid var(--d-sys-color-border-muted);
         }
       }
     }

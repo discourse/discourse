@@ -30,12 +30,12 @@
     justify-content: center;
     padding: 0;
     cursor: pointer;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     user-select: none;
     -webkit-touch-callout: none;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.--left,

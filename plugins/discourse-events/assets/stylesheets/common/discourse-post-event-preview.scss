@@ -1,9 +1,9 @@
 .discourse-post-event-preview {
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   align-items: center;
   flex-direction: column;
   padding: 0.5em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sys-color-border-default);
   display: flex;
   flex: 1 0 auto;
 
@@ -16,7 +16,7 @@
   }
 
   &.alert-error {
-    border-color: var(--danger-low-mid);
+    border-color: var(--d-sys-color-background-danger-subtle);
   }
 }
 

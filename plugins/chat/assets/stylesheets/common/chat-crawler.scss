@@ -7,7 +7,7 @@
 
   &__channel {
     padding-block: 1em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     h2 {
       margin: 0;
@@ -26,17 +26,17 @@
     gap: 0.25em 1em;
     margin-top: 0.5em;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__retention {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__message {
     padding-block: 0.75em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__message-meta {
@@ -54,7 +54,7 @@
 
   &__message-time {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__message-text {

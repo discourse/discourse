@@ -1,7 +1,9 @@
 @use "lib/viewport";
 
 :root {
-  --d-post-control-background--hover: var(--d-hover);
+  --d-post-control-background--hover: var(
+    --d-sys-color-background-default-hovered
+  );
 }
 
 .post-stream {
@@ -71,7 +73,7 @@ body:not(.d-toc-installed) {
 .container.posts {
   .post-notice {
     padding: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1-rem);
 
     .d-icon {
@@ -88,7 +90,7 @@ body:not(.d-toc-installed) {
     border-radius: 1em;
     min-width: 1.3em;
     box-sizing: border-box;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 }
 
@@ -118,14 +120,14 @@ nav.post-controls .actions button {
 }
 
 .archetype-private_message {
-  --pm-border-radius: var(--d-border-radius);
+  --pm-border-radius: var(--d-sys-border-radius-md);
 }
 
 .header-title {
   .event-date {
     font-size: var(--font-down-3);
-    border: 1px solid var(--tertiary-low);
-    background: var(--tertiary-low);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
+    background: var(--d-sys-color-background-accent-subtlest);
 
     &.past {
       border-color: transparent;

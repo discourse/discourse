@@ -5,7 +5,7 @@ details {
   .d-editor-preview,
   &.details__boxed,
   .ProseMirror & {
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
     padding: 0.25rem 0.75rem;
     margin-bottom: 0.5rem;
 
@@ -13,14 +13,14 @@ details {
       &:hover,
       &:focus,
       &:focus-within {
-        background-color: var(--d-hover);
+        background-color: var(--d-sys-color-background-default-hovered);
       }
     }
 
     aside.quote .title,
     blockquote,
     code {
-      background-color: rgb(var(--primary-rgb), 0.05);
+      background-color: color-mix(in srgb, var(--primary) 5%, transparent);
     }
   }
 
@@ -48,9 +48,9 @@ details {
   display: inline-block;
   padding: 1px 6px;
   background: var(--primary-high);
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   border: 1px solid transparent;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-family: var(--font-family);
   font-size: var(--font-down-1);
   font-weight: 400;
@@ -111,12 +111,12 @@ summary::-webkit-details-marker {
       }
 
       summary:hover {
-        background: var(--d-hover);
+        background: var(--d-sys-color-background-default-hovered);
       }
     }
 
     &[open] {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       padding: 0.5rem 0.75rem;
 
       summary {
@@ -138,15 +138,15 @@ summary::-webkit-details-marker {
       box-sizing: border-box;
       margin: 0;
       padding: 0.5rem 0.75rem;
-      color: var(--primary-medium);
-      background: var(--primary-very-low);
+      color: var(--d-sys-color-text-faint);
+      background: var(--d-sys-color-background-sunken);
       width: min-content;
       line-height: 1;
 
       &:hover,
       &:focus,
       &:focus-within {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         cursor: pointer;
       }
     }
@@ -160,7 +160,7 @@ summary::-webkit-details-marker {
       &:hover,
       &:focus,
       &:focus-within {
-        background-color: var(--primary-very-low);
+        background-color: var(--d-sys-color-background-sunken);
       }
     }
   }
@@ -171,7 +171,7 @@ summary::-webkit-details-marker {
 
     &:hover {
       &::before {
-        background: var(--primary-low);
+        background: var(--d-sys-color-background-neutral);
       }
     }
 
@@ -179,7 +179,7 @@ summary::-webkit-details-marker {
       pointer-events: auto;
       padding: var(--space-1) var(--space-2);
       margin-left: calc(-1 * var(--space-2));
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 }

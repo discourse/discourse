@@ -1,6 +1,6 @@
 .ai-payload-viewer {
   &__notice {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-weight: 600;
   }
 
@@ -9,10 +9,10 @@
     margin: 0 0 var(--space-2);
     padding: var(--space-3);
     overflow: auto;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
-    color: var(--primary);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-default);
     font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-1);
     line-height: var(--line-height-medium);
@@ -41,8 +41,8 @@
 
   &__empty {
     padding: var(--space-6);
-    border: 1px dashed var(--content-border-color);
-    color: var(--primary-high);
+    border: 1px dashed var(--d-sys-color-border-default);
+    color: var(--d-sys-color-text-muted);
     text-align: center;
   }
 }

@@ -38,7 +38,7 @@ In themes, you can do the same thing by declaring CSS custom properties in the `
 
 // other stylesheet
 .element {
-  background-color: rgba(var(--primary-rgb), 0.05);
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent);
 }
 ```
 

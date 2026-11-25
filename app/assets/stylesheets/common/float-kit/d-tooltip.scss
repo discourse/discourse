@@ -38,10 +38,10 @@
   }
 
   &__content {
-    background-color: var(--secondary);
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-dropdown);
+    background-color: var(--d-sys-color-background-default);
+    border-radius: var(--d-sys-border-radius-md);
+    border: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-overlay);
     z-index: z("max");
     width: max-content;
     position: absolute;

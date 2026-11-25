@@ -36,7 +36,7 @@
     border-radius: 4px;
     border: none;
     background: var(--primary-very-high);
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -73,7 +73,7 @@
     &.is-disabled,
     &:disabled {
       background: var(--primary-low-mid);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       cursor: not-allowed;
       box-shadow: none;
       opacity: 1;
@@ -81,7 +81,7 @@
       &:hover,
       &:focus-visible {
         background: var(--primary-low-mid);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
   }

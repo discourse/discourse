@@ -3,7 +3,7 @@
     position: relative;
 
     &:hover {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
     }
   }
 
@@ -30,7 +30,7 @@
     align-items: center;
     gap: var(--space-1) var(--space-3);
     margin-top: var(--space-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -44,7 +44,7 @@
 
     &:hover,
     &:focus {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -57,9 +57,9 @@
 
   &__mode {
     padding: 0 var(--space-1);
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
-    color: var(--primary-high);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -68,7 +68,7 @@
     max-width: 40em;
     margin-top: var(--space-1);
     overflow: hidden;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-size: var(--font-down-1);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -110,7 +110,7 @@
     }
 
     &.--pending .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 }

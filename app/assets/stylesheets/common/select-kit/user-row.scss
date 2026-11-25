@@ -6,12 +6,12 @@
     }
 
     .username {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       white-space: nowrap;
     }
 
     .name {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
       margin-left: 0.5em;
       overflow: hidden;

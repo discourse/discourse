@@ -1,7 +1,7 @@
 .c-footer {
   grid-area: footer;
-  background: var(--secondary);
-  border-top: 1px solid var(--content-border-color);
+  background: var(--d-sys-color-background-default);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -27,7 +27,7 @@
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     &.--active {
       .d-icon,
@@ -59,7 +59,7 @@
 
     .d-button-label {
       font-size: var(--font-down-1-rem);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .c-unread-indicator {

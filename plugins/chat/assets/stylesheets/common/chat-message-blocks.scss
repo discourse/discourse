@@ -6,9 +6,9 @@
 }
 
 .chat-confirmation {
-  background: var(--secondary);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius-large);
+  background: var(--d-sys-color-background-default);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-lg);
   max-width: min(100%, 40em);
   min-width: 0;
   overflow: hidden;
@@ -25,7 +25,7 @@
   }
 
   &__description {
-    border-block-start: 1px solid var(--primary-low);
+    border-block-start: 1px solid var(--d-sys-color-border-default);
     max-height: 20em;
     overflow: auto;
     overflow-wrap: anywhere;
@@ -57,7 +57,7 @@
     overflow-wrap: anywhere;
     min-width: 0;
     padding: var(--space-half) var(--space-1);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__diff-value {
@@ -66,13 +66,21 @@
   }
 
   &__before {
-    color: var(--danger);
-    background: color-mix(in srgb, var(--danger) 10%, var(--secondary));
+    color: var(--d-sys-color-text-danger);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-danger) 10%,
+      var(--d-sys-color-background-default)
+    );
   }
 
   &__after {
-    color: var(--success);
-    background: color-mix(in srgb, var(--success) 10%, var(--secondary));
+    color: var(--d-sys-color-text-success);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-success) 10%,
+      var(--d-sys-color-background-default)
+    );
     text-decoration: none;
   }
 
@@ -103,11 +111,11 @@
     flex-shrink: 0;
     vertical-align: middle;
     background: var(--category-badge-color);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__footer {
-    border-block-start: 1px solid var(--primary-low);
+    border-block-start: 1px solid var(--d-sys-color-border-default);
 
     .block__actions {
       margin-top: var(--space-3);
@@ -159,11 +167,14 @@
     flex-direction: row;
     box-sizing: border-box;
     border-width: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background-color: var(--d-category-box-background-color);
     border-left-width: var(--d-category-border-accent-width);
     border-style: solid;
-    border-color: var(--category-badge-color, var(--primary-low));
+    border-color: var(
+      --category-badge-color,
+      var(--d-sys-color-border-default)
+    );
     width: 100%;
   }
 
@@ -177,9 +188,9 @@
     border-width: var(--d-category-border-box-width);
     border-left-width: 0;
     border-style: solid;
-    border-color: var(--primary-low);
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
+    border-color: var(--d-sys-color-border-default);
+    border-top-right-radius: var(--d-sys-border-radius-md);
+    border-bottom-right-radius: var(--d-sys-border-radius-md);
   }
 
   .block__category-heading {
@@ -191,7 +202,7 @@
 
     .badge-category__name {
       font-weight: bold;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .block__category-link {
@@ -200,7 +211,7 @@
 
       &:hover {
         .badge-category__name {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
         }
       }
     }
@@ -208,12 +219,12 @@
 
   .block__category-parent {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .block__category-description {
     font-size: var(--font-0);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     line-height: var(--line-height-medium);
   }
 }

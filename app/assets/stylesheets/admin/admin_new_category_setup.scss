@@ -20,9 +20,9 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     transition:
       border-color 0.15s,
       background-color 0.15s;
@@ -66,12 +66,12 @@
       justify-content: center;
       width: 2.75rem;
       aspect-ratio: 1;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: var(--category-type-accent);
       background: color-mix(
         in srgb,
         var(--category-type-accent) 12%,
-        var(--secondary)
+        var(--d-sys-color-background-default)
       );
       font-size: var(--font-up-2);
 
@@ -90,20 +90,20 @@
       align-self: end;
       font-size: var(--font-up-1);
       font-weight: bold;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &-description {
       grid-area: description;
       align-self: start;
       margin-top: var(--space-1);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       line-height: var(--line-height-medium);
     }
 
     &-chevron {
       grid-area: chevron;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       @container (width >= 40rem) {
         display: none;
@@ -116,11 +116,11 @@
 
     &:hover,
     &:focus-within {
-      border-color: var(--tertiary);
-      background: var(--tertiary-very-low);
+      border-color: var(--d-sys-color-border-accent);
+      background: var(--d-sys-color-background-accent-subtlest);
 
       .category-type-cards__card-chevron {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
 
@@ -144,8 +144,8 @@
 
       &:hover,
       &:focus-within {
-        border-color: var(--primary-low);
-        background: var(--secondary);
+        border-color: var(--d-sys-color-border-default);
+        background: var(--d-sys-color-background-default);
       }
 
       [class^="category-type-cards__card-"] {
@@ -164,10 +164,11 @@
     right: 0;
     top: 0;
     font-size: var(--font-down-2);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     padding: var(--space-1) var(--space-2);
-    background: var(--highlight-low);
-    border-radius: 0 calc(var(--d-border-radius) - 1px) 0 var(--d-border-radius);
+    background: var(--d-sys-color-background-highlight-subtlest);
+    border-radius: 0 calc(var(--d-sys-border-radius-md) - 1px) 0
+      var(--d-sys-border-radius-md);
   }
 
   &__ask-admin-message {
@@ -180,9 +181,10 @@
     align-items: center;
     padding: var(--space-3) var(--space-6);
     font-size: var(--font-down-1);
-    background-color: var(--tertiary-very-low);
-    color: var(--tertiary);
-    border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
+    background-color: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-link);
+    border-radius: 0 0 var(--d-sys-border-radius-md)
+      var(--d-sys-border-radius-md);
     gap: var(--space-6);
 
     .d-icon {
@@ -191,8 +193,8 @@
 
     &:hover,
     &:focus-visible {
-      background: var(--tertiary);
-      color: var(--secondary);
+      background: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
     }
 
     &-text {

@@ -11,7 +11,7 @@
   &__staff-role-description {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__sent-to {
@@ -40,11 +40,11 @@
     padding: 0.5em 0;
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     dt {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-weight: normal;
     }
 

@@ -7,10 +7,10 @@
   }
 
   &__table {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     th {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       white-space: nowrap;
     }
   }

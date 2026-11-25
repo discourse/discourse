@@ -3,7 +3,7 @@
     column-gap: 0.5em;
     display: flex;
     padding: 0.5em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__event:last-of-type {
@@ -23,22 +23,22 @@
     height: 2.5em;
     margin: 0;
     padding: 0;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-button-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-comp-DButton-border-radius);
     flex-direction: column;
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
   }
 
   &__event-date .month {
     text-align: center;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-3);
     text-transform: uppercase;
   }
 
   &__event-date .day {
     text-align: center;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-weight: bold;
     font-size: var(--font-down-1);
   }
@@ -53,12 +53,12 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .d-icon-arrows-rotate {
       margin-right: 0.25em;
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -78,10 +78,10 @@
   }
 
   &__footer a {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__footer a:hover {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 }

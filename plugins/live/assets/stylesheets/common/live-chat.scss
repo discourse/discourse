@@ -14,7 +14,7 @@
   min-height: 0;
   width: 100%;
   overflow: hidden;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   height: 100%;
 
   &__body {
@@ -71,13 +71,13 @@
 .empty-state {
   .live-chat & {
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 
   .is-unavailable.live-chat & {
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 }
@@ -85,7 +85,7 @@
 .c-navbar__title-text {
   .live-chat & {
     .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 }

@@ -1,9 +1,9 @@
 .ai-tool-approval {
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-3) var(--space-4);
   margin: var(--space-2) 0;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
 
   &__summary {
     display: grid;
@@ -13,7 +13,7 @@
   }
 
   &__label {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     overflow-wrap: anywhere;
   }
@@ -31,7 +31,7 @@
   }
 
   &__status {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-style: italic;
   }
 
@@ -75,18 +75,26 @@
     align-items: center;
     gap: var(--space-1);
     padding: var(--space-1) var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     margin-inline-start: var(--space-2);
 
     &.--approved {
-      background: color-mix(in srgb, var(--success-low) 50%, var(--secondary));
-      color: var(--primary);
+      background: color-mix(
+        in srgb,
+        var(--d-sys-color-background-success-subtlest) 50%,
+        var(--d-sys-color-background-default)
+      );
+      color: var(--d-sys-color-text-default);
     }
 
     &.--rejected {
-      background: color-mix(in srgb, var(--danger-low) 50%, var(--secondary));
-      color: var(--primary);
+      background: color-mix(
+        in srgb,
+        var(--d-sys-color-background-danger-subtlest) 50%,
+        var(--d-sys-color-background-default)
+      );
+      color: var(--d-sys-color-text-default);
     }
   }
 

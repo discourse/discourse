@@ -17,7 +17,7 @@
 .tags-list {
   margin-top: 2em;
   padding-bottom: 1em;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 #list-area .tags-list h3 {
@@ -64,7 +64,7 @@
 
 .discourse-tag-count {
   font-size: var(--font-down-1);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .discourse-tag {
@@ -76,7 +76,7 @@
   font-size: var(--d-tag-font-size);
   font-weight: var(--d-tag-font-weight);
   padding: 0 var(--d-tag-horizontal-padding);
-  border-radius: var(--d-tag-border-radius);
+  border-radius: var(--d-comp-DDiscourseTag-border-radius);
   background-color: var(--d-tag-background-color);
 
   @include ellipsis;
@@ -91,11 +91,11 @@
   }
 
   &.box {
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
     padding: 2px 8px;
 
     .extra-info-wrapper & {
-      background-color: var(--header_primary-low);
+      background-color: var(--d-comp-Header-color-background-neutral);
     }
   }
 
@@ -208,7 +208,7 @@
 
 .autocomplete.ac-category-or-tag {
   a {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .d-icon-tag {
@@ -235,7 +235,7 @@
 
   > h2 {
     grid-area: header;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     padding: 20px;
     margin: 1em 0;
   }
@@ -347,7 +347,7 @@
     }
 
     .description {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-top: 0.5em;
       font-size: var(--font-down-1);
     }
@@ -373,7 +373,7 @@ section.tag-info {
       &,
       &:visited,
       &:hover {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         font-weight: bold;
       }
     }
@@ -395,7 +395,7 @@ section.tag-info {
 }
 
 #show-tag-info[aria-pressed="true"] .d-icon {
-  color: var(--tertiary);
+  color: var(--d-sys-color-icon-accent);
 }
 
 .tag-navigation {
@@ -433,7 +433,7 @@ body.tags-intersection {
       box-sizing: border-box;
       margin: 0;
       width: 100%;
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
     }
   }
 

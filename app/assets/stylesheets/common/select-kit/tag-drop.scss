@@ -7,7 +7,7 @@
 
       .tag-drop-header,
       .selected-name {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       @include viewport.until(sm) {
@@ -23,7 +23,7 @@
       .select-kit-row {
         &[data-value="all-tags"],
         &[data-value="no-tags"] {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
           font-weight: 700;
         }
 
@@ -33,7 +33,7 @@
       }
 
       .angle-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       &.has-selection {

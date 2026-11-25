@@ -28,8 +28,8 @@ module AppearanceStyles
       --danger
       --success
       --love
-      --d-selected
-      --d-hover
+      --d-sys-color-background-default-selected
+      --d-sys-color-background-default-hovered
       --d-sys-color-text-default-selected
       --d-sys-color-background-highlight-subtle
       --d-sys-color-background-danger-subtle

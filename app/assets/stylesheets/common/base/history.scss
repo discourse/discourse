@@ -20,7 +20,7 @@
     align-items: center;
     padding-bottom: 0.5em;
     overflow: auto;
-    border-bottom: 3px solid var(--primary-low);
+    border-bottom: 3px solid var(--d-sys-color-border-default);
 
     @include viewport.until(md) {
       padding-bottom: 0;
@@ -72,7 +72,7 @@
   }
 
   .revision-details__unlisted {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .fk-d-tooltip__trigger-container {
       align-items: center;
@@ -123,7 +123,7 @@
 
   .revision__locale {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 
@@ -138,7 +138,7 @@
     align-items: center;
     gap: 0.5em;
     padding: 1em 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &:not(.--mode-inline) {
@@ -210,7 +210,7 @@
         th {
           padding-bottom: 2px;
           font-weight: bold;
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
         }
       }
 
@@ -259,7 +259,7 @@
   del,
   .diff-ins,
   .diff-del {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:not(s, .bbcode-u, .bbcode-s) {
       text-decoration: none;
@@ -282,11 +282,11 @@
 
   ins,
   .diff-ins {
-    background: var(--success-low);
+    background: var(--d-sys-color-background-success-subtlest);
 
     code,
     img {
-      border-color: var(--success);
+      border-color: var(--d-sys-color-border-success);
     }
 
     img {
@@ -295,17 +295,17 @@
     }
 
     a {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
   }
 
   del,
   .diff-del {
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
 
     code,
     img {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
     }
 
     img {
@@ -314,7 +314,7 @@
     }
 
     a {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -323,11 +323,11 @@
   }
 
   span.edit-reason {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .d-icon-ban {
-    color: var(--danger);
+    color: var(--d-sys-color-icon-danger);
   }
 
   .hidden-revision-either {

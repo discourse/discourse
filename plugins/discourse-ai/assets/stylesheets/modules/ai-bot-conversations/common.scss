@@ -241,7 +241,8 @@ body.ai-bot-conversations-page {
 
       .dropdown-select-box-header:focus:not(:focus-visible),
       .dropdown-select-box[open] .dropdown-select-box-header:focus {
-        border: var(--d-button-border);
+        border: var(--d-comp-DButton-border-width) solid
+          var(--d-comp-DButton-color-border);
         outline: none;
       }
 
@@ -259,12 +260,12 @@ body.ai-bot-conversations-page {
       .btn:hover,
       .btn:focus {
         background-color: transparent;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       .btn:hover .d-icon,
       .btn:focus .d-icon {
-        color: var(--primary);
+        color: var(--d-sys-color-icon-default);
       }
     }
 
@@ -326,8 +327,8 @@ body.ai-bot-conversations-page {
       display: flex;
       align-items: center;
       width: 100%;
-      border: 1px solid var(--primary-low);
-      border-radius: var(--d-input-border-radius);
+      border: 1px solid var(--d-sys-color-border-default);
+      border-radius: var(--d-comp-Input-border-radius);
       background-color: var(--d-input-bg-color);
 
       &:has(textarea[disabled]) {
@@ -345,7 +346,7 @@ body.ai-bot-conversations-page {
       }
 
       &:focus-within {
-        border-color: var(--tertiary);
+        border-color: var(--d-sys-color-border-accent);
       }
 
       #ai-bot-conversations-input {
@@ -396,7 +397,7 @@ body.ai-bot-conversations-page {
 
         &:focus-visible {
           outline: none;
-          border-color: var(--tertiary);
+          border-color: var(--d-sys-color-border-accent);
         }
 
         &:not(:placeholder-shown) + .ai-conversation-submit {
@@ -408,7 +409,7 @@ body.ai-bot-conversations-page {
           }
 
           .d-icon {
-            color: var(--tertiary);
+            color: var(--d-sys-color-icon-accent);
           }
         }
       }
@@ -469,10 +470,10 @@ body.ai-bot-conversations-page {
     .ai-bot-upload {
       display: flex;
       align-items: center;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--d-sys-color-border-default);
       border-radius: 10em;
       padding-left: 0.75em;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-2);
 
       &__progress {
@@ -482,15 +483,15 @@ body.ai-bot-conversations-page {
       &:hover,
       &:focus-visible {
         .d-icon {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }
 
     &.--preview #ai-bot-conversations-input {
       padding-inline-start: var(--space-3);
-      border-radius: var(--d-input-border-radius) 0 0
-        var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius) 0 0
+        var(--d-comp-Input-border-radius);
     }
   }
 }
@@ -547,8 +548,8 @@ body.has-ai-conversations-sidebar {
       .trigger-group-card {
         display: flex;
         align-items: center;
-        border: 1px solid var(--primary-low);
-        border-radius: var(--d-button-border-radius);
+        border: 1px solid var(--d-sys-color-border-default);
+        border-radius: var(--d-comp-DButton-border-radius);
         padding: 0.25em 0.5em;
         font-size: var(--font-down-1);
 
@@ -563,7 +564,7 @@ body.has-ai-conversations-sidebar {
         }
 
         a {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
 
@@ -594,10 +595,14 @@ body.has-ai-conversations-sidebar {
   width: calc(100% - 2 * var(--space-4));
   margin: var(--space-4) var(--space-4) 0;
   padding: var(--space-4);
-  border: 1px solid var(--tertiary-medium);
-  background: rgb(var(--tertiary-rgb), 0.075);
-  box-shadow: var(--shadow-card);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-background-accent-subtle);
+  background: color-mix(
+    in srgb,
+    var(--d-sys-color-background-accent) 7.5%,
+    transparent
+  );
+  box-shadow: var(--d-sys-shadow-raised);
+  border-radius: var(--d-sys-border-radius-lg);
   font: inherit;
   text-align: start;
   cursor: pointer;
@@ -609,8 +614,12 @@ body.has-ai-conversations-sidebar {
 
   &:hover,
   &:focus-visible {
-    border-color: var(--tertiary);
-    background: rgb(var(--tertiary-rgb), 0.15);
+    border-color: var(--d-sys-color-border-accent);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-accent) 15%,
+      transparent
+    );
   }
 
   .sidebar-container & {
@@ -643,8 +652,8 @@ body.has-ai-conversations-sidebar {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: var(--tertiary);
-    color: var(--secondary);
+    background-color: var(--d-sys-color-background-accent);
+    color: var(--d-sys-color-text-inverse);
     width: 2rem;
     height: 2rem;
   }
@@ -656,7 +665,7 @@ body.has-ai-conversations-sidebar {
 
   &__body {
     grid-area: body;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 }
@@ -747,7 +756,7 @@ html.mobile-tab-bar-visible:has(.ai-bot-conversations-index) {
   .sidebar-section-header {
     width: 100%;
     padding: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
   }
 
@@ -757,7 +766,7 @@ html.mobile-tab-bar-visible:has(.ai-bot-conversations-index) {
     margin: 0 0 0 auto;
 
     .d-icon {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
       font-size: var(--font-down-1);
     }
   }
@@ -770,7 +779,7 @@ html.mobile-tab-bar-visible:has(.ai-bot-conversations-index) {
   .sidebar-section-link-wrapper
     + .sidebar-section-link-wrapper
     .sidebar-section-link {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   // Lets long titles trim to the row rather than widen it. Through the
@@ -784,11 +793,11 @@ html.mobile-tab-bar-visible:has(.ai-bot-conversations-index) {
     padding-inline: 0;
     border-radius: 0;
     box-sizing: border-box;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
 
     &:active {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
     }
   }
 }

@@ -12,7 +12,7 @@
 
     &:active {
       cursor: col-resize;
-      background: var(--tertiary);
+      background: var(--d-sys-color-background-accent);
     }
   }
 
@@ -23,7 +23,7 @@
     &:hover,
     &:active {
       cursor: col-resize;
-      background: var(--tertiary);
+      background: var(--d-sys-color-background-accent);
     }
   }
 }

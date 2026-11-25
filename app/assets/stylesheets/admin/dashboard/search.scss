@@ -8,7 +8,7 @@
   }
 
   thead th {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1-rem);
   }
 
@@ -28,7 +28,7 @@
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
     margin: 0;
   }

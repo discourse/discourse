@@ -3,7 +3,7 @@
 
   .d-icon {
     padding: 5px;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     border-radius: 100%;
   }
 
@@ -11,7 +11,7 @@
   &:hover,
   &:active {
     .d-icon {
-      color: var(--primary) !important;
+      color: var(--d-sys-color-icon-default) !important;
     }
     background: none !important;
     background-image: none !important;

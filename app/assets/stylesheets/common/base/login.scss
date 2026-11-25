@@ -96,7 +96,7 @@ body.invite-page {
   a {
     display: inline-block;
     padding: 1em 0.5em 1em 0;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   button {
@@ -106,7 +106,7 @@ body.invite-page {
 
 .email-login {
   border-radius: 10px;
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   padding: 20px;
   margin: 0 auto;
 

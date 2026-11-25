@@ -9,18 +9,18 @@
   .text-preview,
   .inline-diff {
     ins {
-      background-color: var(--success-low);
+      background-color: var(--d-sys-color-background-success-subtlest);
       text-decoration: none;
     }
 
     del {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
       text-decoration: line-through;
     }
 
     mark {
-      background-color: var(--highlight-low);
-      border-bottom: 2px solid var(--highlight-high);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
+      border-bottom: 2px solid var(--d-sys-color-background-highlight-bold);
 
       ins,
       del {
@@ -30,7 +30,7 @@
     }
 
     .same-word {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .ghost {
@@ -58,16 +58,16 @@
 
   &__old-value {
     white-space: pre-wrap;
-    border-left: 2px solid var(--danger);
+    border-left: 2px solid var(--d-sys-color-border-danger);
     padding-left: 1rem;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     margin-bottom: 1rem;
   }
 
   &__new-value {
-    border-left: 2px solid var(--success);
+    border-left: 2px solid var(--d-sys-color-border-success);
     padding-left: 1rem;
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   .d-modal__footer {
@@ -101,7 +101,7 @@
     margin-bottom: 0;
 
     &::placeholder {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 }
@@ -125,15 +125,15 @@
 
 @keyframes loading-text {
   0% {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   50% {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   100% {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 }
 
@@ -148,8 +148,8 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--tertiary);
-  color: var(--tertiary);
+  background-color: var(--d-sys-color-background-accent);
+  color: var(--d-sys-color-text-link);
   box-shadow: 9999px 0 0 0 var(--tertiary);
   animation: dot-falling 1s infinite linear;
   animation-delay: 0.1s;
@@ -167,8 +167,8 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--tertiary);
-  color: var(--tertiary);
+  background-color: var(--d-sys-color-background-accent);
+  color: var(--d-sys-color-text-link);
   animation: dot-falling-before 1s infinite linear;
   animation-delay: 0s;
 }
@@ -177,8 +177,8 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: var(--tertiary);
-  color: var(--tertiary);
+  background-color: var(--d-sys-color-background-accent);
+  color: var(--d-sys-color-text-link);
   animation: dot-falling-after 1s infinite linear;
   animation-delay: 0.2s;
 }
@@ -255,17 +255,19 @@
   position: absolute;
 
   .edit-topic-title & {
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     right: var(--space-1);
     bottom: 50%;
-    border-radius: var(--d-input-border-radius); // to match surrounding input
+    border-radius: var(
+      --d-comp-Input-border-radius
+    ); // to match surrounding input
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
     z-index: z("composer", "dropdown");
     transform: translateY(50%);
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 }
@@ -301,7 +303,7 @@
 
     h2 {
       font-size: var(--font-0);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       padding-bottom: 0.5em;
     }
 
@@ -311,7 +313,7 @@
 
     &__copy {
       .d-icon-check {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
     }
 
@@ -371,13 +373,13 @@
 
     &:hover,
     &:focus {
-      background: var(--d-hover);
-      color: var(--primary);
+      background: var(--d-sys-color-background-default-hovered);
+      color: var(--d-sys-color-text-default);
     }
   }
 
   li:not(:last-child) {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .ai-split-topic-suggestion__category-result {
@@ -386,14 +388,14 @@
 
     &:hover,
     &:focus {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
       cursor: pointer;
     }
   }
 
   .topic-count {
     font-size: var(--font-down-2);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -444,7 +446,7 @@
   display: contents;
 
   &__button.btn-transparent {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     min-height: 0;
     padding: 0;
   }
@@ -481,19 +483,19 @@
 
     &:focus,
     &:hover {
-      color: var(--primary);
-      background: var(--d-hover);
+      color: var(--d-sys-color-text-default);
+      background: var(--d-sys-color-background-default-hovered);
 
       .discourse-no-touch & {
-        color: var(--primary);
-        background: var(--d-hover);
+        color: var(--d-sys-color-text-default);
+        background: var(--d-sys-color-background-default-hovered);
       }
 
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
 
         .discourse-no-touch & {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -574,8 +576,8 @@
     justify-content: space-between;
     gap: var(--space-1);
     font-size: var(--font-down-1-rem);
-    border-bottom: 1px solid var(--primary-low);
-    background: var(--secondary);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
+    background: var(--d-sys-color-background-default);
 
     .name {
       margin: 0;
@@ -583,7 +585,7 @@
     }
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 
@@ -593,7 +595,7 @@
 
   &.ai-category-suggest-row,
   &.ai-tag-suggest-row {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
 
     .d-icon-spinner {
@@ -613,7 +615,7 @@
     margin-left: auto;
     width: 0.9em;
     height: 0.9em;
-    border: 2px solid var(--primary-low-mid);
+    border: 2px solid var(--d-sys-color-border-strong);
     border-right-color: transparent;
     border-radius: 50%;
     animation: spin 1s linear infinite;

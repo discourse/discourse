@@ -27,7 +27,7 @@ $live-widget-z: z("header") + 1;
   height: min(21rem, 60vh);
   padding: var(--space-3);
   border-radius: 0.75rem;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 20%);
 
   &__header {
@@ -95,8 +95,8 @@ $live-widget-z: z("header") + 1;
     padding: 0;
     border: none;
     border-radius: 0.5em;
-    background: var(--primary-very-low);
-    color: var(--primary-high);
+    background: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-muted);
     cursor: pointer;
     transition:
       width 0.2s ease-out,
@@ -109,8 +109,8 @@ $live-widget-z: z("header") + 1;
 
     &:hover,
     &:focus-visible {
-      background: var(--primary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -160,7 +160,7 @@ $live-widget-z: z("header") + 1;
 
     .--off,
     .--active {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -242,7 +242,7 @@ html.discourse-touch .live-call-widget {
   grid-template-columns: minmax(0, 1fr) auto;
   height: calc(100dvh - var(--main-outlet-offset, 4em));
   min-height: 0;
-  border-right: 1px solid var(--content-border-color);
+  border-right: 1px solid var(--d-sys-color-border-default);
 
   &__main {
     min-width: 0;
@@ -257,7 +257,7 @@ html.discourse-touch .live-call-widget {
     min-height: 0;
     display: flex;
     overflow: hidden;
-    border-inline-start: 1px solid var(--content-border-color);
+    border-inline-start: 1px solid var(--d-sys-color-border-default);
 
     // Animating the width (not just fading in place) makes the whole layout
     // ease — the video column and controls resize smoothly instead of
@@ -310,14 +310,14 @@ html.discourse-touch .live-call-widget {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
-    background: var(--secondary);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-default);
 
     .live-video-tile {
       width: 100%;
       height: 100%;
-      border-radius: calc(var(--d-border-radius) - 1px);
+      border-radius: calc(var(--d-sys-border-radius-md) - 1px);
     }
 
     .live-video-tile.--screen .live-video-tile__video,
@@ -464,7 +464,7 @@ html.discourse-touch .live-call-widget {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__controls {
@@ -481,7 +481,7 @@ html.discourse-touch .live-call-widget {
 
     .--off,
     .--active {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 }
@@ -511,16 +511,16 @@ html.discourse-touch .live-call-widget {
     min-width: 0;
     padding: 0;
     font: inherit;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:hover,
     &:focus-visible {
       background: none;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       .discourse-no-touch & {
         background: none;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
     }
 
@@ -532,7 +532,7 @@ html.discourse-touch .live-call-widget {
   }
 
   &__participants {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     white-space: nowrap;
   }
@@ -540,7 +540,7 @@ html.discourse-touch .live-call-widget {
   &__icon {
     position: relative;
     font-size: var(--font-up-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     line-height: 1;
   }
 
@@ -552,8 +552,8 @@ html.discourse-touch .live-call-widget {
     height: 40%;
     padding: 2px 2px 3px;
     border-radius: 50%;
-    background-color: var(--secondary);
-    color: var(--primary-high);
+    background-color: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__fallback {
@@ -562,8 +562,8 @@ html.discourse-touch .live-call-widget {
     align-items: center;
     gap: var(--space-2);
     padding: 0 0.67em;
-    border-block-end: 1px solid var(--content-border-color);
-    background: var(--secondary);
+    border-block-end: 1px solid var(--d-sys-color-border-default);
+    background: var(--d-sys-color-background-default);
   }
 
   &__actions {
@@ -620,7 +620,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     padding-inline: 0.4em;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-inline-start: 1px solid var(--primary-low-mid);
+    border-inline-start: 1px solid var(--d-sys-color-border-strong);
   }
 }
 
@@ -643,7 +643,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     margin: 0;
     padding: 0.25em 0.75em;
     max-width: 100%;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: rgb(0 0 0 / 65%);
     color: #fff;
     text-align: center;
@@ -724,7 +724,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     max-width: 8rem;
     padding: 0 0.4em;
     overflow: hidden;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: rgb(0 0 0 / 55%);
     color: #fff;
     font-size: var(--font-down-2);
@@ -787,7 +787,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   &__more {
     padding: var(--live-reaction-spacing);
     margin: var(--live-reaction-spacing);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .emoji,
     .d-icon {
@@ -824,8 +824,8 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     min-width: 1.6em;
     padding: 0 0.3em;
     border-radius: 1em;
-    background: var(--tertiary);
-    color: var(--secondary);
+    background: var(--d-sys-color-background-accent);
+    color: var(--d-sys-color-text-inverse);
     font-size: var(--font-down-2);
     line-height: 1.6em;
     text-align: center;
@@ -857,9 +857,9 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   &__paused {
     margin-block-end: 0.5em;
     padding: 0.35em 0.5em;
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
-    color: var(--primary-high);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -877,17 +877,17 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     align-items: center;
     gap: 0.5em;
     padding: 0.25em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.--self {
-      background: var(--tertiary-very-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   &__position {
     min-width: 1.5em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -904,7 +904,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding: 0.5em;
   }
 }
@@ -942,7 +942,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     inset-inline: 0;
     z-index: 1050;
     width: auto;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     animation-name: live-drawer-in;
 
     &.--closing {
@@ -978,7 +978,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   max-width: 100%;
   border-radius: 0.5em;
   overflow: hidden;
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
 
   // An overlay rather than an inset outline: the video fills the tile and
   // paints over the tile's own outline, so the ring only ever showed on
@@ -987,7 +987,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     content: "";
     position: absolute;
     inset: 0;
-    border: 3px solid var(--success);
+    border: 3px solid var(--d-sys-color-border-success);
     border-radius: inherit;
     pointer-events: none;
   }
@@ -1111,8 +1111,8 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     white-space: nowrap;
 
     &.--moderator {
-      background: var(--tertiary);
-      color: var(--secondary);
+      background: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
     }
 
     // Dark scrim rather than a light one: avatar tiles are light in the
@@ -1137,19 +1137,19 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--tertiary-medium);
-  border-radius: var(--d-border-radius);
-  background: var(--tertiary-very-low);
+  border: 1px solid var(--d-sys-color-background-accent-subtle);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-accent-subtlest);
 
   &-text {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 
@@ -1165,7 +1165,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-up-1);
 }
 
@@ -1175,9 +1175,9 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   gap: var(--space-2);
   max-height: 9.5rem;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  background: var(--primary-very-low);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-sunken);
   overflow-y: auto;
 
   &-header {
@@ -1189,7 +1189,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   &-title {
     font-size: var(--font-down-1);
     font-weight: 600;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &-list {
@@ -1205,10 +1205,10 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     gap: 0.4rem;
     max-width: 13rem;
     padding: 0.2rem 0.55rem 0.2rem 0.25rem;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--d-sys-color-border-default);
     border-radius: 999px;
-    background: var(--secondary);
-    color: var(--primary);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
     cursor: pointer;
     transition:
@@ -1217,8 +1217,8 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
 
     &:hover:not(:disabled),
     &:focus-visible:not(:disabled) {
-      border-color: var(--tertiary);
-      background: var(--tertiary-very-low);
+      border-color: var(--d-sys-color-border-accent);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &:disabled {
@@ -1227,16 +1227,16 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     }
 
     &.--self {
-      border-color: var(--primary-low-mid);
+      border-color: var(--d-sys-color-border-strong);
     }
 
     &.--hand-raised {
-      border-color: var(--tertiary);
-      background: var(--tertiary-very-low);
+      border-color: var(--d-sys-color-border-accent);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
 
     &.--invited {
-      border-color: var(--success-medium);
+      border-color: var(--d-sys-color-background-success-subtle);
     }
 
     .avatar {
@@ -1252,15 +1252,15 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   }
 
   &-hand {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     flex-shrink: 0;
   }
 
   &-invited-badge {
     padding: 0.05em 0.4em;
     border-radius: 999px;
-    background: var(--success-low);
-    color: var(--success);
+    background: var(--d-sys-color-background-success-subtlest);
+    color: var(--d-sys-color-text-success);
     font-size: var(--font-down-2);
     font-weight: 600;
     flex-shrink: 0;
@@ -1317,8 +1317,8 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   // No measured video to derive a shape from — assume the default tile
   // aspect so it packs into the grid like everyone else.
   aspect-ratio: 16 / 9;
-  border: 1px dashed var(--primary-low-mid);
-  background: var(--primary-very-low);
+  border: 1px dashed var(--d-sys-color-border-strong);
+  background: var(--d-sys-color-background-sunken);
 
   &__animation {
     display: flex;
@@ -1331,7 +1331,7 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
     // the icon.
     .d-icon {
       font-size: var(--font-up-4);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       animation: live-ringing-pulse 1.4s ease-in-out infinite;
 
       @media (prefers-reduced-motion: reduce) {

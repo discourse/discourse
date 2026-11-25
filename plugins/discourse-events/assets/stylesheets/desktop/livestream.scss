@@ -23,12 +23,15 @@
     display: flex;
     position: sticky;
     top: var(--header-offset);
-    background: var(--d-content-background, var(--secondary));
+    background: var(
+      --d-content-background,
+      var(--d-sys-color-background-default)
+    );
     align-self: start;
     overflow-y: auto;
 
     @include viewport.from(lg) {
-      border-left: 2px solid var(--primary-very-low);
+      border-left: 2px solid var(--d-sys-color-border-muted);
       height: calc(
         var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
       ) !important;
@@ -79,8 +82,8 @@
 
     .topic-admin-menu-trigger {
       border-radius: 0;
-      background: var(--secondary);
-      border: 1px solid var(--primary-low);
+      background: var(--d-sys-color-background-default);
+      border: 1px solid var(--d-sys-color-border-default);
     }
   }
 

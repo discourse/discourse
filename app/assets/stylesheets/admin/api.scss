@@ -103,9 +103,9 @@
   padding: var(--space-2) var(--space-3);
   font-family: var(--d-font-family--monospace);
   font-size: var(--font-down-1);
-  background: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-sunken);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   user-select: all;
   word-break: break-all;
 
@@ -114,8 +114,8 @@
     flex-direction: column;
     gap: var(--space-2);
     padding: var(--space-3) var(--space-4);
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__detail-row {
@@ -139,13 +139,13 @@
     padding: 0.15em 0.5em;
     font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-1);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__scope-param {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__key-row {
@@ -223,11 +223,11 @@
 
   > p {
     padding-bottom: 10px;
-    border-bottom: var(--primary-low) 1px solid;
+    border-bottom: var(--d-sys-color-border-default) 1px solid;
   }
 
   .filters {
-    border-bottom: var(--primary-low) 1px solid;
+    border-bottom: var(--d-sys-color-border-default) 1px solid;
 
     .filter {
       margin-bottom: 1em;
@@ -263,7 +263,7 @@
 .web-hook-events {
   .heading-container {
     width: 100%;
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
   }
 
   li {

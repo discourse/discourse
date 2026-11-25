@@ -43,12 +43,12 @@
     max-height: 0;
     position: fixed;
     margin-left: 0;
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid var(--content-border-color);
-    box-shadow: var(--shadow-composer);
+    border-top: 1px solid var(--d-sys-color-border-default);
+    box-shadow: var(--d-sys-shadow-dialog);
     padding: 20px 0;
     z-index: z("fullscreen");
 
@@ -117,7 +117,7 @@
         }
 
         a {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
         }
       }
 
@@ -244,7 +244,7 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
-      border-left: 1px solid var(--topic-timeline-border-color);
+      border-left: 1px solid var(--d-comp-TopicTimeline-color-border);
       position: relative;
       max-width: 100%;
       transform: translateZ(0);
@@ -271,7 +271,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--topic-timeline-handle-color);
+      background-color: var(--d-comp-TopicTimelineScroller-color-background);
       height: 100%;
       float: left;
       flex-shrink: 0;
@@ -321,7 +321,7 @@
 
       .progress {
         font-size: 0.8em;
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
         margin-right: var(--space-4);
       }
     }

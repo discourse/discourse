@@ -546,7 +546,7 @@ html {
 
 .blog-article__body .hljs-keyword,
 .blog-article__body .hljs-subst {
-  color: var(--hljs-keyword);
+  color: var(--d-comp-CodeBlock-keyword-color-text);
 }
 
 .blog-article__body .hljs-number {
@@ -564,11 +564,11 @@ html {
 .blog-article__body .hljs-template-tag,
 .blog-article__body .hljs-template-variable,
 .blog-article__body .hljs-type {
-  color: var(--hljs-string);
+  color: var(--d-comp-CodeBlock-string-color-text);
 }
 
 .blog-article__body .hljs-title {
-  color: var(--hljs-title);
+  color: var(--d-comp-CodeBlock-title-color-text);
 }
 
 .blog-article__body .hljs-quote,
@@ -576,7 +576,7 @@ html {
 .blog-article__body .hljs-selector-pseudo,
 .blog-article__body .hljs-selector-tag,
 .blog-article__body .hljs-link {
-  color: var(--hljs-string);
+  color: var(--d-comp-CodeBlock-string-color-text);
 }
 
 .blog-article__body .hljs-subst {
@@ -585,67 +585,67 @@ html {
 
 .blog-article__body .hljs-literal,
 .blog-article__body .hljs-class .hljs-title {
-  color: var(--hljs-title);
+  color: var(--d-comp-CodeBlock-title-color-text);
 }
 
 .blog-article__body .hljs-name {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .blog-article__body .hljs-punctuation {
-  color: var(--hljs-punctuation);
+  color: var(--d-comp-CodeBlock-punctuation-color-text);
 }
 
 .blog-article__body .hljs-attr {
-  color: var(--hljs-attr);
+  color: var(--d-comp-CodeBlock-attr-color-text);
 }
 
 .blog-article__body .hljs-selector-attr,
 .blog-article__body .hljs-selector-class,
 .blog-article__body .hljs-selector-id {
-  color: var(--hljs-attr);
+  color: var(--d-comp-CodeBlock-attr-color-text);
 }
 
 .blog-article__body .hljs-variable {
-  color: var(--hljs-variable);
+  color: var(--d-comp-CodeBlock-variable-color-text);
 }
 
 .blog-article__body .hljs-attribute {
-  color: var(--hljs-attribute);
+  color: var(--d-comp-CodeBlock-attribute-color-text);
 }
 
 .blog-article__body .hljs-regexp {
-  color: var(--success);
+  color: var(--d-sys-color-text-success);
 }
 
 .blog-article__body .hljs-symbol {
-  color: var(--hljs-symbol);
+  color: var(--d-comp-CodeBlock-symbol-color-text);
 }
 
 .blog-article__body .hljs-built_in {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .blog-article__body .hljs-deletion {
-  background: var(--danger-low);
-  color: var(--hljs-deletion);
+  background: var(--d-sys-color-background-danger-subtlest);
+  color: var(--d-comp-CodeBlock-deletion-color-text);
 }
 
 .blog-article__body .hljs-addition {
-  background: var(--success-low);
-  color: var(--hljs-addition);
+  background: var(--d-sys-color-background-success-subtlest);
+  color: var(--d-comp-CodeBlock-addition-color-text);
 }
 
 .blog-article__body .hljs-section {
-  color: var(--hljs-name);
+  color: var(--d-comp-CodeBlock-name-color-text);
 }
 
 .blog-article__body .hljs-bullet {
-  color: var(--hljs-attribute);
+  color: var(--d-comp-CodeBlock-attribute-color-text);
 }
 
 .blog-article__body .hljs-emphasis {
-  color: var(--hljs-comment);
+  color: var(--d-comp-CodeBlock-comment-color-text);
   font-style: italic;
 }
 
@@ -944,7 +944,7 @@ html {
     var(--blog-paper-color) 20%,
     transparent
   );
-  --blog-lightbox-backdrop: rgba(var(--always-black-rgb), 0.82);
+  --blog-lightbox-backdrop: color-mix(in srgb, black 82%, transparent);
   --blog-lightbox-focus: var(--blog-link-color);
   --blog-lightbox-radius: 12px;
   --blog-lightbox-target: 44px;
@@ -1191,7 +1191,7 @@ html {
 }
 
 .blog__preview {
-  background: var(--highlight-low);
+  background: var(--d-sys-color-background-highlight-subtlest);
   border-bottom: 1px solid var(--blog-rule);
   padding: 16px 24px;
   text-align: center;

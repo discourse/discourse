@@ -43,7 +43,7 @@
   .form-kit__container-description {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     pre,
     code {
@@ -54,6 +54,6 @@
   .form-kit__container-help-text {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }

@@ -29,13 +29,13 @@
     gap: var(--space-2);
 
     &:focus-within {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }
 
     &.--invalid {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
       outline: 2px solid var(--danger);
       outline-offset: -2px;
     }
@@ -50,7 +50,7 @@
   &__icon {
     position: absolute;
     pointer-events: none;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
   }
 
@@ -92,6 +92,6 @@
   &__color-code {
     font-family: monospace;
     font-size: var(--font-up-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }

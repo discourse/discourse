@@ -4,14 +4,14 @@
   display: flex;
   padding: var(--space-3);
   gap: var(--space-1);
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   flex-direction: column;
   flex: 1 0 auto;
   max-width: 100%;
   box-sizing: border-box;
   box-shadow: 0 0 0 3px var(--primary-100);
   border: 1px solid var(--primary-300);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   white-space: normal;
 
   input,
@@ -22,18 +22,18 @@
 
     &::placeholder {
       font-style: italic;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &:hover {
       opacity: 1;
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       cursor: pointer;
     }
 
     &:focus {
       opacity: 1;
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       cursor: text;
       outline-color: var(--d-input-focused-color);
 
@@ -45,7 +45,7 @@
     }
 
     @include viewport.until(sm) {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
   }
 
@@ -67,7 +67,7 @@
   }
 
   &.ProseMirror-selectednode {
-    border-color: var(--tertiary);
+    border-color: var(--d-sys-color-border-accent);
     box-shadow: 0 0 0 1px var(--tertiary);
   }
 
@@ -92,14 +92,14 @@
     height: 3em;
     margin: 0;
     padding: 0;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     flex-direction: column;
     align-self: flex-start;
 
     .composer-event__month {
       text-align: center;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -119,7 +119,7 @@
     justify-content: center;
 
     .composer-event__status {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: var(--font-down-1);
       margin: 0;
     }
@@ -140,12 +140,12 @@
     min-height: 2em;
 
     &:first-child {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
 
     > .d-icon,
     > .composer-event__reminder-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       margin: 0 auto;
       padding: 0;
     }
@@ -156,7 +156,7 @@
     justify-items: start;
 
     .composer-event__reminder-icon .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
 
     .composer-event__reminder-value {
@@ -165,7 +165,7 @@
     }
 
     .composer-event__reminder-unit {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       line-height: var(--line-height-small);
     }
   }
@@ -270,19 +270,19 @@
 
     textarea,
     input {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
   }
 }
 
 .composer-event__name-input {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   margin-top: calc(-1 * var(--space-2));
   margin-left: calc(-1 * var(--space-2));
   margin-bottom: calc(-1 * var(--space-1));
   font-size: var(--font-up-2) !important;
   font-weight: 400;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   font-family: inherit;
   padding: var(--space-2) !important;
   cursor: text;
@@ -395,7 +395,7 @@ input.composer-event__time-input[type="time"] {
   }
 
   &::placeholder {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -412,7 +412,7 @@ input.composer-event__time-input[type="time"] {
 }
 
 .composer-event__description-textarea {
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-2);
   width: 100%;
   cursor: text;
@@ -427,17 +427,17 @@ input.composer-event__time-input[type="time"] {
 }
 
 .composer-event__location-external-link {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   text-decoration: none;
   display: flex;
   align-items: center;
   padding: 0.25rem;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   flex-shrink: 0;
 
   &:hover {
-    color: var(--tertiary);
-    background: var(--primary-very-low);
+    color: var(--d-sys-color-text-link);
+    background: var(--d-sys-color-background-sunken);
   }
 
   .d-icon {

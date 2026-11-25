@@ -56,7 +56,7 @@ $solved-color: var(--success);
     margin-right: 0.5em;
 
     .select-kit-header {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .angle-icon {
@@ -148,7 +148,7 @@ $solved-color: var(--success);
 
 .solved-shared-issue-row .post-action-menu__solved-shared-issue {
   &.has-shared-issue {
-    --d-button-default-icon-color: var(--tertiary);
+    --d-comp-DButton-color-icon-default: var(--d-sys-color-icon-accent);
   }
 }
 

@@ -3,14 +3,14 @@
 
   &:visited,
   &:hover {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .hashtag-icon-placeholder {
     width: 0.72em;
     height: 0.72em;
     display: inline-block;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-right: var(--space-1);
   }
 
@@ -34,7 +34,7 @@
 .hashtag-autocomplete {
   max-height: 13.5em;
   overflow-y: auto;
-  box-shadow: var(--shadow-dropdown);
+  box-shadow: var(--d-sys-shadow-overlay);
   border-radius: 8px;
 
   &__fadeout {
@@ -50,8 +50,12 @@
       height: 1.5em;
       background: linear-gradient(
         to bottom,
-        rgb(var(--secondary-rgb), 0),
-        rgb(var(--secondary-rgb), 100%)
+        color-mix(
+          in srgb,
+          var(--d-sys-color-background-default) 0%,
+          transparent
+        ),
+        var(--d-sys-color-background-default)
       );
     }
   }

@@ -14,21 +14,21 @@
     border-color 0.2s;
 
   &.reacted {
-    border-color: var(--tertiary-medium);
-    background: var(--tertiary-very-low);
-    color: var(--tertiary-hover);
+    border-color: var(--d-sys-color-background-accent-subtle);
+    background: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-link-hovered);
 
     &:focus-visible,
     &:hover {
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   &:not(.reacted) {
     &:focus-visible,
     &:hover {
-      background: var(--primary-low);
-      border-color: var(--primary-low-mid);
+      background: var(--d-sys-color-background-neutral);
+      border-color: var(--d-sys-color-border-strong);
     }
   }
 

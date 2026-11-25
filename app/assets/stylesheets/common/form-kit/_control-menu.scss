@@ -20,7 +20,7 @@
 
     .dropdown-menu__item {
       &:hover {
-        background: var(--d-hover);
+        background: var(--d-sys-color-background-default-hovered);
       }
     }
   }
@@ -30,13 +30,13 @@
       .btn:focus,
       .btn:active {
         .discourse-touch & {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           background: rgb(0, 0, 0, 0);
         }
       }
 
       &:last-of-type .btn {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
   }

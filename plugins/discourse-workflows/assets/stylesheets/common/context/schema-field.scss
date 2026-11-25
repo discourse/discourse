@@ -17,12 +17,12 @@
 
   &.has-children > &__row {
     &:hover .workflows-schema-field__key {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
   &__toggle {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-right: 0.25em;
   }
 
@@ -39,7 +39,7 @@
     &:hover {
       background-color: var(--primary-100);
       border-color: var(--primary-300);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       .workflows-schema-field__key-icon {
         border-color: var(--primary-300);

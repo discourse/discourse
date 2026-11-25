@@ -20,13 +20,13 @@
     align-items: center;
     margin: 0 0 0.25rem;
     font-size: var(--font-down-1-rem);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__fieldset-description {
     display: flex;
     align-items: center;
     margin: 0;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 }

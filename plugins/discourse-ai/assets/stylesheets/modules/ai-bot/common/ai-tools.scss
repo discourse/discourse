@@ -2,8 +2,8 @@
 
 .ai-tool-parameter {
   padding: 1.5em;
-  border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-input-border-radius);
+  border: 1px solid var(--d-sys-color-border-strong);
+  border-radius: var(--d-comp-Input-border-radius);
   width: 100%;
   box-sizing: border-box;
 
@@ -15,8 +15,8 @@
 
 .ai-tool-secret-contract {
   padding: 1.5em;
-  border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-input-border-radius);
+  border: 1px solid var(--d-sys-color-border-strong);
+  border-radius: var(--d-comp-Input-border-radius);
   width: 100%;
   box-sizing: border-box;
 
@@ -108,18 +108,18 @@
   align-items: center;
   gap: 0.25em;
   padding: 0.15em 0.5em;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
   line-height: 1.4;
 
   &--bound {
-    background-color: var(--success-low);
-    color: var(--success);
+    background-color: var(--d-sys-color-background-success-subtlest);
+    color: var(--d-sys-color-text-success);
   }
 
   &--missing {
-    background-color: var(--danger-low);
-    color: var(--danger);
+    background-color: var(--d-sys-color-background-danger-subtlest);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -130,7 +130,7 @@
 
 .ai-tool-list__mcp-meta {
   margin-top: 0.35em;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1);
 }
 
@@ -138,14 +138,14 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   font: inherit;
   text-decoration: underline;
   cursor: pointer;
 
   &:hover,
   &:focus-visible {
-    color: var(--tertiary-hover);
+    color: var(--d-sys-color-text-link-hovered);
     text-decoration-thickness: 2px;
   }
 }
@@ -160,13 +160,13 @@
 
   &__summary {
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__tool {
     padding: 1rem;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__header {
@@ -183,13 +183,13 @@
   }
 
   &__name {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
   &__description {
     margin: 0.5rem 0 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__parameters-title {
@@ -205,7 +205,7 @@
 
   &__parameter {
     padding-top: 0.75rem;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     &:first-child {
       padding-top: 0;
@@ -228,19 +228,19 @@
   }
 
   &__parameter-type {
-    background: var(--primary-low);
-    color: var(--primary-high);
+    background: var(--d-sys-color-background-neutral);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__parameter-required {
-    background: var(--danger-low);
-    color: var(--danger);
+    background: var(--d-sys-color-background-danger-subtlest);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__parameter-description,
   &__no-parameters {
     margin-top: 0.35rem;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -249,8 +249,8 @@
   &__test-result {
     margin-bottom: 1rem;
     padding: 1rem;
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     h3 {
       margin-top: 0;
@@ -275,7 +275,7 @@
   }
 
   &__oauth-label {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-weight: 600;
   }
 
@@ -292,7 +292,7 @@
     gap: 1em 2em;
     margin-top: 1em;
     padding-top: 1em;
-    border-top: 3px solid var(--primary-low);
+    border-top: 3px solid var(--d-sys-color-border-default);
   }
 
   &-list-item {
@@ -308,7 +308,7 @@
   }
 
   .admin-section-landing-item__description {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin: 0.25em 0 0.5em;
     line-height: var(--line-height-large);
     align-self: start;
@@ -325,7 +325,7 @@
   h4 {
     font-size: var(--font-down-1);
     font-weight: normal;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin: 0;
     letter-spacing: 0.1px;
   }
@@ -340,26 +340,26 @@
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   transition: background-color 0.15s ease-in-out;
 
   &:hover {
-    background-color: var(--d-hover);
+    background-color: var(--d-sys-color-background-default-hovered);
   }
 
   &:active {
-    background-color: var(--d-selected);
+    background-color: var(--d-sys-color-background-default-selected);
   }
 
   .ai-tool-preset-provider {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     line-height: 1.2;
   }
 
   .ai-tool-preset-model {
     font-size: var(--font-0);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     line-height: 1.2;
     font-weight: 500;
   }

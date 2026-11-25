@@ -377,11 +377,11 @@ module DiscourseAi
 
           value =
             if radius >= AppearanceAuthoring::WebsiteDesign::PILL_RADIUS
-              "var(--d-border-radius-pill)"
+              "var(--d-sys-border-radius-full)"
             else
               "#{radius.clamp(0, 32)}px"
             end
-          { "variables" => { "--d-button-border-radius" => value } }
+          { "variables" => { "--d-comp-DButton-border-radius" => value } }
         end
 
         # A new theme for styles alone keeps the colors the site shows now.

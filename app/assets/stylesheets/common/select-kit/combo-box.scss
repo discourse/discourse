@@ -26,8 +26,8 @@
     }
 
     .select-kit-header {
-      background: var(--secondary);
-      border-color: var(--input-border-color);
+      background: var(--d-sys-color-background-default);
+      border-color: var(--d-sys-color-border-input);
 
       &.is-focused {
         @include default-focus;
@@ -47,7 +47,7 @@
           font-weight: bold;
           display: block;
           padding: 0.75em;
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
 
           &:hover {
             text-decoration: underline;
@@ -59,11 +59,11 @@
     &.is-disabled {
       .select-kit-header {
         background: var(--d-input-bg-color--disabled);
-        border-color: var(--primary-low-mid);
-        color: var(--primary-medium);
+        border-color: var(--d-sys-color-border-strong);
+        color: var(--d-sys-color-text-faint);
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-icon-faint);
         }
       }
     }
@@ -80,7 +80,7 @@
     }
 
     &.tag-drop {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 }

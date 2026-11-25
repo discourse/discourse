@@ -1,6 +1,6 @@
 .btn-floating.open-new-message-btn {
   position: fixed;
-  background: var(--tertiary);
+  background: var(--d-sys-color-background-accent);
   bottom: 5rem;
   right: 2rem;
   border-radius: 50%;
@@ -42,7 +42,7 @@
     position: relative;
     padding: 0;
     background: transparent;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-0-rem);
 
     &::after {
@@ -58,7 +58,7 @@
       background: transparent;
 
       .d-icon {
-        color: var(--primary);
+        color: var(--d-sys-color-icon-default);
       }
     }
   }
@@ -83,8 +83,8 @@
   align-items: center;
   justify-content: space-between;
   font-family: var(--heading-font-family);
-  color: var(--primary);
-  border-bottom: 1px solid var(--content-border-color);
+  color: var(--d-sys-color-text-default);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   .channel-title {
     line-height: var(--line-height-medium);

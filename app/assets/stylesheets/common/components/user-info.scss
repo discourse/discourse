@@ -24,7 +24,7 @@
       gap: 0 0.5em;
 
       a {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       .username-wrapper {
@@ -72,15 +72,15 @@
     }
 
     .details {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       .d-icon-reply {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
 
     .title {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       @include ellipsis;
     }

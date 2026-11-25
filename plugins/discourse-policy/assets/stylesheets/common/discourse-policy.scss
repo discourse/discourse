@@ -2,7 +2,7 @@
 .cooked .policy {
   container-type: inline-size;
   position: relative;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sys-color-border-default);
 
   .policy-body {
     padding: 0.75em;
@@ -10,7 +10,7 @@
   }
 
   .policy-footer {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding: 0.75em;
     align-items: center;
     display: flex;
@@ -23,11 +23,11 @@
     align-items: center;
 
     &.toggle-accepted {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.toggle-not-accepted {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .user-count {
@@ -42,7 +42,7 @@
   }
 
   .no-possible-users {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-size: var(--font-down-1);
   }
 
@@ -64,7 +64,7 @@
   }
 
   .separator {
-    border-right: 2px solid var(--primary-low);
+    border-right: 2px solid var(--d-sys-color-border-default);
   }
 
   .see-policy-settings-btn,
@@ -82,7 +82,7 @@
   }
 
   .load-more-users {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-left: 0.25em;
   }
 
@@ -98,12 +98,12 @@
 
   .policy-settings {
     display: none; // JS override kicks in when needed.
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding: 0.75em;
     flex-direction: column;
 
     .visible-settings {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .save-policy-settings-btn {
@@ -148,7 +148,7 @@
 .d-editor-preview .policy,
 .ProseMirror .policy {
   padding: 0.5em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sys-color-border-default);
   margin-block: var(--space-4);
 
   .policy-header {
@@ -170,7 +170,7 @@
     gap: var(--space-1) var(--space-2);
     margin: var(--space-2) 0;
     padding: var(--space-2);
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
 
     dt {
       font-weight: 700;

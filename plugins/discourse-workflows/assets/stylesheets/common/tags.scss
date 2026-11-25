@@ -6,7 +6,7 @@
 
   &__manage {
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding: var(--space-half) var(--space-2);
     min-height: 0;
   }
@@ -15,7 +15,7 @@
     min-width: 16em;
 
     .select-kit-header {
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 }

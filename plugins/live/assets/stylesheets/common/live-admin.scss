@@ -41,20 +41,20 @@
     display: flex;
     flex-direction: column;
     padding: 1em;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__card-value {
     font-size: var(--font-up-3);
     font-weight: 700;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__card-label {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-top: 0.25em;
   }
 
@@ -67,7 +67,7 @@
   &__empty {
     padding: 2em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   h3 {
@@ -79,9 +79,9 @@
 .live-livekit-status {
   margin-top: 2em;
   padding: 1em;
-  background: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-sunken);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
 
   &__header {
     display: flex;
@@ -114,7 +114,7 @@
 
     &.--ok .d-icon,
     .--ok .d-icon {
-      color: var(--success);
+      color: var(--d-sys-color-icon-success);
     }
 
     &.--warning .d-icon,
@@ -124,7 +124,7 @@
 
     &.--error .d-icon,
     .--error .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 
@@ -134,7 +134,7 @@
 
   &__load-failed,
   &__no-rooms {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   h4 {
@@ -146,22 +146,22 @@
   &__status-badge {
     display: inline-block;
     padding: 0.1em 0.5em;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
 
     &.--recording {
-      background: var(--danger-low);
-      color: var(--danger);
+      background: var(--d-sys-color-background-danger-subtlest);
+      color: var(--d-sys-color-text-danger);
     }
 
     &.--completed {
-      background: var(--success-low);
-      color: var(--success);
+      background: var(--d-sys-color-background-success-subtlest);
+      color: var(--d-sys-color-text-success);
     }
 
     &.--failed {
-      background: var(--primary-low);
-      color: var(--primary-high);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -171,7 +171,7 @@
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__load-more {
