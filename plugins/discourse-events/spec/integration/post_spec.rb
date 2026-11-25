@@ -277,7 +277,7 @@ describe Post do
             post =
               create_post_with_event(
                 user,
-                'reminders="notification.1.minute,bumpTopic.-1.day,1.week,notification.1.hour"',
+                'reminders="notification.1.minute,bumpTopic.-1.day,1.week"',
               ).reload
 
             expect(post.event.parsed_reminders).to eq(
@@ -285,7 +285,6 @@ describe Post do
                 { type: "notification", value: 1, unit: "minutes" },
                 { type: "bumpTopic", value: -1, unit: "days" },
                 { type: "notification", value: 1, unit: "weeks" },
-                { type: "notification", value: 1, unit: "hours" },
               ],
             )
           end
@@ -488,7 +487,7 @@ describe Post do
             expect { create_post_with_event(user, "maxAttendees=\"#{value}\"") }.to raise_error(
               I18n.t(
                 "discourse_post_event.errors.models.event.invalid_max_attendees",
-                maximum: DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT,
+                maximum: SiteSetting.discourse_post_event_max_attendees_limit,
               ),
             )
           end
@@ -497,6 +496,41 @@ describe Post do
             expect_rejected_max_attendees("0")
             expect_rejected_max_attendees("9999999999")
             expect_rejected_max_attendees("")
+          end
+
+          it "raises an error when above the max attendees limit" do
+            expect_rejected_max_attendees(SiteSetting.discourse_post_event_max_attendees_limit + 1)
+          end
+
+          it "raises an error when an edit raises it above the max attendees limit" do
+            post = create_post_with_event(user, 'max-attendees="10"')
+            limit = SiteSetting.discourse_post_event_max_attendees_limit
+
+            revisor = PostRevisor.new(post, post.topic)
+            revised =
+              revisor.revise!(
+                user,
+                raw: post.raw.sub('max-attendees="10"', "max-attendees=\"#{limit + 1}\""),
+              )
+
+            expect(revised).to eq(false)
+            expect(post.errors.full_messages).to include(
+              I18n.t(
+                "discourse_post_event.errors.models.event.invalid_max_attendees",
+                maximum: limit,
+              ),
+            )
+            expect(post.reload.event.max_attendees).to eq(10)
+          end
+        end
+
+        context "when max attendees is at the limit" do
+          it "creates the event" do
+            limit = SiteSetting.discourse_post_event_max_attendees_limit
+
+            post = create_post_with_event(user, "max-attendees=\"#{limit}\"")
+
+            expect(post.event.max_attendees).to eq(limit)
           end
         end
 
@@ -565,6 +599,53 @@ describe Post do
                 ),
               ),
             )
+          end
+        end
+
+        context "when there are too many notification reminders" do
+          it "raises an error" do
+            reminders = "notification.1.minutes,notification.2.minutes,notification.3.minutes"
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.notification",
+                count: 2,
+              ),
+            )
+          end
+
+          it "counts reminders without a type as notification reminders" do
+            reminders = "1.minutes,2.minutes,notification.3.minutes"
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.notification",
+                count: 2,
+              ),
+            )
+          end
+        end
+
+        context "when there are too many topic bump reminders" do
+          it "raises an error" do
+            reminders = "bumpTopic.1.hours,bumpTopic.2.hours"
+
+            expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
+              I18n.t(
+                "discourse_post_event.errors.models.event.too_many_reminders.bump_topic",
+                count: 1,
+              ),
+            )
+          end
+        end
+
+        context "when each reminder type is at its limit" do
+          it "creates the event" do
+            reminders = "notification.1.minutes,notification.2.minutes,bumpTopic.1.hours"
+
+            post = create_post_with_event(user, "reminders=\"#{reminders}\"").reload
+
+            expect(post.event.reminders).to eq(reminders)
           end
         end
 

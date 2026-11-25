@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
-  let!(:user) { Fabricate(:user) }
-  let!(:post) { Fabricate(:post) }
-  let!(:post_2) { Fabricate(:post) }
+  fab!(:user)
+  fab!(:post)
+  fab!(:post_2, :post)
 
   before do
     SiteSetting.discourse_reactions_like_sync_enabled = true
@@ -13,8 +13,8 @@ RSpec.describe DiscourseReactions::ReactionLikeSynchronizer do
     UserActionManager.enable
   end
 
-  let!(:topic_user) { Fabricate(:topic_user, user: user, topic: post.topic) }
-  let!(:topic_user_2) { Fabricate(:topic_user, user: user, topic: post_2.topic) }
+  fab!(:topic_user) { Fabricate(:topic_user, user: user, topic: post.topic) }
+  fab!(:topic_user_2) { Fabricate(:topic_user, user: user, topic: post_2.topic) }
 
   # This and reaction_user_2 use the ReactionManager so the proper PostActionCreator
   # records are created, rather than building this all manually.

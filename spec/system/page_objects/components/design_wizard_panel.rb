@@ -36,14 +36,12 @@ module PageObjects
         has_css?("#{WIZARD_SELECTOR}__next[disabled]")
       end
 
-      def select_palette(pair_key, mode: "light")
-        palette_card(pair_key, mode:).click
+      def select_palette(pair_key)
+        find(palette_card_selector(pair_key)).click
       end
 
-      def has_selected_palette?(pair_key, mode:)
-        has_css?(
-          "#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}[aria-pressed='true']",
-        )
+      def has_selected_palette?(pair_key)
+        has_css?("#{palette_card_selector(pair_key)}[aria-pressed='true']")
       end
 
       def select_palette_mode(mode)
@@ -54,23 +52,12 @@ module PageObjects
         has_css?("#{PALETTE_MODES_SELECTOR} input[value='#{mode}']:checked", visible: :all)
       end
 
-      def has_no_palette_row?(mode:)
-        has_no_css?(palette_row_selector(mode))
+      def has_palette?(pair_key)
+        has_css?(palette_card_selector(pair_key))
       end
 
-      def has_selected_palette_name?(name, mode:)
-        has_css?(
-          "#{palette_row_selector(mode)} #{WIZARD_SELECTOR}__palette-row-selected",
-          exact_text: name,
-        )
-      end
-
-      def has_palette?(pair_key, mode:)
-        has_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
-      end
-
-      def has_no_palette?(pair_key, mode:)
-        has_no_css?("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
+      def has_no_palette?(pair_key)
+        has_no_css?(palette_card_selector(pair_key))
       end
 
       def select_homepage(key)
@@ -125,20 +112,12 @@ module PageObjects
 
       private
 
-      def palette_row_selector(mode)
-        "#{WIZARD_SELECTOR}__palette-row[data-mode='#{mode}']"
-      end
-
       def palette_card_selector(pair_key)
         "#{WIZARD_SELECTOR}__palette-card[data-pair-key='#{pair_key}']"
       end
 
       def palette_mode_input(mode)
         find("#{PALETTE_MODES_SELECTOR} input[value='#{mode}']", visible: :all)
-      end
-
-      def palette_card(pair_key, mode:)
-        find("#{palette_row_selector(mode)} #{palette_card_selector(pair_key)}")
       end
     end
   end

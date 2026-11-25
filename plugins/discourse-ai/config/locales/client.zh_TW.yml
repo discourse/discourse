@@ -244,6 +244,15 @@ zh_TW:
               description: "允許為系統使用者創建的貼文添加標簽。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "重新整理"
+        columns:
+          user: "使用者"
+          reason: "檢舉為"
+          created: "建立時間"
+          status: "狀態"
+        status:
+          applying: "套用中…"
       copied: "已複製"
       view_raw: "檢視原始內容"
       view_decoded: "檢視解碼後內容"
@@ -1046,6 +1055,27 @@ zh_TW:
         mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
         modal:
           title: "創建新憑據"
+      concepts:
+        edit: "編輯"
+        delete: "刪除"
+        columns:
+          status: "狀態"
+          topics: "主題"
+          posts: "新發表的貼文"
+        statuses:
+          all: "所有狀態"
+          active: "啟用"
+        form:
+          name: "名稱"
+          description: "描述"
+          aliases: "別名"
+          status: "狀態"
+        tagged_topics: "帶標簽的主題"
+        topic_columns:
+          topic: "主題"
+          primary: "主要"
+          relevance: "相關性"
+        primary_badge: "主要"
       decision_models:
         no_preset: "無"
         display_name: "名稱"

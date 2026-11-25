@@ -4882,7 +4882,6 @@ nl:
       dracula: "Dracula"
       grey_amber: "Grijsgeel"
       latte: "Latte"
-      dark_rose: "Donkerroze"
   wizard:
     title: "Discourse instellen"
     step:
@@ -5142,6 +5141,8 @@ nl:
       approve_post:
         title: "Ja"
         complete: "Bericht goedgekeurd."
+      deny_and_delete_post:
+        complete: "Bericht verwijderd."
       approve_post_closed:
         title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"

@@ -38,6 +38,12 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Osveži"
+        columns:
+          user: "Uporabnik"
+          created: "Ustvarjeno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
@@ -234,6 +240,24 @@ sl:
         edit: "Uredi"
         delete: "Izbriši"
         embedding: "Vdelovanje"
+      concepts:
+        edit: "Uredi"
+        delete: "Izbriši"
+        columns:
+          status: "Status"
+          topics: "Tem"
+          posts: "Prispevki"
+        statuses:
+          active: "Aktivni"
+        form:
+          name: "Ime"
+          description: "Opis"
+          status: "Status"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Pomembnosti"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Brez"
         display_name: "Ime"

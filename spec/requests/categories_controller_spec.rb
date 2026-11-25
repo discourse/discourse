@@ -16,6 +16,7 @@ RSpec.describe CategoriesController do
     end
 
     it "properly preloads topic list" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
@@ -26,7 +27,23 @@ RSpec.describe CategoriesController do
       end
     end
 
+    it "charges the search limit only for a category layout that loads a topic list" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+      SiteSetting.desktop_category_page_style = "categories_only"
+
+      get "/categories", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/categories_and_latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/categories_and_latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
     it "does not build a topic list for crawlers" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
 
@@ -1918,7 +1935,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#categories_and_topics" do
-    before { 10.times { Fabricate(:topic) } }
+    fab!(:topics) { Fabricate.times(10, :topic) }
 
     it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5

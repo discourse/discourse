@@ -5,6 +5,9 @@
     <title><%= title_content %></title>
     <meta name="description" content="<%= description_content %>">
     <meta name="discourse_theme_id" content="<%= theme_id %>">
+    <%- if (preview_status = theme_preview_status) %>
+      <meta name="discourse_theme_preview" content="<%= preview_status %>">
+    <%- end %>
     <meta name="discourse_current_homepage" content="<%= current_homepage %>">
 
     <%- if GlobalSetting.early_hint_header_mode == "prefetch" %>

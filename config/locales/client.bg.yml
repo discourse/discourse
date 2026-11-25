@@ -614,7 +614,6 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
-        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -3000,18 +2999,12 @@ bg:
       validations:
         icon_required: "Изберете икона."
       description: "Описание"
-      icon: "Икона"
-      emoji: "Емотикони"
       background_color: "Цвят"
       color_validations:
         cant_be_empty: "не може да бъде празно"
       styles:
         icon: "Икона"
         emoji: "Емотикони"
-        options:
-          icon: "Икона"
-          emoji: "Емотикони"
-      color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
@@ -3385,6 +3378,7 @@ bg:
       share: "Споделяне"
       dismiss: "Отмени"
     mobile_tab_bar:
+      new_topic: "Нова тема"
       create: "Създай"
       more: "Повече"
       back: "Назад"

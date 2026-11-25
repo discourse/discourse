@@ -30,13 +30,37 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
         text = "This is a piece of text"
         vdef.update!(search_prompt: "Search: ")
         prepared_text = vdef.prepare_query_text(text, asymmetric: true)
-        stub_vector_mapping(prepared_text, expected_embedding_1)
+        stub_vector_mapping(prepared_text, expected_embedding_1, task: :query)
 
         allow(vdef).to receive(:prepare_query_text).and_call_original
 
         vector.vector_from(text, true)
 
         expect(vdef).to have_received(:prepare_query_text).with(text, asymmetric: true)
+      end
+
+      it "treats task: :query as asymmetric and forwards the task" do
+        text = "This is a piece of text"
+        vdef.update!(search_prompt: "Search: ")
+        prepared_text = vdef.prepare_query_text(text, asymmetric: true)
+        stub_vector_mapping(prepared_text, expected_embedding_1, task: :query)
+
+        expect(vector.vector_from(text, task: :query)).to eq(expected_embedding_1)
+      end
+
+      it "does not apply search_prompt for non-query tasks" do
+        text = "This is a piece of text"
+        vdef.update!(search_prompt: "Search: ")
+        stub_vector_mapping(text, expected_embedding_1, task: :clustering)
+
+        expect(vector.vector_from(text, task: :clustering)).to eq(expected_embedding_1)
+      end
+
+      it "raises ArgumentError for an unknown task" do
+        expect { vector.vector_from("This is a piece of text", task: :invalid) }.to raise_error(
+          ArgumentError,
+          /Unknown embedding task/,
+        )
       end
 
       it "defaults asymmetric parameter to false" do
@@ -65,7 +89,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
     describe "#generate_representation_from" do
       it "creates a vector from a topic and stores it in the database" do
         text = vdef.prepare_target_text(topic)
-        stub_vector_mapping(text, expected_embedding_1)
+        stub_vector_mapping(text, expected_embedding_1, task: :document)
 
         vector.generate_representation_from(topic)
 
@@ -74,7 +98,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
       it "creates a vector from a post and stores it in the database" do
         text = vdef.prepare_target_text(post2)
-        stub_vector_mapping(text, expected_embedding_1)
+        stub_vector_mapping(text, expected_embedding_1, task: :document)
 
         vector.generate_representation_from(post)
 
@@ -92,8 +116,8 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
         text2 = vdef.prepare_target_text(topic_2)
 
-        stub_vector_mapping(text, expected_embedding_1)
-        stub_vector_mapping(text2, expected_embedding_2)
+        stub_vector_mapping(text, expected_embedding_1, task: :document)
+        stub_vector_mapping(text2, expected_embedding_2, task: :document)
 
         vector.gen_bulk_reprensentations(Topic.where(id: [topic.id, topic_2.id]))
 
@@ -106,7 +130,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
       it "doesn't ask for a new embedding if digest is the same" do
         text = vdef.prepare_target_text(topic)
-        stub_vector_mapping(text, expected_embedding_1)
+        stub_vector_mapping(text, expected_embedding_1, task: :document)
 
         original_vector_gen = Time.zone.parse("2021-06-04 10:00")
 
@@ -127,9 +151,9 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
 
           text2 = vdef.prepare_target_text(topic_2)
 
-          stub_vector_mapping(text, expected_embedding_1)
+          stub_vector_mapping(text, expected_embedding_1, task: :document)
           # A 429 would pause the provider and skip requests that haven't started yet.
-          stub_vector_mapping(text2, expected_embedding_2, result_status: 400)
+          stub_vector_mapping(text2, expected_embedding_2, result_status: 400, task: :document)
 
           vector.gen_bulk_reprensentations(Topic.where(id: [topic.id, topic_2.id]))
 
@@ -144,9 +168,14 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
             vdef.prepare_target_text(topic),
             expected_embedding_1,
             result_status: 429,
+            task: :document,
           )
           topic_2_request =
-            stub_vector_mapping(vdef.prepare_target_text(topic_2), expected_embedding_2)
+            stub_vector_mapping(
+              vdef.prepare_target_text(topic_2),
+              expected_embedding_2,
+              task: :document,
+            )
 
           stub_const(described_class, :MAX_CONCURRENT_EMBEDDINGS, 1) do
             vector.gen_bulk_reprensentations([topic, topic_2])
@@ -162,7 +191,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   context "with open_ai as the provider" do
     fab!(:vdef, :open_ai_embedding_def)
 
-    def stub_vector_mapping(text, expected_embedding, result_status: 200)
+    def stub_vector_mapping(text, expected_embedding, result_status: 200, task: nil)
       EmbeddingsGenerationStubs.openai_service(
         vdef.lookup_custom_param("model_name"),
         text,
@@ -197,7 +226,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   context "with hugging_face as the provider" do
     fab!(:vdef, :embedding_definition)
 
-    def stub_vector_mapping(text, expected_embedding, result_status: 200)
+    def stub_vector_mapping(text, expected_embedding, result_status: 200, task: nil)
       EmbeddingsGenerationStubs.hugging_face_service(
         text,
         expected_embedding,
@@ -211,12 +240,18 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   context "with google as the provider" do
     fab!(:vdef, :gemini_embedding_def)
 
-    def stub_vector_mapping(text, expected_embedding, result_status: 200)
+    def stub_vector_mapping(text, expected_embedding, result_status: 200, task: nil)
+      extra_args = {}
+      if task.present?
+        extra_args[:taskType] = DiscourseAi::Inference::GeminiEmbeddings::TASK_TYPES[task]
+      end
+
       EmbeddingsGenerationStubs.gemini_service(
         vdef.api_key,
         text,
         expected_embedding,
         result_status: result_status,
+        extra_args: extra_args,
       )
     end
 
@@ -226,7 +261,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   context "with cloudflare as the provider" do
     fab!(:vdef, :cloudflare_embedding_def)
 
-    def stub_vector_mapping(text, expected_embedding, result_status: 200)
+    def stub_vector_mapping(text, expected_embedding, result_status: 200, task: nil)
       EmbeddingsGenerationStubs.cloudflare_service(
         text,
         expected_embedding,
@@ -235,5 +270,49 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
     end
 
     it_behaves_like "generates and store embeddings using a vector definition"
+  end
+
+  context "with aws_bedrock as the provider" do
+    fab!(:vdef) { Fabricate(:bedrock_embedding_def, api_key: "bedrock-api-key") }
+
+    let(:invoke_url) do
+      "https://bedrock-runtime.us-east-1.amazonaws.com/model/cohere.embed-v4:0/invoke"
+    end
+
+    def stub_vector_mapping(text, expected_embedding, result_status: 200, task: nil)
+      input_type = DiscourseAi::Inference::BedrockEmbeddings::COHERE_INPUT_TYPES[task || :document]
+
+      WebMock
+        .stub_request(:post, invoke_url)
+        .with(
+          body:
+            JSON.dump(
+              texts: [text],
+              input_type: input_type,
+              embedding_types: ["float"],
+              truncate: "END",
+              output_dimension: vdef.dimensions,
+            ),
+        )
+        .to_return(
+          status: result_status,
+          body: JSON.dump(embeddings: { float: [expected_embedding] }),
+        )
+    end
+
+    it_behaves_like "generates and store embeddings using a vector definition"
+
+    it "maps asymmetric and task modes to Cohere input_type" do
+      vector = described_class.new(vdef)
+      expected_embedding = [0.0038493] * vdef.dimensions
+      text = "This is a piece of text"
+
+      stub_vector_mapping(text, expected_embedding, task: :query)
+      expect(vector.vector_from(text, true)).to eq(expected_embedding)
+      expect(vector.vector_from(text, task: :query)).to eq(expected_embedding)
+
+      stub_vector_mapping(text, expected_embedding, task: :clustering)
+      expect(vector.vector_from(text, task: :clustering)).to eq(expected_embedding)
+    end
   end
 end

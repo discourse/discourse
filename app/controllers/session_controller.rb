@@ -73,7 +73,9 @@ class SessionController < ApplicationController
   def sso_provider(payload = nil, confirmed_2fa_during_login = false)
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect_provider
 
-    raise Discourse::InvalidAccess if is_api? || is_user_api?
+    if is_api? || is_user_api? || request.env["HTTP_X_SHARED_SESSION_KEY"]
+      raise Discourse::InvalidAccess
+    end
 
     result =
       run_second_factor!(
@@ -245,8 +247,8 @@ class SessionController < ApplicationController
       if user = sso.lookup_or_create_user(request.remote_ip)
         raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
-        if user.suspended?
-          render_sso_error(text: failed_to_login(user)[:error], status: 403)
+        if payload = login_error_check(user)
+          render_sso_error(text: payload[:error], status: 403)
           return
         end
 
@@ -279,8 +281,7 @@ class SessionController < ApplicationController
           user.activate
           login_sso_user(sso, user)
 
-          topic = invite.topics.first
-          return_path = topic.present? ? path(topic.relative_url) : path("/")
+          return_path = invite_login_code_redirect(invite, user)
         elsif !user.active?
           activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
@@ -574,9 +575,13 @@ class SessionController < ApplicationController
         Discourse.redis.del "otp_#{params[:token]}"
         return redirect_to path("/")
       elsif request.post?
-        log_on_user(user, replay_anonymous_action: true)
-        Discourse.redis.del "otp_#{params[:token]}"
-        return redirect_to path("/")
+        if payload = login_error_check(user)
+          @error = payload[:error]
+        else
+          log_on_user(user, replay_anonymous_action: true)
+          Discourse.redis.del "otp_#{params[:token]}"
+          return redirect_to path("/")
+        end
       else
         # Display the form
       end
@@ -934,7 +939,7 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "login-code-hour-#{request.remote_ip}", 30, 1.hour).performed!
     RateLimiter.new(nil, "login-code-min-#{request.remote_ip}", 6, 1.minute).performed!
 
-    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    invite = login_code_invite
     email = (invite&.email.presence || params[:email]).to_s.strip.downcase
     if email.present?
       RateLimiter.new(
@@ -1234,10 +1239,18 @@ class SessionController < ApplicationController
   end
 
   def login_code_verification_params
-    invite = Invite.find_by(invite_key: params[:invite_key]) if params[:invite_key].present?
+    invite = login_code_invite
     email = invite&.email.presence || params[:email]
 
     service_params.deep_merge(params: params.to_unsafe_h.merge(email:))
+  end
+
+  # Login code requests must resolve the invite from the same normalised key the
+  # invite services validate, otherwise the per-address rate limit can be keyed
+  # to a different address (or skipped) than the one the code is mailed to.
+  def login_code_invite
+    invite_key = params[:invite_key].to_s.strip
+    Invite.find_by(invite_key:) if invite_key.present?
   end
 
   def process_verified_invite_login_code(matched_user)

@@ -4641,7 +4641,6 @@ hu:
       dracula: "Drakula"
       grey_amber: "Szürke borostyán"
       latte: "Tejeskávé"
-      dark_rose: "Sötét rózsa"
   wizard:
     title: "Discourse telepítő"
     step:
@@ -4901,6 +4900,8 @@ hu:
       approve_post:
         title: "Igen"
         complete: "Bejegyzés jóváhagyva."
+      deny_and_delete_post:
+        complete: "Bejegyzés törölve."
       approve_post_closed:
         title: "Igen"
         confirm: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"

@@ -461,3 +461,66 @@ describe "Login" do
     include_examples "login scenarios"
   end
 end
+
+RSpec.describe "System test sign-in navigation" do
+  fab!(:user)
+  fab!(:admin)
+  fab!(:inactive) { Fabricate(:user, active: false) }
+
+  def sign_in_path(user)
+    "/session/#{user.encoded_username}/become.json?redirect=false"
+  end
+
+  it "uses the app response, updates the browser session and adds an entry to history" do
+    visit "/about"
+    sign_in(user)
+
+    expect(page).to have_current_path(sign_in_path(user))
+    expect(page.status_code).to eq(200)
+    expect(page).to have_text("Signed in to #{user.username} successfully")
+
+    page.go_back
+    expect(page).to have_current_path("/about")
+    expect(page).to have_css("#main.ember-application")
+
+    visit "/"
+    expect(
+      page.evaluate_script("require('discourse/models/user').default.current().username"),
+    ).to eq(user.username)
+
+    sign_in(admin)
+    visit "/"
+    expect(
+      page.evaluate_script("require('discourse/models/user').default.current().username"),
+    ).to eq(admin.username)
+  end
+
+  it "reports a failed sign-in as such, despite the page still navigating" do
+    expect { sign_in(inactive) }.to raise_error(
+      RSpec::Expectations::ExpectationNotMetError,
+      /is not active/,
+    )
+
+    expect(page).to have_current_path(sign_in_path(inactive))
+    expect(page.status_code).to eq(403)
+    expect(page).to have_text("User #{inactive.username} is not active")
+  end
+
+  it "handles a URL-encoded username without changing the real document" do
+    SiteSetting.external_system_avatars_url = "https://avatars.example.com/{username}.png"
+    SiteSetting.unicode_usernames = true
+    unicode_user = Fabricate(:user, username: "mañana")
+
+    sign_in(unicode_user)
+
+    expect(page).to have_current_path(sign_in_path(unicode_user))
+    expect(page).to have_text("Signed in to mañana successfully")
+  end
+
+  it "keeps the normal Ember check on a visit that redirects" do
+    visit "/session/#{user.encoded_username}/become.json"
+
+    expect(page).to have_current_path("/")
+    expect(page).to have_css("#main.ember-application")
+  end
+end

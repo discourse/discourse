@@ -718,7 +718,7 @@ pl_PL:
           title: "Wygląd i odczucia"
           description: "Wybierz czcionki i to, co członkowie zobaczą w pierwszej kolejności."
       sections:
-        colors: "Tryby kolorów witryny"
+        colors: "Domyślne tryby kolorów"
         fonts: "Czcionki"
         logo: "Logo"
         homepage: "Strona główna"
@@ -727,9 +727,9 @@ pl_PL:
         applying: "Zastosowanie…"
         custom_theme_notice: "Twoja witryna używa obecnie motywu %{name} jako domyślnego. Wybierz motyw poniżej, aby go podejrzeć. Zapisanie spowoduje zastąpienie obecnego motywu."
       colors:
-        description: "Ustaw domyślną paletę dla każdego trybu. Preferencje dotyczące wyglądu członków decydują o tym, którą paletę zobaczą."
-        light_palette: "Jasna paleta"
-        dark_palette: "Ciemna paleta"
+        palette: "Paleta"
+        manage_palettes_prompt: "Chcesz mieć własną paletę lub decydować, z jakich palet mogą wybierać członkowie?"
+        manage_palettes: "Zarządzaj paletami kolorów"
         modes:
           label: "Tryby kolorów"
           both: "Jasny i ciemny"
@@ -738,9 +738,6 @@ pl_PL:
       fonts:
         base_font: "Treść"
         heading_font: "Nagłówki"
-      logo:
-        description: "Pojawia się w górnej nawigacji witryny, a także w górnej części powiadomień e-mail witryny."
-        help_text: "Zalecany rozmiar to 600 x 80 pikseli."
       homepage:
         topics: "Tematy"
         categories: "Kategorie"
@@ -1289,6 +1286,10 @@ pl_PL:
           title: "Wszystkie sprawdzone"
         all:
           title: "Wszystko"
+      pending_post_approval: "Zatwierdzenie wpisu"
+      pending_topic_approval: "Zatwierdzenie tematu"
+      pending_account_approval: "Zatwierdzenie konta"
+      account_review: "Przegląd konta"
       context_question:
         is_this_post: "Czy to jest %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "lub"
@@ -1297,9 +1298,6 @@ pl_PL:
         suspect_user: "Czy ta osoba to spam?"
         approve_post: "Zatwierdzić ten wpis?"
         approve_topic: "Zatwierdzić ten temat?"
-        something_wrong_with_post: "Czy coś jest nie tak z tym wpisem?"
-        something_wrong_with_topic: "Czy coś jest nie tak z tym tematem?"
-        something_wrong_with_account: "Czy coś jest nie tak z tym kontem?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -3446,6 +3444,7 @@ pl_PL:
       standard: Standardowe
       fluentui: Fluent Emoji
       noto: Noto Emoji
+      noto_3d: Emoji 3D Noto
       twemoji: Twemoji
     category_page_style:
       categories_only: "Tylko kategorie"
@@ -3730,7 +3729,7 @@ pl_PL:
       more_emoji: "więcej…"
       options: "Opcje"
       ai_content:
-        menu: "Dodaj treść AI..."
+        menu: "Oznacz treść AI..."
         code: "Kod"
         quote: "Cytat"
         details: "Detale"
@@ -5777,6 +5776,7 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
+      back_to_categories: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
       moderation: "Moderacja"
@@ -5819,6 +5819,11 @@ pl_PL:
         delete_title: "Edytuj tę kategorię"
         delete_description: "Po usunięciu tej kategorii i jej ustawień nie będzie można odzyskać. Tematy w niej zawarte będą musiały zostać wcześniej ponownie przypisane."
         delete_title_forbidden: "Nie można usunąć tej kategorii"
+      empty_state:
+        title: "Rozpocznij rozmowę"
+        body: "Nowe tematy w tej kategorii będą pojawiać się tutaj."
+        create_topic: "Utwórz pierwszy temat"
+        edit_category: "Edytuj kategorię"
       create: "Nowa kategoria"
       create_with_type: "Nowa kategoria %{typeName}"
       create_long: "Utwórz nową kategorię"
@@ -5848,7 +5853,12 @@ pl_PL:
         icon_required: "Wybierz ikonę."
         groups_required: "Wybierz co najmniej jedną grupę dla tego trybu zatwierdzania."
       name: "Nazwa kategorii"
-      untitled: "Kategoria bez tytułu"
+      name_and_style: "Nazwa kategorii i styl"
+      choose_style: "Wybierz styl kategorii (aktualnie %{style})"
+      choose_style_with_icon: "Wybierz styl kategorii (aktualnie ikona %{name})"
+      choose_style_with_emoji: "Wybierz styl kategorii (aktualnie emoji %{name})"
+      choose_style_with_emoji_tone: "Wybierz styl kategorii (aktualnie emoji %{name} , %{tone})"
+      icon_search_placeholder: "Szukaj…"
       description: "Opis"
       logo: "Grafika z logo kategorii"
       logo_dark: "Obraz logo kategorii w trybie ciemnym"
@@ -5856,10 +5866,6 @@ pl_PL:
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
       style: "Styl"
-      icon: "Ikona"
-      emoji: "Emoji"
-      select_emoji: "Wybierz emoji"
-      select_icon: "Wybierz ikonę"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -5867,22 +5873,15 @@ pl_PL:
         incorrect_length: "musi być zgodny z formatem #RRGGBB lub #RGB"
         non_hexdecimal: "może zawierać wyłącznie znaki szesnastkowe (0-9, AF)"
       styles:
-        type: "Styl"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Kwadrat"
-        options:
-          square: "Kwadrat"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Kolor w użyciu"
-      predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Zalecane jedno lub dwa słowa"
       category_types: "Typy kategorii"
       unknown_category_type: "Nieznany typ kategorii"
       unknown_category_type_description: "Typ kategorii '%{categoryType}' nie jest obsługiwany lub wyłączony w tej kategorii."
       category_types_no_results: "Nie znaleziono innych typów kategorii"
-      color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
       list: "Wymień kategorie"
@@ -9709,8 +9708,8 @@ pl_PL:
           title: "Kolory"
           edit: "Edytuj"
           view: "Widok"
-          set_default_light: "Ustaw jako jasną paletę w domyślnym motywie (%{theme})"
-          set_default_dark: "Ustaw jako ciemną paletę w domyślnym motywie (%{theme})"
+          set_default_light: "Ustaw jako jasny"
+          set_default_dark: "Ustaw jako ciemny"
           set_default_success: "%{schemeName} ustaw jako domyślną paletę dla %{themeName}"
           saved_refreshing: "Zapisane! Odświeżanie kolorów..."
           from_theme: "Z motywu: %{name}"
@@ -9938,6 +9937,7 @@ pl_PL:
             mcp_client_updated: "aktualizacja klienta MCP OAuth"
             delete_user: "usunięcie użytkownika"
             create_bot: "Utwórz bota"
+            change_bot_interactivity: "Zmień interaktywność bota"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
@@ -10001,6 +10001,7 @@ pl_PL:
             change_name: "zmień nazwe"
             topic_timestamps_changed: "zmieniono znaczniki czasowe wątku"
             approve_user: "zatwierdzony użytkownik"
+            approve_account_review: "zatwierdzony przegląd konta"
             removed_avatar: "usunięto awatar"
             web_hook_create: "utwórz webhooka"
             web_hook_update: "zaktualizuj webhooka"
@@ -10366,6 +10367,9 @@ pl_PL:
               description: "Konto do integracji, webhooków lub automatycznego publikowania za pośrednictwem interfejsu API."
           back: "Powrót do botów"
           help: "Boty to konta użytkowników, które nie mogą się logować w celu integracji i automatycznego publikowania."
+          interactive_bot: "Interaktywny"
+          interactive_column: "Interaktywny?"
+          interactive_bot_description: "Powiadamiaj tego bota o wzmiankach na forum, bezpośrednich odpowiedziach i wiadomościach prywatnych do niego adresowanych. Gdy czat jest włączony, wyświetlaj go również w selektorze wiadomości bezpośrednich."
           generate_api_key: "Wygeneruj klucz API"
           generate_api_key_description: "Potrzebne tylko dla usług zewnętrznych, które działają jako ten bot. Wtyczki Discourse nie wymagają tego."
           scope_mode_description: "Klucz ma uprawnienia wyłącznie tego bota."

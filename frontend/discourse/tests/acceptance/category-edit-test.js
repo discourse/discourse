@@ -35,11 +35,9 @@ acceptance("Category Edit", function (needs) {
     );
 
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
-    assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
+    assert.dom(".category-name-style__square").exists("shows the saved style");
     await fillIn("input.category-name", "testing");
-    assert
-      .dom(".edit-category-tab-general .badge-category__name")
-      .hasText("testing");
+    assert.dom("input.category-name").hasValue("testing");
 
     await visit("/c/bug/edit/topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
@@ -647,12 +645,19 @@ acceptance("Category Edit - emoji disabled", function (needs) {
   test("hides the emoji style and shows emoji categories as square", async function (assert) {
     await visit("/c/bug/edit/general");
 
-    assert
-      .dom(".form-kit__control-radio[value='emoji']")
-      .doesNotExist("emoji style isn't offered");
-    assert
-      .dom(".form-kit__control-radio[value='square']")
-      .isChecked("emoji category resolves to square");
+    assert.dom(".category-name-style__square").exists("previews a square");
+    await click(".category-style-trigger");
+    assert.dom("[data-d-tab='emoji']").doesNotExist("hides the emoji style");
+    assert.dom("[data-d-tab='square']").hasAria("selected", "true");
+    await click(".category-style-trigger");
+    await fillIn("input.category-name", "Renamed");
+    await click("#save-category");
+    const { style_type, emoji } = latestCategorySavePayload();
+    assert.deepEqual(
+      { style_type, emoji },
+      { style_type: "emoji", emoji: "wave" },
+      "renaming preserves the stored emoji while emoji are disabled"
+    );
   });
 });
 

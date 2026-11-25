@@ -43,23 +43,49 @@ RSpec.describe ReviewablePost do
       expect(reviewable_actions(Guardian.new(admin)).has?(:reject_and_delete)).to eq(true)
     end
 
-    it "offers the rejection as \"Yes\" before the approval as \"No\" with consistent answers" do
+    it "offers denial and approval for a published reply" do
       SiteSetting.review_queue_consistent_answers = true
+      post.post_number = 2
 
-      actions = reviewable_actions(Guardian.new(admin))
+      actions = reviewable_actions(admin.guardian)
 
-      expect(actions.bundles.first.label).to eq("reviewables.actions.answer_yes.title")
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_post.title")
+      expect(
+        actions.bundles.first.actions.map { |a| [a.server_action, a.label] },
+      ).to contain_exactly(
+        %w[reject_and_delete reviewables.actions.deny_and_delete_post.title],
+        %w[reject_and_silence reviewables.actions.silence_user.title],
+        %w[reject_and_suspend reviewables.actions.suspend_user.title],
+      )
       expect(
         actions.bundles.last.actions.map { |action| [action.server_action, action.label] },
-      ).to eq([%w[approve reviewables.actions.answer_no.title]])
+      ).to eq([%w[approve reviewables.actions.approve_post.action_title]])
     end
 
     it "includes the approve post and unhide action if the post is hidden" do
+      SiteSetting.review_queue_consistent_answers = true
       post.hidden = true
 
-      actions = reviewable_actions(guardian)
+      actions = reviewable_actions(admin.guardian)
 
-      expect(actions.has?(:approve_and_unhide)).to eq(true)
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.approve_and_unhide.action_title"],
+      )
+    end
+
+    it "offers a direct delete action to a category moderator" do
+      SiteSetting.review_queue_consistent_answers = true
+      SiteSetting.enable_category_group_moderation = true
+      group_user = Fabricate(:group_user)
+      category = Fabricate(:category_moderation_group, group: group_user.group).category
+      post = Fabricate(:post, topic: Fabricate(:topic, category:), post_number: 2)
+      reviewable = described_class.queue_for_review(post)
+
+      actions = reviewable.actions_for(group_user.user.guardian)
+
+      expect(actions.bundles.first.actions.map(&:label)).to eq(
+        ["reviewables.actions.deny_and_delete_post.title"],
+      )
     end
 
     it "includes the reject post and keep deleted action is the post is deleted" do
@@ -71,12 +97,20 @@ RSpec.describe ReviewablePost do
       expect(actions.has?(:reject_and_keep_deleted)).to eq(true)
     end
 
-    it "includes an option to approve and restore the post if the user is allowed" do
-      post.deleted_at = 1.day.ago
+    it "names the restore action when the reviewer can recover a deleted post" do
+      SiteSetting.review_queue_consistent_answers = true
+      post = Fabricate(:post)
+      reviewable = described_class.queue_for_review(post)
+      post.trash!(admin)
 
-      actions = reviewable_actions(Guardian.new(admin))
+      actions = reviewable.actions_for(admin.guardian)
 
-      expect(actions.has?(:approve_and_restore)).to eq(false)
+      expect(actions.bundles.first.actions.map(&:label)).to include(
+        "reviewables.actions.deny_and_keep_deleted.title",
+      )
+      expect(actions.bundles.last.actions.map(&:label)).to eq(
+        ["reviewables.actions.approve_and_restore.action_title"],
+      )
     end
 
     it "doesn't include the suspend action when the author is already suspended" do
@@ -173,13 +207,20 @@ RSpec.describe ReviewablePost do
     end
 
     describe "#perform_approve_and_restore" do
-      it "transitions to the approved state and restores the post" do
-        post.trash!
+      it "offers to approve and restore the topic when its first post was deleted with it" do
+        SiteSetting.review_queue_consistent_answers = true
+        topic = post.topic
+        PostDestroyer.new(admin, post).destroy
+        actions = reviewable.reload.actions_for(admin.guardian)
+        restore = actions.to_a.find { |action| action.server_action == "approve_and_restore" }
 
-        result = reviewable.reload.perform admin, :approve_and_restore
+        expect(I18n.t(restore.label)).to eq("Approve and restore topic")
+        expect(I18n.t(restore.completed_message)).to eq("Topic approved and restored.")
+        result = reviewable.perform admin, :approve_and_restore
 
         expect(result.transition_to).to eq :approved
         expect(Post.where(id: post.id).exists?).to eq(true)
+        expect(topic.reload).not_to be_trashed
       end
     end
 
@@ -195,11 +236,23 @@ RSpec.describe ReviewablePost do
     end
 
     describe "#perform_reject_and_delete" do
-      it "transitions to the rejected state and deletes the post" do
+      it "offers to delete the entire topic when reviewing its first post" do
+        SiteSetting.review_queue_consistent_answers = true
+        topic = post.topic
+        removal =
+          reviewable
+            .actions_for(admin.guardian)
+            .to_a
+            .find { |action| action.server_action == "reject_and_delete" }
+
+        expect(I18n.t(removal.label)).to eq("Deny and delete topic")
+        expect(I18n.t(removal.completed_message)).to eq("Topic deleted.")
+
         result = reviewable.perform admin, :reject_and_delete
 
         expect(result.transition_to).to eq :rejected
         expect(Post.where(id: post.id).exists?).to eq(false)
+        expect(topic.reload).to be_trashed
       end
     end
   end

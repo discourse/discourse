@@ -939,6 +939,8 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   });
 
   test("adds incoming in the categories latest topics list", async function (assert) {
+    getOwner(this).lookup("service:site-settings").desktop_category_page_style =
+      "categories_and_latest_topics";
     this.trackingState.trackIncoming("categories");
     const unreadCategoriesLatestTopicsPayload = {
       ...unreadTopicPayload,

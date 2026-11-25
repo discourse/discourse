@@ -59,4 +59,35 @@ describe "Appearance change styles" do
     expect(computed(".d-header", "background-image")).to eq("none")
     expect(computed(":root", "--d-button-border-radius")).not_to eq("20px")
   end
+
+  it "renders a theme from its database-cached stylesheet when the files are missing" do
+    theme = Fabricate.build(:theme)
+    # A theme save broadcasts its stylesheet URLs, which would warm the URL cache.
+    allow(theme).to receive(:notify_theme_change)
+    theme.set_field(
+      target: :common,
+      name: :scss,
+      value: ":root { --d-button-border-radius: 27px; }",
+    )
+    theme.save!
+
+    manager = Stylesheet::Manager.new(theme_id: theme.id)
+    builder = Stylesheet::Manager::Builder.new(target: :common_theme, theme:, manager:)
+    css_path = builder.stylesheet_fullpath
+    map_path = builder.source_map_fullpath
+    builder.compile
+    cached = StylesheetCache.find_by!(target: builder.qualified_target, digest: builder.digest)
+
+    # Make the cached bytes distinguishable from a fresh compilation.
+    cached.update!(content: "#{cached.content}\n/* cached theme CSS */")
+    File.delete(css_path, map_path)
+
+    visit("/latest?preview_theme_id=#{theme.id}")
+
+    expect(computed(":root", "--d-button-border-radius")).to eq("27px")
+    expect(File.binread(css_path)).to eq(cached.content.b)
+    expect(File.binread(map_path)).to eq(cached.source_map.b)
+  ensure
+    FileUtils.rm_f([css_path, map_path].compact)
+  end
 end

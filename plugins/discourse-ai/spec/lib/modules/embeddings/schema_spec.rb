@@ -101,4 +101,41 @@ RSpec.describe DiscourseAi::Embeddings::Schema do
       end
     end
   end
+
+  describe "InferredConcept embeddings" do
+    subject(:concepts_schema) { described_class.for(InferredConcept) }
+
+    fab!(:concept_1) { Fabricate(:inferred_concept, name: "Authentication") }
+    fab!(:concept_2) { Fabricate(:inferred_concept, name: "Authorization") }
+    let(:concept_embeddings_1) { [0.0038490295] * vector_def.dimensions }
+    let(:concept_embeddings_2) { [0.0038490294] * vector_def.dimensions }
+
+    before do
+      concepts_schema.store(concept_1, concept_embeddings_1, digest)
+      concepts_schema.store(concept_2, concept_embeddings_2, digest)
+    end
+
+    it "stores and retrieves inferred concept embeddings" do
+      record = concepts_schema.find_by_target(concept_1)
+
+      expect(record.digest).to eq(digest)
+      expect(JSON.parse(record.embeddings)).to eq(concept_embeddings_1)
+    end
+
+    it "supports asymmetric and symmetric similarity search" do
+      asymmetric =
+        concepts_schema.asymmetric_similarity_search(concept_embeddings_1, limit: 2, offset: 0)
+      symmetric = concepts_schema.symmetric_similarity_search(concept_1)
+
+      expect(asymmetric.map(&:inferred_concept_id)).to contain_exactly(concept_1.id, concept_2.id)
+      expect(symmetric.map(&:inferred_concept_id)).to contain_exactly(concept_1.id, concept_2.id)
+    end
+
+    it "deletes embeddings for a concept via delete_embeddings_for" do
+      described_class.delete_embeddings_for(concept_1)
+
+      expect(concepts_schema.find_by_target(concept_1)).to be_nil
+      expect(concepts_schema.find_by_target(concept_2)).to be_present
+    end
+  end
 end

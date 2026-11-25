@@ -10,14 +10,12 @@ describe "Navigation menu states" do
   context "when navigation_menu is 'header dropdown'" do
     before { SiteSetting.navigation_menu = "header dropdown" }
 
-    it "does not show the sidebar" do
+    it "lets the user open and close the header menu instead of a sidebar" do
       visit "/"
-      expect(sidebar_navigation).to be_not_visible
-    end
 
-    it "opens and closes the hamburger menu from the toggle" do
-      visit "/"
+      expect(sidebar_navigation).to be_not_visible
       expect(header_dropdown).to be_visible
+
       header_dropdown.open
       expect(header_dropdown).to have_dropdown_visible
       expect(header_dropdown).to have_sidebar_panel("main")
@@ -64,18 +62,12 @@ describe "Navigation menu states" do
   context "when navigation_menu is 'sidebar'" do
     before { SiteSetting.navigation_menu = "sidebar" }
 
-    it "shows the sidebar" do
+    it "lets the user toggle the sidebar without a hamburger menu" do
       visit "/"
+
       expect(sidebar_navigation).to be_visible
-    end
-
-    it "does not show the hamburger menu" do
-      visit "/"
       expect(header_dropdown).to be_not_visible
-    end
 
-    it "opens and closes the sidebar from the toggle" do
-      visit "/"
       sidebar_navigation.click_header_toggle
       expect(sidebar_navigation).to be_not_visible
       sidebar_navigation.click_header_toggle
@@ -85,19 +77,17 @@ describe "Navigation menu states" do
     context "for admins" do
       fab!(:current_user) { Fabricate(:admin, refresh_auto_groups: true) }
 
-      it "shows the sidebar and allows toggling it" do
+      it "lets admins toggle the sidebar without a hamburger menu" do
         visit "/admin"
+
         expect(sidebar_navigation).to be_visible
+        expect(header_dropdown).to be_not_visible
+
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_not_visible
         sidebar_navigation.click_header_toggle
         expect(sidebar_navigation).to be_visible
         expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-bars")
-      end
-
-      it "does not show the hamburger menu" do
-        visit "/admin"
-        expect(header_dropdown).to be_not_visible
       end
     end
   end

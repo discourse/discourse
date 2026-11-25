@@ -37,6 +37,56 @@
     height: auto;
   }
 
+  &.--compact {
+    width: 100%;
+    height: auto;
+
+    .emoji-picker__content {
+      height: 13rem;
+      padding-block-start: var(--space-2);
+    }
+
+    .emoji-picker__filter-container {
+      align-items: center;
+      gap: var(--space-2);
+      height: auto;
+      padding: 0;
+      background: transparent;
+    }
+
+    .emoji-picker__filter {
+      margin: 0;
+      border-color: var(--primary-low-mid);
+    }
+
+    .emoji-picker__diversity-trigger {
+      align-self: stretch;
+      padding: 0 var(--space-2);
+
+      .emoji {
+        padding: 0;
+      }
+    }
+
+    .emoji-picker__section-emojis,
+    .emoji-picker__section.filtered {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--space-9), 1fr));
+      justify-items: center;
+      padding: 0;
+    }
+
+    .emoji-picker__no-results,
+    .spinner-container {
+      grid-column: 1 / -1;
+    }
+
+    .emoji[aria-current="true"] {
+      background: var(--tertiary-low);
+      border-radius: var(--d-border-radius);
+    }
+  }
+
   .spinner-container {
     height: 100%;
     width: 100%;

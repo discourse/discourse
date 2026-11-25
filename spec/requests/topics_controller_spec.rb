@@ -3402,6 +3402,21 @@ RSpec.describe TopicsController do
       expect(response.body).not_to include(hidden_link.url)
     end
 
+    it "keeps the preview params when redirecting a short topic URL" do
+      get "/t/#{topic.id}",
+          params: {
+            preview_theme_id: 9999,
+            preview_base_font: "lora",
+            preview_heading_font: "roboto",
+            preview_component_ids: "12,13",
+          }
+
+      expect(response.status).to eq(301)
+      expect(response).to redirect_to(
+        "#{topic.relative_url}?preview_theme_id=9999&preview_base_font=lora&preview_heading_font=roboto&preview_component_ids=12%2C13",
+      )
+    end
+
     it "shows a blank-slug topic without redirecting" do
       topic.update_columns(title: "", slug: nil)
       topic.reload

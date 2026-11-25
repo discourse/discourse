@@ -17,31 +17,15 @@ interface HandlePartSignature {
     /** Whether the shared menu is currently open on this row. */
     isOpen: boolean;
 
-    /**
-     * Records the handle's element against the row's key, so the list can
-     * find the row's one control wherever it was placed.
-     */
-    register: ModifierLike<{
-      Element: Element;
-      Args: { Positional: [string] };
-    }>;
+    /** Registers the grip with its owning list. */
+    register: ModifierLike<{ Element: HTMLElement }>;
   };
   Element: HTMLElement;
 }
 
 /**
- * The one control a movable row renders: a real button that is the drag
- * source and the move menu's trigger at once, so a pointer drags or clicks it
- * and a keyboard activates it, with nothing intercepting a plain button.
- *
- * The menu itself belongs to the list, not to this button; the button carries
- * only the menu's ARIA, driven by the list's single record of which row is
- * open.
- *
- * The drag registration belongs to the row: the registered element is what
- * the browser photographs for the drag preview, and registered here a drag
- * would show the grip rather than the row. The row registers instead and
- * names this button as its `dragHandle`.
+ * Tapping or activating the grip opens the list's move menu. The row owns
+ * the native drag registration so the browser previews the entire row.
  */
 export default class HandlePart extends Component<HandlePartSignature> {
   @action
@@ -54,13 +38,15 @@ export default class HandlePart extends Component<HandlePartSignature> {
       aria-describedby={{@row.descriptionId}}
       aria-haspopup={{if @row.hasDestinations "menu"}}
       class="btn-flat d-reorderable-list__handle"
+      data-reorderable-handle-key={{@row.key}}
+      data-swipe-ignore
       ...attributes
       @action={{this.open}}
       @ariaExpanded={{if @row.hasDestinations @isOpen}}
       @icon={{HANDLE_ICON}}
       @translatedAriaLabel={{@row.handleLabel}}
       @translatedTitle={{@row.handleLabel}}
-      {{@register @row.key}}
+      {{@register}}
     >
       <span class="sr-only" id={{@row.descriptionId}}>
         {{if

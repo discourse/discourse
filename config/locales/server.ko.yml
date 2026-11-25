@@ -3507,7 +3507,6 @@ ko:
       summer: "여름"
       grey_amber: "회색 호박색"
       latte: "라떼"
-      dark_rose: "다크 로즈"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3645,6 +3644,8 @@ ko:
         title: "예"
       approve_post:
         title: "예"
+      deny_and_delete_post:
+        complete: "게시물 삭제됨."
       approve_post_closed:
         title: "예"
         confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"

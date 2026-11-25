@@ -554,9 +554,12 @@ $mobile-avatar-height: 1.532em;
   overflow: auto;
 }
 
-// Hide header avatar + icons while topic title is visible in mobile header,
-// except with the tab bar, which keeps them like its other titled pages
-.mobile-view:not(.mobile-tab-bar-visible) {
+// With footer navigation the topic title stays docked on scroll up, even
+// after the header actions return.
+.mobile-view:not(.mobile-tab-bar-visible),
+.mobile-view:is(.mobile-tab-bar-tucked, .mobile-tab-bar-actions-tucked):not(
+    :has(.mobile-tab-bar :focus-visible)
+  ) {
   .extra-info-wrapper ~ .panel {
     .before-header-panel-outlet,
     .header-buttons,

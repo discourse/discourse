@@ -6,6 +6,7 @@ import type { CapabilitiesService } from "discourse/services/capabilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 import type {
+  InsertBlockOptions,
   SelectedText,
   SurroundOptions,
   ToolbarState,
@@ -41,7 +42,10 @@ export interface ToolbarEvent {
   /** Adds text at the captured selection. */
   addText(text: string): void;
   /** Inserts a standalone block in place of the captured selection. */
-  insertBlock(block: string): void;
+  insertBlock(
+    block: string,
+    options?: Omit<InsertBlockOptions, "selected">
+  ): void;
   /** Applies a link to the captured selection. */
   applyLink(url: string): void;
   /** Toggles the editor's text direction. */

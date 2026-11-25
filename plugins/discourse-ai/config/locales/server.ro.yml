@@ -75,6 +75,8 @@ ro:
           text_color: "culoare text"
         approve_label: "Da"
         reject_label: "Nu"
+        category_access_levels:
+          readonly: "Doar citire"
       tool_summary:
         suspend_user: "Suspendă utilizatorul"
         silence_user: "Redu la tăcere utilizatorul"

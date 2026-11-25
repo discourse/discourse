@@ -1373,6 +1373,20 @@ RSpec.describe InvitesController do
           expect(response.status).to eq(200)
           expect(Jobs::InviteEmail.jobs.size).to eq(1)
         end
+
+        it "counts an email change towards max_invites_per_day" do
+          SiteSetting.max_invites_per_day = 2
+          sign_in(user)
+          invite = Fabricate(:invite, invited_by: user, email: "first@example.com")
+
+          put "/invites/#{invite.id}.json", params: { email: "second@example.com" }
+          expect(response.status).to eq(200)
+
+          put "/invites/#{invite.id}.json", params: { email: "third@example.com" }
+          expect(response.status).to eq(429)
+          expect(invite.reload.email).to eq("second@example.com")
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+        end
       end
 
       context "when allow_email_invites is disabled" do
@@ -1816,6 +1830,56 @@ RSpec.describe InvitesController do
             end
           end
         end
+      end
+    end
+
+    context "with user fields" do
+      fab!(:invite)
+
+      fab!(:dropdown_field) do
+        Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+          field.user_field_options.create!(value: "Engineering")
+          field.user_field_options.create!(value: "Sales")
+        end
+      end
+
+      fab!(:multiselect_field) do
+        Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+          field.user_field_options.create!(value: "Axe")
+          field.user_field_options.create!(value: "Sword")
+        end
+      end
+
+      it "ignores dropdown and multiselect values that are not configured options" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              user_custom_fields: {
+                dropdown_field.id.to_s => "Staff",
+                multiselect_field.id.to_s => %w[Axe Juice Sword],
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        user_fields = User.find_by_email(invite.email).user_fields
+        expect(user_fields[dropdown_field.id.to_s]).to be_nil
+        expect(user_fields[multiselect_field.id.to_s]).to eq(%w[Axe Sword])
+      end
+
+      it "keeps dropdown and multiselect values that are configured options" do
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              user_custom_fields: {
+                dropdown_field.id.to_s => "Sales",
+                multiselect_field.id.to_s => %w[Axe Sword],
+              },
+            }
+
+        expect(response.status).to eq(200)
+
+        user_fields = User.find_by_email(invite.email).user_fields
+        expect(user_fields[dropdown_field.id.to_s]).to eq("Sales")
+        expect(user_fields[multiselect_field.id.to_s]).to eq(%w[Axe Sword])
       end
     end
 

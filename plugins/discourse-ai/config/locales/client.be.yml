@@ -37,6 +37,12 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      review_bulk:
+        refresh: "Абнавіць"
+        columns:
+          user: "Карыстальнік"
+          created: "Створана"
+          status: "Статус"
       ai_decoded_transcript:
         type: "Тып"
         error: "памылка"
@@ -188,6 +194,22 @@ be:
         edit: "Рэдагаваць"
         delete: "Выдаліць"
         embedding: "узаемадзеянне"
+      concepts:
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+        columns:
+          status: "Статус"
+          topics: "тэмы"
+          posts: "Допісаў"
+        statuses:
+          active: "Актыўныя"
+        form:
+          name: "Імя"
+          description: "Апісанне"
+          status: "Статус"
+        tagged_topics: "Tagged тэмы"
+        topic_columns:
+          topic: "Тэма"
       decision_models:
         no_preset: "Няма"
         display_name: "Імя"

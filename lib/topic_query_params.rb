@@ -17,4 +17,10 @@ module TopicQueryParams
 
     options
   end
+
+  private
+
+  def build_topic_query(options, user: current_user)
+    TopicQuery.new(user, options) { rate_limit_search! }
+  end
 end

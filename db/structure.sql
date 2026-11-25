@@ -810,6 +810,23 @@ CREATE TABLE public.ai_document_fragments_embeddings (
 
 
 --
+-- Name: ai_inferred_concepts_embeddings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_inferred_concepts_embeddings (
+    inferred_concept_id bigint NOT NULL,
+    model_id bigint NOT NULL,
+    model_version integer NOT NULL,
+    strategy_id integer NOT NULL,
+    strategy_version integer NOT NULL,
+    digest text NOT NULL,
+    embeddings public.halfvec NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
 -- Name: ai_mcp_oauth_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1007,8 +1024,8 @@ CREATE TABLE public.ai_reviewable_suggestions (
     id bigint NOT NULL,
     reviewable_id bigint NOT NULL,
     decision_model_id bigint NOT NULL,
-    action_name character varying NOT NULL,
-    confidence double precision NOT NULL,
+    action_name character varying,
+    confidence double precision,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -1309,6 +1326,17 @@ ALTER SEQUENCE public.allowed_pm_users_id_seq OWNED BY public.allowed_pm_users.i
 
 
 --
+-- Name: anonymous_mode_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.anonymous_mode_sessions (
+    id integer NOT NULL,
+    master_user_id integer NOT NULL,
+    user_auth_token_id integer NOT NULL
+);
+
+
+--
 -- Name: anonymous_users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1435,7 +1463,8 @@ CREATE TABLE public.appearance_changes (
     updated_at timestamp(6) without time zone NOT NULL,
     styles jsonb DEFAULT '{}'::jsonb NOT NULL,
     css text DEFAULT ''::text NOT NULL,
-    replaces_theme_id integer
+    replaces_theme_id integer,
+    parent_theme_id integer
 );
 
 
@@ -7704,7 +7733,10 @@ CREATE TABLE public.inferred_concept_posts (
     inferred_concept_id bigint,
     post_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7716,7 +7748,10 @@ CREATE TABLE public.inferred_concept_topics (
     inferred_concept_id bigint,
     topic_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    relevance double precision DEFAULT 1.0 NOT NULL,
+    "primary" boolean DEFAULT false NOT NULL,
+    digest character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -7728,7 +7763,12 @@ CREATE TABLE public.inferred_concepts (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    description text DEFAULT ''::text NOT NULL,
+    slug character varying DEFAULT ''::character varying NOT NULL,
+    status integer DEFAULT 1 NOT NULL,
+    aliases text[] DEFAULT '{}'::text[] NOT NULL,
+    parent_id bigint
 );
 
 
@@ -10053,7 +10093,8 @@ CREATE TABLE public.push_subscriptions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
-    first_error_at timestamp without time zone
+    first_error_at timestamp without time zone,
+    user_auth_token_id integer
 );
 
 
@@ -10266,6 +10307,19 @@ CREATE SEQUENCE public.remote_themes_id_seq
 --
 
 ALTER SEQUENCE public.remote_themes_id_seq OWNED BY public.remote_themes.id;
+
+
+--
+-- Name: retired_user_auth_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.retired_user_auth_tokens (
+    id integer NOT NULL,
+    anonymous_mode_session_id integer NOT NULL,
+    token_hash character varying NOT NULL,
+    previous_token_hash character varying,
+    rotated_at timestamp(6) without time zone NOT NULL
+);
 
 
 --
@@ -17241,6 +17295,14 @@ ALTER TABLE ONLY public.allowed_pm_users
 
 
 --
+-- Name: anonymous_mode_sessions anonymous_mode_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT anonymous_mode_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: anonymous_users anonymous_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -19169,6 +19231,14 @@ ALTER TABLE ONLY public.remote_themes
 
 
 --
+-- Name: retired_user_auth_tokens retired_user_auth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT retired_user_auth_tokens_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reviewable_claimed_topics reviewable_claimed_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -20246,6 +20316,13 @@ CREATE INDEX idx_ai_post_image_captions_reuse ON public.ai_post_image_captions U
 --
 
 CREATE UNIQUE INDEX idx_ai_summaries_on_target_type_and_locale ON public.ai_summaries USING btree (target_id, target_type, summary_type, locale) NULLS NOT DISTINCT;
+
+
+--
+-- Name: idx_anonymous_users_all_shadows_by_master; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_anonymous_users_all_shadows_by_master ON public.anonymous_users USING btree (master_user_id);
 
 
 --
@@ -21579,6 +21656,13 @@ CREATE UNIQUE INDEX index_ai_artifact_versions_on_ai_artifact_id_and_version_num
 
 
 --
+-- Name: index_ai_concepts_embeddings_on_model_strategy_concept; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ai_concepts_embeddings_on_model_strategy_concept ON public.ai_inferred_concepts_embeddings USING btree (model_id, strategy_id, inferred_concept_id);
+
+
+--
 -- Name: index_ai_fragments_embeddings_on_model_strategy_fragment; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21719,6 +21803,20 @@ CREATE UNIQUE INDEX index_allowed_pm_users_on_user_id_and_allowed_pm_user_id ON 
 
 
 --
+-- Name: index_anonymous_mode_sessions_on_master_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_anonymous_mode_sessions_on_master_user_id ON public.anonymous_mode_sessions USING btree (master_user_id);
+
+
+--
+-- Name: index_anonymous_mode_sessions_on_user_auth_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_anonymous_mode_sessions_on_user_auth_token_id ON public.anonymous_mode_sessions USING btree (user_auth_token_id);
+
+
+--
 -- Name: index_anonymous_users_on_master_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21751,6 +21849,13 @@ CREATE INDEX index_api_keys_on_key_hash ON public.api_keys USING btree (key_hash
 --
 
 CREATE INDEX index_api_keys_on_user_id ON public.api_keys USING btree (user_id);
+
+
+--
+-- Name: index_appearance_changes_on_parent_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_appearance_changes_on_parent_theme_id ON public.appearance_changes USING btree (parent_theme_id);
 
 
 --
@@ -23406,10 +23511,38 @@ CREATE UNIQUE INDEX index_inferred_concept_topics_uniqueness ON public.inferred_
 
 
 --
+-- Name: index_inferred_concepts_on_lower_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_lower_name ON public.inferred_concepts USING btree (lower((name)::text));
+
+
+--
 -- Name: index_inferred_concepts_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_inferred_concepts_on_name ON public.inferred_concepts USING btree (name);
+
+
+--
+-- Name: index_inferred_concepts_on_parent_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_parent_id ON public.inferred_concepts USING btree (parent_id) WHERE (parent_id IS NOT NULL);
+
+
+--
+-- Name: index_inferred_concepts_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_inferred_concepts_on_slug ON public.inferred_concepts USING btree (slug) WHERE ((slug)::text <> ''::text);
+
+
+--
+-- Name: index_inferred_concepts_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_inferred_concepts_on_status ON public.inferred_concepts USING btree (status);
 
 
 --
@@ -24505,6 +24638,20 @@ CREATE UNIQUE INDEX index_published_pages_on_topic_id ON public.published_pages 
 
 
 --
+-- Name: index_push_subscriptions_on_user_auth_token_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_auth_token_id ON public.push_subscriptions USING btree (user_auth_token_id) WHERE (user_auth_token_id IS NOT NULL);
+
+
+--
+-- Name: index_push_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_push_subscriptions_on_user_id ON public.push_subscriptions USING btree (user_id);
+
+
+--
 -- Name: index_quoted_posts_on_post_id_and_quoted_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -24544,6 +24691,34 @@ CREATE INDEX index_rag_document_sources_on_target_type_and_target_id ON public.r
 --
 
 CREATE INDEX index_redelivering_webhook_events_on_web_hook_event_id ON public.redelivering_webhook_events USING btree (web_hook_event_id);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_anonymous_mode_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_anonymous_mode_session_id ON public.retired_user_auth_tokens USING btree (anonymous_mode_session_id);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_previous_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_previous_token_hash ON public.retired_user_auth_tokens USING btree (previous_token_hash) WHERE (previous_token_hash IS NOT NULL);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_rotated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retired_user_auth_tokens_on_rotated_at ON public.retired_user_auth_tokens USING btree (rotated_at);
+
+
+--
+-- Name: index_retired_user_auth_tokens_on_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_retired_user_auth_tokens_on_token_hash ON public.retired_user_auth_tokens USING btree (token_hash);
 
 
 --
@@ -26572,6 +26747,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 
 --
+-- Name: anonymous_mode_sessions fk_rails_75ec4f4b22; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.anonymous_mode_sessions
+    ADD CONSTRAINT fk_rails_75ec4f4b22 FOREIGN KEY (user_auth_token_id) REFERENCES public.user_auth_tokens(id) ON DELETE CASCADE;
+
+
+--
 -- Name: optimized_videos fk_rails_7c76beeaf4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -26641,6 +26824,14 @@ ALTER TABLE ONLY public.poll_votes
 
 ALTER TABLE ONLY public.poll_options
     ADD CONSTRAINT fk_rails_aa85becb42 FOREIGN KEY (poll_id) REFERENCES public.polls(id);
+
+
+--
+-- Name: retired_user_auth_tokens fk_rails_ae20d58572; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retired_user_auth_tokens
+    ADD CONSTRAINT fk_rails_ae20d58572 FOREIGN KEY (anonymous_mode_session_id) REFERENCES public.anonymous_mode_sessions(id) ON DELETE CASCADE;
 
 
 --
@@ -26770,8 +26961,20 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261124173030'),
+('20261124170000'),
+('20261124152608'),
+('20261124152603'),
+('20261124151606'),
+('20261124013641'),
+('20261124013638'),
+('20261123182523'),
 ('20261123103548'),
+('20261123031254'),
 ('20261123030923'),
+('20261123011249'),
+('20261123011248'),
+('20261122235552'),
 ('20261121231304'),
 ('20261120183731'),
 ('20261120090013'),

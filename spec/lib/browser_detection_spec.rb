@@ -233,4 +233,10 @@ RSpec.describe BrowserDetection do
       ).to eq(:chrome)
     end
   end
+
+  it "handles nil user agents safely" do
+    expect(BrowserDetection.browser(nil)).to eq(:unknown)
+    expect(BrowserDetection.device(nil)).to eq(:unknown)
+    expect(BrowserDetection.os(nil)).to eq(:unknown)
+  end
 end

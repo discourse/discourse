@@ -5,16 +5,6 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  site_settings:
-    blog_url: 使用独立的 HTTPS 源提供博客服务，源地址不带尾部斜杠或路径，而不是使用本站的 /blog 路径。博客主机名必须与讨论区主机名不同。在代理和数据库连接中，将此主机名配置为本站的别名。
-    blog_title: 博客名称显示在导航栏、页面标题和订阅源中。
-    blog_description: 首页、信息流和搜索引擎的简短描述。
-    blog_about: 博客“关于”页面的 Markdown 内容。
-    blog_posts_per_page: 每个首页或存档页面上显示的文章数量。
-    keywords:
-      blog_about: "关于页面"
-      blog_description: "标语"
-      blog_title: "博客名称"
   blog:
     home: 首页
     continue_reading: 继续阅读

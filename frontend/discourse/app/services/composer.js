@@ -563,9 +563,12 @@ export default class ComposerService extends Service {
             {
               name: "ai-content-code",
               action: ({ insertBlock, selected }) => {
-                const content =
-                  (selected.plainText ?? selected.value) ||
-                  `// ${i18n("composer.ai_content.placeholder")}`;
+                const content = selected.plainText ?? selected.value;
+                if (!content) {
+                  insertBlock("``` ai\n\n```", { moveCursorInside: true });
+                  return;
+                }
+
                 const fenceLength = (content.match(/`+/g) ?? []).reduce(
                   (length, run) => Math.max(length, run.length + 1),
                   3
@@ -602,7 +605,7 @@ export default class ComposerService extends Service {
           this._setupPopupMenuOption({
             name: "change-reply-to",
             action: this.openChangeReplyToModal,
-            icon: "share",
+            icon: "reply",
             label: "composer.change_reply_to.open_from_menu",
           })
         );

@@ -27,6 +27,7 @@ import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 class FKForm extends Component {
@@ -127,6 +128,9 @@ class FKForm extends Component {
       },
       get data() {
         return instance.formData;
+      },
+      get layout() {
+        return instance.args.layout;
       },
       addError: instance.addError,
       set: instance.set,
@@ -358,7 +362,10 @@ class FKForm extends Component {
 
   <template>
     <form
-      class="form-kit"
+      class={{dConcatClass
+        "form-kit"
+        (if (eq @layout "horizontal") "--horizontal")
+      }}
       novalidate
       ...attributes
       {{on "submit" this.onSubmit}}
@@ -415,6 +422,7 @@ const Form = <template>
       ...attributes
       @commitOnSubmit={{@commitOnSubmit}}
       @data={{data}}
+      @layout={{@layout}}
       @onDirtyCheck={{@onDirtyCheck}}
       @onRegisterApi={{@onRegisterApi}}
       @onReset={{@onReset}}

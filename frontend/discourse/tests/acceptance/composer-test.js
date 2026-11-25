@@ -2387,17 +2387,24 @@ acceptance("Composer - Insert AI content | Markdown editor", function (needs) {
     await fillIn(".d-editor-input", "Introduction");
 
     await insertAiContent("code");
-    await waitUntil(() =>
-      find(".d-editor-input").value.includes("// AI content")
+    await waitUntil(() => find(".d-editor-input").value.includes("``` ai"));
+    const textarea = find(".d-editor-input");
+    const codeStart = "Introduction\n\n``` ai\n".length;
+    assert.deepEqual(
+      [textarea.selectionStart, textarea.selectionEnd],
+      [codeStart, codeStart],
+      "the cursor is on the blank line inside the code fence"
     );
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
     await insertAiContent("quote");
     await waitUntil(() => find(".d-editor-input").value.includes("> [!AI]"));
 
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "Introduction\n\n``` ai\n// AI content\n```\n\n> [!AI]\n> AI content\n",
-        "each choice adds a standalone block with its AI marker and placeholder"
+        "Introduction\n\n``` ai\n\n```\n\n> [!AI]\n> AI content\n",
+        "the standalone code fence is empty and both blocks retain their AI markers"
       );
     assert
       .dom(".toolbar-menu__ai-content-content")
@@ -2455,22 +2462,32 @@ acceptance("Composer - Insert AI content | rich editor", function (needs) {
     "user_option.composition_mode": USER_OPTION_COMPOSITION_MODES.rich,
   });
 
-  test("inserts editable code and quote blocks with AI badges", async function (assert) {
-    await visit("/");
-    await click("#create-topic");
+  test("inserts an empty editable code block with an AI badge", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
     await waitFor("#reply-control .ProseMirror");
 
     await insertAiContent("code");
-    await waitFor(".ProseMirror pre");
+    const code = await waitFor(".ProseMirror pre[data-code-ai='true'] code");
+    assert.dom(code).hasText("", "the AI-marked code block has no sample code");
+    assert.dom(".ProseMirror").isFocused("the editor is ready for typing");
+    document.execCommand("insertText", false, "echo hello");
+    await settled();
     assert
       .dom(".ProseMirror pre[data-code-ai='true'] code")
-      .hasText("// AI content");
+      .hasText("echo hello", "typing lands inside the code block");
+  });
+
+  test("inserts a quote with an AI badge", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+    await waitFor("#reply-control .ProseMirror");
 
     await insertAiContent("quote");
     await waitFor(".ProseMirror blockquote");
     assert
       .dom(".ProseMirror blockquote[data-ai-generated='true'] p")
-      .hasText("AI content");
+      .hasText("AI content", "the AI-marked quote contains the placeholder");
   });
 
   async function selectRichText(text) {

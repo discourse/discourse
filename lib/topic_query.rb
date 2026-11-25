@@ -142,8 +142,9 @@ class TopicQuery
     results
   end
 
-  def initialize(user = nil, options = {})
+  def initialize(user = nil, options = {}, &before_first_keyword_search)
     options.assert_valid_keys(TopicQuery.valid_options)
+    @before_first_keyword_search = before_first_keyword_search
     @options = options.dup
     @user = user
     @guardian = options[:guardian] || Guardian.new(@user)
@@ -332,7 +333,10 @@ class TopicQuery
           []
         else
           matches, = filter_results
-          matches.where(id: candidate_ids).except(:limit, :offset, :order).distinct.pluck(:id)
+
+          with_keyword_search_timeout(matches) do
+            matches.where(id: candidate_ids).except(:limit, :offset, :order).distinct.pluck(:id)
+          end
         end
     end
 
@@ -586,9 +590,11 @@ class TopicQuery
     apply_pinning &&= %w[activity default].include?(options[:order] || "activity")
     apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
 
-    topics = prioritize_pinned_topics(topics, options) if apply_pinning
-
-    topics = topics.to_a
+    topics =
+      with_keyword_search_timeout(topics) do
+        topics = prioritize_pinned_topics(topics, options) if apply_pinning
+        topics.to_a
+      end
 
     if options[:preload_posters]
       user_ids = []
@@ -926,18 +932,8 @@ class TopicQuery
       result = result.where("topics.id in (?)", options[:topic_ids]).references(:topics)
     end
 
-    if (search = options[:search].presence) && search.length >= SiteSetting.min_search_term_length
-      result = result.where(<<~SQL, visible_post_types: Topic.visible_post_types(@guardian.user))
-            topics.id IN (
-              SELECT pp.topic_id
-              FROM post_search_data pd
-              JOIN posts pp ON pp.id = pd.post_id
-              WHERE pd.search_data @@ #{Search.ts_query(term: search.to_s)}
-                AND NOT pp.hidden
-                AND pp.deleted_at IS NULL
-                AND pp.post_type IN (:visible_post_types)
-            )
-          SQL
+    if Topic::KeywordSearch.valid_term?(search = options[:search])
+      result = result.with_post_keywords(search, Post.with_visible_post_types(@guardian))
     end
 
     if state = options[:state]
@@ -1343,6 +1339,15 @@ class TopicQuery
   end
 
   private
+
+  def with_keyword_search_timeout(scope, &block)
+    return yield unless scope.respond_to?(:with_keyword_search_timeout)
+
+    @before_first_keyword_search&.call
+    @before_first_keyword_search = nil
+
+    scope.with_keyword_search_timeout(&block)
+  end
 
   def filter_results(query = @options[:q])
     topics_filter =

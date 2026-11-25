@@ -807,9 +807,10 @@ RSpec.describe Assigner do
   end
 
   describe "unassign_on_close" do
-    let(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator) }
+
+    fab!(:moderator)
 
     context "with topic" do
       let(:assigner) { described_class.new(topic, moderator) }
@@ -849,7 +850,7 @@ RSpec.describe Assigner do
     end
 
     context "with post" do
-      let(:post_2) { Fabricate(:post, topic: topic) }
+      fab!(:post_2) { Fabricate(:post, topic: post.topic) }
       let(:assigner) { described_class.new(post_2, moderator) }
       let(:post_3) { Fabricate(:post, topic: topic) }
       let(:assigner_2) { described_class.new(post_3, moderator) }
@@ -904,9 +905,10 @@ RSpec.describe Assigner do
   end
 
   describe "reassign_on_open" do
-    let(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator) }
+
+    fab!(:moderator)
 
     describe "topic" do
       let(:assigner) { described_class.new(topic, moderator) }

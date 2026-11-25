@@ -15,6 +15,14 @@ da:
         desktop: Desktop
         mobile: Mobil
         save: Gem
+        about_tab: Om
+        blog_slug: Alias (Slug)
+        general_heading: Overordnet
+        settings_tab: Indstillinger
+        theme_tab: Tema
+        column_name: Navn
+        column_category: Kategori
+        column_status: Status
         path_formats:
           custom: Tilpasset
         back_to_themes: Tilbage til temaer

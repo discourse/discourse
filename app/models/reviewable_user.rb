@@ -43,12 +43,10 @@ class ReviewableUser < Reviewable
   def build_combined_actions(actions, guardian, args)
     build_action(actions, :scrub, client_action: "scrub") if guardian.is_admin? && scrubbable?
 
-    suspect_pending = status == "pending" && is_a_suspect_user?
+    suspect_pending = pending? && is_a_suspect_user?
     consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    explicit_account_actions = consistent_answers && pending? && !suspect_pending
 
-    # For suspect users the destructive "confirm spam" bundle must be added
-    # before the approve action so it renders first in the queue UI. With
-    # consistent answers every "Yes, there's a problem" bundle goes first.
     if suspect_pending
       bundle =
         actions.add_bundle(
@@ -71,12 +69,12 @@ class ReviewableUser < Reviewable
         require_reject_reason: false,
         dsa_classification_required: true,
       )
-    elsif status == "pending" && consistent_answers
+    elsif explicit_account_actions
       delete_user_actions(
         actions,
         nil,
         require_reject_reason: true,
-        bundle_label: "reviewables.actions.answer_yes.title",
+        bundle_label: "reviewables.actions.deny_account.title",
       )
     end
 
@@ -101,11 +99,18 @@ class ReviewableUser < Reviewable
           a.label = "reviewables.actions.not_spam.title"
           a.description = "reviewables.actions.not_spam.description"
         elsif consistent_answers
-          a.label = "reviewables.actions.answer_no.title"
+          a.label = "reviewables.actions.approve_user.action_title"
         else
           a.label = "reviewables.actions.approve_user.title"
         end
       end
+    elsif explicit_account_actions && target&.approved? && guardian.is_staff?
+      build_action(
+        actions,
+        :approve_account_review,
+        icon: "check",
+        label: "reviewables.actions.approve_user.action_title",
+      )
     end
 
     if status == "pending" && !suspect_pending && !consistent_answers
@@ -150,6 +155,11 @@ class ReviewableUser < Reviewable
     end
     StaffActionLogger.new(performed_by).log_user_approve(target, reviewable_id: id)
 
+    create_result(:success, :approved)
+  end
+
+  def perform_approve_account_review(performed_by, _args)
+    StaffActionLogger.new(performed_by).log_account_review_approved(target, reviewable_id: id)
     create_result(:success, :approved)
   end
 
@@ -247,6 +257,15 @@ class ReviewableUser < Reviewable
 
   def is_a_suspect_user?
     reviewable_scores.any? { |rs| rs.reason == "suspect_user" }
+  end
+
+  def signup_approval?
+    return false unless pending? && target && !target.approved?
+
+    reviewable_scores.all? do |score|
+      score.reviewable_score_type == ReviewableScore.types[:needs_approval] &&
+        (score.reason.blank? || %w[must_approve_users invite_only].include?(score.reason))
+    end
   end
 
   private

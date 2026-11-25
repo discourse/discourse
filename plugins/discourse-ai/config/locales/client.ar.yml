@@ -243,6 +243,13 @@ ar:
               description: "السماح بوضع الوسوم على المنشورات التي ينشئها مستخدم النظام."
     discourse_ai:
       title: "الذكاء الاصطناعي"
+      review_bulk:
+        refresh: "تحديث"
+        columns:
+          user: "المستخدم"
+          reason: "صفة الإبلاغ"
+          created: "تاريخ الإنشاء"
+          status: "الحالة"
       dsa_classification:
         suggest: "الاقتراح باستخدام الذكاء الاصطناعي"
       copied: "تم النسخ"
@@ -1088,6 +1095,27 @@ ar:
         mcp_server_oauth_client_secret: "سر عميل OAuth لخادم MCP"
         modal:
           title: "إنشاء بيانات اعتماد جديدة"
+      concepts:
+        edit: "تعديل"
+        delete: "حذف"
+        columns:
+          status: "الحالة"
+          topics: "الموضوعات"
+          posts: "المنشورات"
+        statuses:
+          all: "جميع الحالات"
+          active: "نشطة"
+        form:
+          name: "الاسم"
+          description: "الوصف"
+          aliases: "الأسماء المستعارة"
+          status: "الحالة"
+        tagged_topics: "الموضوعات الموسومة"
+        topic_columns:
+          topic: "الموضوع"
+          primary: "أساسي"
+          relevance: "مدى الصلة بالموضوع"
+        primary_badge: "أساسي"
       decision_models:
         no_preset: "لا يوجد"
         display_name: "الاسم"

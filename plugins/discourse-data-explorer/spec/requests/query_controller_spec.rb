@@ -1267,6 +1267,7 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+        expect(response.parsed_body.keys).not_to include("column_schema", "truncated")
       end
 
       it "does not include post relations the user cannot see" do
@@ -1449,6 +1450,84 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+      end
+
+      it "describes the ordered types of a parameterized query with no rows" do
+        group.add(user)
+        query = make_query(<<~SQL, {}, [group.id])
+            -- [params]
+            -- int :value
+            SELECT CAST(:value AS bigint) AS id, 12.345::numeric(12,3) AS amount,
+                   NULL::date AS reported_on, SUM(1) OVER ()::numeric AS total
+          SQL
+
+        get "/data-explorer/queries/#{query.id}/run.json",
+            params: {
+              typed: true,
+              limit: 0,
+              params: { value: "42" }.to_json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "columns" => %w[id amount reported_on total],
+          "column_schema" => [
+            { "name" => "id", "type" => "int8" },
+            { "name" => "amount", "type" => "numeric", "precision" => 12, "scale" => 3 },
+            { "name" => "reported_on", "type" => "date" },
+            { "name" => "total", "type" => "numeric" },
+          ],
+          "rows" => [],
+          "result_count" => 0,
+        )
+      end
+
+      it "preserves the textual values and SQL nulls in typed rows" do
+        group.add(user)
+        query = make_query(<<~SQL, {}, [group.id])
+            SELECT 12345.123456789123456789::numeric(38,18) AS amount,
+                   '2025-11-30 10:30:00.123456'::timestamp AS observed_at,
+                   '{"value":1}'::json AS payload, NULL::int AS count
+          SQL
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["rows"]).to eq(
+          [["12345.123456789123456789", "2025-11-30 10:30:00.123456", '{"value":1}', nil]],
+        )
+      end
+
+      it "reports truncation only when there are more rows than the requested limit" do
+        group.add(user)
+        query =
+          make_query("SELECT id FROM generate_series(1, 2) AS ids(id) ORDER BY id", {}, [group.id])
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, limit: 2 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "rows" => [["1"], ["2"]],
+          "result_count" => 2,
+          "truncated" => false,
+        )
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, limit: 1 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "rows" => [["1"]],
+          "result_count" => 1,
+          "truncated" => true,
+        )
+      end
+
+      it "rejects the download parameter for typed JSON" do
+        group.add(user)
+        query = make_query("SELECT 1 AS value", {}, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, download: true }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body.fetch("errors").join).to include("download")
       end
 
       it "rejects negative limits in CSV downloads" do

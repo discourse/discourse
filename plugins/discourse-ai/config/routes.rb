@@ -253,5 +253,16 @@ Discourse::Application.routes.draw do
               only: %i[index show new create edit update destroy],
               path: "ai-secrets",
               controller: "discourse_ai/admin/ai_secrets"
+
+    resources :ai_concepts,
+              only: %i[index show new create edit update destroy],
+              path: "ai-concepts",
+              controller: "discourse_ai/admin/ai_concepts" do
+      member { post :merge }
+      collection do
+        post :curate
+        post :seed
+      end
+    end
   end
 end

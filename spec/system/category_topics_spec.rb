@@ -9,6 +9,8 @@ describe "Viewing categories page" do
   let(:topic_view) { PageObjects::Components::TopicView.new }
 
   context "when viewing top topics" do
+    before { SiteSetting.desktop_category_page_style = "categories_and_latest_topics" }
+
     it "displays and updates new counter" do
       sign_in(user)
 

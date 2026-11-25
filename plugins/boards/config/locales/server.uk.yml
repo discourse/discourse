@@ -5,7 +5,20 @@
 # https://translate.discourse.org/
 
 uk:
+  discourse_workflows:
+    errors:
+      create_board_column:
+        board_not_found: "Не вдалося знайти дошку для цієї колонки."
+        forbidden: "Користувач виконання робочого процесу не має дозволу на керування цією дошкою."
+        invalid_params: "Не вдалося створити стовпець дошки: %{errors}"
+        failed: "Не вдалося створити стовпець дошки."
+      create_board:
+        forbidden: "Не вдалося створити дошку: %{policy_reason}"
+        invalid_params: "Не вдалося створити дошку: %{errors}"
+        acl_failed: "Не вдалося створити права доступу для дошки. Перевірте вибрані групи та дозволи."
+        failed: "Не вдалося створити дошку."
   site_settings:
+    boards_enabled: "Упорядковуйте теми та невеликі автономні «плаваючі» картки у настроювані дошки та стовпці у стилі канбан, які можна перетягувати мишкою, — все це за допомогою спеціально розробленого інтерфейсу управління та контролю доступу для кожної дошки. Перейдіть на <a href='%{base_path}/boards'> сторінку /boards</a>, щоб розпочати роботу."
     boards_manage_board_allowed_groups: "Групам дозволено створювати та налаштовувати дошки."
   access_control_list:
     errors:
@@ -17,8 +30,10 @@ uk:
         acl_update_failed: "Не вдалося оновити дозволи дошки."
         acl_create_failed: "Не вдалося створити дозволи дошки."
     errors:
+      slug_unavailable: "Цей слаг дошки вже використовується. Будь ласка, виберіть інший слаг."
       board_not_found: "Дошка не знайдена"
       board_read_forbidden: "У вас немає дозволу на перегляд цієї дошки"
+      board_create_forbidden: "У вас немає дозволу на створення дощок"
       board_write_forbidden: "У вас немає дозволу на змінення цієї дошки"
       board_manage_forbidden: "У вас немає дозволу керувати цією дошкою"
       column_not_found: "Стовпець не знайдено"
@@ -41,6 +56,7 @@ uk:
       cannot_reorder_recency_column: "Картки у стовпцях, відсортованих за новизною, не можна перевпорядкувати."
       invalid_column_sort: "Недійсне сортування стовпця: %{sort}"
     onebox:
+      archived: "Архів дошки"
       inline_to_card: "Картка '%{card_name}' на дошці '%{board_name}'"
       inline_to_board: "Дошка '%{board_name}'"
       created_by: "Створено %{username}"

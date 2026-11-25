@@ -789,6 +789,19 @@ export default class FullPageSearchController extends Controller {
   _afterTransition() {
     if (Object.keys(this.model).length === 0) {
       this.reset();
+    } else if (
+      [SEARCH_TYPE_CATS_TAGS, SEARCH_TYPE_USERS].includes(this.search_type) &&
+      !this.customSearchType &&
+      this.searchActive &&
+      !this.searching &&
+      this.model.grouped_search_result
+    ) {
+      // Back can restore cached Posts results because lastSearch is keyed by term
+      // and context, not tab. If q and search_type are unchanged, neither observer
+      // reruns the lookup. Only Posts results carry grouped_search_result, so its
+      // presence on either of these tabs means the model doesn't match the tab.
+      this.set("page", 1);
+      this._search();
     }
   }
 }

@@ -93,6 +93,13 @@ export interface AddTextOptions {
   ensureSpace?: boolean;
 }
 
+export interface InsertBlockOptions {
+  /** Place the cursor on the first line inside a multiline block. */
+  moveCursorInside?: boolean;
+  /** Replace the captured selection instead of the current selection. */
+  selected?: SelectedText;
+}
+
 export type AutocompleteOptions = Record<string, unknown> | "destroy";
 
 export type UppyFile = MinimalRequiredUppyFile<Meta, Body> & {
@@ -174,7 +181,7 @@ export interface TextManipulation {
   /** Handles pasted content. */
   paste(event?: ClipboardEvent): void | Promise<void>;
   /** Inserts a standalone block in place of the supplied or current selection. */
-  insertBlock(block: string, selected?: SelectedText): void;
+  insertBlock(block: string, options?: InsertBlockOptions): void;
   /** Inserts text at the current selection. */
   insertText(text: string, options?: AddTextOptions): void;
   /** Surrounds the current selection with formatting text. */

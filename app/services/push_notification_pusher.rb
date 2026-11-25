@@ -117,62 +117,69 @@ class PushNotificationPusher
   end
 
   def self.subscriptions(user)
-    user.push_subscriptions.order(id: :desc).limit(MAX_SUBSCRIPTIONS_PER_USER)
+    user.push_subscriptions.with_unexpired_login.order(id: :desc).limit(MAX_SUBSCRIPTIONS_PER_USER)
   end
 
   def self.clear_subscriptions(user)
     user.push_subscriptions.clear
   end
 
-  def self.subscribe(user, push_params, send_confirmation)
+  def self.subscribe(user, push_params, send_confirmation, user_auth_token_id:)
     return if revoked_endpoint?(push_params[:endpoint])
 
     data = push_params.to_json
-    subscriptions = PushSubscription.where(user: user, data: data)
-    subscriptions_count = subscriptions.count
-
-    new_subscription =
-      if subscriptions_count > 1
-        subscriptions.destroy_all
-        PushSubscription.create!(user: user, data: data)
-      elsif subscriptions_count == 0
-        RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
-        PushSubscription.create!(user: user, data: data)
+    matching = user.push_subscriptions.where(data: data).order(id: :desc).to_a
+    if subscription = matching.shift
+      if subscription.user_auth_token_id != user_auth_token_id
+        subscription.update!(user_auth_token_id:)
       end
+      PushSubscription.where(id: matching.map(&:id)).delete_all if matching.present?
+      return
+    end
 
-    prune_subscriptions(user) if new_subscription
+    RateLimiter.new(user, "push-subscribe", SUBSCRIBE_RATE_LIMIT_PER_HOUR, 1.hour).performed!
+    subscription = user.push_subscriptions.create!(data: data, user_auth_token_id:)
+    prune_subscriptions(user)
+    DB.after_commit { confirm_subscription(user, subscription.id) } if send_confirmation == "true"
+  end
 
-    if send_confirmation == "true"
-      message = {
-        title:
-          I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
-        body: I18n.t("discourse_push_notifications.popup.confirm_body"),
-        icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
-        badge: get_badge,
-        tag: "#{Discourse.current_hostname}-subscription",
-      }
+  def self.confirm_subscription(user, subscription_id)
+    subscription = user.push_subscriptions.with_unexpired_login.find_by(id: subscription_id)
+    return unless subscription
 
-      if trusted?(new_subscription)
-        send_notification(user, new_subscription, message)
-      else
-        Jobs::DeliverUntrustedPushNotifications.add(
-          user_id: user.id,
-          message: message,
-          subscription_id: new_subscription.id,
-        )
-      end
+    message = {
+      title:
+        I18n.t("discourse_push_notifications.popup.confirm_title", site_title: SiteSetting.title),
+      body: I18n.t("discourse_push_notifications.popup.confirm_body"),
+      icon: ActionController::Base.helpers.image_url("push-notifications/check.png"),
+      badge: get_badge,
+      tag: "#{Discourse.current_hostname}-subscription",
+    }
+
+    if trusted?(subscription)
+      send_notification(user, subscription, message)
+    else
+      Jobs::DeliverUntrustedPushNotifications.add(
+        user_id: user.id,
+        message: message,
+        subscription_id: subscription.id,
+      )
     end
   end
 
   # Keeps the newest subscriptions so the most recently registered browsers still
   # receive pushes, since users have no UI to manage older ones.
   def self.prune_subscriptions(user)
+    subscriptions = user.push_subscriptions
+    live_login =
+      UserAuthToken.unexpired.where("user_auth_tokens.id = push_subscriptions.user_auth_token_id")
+    subscriptions.where.not(user_auth_token_id: nil).where.not(live_login.arel.exists).delete_all
+
     untrusted_kept = 0
     total_kept = 0
 
     stale_ids =
-      user
-        .push_subscriptions
+      subscriptions
         .order(id: :desc)
         .filter_map do |subscription|
           if !trusted?(subscription)
@@ -295,6 +302,7 @@ class PushNotificationPusher
     end
   end
 
+  private_class_method :confirm_subscription
   private_class_method :send_notification
   private_class_method :handle_generic_error
   private_class_method :record_error

@@ -446,6 +446,8 @@ zh_TW:
           text_color: "文字顏色"
         approve_label: "是"
         reject_label: "否"
+        category_access_levels:
+          readonly: "觀看"
         approved: "已由 @%{username} 核准。"
         rejected: "已由 @%{username} 拒絕。"
         failed: "無法完成此動作：%{error}"
@@ -500,8 +502,7 @@ zh_TW:
         discourse_helper:
           name: "Discourse 助理"
           description: "專門協助處理 Discourse 相關工作的 AI 機器人"
-        discourse_admin_assistant:
-          name: "Discourse 管理員助理"
+        admin_assistant:
           description: "回答 Discourse 問題並協助管理員管理網站設定的 AI 機器人"
         web_artifact_creator:
           name: "網頁成品建立器"
@@ -693,6 +694,7 @@ zh_TW:
         edit_tag: "編輯標籤"
         create_category: "建立分類"
         edit_category: "編輯分類"
+        delete_category: "刪除分類"
         change_topic_category: "變更主題分類"
         set_topic_timer: "設定主題計時器"
         set_slow_mode: "設定慢速模式"
@@ -943,6 +945,12 @@ zh_TW:
           nothing_to_edit: "name、description、color 或 text_color 至少須提供一項。"
           no_reason: "編輯分類時必須提供原因。"
         success: "分類「%{name}」已成功更新。"
+      set_category_permissions:
+        errors:
+          not_found: "找不到分類。"
+      delete_category:
+        errors:
+          not_found: "找不到分類。"
       change_topic_category:
         errors:
           not_found: "未找到話題."
@@ -1044,6 +1052,8 @@ zh_TW:
           secret: "網站設定「%{setting_name}」包含密鑰，無法在此讀取。"
           themeable: "網站設定「%{setting_name}」需要佈景主題，無法在此讀取。"
     appearance_authoring:
+      component_on: "開"
+      component_off: "關"
       default_theme: "預設佈景主題"
       colors:
         light:

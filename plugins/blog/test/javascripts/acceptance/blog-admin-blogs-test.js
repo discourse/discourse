@@ -38,7 +38,11 @@ function blogFixture(overrides = {}) {
 
 acceptance("Blog admin with one blog", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+  needs.settings({
+    blog_enabled: true,
+    blog_custom_domains_enabled: true,
+    blog_custom_themes_enabled: true,
+  });
   needs.site({
     blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
   });
@@ -157,7 +161,7 @@ acceptance("Blog admin with one blog", function (needs) {
     );
   });
 
-  test("offers an own domain only where the site allows it", async function (assert) {
+  test("offers a custom domain only where the site allows it", async function (assert) {
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
       .dom(".blog-settings .form-kit__field[data-name='url']")
@@ -167,15 +171,15 @@ acceptance("Blog admin with one blog", function (needs) {
     await visit("/admin/plugins/blog/blogs");
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
-      .dom(".blog-settings .form-kit__field[data-name='url']")
-      .doesNotExist("the field is hidden");
+      .dom(".blog-settings .form-kit__field[data-name='url'] input")
+      .isDisabled("the field is locked");
 
     blog = { ...blog, url: "https://blog.example.com" };
     await visit("/admin/plugins/blog/blogs");
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
-      .dom(".blog-settings .form-kit__field[data-name='url']")
-      .exists("a blog that has an own domain can still clear it");
+      .dom(".blog-settings .form-kit__field[data-name='url'] input")
+      .isEnabled("a blog that has a custom domain can still clear it");
   });
 
   test("rejects a custom address format without a unique placeholder", async function (assert) {
@@ -238,28 +242,30 @@ acceptance("Blog admin with one blog", function (needs) {
 
     await visit("/admin/plugins/blog/blogs/1/theme");
     assert
-      .dom(".blog-theme-picker .d-page-subheader a")
+      .dom(".blog-edit__links a")
       .hasAttribute(
         "href",
         "/admin/plugins/blog/themes",
         "themes are added and edited in the library"
       );
     assert
-      .dom('[data-theme-id="candidate"] .theme-card__button.edit')
+      .dom('[data-theme-id="candidate"] .blog-theme-card__button.edit')
       .doesNotExist("a blog only picks a theme");
     assert
-      .dom('[data-theme-id="candidate"] .theme-card__button.preview')
+      .dom('[data-theme-id="candidate"] .blog-theme-card__button.preview')
       .exists("another theme can be previewed on this blog");
     assert
       .dom('[data-theme-id="default"]')
       .exists("the blog's active theme is listed");
     assert
-      .dom('[data-theme-id="default"] .theme-card__button.preview')
+      .dom('[data-theme-id="default"] .blog-theme-card__button.preview')
       .doesNotExist("the blog already shows its active theme");
     assert
       .dom(".blog-edit__nav .active")
       .hasText("Theme", "the tab names the one theme this blog uses");
-    await click('[data-theme-id="candidate"] .theme-card__button.activate');
+    await click(
+      '[data-theme-id="candidate"] .blog-theme-card__button.activate'
+    );
     await click(".dialog-footer .btn-primary");
 
     assert.strictEqual(listedFor, "1", "previews are built for this blog");
@@ -273,7 +279,11 @@ acceptance("Blog admin with one blog", function (needs) {
 
 acceptance("Blog admin with several blogs", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+  needs.settings({
+    blog_enabled: true,
+    blog_custom_domains_enabled: true,
+    blog_custom_themes_enabled: true,
+  });
   needs.site({
     blogs: [
       { id: 1, is_default: true },
@@ -437,7 +447,7 @@ acceptance("Blog admin with several blogs", function (needs) {
 
     await click('[data-theme-id="candidate"] .theme-card__footer-menu');
     assert
-      .dom(".theme-card__button.activate")
+      .dom(".blog-theme-card__button.activate")
       .doesNotExist("each blog picks its theme on its own page");
   });
 
@@ -454,7 +464,7 @@ acceptance("Blog admin with several blogs", function (needs) {
       .hasClass("is-disabled", "the category keeps published articles public");
     assert
       .dom(".blog-settings .form-kit__field[data-name='category_id']")
-      .includesText("is fixed", "with the reason beneath it");
+      .includesText("cannot be changed", "with the reason beneath it");
   });
 
   test("greys out Delete while a blog has articles", async function (assert) {
@@ -472,7 +482,11 @@ acceptance(
   "Blog admin list after a blog is added or deleted",
   function (needs) {
     needs.user({ admin: true });
-    needs.settings({ blog_enabled: true, blog_custom_domains_enabled: true });
+    needs.settings({
+      blog_enabled: true,
+      blog_custom_domains_enabled: true,
+      blog_custom_themes_enabled: true,
+    });
     needs.site({ blogs: [{ id: 1, is_default: true }] });
 
     let blogs;

@@ -142,14 +142,74 @@ RSpec.describe Jobs::SuggestReviewableAction do
     end
   end
 
-  it "skips uncertain answers and refusals" do
-    [{ actions.first => 0.8, actions.second => 0.2 }, :refusal].each do |answer|
-      DiscourseAi::Decisions.with_canned_answers(action: answer) do
-        expect { described_class.new.execute(reviewable_id: reviewable.id) }.not_to change(
-          AiReviewableSuggestion,
-          :count,
-        )
-      end
+  it "records below-threshold answers once and reveals them if min confidence drops" do
+    DiscourseAi::Decisions.with_canned_answers(
+      action: {
+        actions.first => 0.8,
+        actions.second => 0.2,
+      },
+    ) do |canned|
+      2.times { described_class.new.execute(reviewable_id: reviewable.id) }
+      expect(canned.calls.size).to eq(1)
+    end
+
+    suggestion = AiReviewableSuggestion.find_by!(reviewable:)
+    expect(suggestion).to have_attributes(
+      action_name: actions.first,
+      confidence: 0.8,
+      decision_model:,
+    )
+    expect(suggestion).not_to be_actionable
+
+    SiteSetting.ai_reviewable_action_min_confidence = 0.8
+    expect(suggestion).to be_actionable
+    expect(AiReviewableSuggestion.actionable).to contain_exactly(suggestion)
+  end
+
+  it "records refusals once so items are not re-evaluated" do
+    DiscourseAi::Decisions.with_canned_answers(action: :refusal) do |canned|
+      2.times { described_class.new.execute(reviewable_id: reviewable.id) }
+      expect(canned.calls.size).to eq(1)
+    end
+
+    suggestion = AiReviewableSuggestion.find_by!(reviewable:)
+    expect(suggestion).to have_attributes(action_name: nil, confidence: nil, decision_model:)
+    expect(suggestion).not_to be_actionable
+    expect(AiReviewableSuggestion.actionable).to be_empty
+  end
+
+  it "records a blank suggestion without calling the model when no actions are available" do
+    ReviewableQueuedPost
+      .any_instance
+      .stubs(:actions_for)
+      .returns(Reviewable::Actions.new(reviewable, Guardian.new))
+
+    DiscourseAi::Decisions.with_canned_answers do |canned|
+      described_class.new.execute(reviewable_id: reviewable.id)
+      expect(canned.calls).to be_empty
+    end
+
+    suggestion = AiReviewableSuggestion.find_by!(reviewable:)
+    expect(suggestion).to have_attributes(action_name: nil, confidence: nil, decision_model:)
+    expect(suggestion).not_to be_actionable
+  end
+
+  it "skips without recording a row when credits are exhausted" do
+    seeded_model = Fabricate(:decision_model, id: -1)
+    Fabricate(
+      :decision_model_credit_allocation,
+      decision_model: seeded_model,
+      daily_credits: 100,
+      daily_used: 100,
+    )
+    SiteSetting.ai_reviewable_action_decision_model = seeded_model.id.to_s
+
+    DiscourseAi::Decisions.with_canned_answers(action: actions.first) do |canned|
+      expect { described_class.new.execute(reviewable_id: reviewable.id) }.not_to change(
+        AiReviewableSuggestion,
+        :count,
+      )
+      expect(canned.calls).to be_empty
     end
   end
 end
