@@ -41,6 +41,7 @@ import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import DButton from "discourse/ui-kit/d-button";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DCookText from "discourse/ui-kit/d-cook-text";
 import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
@@ -376,7 +377,7 @@ export default <template>
               @jumpToDate={{@controller.jumpToDate}}
               @jumpToIndex={{@controller.jumpToIndex}}
               @topic={{@controller.model}}
-              as |info toggleProgressExpansion|
+              as |info toggleProgressExpansion footerSlot|
             >
               <PluginOutlet
                 @connectorTagName="div"
@@ -419,42 +420,50 @@ export default <template>
                   @toggleVisibility={{@controller.toggleVisibility}}
                 />
               {{else}}
-                <TopicProgress
-                  @jumpToPost={{@controller.jumpToPost}}
-                  @onExpandToggle={{toggleProgressExpansion}}
-                  @prevEvent={{info.prevEvent}}
-                  @topic={{@controller.model}}
+                <DConditionalInElement
+                  @append={{true}}
+                  @element={{footerSlot}}
+                  @inline={{not footerSlot}}
                 >
-                  <PluginOutlet
-                    @connectorTagName="div"
-                    @name="before-topic-progress"
-                    @outletArgs={{lazyHash
-                      model=@controller.model
-                      jumpToPost=@controller.jumpToPost
-                    }}
-                  />
-                  <TopicAdminMenu
-                    @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
-                    @convertToPublicTopic={{@controller.convertToPublicTopic}}
-                    @deleteTopic={{@controller.deleteTopic}}
-                    @recoverTopic={{@controller.recoverTopic}}
-                    @resetBumpDate={{@controller.resetBumpDate}}
-                    @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
-                    @showFeatureTopic={{routeAction "showFeatureTopic"}}
-                    @showTopicSlowModeUpdate={{routeAction
-                      "showTopicSlowModeUpdate"
-                    }}
-                    @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
-                    @toggleArchived={{@controller.toggleArchived}}
-                    @toggleClosed={{@controller.toggleClosed}}
-                    @toggleMultiSelect={{@controller.toggleMultiSelect}}
-                    @toggleVisibility={{@controller.toggleVisibility}}
+                  <TopicProgress
+                    @docked={{info.progressDocked}}
+                    @footerSlot={{footerSlot}}
+                    @jumpToPost={{@controller.jumpToPost}}
+                    @onExpandToggle={{toggleProgressExpansion}}
+                    @prevEvent={{info.prevEvent}}
                     @topic={{@controller.model}}
-                  />
-                  {{#if @controller.model.has_localized_content}}
-                    <TopicContentLanguagePreferences />
-                  {{/if}}
-                </TopicProgress>
+                  >
+                    <PluginOutlet
+                      @connectorTagName="div"
+                      @name="before-topic-progress"
+                      @outletArgs={{lazyHash
+                        model=@controller.model
+                        jumpToPost=@controller.jumpToPost
+                      }}
+                    />
+                    <TopicAdminMenu
+                      @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
+                      @convertToPublicTopic={{@controller.convertToPublicTopic}}
+                      @deleteTopic={{@controller.deleteTopic}}
+                      @recoverTopic={{@controller.recoverTopic}}
+                      @resetBumpDate={{@controller.resetBumpDate}}
+                      @showChangeTimestamp={{routeAction "showChangeTimestamp"}}
+                      @showFeatureTopic={{routeAction "showFeatureTopic"}}
+                      @showTopicSlowModeUpdate={{routeAction
+                        "showTopicSlowModeUpdate"
+                      }}
+                      @showTopicTimerModal={{routeAction "showTopicTimerModal"}}
+                      @toggleArchived={{@controller.toggleArchived}}
+                      @toggleClosed={{@controller.toggleClosed}}
+                      @toggleMultiSelect={{@controller.toggleMultiSelect}}
+                      @toggleVisibility={{@controller.toggleVisibility}}
+                      @topic={{@controller.model}}
+                    />
+                    {{#if @controller.model.has_localized_content}}
+                      <TopicContentLanguagePreferences />
+                    {{/if}}
+                  </TopicProgress>
+                </DConditionalInElement>
               {{/if}}
 
               <PluginOutlet
