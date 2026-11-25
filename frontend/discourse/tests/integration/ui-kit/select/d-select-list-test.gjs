@@ -110,7 +110,7 @@ function root(selector = ".d-select.--list") {
 }
 
 function input(scope = ".d-select.--list") {
-  return find(`${scope} .d-select__chips input[type="search"]`);
+  return find(`${scope} input.d-select__filter`);
 }
 
 function listbox(scope = ".d-select.--list") {
@@ -2091,6 +2091,38 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
     }
   });
 
+  module("groups", function () {
+    test("groups rows under the headers @groupHeader builds", async function (assert) {
+      const groupBy = (fruit) => (fruit.id % 2 ? "odd" : "even");
+      const groupHeader = (key) => (key === "odd" ? "Odd" : "Even");
+
+      await render(
+        <template>
+          <DSelectList
+            @groupBy={{groupBy}}
+            @groupHeader={{groupHeader}}
+            @multiple={{false}}
+            @options={{FRUIT}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{null}}
+          />
+        </template>
+      );
+
+      assert.deepEqual(
+        findAll(".d-select.--list .d-select__group-header").map((header) =>
+          header.textContent.trim()
+        ),
+        ["Odd", "Even"]
+      );
+      assert.deepEqual(
+        rows().map((row) => row.dataset.name),
+        ["Apple", "Cherry", "Banana", "Date"],
+        "each group's rows follow its header"
+      );
+    });
+  });
+
   module("single", function () {
     /** A single list over the fruit, recording every change it emits. */
     async function renderSingle(held, extra = {}) {
@@ -2121,11 +2153,6 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       await click(rows()[1]);
 
       assert.deepEqual(changes, [[2, "Banana"]], "emits the value and item");
-      assert.deepEqual(
-        chips().map((chip) => chip.dataset.name),
-        ["Banana"],
-        "the field holds only the new item"
-      );
       assert.deepEqual(
         rows().map((row) => row.getAttribute("aria-selected")),
         ["false", "true", "false", "false"],
@@ -2160,14 +2187,13 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       assert.dom(rows()[1]).hasAria("selected", "true");
     });
 
-    test("removing the held chip emits null", async function (assert) {
+    test("shows the held value by its selected row, without chips", async function (assert) {
       const held = tracked(2);
-      const changes = await renderSingle(held);
+      await renderSingle(held);
 
-      await click(chipButtons()[0]);
-
-      assert.deepEqual(changes, [[null, undefined]]);
-      assert.strictEqual(chips().length, 0, "the field is empty");
+      assert.strictEqual(chips().length, 0, "no chip repeats the row");
+      assert.dom(input()).exists("the field is the search alone");
+      assert.dom(rows()[1]).hasAria("selected", "true");
     });
 
     test("Backspace on an empty query removes the held item and says so", async function (assert) {
@@ -2198,18 +2224,20 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       );
     });
 
-    test("dSelect() picks and removes on a single list", async function (assert) {
+    test("dSelect() picks on a single list, which has no chip to remove", async function (assert) {
       const held = tracked(1);
       const changes = await renderSingle(held);
       const select = dSelect(".d-select.--list");
 
       await select.selectByName("Date");
-      await select.remove(4);
 
-      assert.deepEqual(changes, [
-        [4, "Date"],
-        [null, undefined],
-      ]);
+      assert.deepEqual(changes, [[4, "Date"]]);
+      assert.dom(root()).doesNotHaveAttribute("data-selection-removal");
+      await assert.rejects(
+        select.remove(4),
+        /unknown selection removal model/,
+        "removal by value has nothing to press"
+      );
     });
 
     test("the listbox allows one selection in either body", async function (assert) {

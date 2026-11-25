@@ -294,8 +294,9 @@ Wherever the list stays visible (a button select's popup, the mobile modal, and
 `DSelectList`), the panel has a search field. Held chips sit inside it, before the caret,
 where the options alone cannot show every held value: in the mobile modal, which covers the
 trigger; for an async source, whose loaded page may lack them; with `@hideSelected`; and
-always in `DSelectList`, which has no trigger. Elsewhere, such as a local desktop popup, the
-selected options and the trigger's chips already show them, so the field holds only the input.
+always in a multiple `DSelectList`, which has no trigger. Elsewhere, such as a local desktop
+popup, the selected options and the trigger's chips already show them, so the field holds only
+the input. A single `DSelectList` holds only the input too: its selected row shows the value.
 `@panelChips={{true}}` opts such a popup into field chips. While a panel lists the held
 values, a button or static trigger shrinks to one line reading "N selected" instead of
 repeating them. The field is a single Tab stop. Its input is a search field (`type="search"`, no role) that drives the
@@ -1484,6 +1485,31 @@ use the palette's id, or `null` for the none option.
 The picker is named "Color palette" unless the caller's texts name it. Until cleanup it defaults
 `@legacyKind` to `color-palette-picker`.
 
+**`DSelectColorPaletteList`** is the same picker as a single `DSelectList` that stays open. It
+takes `@palettes`, `@activeIds`, `@value` and `@onChange` as the field does, and shows the same
+rows, grouping and "Active" descriptions. `@hideSelected` leaves the held palette out, for a
+page that shows it elsewhere. The new palette modal does that: it draws the held palette with
+`PaletteOption`, the recipe's row component, whose optional `@badge` shows "Active".
+
+#### Time zone recipe
+
+**`DSelectTimezone`** (kind `select-timezone`) picks a time zone. `@value` and `@onChange` use the
+zone's IANA name, such as `Europe/Lisbon`, or `null` when the field is emptied.
+
+- Zones are named "City, Country", with the country the browser's locale data gives as the
+  zone's own. Each row shows the zone's common name, its current time and its offset, with a
+  Tomorrow or Yesterday badge when its date differs from the device's. The times refresh each
+  time the list opens.
+- Only modern zone names are offered. A held legacy alias still resolves and shows.
+- Zones are grouped by region. The device's zone leads under its own heading unless it's held,
+  its region comes next, and UTC comes last.
+- A search matches the city, the country, the zone's name and its common name, word by word, and
+  offsets such as "utc-3" or "+5:30". "gmt" also finds UTC.
+- The closed field shows the offset beside the name.
+
+The picker is named "Time zone" unless the caller's texts name it. Until cleanup it defaults
+`@legacyKind` to `timezone-input`.
+
 A variant that only changes configuration, such as a chooser used by advanced search, is the same
 kind with its own `@identifier`, not a new kind.
 
@@ -1718,13 +1744,16 @@ Use `DSelectList` for a persistent search and selection surface inside a panel, 
 several independent selects inside one `DMenu`. It is multi by default: pass an array to
 `@value` and replace it with the array from `@onChange(next, records, change)`. With
 `@multiple={{false}}` it holds one value: `@value` is that value or `null`, a pick replaces it
-and `@onChange` receives the new value and its record, or `null` when the held chip is removed.
-The held record still shows as a chip in the search field, its option stays marked selected, and
-pressing that option again changes nothing. `@maximum` keeps its multi meaning, so a list that
+and `@onChange` receives the new value and its record, or `null` when Backspace or Delete on an
+empty search clears it. Like a group of radio buttons, it shows the held value only by its
+option, which stays marked selected; pressing that option again changes nothing. The search
+field holds no chip. Where that option can scroll away, be filtered out or be left out with
+`@hideSelected`, the page around the list shows the held value. `dSelect().remove()` rejects
+on a single list, since there is no chip to press. `@maximum` keeps its multi meaning, so a list that
 must hold one value at a time uses this mode rather than `@maximum={{1}}`, which refuses a
 second pick until the first is removed. It shares
-DSelect's sources, creation, paste parsing, customizations, selection limits and value
-resolution. It has no trigger, overlay lifecycle callbacks or mobile modal.
+DSelect's sources, creation, paste parsing, customizations, selection limits, grouping
+(`@groupBy` and `@groupHeader`, with text headers) and value resolution. It has no trigger, overlay lifecycle callbacks or mobile modal.
 
 `@virtualized` defaults to `true`: the windowed body handles large result sets and
 pagination. Set `@virtualized={{false}}` for a short list whose rows need normal flow,
@@ -1736,8 +1765,8 @@ an inert `li.d-select__option.--placeholder` containing a text skeleton in the s
 `ul.d-select__options`, marked `aria-busy="true"`. Its first load uses the same row
 markup. Virtualized lists keep the separate skeleton list.
 
-`@hideSelected` leaves held records as chips in the search field and omits them from
-results.
+`@hideSelected` omits held records from results; a multiple list keeps them as chips in the
+search field.
 Removing a chip restores its option without another source request. Options then drop the
 selection marker, which could only ever read unselected. The `:listHeader`
 block sits between the search field and results, outside the listbox. It yields the same live

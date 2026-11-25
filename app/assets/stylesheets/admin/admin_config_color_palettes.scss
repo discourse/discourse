@@ -104,3 +104,46 @@
 .color-palette__warning {
   font-style: italic;
 }
+
+// The base palette list fills the modal's body and is the only part that scrolls.
+.create-color-palette {
+  .d-modal__body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .select-base-intro {
+    flex-shrink: 0;
+    margin: 0 0 var(--space-1);
+  }
+
+  .select-base-label {
+    flex-shrink: 0;
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+  }
+
+  .select-base-summary {
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
+    flex-shrink: 0;
+    margin-bottom: var(--space-4);
+    padding: var(--space-2);
+  }
+
+  .d-select-color-palette-list {
+    --d-select-list-max-height: none;
+    flex: 1 1 auto;
+    min-height: 0;
+
+    > * {
+      flex-shrink: 0;
+    }
+
+    > .d-virtual-list {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
+}

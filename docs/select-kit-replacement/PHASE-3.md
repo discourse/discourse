@@ -439,6 +439,14 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
     - Interface preferences put the mode first, with its hint beside it, then the two palettes
       stacked at the form's width. The theme page's pickers drop the paintbrush icon the old
       picker never drew.
+    - The new palette modal lists the palettes open, with `DSelectColorPaletteList`, a single
+      `DSelectList`. Above the list it shows the held palette with the line "Your new palette
+      starts as a copy of this one", and the list, headed "Other palettes", leaves it out. The
+      title reads "New color palette" and the button "Create palette". The list scrolls on its
+      own, so the modal never scrolls twice.
+    - Engine changes for it: a single `DSelectList` shows no chip in its search field, since its
+      selected row already shows the value, and `DSelectList` declares `@groupBy` and
+      `@groupHeader`, which it already passed to the engine.
   - ☐ `ColorPalettes` (the wizard). Rows show swatches.
   - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
     - ☑ The font list setting (2026-11-19): `setting-field/font-list` and the older

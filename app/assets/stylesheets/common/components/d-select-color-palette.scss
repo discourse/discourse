@@ -7,6 +7,10 @@
   min-width: 0;
 }
 
+.d-select-color-palette__option {
+  position: relative;
+}
+
 .d-select-color-palette__details {
   align-items: flex-start;
   display: flex;
@@ -65,25 +69,28 @@
   }
 }
 
-// "Active" is the row's description, drawn as a badge over the palette's preview.
-.d-select__content.--kind-select-color-palette {
+.d-select__content.--kind-select-color-palette,
+.d-select-color-palette-list {
   --d-select-menu-min-width: 20em;
 
   .d-select__option-content {
     position: relative;
   }
+}
 
-  .d-select__option-description {
-    background-color: var(--tertiary);
-    border-radius: 4px;
-    color: var(--secondary);
-    font-size: var(--font-down-6);
-    inset-block-start: 0.25em;
-    inset-inline-start: 0.25em;
-    letter-spacing: 0.25px;
-    line-height: normal;
-    padding: 0.07rem 0.15rem;
-    position: absolute;
-    text-transform: uppercase;
-  }
+// "Active" is a row's description, drawn as a badge over the palette's preview.
+.d-select-color-palette__badge,
+.d-select__content.--kind-select-color-palette .d-select__option-description,
+.d-select-color-palette-list .d-select__option-description {
+  background-color: var(--tertiary);
+  border-radius: 4px;
+  color: var(--secondary);
+  font-size: var(--font-down-6);
+  inset-block-start: 0.25em;
+  inset-inline-start: 0.25em;
+  letter-spacing: 0.25px;
+  line-height: normal;
+  padding: 0.07rem 0.15rem;
+  position: absolute;
+  text-transform: uppercase;
 }

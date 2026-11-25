@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { associateDestroyableChild } from "@ember/destroyable";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { getOwner } from "@ember/owner";
@@ -14,6 +15,7 @@ import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-ap
 import type A11yService from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SelectHost, {
   type SelectHostArgs,
 } from "discourse/ui-kit/select/-internals/coordinators/select-host";
@@ -22,6 +24,7 @@ import SelectListPresenter from "discourse/ui-kit/select/-internals/coordinators
 import type { SelectConfig } from "discourse/ui-kit/select/-internals/engine/customizations";
 import { assertNoRemovedTextArgs } from "discourse/ui-kit/select/-internals/engine/select-texts";
 import { legacySelectKitIdentifiers } from "discourse/ui-kit/select/-internals/modify-select-kit-bridge";
+import ComboboxQueryInput from "discourse/ui-kit/select/-internals/parts/combobox-query-input";
 import MultiChips from "discourse/ui-kit/select/-internals/parts/multi-chips";
 import SelectPanel, {
   type SelectPanelState,
@@ -100,6 +103,10 @@ interface DSelectListSignature {
     virtualized?: boolean;
     /** Omits held options from results without reloading. */
     hideSelected?: boolean;
+    /** Groups the rows; see `DSelect`'s `@groupBy`. */
+    groupBy?: SelectHostArgs["groupBy"];
+    /** Builds a group's text header; see `DSelect`'s `@groupHeader`. */
+    groupHeader?: SelectHostArgs["groupHeader"];
     /** Hard selection cap; false means no cap. Invalid numbers warn in development. */
     maximum?: number | false;
     /** Advisory selection minimum. */
@@ -331,7 +338,7 @@ export default class DSelectList extends Component<DSelectListSignature> {
       {{! TODO (select-kit-replacement-cleanup): Retain legacy root classes during rollout. }}
       class={{dConcatClass "d-select" "--list" this.engine.legacyKinds}}
       data-select-id={{this.listboxId}}
-      data-selection-removal="panel-chips"
+      data-selection-removal={{if this.multiple "panel-chips"}}
       ...attributes
       {{this.interaction.registerRoot}}
       {{this.host.selectionHooks}}
@@ -414,53 +421,95 @@ export default class DSelectList extends Component<DSelectListSignature> {
         @value={{@value}}
       >
         <:field>
-          <MultiChips
-            @ariaOwns={{false}}
-            @closeMenu={{this.interaction.focusInput}}
-            @composeDescribedBy={{this.host.describedBy}}
-            @describedBy={{@describedBy}}
-            @editing={{true}}
-            @engine={{this.engine}}
-            @expanded={{true}}
-            @fieldRendersInput={{true}}
-            @focusChip={{this.interaction.focusChip}}
-            @focusInput={{this.interaction.focusInput}}
-            @hasSelectionBlock={{has-block "selection"}}
-            @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
-            @hasUnresolvedBlock={{has-block "unresolved"}}
-            @id={{@id}}
-            @invalid={{@invalid}}
-            @label={{this.presenter.ariaLabelText}}
-            @listboxId={{this.activeListboxId}}
-            @onChipFocus={{this.interaction.clearActive}}
-            @onEscape={{this.interaction.handleEscape}}
-            @onInputKeydown={{this.interaction.handleInputKeydown}}
-            @onPaste={{this.host.handlePaste}}
-            @onRegisterChipRoving={{this.interaction.registerChipRoving}}
-            @onResize={{this.listbox.remeasureListbox}}
-            @pending={{this.engine.pending}}
-            @placeholder={{this.presenter.searchPlaceholderText}}
-            @presenter={{this.presenter}}
-            @queryDisplay="always"
-            @registerInput={{this.interaction.registerFilter}}
-            @roleMode="search"
-            @searchIcon={{this.engine.config.searchIcon}}
-            @selection={{this.heldSelection}}
-            @showMenu={{this.interaction.focusInput}}
-            @tabPassthrough={{true}}
-            @triggerChipsInteractive={{true}}
-            @value={{@value}}
-          >
-            <:selection as |option|>
-              {{~yield option this.engine.config to="selection"~}}
-            </:selection>
-            <:selectionLoading>
-              {{~yield to="selectionLoading"~}}
-            </:selectionLoading>
-            <:unresolved as |option|>
-              {{~yield option this.engine.config to="unresolved"~}}
-            </:unresolved>
-          </MultiChips>
+          {{! A single list shows its held value by the selected row alone; a chip would repeat it. }}
+          {{#if this.multiple}}
+            <MultiChips
+              @ariaOwns={{false}}
+              @closeMenu={{this.interaction.focusInput}}
+              @composeDescribedBy={{this.host.describedBy}}
+              @describedBy={{@describedBy}}
+              @editing={{true}}
+              @engine={{this.engine}}
+              @expanded={{true}}
+              @fieldRendersInput={{true}}
+              @focusChip={{this.interaction.focusChip}}
+              @focusInput={{this.interaction.focusInput}}
+              @hasSelectionBlock={{has-block "selection"}}
+              @hasSelectionLoadingBlock={{has-block "selectionLoading"}}
+              @hasUnresolvedBlock={{has-block "unresolved"}}
+              @id={{@id}}
+              @invalid={{@invalid}}
+              @label={{this.presenter.ariaLabelText}}
+              @listboxId={{this.activeListboxId}}
+              @onChipFocus={{this.interaction.clearActive}}
+              @onEscape={{this.interaction.handleEscape}}
+              @onInputKeydown={{this.interaction.handleInputKeydown}}
+              @onPaste={{this.host.handlePaste}}
+              @onRegisterChipRoving={{this.interaction.registerChipRoving}}
+              @onResize={{this.listbox.remeasureListbox}}
+              @pending={{this.engine.pending}}
+              @placeholder={{this.presenter.searchPlaceholderText}}
+              @presenter={{this.presenter}}
+              @queryDisplay="always"
+              @registerInput={{this.interaction.registerFilter}}
+              @roleMode="search"
+              @searchIcon={{this.engine.config.searchIcon}}
+              @selection={{this.heldSelection}}
+              @showMenu={{this.interaction.focusInput}}
+              @tabPassthrough={{true}}
+              @triggerChipsInteractive={{true}}
+              @value={{@value}}
+            >
+              <:selection as |option|>
+                {{~yield option this.engine.config to="selection"~}}
+              </:selection>
+              <:selectionLoading>
+                {{~yield to="selectionLoading"~}}
+              </:selectionLoading>
+              <:unresolved as |option|>
+                {{~yield option this.engine.config to="unresolved"~}}
+              </:unresolved>
+            </MultiChips>
+          {{else}}
+            <div
+              class={{dConcatClass
+                "d-select__search"
+                (if this.engine.config.searchIcon "--with-icon")
+              }}
+            >
+              <ComboboxQueryInput
+                aria-invalid={{if @invalid "true"}}
+                class="d-select__filter"
+                id={{@id}}
+                @describedBy={{@describedBy}}
+                @editing={{true}}
+                @engine={{this.engine}}
+                @expanded={{true}}
+                @label={{this.presenter.ariaLabelText}}
+                @listboxId={{this.activeListboxId}}
+                @onEscape={{this.interaction.handleEscape}}
+                @onOpen={{this.interaction.focusInput}}
+                @onRequestClose={{this.interaction.focusInput}}
+                @placeholder={{this.presenter.searchPlaceholderText}}
+                @queryDisplay="always"
+                @registerInput={{this.interaction.registerFilter}}
+                @roleMode="search"
+                @tabPassthrough={{true}}
+                {{on "paste" this.host.handlePaste}}
+                {{on
+                  "keydown"
+                  this.interaction.handleInputKeydown
+                  capture=true
+                }}
+              />
+              {{#if this.engine.config.searchIcon}}
+                {{dIcon
+                  this.engine.config.searchIcon
+                  class="d-select__search-icon"
+                }}
+              {{/if}}
+            </div>
+          {{/if}}
         </:field>
         <:option as |option config|>
           {{~yield option config to="option"~}}

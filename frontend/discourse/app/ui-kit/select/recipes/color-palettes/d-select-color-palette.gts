@@ -19,7 +19,7 @@ import {
 import { i18n } from "discourse-i18n";
 
 /** A color palette as the call sites hold it. */
-interface ColorPalette extends SelectRecord {
+export interface ColorPalette extends SelectRecord {
   id: number;
   name: string;
   /** Unset for an entry that stands for another palette, such as "Theme default". */
@@ -123,6 +123,67 @@ const PaletteSwatches: TemplateOnlyComponent<{
   {{/let}}
 </template>;
 
+/** A palette's row: its preview, its name and its strip, with a badge over the preview if given. */
+export const PaletteOption: TemplateOnlyComponent<{
+  Args: { badge?: string; label: string; record: SelectRecord };
+}> = <template>
+  <span class="d-select-color-palette__option">
+    {{#if @badge}}
+      <span class="d-select-color-palette__badge">{{@badge}}</span>
+    {{/if}}
+    <ColorPalettePreview
+      class="d-select-color-palette__preview"
+      @scheme={{paletteOf @record}}
+    />
+    <span class="d-select-color-palette__details">
+      <span class="d-select-color-palette__name">{{@label}}</span>
+      <PaletteSwatches @record={{@record}} />
+    </span>
+  </span>
+</template>;
+
+/** Whether the palettes hold both light and dark ones, and so are grouped. */
+function mixesLightAndDark(palettes: readonly ColorPalette[]): boolean {
+  const groups = new Set(palettes.map(groupOf));
+  return groups.has(LIGHT) && groups.has(DARK);
+}
+
+/** Groups palettes by mode when they mix light and dark ones; nothing otherwise. */
+export function paletteGroupBy(
+  palettes: readonly ColorPalette[]
+): typeof groupOf | undefined {
+  return mixesLightAndDark(palettes) ? groupOf : undefined;
+}
+
+/** Heads the light and dark groups; palettes with no mode get no header. */
+export function paletteGroupHeader(key: SelectId): string | undefined {
+  if (key === DARK) {
+    return i18n("color_palette_picker.dark");
+  }
+  if (key === LIGHT) {
+    return i18n("color_palette_picker.light");
+  }
+}
+
+/** The palettes as options: light ones before dark when mixed, the in-use ones described so. */
+export function paletteOptions(
+  palettes: readonly ColorPalette[],
+  activeIds: readonly number[] = []
+): SelectOptionLike[] {
+  const rank = (palette: ColorPalette) =>
+    [undefined, LIGHT, DARK].indexOf(groupOf(palette));
+  const ordered = mixesLightAndDark(palettes)
+    ? [...palettes].sort((a, b) => rank(a) - rank(b))
+    : palettes;
+  return ordered.map((palette) =>
+    activeIds.includes(palette.id)
+      ? selectOption(palette, {
+          description: i18n("user.color_schemes.picker.active"),
+        })
+      : palette
+  );
+}
+
 /**
  * Picks a color palette, drawing each one's colors beside its name. A list holding both light and
  * dark palettes is grouped under "Light" and "Dark"; the palettes in use are marked "Active".
@@ -134,48 +195,19 @@ export default class DSelectColorPalette extends Component<DSelectColorPaletteSi
   };
 
   get groupBy() {
-    return this.#grouped ? groupOf : undefined;
+    return paletteGroupBy(this.#palettes);
   }
 
   get legacyKind() {
     return this.args.legacyKind ?? "color-palette-picker";
   }
 
-  /** The palettes, light ones before dark when grouped, the in-use ones described as such. */
   get options(): SelectOptionLike[] {
-    const rank = (palette: ColorPalette) =>
-      [undefined, LIGHT, DARK].indexOf(groupOf(palette));
-    const palettes = this.#grouped
-      ? [...this.#palettes].sort((a, b) => rank(a) - rank(b))
-      : this.#palettes;
-    const active = this.args.activeIds ?? [];
-    return palettes.map((palette) =>
-      active.includes(palette.id)
-        ? selectOption(palette, {
-            description: i18n("user.color_schemes.picker.active"),
-          })
-        : palette
-    );
-  }
-
-  /** Whether the list holds both light and dark palettes, and so is grouped. */
-  get #grouped(): boolean {
-    const groups = new Set(this.#palettes.map(groupOf));
-    return groups.has(LIGHT) && groups.has(DARK);
+    return paletteOptions(this.#palettes, this.args.activeIds);
   }
 
   get #palettes(): readonly ColorPalette[] {
     return this.args.palettes ?? [];
-  }
-
-  @action
-  groupHeader(key: SelectId): string | undefined {
-    if (key === DARK) {
-      return i18n("color_palette_picker.dark");
-    }
-    if (key === LIGHT) {
-      return i18n("color_palette_picker.light");
-    }
   }
 
   @action
@@ -191,7 +223,7 @@ export default class DSelectColorPalette extends Component<DSelectColorPaletteSi
       @describedBy={{@describedBy}}
       @disabled={{@disabled}}
       @groupBy={{this.groupBy}}
-      @groupHeader={{this.groupHeader}}
+      @groupHeader={{paletteGroupHeader}}
       @icon={{@icon}}
       @id={{@id}}
       @identifier={{@identifier}}
@@ -209,16 +241,7 @@ export default class DSelectColorPalette extends Component<DSelectColorPaletteSi
       @variant={{@variant}}
     >
       <:option as |option|>
-        <span class="d-select-color-palette__option">
-          <ColorPalettePreview
-            class="d-select-color-palette__preview"
-            @scheme={{paletteOf option.record}}
-          />
-          <span class="d-select-color-palette__details">
-            <span class="d-select-color-palette__name">{{option.label}}</span>
-            <PaletteSwatches @record={{option.record}} />
-          </span>
-        </span>
+        <PaletteOption @label={{option.label}} @record={{option.record}} />
       </:option>
       <:selection as |option|>
         <span class="d-select-color-palette__selection">
