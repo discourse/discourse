@@ -1,22 +1,52 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
+import MobileTabBarViews from "discourse/components/mobile-tab-bar/views";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper.js";
 import formatEventForCalendar from "../lib/format-event-for-calendar.js";
 import openEventComposer from "../lib/open-event-composer.js";
+import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 import FullCalendar from "./full-calendar.gjs";
+
+const eventViews = [
+  {
+    button: "allEvents",
+    label: "discourse_post_event.upcoming_events.all_events",
+    route: "discourse-post-event-upcoming-events.index",
+  },
+  {
+    button: "mineEvents",
+    label: "discourse_post_event.upcoming_events.my_events",
+    route: "discourse-post-event-upcoming-events.mine",
+  },
+];
+
+// Checked once per user rather than per date range, so the view tabs stay put
+// while paging through the calendar and switching between views
+const personalEventsChecks = new WeakMap();
 
 export default class UpcomingEventsCalendar extends Component {
   @service composer;
   @service currentUser;
+  @service mobileTabBar;
   @service router;
   @service capabilities;
   @service siteSettings;
-  @service discoursePostEventService;
+  @service discoursePostEventApi;
+
+  @tracked
+  hasPersonalEvents = personalEventsChecks.get(this.currentUser)?.value;
+
+  constructor() {
+    super(...arguments);
+    this.#checkPersonalEvents();
+  }
 
   get canCreateEvent() {
     if (!this.currentUser) {
@@ -41,34 +71,36 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   get customButtons() {
-    return {
-      mineEvents: {
-        text: i18n("discourse_post_event.upcoming_events.my_events"),
-        click: () => {
-          const params = this.router.currentRoute.params;
-          this.router.replaceWith(
-            "discourse-post-event-upcoming-events.mine",
-            params.view,
-            params.year,
-            params.month,
-            params.day
-          );
-        },
-      },
-      allEvents: {
-        text: i18n("discourse_post_event.upcoming_events.all_events"),
-        click: () => {
-          const params = this.router.currentRoute.params;
-          this.router.replaceWith(
-            "discourse-post-event-upcoming-events.index",
-            params.view,
-            params.year,
-            params.month,
-            params.day
-          );
-        },
-      },
-    };
+    const buttons = {};
+    for (const { button, label, route } of eventViews) {
+      buttons[button] = {
+        text: i18n(label),
+        click: () =>
+          this.router.replaceWith(route, ...this.calendarRouteModels),
+      };
+    }
+    return buttons;
+  }
+
+  get calendarRouteModels() {
+    const { view, year, month, day } = this.router.currentRoute.params;
+    return [view, year, month, day];
+  }
+
+  get viewsInFooter() {
+    return (
+      this.mobileTabBar.enabled &&
+      this.mobileTabBar.sectionTabKey === UPCOMING_EVENTS_TAB_KEY
+    );
+  }
+
+  // My events stays reachable while it's open, even on days it has nothing
+  get showFooterViews() {
+    return (
+      this.viewsInFooter &&
+      !!this.currentUser &&
+      (this.args.mine || this.hasPersonalEvents)
+    );
   }
 
   get refreshKey() {
@@ -80,19 +112,13 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   get leftHeaderToolbar() {
-    let left = "";
-
-    if (!this.capabilities.viewport.sm) {
-      left = `title allEvents,mineEvents`;
-    } else {
-      left += "allEvents,mineEvents";
+    if (this.viewsInFooter) {
+      return this.capabilities.viewport.sm ? "prev,next,today" : "title";
     }
 
-    if (!this.capabilities.viewport.sm) {
-      return left;
-    } else {
-      return `${left} prev,next,today`;
-    }
+    return this.capabilities.viewport.sm
+      ? "allEvents,mineEvents prev,next,today"
+      : "title allEvents,mineEvents";
   }
 
   get rightHeaderToolbar() {
@@ -139,7 +165,7 @@ export default class UpcomingEventsCalendar extends Component {
       params.include_subcategories = this.args.includeSubcategories;
     }
 
-    const events = await this.discoursePostEventService.fetchEvents(params);
+    const events = await this.discoursePostEventApi.events(params);
 
     const timezone = this.currentUser?.user_option?.timezone;
 
@@ -154,7 +180,9 @@ export default class UpcomingEventsCalendar extends Component {
 
   @action
   async onDatesChange(info) {
-    this.applyCustomButtonsState();
+    if (!this.viewsInFooter) {
+      this.applyCustomButtonsState(info.view.calendar.el);
+    }
 
     if (this.args.updateRouteOnDatesChange === false) {
       return;
@@ -174,27 +202,61 @@ export default class UpcomingEventsCalendar extends Component {
   }
 
   @action
-  applyCustomButtonsState() {
+  applyCustomButtonsState(element) {
     schedule("afterRender", () => {
-      if (this.args.mine) {
-        document
-          .querySelector(".fc-mineEvents-button")
-          .classList.add("fc-button-active");
-        document
-          .querySelector(".fc-allEvents-button")
-          .classList.remove("fc-button-active");
-      } else {
-        document
-          .querySelector(".fc-allEvents-button")
-          .classList.add("fc-button-active");
-        document
-          .querySelector(".fc-mineEvents-button")
-          .classList.remove("fc-button-active");
-      }
+      element
+        .querySelector(".fc-mineEvents-button")
+        ?.classList.toggle("fc-button-active", !!this.args.mine);
+      element
+        .querySelector(".fc-allEvents-button")
+        ?.classList.toggle("fc-button-active", !this.args.mine);
     });
   }
 
+  async #checkPersonalEvents() {
+    const user = this.currentUser;
+
+    if (!user || !this.mobileTabBar.enabled) {
+      return;
+    }
+
+    let check = personalEventsChecks.get(user);
+    if (!check) {
+      check = {};
+      check.promise = this.discoursePostEventApi
+        .hasEvents({ attending_user: user.username })
+        // Offering an empty view beats hiding one the user has events in
+        .catch(() => true)
+        .then((hasEvents) => (check.value = hasEvents));
+      personalEventsChecks.set(user, check);
+    }
+
+    const hasEvents = await check.promise;
+    if (!this.isDestroying) {
+      this.hasPersonalEvents = hasEvents;
+    }
+  }
+
   <template>
+    {{#if this.showFooterViews}}
+      <MobileTabBarViews>
+        <ul class="nav nav-pills">
+          {{#each eventViews as |view|}}
+            <li>
+              <LinkTo
+                aria-current={{if
+                  (eq this.router.currentRouteName view.route)
+                  "page"
+                }}
+                @models={{this.calendarRouteModels}}
+                @replace={{true}}
+                @route={{view.route}}
+              >{{i18n view.label}}</LinkTo>
+            </li>
+          {{/each}}
+        </ul>
+      </MobileTabBarViews>
+    {{/if}}
     <div id="upcoming-events-calendar">
       <FullCalendar
         @centerHeaderToolbar={{this.centerHeaderToolbar}}

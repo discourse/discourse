@@ -73,6 +73,15 @@ export default class DiscoursePostEventApi extends Service {
     });
   }
 
+  /**
+   * @param {Object} data Filters, as for `events`.
+   * @returns {Promise<boolean>} Whether any event matches them.
+   */
+  async hasEvents(data = {}) {
+    const result = await this.#getRequest("/events", { ...data, limit: 1 });
+    return result.events?.length > 0;
+  }
+
   async listEventInvitees(event, data = {}) {
     const result = await this.#getRequest(`/events/${event.id}/invitees`, {
       ...data,

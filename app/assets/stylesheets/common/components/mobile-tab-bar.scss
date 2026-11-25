@@ -15,38 +15,9 @@ html.mobile-tab-bar-visible {
   --mobile-tab-bar-side-inset: var(--space-3);
   --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
 
-  @media (display-mode: standalone) {
-    --mobile-tab-bar-side-inset: var(--space-5);
-
-    // Other platforms may reserve this inset for system navigation controls.
-    --mobile-tab-bar-bottom-inset: max(
-      var(--space-5),
-      env(safe-area-inset-bottom)
-    );
-
-    &.ios-device {
-      --mobile-tab-bar-bottom-inset: max(
-        var(--space-5),
-        min(env(safe-area-inset-bottom), var(--space-6))
-      );
-      --mobile-tab-bar-corner-radius: max(
-        var(--d-button-border-radius),
-        min(
-          env(safe-area-inset-bottom) * 100,
-          calc(3.5rem - var(--mobile-tab-bar-side-inset))
-        )
-      );
-    }
-  }
-
   // Set here rather than on the bar, so the page's own bubbles over it match.
-  // The theme's button radius, so containers match the buttons beside them;
-  // items inside keep their corners parallel, never quite square
+  // The theme's button radius, so containers match the buttons beside them
   --mobile-tab-bar-radius: var(--d-button-border-radius);
-  --mobile-tab-bar-inner-radius: max(
-    calc(var(--d-border-radius) / 2),
-    calc(var(--mobile-tab-bar-radius) - var(--space-1))
-  );
 
   // Kept close, as the controls have no border to set them off
   --mobile-tab-bar-shadow:
@@ -63,6 +34,30 @@ html.mobile-tab-bar-visible {
   // anything else floating above the bar to clear
   --mobile-tab-bar-composer-offset: 0px;
 
+  // How far up the screen the bar reaches right now, as parts of it tuck
+  // away, for whatever floats above it to follow. Layouts keep clearing the
+  // full `--footer-nav-height`, so content doesn't jump as it moves.
+  --mobile-tab-bar-current-height: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom)
+  );
+
+  @media (display-mode: standalone) {
+    --mobile-tab-bar-side-inset: var(--space-5);
+
+    // Other platforms may reserve this inset for system navigation controls.
+    --mobile-tab-bar-bottom-inset: max(
+      var(--space-5),
+      env(safe-area-inset-bottom)
+    );
+
+    &.ios-device {
+      --mobile-tab-bar-bottom-inset: max(
+        var(--space-5),
+        min(env(safe-area-inset-bottom), var(--space-6))
+      );
+    }
+  }
+
   &:has(#reply-control.draft, #reply-control.saving) {
     --mobile-tab-bar-composer-offset: calc(
       var(--composer-collapsed-height) + var(--mobile-tab-bar-views-gap)
@@ -76,13 +71,6 @@ html.mobile-tab-bar-visible {
         var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
     );
   }
-
-  // How far up the screen the bar reaches right now, as parts of it tuck
-  // away, for whatever floats above it to follow. Layouts keep clearing the
-  // full `--footer-nav-height`, so content doesn't jump as it moves.
-  --mobile-tab-bar-current-height: calc(
-    var(--footer-nav-height) + env(safe-area-inset-bottom)
-  );
 
   &.mobile-tab-bar-views-tucked {
     --mobile-tab-bar-current-height: calc(
@@ -112,6 +100,7 @@ html.mobile-tab-bar-visible {
 }
 
 .mobile-tab-bar {
+  --mobile-tab-bar-controls-gap: var(--space-2);
   --mobile-tab-bar-inner-radius: 0;
   position: fixed;
   bottom: 0;
@@ -144,12 +133,23 @@ html.mobile-tab-bar-visible {
     transition: none;
   }
 
+  &.--with-hub:not(.--no-tabs) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: end;
+    column-gap: var(--mobile-tab-bar-controls-gap);
+
+    .mobile-tab-bar__views {
+      grid-column: 1 / -1;
+    }
+  }
+
   &.--no-tabs {
     --mobile-tab-bar-views-height: var(--mobile-tab-bar-controls-height);
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2);
+    gap: var(--mobile-tab-bar-controls-gap);
     background: none;
 
     .mobile-tab-bar__menu {
@@ -168,12 +168,17 @@ html.mobile-tab-bar-visible {
       @include mobile-tab-bar-floating($fill: false);
     }
 
+    &.--with-hub > .mobile-tab-bar__create {
+      margin-inline-start: auto;
+    }
+
     &.--topic {
+      --mobile-tab-bar-edge-width: var(--mobile-tab-bar-controls-height);
       display: grid;
       grid-template-columns:
-        var(--mobile-tab-bar-controls-height) minmax(0, 1fr)
+        var(--mobile-tab-bar-edge-width) minmax(0, 1fr)
         minmax(0, var(--mobile-tab-bar-progress-width))
-        minmax(0, 1fr) var(--mobile-tab-bar-controls-height);
+        minmax(0, 1fr) var(--mobile-tab-bar-edge-width);
 
       .mobile-tab-bar__menu {
         justify-self: start;
@@ -193,15 +198,50 @@ html.mobile-tab-bar-visible {
       }
 
       .mobile-tab-bar__menu,
-      .mobile-tab-bar__create {
+      .mobile-tab-bar__create,
+      .mobile-tab-bar__hub {
         transition: inherit;
+      }
+
+      &.--with-hub {
+        container: mobile-tab-bar-topic / inline-size;
+
+        // Leave equal space on both sides of the timeline for two buttons.
+        --mobile-tab-bar-edge-width: min(
+          var(--mobile-tab-bar-controls-height),
+          calc(
+            (100% - var(--mobile-tab-bar-progress-width)) /
+              4 - var(--mobile-tab-bar-controls-gap)
+          )
+        );
+
+        .mobile-tab-bar__menu,
+        .mobile-tab-bar__hub {
+          width: 100%;
+        }
+
+        .mobile-tab-bar__create {
+          grid-column: 4;
+          min-width: 0;
+        }
+
+        .mobile-tab-bar__hub {
+          grid-column: 5;
+        }
+
+        @container mobile-tab-bar-topic (width < 25rem) {
+          .mobile-tab-bar__login .d-button-label {
+            display: none;
+          }
+        }
       }
     }
   }
 
   &.--actions-tucked:not(:has(:focus-visible)) {
     .mobile-tab-bar__menu,
-    .mobile-tab-bar__create {
+    .mobile-tab-bar__create,
+    .mobile-tab-bar__hub {
       opacity: 0;
       transform: translateY(calc(100% + var(--mobile-tab-bar-bottom-inset)));
       pointer-events: none;
@@ -214,7 +254,8 @@ html.mobile-tab-bar-visible {
     transform: translateY(100%);
 
     .mobile-tab-bar__views,
-    .mobile-tab-bar__controls {
+    .mobile-tab-bar__controls,
+    .mobile-tab-bar__hub {
       pointer-events: none;
     }
   }
@@ -367,6 +408,7 @@ html.mobile-tab-bar-visible {
   }
 
   &__menu,
+  &__hub,
   &__tabs,
   &__create {
     flex: none;
@@ -376,6 +418,7 @@ html.mobile-tab-bar-visible {
   }
 
   &__menu,
+  &__hub,
   &__create {
     width: var(--mobile-tab-bar-control-size);
 
@@ -386,6 +429,7 @@ html.mobile-tab-bar-visible {
   }
 
   &__menu,
+  &__hub,
   &__views .progress-back {
     --d-button-default-bg-color: var(--header_background);
     --d-button-default-bg-color--hover: var(--d-hover);
@@ -393,6 +437,13 @@ html.mobile-tab-bar-visible {
     --d-button-default-icon-color--hover: var(--header_primary);
     --d-button-default-border: 0;
     --d-button-default-border--hover: 0;
+  }
+
+  &__hub {
+    width: var(--mobile-tab-bar-controls-height);
+    padding: 0;
+
+    @include mobile-tab-bar-floating($fill: false);
   }
 
   &__menu {
@@ -671,15 +722,15 @@ html.mobile-tab-bar-visible #reply-control {
     padding-bottom: 0;
     border-radius: var(--mobile-tab-bar-radius);
     box-shadow: var(--mobile-tab-bar-shadow);
+    transition:
+      height 0.2s,
+      min-height 0.2s,
+      bottom 200ms ease;
 
     @media (display-mode: standalone) {
       left: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-left));
       right: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
     }
-    transition:
-      height 0.2s,
-      min-height 0.2s,
-      bottom 200ms ease;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
