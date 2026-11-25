@@ -393,8 +393,7 @@ module Boards
         return [] if topic_ids.empty?
 
         guardian
-          .discoverable_topic_scope(Topic.listable_topics.secured(guardian))
-          .where(id: topic_ids)
+          .discoverable_topic_scope(Topic.listable_topics.where(id: topic_ids))
           .where.not(id: Category.where.not(topic_id: nil).select(:topic_id))
           .pluck(:id)
       end
