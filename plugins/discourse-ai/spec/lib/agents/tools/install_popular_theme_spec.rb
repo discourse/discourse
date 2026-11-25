@@ -25,9 +25,7 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
     action =
       AiToolAction.create!(
         tool_name: described_class.name,
-        tool_parameters: {
-          theme:,
-        },
+        tool_parameters: build_tool(theme).parameters_for_approval,
         ai_agent:,
         bot_user_id: Discourse.system_user.id,
       )
@@ -116,10 +114,111 @@ RSpec.describe DiscourseAi::Agents::Tools::InstallPopularTheme do
     )
   end
 
-  it "refuses a theme the site already has" do
-    RemoteTheme.create!(remote_url: "#{remote_url}.git")
+  context "when the site already has the theme" do
+    fab!(:existing_theme) do
+      Fabricate(
+        :theme,
+        name: "Mint Theme",
+        remote_theme:
+          RemoteTheme.create!(remote_url: "https://github.com/discourse/discourse-mint-theme.git"),
+      )
+    end
 
-    expect(tool.validation_error).to eq(error(:already_installed, name: "Mint"))
+    it "offers to use it, and saves it once approved without installing it again" do
+      expect(tool.validation_error).to be_nil
+      expect(tool.approval_title).to eq("Use theme: Mint Theme")
+      expect(tool.approval_details).to include("Mint Theme is already installed")
+
+      result = approve_as(other_admin, build_reviewable)
+
+      appearance_change = AppearanceChange.last
+      expect(RemoteTheme).not_to have_received(:import_theme)
+      expect(appearance_change).to have_attributes(kind: "existing_theme", theme: existing_theme)
+      expect(result).to include(
+        status: "success",
+        appearance_change_id: appearance_change.id,
+        message: I18n.t("discourse_ai.appearance_authoring.saved_existing_theme"),
+      )
+    end
+
+    it "requires fresh approval instead of installing a removed theme" do
+      reviewable = build_reviewable
+      existing_theme.destroy!
+
+      expect(approve_as(other_admin, reviewable)).to eq(error(:approval_required))
+      expect(RemoteTheme).not_to have_received(:import_theme)
+    end
+
+    it "previews the theme's current palette when reusing a draft" do
+      existing_theme.update!(color_scheme: Fabricate(:color_scheme))
+      approve_as(other_admin, build_reviewable)
+      existing_theme.update!(color_scheme: Fabricate(:color_scheme))
+
+      result = approve_as(other_admin, build_reviewable)
+
+      expect(result[:preview_url]).to eq(
+        "#{Discourse.base_url}/?" +
+          {
+            preview_color_scheme_id: existing_theme.color_scheme_id,
+            preview_dark_color_scheme_id: "none",
+            preview_theme_id: existing_theme.id,
+          }.to_query,
+      )
+      authoring = DiscourseAi::Agents::AppearanceAuthoring
+      expect(authoring.change_palettes(AppearanceChange.last)).to eq(
+        authoring.theme_palettes(existing_theme),
+      )
+    end
+
+    it "doesn't need the site to allow new themes" do
+      plugin = Plugin::Instance.new
+      modifier =
+        proc do |decision, request|
+          decision.deny!("No new themes here.") if request.feature == :theme_authoring
+          decision
+        end
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(tool.validation_error).to be_nil
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
+    it "says when it's already the default theme" do
+      existing_theme.set_default!
+
+      expect(tool.validation_error).to eq(error(:already_default, name: "Mint Theme"))
+    end
+
+    it "makes it live and switches back without removing it" do
+      approve_as(other_admin, build_reviewable)
+      appearance_change = AppearanceChange.last
+      previous_default = Theme.find_default
+
+      expect(
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to run_successfully
+      expect(existing_theme.reload).to be_default
+      expect(
+        AppearanceChange::Revert.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        ),
+      ).to run_successfully
+      expect(Theme.find_default).to eq(previous_default)
+      expect(Theme.exists?(existing_theme.id)).to eq(true)
+    end
   end
 
   it "says when the theme can't be installed" do

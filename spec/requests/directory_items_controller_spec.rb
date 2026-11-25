@@ -20,7 +20,7 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "with limit parameter" do
-    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
+    fab!(:users) { Fabricate.times(DirectoryItemsController::PAGE_SIZE + 10, :user) }
 
     before { DirectoryItem.refresh! }
 

@@ -15,6 +15,14 @@ lt:
         desktop: Darbalaukis
         mobile: Mobilus
         save: Saugoti
+        about_tab: Apie
+        blog_slug: URL adresas
+        general_heading: Bendra
+        settings_tab: Nustatymai
+        theme_tab: Tema
+        column_name: Vardas
+        column_category: Kategorija
+        column_status: Statusas
         path_formats:
           custom: Pasirinktinis
         themes: Temos

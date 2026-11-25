@@ -2794,7 +2794,6 @@ hy:
       summer: "Ամառ"
       grey_amber: "Մոխրագույն Սաթ"
       latte: "Լատտե"
-      dark_rose: "Մուգ Վարդագույն"
   wizard:
     title: "Discourse Տեղադրում"
     step:
@@ -2904,6 +2903,8 @@ hy:
       approve_post:
         title: "Այո"
         complete: "Գրառումը հաստատվել է."
+      deny_and_delete_post:
+        complete: "Գրառումը ջնջված է."
       approve_post_closed:
         title: "Այո"
         complete: "Գրառումը հաստատվել է."

@@ -259,6 +259,8 @@ it:
           text_color: "colore del testo"
         approve_label: "Sì"
         reject_label: "No"
+        category_access_levels:
+          readonly: "Vedi"
       agents:
         cannot_have_duplicate_tools: "Non sono ammessi strumenti duplicati"
         github_helper:
@@ -513,6 +515,12 @@ it:
       edit_category:
         errors:
           not_found: "Categoria non trovata."
+      set_category_permissions:
+        errors:
+          not_found: "Categoria non trovata."
+      delete_category:
+        errors:
+          not_found: "Categoria non trovata."
       change_topic_category:
         errors:
           not_found: "Argomento non trovato."
@@ -530,6 +538,8 @@ it:
         errors:
           not_found: "Argomento non trovato."
     appearance_authoring:
+      component_on: "On"
+      component_off: "Off"
       default_theme: "Tema predefinito"
       colors:
         light:

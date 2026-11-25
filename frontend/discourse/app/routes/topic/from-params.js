@@ -295,13 +295,21 @@ export default class TopicFromParams extends DiscourseRoute {
         () => ajax(`/n/${slug}/${topic.id}/context/${postNumber}.json?${query}`)
       );
 
-      params._nested = processNestedContextResponse({
-        data,
-        params: nestedParams,
-        site: this.site,
-        sort,
-        store: this.store,
-      });
+      params._nested = data.target_post
+        ? processNestedContextResponse({
+            data,
+            params: nestedParams,
+            site: this.site,
+            sort,
+            store: this.store,
+          })
+        : processNestedRootResponse({
+            data,
+            params: { ...nestedParams, post_number: null },
+            site: this.site,
+            siteSettings: this.siteSettings,
+            store: this.store,
+          });
     } else {
       const query = nestedQueryString({ sort, track_visit: true });
       const data = await PreloadStore.getAndRemove(

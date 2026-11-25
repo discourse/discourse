@@ -5,6 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Form from "discourse/components/form";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -43,9 +45,10 @@ export default class BlogSettings extends Component {
     };
   }
 
-  // A blog that already has its own domain can still clear it.
-  get showsOwnDomain() {
-    return this.siteSettings.blog_custom_domains_enabled || this.args.blog.url;
+  get customDomainLocked() {
+    return (
+      !this.siteSettings.blog_custom_domains_enabled && !this.args.blog.url
+    );
   }
 
   get pathFormats() {
@@ -159,17 +162,28 @@ export default class BlogSettings extends Component {
                 as |field|
               ><field.Control /></form.Field>
             {{/unless}}
-            {{#if this.showsOwnDomain}}
-              <form.Field
-                @description={{i18n "blog.admin.blog_url_description"}}
-                @format="full"
-                @name="url"
-                @title={{i18n "blog.admin.blog_url"}}
-                @type="input"
-                as |field|
-              ><field.Control
-                  placeholder="https://blog.example.com"
-                /></form.Field>
+            <form.Field
+              @description={{i18n
+                (if
+                  this.customDomainLocked
+                  "blog.admin.blog_url_unavailable"
+                  "blog.admin.blog_url_description"
+                )
+              }}
+              @disabled={{this.customDomainLocked}}
+              @format="full"
+              @name="url"
+              @title={{i18n "blog.admin.blog_url"}}
+              @type="input"
+              as |field|
+            ><field.Control
+                placeholder="https://blog.example.com"
+              /></form.Field>
+            {{#if this.customDomainLocked}}
+              <PluginOutlet
+                @name="blog-admin-custom-domain-unavailable"
+                @outletArgs={{lazyHash blog=@blog}}
+              />
             {{/if}}
             <form.Field
               @description={{i18n

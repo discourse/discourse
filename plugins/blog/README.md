@@ -85,11 +85,11 @@ By default the blog is served under `/blog` on the community, for example
 can pick it as the site homepage.
 
 A blog can instead have its own hostname, such as `https://blog.example.com`, set
-as **Own domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
+as **Custom domain** on the blog's Settings tab (**Admin → Plugins → Blog → Blogs**).
 The hostname needs DNS, TLS and routing set up outside Discourse first. A host that
-offers own domains only on some plans turns off the hidden
-`blog_custom_domains_enabled` setting elsewhere: the field is then hidden and a new
-own domain is refused, while a blog that already has one keeps it. While a dedicated
+offers custom domains only on some plans turns off the hidden
+`blog_custom_domains_enabled` setting elsewhere: the field is then locked and a new
+custom domain is refused, while a blog that already has one keeps it. While a dedicated
 hostname is active,
 `/blog` on the community redirects to it with a temporary (302) redirect, so
 dropping the hostname later does not leave browsers stuck on the old one.
@@ -98,7 +98,7 @@ dropping the hostname later does not leave browsers stuck on the old one.
 
 A site can have more than one blog. **Add blog** on the **Blogs** tab asks for a name
 and a slug. The main blog stays at `/blog`; another blog lives at `/blog/<slug>`
-until it is given its own domain. Each blog has its own name, address, discussion
+until it is given a custom domain. Each blog has its own name, address, discussion
 category, article address format and theme. All blogs share the drafts category
 and the three role groups, so a writer chooses the blog for each draft: from the
 **New draft** menu in `/blog-editor`, or in the article's settings until it is
@@ -115,6 +115,11 @@ published.
 - The hidden `blog_max_instances` setting (default 10) caps how many blogs a site
   may have, so a host can lower it per plan. Existing blogs keep working when a
   site is over its limit; only adding is refused.
+- The hidden `blog_role_groups_enabled` setting (on by default) lets a site choose
+  which groups hold the contributor, editor and publisher roles. A host can turn it
+  off per plan: staff then hold all three roles whatever groups are saved, the drafts
+  category is limited to staff within the hour, and the saved groups take effect
+  again when the setting is turned back on.
 
 Enabling the blog claims `/blog` in both modes. A theme or plugin that already
 serves its own page under `/blog` stops receiving those requests.
@@ -140,7 +145,7 @@ setting is hidden, so it can only be turned on from the Rails console (step 3).
    console: `SiteSetting.blog_enabled = true`. The blog's own admin pages only
    load once it is enabled, so enable first and configure second.
 4. Open **Admin → Plugins → Blog → Blogs** and edit the blog: its name, tagline
-   and About text on the About tab; its own domain (dedicated hostname only, no
+   and About text on the About tab; its custom domain (dedicated hostname only, no
    trailing slash or path), discussion category, articles per page and article
    address format on the Settings tab; its design on the Theme tab.
 5. Leave the categories to the plugin. It creates a private drafts category when the
@@ -245,6 +250,12 @@ Open **Admin → Plugins → Blog**. **Themes** lists the included designs, then
 saved drafts, and badges the one currently shown to readers; **Blogs** lists each blog, whose About tab holds its name, tagline, and About
 content and whose Theme tab picks its design. A design owns its whole look: palette, CSS, JavaScript, and Liquid
 templates. Design and color changes are blog-only; they do not restyle the community.
+
+The hidden `blog_custom_themes_enabled` setting (on by default) lets a host offer
+custom themes only on some plans. With it off, a site keeps to the included designs
+as shipped: creating, customizing, importing, pulling and previewing unsaved edits
+are refused, and so is activating a custom theme. A blog already showing a custom
+theme keeps it, and existing themes can still be exported or deleted.
 
 Included designs are the built-in **Default** and each folder under `branding/`
 with a `blog-theme.json`. They are read-only: activating one stores only its id,

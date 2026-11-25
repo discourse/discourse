@@ -12,6 +12,9 @@ describe Chat::MessageBookmarkable do
   fab!(:direct_message)
   fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: direct_message) }
 
+  fab!(:message1) { Fabricate(:chat_message, chat_channel: channel) }
+  fab!(:message2) { Fabricate(:chat_message, chat_channel: channel) }
+
   let(:guardian) { Guardian.new(user) }
 
   before do
@@ -22,13 +25,12 @@ describe Chat::MessageBookmarkable do
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
 
-  let!(:message1) { Fabricate(:chat_message, chat_channel: channel) }
-  let!(:message2) { Fabricate(:chat_message, chat_channel: channel) }
   let!(:bookmark1) do
     Fabricate(:bookmark, user: user, bookmarkable: message1, name: "something i gotta do")
   end
   let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: message2) }
-  let!(:bookmark3) { Fabricate(:bookmark) }
+
+  fab!(:bookmark3, :bookmark)
 
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do

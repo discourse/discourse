@@ -459,9 +459,6 @@ it:
       fonts:
         base_font: "Corpo"
         heading_font: "Titoli"
-      logo:
-        description: "Appare nella barra di navigazione superiore del sito e nella parte superiore delle notifiche e-mail del sito."
-        help_text: "La dimensione consigliata è 600 x 80 pixel."
       homepage:
         topics: "Argomenti"
         categories: "Categorie"
@@ -875,7 +872,6 @@ it:
         is_this_post: "Questo messaggio è %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "o"
         something_else_wrong: "C'è qualcosa che non va con questo %{reviewable_type}?"
-        something_wrong_with_post: "Cosa non va in questo messaggio?"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
@@ -4183,27 +4179,19 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       validations:
         icon_required: "Seleziona un'icona."
+      icon_search_placeholder: "Cerca…"
       description: "Descrizione"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
       style: "Stile"
-      icon: "Icona"
-      emoji: "Emoji"
       background_color: "Colore"
       foreground_color: "Colore del testo"
       color_validations:
         cant_be_empty: "non può essere vuoto"
       styles:
-        type: "Stile"
         icon: "Icona"
         emoji: "Emoji"
         square: "Quadrato"
-        options:
-          square: "Quadrato"
-          icon: "Icona"
-          emoji: "Emoji"
       color_used: "Colore in uso"
-      predefined_colors: "Opzioni di colore predefinite"
-      color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
       list: "Elenca le categorie"
@@ -6816,8 +6804,6 @@ it:
           dark: "scuro"
           title: "Colori"
           edit: "Modifica"
-          set_default_light: "Imposta come schema chiaro sul tema predefinito (%{theme})"
-          set_default_dark: "Imposta come schema scuro sul tema predefinito (%{theme})"
           saved_refreshing: "Salvato! Aggiornamento dei colori..."
           from_theme: "Dal tema: %{name}"
           filters:

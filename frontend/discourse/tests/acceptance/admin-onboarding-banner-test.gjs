@@ -273,7 +273,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await fillIn("input.category-name", "testing");
     await click("#save-category");
-    assert.strictEqual(currentURL(), "/c/testing/edit/general");
+    assert.strictEqual(currentURL(), "/c/testing/11");
     assert.deepEqual(
       loggedEvents,
       [{ event: "step_completed", step: "create_category" }],
@@ -434,14 +434,10 @@ acceptance("Admin - Onboarding Banner", function (needs) {
       .dom(".design-wizard__theme-card")
       .doesNotExist("theme cards are left behind on the colors step");
     assert
-      .dom(
-        ".design-wizard__palette-row[data-mode='light'] .design-wizard__palette-card"
-      )
-      .exists({ count: 1 }, "the colors step shows the theme's light palettes");
+      .dom(".design-wizard__palette-card")
+      .exists({ count: 1 }, "the colors step shows the theme's palettes");
 
-    await click(
-      ".design-wizard__palette-row[data-mode='light'] [data-pair-key='default']"
-    );
+    await click(".design-wizard__palette-card[data-pair-key='default']");
     assert
       .dom("link[data-scheme-id]", document.documentElement)
       .exists("the page's color scheme stylesheet is swapped for the preview");
@@ -487,7 +483,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".design-wizard__back");
     assert
-      .dom(".design-wizard__palette-row[data-mode='light']")
+      .dom(".design-wizard__palette-row")
       .exists("back returns to the colors step");
 
     await click(".design-wizard__close");
@@ -501,7 +497,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isNotChecked();
   });
 
-  test("the design wizard activates the stylesheet for the mode of the picked palette", async function (assert) {
+  test("the design wizard activates the stylesheet for the picked color mode", async function (assert) {
     const darkLink = this.addSchemeLink(
       "dark-scheme",
       "data:text/css,design-wizard-dark",
@@ -516,9 +512,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     await visit("/");
     await withStep("select_theme", assert).clickAction();
     await click(".design-wizard__next");
-    await click(
-      ".design-wizard__palette-row[data-mode='dark'] [data-pair-key='default']"
-    );
+    await click(".design-wizard__palette-modes input[value='dark']");
 
     assert
       .dom(lightLink)

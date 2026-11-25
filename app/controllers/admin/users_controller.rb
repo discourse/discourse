@@ -256,8 +256,7 @@ class Admin::UsersController < Admin::StaffController
 
   def log_out
     if @user
-      @user.user_auth_tokens.destroy_all
-      PushNotificationPusher.clear_subscriptions(@user)
+      @user.revoke_family_sessions!
       @user.logged_out
       render json: success_json
     else

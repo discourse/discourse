@@ -281,17 +281,7 @@ describe "Post menu" do
       expect(topic_page).to have_post_action_button(post, :recover)
     end
 
-    it "deletes a topic" do
-      sign_in(admin)
-
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_no_deleted_post(post)
-      topic_page.click_post_action_button(post, :delete)
-      expect(topic_page).to have_deleted_post(post)
-    end
-
-    it "deletes a post" do
+    it "deletes and recovers a post and a topic" do
       sign_in(admin)
 
       topic_page.visit_topic(post.topic)
@@ -299,6 +289,22 @@ describe "Post menu" do
       expect(topic_page).to have_no_deleted_post(post2)
       topic_page.click_post_action_button(post2, :delete)
       expect(topic_page).to have_deleted_post(post2)
+
+      topic_page.click_post_action_button(post2, :recover)
+      expect(topic_page).to have_no_deleted_post(post2)
+
+      expect(topic_page).to have_no_deleted_post(post)
+      topic_page.click_post_action_button(post, :delete)
+      expect(topic_page).to have_deleted_post(post)
+
+      topic_page.visit_topic(post.topic)
+      expect(topic_page).to have_deleted_post(post)
+
+      topic_page.click_post_action_button(post, :recover)
+      expect(topic_page).to have_no_deleted_post(post)
+
+      topic_page.visit_topic(post.topic)
+      expect(topic_page).to have_no_deleted_post(post)
     end
 
     it "shows a flag to delete message when the user is the author but can't delete it without permission" do
@@ -317,31 +323,6 @@ describe "Post menu" do
       expect(topic_page).to have_no_deleted_post(other_p1)
       expect(modal).to be_open
       expect(modal).to have_content(I18n.t("js.post.controls.delete_topic_disallowed_modal"))
-    end
-
-    it "recovers a topic" do
-      PostDestroyer.new(admin, post).destroy
-
-      sign_in(admin)
-
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_deleted_post(post)
-      topic_page.click_post_action_button(post, :recover)
-      expect(topic_page).to have_no_deleted_post(post)
-    end
-
-    it "recovers a post" do
-      sign_in(admin)
-
-      topic_page.visit_topic(post.topic)
-
-      expect(topic_page).to have_no_deleted_post(post2)
-      topic_page.click_post_action_button(post2, :delete)
-      expect(topic_page).to have_deleted_post(post2)
-
-      topic_page.click_post_action_button(post2, :recover)
-      expect(topic_page).to have_no_deleted_post(post2)
     end
 
     it "allows regular users to recover their own deleted topic" do

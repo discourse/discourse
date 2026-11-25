@@ -36,7 +36,6 @@ RSpec.describe DiscourseEvents::Events::Event do
     is_expected.to validate_numericality_of(:max_attendees)
       .only_integer
       .is_greater_than(0)
-      .is_less_than_or_equal_to(DiscourseEvents::Events::Event::MAX_ATTENDEES_LIMIT)
       .allow_nil
   end
 
@@ -1235,6 +1234,34 @@ RSpec.describe DiscourseEvents::Events::Event do
     it "is empty without reminders" do
       expect(event_with_reminders(nil).parsed_reminders).to eq([])
     end
+
+    it "deduplicates reminders with the same type, value, and unit" do
+      event = event_with_reminders("notification.15.minutes,notification.15.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 15, unit: "minutes" }])
+    end
+
+    it "deduplicates reminders with the same overall time value regardless of unit" do
+      event = event_with_reminders("notification.1.hour,notification.60.minutes")
+
+      expect(event.parsed_reminders).to eq([{ type: "notification", value: 60, unit: "minutes" }])
+    end
+
+    it "keeps at most the allowed number of reminders per type" do
+      event =
+        event_with_reminders(
+          "notification.1.minutes,notification.2.minutes,notification.3.minutes," \
+            "bumpTopic.1.hours,bumpTopic.2.hours",
+        )
+
+      expect(event.parsed_reminders).to eq(
+        [
+          { type: "notification", value: 1, unit: "minutes" },
+          { type: "notification", value: 2, unit: "minutes" },
+          { type: "bumpTopic", value: 1, unit: "hours" },
+        ],
+      )
+    end
   end
 
   describe ".valid_reminder?" do
@@ -1892,6 +1919,36 @@ describe DiscourseEvents::Events::Event, "#capacity" do
     event.create_invitees(
       [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
     )
+    expect(event.at_capacity?).to eq(true)
+  end
+
+  it "uses the site setting limit when max_attendees is not set" do
+    SiteSetting.discourse_post_event_max_attendees_limit = 1
+    creator = Fabricate(:user)
+    post = Fabricate(:post, user: creator, topic: Fabricate(:topic, user: creator))
+    event = Fabricate(:event, post: post, max_attendees: nil)
+
+    expect(event.at_capacity?).to eq(false)
+
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+    )
+
+    expect(event.at_capacity?).to eq(true)
+  end
+
+  it "uses the site setting limit when max_attendees is above it" do
+    creator = Fabricate(:user)
+    post = Fabricate(:post, user: creator, topic: Fabricate(:topic, user: creator))
+    event = Fabricate(:event, post: post, max_attendees: 2)
+    event.create_invitees(
+      [{ user_id: creator.id, status: DiscourseEvents::Events::Invitee.statuses[:going] }],
+    )
+
+    expect(event.at_capacity?).to eq(false)
+
+    SiteSetting.discourse_post_event_max_attendees_limit = 1
+
     expect(event.at_capacity?).to eq(true)
   end
 end

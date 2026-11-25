@@ -67,6 +67,30 @@ describe DiscourseMcp::Access do
   end
 
   describe ".eligible_scopes_by_user" do
+    it "excludes current and historical shadows from group and logged-in user grants" do
+      SiteSetting.allow_anonymous_mode = false
+      current_shadow = Fabricate(:user)
+      former_shadow = Fabricate(:user)
+      AnonymousUser.create!(user: current_shadow, master_user: user, active: true)
+      former_master = Fabricate(:user)
+      AnonymousUser.create!(user: former_shadow, master_user: former_master, active: false)
+      former_master.destroy!
+
+      group.add(current_shadow)
+      group.add(former_shadow)
+      McpGroupScope.create!(group: group, scope: "mcp:content:write")
+      McpGroupScope.create!(
+        group_id: Group::AUTO_GROUPS[:logged_in_users],
+        scope: "mcp:profile:read",
+      )
+
+      expect(described_class.eligible_scopes_by_user([user, current_shadow, former_shadow])).to eq(
+        user.id => %w[mcp:content:write mcp:profile:read],
+        current_shadow.id => [],
+        former_shadow.id => [],
+      )
+    end
+
     it "returns sorted scopes when the user's group grants are unique" do
       McpGroupScope.create!(group: group, scope: "mcp:profile:read")
       McpGroupScope.create!(group: other_group, scope: "mcp:content:write")

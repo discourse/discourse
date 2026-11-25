@@ -6,31 +6,20 @@ module DiscourseAi
       # Identifies potential concepts from provided content
       # Returns an array of concept names (strings)
       def identify_concepts(content)
-        return [] if content.blank?
+        return [] if content.blank? || !DiscourseAi::Embeddings.enabled?
 
-        # Use the ConceptFinder agent to identify concepts
-        agent =
-          AiAgent
-            .all_agents(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_generate_agent.to_i }
-            .new
+        candidates = CandidateRetriever.new.retrieve(content: content)
+        result = Classifier.new.classify(content, candidates: candidates, allow_new: true)
 
-        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
-        context =
-          DiscourseAi::Agents::BotContext.new(
-            messages: [{ type: :user, content: content }],
-            user: Discourse.system_user,
-            inferred_concepts: DiscourseAi::InferredConcepts::Manager.new.list_concepts,
-          )
+        by_id = candidates.index_by(&:id)
+        matched_names = result[:matches].filter_map { |match| by_id[match[:concept_id]]&.name }
+        proposed_names = result[:proposed_new].map { |entry| entry[:name] }
 
-        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
-        structured_output = nil
-
-        bot.reply(context) do |partial, _, type|
-          structured_output = partial if type == :structured_output
-        end
-
-        structured_output&.read_buffered_property(:concepts) || []
+        (matched_names + proposed_names).uniq
+      rescue CandidateRetriever::EmbeddingsUnavailableError,
+             DiscourseAi::Embeddings::ProviderPausedError,
+             DiscourseAi::Inference::EmbeddingInferenceError
+        []
       end
 
       # Creates or finds concepts in the database from provided names
@@ -38,7 +27,23 @@ module DiscourseAi
       def create_or_find_concepts(concept_names)
         return [] if concept_names.blank?
 
-        concept_names.map { |name| InferredConcept.find_or_create_by(name: name) }
+        concept_names.filter_map do |name|
+          cleaned = name.to_s.strip
+          next if cleaned.blank?
+
+          existing = InferredConcept.by_name_or_alias(cleaned).first
+          next existing if existing
+
+          concept = InferredConcept.create!(name: cleaned)
+          if DiscourseAi::Embeddings.enabled?
+            Jobs.enqueue(
+              :generate_embeddings,
+              target_type: "InferredConcept",
+              target_id: concept.id,
+            )
+          end
+          concept
+        end
       end
 
       # Finds candidate topics to use for concept generation
@@ -112,7 +117,18 @@ module DiscourseAi
         category_ids: nil,
         created_after: 30.days.ago
       )
-        query = Post.where("posts.like_count >= ?", min_likes)
+        query =
+          Post
+            .joins(:topic)
+            .where(
+              topics: {
+                archetype: Archetype.default,
+              },
+              posts: {
+                post_type: Post.types[:regular],
+              },
+            )
+            .where("posts.like_count >= ?", min_likes)
 
         # Exclude first posts if specified
         query = query.where("posts.post_number > 1") if exclude_first_posts
@@ -122,9 +138,7 @@ module DiscourseAi
         query = query.where("posts.created_at >= ?", created_after) if created_after.present?
 
         # Filter by category if specified
-        if category_ids.present?
-          query = query.joins(:topic).where("topics.category_id IN (?)", category_ids)
-        end
+        query = query.where("topics.category_id IN (?)", category_ids) if category_ids.present?
 
         # Exclude posts that already have concepts
         posts_with_concepts = <<~SQL
@@ -139,37 +153,6 @@ module DiscourseAi
 
         # Return limited number of posts
         query.limit(limit)
-      end
-
-      # Deduplicate and standardize a list of concepts
-      # @param concept_names [Array<String>] List of concept names to deduplicate
-      # @return [Hash] Hash with deduplicated concepts and mapping
-      def deduplicate_concepts(concept_names)
-        return { deduplicated_concepts: [], mapping: {} } if concept_names.blank?
-
-        # Use the ConceptDeduplicator agent to deduplicate concepts
-        agent =
-          AiAgent
-            .all_agents(enabled_only: false)
-            .find { |p| p.id == SiteSetting.inferred_concepts_deduplicate_agent.to_i }
-            .new
-
-        llm = LlmModel.find(agent.class.default_llm_id || SiteSetting.ai_default_llm_model)
-
-        # Create the input for the deduplicator
-        input = { type: :user, content: concept_names.join(", ") }
-
-        context =
-          DiscourseAi::Agents::BotContext.new(messages: [input], user: Discourse.system_user)
-
-        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
-        structured_output = nil
-
-        bot.reply(context) do |partial, _, type|
-          structured_output = partial if type == :structured_output
-        end
-
-        structured_output&.read_buffered_property(:streamlined_tags) || []
       end
     end
   end

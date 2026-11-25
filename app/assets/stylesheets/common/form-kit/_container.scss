@@ -5,6 +5,13 @@
   gap: 0.25rem;
   flex-direction: column;
   align-items: flex-start;
+  box-sizing: border-box;
+
+  .--horizontal & {
+    @include viewport.from(sm) {
+      display: contents;
+    }
+  }
 
   &.--full {
     width: 100%;
@@ -27,6 +34,31 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary);
     font-weight: 600 !important;
+    position: relative;
+
+    .--horizontal & {
+      @include viewport.from(sm) {
+        grid-area: title;
+        margin-inline-start: var(--space-4);
+        overflow-wrap: anywhere;
+        font-weight: normal !important;
+        font-size: var(--font-0);
+      }
+    }
+
+    .--horizontal.--overridden & {
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0.35rem;
+        left: 0;
+        margin-left: calc(var(--space-4) * -1);
+        width: var(--space-2);
+        height: var(--space-2);
+        border-radius: 100%;
+        background-color: var(--highlight-high);
+      }
+    }
   }
 
   &-subtitle {
@@ -36,6 +68,10 @@
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-medium);
+
+    .--horizontal & {
+      grid-area: description;
+    }
 
     > * {
       margin: 0;
@@ -58,6 +94,26 @@
 
     @include viewport.until(sm) {
       width: 100%;
+    }
+
+    .--horizontal & {
+      grid-area: content;
+
+      @include viewport.until(sm) {
+        order: 1;
+      }
+    }
+
+    .form-kit__field-checkbox & {
+      .--horizontal & {
+        width: 100%;
+      }
+    }
+  }
+
+  &-description {
+    .--horizontal & {
+      grid-area: description;
     }
   }
 }

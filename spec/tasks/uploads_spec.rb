@@ -7,15 +7,15 @@ RSpec.describe "tasks/uploads" do
   end
 
   describe "uploads:secure_upload_analyse_and_update" do
+    fab!(:post_1, :post)
+    fab!(:post_2, :post)
+    fab!(:post_3, :post)
+
     let!(:uploads) { [multi_post_upload_1, upload_1, upload_2, upload_3] }
     let(:multi_post_upload_1) { Fabricate(:upload_s3) }
     let(:upload_1) { Fabricate(:upload_s3) }
     let(:upload_2) { Fabricate(:upload_s3) }
     let(:upload_3) { Fabricate(:upload_s3, original_filename: "test.pdf", extension: "pdf") }
-
-    let!(:post_1) { Fabricate(:post) }
-    let!(:post_2) { Fabricate(:post) }
-    let!(:post_3) { Fabricate(:post) }
 
     before do
       UploadReference.create(target: post_1, upload: multi_post_upload_1)
@@ -211,9 +211,10 @@ RSpec.describe "tasks/uploads" do
       end
     end
 
+    fab!(:post_1, :post)
+    fab!(:post_2, :post)
+
     let!(:uploads) { [upload_1, upload_2, upload_3, upload_4, upload_5] }
-    let(:post_1) { Fabricate(:post) }
-    let(:post_2) { Fabricate(:post) }
     let(:draft) { Fabricate(:draft) }
     let(:upload_1) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }
     let(:upload_2) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }

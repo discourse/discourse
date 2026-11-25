@@ -2871,7 +2871,6 @@ zh_CN:
     enable_composer_redesign: "启用重新设计的编辑器。"
     enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
-    review_queue_consistent_answers: "统一所有审核队列问题的表述，让“是”始终表示存在问题，并将所有类型的审核结果标记为“确认存在问题”或“未发现问题”。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
@@ -5450,7 +5449,6 @@ zh_CN:
       dracula: "Dracula"
       grey_amber: "灰琥珀色"
       latte: "棕色"
-      dark_rose: "黑红"
   wizard:
     title: "Discourse 设置"
     step:
@@ -5652,8 +5650,6 @@ zh_CN:
     actions:
       answer_yes:
         title: "是"
-        delete_post_title: "是的，删除帖子"
-        keep_post_deleted_title: "是，保持帖子已删除状态"
       answer_no:
         title: "否"
       agree:
@@ -5756,6 +5752,10 @@ zh_CN:
         title: "是"
         action_title: "批准帖子"
         complete: "帖子已被批准。"
+      deny_and_delete_post:
+        complete: "帖子已被删除。"
+      deny_and_keep_deleted:
+        complete: "帖子保持删除状态。"
       approve_post_closed:
         title: "是"
         confirm: "此话题已被关闭。仍要创建帖子吗？"

@@ -13,13 +13,17 @@ module PageObjects
       end
 
       def has_revoked_api_key_listed?(name)
-        row = page.find(table_selector, text: name)
-        row.has_css?(badge_selector, text: I18n.t("admin_js.admin.api_keys.revoked"))
+        row_for_description(name).has_css?(
+          badge_selector,
+          text: I18n.t("admin_js.admin.api_keys.revoked"),
+        )
       end
 
       def has_unrevoked_api_key_listed?(name)
-        row = page.find(table_selector, text: name)
-        row.has_no_css?(badge_selector, text: I18n.t("admin_js.admin.api_keys.revoked"))
+        row_for_description(name).has_no_css?(
+          badge_selector,
+          text: I18n.t("admin_js.admin.api_keys.revoked"),
+        )
       end
 
       def has_no_api_key_listed?(name)
@@ -90,6 +94,10 @@ module PageObjects
       end
 
       private
+
+      def row_for_description(name)
+        page.find(".d-table__row .key-description", text: name).ancestor(".d-table__row")
+      end
 
       def table_selector
         ".admin-api_keys__items"

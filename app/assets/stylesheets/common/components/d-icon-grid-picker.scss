@@ -62,6 +62,31 @@
     max-height: 380px;
   }
 
+  &__content.--list {
+    width: 100%;
+
+    .d-icon-grid-picker__grid-wrapper {
+      grid-template-columns: minmax(0, 1fr);
+      margin-block-start: var(--space-2);
+      max-height: 14rem;
+    }
+
+    .d-icon-grid-picker__icon {
+      width: 100%;
+      height: auto;
+      justify-content: flex-start;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      color: var(--primary);
+      transform: none;
+
+      .d-icon {
+        color: var(--icon-color, var(--primary-high));
+        font-size: var(--font-0);
+      }
+    }
+  }
+
   // Mirrors emoji-picker__filter-container
   &__filter-container {
     background: var(--primary-very-low);

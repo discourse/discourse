@@ -1499,6 +1499,10 @@ class TopicsController < ApplicationController
           preview_theme_id
           preview_color_scheme_id
           preview_dark_color_scheme_id
+          preview_base_font
+          preview_heading_font
+          preview_component_ids
+          preview_hide_component_ids
           include_raw
         ],
         Discourse::LOCALE_PARAM,

@@ -2232,15 +2232,10 @@ th:
       validations:
         icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
-      icon: "ไอคอน"
-      emoji: "Emoji"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
         emoji: "Emoji"
-        options:
-          icon: "ไอคอน"
-          emoji: "Emoji"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
@@ -2578,6 +2573,7 @@ th:
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
     mobile_tab_bar:
+      new_topic: "กระทู้ใหม่"
       create: "สร้าง"
       more: "อื่น"
       back: "กลับ"

@@ -11,9 +11,10 @@ module DiscourseAi
       TOPICS_TABLE = "ai_topics_embeddings"
       POSTS_TABLE = "ai_posts_embeddings"
       RAG_DOCS_TABLE = "ai_document_fragments_embeddings"
+      INFERRED_CONCEPTS_TABLE = "ai_inferred_concepts_embeddings"
 
-      EMBEDDING_TARGETS = %w[topics posts document_fragments]
-      EMBEDDING_TABLES = [TOPICS_TABLE, POSTS_TABLE, RAG_DOCS_TABLE]
+      EMBEDDING_TARGETS = %w[topics posts document_fragments inferred_concepts]
+      EMBEDDING_TABLES = [TOPICS_TABLE, POSTS_TABLE, RAG_DOCS_TABLE, INFERRED_CONCEPTS_TABLE]
 
       MissingEmbeddingError = Class.new(StandardError)
 
@@ -32,9 +33,31 @@ module DiscourseAi
             new(POSTS_TABLE, "post_id", vector_def)
           when "RagDocumentFragment"
             new(RAG_DOCS_TABLE, "rag_document_fragment_id", vector_def)
+          when "InferredConcept"
+            new(INFERRED_CONCEPTS_TABLE, "inferred_concept_id", vector_def)
           else
             raise ArgumentError, "Invalid target type for embeddings"
           end
+        end
+
+        def delete_embeddings_for(target)
+          return if target&.id.blank?
+
+          table, target_column =
+            case target
+            when Topic
+              [TOPICS_TABLE, "topic_id"]
+            when Post
+              [POSTS_TABLE, "post_id"]
+            when RagDocumentFragment
+              [RAG_DOCS_TABLE, "rag_document_fragment_id"]
+            when InferredConcept
+              [INFERRED_CONCEPTS_TABLE, "inferred_concept_id"]
+            else
+              raise ArgumentError, "Invalid target type for embeddings"
+            end
+
+          DB.exec("DELETE FROM #{table} WHERE #{target_column} = :target_id", target_id: target.id)
         end
 
         def search_index_name(table, def_id)
@@ -167,7 +190,7 @@ module DiscourseAi
 
         yield(builder) if block_given?
 
-        if table == RAG_DOCS_TABLE
+        if table == RAG_DOCS_TABLE || table == INFERRED_CONCEPTS_TABLE
           # A too low limit exacerbates the the recall loss of binary quantization
           candidates_limit = [limit * 2, 100].max
         else

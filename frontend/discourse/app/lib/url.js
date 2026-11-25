@@ -19,13 +19,15 @@ const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;
 const NESTED_URL_REGEXP = /^\/n\/([^\/]+)\/(\d+)(?:\/(\d+))?/;
 
-// Query params that preview a theme, its palettes or fonts.
+// Query params that preview a theme, its palettes, fonts or components.
 export const THEME_PREVIEW_QUERY_PARAMS = [
   "preview_theme_id",
   "preview_color_scheme_id",
   "preview_dark_color_scheme_id",
   "preview_base_font",
   "preview_heading_font",
+  "preview_component_ids",
+  "preview_hide_component_ids",
 ];
 
 // Query params the server applies while it renders the page, so a link that

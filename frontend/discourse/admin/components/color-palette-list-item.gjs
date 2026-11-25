@@ -7,7 +7,6 @@ import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButtonTooltip from "discourse/float-kit/components/d-button-tooltip";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { bind } from "discourse/lib/decorators";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -60,15 +59,6 @@ export default class ColorPaletteListItem extends Component {
       this.args.defaultTheme &&
       this.args.isDefaultThemeDarkColorScheme(this.args.scheme)
     );
-  }
-
-  @bind
-  setAsDefaultLabel(mode) {
-    const themeName = this.args.defaultTheme?.name || "Default";
-
-    return i18n(`admin.customize.colors.set_default_${mode}`, {
-      theme: themeName,
-    });
   }
 
   @action
@@ -220,7 +210,7 @@ export default class ColorPaletteListItem extends Component {
                         "light"
                       }}
                       @icon="far-star"
-                      @translatedLabel={{fn this.setAsDefaultLabel "light"}}
+                      @label="admin.customize.colors.set_default_light"
                     />
                   </dropdown.item>
                   <dropdown.item>
@@ -234,7 +224,7 @@ export default class ColorPaletteListItem extends Component {
                         "dark"
                       }}
                       @icon="star"
-                      @translatedLabel={{fn this.setAsDefaultLabel "dark"}}
+                      @label="admin.customize.colors.set_default_dark"
                     />
                   </dropdown.item>
 

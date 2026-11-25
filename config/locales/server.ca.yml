@@ -2784,7 +2784,6 @@ ca:
       summer: "Estiu"
       grey_amber: "Gris ambre"
       latte: "Latte"
-      dark_rose: "Rosa fosc"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2896,6 +2895,8 @@ ca:
         title: "Sí"
       approve_post:
         title: "Sí"
+      deny_and_delete_post:
+        complete: "Publicació suprimida."
       approve_post_closed:
         title: "Sí"
         confirm: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"

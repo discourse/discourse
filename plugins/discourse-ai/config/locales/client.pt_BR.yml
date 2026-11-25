@@ -216,6 +216,13 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      review_bulk:
+        refresh: "Atualizar"
+        columns:
+          user: "Usuário(a)"
+          reason: "Sinalizado como"
+          created: "Criado(a)"
+          status: "Status"
       dsa_classification:
         suggest: "Sugestão com IA"
       copied: "Copiou"
@@ -760,6 +767,26 @@ pt_BR:
         tool: "Ferramenta"
         modal:
           title: "Criar nova credencial"
+      concepts:
+        edit: "Editar"
+        delete: "Excluir"
+        columns:
+          status: "Status"
+          topics: "Tópicos"
+          posts: "Postagens"
+        statuses:
+          all: "Todos os status"
+          active: "Ativo(a)"
+        form:
+          name: "Nome"
+          description: "Descrição"
+          status: "Status"
+        tagged_topics: "Tópicos com etiqueta"
+        topic_columns:
+          topic: "Tópico"
+          primary: "Primário"
+          relevance: "Relevância"
+        primary_badge: "Primário"
       decision_models:
         no_preset: "Nenhum"
         display_name: "Nome"

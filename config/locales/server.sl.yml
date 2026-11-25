@@ -2098,6 +2098,8 @@ sl:
       approve_post:
         title: "Da"
         complete: "Objava odobrena."
+      deny_and_delete_post:
+        complete: "Prispevek izbrisan."
       approve_post_closed:
         title: "Da"
         complete: "Objava odobrena."

@@ -41,6 +41,8 @@ sr:
           color: "boja"
         approve_label: "Da"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Pogledaj"
       tool_summary:
         search: "Pretraži"
         time: "Vreme"

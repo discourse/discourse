@@ -38,6 +38,11 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      review_bulk:
+        refresh: "Rudisha Tena"
+        columns:
+          user: "Mtumiaji"
+          created: "Imetengenezwa"
       ai_decoded_transcript:
         type: "Aina"
         error: "Hitilafu"
@@ -203,6 +208,21 @@ sw:
         edit: "Hariri"
         delete: "Futa"
         embedding: "Ambatanisha"
+      concepts:
+        edit: "Hariri"
+        delete: "Futa"
+        columns:
+          topics: "Mada"
+          posts: "Machapisho"
+        statuses:
+          active: "Amilifu"
+        form:
+          name: "Jina"
+          description: "Maelezo"
+        tagged_topics: "Mada zilizotajwa"
+        topic_columns:
+          topic: "Mada"
+          relevance: "Umuhimu"
       decision_models:
         no_preset: "Hakuna"
         display_name: "Jina"

@@ -8,6 +8,7 @@ describe "Admin Customize Themes Config Area Page" do
   fab!(:parent_theme_4) { Fabricate(:theme, name: "D theme") }
 
   let(:config_area) { PageObjects::Pages::AdminCustomizeComponentsConfigArea.new }
+  let(:filter_controls) { PageObjects::Components::DFilterControls.new(".d-filter-controls") }
   let(:toasts) { PageObjects::Components::Toasts.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
@@ -98,15 +99,7 @@ describe "Admin Customize Themes Config Area Page" do
       expect(config_area).to have_exact_components(remote_component_with_update.id)
     end
 
-    it "can filter components by name" do
-      config_area.visit
-
-      config_area.name_filter_input.fill_in(with: "glo")
-
-      expect(config_area).to have_exact_components(enabled_component.id, disabled_component.id)
-    end
-
-    it "keeps the filters shown when there are no components matching the filters" do
+    it "keeps the name and status filters available after a search with no matches" do
       config_area.visit
 
       config_area.name_filter_input.fill_in(with: "stringthatshouldnotmatchanything")
@@ -114,6 +107,17 @@ describe "Admin Customize Themes Config Area Page" do
       expect(config_area).to have_no_components
       expect(config_area).to have_name_filter_input
       expect(config_area).to have_status_selector
+
+      filter_controls.click_no_results_reset_button
+      expect(config_area).to have_exact_components(
+        enabled_component.id,
+        disabled_component.id,
+        remote_component.id,
+        remote_component_with_update.id,
+      )
+
+      config_area.name_filter_input.fill_in(with: "glo")
+      expect(config_area).to have_exact_components(enabled_component.id, disabled_component.id)
     end
 
     it "navigates to the component page when clicking the Edit button" do

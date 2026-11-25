@@ -97,6 +97,13 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      review_bulk:
+        refresh: "Làm mới"
+        columns:
+          user: "Người dùng"
+          reason: "Báo cáo như"
+          created: "Đã tạo"
+          status: "Trạng thái"
       copied: "Đã sao chép"
       ai_decoded_transcript:
         type: "Loại"
@@ -374,6 +381,26 @@ vi:
         edit: "Sửa"
         delete: "Xóa"
         embedding: "Nhúng"
+      concepts:
+        edit: "Sửa"
+        delete: "Xóa"
+        columns:
+          status: "Trạng thái"
+          topics: "Các chủ đề"
+          posts: "Số lượng bài viết"
+        statuses:
+          all: "Tất cả trạng thái"
+          active: "Hoạt động"
+        form:
+          name: "Tên"
+          description: "Mô tả"
+          status: "Trạng thái"
+        tagged_topics: "Những chủ đề được gắn thẻ"
+        topic_columns:
+          topic: "Chủ đề"
+          primary: "Chính"
+          relevance: "Độ phù hợp"
+        primary_badge: "Chính"
       decision_models:
         no_preset: "Không"
         display_name: "Tên"

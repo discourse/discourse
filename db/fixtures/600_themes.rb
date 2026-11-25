@@ -13,14 +13,21 @@ if !theme_exists
     { name: I18n.t("color_schemes.wcag"), base_scheme_name: "WCAG" },
     { name: I18n.t("color_schemes.wcag_dark"), base_scheme_name: "WCAG Dark" },
     { name: I18n.t("color_schemes.dracula"), base_scheme_name: "Dracula" },
+    { name: I18n.t("color_schemes.dracula_light"), base_scheme_name: "Dracula Light" },
     { name: I18n.t("color_schemes.solarized_light"), base_scheme_name: "Solarized Light" },
     { name: I18n.t("color_schemes.solarized_dark"), base_scheme_name: "Solarized Dark" },
     { name: I18n.t("color_schemes.neutral"), base_scheme_name: "Neutral" },
+    { name: I18n.t("color_schemes.neutral_dark"), base_scheme_name: "Neutral Dark" },
     { name: I18n.t("color_schemes.grey_amber"), base_scheme_name: "Grey Amber" },
+    { name: I18n.t("color_schemes.grey_amber_light"), base_scheme_name: "Grey Amber Light" },
     { name: I18n.t("color_schemes.shades_of_blue"), base_scheme_name: "Shades of Blue" },
+    { name: I18n.t("color_schemes.shades_of_blue_dark"), base_scheme_name: "Shades of Blue Dark" },
     { name: I18n.t("color_schemes.latte"), base_scheme_name: "Latte" },
+    { name: I18n.t("color_schemes.latte_light"), base_scheme_name: "Latte Light" },
     { name: I18n.t("color_schemes.summer"), base_scheme_name: "Summer" },
+    { name: I18n.t("color_schemes.summer_dark"), base_scheme_name: "Summer Dark" },
     { name: I18n.t("color_schemes.dark_rose"), base_scheme_name: "Dark Rose" },
+    { name: I18n.t("color_schemes.rose"), base_scheme_name: "Rose" },
   ]
 
   color_schemes.each do |cs|

@@ -491,6 +491,13 @@ RSpec.describe UsersController do
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 
+      it "leaves existing sessions intact when the new password fails validation" do
+        put "/u/password-reset/#{email_token.token}.json", params: { password: "abc" }
+
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(UserAuthToken.exists?(user_auth_token.id)).to eq(true)
+      end
+
       it "stops private message pushes to previously authorized browsers after a password reset" do
         Fabricate(:push_subscription, user: user1)
         allow(WebPush).to receive(:payload_send)
@@ -1058,6 +1065,103 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
       expect(session[:current_user_id]).to eq(user.id)
       expect(user.reload.admin?).to eq(false)
+    end
+
+    it "does not let an in-flight request with a replaced cookie clear the new session" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      before_rotation = Rack::Utils.escape(cookies["_t"])
+      token = master.user_auth_tokens.sole
+      token.update!(auth_token_seen: true)
+      expect(token.rotate!).to eq(true)
+      after_rotation = create_auth_cookie(token: token.unhashed_auth_token, user_id: master.id)
+      old_cookies = [before_rotation, after_rotation]
+      old_cookies.each do |old_cookie|
+        probe = open_session
+        probe.get "/session/current.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(probe.response.parsed_body.dig("current_user", "id")).to eq(master.id)
+      end
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      old_cookies.each do |old_cookie|
+        stale_request = open_session
+        stale_request.get "/session/current.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(stale_request.response.status).to eq(404)
+        expect(stale_request.response.headers["Discourse-Logged-Out"]).to be_nil
+        stale_request.get "/latest.json", headers: { "HTTP_COOKIE" => "_t=#{old_cookie}" }
+        expect(stale_request.response.status).to eq(200)
+        expect(stale_request.response.headers["Discourse-Logged-Out"]).to be_nil
+        expect(stale_request.response.headers["Set-Cookie"].to_s).not_to include("_t=;")
+      end
+
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.reload.shadow_user.id)
+    end
+
+    it "keeps the original session and emits no login event if the exchange rolls back" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      original_cookie = cookies["_t"]
+
+      events =
+        DiscourseEvent.track_events(:user_logged_in) do
+          User.transaction(requires_new: true) do
+            post "/u/toggle-anon.json"
+            expect(response.status).to eq(200)
+            raise ActiveRecord::Rollback
+          end
+        end
+
+      expect(events).to be_empty
+      expect(cookies["_t"]).to eq(original_cookie)
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "denies the exchange when a custom provider cannot freshly authenticate browser sessions" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      legacy_provider =
+        Class.new(TestCurrentUserProvider) { undef_method :authenticated_session_user }
+      Discourse.stubs(:current_user_provider).returns(legacy_provider)
+
+      expect { post "/u/toggle-anon.json" }.not_to change { UserAuthToken.count }
+      expect(response.status).to eq(403)
+      get "/session/current.json"
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "denies a shadow user API key even when accompanied by a valid shadow cookie" do
+      SiteSetting.allow_anonymous_mode = true
+      master = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+
+      key =
+        Fabricate(
+          :user_api_key,
+          user: master.shadow_user,
+          scopes: [Fabricate.build(:user_api_key_scope, name: "write")],
+        )
+      key_headers = { HTTP_USER_API_KEY: key.key }
+
+      expect { post "/u/toggle-anon.json", headers: key_headers }.not_to change {
+        UserAuthToken.where(user_id: master.id).count
+      }
+      expect(response.status).to eq(403)
+
+      reset!
+      get "/session/current.json", headers: key_headers
+      expect(response.parsed_body.dig("current_user", "id")).to eq(master.shadow_user.id)
+
+      expect { post "/u/toggle-anon.json", headers: key_headers }.not_to change {
+        UserAuthToken.where(user_id: master.id).count
+      }
+      expect(response.status).to eq(403)
+      get "/session/current.json"
+      expect(response.status).to eq(404)
     end
   end
 
@@ -6306,6 +6410,139 @@ RSpec.describe UsersController do
       user
     end
 
+    context "when the account has redeemed an invite" do
+      fab!(:inviter) { Fabricate(:user, trust_level: TrustLevel[2]) }
+
+      before { SiteSetting.enable_local_logins_via_email = false }
+
+      def redeem_invite(invite, email: "invitee@example.com")
+        put "/invites/show/#{invite.invite_key}.json",
+            params: {
+              email: email,
+              username: "invitee",
+              password: "verystrongpassword",
+            }
+        expect(response.status).to eq(200)
+        User.find_by!(username: "invitee")
+      end
+
+      def update_invitee_email(user, email)
+        put "/u/update-activation-email.json",
+            params: {
+              username: user.username,
+              password: "verystrongpassword",
+              email: email,
+            }
+      end
+
+      it "rejects a change after an unrestricted invite and preserves activation at the original address" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        original_email = user.email
+        original_token = user.email_tokens.find_by!(scope: EmailToken.scopes[:signup])
+        signup_email =
+          Jobs::CriticalUserEmail
+            .jobs
+            .reverse
+            .map { |job| job["args"].first }
+            .find { |args| args["user_id"] == user.id && args["type"] == "signup" }
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("activation.email_change_not_allowed_after_invite"),
+        )
+        expect(user.reload.email).to eq(original_email)
+        expect(user.email_tokens.where(email: "changed@example.net")).to be_empty
+        expect(EmailToken.exists?(original_token.id)).to eq(true)
+
+        put "/u/activate-account/#{signup_email["email_token"]}.json"
+
+        expect(response.status).to eq(200)
+        expect(user.reload).to be_active
+      end
+
+      it "rejects a change when the redeemed account already has private message access" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        pm = Fabricate(:private_message_topic, user: inviter, recipient: user)
+        expect(pm.allowed_users).to include(user)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+        expect(user).not_to be_active
+        expect(user.email_tokens.where(email: "changed@example.net")).to be_empty
+      end
+
+      it "rejects a same-domain typo correction after a group invite" do
+        group = Fabricate(:group)
+        invite = Invite.generate(admin, domain: "example.com", group_ids: [group.id])
+        user = redeem_invite(invite, email: "invtee@example.com")
+        expect(user.groups).to include(group)
+
+        update_invitee_email(user, "invitee@example.com")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invtee@example.com")
+      end
+
+      it "rejects a change after an email-specific invite" do
+        invite = Invite.generate(inviter, email: "invitee@example.com", skip_email: true)
+        user = redeem_invite(invite)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "rejects a change after the redeemed invite was soft-deleted" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        invite.trash!(inviter)
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "rejects a change after the redeemed invite was hard-deleted" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+        invite.destroy!
+
+        update_invitee_email(user, "changed@example.net")
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("invitee@example.com")
+      end
+
+      it "allows resending activation to the unchanged address after normalization" do
+        invite = Invite.generate(inviter, max_redemptions_allowed: 5)
+        user = redeem_invite(invite)
+
+        update_invitee_email(user, " INVITEE@example.com ")
+
+        expect(response.status).to eq(200)
+        expect(user.reload.email).to eq("invitee@example.com")
+        expect(user.email_tokens.where(email: user.email, expired: false)).to be_present
+      end
+
+      it "rejects a change authenticated through the signup session after an invite was redeemed" do
+        user = post_user
+        Fabricate(:invited_user, user: user)
+
+        put "/u/update-activation-email.json", params: { email: "changed@example.net" }
+
+        expect(response.status).to eq(403)
+        expect(user.reload.email).to eq("osama@example.com")
+      end
+    end
+
     context "with a session variable" do
       it "raises an error with an invalid session value" do
         post_user
@@ -6574,6 +6811,82 @@ RSpec.describe UsersController do
           expect(approved_user).not_to be_approved
           expect(approved_user.approved_by).to be_nil
           expect(approved_user.approved_at).to be_nil
+        end
+
+        context "when approval came from an auto-approved email domain" do
+          before { SiteSetting.auto_approve_email_domains = "example.com" }
+
+          def sign_up(email)
+            post "/u.json",
+                 params: {
+                   username: "domainuser",
+                   password: "strongpassword1",
+                   email: email,
+                 }
+            expect(response.status).to eq(200)
+
+            User.find_by(username: "domainuser").tap { |user| expect(user).to be_approved }
+          end
+
+          def change_activation_email(email)
+            put "/u/update-activation-email.json",
+                params: {
+                  username: "domainuser",
+                  password: "strongpassword1",
+                  email: email,
+                }
+            expect(response.status).to eq(200)
+          end
+
+          it "requires staff approval after moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email("someone@other.com")
+
+            raw_token =
+              Jobs::CriticalUserEmail
+                .jobs
+                .map { |job| job["args"].first }
+                .find { |args| args["to_address"] == "someone@other.com" }[
+                "email_token"
+              ]
+
+            put "/u/activate-account/#{raw_token}.json"
+
+            user.reload
+            expect(user).to be_active
+            expect(user).not_to be_approved
+            expect(response.parsed_body["needs_approval"]).to eq(true)
+            expect(session[:current_user_id]).to be_blank
+          end
+
+          it "preserves approval given by staff when moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+            user.update!(approved_by: admin)
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).to be_approved
+          end
+
+          it "requires staff approval when the domain stopped qualifying before the move" do
+            user = sign_up("someone@example.com")
+            SiteSetting.auto_approve_email_domains = "another.com"
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).not_to be_approved
+          end
+
+          it "preserves approval when correcting the email within a qualifying domain" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email(" Corrected@Example.com ")
+
+            user.reload
+            expect(user.email).to eq("corrected@example.com")
+            expect(user).to be_approved
+          end
         end
       end
 
@@ -7529,6 +7842,181 @@ RSpec.describe UsersController do
       json = response.parsed_body
       expect(json["users"].map { |u| u["username"] }).to_not include(user.username)
       expect(json["users"].map { |u| u["username"] }).to include(privileged_user.username)
+    end
+
+    it "filters last-seen suggestions by category member visibility only for allowed-user searches" do
+      searching_user = Fabricate(:user, last_seen_at: 1.day.ago)
+      hidden_member = Fabricate(:user, last_seen_at: 1.minute.from_now)
+      large_group_member = Fabricate(:user, last_seen_at: 2.minutes.from_now)
+      admin = Fabricate(:admin, last_seen_at: 3.minutes.from_now)
+      global_user = Fabricate(:user, last_seen_at: 4.minutes.from_now)
+      hidden_access_group =
+        Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      large_visible_access_group =
+        Fabricate(:group, members_visibility_level: Group.visibility_levels[:public])
+      hidden_access_group.add(searching_user)
+      hidden_access_group.add(hidden_member)
+      large_visible_access_group.add(large_group_member)
+      large_visible_access_group.update_column(:user_count, UserSearch::MAX_SIZE_PRIORITY_MENTION)
+
+      category = Fabricate(:category)
+      category.set_permissions(
+        hidden_access_group => :readonly,
+        large_visible_access_group => :readonly,
+      )
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+
+      sign_in(searching_user)
+      params = {
+        term: "",
+        topic_id: topic.id,
+        topic_allowed_users: "true",
+        last_seen_users: true,
+        limit: 10,
+      }
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |user| user["username"] }
+      expect(usernames).to include(admin.username, large_group_member.username)
+      expect(usernames).not_to include(hidden_member.username)
+
+      hidden_access_group.update!(
+        visibility_level: Group.visibility_levels[:owners],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      usernames = response.parsed_body["users"].map { |user| user["username"] }
+      expect(usernames).to include(large_group_member.username)
+      expect(usernames).not_to include(hidden_member.username)
+
+      hidden_access_group.update!(visibility_level: Group.visibility_levels[:public])
+      get "/u/search/users.json", params: params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        admin.username,
+        hidden_member.username,
+        large_group_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(topic_allowed_users: "false")
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        global_user.username,
+      )
+    end
+
+    it "does not reveal hidden category-access members through term or username searches",
+       :aggregate_failures do
+      searching_user = Fabricate(:user, last_seen_at: 1.day.ago)
+      hidden_member = Fabricate(:user, username: "secretivemember", last_seen_at: 1.minute.ago)
+      participant = Fabricate(:user, username: "knownparticipant", last_seen_at: 1.minute.ago)
+      access_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      access_group.add(searching_user)
+      access_group.add(hidden_member)
+      access_group.add(participant)
+
+      category = Fabricate(:category)
+      category.set_permissions(access_group => :readonly)
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+      Fabricate(:post, topic: topic, user: participant)
+
+      sign_in(searching_user)
+
+      params = { topic_id: topic.id, topic_allowed_users: "true" }
+
+      get "/u/search/users.json",
+          params: params.merge(term: hidden_member.username, last_seen_users: true)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(term: "secretive")
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(usernames: hidden_member.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_member.username,
+      )
+
+      get "/u/search/users.json", params: params.merge(term: participant.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        participant.username,
+      )
+
+      access_group.update!(members_visibility_level: Group.visibility_levels[:public])
+
+      get "/u/search/users.json", params: params.merge(term: hidden_member.username)
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        hidden_member.username,
+      )
+    end
+
+    it "does not treat hidden posts as observable topic participation", :aggregate_failures do
+      searching_user = Fabricate(:user)
+      hidden_post_author = Fabricate(:user, username: "hiddenpostauthor")
+      visible_participant = Fabricate(:user, username: "visibleparticipant")
+      access_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:owners])
+      access_group.add(searching_user)
+      access_group.add(hidden_post_author)
+      access_group.add(visible_participant)
+
+      category = Fabricate(:category)
+      category.set_permissions(access_group => :readonly)
+      category.save!
+      topic = Fabricate(:topic, user: searching_user, category: category)
+      hidden_post = Fabricate(:post, topic: topic, user: hidden_post_author, hidden: true)
+      Fabricate(:post, topic: topic, user: visible_participant)
+
+      sign_in(searching_user)
+
+      expect(searching_user.guardian.can_see_post?(hidden_post)).to eq(false)
+
+      get "/u/search/users.json",
+          params: {
+            term: hidden_post_author.username,
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).not_to include(
+        hidden_post_author.username,
+      )
+
+      get "/u/search/users.json",
+          params: {
+            term: visible_participant.username,
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to include(
+        visible_participant.username,
+      )
+
+      get "/u/search/users.json",
+          params: {
+            term: "",
+            topic_id: topic.id,
+            topic_allowed_users: "true",
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].map { |user| user["username"] }).to contain_exactly(
+        visible_participant.username,
+      )
     end
 
     it "interprets blank category id correctly" do
@@ -9002,18 +9490,19 @@ RSpec.describe UsersController do
     context "while logged in" do
       before { 2.times { sign_in(user1) } }
 
-      it "logs user out" do
-        subscription = Fabricate(:push_subscription, user: user1)
-        ids = user1.user_auth_tokens.order(:created_at).pluck(:id)
+      it "revokes only the selected device and its push subscription" do
+        revoked, current = user1.user_auth_tokens.order(:id)
+        Fabricate(:push_subscription, user: user1, user_auth_token: revoked)
+        current_push = Fabricate(:push_subscription, user: user1, user_auth_token: current)
 
-        post "/u/#{user1.username}/preferences/revoke-auth-token.json", params: { token_id: ids[0] }
+        post "/u/#{user1.username}/preferences/revoke-auth-token.json",
+             params: {
+               token_id: revoked.id,
+             }
 
         expect(response.status).to eq(200)
-
-        user1.user_auth_tokens.reload
-        expect(user1.user_auth_tokens.count).to eq(1)
-        expect(user1.user_auth_tokens.first.id).to eq(ids[1])
-        expect(PushSubscription.exists?(subscription.id)).to eq(true)
+        expect(user1.user_auth_tokens).to contain_exactly(current)
+        expect(user1.push_subscriptions).to contain_exactly(current_push)
       end
 
       it "checks if token exists" do
@@ -9683,9 +10172,9 @@ RSpec.describe UsersController do
 
   describe "#bookmarks excerpts" do
     fab!(:user)
-    let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:topic_post) { Fabricate(:post, topic: topic) }
-    let!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:topic_post) { Fabricate(:post, topic: topic) }
+    fab!(:bookmark) { Fabricate(:bookmark, name: "Test", user: user, bookmarkable: topic) }
 
     it "uses the first post of the topic for the bookmarks excerpt" do
       TopicUser.change(

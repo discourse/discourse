@@ -79,7 +79,7 @@ RSpec.describe "Nested view post lifecycle" do
     context "when user deletes their own post" do
       before { sign_in(user) }
 
-      it "shows a deleted placeholder after confirming deletion" do
+      it "shows the deleted placeholder after confirming and reloading" do
         nested_view.visit_nested(topic)
         expect(page).to have_css(
           "[data-post-number='#{root_reply.post_number}']",
@@ -87,7 +87,20 @@ RSpec.describe "Nested view post lifecycle" do
         )
 
         nested_view.click_post_delete_button(root_reply)
-        dialog.click_yes
+        # The placeholder is optimistic; wait for the server before leaving the page.
+        response =
+          page.driver.with_playwright_page do |browser_page|
+            deletion = ->(response) do
+              response.request.method == "DELETE" &&
+                URI(response.url).path.end_with?("/posts/#{root_reply.id}")
+            end
+            browser_page.expect_response(deletion) { dialog.click_yes }
+          end
+
+        expect(response.status).to eq(200)
+        expect(nested_view).to have_deleted_post_class_for(root_reply)
+
+        page.refresh
 
         expect(nested_view).to have_deleted_post_class_for(root_reply)
       end

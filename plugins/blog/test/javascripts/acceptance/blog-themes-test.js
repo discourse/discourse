@@ -19,7 +19,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Blog themes", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true });
+  needs.settings({ blog_enabled: true, blog_custom_themes_enabled: true });
   needs.site({
     blogs: [{ id: 1, is_default: true, base_url: "https://blog.example.com" }],
   });
@@ -758,11 +758,11 @@ acceptance("Blog themes", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-candidate"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button'
       )
       .exists(
-        { count: 4 },
-        "a Git design offers activate, pull, preview, and delete"
+        { count: 5 },
+        "a Git design offers activate, pull, preview, export, and delete"
       );
     assert
       .dom(
@@ -779,8 +779,10 @@ acceptance("Blog themes", function (needs) {
 
     await click(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`);
     assert
-      .dom('[data-identifier="blog-theme-actions-live"] .theme-card__button')
-      .exists({ count: 3 }, "a design without a Git source cannot be pulled");
+      .dom(
+        '[data-identifier="blog-theme-actions-live"] .blog-theme-card__button'
+      )
+      .exists({ count: 4 }, "a design without a Git source cannot be pulled");
     assert
       .dom('[data-identifier="blog-theme-actions-live"] .preview')
       .exists("the live design keeps a useful action");
@@ -795,6 +797,57 @@ acceptance("Blog themes", function (needs) {
     assert
       .dom(`.theme-card[data-theme-id="live"] .theme-card__footer-menu`)
       .exists("the menu belongs to the card it was opened from");
+  });
+
+  test("locks making and changing themes when the site may not use custom themes", async function (assert) {
+    this.siteSettings.blog_custom_themes_enabled = false;
+    const preset = { ...draft, id: "default", name: "Default", preset: true };
+    const imported = {
+      ...draft,
+      source: { repository: "https://example.com/blog-theme.git" },
+    };
+    pretender.get("/admin/plugins/blog/themes.json", () =>
+      response({ themes: [preset, imported], active: preset })
+    );
+
+    await visit("/admin/plugins/blog/themes");
+
+    assert
+      .dom(".blog-themes .d-page-subheader .btn-primary")
+      .isDisabled("New theme is locked");
+    assert
+      .dom(".blog-themes .d-page-subheader .btn-default")
+      .isDisabled("Import is locked");
+    assert
+      .dom('.theme-card[data-theme-id="default"] .customize')
+      .isDisabled("a built-in design cannot be customized");
+    assert
+      .dom('.theme-card[data-theme-id="candidate"] .edit')
+      .isDisabled("a custom theme cannot be edited");
+
+    await click(
+      '.theme-card[data-theme-id="candidate"] .theme-card__footer-menu'
+    );
+    const menu = '[data-identifier="blog-theme-actions-candidate"]';
+    assert
+      .dom(`${menu} .activate`)
+      .isDisabled("a custom theme cannot be activated");
+    assert.dom(`${menu} .pull`).isDisabled("nor pulled");
+    assert
+      .dom(`${menu} .export`)
+      .hasAttribute(
+        "href",
+        "/admin/plugins/blog/themes/candidate/export",
+        "it can still be exported"
+      );
+    assert.dom(`${menu} .--danger`).isEnabled("and deleted");
+
+    await click(
+      '.theme-card[data-theme-id="default"] .theme-card__footer-menu'
+    );
+    assert
+      .dom('[data-identifier="blog-theme-actions-default"] .activate')
+      .isDisabled("the built-in design in use needs no activating");
   });
 
   test("shows presets as read-only cards that can be customized", async function (assert) {
@@ -854,7 +907,7 @@ acceptance("Blog themes", function (needs) {
     );
     assert
       .dom(
-        '[data-identifier="blog-theme-actions-discourse-blog"] .theme-card__button'
+        '[data-identifier="blog-theme-actions-discourse-blog"] .blog-theme-card__button'
       )
       .exists({ count: 2 }, "a preset offers only activate and preview");
     assert
@@ -995,7 +1048,7 @@ acceptance("Blog themes", function (needs) {
     );
     const loadsBeforeActivating = listLoads;
     await click(
-      '[data-identifier="blog-theme-actions-candidate"] .theme-card__button:not([disabled])'
+      '[data-identifier="blog-theme-actions-candidate"] .blog-theme-card__button:not([disabled])'
     );
     assert.verifySteps([], "opening the confirmation changes nothing");
     await click(".dialog-footer .btn-primary");
@@ -1063,7 +1116,7 @@ acceptance("Blog themes", function (needs) {
 
 acceptance("Blog themes with several blogs", function (needs) {
   needs.user({ admin: true });
-  needs.settings({ blog_enabled: true });
+  needs.settings({ blog_enabled: true, blog_custom_themes_enabled: true });
   needs.site({
     blogs: [
       { id: 1, is_default: true, base_url: "https://blog.example.com" },

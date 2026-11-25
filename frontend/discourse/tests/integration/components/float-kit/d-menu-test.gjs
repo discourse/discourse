@@ -1519,4 +1519,29 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
         "scrolling the nearest scrollable ancestor closes the menu"
       );
   });
+
+  test("closing an unregistered menu does not probe the registry", async function (assert) {
+    const menu = getOwner(this).lookup("service:menu");
+    const instance = menu.newInstance(document.createElement("button"));
+    let probes = 0;
+
+    // A tracked set strongly retains any absent key passed to `has()`, and
+    // nothing else exposes that retention, so the probe itself is asserted.
+    menu.registeredMenus = new Proxy(menu.registeredMenus, {
+      get(target, prop, receiver) {
+        if (prop === "has") {
+          probes++;
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+
+    await menu.close(instance);
+
+    assert.strictEqual(
+      probes,
+      0,
+      "the registry is not probed for an absent menu"
+    );
+  });
 });

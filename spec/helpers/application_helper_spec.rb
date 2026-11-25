@@ -1193,6 +1193,152 @@ RSpec.describe ApplicationHelper do
     end
   end
 
+  describe "previewing components" do
+    fab!(:theme)
+    fab!(:moderator)
+
+    def styled_component(scss: "body { margin: 1px; }")
+      Fabricate(:theme, component: true, enabled: false).tap do |component|
+        component.set_field(target: :common, name: :scss, value: scss)
+        yield component if block_given?
+        component.save!
+      end
+    end
+
+    fab!(:component) { styled_component }
+
+    def preview(*components, as: moderator)
+      helper.stubs(:current_user).returns(as)
+      controller.params[:preview_component_ids] = components.map(&:id).join(",")
+    end
+
+    before { helper.request.env[:resolved_theme_id] = theme.id }
+
+    it "puts the styles of a disabled component inline for staff, without caching them" do
+      preview(component)
+
+      tags = helper.preview_component_style_tags
+      expect(tags).to include(%[data-preview-component-id="#{component.id}"], "margin:1px")
+      expect(tags).not_to include("sourceMappingURL")
+      expect(helper.theme_preview_status).to eq("active")
+      expect(StylesheetCache.where("target LIKE ?", "%_theme_#{component.id}%")).to be_empty
+      expect(helper.discourse_stylesheet_link_tag(:common_theme)).not_to include(
+        %[data-theme-id="#{component.id}"],
+      )
+    end
+
+    it "includes partials the component's stylesheets import" do
+      partial_component =
+        styled_component(scss: "@import \"sizes\"; body { margin: $preview-margin; }") do |c|
+          c.set_field(target: :extra_scss, name: "sizes", value: "$preview-margin: 3px;")
+        end
+      preview(partial_component)
+
+      expect(helper.preview_component_style_tags).to include("margin:3px")
+    end
+
+    it "previews nothing for everyone else, and says the preview failed" do
+      preview(component, as: Fabricate(:user))
+
+      expect(helper.preview_component_style_tags).to be_blank
+      expect(helper.theme_preview_status).to eq("failed")
+    end
+
+    it "previews nothing in safe mode" do
+      preview(component)
+      helper.request.env[ApplicationController::NO_THEMES] = true
+
+      expect(helper.preview_component_styles).to eq({})
+    end
+
+    it "previews nothing when a component has more than stylesheets" do
+      with_js =
+        styled_component do |c|
+          c.set_field(
+            target: :extra_js,
+            name: "discourse/api-initializers/x.js",
+            value: "export default {};",
+          )
+        end
+      with_modifier = styled_component { |c| c.theme_modifier_set.serialize_topic_excerpts = true }
+      with_palette = styled_component.tap { Fabricate(:color_scheme, theme: it) }
+
+      [with_js, with_modifier, with_palette].each do |unsupported|
+        preview(component, unsupported)
+        if helper.instance_variable_defined?(:@preview_component_styles)
+          helper.remove_instance_variable(:@preview_component_styles)
+        end
+
+        expect(helper.preview_component_styles).to eq({})
+        expect(helper.theme_preview_status).to eq("failed")
+      end
+    end
+
+    it "previews nothing when one of the IDs isn't a component" do
+      preview(component, theme)
+
+      expect(helper.preview_component_styles).to eq({})
+    end
+  end
+
+  describe "previewing without some of a theme's components" do
+    fab!(:theme)
+    fab!(:moderator)
+    fab!(:live_component) do
+      Fabricate(:theme, component: true).tap do |component|
+        component.set_field(target: :common, name: :scss, value: "body { margin: 1px; }")
+        component.save!
+        theme.add_relative_theme!(:child, component)
+      end
+    end
+
+    def stylesheet_theme_ids
+      helper
+        .discourse_stylesheet_link_tag(:common_theme)
+        .scan(/data-theme-id="(\d+)"/)
+        .flatten
+        .map(&:to_i)
+    end
+
+    def hide(*components, as: moderator)
+      helper.stubs(:current_user).returns(as)
+      controller.params[:preview_hide_component_ids] = components.map(&:id).join(",")
+    end
+
+    before { helper.request.env[:resolved_theme_id] = theme.id }
+
+    it "leaves out the stylesheets of components that only hold styles, for staff" do
+      hide(live_component)
+
+      expect(stylesheet_theme_ids).not_to include(live_component.id)
+      expect(helper.theme_preview_status).to eq("active")
+    end
+
+    it "leaves out nothing for everyone else, and says the preview failed" do
+      hide(live_component, as: Fabricate(:user))
+
+      expect(stylesheet_theme_ids).to include(live_component.id)
+      expect(helper.theme_preview_status).to eq("failed")
+    end
+
+    it "leaves out nothing when a component isn't the theme's, or holds more than styles" do
+      other = Fabricate(:theme, component: true)
+      hide(live_component, other)
+      expect(helper.preview_hidden_component_ids).to be_nil
+      expect(helper.theme_preview_status).to eq("failed")
+
+      live_component.set_field(
+        target: :extra_js,
+        name: "discourse/api-initializers/x.js",
+        value: "export default {};",
+      )
+      live_component.save!
+      helper.remove_instance_variable(:@preview_hidden_component_ids)
+      hide(live_component)
+      expect(helper.preview_hidden_component_ids).to be_nil
+    end
+  end
+
   describe "previewing palettes" do
     fab!(:light_palette, :color_scheme)
     fab!(:dark_palette, :color_scheme)
@@ -1220,6 +1366,32 @@ RSpec.describe ApplicationHelper do
         light_palette.id,
         dark_palette.id,
       )
+    end
+  end
+
+  describe "previewing having no palette" do
+    fab!(:light_palette) { Fabricate(:color_scheme, user_selectable: true) }
+    fab!(:dark_palette) { Fabricate(:color_scheme, user_selectable: true) }
+
+    before do
+      helper.request.cookies["color_scheme_id"] = light_palette.id
+      helper.request.cookies["dark_scheme_id"] = dark_palette.id
+      controller.params[:preview_color_scheme_id] = "none"
+      controller.params[:preview_dark_color_scheme_id] = "none"
+    end
+
+    it "shows core's palette and no dark mode instead of the viewer's own palettes" do
+      helper.stubs(:current_user).returns(Fabricate(:moderator))
+
+      expect(helper.scheme_id).to be_nil
+      expect(helper.dark_scheme_id).to eq(-1)
+    end
+
+    it "is ignored for everyone else" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+
+      expect(helper.scheme_id).to eq(light_palette.id)
+      expect(helper.dark_scheme_id).to eq(dark_palette.id)
     end
   end
 
@@ -1468,11 +1640,21 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
       end
 
-      it "binds the stored value to the auth token" do
+      it "reuses a live credential but does not resurrect an expired one" do
+        helper.session["shared_session_key"] = SecureRandom.hex
         key = helper.shared_session_key
-        expect(
-          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
-        ).to eq(auth_token.id.to_s)
+        expect(key).to be_present
+        expect(key).not_to eq(helper.session["shared_session_key"])
+        expect(helper.shared_session_key).to eq(key)
+
+        helper.request.env.delete("shared_session_key_v2")
+        expect(helper.shared_session_key).to eq(key)
+
+        Discourse.redis.del(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key))
+        helper.request.env.delete("shared_session_key_v2")
+        replacement = helper.shared_session_key
+        expect(replacement).to be_present
+        expect(replacement).not_to eq(key)
       end
     end
 
@@ -1507,11 +1689,9 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
       end
 
-      it "binds the stored value to the impersonating token" do
+      it "issues a key for the impersonated user, not the actor" do
         key = helper.shared_session_key
-        expect(
-          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
-        ).to eq(auth_token.id.to_s)
+        expect(Auth::DefaultCurrentUserProvider.read_shared_session_key(key)).to eq(user)
       end
     end
 

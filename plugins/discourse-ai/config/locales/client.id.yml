@@ -93,6 +93,12 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Segarkan"
+        columns:
+          user: "Pengguna"
+          created: "Dibuat"
+          status: "Status"
       copied: "Disalin"
       ai_decoded_transcript:
         type: "Tipe"
@@ -258,6 +264,24 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      concepts:
+        edit: "Ubah"
+        delete: "Hapus"
+        columns:
+          status: "Status"
+          topics: "Topik"
+          posts: "Pos"
+        statuses:
+          active: "Aktif"
+        form:
+          name: "Nama"
+          description: "Deskripsi"
+          status: "Status"
+        tagged_topics: "Topik yang diberi tag"
+        topic_columns:
+          topic: "Topik"
+          primary: "Utama"
+        primary_badge: "Utama"
       decision_models:
         no_preset: "Tidak ada"
         display_name: "Nama"

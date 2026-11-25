@@ -19,10 +19,17 @@ blog:
     default: true
     client: true
     hidden: true
+  blog_custom_themes_enabled:
+    default: true
+    client: true
+    hidden: true
   blog_max_instances:
     type: integer
     default: 10
     min: 1
+    hidden: true
+  blog_role_groups_enabled:
+    default: true
     hidden: true
   blog_contributor_groups:
     type: group_list

@@ -44,6 +44,13 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      review_bulk:
+        refresh: "Újratöltés"
+        columns:
+          user: "Felhasználó"
+          reason: "Megjelölt"
+          created: "Létrehozott"
+          status: "Állapot"
       copied: "Másolva"
       ai_decoded_transcript:
         arguments: "Paraméterek"
@@ -274,6 +281,26 @@ hu:
         edit: "Szerkesztés"
         delete: "Törlés"
         embedding: "Beágyazás"
+      concepts:
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        columns:
+          status: "Állapot"
+          topics: "Témák"
+          posts: "Bejegyzések"
+        statuses:
+          all: "Minden állapot"
+          active: "Aktív"
+        form:
+          name: "Név"
+          description: "Leírás"
+          status: "Állapot"
+        tagged_topics: "Megjelölt témák"
+        topic_columns:
+          topic: "Téma"
+          primary: "Elsődleges"
+          relevance: "Relevancia"
+        primary_badge: "Elsődleges"
       decision_models:
         no_preset: "Egyik sem"
         display_name: "Név"

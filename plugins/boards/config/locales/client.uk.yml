@@ -7,8 +7,19 @@
 uk:
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_boards: "Потрібно ввімкнути дошки"
+      nodes:
+        "action:create_board_column": "Створити колонку дошки"
+        "action:create_board": "Створити дошку"
+        "trigger:card_moved": "Картку переміщено"
+      node_descriptions:
+        "action:create_board_column": "Створення стовпця на дошці з додатковим значком, кольором, тегом і сортуванням за замовчуванням"
+        "action:create_board": "Створіть дошку з правами доступу та додатковими обмеженнями тегів і категорій"
+        "trigger:card_moved": "Спрацьовує, коли карту переміщують з одного стовпця в інший на дошці."
       create_board_column:
         board_id: "Дошка"
+        board_id_description: "Виберіть дошку або скористайтеся ідентифікатором дошки з попереднього кроку."
         title: "Назва"
         icon: "Іконка"
         color: "Колір"
@@ -16,13 +27,20 @@ uk:
         default_sort: "Сортування за замовчуванням"
         default_sort_priority: "Пріоритет"
         default_sort_recency: "Останні"
+        actor_username: "Виконано користувачем"
       create_board:
         name: "Імʼя"
         slug: "Мітка"
+        slug_description: "Залиште поле порожнім, щоб згенерувати слаг на основі назви дошки."
         tag_names: "Теґи"
         category_ids: "Розділи"
+        category_ids_description: "Виберіть одну або кілька категорій, до яких можуть належати тематичні картки для дошки."
+        actor_username: "Виконано користувачем"
+        acl: "Доступ до ради директорів"
+        acl_description: "Виберіть, хто може переглядати, редагувати та керувати дошкою."
       card_moved:
         board_id: "Дошка"
+        board_id_description: "Виберіть дошку, щоб обмежити цей тригер, або залиште поле порожнім для всіх дощок."
         board_id_placeholder: "Усі дошки"
     boards:
       filter_boards: "Фільтрувальні дошки"
@@ -82,6 +100,15 @@ uk:
         column_settings_title: "Налаштування стовпців"
         new_column_title: "Новий стовпець"
         new_board: "Нова дошка"
+        archive_board: "Архівна дошка"
+        unarchive_board: "Розархівувати дошку"
+        unarchive_board_menu: "Розархівувати дошку..."
+        confirm_archive: 'Ви впевнені, що хочете архівувати цю дошку? Ви можете переглянути архівовані дошки у <a href="%{boards_url}">списку дощок</a> , вибравши "Архів" у випадаючому списку фільтрів.'
+        confirm_unarchive: "Ви впевнені, що хочете розархівувати цю дошку?"
+        archived_successfully: "Дошку успішно архівовано"
+        unarchived_successfully: "Дошку успішно розархівовано"
+        unarchive_slug_required: "Оригінальний слуг дошки тепер використовується. Виберіть новий слуг, щоб розархівувати цю дошку."
+        archived_tooltip: "Цю дошку заархівовано. Картки та колонки більше не можна змінювати."
         delete_board: "Видалити дошку"
         remove_card: "Вилучити"
         new_topic: "Нова тема..."
@@ -121,6 +148,7 @@ uk:
           other: "Власники"
         show_older_cards: "Показати %{count} старіших карток"
         errors:
+          category_unavailable: "Цільова категорія більше недоступна. Оновіть налаштування дошки або колонки, перш ніж створювати тему."
           acl_update_failed: "Не вдалося оновити дозволи дошки."
           acl_create_failed: "Не вдалося створити дозволи дошки."
       manage:
