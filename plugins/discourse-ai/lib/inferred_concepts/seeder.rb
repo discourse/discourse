@@ -3,23 +3,26 @@
 module DiscourseAi
   module InferredConcepts
     class Seeder
-      PLUGIN_STORE_NAMESPACE = "discourse_ai"
-      STATE_KEY = "inferred_concepts_seed_state"
+      STATE_KEY = "discourse_ai:inferred_concepts:seed_state"
       MUTEX_KEY = "discourse_ai_seed_inferred_concepts"
       MUTEX_VALIDITY = 30.minutes
       STALE_AFTER = 1.hour
+      TERMINAL_STATE_TTL = 24.hours
       RECENT_WINDOW = 2.years
       MIN_WORD_COUNT = 50
       EMBED_FLUSH_INTERVAL = 15
       PROGRESS_UPDATE_INTERVAL = 10
 
       def self.status
-        state = PluginStore.get(PLUGIN_STORE_NAMESPACE, STATE_KEY)
-        return nil if state.blank?
+        raw = Discourse.redis.get(STATE_KEY)
+        return nil if raw.blank?
 
+        state = JSON.parse(raw)
         return nil if %w[queued running].include?(state["status"]) && stale?(state)
 
         state
+      rescue JSON::ParserError
+        nil
       end
 
       def self.seeding?
@@ -39,11 +42,13 @@ module DiscourseAi
       end
 
       def self.reset_status!
-        PluginStore.remove(PLUGIN_STORE_NAMESPACE, STATE_KEY)
+        Discourse.redis.del(STATE_KEY)
       end
 
       def self.write_state(state)
-        PluginStore.set(PLUGIN_STORE_NAMESPACE, STATE_KEY, state)
+        ttl =
+          %w[queued running].include?(state["status"]) ? STALE_AFTER.to_i : TERMINAL_STATE_TTL.to_i
+        Discourse.redis.set(STATE_KEY, state.to_json, ex: ttl)
         state
       end
       private_class_method :write_state

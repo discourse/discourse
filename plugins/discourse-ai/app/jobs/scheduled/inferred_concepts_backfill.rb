@@ -6,12 +6,11 @@ module Jobs
     sidekiq_options queue: "low", retry: false
     cluster_concurrency 1
 
-    PLUGIN_STORE_NAMESPACE = "discourse_ai"
-    CURSOR_KEY = "inferred_concepts_backfill_cursor"
+    CURSOR_KEY = "discourse_ai:inferred_concepts:backfill_cursor"
     MAX_CONSECUTIVE_FAILURES = 3
 
     def self.reset_cursor!
-      PluginStore.remove(PLUGIN_STORE_NAMESPACE, CURSOR_KEY)
+      Discourse.redis.del(CURSOR_KEY)
     end
 
     def execute(_args)
@@ -123,15 +122,12 @@ module Jobs
     end
 
     def current_cursor_id
-      PluginStore.get(PLUGIN_STORE_NAMESPACE, CURSOR_KEY)&.dig("last_topic_id")&.to_i
+      raw = Discourse.redis.get(CURSOR_KEY)
+      raw.presence&.to_i
     end
 
     def save_cursor(topic_id)
-      PluginStore.set(
-        PLUGIN_STORE_NAMESPACE,
-        CURSOR_KEY,
-        { "last_topic_id" => topic_id, "updated_at" => Time.zone.now.iso8601 },
-      )
+      Discourse.redis.set(CURSOR_KEY, topic_id.to_s)
     end
   end
 end

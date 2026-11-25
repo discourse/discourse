@@ -152,10 +152,9 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
       expect(described_class).to be_seeding
 
       stale_time = (described_class::STALE_AFTER + 5.minutes).ago.iso8601
-      PluginStore.set(
-        described_class::PLUGIN_STORE_NAMESPACE,
+      Discourse.redis.set(
         described_class::STATE_KEY,
-        { "status" => "running", "updated_at" => stale_time },
+        { "status" => "running", "updated_at" => stale_time }.to_json,
       )
 
       expect(described_class).not_to be_seeding

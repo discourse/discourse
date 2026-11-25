@@ -124,9 +124,7 @@ RSpec.describe Jobs::InferredConceptsBackfill do
     job.execute({})
 
     expect(fourth.inferred_concepts.reload).to be_empty
-    expect(
-      PluginStore.get(described_class::PLUGIN_STORE_NAMESPACE, described_class::CURSOR_KEY),
-    ).to be_nil
+    expect(Discourse.redis.get(described_class::CURSOR_KEY)).to be_nil
   end
 
   it "skips when disabled, budget is 0, no active concepts exist, or seeding is in progress" do
