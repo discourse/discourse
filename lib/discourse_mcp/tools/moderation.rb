@@ -40,15 +40,15 @@ module DiscourseMcp
 
       # While a rule is active, a reviewable with a topic follows that topic. A
       # queued post without one is judged by its category and the tags in its
-      # payload; a personal message without a topic, by its tags while personal
-      # messages are allowed. Other reviewable types without a topic can't be
+      # payload; a personal message without a topic, by its tags while
+      # personal messages are allowed. Other reviewable types without a topic can't be
       # judged, so they're left out.
       def allowed_by_policy(scope, policy)
         condition = policy.topic_condition("mcp_reviewable_topics")
         return scope if condition.nil?
 
         restricted_categories = policy.restricted_category_ids.to_a.presence || [-1]
-        restricted_tags = policy.restricted_tag_names.map(&:downcase).presence || [""]
+        restricted_queued = restricted_queued_post_ids(policy).presence || [-1]
         scope.where(
           <<~SQL.squish,
             (
@@ -68,15 +68,7 @@ module DiscourseMcp
                       reviewables.payload->>'archetype' = :private_message AND NOT :private_messages_denied
                     )
                   )
-                  AND NOT EXISTS (
-                    SELECT 1
-                    FROM jsonb_array_elements_text(
-                      CASE jsonb_typeof(reviewables.payload::jsonb->'tags')
-                      WHEN 'array' THEN reviewables.payload::jsonb->'tags'
-                      ELSE '[]'::jsonb END
-                    ) AS queued_tags(name)
-                    WHERE LOWER(queued_tags.name) IN (:restricted_tags)
-                  )
+                  AND reviewables.id NOT IN (:restricted_queued)
                 )
               )
             )
@@ -84,9 +76,32 @@ module DiscourseMcp
           private_message: Archetype.private_message,
           uncategorized: SiteSetting.uncategorized_category_id,
           restricted_categories:,
-          restricted_tags:,
+          restricted_queued:,
           private_messages_denied: policy.denies_all?(ContentPolicy::PRIVATE_MESSAGES),
         )
+      end
+
+      # Queued posts without a topic whose payload tags name a restricted tag
+      # once cleaned the way topic creation cleans them. Tags are stored as
+      # names or as tag objects; any other shape counts as restricted.
+      def restricted_queued_post_ids(policy)
+        restricted = policy.restricted_tag_names.map(&:downcase).to_set
+        ReviewableQueuedPost
+          .where(topic_id: nil)
+          .where("reviewables.payload::jsonb->'tags' IS NOT NULL")
+          .pluck(:id, Arel.sql("(reviewables.payload::jsonb->'tags')::text"))
+          .filter_map do |id, tags|
+            tags = JSON.parse(tags)
+            next id if !tags.is_a?(Array)
+
+            restricted_tag =
+              tags.any? do |tag|
+                name = tag.is_a?(Hash) ? tag["name"] : tag
+                !name.is_a?(String) ||
+                  restricted.include?(DiscourseTagging.clean_tag(name).downcase)
+              end
+            id if restricted_tag
+          end
       end
 
       # Conversation posts are side-loaded on their own, keyed by post id.
