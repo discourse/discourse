@@ -710,6 +710,12 @@ html.design-wizard-floating {
     color: var(--primary-medium);
   }
 
+  // Grows to the taller field, since each one is drawn in its own font.
+  &__font-picker.d-select__trigger {
+    --d-input-bg-color: var(--secondary);
+    flex-grow: 1;
+  }
+
   &__homepage-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;

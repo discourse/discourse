@@ -49,7 +49,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       by the visible "Sort by" label and styled as the flat button it replaces. The system
       specs still drive the old menu through the nested view's page object.
     - ☐ Emoji skin tone (`components/emoji-picker/diversity-menu.gjs`).
-    - ☐ Design wizard body and heading fonts (`components/design-wizard/fonts-section.gjs`).
+    - ☑ Design wizard body and heading fonts (`components/design-wizard/fonts-section.gjs`).
+      Two required `DSelectFont` typeaheads named by their captions. The wizard's fonts are
+      keyed by `key` and listed popular first, so the recipe gained `@valueField` and
+      `@sortByName`. The panel renders outside the wizard, so `DSelect` gained `@contentClass`
+      to give it the wizard's colors and stacking.
     - ☐ Messages inbox (`components/user-nav/messages-dropdown.gjs`). Its rows navigate.
     - ☐ Mobile navigation dropdown (`components/navigation-bar.gjs`). Its rows navigate, and
       the `extra-nav-item` outlet renders after them.

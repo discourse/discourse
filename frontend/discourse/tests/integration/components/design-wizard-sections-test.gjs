@@ -1,10 +1,22 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render, settled } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  findAll,
+  focus,
+  render,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { MAIN_FONTS, MORE_FONTS } from "discourse/admin/lib/constants";
 import ColorsSection from "discourse/components/design-wizard/colors-section";
+import FontsSection from "discourse/components/design-wizard/fonts-section";
 import HomepageSection from "discourse/components/design-wizard/homepage-section";
 import ThemeSection from "discourse/components/design-wizard/theme-section";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import dSelect from "discourse/tests/helpers/d-select-helper";
+import { i18n } from "discourse-i18n";
 
 const SCREENSHOT = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
 
@@ -308,6 +320,122 @@ module(
       assert
         .dom(".design-wizard__style-block[data-style='categories_boxes']")
         .hasAria("pressed", "true", "exposes the selected category style");
+    });
+  }
+);
+
+module(
+  "Integration | Component | DesignWizard | FontsSection | new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      this.bodyChanges = [];
+      this.headingChanges = [];
+      this.onSelectBodyFont = (key) => this.bodyChanges.push(key);
+      this.onSelectHeadingFont = (key) => this.headingChanges.push(key);
+    });
+
+    test("each font field is named by its caption and shows the held font", async function (assert) {
+      await render(
+        <template>
+          <FontsSection
+            @bodyFont="inter"
+            @headingFont="roboto"
+            @onSelectBodyFont={{this.onSelectBodyFont}}
+            @onSelectHeadingFont={{this.onSelectHeadingFont}}
+          />
+        </template>
+      );
+
+      const [body, heading] = findAll(".design-wizard__font-group .d-select");
+      const captionOf = (field) =>
+        document.getElementById(
+          field
+            .querySelector("[role='combobox']")
+            .getAttribute("aria-labelledby")
+        )?.textContent;
+
+      assert.strictEqual(
+        captionOf(body).trim(),
+        i18n("design_wizard.fonts.base_font")
+      );
+      assert.strictEqual(
+        captionOf(heading).trim(),
+        i18n("design_wizard.fonts.heading_font")
+      );
+      assert.dSelect(body).hasValue("inter");
+      assert.dSelect(heading).hasValue("roboto");
+    });
+
+    test("lists the fonts in the wizard's order, popular ones first", async function (assert) {
+      await render(
+        <template>
+          <FontsSection
+            @bodyFont="inter"
+            @headingFont="inter"
+            @onSelectBodyFont={{this.onSelectBodyFont}}
+            @onSelectHeadingFont={{this.onSelectHeadingFont}}
+          />
+        </template>
+      );
+      const [body] = findAll(".design-wizard__font-group .d-select");
+      await dSelect(body).open();
+
+      assert.deepEqual(
+        findAll("[role='option']").map((row) => row.dataset.value),
+        [...MAIN_FONTS, ...MORE_FONTS].map((font) => font.key)
+      );
+      assert
+        .dom(".d-select__content")
+        .hasClass(
+          "design-wizard__font-select-content",
+          "the list takes the wizard's colors and stacks above it"
+        );
+    });
+
+    test("reports a picked font's key to its own field's handler", async function (assert) {
+      await render(
+        <template>
+          <FontsSection
+            @bodyFont="inter"
+            @headingFont="inter"
+            @onSelectBodyFont={{this.onSelectBodyFont}}
+            @onSelectHeadingFont={{this.onSelectHeadingFont}}
+          />
+        </template>
+      );
+      const [body, heading] = findAll(".design-wizard__font-group .d-select");
+
+      await dSelect(heading).select("roboto");
+      await dSelect(body).select("lato");
+
+      assert.deepEqual(this.bodyChanges, ["lato"]);
+      assert.deepEqual(this.headingChanges, ["roboto"]);
+    });
+
+    test("keeps the font when the field's text is erased", async function (assert) {
+      await render(
+        <template>
+          <FontsSection
+            @bodyFont="inter"
+            @headingFont="inter"
+            @onSelectBodyFont={{this.onSelectBodyFont}}
+            @onSelectHeadingFont={{this.onSelectHeadingFont}}
+          />
+        </template>
+      );
+      const input = ".design-wizard__font-group:first-child [role='combobox']";
+
+      await focus(input);
+      await fillIn(input, "");
+      await triggerKeyEvent(input, "keydown", "Backspace");
+
+      assert.deepEqual(this.bodyChanges, []);
+      assert
+        .dSelect(".design-wizard__font-group:first-child .d-select")
+        .hasValue("inter");
     });
   }
 );

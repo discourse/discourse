@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, uniqueId } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { MAIN_FONTS, MORE_FONTS } from "discourse/admin/lib/constants";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { fontClass } from "discourse/lib/design-wizard-preview";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelectFont from "discourse/ui-kit/select/recipes/fonts/d-select-font";
 import { i18n } from "discourse-i18n";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
@@ -19,6 +21,8 @@ const FontTrigger = <template>
 </template>;
 
 export default class DesignWizardFontsSection extends Component {
+  @service siteSettings;
+
   get baseFontLabel() {
     return this.#fontName(this.args.bodyFont);
   }
@@ -41,79 +45,113 @@ export default class DesignWizardFontsSection extends Component {
 
   <template>
     <div class="design-wizard__font-group">
-      <span class="design-wizard__label">
-        {{i18n "design_wizard.fonts.base_font"}}
-      </span>
-      <DMenu
-        @contentClass="design-wizard__font-select-content"
-        @identifier="design-wizard-base-font"
-        @modalForMobile={{true}}
-        @triggerClass="design-wizard__font-select"
-        @triggerComponent={{component
-          FontTrigger
-          label=this.baseFontLabel
-          fontKey=@bodyFont
-        }}
-      >
-        <:content as |dMenu|>
-          <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
-            {{#each ALL_FONTS as |font|}}
-              <dropdown.item>
-                <DButton
-                  class="btn-flat
-                    {{fontClass font.key}}
-                    {{if (eq font.key @bodyFont) '-selected'}}"
-                  @action={{fn
-                    this.selectFont
-                    @onSelectBodyFont
-                    font.key
-                    dMenu
-                  }}
-                  @translatedLabel={{font.name}}
-                />
-              </dropdown.item>
-            {{/each}}
-          </DDropdownMenu>
-        </:content>
-      </DMenu>
+      {{#let (uniqueId) as |labelId|}}
+        <span class="design-wizard__label" id={{labelId}}>
+          {{i18n "design_wizard.fonts.base_font"}}
+        </span>
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectFont
+            class="design-wizard__font-picker"
+            @ariaLabelledBy={{labelId}}
+            @contentClass="design-wizard__font-select-content"
+            @fonts={{ALL_FONTS}}
+            @onChange={{@onSelectBodyFont}}
+            @required={{true}}
+            @sortByName={{false}}
+            @value={{@bodyFont}}
+            @valueField="key"
+          />
+        {{else}}
+          <DMenu
+            @contentClass="design-wizard__font-select-content"
+            @identifier="design-wizard-base-font"
+            @modalForMobile={{true}}
+            @triggerClass="design-wizard__font-select"
+            @triggerComponent={{component
+              FontTrigger
+              label=this.baseFontLabel
+              fontKey=@bodyFont
+            }}
+          >
+            <:content as |dMenu|>
+              <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
+                {{#each ALL_FONTS as |font|}}
+                  <dropdown.item>
+                    <DButton
+                      class="btn-flat
+                        {{fontClass font.key}}
+                        {{if (eq font.key @bodyFont) '-selected'}}"
+                      @action={{fn
+                        this.selectFont
+                        @onSelectBodyFont
+                        font.key
+                        dMenu
+                      }}
+                      @translatedLabel={{font.name}}
+                    />
+                  </dropdown.item>
+                {{/each}}
+              </DDropdownMenu>
+            </:content>
+          </DMenu>
+        {{/if}}
+      {{/let}}
     </div>
 
     <div class="design-wizard__font-group">
-      <span class="design-wizard__label">
-        {{i18n "design_wizard.fonts.heading_font"}}
-      </span>
-      <DMenu
-        @contentClass="design-wizard__font-select-content"
-        @identifier="design-wizard-heading-font"
-        @modalForMobile={{true}}
-        @triggerClass="design-wizard__font-select"
-        @triggerComponent={{component
-          FontTrigger
-          label=this.headingFontLabel
-          fontKey=@headingFont
-        }}
-      >
-        <:content as |dMenu|>
-          <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
-            {{#each ALL_FONTS as |font|}}
-              <dropdown.item>
-                <DButton
-                  class="btn-flat
-                    {{fontClass font.key}}
-                    {{if (eq font.key @headingFont) '-selected'}}"
-                  @action={{fn
-                    this.selectFont
-                    @onSelectHeadingFont
-                    font.key
-                    dMenu
-                  }}
-                  @translatedLabel={{font.name}}
-                />
-              </dropdown.item>
-            {{/each}}
-          </DDropdownMenu>
-        </:content>
-      </DMenu>
+      {{#let (uniqueId) as |labelId|}}
+        <span class="design-wizard__label" id={{labelId}}>
+          {{i18n "design_wizard.fonts.heading_font"}}
+        </span>
+        {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+        {{#if this.siteSettings.enable_new_select_controls}}
+          <DSelectFont
+            class="design-wizard__font-picker"
+            @ariaLabelledBy={{labelId}}
+            @contentClass="design-wizard__font-select-content"
+            @fonts={{ALL_FONTS}}
+            @onChange={{@onSelectHeadingFont}}
+            @required={{true}}
+            @sortByName={{false}}
+            @value={{@headingFont}}
+            @valueField="key"
+          />
+        {{else}}
+          <DMenu
+            @contentClass="design-wizard__font-select-content"
+            @identifier="design-wizard-heading-font"
+            @modalForMobile={{true}}
+            @triggerClass="design-wizard__font-select"
+            @triggerComponent={{component
+              FontTrigger
+              label=this.headingFontLabel
+              fontKey=@headingFont
+            }}
+          >
+            <:content as |dMenu|>
+              <DDropdownMenu class="design-wizard__font-list" as |dropdown|>
+                {{#each ALL_FONTS as |font|}}
+                  <dropdown.item>
+                    <DButton
+                      class="btn-flat
+                        {{fontClass font.key}}
+                        {{if (eq font.key @headingFont) '-selected'}}"
+                      @action={{fn
+                        this.selectFont
+                        @onSelectHeadingFont
+                        font.key
+                        dMenu
+                      }}
+                      @translatedLabel={{font.name}}
+                    />
+                  </dropdown.item>
+                {{/each}}
+              </DDropdownMenu>
+            </:content>
+          </DMenu>
+        {{/if}}
+      {{/let}}
     </div>
   </template>
 }

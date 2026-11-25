@@ -61,6 +61,62 @@ module(
       assert.deepEqual(changes, ["times_new_roman"]);
     });
 
+    test("fonts: lists fonts keyed by another field when given valueField", async function (assert) {
+      const keyed = [
+        { key: "times_new_roman", name: "Times New Roman" },
+        { key: "arial", name: "Arial" },
+      ];
+      const changes = [];
+      const onChange = (value) => changes.push(value);
+
+      await render(
+        <template>
+          <DSelectFont
+            @fonts={{keyed}}
+            @onChange={{onChange}}
+            @value="arial"
+            @valueField="key"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select").hasAttribute("data-name", "Arial");
+      assert.dom(".d-select").hasClass("body-font-arial");
+
+      await new DSelect(".d-select").open();
+
+      assert
+        .dom(
+          "[role='option'][data-value='times_new_roman'] .body-font-times-new-roman"
+        )
+        .hasText("Times New Roman");
+
+      await new DSelect(".d-select").select("times_new_roman");
+
+      assert.deepEqual(changes, ["times_new_roman"]);
+    });
+
+    test("fonts: keeps the given order when not sorted by name", async function (assert) {
+      const noop = () => {};
+
+      await render(
+        <template>
+          <DSelectFont
+            @fonts={{FONTS}}
+            @onChange={{noop}}
+            @sortByName={{false}}
+            @value="arial"
+          />
+        </template>
+      );
+      await new DSelect(".d-select").open();
+
+      assert.deepEqual(
+        findAll("[role='option']").map((row) => row.dataset.name),
+        ["Times New Roman", "Arial"]
+      );
+    });
+
     test("fonts: is named Font unless the caller's texts name it", async function (assert) {
       const noop = () => {};
 
