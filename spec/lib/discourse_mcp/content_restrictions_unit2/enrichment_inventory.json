@@ -13,7 +13,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1396,
+          "line": 1409,
           "source": "\"discourse_create_topic\","
         },
         {
@@ -21,7 +21,8 @@
           "line": 99,
           "source": "class CreateTopic"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 now rejects missing/restricted category targets before submission and redacts identifiers if the stored new topic becomes restricted; NewPostManager and its creation/queue paths remain."
     },
     {
       "tool": "discourse_create_post",
@@ -34,15 +35,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1437,
+          "line": 1450,
           "source": "\"discourse_create_post\","
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 156,
+          "line": 166,
           "source": "class ReplyTopic"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks the target topic against content policy before submission; the NewPostManager creation/queue paths remain."
     },
     {
       "tool": "discourse_create_private_message",
@@ -55,15 +57,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1651,
+          "line": 1664,
           "source": "\"discourse_create_private_message\","
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 230,
+          "line": 238,
           "source": "class CreatePrivateMessage"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement; creation still calls PostCreator directly. The new Server egress tripwire can refuse the returned restricted topic identifiers after creation."
     },
     {
       "tool": "discourse_reply_private_message",
@@ -76,15 +79,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1707,
+          "line": 1720,
           "source": "\"discourse_reply_private_message\","
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 294,
+          "line": 302,
           "source": "class ReplyPrivateMessage"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks the PM target through the policy-aware private_message_topic! lookup before PostCreator."
     },
     {
       "tool": "discourse_update_post",
@@ -96,15 +100,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1471,
+          "line": 1484,
           "source": "\"discourse_update_post\","
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 214,
+          "line": 224,
           "source": "class EditPost"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks the existing topic against content policy before PostRevisor; the revision/cooking path is unchanged."
     },
     {
       "tool": "discourse_update_topic",
@@ -117,15 +122,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1499,
+          "line": 1512,
           "source": "\"discourse_update_topic\","
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 261,
+          "line": 271,
           "source": "class UpdateTopic"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 rejects restricted destination categories and rolls back a move/retag that makes the stored topic restricted. Permitted edits still use first-post PostRevisor and upload-security hooks."
     },
     {
       "tool": "discourse_post_set_deleted",
@@ -142,15 +148,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1787,
+          "line": 1800,
           "source": "\"discourse_post_set_deleted\","
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 382,
+          "line": 405,
           "source": "class SetPostDeleted"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks topic access before PostDestroyer destroy/recover; the recovery/revision/event paths remain conditional on that check."
     },
     {
       "tool": "discourse_create_category",
@@ -162,15 +169,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 694,
+          "line": 707,
           "source": "\"discourse_create_category\","
         },
         {
           "file": "lib/discourse_mcp/tools/categories.rb",
-          "line": 80,
+          "line": 96,
           "source": "class CreateCategory"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 rejects a missing/restricted parent before CategoryCreator and redacts identifiers when the resulting category is restricted; definition-post creation remains."
     },
     {
       "tool": "discourse_update_category",
@@ -182,15 +190,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 742,
+          "line": 755,
           "source": "\"discourse_update_category\","
         },
         {
           "file": "lib/discourse_mcp/tools/categories.rb",
-          "line": 137,
+          "line": 164,
           "source": "class UpdateCategory"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 treats restricted targets as missing and blocks re-parenting under forum restrictions; permitted CategoryUpdater definition revisions remain."
     },
     {
       "tool": "discourse_delete_category",
@@ -200,12 +209,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 799,
+          "line": 812,
           "source": "\"discourse_delete_category\","
         },
         {
           "file": "lib/discourse_mcp/tools/categories.rb",
-          "line": 168,
+          "line": 202,
           "source": "class DeleteCategory"
         },
         {
@@ -214,7 +223,8 @@
           "source": "category.destroy!"
         }
       ],
-      "cooks_nothing": true
+      "cooks_nothing": true,
+      "unit3_review": "Unit 3 treats a restricted target as missing before destruction; still no cooking path of its own."
     },
     {
       "tool": "discourse_set_topic_closed",
@@ -226,7 +236,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1939,
+          "line": 1952,
           "source": "\"discourse_set_topic_closed\","
         },
         {
@@ -234,7 +244,8 @@
           "line": 5,
           "source": "class SetTopicClosed"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks topic policy before TopicStatusUpdater; permitted status changes retain their generated moderator-post path."
     },
     {
       "tool": "discourse_set_topic_pin",
@@ -246,7 +257,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1915,
+          "line": 1928,
           "source": "\"discourse_set_topic_pin\","
         },
         {
@@ -254,7 +265,8 @@
           "line": 47,
           "source": "class SetTopicPin"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks topic policy before TopicStatusUpdater; permitted pin changes retain their generated moderator-post path."
     },
     {
       "tool": "discourse_perform_reviewable_action",
@@ -267,15 +279,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2191,
+          "line": 2204,
           "source": "\"discourse_perform_reviewable_action\","
         },
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 530,
+          "line": 653,
           "source": "class PerformReviewableAction"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 filters reviewables by topic or queued category/tags, blocks account-deletion actions and any additional_fields while a rule is active, and removes queue counters. Permitted actions still dispatch Reviewable.perform; feedback paths are no longer unconditionally reachable under active rules."
     },
     {
       "tool": "discourse_update_user",
@@ -289,15 +302,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1554,
+          "line": 1567,
           "source": "\"discourse_update_user\","
         },
         {
           "file": "lib/discourse_mcp/tools/users.rb",
-          "line": 622,
+          "line": 656,
           "source": "class UpdateUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched, retaining enforced PM handling. The profile field allowlist, UserUpdater cooking/events and username-change exclusion remain unchanged."
     },
     {
       "tool": "discourse_create_user",
@@ -310,7 +324,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3300,
+          "line": 3313,
           "source": "\"discourse_create_user\","
         },
         {
@@ -318,7 +332,8 @@
           "line": 114,
           "source": "class CreateUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; registration and welcome/user-event paths remain unchanged."
     },
     {
       "tool": "discourse_manage_user_activation",
@@ -331,7 +346,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3364,
+          "line": 3377,
           "source": "\"discourse_manage_user_activation\","
         },
         {
@@ -339,7 +354,8 @@
           "line": 160,
           "source": "class ManageUserActivation"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; activation/approval hooks remain unchanged."
     },
     {
       "tool": "discourse_create_group",
@@ -352,15 +368,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2986,
+          "line": 2999,
           "source": "\"discourse_create_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 357,
+          "line": 400,
           "source": "class CreateGroup"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule; group creation, bio cooking and membership hooks otherwise remain."
     },
     {
       "tool": "discourse_update_group",
@@ -373,15 +390,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3025,
+          "line": 3038,
           "source": "\"discourse_update_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 410,
+          "line": 454,
           "source": "class UpdateGroup"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain."
     },
     {
       "tool": "discourse_update_group",
@@ -393,15 +411,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3025,
+          "line": 3038,
           "source": "\"discourse_update_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 410,
+          "line": 454,
           "source": "class UpdateGroup"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 blocks category/tag notification-default mutation under a forum rule and filters returned defaults (with the accepted tag-object leak covered by unit 3 oracle). Group saves, bio cooking, membership hooks and rename rewrites remain."
     },
     {
       "tool": "discourse_manage_group_members",
@@ -414,15 +433,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3079,
+          "line": 3092,
           "source": "\"discourse_manage_group_members\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 484,
+          "line": 529,
           "source": "class ManageGroupMembers"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; membership mutation and optional notification paths remain unchanged."
     },
     {
       "tool": "discourse_invite_group_members",
@@ -435,15 +455,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3106,
+          "line": 3119,
           "source": "\"discourse_invite_group_members\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 537,
+          "line": 582,
           "source": "class InviteGroupMembers"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; matching/inviting accounts and membership notification paths remain unchanged."
     },
     {
       "tool": "discourse_manage_group_owners",
@@ -456,15 +477,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3138,
+          "line": 3151,
           "source": "\"discourse_manage_group_owners\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 579,
+          "line": 624,
           "source": "class ManageGroupOwners"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; owner mutation and optional notification paths remain unchanged."
     },
     {
       "tool": "discourse_manage_group_membership",
@@ -477,15 +499,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3164,
+          "line": 3177,
           "source": "\"discourse_manage_group_membership\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 620,
+          "line": 665,
           "source": "class ManageGroupMembership"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement; join/leave/request dispatch and the PM-off request guard remain. New Server output filtering applies to a returned request topic_id."
     },
     {
       "tool": "discourse_handle_group_membership_request",
@@ -497,15 +520,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3191,
+          "line": 3204,
           "source": "\"discourse_handle_group_membership_request\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 673,
+          "line": 718,
           "source": "class HandleGroupMembershipRequest"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 passes a topic-policy callback to GroupMembershipRequestHandler: approval still adds membership and removes the request, but skips the acceptance reply when its stored request PM is restricted."
     },
     {
       "tool": "discourse_delete_group",
@@ -515,16 +539,17 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 3053,
+          "line": 3066,
           "source": "\"discourse_delete_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/groups.rb",
-          "line": 452,
+          "line": 497,
           "source": "class DeleteGroup"
         }
       ],
-      "cooks_nothing": true
+      "cooks_nothing": true,
+      "unit3_review": "Unit 3 classifies forum data as untouched; destruction still has no direct cooking path."
     },
     {
       "tool": "discourse_silence_user",
@@ -536,7 +561,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2005,
+          "line": 2018,
           "source": "\"discourse_#{operation}_user\","
         },
         {
@@ -544,7 +569,8 @@
           "line": 151,
           "source": "class SilenceUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; PM enforcement and native moderation paths remain."
     },
     {
       "tool": "discourse_unsilence_user",
@@ -556,7 +582,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2005,
+          "line": 2018,
           "source": "\"discourse_#{operation}_user\","
         },
         {
@@ -564,7 +590,8 @@
           "line": 167,
           "source": "class UnsilenceUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; PM enforcement and native moderation paths remain."
     },
     {
       "tool": "discourse_suspend_user",
@@ -576,7 +603,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2005,
+          "line": 2018,
           "source": "\"discourse_#{operation}_user\","
         },
         {
@@ -584,7 +611,8 @@
           "line": 119,
           "source": "class SuspendUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; PM enforcement and native moderation paths remain."
     },
     {
       "tool": "discourse_unsuspend_user",
@@ -596,7 +624,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2005,
+          "line": 2018,
           "source": "\"discourse_#{operation}_user\","
         },
         {
@@ -604,7 +632,8 @@
           "line": 135,
           "source": "class UnsuspendUser"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; PM enforcement and native moderation paths remain."
     },
     {
       "tool": "discourse_invite_to_private_message",
@@ -616,12 +645,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1740,
+          "line": 1753,
           "source": "\"discourse_invite_to_private_message\","
         },
         {
           "file": "lib/discourse_mcp/tools/private_messages.rb",
-          "line": 336,
+          "line": 341,
           "source": "class InviteToPrivateMessage"
         },
         {
@@ -634,7 +663,8 @@
           "line": 1371,
           "source": "add_small_action(user, \"invited_group\", group.name)"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 checks the PM target through the policy-aware lookup before recipient changes and generated invite content."
     },
     {
       "tool": "discourse_save_draft",
@@ -646,15 +676,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1801,
+          "line": 1814,
           "source": "\"discourse_save_draft\","
         },
         {
           "file": "lib/discourse_mcp/tools/drafts.rb",
-          "line": 91,
+          "line": 100,
           "source": "class SaveDraft"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement and the shared ensure_draft_topic! now rejects restricted topic keys before Draft.set; backup_draft branches are unchanged."
     },
     {
       "tool": "discourse_delete_draft",
@@ -664,16 +695,17 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1853,
+          "line": 1866,
           "source": "\"discourse_delete_draft\","
         },
         {
           "file": "lib/discourse_mcp/tools/drafts.rb",
-          "line": 160,
+          "line": 169,
           "source": "class DeleteDraft"
         }
       ],
-      "cooks_nothing": true
+      "cooks_nothing": true,
+      "unit3_review": "Unit 3 certifies forum enforcement and the shared ensure_draft_topic! now rejects restricted topic keys before Draft.clear; still no cooking path."
     },
     {
       "tool": "discourse_user_status_set",
@@ -683,16 +715,17 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1877,
+          "line": 1890,
           "source": "\"discourse_user_status_set\","
         },
         {
           "file": "lib/discourse_mcp/tools/users.rb",
-          "line": 717,
+          "line": 751,
           "source": "class SetUserStatus"
         }
       ],
-      "cooks_nothing": true
+      "cooks_nothing": true,
+      "unit3_review": "Unit 3 classifies forum data as untouched; status set/clear still cooks nothing."
     },
     {
       "tool": "discourse_upload_file",
@@ -704,7 +737,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 1614,
+          "line": 1627,
           "source": "\"discourse_upload_file\","
         },
         {
@@ -712,7 +745,8 @@
           "line": 8,
           "source": "class UploadFile"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 classifies forum data as untouched; URL upload/redirect processing and PM enforcement remain."
     },
     {
       "tool": "discourse_create_tag_group",
@@ -724,15 +758,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 637,
+          "line": 650,
           "source": "\"discourse_create_tag_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/tag_groups.rb",
-          "line": 194,
+          "line": 215,
           "source": "class CreateTagGroup"
         }
-      ]
+      ],
+      "unit3_review": "Only evidence locations and policy-aware output projection changed; the write remains uncertified for forum restrictions and still uses TagGroupCreator."
     },
     {
       "tool": "discourse_update_tag_group",
@@ -744,15 +779,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 649,
+          "line": 662,
           "source": "\"discourse_update_tag_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/tag_groups.rb",
-          "line": 214,
+          "line": 237,
           "source": "class UpdateTagGroup"
         }
-      ]
+      ],
+      "unit3_review": "Only evidence locations and policy-aware output projection changed; the write remains uncertified for forum restrictions and still uses TagGroupUpdater."
     },
     {
       "tool": "discourse_delete_tag_group",
@@ -764,15 +800,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 661,
+          "line": 674,
           "source": "\"discourse_delete_tag_group\","
         },
         {
           "file": "lib/discourse_mcp/tools/tag_groups.rb",
-          "line": 237,
+          "line": 262,
           "source": "class DeleteTagGroup"
         }
-      ]
+      ],
+      "unit3_review": "Only evidence locations moved in this body; the write remains uncertified for forum restrictions and still uses TagGroupDestroyer."
     },
     {
       "tool": "discourse_create_webhook",
@@ -782,12 +819,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 423,
+          "line": 436,
           "source": "\"discourse_create_webhook\","
         },
         {
           "file": "lib/discourse_mcp/tools/web_hooks.rb",
-          "line": 430,
+          "line": 432,
           "source": "class CreateWebhook"
         }
       ],
@@ -801,12 +838,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 439,
+          "line": 452,
           "source": "\"discourse_update_webhook\","
         },
         {
           "file": "lib/discourse_mcp/tools/web_hooks.rb",
-          "line": 458,
+          "line": 460,
           "source": "class UpdateWebhook"
         }
       ],
@@ -820,16 +857,17 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 466,
+          "line": 479,
           "source": "\"discourse_delete_webhook\","
         },
         {
           "file": "lib/discourse_mcp/tools/web_hooks.rb",
-          "line": 488,
+          "line": 490,
           "source": "class DeleteWebhook"
         }
       ],
-      "cooks_nothing": true
+      "cooks_nothing": true,
+      "unit3_review": "Unit 3 classifies forum data as untouched; deletion still has no cooking path."
     },
     {
       "tool": "discourse_ping_webhook",
@@ -839,12 +877,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 482,
+          "line": 495,
           "source": "\"discourse_ping_webhook\","
         },
         {
           "file": "lib/discourse_mcp/tools/web_hooks.rb",
-          "line": 514,
+          "line": 516,
           "source": "class PingWebhook"
         }
       ],
@@ -858,12 +896,12 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 497,
+          "line": 510,
           "source": "\"discourse_redeliver_webhook_event\","
         },
         {
           "file": "lib/discourse_mcp/tools/web_hooks.rb",
-          "line": 551,
+          "line": 554,
           "source": "class RedeliverWebhookEvent"
         }
       ],
@@ -879,15 +917,16 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2312,
+          "line": 2325,
           "source": "\"discourse_update_site_setting\","
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 220,
+          "line": 269,
           "source": "class UpdateSiteSetting"
         }
-      ]
+      ],
+      "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -899,7 +938,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2353,
+          "line": 2366,
           "source": "\"discourse_set_theme_code\","
         },
         {
@@ -919,7 +958,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2434,
+          "line": 2447,
           "source": "\"discourse_create_theme\","
         },
         {
@@ -939,7 +978,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2476,
+          "line": 2489,
           "source": "\"discourse_update_theme\","
         },
         {
@@ -959,7 +998,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2581,
+          "line": 2594,
           "source": "\"discourse_delete_theme\","
         },
         {
@@ -979,7 +1018,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2596,
+          "line": 2609,
           "source": "\"discourse_install_theme\","
         },
         {
@@ -999,7 +1038,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2631,
+          "line": 2644,
           "source": "\"discourse_sync_remote_theme\","
         },
         {
@@ -1019,7 +1058,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2660,
+          "line": 2673,
           "source": "\"discourse_upload_theme_asset\","
         },
         {
@@ -1039,7 +1078,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2673,
+          "line": 2686,
           "source": "\"discourse_update_theme_setting\","
         },
         {
@@ -1059,7 +1098,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/core_primitives.rb",
-          "line": 2706,
+          "line": 2719,
           "source": "\"discourse_update_theme_translations\","
         },
         {
@@ -1107,7 +1146,8 @@
           "line": 20,
           "source": "def self.call(arguments:, request_context:)"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement; visible_post! now checks topic policy before the unchanged reaction toggle service."
     },
     {
       "tool": "discourse_solved_solution_set",
@@ -1127,7 +1167,8 @@
           "line": 20,
           "source": "def self.call(arguments:, request_context:)"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement; visible_post! now checks topic policy before unchanged accept/unaccept services."
     },
     {
       "tool": "discourse_topic_voting_vote_set",
@@ -1147,7 +1188,8 @@
           "line": 20,
           "source": "def self.call(arguments:, request_context:)"
         }
-      ]
+      ],
+      "unit3_review": "Unit 3 certifies forum enforcement; visible_topic! now checks topic policy before unchanged cast/remove services."
     }
   ],
   "paths": {
@@ -1474,7 +1516,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 569,
+          "line": 692,
           "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
         }
       ],
@@ -1486,7 +1528,8 @@
         "system_message",
         "reviewable_events",
         "reviewable_feedback"
-      ]
+      ],
+      "unit3_review": "The dispatch remains at moderation.rb:692, but policy-aware lookup and action guards now precede it. Restricted reviewables answer as missing; account deletion and additional_fields are refused under any active rule. Downstream paths describe permitted dispatch, not unconditional feedback reachability."
     },
     "category_create": {
       "trigger": "Category#create_category_definition",
@@ -1593,14 +1636,15 @@
       "evidence": [
         {
           "file": "lib/group_membership_request_handler.rb",
-          "line": 50,
+          "line": 55,
           "source": "PostCreator.new("
         }
       ],
       "downstream": [
         "post_create",
         "membership_events"
-      ]
+      ],
+      "unit3_review": "PostCreator moved from line 50 to 55 because the handler now accepts reply_allowed and clears a restricted request_topic before replying. Membership and request removal still happen. The MCP caller supplies the policy callback; other callers may omit it."
     },
     "group_notify": {
       "trigger": "NotifyUsersAddedToGroup -> Group#notify_added_to_group",
@@ -1712,14 +1756,15 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 283,
+          "line": 332,
           "source": "SiteSettingSupport.update!("
         }
       ],
       "downstream": [
         "rebake",
         "setting_hooks"
-      ]
+      ],
+      "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",
@@ -2881,7 +2926,7 @@
         },
         {
           "file": "lib/discourse_mcp/tools/topic_writes.rb",
-          "line": 135,
+          "line": 139,
           "source": "category: category_id,"
         }
       ]
@@ -2908,15 +2953,23 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/users.rb",
-          "line": 622,
+          "line": 656,
           "source": "class UpdateUser"
         },
         {
           "file": "lib/discourse_mcp/tools/users.rb",
-          "line": 655,
+          "line": 689,
           "source": "attributes = arguments.slice(*PROFILE_FIELDS).symbolize_keys"
         }
       ]
     }
-  ]
+  ],
+  "unit3_review": {
+    "baseline": "fc63dd894d5",
+    "reviewed_revision": "3af1cfab93a",
+    "moved_evidence_occurrences": 91,
+    "moved_evidence_unique_locations": 85,
+    "scope": "Re-read moved declarations in their current implementation context, checked registry implementation bindings and the unit 3 diff, and retained the graph of conditional cooking reachability. Operation/path unit3_review notes record changes in policy gates or reachability; unchanged excluded Blog/username candidates were rechecked against current allowlists. Exact move list is in README.md.",
+    "egress": "Unit 3 Server tools/call invokes ContentPolicy.filter_tool_result after the implementation returns, before result completion. It can refuse returned restricted topic/post identifiers or redact recognized category/tag identifier fields; this is an output boundary, not proof that writes or downstream cooking are safe."
+  }
 }

@@ -233,3 +233,24 @@ Discourse's three-argument helper. The I18n stub also avoids the Mocha/RSpec `an
   new raw. Their outputs are not bounded by validating the triggering MCP argument alone. The plan
   corrections above are accepted input to unit 4's write rules. The configured automation/workflow/bot
   boundary is a user scope decision; this harness does not silently resolve that decision.
+
+## Unit 3 evidence refresh at `3af1cfab93a`
+
+Re-reviewed 91 moved evidence occurrences (85 distinct file/line locations) against the current implementation and `fc63dd894d5..3af1cfab93a`, including every registry implementation binding. The 56 operation rows, 55 write primitives, 116 shared paths and three exclusions are retained. Repeated evidence for UpdateGroup, moderation registration and the username exclusion accounts for the occurrence/location difference.
+
+| Evidence file | Old → current lines | Review result |
+| --- | --- | --- |
+| `lib/discourse_mcp/core_primitives.rb` | 423 → 436, 439 → 452, 466 → 479, 482 → 495, 497 → 510, 637 → 650, 649 → 662, 661 → 674, 694 → 707, 742 → 755, 799 → 812, 1396 → 1409, 1437 → 1450, 1471 → 1484, 1499 → 1512, 1554 → 1567, 1614 → 1627, 1651 → 1664, 1707 → 1720, 1740 → 1753, 1787 → 1800, 1801 → 1814, 1853 → 1866, 1877 → 1890, 1915 → 1928, 1939 → 1952, 2005 → 2018, 2191 → 2204, 2312 → 2325, 2353 → 2366, 2434 → 2447, 2476 → 2489, 2581 → 2594, 2596 → 2609, 2631 → 2644, 2660 → 2673, 2673 → 2686, 2706 → 2719, 2986 → 2999, 3025 → 3038, 3053 → 3066, 3079 → 3092, 3106 → 3119, 3138 → 3151, 3164 → 3177, 3191 → 3204, 3300 → 3313, 3364 → 3377 | Registrations still bind to the same implementations; forum-rule registration adds 13 preceding lines. |
+| `lib/discourse_mcp/tools/topic_writes.rb` | 135 → 139, 156 → 166, 214 → 224, 261 → 271, 382 → 405 | Policy checks precede existing submissions/revisions/deletion; moves/retags get a stored-result rollback check. Blog remains excluded by the explicit submission fields. |
+| `lib/discourse_mcp/tools/private_messages.rb` | 230 → 238, 294 → 302, 336 → 341 | Policy-aware PM lookups guard replies and invitations; PostCreator paths remain. |
+| `lib/discourse_mcp/tools/categories.rb` | 80 → 96, 137 → 164, 168 → 202 | Restricted targets/parents are rejected; re-parenting is blocked under forum rules; existing definition-post paths remain. |
+| `lib/discourse_mcp/tools/moderation.rb` | 530 → 653, 569 → 692 | Policy-aware lookup/action guards narrow dispatch and feedback reachability. |
+| `lib/discourse_mcp/tools/users.rb` | 622 → 656, 655 → 689, 717 → 751 | Profile mutation allowlist still excludes username; only declarations changed for this write. SetUserStatus still cooks nothing. |
+| `lib/discourse_mcp/tools/groups.rb` | 357 → 400, 410 → 454, 452 → 497, 484 → 529, 537 → 582, 579 → 624, 620 → 665, 673 → 718 | Defaults mutation is guarded; acceptance can skip a restricted request PM. Existing save/bio/rename/membership paths remain. |
+| `lib/discourse_mcp/tools/drafts.rb` | 91 → 100, 160 → 169 | Shared topic lookup now guards restricted keys before set/clear; backup branches remain. |
+| `lib/discourse_mcp/tools/tag_groups.rb` | 194 → 215, 214 → 237, 237 → 262 | Write bodies retain creator/updater/destroyer and remain uncertified under forum rules; create/update output uses policy-aware projection. |
+| `lib/discourse_mcp/tools/web_hooks.rb` | 430 → 432, 458 → 460, 488 → 490, 514 → 516, 551 → 554 | Bodies retain the same no-cooking classification. Delete is now classified untouched; ping remains content-free and replay remains uncertified. |
+| `lib/discourse_mcp/tools/site_settings.rb` | 220 → 269, 283 → 332 | Read-side redaction shifted the write; update and setting/rebake hooks remain unchanged and uncertified under rules. |
+| `lib/group_membership_request_handler.rb` | 50 → 55 | New reply_allowed callback suppresses the acceptance post for a restricted request PM while preserving membership/request handling. |
+
+Changed reachability is recorded on the affected operations and on shared paths `reviewable_action`, `membership_accept` and `settings` using `unit3_review`. The generic Server egress change is recorded once in the inventory metadata. Native cooking/job/event implementations retain their graph edges; these remain conditional paths, not a claim that unit 3 makes every path safe. Theme code and copied raw source remain open boundaries. The Blog and UpdateUsername exclusions remain valid; Boards evidence did not move.
