@@ -134,7 +134,9 @@ acceptance("Boards mobile footer - anonymous", function (needs) {
     assert
       .dom(BOARDS_TAB)
       .hasText(i18n("boards.manage.title"), "names the tab");
-    assert.dom(`${BOARDS_TAB} .d-icon-boards`).exists("uses the Boards icon");
+    assert
+      .dom(`${BOARDS_TAB} .d-icon-table-columns`)
+      .exists("uses the Boards icon");
     await click(BOARDS_TAB);
 
     assert.strictEqual(currentURL(), "/boards", "opens the boards index");

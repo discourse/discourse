@@ -55,6 +55,12 @@
   }
 }
 
+// Menus portal out of the editor, so one inside a modal would otherwise keep
+// the composer's layer and open beneath the modal.
+html.modal-open .fk-d-menu[class*="toolbar-menu"] {
+  z-index: z("modal", "dropdown");
+}
+
 .fk-d-menu[class*="toolbar-menu"] .dropdown-menu__header {
   padding: var(--space-2) 0.35em;
   color: var(--primary-medium);
