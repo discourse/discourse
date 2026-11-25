@@ -248,6 +248,25 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      concepts:
+        edit: "Redigera"
+        delete: "Radera"
+        columns:
+          status: "Status"
+          topics: "Ämnen"
+          posts: "Inlägg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Namn"
+          description: "Beskrivning"
+          status: "Status"
+        tagged_topics: "Taggade ämnen"
+        topic_columns:
+          topic: "Ämne"
+          primary: "Primär"
+          relevance: "Relevans"
+        primary_badge: "Primär"
       decision_models:
         no_preset: "Ingen"
         display_name: "Namn"

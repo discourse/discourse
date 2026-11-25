@@ -2636,6 +2636,10 @@ vi:
         title: "Đồng ý"
       approve_post:
         title: "Đồng ý"
+      deny_and_delete_post:
+        complete: "Tút đã bị xóa."
+      deny_and_keep_deleted:
+        complete: "Đã giữ nguyên trạng thái xóa bài viết."
       approve_post_closed:
         title: "Đồng ý"
       reject_post_bundle:

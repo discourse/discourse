@@ -97,6 +97,8 @@ ko:
         errors:
           not_found: "글을 찾을 수 없음."
     appearance_authoring:
+      component_on: "켜기"
+      component_off: "끄기"
       colors:
         light:
           header_background: "헤더"

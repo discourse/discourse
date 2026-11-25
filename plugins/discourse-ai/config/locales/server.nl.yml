@@ -833,6 +833,8 @@ nl:
           not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
           not_found: "Item in de beoordelingswachtrij niet gevonden"
     appearance_authoring:
+      component_on: "Aan"
+      component_off: "Uit"
       default_theme: "Standaardthema"
       colors:
         light:

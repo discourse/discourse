@@ -462,7 +462,6 @@ de:
           name: "Discourse-Helfer"
           description: "KI-Bot, der auf die Unterstützung bei Discourse-bezogenen Aufgaben spezialisiert ist"
         admin_assistant:
-          name: "Discourse Admin-Assistent"
           description: "Ein KI-Bot, der Fragen auf Discourse beantwortet und Administratoren bei der Verwaltung der Website-Einstellungen unterstützt"
         web_artifact_creator:
           name: "Web-Artefakt-Ersteller"
@@ -959,6 +958,8 @@ de:
           secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht gelesen werden."
           themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht gelesen werden."
     appearance_authoring:
+      component_on: "An"
+      component_off: "Aus"
       default_theme: "Standard-Theme"
       colors:
         light:

@@ -682,6 +682,27 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      concepts:
+        edit: "עריכה"
+        delete: "מחיקה"
+        columns:
+          status: "מצב"
+          topics: "נושאים"
+          posts: "פרסומים"
+        statuses:
+          all: "כל המצבים"
+          active: "פעיל"
+        form:
+          name: "שם"
+          description: "תיאור"
+          aliases: "כינויים"
+          status: "מצב"
+        tagged_topics: "נושאים מתויגים"
+        topic_columns:
+          topic: "נושא"
+          primary: "ראשית"
+          relevance: "רלוונטיות"
+        primary_badge: "ראשית"
       decision_models:
         no_preset: "ללא"
         display_name: "שם"

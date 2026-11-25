@@ -183,6 +183,8 @@ ug:
           not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
           not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
     appearance_authoring:
+      component_on: "ئوچۇق"
+      component_off: "تاقاق"
       default_theme: "كۆڭۈلدىكى ئۆرنەك"
       colors:
         light:

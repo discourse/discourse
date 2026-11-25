@@ -5196,7 +5196,6 @@ de:
       dracula: "Dracula"
       grey_amber: "Grauer Bernstein"
       latte: "Latte"
-      dark_rose: "Dunkelrosa"
   wizard:
     title: "Discourse einrichten"
     step:
@@ -5478,6 +5477,10 @@ de:
       approve_post:
         title: "Ja"
         complete: "Beitrag genehmigt."
+      deny_and_delete_post:
+        complete: "Beitrag gelöscht."
+      deny_and_keep_deleted:
+        complete: "Beitrag gelöscht gelassen."
       approve_post_closed:
         title: "Ja"
         confirm: "Dieses Thema ist geschlossen. Willst du den Beitrag trotzdem erstellen?"

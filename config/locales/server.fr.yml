@@ -5206,7 +5206,6 @@ fr:
       dracula: "Dracula"
       grey_amber: "Gris ambre"
       latte: "Café crème"
-      dark_rose: "Rose foncé"
   wizard:
     title: "Configuration de Discourse"
     step:
@@ -5488,6 +5487,10 @@ fr:
       approve_post:
         title: "Oui"
         complete: "Publication approuvée."
+      deny_and_delete_post:
+        complete: "Publication supprimée."
+      deny_and_keep_deleted:
+        complete: "Publication maintenue supprimée."
       approve_post_closed:
         title: "Oui"
         confirm: "Ce sujet est fermé. Voulez-vous quand même créer la publication ?"

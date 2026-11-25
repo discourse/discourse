@@ -308,6 +308,26 @@ cs:
         delete: "Smazat"
         embedding: "Zabudování"
         tool: "Nástroj"
+      concepts:
+        edit: "Upravit"
+        delete: "Smazat"
+        columns:
+          status: "Stav"
+          topics: "Témata"
+          posts: "Příspěvky"
+        statuses:
+          all: "Všechny stavy"
+          active: "Aktivní"
+        form:
+          name: "Jméno"
+          description: "Popis"
+          status: "Stav"
+        tagged_topics: "Oštítkovaná témata"
+        topic_columns:
+          topic: "Témata"
+          primary: "Primární"
+          relevance: "Relevance"
+        primary_badge: "Primární"
       decision_models:
         no_preset: "Žádný"
         display_name: "Jméno"

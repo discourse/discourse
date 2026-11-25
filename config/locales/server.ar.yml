@@ -5671,7 +5671,6 @@ ar:
       dracula: "دراكولا"
       grey_amber: "العنبر الرمادي"
       latte: "اللاتيه"
-      dark_rose: "الوردي الداكن"
   wizard:
     title: "إعداد Discourse"
     step:
@@ -5969,6 +5968,10 @@ ar:
       approve_post:
         title: "نعم"
         complete: "تمت الموافقة على المنشور."
+      deny_and_delete_post:
+        complete: "تم حذف المنشور."
+      deny_and_keep_deleted:
+        complete: "تم إبقاء المنشور محذوفًا."
       approve_post_closed:
         title: "نعم"
         confirm: "تم إغلاق هذا الموضوع. هل ترغب في إنشاء المنشور على أي حال؟"

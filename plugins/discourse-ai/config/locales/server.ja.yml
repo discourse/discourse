@@ -581,6 +581,8 @@ ja:
         errors:
           not_found: "トピックが見つかりませんでした."
     appearance_authoring:
+      component_on: "オン"
+      component_off: "オフ"
       default_theme: "デフォルトのテーマ"
       colors:
         light:

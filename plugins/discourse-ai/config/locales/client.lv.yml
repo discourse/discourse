@@ -222,6 +222,24 @@ lv:
         edit: "Labot"
         delete: "Dzēst"
         embedding: "Ieguldīšana"
+      concepts:
+        edit: "Labot"
+        delete: "Dzēst"
+        columns:
+          status: "Statuss"
+          topics: "Tēmas"
+          posts: "Ieraksti"
+        statuses:
+          active: "Aktīvs"
+        form:
+          name: "Vārds"
+          description: "Apraksts"
+          status: "Statuss"
+        topic_columns:
+          topic: "Tēmas"
+          primary: "Primārais"
+          relevance: "Nozīmīgums"
+        primary_badge: "Primārais"
       decision_models:
         no_preset: "Nav"
         display_name: "Vārds"

@@ -538,6 +538,8 @@ fi:
         errors:
           not_found: "Ketjua ei löytynyt."
     appearance_authoring:
+      component_on: "Käytössä"
+      component_off: "Pois käytöstä"
       default_theme: "Oletusteema"
       colors:
         light:

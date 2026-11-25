@@ -619,7 +619,6 @@ zh_CN:
           title: "外观和感觉"
           description: "选择字体以及会员首先看到的内容。"
       sections:
-        colors: "站点颜色模式"
         fonts: "字体"
         logo: "徽标"
         homepage: "首页"
@@ -628,9 +627,6 @@ zh_CN:
         applying: "应用…"
         custom_theme_notice: "您的网站当前使用 %{name} 作为其默认主题。请选择以下主题进行预览。保存后将替换您当前的主题。"
       colors:
-        description: "为每个模式设置一个默认调色板。成员的外观首选项决定他们看到哪一个。"
-        light_palette: "浅色调"
-        dark_palette: "深色调"
         modes:
           label: "颜色模式"
           both: "浅色与深色"
@@ -639,9 +635,6 @@ zh_CN:
       fonts:
         base_font: "正文"
         heading_font: "标题"
-      logo:
-        description: "显示在站点顶部导航以及站点电子邮件通知的顶部。"
-        help_text: "建议尺寸为 600 x 80 像素。"
       homepage:
         topics: "话题"
         categories: "类别"
@@ -1100,9 +1093,6 @@ zh_CN:
         suspect_user: "此用户是垃圾用户吗？"
         approve_post: "是否批准此帖子？"
         approve_topic: "是否批准此话题？"
-        something_wrong_with_post: "此帖子有什么问题吗？"
-        something_wrong_with_topic: "此话题有什么问题吗？"
-        something_wrong_with_account: "此帐户有什么问题吗？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -5004,6 +4994,8 @@ zh_CN:
         delete_title: "删除此类别"
         delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新指定。"
         delete_title_forbidden: "无法删除此类别"
+      empty_state:
+        edit_category: "编辑类别"
       create: "新建类别"
       create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
@@ -5033,7 +5025,7 @@ zh_CN:
         icon_required: "选择一个图标。"
         groups_required: "为此审批模式选择至少一个群组。"
       name: "类别名称"
-      untitled: "无标题类别"
+      icon_search_placeholder: "搜索…"
       description: "描述"
       logo: "类别徽标图片"
       logo_dark: "深色模式类别徽标图片"
@@ -5041,10 +5033,6 @@ zh_CN:
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
       style: "样式"
-      icon: "图标"
-      emoji: "表情符号"
-      select_emoji: "选择表情符号"
-      select_icon: "选择图标"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -5052,22 +5040,15 @@ zh_CN:
         incorrect_length: "必须匹配格式 #RRGGBB 或 #RGB"
         non_hexdecimal: "必须仅包含十六进制字符（0-9、AF）"
       styles:
-        type: "样式"
         icon: "图标"
         emoji: "表情符号"
         square: "方形"
-        options:
-          square: "方形"
-          icon: "图标"
-          emoji: "表情符号"
       color_used: "使用的颜色"
-      predefined_colors: "预定义颜色选项"
       name_placeholder: "建议使用一到两个词"
       category_types: "类别类型"
       unknown_category_type: "未知类别类型"
       unknown_category_type_description: "此类别不支持或未启用类别类型 '%{categoryType}'。"
       category_types_no_results: "找不到其他类别类型"
-      color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
       list: "列出类别"
@@ -8587,8 +8568,6 @@ zh_CN:
           title: "颜色"
           edit: "编辑"
           view: "查看"
-          set_default_light: "在默认主题 (%{theme}) 中设置为浅色调色板"
-          set_default_dark: "在默认主题 (%{theme}) 中设置为深色调色板"
           set_default_success: "%{schemeName} 设置为 %{themeName} 的默认调色板"
           saved_refreshing: "已保存！正在刷新颜色…"
           from_theme: "来自主题：%{name}"

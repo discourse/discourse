@@ -107,6 +107,8 @@ hu:
         errors:
           not_found: "A téma nem található."
     appearance_authoring:
+      component_on: "Be"
+      component_off: "Ki"
       default_theme: "Alapértelmezett téma"
       colors:
         light:

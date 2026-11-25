@@ -333,6 +333,25 @@ pt:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporação"
+      concepts:
+        edit: "Editar"
+        delete: "Eliminar"
+        columns:
+          status: "Estado"
+          topics: "Tópicos"
+          posts: "Mensagens"
+        statuses:
+          active: "Ativo"
+        form:
+          name: "Nome"
+          description: "Descrição"
+          status: "Estado"
+        tagged_topics: "Tópicos etiquetados"
+        topic_columns:
+          topic: "Tópico"
+          primary: "Principal"
+          relevance: "Relevância"
+        primary_badge: "Principal"
       decision_models:
         no_preset: "Nenhuma"
         display_name: "Nome"

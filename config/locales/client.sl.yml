@@ -3092,16 +3092,10 @@ sl:
       validations:
         icon_required: "Izberite ikono."
       description: "Opis"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Barva"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
-        options:
-          icon: "Ikona"
-          emoji: "Emoji"
-      color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
       no_description: "Dodajte opis kategorije."
@@ -3617,6 +3611,7 @@ sl:
       share: "Deli"
       dismiss: "Opusti"
     mobile_tab_bar:
+      new_topic: "Nova tema"
       create: "Ustvari"
       more: "Več"
       back: "Nazaj"

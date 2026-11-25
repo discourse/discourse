@@ -4788,7 +4788,6 @@ es:
       dracula: "Drácula"
       grey_amber: "Gris ámbar"
       latte: "Latte"
-      dark_rose: "Rosa oscuro"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -5048,6 +5047,8 @@ es:
       approve_post:
         title: "Sí"
         complete: "Publicación aprobada."
+      deny_and_delete_post:
+        complete: "Publicación eliminada."
       approve_post_closed:
         title: "Sí"
         confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"

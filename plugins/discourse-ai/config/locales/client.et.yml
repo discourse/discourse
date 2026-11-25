@@ -218,6 +218,23 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      concepts:
+        edit: "Muuda"
+        delete: "Kustuta"
+        columns:
+          status: "Staatus"
+          topics: "Teemasid"
+          posts: "Postitust"
+        statuses:
+          active: "Aktiivne"
+        form:
+          name: "Nimi"
+          description: "Kirjeldus"
+          status: "Staatus"
+        tagged_topics: "Sildistatud teemad"
+        topic_columns:
+          topic: "Teema"
+          relevance: "Asjakohasus"
       decision_models:
         no_preset: "Pole"
         display_name: "Nimi"

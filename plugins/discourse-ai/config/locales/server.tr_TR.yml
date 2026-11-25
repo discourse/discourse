@@ -833,6 +833,8 @@ tr_TR:
           not_allowed: "İnceleme kuyruğuna erişiminiz yok"
           not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     appearance_authoring:
+      component_on: "Açık"
+      component_off: "Kapalı"
       default_theme: "Varsayılan tema"
       colors:
         light:

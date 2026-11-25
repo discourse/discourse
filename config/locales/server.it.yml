@@ -4376,7 +4376,6 @@ it:
       dracula: "Dracula"
       grey_amber: "Ambra grigia"
       latte: "Color latte"
-      dark_rose: "Rosa scuro"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4613,6 +4612,8 @@ it:
       approve_post:
         title: "Sì"
         complete: "Messaggio approvato."
+      deny_and_delete_post:
+        complete: "Messaggio eliminato."
       approve_post_closed:
         title: "Sì"
         confirm: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"

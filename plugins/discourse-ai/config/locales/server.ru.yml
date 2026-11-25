@@ -698,6 +698,8 @@ ru:
           action_failed: "Не удалось обновить статус \"решено\"."
         success: "Статус \"Решено\" успешно обновлен."
     appearance_authoring:
+      component_on: "Включено"
+      component_off: "Выключено"
       default_theme: "Тема по умолчанию"
       colors:
         light:

@@ -1202,6 +1202,30 @@ zh_CN:
         decision_model: "决策模型"
         modal:
           title: "创建新凭据"
+      concepts:
+        edit: "编辑"
+        load_more: "加载更多"
+        delete: "删除"
+        parent_label: "父级： %{name}"
+        columns:
+          status: "状态"
+          topics: "话题"
+          posts: "帖子"
+        statuses:
+          all: "所有状态"
+          active: "有效"
+        form:
+          name: "名称"
+          description: "描述"
+          aliases: "别名"
+          status: "状态"
+        tagged_topics: "带标签的话题"
+        topic_columns:
+          topic: "话题"
+          primary: "主要"
+          relevance: "相关性"
+        primary_badge: "主要"
+        secondary_badge: "次要"
       decision_models:
         seeded_description: "预配置模型"
         manage: "管理决策模型"

@@ -625,6 +625,25 @@ sk:
         delete: "Odstrániť"
         embedding: "Vkladám"
         tool: "Nástroj"
+      concepts:
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        columns:
+          status: "Stav"
+          topics: "Témy"
+          posts: "Príspevky"
+        statuses:
+          active: "Aktívny"
+        form:
+          name: "Meno"
+          description: "Popis"
+          status: "Stav"
+        tagged_topics: "Oštítkované témy"
+        topic_columns:
+          topic: "Téma"
+          primary: "Primárne"
+          relevance: "Relevancia"
+        primary_badge: "Primárne"
       decision_models:
         no_preset: "Žiadny"
         display_name: "Meno"

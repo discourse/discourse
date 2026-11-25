@@ -503,7 +503,6 @@ zh_TW:
           name: "Discourse 助理"
           description: "專門協助處理 Discourse 相關工作的 AI 機器人"
         admin_assistant:
-          name: "Discourse 管理員助理"
           description: "回答 Discourse 問題並協助管理員管理網站設定的 AI 機器人"
         web_artifact_creator:
           name: "網頁成品建立器"
@@ -1053,6 +1052,8 @@ zh_TW:
           secret: "網站設定「%{setting_name}」包含密鑰，無法在此讀取。"
           themeable: "網站設定「%{setting_name}」需要佈景主題，無法在此讀取。"
     appearance_authoring:
+      component_on: "開"
+      component_off: "關"
       default_theme: "預設佈景主題"
       colors:
         light:
