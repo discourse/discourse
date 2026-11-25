@@ -355,9 +355,6 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     post
   end
 
-  # The filters are applied from the perspective of the stream's owner, as core does for
-  # user actions, so that viewers who are neither staff nor the owner do not get unlisted
-  # topics or other users' private messages.
   def secure_reaction_users!(reaction_users, user)
     builder = DB.build("/*where*/")
     UserAction.apply_common_filters(builder, user.id, guardian)
