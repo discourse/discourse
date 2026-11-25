@@ -179,6 +179,43 @@ describe DiscourseReactions::CustomReactionsController do
       described_class.new.send(:publish_change_to_clients!, post_1, reaction: "cry")
     end
 
+    it "publishes whisper reaction changes only to staff and the whisper author" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      whispering_user = Fabricate(:moderator)
+      whisper = Fabricate(:whisper, topic: post_1.topic, user: whispering_user)
+
+      sign_in(admin)
+      messages =
+        MessageBus.track_publish("/topic/#{whisper.topic_id}/reactions") do
+          put "/discourse-reactions/posts/#{whisper.id}/custom-reactions/hugs/toggle.json"
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages.size).to eq(1)
+      expect(messages.first.user_ids).to contain_exactly(admin.id, whispering_user.id)
+      expect(messages.first.group_ids).to be_nil
+    end
+
+    it "publishes private-message whisper reaction changes only to staff who can see the private message" do
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      whispering_user = Fabricate(:moderator)
+      Fabricate(:moderator)
+      pm_topic = Fabricate(:private_message_topic, user: whispering_user, recipient: admin)
+      pm_topic.allowed_users << user_2
+      whisper = Fabricate(:whisper, topic: pm_topic, user: whispering_user)
+
+      sign_in(admin)
+      messages =
+        MessageBus.track_publish("/topic/#{pm_topic.id}/reactions") do
+          put "/discourse-reactions/posts/#{whisper.id}/custom-reactions/hugs/toggle.json"
+        end
+
+      expect(response.status).to eq(200)
+      expect(messages.size).to eq(1)
+      expect(messages.first.user_ids).to contain_exactly(admin.id, whispering_user.id)
+      expect(messages.first.group_ids).to be_nil
+    end
+
     it "errors when reaction is invalid" do
       sign_in(user_1)
       expect do

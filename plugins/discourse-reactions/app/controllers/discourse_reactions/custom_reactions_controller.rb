@@ -374,15 +374,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
-    return unless (topic = post.topic)
-
-    message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
-
-    opts = topic.secure_audience_publish_messages
-
-    if opts[:user_ids] != [] && opts[:group_ids] != []
-      MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
-    end
+    post.publish_message!(
+      "/topic/#{post.topic_id}/reactions",
+      { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq },
+    )
   end
 
   def secure_reaction_users!(reaction_users)
