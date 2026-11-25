@@ -3,6 +3,7 @@
 module DiscourseAi
   class WorkflowUsage
     WORKFLOW_ID_PATTERN = /\A[1-9]\d{0,17}\z/
+    FEATURE_NAMES = %w[workflow context_compression].freeze
 
     def self.workflow_id(log)
       id =
@@ -11,7 +12,7 @@ module DiscourseAi
         else
           log.feature_context&.fetch("workflow_id", nil).to_s
         end
-      id.to_i if log.feature_name == "workflow" && id.match?(WORKFLOW_ID_PATTERN)
+      id.to_i if FEATURE_NAMES.include?(log.feature_name) && id.match?(WORKFLOW_ID_PATTERN)
     end
 
     def self.workflows_for(logs)
@@ -22,10 +23,14 @@ module DiscourseAi
     end
 
     def self.breakdown(start_date:, end_date:, feature: nil, model: nil)
-      return [] if feature.present? && feature != "workflow"
+      return [] if feature.present? && !FEATURE_NAMES.include?(feature)
       return [] if !defined?(DiscourseWorkflows::Workflow)
 
-      logs = AiApiAuditLog.where(feature_name: "workflow", created_at: start_date..end_date)
+      logs =
+        AiApiAuditLog.where(
+          feature_name: feature.presence || FEATURE_NAMES,
+          created_at: start_date..end_date,
+        )
       if model.present?
         if model.to_s.match?(Completions::Report::LLM_MODEL_ID_PATTERN)
           llm = LlmModel.find_by(id: model)
@@ -79,7 +84,7 @@ module DiscourseAi
     def self.for(workflow_id:, since:)
       count, tokens, estimated_cost =
         AiApiAuditLog
-          .where(feature_name: "workflow", created_at: since..)
+          .where(feature_name: FEATURE_NAMES, created_at: since..)
           .where("feature_context ->> 'workflow_id' = ?", workflow_id.to_s)
           .pick(
             Arel.sql("COUNT(*)"),

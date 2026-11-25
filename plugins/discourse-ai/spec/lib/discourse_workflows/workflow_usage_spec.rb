@@ -59,6 +59,47 @@ RSpec.describe DiscourseAi::WorkflowUsage do
     expect(stats[:ai_usage]).to eq(requests: 2, tokens: 155, estimated_cost: 0.0143)
   end
 
+  it "includes workflow context compression requests but not unrelated compression" do
+    compression =
+      Fabricate(
+        :ai_api_audit_log,
+        feature_name: "context_compression",
+        feature_context: {
+          workflow_id: workflow.id.to_s,
+        },
+        request_tokens: 70,
+        response_tokens: 20,
+        estimated_cost: 0.003,
+      )
+    Fabricate(:ai_api_audit_log, feature_name: "context_compression", request_tokens: 500)
+
+    expect(described_class.workflow_id(compression)).to eq(workflow.id)
+    expect(described_class.for(workflow_id: workflow.id, since: 7.days.ago)).to eq(
+      requests: 1,
+      tokens: 90,
+      estimated_cost: 0.003,
+    )
+    expect(described_class.breakdown(start_date: 7.days.ago, end_date: Time.zone.now)).to eq(
+      [{ id: workflow.id, name: workflow.name, requests: 1, tokens: 90, estimated_cost: 0.003 }],
+    )
+    expect(
+      described_class.breakdown(
+        start_date: 7.days.ago,
+        end_date: Time.zone.now,
+        feature: "workflow",
+      ),
+    ).to eq([])
+    expect(
+      described_class.breakdown(
+        start_date: 7.days.ago,
+        end_date: Time.zone.now,
+        feature: "context_compression",
+      ),
+    ).to eq(
+      [{ id: workflow.id, name: workflow.name, requests: 1, tokens: 90, estimated_cost: 0.003 }],
+    )
+  end
+
   it "omits usage when AI is disabled" do
     SiteSetting.discourse_ai_enabled = false
 

@@ -135,6 +135,32 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         expect(response.parsed_body["workflows"].pluck("id")).to eq([workflow.id])
       end
 
+      it "includes attributed compression while respecting the selected feature" do
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "context_compression",
+          feature_context: {
+            workflow_id: workflow.id.to_s,
+          },
+          request_tokens: 40,
+          response_tokens: 10,
+        )
+
+        get usage_report_path
+        expect(response.parsed_body["workflows"]).to include(
+          hash_including("id" => workflow.id, "requests" => 1, "tokens" => 50),
+        )
+
+        get usage_report_path, params: { feature: "workflow" }
+        expect(response.parsed_body["workflows"]).to eq([])
+
+        get usage_report_path, params: { feature: "context_compression" }
+        expect(response.parsed_body["workflows"]).to include(
+          hash_including("id" => workflow.id, "requests" => 1, "tokens" => 50),
+        )
+      end
+
       it "returns correct data structure" do
         get usage_report_path
 

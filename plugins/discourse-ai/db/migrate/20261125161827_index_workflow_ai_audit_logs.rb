@@ -10,7 +10,7 @@ class IndexWorkflowAiAuditLogs < ActiveRecord::Migration[8.0]
     add_index :ai_api_audit_logs,
               "(feature_context ->> 'workflow_id'), created_at",
               name: INDEX_NAME,
-              where: "feature_name = 'workflow'",
+              where: "feature_name IN ('workflow', 'context_compression')",
               algorithm: :concurrently
   end
 

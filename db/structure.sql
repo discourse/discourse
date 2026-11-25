@@ -20280,7 +20280,7 @@ CREATE INDEX idx_ai_api_audit_logs_user_id_id ON public.ai_api_audit_logs USING 
 -- Name: idx_ai_api_audit_logs_workflow_usage; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX idx_ai_api_audit_logs_workflow_usage ON public.ai_api_audit_logs USING btree (((feature_context ->> 'workflow_id'::text)), created_at) WHERE ((feature_name)::text = 'workflow'::text);
+CREATE INDEX idx_ai_api_audit_logs_workflow_usage ON public.ai_api_audit_logs USING btree (((feature_context ->> 'workflow_id'::text)), created_at) WHERE ((feature_name)::text = ANY ((ARRAY['workflow'::character varying, 'context_compression'::character varying])::text[]));
 
 
 --

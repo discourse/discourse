@@ -23,6 +23,14 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
           workflow_id: workflow.id.to_s,
         },
       )
+    compression =
+      Fabricate(
+        :ai_api_audit_log,
+        feature_name: "context_compression",
+        feature_context: {
+          workflow_id: workflow.id.to_s,
+        },
+      )
     unrelated =
       Fabricate(
         :ai_api_audit_log,
@@ -44,11 +52,15 @@ RSpec.describe DiscourseAi::Admin::AiLogsController do
     listed = response.parsed_body["logs"].index_by { |item| item["id"] }
 
     expect(listed[log.id]["workflow"]).to eq("id" => workflow.id, "name" => workflow.name)
+    expect(listed[compression.id]["workflow"]).to eq("id" => workflow.id, "name" => workflow.name)
     expect(listed[unrelated.id]["workflow"]).to be_nil
     expect(listed[deleted.id]["workflow"]).to be_nil
 
     get "/admin/plugins/discourse-ai/ai-logs/#{log.id}.json"
 
+    expect(response.parsed_body["workflow"]).to eq("id" => workflow.id, "name" => workflow.name)
+
+    get "/admin/plugins/discourse-ai/ai-logs/#{compression.id}.json"
     expect(response.parsed_body["workflow"]).to eq("id" => workflow.id, "name" => workflow.name)
   end
 

@@ -32,7 +32,7 @@ loaded groups. Keep new built-in domain tools in `AdminAssistant::TOOL_GROUPS`.
 ### Workflow AI usage
 
 The AI agent workflow action tags each LLM audit entry with its workflow ID, including
-requests made by subagents. A workflow's stats panel displays the number of AI requests,
+requests made by subagents and context compression. A workflow's stats panel displays the number of AI requests,
 request, response, and cache tokens, and estimated USD cost for the last seven days. These
 figures count requests rather than workflow executions; multiple items or tool calls can
 produce multiple requests. Only retained audit logs are counted, so reducing audit-log
