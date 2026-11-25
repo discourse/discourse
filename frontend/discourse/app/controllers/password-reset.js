@@ -16,6 +16,7 @@ export default class PasswordResetController extends Controller {
   passwordRequired = true;
   errorMessage = null;
   successMessage = null;
+  loginError = null;
   requiresApproval = false;
   redirected = false;
   maskPassword = true;
@@ -158,10 +159,11 @@ export default class PasswordResetController extends Controller {
       if (result.success) {
         this.set("successMessage", result.message);
         this.set("redirectTo", result.redirect_to);
+        this.set("loginError", result.login_error);
 
         if (result.requires_approval) {
           this.set("requiresApproval", true);
-        } else {
+        } else if (!result.login_error) {
           this.set("redirected", true);
           DiscourseURL.redirectTo(result.redirect_to || "/");
         }
