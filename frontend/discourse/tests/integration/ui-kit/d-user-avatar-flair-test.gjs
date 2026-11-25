@@ -24,6 +24,11 @@ function setupSiteGroups(that) {
       flair_color: "FFFFF5",
     },
     {
+      id: AUTO_GROUPS.trust_level_0.id,
+      name: "trust_level_0",
+      flair_url: "circle",
+    },
+    {
       id: AUTO_GROUPS.trust_level_1.id,
       name: "trust_level_1",
       flair_url: "dice-one",
@@ -213,6 +218,39 @@ module("Integration | ui-kit | DUserAvatarFlair", function (hooks) {
     await render(<template><DUserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
+  });
+
+  test("trust level does not select a flair by default", async function (assert) {
+    setupSiteGroups(this);
+    const user = { id: 1, trust_level: 2 };
+
+    await render(<template><DUserAvatarFlair @user={{user}} /></template>);
+
+    assert.dom(".avatar-flair").doesNotExist();
+  });
+
+  test("automatic trust level flair follows the highest configured level and respects selected flair", async function (assert) {
+    setupSiteGroups(this);
+    this.siteSettings.automatically_apply_trust_level_group_flair = true;
+    const user = tracked({ id: 1, trust_level: 4, admin: true });
+
+    await render(
+      <template><DUserAvatarFlair @user={{user.value}} /></template>
+    );
+
+    assert.dom(".d-icon-dice-two").exists();
+
+    user.value = { id: 1, trust_level: 0 };
+    await settled();
+    assert.dom(".d-icon-circle").exists();
+
+    user.value = { id: 1, trust_level: 0, flair_group_id: 41 };
+    await settled();
+    assert.dom(".d-icon-xmark").exists();
+
+    user.value = { id: -1, trust_level: 2 };
+    await settled();
+    assert.dom(".d-icon-robot").exists();
   });
 
   test("bot accounts default to accessible robot flair, including system and zero IDs", async function (assert) {

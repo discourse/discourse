@@ -2893,6 +2893,11 @@ trust:
     default: 0
     enum: "TrustLevelSetting"
     area: "trust_levels"
+  automatically_apply_trust_level_group_flair:
+    default: false
+    client: true
+    refresh: true
+    area: "trust_levels|users"
   default_invitee_trust_level:
     default: 1
     enum: "TrustLevelSetting"
