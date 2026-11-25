@@ -365,3 +365,23 @@ historical. All **245 live evidence occurrences** and graph references were
 checked twice directly after the update. Counts remain **56 operation rows,
 55 distinct write primitives, 116 paths, three exclusions**. The post-refresh
 RSpec result is recorded in [REVIEW3.md](../content_restrictions_unit4/REVIEW3.md).
+
+## Unit 4 review 4 evidence refresh at `6bb81ffd390`
+
+Seed **84019** observed the exact-line example fail at `moderation.rb:704`
+before editing. The same run then hit an out-of-range site-settings reference
+at line 479, which prevented it from reaching the remaining rows. Directly
+checking all 245 live evidence occurrences found exactly four stale locations:
+
+| Source | Evidence move | Re-review |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/moderation.rb` | `PerformReviewableAction` 704 → 714; `reviewable.perform` 744 → 754 | Prospective queued-topic validation now selects the staff reviewer's guardian or the non-staff queued author's guardian. Publishing/stored-text guards and permitted native dispatch remain. Category filtering and approval's tag fallback still require the review-4 regression coverage. |
+| `lib/discourse_mcp/tools/site_settings.rb` | `UpdateSiteSetting` 479 → 277; `SiteSettingSupport.update!` 542 → 340 | Read-side URL handling now uses an origin boundary instead of route/model inference. The write retains its unenforced declarations, confirmation/dependency/current-value checks, service update and verification. Native setting/rebake edges remain conditional. |
+
+The current bodies and `9568245c408..6bb81ffd390` were re-read before refreshing
+the live entries. `unit4_review4_refresh` records the four moves and changed
+entry conditions; previous review metadata remains historical. Counts and graph
+edges remain **245 evidence occurrences, 56 operation rows, 55 distinct write
+primitives, 116 paths and three exclusions**. Both enrichment examples pass in
+the combined review-4 run. Names, RED signatures, calibration limits and run
+receipts are recorded in [REVIEW4.md](../content_restrictions_unit4/REVIEW4.md).
