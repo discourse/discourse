@@ -6338,6 +6338,82 @@ RSpec.describe UsersController do
           expect(approved_user.approved_by).to be_nil
           expect(approved_user.approved_at).to be_nil
         end
+
+        context "when approval came from an auto-approved email domain" do
+          before { SiteSetting.auto_approve_email_domains = "example.com" }
+
+          def sign_up(email)
+            post "/u.json",
+                 params: {
+                   username: "domainuser",
+                   password: "strongpassword1",
+                   email: email,
+                 }
+            expect(response.status).to eq(200)
+
+            User.find_by(username: "domainuser").tap { |user| expect(user).to be_approved }
+          end
+
+          def change_activation_email(email)
+            put "/u/update-activation-email.json",
+                params: {
+                  username: "domainuser",
+                  password: "strongpassword1",
+                  email: email,
+                }
+            expect(response.status).to eq(200)
+          end
+
+          it "requires staff approval after moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email("someone@other.com")
+
+            raw_token =
+              Jobs::CriticalUserEmail
+                .jobs
+                .map { |job| job["args"].first }
+                .find { |args| args["to_address"] == "someone@other.com" }[
+                "email_token"
+              ]
+
+            put "/u/activate-account/#{raw_token}.json"
+
+            user.reload
+            expect(user).to be_active
+            expect(user).not_to be_approved
+            expect(response.parsed_body["needs_approval"]).to eq(true)
+            expect(session[:current_user_id]).to be_blank
+          end
+
+          it "preserves approval given by staff when moving to a domain that does not qualify" do
+            user = sign_up("someone@example.com")
+            user.update!(approved_by: admin)
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).to be_approved
+          end
+
+          it "requires staff approval when the domain stopped qualifying before the move" do
+            user = sign_up("someone@example.com")
+            SiteSetting.auto_approve_email_domains = "another.com"
+
+            change_activation_email("someone@other.com")
+
+            expect(user.reload).not_to be_approved
+          end
+
+          it "preserves approval when correcting the email within a qualifying domain" do
+            user = sign_up("someone@example.com")
+
+            change_activation_email(" Corrected@Example.com ")
+
+            user.reload
+            expect(user.email).to eq("corrected@example.com")
+            expect(user).to be_approved
+          end
+        end
       end
 
       it "tells the user to slow down after many requests" do
