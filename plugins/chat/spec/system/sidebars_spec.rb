@@ -41,9 +41,16 @@ RSpec.describe "Navigation" do
       end
     end
 
-    context "when a direct message title contains HTML-escapable characters" do
+    context "when channel titles and descriptions contain HTML-escapable characters" do
       fab!(:other_user) { Fabricate(:user, name: "Frodo's <b>friend</b>") }
       fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+      fab!(:group_dm_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [user, other_user, Fabricate(:user)],
+          name: "Frodo's <b>party</b>",
+        )
+      end
 
       before do
         SiteSetting.enable_names = true
@@ -59,6 +66,12 @@ RSpec.describe "Navigation" do
           sidebar_page.dms_section.find(sidebar_page.channel_section_link_selector(dm_channel))
         expect(dm_link).to have_text("Frodo's <b>friend</b>", exact: true)
         expect(dm_link["title"]).to eq("Chat with Frodo's <b>friend</b>")
+
+        group_dm_link =
+          sidebar_page.dms_section.find(
+            sidebar_page.channel_section_link_selector(group_dm_channel),
+          )
+        expect(group_dm_link["title"]).to eq("Chat in Frodo's <b>party</b>")
 
         channel_link =
           sidebar_page.channels_section.find(
