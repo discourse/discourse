@@ -725,6 +725,149 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
         expect(resumed_state["total"]).to eq(2)
       end
     end
+
+    it "renews the lock lease while a slow wave runs and releases it on completion" do
+      stub_const(described_class, :MUTEX_VALIDITY, 1.second) do
+        topic =
+          Fabricate(
+            :topic,
+            title: "Slow wave topic",
+            category: Fabricate(:category),
+            word_count: 120,
+            like_count: 30,
+            posts_count: 5,
+            views: 250,
+          )
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for slow wave test.")
+        vector = [0.1] * vector_def.dimensions
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+
+        allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+          :gen_bulk_reprensentations,
+        ).and_wrap_original do |_method, relation|
+          relation.each do |concept|
+            DiscourseAi::Embeddings::Schema.for(InferredConcept).store(
+              concept,
+              vector,
+              "concept-vec",
+            )
+          end
+        end
+
+        curator =
+          instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+        allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+        observed_lock_during_slow_call = nil
+        observed_watchdog_result = nil
+
+        allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(:classify) do
+          state = described_class.status
+          stale_time = (described_class::WAVE_STALE_AFTER + 1.minute).ago.iso8601
+          Discourse.redis.set(
+            described_class::STATE_KEY,
+            state.merge("updated_at" => stale_time).to_json,
+            ex: described_class::STALE_AFTER.to_i,
+          )
+
+          sleep 1.25
+          observed_lock_during_slow_call = Discourse.redis.get(described_class::MUTEX_KEY)
+          observed_watchdog_result = described_class.resume_if_stalled!
+
+          {
+            matches: [],
+            proposed_new: [
+              {
+                name: "SlowWaveTheme",
+                description: "Renewed lease through slow wave",
+                parent_concept_id: nil,
+              },
+            ],
+          }
+        end
+
+        wave_seeder =
+          described_class.new(concurrency: 1, wave_size: 1, lock_heartbeat_interval: 0.1)
+        state = wave_seeder.seed_wave!(limit: 1, enqueue_next: false)
+
+        expect(observed_lock_during_slow_call).to be_present
+        expect(observed_watchdog_result).to eq(false)
+        expect(state["status"]).to eq("completed")
+        expect(Discourse.redis.get(described_class::MUTEX_KEY)).to be_nil
+      end
+    ensure
+      Discourse.redis.del(described_class::MUTEX_KEY)
+    end
+
+    it "skips queue trimming and job chaining if lock ownership is lost mid-wave" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "First lock-loss discussion",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Second lock-loss discussion",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(:classify) do
+        Discourse.redis.set(described_class::MUTEX_KEY, "other-worker-token", ex: 60)
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "TakeoverTheme",
+              description: "Classified just before lock takeover",
+              parent_concept_id: nil,
+            },
+          ],
+        }
+      end
+
+      queued = described_class.mark_queued!
+      wave_seeder = described_class.new(concurrency: 1, wave_size: 1)
+
+      state = nil
+      expect do
+        state = wave_seeder.seed_wave!(limit: 2, run_id: queued["run_id"], enqueue_next: true)
+      end.not_to change { Jobs::SeedInferredConcepts.jobs.size }
+
+      expect(state["status"]).to eq("skipped")
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(2)
+      expect(Discourse.redis.get(described_class::MUTEX_KEY)).to eq("other-worker-token")
+    ensure
+      Discourse.redis.del(described_class::MUTEX_KEY)
+    end
   end
 
   describe ".resume_if_stalled!" do
@@ -749,6 +892,96 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
       }.by(1)
       expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(state["run_id"])
       expect(described_class.resume_if_stalled!).to eq(false)
+    end
+
+    it "does not overwrite newer state created by a delayed seed job racing the watchdog" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "First racing discussion",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Second racing discussion",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ).and_return(
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "RaceSafeTheme",
+              description: "Not overwritten by watchdog",
+              parent_concept_id: nil,
+            },
+          ],
+        },
+      )
+
+      queued = described_class.mark_queued!
+      stalled_time = (described_class::WAVE_STALE_AFTER + 1.minute).ago.iso8601
+      Discourse.redis.set(
+        described_class::STATE_KEY,
+        queued.merge("updated_at" => stalled_time).to_json,
+        ex: described_class::STALE_AFTER.to_i,
+      )
+
+      intercepted = false
+      allow(described_class).to receive(
+        :with_lock,
+      ).and_wrap_original do |method, *args, **kwargs, &block|
+        if !intercepted
+          intercepted = true
+          described_class.new(concurrency: 1, wave_size: 1).seed_wave!(
+            limit: 2,
+            run_id: queued["run_id"],
+            enqueue_next: true,
+          )
+        end
+
+        method.call(*args, **kwargs, &block)
+      end
+
+      expect do expect(described_class.resume_if_stalled!).to eq(false) end.to change {
+        Jobs::SeedInferredConcepts.jobs.size
+      }.by(1)
+
+      current_state = described_class.status
+      expect(current_state["status"]).to eq("running")
+      expect(current_state["processed"]).to eq(1)
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(1)
     end
   end
 end

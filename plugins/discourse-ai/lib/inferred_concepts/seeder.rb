@@ -6,7 +6,8 @@ module DiscourseAi
       STATE_KEY = "discourse_ai:inferred_concepts:seed_state"
       QUEUE_KEY = "discourse_ai:inferred_concepts:seed_queue"
       MUTEX_KEY = "discourse_ai_seed_inferred_concepts"
-      MUTEX_VALIDITY = 5.minutes
+      MUTEX_VALIDITY = 2.minutes
+      LOCK_HEARTBEAT_INTERVAL = 30.seconds
       STALE_AFTER = 24.hours
       WAVE_STALE_AFTER = 5.minutes
       QUEUE_TTL = STALE_AFTER
@@ -18,6 +19,50 @@ module DiscourseAi
       DEFAULT_CONCURRENCY = 5
       INTERMEDIATE_CURATE_INTERVAL = 250
       FEATURE_NAME = "inferred_concepts_generate"
+
+      RENEW_LOCK_SCRIPT = DiscourseRedis::EvalHelper.new(<<~LUA)
+        if redis.call("get", KEYS[1]) == ARGV[1] then
+          return redis.call("expire", KEYS[1], tonumber(ARGV[2]))
+        else
+          return 0
+        end
+      LUA
+
+      RELEASE_LOCK_SCRIPT = DiscourseRedis::EvalHelper.new(<<~LUA)
+        if redis.call("get", KEYS[1]) == ARGV[1] then
+          return redis.call("del", KEYS[1])
+        else
+          return 0
+        end
+      LUA
+
+      ADVANCE_WAVE_SCRIPT = DiscourseRedis::EvalHelper.new(<<~LUA)
+        if redis.call("get", KEYS[1]) ~= ARGV[1] then
+          return 0
+        end
+        redis.call("ltrim", KEYS[2], tonumber(ARGV[2]), -1)
+        redis.call("expire", KEYS[2], tonumber(ARGV[3]))
+        redis.call("set", KEYS[3], ARGV[4], "EX", tonumber(ARGV[5]))
+        return 1
+      LUA
+
+      FINALIZE_RUN_SCRIPT = DiscourseRedis::EvalHelper.new(<<~LUA)
+        if redis.call("get", KEYS[1]) ~= ARGV[1] then
+          return 0
+        end
+        redis.call("del", KEYS[2])
+        redis.call("set", KEYS[3], ARGV[2], "EX", tonumber(ARGV[3]))
+        return 1
+      LUA
+
+      REFRESH_STALLED_SCRIPT = DiscourseRedis::EvalHelper.new(<<~LUA)
+        if redis.call("get", KEYS[1]) ~= ARGV[1] then
+          return 0
+        end
+        redis.call("set", KEYS[3], ARGV[2], "EX", tonumber(ARGV[3]))
+        redis.call("expire", KEYS[2], tonumber(ARGV[4]))
+        return 1
+      LUA
 
       def self.status
         raw = Discourse.redis.get(STATE_KEY)
@@ -53,21 +98,96 @@ module DiscourseAi
         Discourse.redis.del(STATE_KEY, QUEUE_KEY)
       end
 
+      def self.with_lock(renew: true, heartbeat_interval: LOCK_HEARTBEAT_INTERVAL)
+        redis = Discourse.redis
+        token = SecureRandom.hex(16)
+        acquired = redis.set(MUTEX_KEY, token, nx: true, ex: MUTEX_VALIDITY.to_i)
+        return false unless acquired
+
+        prefixed_mutex_key = redis.namespace_key(MUTEX_KEY)
+        parent_thread = Thread.current
+        stop_mutex = Mutex.new
+        stop_cv = ConditionVariable.new
+        finished = false
+        heartbeat_thread = nil
+
+        if renew
+          heartbeat_thread =
+            Thread.new do
+              interval = heartbeat_interval.to_f
+              loop do
+                should_stop =
+                  stop_mutex.synchronize do
+                    stop_cv.wait(stop_mutex, interval) unless finished
+                    finished
+                  end
+                break if should_stop || !parent_thread.alive?
+
+                begin
+                  renewed =
+                    RENEW_LOCK_SCRIPT.eval(
+                      redis,
+                      [prefixed_mutex_key],
+                      [token, MUTEX_VALIDITY.to_i.to_s],
+                    )
+                  break if renewed != 1
+                rescue StandardError => e
+                  Discourse.warn_exception(
+                    e,
+                    message: "Failed renewing inferred concepts seed lock",
+                  )
+                  break
+                end
+              end
+            end
+        end
+
+        yield token
+        true
+      ensure
+        if acquired
+          stop_mutex.synchronize do
+            finished = true
+            stop_cv.broadcast
+          end
+          heartbeat_thread&.join(2)
+          RELEASE_LOCK_SCRIPT.eval(redis, [prefixed_mutex_key], [token])
+        end
+      end
+
       def self.resume_if_stalled!
         unless SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
           return false
         end
 
-        state = status
-        return false if state.blank? || %w[queued running].exclude?(state["status"])
-        return false unless stalled?(state)
+        initial_state = status
+        return false if initial_state.blank? || %w[queued running].exclude?(initial_state["status"])
+        return false unless stale_wave?(initial_state)
 
-        refreshed_state = state.merge("updated_at" => Time.zone.now.iso8601)
-        Discourse.redis.multi do |tx|
-          tx.set(STATE_KEY, refreshed_state.to_json, ex: STALE_AFTER.to_i)
-          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i)
+        run_id_to_enqueue = nil
+        with_lock(renew: false) do |lock_token|
+          state = status
+          next if state.blank? || %w[queued running].exclude?(state["status"])
+          next unless stale_wave?(state)
+
+          refreshed_state = state.merge("updated_at" => Time.zone.now.iso8601)
+          redis = Discourse.redis
+          updated =
+            REFRESH_STALLED_SCRIPT.eval(
+              redis,
+              [
+                redis.namespace_key(MUTEX_KEY),
+                redis.namespace_key(QUEUE_KEY),
+                redis.namespace_key(STATE_KEY),
+              ],
+              [lock_token, refreshed_state.to_json, STALE_AFTER.to_i.to_s, QUEUE_TTL.to_i.to_s],
+            )
+          run_id_to_enqueue = state["run_id"] if updated == 1
         end
-        Jobs.enqueue(:seed_inferred_concepts, run_id: state["run_id"])
+
+        return false if run_id_to_enqueue.blank?
+
+        Jobs.enqueue(:seed_inferred_concepts, run_id: run_id_to_enqueue)
         true
       end
 
@@ -89,9 +209,7 @@ module DiscourseAi
       end
       private_class_method :stale?
 
-      def self.stalled?(state)
-        return false if Discourse.redis.exists?(MUTEX_KEY)
-
+      def self.stale_wave?(state)
         timestamp = state["updated_at"] || state["started_at"] || state["queued_at"]
         return true if timestamp.blank?
 
@@ -99,16 +217,18 @@ module DiscourseAi
       rescue ArgumentError
         true
       end
-      private_class_method :stalled?
+      private_class_method :stale_wave?
 
       def initialize(
         concurrency: DEFAULT_CONCURRENCY,
         wave_size: WAVE_SIZE,
-        curate_every: INTERMEDIATE_CURATE_INTERVAL
+        curate_every: INTERMEDIATE_CURATE_INTERVAL,
+        lock_heartbeat_interval: LOCK_HEARTBEAT_INTERVAL
       )
         @concurrency = concurrency.to_i.clamp(1, 20)
         @wave_size = wave_size.to_i.clamp(1, 100)
         @curate_every = curate_every.to_i
+        @lock_heartbeat_interval = lock_heartbeat_interval.to_f
       end
 
       def select_seed_topics(limit: SiteSetting.inferred_concepts_seed_topics_limit)
@@ -156,15 +276,22 @@ module DiscourseAi
           )
         end
 
-        result_state, should_enqueue_next, next_run_id =
-          DistributedMutex.synchronize(MUTEX_KEY, validity: MUTEX_VALIDITY) do
-            run_wave_locked(
-              limit: limit,
-              run_id: run_id,
-              enqueue_next: enqueue_next,
-              agent_class: agent_class,
-              llm: llm,
-            )
+        result_state = { "status" => "skipped" }
+        should_enqueue_next = false
+        next_run_id = nil
+
+        self
+          .class
+          .with_lock(renew: true, heartbeat_interval: @lock_heartbeat_interval) do |lock_token|
+            result_state, should_enqueue_next, next_run_id =
+              run_wave_locked(
+                limit: limit,
+                run_id: run_id,
+                enqueue_next: enqueue_next,
+                agent_class: agent_class,
+                llm: llm,
+                lock_token: lock_token,
+              )
           end
 
         Jobs.enqueue(:seed_inferred_concepts, run_id: next_run_id) if should_enqueue_next
@@ -178,14 +305,22 @@ module DiscourseAi
         SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
       end
 
-      def run_wave_locked(limit:, run_id:, enqueue_next:, agent_class:, llm:)
+      def run_wave_locked(limit:, run_id:, enqueue_next:, agent_class:, llm:, lock_token:)
         state = self.class.status
 
         return { "status" => "skipped" }, false, nil if stale_job_for_run?(state, run_id)
 
         if state.nil? || state["status"] != "running"
-          state = initialize_run!(limit: limit, run_id: run_id || state&.dig("run_id"))
-          return finalize_state(state), false, nil if state["total"].to_i == 0
+          state =
+            initialize_run!(
+              limit: limit,
+              run_id: run_id || state&.dig("run_id"),
+              lock_token: lock_token,
+            )
+          return { "status" => "skipped" }, false, nil if state.nil?
+          if state["total"].to_i == 0
+            return finalize_state(state, lock_token: lock_token), false, nil
+          end
         end
 
         begin
@@ -193,14 +328,14 @@ module DiscourseAi
         rescue LlmCreditAllocation::CreditLimitExceeded => e
           flush_concept_embeddings
           curate_seeded_concepts if state["since_last_curate"].to_i > 0
-          return finalize_state(state, error: e.message), false, nil
+          return finalize_state(state, lock_token: lock_token, error: e.message), false, nil
         end
 
         wave_ids = peek_wave_ids
         if wave_ids.empty?
           flush_concept_embeddings
           curate_seeded_concepts if state["since_last_curate"].to_i > 0
-          return finalize_state(state), false, nil
+          return finalize_state(state, lock_token: lock_token), false, nil
         end
 
         process_wave(
@@ -209,10 +344,10 @@ module DiscourseAi
           enqueue_next: enqueue_next,
           agent_class: agent_class,
           llm: llm,
+          lock_token: lock_token,
         )
       rescue StandardError => e
-        Discourse.redis.del(QUEUE_KEY)
-        write_terminal_error_state(state, e.message)
+        write_terminal_error_state(state, e.message, lock_token: lock_token)
         raise
       end
 
@@ -224,7 +359,7 @@ module DiscourseAi
         %w[completed failed].include?(state["status"])
       end
 
-      def initialize_run!(limit:, run_id:)
+      def initialize_run!(limit:, run_id:, lock_token:)
         effective_limit =
           (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, MAX_SEED_TOPICS)
         topic_ids = select_seed_topics(limit: effective_limit)
@@ -240,6 +375,8 @@ module DiscourseAi
           "since_last_curate" => 0,
         }
 
+        return nil if Discourse.redis.get(MUTEX_KEY) != lock_token
+
         Discourse.redis.multi do |tx|
           tx.del(QUEUE_KEY)
           topic_ids.each_slice(1000) { |slice| tx.rpush(QUEUE_KEY, slice.map(&:to_s)) }
@@ -254,7 +391,7 @@ module DiscourseAi
         Array(Discourse.redis.lrange(QUEUE_KEY, 0, @wave_size - 1)).map(&:to_i)
       end
 
-      def process_wave(state:, wave_ids:, enqueue_next:, agent_class:, llm:)
+      def process_wave(state:, wave_ids:, enqueue_next:, agent_class:, llm:, lock_token:)
         applier = Applier.new
         retriever = CandidateRetriever.new
         classifier = Classifier.new
@@ -335,12 +472,12 @@ module DiscourseAi
 
         if failed_error.present?
           curate_seeded_concepts if since_last_curate > 0
-          return finalize_state(next_state, error: failed_error), false, nil
+          return finalize_state(next_state, lock_token: lock_token, error: failed_error), false, nil
         end
 
         if remaining == 0
           curate_seeded_concepts if since_last_curate > 0
-          return finalize_state(next_state), false, nil
+          return finalize_state(next_state, lock_token: lock_token), false, nil
         end
 
         if @curate_every > 0 && since_last_curate >= @curate_every
@@ -348,20 +485,28 @@ module DiscourseAi
           next_state["since_last_curate"] = 0
         end
 
-        advance_wave!(wave_ids.size, next_state)
+        committed = advance_wave!(wave_ids.size, next_state, lock_token: lock_token)
+        return { "status" => "skipped" }, false, nil unless committed
+
         [next_state, enqueue_next, next_state["run_id"]]
       end
 
-      def advance_wave!(count, state)
-        Discourse.redis.multi do |tx|
-          tx.ltrim(QUEUE_KEY, count, -1)
-          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i)
-          tx.set(STATE_KEY, state.to_json, ex: STALE_AFTER.to_i)
-        end
-        state
+      def advance_wave!(count, state, lock_token:)
+        redis = Discourse.redis
+        updated =
+          ADVANCE_WAVE_SCRIPT.eval(
+            redis,
+            [
+              redis.namespace_key(MUTEX_KEY),
+              redis.namespace_key(QUEUE_KEY),
+              redis.namespace_key(STATE_KEY),
+            ],
+            [lock_token, count.to_s, QUEUE_TTL.to_i.to_s, state.to_json, STALE_AFTER.to_i.to_s],
+          )
+        updated == 1
       end
 
-      def finalize_state(state, error: nil)
+      def finalize_state(state, lock_token:, error: nil)
         now = Time.zone.now.iso8601
         initial_concepts = state["initial_concepts"].to_i
         final_state = {
@@ -376,19 +521,25 @@ module DiscourseAi
         }
         final_state["error"] = error if error.present?
 
-        Discourse.redis.multi do |tx|
-          tx.del(QUEUE_KEY)
-          tx.set(STATE_KEY, final_state.to_json, ex: TERMINAL_STATE_TTL.to_i)
-        end
+        redis = Discourse.redis
+        updated =
+          FINALIZE_RUN_SCRIPT.eval(
+            redis,
+            [
+              redis.namespace_key(MUTEX_KEY),
+              redis.namespace_key(QUEUE_KEY),
+              redis.namespace_key(STATE_KEY),
+            ],
+            [lock_token, final_state.to_json, TERMINAL_STATE_TTL.to_i.to_s],
+          )
 
-        final_state
+        updated == 1 ? final_state : { "status" => "skipped" }
       end
 
-      def write_terminal_error_state(state, error_message)
+      def write_terminal_error_state(state, error_message, lock_token:)
         base = state || {}
         now = Time.zone.now.iso8601
-        self.class.send(
-          :write_state,
+        error_state = {
           "status" => "failed",
           "run_id" => base["run_id"],
           "error" => error_message,
@@ -398,6 +549,17 @@ module DiscourseAi
           "processed" => base["processed"].to_i,
           "total" => base["total"].to_i,
           "concepts_created" => [InferredConcept.count - base["initial_concepts"].to_i, 0].max,
+        }
+
+        redis = Discourse.redis
+        FINALIZE_RUN_SCRIPT.eval(
+          redis,
+          [
+            redis.namespace_key(MUTEX_KEY),
+            redis.namespace_key(QUEUE_KEY),
+            redis.namespace_key(STATE_KEY),
+          ],
+          [lock_token, error_state.to_json, TERMINAL_STATE_TTL.to_i.to_s],
         )
       end
 
