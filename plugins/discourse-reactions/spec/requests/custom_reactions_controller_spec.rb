@@ -239,6 +239,23 @@ describe DiscourseReactions::CustomReactionsController do
       expect(post).not_to have_key("name")
     end
 
+    it "only returns reactions in unlisted topics to the user themselves and to staff" do
+      post_2.topic.update!(visible: false)
+
+      sign_in(user_1)
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to be_empty
+
+      sign_in(user_2)
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(post_2.id)
+
+      sign_in(admin)
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(post_2.id)
+    end
+
     it "does not return reactions for private messages" do
       sign_in(user_1)
 
