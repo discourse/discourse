@@ -2,7 +2,7 @@
 
 .invites-show {
   box-sizing: border-box;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   padding: 1em;
 
   @include viewport.from(sm) {
@@ -62,11 +62,11 @@
   }
 
   .instructions {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .disclaimer {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-top: 0.5em;
   }
 
@@ -91,14 +91,14 @@
 }
 
 .invite-page {
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
 }
 
 .invites-show,
 #simple-container .invite-error {
   max-width: 500px;
   padding: 2rem 3rem;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   margin: 0 auto;
 
   @include viewport.until(md) {

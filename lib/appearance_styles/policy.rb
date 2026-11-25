@@ -5,10 +5,10 @@
 # cosmetic changes. Styles never contain CSS text or selectors:
 #
 #   {
-#     "variables" => { "--d-border-radius" => "12px" },
+#     "variables" => { "--d-sys-border-radius-md" => "12px" },
 #     "rules" => [
 #       { "area" => "topic_list_item", "state" => "hover", "media" => "desktop",
-#         "declarations" => { "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)" } }
+#         "declarations" => { "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)" } }
 #     ]
 #   }
 #
@@ -29,7 +29,7 @@ module AppearanceStyles
 
     # Never style the admin area, so an admin can always get back to
     # Customize > Themes. Variables go on the root element because derived
-    # variables (e.g. --d-button-border-radius: var(--d-border-radius)) are
+    # variables (e.g. --d-comp-DButton-border-radius: var(--d-sys-border-radius-md)) are
     # resolved there; setting them on body would not reach those.
     ROOT_SCOPE = ":root:not(:has(> body.admin-interface))"
     BODY_SCOPE = "body:not(.admin-interface)"
@@ -972,30 +972,31 @@ module AppearanceStyles
     # Backgrounds without a text variable of their own, with the text core
     # shows on them.
     # Site-wide text colors that BACKGROUND_TEXT backgrounds rely on.
-    SITE_WIDE_TEXT = %w[--primary --token-color-text-default].freeze
+    SITE_WIDE_TEXT = %w[--primary --d-sys-color-text-default].freeze
 
     # Backgrounds an area rule can paint instead, with that area.
     BACKGROUND_AREAS = { "--d-category-box-background-color" => "category_box" }.freeze
 
     BACKGROUND_TEXT = {
-      "--d-badge-card-background-color" => "--primary",
+      "--d-comp-DBadgeCard-color-background" => "--primary",
       "--d-category-box-background-color" => "--primary",
       "--d-content-background" => "--primary",
       "--d-post-aside-background" => "--primary",
       "--d-sidebar-background" => "--d-sidebar-link-color",
       "--d-sidebar-highlight-hover-background" => "--d-sidebar-highlight-color",
       "--d-unread-notification-background" => "--primary",
-      "--token-color-surface" => "--token-color-text-default",
-      "--token-color-surface-hovered" => "--token-color-text-default",
-      "--token-color-surface-pressed" => "--token-color-text-default",
-      "--token-color-surface-focused" => "--token-color-text-default",
-      "--token-color-surface-selected" => "--token-color-text-default",
+      "--d-sys-color-background-default" => "--d-sys-color-text-default",
+      "--d-sys-color-background-default-hovered" => "--d-sys-color-text-default",
+      "--d-sys-color-background-default-pressed" => "--d-sys-color-text-default",
+      "--d-sys-color-background-default-focused" => "--d-sys-color-text-default",
+      "--d-sys-color-background-default-selected" => "--d-sys-color-text-default",
     }.freeze
 
     # Background and text variables that render together, found by naming
     # convention (-bg-color, -background-color or -background with
-    # -text-color or -color), plus the
-    # backgrounds whose text is listed above.
+    # -text-color or -color, and a component's -color-background with its
+    # -color-text and -color-icon), plus the backgrounds whose text is listed
+    # above.
     def variable_pairs
       @variable_pairs ||=
         begin
@@ -1015,6 +1016,12 @@ module AppearanceStyles
                 icon = "#{base}-icon-color#{state}"
                 texts = [named || texts.first, (icon if @registry[icon])]
               end
+              if (match = variable.name.match(/\A(--d-comp-.*-color)-background(-.+)?\z/))
+                base, rest = match.captures
+                named = "#{base}-text#{rest}"
+                icon = "#{base}-icon#{rest}"
+                texts = [(@registry[named] ? named : texts.first), (icon if @registry[icon])]
+              end
               texts.compact.map { |text| [variable.name, text] }
             end
           paired = pairs.map(&:last)
@@ -1032,7 +1039,8 @@ module AppearanceStyles
       variable.type == "color" &&
         (
           variable.name.match?(/-color(--[a-z-]+)?\z/) ||
-            variable.name.match?(/\A--token-color-(text|icon)-/)
+            variable.name.match?(/\A--token-color-(text|icon)-/) ||
+            variable.name.match?(/-color-(text|icon)(-|\z)/)
         ) && !variable.name.match?(/background|-bg-|bg-color|border|shadow|outline|divider|fill/)
     end
 
@@ -1041,10 +1049,10 @@ module AppearanceStyles
       case name
       when /\A--d-sidebar-/
         "--d-sidebar-background"
-      when /\A--d-header-/
+      when /\A--d-header-/, /\A--d-comp-Header-/
         "--header_background"
-      when /\A--token-color-/
-        "--token-color-surface"
+      when /\A--token-color-/, /\A--d-sys-color-/
+        "--d-sys-color-background-default"
       else
         "--secondary"
       end
@@ -1345,7 +1353,7 @@ module AppearanceStyles
           return true if palette_rgb?(node)
           error(
             path,
-            "raw color #{node.value}() must use a palette variable, as rgb(var(--primary-rgb)) or rgba(var(--primary-rgb), 0.1), or be hex inside light-dark()",
+            "raw color #{node.value}() must use a palette variable, as var(--primary) or color-mix(in srgb, var(--primary) 10%, transparent), or be hex inside light-dark()",
           )
         else
           error(path, "#{node.value}() is not a color")

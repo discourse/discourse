@@ -15,17 +15,17 @@
     align-items: center;
 
     .back-to-forum {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-size: var(--font-up-1);
       padding: 0.5rem 0.8rem 0.5rem 0.25rem;
 
       .d-icon {
-        color: var(--primary);
+        color: var(--d-sys-color-icon-default);
       }
     }
 
     .c-heading {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-size: var(--font-up-2);
       font-weight: bold;
       margin: 0 auto;

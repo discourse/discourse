@@ -31,12 +31,12 @@
 }
 
 .install-theme-item {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-bottom: none;
   position: relative;
 
   &:last-child {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   input,
@@ -52,12 +52,12 @@
   }
 
   input:checked + label {
-    color: var(--secondary);
-    background-color: var(--tertiary);
+    color: var(--d-sys-color-text-inverse);
+    background-color: var(--d-sys-color-background-accent);
 
     + .d-icon {
       display: block;
-      color: var(--secondary);
+      color: var(--d-sys-color-icon-inverse);
     }
   }
 
@@ -95,7 +95,7 @@
 
 .install-theme-content__placeholder-type-tip {
   margin-top: 0.25em;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .popular-theme-items {
@@ -116,7 +116,7 @@
   flex-direction: column;
   align-items: center;
   max-height: 22rem;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 4px;
   padding: 0.75em;
   overflow: hidden;
@@ -135,17 +135,17 @@
     .popular-theme-type {
       font-weight: normal;
       font-size: var(--font-down-2);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     a {
-      color: var(--primary-very-high);
+      color: var(--d-sys-color-text-default);
       font-weight: bold;
 
       &:hover,
       &:visited,
       &:active {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
     }
 
@@ -169,7 +169,7 @@
     > span {
       font-style: italic;
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-right: 8px;
     }
 
@@ -184,9 +184,9 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 3px;
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
 
   img {
     display: block;

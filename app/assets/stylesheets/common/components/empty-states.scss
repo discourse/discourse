@@ -38,7 +38,7 @@
       }
 
       .empty-state__body {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .empty-state__cta {
@@ -82,7 +82,7 @@
     &.--icon svg {
       width: 3rem;
       height: 3rem;
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
 
       @include viewport.until(sm) {
         width: 3rem;
@@ -97,7 +97,7 @@
   &__tip {
     margin-top: 2rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .d-icon {
       font-size: var(--font-down-1);

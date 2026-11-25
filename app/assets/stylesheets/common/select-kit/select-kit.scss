@@ -50,10 +50,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
-      box-shadow: var(--shadow-dropdown);
-      background: var(--secondary);
+      border-radius: var(--d-sys-border-radius-md);
+      border: 1px solid var(--d-sys-color-border-default);
+      box-shadow: var(--d-sys-shadow-overlay);
+      background: var(--d-sys-color-background-default);
       max-width: 600px;
       overflow: hidden;
     }
@@ -81,7 +81,7 @@
     .select-kit-filter::after {
       content: "";
       position: absolute;
-      background: var(--tertiary);
+      background: var(--d-sys-color-background-accent);
       width: 100%;
       height: 2px;
       left: 0;
@@ -95,7 +95,7 @@
   }
 
   .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .select-kit-header {
@@ -108,7 +108,7 @@
     height: 100%;
 
     &:not(.btn) {
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       padding-left: 0.5em;
       padding-right: 0.5em;
     }
@@ -143,7 +143,7 @@
       min-width: 0;
 
       &:focus .d-icon-xmark {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
 
       .d-icon + .name {
@@ -188,15 +188,15 @@
       margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &.btn-primary .angle-icon {
-      color: var(--d-button-primary-icon-color);
+      color: var(--d-comp-DButton-color-icon-primary);
     }
 
     &.btn-danger .angle-icon {
-      color: var(--d-button-danger-icon-color);
+      color: var(--d-comp-DButton-color-icon-danger);
     }
 
     .d-button-label {
@@ -215,7 +215,7 @@
 
   .select-kit-body {
     display: none;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     box-sizing: border-box;
     width: max-content;
 
@@ -261,19 +261,19 @@
     }
 
     &.is-highlighted {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
     }
 
     &.is-selected,
     &.is-selected.is-highlighted {
-      background: var(--d-selected);
-      color: var(--d-selected-text-color);
+      background: var(--d-sys-color-background-default-selected);
+      color: var(--d-sys-color-text-default-selected);
     }
 
     .discourse-tag,
     .discourse-tag:visited,
     .discourse-tag:hover {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     &.create-color-row {
@@ -290,16 +290,16 @@
     width: 100%;
 
     &:hover .select-kit-row.is-highlighted:hover {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
     }
 
     &:hover .select-kit-row.is-selected.is-highlighted:hover {
-      background: var(--d-selected-hover);
+      background: var(--d-sys-color-background-default-selected-hovered);
     }
 
     .validation-message {
       white-space: nowrap;
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
       flex: 1 0 auto;
       margin: 5px;
       padding: 0 2px;
@@ -362,7 +362,7 @@
   }
 
   .select-kit-errors-collection {
-    background: var(--danger);
+    background: var(--d-sys-color-background-danger);
     padding: 0.25em 1em;
     margin: 0;
     width: 100%;
@@ -370,7 +370,7 @@
 
     .select-kit-error {
       list-style: none;
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
     }
   }
 
@@ -381,7 +381,7 @@
     padding: 0.5em;
     width: 100%;
     box-sizing: border-box;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
   }
 
   .results-count {

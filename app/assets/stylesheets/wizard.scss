@@ -2,10 +2,10 @@
 
 :root {
   --wizard-primary: var(--tertiary);
-  --wizard-primary-100: var(--tertiary-low);
-  --wizard-primary-300: var(--tertiary-medium);
+  --wizard-primary-100: var(--d-sys-color-background-accent-subtlest);
+  --wizard-primary-300: var(--d-sys-color-background-accent-subtle);
   --wizard-primary-400: var(--tertiary-hover);
-  --wizard-primary-800: var(--tertiary-high);
+  --wizard-primary-800: var(--d-sys-color-background-accent);
   --wizard-bg-color: light-dark(#{$discourse-bg-light}, #{$discourse-bg-dark});
   --wizard-bg-color-2: light-dark(
     #{$discourse-brand-light},
@@ -43,7 +43,7 @@ html:has(body.wizard) {
 
 body.wizard {
   background-color: var(--wizard-bg-color);
-  color: var(--primary-very-high);
+  color: var(--d-sys-color-text-default);
 
   #wizard-main {
     display: flex;
@@ -140,7 +140,8 @@ body.wizard {
     }
 
     .wizard-container {
-      border: 1px solid light-dark(rgb(0, 0, 0, 0.08), var(--primary-low));
+      border: 1px solid
+        light-dark(rgb(0, 0, 0, 0.08), var(--d-sys-color-border-default));
       border-radius: 8px;
       box-shadow:
         0 34px 110px rgb(30, 36, 72, 0.34),
@@ -153,7 +154,7 @@ body.wizard {
 .wizard-container {
   position: relative;
   z-index: 11;
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   box-shadow: 0 10px 30px light-dark(rgb(123, 95, 226, 0.15), transparent);
   box-sizing: border-box;
   border-radius: 16px;
@@ -185,7 +186,7 @@ body.wizard {
 
   &__field.invalid input {
     outline: 0;
-    border: 3px solid var(--danger);
+    border: 3px solid var(--d-sys-color-border-danger);
 
     @media (prefers-reduced-motion: no-preference) {
       animation: bump 0.25s ease-in-out;
@@ -214,7 +215,7 @@ body.wizard {
 
   &__step-title {
     font-size: 2em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
     font-weight: 900;
@@ -255,18 +256,18 @@ body.wizard {
   &__link {
     margin-right: 1em;
     text-decoration: none;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-up-1);
   }
 
   &__link:hover {
-    color: var(--tertiary-hover);
+    color: var(--d-sys-color-text-link-hovered);
   }
 
   &__button {
     --accent-color: var(--wizard-primary);
-    --d-button-primary-bg-color: var(--wizard-primary);
-    --d-button-primary-text-color: var(--wizard-button-text-color);
+    --d-comp-DButton-color-background-primary: var(--wizard-primary);
+    --d-comp-DButton-color-text-primary: var(--wizard-button-text-color);
     width: 100%;
     padding: 0.75em 2em;
     font-weight: bold;
@@ -310,16 +311,16 @@ body.wizard {
 
   &__label {
     font-weight: bold;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__label.required {
     display: inline;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__description {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-0);
     font-weight: normal;
     margin: 0.25em 0 1em;
@@ -334,7 +335,7 @@ body.wizard {
   }
 
   &__description.extra {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
 
@@ -346,7 +347,7 @@ body.wizard {
   &__text-input,
   input[type="text"] {
     --accent-color: var(--wizard-primary);
-    --d-input-border-radius: var(--wizard-input-radius);
+    --d-comp-Input-border-radius: var(--wizard-input-radius);
     --d-input-border: 1px solid var(--primary-300);
     width: 100%;
     margin: 0;
@@ -400,7 +401,10 @@ body.wizard {
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
-        color: light-dark(var(--wizard-primary), var(--primary));
+        color: light-dark(
+          var(--wizard-primary),
+          var(--d-sys-color-text-default)
+        );
         font-weight: bold;
       }
     }
@@ -493,12 +497,12 @@ body.wizard {
   }
 
   .wizard-container__combobox {
-    background: var(--secondary);
-    color: var(--primary);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-default);
     padding: 0.5em;
     font-size: var(--font-up-1);
     border-radius: 4px;
-    border: 1px solid var(--primary-low-mid);
+    border: 1px solid var(--d-sys-color-border-strong);
     margin-top: 0.25em;
   }
 
@@ -507,22 +511,25 @@ body.wizard {
   }
 
   .wizard-container__text-input {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .wizard-container__button {
     border-radius: 2px;
     border: 0;
     padding: 0.5em;
-    transition: var(--d-button-transition);
+    transition: var(--d-comp-DButton-motion-transition);
     text-decoration: none;
-    background-color: var(--secondary);
-    color: var(--primary-very-high);
+    background-color: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-default);
     cursor: pointer;
 
     &.btn-primary {
       background-color: var(--wizard-primary);
-      color: light-dark(var(--secondary), var(--primary));
+      color: light-dark(
+        var(--d-sys-color-text-inverse),
+        var(--d-sys-color-text-default)
+      );
       display: inline-block;
       padding: 0.75em 2em;
       border-radius: var(--wizard-button-radius);
@@ -543,14 +550,14 @@ body.wizard {
     }
 
     &:disabled {
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 
   .alert-error {
     padding: 0.5em 2.5em 0.5em 1em;
-    background-color: var(--danger-low);
-    color: var(--primary);
+    background-color: var(--d-sys-color-background-danger-subtlest);
+    color: var(--d-sys-color-text-default);
     position: relative;
     margin-bottom: 1em;
   }

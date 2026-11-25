@@ -57,6 +57,7 @@ module AppearanceStyles
       [/radius-(full|pill)\z/, 0, 9999],
       # pill-shaped buttons and inputs
       [/(button|input)-border-radius\z/, 0, 9999],
+      [/-(DButton|Input)-border-radius\z/, 0, 9999],
       [/radius/, 0, 32],
       [/font-size|header-size/, 11, 48],
       [/max-width\z/, 960, 1600],

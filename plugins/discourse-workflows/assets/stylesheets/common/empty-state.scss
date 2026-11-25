@@ -3,8 +3,8 @@
   flex-direction: column;
   align-items: center;
   padding: var(--space-8) var(--space-4);
-  border: 2px dashed var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border: 2px dashed var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   text-align: center;
 
   &__title {
@@ -12,7 +12,7 @@
   }
 
   &__description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin: 0 0 var(--space-4);
   }
 

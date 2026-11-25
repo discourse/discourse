@@ -77,11 +77,11 @@
       justify-content: flex-start;
       gap: var(--space-2);
       padding: var(--space-2);
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
       transform: none;
 
       .d-icon {
-        color: var(--icon-color, var(--primary-high));
+        color: var(--icon-color, var(--d-sys-color-icon-muted));
         font-size: var(--font-0);
       }
     }
@@ -89,7 +89,7 @@
 
   // Mirrors emoji-picker__filter-container
   &__filter-container {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     display: flex;
     height: 50px;
   }
@@ -98,7 +98,7 @@
   &__filter {
     width: 100%;
     margin: 0.5rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-sizing: border-box;
 
     input {
@@ -107,12 +107,12 @@
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     &.filter-input-container {
       border-color: transparent;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 
@@ -165,7 +165,7 @@
     width: var(--icon-grid-cell);
     height: var(--icon-grid-cell);
     cursor: pointer;
-    color: var(--icon-color, var(--primary-high));
+    color: var(--icon-color, var(--d-sys-color-icon-muted));
     border: none;
     background: none;
     padding: 0;
@@ -177,8 +177,8 @@
 
     &:hover,
     &:focus {
-      background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-sunken);
+      border-radius: var(--d-sys-border-radius-md);
 
       @media (prefers-reduced-motion: no-preference) {
         transform: scale(1.25);
@@ -186,9 +186,9 @@
     }
 
     &.--selected {
-      background: var(--tertiary-low);
-      color: var(--tertiary);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-icon-accent);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     // Inner grid so the chip icon aligns with the first grid column
@@ -238,7 +238,7 @@
   &__empty {
     padding: 1em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
     grid-column: 1 / -1;
   }
 

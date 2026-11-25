@@ -19,11 +19,11 @@
     box-sizing: border-box;
     height: 42px;
     padding: 0 var(--space-2);
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
 
     &:focus,
     &:focus-within {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }
@@ -31,7 +31,7 @@
 
   &__input-icon {
     background: none !important;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__input-field {
@@ -46,7 +46,7 @@
 
 // Results
 .admin-search__result {
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: block;
 
   &:first-child {
@@ -58,11 +58,11 @@
   }
 
   &:hover {
-    background-color: var(--d-hover);
+    background-color: var(--d-sys-color-background-default-hovered);
   }
 
   &-name {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -70,7 +70,7 @@
     gap: var(--space-3);
 
     .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       font-size: var(--font-down-1);
     }
   }
@@ -81,7 +81,7 @@
 
   &-description {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     margin-top: var(--space-1);
   }
 
@@ -97,7 +97,7 @@
   }
 
   &:focus-within {
-    background: var(--d-hover);
+    background: var(--d-sys-color-background-default-hovered);
   }
 }
 
@@ -116,7 +116,7 @@
   .admin-search__input-container {
     position: sticky;
     top: 0;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     z-index: z("modal", "content"); // above title icons
 
     &.--has-results {

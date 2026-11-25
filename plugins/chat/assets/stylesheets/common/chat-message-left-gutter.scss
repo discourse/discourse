@@ -13,7 +13,7 @@
 }
 
 .chat-message-left-gutter__date {
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   font-size: var(--font-down-1);
 }
 
@@ -25,7 +25,7 @@
 .chat-message-left-gutter__bookmark {
   .d-icon-discourse-bookmark-clock,
   .d-icon-bookmark {
-    color: var(--primary-low-mid);
+    color: var(--d-sys-color-icon-faint);
     font-size: var(--font-down-2);
     margin-left: 0.5em;
   }

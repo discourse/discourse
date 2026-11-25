@@ -7,11 +7,11 @@
 
   .ai-embedding-editor-tests {
     &__failure {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
 
     &__success {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
   }
 
@@ -61,7 +61,7 @@
 
   .fk-d-tooltip__icon {
     margin-left: 0.25em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   textarea + .fk-d-tooltip__trigger {
@@ -69,6 +69,6 @@
   }
 
   .d-icon-circle-exclamation {
-    color: var(--danger);
+    color: var(--d-sys-color-icon-danger);
   }
 }

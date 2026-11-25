@@ -1,18 +1,19 @@
 // LEGACY STYLES
 // some plugins rely on these (discourse-topic-voting is one)
 .popup-menu {
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   width: 14em;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   z-index: z("dropdown");
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--d-sys-shadow-raised);
 
   ul {
     margin: 0;
     list-style: none;
 
     li {
-      border-bottom: 1px solid rgb(var(--primary-low-rgb), 0.5);
+      border-bottom: 1px solid
+        color-mix(in srgb, var(--d-sys-color-border-default) 50%, transparent);
 
       &:last-child {
         border: none;
@@ -30,7 +31,7 @@
     margin: 0;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       align-self: flex-start;
       margin-right: 0.75em;
       margin-top: 0.1em; // vertical alignment
@@ -38,30 +39,30 @@
 
     &:focus,
     &:hover {
-      color: var(--primary);
-      background: var(--d-hover);
+      color: var(--d-sys-color-text-default);
+      background: var(--d-sys-color-background-default-hovered);
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
 
     &.popup-menu-btn-danger {
       .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
 
       .d-button-label {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       &:focus,
       &:hover {
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
 
         .d-icon,
         .d-button-label {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }

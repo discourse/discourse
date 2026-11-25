@@ -8,7 +8,7 @@
   @include default-input;
 
   .form-kit__field.has-error & {
-    border-color: var(--danger);
+    border-color: var(--d-sys-color-border-danger);
   }
 
   &.has-prefix.has-suffix {
@@ -16,11 +16,13 @@
   }
 
   &.has-prefix:not(.has-suffix) {
-    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-radius: 0 var(--d-comp-Input-border-radius)
+      var(--d-comp-Input-border-radius) 0;
   }
 
   &.has-suffix:not(.has-prefix) {
-    border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius) 0 0
+      var(--d-comp-Input-border-radius);
   }
 
   &-wrapper {
@@ -33,21 +35,23 @@
 
 .form-kit__before-input,
 .form-kit__after-input {
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
   padding-inline: 0.5em;
   height: var(--space-9);
   box-sizing: border-box;
-  background: var(--primary-low);
+  background: var(--d-sys-color-background-neutral);
   display: flex;
   align-items: center;
 }
 
 .form-kit__before-input {
   margin-right: -0.25em;
-  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius) 0 0
+    var(--d-comp-Input-border-radius);
 }
 
 .form-kit__after-input {
   margin-left: -0.25em;
-  border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+  border-radius: 0 var(--d-comp-Input-border-radius)
+    var(--d-comp-Input-border-radius) 0;
 }

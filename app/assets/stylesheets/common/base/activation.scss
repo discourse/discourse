@@ -2,7 +2,7 @@
 // account or changing their email.
 .account-created-page,
 .activate-account-page {
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
 
   #main-outlet {
     padding: 0;
@@ -22,7 +22,7 @@
 .activate-account {
   max-width: 500px;
   padding: 2rem 3rem;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   margin: 10vh auto 1em auto;
 
   @media screen and (height <= 700px) {

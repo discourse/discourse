@@ -4,7 +4,7 @@
   padding: 0;
 
   .chat-message-expand {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     padding: 0.25em;
 
     .d-button-label {
@@ -31,7 +31,7 @@
   min-width: 0;
 
   .search-highlight {
-    background: var(--highlight-medium);
+    background: var(--d-sys-color-background-highlight-subtle);
   }
 
   .chat-message-reaction {
@@ -57,7 +57,7 @@
     width: 100%;
 
     mark {
-      background-color: var(--highlight);
+      background-color: var(--d-sys-color-background-highlight);
     }
 
     code {
@@ -72,7 +72,7 @@
     .mention,
     span.mention.--wide {
       &.highlighted {
-        background: var(--tertiary-low);
+        background: var(--d-sys-color-background-accent-subtlest);
       }
 
       .user-status-message {
@@ -86,7 +86,7 @@
 
     // unlinked, invalid mention
     span.mention:not(.--wide) {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     // Automatic aspect-ratio mapping https://developer.mozilla.org/en-US/docs/Web/Media/images/aspect_ratio_mapping
@@ -103,7 +103,7 @@
 
   .chat-message-edited {
     display: inline-block;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
   }
 
@@ -130,12 +130,12 @@
       }
 
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
 
       &:hover {
         .d-icon {
-          color: var(--primary);
+          color: var(--d-sys-color-icon-default);
         }
       }
     }
@@ -150,11 +150,11 @@
 
 .touch .chat-message-container {
   &.-active {
-    background: var(--d-hover);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-default-hovered);
+    border-radius: var(--d-sys-border-radius-md);
 
     &.-bookmarked {
-      background: var(--highlight-low);
+      background: var(--d-sys-color-background-highlight-subtlest);
     }
   }
 }
@@ -168,45 +168,48 @@
 
   &:hover,
   &.-active {
-    background: var(--d-hover);
+    background: var(--d-sys-color-background-default-hovered);
 
     &.-bookmarked {
-      background: var(--highlight-medium);
+      background: var(--d-sys-color-background-highlight-subtle);
     }
 
     &.-deleted {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
 
       .chat-message-expand {
-        color: var(--danger);
+        color: var(--d-sys-color-text-danger);
       }
     }
 
     &.-highlighted {
-      background-color: var(--tertiary-medium);
+      background-color: var(--d-sys-color-background-accent-subtle);
     }
   }
 }
 
 .chat-message-container {
-  background-color: var(--d-content-background, var(--secondary));
+  background-color: var(
+    --d-content-background,
+    var(--d-sys-color-background-default)
+  );
   width: 100%;
 
   &.-errored {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &.-deleted {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     padding-block: 0.25rem;
   }
 
   &.-bookmarked {
-    background: var(--highlight-bg);
+    background: var(--d-sys-color-background-highlight-subtlest);
   }
 
   &.-highlighted {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   &.has-reply {

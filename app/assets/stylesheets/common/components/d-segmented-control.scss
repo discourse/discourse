@@ -4,9 +4,9 @@
   align-items: center;
   box-sizing: border-box;
   overflow: hidden;
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
   gap: var(--space-2);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   padding: var(--space-1) var(--space-2);
   height: var(--space-9);
 
@@ -28,8 +28,8 @@
     width: var(--slider-width, 0);
     height: calc(100% - var(--space-2));
     transform: translateX(var(--slider-x, 0));
-    background: var(--secondary);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-default);
+    border-radius: var(--d-sys-border-radius-md);
     box-shadow: 0 1px 6px rgb(0, 0, 0, 0.1);
     pointer-events: none;
 
@@ -92,16 +92,16 @@
     font-weight: normal;
     padding: var(--space-1) var(--space-4);
     margin: 0;
-    border-radius: var(--d-border-radius);
-    color: var(--primary-high);
+    border-radius: var(--d-sys-border-radius-md);
+    color: var(--d-sys-color-text-muted);
     height: var(--space-5);
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
 
     &:hover {
-      background: var(--primary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-default);
     }
 
     &:has(:focus-visible) {
@@ -112,7 +112,7 @@
     &:has(:checked),
     &:has(:checked):hover {
       background: transparent;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.is-disabled {

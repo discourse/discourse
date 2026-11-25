@@ -19,7 +19,7 @@
 .bundle-analyzer-modal .ba-warning p {
   max-width: 34em;
   margin: 0 auto 1.5em;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 }
 
 .bundle-analyzer {
@@ -150,12 +150,12 @@
   flex: none;
 }
 .bundle-analyzer .ba-badge.add {
-  background: var(--highlight-low);
-  color: var(--primary);
+  background: var(--d-sys-color-background-highlight-subtlest);
+  color: var(--d-sys-color-text-default);
 }
 .bundle-analyzer .ba-badge.route {
-  background: var(--success-low);
-  color: var(--success);
+  background: var(--d-sys-color-background-success-subtlest);
+  color: var(--d-sys-color-text-success);
 }
 
 .bundle-analyzer .ba-bar {

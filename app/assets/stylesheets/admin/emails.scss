@@ -35,7 +35,7 @@
   .reply-key {
     display: block;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .username div {
@@ -71,7 +71,7 @@
     text-align: right;
 
     a {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -100,7 +100,7 @@
   }
 
   .error-description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -131,7 +131,7 @@
 
 .admin-list-item {
   width: 100%;
-  border-top: 1px solid var(--content-border-color);
+  border-top: 1px solid var(--d-sys-color-border-default);
   padding: 0.25em 0;
 }
 

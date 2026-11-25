@@ -37,7 +37,7 @@
     gap: var(--space-2) var(--space-4);
     padding-bottom: var(--space-5);
     margin-bottom: var(--space-6);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     font-size: var(--font-down-1);
   }
 
@@ -51,13 +51,13 @@
   &__badge {
     padding: var(--space-1) var(--space-3);
     border-radius: var(--space-4);
-    background: var(--primary-low);
-    color: var(--primary-high);
+    background: var(--d-sys-color-background-neutral);
+    color: var(--d-sys-color-text-muted);
     font-weight: 600;
   }
 
   &__expiry {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__article {
@@ -78,7 +78,7 @@
   &__feedback {
     margin-block: var(--space-8);
     padding-top: var(--space-5);
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 }
 
@@ -100,12 +100,12 @@
   &__new + .blog-reviews__list {
     margin-top: var(--space-5);
     padding-top: var(--space-5);
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__intro {
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__create {
@@ -127,7 +127,7 @@
 
   &__empty {
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__entry {
@@ -135,8 +135,8 @@
     flex-direction: column;
     gap: var(--space-2);
     padding: var(--space-4);
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     overflow-wrap: anywhere;
   }
 
@@ -170,13 +170,13 @@
   &__status {
     padding: var(--space-half) var(--space-2);
     border-radius: var(--space-4);
-    background: var(--primary-low);
-    color: var(--primary-high);
+    background: var(--d-sys-color-background-neutral);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
 
     &.--success {
-      background: var(--success-low);
-      color: var(--success-hover);
+      background: var(--d-sys-color-background-success-subtlest);
+      color: var(--d-sys-color-background-success-hovered);
     }
   }
 
@@ -186,7 +186,7 @@
     flex-wrap: wrap;
     gap: var(--space-1) var(--space-3);
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 

@@ -56,7 +56,7 @@
 
     .emoji-picker__filter {
       margin: 0;
-      border-color: var(--primary-low-mid);
+      border-color: var(--d-sys-color-border-strong);
     }
 
     .emoji-picker__diversity-trigger {
@@ -82,8 +82,8 @@
     }
 
     .emoji[aria-current="true"] {
-      background: var(--tertiary-low);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-accent-subtlest);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -109,14 +109,14 @@
 
     &:hover,
     &:focus {
-      background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-sunken);
+      border-radius: var(--d-sys-border-radius-md);
       transform: scale(1.25);
     }
   }
 
   &__filter-container {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     display: flex;
     height: 50px;
 
@@ -128,7 +128,7 @@
   &__filter {
     width: 100%;
     margin: 0.5rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     box-sizing: border-box;
 
     input {
@@ -137,12 +137,12 @@
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     &.filter-input-container {
       border-color: transparent;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 
@@ -177,7 +177,7 @@
 
   &__sections-nav-wrap {
     --fade-color: var(--primary-low);
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     flex: 0 0 auto;
 
     @include viewport.until(sm) {
@@ -248,14 +248,18 @@
     display: flex;
     position: sticky;
     top: -1px; // to avoid an ugly sub 1px gap on retina
-    background: rgb(var(--secondary-rgb), 0.95);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-default) 95%,
+      transparent
+    );
     z-index: 2;
   }
 
   &__section-title {
     margin: 0;
     padding: 0.5rem;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-2);
     font-weight: 700;
     width: 100%;
@@ -274,7 +278,7 @@
     background: none;
     margin-right: 0.5rem;
     border: 0;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       visibility: hidden;

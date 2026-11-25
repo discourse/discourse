@@ -5,12 +5,12 @@
   }
 
   .d-icon-grid-picker__caret {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .form-kit__field.has-error & {
     .fk-d-menu__trigger {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
     }
   }
 }

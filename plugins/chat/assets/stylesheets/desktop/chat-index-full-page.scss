@@ -2,8 +2,8 @@
   .full-page-chat {
     .channels-list {
       height: calc(100vh - var(--main-outlet-offset));
-      border-right: 1px solid var(--content-border-color);
-      background: var(--secondary);
+      border-right: 1px solid var(--d-sys-color-border-default);
+      background: var(--d-sys-color-background-default);
       overflow-y: auto;
 
       .chat-channel-divider {
@@ -25,13 +25,13 @@
 
         &:hover,
         &.active {
-          background-color: var(--primary-low);
+          background-color: var(--d-sys-color-background-neutral);
 
           .chat-channel-title {
             .category-chat-name,
             .chat-name,
             .dm-usernames {
-              color: var(--primary);
+              color: var(--d-sys-color-text-default);
             }
           }
         }

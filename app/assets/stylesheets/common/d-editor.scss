@@ -34,10 +34,10 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   position: relative;
   border: var(--d-input-border);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
   min-height: 0;
 
   textarea {
@@ -109,7 +109,7 @@
   .d-editor-preview,
   .d-editor-input {
     font-style: italic;
-    color: var(--primary-medium) !important;
+    color: var(--d-sys-color-text-faint) !important;
   }
 }
 
@@ -153,7 +153,7 @@
   }
 
   .d-editor-preview {
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
     margin-top: 1em;
     padding: 0.667em;
 
@@ -201,8 +201,8 @@
     left: 0;
     opacity: 0.9;
     z-index: 1; // needs to be higher than image
-    background: var(--secondary);
-    color: var(--primary);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-default);
 
     .scale-btn-container,
     .alt-text-readonly-container,
@@ -218,7 +218,7 @@
     }
 
     .scale-btn {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       padding: 0 1em;
 
       &:first-child,
@@ -228,7 +228,7 @@
 
       &.active {
         font-weight: bold;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       &:not(.active):hover {
@@ -252,7 +252,7 @@
 
       .alt-text-edit-btn {
         cursor: pointer;
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
 
         svg {
           padding-right: 0.5em;
@@ -295,7 +295,7 @@
 
     .delete-image-button {
       cursor: pointer;
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       .d-icon-trash-can {
         margin-left: 0.5em;
@@ -304,7 +304,7 @@
 
     .wrap-image-grid-button {
       cursor: pointer;
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
 
     svg {
@@ -348,8 +348,8 @@
   .btn {
     margin: 0;
     background-color: transparent;
-    color: var(--primary-high);
-    border-radius: var(--d-border-radius);
+    color: var(--d-sys-color-text-muted);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
       color: currentcolor;
@@ -357,11 +357,11 @@
 
     .discourse-no-touch & {
       &:hover {
-        background-color: var(--d-hover);
+        background-color: var(--d-sys-color-background-default-hovered);
 
         .d-icon {
           color: var(
-            --primary-high
+            --d-sys-color-icon-muted
           ); // to remove when btn hover variable is scoped better
         }
       }
@@ -391,7 +391,7 @@
 
 .toolbar-separator {
   width: 1px;
-  background-color: var(--primary-low);
+  background-color: var(--d-sys-color-background-neutral);
   margin: auto 1px;
   height: 1.25rem;
 }
@@ -404,22 +404,22 @@
   }
 
   &.--active {
-    background: var(--d-selected);
-    color: var(--d-selected-text-color);
+    background: var(--d-sys-color-background-default-selected);
+    color: var(--d-sys-color-text-default-selected);
 
     &.btn:hover .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 
   &.-expanded {
-    background: var(--d-hover);
+    background: var(--d-sys-color-background-default-hovered);
   }
 }
 
 .d-editor #form-template-form {
   overflow: auto;
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
   padding: 1rem;
   border: var(--d-input-border);
   margin-bottom: 0;
@@ -452,11 +452,17 @@
 
   .translation-selector-dropdown {
     .select-kit-header {
-      --d-button-default-bg-color: transparent;
-      --d-button-default-bg-color--hover: var(--primary-low);
-      --d-button-default-text-color--hover: var(--primary-high);
-      --d-button-default-icon-color--hover: var(--primary-high);
-      border: 1px solid var(--primary-low-mid);
+      --d-comp-DButton-color-background-default: transparent;
+      --d-comp-DButton-color-background-default-hovered: var(
+        --d-sys-color-background-neutral
+      );
+      --d-comp-DButton-color-text-default-hovered: var(
+        --d-sys-color-text-muted
+      );
+      --d-comp-DButton-color-icon-default-hovered: var(
+        --d-sys-color-icon-muted
+      );
+      border: 1px solid var(--d-sys-color-border-strong);
     }
 
     .select-kit-body {
@@ -468,7 +474,7 @@
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
     border: var(--d-input-border);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     position: relative;
     overflow: auto;
 
@@ -476,9 +482,9 @@
       margin-left: 0.5rem;
       text-transform: uppercase;
       font-size: var(--font-down-2);
-      background: var(--tertiary-low);
+      background: var(--d-sys-color-background-accent-subtlest);
       padding: 0.25rem 0.5rem;
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -491,15 +497,16 @@
     align-items: center;
     padding: 0.5rem var(--translation-preview-padding, 1rem);
     padding-bottom: 0.25rem;
-    border-bottom: 1px solid var(--primary-low);
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
+    border-bottom: 1px solid var(--d-sys-color-border-default);
+    background: var(--d-sys-color-background-sunken);
+    border-radius: var(--d-sys-border-radius-md) var(--d-sys-border-radius-md) 0
+      0;
 
     &__title {
       display: inline-flex;
       align-items: center;
       font-size: var(--font-down-1-rem);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-weight: 500;
     }
 
@@ -513,8 +520,8 @@
         font-size: var(--font-down-1-rem);
         color: var(--d-nav-color);
         background-color: var(--d-nav-bg-color);
-        transition: var(--d-button-transition);
-        border-radius: var(--d-nav-pill-border-radius);
+        transition: var(--d-comp-DButton-motion-transition);
+        border-radius: var(--d-comp-NavPills-border-radius);
 
         &:hover:not(.active) {
           color: var(--d-nav-color--hover);
@@ -541,7 +548,7 @@
     &__raw-toggle {
       padding-left: 0.5rem;
       margin-left: 0.5rem;
-      border-left: 1px solid var(--primary-low);
+      border-left: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -556,7 +563,7 @@
   }
 
   .d-editor-translation-preview-empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
     padding: 2rem 0;
     text-align: center;

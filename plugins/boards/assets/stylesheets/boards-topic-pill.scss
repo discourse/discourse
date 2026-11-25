@@ -1,7 +1,7 @@
 .discourse-boards-topic-pill {
   .d-icon {
     margin-right: 0.25em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
     font-size: var(--font-down-1);
 
     .title-wrapper & {
@@ -40,7 +40,7 @@
     flex: 1 1 auto;
     font-weight: bold;
     font-size: var(--font-0);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     max-width: 100%;
 
     @include ellipsis;
@@ -61,7 +61,7 @@
       oklch(from var(--discourse-boards-column-color) 97% calc(c * 0.3) h),
       oklch(from var(--discourse-boards-column-color) 45% calc(c * 0.5) h)
     );
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: light-dark(
       oklch(from var(--discourse-boards-column-color) 20% calc(c * 1) h),
       oklch(from var(--discourse-boards-column-color) 100% calc(c * 0.9) h)
@@ -78,5 +78,5 @@
 
 .discourse-no-touch .discourse-boards-boards-menu__item.btn:hover,
 .discourse-boards-boards-menu__item.btn:focus-visible {
-  background: var(--d-hover);
+  background: var(--d-sys-color-background-default-hovered);
 }

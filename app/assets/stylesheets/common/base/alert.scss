@@ -1,8 +1,8 @@
 .alert {
   display: inline-block;
   padding: 0.5em 2.5em 0.5em 1em;
-  background-color: var(--danger-low);
-  color: var(--primary);
+  background-color: var(--d-sys-color-background-danger-subtlest);
+  color: var(--d-sys-color-text-default);
   position: relative;
   margin-bottom: 1em;
 
@@ -14,31 +14,31 @@
     padding: 0;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
   &.alert-success {
-    background-color: var(--success-low);
-    color: var(--primary);
+    background-color: var(--d-sys-color-background-success-subtlest);
+    color: var(--d-sys-color-text-default);
   }
 
   &.alert-error {
-    background-color: var(--danger-low);
-    color: var(--primary);
+    background-color: var(--d-sys-color-background-danger-subtlest);
+    color: var(--d-sys-color-text-default);
   }
 
   &.alert-warning {
-    background-color: var(--highlight-bg);
-    color: var(--primary);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
+    color: var(--d-sys-color-text-default);
   }
 
   &.alert-info {
-    background-color: var(--tertiary-low);
-    color: var(--primary);
+    background-color: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-default);
 
     &.clickable {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       z-index: z("base");
 
       .mobile-view & {

@@ -28,7 +28,7 @@ body.activate-account-page {
   .d-header {
     box-shadow: none;
     border: none;
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
   }
 
   .d-header .home-logo-wrapper-outlet {
@@ -42,7 +42,7 @@ body.activate-account-page {
 
 body.login-page,
 body.signup-page {
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
 
   .sidebar-wrapper {
     display: none;
@@ -116,7 +116,7 @@ body.signup-page {
           display: block;
           height: 1px;
           width: 100%;
-          background-color: var(--primary-low);
+          background-color: var(--d-sys-color-background-neutral);
           margin-block: 1rem;
         }
       }
@@ -151,11 +151,11 @@ body.signup-page {
     &__existing-account,
     &__no-account-yet {
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &__disclaimer {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-bottom: 1rem;
     }
   }
@@ -193,7 +193,7 @@ body.signup-page {
       width: 1px;
       height: 80%;
       transform: translateY(-50%);
-      background-color: var(--primary-low);
+      background-color: var(--d-sys-color-background-neutral);
     }
   }
 
@@ -221,21 +221,21 @@ body.signup-page {
 
     textarea {
       border: var(--d-input-border);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
     }
 
     input:not(.filter-input):focus {
       outline: none;
-      border: 1px solid var(--tertiary);
-      box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.25);
+      border: 1px solid var(--d-sys-color-border-accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--tertiary) 25%, transparent);
     }
 
     input:disabled {
-      background-color: var(--primary-low);
+      background-color: var(--d-sys-color-background-neutral);
     }
 
     span.more-info {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       min-height: 1.4em; // prevents height increase due to tips
       overflow-wrap: anywhere;
     }
@@ -246,7 +246,7 @@ body.signup-page {
     .user-field.dropdown label.control-label,
     .user-field.multiselect label.control-label {
       display: block;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: 16px;
       font-weight: normal;
       position: absolute;
@@ -255,7 +255,7 @@ body.signup-page {
       width: max-content;
       max-width: calc(100% - 2em);
       top: 13px;
-      box-shadow: 0 0 0 0 rgb(var(--tertiary-rgb), 0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--tertiary) 0%, transparent);
       transition: 0.2s ease all;
       white-space: nowrap;
       overflow: hidden;
@@ -269,7 +269,7 @@ body.signup-page {
     .user-field.date label.control-label {
       top: -8px;
       left: calc(1em - 0.25em);
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
       padding: 0 0.25em 0 0.25em;
       font-size: $font-down-1;
     }
@@ -295,13 +295,13 @@ body.signup-page {
     input.value-entered + label.alt-placeholder {
       top: -8px;
       left: calc(1em - 0.25em);
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
       padding: 0 0.25em 0 0.25em;
       font-size: var(--font-down-1);
     }
 
     input.alt-placeholder:invalid {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .user-field.dropdown,
@@ -368,11 +368,11 @@ body.signup-page {
         }
 
         input.alt-placeholder:invalid {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
         }
 
         label.more-info {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
 
         label.alt-placeholder,
@@ -421,7 +421,7 @@ body.signup-page {
       .btn {
         margin: 0;
         padding-block: 0.65rem;
-        border: 1px solid var(--content-border-color);
+        border: 1px solid var(--d-sys-color-border-default);
         flex: 1 1 calc(50% - 0.25em);
         font-size: var(--font-down-1);
         white-space: nowrap;
@@ -442,11 +442,11 @@ body.signup-page {
     }
 
     .btn-social {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0.75em 0.77em; // matches input padding
 
       &.discourse_id {
-        border-color: var(--discourse_id-border);
+        border-color: var(--d-comp-DButton-color-border-primary);
       }
     }
 
@@ -492,7 +492,7 @@ body.signup-page {
     display: block;
 
     &.bad {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -503,12 +503,12 @@ body.signup-page {
   .more-info,
   .instructions {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     overflow-wrap: anywhere;
   }
 
   .caps-lock-warning {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     font-size: var(--font-down-1);
 
     @include viewport.until(md) {
@@ -545,7 +545,7 @@ body.signup-page {
       width: 100%;
       gap: 0.5rem;
       line-height: 1rem;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &__sign-in {
@@ -563,7 +563,7 @@ body.signup-page {
 
   @include viewport.until(md) {
     .login-or-separator {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       position: relative;
       margin-block: 1rem;
 
@@ -572,9 +572,9 @@ body.signup-page {
         position: absolute;
         left: 50%;
         top: 50%;
-        background: var(--secondary);
+        background: var(--d-sys-color-background-default);
         padding-inline: 0.5rem;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         font-size: var(--font-down-1-rem);
         text-transform: uppercase;
       }
@@ -635,14 +635,14 @@ body.signup-page {
         textarea:focus + label.alt-placeholder.control-label {
           top: -8px;
           left: calc(1em - 0.25em);
-          background-color: var(--secondary);
+          background-color: var(--d-sys-color-background-default);
           padding: 0 0.25em 0 0.25em;
           font-size: 14px;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
 
         label.alt-placeholder.control-label {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           font-size: 16px;
           position: absolute;
           pointer-events: none;
@@ -658,17 +658,18 @@ body.signup-page {
 
       details:not(.has-selection) span.name,
       details:not(.has-selection) span.formatted-selection {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .select-kit-row span.name {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       .select-kit.combo-box.is-expanded summary {
         outline: none;
-        border: 1px solid var(--tertiary);
-        box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.25);
+        border: 1px solid var(--d-sys-color-border-accent);
+        box-shadow: 0 0 0 2px
+          color-mix(in srgb, var(--tertiary) 25%, transparent);
       }
 
       .controls .checkbox-label {

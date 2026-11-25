@@ -2,7 +2,7 @@
 
 // nested replies in topics
 .embedded-posts {
-  --border-color: var(--content-border-color);
+  --border-color: var(--d-sys-color-border-default);
   --border-width: 1px;
 
   @include viewport.until(sm) {
@@ -93,12 +93,12 @@
             .post-info.arrow {
               padding: 0.5em 0;
               margin-right: 0;
-              color: var(--primary-medium);
+              color: var(--d-sys-color-text-faint);
               line-height: 1;
 
               &:hover,
               &:focus {
-                color: var(--primary-high);
+                color: var(--d-sys-color-text-muted);
               }
             }
           }
@@ -144,7 +144,7 @@
     .collapse-down,
     .collapse-up {
       position: absolute;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       z-index: 99; // Needs to be higher than topic-avatar
     }
 
@@ -220,7 +220,7 @@
 
                   &:hover,
                   &:focus {
-                    color: var(--primary-high);
+                    color: var(--d-sys-color-text-muted);
                   }
                 }
               }

@@ -7,7 +7,7 @@
 .chat-channel-list-options-button {
   padding: 0;
   background: transparent;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-0-rem);
 
   &:hover {
@@ -58,7 +58,7 @@
 
 .chat-channel-list-filter-menu__label-description,
 .chat-channel-list-sort-menu__label-description {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1-rem);
   padding-inline-end: var(--space-2);
 }

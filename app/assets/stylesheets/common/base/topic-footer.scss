@@ -53,12 +53,12 @@
 
     .bookmark.bookmarked {
       .d-icon-discourse-bookmark-clock {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
 
       &:not(.--post-bookmarked-only) {
         .d-icon-bookmark {
-          color: var(--tertiary);
+          color: var(--d-sys-color-icon-accent);
         }
       }
     }
@@ -71,7 +71,7 @@
   .pinned-button,
   .topic-notifications-button {
     .text {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     @include viewport.until(sm) {
@@ -139,8 +139,8 @@
     .topic-admin-menu-trigger,
     .topic-content-language-preferences {
       border-radius: 0;
-      background: var(--secondary);
-      border: 1px solid var(--primary-low);
+      background: var(--d-sys-color-background-default);
+      border: 1px solid var(--d-sys-color-border-default);
     }
 
     .topic-admin-menu-trigger + .topic-content-language-preferences {
@@ -166,10 +166,10 @@
 
   #topic-progress {
     position: relative;
-    background-color: var(--secondary);
-    color: var(--tertiary);
+    background-color: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-link);
     padding: 0.5rem 1em;
-    border: 1px solid var(--tertiary-low);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
 
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
@@ -200,7 +200,7 @@
       bottom: 0;
       left: 0;
       width: var(--progress-bg-width, 0);
-      background-color: var(--tertiary-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
     }
   }
 }

@@ -3,11 +3,11 @@
 .db-report {
   &__card {
     position: relative;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
     padding: var(--space-4);
     box-sizing: border-box;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     height: 320px;
     display: flex;
     flex-direction: column;
@@ -25,8 +25,16 @@
         right: 0;
         background: linear-gradient(
           to bottom,
-          rgb(var(--secondary-rgb), 0),
-          rgb(var(--secondary-rgb), 0.5)
+          color-mix(
+            in srgb,
+            var(--d-sys-color-background-default) 0%,
+            transparent
+          ),
+          color-mix(
+            in srgb,
+            var(--d-sys-color-background-default) 50%,
+            transparent
+          )
         );
         height: var(--space-2);
       }
@@ -60,8 +68,8 @@
     &.--resize-placeholder {
       margin: calc(var(--space-2) * -1);
       border-style: dashed;
-      border-color: var(--tertiary);
-      background: var(--tertiary-low);
+      border-color: var(--d-sys-color-border-accent);
+      background: var(--d-sys-color-background-accent-subtlest);
 
       &:not(.--rows-2, .--rows-3, .--rows-4) {
         height: calc(320px + var(--space-2) * 2);
@@ -152,8 +160,16 @@
         right: 0;
         background: linear-gradient(
           to top,
-          rgb(var(--secondary-rgb), 0),
-          rgb(var(--secondary-rgb), 0.5)
+          color-mix(
+            in srgb,
+            var(--d-sys-color-background-default) 0%,
+            transparent
+          ),
+          color-mix(
+            in srgb,
+            var(--d-sys-color-background-default) 50%,
+            transparent
+          )
         );
         height: var(--space-2);
         z-index: 1;
@@ -166,18 +182,18 @@
     align-items: center;
     font-size: var(--font-down-1-rem);
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:visited,
     &:hover,
     &:active {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
   &__label {
-    background: var(--tertiary-low);
-    color: var(--tertiary);
+    background: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-link);
     border-radius: 4px;
     font-size: var(--font-down-3);
     padding: var(--space-half) var(--space-2);
@@ -225,7 +241,7 @@
     justify-content: center;
     gap: var(--space-2);
     height: 100%;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .d-icon {
       font-size: var(--font-up-3);
@@ -233,21 +249,21 @@
   }
 
   &__error {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__add-report {
-    border: 1px dashed var(--content-border-color);
-    border-radius: var(--d-border-radius-large);
-    background: var(--secondary);
-    color: var(--primary-medium);
+    border: 1px dashed var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-lg);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-faint);
     padding: var(--space-2);
 
     &:hover,
     &:focus {
-      background: var(--tertiary-low);
-      border-color: var(--tertiary);
-      color: var(--tertiary);
+      background: var(--d-sys-color-background-accent-subtlest);
+      border-color: var(--d-sys-color-border-accent);
+      color: var(--d-sys-color-text-link);
     }
   }
 }

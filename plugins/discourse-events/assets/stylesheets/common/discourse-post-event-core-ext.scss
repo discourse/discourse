@@ -7,7 +7,7 @@
 
   .event-date {
     font-size: var(--font-down-4);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-weight: normal;
     padding: 0.25em;
   }
@@ -29,18 +29,18 @@
     display: inline-flex;
     align-items: center;
     font-size: var(--font-down-2);
-    border: 1px solid var(--tertiary-very-low);
-    background: var(--tertiary-very-low);
-    color: var(--tertiary);
+    border: 1px solid var(--d-sys-color-background-accent-subtlest);
+    background: var(--d-sys-color-background-accent-subtlest);
+    color: var(--d-sys-color-text-link);
     padding: 0 0.35em;
     border-radius: 3px;
     pointer-events: auto; // needed to show title attribute on hover
     vertical-align: middle;
 
     &.past {
-      border: 1px solid var(--primary-very-low);
-      background: var(--primary-very-low);
-      color: var(--primary-medium);
+      border: 1px solid var(--d-sys-color-border-muted);
+      background: var(--d-sys-color-background-sunken);
+      color: var(--d-sys-color-text-faint);
     }
 
     .indicator {
@@ -48,7 +48,7 @@
       width: 6px;
       height: 6px;
       border-radius: 3px;
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
       margin-right: 0.25em;
     }
   }

@@ -18,13 +18,13 @@
   }
 
   .topic-chat-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     display: flex;
   }
 
   .chat-unread-count {
     display: inline-block;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     background-color: var(--tertiary-med-or-tertiary);
     font-size: var(--font-down-2);
     border-radius: 100%;
@@ -41,7 +41,7 @@
 .chat-channel-title__users-count {
   display: flex;
   border-radius: 50%;
-  background: rgb(var(--primary-rgb), 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   width: 22px;
   height: 22px;
   box-sizing: border-box;
@@ -50,22 +50,22 @@
   font-size: var(--font-down-1);
   align-items: center;
   padding: 0.25rem 0.5rem;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 }
 
 .chat-channel-title__category-badge {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   display: flex;
   font-size: var(--font-up-1);
   position: relative;
 }
 
 .chat-channel-title__restricted-category-icon {
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   position: absolute;
   border-radius: 50%;
   padding: 2px 2px 3px;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   height: 0.5rem;
   width: 0.5rem;
   right: -0.5rem;

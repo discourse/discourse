@@ -30,7 +30,7 @@
   &__scope-note {
     margin: 0 0 var(--space-2);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__cached {
@@ -39,7 +39,7 @@
     align-items: baseline;
     gap: var(--space-1) var(--space-2);
     margin-block-start: var(--space-2);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -59,7 +59,7 @@
     justify-content: center;
     height: 100%;
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-align: center;
   }
 
@@ -78,7 +78,7 @@
     margin: 0 0 var(--space-1);
     font-size: var(--font-down-1);
     font-weight: normal;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__related-list {
@@ -87,7 +87,7 @@
   }
 
   &__related-item + &__related-item {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__follow-up {
@@ -123,7 +123,7 @@
   line-height: var(--line-height-medium);
 
   &:hover {
-    background: var(--d-hover);
+    background: var(--d-sys-color-background-default-hovered);
   }
 
   &__title {
@@ -131,7 +131,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__category {
@@ -147,7 +147,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   // the category badge sets its own size, which these match
@@ -155,7 +155,7 @@
   &__replies {
     justify-self: end;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__date {
@@ -177,7 +177,7 @@
 
 .ai-search-menu-answer {
   flex-shrink: 0;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 }
 
 // Results sit beside an answer that summarises them, so each one is held to a
@@ -218,8 +218,8 @@
   max-height: calc(100vh - var(--header-offset, 0px) - var(--space-8));
   overflow-y: auto;
   padding: var(--space-4);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius-large);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-lg);
 
   &__title {
     margin: 0 0 var(--space-3);
@@ -241,11 +241,11 @@
   }
 
   &__item + &__item {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   // The modal has its own title and frame. Rows reach into the padding to
@@ -264,7 +264,7 @@
 
 @keyframes ai-search-highlight {
   from {
-    background: var(--highlight-low);
+    background: var(--d-sys-color-background-highlight-subtlest);
   }
 }
 
@@ -314,12 +314,12 @@
     min-width: 1.5em;
     height: 1.5em;
     padding: 0 0.35em;
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
     font-size: var(--font-down-2);
     font-weight: bold;
     line-height: 1;
-    color: var(--secondary);
-    background: var(--tertiary);
+    color: var(--d-sys-color-text-inverse);
+    background: var(--d-sys-color-background-accent);
     pointer-events: none;
 
     .d-icon {
@@ -329,7 +329,7 @@
 
   .--empty &__count,
   &__empty {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     background: var(--primary-low-mid);
   }
 }

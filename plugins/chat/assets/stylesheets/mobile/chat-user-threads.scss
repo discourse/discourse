@@ -33,12 +33,12 @@
     position: absolute;
     top: -4px;
     right: -3px;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     border-radius: 50%;
     padding: 0.2em;
     line-height: var(--line-height-small);
     border: 2px solid var(--secondary-very-high);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     // sized by its padding rather than a fixed box
     .d-icon {
@@ -74,7 +74,7 @@
     @include ellipsis;
     grid-area: excerpt;
     display: flex;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .c-user-thread__excerpt-text {

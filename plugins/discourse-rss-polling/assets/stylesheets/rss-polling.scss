@@ -51,7 +51,7 @@
     gap: var(--space-2);
     margin-top: var(--space-1);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -79,7 +79,7 @@
   }
 
   &__count {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -91,8 +91,8 @@
     max-height: 22em;
     overflow-y: auto;
     margin-top: var(--space-2);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__list {
@@ -109,22 +109,22 @@
     border-inline-start: 3px solid transparent;
 
     & + & {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
 
     &.--import {
-      border-inline-start-color: var(--success);
+      border-inline-start-color: var(--d-sys-color-border-success);
     }
 
     &.--update {
-      border-inline-start-color: var(--tertiary);
+      border-inline-start-color: var(--d-sys-color-border-accent);
     }
 
     &.--skip {
-      border-inline-start-color: var(--primary-low-mid);
+      border-inline-start-color: var(--d-sys-color-border-strong);
 
       .rss-polling-feed-test__item-title {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
     }
   }
@@ -147,11 +147,11 @@
   &__item-date,
   &__item-reason {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__item-reason a {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     &:hover {
       text-decoration: underline;
@@ -160,7 +160,7 @@
 
   &__more,
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 }
@@ -182,7 +182,7 @@
     margin-top: var(--space-1);
     font-size: var(--font-down-1);
     line-height: var(--line-height-medium);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     > * {
       display: inline-flex;
@@ -211,10 +211,10 @@
     gap: var(--space-2);
 
     a {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
 
       &:hover {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
     }
   }
@@ -228,7 +228,7 @@
     gap: var(--space-1);
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -263,7 +263,7 @@
     .d-table__cell.--overview {
       flex: 0 0 100%;
       padding-inline: 0;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       .d-table__overview-link {
         padding-inline: var(--space-2);
@@ -280,12 +280,12 @@
       gap: var(--space-1);
       margin-top: var(--space-2);
       padding: var(--space-2) var(--space-2) 0;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       .d-table__mobile-label {
         min-width: 8.5em;
         font-weight: 700;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       > * {
@@ -308,7 +308,7 @@
       gap: var(--space-2);
 
       .d-table__mobile-label {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
@@ -334,7 +334,7 @@
 
   &__attempt {
     &.--danger .rss-polling-feed-history__counts {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
 
     .d-table__cell.--overview {
@@ -342,7 +342,7 @@
     }
 
     @include viewport.from(md) {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
 
       &:first-child {
         border-top: 0;
@@ -373,7 +373,7 @@
   }
 
   &__counts {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -390,7 +390,7 @@
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 

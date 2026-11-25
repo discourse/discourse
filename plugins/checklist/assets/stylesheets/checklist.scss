@@ -27,7 +27,7 @@ span.chcklst-box {
     touch-action: manipulation;
 
     &.is-pending {
-      background-color: var(--primary-low);
+      background-color: var(--d-sys-color-background-neutral);
       box-shadow: 0 0 0 0.09em var(--primary-low);
     }
 

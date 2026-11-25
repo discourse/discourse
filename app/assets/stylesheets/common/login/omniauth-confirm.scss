@@ -87,7 +87,7 @@ body.no-ember:has(.omniauth-confirm) {
   }
 
   &__card {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border-radius: var(--omniauth-card-radius);
     box-shadow: var(--omniauth-card-shadow);
     padding: var(--space-5);
@@ -104,7 +104,7 @@ body.no-ember:has(.omniauth-confirm) {
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-3);
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: var(--omniauth-element-radius);
     margin-bottom: var(--space-4);
     text-align: left;
@@ -136,13 +136,13 @@ body.no-ember:has(.omniauth-confirm) {
 
   &__provider-name {
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-0);
   }
 
   &__provider-description {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__actions {
@@ -168,7 +168,8 @@ body.no-ember:has(.omniauth-confirm) {
     &.btn-primary {
       background: var(--omniauth-primary);
       color: #fff;
-      border: var(--d-button-primary-border);
+      border: var(--d-comp-DButton-border-width) solid
+        var(--d-comp-DButton-color-border-primary);
 
       &:hover,
       &:focus {

@@ -4,7 +4,7 @@
   box-sizing: content-box;
   border-radius: 100vmax;
   background: var(--d-new-indicator-color);
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   font-size: var(--font-down-2);
   text-align: center;
   cursor: default;
@@ -13,7 +13,7 @@
   transition: border-color linear 0.15s;
 
   &.-urgent {
-    background: var(--success);
+    background: var(--d-sys-color-background-success);
     height: 1em;
     width: min-content;
     min-width: 0.6em;
@@ -22,6 +22,6 @@
 }
 
 .c-unread-indicator__number {
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   line-height: var(--line-height-small);
 }

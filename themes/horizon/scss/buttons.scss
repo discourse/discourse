@@ -1,7 +1,7 @@
 @use "lib/viewport";
 
 :root {
-  --d-button-border-radius: 6.25rem;
+  --d-comp-DButton-border-radius: 6.25rem;
 }
 
 .discourse-no-touch .topic-body .actions .fade-out {
@@ -11,8 +11,8 @@
 .sidebar-new-topic-button__wrapper {
   &:has(.fk-d-tooltip__trigger) {
     #create-topic.btn {
-      border-radius: var(--d-button-border-radius) 0 0
-        var(--d-button-border-radius);
+      border-radius: var(--d-comp-DButton-border-radius) 0 0
+        var(--d-comp-DButton-border-radius);
     }
   }
 }
@@ -29,7 +29,7 @@
   &:focus-visible,
   &:hover {
     background: var(--primary-100);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     box-shadow: 0 0 0 4px var(--button-box-shadow);
 
     .d-icon {
@@ -38,12 +38,12 @@
   }
 
   &:active:not(:hover, :focus) {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     background: var(--tertiary-300);
     background-image: none;
 
     .d-icon {
-      color: var(--tertiary-high);
+      color: var(--d-sys-color-background-accent);
     }
   }
 }
@@ -86,8 +86,9 @@
   .discourse-no-touch & {
     &:not([disabled]):focus-visible,
     &:not([disabled]):hover {
-      background-color: var(--danger);
-      box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
+      background-color: var(--d-sys-color-background-danger);
+      box-shadow: 0 0 0 4px
+        var(--d-comp-DButton-color-background-danger-hovered);
     }
   }
 }
@@ -105,7 +106,7 @@
 }
 
 .d-combo-button:hover {
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   box-shadow: 0 0 0 4px var(--button-box-shadow);
 
   button:hover {
@@ -119,4 +120,14 @@
   .d-icon {
     color: var(--icon-color);
   }
+}
+
+.btn-social.discourse_id {
+  --d-comp-DButton-color-text-primary: var(--accent-text-color);
+  --d-comp-DButton-color-text-primary-hovered: var(--accent-text-color);
+  --d-comp-DButton-color-icon-primary: var(--accent-text-color);
+  --d-comp-DButton-color-icon-primary-hovered: var(--accent-text-color);
+  --d-comp-DButton-color-border-primary: var(
+    --d-comp-DButton-color-background-primary
+  );
 }

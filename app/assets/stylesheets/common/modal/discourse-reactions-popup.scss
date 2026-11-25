@@ -18,8 +18,8 @@
 .users-popup {
   --skeleton-shimmer-rgb: #{hexToRGB($primary-50)};
   width: 250px;
-  background: var(--secondary);
-  color: var(--primary);
+  background: var(--d-sys-color-background-default);
+  color: var(--d-sys-color-text-default);
   line-height: normal;
 
   @include viewport.until(sm) {
@@ -30,7 +30,7 @@
     padding: 0 var(--space-4) var(--space-4);
     text-align: center;
     font-weight: 700;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     @include viewport.until(sm) {
       padding-top: var(--space-3);
@@ -41,7 +41,7 @@
   &__sticky-header {
     position: sticky;
     top: 0;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     z-index: z("base");
   }
 
@@ -65,7 +65,7 @@
 
     @include viewport.from(sm) {
       padding: var(--space-2) var(--space-3);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     &::-webkit-scrollbar {
@@ -83,9 +83,9 @@
       padding: var(--space-1) var(--space-2);
     }
     border: none;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     cursor: pointer;
     white-space: nowrap;
@@ -103,7 +103,7 @@
 
     &:hover {
       .discourse-no-touch & {
-        background: var(--primary-very-low);
+        background: var(--d-sys-color-background-sunken);
       }
 
       .discourse-touch & {
@@ -112,8 +112,8 @@
     }
 
     &.is-active {
-      background: var(--tertiary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -140,7 +140,7 @@
 
     &:hover {
       .discourse-no-touch & {
-        background: var(--primary-very-low);
+        background: var(--d-sys-color-background-sunken);
       }
 
       .discourse-touch & {
@@ -150,7 +150,7 @@
   }
 
   .avatar {
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
 
     @include viewport.until(sm) {
       width: 32px;
@@ -168,12 +168,12 @@
 
   &__name {
     @include ellipsis;
-    color: var(--primary) !important;
+    color: var(--d-sys-color-text-default) !important;
     max-width: 100%;
   }
 
   &__username {
-    color: var(--primary-medium) !important;
+    color: var(--d-sys-color-text-faint) !important;
     font-size: var(--font-down-1);
     text-decoration: none;
     overflow: hidden;
@@ -186,7 +186,7 @@
   }
 
   &__reaction {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     flex-shrink: 0;
     margin-left: auto;
 
@@ -209,8 +209,8 @@
   &__skeleton-name,
   &__skeleton-username,
   &__skeleton-reaction {
-    background: var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-neutral);
+    border-radius: var(--d-sys-border-radius-md);
     position: relative;
     overflow: hidden;
 

@@ -40,17 +40,17 @@
   .-ghost,
   .-ghost .d-icon {
     padding: 0;
-    color: var(--tertiary);
+    color: var(--d-sys-color-icon-accent);
     border: 0;
     background-color: transparent;
     box-shadow: none;
 
     &:hover {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
       background-color: transparent;
 
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
         background-color: transparent;
       }
     }
@@ -64,7 +64,11 @@
     padding-bottom: 5rem;
 
     &__wrapper {
-      background: rgb(var(--tertiary-rgb), 0.1);
+      background: color-mix(
+        in srgb,
+        var(--d-sys-color-background-accent) 10%,
+        transparent
+      );
       border-bottom-left-radius: 20px;
       border-bottom-right-radius: 20px;
     }
@@ -181,7 +185,7 @@
     display: flex;
     justify-content: space-between;
     top: var(--header-offset);
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
     border-bottom: 1px solid black;
 
     .d-icon {
@@ -192,7 +196,7 @@
       position: relative;
       height: 2px;
       margin-top: -1px;
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
     }
   }
 
@@ -202,7 +206,7 @@
     align-items: center;
     margin-bottom: 1.25rem;
     padding: 0.5rem 1.5rem;
-    background-color: rgb(var(--primary-rgb), 0.075);
+    background-color: color-mix(in srgb, var(--primary) 7.5%, transparent);
     border-radius: 20px;
 
     &__rank {
@@ -239,8 +243,8 @@
       margin-bottom: 2rem;
       padding-top: 0.25rem;
       padding-bottom: 0.25rem;
-      background-color: var(--tertiary);
-      color: var(--secondary);
+      background-color: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
 
       .user__name {
         flex-grow: 1;
@@ -254,8 +258,8 @@
     }
 
     &-highlight {
-      background-color: var(--tertiary);
-      color: var(--secondary);
+      background-color: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
     }
   }
 
@@ -278,6 +282,6 @@
 .recalculate-modal {
   &__footer-text {
     margin-left: auto;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }

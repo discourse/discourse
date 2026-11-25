@@ -333,9 +333,13 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
           new_theme: true,
         )
 
-      expect(result[:style_changes]).to eq(["--d-button-border-radius: 8px"])
+      expect(result[:style_changes]).to eq(["--d-comp-DButton-border-radius: 8px"])
       expect(result[:website]).to include(button_radius: "8px")
-      expect(draft(result)[:styles]).to eq("variables" => { "--d-button-border-radius" => "8px" })
+      expect(draft(result)[:styles]).to eq(
+        "variables" => {
+          "--d-comp-DButton-border-radius" => "8px",
+        },
+      )
     end
 
     it "uses core's pill shape for fully rounded buttons" do
@@ -348,7 +352,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
         )
 
       expect(draft(result)[:styles]["variables"]).to eq(
-        "--d-button-border-radius" => "var(--d-border-radius-pill)",
+        "--d-comp-DButton-border-radius" => "var(--d-sys-border-radius-full)",
       )
     end
 
@@ -437,7 +441,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
     let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
     let(:styles_answer) do
       {
-        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "12px" }],
         "rules" => [],
         "unsupported" => ["Add a shop link to the header"],
       }
@@ -454,14 +458,14 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
 
       expect(result).to include(
         status: "success",
-        style_changes: ["--d-border-radius: 12px"],
+        style_changes: ["--d-sys-border-radius-md: 12px"],
         not_supported: ["Add a shop link to the header"],
       )
       expect(draft(result)).to include(
         kind: "theme",
         styles: {
           "variables" => {
-            "--d-border-radius" => "12px",
+            "--d-sys-border-radius-md" => "12px",
           },
         },
       )
@@ -482,7 +486,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
 
     it "says when no styles pass the checks" do
       bad = {
-        "variables" => [{ "name" => "--d-border-radius", "value" => "url(x)" }],
+        "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "url(x)" }],
         "rules" => [],
         "unsupported" => [],
       }
@@ -503,7 +507,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
     end
 
     context "when the live theme is one the assistant made" do
-      let(:live_styles) { { "variables" => { "--d-border-radius" => "8px" } } }
+      let(:live_styles) { { "variables" => { "--d-sys-border-radius-md" => "8px" } } }
       let!(:live_change) do
         theme = Fabricate(:theme)
         css = AppearanceStyles::Policy.call(live_styles).css
@@ -524,7 +528,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
               context:,
             ).invoke
           request = prompts.first.messages.find { |message| message[:type] == :user }
-          expect(request[:content]).to include('{"variables":{"--d-border-radius":"8px"}}')
+          expect(request[:content]).to include('{"variables":{"--d-sys-border-radius-md":"8px"}}')
         end
 
         expect(result[:saves_as]).to eq(
@@ -606,7 +610,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
     let(:horizon) { Theme.horizon_theme }
     let(:corners_answer) do
       {
-        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "12px" }],
         "rules" => [],
         "unsupported" => [],
       }
@@ -632,7 +636,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
 
       expect(result).to include(
         status: "success",
-        style_changes: ["--d-border-radius: 12px"],
+        style_changes: ["--d-sys-border-radius-md: 12px"],
         saves_as: I18n.t("discourse_ai.appearance_authoring.component_target", theme: horizon.name),
       )
       expect(draft(result)).to include(
@@ -640,7 +644,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
         parent_theme_id: horizon.id,
         styles: {
           "variables" => {
-            "--d-border-radius" => "12px",
+            "--d-sys-border-radius-md" => "12px",
           },
         },
       )
@@ -682,7 +686,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
             parent_theme_id: horizon.id,
             styles: {
               variables: {
-                "--d-border-radius" => "8px",
+                "--d-sys-border-radius-md" => "8px",
               },
             },
           },
@@ -761,7 +765,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
             dark_colors: palettes.dark,
             styles: {
               variables: {
-                "--d-border-radius" => "8px",
+                "--d-sys-border-radius-md" => "8px",
               },
             },
           },
@@ -809,7 +813,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
             parent_theme_id: horizon.id,
             styles: {
               variables: {
-                "--d-border-radius" => "8px",
+                "--d-sys-border-radius-md" => "8px",
               },
             },
           },
@@ -832,7 +836,7 @@ RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
         replaces_theme_id: live.theme_id,
       )
       expect(@prompts.first.messages.map { it[:content] }.join).to include(
-        '{"variables":{"--d-border-radius":"8px"}}',
+        '{"variables":{"--d-sys-border-radius-md":"8px"}}',
       )
     end
   end

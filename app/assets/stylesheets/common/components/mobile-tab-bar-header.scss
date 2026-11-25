@@ -20,8 +20,8 @@ html.mobile-tab-bar-visible {
     max-width: none;
     overflow: hidden;
     border: 0;
-    background: var(--secondary);
-    box-shadow: var(--shadow-modal);
+    background: var(--d-sys-color-background-default);
+    box-shadow: var(--d-sys-shadow-dialog);
 
     &::before {
       content: "";
@@ -56,7 +56,8 @@ html.mobile-tab-bar-visible {
     );
     padding-top: var(--space-3);
     padding-bottom: env(safe-area-inset-bottom);
-    border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
+    border-radius: var(--d-sys-border-radius-lg) var(--d-sys-border-radius-lg) 0
+      0;
 
     &::before {
       top: 2.5px;
@@ -76,7 +77,8 @@ html.mobile-tab-bar-visible {
     );
     padding-top: env(safe-area-inset-top);
     padding-bottom: var(--space-3);
-    border-radius: 0 0 var(--d-border-radius-large) var(--d-border-radius-large);
+    border-radius: 0 0 var(--d-sys-border-radius-lg)
+      var(--d-sys-border-radius-lg);
 
     &::before {
       bottom: 2.5px;

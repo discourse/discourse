@@ -28,8 +28,15 @@ module AppearanceStyles
       --danger
       --success
       --love
-      --d-selected
-      --d-hover
+      --d-sys-color-background-default-selected
+      --d-sys-color-background-default-hovered
+      --d-sys-color-text-default-selected
+      --d-sys-color-background-highlight-subtle
+      --d-sys-color-background-danger-subtle
+      --d-sys-color-background-danger-hovered
+      --d-sys-color-background-success-subtle
+      --d-sys-color-background-success-hovered
+      --d-sys-color-background-love-subtlest
     ].freeze
 
     # { "variables" => [{ "name", "type", "scope", "default", "selectors" }],
@@ -121,12 +128,24 @@ module AppearanceStyles
       end
     end
 
+    # Compiled CSS replaces light-dark() with a fallback for older browsers,
+    # and keeps the original under @supports.
+    def native_light_dark(definitions)
+      definitions.find do |definition|
+        definition[:media]&.start_with?("@supports") &&
+          definition[:value].include?("light-dark(") &&
+          ROOT_SELECTORS.include?(definition[:selector].delete(" "))
+      end
+    end
+
     def root?(definition)
       ROOT_SELECTORS.include?(definition[:selector].delete(" ")) && definition[:media].nil?
     end
 
     def variable(name, definitions)
-      root_definition = definitions.find { |definition| root?(definition) } || definitions.first
+      root_definition =
+        native_light_dark(definitions) || definitions.find { |definition| root?(definition) } ||
+          definitions.first
       {
         "name" => name,
         "type" => infer_type(name, root_definition[:value]),

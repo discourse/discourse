@@ -15,7 +15,7 @@
 
   .table {
     margin: 0;
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     table-layout: fixed;
 
     tbody {
@@ -55,7 +55,7 @@
 
     &.is-current-sort {
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
@@ -74,7 +74,7 @@
   }
 
   .total-row {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
 
     td {
       font-weight: 700;
@@ -91,7 +91,7 @@
       margin-left: 0.5em;
 
       &.is-current {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
   }
@@ -213,7 +213,7 @@
 
   .table .admin-report-table-header {
     font-weight: 500;
-    border-right: 1px solid var(--content-border-color);
+    border-right: 1px solid var(--d-sys-color-border-default);
     padding: auto;
 
     .title {

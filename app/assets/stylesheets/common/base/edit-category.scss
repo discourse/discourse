@@ -36,7 +36,7 @@ $number-input-width: var(--form-kit-small-input);
   }
 
   .warning {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
     padding: 0.5em 2.5em 0.5em 1em;
     margin-top: 0;
   }
@@ -109,7 +109,7 @@ $number-input-width: var(--form-kit-small-input);
 
     .--dependent-border {
       flex: 0 0 1lh;
-      border-right: 3px solid var(--primary-low);
+      border-right: 3px solid var(--d-sys-color-border-default);
     }
 
     .--dependent-fields {
@@ -200,18 +200,18 @@ $number-input-width: var(--form-kit-small-input);
     grid-area: footer;
 
     .form-kit__section-header {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
     }
 
     .form-kit__section-title {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
   &__delete {
     padding: var(--space-4);
-    border: 1px solid var(--danger);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-danger);
+    border-radius: var(--d-sys-border-radius-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -223,8 +223,8 @@ $number-input-width: var(--form-kit-small-input);
     }
 
     &.--forbidden {
-      background: var(--highlight-bg);
-      border-color: var(--highlight-high);
+      background: var(--d-sys-color-background-highlight-subtlest);
+      border-color: var(--d-sys-color-background-highlight-bold);
     }
   }
 
@@ -234,7 +234,7 @@ $number-input-width: var(--form-kit-small-input);
 
   &__delete-description {
     font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-bottom: 0;
     max-width: 60ch;
   }
@@ -285,16 +285,28 @@ $number-input-width: var(--form-kit-small-input);
   }
 
   &__trigger.btn {
-    --d-button-default-bg-color: var(--token-color-background-input);
-    --d-button-default-bg-color--hover: var(--primary-very-low);
-    --d-button-default-border: 1px solid var(--primary-low-mid);
-    --d-button-default-border--hover: var(--d-button-default-border);
-    --d-button-default-icon-color: var(--icon-color, var(--primary-high));
-    --d-button-default-icon-color--hover: var(--d-button-default-icon-color);
+    --d-comp-DButton-color-background-default: var(
+      --d-sys-color-background-input
+    );
+    --d-comp-DButton-color-background-default-hovered: var(
+      --d-sys-color-background-sunken
+    );
+    --d-comp-DButton-border-width: 1px;
+    --d-comp-DButton-color-border-default: var(--d-sys-color-border-strong);
+    --d-comp-DButton-color-border-default-hovered: var(
+      --d-comp-DButton-color-border-default
+    );
+    --d-comp-DButton-color-icon-default: var(
+      --icon-color,
+      var(--d-sys-color-icon-muted)
+    );
+    --d-comp-DButton-color-icon-default-hovered: var(
+      --d-comp-DButton-color-icon-default
+    );
     flex: 0 0 auto;
     height: var(--space-9);
     margin-inline-end: -1px;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
     padding: 0 var(--space-3);
@@ -314,7 +326,7 @@ $number-input-width: var(--form-kit-small-input);
     .category-name-style__square {
       width: 1em;
       height: 1em;
-      color: var(--icon-color, var(--primary-high));
+      color: var(--icon-color, var(--d-sys-color-icon-muted));
     }
   }
 
@@ -343,7 +355,7 @@ $number-input-width: var(--form-kit-small-input);
       flex: 1 1 6em;
       min-width: 0;
       margin: 0;
-      border-color: var(--primary-low-mid);
+      border-color: var(--d-sys-color-border-strong);
 
       .filter-input {
         padding-inline-start: 0;
@@ -352,8 +364,10 @@ $number-input-width: var(--form-kit-small-input);
   }
 
   &__color-warning.btn {
-    --d-button-transparent-icon-color: var(--danger);
-    --d-button-transparent-text-color--hover: var(--danger);
+    --d-comp-DButton-color-icon-transparent: var(--d-sys-color-icon-danger);
+    --d-comp-DButton-color-text-transparent-hovered: var(
+      --d-sys-color-text-danger
+    );
     flex: 1;
     padding: 0;
   }
@@ -411,7 +425,7 @@ $number-input-width: var(--form-kit-small-input);
   .readonly-field {
     width: 100%;
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     p {
       margin: 0;
@@ -431,7 +445,10 @@ $number-input-width: var(--form-kit-small-input);
         left: 0;
         right: 0;
         height: 1.5em;
-        background: linear-gradient(transparent, var(--secondary, white));
+        background: linear-gradient(
+          transparent,
+          var(--d-sys-color-background-default, white)
+        );
         pointer-events: none;
       }
     }
@@ -452,12 +469,12 @@ $number-input-width: var(--form-kit-small-input);
   margin-bottom: 0;
 
   .permission-row {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     display: flex;
 
     &.row-header {
       font-weight: bold;
-      border-bottom: 2px solid var(--primary-low);
+      border-bottom: 2px solid var(--d-sys-color-border-default);
     }
 
     .group-name,
@@ -492,7 +509,7 @@ $number-input-width: var(--form-kit-small-input);
 
     .btn-flat .d-icon-square-check,
     .btn-flat:hover .d-icon-square-check {
-      color: var(--success);
+      color: var(--d-sys-color-icon-success);
     }
   }
 
@@ -501,17 +518,17 @@ $number-input-width: var(--form-kit-small-input);
     padding: 0.15em;
 
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
 
     &:hover {
-      color: var(--danger-hover);
+      color: var(--d-sys-color-background-danger-hovered);
     }
   }
 
   .row-empty {
     padding: 0.5em 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -550,7 +567,7 @@ $number-input-width: var(--form-kit-small-input);
       }
 
       .category-type-selector__name {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .category-type-selector__description {
@@ -580,7 +597,7 @@ $number-input-width: var(--form-kit-small-input);
 }
 
 h3:has(+ #control-doc_index_topic_id) {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   padding-bottom: 0.5em;
   font-size: var(--font-up-1);
   margin: 0;

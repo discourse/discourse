@@ -358,11 +358,11 @@ table.screened-ip-addresses {
 .watched-words-test-modal {
   .replacement {
     white-space: pre;
-    background: var(--tertiary-low);
+    background: var(--d-sys-color-background-accent-subtlest);
   }
 
   .tag {
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     font-size: var(--font-down-1);
     margin-right: 0.1em;
     padding: 0.5em;
@@ -388,7 +388,7 @@ table.screened-ip-addresses {
   cursor: pointer;
 
   .delete-word-record:hover {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 

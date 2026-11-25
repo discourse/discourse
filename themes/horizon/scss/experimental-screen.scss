@@ -2,8 +2,8 @@
 
 @media screen and (width >= 1300px) {
   #main-outlet {
-    border-top-right-radius: var(--d-border-radius-large);
-    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
   }
 }
 
@@ -66,17 +66,17 @@
   &__bottom-left,
   &__bottom-right {
     position: fixed;
-    width: var(--d-border-radius-large);
-    height: var(--d-border-radius-large);
+    width: var(--d-sys-border-radius-lg);
+    height: var(--d-sys-border-radius-lg);
     background-color: var(--background-color);
     z-index: calc(
       z("base") + 1
     ); // has to top list-controls, which is sticky in Horizon
     mask: radial-gradient(
-      circle at var(--d-border-radius-large) var(--d-border-radius-large),
-      transparent var(--d-border-radius-large),
-      transparent var(--d-border-radius-large),
-      black var(--d-border-radius-large)
+      circle at var(--d-sys-border-radius-lg) var(--d-sys-border-radius-lg),
+      transparent var(--d-sys-border-radius-lg),
+      transparent var(--d-sys-border-radius-lg),
+      black var(--d-sys-border-radius-lg)
     );
   }
 
@@ -88,7 +88,7 @@
   &__top-right {
     top: var(--main-outlet-offset);
     transform: rotate(90deg);
-    left: calc(var(--right-distance) - var(--d-border-radius-large));
+    left: calc(var(--right-distance) - var(--d-sys-border-radius-lg));
   }
 
   &__bottom-left {
@@ -97,17 +97,17 @@
     left: var(--left-distance);
 
     @media screen and (width <= 768px) {
-      bottom: calc(var(--d-border-radius-large) * 2);
+      bottom: calc(var(--d-sys-border-radius-lg) * 2);
     }
   }
 
   &__bottom-right {
     transform: rotate(180deg);
     bottom: var(--main-grid-gap);
-    left: calc(var(--right-distance) - var(--d-border-radius-large));
+    left: calc(var(--right-distance) - var(--d-sys-border-radius-lg));
 
     @media screen and (width <= 768px) {
-      bottom: calc(var(--d-border-radius-large) * 2);
+      bottom: calc(var(--d-sys-border-radius-lg) * 2);
     }
   }
 
@@ -123,7 +123,7 @@
     height: var(--main-grid-gap);
 
     @media screen and (width <= 768px) {
-      height: calc(var(--d-border-radius-large) * 2);
+      height: calc(var(--d-sys-border-radius-lg) * 2);
     }
 
     @container content-width (width > 1px) {
@@ -140,7 +140,7 @@
 
   &__top-right {
     transform: rotate(-90deg) !important;
-    right: calc(var(--right-distance) - var(--d-border-radius-large));
+    right: calc(var(--right-distance) - var(--d-sys-border-radius-lg));
     left: unset;
   }
 
@@ -153,7 +153,7 @@
   &__bottom-right {
     transform: rotate(180deg);
     left: unset;
-    right: calc(var(--right-distance) - var(--d-border-radius-large));
+    right: calc(var(--right-distance) - var(--d-sys-border-radius-lg));
   }
 
   &__bottom-bar {
@@ -166,7 +166,7 @@
   .with-topic-progress {
     bottom: calc(
       env(safe-area-inset-bottom) + var(--composer-height, 0px) +
-        var(--d-border-radius-large)
+        var(--d-sys-border-radius-lg)
     );
   }
 }
@@ -175,7 +175,7 @@
   .with-topic-progress {
     bottom: calc(
       env(safe-area-inset-bottom) + var(--composer-height, 0px) +
-        calc(var(--d-border-radius-large) * 2)
+        calc(var(--d-sys-border-radius-lg) * 2)
     );
   }
 }

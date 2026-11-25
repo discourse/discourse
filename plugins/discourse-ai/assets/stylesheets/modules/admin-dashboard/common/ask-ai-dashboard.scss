@@ -29,7 +29,7 @@
       align-items: baseline;
       gap: var(--space-3);
       padding-block: var(--space-3);
-      border-block-end: 1px solid var(--primary-low);
+      border-block-end: 1px solid var(--d-sys-color-border-default);
     }
 
     dd {
@@ -42,7 +42,7 @@
 
   &__percentage {
     min-inline-size: 5ch;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     text-align: end;
   }
 }
@@ -53,7 +53,7 @@
   }
 
   &__hint {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
   }
 
@@ -73,7 +73,7 @@
 }
 
 .ask-ai-report-subject {
-  border-block-start: 1px solid var(--primary-low);
+  border-block-start: 1px solid var(--d-sys-color-border-default);
 
   &__empty {
     padding-block: var(--space-4);
@@ -87,11 +87,11 @@
 
   &__no-valid-questions {
     margin-block: var(--space-2) 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__toggle.btn {
-    --d-button-flat-bg-color--hover: transparent;
+    --d-comp-DButton-color-background-flat-hovered: transparent;
     display: flex;
     align-items: baseline;
     gap: var(--space-3);
@@ -101,11 +101,11 @@
     line-height: var(--line-height-large);
     text-align: start;
     white-space: normal;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .d-icon {
       flex-shrink: 0;
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 
@@ -120,7 +120,7 @@
     max-inline-size: 70ch;
     margin-block-start: var(--space-1);
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__count {
@@ -142,7 +142,7 @@
 
   .btn-flat {
     padding: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: inherit;
   }
 }
@@ -151,7 +151,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: var(--space-1);
-  color: var(--d-link-color);
+  color: var(--d-sys-color-text-link);
 
   .d-icon {
     font-size: var(--font-down-1);
@@ -165,7 +165,7 @@
   align-items: baseline;
   gap: var(--space-3);
   padding-block-start: var(--space-3);
-  border-block-start: 1px solid var(--primary-low);
+  border-block-start: 1px solid var(--d-sys-color-border-default);
   font-size: var(--font-down-1);
 
   .ask-ai-reports__hint {
@@ -178,8 +178,8 @@
   margin-inline-start: var(--space-5);
   margin-block-end: var(--space-4);
   padding: var(--space-4);
-  background: var(--primary-very-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-sunken);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
   line-height: var(--line-height-large);
 
@@ -187,7 +187,7 @@
     margin: 0 0 var(--space-2);
     font-size: inherit;
     font-weight: 600;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   ul {
@@ -205,11 +205,11 @@
     margin-block-start: var(--space-2);
     padding-inline: 0;
     font-size: inherit;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__query.btn-flat {
-    --d-button-flat-bg-color--hover: transparent;
+    --d-comp-DButton-color-background-flat-hovered: transparent;
     display: inline;
     margin: 0;
     padding: 0;

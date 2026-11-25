@@ -5,7 +5,7 @@
   grid: 1fr / auto-flow;
 
   .d-icon {
-    color: var(--primary-low-mid);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .chat-user-presence-flair {
@@ -33,7 +33,7 @@
 
 .chat-reply__excerpt {
   @include ellipsis;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 
   > * {
     margin-top: 0;

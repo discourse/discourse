@@ -13,9 +13,9 @@ body.livestream-topic.chat-enabled {
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        background-color: var(--danger);
+        background-color: var(--d-sys-color-background-danger);
         animation: pulse-circle 3s infinite;
-        border: 2px solid var(--header_background);
+        border: 2px solid var(--d-comp-Header-color-background);
       }
     }
   }
@@ -27,7 +27,7 @@ body.livestream-topic.chat-enabled {
 
     .chat-composer__wrapper {
       border-top: 1px solid var(--primary-200);
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
     }
   }
 
@@ -45,10 +45,13 @@ body.livestream-topic.chat-enabled {
     width: 100%;
     max-height: 50%;
     height: 400px;
-    background: var(--d-content-background, var(--secondary));
+    background: var(
+      --d-content-background,
+      var(--d-sys-color-background-default)
+    );
     z-index: 50;
     resize: both;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
 
     html.keyboard-visible & {
       max-height: none;
@@ -102,7 +105,10 @@ body.livestream-topic.chat-enabled {
     .chat-composer__wrapper {
       position: fixed;
       bottom: 0;
-      background: var(--d-content-background, var(--secondary));
+      background: var(
+        --d-content-background,
+        var(--d-sys-color-background-default)
+      );
       width: 100%;
 
       #channel-composer {
@@ -112,7 +118,7 @@ body.livestream-topic.chat-enabled {
   }
 
   .chat-message-text {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .livestream-chat-modal {

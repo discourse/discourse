@@ -4,7 +4,7 @@
     border: none;
     padding: 0;
     cursor: pointer;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     &:hover {
       text-decoration: underline;
@@ -51,8 +51,8 @@
     padding: 0 var(--space-1) !important;
     margin: 0 !important;
     box-sizing: content-box !important;
-    background: var(--primary-very-low) !important;
-    border-radius: var(--d-border-radius) !important;
+    background: var(--d-sys-color-background-sunken) !important;
+    border-radius: var(--d-sys-border-radius-md) !important;
     flex: 0 1 auto !important;
     // stylelint-enable declaration-no-important
   }
@@ -77,7 +77,7 @@
     th,
     td {
       padding: 0;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--d-sys-color-border-default);
       text-align: left;
       min-width: 150px;
     }
@@ -87,7 +87,7 @@
       top: 0;
       z-index: 1;
       padding: var(--space-2) var(--space-3);
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       font-weight: 700;
       white-space: nowrap;
 
@@ -110,7 +110,7 @@
 
   &__col-type {
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-right: var(--space-1);
     text-transform: uppercase;
   }
@@ -156,7 +156,7 @@
 
     &.--id,
     &.--system {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: var(--font-down-1);
       white-space: nowrap;
     }
@@ -207,6 +207,6 @@
   }
 
   &__add-row td {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 }

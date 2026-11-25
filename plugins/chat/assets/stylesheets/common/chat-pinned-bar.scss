@@ -10,8 +10,8 @@
   min-height: var(--chat-pinned-bar-height);
   box-sizing: border-box;
   padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--content-border-color);
-  background: var(--secondary);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
+  background: var(--d-sys-color-background-default);
   flex-shrink: 0;
   z-index: 2;
 
@@ -31,7 +31,7 @@
     text-align: start;
 
     .no-touch &:hover .chat-pinned-bar__jump {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
     }
   }
 
@@ -87,8 +87,8 @@
     height: var(--chat-pinned-bar-seg, 6px);
 
     // translucent tint of the active colour so dim bars keep contrast in both
-    // schemes (--tertiary-low collapses into the dark-mode background)
-    background: var(--tertiary);
+    // schemes (--d-sys-color-background-accent-subtlest collapses into the dark-mode background)
+    background: var(--d-sys-color-background-accent);
     opacity: 0.4;
     border-radius: 3px;
   }
@@ -98,7 +98,7 @@
     inset-inline: 0;
     inset-block-start: 0;
     height: var(--chat-pinned-bar-seg, 6px);
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
     border-radius: 3px;
     transform: translateY(
       calc(
@@ -126,7 +126,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-1);
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     font-size: var(--font-down-2);
     font-weight: 700;
 
@@ -138,7 +138,7 @@
 
   &__excerpt {
     @include ellipsis;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-1);
 
     // only links opt back into clicks; the rest of the bar jumps to the pin
@@ -154,13 +154,13 @@
     flex-shrink: 0;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
   &__see-all {
     &.--active .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 

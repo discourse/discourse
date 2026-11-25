@@ -23,8 +23,8 @@
       padding: 0.5em 1em;
 
       &.btn-primary {
-        background: var(--tertiary);
-        color: var(--secondary);
+        background: var(--d-sys-color-background-accent);
+        color: var(--d-sys-color-text-inverse);
       }
     }
   }
@@ -66,7 +66,7 @@
 
   &__summary-title {
     margin-bottom: 1em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: 1.2em;
   }
 
@@ -143,7 +143,7 @@
     th {
       text-align: left;
       padding: 0.5em;
-      border-bottom: 2px solid var(--primary-low);
+      border-bottom: 2px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -151,7 +151,7 @@
   &__users-row,
   &__models-row {
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
     }
   }
 
@@ -171,28 +171,28 @@
   &__users-cell,
   &__models-cell {
     padding: 0.5em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     overflow-wrap: anywhere;
     width: 100%;
   }
 
   &__total-row {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
 
     td {
       font-weight: 700;
       padding: var(--space-2);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     &:hover {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
   }
 
   &__models-credit-bar {
     padding: var(--space-2);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     min-width: 120px;
     max-width: 200px;
   }
@@ -202,7 +202,7 @@
   }
 
   &__included-label {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__mixed-cost {
@@ -211,7 +211,7 @@
   }
 
   &__info-icon {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     cursor: help;
     margin-left: var(--space-2);
     font-size: var(--font-down-1);
@@ -248,11 +248,11 @@
     }
 
     th {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
 
     td {
-      border-bottom: 1px solid var(--primary-very-low);
+      border-bottom: 1px solid var(--d-sys-color-border-muted);
     }
   }
 }

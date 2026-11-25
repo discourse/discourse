@@ -4,7 +4,7 @@ RSpec.describe AppearanceChange::DraftComponent do
   fab!(:admin)
 
   let(:horizon) { Theme.horizon_theme }
-  let(:styles) { { variables: { "--d-border-radius" => "12px" } } }
+  let(:styles) { { variables: { "--d-sys-border-radius-md" => "12px" } } }
   let(:params) { { name: "Rounded", parent_theme_id: horizon.id, styles: } }
 
   before do
@@ -50,7 +50,7 @@ RSpec.describe AppearanceChange::DraftComponent do
       expect(change).to have_attributes(kind: "component", parent_theme_id: horizon.id)
       expect(component).to have_attributes(component: true, enabled: false, name: "Rounded")
       expect(horizon.reload.child_theme_ids).to include(component.id)
-      expect(component.theme_fields.sole.value).to include("--d-border-radius: 12px")
+      expect(component.theme_fields.sole.value).to include("--d-sys-border-radius-md: 12px")
       expect(Theme.transform_ids(horizon.id)).not_to include(component.id)
       expect(SiteSetting.default_theme_id).to eq(horizon.id)
     end

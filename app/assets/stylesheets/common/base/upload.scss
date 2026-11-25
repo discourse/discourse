@@ -4,7 +4,7 @@
 
   &__restrictions {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-top: 0.25em;
   }
 
@@ -14,7 +14,7 @@
     width: 100%;
     height: 125px;
     box-sizing: border-box;
-    border-radius: var(--d-input-border-radius);
+    border-radius: var(--d-comp-Input-border-radius);
     background-origin: content-box;
     background-clip: content-box;
 
@@ -24,13 +24,13 @@
 
     &:focus,
     &:focus-within {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: 2px solid var(--tertiary);
       outline-offset: -2px;
     }
 
     &:hover {
-      background-color: var(--tertiary-very-low);
+      background-color: var(--d-sys-color-background-accent-subtlest);
 
       .has-image &,
       .has-file & {
@@ -42,10 +42,10 @@
     .no-file & {
       position: relative;
       border: 1px dashed var(--primary-medium);
-      background-color: var(--primary-very-low);
+      background-color: var(--d-sys-color-background-sunken);
 
       &:hover {
-        background-color: var(--tertiary-very-low);
+        background-color: var(--d-sys-color-background-accent-subtlest);
       }
 
       &:focus,
@@ -58,7 +58,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: left center;
-      border: 1px solid var(--primary-low-mid);
+      border: 1px solid var(--d-sys-color-border-strong);
       padding: var(--space-1);
 
       &.--bg-size-cover {
@@ -71,12 +71,12 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: left center;
-      border: 1px solid var(--primary-low-mid);
+      border: 1px solid var(--d-sys-color-border-strong);
       padding: var(--space-1);
 
       &:focus,
       &:focus-within {
-        border-color: var(--tertiary);
+        border-color: var(--d-sys-color-border-accent);
         outline: 2px solid var(--tertiary);
         outline-offset: -2px;
       }
@@ -87,13 +87,13 @@
       align-items: center;
       gap: var(--space-3);
       padding: var(--space-4);
-      background: var(--primary-very-low);
-      border-radius: var(--d-input-border-radius);
+      background: var(--d-sys-color-background-sunken);
+      border-radius: var(--d-comp-Input-border-radius);
       height: 100%;
       box-sizing: border-box;
 
       .file-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         font-size: var(--font-up-3);
       }
 
@@ -109,7 +109,7 @@
         }
 
         .file-size {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
           font-size: var(--font-down-1);
         }
       }
@@ -144,16 +144,16 @@
     width: 90%;
 
     .progress-bar-container {
-      --d-border-radius: 10px;
+      --d-sys-border-radius-md: 10px;
       background: var(--primary-low-mid);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       height: 5px;
       position: relative;
 
       .progress-bar {
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-sys-border-radius-md);
         height: 100%;
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
         transition: width 0.3s ease;
         position: absolute;
         left: 0;
@@ -166,7 +166,7 @@
       margin-top: 8px;
       display: block;
       text-align: center;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -187,8 +187,8 @@
       display: flex;
       font-weight: normal;
       box-sizing: border-box;
-      color: var(--primary-very-high);
-      border-radius: var(--d-button-border-radius);
+      color: var(--d-sys-color-text-default);
+      border-radius: var(--d-comp-DButton-border-radius);
       cursor: pointer;
 
       .no-image &,
@@ -203,7 +203,7 @@
 
         &:hover,
         &:focus-visible {
-          color: var(--primary-very-high);
+          color: var(--d-sys-color-text-default);
         }
       }
     }

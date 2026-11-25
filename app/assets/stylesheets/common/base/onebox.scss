@@ -13,8 +13,8 @@
     0 0 0 1px var(--onebox-border-color),
     0 0 0 $thickness var(--onebox-shadow-color);
 
-  // Makes the outer drop shadow radius equal to --d-border-radius
-  border-radius: calc(var(--d-border-radius) - ($thickness / 2));
+  // Makes the outer drop shadow radius equal to --d-sys-border-radius-md
+  border-radius: calc(var(--d-sys-border-radius-md) - ($thickness / 2));
 }
 
 a.loading-onebox {
@@ -26,7 +26,7 @@ a.loading-onebox {
     position: relative;
     height: 10px;
     width: 10px;
-    border: 2px solid var(--primary-low-mid);
+    border: 2px solid var(--d-sys-color-border-strong);
     border-right-color: transparent;
     border-radius: 50%;
     animation: rotate-forever 1s infinite linear;
@@ -88,7 +88,7 @@ a.loading-onebox {
     margin-bottom: 12px;
     margin-right: 10px;
     display: block;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     position: relative;
     height: 20px;
 
@@ -122,7 +122,7 @@ aside.onebox {
   margin-bottom: 1em;
   padding: 1em;
   font-size: var(--font-0);
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
 
   &:first-child {
     margin-top: 4px;
@@ -165,12 +165,12 @@ aside.onebox {
     }
 
     a[href] {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       text-decoration: none;
     }
 
     a[href]:visited {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
 
     img:not(
@@ -289,7 +289,7 @@ aside.onebox {
       }
 
       .user-onebox--joined {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         margin-top: 10px;
       }
 
@@ -342,7 +342,10 @@ aside.onebox {
 // 16:9 at most, but never taller than the image itself, so small or very wide images don't sit in
 // large bars.
 @mixin letterboxed-event-image {
-  background: var(--event-onebox-image-color, var(--primary-very-low));
+  background: var(
+    --event-onebox-image-color,
+    var(--d-sys-color-background-sunken)
+  );
   height: min(
     calc(100cqi * 9 / 16),
     calc(100cqi * var(--event-onebox-image-ratio, 1)),
@@ -395,9 +398,9 @@ aside.onebox:has(.discourse-event-onebox) {
 
   &__date {
     align-items: center;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     display: flex;
     flex-direction: column;
     height: 3em;
@@ -410,7 +413,7 @@ aside.onebox:has(.discourse-event-onebox) {
   }
 
   &__month {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-2);
     font-weight: 400;
     text-align: center;
@@ -434,7 +437,7 @@ aside.onebox:has(.discourse-event-onebox) {
     gap: var(--space-2);
 
     .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       font-size: var(--font-down-1);
       flex: 0 0 auto;
     }
@@ -455,7 +458,7 @@ aside.onebox:has(.discourse-event-onebox) {
     overflow-wrap: anywhere;
 
     .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
       font-size: var(--font-down-1);
       flex: 0 0 auto;
       margin-top: 0.2em;
@@ -477,7 +480,7 @@ aside.onebox:has(.discourse-event-onebox) {
     // Matches the event widget's 16:9 image. The height is derived from the width rather than
     // set with aspect-ratio, which cooked images carry inline from their dimensions.
     .discourse-event-onebox__image.thumbnail {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       grid-column: 1 / -1;
       height: calc(100cqi * 9 / 16);
     }
@@ -509,7 +512,7 @@ aside.onebox:has(.discourse-event-onebox) {
 
     // Shows a 2:3 poster whole; anything taller is cropped from the bottom
     .discourse-event-onebox__image.thumbnail {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       grid-area: image;
       height: auto;
       max-height: 12rem;
@@ -599,10 +602,10 @@ aside.onebox:has(.discourse-event-onebox) {
     width: 3.25em;
     height: 3.25em;
     margin-block-start: 0.15em;
-    color: var(--primary-medium);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    color: var(--d-sys-color-text-faint);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__icon .d-icon {
@@ -620,7 +623,7 @@ aside.onebox:has(.discourse-event-onebox) {
   &__code,
   &__description {
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__code {
@@ -633,9 +636,9 @@ aside.onebox:has(.discourse-event-onebox) {
   &__code-value {
     padding: 0.15em 0.35em;
     font-family: var(--d-font-family--monospace);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__join {
@@ -650,7 +653,7 @@ aside.onebox .onebox-body .google-meet-onebox__title {
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: var(--primary-low-mid);
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   border: 1px inset var(--primary);
 
   .gdocs-onebox-logo {
@@ -704,7 +707,7 @@ pre.onebox code ol.lines li::before {
 }
 
 pre.onebox code ol.lines li.selected::before {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
 }
 
 .onebox.githubblob,
@@ -756,8 +759,8 @@ pre.onebox code ol.lines li {
 }
 
 pre.onebox code ol.lines li.selected {
-  background-color: var(--highlight-bg);
-  border-left-color: rgb(var(--primary-rgb), 0.2);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
+  border-left-color: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 .onebox-warning-message {
@@ -776,7 +779,7 @@ aside.onebox.github-onebox {
   --github-onebox-header-background: var(--primary-very-low);
   --onebox-border-color: light-dark(#d1d9e0, #3d444d);
   --onebox-shadow-color: transparent;
-  --onebox-shadow-width: var(--token-border-width);
+  --onebox-shadow-width: var(--d-sys-border-width-sm);
   container: github-onebox / inline-size;
   padding: 0;
   overflow: hidden;
@@ -863,13 +866,13 @@ aside.onebox.github-onebox {
     grid-area: 1 / 2;
     justify-self: end;
     color: var(--github-onebox-status-color);
-    font-weight: var(--token-font-weight-semibold);
+    font-weight: var(--d-sys-font-weight-semibold);
     white-space: nowrap;
   }
 
   .github-onebox__repo[href] {
     grid-area: 1 / 1;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     > span {
       @include ellipsis;
@@ -883,7 +886,7 @@ aside.onebox.github-onebox {
     h4 {
       margin-block: 0 var(--space-2);
       font-size: var(--font-0);
-      font-weight: var(--token-font-weight-semibold);
+      font-weight: var(--d-sys-font-weight-semibold);
       line-height: var(--line-height-large);
     }
   }
@@ -917,7 +920,7 @@ aside.onebox.github-onebox {
     code {
       @include ellipsis;
       font-size: inherit;
-      border-radius: var(--token-radius-small);
+      border-radius: var(--d-sys-border-radius-sm);
     }
 
     code:first-of-type {
@@ -930,7 +933,7 @@ aside.onebox.github-onebox {
     gap: var(--space-1);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
-    color: var(--token-color-text-subtle);
+    color: var(--d-sys-color-text-muted);
 
     > div + div {
       display: inline-flex;
@@ -946,13 +949,13 @@ aside.onebox.github-onebox {
       display: flex;
       align-items: center;
       gap: var(--space-1);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .user a,
     .discourse-local-date.cooked-date .relative-time {
       text-decoration: underline dashed var(--primary-low-mid);
-      text-decoration-thickness: var(--token-border-width);
+      text-decoration-thickness: var(--d-sys-border-width-sm);
       text-underline-offset: 0.2em;
     }
 
@@ -979,7 +982,7 @@ aside.onebox.github-onebox {
     font-family: inherit;
     font-size: var(--font-down-1);
     line-height: var(--cooked-line-height);
-    color: var(--token-color-text-default);
+    color: var(--d-sys-color-text-default);
   }
 
   .github-repo-description,
@@ -1049,7 +1052,7 @@ aside.onebox.github-onebox {
     max-width: 1.8em;
     height: auto;
     justify-self: center;
-    fill: var(--primary-high);
+    fill: var(--d-sys-color-icon-muted);
   }
 
   .branches {
@@ -1081,11 +1084,11 @@ aside.onebox.github-onebox {
       font-weight: bold;
 
       .added {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
       }
 
       .removed {
-        color: var(--danger);
+        color: var(--d-sys-color-text-danger);
       }
     }
 
@@ -1097,7 +1100,7 @@ aside.onebox.github-onebox {
   .github-body-container {
     grid-area: body;
     margin: 1em 0 0 0;
-    color: var(--primary-very-high);
+    color: var(--d-sys-color-text-default);
     max-height: 400px;
     white-space: pre-wrap;
     overflow-y: auto;
@@ -1119,7 +1122,7 @@ aside.onebox.github-onebox {
   }
 
   .onebox-avatar-inline {
-    border-radius: var(--token-radius-small);
+    border-radius: var(--d-sys-border-radius-sm);
     vertical-align: text-bottom;
   }
 
@@ -1131,7 +1134,7 @@ aside.onebox.github-onebox {
     span {
       // !important required to override inline style attribute
       background-color: var(--primary-medium) !important;
-      color: var(--secondary) !important;
+      color: var(--d-sys-color-text-inverse) !important;
       padding: var(--space-half) var(--space-1) !important;
       white-space: nowrap;
     }
@@ -1167,17 +1170,17 @@ aside.onebox.github-onebox {
   }
 
   .github-icon {
-    fill: var(--primary-medium);
+    fill: var(--d-sys-color-icon-faint);
     width: var(--font-up-3);
     height: var(--font-up-3);
   }
 
   .github-icon-success {
-    fill: var(--success);
+    fill: var(--d-sys-color-icon-success);
   }
 
   .github-icon-failure {
-    fill: var(--danger);
+    fill: var(--d-sys-color-icon-danger);
   }
 
   .github-icon-pending {
@@ -1185,11 +1188,11 @@ aside.onebox.github-onebox {
   }
 
   .github-info {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .github-run-number {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -1258,7 +1261,7 @@ aside.onebox.twitterstatus .onebox-body {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;
@@ -1274,7 +1277,7 @@ aside.onebox.twitterstatus .onebox-body {
 
         span {
           font-weight: lighter;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
 
@@ -1289,14 +1292,14 @@ aside.onebox.twitterstatus .onebox-body {
     line-height: var(--line-height-small);
 
     .timestamp {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
   .like,
   .retweet {
     align-items: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     display: flex;
     margin-left: 0.75em;
     white-space: nowrap;
@@ -1308,7 +1311,7 @@ aside.onebox.twitterstatus .onebox-body {
   }
 
   .is-reply {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-right: 0.25em;
   }
 }
@@ -1408,7 +1411,7 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   &.category-onebox {
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
 
@@ -1435,7 +1438,7 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   .topic-category {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     line-height: var(--line-height-medium);
   }
 
@@ -1446,7 +1449,7 @@ aside.onebox.xkcd .onebox-body img {
       font-size: var(--font-down-1);
       margin-right: 0.35em;
       margin-top: 0.15em;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       align-self: center;
     }
   }
@@ -1477,7 +1480,7 @@ iframe.reddit-onebox {
   margin: 0 auto;
   overflow: hidden;
   border: 0;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .onebox.githubfolder {
@@ -1597,7 +1600,7 @@ aside.onebox.mixcloud-preview {
     transform: translate(-50%, -50%);
 
     .d-icon-play {
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
       color: #fff;
       display: flex;
       filter: drop-shadow(3px 3px 2px rgb(0, 0, 0, 0.25));
@@ -1634,7 +1637,7 @@ iframe.restream-onebox {
 
 .video-container {
   .notice {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
     padding: 10px 20px;
     position: absolute;
     width: calc(100% - 40px);
@@ -1662,7 +1665,7 @@ iframe.restream-onebox {
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;
-  background-color: var(--primary-low);
+  background-color: var(--d-sys-color-background-neutral);
 
   .placeholder-icon {
     position: absolute;
@@ -1751,7 +1754,7 @@ aside.onebox.preview-error .site-icon {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;
@@ -1767,7 +1770,7 @@ aside.onebox.preview-error .site-icon {
 
         span {
           font-weight: lighter;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
 
@@ -1782,14 +1785,14 @@ aside.onebox.preview-error .site-icon {
     line-height: var(--line-height-small);
 
     .timestamp {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
   .like,
   .replies {
     align-items: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     display: flex;
     margin-left: 0.75em;
 
@@ -1800,7 +1803,7 @@ aside.onebox.preview-error .site-icon {
   }
 
   .is-reply {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-right: 0.25em;
   }
 }

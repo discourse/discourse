@@ -31,11 +31,11 @@
     margin: 0;
 
     .details {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .user-info-empty-message {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       padding-bottom: 2em;
 
       p {

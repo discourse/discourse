@@ -8,15 +8,15 @@
   }
 
   a.search-link {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .search-item-slug,
     .keyword {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -89,7 +89,7 @@
           .search-icon {
             background: transparent;
             pointer-events: none;
-            color: var(--header_primary-medium);
+            color: var(--d-comp-Header-color-icon-strong);
             margin-left: calc(1rem - 0.65em);
             height: 100%;
             position: absolute;
@@ -98,22 +98,22 @@
 
           .search-menu-panel {
             padding: 0;
-            border: 1px solid var(--content-border-color);
-            border-radius: var(--d-border-radius);
+            border: 1px solid var(--d-sys-color-border-default);
+            border-radius: var(--d-sys-border-radius-md);
             max-height: calc(100vh - var(--header-offset));
           }
 
           .search-input {
             display: flex;
             padding: 0 0 0 2em;
-            border-radius: var(--d-input-border-radius);
+            border-radius: var(--d-comp-Input-border-radius);
 
             .search-term__input {
               height: 100%;
               width: 100%;
               margin: 0;
               padding: 0.5em;
-              border-radius: var(--d-input-border-radius);
+              border-radius: var(--d-comp-Input-border-radius);
 
               &:focus {
                 outline: none;
@@ -125,7 +125,7 @@
             &:empty {
               display: none;
             }
-            background: var(--secondary);
+            background: var(--d-sys-color-background-default);
             position: relative;
             box-sizing: border-box;
             width: 100%;
@@ -144,11 +144,11 @@
   // Styling for extra icons
   .search-bar-icons--icon {
     .d-icon {
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
     }
 
     &:hover .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 }

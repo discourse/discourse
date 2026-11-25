@@ -11,8 +11,8 @@
 
   &__progress {
     height: 0.75rem;
-    background: var(--primary-low);
-    border-radius: var(--d-border-radius-large);
+    background: var(--d-sys-color-background-neutral);
+    border-radius: var(--d-sys-border-radius-lg);
     overflow: hidden;
     margin-bottom: 0.25em;
     width: 100%;
@@ -26,12 +26,12 @@
 
   &__text {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &--warning {
     .ai-credit-bar__fill {
-      background: var(--danger);
+      background: var(--d-sys-color-background-danger);
     }
   }
 
@@ -57,6 +57,6 @@
 
 .ai-credit-warning {
   margin-top: 0.5em;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-1);
 }

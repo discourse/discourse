@@ -27,10 +27,11 @@
   .select-kit.combo-box.tag-drop .selected-name,
   .select-kit.combo-box.tag-drop .caret-icon,
   .select-kit.combo-box.solved-status-filter .selected-name {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .select-kit .select-kit-header.btn-default {
-    border: var(--d-button-default-border);
+    border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-default);
   }
 }

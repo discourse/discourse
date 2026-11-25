@@ -26,11 +26,11 @@
       border: 1px solid transparent;
 
       a {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
         font-size: var(--font-up-5);
         display: block;
         margin: 0.25em auto;
@@ -38,25 +38,25 @@
 
       &.no-data,
       &.rate-limited {
-        background: var(--secondary);
-        border-color: var(--primary-low);
-        color: var(--primary);
+        background: var(--d-sys-color-background-default);
+        border-color: var(--d-sys-color-border-default);
+        color: var(--d-sys-color-text-default);
       }
 
       &.rate-limited .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
 
       &.timeout,
       &.exception {
-        border-color: var(--danger-low);
-        color: var(--danger);
+        border-color: var(--d-sys-color-background-danger-subtlest);
+        color: var(--d-sys-color-text-danger);
       }
     }
 
     .average-chart {
       font-style: italic;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       text-align: right;
     }
   }
@@ -132,7 +132,7 @@
       flex: 1 0 0px;
 
       .mode-btn.is-current {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
   }

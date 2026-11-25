@@ -2,7 +2,7 @@
 
 RSpec.describe AppearanceChange do
   def styled_theme_appearance_change
-    css = ":root {\n  --d-border-radius: 12px;\n}"
+    css = ":root {\n  --d-sys-border-radius-md: 12px;\n}"
     theme = Fabricate(:theme)
     theme.set_field(target: :common, name: :scss, value: css)
     theme.save!
@@ -12,7 +12,7 @@ RSpec.describe AppearanceChange do
       css:,
       styles: {
         "variables" => {
-          "--d-border-radius" => "12px",
+          "--d-sys-border-radius-md" => "12px",
         },
       },
     )
@@ -300,7 +300,7 @@ RSpec.describe AppearanceChange do
             dark_colors:,
             styles: {
               variables: {
-                "--d-border-radius" => radius,
+                "--d-sys-border-radius-md" => radius,
               },
             },
             replaces_theme_id: replaces&.id,

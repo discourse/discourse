@@ -1,0 +1,38 @@
+{
+  "--d-button-border": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border"
+  },
+  "--d-button-default-border": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-default"
+  },
+  "--d-button-default-border--hover": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-default-hovered"
+  },
+  "--d-button-primary-border": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-primary"
+  },
+  "--d-button-primary-border--hover": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-primary-hovered"
+  },
+  "--d-button-danger-border": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-danger"
+  },
+  "--d-button-danger-border--hover": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-danger-hovered"
+  },
+  "--d-button-success-border": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-success"
+  },
+  "--d-button-success-border--hover": {
+    "width": "--d-comp-DButton-border-width",
+    "color": "--d-comp-DButton-color-border-success-hovered"
+  }
+}

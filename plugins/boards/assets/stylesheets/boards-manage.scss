@@ -3,7 +3,7 @@
   align-items: center;
   box-sizing: border-box;
   padding: var(--space-2) var(--space-4);
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   gap: var(--space-1);
   width: 100%;
 
@@ -36,7 +36,7 @@
     font-family: inherit;
     padding: var(--space-1) var(--space-2);
     border: 1px solid transparent;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     line-height: 1.5;
     box-sizing: border-box;
     margin: 0 !important;
@@ -46,21 +46,21 @@
     cursor: pointer;
 
     &:hover {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
 
     &.--empty {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-weight: 400;
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
   }
 
   &__input {
     outline: none !important;
     box-shadow: none !important;
-    border-color: var(--tertiary) !important;
-    background: var(--primary-very-low);
+    border-color: var(--d-sys-color-border-accent) !important;
+    background: var(--d-sys-color-background-sunken);
   }
 
   &__close {
@@ -90,7 +90,7 @@
   }
 
   .form-kit__actions {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .form-kit {
@@ -155,13 +155,13 @@
     align-items: center;
     justify-content: center;
     padding: 3em 1em;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     text-align: center;
 
     > .d-icon {
       font-size: 2.5em;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       margin-bottom: 0.4em;
     }
 
@@ -170,7 +170,7 @@
     }
 
     p {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin: 0 0 1em;
     }
   }
@@ -179,9 +179,9 @@
 .discourse-boards-board-card {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
-  background: var(--secondary);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-default);
   padding: 1em;
   transition: box-shadow 0.15s ease;
 
@@ -192,7 +192,7 @@
   &--kb-selected {
     outline: 2px solid var(--tertiary);
     outline-offset: -2px;
-    background: var(--tertiary-very-low);
+    background: var(--d-sys-color-background-accent-subtlest);
   }
 
   &__header {
@@ -208,11 +208,11 @@
 
     &,
     &:visited {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &:hover {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -234,7 +234,7 @@
 
   &__no-columns {
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
   }
 
@@ -245,7 +245,7 @@
     align-items: center;
     margin-top: auto;
     padding-top: 0.5em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__owner-avatars {
@@ -270,7 +270,7 @@
   }
 
   &__name {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 }
 
@@ -279,14 +279,14 @@
   align-items: center;
   gap: 0.3em;
   padding: 0.15em 0.5em;
-  background: var(--primary-very-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-sunken);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 
   .d-icon {
     font-size: 0.85em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 }
 
@@ -295,18 +295,18 @@
   align-items: center;
   gap: 0.25em;
   padding: 0.15em 0.5em;
-  background: var(--tertiary-very-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-accent-subtlest);
+  border-radius: var(--d-sys-border-radius-md);
   font-size: var(--font-down-2);
   line-height: var(--line-height-large);
   min-height: calc(var(--line-height-large) * 1em + 0.3em);
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 
   &--restricted {
     justify-content: center;
   }
 
   &--restricted .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 }

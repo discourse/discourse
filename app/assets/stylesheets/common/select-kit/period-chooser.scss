@@ -16,11 +16,11 @@
         border-radius: 0;
 
         h2.selected-name {
-          color: var(--secondary);
+          color: var(--d-sys-color-text-inverse);
           display: inline-block;
 
           .date-section {
-            color: var(--primary);
+            color: var(--d-sys-color-text-default);
             margin-right: 5px;
           }
 
@@ -33,7 +33,7 @@
         }
 
         .d-icon {
-          color: var(--primary);
+          color: var(--d-sys-color-icon-default);
           opacity: 1;
           font-size: var(--font-up-3);
         }
@@ -59,7 +59,7 @@
         }
 
         .date-section {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
         }
 
         .top-date-string {

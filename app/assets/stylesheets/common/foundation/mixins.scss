@@ -208,7 +208,7 @@ $hpad: 0.65em;
 
 // --primary-rgb: #{hexToRGB($primary)};
 // ...
-// rgba(var(--primary-low-rgb), 0.5)
+// color-mix(in srgb, var(--primary-low) 50%, transparent)
 
 @function hexToRGB($hex) {
   @return color.red($hex), color.green($hex), color.blue($hex);
@@ -245,9 +245,9 @@ $hpad: 0.65em;
   display: inline-block;
   font-size: 0.93em;
   font-weight: normal;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   padding: 0.2em 0.34em;
-  background: var(--mention-background-color);
+  background: var(--d-sys-color-background-neutral);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
@@ -260,7 +260,7 @@ $hpad: 0.65em;
   }
 
   &.--bot {
-    background: var(--success-low);
+    background: var(--d-sys-color-background-success-subtlest);
   }
 
   &.--wide {
@@ -421,8 +421,8 @@ $hpad: 0.65em;
 @mixin click-counter-badge {
   content: attr(data-clicks);
   font-weight: normal;
-  background-color: var(--primary-low);
-  color: var(--primary-medium);
+  background-color: var(--d-sys-color-background-neutral);
+  color: var(--d-sys-color-text-faint);
   position: relative;
   top: -1px;
   padding: 0.21em 0.42em;
@@ -446,7 +446,7 @@ $hpad: 0.65em;
   }
 
   a.title {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .d-icon-bookmark {
@@ -493,7 +493,7 @@ $hpad: 0.65em;
   width: 100%;
   justify-content: flex-start;
   background: rgb(0, 0, 0, 0);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:not(.notifications-tracking-btn, .--with-description, .pinned-options-btn) {
     height: var(--d-sidebar-row-height);
@@ -501,11 +501,11 @@ $hpad: 0.65em;
   }
 
   &.-selected {
-    background: var(--d-hover);
+    background: var(--d-sys-color-background-default-hovered);
   }
 
   &.btn-danger {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     .d-icon {
       color: inherit;
@@ -520,19 +520,19 @@ $hpad: 0.65em;
   &:hover,
   &:focus-visible {
     .discourse-no-touch & {
-      background: var(--d-hover);
-      color: var(--primary);
+      background: var(--d-sys-color-background-default-hovered);
+      color: var(--d-sys-color-text-default);
 
       .d-icon {
         color: inherit;
       }
 
       &.btn-danger {
-        background: var(--danger-low);
-        color: var(--danger);
+        background: var(--d-sys-color-background-danger-subtlest);
+        color: var(--d-sys-color-text-danger);
 
         .d-icon {
-          color: var(--danger-hover);
+          color: var(--d-sys-color-background-danger-hovered);
         }
       }
     }

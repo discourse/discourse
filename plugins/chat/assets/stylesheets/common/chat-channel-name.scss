@@ -1,6 +1,6 @@
 .chat-channel-name {
   @include ellipsis;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
 
   .chat-channel-row__info & {
     display: flex;

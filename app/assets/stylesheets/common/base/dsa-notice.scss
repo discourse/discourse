@@ -58,7 +58,7 @@
     flex-shrink: 0;
     margin-top: auto;
     padding: var(--space-4) var(--space-6);
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   @include viewport.until(sm) {

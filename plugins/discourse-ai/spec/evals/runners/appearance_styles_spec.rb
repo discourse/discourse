@@ -10,7 +10,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AppearanceStyles do
   let(:runner) { described_class.new("appearance_styles") }
   let(:answer) do
     {
-      "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+      "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "12px" }],
       "rules" => [
         {
           "area" => "share_button",
@@ -25,7 +25,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AppearanceStyles do
   end
   let(:invalid_answer) do
     {
-      "variables" => [{ "name" => "--d-border-radius", "value" => "url(x)" }],
+      "variables" => [{ "name" => "--d-sys-border-radius-md", "value" => "url(x)" }],
       "rules" => [],
       "unsupported" => [],
     }
@@ -48,7 +48,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AppearanceStyles do
       "result" => "styles",
       "attempts" => 1,
       "variables" => {
-        "--d-border-radius" => "12px",
+        "--d-sys-border-radius-md" => "12px",
       },
       "unsupported" => ["Add a shop link"],
     )
@@ -94,7 +94,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AppearanceStyles do
         input: "Also hide share",
         current_styles: {
           variables: {
-            "--d-border-radius" => "8px",
+            "--d-sys-border-radius-md" => "8px",
           },
         },
         brand_color: "#e8590c",
@@ -103,7 +103,7 @@ RSpec.describe DiscourseAi::Evals::Runners::AppearanceStyles do
     end
 
     request = prompts.first.messages.find { |message| message[:type] == :user }[:content]
-    expect(request).to include('{"variables":{"--d-border-radius":"8px"}}')
+    expect(request).to include('{"variables":{"--d-sys-border-radius-md":"8px"}}')
     expect(prompts.first.messages.first[:content]).to include(
       "tertiary ##{ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c").light["tertiary"]}",
     )

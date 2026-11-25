@@ -6,7 +6,7 @@
 // --------------------------------------------------
 :root {
   --category-badge-size: 0.75em;
-  --category-badge-border-radius: 2px;
+  --d-comp-DCategoryBadge-border-radius: 2px;
   --d-new-indicator-size: 0.5rem;
   --d-new-indicator-color: var(--tertiary-med-or-tertiary);
 }
@@ -21,7 +21,7 @@
 // Category badges
 // --------------------------------------------------
 .badge-category__wrapper {
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--font-down-1);
@@ -34,7 +34,7 @@
     display: inline-flex;
     align-items: baseline;
     gap: 0.33em;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     min-width: 0;
 
     &.--style-square::before {
@@ -43,7 +43,7 @@
       flex: 0 0 auto;
       width: var(--category-badge-size);
       height: var(--category-badge-size);
-      border-radius: var(--category-badge-border-radius);
+      border-radius: var(--d-comp-DCategoryBadge-border-radius);
     }
 
     &.--style-emoji,
@@ -63,7 +63,7 @@
     }
 
     &.--style-icon .d-icon + .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     &__name {
@@ -84,14 +84,14 @@
     }
 
     .extra-info-wrapper & {
-      color: var(--header_primary-high);
+      color: var(--d-comp-Header-color-text-muted);
     }
   }
 
   .d-icon {
     width: 0.74em;
     height: 0.74em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 }
 
@@ -103,24 +103,24 @@
   top: -2px;
   padding: 0.21em 0.42em;
   min-width: 0.5em;
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   font-size: var(--font-down-2);
   line-height: var(--line-height-small);
   text-align: center;
   background-color: var(--primary-low-mid-or-secondary-low);
 
   &[href] {
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   &:hover {
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   // Unread posts
   &.unread-posts {
     background-color: var(--tertiary-med-or-tertiary);
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     font-weight: dark-light-choose(normal, bold);
   }
 
@@ -170,8 +170,8 @@
 .badge-group {
   @extend %badge;
   padding: 2px 5px;
-  color: var(--primary);
-  background-color: var(--primary-low);
-  border-color: var(--primary-low);
+  color: var(--d-sys-color-text-default);
+  background-color: var(--d-sys-color-background-neutral);
+  border-color: var(--d-sys-color-border-default);
   font-size: var(--font-down-1);
 }

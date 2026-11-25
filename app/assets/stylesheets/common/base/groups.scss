@@ -42,9 +42,9 @@
     display: flex;
     box-sizing: border-box;
     cursor: pointer;
-    border: 1px solid var(--content-border-color);
-    color: var(--primary);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    color: var(--d-sys-color-text-default);
+    border-radius: var(--d-sys-border-radius-md);
 
     .discourse-no-touch & {
       &:hover {
@@ -53,13 +53,13 @@
     }
 
     .group-membership {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-top: auto;
       padding-top: 1em;
 
       .is-group-owner,
       .is-group-member {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
       }
     }
 
@@ -96,24 +96,24 @@
       .group-user-count {
         display: flex;
         align-items: center;
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
 
         .d-icon {
           margin-right: 0.25em;
           font-size: 0.8em;
-          color: var(--primary-medium);
+          color: var(--d-sys-color-icon-faint);
         }
       }
 
       .group-description {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
         overflow-wrap: break-word;
       }
     }
 
     .group-avatar-flair {
       display: inline-block;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
 
       .avatar-flair {
         --avatar-flair-size: 40px;
@@ -132,7 +132,7 @@
     max-width: 33em;
 
     .control-instructions {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin-bottom: 10px;
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
@@ -163,8 +163,8 @@
   align-items: center;
   font-size: var(--font-down-2);
   padding: 0.2em 1em;
-  background-color: var(--primary-low);
-  border-radius: var(--d-border-radius);
+  background-color: var(--d-sys-color-background-neutral);
+  border-radius: var(--d-sys-border-radius-md);
 
   .fk-d-tooltip__trigger-container {
     align-items: center;

@@ -1,0 +1,87 @@
+{
+  "plugins/styleguide/assets/stylesheets/colors.scss": {
+    ".color-row >> .primary-very-low": {
+      "background-color": "keep"
+    },
+    ".color-row >> .primary-low": {
+      "background-color": "keep"
+    },
+    ".color-row >> .primary-low-mid": {
+      "background-color": "keep"
+    },
+    ".color-row >> .primary-medium": {
+      "background-color": "keep"
+    },
+    ".color-row >> .primary-high": {
+      "background-color": "keep"
+    },
+    ".color-row >> .primary": {
+      "background-color": "keep"
+    },
+    ".color-row >> .secondary": {
+      "background-color": "keep"
+    },
+    ".color-row >> .tertiary": {
+      "background-color": "keep"
+    },
+    ".color-row >> .quaternary": {
+      "background-color": "keep"
+    },
+    ".color-row >> .highlight": {
+      "background-color": "keep"
+    },
+    ".color-row >> .danger-medium": {
+      "background-color": "keep"
+    },
+    ".color-row >> .danger": {
+      "background-color": "keep"
+    },
+    ".color-row >> .success": {
+      "background-color": "keep"
+    },
+    ".color-row >> .love": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_primary": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_background": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_primary-low": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_primary-low-mid": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_primary-medium": {
+      "background-color": "keep"
+    },
+    ".color-row >> .header_primary-high": {
+      "background-color": "keep"
+    }
+  },
+  "plugins/discourse-data-explorer/assets/stylesheets/explorer.scss": {
+    ".query-params": {
+      "border": "keep"
+    }
+  },
+  "plugins/discourse-gamification/assets/stylesheets/common/leaderboard.scss": {
+    ".leaderboard >> .page >> &__header": {
+      "border-bottom": "keep"
+    }
+  },
+  "app/assets/stylesheets/common/base/header.scss": {
+    ":root": {
+      "--d-comp-HeaderIcons-color-icon-default-hovered": "keep"
+    },
+    ".extra-info-wrapper": {
+      "--tag-text-color": "--d-comp-Header-color-text-muted"
+    }
+  },
+  "app/assets/stylesheets/common/components/header-search.scss": {
+    ".header-search--enabled, .search-header--visible >> .floating-search-input >> .search-banner >> &-inner.wrap >> .search-menu >> .search-icon": {
+      "color": "--d-comp-Header-color-icon-strong"
+    }
+  }
+}

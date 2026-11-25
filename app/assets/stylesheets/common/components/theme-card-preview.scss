@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     svg {
       width: 100%;
@@ -47,7 +47,7 @@
     font-size: var(--font-up-0);
     font-weight: 700;
     overflow-wrap: anywhere;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__description {

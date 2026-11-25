@@ -20,19 +20,20 @@ RSpec.describe AppearanceStyles::Policy do
 
   describe "variables" do
     it "puts root variables on the root element outside the admin area" do
-      css = expect_valid(variables: { "--d-border-radius" => "12px" })
+      css = expect_valid(variables: { "--d-sys-border-radius-md" => "12px" })
 
       expect(css).to include(":root:not(:has(> body.admin-interface)) {")
-      expect(css).to include("--d-border-radius: 12px;")
+      expect(css).to include("--d-sys-border-radius-md: 12px;")
     end
 
     it "accepts palette variables and light-dark colors" do
       expect_valid(
         variables: {
-          "--d-button-primary-bg-color" => "var(--tertiary)",
-          "--d-link-color" => "light-dark(#06705a, #4fd)",
+          "--d-comp-DButton-color-background-primary" => "var(--tertiary)",
+          "--d-sys-color-text-link" => "light-dark(#06705a, #4fd)",
           "--d-sidebar-background" => "color-mix(in srgb, var(--secondary) 90%, var(--tertiary))",
           "--d-sidebar-link-icon-color" => "var(--primary-high)",
+          "--d-sidebar-suffix-color" => "var(--tertiary)",
         },
       )
     end
@@ -53,15 +54,15 @@ RSpec.describe AppearanceStyles::Policy do
     end
 
     it "lets buttons be pill-shaped but keeps other corners bounded" do
-      expect_valid(variables: { "--d-button-border-radius" => "9999px" })
-      expect_error({ variables: { "--d-border-radius" => "9999px" } }, "outside 0px to 32px")
+      expect_valid(variables: { "--d-comp-DButton-border-radius" => "9999px" })
+      expect_error({ variables: { "--d-sys-border-radius-md" => "9999px" } }, "outside 0px to 32px")
     end
 
     it "rejects unknown, excluded and out-of-bounds variables" do
       expect_error({ variables: { "--d-made-up" => "1px" } }, "unknown variable")
       expect_error({ variables: { "--d-skeleton-gap" => "1px" } }, "not authorable")
       expect_error({ variables: { "--d-max-width" => "4000px" } }, "outside 960px to 1600px")
-      expect_error({ variables: { "--d-border-radius" => "-4px" } }, "negative values")
+      expect_error({ variables: { "--d-sys-border-radius-md" => "-4px" } }, "negative values")
     end
   end
 
@@ -75,7 +76,7 @@ RSpec.describe AppearanceStyles::Policy do
               state: "hover",
               media: "desktop",
               declarations: {
-                "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+                "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
               },
             },
           ],
@@ -188,14 +189,14 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "user_badge",
               declarations: {
-                "background-color" => "rgba(var(--tertiary-rgb), 0.2)",
+                "background-color" => "color-mix(in srgb, var(--tertiary) 20%, transparent)",
               },
             },
           ],
         },
       )
       expect_error(
-        declare("rgba(var(--tertiary-rgb), 0.2)", property: "color"),
+        declare("color-mix(in srgb, var(--tertiary) 20%, transparent)", property: "color"),
         "text needs an opaque color",
       )
     end
@@ -212,8 +213,8 @@ RSpec.describe AppearanceStyles::Policy do
       result =
         run(
           variables: {
-            "--d-border-radius" => "12px",
-            "--d-link-color" => "light-dark(#06705a, #4fd)",
+            "--d-sys-border-radius-md" => "12px",
+            "--d-sys-color-text-link" => "light-dark(#06705a, #4fd)",
             "--d-logo-height" => "3em",
           },
           rules: [
@@ -229,7 +230,7 @@ RSpec.describe AppearanceStyles::Policy do
               state: "hover",
               media: "desktop",
               declarations: {
-                "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+                "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
               },
             },
           ],
@@ -291,7 +292,7 @@ RSpec.describe AppearanceStyles::Policy do
               area: "primary_button",
               state: "hover",
               declarations: {
-                "color" => "var(--d-button-primary-bg-color--hover)",
+                "color" => "var(--d-comp-DButton-color-background-primary-hovered)",
               },
             },
           ],
@@ -330,11 +331,7 @@ RSpec.describe AppearanceStyles::Policy do
         "light-dark() takes hex colors",
       )
       expect_error(
-        {
-          rules: [
-            { area: "primary_button", declarations: { "color" => "rgb(var(--tertiary-rgb))" } },
-          ],
-        },
+        { rules: [{ area: "primary_button", declarations: { "color" => "var(--tertiary)" } }] },
         "rules[0]: text on background is",
       )
       expect_error(
@@ -351,7 +348,7 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "user_badge",
               declarations: {
-                "background-color" => "rgba(var(--tertiary-rgb), 0.2)",
+                "background-color" => "color-mix(in srgb, var(--tertiary) 20%, transparent)",
               },
             },
           ],
@@ -370,7 +367,7 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "primary_button",
               declarations: {
-                "color" => "rgba(var(--secondary-rgb), 0)",
+                "color" => "color-mix(in srgb, var(--secondary) 0%, transparent)",
               },
             },
           ],
@@ -378,7 +375,7 @@ RSpec.describe AppearanceStyles::Policy do
         "text needs an opaque color",
       )
       expect_error(
-        { variables: { "--d-button-primary-text-color" => "transparent" } },
+        { variables: { "--d-comp-DButton-color-text-primary" => "transparent" } },
         "text needs an opaque color",
       )
     end
@@ -456,7 +453,7 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "primary_button",
               declarations: {
-                "background-color" => "rgba(var(--secondary-rgb), 0.9)",
+                "background-color" => "color-mix(in srgb, var(--secondary) 90%, transparent)",
                 "color" => "var(--secondary)",
               },
             },
@@ -470,7 +467,7 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "primary_button",
               declarations: {
-                "background-color" => "rgba(var(--primary-rgb), 0.9)",
+                "background-color" => "color-mix(in srgb, var(--primary) 90%, transparent)",
                 "color" => "var(--secondary)",
               },
             },
@@ -525,7 +522,8 @@ RSpec.describe AppearanceStyles::Policy do
         expect_error(
           {
             variables: {
-              "--d-link-color" => "color-mix(in srgb, var(--primary) #{percent}, var(--secondary))",
+              "--d-sys-color-text-link" =>
+                "color-mix(in srgb, var(--primary) #{percent}, var(--secondary))",
             },
           },
           "color-mix() percentages must be between 0% and 100%",
@@ -540,20 +538,20 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "primary_button",
               declarations: {
-                "--d-button-primary-bg-color" => "light-dark(#000000, #000000)",
-                "--d-button-primary-text-color" => "light-dark(#ffffff, #ffffff)",
-                "--d-button-primary-icon-color" => "light-dark(#ffffff, #ffffff)",
+                "--d-comp-DButton-color-background-primary" => "light-dark(#000000, #000000)",
+                "--d-comp-DButton-color-text-primary" => "light-dark(#ffffff, #ffffff)",
+                "--d-comp-DButton-color-icon-primary" => "light-dark(#ffffff, #ffffff)",
               },
             },
             {
               area: "primary_button",
               declarations: {
-                "--d-button-primary-text-color" => "light-dark(#000000, #000000)",
+                "--d-comp-DButton-color-text-primary" => "light-dark(#000000, #000000)",
               },
             },
           ],
         },
-        "--d-button-primary-text-color on --d-button-primary-bg-color is",
+        "--d-comp-DButton-color-text-primary on --d-comp-DButton-color-background-primary is",
       )
     end
 
@@ -567,23 +565,23 @@ RSpec.describe AppearanceStyles::Policy do
 
     it "checks the draft's value for variables that are also palette colors" do
       expect_error(
-        { variables: { "--d-selected-text-color" => "transparent" } },
+        { variables: { "--d-sys-color-text-default-selected" => "transparent" } },
         "text needs an opaque color",
       )
     end
 
     it "checks text color variables against the background they show on" do
       expect_error(
-        { variables: { "--d-link-color" => "transparent" } },
+        { variables: { "--d-sys-color-text-link" => "transparent" } },
         "text needs an opaque color",
       )
       expect_error(
-        { variables: { "--d-link-color" => "light-dark(#ffffff, #000000)" } },
-        "--d-link-color on --secondary is",
+        { variables: { "--d-sys-color-text-link" => "light-dark(#ffffff, #000000)" } },
+        "--d-sys-color-text-link on --d-sys-color-background-default is",
       )
       expect_error(
-        { variables: { "--d-button-primary-icon-color" => "var(--tertiary)" } },
-        "--d-button-primary-icon-color on --d-button-primary-bg-color is",
+        { variables: { "--d-comp-DButton-color-icon-primary" => "var(--tertiary)" } },
+        "--d-comp-DButton-color-icon-primary on --d-comp-DButton-color-background-primary is",
       )
     end
 
@@ -720,7 +718,7 @@ RSpec.describe AppearanceStyles::Policy do
           {
             area: "welcome_banner_title",
             declarations: {
-              "background-color" => "rgba(var(--secondary-rgb), 0.1)",
+              "background-color" => "color-mix(in srgb, var(--secondary) 10%, transparent)",
             },
           },
         ],
@@ -792,20 +790,20 @@ RSpec.describe AppearanceStyles::Policy do
 
     it "checks the color the draft gives a token, not the default" do
       expect_error(
-        { variables: { "--token-color-surface" => "var(--primary)" } },
-        "--token-color-text-default on --token-color-surface is",
+        { variables: { "--d-sys-color-background-default" => "var(--primary)" } },
+        "--d-sys-color-text-default on --d-sys-color-background-default is",
       )
       expect_error(
         {
           variables: {
-            "--token-color-surface" => "var(--primary)",
-            "--token-color-text-default" => "var(--secondary)",
+            "--d-sys-color-background-default" => "var(--primary)",
+            "--d-sys-color-text-default" => "var(--secondary)",
           },
           rules: [
             {
               area: "primary_button",
               declarations: {
-                "background-color" => "var(--token-color-surface)",
+                "background-color" => "var(--d-sys-color-background-default)",
                 "color" => "var(--primary)",
               },
             },
@@ -822,12 +820,12 @@ RSpec.describe AppearanceStyles::Policy do
             {
               area: "primary_button",
               declarations: {
-                "--d-button-primary-text-color" => "var(--tertiary)",
+                "--d-comp-DButton-color-text-primary" => "var(--tertiary)",
               },
             },
           ],
         },
-        "rules[0]: --d-button-primary-text-color on --d-button-primary-bg-color is",
+        "rules[0]: --d-comp-DButton-color-text-primary on --d-comp-DButton-color-background-primary is",
       )
     end
 
@@ -866,20 +864,20 @@ RSpec.describe AppearanceStyles::Policy do
 
       result =
         described_class.call(
-          { variables: { "--d-button-primary-bg-color" => "var(--quaternary)" } },
+          { variables: { "--d-comp-DButton-color-background-primary" => "var(--quaternary)" } },
           palettes:,
         )
       expect(result.errors.join).to include(
-        "--d-button-primary-text-color on --d-button-primary-bg-color is",
+        "--d-comp-DButton-color-text-primary on --d-comp-DButton-color-background-primary is",
       )
 
       result =
         described_class.call(
           {
             variables: {
-              "--d-button-primary-bg-color" => "var(--quaternary)",
-              "--d-button-primary-text-color" => "light-dark(#1a1a1a, #1a1a1a)",
-              "--d-button-primary-icon-color" => "light-dark(#1a1a1a, #1a1a1a)",
+              "--d-comp-DButton-color-background-primary" => "var(--quaternary)",
+              "--d-comp-DButton-color-text-primary" => "light-dark(#1a1a1a, #1a1a1a)",
+              "--d-comp-DButton-color-icon-primary" => "light-dark(#1a1a1a, #1a1a1a)",
             },
           },
           palettes:,
@@ -1136,7 +1134,7 @@ RSpec.describe AppearanceStyles::Policy do
       result =
         horizon(
           variables: {
-            "--d-border-radius" => "12px",
+            "--d-sys-border-radius-md" => "12px",
           },
           rules: [
             {
@@ -1177,7 +1175,7 @@ RSpec.describe AppearanceStyles::Policy do
         "background" => "var(--secondary)",
         "background-image" => "linear-gradient(var(--secondary), var(--tertiary))",
         "border" => "1px solid var(--primary)",
-        "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.1)",
+        "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 10%, transparent)",
         "opacity" => "0.8",
       }.each do |property, value|
         result = horizon(rules: [{ area: "topic_list_item", declarations: { property => value } }])

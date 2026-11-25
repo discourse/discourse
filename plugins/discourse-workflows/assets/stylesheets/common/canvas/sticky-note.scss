@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   overflow: visible;
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
 
   &:active {
     cursor: grabbing;
@@ -42,10 +42,10 @@
     align-items: center;
     gap: 4px;
     padding: 4px 6px;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    box-shadow: var(--shadow-dropdown);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-strong);
+    border-radius: var(--d-sys-border-radius-md);
+    box-shadow: var(--d-sys-shadow-overlay);
     z-index: calc(var(--z-canvas-chrome) + 1);
   }
 
@@ -83,7 +83,7 @@
     font-size: var(--font-down-3);
     font-family: inherit;
     line-height: 1.4;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     outline: none;
     padding: 0;
     cursor: text;
@@ -97,7 +97,7 @@
   &__text {
     font-size: var(--font-down-3);
     line-height: 1.4;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     word-break: break-word;
     overflow: hidden;
     height: 100%;
@@ -111,11 +111,11 @@
     }
 
     a {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
 
     code {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       padding: 1px 4px;
       border-radius: 3px;
       font-size: var(--font-down-2);
@@ -123,7 +123,7 @@
   }
 
   &__placeholder {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
   }
 

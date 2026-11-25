@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   display: flex;
-  background: rgb(var(--always-black-rgb), 0.85);
+  background: color-mix(in srgb, black 85%, transparent);
   pointer-events: none;
 
   .uppy-is-drag-over & {

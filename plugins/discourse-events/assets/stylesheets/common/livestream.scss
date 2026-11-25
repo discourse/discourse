@@ -39,7 +39,7 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
 
   &__waiting {
     margin: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-align: center;
     width: 100%;
   }
@@ -87,7 +87,7 @@ body.discourse-calendar-livestream-zoom-full {
   --livestream-zoom-view-height: var(--livestream-zoom-resting-height);
   position: relative;
   height: var(--livestream-zoom-resting-height);
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
 
   // The device's own controls sit over the bottom of the viewport wherever the
   // page is laid out edge to edge, and the app's footer navigation over that
@@ -118,14 +118,14 @@ body.discourse-calendar-livestream-zoom-full {
 
   &__waiting-wrapper {
     border: 1px solid var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     overflow: hidden;
   }
 
   &__waiting {
     margin: 0;
     padding: 1rem;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-align: center;
   }
 
@@ -137,8 +137,8 @@ body.discourse-calendar-livestream-zoom-full {
     z-index: 2;
     padding: 1rem;
     border-radius: 8px;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-default);
 
     p {
       margin-top: 0;
@@ -168,7 +168,7 @@ body.discourse-calendar-livestream-zoom-full {
 
     .discourse-calendar-livestream-zoom-page__chat {
       flex: 1 1 0;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
 
     .discourse-calendar-livestream-zoom-page__waiting-wrapper {
@@ -228,7 +228,7 @@ body.discourse-calendar-livestream-zoom-full {
         .discourse-calendar-livestream-zoom-page__chat {
           flex: 0 0 clamp(20rem, 30%, 28rem);
           border-top: 0;
-          border-left: 1px solid var(--primary-low);
+          border-left: 1px solid var(--d-sys-color-border-default);
         }
 
         .discourse-calendar-livestream-zoom-page__waiting-wrapper {
@@ -249,7 +249,7 @@ body.discourse-calendar-livestream-zoom-full {
   width: 100%;
   flex: 1 1 0;
   min-height: 0;
-  border-right: 1px solid var(--content-border-color);
+  border-right: 1px solid var(--d-sys-color-border-default);
 
   .chat-drawer,
   .chat-channel {

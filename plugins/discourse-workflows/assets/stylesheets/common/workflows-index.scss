@@ -1,7 +1,7 @@
 .workflows-index {
   &__tabs {
     display: flex;
-    border-bottom: 2px solid var(--primary-low);
+    border-bottom: 2px solid var(--d-sys-color-border-default);
     margin-bottom: var(--space-4);
   }
 
@@ -11,17 +11,17 @@
     background: transparent;
     cursor: pointer;
     font-size: var(--font-0);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.is-active {
-      color: var(--tertiary);
-      border-bottom-color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
+      border-bottom-color: var(--d-sys-color-border-accent);
     }
   }
 
@@ -56,9 +56,9 @@
     box-sizing: border-box;
     width: 100%;
     padding: var(--space-8) var(--space-4);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__badge {
@@ -68,9 +68,9 @@
     white-space: nowrap;
     font-size: var(--font-down-1);
     padding: 0.25em 0.6em;
-    border-radius: var(--d-border-radius);
-    border: 1px solid var(--primary-low);
-    color: var(--primary-high);
+    border-radius: var(--d-sys-border-radius-md);
+    border: 1px solid var(--d-sys-color-border-default);
+    color: var(--d-sys-color-text-muted);
 
     &::before {
       content: "";
@@ -90,13 +90,13 @@
     }
 
     &.is-unpublished-changes {
-      border-color: var(--tertiary-medium);
-      background: var(--tertiary-low);
-      color: var(--primary);
+      border-color: var(--d-sys-color-background-accent-subtle);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-text-default);
       font-weight: 600;
 
       &::before {
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
       }
     }
   }
@@ -114,7 +114,7 @@
   }
 
   &__tag-filter-count {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
@@ -128,6 +128,6 @@
   }
 
   &__no-results {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }

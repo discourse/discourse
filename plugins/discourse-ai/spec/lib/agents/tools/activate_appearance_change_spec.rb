@@ -132,7 +132,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
         service: AppearanceChange::DraftTheme,
         styles: {
           variables: {
-            "--d-border-radius" => "12px",
+            "--d-sys-border-radius-md" => "12px",
           },
         },
       )
@@ -158,7 +158,13 @@ RSpec.describe DiscourseAi::Agents::Tools::ActivateAppearanceChange do
     end
 
     it "refuses styles that no longer pass the checks" do
-      theme_change.update_columns(styles: { "variables" => { "--d-border-radius" => "500px" } })
+      theme_change.update_columns(
+        styles: {
+          "variables" => {
+            "--d-sys-border-radius-md" => "500px",
+          },
+        },
+      )
 
       expect(build_tool(theme_change).invoke[:error]).to eq(
         I18n.t("discourse_ai.appearance_authoring.theme_changed"),

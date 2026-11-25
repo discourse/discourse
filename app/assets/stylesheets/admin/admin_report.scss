@@ -41,7 +41,7 @@
       font-weight: 700;
 
       .report-url {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       .info {
@@ -50,7 +50,7 @@
         color: var(--primary-low-mid);
 
         &:hover {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
     }
@@ -62,16 +62,16 @@
 
     &.trending-down,
     &.high-trending-down {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
 
     &.trending-up,
     &.high-trending-up {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.no-change {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       .d-icon {
         display: none;
@@ -89,7 +89,7 @@
   }
 
   .d-page-subheader__title a {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .report-alert {
@@ -99,11 +99,11 @@
     border: 1px solid transparent;
 
     a {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
@@ -111,19 +111,19 @@
 
     &.no-data,
     &.rate-limited {
-      background: var(--secondary);
-      border-color: var(--primary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-default);
+      border-color: var(--d-sys-color-border-default);
+      color: var(--d-sys-color-text-default);
     }
 
     &.rate-limited .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
 
     &.timeout,
     &.exception {
-      border-color: var(--danger-low);
-      color: var(--danger);
+      border-color: var(--d-sys-color-background-danger-subtlest);
+      color: var(--d-sys-color-text-danger);
     }
   }
 }
@@ -139,7 +139,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
   padding-bottom: 0.5em;
 
   @media screen and (width <= 400px) {
@@ -150,7 +150,7 @@
     margin: 0 0.5em 0 0;
 
     a {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 }
@@ -165,8 +165,8 @@
     padding-top: 0;
 
     .admin-section-landing-item {
-      border-radius: var(--d-border-radius);
-      border: 1px solid var(--content-border-color);
+      border-radius: var(--d-sys-border-radius-md);
+      border: 1px solid var(--d-sys-color-border-default);
       margin-bottom: 0;
 
       @include viewport.from(sm) {
@@ -174,7 +174,7 @@
       }
 
       &:hover {
-        border: 1px solid var(--primary-low-mid);
+        border: 1px solid var(--d-sys-color-border-strong);
       }
     }
   }

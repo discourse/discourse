@@ -10,7 +10,7 @@
 
     &.--danger {
       border: 1px solid var(--workflow-status-error-low);
-      border-radius: var(--d-border-radius);
+      border-radius: var(--d-sys-border-radius-md);
     }
   }
 
@@ -24,7 +24,7 @@
   }
 
   &__section-description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin: 0 0 var(--space-3) 0;
   }
 

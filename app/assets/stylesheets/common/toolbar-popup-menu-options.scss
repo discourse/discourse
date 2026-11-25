@@ -30,13 +30,21 @@
     &::before {
       top: 0;
       margin-bottom: calc(var(--fade-height) * -1);
-      background: linear-gradient(to top, transparent, var(--secondary));
+      background: linear-gradient(
+        to top,
+        transparent,
+        var(--d-sys-color-background-default)
+      );
     }
 
     &::after {
       bottom: 0;
       margin-top: calc(var(--fade-height) * -1);
-      background: linear-gradient(to bottom, transparent, var(--secondary));
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--d-sys-color-background-default)
+      );
     }
   }
 
@@ -57,7 +65,7 @@
 
 .fk-d-menu[class*="toolbar-menu"] .dropdown-menu__header {
   padding: var(--space-2) 0.35em;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1-rem);
 }
 

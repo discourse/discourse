@@ -24,9 +24,9 @@
   }
 
   &.bad {
-    background: var(--danger-medium);
+    background: var(--d-sys-color-background-danger);
     color: white;
-    box-shadow: var(--shadow-dropdown);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 
   &.hide,
@@ -35,7 +35,7 @@
   }
 
   .d-icon {
-    color: var(--primary);
+    color: var(--d-sys-color-icon-default);
     opacity: 0.5;
     font-size: var(--font-0);
 

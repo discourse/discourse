@@ -14,7 +14,7 @@
   .d-icon,
   i.fa {
     margin-right: 0.25em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .assign-text {
@@ -37,7 +37,7 @@
 .cant-act-flagged-post {
   padding: 0.5em;
   border: 1px dashed var(--primary-medium);
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,7 +61,7 @@
     font-weight: bold;
 
     .label-optional {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-weight: normal;
     }
   }
@@ -86,11 +86,11 @@
     }
 
     &-filter.is-expanded {
-      border: 1px solid var(--tertiary);
+      border: 1px solid var(--d-sys-color-border-accent);
     }
 
     .angle-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .select-kit-row > div {
@@ -113,7 +113,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-size: var(--font-down-2);
       margin-left: 0.5em;
 
@@ -137,11 +137,11 @@
 
   .control-group.assignee-error {
     .select-kit-header {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
     }
 
     .error-label {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
       font-size: var(--font-down-1);
     }
   }
@@ -173,7 +173,7 @@
 
   .d-icon,
   i.fa {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   .d-icon {
@@ -211,7 +211,7 @@
       svg {
         width: 1.5em;
         height: 1.5em;
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
     }
 
@@ -264,7 +264,7 @@
   // when assigns are not public, make the description look like a whisper
   .small-action-custom-message {
     font-style: italic;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 

@@ -3,7 +3,7 @@
     font-size: var(--font-down-2);
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -37,7 +37,7 @@
 
   .sidebar-section-link-content-text {
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &--muted,
@@ -63,13 +63,13 @@
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     // A raised hand is a request waiting on someone — accent it so it reads
     // over the passive state icons.
     .d-icon-hand {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
   }
 
@@ -109,12 +109,12 @@
 
     .sidebar-section-link-content-text {
       font-size: var(--font-down-2);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
   &--listeners-start {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding-top: 0.25rem;
     margin-top: 0.25rem;
   }
@@ -122,7 +122,7 @@
   &--listener-count {
     .sidebar-section-link-content-text {
       font-size: var(--font-down-2);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       font-style: italic;
     }
   }
@@ -159,7 +159,7 @@
   // animated bars centered on top. Last so it wins over the idle/afk badge.
   &--speaking {
     .sidebar-section-link-content-text {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .sidebar-section-link-prefix {
@@ -192,9 +192,21 @@
         border-radius: 0;
         mask-image: none;
         background:
-          linear-gradient(var(--success), var(--success)) 0 50%,
-          linear-gradient(var(--success), var(--success)) 5px 50%,
-          linear-gradient(var(--success), var(--success)) 10px 50%;
+          linear-gradient(
+              var(--d-sys-color-background-success),
+              var(--d-sys-color-background-success)
+            )
+            0 50%,
+          linear-gradient(
+              var(--d-sys-color-background-success),
+              var(--d-sys-color-background-success)
+            )
+            5px 50%,
+          linear-gradient(
+              var(--d-sys-color-background-success),
+              var(--d-sys-color-background-success)
+            )
+            10px 50%;
         background-size:
           3px 40%,
           3px 70%,
@@ -253,7 +265,7 @@
     }
 
     p {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 
@@ -356,7 +368,7 @@
     summary {
       cursor: pointer;
       font-weight: bold;
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .form-kit__field {
@@ -371,7 +383,7 @@
   }
 
   .form-kit__field-toggle {
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 8px;
     padding: 0.75rem 1rem;
   }
@@ -405,7 +417,7 @@
 
   &__volume-label {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__volume-slider {
@@ -414,10 +426,10 @@
   }
 
   &__kick-btn {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     &:hover {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
   }
 
@@ -429,28 +441,28 @@
   &__ptt-hint {
     display: block;
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding: 0 0.75rem 0.25rem;
   }
 
   &__ptt-btn.--active {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__stage-hint {
     display: block;
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding: 0.25rem 0.75rem;
     font-style: italic;
   }
 
   &__promote-btn {
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   &__demote-btn {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -465,23 +477,23 @@
   &__display {
     flex: 1;
     padding: 0.35rem 0.5rem;
-    border: 1px dashed var(--primary-low-mid);
+    border: 1px dashed var(--d-sys-color-border-strong);
     border-radius: 4px;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-align: center;
 
     &--captured {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       border-style: solid;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       font-weight: 600;
     }
 
     &--error {
-      border-color: var(--danger);
+      border-color: var(--d-sys-color-border-danger);
       border-style: solid;
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -493,33 +505,33 @@
   }
 
   .btn.btn-flat.live-ptt-key-capture__confirm:not(:disabled) {
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
 
     .d-icon {
-      color: var(--success);
+      color: var(--d-sys-color-icon-success);
     }
 
     &:hover {
-      background: var(--success-low);
+      background: var(--d-sys-color-background-success-subtlest);
     }
   }
 
   .btn.btn-flat.live-ptt-key-capture__cancel {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
 
     &:hover {
-      background: var(--danger-low);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
   }
 }
 
 .live-sidebar-participant__ptt-badge {
   font-size: var(--font-down-2);
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
   font-weight: 600;
   margin-left: 0.25rem;
 }
@@ -536,10 +548,10 @@
     padding: 1.5rem;
     background: linear-gradient(
       135deg,
-      var(--tertiary-low) 0%,
-      var(--tertiary-very-low) 100%
+      var(--d-sys-color-background-accent-subtlest) 0%,
+      var(--d-sys-color-background-accent-subtlest) 100%
     );
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__icon {
@@ -549,12 +561,12 @@
     justify-content: center;
     width: 3.5rem;
     height: 3.5rem;
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
     border-radius: 12px;
     flex-shrink: 0;
 
     .d-icon {
-      color: var(--secondary);
+      color: var(--d-sys-color-icon-inverse);
       font-size: 1.5rem;
     }
   }
@@ -565,8 +577,8 @@
     right: -0.4rem;
     font-size: var(--font-down-2);
     padding: 0.2rem;
-    background: var(--tertiary);
-    border-radius: var(--token-radius-full);
+    background: var(--d-sys-color-background-accent);
+    border-radius: var(--d-sys-border-radius-full);
   }
 
   &__header-content {
@@ -578,13 +590,13 @@
     margin: 0 0 0.25rem;
     font-size: var(--font-up-3);
     font-weight: 700;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     line-height: 1.2;
   }
 
   &__description {
     margin: 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-0);
     line-height: 1.4;
   }
@@ -593,8 +605,8 @@
     display: flex;
     gap: 0.5rem;
     padding: 1rem 1.5rem;
-    background: var(--secondary);
-    border-bottom: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-default);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   &__stat {
@@ -604,7 +616,7 @@
     justify-content: center;
     flex: 1;
     padding: 0.75rem;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 8px;
     text-align: center;
     gap: 0.25rem;
@@ -613,17 +625,17 @@
   &__stat-value {
     font-size: var(--font-up-2);
     font-weight: 700;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .d-icon {
       font-size: 1.25rem;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
   &__stat-label {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 500;
@@ -639,10 +651,10 @@
     gap: 0.5rem;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--tertiary-low);
+    border-bottom: 2px solid var(--d-sys-color-background-accent-subtlest);
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
       font-size: 1.1rem;
     }
 
@@ -650,7 +662,7 @@
       margin: 0;
       font-size: var(--font-up-1);
       font-weight: 600;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -660,7 +672,7 @@
     justify-content: center;
     gap: 0.75rem;
     padding: 2rem;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__member-list {
@@ -677,27 +689,27 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     border-radius: 8px;
     transition: background 0.15s ease;
 
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
     }
 
     &.--creator {
       background: linear-gradient(
         135deg,
-        var(--tertiary-very-low) 0%,
-        var(--primary-very-low) 100%
+        var(--d-sys-color-background-accent-subtlest) 0%,
+        var(--d-sys-color-background-sunken) 100%
       );
-      border: 1px solid var(--tertiary-low);
+      border: 1px solid var(--d-sys-color-background-accent-subtlest);
 
       &:hover {
         background: linear-gradient(
           135deg,
-          var(--tertiary-low) 0%,
-          var(--primary-low) 100%
+          var(--d-sys-color-background-accent-subtlest) 0%,
+          var(--d-sys-color-background-neutral) 100%
         );
       }
     }
@@ -722,7 +734,7 @@
 
   &__member-username {
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -733,21 +745,21 @@
     align-items: center;
     gap: 0.25rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     text-transform: capitalize;
 
     &.--creator {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       font-weight: 500;
 
       .d-icon {
         font-size: 0.75rem;
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
     &.--moderator {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
   }
 
@@ -767,12 +779,12 @@
   }
 
   &__remove-btn {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     padding: 0.4rem;
 
     &:hover {
-      color: var(--danger);
-      background: var(--danger-low);
+      color: var(--d-sys-color-text-danger);
+      background: var(--d-sys-color-background-danger-subtlest);
     }
 
     .d-icon {
@@ -782,7 +794,7 @@
 
   &__add-member {
     padding-top: 1rem;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__add-row {
@@ -823,7 +835,7 @@
     }
 
     .form-kit__field-toggle {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       border-radius: 8px;
       padding: 0.75rem 1rem;
     }
@@ -874,10 +886,10 @@
     position: relative;
     height: 0.75rem;
     border-radius: 0.375rem;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
 
     &.--open .live-voice-settings__meter-fill {
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
     }
   }
 
@@ -897,7 +909,7 @@
     bottom: -0.15rem;
     width: 2px;
     border-radius: 1px;
-    background: var(--tertiary);
+    background: var(--d-sys-color-background-accent);
   }
 
   &__sensitivity-slider {
@@ -908,12 +920,12 @@
   &__hint {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__mic-error {
     margin: 0;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -927,8 +939,8 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 16 / 9;
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
     overflow: hidden;
 
     video {
@@ -957,13 +969,13 @@
   &__hint {
     margin: 0;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__camera-error {
     margin: 0;
     padding: 1rem;
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -975,10 +987,10 @@
   flex-shrink: 0;
   gap: 0.4em;
   padding: 0.15em 0.65em;
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
   border-radius: 1em;
-  background: var(--primary-very-low);
-  color: var(--primary-high);
+  background: var(--d-sys-color-background-sunken);
+  color: var(--d-sys-color-text-muted);
   font-size: var(--font-down-1);
   font-weight: normal;
   line-height: var(--line-height-medium);
@@ -987,7 +999,7 @@
   .d-icon {
     width: 0.5em;
     height: 0.5em;
-    color: var(--danger);
+    color: var(--d-sys-color-icon-danger);
     animation: live-recording-pulse 2s ease-in-out infinite;
 
     @media (prefers-reduced-motion: reduce) {
@@ -1009,10 +1021,10 @@
     gap: 0.4em;
   }
   padding: 0.15em 0.65em;
-  border: 1px solid var(--primary-low-mid);
+  border: 1px solid var(--d-sys-color-border-strong);
   border-radius: 1em;
-  background: var(--primary-very-low);
-  color: var(--primary-high);
+  background: var(--d-sys-color-background-sunken);
+  color: var(--d-sys-color-text-muted);
   font-size: var(--font-down-1);
   font-weight: normal;
   line-height: var(--line-height-medium);
@@ -1021,7 +1033,7 @@
   .d-icon {
     width: 0.85em;
     height: 0.85em;
-    color: var(--tertiary);
+    color: var(--d-sys-color-icon-accent);
     animation: live-recording-pulse 2s ease-in-out infinite;
 
     @media (prefers-reduced-motion: reduce) {
@@ -1038,7 +1050,7 @@
 .live-local-recording-toggle {
   &.--recording {
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 }
@@ -1046,7 +1058,7 @@
 .live-call-controls__record {
   &.--recording {
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
       animation: live-recording-pulse 2s ease-in-out infinite;
 
       @media (prefers-reduced-motion: reduce) {
@@ -1078,7 +1090,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .d-button__suffix-icon {
@@ -1097,7 +1109,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__search-row,
@@ -1116,7 +1128,7 @@
     margin: 0 0 0.75rem;
     font-size: var(--font-0);
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__suggestion-list {
@@ -1135,7 +1147,7 @@
     border-radius: 8px;
 
     &:hover {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
     }
   }
 
@@ -1148,23 +1160,23 @@
 
   &__suggestion-username {
     font-weight: 600;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__suggestion-time {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__suggestion-invited {
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: var(--success);
+      color: var(--d-sys-color-icon-success);
     }
   }
 
@@ -1172,14 +1184,14 @@
     flex: 1;
     min-width: 0;
     margin-bottom: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__loading {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -1197,7 +1209,7 @@
     align-items: center;
     gap: 0.5rem;
     margin: 1rem 0 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     input[type="checkbox"] {
       margin: 0;
@@ -1248,7 +1260,7 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      border: 2px solid var(--tertiary);
+      border: 2px solid var(--d-sys-color-border-accent);
       opacity: 0;
       pointer-events: none;
     }
@@ -1271,7 +1283,7 @@
   }
 
   &__state {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .d-modal__footer {
@@ -1282,11 +1294,11 @@
   // btn-primary supplies the contrast text/icon colors; only the surface
   // changes to the universal answer-a-call green.
   &__answer.btn-primary {
-    background: var(--success);
+    background: var(--d-sys-color-background-success);
 
     &:hover,
     &:focus-visible {
-      background: var(--success-hover);
+      background: var(--d-sys-color-background-success-hovered);
     }
   }
 }
@@ -1307,7 +1319,7 @@
   &__hint {
     margin: 0 0 1em;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   // The field content wrapper is a column flex box aligned to flex-start, so
@@ -1340,7 +1352,7 @@
   &__note {
     font-weight: normal;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__section {
@@ -1353,14 +1365,14 @@
   }
 
   &__peer {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--d-sys-color-border-default);
     border-left-width: 4px;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 0.75rem;
     margin-bottom: 0.5rem;
 
     &.--connected {
-      border-left-color: var(--success);
+      border-left-color: var(--d-sys-color-border-success);
     }
 
     &.--connecting {
@@ -1369,7 +1381,7 @@
 
     &.--failed,
     &.--missing {
-      border-left-color: var(--danger);
+      border-left-color: var(--d-sys-color-border-danger);
     }
   }
 
@@ -1389,20 +1401,20 @@
     padding: 0.1rem 0.5rem;
     border-radius: 1em;
     font-size: var(--font-down-1);
-    background: var(--primary-very-low);
-    color: var(--primary-high);
+    background: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-muted);
 
     &.--connected,
     &.--ok {
-      background: var(--success-low);
-      color: var(--success);
+      background: var(--d-sys-color-background-success-subtlest);
+      color: var(--d-sys-color-text-success);
     }
 
     &.--failed,
     &.--missing,
     &.--timeout {
-      background: var(--danger-low);
-      color: var(--danger);
+      background: var(--d-sys-color-background-danger-subtlest);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -1413,7 +1425,7 @@
     margin-top: 0.5rem;
 
     &.--relayed {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -1425,7 +1437,7 @@
     font-size: var(--font-down-1);
 
     dt {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     dd {
@@ -1438,13 +1450,13 @@
     margin: 0.5rem 0 0;
     padding-left: 1.25rem;
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
     overflow-wrap: anywhere;
   }
 
   &__server {
     padding: 0.5rem 0;
-    border-bottom: 1px solid var(--primary-very-low);
+    border-bottom: 1px solid var(--d-sys-color-border-muted);
 
     code {
       overflow-wrap: anywhere;
@@ -1462,13 +1474,13 @@
   }
 
   &__warning {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__alert {
     margin: 0.5rem 0;
     font-size: var(--font-down-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__line {
@@ -1478,7 +1490,7 @@
   &__harmless {
     margin-top: 0.5rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     summary {
       cursor: pointer;
@@ -1495,13 +1507,13 @@
     flex-basis: 100%;
     margin: 0 0 0.5rem;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__server-kind {
     font-size: var(--font-down-2);
     font-weight: 600;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -1514,11 +1526,11 @@
   max-height: 50dvh;
   overflow-y: auto;
   padding: 1rem;
-  background: var(--secondary);
-  color: var(--primary);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  box-shadow: var(--shadow-dropdown);
+  background: var(--d-sys-color-background-default);
+  color: var(--d-sys-color-text-default);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
+  box-shadow: var(--d-sys-shadow-overlay);
 
   &__header {
     display: flex;
@@ -1547,7 +1559,7 @@
   overflow-wrap: anywhere;
 
   & + & {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &__name {

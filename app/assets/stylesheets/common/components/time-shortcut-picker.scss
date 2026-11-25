@@ -1,12 +1,12 @@
 .custom-date-time-wrap {
   padding: 1em 1em 0.5em;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   border-top: none;
-  background: var(--primary-very-low);
+  background: var(--d-sys-color-background-sunken);
 
   .d-icon {
     padding: 0 0.75em 0 0;
-    color: var(--primary-high);
+    color: var(--d-sys-color-icon-muted);
     margin-top: -0.5em;
   }
 

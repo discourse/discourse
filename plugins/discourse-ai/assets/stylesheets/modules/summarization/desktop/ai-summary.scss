@@ -13,7 +13,7 @@ html.scrollable-modal {
     max-height: calc(
       100vh - var(--header-offset) - 3rem - var(--composer-height, 0px)
     );
-    box-shadow: var(--shadow-menu-panel);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 
   // Override default modal animations to float in from left

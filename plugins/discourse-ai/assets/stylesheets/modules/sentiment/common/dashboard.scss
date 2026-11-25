@@ -48,8 +48,8 @@
 
 .admin-report-sentiment-analysis {
   &__selected-chart {
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     padding: 1rem;
   }
 
@@ -57,21 +57,21 @@
     display: flex;
     align-items: center;
     padding-bottom: 0.35rem;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .share {
       margin-left: auto;
 
       .d-icon-check {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
     }
   }
 }
 
 .admin-report-sentiment-analysis-details {
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 1rem;
   flex: 1 1 300px;
   min-width: 300px;
@@ -83,7 +83,7 @@
   padding-top: 0;
 
   &__filters {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     margin-bottom: 1rem;
 
     @include viewport.until(sm) {
@@ -101,9 +101,9 @@
     gap: 0.25rem;
     list-style: none;
     margin-left: 0;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     padding: 1rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon-face-smile {
       color: rgb(var(--d-sentiment-report-positive-rgb));
@@ -119,8 +119,8 @@
   }
 
   &__post-score {
-    border-radius: var(--d-border-radius);
-    background: var(--primary-very-low);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-sunken);
     margin-top: 0.5rem;
     padding: 0.25rem;
     font-size: var(--font-down-1);
@@ -158,7 +158,7 @@
   }
 
   nav.horizontal-overflow-nav {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     position: sticky;
     top: 0;
     padding-top: 1rem;
@@ -234,7 +234,7 @@
   &__count {
     font-weight: bold;
     font-size: var(--font-down-1);
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   &__positive,
@@ -251,8 +251,8 @@
 
   &__positive {
     background: rgb(var(--d-sentiment-report-positive-rgb));
-    border-top-left-radius: var(--d-border-radius);
-    border-bottom-left-radius: var(--d-border-radius);
+    border-top-left-radius: var(--d-sys-border-radius-md);
+    border-bottom-left-radius: var(--d-sys-border-radius-md);
   }
 
   &__negative {
@@ -261,7 +261,7 @@
 
   &__neutral {
     background: rgb(var(--d-sentiment-report-neutral-rgb));
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
+    border-top-right-radius: var(--d-sys-border-radius-md);
+    border-bottom-right-radius: var(--d-sys-border-radius-md);
   }
 }

@@ -52,6 +52,50 @@ test("adds one comment when a declaration sets and reads the same old name", () 
   );
 });
 
+test("removes a declaration that a merge turns into a reference to itself", () => {
+  const merge = { "--old-a": "--merged", "--old-b": "--merged" };
+  const css = postcss([postcssVariableRenamer(merge)]).process(
+    ":root { --old-a: var(--old-b); }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    ":root { /* automatically removed --old-a: var(--old-b), both names now refer to --merged */ }"
+  );
+});
+
+test("keeps a merge when the value is more than the reference", () => {
+  const merge = { "--old-a": "--merged", "--old-b": "--merged" };
+  const css = postcss([postcssVariableRenamer(merge)]).process(
+    ":root { --old-a: calc(var(--old-b) * 2); }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    ":root { --merged: calc(var(--merged) * 2); /* automatically renamed --old-a to --merged, --old-b to --merged */ }"
+  );
+});
+
+test("splits a border shorthand setter into width and color", () => {
+  const splits = { "--old-border": { width: "--width", color: "--color" } };
+  const css = postcss([postcssVariableRenamer({}, splits)]).process(
+    "a { --old-border: 2px solid red !important; }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    "a { --width: 2px !important; --color: red !important; /* automatically split --old-border: 2px solid red */ }"
+  );
+});
+
+test("composes reads of a split border variable", () => {
+  const splits = { "--old-border": { width: "--width", color: "--color" } };
+  const css = postcss([postcssVariableRenamer({}, splits)]).process(
+    "a { border-left: var(--old-border); }",
+    { from: undefined }
+  ).css;
+  expect(css).toBe(
+    "a { border-left: var(--width) solid var(--color); /* automatically renamed --old-border to --width and --color */ }"
+  );
+});
+
 test("leaves untouched declarations alone", () => {
   const css = "a { color: var(--primary); }";
   expect(process(css)).toBe(css);

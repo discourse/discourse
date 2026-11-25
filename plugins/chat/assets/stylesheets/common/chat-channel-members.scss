@@ -22,7 +22,7 @@
       display: flex;
       gap: var(--space-2);
       list-style: none;
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       align-items: center;
       box-sizing: border-box;
       padding: var(--space-3);
@@ -33,7 +33,7 @@
       }
 
       &:hover {
-        background: var(--d-hover);
+        background: var(--d-sys-color-background-default-hovered);
       }
 
       .chat-user-display-name {
@@ -42,7 +42,7 @@
         width: 100%;
 
         span:not(.-first) {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
         }
 
         &__name {
@@ -52,7 +52,7 @@
 
       .user-status-message {
         @include ellipsis;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         font-size: var(--font-down-2-rem);
         white-space: nowrap;
       }

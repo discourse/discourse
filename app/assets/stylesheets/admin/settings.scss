@@ -29,7 +29,7 @@
       .setting-link {
         opacity: 0;
         transition: opacity 0.3s;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       // Word joiner: wraps the icons with the name's last word.
@@ -67,7 +67,7 @@
       transition: background-color 1s ease;
 
       &.--highlighted {
-        background-color: var(--highlight-low);
+        background-color: var(--d-sys-color-background-highlight-subtlest);
       }
 
       .setting-label__heading {
@@ -146,7 +146,7 @@
 
     .setting-override-warning {
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       .d-icon {
         font-size: var(--font-down-1);
@@ -174,8 +174,8 @@
 
     .input-setting-list {
       padding: 1px;
-      background-color: var(--secondary);
-      border: 1px solid var(--input-border-color);
+      background-color: var(--d-sys-color-background-default);
+      border: 1px solid var(--d-sys-color-border-input);
       border-radius: 3px;
       transition:
         border linear 0.2s,
@@ -192,7 +192,7 @@
         position: relative;
         line-height: var(--line-height-small);
         cursor: default;
-        border: 1px dashed var(--primary-low-mid);
+        border: 1px dashed var(--d-sys-color-border-strong);
         border-radius: 3px;
         background-clip: padding-box;
         background-color: transparent;
@@ -209,7 +209,7 @@
     }
 
     .validation-error {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
 
     .job.site-setting {
@@ -221,13 +221,13 @@
       }
 
       .alert {
-        color: var(--danger);
+        color: var(--d-sys-color-text-danger);
         background-color: transparent;
         padding: 0;
       }
 
       .success {
-        color: var(--success);
+        color: var(--d-sys-color-text-success);
       }
 
       .progress {
@@ -236,7 +236,7 @@
     }
 
     .desc {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     h3 {
@@ -247,7 +247,7 @@
 
   .setting.overridden {
     .values input {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
     }
 
     h3 {
@@ -261,7 +261,7 @@
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 100%;
-        background-color: var(--highlight-high);
+        background-color: var(--d-sys-color-background-highlight-bold);
       }
     }
   }
@@ -270,12 +270,12 @@
     input[type="text"],
     input[type="password"],
     textarea {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
     }
   }
 
   .warning {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   .file-types-list__button {

@@ -42,7 +42,7 @@
       margin-bottom: var(--space-1);
 
       a {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         &:visited {
           color: currentcolor;
@@ -50,7 +50,7 @@
 
         &:hover,
         &:focus {
-          color: var(--tertiary);
+          color: var(--d-sys-color-text-link);
         }
       }
     }
@@ -60,7 +60,7 @@
       font-size: var(--font-down-1);
 
       a {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .d-icon {
@@ -88,7 +88,7 @@
     background: transparent;
 
     .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
   }
 

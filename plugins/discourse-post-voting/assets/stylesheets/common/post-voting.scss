@@ -13,7 +13,7 @@
   .topic-post-visited + .topic-post {
     .topic-avatar,
     .topic-body {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -67,14 +67,14 @@
 
   &__comment {
     font-size: var(--font-down-1-rem);
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     display: flex;
     align-items: flex-start;
     padding: var(--space-3) 0;
     word-break: break-word;
 
     &.--deleted {
-      background-color: var(--danger-low);
+      background-color: var(--d-sys-color-background-danger-subtlest);
     }
 
     &:hover:not(.--deleted) .post-voting-comments__comment-actions {
@@ -98,26 +98,26 @@
       padding: 0;
 
       .d-icon {
-        color: var(--primary-low-mid);
+        color: var(--d-sys-color-icon-faint);
       }
 
       &.--voted {
         .d-icon {
-          color: var(--success);
+          color: var(--d-sys-color-icon-success);
         }
       }
 
       &:focus-visible,
       .discourse-no-touch &:hover {
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
   }
 
   &__vote-count {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     min-width: 3ch;
     text-align: center;
 
@@ -158,7 +158,7 @@
   &__comment-actions-delete-link:hover,
   &__comment-actions-flag-link:hover {
     .discourse-no-touch & {
-      color: var(--danger) !important;
+      color: var(--d-sys-color-text-danger) !important;
     }
   }
 
@@ -195,11 +195,11 @@
     width: auto;
     margin: 0;
     transform: translateY(+50%);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
 
     &.has-error {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 
@@ -246,18 +246,18 @@
     &:focus-visible,
     .discourse-no-touch &:hover {
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
     }
 
     &.--voted {
       .d-icon {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
 
       &.--downvote {
         .d-icon {
-          color: var(--danger);
+          color: var(--d-sys-color-icon-danger);
         }
       }
     }
@@ -267,7 +267,7 @@
     font-size: var(--font-down-1);
     padding: var(--space-half) var(--space-2);
     text-align: center;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -290,7 +290,7 @@
     //   padding-bottom: var(--space-2);
     // }
     &:nth-child(2) {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding-top: var(--space-2);
       margin-top: var(--space-2);
     }
@@ -304,19 +304,19 @@
   }
 
   &__count {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__icon {
     &.--upvote {
       .d-icon {
-        color: var(--success);
+        color: var(--d-sys-color-icon-success);
       }
     }
 
     &.--downvote {
       .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
         transform: rotate(180deg);
       }
     }

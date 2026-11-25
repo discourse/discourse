@@ -19,7 +19,7 @@
 
     .d-toggle-switch__checkbox[aria-checked="true"]:not([disabled])
       + .d-toggle-switch__checkbox-slider {
-      background-color: var(--tertiary-hover);
+      background-color: var(--d-sys-color-background-accent-hovered);
     }
   }
 
@@ -52,7 +52,7 @@
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
-    background-color: var(--tertiary);
+    background-color: var(--d-sys-color-background-accent);
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
@@ -84,7 +84,7 @@
     .d-icon {
       width: calc(var(--toggle-switch-height) * 0.54) !important;
       height: calc(var(--toggle-switch-height) * 0.54) !important;
-      color: var(--secondary) !important;
+      color: var(--d-sys-color-icon-inverse) !important;
       position: absolute;
       top: 50%;
       left: calc(var(--toggle-switch-height) * 0.291);
@@ -101,7 +101,7 @@
   }
 
   &__checkbox-slider::before {
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     border-radius: 50%;
     width: calc(var(--toggle-switch-height) * 0.75);
     height: calc(var(--toggle-switch-height) * 0.75);

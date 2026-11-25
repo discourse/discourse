@@ -10,7 +10,7 @@
   }
 
   &__description {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     margin-top: var(--space-1);
   }
@@ -21,10 +21,10 @@
     gap: var(--space-1);
     margin-top: var(--space-1);
     font-size: var(--font-down-1);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 }

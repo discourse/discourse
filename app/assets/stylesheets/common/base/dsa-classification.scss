@@ -18,7 +18,7 @@
     h2 {
       margin: 0;
       font-size: var(--font-up-1);
-      font-weight: var(--token-font-weight-semibold);
+      font-weight: var(--d-sys-font-weight-semibold);
       line-height: var(--line-height-medium);
     }
   }
@@ -44,8 +44,8 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   list-style: none;
   margin: 0;
   padding: var(--space-2) var(--space-6);
-  border-block-end: 1px solid var(--content-border-color);
-  color: var(--primary-medium);
+  border-block-end: 1px solid var(--d-sys-color-border-default);
+  color: var(--d-sys-color-text-faint);
 
   @include viewport.until(sm) {
     font-size: var(--font-down-1);
@@ -58,13 +58,13 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
   }
 
   .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
     font-weight: normal;
     font-size: var(--font-down-1);
   }
 
   .--current {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-weight: bold;
   }
 
@@ -78,13 +78,13 @@ html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
     &:hover,
     &:focus-visible {
       background: transparent;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 }
 
 .dsa-moderation-help {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .dsa-moderation-title-help {

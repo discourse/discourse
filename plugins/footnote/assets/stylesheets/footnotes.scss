@@ -90,11 +90,11 @@
     margin: 0.5rem;
     padding-top: 0.5rem;
     background-color: var(--primary-50);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     z-index: z("modal", "tooltip");
 
     &:focus-within {
-      outline: 1px solid var(--content-border-color);
+      outline: 1px solid var(--d-sys-color-border-default);
     }
 
     &::before {

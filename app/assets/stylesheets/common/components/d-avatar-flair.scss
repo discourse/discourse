@@ -45,11 +45,11 @@
   &.--bot {
     --avatar-flair-icon-scale: 0.7;
     background-color: var(--primary);
-    color: var(--secondary);
-    border-radius: var(--d-border-radius);
+    color: var(--d-sys-color-text-inverse);
+    border-radius: var(--d-sys-border-radius-md);
 
     .d-icon {
-      fill: var(--secondary);
+      fill: var(--d-sys-color-icon-inverse);
     }
   }
 }

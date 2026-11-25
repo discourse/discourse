@@ -2,8 +2,8 @@
   display: flex;
   width: 100%;
   gap: 0.5rem;
-  border-bottom: 1px solid var(--content-border-color);
-  background: var(--secondary);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
+  background: var(--d-sys-color-background-default);
   padding: 0.25rem 0.67em;
   box-sizing: border-box;
   flex-direction: column;
@@ -17,7 +17,7 @@
 
   .filter-input-container {
     margin-right: auto;
-    border-color: var(--primary-low);
+    border-color: var(--d-sys-color-border-default);
     width: 100%;
     max-width: 320px;
   }

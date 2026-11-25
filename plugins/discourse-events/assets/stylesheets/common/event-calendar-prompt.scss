@@ -1,9 +1,9 @@
 @use "sass:color";
 
 .event-calendar-prompt {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--d-sys-color-border-default);
   padding: var(--space-2) var(--space-4) var(--space-4);
-  background: var(--success-very-low);
+  background: var(--d-sys-color-background-success-subtlest);
 
   &__heading {
     display: grid;
@@ -17,12 +17,12 @@
   }
 
   &__icon {
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   &__dismiss {
     padding: 0.25em;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   &__actions {

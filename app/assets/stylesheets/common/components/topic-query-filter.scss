@@ -15,21 +15,21 @@
     min-width: 0;
     gap: var(--space-3);
     padding-inline: 2.25em 0.75em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     background: var(--d-input-bg-color);
     border: var(--d-input-border);
-    border-color: var(--primary-low-mid);
-    border-radius: var(--d-input-border-radius);
+    border-color: var(--d-sys-color-border-strong);
+    border-radius: var(--d-comp-Input-border-radius);
     transition:
       border-color 0.15s,
       box-shadow 0.15s;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &:focus-visible {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: 2px solid var(--tertiary);
       outline-offset: 1px;
       box-shadow: inset 0 0 0 1px var(--tertiary);
@@ -43,15 +43,15 @@
   &__reset {
     margin-inline-start: auto;
     flex-shrink: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__label {
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
     display: flex;
     align-items: center;
     padding: 0.25em 0.65em;
-    border: 1px solid var(--primary-low-mid);
+    border: 1px solid var(--d-sys-color-border-strong);
     border-right: 0;
   }
 
@@ -65,7 +65,7 @@
     left: 0.75em;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: 0.9em;
     pointer-events: none;
     opacity: 0.7;
@@ -88,36 +88,36 @@
     min-width: unset;
     background: transparent;
     border: none;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     transition: all 0.15s;
     z-index: 1;
 
     &:hover {
-      background: var(--primary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-default);
     }
   }
 
   input.topic-query-filter__filter-term {
     margin: 0;
-    border-color: var(--primary-low-mid);
+    border-color: var(--d-sys-color-border-strong);
     padding-left: 2.25em;
     padding-right: 2.5em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     width: 100%;
     transition:
       border-color 0.15s,
       box-shadow 0.15s;
 
     &:focus {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: none;
       outline-offset: 0;
       box-shadow: inset 0 0 0 1px var(--tertiary);
 
       ~ .topic-query-filter__icon {
         opacity: 1;
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
 

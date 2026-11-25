@@ -9,7 +9,7 @@
       grid-area: description;
       width: 100%;
       font-size: var(--font-down-1);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -46,7 +46,7 @@
 
     &:not(.visited) {
       .excerpt {
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
       }
     }
   }

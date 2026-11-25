@@ -10,7 +10,7 @@
 
   &__link,
   &__link:visited {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   li {
@@ -18,7 +18,7 @@
       margin-right: var(--space-1);
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
         font-size: var(--font-down-1);
       }
     }

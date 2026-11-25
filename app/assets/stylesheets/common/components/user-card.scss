@@ -9,7 +9,7 @@
   .fk-d-menu__inner-content {
     min-width: 0;
     overflow: visible;
-    border-radius: var(--d-border-radius-large);
+    border-radius: var(--d-sys-border-radius-lg);
   }
 
   @include viewport.until(sm) {
@@ -37,9 +37,9 @@
     content: "";
     background: linear-gradient(
       to right,
-      var(--primary-very-low) 10%,
-      var(--primary-low) 18%,
-      var(--primary-very-low) 33%
+      var(--d-sys-color-background-sunken) 10%,
+      var(--d-sys-color-background-neutral) 18%,
+      var(--d-sys-color-background-sunken) 33%
     );
     height: var(--avatar-width);
     width: var(--card-width);
@@ -59,12 +59,12 @@
   --avatar-margin: -3.3em; // extends the avatar above the card
   min-width: 0;
   width: var(--card-width);
-  color: var(--primary);
-  background: var(--secondary) center center;
+  color: var(--d-sys-color-text-default);
+  background: var(--d-sys-color-background-default) center center;
   background-size: cover;
   position: unset;
   margin: 0;
-  border-radius: var(--d-border-radius-large);
+  border-radius: var(--d-sys-border-radius-lg);
   box-shadow: unset;
   z-index: unset;
 
@@ -77,8 +77,12 @@
   .card-content {
     container-type: inline-size;
     padding: 10px;
-    background: rgb(var(--secondary-rgb), 0.85);
-    border-radius: var(--d-border-radius-large);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-default) 85%,
+      transparent
+    );
+    border-radius: var(--d-sys-border-radius-lg);
     border: 5px solid var(--secondary);
 
     &::after {
@@ -204,7 +208,7 @@
     }
 
     .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
       font-size: var(--font-down-1);
 
       @include viewport.until(sm) {
@@ -225,11 +229,11 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.15em 0.5em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &.email,
     .desc {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 
@@ -243,7 +247,7 @@
   .names__primary,
   .names__secondary {
     a {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -299,12 +303,12 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          background-color: rgb(var(--secondary-rgb), 1);
+          background-color: var(--d-sys-color-background-default);
           border-radius: 50%;
           padding: 0.75rem;
           font-size: 1.25rem;
-          color: var(--primary);
-          box-shadow: var(--shadow-dropdown);
+          color: var(--d-sys-color-text-default);
+          box-shadow: var(--d-sys-shadow-overlay);
           box-sizing: border-box;
         }
 
@@ -331,7 +335,7 @@
 
     .bio {
       a:not(.mention) {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
 
       .overflow {
@@ -341,7 +345,7 @@
     }
 
     .suspended {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       .suspension-reason-title,
       .suspension-date {
@@ -350,7 +354,7 @@
     }
 
     .silenced {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       .silence-reason-title,
       .silence-date {
@@ -369,11 +373,11 @@
     text-align: left;
 
     .desc {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     a {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       text-decoration: underline;
     }
   }
@@ -399,7 +403,7 @@
     .website-name a,
     .location span {
       @include ellipsis;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .location,
@@ -453,10 +457,10 @@
 
     .user-badge {
       @include ellipsis;
-      background: var(--primary-very-low);
-      border: 1px solid var(--content-border-color);
-      color: var(--primary);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-sunken);
+      border: 1px solid var(--d-sys-color-border-default);
+      color: var(--d-sys-color-text-default);
+      border-radius: var(--d-sys-border-radius-md);
 
       @include viewport.until(sm) {
         display: flex;
@@ -517,7 +521,7 @@
     box-sizing: border-box;
     width: max-content;
     max-width: calc(100cqi - 50% - var(--avatar-width) / 3);
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     padding: var(--space-1) var(--space-3);
     border-radius: 9999px;
     border: 5px solid var(--secondary);
@@ -534,7 +538,7 @@
       }
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
 
@@ -548,7 +552,7 @@
       text-align: left;
       font-size: var(--font-down-2);
       margin-left: var(--space-half);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     &__description {
@@ -568,7 +572,7 @@
 
     .avatar-flair {
       --avatar-flair-size: var(--avatar-width);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -579,7 +583,7 @@
 
     .bio {
       a:not(.mention) {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
 
       img {

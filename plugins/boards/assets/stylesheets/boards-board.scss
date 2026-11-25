@@ -5,7 +5,7 @@ html:has(body.discourse-boards-board) {
 }
 
 body.discourse-boards-board {
-  --d-border-radius-small: calc(var(--d-border-radius) / 2);
+  --d-sys-border-radius-sm: calc(var(--d-sys-border-radius-md) / 2);
   --discourse-boards-column-header-height: 25px;
   --discourse-boards-column-card-gap: var(--space-2);
   --discourse-boards-column-padding: var(--space-2);
@@ -90,7 +90,7 @@ body.discourse-boards-board {
     align-items: center;
     gap: var(--space-1);
     font-size: var(--font-down-2-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-weight: normal;
 
     .avatar {
@@ -99,7 +99,7 @@ body.discourse-boards-board {
     }
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -119,7 +119,7 @@ body.discourse-boards-board {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
 
       .d-icon {
         font-size: var(--font-down-1);
@@ -148,13 +148,13 @@ body.discourse-boards-board {
     height: 50%;
     padding: 2em 1em;
     border: 1px dashed var(--primary-300);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: var(--primary-50);
     text-align: center;
 
     > .d-icon {
       font-size: 2em;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       margin-bottom: 0.4em;
     }
 
@@ -164,7 +164,7 @@ body.discourse-boards-board {
     }
 
     p {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       margin: 0 0 1em;
       font-size: var(--font-down-1);
     }
@@ -174,7 +174,7 @@ body.discourse-boards-board {
     position: fixed;
     inset: 0;
     z-index: z("fullscreen");
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     height: 100%;
     padding: 10px 0;
     overflow-x: auto;
@@ -211,8 +211,8 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-items: center;
     justify-content: center;
     width: 2.5rem;
-    border: 1px dashed var(--primary-low);
-    border-radius: var(--d-border-radius);
+    border: 1px dashed var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
     background: transparent;
     color: var(--primary-low-mid);
     cursor: pointer;
@@ -229,7 +229,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     &:hover {
       opacity: 1;
       border-color: var(--primary-300);
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       background: var(--primary-50);
     }
   }
@@ -255,7 +255,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   display: flex;
   flex-direction: column;
   transition: border-color 0.15s ease;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   border: 1px solid
     oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h /
@@ -271,9 +271,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-items: center;
     height: var(--discourse-boards-column-header-height);
     justify-content: space-between;
-    border-top-right-radius: var(--d-border-radius-small);
-    border-top-left-radius: var(--d-border-radius-small);
-    color: var(--primary);
+    border-top-right-radius: var(--d-sys-border-radius-sm);
+    border-top-left-radius: var(--d-sys-border-radius-sm);
+    color: var(--d-sys-color-text-default);
     padding: var(--space-2);
   }
 
@@ -289,7 +289,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     font-weight: 500;
     padding: var(--space-1) var(--space-2);
     background: var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     max-width: 25ch;
 
     @include ellipsis;
@@ -322,10 +322,12 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &__menu-trigger {
-    --d-button-flat-bg-color: transparent;
-    --d-button-flat-icon-color: var(--discourse-boards-column-header-tint);
-    --d-button-flat-bg-color--hover: transparent;
-    --d-button-flat-icon-color--hover: var(--primary);
+    --d-comp-DButton-color-background-flat: transparent;
+    --d-comp-DButton-color-icon-flat: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-background-flat-hovered: transparent;
+    --d-comp-DButton-color-icon-flat-hovered: var(--d-sys-color-icon-default);
     opacity: 0;
     transition: opacity 0.15s ease;
     padding: 2px 4px;
@@ -356,7 +358,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &__drop-indicator {
     flex-shrink: 0;
     border: 1px solid var(--discourse-boards-column-color, var(--primary-500));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     background: oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
@@ -389,36 +391,41 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-self: center;
     border: 0;
     background: transparent;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     cursor: pointer;
     font-size: var(--font-down-1);
     padding: var(--space-2);
 
     &:hover,
     &:focus {
-      color: var(--tertiary-hover);
+      color: var(--d-sys-color-text-link-hovered);
       text-decoration: underline;
     }
   }
 
   &__add-btn {
-    --d-button-default-text-color: var(--discourse-boards-column-header-tint);
-    --d-button-default-icon-color: var(--discourse-boards-column-header-tint);
-    --d-button-default-bg-color: transparent;
-    --d-button-default-bg-color--hover: var(
+    --d-comp-DButton-color-text-default: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-icon-default: var(
+      --discourse-boards-column-header-tint
+    );
+    --d-comp-DButton-color-background-default: transparent;
+    --d-comp-DButton-color-background-default-hovered: var(
       --discourse-boards-column-color,
       var(--primary-500)
     );
-    --d-button-default-text-color--hover: var(
+    --d-comp-DButton-color-text-default-hovered: var(
       --discourse-boards-column-title-text-color
     );
-    --d-button-default-icon-color--hover: var(
+    --d-comp-DButton-color-icon-default-hovered: var(
       --discourse-boards-column-title-text-color
     );
-    --d-button-default-border--hover: 1px solid transparent;
+    --d-comp-DButton-border-width: 1px;
+    --d-comp-DButton-color-border-default-hovered: transparent;
     width: 100%;
     justify-content: flex-start;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 
@@ -461,7 +468,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     min-height: 60px;
     resize: vertical;
     margin-bottom: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__add-card-actions {
@@ -482,9 +489,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
 .discourse-boards-card {
   display: block;
   position: relative;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   background: light-dark(
-    var(--secondary),
+    var(--d-sys-color-background-default),
     oklch(
       from var(--discourse-boards-column-color, var(--primary-500)) l c h /
         0.125
@@ -495,7 +502,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
       from var(--discourse-boards-column-color, var(--primary-500)) l c h/0.25
     );
   padding: var(--space-2);
-  border-radius: var(--d-border-radius-small);
+  border-radius: var(--d-sys-border-radius-sm);
   cursor: grab;
 
   &--floater {
@@ -547,7 +554,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &--kb-selected {
     outline: 2px solid var(--tertiary);
     outline-offset: -2px;
-    background: var(--tertiary-very-low);
+    background: var(--d-sys-color-background-accent-subtlest);
   }
 
   &__row {
@@ -586,7 +593,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     flex-grow: 1;
     overflow-wrap: break-word;
     overflow: hidden;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-weight: 500;
     line-height: 1.2;
   }
@@ -614,7 +621,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     font-size: $font-down-1;
 
     a {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .d-icon {
@@ -634,7 +641,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     flex-grow: 1;
     text-align: left;
     font-size: $font-down-2;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     overflow-wrap: break-word;
     overflow: hidden;
   }
@@ -666,7 +673,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   }
 
   &__assign-btn:hover .avatar + .avatar {
-    outline-color: var(--d-button-flat-bg-color--hover);
+    outline-color: var(--d-comp-DButton-color-background-flat-hovered);
   }
 
   &__thumbnail-row {
@@ -687,10 +694,10 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   &__label {
     display: inline-block;
     padding: 1px 6px;
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: $font-down-2;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -711,13 +718,13 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     align-items: center;
     gap: 0.3em;
     padding: 0.15em 0.5em;
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
+    background: var(--d-sys-color-background-sunken);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-2);
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
 
     &:hover {
-      background: var(--primary-low);
+      background: var(--d-sys-color-background-neutral);
     }
   }
 }
@@ -766,7 +773,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
 @media (prefers-reduced-motion: reduce) {
   .discourse-boards-card--drop-highlighted {
     animation: none;
-    border-color: var(--tertiary);
+    border-color: var(--d-sys-color-border-accent);
   }
 
   .discourse-boards-card--link-highlighted {
@@ -815,9 +822,9 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     gap: 0.5em;
     margin-bottom: 1em;
     padding-bottom: 0.75em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .badge-category__wrapper {
       font-size: inherit;
@@ -841,8 +848,8 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     gap: 0.35em;
     margin-top: 1em;
     padding-top: 0.75em;
-    border-top: 1px solid var(--primary-low);
-    color: var(--primary-medium);
+    border-top: 1px solid var(--d-sys-color-border-default);
+    color: var(--d-sys-color-text-faint);
     font-size: $font-down-1;
 
     .d-icon {
@@ -860,19 +867,19 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
     gap: 0.35em;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
   .discourse-boards-topic-card-detail__username {
     font-weight: 600;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .discourse-boards-topic-card-detail__error {
     padding: 1em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -907,22 +914,22 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
         position: absolute;
         top: 4rem;
         padding: 5px 10px;
-        box-shadow: var(--shadow-card);
+        box-shadow: var(--d-sys-shadow-raised);
         z-index: 5;
-        background-color: var(--secondary);
+        background-color: var(--d-sys-color-background-default);
         max-height: 10rem;
         width: 90%;
         overflow-y: auto;
 
         > .search-link {
           padding: 6px;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           cursor: pointer;
           display: block;
 
           &:hover,
           &:focus {
-            background-color: var(--highlight-bg);
+            background-color: var(--d-sys-color-background-highlight-subtlest);
           }
 
           .search-category {
@@ -955,7 +962,7 @@ body.discourse-boards-fullscreen .fk-d-menu[data-identifier^="boards-"] {
   .discourse-boards-column-settings__help {
     margin-top: 0.35em;
     margin-bottom: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: $font-down-2;
   }
 }

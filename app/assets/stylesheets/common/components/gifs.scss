@@ -53,7 +53,7 @@
   &__categories-header {
     margin: 0.5em 0;
     font-size: var(--font-0);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-weight: normal;
   }
 
@@ -68,7 +68,7 @@
     padding: 3em 1em;
     font-size: var(--font-up-2);
     color: var(--primary-low-mid);
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     font-weight: bold;
     text-align: center;
   }

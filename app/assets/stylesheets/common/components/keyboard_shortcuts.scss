@@ -49,11 +49,11 @@
 }
 
 .shortcut-category {
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
 
   h2 {
     font-size: var(--font-0);
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
     padding: 0.5rem 1rem;
     margin: 0;
   }
@@ -93,7 +93,7 @@
   }
 
   tbody tr {
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   td {

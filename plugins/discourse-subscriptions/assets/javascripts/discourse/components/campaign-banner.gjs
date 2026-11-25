@@ -129,8 +129,8 @@ export default class CampaignBanner extends Component {
 
     return `background-image: linear-gradient(
         0deg,
-        rgba(var(--secondary-rgb), 0.75) 0%,
-        rgba(var(--secondary-rgb), 0.75) 100%),
+        color-mix(in srgb, var(--secondary) 75%, transparent) 0%,
+        color-mix(in srgb, var(--secondary) 75%, transparent) 100%),
         var(--campaign-background-image);
       background-size: cover;
       background-repeat: no-repeat;`;

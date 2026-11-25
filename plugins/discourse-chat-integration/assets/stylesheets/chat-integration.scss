@@ -10,7 +10,7 @@
     align-items: center;
     gap: 1rem;
     margin-top: var(--space-4);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .chat-integration-add-provider-trigger {
       margin-left: auto;
@@ -56,8 +56,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem 1rem;
-    background: var(--primary-very-low);
-    border-bottom: 1px solid var(--primary-low);
+    background: var(--d-sys-color-background-sunken);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     .channel-title {
       display: flex;
@@ -85,7 +85,7 @@
       table-layout: fixed;
 
       thead {
-        background: var(--primary-very-low);
+        background: var(--d-sys-color-background-sunken);
       }
 
       th,
@@ -134,9 +134,9 @@
     max-width: 100%;
     max-height: 400px;
     overflow: auto;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
     padding: 1rem;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
   }
 }
@@ -158,9 +158,9 @@
 }
 
 .inline-channel-form {
-  background: var(--primary-very-low);
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
+  background: var(--d-sys-color-background-sunken);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   padding: 1rem;
 
   .form-kit__container {

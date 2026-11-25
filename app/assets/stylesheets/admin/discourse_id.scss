@@ -20,19 +20,19 @@
       align-items: center;
       flex: 1;
       padding: 1em 1.5em;
-      background: var(--primary-very-low);
-      border-radius: var(--d-border-radius);
+      background: var(--d-sys-color-background-sunken);
+      border-radius: var(--d-sys-border-radius-md);
     }
 
     &__value {
       font-size: var(--font-up-4);
       font-weight: 700;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &__label {
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
       text-align: center;
       margin-top: 0.25em;
     }

@@ -33,14 +33,14 @@
 
   .grippie {
     padding-block: var(--space-1);
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
   }
 
   .reply-to {
     padding: var(--space-2) var(--space-4);
     margin: 0 !important;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
   }
 
   .reply-area {
@@ -58,7 +58,7 @@
     padding: 0 !important;
     width: 100% !important;
     gap: 0 !important;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     flex-wrap: nowrap !important;
 
     .user-selector {
@@ -68,7 +68,7 @@
 
   .category-input,
   .user-selector {
-    border-right: 1px solid var(--primary-low);
+    border-right: 1px solid var(--d-sys-color-border-default);
 
     @include viewport.until(sm) {
       flex-grow: 1;
@@ -77,7 +77,7 @@
 
   .tags-input {
     &:not(:last-child) {
-      border-right: 1px solid var(--primary-low);
+      border-right: 1px solid var(--d-sys-color-border-default);
     }
 
     @include viewport.until(sm) {
@@ -96,7 +96,7 @@
       gap: var(--space-1);
 
       .formatted-selection {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .d-icon-plus {
@@ -106,7 +106,7 @@
       }
 
       .d-icon-tag {
-        color: var(--primary-low-mid) !important;
+        color: var(--d-sys-color-icon-faint) !important;
       }
 
       .multi-select-header__selected-count {
@@ -119,11 +119,11 @@
     .has-selection {
       .select-kit-header-wrapper {
         .formatted-selection {
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
         }
 
         .d-icon-tag {
-          color: var(--tertiary) !important;
+          color: var(--d-sys-color-icon-accent) !important;
         }
       }
     }
@@ -162,7 +162,7 @@
 
       .d-icon:not(.badge-category *) {
         font-size: var(--font-down-1-rem);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
     }
   }
@@ -175,7 +175,7 @@
   .title-input {
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
 
     #reply-title {
       border: 0;
@@ -187,7 +187,7 @@
       flex-basis: unset !important;
 
       &::placeholder {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       &:focus {
@@ -242,9 +242,10 @@
             -1
         );
         z-index: z("composer", "dropdown") + 1;
-        box-shadow: 0 -12px 12px 0 rgb(var(--primary-rgb), 0.15);
-        border-top-left-radius: var(--d-border-radius-large);
-        border-top-right-radius: var(--d-border-radius-large);
+        box-shadow: 0 -12px 12px 0
+          color-mix(in srgb, var(--primary) 15%, transparent);
+        border-top-left-radius: var(--d-sys-border-radius-lg);
+        border-top-right-radius: var(--d-sys-border-radius-lg);
         padding-top: var(--space-4);
 
         &::before {
@@ -256,7 +257,7 @@
           width: 15vw;
           height: 5px;
           background: var(--primary-medium);
-          border-radius: var(--d-border-radius-pill);
+          border-radius: var(--d-sys-border-radius-full);
         }
       }
     }
@@ -326,7 +327,7 @@
   // clean up selector once the uc- body class is no longer in the way
   .show-preview .d-editor-container.--markdown-editor-enabled {
     .d-editor-preview-wrapper {
-      border-left: 1px solid var(--primary-low);
+      border-left: 1px solid var(--d-sys-color-border-default);
       margin: 0;
       padding: var(--space-2) var(--space-4);
     }
@@ -342,7 +343,7 @@
     }
 
     @include container.from(sm) {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: var(--space-2) var(--space-4);
     }
 
@@ -354,8 +355,8 @@
 
       @include container.until(sm) {
         padding: 0 var(--space-2);
-        border-top: 1px solid var(--primary-low);
-        border-bottom: 1px solid var(--primary-low);
+        border-top: 1px solid var(--d-sys-color-border-default);
+        border-bottom: 1px solid var(--d-sys-color-border-default);
       }
 
       // takes what the submit panel leaves, rather than 100% and then shrinking
@@ -384,7 +385,7 @@
           // temporary overrule, should be done in template eventually
           .btn.btn-primary {
             background: transparent;
-            color: var(--tertiary);
+            color: var(--d-sys-color-text-link);
             font-weight: bold;
           }
         }
@@ -407,7 +408,7 @@
       }
 
       &__scroll-btn {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
         font-size: var(--font-down-1-rem);
       }
 
@@ -425,7 +426,7 @@
 
   @include viewport.until(sm) {
     .reply-area {
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
       padding: 0 0 max(env(safe-area-inset-bottom), var(--space-2)) !important;
 
       html.keyboard-visible & {

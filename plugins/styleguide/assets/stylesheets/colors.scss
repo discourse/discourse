@@ -80,15 +80,15 @@
   }
 
   .tertiary-low {
-    background-color: var(--tertiary-low);
+    background-color: var(--d-sys-color-background-accent-subtlest);
   }
 
   .tertiary-medium {
-    background-color: var(--tertiary-medium);
+    background-color: var(--d-sys-color-background-accent-subtle);
   }
 
   .tertiary-high {
-    background-color: var(--tertiary-high);
+    background-color: var(--d-sys-color-background-accent);
   }
 
   .tertiary {
@@ -148,7 +148,7 @@
   }
 
   .highlight-bg {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .highlight {
@@ -156,11 +156,11 @@
   }
 
   .danger-low {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
   }
 
   .danger-low-mid {
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
   }
 
   .danger-medium {
@@ -172,11 +172,11 @@
   }
 
   .success-low {
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
   }
 
   .success-medium {
-    background-color: var(--success-medium);
+    background-color: var(--d-sys-color-background-success-subtle);
   }
 
   .success {
@@ -184,7 +184,7 @@
   }
 
   .love-low {
-    background-color: var(--love-low);
+    background-color: var(--d-sys-color-background-love-subtlest);
   }
 
   .love {

@@ -5,8 +5,8 @@
   border: 1px solid var(--primary-400);
 
   // No overflow clip: touch devices place the completion popup inside.
-  border-radius: var(--d-input-border-radius);
-  background: var(--secondary);
+  border-radius: var(--d-comp-Input-border-radius);
+  background: var(--d-sys-color-background-default);
 
   // Flex rather than percentage heights, so a host that only sets a
   // min-height still gets a full-size editor instead of a dead strip.
@@ -20,7 +20,7 @@
   }
 
   .grippie {
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     border-top: 1px solid var(--primary-400);
 
     &::before {
@@ -32,7 +32,7 @@
     flex: 1 1 auto;
     min-height: 0;
     background: transparent;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     // Code reads left to right whatever the UI language.
 
@@ -49,7 +49,7 @@
         position: absolute;
         inset: 0;
         z-index: 400;
-        border: 2px solid var(--tertiary);
+        border: 2px solid var(--d-sys-color-border-accent);
         border-radius: inherit;
         pointer-events: none;
       }
@@ -75,23 +75,23 @@
   }
 
   .cm-content {
-    caret-color: var(--primary);
+    caret-color: var(--d-sys-color-text-default);
   }
 
   .cm-panels,
   .cm-textfield,
   .cm-button {
-    background: var(--secondary);
-    color: var(--primary);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-default);
   }
 
   .cm-panels-bottom {
-    border-top-color: var(--primary-low-mid);
+    border-top-color: var(--d-sys-color-border-strong);
   }
 
   .cm-textfield,
   .cm-button {
-    border-color: var(--primary-low-mid);
+    border-color: var(--d-sys-color-border-strong);
   }
 
   .cm-cursor {
@@ -99,58 +99,66 @@
   }
 
   .cm-selectionBackground {
-    background: var(--tertiary-low) !important;
+    background: var(--d-sys-color-background-accent-subtlest) !important;
   }
 
   // Translucent, because the line sits above the drawn selection.
   .cm-activeLine {
-    background: rgb(var(--primary-rgb), 0.04);
+    background: color-mix(in srgb, var(--primary) 4%, transparent);
   }
 
   .cm-selectionMatch {
-    background: rgb(var(--tertiary-rgb), 0.2);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-accent) 20%,
+      transparent
+    );
   }
 
   .cm-editor.cm-focused .cm-matchingBracket {
-    background: rgb(var(--tertiary-rgb), 0.25);
-    outline: 1px solid rgb(var(--tertiary-rgb), 0.5);
+    background: color-mix(
+      in srgb,
+      var(--d-sys-color-background-accent) 25%,
+      transparent
+    );
+    outline: 1px solid color-mix(in srgb, var(--tertiary) 50%, transparent);
   }
 
   .cm-editor.cm-focused .cm-nonmatchingBracket {
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
   }
 
   .cm-foldPlaceholder {
-    background: var(--primary-low);
-    border-color: var(--primary-low-mid);
-    color: var(--primary-medium);
+    background: var(--d-sys-color-background-neutral);
+    border-color: var(--d-sys-color-border-strong);
+    color: var(--d-sys-color-text-faint);
   }
 
   .cm-foldGutter .cm-gutterElement {
     cursor: pointer;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   // Opaque, because text scrolled sideways passes under the pinned gutter.
   .cm-gutters {
     border: 0;
-    background: var(--secondary);
+    background: var(--d-sys-color-background-default);
     color: var(--primary-low-mid);
   }
 
   .cm-activeLineGutter {
     background: transparent;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   // The editor's base theme only styles tooltips for light mode.
   .cm-tooltip {
-    background: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    color: var(--primary);
+    background: var(--d-sys-color-background-default);
+    border: 1px solid var(--d-sys-color-border-strong);
+    border-radius: var(--d-sys-border-radius-md);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-down-2);
-    box-shadow: var(--shadow-dropdown);
+    box-shadow: var(--d-sys-shadow-overlay);
   }
 
   .cm-tooltip-autocomplete > ul {
@@ -158,32 +166,32 @@
 
     > li {
       padding: 1px 0.4em;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     > li[aria-selected] {
-      background: var(--tertiary-low);
-      color: var(--primary);
+      background: var(--d-sys-color-background-accent-subtlest);
+      color: var(--d-sys-color-text-default);
     }
   }
 
   .cm-completionDetail {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: normal;
   }
 
   .cm-completionMatchedText {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     text-decoration: none;
     font-weight: 700;
   }
 
   .cm-diagnostic {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .cm-diagnostic-warning {
-    border-left-color: var(--highlight-medium);
+    border-left-color: var(--d-sys-color-background-highlight-subtle);
   }
 
   &[data-disabled="true"] {
@@ -203,47 +211,47 @@
   // shortcut lands somewhere sensible.
   .cm-hl-keyword,
   .cm-hl-control {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   .cm-hl-name,
   .cm-hl-property,
   .cm-hl-tag {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 
   .cm-hl-function,
   .cm-hl-type {
-    color: var(--tertiary-hover);
+    color: var(--d-sys-color-text-link-hovered);
   }
 
   .cm-hl-string,
   .cm-hl-number {
-    color: var(--success);
+    color: var(--d-sys-color-text-success);
   }
 
   .cm-hl-atom,
   .cm-hl-meta {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   .cm-hl-comment {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
   }
 
   .cm-hl-punctuation,
   .cm-hl-bracket {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .cm-hl-link {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     text-decoration: underline;
   }
 
   .cm-hl-invalid {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   .cm-hl-heading,

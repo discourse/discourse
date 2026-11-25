@@ -1,7 +1,7 @@
 .d-multi-select-trigger {
   @include form-item-sizing;
   display: inline-flex;
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-comp-Input-border-radius);
   cursor: pointer;
   align-items: center;
   gap: 0.25em;
@@ -31,7 +31,7 @@
 .d-multi-select-trigger__label {
   font-size: var(--font-0);
   line-height: normal;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .d-multi-select__search-no-result,
@@ -53,7 +53,7 @@
   gap: 0.5em;
 
   .d-icon-magnifying-glass {
-    color: var(--primary-high);
+    color: var(--d-sys-color-icon-muted);
     font-size: var(--font-down-1);
   }
 }
@@ -77,8 +77,8 @@
   font-size: var(--font-down-1);
   display: flex;
   align-items: center;
-  border-radius: var(--d-border-radius);
-  background-color: var(--primary-low);
+  border-radius: var(--d-sys-border-radius-md);
+  background-color: var(--d-sys-color-background-neutral);
   gap: var(--space-1);
 
   &:hover:not(:disabled, [aria-disabled="true"]) {
@@ -110,14 +110,14 @@
 
 .d-multi-select__result {
   padding: 0.25em;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   cursor: pointer;
   gap: 0.5em;
   display: flex;
   align-items: center;
 
   &.--preselected {
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
   }
 }
 
@@ -144,8 +144,8 @@
 }
 
 .d-multi-select__skeleton-checkbox {
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-default);
+  border-radius: var(--d-sys-border-radius-md);
   width: 14px;
   height: 14px;
   animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -153,11 +153,11 @@
 }
 
 .d-multi-select__skeleton-text {
-  background: var(--primary-low);
+  background: var(--d-sys-color-background-neutral);
   width: 100%;
   height: 24px;
   animation: dmultiselect-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 }
 
 .fk-d-menu[data-identifier="d-multi-select"] {
@@ -201,6 +201,6 @@
 }
 
 .d-multi-select__footer {
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   flex-shrink: 0;
 }

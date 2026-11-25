@@ -101,7 +101,7 @@ body.archetype-regular {
   display: flex;
   width: 100%;
   margin: 1em 0 2em 0;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--d-sys-color-border-default);
   position: relative;
   align-items: stretch;
   box-shadow: 5px 5px
@@ -122,7 +122,7 @@ body.archetype-regular {
 
     &:hover {
       .d-icon {
-        color: var(--primary);
+        color: var(--d-sys-color-icon-default);
       }
     }
   }
@@ -130,7 +130,7 @@ body.archetype-regular {
   &-info {
     width: 30%;
     padding: 2em;
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
 
     @include viewport.until(md) {
       width: calc(100% - 4em);
@@ -203,10 +203,10 @@ body.archetype-regular {
       height: 32px;
       background: linear-gradient(
         -45deg,
-        var(--tertiary-hover),
-        var(--tertiary-medium),
-        var(--tertiary-hover),
-        var(--tertiary-medium)
+        var(--d-sys-color-background-accent-hovered),
+        var(--d-sys-color-background-accent-subtle),
+        var(--d-sys-color-background-accent-hovered),
+        var(--d-sys-color-background-accent-subtle)
       );
       border-radius: 2em;
       margin: 0;
@@ -245,22 +245,22 @@ body.archetype-regular {
       width: 100%;
       border: 1px solid #e5e5e5;
       border-radius: 2em;
-      background-color: var(--primary-very-low);
+      background-color: var(--d-sys-color-background-sunken);
       overflow: hidden;
     }
 
     progress[value]::-webkit-progress-bar {
-      background-color: var(--primary-very-low);
+      background-color: var(--d-sys-color-background-sunken);
     }
 
     progress[value]::-webkit-progress-value {
-      background-color: var(--tertiary);
+      background-color: var(--d-sys-color-background-accent);
       border-top-right-radius: 2em;
       border-bottom-right-radius: 2em;
     }
 
     progress[value]::-moz-progress-bar {
-      background-color: var(--tertiary);
+      background-color: var(--d-sys-color-background-accent);
       border-top-right-radius: 2em;
       border-bottom-right-radius: 2em;
     }

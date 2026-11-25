@@ -7,8 +7,8 @@
 
   &__hint {
     border: 1px solid;
-    border-color: var(--tertiary);
-    border-radius: var(--d-border-radius);
+    border-color: var(--d-sys-color-border-accent);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-2);
     background-color: light-dark(var(--tertiary-100), var(--tertiary-500));
   }
@@ -45,9 +45,12 @@
   &__section {
     border: 1px solid;
     border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     padding: var(--space-2);
-    background-color: light-dark(var(--secondary), var(--primary-50));
+    background-color: light-dark(
+      var(--d-sys-color-background-default),
+      var(--primary-50)
+    );
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -60,7 +63,7 @@
     justify-content: space-between;
     gap: var(--space-2);
     margin-bottom: var(--space-2);
-    border-bottom: 2px solid var(--primary-low);
+    border-bottom: 2px solid var(--d-sys-color-border-default);
   }
 
   &__header-actions {
@@ -84,14 +87,14 @@
 
   &__title-meta {
     margin-left: auto;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     font-weight: 400;
     text-transform: none;
   }
 
   &__title-info {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     font-weight: 400;
     text-transform: none;
@@ -105,7 +108,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-family: monospace;
     font-size: var(--font-down-2);
     font-weight: 700;
@@ -115,7 +118,7 @@
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
     font-style: italic;
   }
@@ -131,17 +134,17 @@
     background: transparent;
     cursor: pointer;
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
 
     &:hover {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.is-active {
-      color: var(--tertiary);
-      border-bottom-color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
+      border-bottom-color: var(--d-sys-color-border-accent);
     }
   }
 
@@ -152,13 +155,13 @@
     background: transparent;
     border: 0;
     padding: var(--space-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     cursor: pointer;
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     &:hover:not([disabled]) {
-      color: var(--primary);
-      background: var(--primary-very-low);
+      color: var(--d-sys-color-text-default);
+      background: var(--d-sys-color-background-sunken);
     }
 
     &[disabled] {
@@ -172,7 +175,7 @@
   }
 
   &__pin-btn.is-pinned {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
   }
 
   &__pin-banner {
@@ -182,12 +185,12 @@
     padding: var(--space-1) var(--space-2);
     margin: 0;
     background: transparent;
-    border-left: 2px solid var(--tertiary);
-    color: var(--primary-medium);
+    border-left: 2px solid var(--d-sys-color-border-accent);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
       flex-shrink: 0;
     }
   }
@@ -198,7 +201,7 @@
 
   &__unpin-btn {
     padding: 0;
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     font-size: var(--font-down-1);
 
     &:hover {
@@ -222,7 +225,7 @@
 
   &__editor-size {
     margin-left: auto;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     font-family: monospace;
 
@@ -243,10 +246,13 @@
   &__editor-read {
     margin: 0;
     padding: var(--space-2);
-    background-color: light-dark(var(--primary-very-low), var(--primary-100));
+    background-color: light-dark(
+      var(--d-sys-color-background-sunken),
+      var(--primary-100)
+    );
     border: 1px solid;
     border-color: light-dark(var(--primary-100), var(--primary-200));
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     font-size: var(--font-down-1);
     font-family: monospace;
     white-space: pre-wrap;
@@ -278,7 +284,7 @@
 
   &__empty-state-title {
     margin: 0;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-up-2);
     font-weight: 600;
   }

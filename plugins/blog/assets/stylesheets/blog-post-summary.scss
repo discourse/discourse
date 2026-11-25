@@ -3,14 +3,14 @@
 
   &__label {
     margin: 0 0 0.75em;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     font-weight: 600;
   }
 
   &__excerpt {
     margin: 0 0 1em;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-size: var(--font-up-1);
     line-height: 1.6;
   }

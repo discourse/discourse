@@ -3,9 +3,9 @@
 .form-kit__errors-summary {
   box-sizing: border-box;
   padding: var(--space-4);
-  border: 1px solid var(--danger);
-  background-color: var(--danger-low);
-  border-radius: var(--d-border-radius);
+  border: 1px solid var(--d-sys-color-border-danger);
+  background-color: var(--d-sys-color-background-danger-subtlest);
+  border-radius: var(--d-sys-border-radius-md);
   width: 100%;
 
   h2 {
@@ -13,7 +13,7 @@
   }
 
   .d-icon {
-    color: var(--danger);
+    color: var(--d-sys-color-icon-danger);
     width: var(--space-5);
   }
 

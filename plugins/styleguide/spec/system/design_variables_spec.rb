@@ -11,7 +11,7 @@ RSpec.describe "Styleguide design variables" do
   it "lists core's design variables with what theme styles may change, and filters them" do
     visit "/styleguide/atoms/design-variables"
 
-    radius = find(".styleguide-design-variables__row[data-variable='--d-border-radius-large']")
+    radius = find(".styleguide-design-variables__row[data-variable='--d-sys-border-radius-lg']")
     expect(radius).to have_text("length")
     expect(radius).to have_text("0px to 32px")
 
@@ -21,7 +21,7 @@ RSpec.describe "Styleguide design variables" do
       ".styleguide-design-variables__row[data-variable='--d-tooltip-border']",
     )
     expect(page).to have_no_css(
-      ".styleguide-design-variables__row[data-variable='--d-border-radius-large']",
+      ".styleguide-design-variables__row[data-variable='--d-sys-border-radius-lg']",
     )
 
     find(".styleguide-design-variables__palette summary").click

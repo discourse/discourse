@@ -23,22 +23,22 @@
         position: absolute;
         top: 4rem;
         padding: 5px 10px;
-        box-shadow: var(--shadow-card);
+        box-shadow: var(--d-sys-shadow-raised);
         z-index: 5;
-        background-color: var(--secondary);
+        background-color: var(--d-sys-color-background-default);
         max-height: 10rem;
         width: 90%;
         overflow-y: auto;
 
         > .search-link {
           padding: 6px;
-          border-bottom: 1px solid var(--content-border-color);
+          border-bottom: 1px solid var(--d-sys-color-border-default);
           cursor: pointer;
           display: block;
 
           &:hover,
           &:focus {
-            background-color: var(--highlight-bg);
+            background-color: var(--d-sys-color-background-highlight-subtlest);
           }
 
           .search-category {
@@ -79,11 +79,11 @@
     }
 
     .input-hint-text {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     .jump-to-post-control .index {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .jump-to-date-control {
@@ -109,9 +109,9 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: var(--secondary);
+        background: var(--d-sys-color-background-default);
         padding: 0.25rem 0.5rem;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
   }
@@ -409,17 +409,17 @@
     .date-time-control {
       position: relative;
       display: flex;
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
 
       &.is-filled,
       &.is-selected {
         .date-time {
-          color: var(--primary);
-          background: var(--secondary);
+          color: var(--d-sys-color-text-default);
+          background: var(--d-sys-color-background-default);
         }
 
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
 
@@ -431,7 +431,7 @@
         }
 
         &.is-selected {
-          border-color: var(--tertiary);
+          border-color: var(--d-sys-color-border-accent);
         }
       }
 
@@ -445,13 +445,13 @@
         }
 
         &.is-selected {
-          border-color: var(--tertiary);
+          border-color: var(--d-sys-color-border-accent);
         }
       }
 
       .date-time {
-        color: var(--primary-medium);
-        background: var(--primary-very-low);
+        color: var(--d-sys-color-text-faint);
+        background: var(--d-sys-color-background-sunken);
         padding: 1em 0.5em 1em 2em;
         border: 0;
         outline: none;
@@ -473,7 +473,7 @@
         left: 0.5em;
         top: 0;
         bottom: 0;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
       }
 
       .delete-to-date {
@@ -484,7 +484,7 @@
         width: 30px;
         top: 0;
         bottom: 0;
-        color: var(--primary-high);
+        color: var(--d-sys-color-text-muted);
         border-radius: 0 0 5px 0;
       }
     }
@@ -525,7 +525,7 @@
 
     .format {
       .previewed-format {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
   }
@@ -645,7 +645,7 @@
   .btn {
     display: block;
     text-align: left;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
 
     &.dialog-close {
       display: none;
@@ -692,8 +692,8 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-primary-text-color);
-        --tag-text-color: var(--d-button-primary-text-color);
+        --category-badge-title-color: var(--d-comp-DButton-color-text-primary);
+        --tag-text-color: var(--d-comp-DButton-color-text-primary);
       }
     }
 
@@ -701,8 +701,8 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-default-text-color);
-        --tag-text-color: var(--d-button-default-text-color);
+        --category-badge-title-color: var(--d-comp-DButton-color-text-default);
+        --tag-text-color: var(--d-comp-DButton-color-text-default);
       }
     }
 
@@ -710,8 +710,10 @@
       .badge-category__name,
       .discourse-tag,
       .discourse-tags__tag-separator {
-        --category-badge-title-color: var(--d-button-default-text-color--hover);
-        --tag-text-color: var(--d-button-default-text-color--hover);
+        --category-badge-title-color: var(
+          --d-comp-DButton-color-text-default-hovered
+        );
+        --tag-text-color: var(--d-comp-DButton-color-text-default-hovered);
       }
     }
 
@@ -741,7 +743,7 @@
       display: block;
       width: 0%;
       height: 100%;
-      background-color: var(--tertiary);
+      background-color: var(--d-sys-color-background-accent);
       position: relative;
       transition: width 0.6s linear;
     }
@@ -755,7 +757,7 @@
 
     &:hover,
     &.active {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
 
     &.active {
@@ -777,7 +779,7 @@
 
     .incoming-email-html-part {
       border: none;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding-top: 10px;
       width: 100%;
       height: 100%;
@@ -861,7 +863,7 @@
 }
 
 .custom-message-length {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1);
 }
 
@@ -912,13 +914,13 @@
 
   &__fine-print {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     max-width: 600px;
   }
 
   &__reset {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -1116,12 +1118,12 @@
       cursor: pointer;
 
       &.is-active {
-        color: var(--secondary);
-        background: var(--danger);
+        color: var(--d-sys-color-text-inverse);
+        background: var(--d-sys-color-background-danger);
 
         &.single-tab {
           background: none;
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
           padding: 0;
           font-size: var(--font-up-3);
           font-weight: bold;

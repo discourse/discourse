@@ -24,17 +24,17 @@ RSpec.describe AppearanceStyles::VariableInventory do
       inventory = described_class.new.build
       variables = inventory["variables"].index_by { |variable| variable["name"] }
 
-      expect(variables["--d-border-radius"]).to include(
+      expect(variables["--d-sys-border-radius-md"]).to include(
         "type" => "length",
         "scope" => "root",
         "default" => "4px",
       )
-      expect(variables["--d-button-primary-bg-color"]).to include("type" => "color")
+      expect(variables["--d-comp-DButton-color-background-primary"]).to include("type" => "color")
       expect(variables.keys).to all(match(/\A--(d|token|hljs)-/))
-      expect(inventory["palette_variables"]).to include("--primary", "--tertiary-low")
+      expect(inventory["palette_variables"]).to include("--primary", "--tertiary-50")
 
       expect(variables).not_to have_key("--d-theme-only-color")
-      expect(variables["--d-hover"]["default"]).not_to eq("#ff00ff")
+      expect(variables["--d-sys-color-background-default-hovered"]["default"]).not_to eq("#ff00ff")
     end
   end
 

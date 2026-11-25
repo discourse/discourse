@@ -43,7 +43,7 @@
   top: 100%; // directly underneath .panel
   right: 5px;
   max-height: calc(100dvh - var(--header-offset) - 1em);
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   .panel-body {
     // improves usability on high zoom levels
@@ -54,11 +54,11 @@
 }
 
 .menu-panel {
-  --shadow-dropdown: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+  --d-sys-shadow-overlay: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
   --list-item-padding: 0.5em 1rem;
-  border: 1px solid var(--content-border-color);
-  box-shadow: var(--shadow-dropdown);
-  background-color: var(--secondary);
+  border: 1px solid var(--d-sys-color-border-default);
+  box-shadow: var(--d-sys-shadow-overlay);
+  background-color: var(--d-sys-color-background-default);
   z-index: z("header");
   padding: 0.5em;
   width: 320px;
@@ -73,16 +73,16 @@
   .categories-link {
     padding: 0.25em 0.5em;
     display: block;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:hover,
     &:focus {
-      background-color: var(--d-hover);
+      background-color: var(--d-sys-color-background-default-hovered);
       outline: none;
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .new {
@@ -93,7 +93,7 @@
 
     &.show-help,
     &.filter {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -101,16 +101,16 @@
   .categories-link {
     padding: 0.25em 0.5em;
     display: block;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:hover,
     &:focus {
-      background-color: var(--d-hover);
+      background-color: var(--d-sys-color-background-default-hovered);
       outline: none;
     }
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
 
     .new {
@@ -121,7 +121,7 @@
 
     &.show-help,
     &.filter {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -142,7 +142,7 @@
         background: transparent;
 
         .category-name {
-          color: var(--primary);
+          color: var(--d-sys-color-text-default);
         }
       }
     }
@@ -301,8 +301,8 @@
       }
 
       .d-icon {
-        border-radius: var(--d-border-radius);
-        color: var(--primary-medium);
+        border-radius: var(--d-sys-border-radius-md);
+        color: var(--d-sys-color-icon-faint);
         padding: 0.5em; // 8px
       }
 
@@ -332,14 +332,15 @@
         background: none;
 
         .d-icon {
-          background-color: var(--d-hover);
+          background-color: var(--d-sys-color-background-default-hovered);
         }
       }
     }
   }
 
   .bottom-tabs {
-    border-top: var(--user-menu-border-width) solid var(--content-border-color);
+    border-top: var(--user-menu-border-width) solid
+      var(--d-sys-color-border-default);
   }
 
   .panel-body-contents {
@@ -358,7 +359,7 @@
     justify-content: space-between;
     box-sizing: border-box;
     border-right: var(--user-menu-border-width) solid
-      var(--content-border-color);
+      var(--d-sys-color-border-default);
     min-width: 0; // makes sure menu tabs don't go off screen
   }
 
@@ -398,7 +399,7 @@
       }
 
       &.enabled .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
@@ -415,7 +416,7 @@
 
       .relative-date {
         font-size: var(--font-down-3);
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
 
       .d-icon {
@@ -425,13 +426,13 @@
 
     .do-not-disturb {
       .d-icon-toggle-on {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
     hr {
       border-top: var(--user-menu-border-width) solid
-        var(--content-border-color);
+        var(--d-sys-color-border-default);
       width: 100%;
     }
   }
@@ -466,7 +467,7 @@
 
         .sidebar-section-link.active {
           font-weight: normal;
-          background: var(--d-hover);
+          background: var(--d-sys-color-background-default-hovered);
         }
 
         .sidebar-section-header-wrapper .select-kit .btn:hover {
@@ -505,14 +506,14 @@
         .sidebar-footer-container {
           padding: 0;
           border: none;
-          background: var(--secondary);
+          background: var(--d-sys-color-background-default);
 
           &::before {
             top: -1.5em;
             background: linear-gradient(
               to bottom,
               transparent,
-              rgb(var(--secondary-rgb), 1)
+              var(--d-sys-color-background-default)
             );
           }
         }
@@ -553,7 +554,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   h3 {
@@ -589,12 +590,12 @@
     }
 
     &:hover {
-      background-color: var(--d-hover);
+      background-color: var(--d-sys-color-background-default-hovered);
       outline: none;
     }
 
     &:focus-within {
-      background: var(--d-hover);
+      background: var(--d-sys-color-background-default-hovered);
 
       a {
         // we don't need the link focus because we're styling the parent
@@ -655,7 +656,7 @@
       }
 
       .item-description {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         overflow: hidden; // clears the text from wrapping below icons
         overflow-wrap: break-word;
 
@@ -691,16 +692,16 @@
 
   .is-warning {
     .d-icon-envelope {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 
   .read,
   .bookmark {
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
 
     a .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -730,8 +731,8 @@
     background: var(--blend-primary-secondary-5);
 
     &:hover {
-      color: var(--primary);
-      background: var(--primary-low);
+      color: var(--d-sys-color-text-default);
+      background: var(--d-sys-color-background-neutral);
     }
   }
 }
@@ -744,7 +745,7 @@
   li.reviewable,
   li.message {
     a {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       align-items: center;
 
       .item-label {
@@ -752,7 +753,7 @@
       }
 
       .item-description {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         @include line-clamp(3);
       }
@@ -781,14 +782,14 @@
           width: 22px;
           height: 22px;
           border-radius: 100%;
-          background: var(--secondary);
+          background: var(--d-sys-color-background-default);
 
           .d-icon {
             display: block;
             margin: 0;
             padding: 0;
             font-size: var(--font-down-1);
-            color: var(--primary);
+            color: var(--d-sys-color-icon-default);
           }
         }
       }
@@ -801,10 +802,10 @@
     &.unread,
     &.pending {
       .icon-avatar__icon-wrapper {
-        background: var(--tertiary);
+        background: var(--d-sys-color-background-accent);
 
         .d-icon {
-          color: var(--secondary);
+          color: var(--d-sys-color-icon-inverse);
         }
       }
     }

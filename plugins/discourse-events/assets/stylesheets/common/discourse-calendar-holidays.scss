@@ -10,8 +10,8 @@
 
 .admin-holidays-list {
   .d-table__row.--disabled td {
-    background-color: var(--primary-very-low);
-    color: var(--primary-medium);
+    background-color: var(--d-sys-color-background-sunken);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
   }
 }

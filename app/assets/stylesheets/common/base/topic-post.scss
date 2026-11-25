@@ -6,8 +6,8 @@
 
 .button-count.has-pending {
   span {
-    background-color: var(--danger);
-    color: var(--secondary);
+    background-color: var(--d-sys-color-background-danger);
+    color: var(--d-sys-color-text-inverse);
     display: inline-block;
     font-size: var(--font-down-2-rem);
     border-radius: 1em;
@@ -31,9 +31,9 @@
     content: "";
     background: linear-gradient(
       to right,
-      var(--primary-very-low) 10%,
-      var(--primary-low) 28%,
-      var(--primary-very-low) 43%
+      var(--d-sys-color-background-sunken) 10%,
+      var(--d-sys-color-background-neutral) 28%,
+      var(--d-sys-color-background-sunken) 43%
     );
     height: 45px;
     width: 700px;
@@ -103,7 +103,7 @@
   .new_user a,
   .user-title,
   .user-title a {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -177,16 +177,16 @@
 
   mark {
     text-decoration: none;
-    background-color: var(--highlight);
+    background-color: var(--d-sys-color-background-highlight);
   }
 
   ins {
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
     text-decoration: underline;
   }
 
   del {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
     text-decoration: line-through;
   }
 
@@ -231,7 +231,7 @@
 // add staff color
 .moderator {
   .regular > .cooked {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   .clearfix > .topic-meta-data > .names {
@@ -239,7 +239,7 @@
       color: var(--primary-high-or-secondary-low);
 
       a {
-        background-color: var(--highlight-bg);
+        background-color: var(--d-sys-color-background-highlight-subtlest);
         padding-left: 4px;
         padding-right: 4px;
       }
@@ -359,7 +359,7 @@
 }
 
 :root {
-  --d-post-control-border-radius: var(--d-button-border-radius);
+  --d-comp-PostMenu-button-border-radius: var(--d-comp-DButton-border-radius);
   --d-post-control-text-color: var(--primary-low-mid);
   --d-post-control-text-color--hover: var(--primary);
   --d-post-control-icon-color: var(--primary-low-mid);
@@ -416,13 +416,17 @@ nav.post-controls {
     .post-action-menu {
       &__like {
         &.has-like .d-icon {
-          color: var(--love);
+          color: var(--d-sys-color-icon-love);
         }
 
         .discourse-no-touch & {
           &:not(.has-like):hover {
-            --d-post-control-background--hover: var(--love-low);
-            --d-button-flat-icon-color--hover: var(--love);
+            --d-post-control-background--hover: var(
+              --d-sys-color-background-love-subtlest
+            );
+            --d-comp-DButton-color-icon-flat-hovered: var(
+              --d-sys-color-icon-love
+            );
           }
         }
       }
@@ -430,8 +434,12 @@ nav.post-controls {
       &__double-button {
         .discourse-no-touch & {
           &:not(.has-liked):hover {
-            --d-post-control-background--hover: var(--love-low);
-            --d-button-flat-icon-color--hover: var(--love);
+            --d-post-control-background--hover: var(
+              --d-sys-color-background-love-subtlest
+            );
+            --d-comp-DButton-color-icon-flat-hovered: var(
+              --d-sys-color-icon-love
+            );
           }
         }
       }
@@ -457,13 +465,13 @@ nav.post-controls {
         margin-inline: 0;
 
         &:first-child {
-          border-radius: var(--d-post-control-border-radius) 0 0
-            var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius) 0 0
+            var(--d-comp-PostMenu-button-border-radius);
         }
 
         &:last-child {
-          border-radius: 0 var(--d-post-control-border-radius)
-            var(--d-post-control-border-radius) 0;
+          border-radius: 0 var(--d-comp-PostMenu-button-border-radius)
+            var(--d-comp-PostMenu-button-border-radius) 0;
         }
 
         &:nth-child(2) {
@@ -471,13 +479,13 @@ nav.post-controls {
         }
 
         &:first-child:last-child {
-          border-radius: var(--d-post-control-border-radius);
+          border-radius: var(--d-comp-PostMenu-button-border-radius);
         }
 
         &.has-like {
           // Like button after I've liked
           .d-icon {
-            color: var(--love);
+            color: var(--d-sys-color-icon-love);
           }
         }
 
@@ -509,7 +517,7 @@ nav.post-controls {
           // Like count button
           .discourse-no-touch & {
             &:hover {
-              color: var(--primary);
+              color: var(--d-sys-color-text-default);
             }
           }
         }
@@ -551,11 +559,11 @@ nav.post-controls {
         &.delete:hover,
         &.delete:active,
         &.delete:focus {
-          background: var(--danger);
-          color: var(--secondary);
+          background: var(--d-sys-color-background-danger);
+          color: var(--d-sys-color-text-inverse);
 
           .d-icon {
-            color: var(--secondary);
+            color: var(--d-sys-color-icon-inverse);
           }
         }
       }
@@ -569,7 +577,7 @@ nav.post-controls {
       }
 
       &.bookmarked .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
 
       &.create {
@@ -589,34 +597,34 @@ nav.post-controls {
     gap: var(--space-2);
 
     &.has-liked .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 
   .btn.show-replies {
     --border-width: 1px;
     font-size: inherit;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     display: flex;
     align-items: center;
-    border-radius: var(--d-button-border-radius);
+    border-radius: var(--d-comp-DButton-border-radius);
 
     &[aria-expanded="true"] {
-      background: var(--primary-low);
-      color: var(--primary-high);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-muted);
       z-index: 1;
 
       .d-icon {
-        color: var(--primary-high);
+        color: var(--d-sys-color-icon-muted);
       }
     }
 
     .discourse-no-touch & {
       &:hover {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
 
         .d-icon {
-          color: var(--primary-high);
+          color: var(--d-sys-color-icon-muted);
         }
       }
     }
@@ -646,7 +654,7 @@ nav.post-controls {
 
   @include viewport.until(sm) {
     .reply .d-icon {
-      color: var(--primary-high);
+      color: var(--d-sys-color-icon-muted);
     }
 
     &.replies-button-visible {
@@ -685,11 +693,11 @@ nav.post-controls {
 
 .deleted {
   .regular > .cooked {
-    background-color: var(--danger-low-mid);
+    background-color: var(--d-sys-color-background-danger-subtle);
   }
 
   .topic-meta-data:not(.embedded-reply) {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     .post-info a,
     a {
@@ -702,21 +710,21 @@ nav.post-controls {
   }
 
   nav.post-controls {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
 
     .show-replies,
     button.reply.create {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
 
       .d-icon {
-        color: var(--danger);
+        color: var(--d-sys-color-icon-danger);
       }
     }
 
     .btn {
       &:hover {
         color: currentcolor;
-        background: var(--danger-low);
+        background: var(--d-sys-color-background-danger-subtlest);
 
         .d-icon {
           color: currentcolor;
@@ -734,12 +742,12 @@ nav.post-controls {
     }
 
     .d-icon {
-      color: var(--danger);
+      color: var(--d-sys-color-icon-danger);
     }
   }
 
   .post-action {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 }
 
@@ -783,9 +791,9 @@ blockquote {
   display: inline-block;
   padding: 1px 6px;
   background: var(--primary-high);
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   border: 1px solid transparent;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
   font-family: var(--font-family);
   font-size: var(--font-down-1);
   font-weight: 400;
@@ -902,12 +910,12 @@ aside.quote {
         font-size: var(--font-up-4);
         padding-top: 0.5em;
         padding-bottom: 0.5em;
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
     .onebox-result {
-      background-color: var(--primary-very-low);
+      background-color: var(--d-sys-color-background-sunken);
     }
   }
 
@@ -918,8 +926,8 @@ aside.quote {
     blockquote,
     .onebox,
     .onebox-result {
-      background: var(--primary-very-low);
-      border-left: 5px solid var(--primary-low);
+      background: var(--d-sys-color-background-sunken);
+      border-left: 5px solid var(--d-sys-color-border-default);
     }
 
     aside.quote > blockquote,
@@ -951,7 +959,7 @@ aside.quote {
 }
 
 .cooked .highlight {
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   padding: 0.15em;
   margin: -0.15em;
 }
@@ -975,7 +983,7 @@ aside.quote {
 }
 
 .post-action {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 
   @include viewport.from(sm) {
     .relative-date {
@@ -1003,7 +1011,7 @@ aside.quote {
 
   .unknown {
     display: inline-block;
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
     width: 25px;
     height: 25px;
     border-radius: 50%;
@@ -1084,7 +1092,7 @@ aside.quote {
   .btn-flat {
     &:hover {
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
@@ -1149,7 +1157,7 @@ aside.quote {
     float: left;
     min-width: 0; // prevents some elements, like <pre>, from blowing out the width
     position: relative;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-3) 0 0 0;
 
     &:first-of-type {
@@ -1183,7 +1191,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding-top: 0.5em;
 
     @include viewport.from(sm) {
@@ -1222,12 +1230,12 @@ aside.quote {
 
   .wiki,
   .last-wiki-edit {
-    color: var(--wiki);
+    color: var(--d-comp-PostMetaData-wiki-color-text);
   }
 
   @include viewport.from(sm) {
     a.wiki {
-      color: var(--wiki);
+      color: var(--d-comp-PostMetaData-wiki-color-text);
     }
   }
 
@@ -1259,11 +1267,11 @@ aside.quote {
       .discourse-no-touch & {
         &:hover {
           .d-button-label {
-            color: var(--primary-high);
+            color: var(--d-sys-color-text-muted);
           }
 
           .d-icon {
-            color: var(--primary-high);
+            color: var(--d-sys-color-icon-muted);
           }
         }
       }
@@ -1283,8 +1291,8 @@ pre {
   .bidi-warning,
   .bidi-warning span {
     font-style: normal;
-    background-color: var(--highlight);
-    color: var(--danger);
+    background-color: var(--d-sys-color-background-highlight);
+    color: var(--d-sys-color-text-danger);
     cursor: help;
   }
 }
@@ -1312,7 +1320,7 @@ pre {
       cursor: auto;
 
       .d-icon {
-        color: var(--tertiary);
+        color: var(--d-sys-color-icon-accent);
       }
     }
 
@@ -1352,8 +1360,8 @@ pre {
 
 kbd {
   align-items: center;
-  border: 1px solid var(--primary-low-mid);
-  background: var(--primary-very-low);
+  border: 1px solid var(--d-sys-color-border-strong);
+  background: var(--d-sys-color-background-sunken);
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
@@ -1439,7 +1447,7 @@ blockquote .post__contents-cooked-quote {
       text-align: left;
       padding-bottom: 2px;
       font-weight: bold;
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 
@@ -1455,13 +1463,13 @@ blockquote .post__contents-cooked-quote {
   &.deleted {
     .topic-avatar,
     .small-action-desc {
-      background-color: var(--danger-low-mid);
+      background-color: var(--d-sys-color-background-danger-subtle);
     }
   }
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .topic-avatar {
@@ -1476,7 +1484,7 @@ blockquote .post__contents-cooked-quote {
 
     .d-icon {
       font-size: var(--font-up-3);
-      color: var(--primary-low-mid);
+      color: var(--d-sys-color-icon-faint);
     }
   }
 
@@ -1520,7 +1528,7 @@ blockquote .post__contents-cooked-quote {
     margin-top: var(--space-2);
     word-break: break-word;
     min-width: 0; // Allows content like oneboxes to shrink
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     p {
       margin-bottom: 0;
@@ -1534,12 +1542,19 @@ blockquote .post__contents-cooked-quote {
   &.topic-post-visited {
     .topic-post-visited-line {
       text-align: center;
-      border-bottom: 1px solid light-dark(var(--danger-medium), var(--danger));
+      border-bottom: 1px solid
+        light-dark(
+          var(--d-sys-color-border-danger),
+          var(--d-sys-color-border-danger)
+        );
       z-index: z("base") + 2; // ensures last visit border is on top of post borders
       line-height: 0;
       margin: 0;
       margin-bottom: -1px;
-      color: light-dark(var(--danger-medium), var(--danger));
+      color: light-dark(
+        var(--d-sys-color-text-danger),
+        var(--d-sys-color-text-danger)
+      );
       font-size: var(--font-down-1);
       width: calc(
         var(--topic-body-width) + var(--topic-avatar-width) +
@@ -1547,7 +1562,7 @@ blockquote .post__contents-cooked-quote {
       );
 
       .topic-post-visited-message {
-        background-color: var(--secondary);
+        background-color: var(--d-sys-color-background-default);
         padding: 0 0.5em;
       }
     }
@@ -1589,7 +1604,7 @@ blockquote .post__contents-cooked-quote {
   .topic-body {
     .cooked {
       font-style: italic;
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
   }
 }
@@ -1611,7 +1626,7 @@ a.mention-group {
 
 span.mention {
   // unlinked, invalid mention
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
 }
 
 .suggested-topics {
@@ -1665,7 +1680,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   align-items: center;
   justify-content: center;
 
@@ -1697,14 +1712,14 @@ a.reply-to-tab {
   }
 
   .d-icon {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 }
 
 .topic-post {
   @include viewport.until(sm) {
     > article {
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
       padding: 15px 0 8px 0;
     }
   }
@@ -1713,9 +1728,9 @@ a.reply-to-tab {
     article.boxed {
       .select-posts {
         button.select-post {
-          background-color: var(--tertiary);
-          color: var(--secondary);
-          border-color: var(--tertiary);
+          background-color: var(--d-sys-color-background-accent);
+          color: var(--d-sys-color-text-inverse);
+          border-color: var(--d-sys-color-border-accent);
         }
       }
 
@@ -1739,9 +1754,9 @@ a.reply-to-tab {
 
       button {
         margin-left: 8px;
-        background-color: var(--primary-low);
-        color: var(--primary);
-        box-shadow: var(--shadow-dropdown);
+        background-color: var(--d-sys-color-background-neutral);
+        color: var(--d-sys-color-text-default);
+        box-shadow: var(--d-sys-shadow-overlay);
       }
     }
   }
@@ -1756,7 +1771,7 @@ a.reply-to-tab {
     width: 200px;
     position: fixed;
     z-index: z("dropdown") + 1; // 1 higher than .select-posts
-    box-shadow: var(--shadow-card);
+    box-shadow: var(--d-sys-shadow-raised);
     padding: var(--space-3);
     margin-bottom: var(--space-1);
     right: 10px;
@@ -1793,7 +1808,7 @@ a.reply-to-tab {
 
     h3 {
       font-size: var(--font-up-4);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       margin-bottom: 5px;
 
       .d-icon {
@@ -1853,7 +1868,7 @@ a.reply-to-tab {
       }
 
       &.btn-remind {
-        background: var(--primary-very-low);
+        background: var(--d-sys-color-background-sunken);
         margin-right: auto;
 
         @include hover {
@@ -1872,8 +1887,8 @@ a.reply-to-tab {
 
 .post-notice {
   align-items: center;
-  background-color: var(--tertiary-very-low);
-  border-top: 1px solid var(--content-border-color);
+  background-color: var(--d-sys-color-background-accent-subtlest);
+  border-top: 1px solid var(--d-sys-color-border-default);
   display: flex;
   width: 100%;
   max-width: calc(
@@ -1890,7 +1905,7 @@ a.reply-to-tab {
   }
 
   &.custom {
-    background: var(--danger-low);
+    background: var(--d-sys-color-background-danger-subtlest);
   }
 
   .emoji {
@@ -1901,7 +1916,7 @@ a.reply-to-tab {
   .d-icon {
     width: 1.25em;
     height: 1.25em;
-    color: var(--primary-high);
+    color: var(--d-sys-color-icon-muted);
   }
 
   .post-notice-message {
@@ -1953,7 +1968,7 @@ iframe {
 
 .posts-filtered-notice {
   position: sticky;
-  background-color: var(--tertiary-low);
+  background-color: var(--d-sys-color-background-accent-subtlest);
   bottom: 0;
   padding: 1em;
   margin-top: 0.5em;
@@ -2018,11 +2033,11 @@ iframe {
 }
 
 span.highlighted {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
 }
 
 .quote-highlight {
-  background-color: var(--highlight-bg);
+  background-color: var(--d-sys-color-background-highlight-subtlest);
   scroll-margin-top: 3lh;
 
   &:not(span) {
@@ -2042,7 +2057,7 @@ span.highlighted {
   }
 
   > canvas {
-    background-color: var(--primary-very-low);
+    background-color: var(--d-sys-color-background-sunken);
   }
 
   > .animated-image-overlay {
@@ -2055,7 +2070,7 @@ span.highlighted {
     > .d-icon {
       padding: 0.5em;
       margin: 0.5em;
-      background-color: rgb(var(--always-black-rgb), 0.25);
+      background-color: color-mix(in srgb, black 25%, transparent);
       color: var(--secondary-or-primary);
       cursor: pointer;
       display: none;
@@ -2147,7 +2162,7 @@ span.highlighted {
       position: sticky;
       top: 0;
       z-index: 1;
-      background-color: var(--secondary);
+      background-color: var(--d-sys-color-background-default);
     }
 
     td {
@@ -2165,8 +2180,8 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   &.--has-overflow {
     box-shadow:
-      0 2px 5px 0 rgb(var(--always-black-rgb), 0.1),
-      0 2px 10px 0 rgb(var(--always-black-rgb), 0.1);
+      0 2px 5px 0 color-mix(in srgb, black 10%, transparent),
+      0 2px 10px 0 color-mix(in srgb, black 10%, transparent);
   }
 }
 
@@ -2203,7 +2218,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
   // We use absolute positioning here because we want it to display in the padding
   align-self: center;
-  color: var(--tertiary-medium);
+  color: var(--d-sys-color-background-accent-subtle);
   right: 0;
   font-size: 0.571em;
 
@@ -2229,7 +2244,7 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
 
 span.post-count {
   background: var(--primary);
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
   opacity: 0.8;
 }
 
@@ -2283,7 +2298,7 @@ span.post-count {
   }
 
   .topic-avatar {
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
     padding-top: var(--space-4);
     width: var(--topic-avatar-width);
     float: left;
@@ -2309,7 +2324,7 @@ span.post-count {
 
   .info-line {
     margin: 10px 0;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .topic-post-visited {

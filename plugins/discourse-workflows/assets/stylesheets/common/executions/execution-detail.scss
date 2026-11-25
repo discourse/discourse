@@ -21,7 +21,7 @@
   }
 
   &__step {
-    border: 1.5px solid var(--primary-low);
+    border: 1.5px solid var(--d-sys-color-border-default);
     border-radius: 0.375em;
     padding: var(--space-3) var(--space-3);
     margin-bottom: var(--space-3);
@@ -40,7 +40,7 @@
     }
 
     &.--skipped {
-      border-color: var(--primary-low);
+      border-color: var(--d-sys-color-border-default);
       opacity: 0.7;
     }
 
@@ -64,7 +64,7 @@
     flex-shrink: 0;
     width: 1.25em;
     text-align: center;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     .--kind-trigger & {
       color: var(--workflow-node-color-orange);
@@ -89,7 +89,7 @@
 
   &__step-operation {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     &::before {
       content: "›";
@@ -151,7 +151,7 @@
 
   &__step-type {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__step-badge {
@@ -177,8 +177,8 @@
     }
 
     &.--skipped {
-      background: var(--primary-low);
-      color: var(--primary-medium);
+      background: var(--d-sys-color-background-neutral);
+      color: var(--d-sys-color-text-faint);
     }
 
     &.--filtered {
@@ -194,7 +194,7 @@
 
   &__step-time {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-left: auto;
   }
 
@@ -230,7 +230,7 @@
     }
 
     code {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       padding: 0.1em 0.3em;
       border-radius: 0.2em;
       font-size: var(--font-down-1);
@@ -256,25 +256,25 @@
   }
 
   &__condition-expression {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     background: none;
     padding: 0;
     font-size: var(--font-down-1);
   }
 
   &__condition-arrow {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__condition-operator {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-style: italic;
   }
 
   &__step-body {
     margin-top: var(--space-2);
     padding-top: var(--space-2);
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--d-sys-color-border-default);
     font-size: var(--font-down-1);
   }
 
@@ -285,9 +285,9 @@
     flex-wrap: wrap;
     padding: var(--space-2);
     margin-bottom: var(--space-2);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--d-sys-color-border-default);
     border-radius: 0.25em;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
 
     &.--caller {
       padding: 0;
@@ -312,7 +312,7 @@
 
   &__workflow-call-icon {
     flex-shrink: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__workflow-call-content {
@@ -323,7 +323,7 @@
 
   &__workflow-call-label {
     font-size: var(--font-down-2);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__workflow-call-name {
@@ -343,7 +343,7 @@
 
   &__item-count {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     margin-left: var(--space-1);
   }
 
@@ -351,7 +351,7 @@
     margin-bottom: var(--space-2);
 
     pre {
-      background: var(--primary-very-low);
+      background: var(--d-sys-color-background-sunken);
       padding: var(--space-2);
       border-radius: 0.25em;
       font-size: var(--font-down-1);

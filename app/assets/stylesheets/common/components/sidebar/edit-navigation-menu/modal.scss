@@ -17,18 +17,18 @@
 
   .sidebar__edit-navigation-menu__filter-dropdown {
     .select-kit-header {
-      background: var(--secondary);
-      color: var(--primary);
-      border: 1px solid var(--primary-low-mid);
+      background: var(--d-sys-color-background-default);
+      color: var(--d-sys-color-text-default);
+      border: 1px solid var(--d-sys-color-border-strong);
       font-size: var(--font-0);
 
       &:hover,
       &:focus {
-        background: var(--secondary);
-        color: var(--primary);
+        background: var(--d-sys-color-background-default);
+        color: var(--d-sys-color-text-default);
 
         .d-icon {
-          color: var(--primary);
+          color: var(--d-sys-color-icon-default);
         }
       }
     }
@@ -68,12 +68,12 @@
   }
 
   .sidebar__edit-navigation-menu__filter-input-field {
-    border-color: var(--primary-low-mid);
+    border-color: var(--d-sys-color-border-strong);
     padding-left: 1.75em;
     width: 100%;
 
     &:focus {
-      border-color: var(--tertiary);
+      border-color: var(--d-sys-color-border-accent);
       outline: none;
       outline-offset: 0;
       box-shadow: inset 0 0 0 1px var(--tertiary);
@@ -92,7 +92,7 @@
 
     .d-icon {
       font-size: var(--font-down-1);
-      color: var(--tertiary);
+      color: var(--d-sys-color-icon-accent);
     }
 
     &:focus,

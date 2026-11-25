@@ -5,9 +5,9 @@
   min-width: 0;
   max-width: min(100%, 36rem);
   padding: var(--space-1) var(--space-2);
-  border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-border-radius);
-  background: var(--secondary);
+  border: 1px solid var(--d-sys-color-border-strong);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-default);
   box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
 
   &__body {
@@ -33,7 +33,7 @@
 
   &__title {
     overflow: hidden;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     font-weight: 600;
     text-overflow: ellipsis;
@@ -42,7 +42,7 @@
 
   &__detail {
     overflow: hidden;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     text-overflow: ellipsis;
     white-space: nowrap;

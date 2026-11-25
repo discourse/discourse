@@ -8,17 +8,20 @@
   // selectors below are its children
   .item,
   .user-stream-item {
-    background: var(--d-content-background, var(--secondary));
-    border-bottom: 1px solid var(--content-border-color);
+    background: var(
+      --d-content-background,
+      var(--d-sys-color-background-default)
+    );
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding: 1em 0.53em;
     list-style: none;
 
     &.moderator-action {
-      background-color: var(--highlight-bg);
+      background-color: var(--d-sys-color-background-highlight-subtlest);
     }
 
     &.deleted {
-      background-color: var(--danger-low-mid);
+      background-color: var(--d-sys-color-background-danger-subtle);
     }
 
     &.hidden {
@@ -59,14 +62,14 @@
       span + span {
         &::before {
           content: "•";
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
     }
   }
 
   .draft-icon {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-up-4);
     margin-right: 0.5rem;
     text-align: center;
@@ -81,7 +84,7 @@
   }
 
   .draft-title {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     padding: 0;
   }
 
@@ -89,7 +92,7 @@
     display: inline-block;
     margin: 0;
     padding: 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     li {
       display: inline-flex;
@@ -99,14 +102,14 @@
 
   .type,
   span.name {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .relative-date,
   .delete-info,
   .draft-type {
     line-height: var(--line-height-small);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-2);
     padding-top: unset !important;
     margin-right: 0.5rem;
@@ -131,14 +134,14 @@
 
     li.notification {
       padding: var(--space-3);
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       a {
         align-items: center;
       }
 
       .d-icon {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
         padding-top: 0;
         font-size: var(--font-up-2);
       }
@@ -157,7 +160,7 @@
     margin-left: 0.25em;
     line-height: var(--line-height-small);
     padding-top: 3px;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   .avatar-link {
@@ -176,7 +179,7 @@
   }
 
   .edit-reason {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
     padding: 3px 5px 5px 5px;
   }
 
@@ -184,14 +187,14 @@
     margin: 1em 0 0 0;
     font-size: var(--font-0);
     overflow-wrap: break-word;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     &:empty {
       display: none;
     }
 
     details.disabled {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-text-faint);
     }
 
     .emoji.only-emoji {
@@ -241,14 +244,14 @@
   .fa {
     width: 15px;
     display: inline-block;
-    color: var(--primary);
+    color: var(--d-sys-color-icon-default);
 
     &.d-icon-heart {
-      color: var(--love);
+      color: var(--d-sys-color-icon-love);
     }
 
     &.d-icon-trash-can {
-      color: var(--secondary);
+      color: var(--d-sys-color-icon-inverse);
     }
   }
 }

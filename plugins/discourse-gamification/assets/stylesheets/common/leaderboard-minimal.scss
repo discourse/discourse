@@ -21,7 +21,7 @@
     padding: 0.75em 0.5em;
     margin-bottom: 0;
     background-color: transparent;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     border-radius: 0;
 
     &.-self {
@@ -53,7 +53,7 @@
 
     &-highlight {
       background-color: var(--tertiary-50);
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
     }
   }
 }

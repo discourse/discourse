@@ -22,9 +22,9 @@
   &__name-row {
     display: flex;
     align-items: stretch;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
-    background: var(--secondary);
+    border: 1px solid var(--d-sys-color-border-strong);
+    border-radius: var(--d-sys-border-radius-md);
+    background: var(--d-sys-color-background-default);
     box-shadow: 0 2px 8px rgb(0, 0, 0, 0.1);
     overflow: hidden;
 

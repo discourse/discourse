@@ -84,7 +84,7 @@ html.mobile-tab-bar-visible
   }
 
   .bg {
-    background: var(--d-selected);
+    background: var(--d-sys-color-background-default-selected);
   }
 }
 
@@ -158,12 +158,12 @@ html.mobile-tab-bar-visible
     background: transparent;
 
     .d-icon {
-      color: var(--header_primary-medium);
+      color: var(--d-comp-Header-color-icon-strong);
     }
   }
 
   .topic-admin-menu-trigger {
-    border-inline-end: 1px solid var(--primary-low);
+    border-inline-end: 1px solid var(--d-sys-color-border-default);
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
@@ -256,8 +256,8 @@ html.mobile-tab-bar-visible
 
   .topic-admin-menu-trigger,
   .topic-content-language-preferences {
-    background: var(--header_background);
-    color: var(--header_primary);
+    background: var(--d-comp-Header-color-background);
+    color: var(--d-comp-Header-color-text-default);
   }
 
   .progress-back-container {

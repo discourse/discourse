@@ -24,7 +24,7 @@
 
   &__input-container {
     padding: 0.15em 0.5em;
-    background: var(--primary-very-low);
+    background: var(--d-sys-color-background-sunken);
   }
 
   &__input {
@@ -47,8 +47,8 @@
 
     .is-send-enabled.is-focused &,
     .is-send-enabled & {
-      background-color: var(--tertiary-high);
-      color: var(--secondary);
+      background-color: var(--d-sys-color-background-accent);
+      color: var(--d-sys-color-text-inverse);
 
       .d-icon {
         color: inherit;

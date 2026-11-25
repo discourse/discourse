@@ -1,11 +1,11 @@
 [data-content][data-identifier="user-tip"] {
   min-width: 300px;
-  background-color: var(--tertiary);
+  background-color: var(--d-sys-color-background-accent);
   border: none;
-  color: var(--secondary);
+  color: var(--d-sys-color-text-inverse);
 
-  --float-kit-arrow-stroke-color: var(--tertiary);
-  --float-kit-arrow-fill-color: var(--tertiary);
+  --d-comp-FloatKit-color-border: var(--d-sys-color-border-accent);
+  --d-comp-FloatKit-color-background: var(--d-sys-color-background-accent);
 
   .user-tip__container {
     font-weight: normal;
@@ -22,7 +22,7 @@
     margin-top: 0.25em;
 
     a {
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
       text-decoration: underline;
     }
   }
@@ -34,12 +34,12 @@
   }
 
   .btn-primary {
-    background: var(--secondary);
-    color: var(--tertiary);
+    background: var(--d-sys-color-background-default);
+    color: var(--d-sys-color-text-link);
   }
 
   .btn-flat.btn-text {
     background-color: transparent;
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 }

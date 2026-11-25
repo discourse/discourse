@@ -16,14 +16,14 @@
   // Badges/statuses
   // Default
   .status-label {
-    --d-border-radius: var(--space-4);
+    --d-sys-border-radius-md: var(--space-4);
     --status-icon-diameter: 8px;
     display: flex;
     flex-wrap: nowrap;
     width: fit-content;
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
     padding: var(--space-half) var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
 
     .status-label-indicator {
       display: inline-block;
@@ -37,47 +37,47 @@
     }
 
     .status-label-text {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
       font-size: var(--font-down-1);
     }
   }
 
   // Success badge
   .status-label.--success {
-    background-color: var(--success-low);
+    background-color: var(--d-sys-color-background-success-subtlest);
 
     .status-label-indicator {
-      background-color: var(--success);
+      background-color: var(--d-sys-color-background-success);
     }
 
     .status-label-text {
-      color: var(--success-hover);
+      color: var(--d-sys-color-background-success-hovered);
     }
   }
 
   // Critical badge
   .status-label.--critical {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
 
     .status-label-indicator {
-      background-color: var(--danger);
+      background-color: var(--d-sys-color-background-danger);
     }
 
     .status-label-text {
-      color: var(--danger-hover);
+      color: var(--d-sys-color-background-danger-hovered);
     }
   }
 
   // Inactive badge
   .status-label.--inactive {
-    background-color: var(--primary-low);
+    background-color: var(--d-sys-color-background-neutral);
 
     .status-label-indicator {
       background-color: var(--primary-high);
     }
 
     .status-label-text {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
   }
 }
@@ -91,7 +91,7 @@
 .d-table__header-cell {
   text-align: left;
   font-weight: normal;
-  color: var(--primary-high);
+  color: var(--d-sys-color-text-muted);
   vertical-align: bottom;
 }
 
@@ -102,12 +102,12 @@
   @include viewport.until(md) {
     display: block;
     margin-bottom: var(--space-3);
-    border: 1px solid var(--content-border-color);
+    border: 1px solid var(--d-sys-color-border-default);
   }
 
   &.has-update {
-    background-color: var(--tertiary-very-low);
-    border-left: solid 3px var(--tertiary);
+    background-color: var(--d-sys-color-background-accent-subtlest);
+    border-left: solid 3px var(--d-sys-color-border-accent);
   }
 }
 
@@ -116,7 +116,7 @@
 
   @include viewport.until(md) {
     display: block;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   &:first-child {
@@ -136,16 +136,16 @@
     font-weight: 700;
     max-width: 80%;
     margin-bottom: var(--space-1);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   .d-table__overview-link {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
 
     .d-table__overview-name {
       &:hover,
       &:focus {
-        color: var(--tertiary);
+        color: var(--d-sys-color-text-link);
       }
     }
   }
@@ -157,7 +157,7 @@
 
     &:hover,
     &:focus {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -180,7 +180,7 @@
   }
 
   .d-table__overview-flags {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1);
     text-transform: lowercase;
 
@@ -202,7 +202,7 @@
 
   @include viewport.until(md) {
     display: inline-flex;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }
 
@@ -260,20 +260,20 @@
 .d-table-badge {
   display: flex;
   font-size: var(--font-down-2);
-  border-radius: var(--d-button-border-radius);
-  color: var(--primary-very-high);
-  background: var(--tertiary-very-low);
+  border-radius: var(--d-comp-DButton-border-radius);
+  color: var(--d-sys-color-text-default);
+  background: var(--d-sys-color-background-accent-subtlest);
   letter-spacing: 0.25px;
 
   // Only badges that are links react to hover.
   &:is(a) {
     &:visited,
     &:active {
-      color: var(--primary-very-high);
+      color: var(--d-sys-color-text-default);
     }
 
     &:hover {
-      color: var(--d-link-color);
+      color: var(--d-sys-color-text-link);
     }
   }
 
@@ -289,13 +289,13 @@
 
   &__info {
     border-left: 1px solid var(--secondary);
-    border-radius: 0 var(--d-button-border-radius) var(--d-button-border-radius)
-      0;
+    border-radius: 0 var(--d-comp-DButton-border-radius)
+      var(--d-comp-DButton-border-radius) 0;
     padding: var(--space-half) var(--space-1);
   }
 
   svg {
     font-size: var(--font-down-2);
-    color: var(--primary-high);
+    color: var(--d-sys-color-icon-muted);
   }
 }

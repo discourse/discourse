@@ -27,18 +27,18 @@
   height: 40px;
   margin-bottom: 9px;
   border: 1px solid var(--primary-medium);
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   font-size: $base-font-size;
   font-family: $base-font-family;
 }
 
 .StripeElement--focus {
-  border-color: var(--tertiary);
+  border-color: var(--d-sys-color-border-accent);
   outline: 1px solid var(--tertiary);
 }
 
 .StripeElement--invalid {
-  border-color: var(--danger);
+  border-color: var(--d-sys-color-border-danger);
 }
 
 .StripeElement--webkit-autofill {

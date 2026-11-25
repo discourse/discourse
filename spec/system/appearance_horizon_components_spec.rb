@@ -13,7 +13,7 @@ describe "Appearance styles on Horizon" do
           parent_theme_id: horizon.id,
           styles: {
             variables: {
-              "--d-button-border-radius" => "20px",
+              "--d-comp-DButton-border-radius" => "20px",
             },
           },
         },
@@ -31,7 +31,7 @@ describe "Appearance styles on Horizon" do
 
   def button_radius
     page.evaluate_script(
-      "getComputedStyle(document.documentElement).getPropertyValue('--d-button-border-radius').trim()",
+      "getComputedStyle(document.documentElement).getPropertyValue('--d-comp-DButton-border-radius').trim()",
     )
   end
 
@@ -80,7 +80,7 @@ describe "Appearance styles on Horizon" do
           replaces_theme_id: change.theme_id,
           styles: {
             variables: {
-              "--d-border-radius" => "14px",
+              "--d-sys-border-radius-md" => "14px",
             },
           },
         },
@@ -97,7 +97,7 @@ describe "Appearance styles on Horizon" do
     expect(button_radius).not_to eq("20px")
     expect(
       page.evaluate_script(
-        "getComputedStyle(document.documentElement).getPropertyValue('--d-border-radius').trim()",
+        "getComputedStyle(document.documentElement).getPropertyValue('--d-sys-border-radius-md').trim()",
       ),
     ).to eq("14px")
   end

@@ -82,7 +82,7 @@ body.has-ai-bot-docked-composer {
       left: 0;
       right: 0;
       height: 100vh;
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 }
@@ -105,18 +105,18 @@ body.has-ai-bot-docked-composer {
   display: flex;
   flex-direction: column-reverse;
   border: var(--d-input-border);
-  border-color: var(--content-border-color);
-  border-radius: var(--d-input-border-radius);
+  border-color: var(--d-sys-color-border-default);
+  border-radius: var(--d-comp-Input-border-radius);
 
   // Match the chat input's light grey, but composited over an opaque base so
   // topic content doesn't show through the input while scrolling (the docked
   // composer's container is transparent, unlike chat's opaque pane).
-  background-color: var(--secondary);
+  background-color: var(--d-sys-color-background-default);
   transition:
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out;
   position: relative;
-  box-shadow: var(--shadow-docked-composer);
+  box-shadow: var(--d-sys-shadow-overflow);
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
@@ -128,7 +128,7 @@ body.has-ai-bot-docked-composer {
       inset: -1px;
       z-index: 1;
       border: 2px solid var(--d-input-focused-color);
-      border-radius: var(--d-input-border-radius);
+      border-radius: var(--d-comp-Input-border-radius);
       pointer-events: none;
     }
   }
@@ -150,9 +150,10 @@ body.has-ai-bot-docked-composer {
   max-height: 4em;
   opacity: 1;
   margin: 0;
-  border-top: 1px solid var(--primary-low);
-  border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
-  background: var(--primary-very-low);
+  border-top: 1px solid var(--d-sys-color-border-default);
+  border-radius: 0 0 var(--d-comp-Input-border-radius)
+    var(--d-comp-Input-border-radius);
+  background: var(--d-sys-color-background-sunken);
   transition:
     max-height 0.25s ease,
     opacity 0.2s ease;
@@ -186,20 +187,20 @@ body.has-ai-bot-docked-composer {
   min-width: auto;
   min-height: auto;
   padding: 0.35em 0.5em;
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
   background: transparent !important;
 
   .d-icon {
-    color: var(--primary-medium) !important;
+    color: var(--d-sys-color-icon-faint) !important;
     font-size: var(--font-down-1);
   }
 
   &:hover:not(:disabled),
   &:focus-visible {
-    background: var(--primary-very-low) !important;
+    background: var(--d-sys-color-background-sunken) !important;
 
     .d-icon {
-      color: var(--primary-high) !important;
+      color: var(--d-sys-color-icon-muted) !important;
     }
   }
 }
@@ -219,10 +220,10 @@ body.has-ai-bot-docked-composer {
   justify-content: space-between;
   width: 100%;
   padding: 0.5em 0.75em;
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--d-sys-color-border-default);
   box-sizing: border-box;
   font-size: var(--font-down-1);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .ai-bot-docked-composer__editing-text {
@@ -247,8 +248,8 @@ body.has-ai-bot-docked-composer {
   align-items: center;
   justify-content: center;
   padding: 0.4em 0.8em;
-  background: var(--secondary);
-  border: 1px solid var(--content-border-color);
+  background: var(--d-sys-color-background-default);
+  border: 1px solid var(--d-sys-color-border-default);
   border-radius: 2em;
   cursor: pointer;
 
@@ -259,14 +260,14 @@ body.has-ai-bot-docked-composer {
   .d-icon {
     width: 0.875em;
     height: 0.875em;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-icon-faint);
   }
 
   &:hover {
     border-color: var(--primary-medium);
 
     .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
     }
   }
 
@@ -346,7 +347,7 @@ body.has-ai-bot-docked-composer [data-user-id^="-"] .cooked {
 
   &__username {
     font-weight: bold;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
   }
 }
 

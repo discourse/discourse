@@ -51,7 +51,7 @@
   &__circle {
     flex-shrink: 0;
     font-size: var(--progress-bar-icon-size);
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,19 +59,20 @@
     width: var(--progress-bar-circle-size);
     transform: none;
     border-radius: 50%;
-    border: var(--progress-bar-line-width) solid var(--primary-low-mid);
-    background-color: var(--secondary);
+    border: var(--progress-bar-line-width) solid
+      var(--d-sys-color-border-strong);
+    background-color: var(--d-sys-color-background-default);
 
     .--active & {
-      background-color: var(--success);
-      border-color: var(--success);
+      background-color: var(--d-sys-color-background-success);
+      border-color: var(--d-sys-color-border-success);
       box-shadow: 0 0 1px calc(var(--progress-bar-circle-size) / 2)
-        var(--success-low);
+        var(--d-sys-color-background-success-subtlest);
     }
 
     .--completed & {
-      background-color: var(--success);
-      border-color: var(--success);
+      background-color: var(--d-sys-color-background-success);
+      border-color: var(--d-sys-color-border-success);
     }
   }
 }

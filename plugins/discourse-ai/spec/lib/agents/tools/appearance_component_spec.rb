@@ -18,7 +18,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       },
       styles: {
         "variables" => {
-          "--d-border-radius" => "12px",
+          "--d-sys-border-radius-md" => "12px",
         },
       },
     }
@@ -66,7 +66,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       I18n.t("discourse_ai.ai_bot.chat_tool_approval.save_appearance_details.component"),
     )
     expect(save_tool.approval_changes).to contain_exactly(
-      a_hash_including(label: "--d-border-radius", after: "12px"),
+      a_hash_including(label: "--d-sys-border-radius-md", after: "12px"),
     )
 
     saved = approve(DiscourseAi::Agents::Tools::SaveAppearanceChange, draft_token: token)
@@ -87,7 +87,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
         appearance_change_id: change.id,
       )
     expect(activate_tool.approval_changes).to include(
-      a_hash_including(label: "--d-border-radius", after: "12px"),
+      a_hash_including(label: "--d-sys-border-radius-md", after: "12px"),
       { label: "Component: Rounded", before: "Off", after: "On" },
     )
     expect(activate_tool.approval_details).to include(horizon.name, saved[:preview_url])

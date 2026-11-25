@@ -42,11 +42,11 @@
   &__description {
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
     margin: 0;
   }
@@ -57,7 +57,7 @@
   border-collapse: collapse;
 
   thead th {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     font-size: var(--font-down-1-rem);
   }
 
@@ -93,7 +93,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__swatch {
@@ -175,7 +175,7 @@
   &__bar-track {
     height: $db-bar-height;
     border-radius: 1em;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
   }
 
   &__bar-fill {
@@ -184,11 +184,11 @@
     border-radius: 4px;
 
     &.--new-members {
-      background: var(--tertiary);
+      background: var(--d-sys-color-background-accent);
     }
 
     &.--returning {
-      background: var(--tertiary-medium);
+      background: var(--d-sys-color-background-accent-subtle);
     }
 
     &.--staff {
@@ -200,35 +200,35 @@
     }
 
     &.--group-1 {
-      background: var(--love);
+      background: var(--d-sys-color-background-love);
     }
 
     &.--group-2 {
-      background: var(--success);
+      background: var(--d-sys-color-background-success);
     }
 
     &.--group-3 {
-      background: var(--danger);
+      background: var(--d-sys-color-background-danger);
     }
 
     &.--group-4 {
-      background: var(--success-medium);
+      background: var(--d-sys-color-background-success-subtle);
     }
 
     &.--group-5 {
-      background: var(--danger-medium);
+      background: var(--d-sys-color-background-danger);
     }
   }
 
   &__bar-share {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-variant-numeric: tabular-nums;
     text-align: right;
     line-height: 1;
   }
 
   &__empty {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1-rem);
     margin: 0;
   }
@@ -242,9 +242,9 @@
   &__signups {
     margin-left: auto;
     font-size: var(--font-down-3);
-    border-radius: var(--d-border-radius-pill);
+    border-radius: var(--d-sys-border-radius-full);
     padding: var(--space-half) var(--space-2);
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
     white-space: nowrap;
   }
 
@@ -264,7 +264,7 @@
     padding-bottom: var(--space-3);
 
     &:not(:last-child) {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -280,12 +280,12 @@
   }
 
   &__name {
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__count {
     font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__flow {
@@ -306,10 +306,10 @@
     height: $db-bar-height;
     border-radius: 5px;
     flex: 0 0 auto;
-    background: var(--success);
+    background: var(--d-sys-color-background-success);
 
     &.--demoted {
-      background: var(--danger);
+      background: var(--d-sys-color-background-danger);
     }
   }
 }

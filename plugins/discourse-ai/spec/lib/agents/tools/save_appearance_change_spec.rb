@@ -166,14 +166,14 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     let(:styles) do
       {
         "variables" => {
-          "--d-border-radius" => "12px",
+          "--d-sys-border-radius-md" => "12px",
         },
         "rules" => [
           {
             "area" => "topic_list_item",
             "state" => "hover",
             "declarations" => {
-              "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+              "box-shadow" => "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
             },
           },
         ],
@@ -194,7 +194,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
     it "shows the styles on the approval card" do
       labels = tool.approval_changes.map { |row| row[:label] }
 
-      expect(labels).to include("--d-border-radius", "Topic list rows (hover) box-shadow")
+      expect(labels).to include("--d-sys-border-radius-md", "Topic list rows (hover) box-shadow")
     end
 
     it "saves the theme with the CSS written from the styles" do
@@ -203,7 +203,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       appearance_change = AppearanceChange.last
       expect(appearance_change.styles).to eq(styles)
       expect(appearance_change.theme.theme_fields.sole.value).to eq(appearance_change.css)
-      expect(appearance_change.css).to include("--d-border-radius: 12px;")
+      expect(appearance_change.css).to include("--d-sys-border-radius-md: 12px;")
     end
 
     it "saves a new version of a theme the assistant made as a draft" do
@@ -242,13 +242,13 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
           :appearance_change
         ]
       draft_attributes[:replaces_theme_id] = live.theme_id
-      draft_attributes[:styles] = { "variables" => { "--d-border-radius" => "16px" } }
+      draft_attributes[:styles] = { "variables" => { "--d-sys-border-radius-md" => "16px" } }
 
       expect(tool.approval_changes).to include(
-        a_hash_including(label: "--d-border-radius", before: "12px", after: "16px"),
+        a_hash_including(label: "--d-sys-border-radius-md", before: "12px", after: "16px"),
         a_hash_including(
           label: "Topic list rows (hover) box-shadow",
-          before: "0 2px 8px rgba(var(--primary-rgb), 0.08)",
+          before: "0 2px 8px color-mix(in srgb, var(--primary) 8%, transparent)",
         ),
       )
     end
@@ -269,7 +269,7 @@ RSpec.describe DiscourseAi::Agents::Tools::SaveAppearanceChange do
       draft_attributes[:replaces_theme_id] = live.theme_id
       draft_attributes[:styles] = {}
 
-      expect(tool.approval_changes.map { |row| row[:label] }).to include("--d-border-radius")
+      expect(tool.approval_changes.map { |row| row[:label] }).to include("--d-sys-border-radius-md")
       approve_as(other_admin, build_reviewable)
 
       appearance_change = AppearanceChange.last

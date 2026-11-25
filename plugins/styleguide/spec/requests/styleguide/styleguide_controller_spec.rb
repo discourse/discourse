@@ -86,7 +86,7 @@ RSpec.describe Styleguide::StyleguideController do
 
       expect(response.status).to eq(200)
       variables = response.parsed_body["design_variables"].index_by { |variable| variable["name"] }
-      expect(variables["--d-border-radius"]).to include(
+      expect(variables["--d-sys-border-radius-md"]).to include(
         "type" => "length",
         "scope" => "root",
         "default" => "4px",

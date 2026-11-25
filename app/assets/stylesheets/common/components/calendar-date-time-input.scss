@@ -1,8 +1,8 @@
 .calendar-date-time-input {
   padding: 5px;
-  border: 1px solid var(--content-border-color);
+  border: 1px solid var(--d-sys-color-border-default);
   z-index: 1;
-  background: var(--secondary);
+  background: var(--d-sys-color-background-default);
   width: 200px;
   box-sizing: border-box;
   margin-left: 1em;
@@ -32,11 +32,11 @@
     margin-top: 1em;
     align-items: center;
     padding: 0.25em;
-    border-top: 1px solid var(--primary-low-mid);
+    border-top: 1px solid var(--d-sys-color-border-strong);
     box-sizing: border-box;
 
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sys-color-icon-faint);
       margin-right: 0.5em;
     }
 

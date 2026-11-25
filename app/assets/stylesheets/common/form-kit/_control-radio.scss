@@ -3,7 +3,7 @@
   gap: 0.5em;
   font-weight: 500 !important;
   margin: 0;
-  color: var(--primary);
+  color: var(--d-sys-color-text-default);
   font-size: var(--font-down-1-rem);
 
   .form-kit__field[data-disabled] & {
@@ -21,7 +21,7 @@
 }
 
 .form-kit__control-radio-description {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   font-size: var(--font-down-1-rem);
 }
 

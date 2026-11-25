@@ -11,7 +11,7 @@
   &.--activated,
   &.--activated:hover {
     .d-icon-d-post-share {
-      color: var(--success);
+      color: var(--d-sys-color-icon-success);
     }
   }
 }
@@ -23,11 +23,11 @@
   width: 20px;
   height: 20px;
   display: block;
-  stroke: var(--success);
+  stroke: var(--d-sys-color-icon-success);
   opacity: 0;
 
   path {
-    stroke: var(--success);
+    stroke: var(--d-sys-color-icon-success);
     stroke-width: 4;
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
@@ -40,7 +40,7 @@
   top: -1.5rem;
   left: 60%;
   transform: translateX(-50%);
-  color: var(--success);
+  color: var(--d-sys-color-text-success);
   padding: 0.25rem 0.5rem;
   white-space: nowrap;
   font-size: var(--font-down-2);
@@ -65,11 +65,11 @@
 
   .post-action-feedback-alert {
     &.-success {
-      color: var(--success);
+      color: var(--d-sys-color-text-success);
     }
 
     &.-fail {
-      color: var(--danger);
+      color: var(--d-sys-color-text-danger);
     }
   }
 }

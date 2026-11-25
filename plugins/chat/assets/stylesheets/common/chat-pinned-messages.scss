@@ -29,7 +29,7 @@
 .chat-pinned-messages-list__empty {
   padding: 2rem;
   text-align: center;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .chat-pinned-messages-list__footer {
@@ -37,14 +37,14 @@
   inset-block-end: 0;
   margin-block-start: auto;
   padding: var(--space-2);
-  background: var(--secondary);
-  border-top: 1px solid var(--content-border-color);
+  background: var(--d-sys-color-background-default);
+  border-top: 1px solid var(--d-sys-color-border-default);
 }
 
 .chat-pinned-messages-list__dismiss,
 .chat-pinned-messages-list__show {
   width: 100%;
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .chat-pinned-message {
@@ -52,7 +52,7 @@
   display: flex;
   align-items: flex-start;
   margin-inline: 1rem 0.75rem;
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   &__link {
     flex: 1;
@@ -62,7 +62,7 @@
     &:hover,
     &:visited,
     &:active {
-      color: var(--primary);
+      color: var(--d-sys-color-text-default);
       text-decoration: none;
     }
 
@@ -103,7 +103,7 @@
 
   .no-touch &:hover,
   .touch &:active {
-    background-color: var(--d-hover);
+    background-color: var(--d-sys-color-background-default-hovered);
     margin-inline: 0;
     padding-inline: 1rem 0.75rem;
   }
@@ -113,18 +113,18 @@
     align-items: center;
     gap: 0.25em;
     padding: 0.5em 0 0;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     font-size: var(--font-down-1);
   }
 
   &__pinned-by-icon {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     transform: rotate(45deg);
   }
 }
 
 .chat-message-info__pinned {
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   margin-left: 0.25rem;
 
   .d-icon {

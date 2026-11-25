@@ -16,8 +16,8 @@
   &__rows {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-default);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__row {
@@ -25,7 +25,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    border-bottom: 1px solid var(--content-border-color);
+    border-bottom: 1px solid var(--d-sys-color-border-default);
     padding: var(--space-1) var(--space-2);
 
     &:last-child {
@@ -63,7 +63,7 @@
     font-size: var(--font-down-3);
     background: var(--primary-100);
     padding: var(--space-half) var(--space-1);
-    border-radius: var(--d-border-radius);
+    border-radius: var(--d-sys-border-radius-md);
     color: var(--d-input-text-color--disabled);
   }
 
@@ -80,7 +80,7 @@
   }
 
   &__permission-option.--remove .d-access-control__permission-label {
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__permission-texts {
@@ -92,12 +92,12 @@
 
   &__permission-label {
     font-weight: bold;
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
   }
 
   &__permission-description {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
     white-space: normal;
     text-align: start;
   }

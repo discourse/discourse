@@ -4,9 +4,9 @@
   z-index: z("composer", "dropdown") + 1;
   max-width: 370px;
   min-width: 300px;
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: var(--shadow-dropdown);
+  background-color: var(--d-sys-color-background-default);
+  border: 1px solid var(--d-sys-color-border-default);
+  box-shadow: var(--d-sys-shadow-overlay);
   border-radius: 8px;
 
   @include viewport.from(sm) {
@@ -29,19 +29,19 @@
 
       a {
         align-items: center;
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
         display: flex;
         gap: 0.25em;
         padding: 0.3em 1em;
 
         @include hover {
-          background-color: var(--d-hover);
+          background-color: var(--d-sys-color-background-default-hovered);
           text-decoration: none;
         }
 
         &.selected {
-          background-color: var(--d-selected);
-          color: var(--d-selected-text-color);
+          background-color: var(--d-sys-color-background-default-selected);
+          color: var(--d-sys-color-text-default-selected);
         }
 
         .avatar {
@@ -51,7 +51,7 @@
         .name {
           display: contents;
           font-size: var(--font-down-1);
-          color: var(--primary-high);
+          color: var(--d-sys-color-text-muted);
         }
 
         .user-status-message {
@@ -62,7 +62,7 @@
           .user-status-message-description {
             @include ellipsis;
             font-size: var(--font-down-2);
-            color: var(--primary-high);
+            color: var(--d-sys-color-text-muted);
             margin: 0;
           }
         }
@@ -89,7 +89,7 @@
       }
 
       .d-icon-users {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-icon-faint);
         padding: 0 2px;
       }
     }
@@ -112,7 +112,7 @@
 
   &.ac-emoji {
     li:last-of-type a {
-      color: var(--primary-high);
+      color: var(--d-sys-color-text-muted);
     }
 
     .emoji {

@@ -7,18 +7,18 @@
 @import "./common/components/hashtag";
 
 article.post {
-  border-bottom: 1px solid var(--content-border-color);
+  border-bottom: 1px solid var(--d-sys-color-border-default);
 
   img.avatar {
     border-radius: 50%;
   }
 
   &.deleted {
-    background-color: var(--danger-low);
+    background-color: var(--d-sys-color-background-danger-subtlest);
   }
 
   .quote .title {
-    border-left: 5px solid var(--primary-very-low);
+    border-left: 5px solid var(--d-sys-color-border-muted);
     padding: 10px 10px 0 12px;
 
     .avatar {
@@ -34,7 +34,7 @@ article.post {
   blockquote {
     padding: 10px 8px 10px 13px;
     margin: 0 0 10px 0;
-    border-left: 5px solid var(--primary-very-low);
+    border-left: 5px solid var(--d-sys-color-border-muted);
 
     p {
       margin: 0 0 10px 0;
@@ -97,12 +97,12 @@ article.post {
   margin: 0 0 10px 0;
 
   a {
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     word-break: break-all;
   }
 
   a.staff {
-    background-color: var(--highlight-bg);
+    background-color: var(--d-sys-color-background-highlight-subtlest);
   }
 
   a.new-user {
@@ -111,7 +111,7 @@ article.post {
 
   span.title {
     font-weight: normal;
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 }
 
@@ -125,12 +125,12 @@ img.emoji {
   text-align: center;
   margin: 10px 20px 6px 0;
   float: right;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
 }
 
 .replies {
   font-size: var(--font-0);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
 }
 
 .clearfix {
@@ -142,7 +142,7 @@ header.discourse {
   padding-right: 10px;
   padding-bottom: 8px;
   font-size: var(--font-up-2);
-  border-bottom: 3px solid var(--primary-low);
+  border-bottom: 3px solid var(--d-sys-color-border-default);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -165,7 +165,7 @@ footer {
   .button {
     color: white;
     padding: 6px 8px;
-    background-color: var(--tertiary);
+    background-color: var(--d-sys-color-background-accent);
     display: inline-block;
   }
 }
@@ -200,7 +200,7 @@ div.lightbox-wrapper {
   margin: 0.5rem;
 
   &:hover {
-    background: var(--tertiary-hover);
+    background: var(--d-sys-color-background-accent-hovered);
   }
 
   span {
@@ -229,16 +229,16 @@ div.lightbox-wrapper {
     clear: both;
 
     .main-link {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
       padding: 0.5rem;
       width: 100%;
 
       a {
-        color: var(--primary);
+        color: var(--d-sys-color-text-default);
       }
 
       a:visited {
-        color: var(--primary-medium);
+        color: var(--d-sys-color-text-faint);
       }
     }
 
@@ -267,7 +267,7 @@ div.lightbox-wrapper {
         .topic-last-posted-at,
         .topic-created-at,
         .topic-stats {
-          color: var(--primary-medium);
+          color: var(--d-sys-color-text-faint);
         }
       }
 

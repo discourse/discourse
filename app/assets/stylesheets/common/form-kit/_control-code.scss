@@ -3,6 +3,6 @@
   width: 100%;
 
   .form-kit__field.has-error & {
-    border-color: var(--danger);
+    border-color: var(--d-sys-color-border-danger);
   }
 }

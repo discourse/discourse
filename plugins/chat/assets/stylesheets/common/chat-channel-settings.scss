@@ -13,7 +13,7 @@
   }
 
   .chat-retention-reminder-text {
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__actions {
@@ -31,15 +31,15 @@
   &__danger-zone-title {
     margin: 0;
     padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--danger);
+    border-bottom: 1px solid var(--d-sys-color-border-danger);
     font-size: var(--font-up-1);
-    color: var(--danger);
+    color: var(--d-sys-color-text-danger);
   }
 
   &__danger-actions {
     @include unstyled-list;
-    border: 1px solid var(--danger);
-    border-radius: var(--d-border-radius);
+    border: 1px solid var(--d-sys-color-border-danger);
+    border-radius: var(--d-sys-border-radius-md);
   }
 
   &__danger-action {
@@ -56,7 +56,7 @@
     }
 
     &.--forbidden {
-      background: var(--highlight-bg);
+      background: var(--d-sys-color-background-highlight-subtlest);
     }
   }
 
@@ -66,7 +66,7 @@
 
   &__danger-action-description {
     font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
   }
 
   &__danger-cta {

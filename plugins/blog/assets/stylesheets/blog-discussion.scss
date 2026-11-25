@@ -39,14 +39,31 @@ html.discourse-blog-discussion {
 
   body.embed-mode {
     --primary: var(--blog-foreground);
+    --d-sys-color-text-default: var(--primary);
+    --d-sys-color-icon-default: var(--primary);
     --secondary: var(--blog-canvas);
+    --d-sys-color-background-default: var(--secondary);
+    --d-sys-color-text-inverse: var(--secondary);
+    --d-sys-color-icon-inverse: var(--secondary);
     --primary-low: var(--blog-rule);
+    --d-sys-color-background-neutral: var(--primary-low);
+    --d-sys-color-background-default-pressed: var(--primary-low);
     --primary-very-low: var(--blog-tint);
+    --d-sys-color-background-sunken: var(--primary-very-low);
+    --d-sys-color-border-muted: var(--primary-very-low);
     --primary-medium: var(--blog-muted);
+    --d-sys-color-text-faint: var(--primary-medium);
+    --d-sys-color-icon-faint: var(--primary-medium);
     --primary-high: var(--blog-foreground);
+    --d-sys-color-text-muted: var(--primary-high);
+    --d-sys-color-icon-muted: var(--primary-high);
     --tertiary: var(--blog-link);
+    --d-sys-color-text-link: var(--tertiary);
+    --d-sys-color-background-accent: var(--tertiary);
+    --d-sys-color-border-accent: var(--tertiary);
+    --d-sys-color-icon-accent: var(--tertiary);
     --content-background: var(--blog-canvas);
-    --content-border-color: var(--blog-rule);
+    --d-sys-color-border-default: var(--blog-rule);
     --d-input-bg-color: var(--blog-canvas);
     background: var(--blog-canvas);
     color: var(--blog-foreground);
@@ -101,10 +118,10 @@ html.discourse-blog-discussion {
     }
 
     .btn-primary {
-      --d-button-primary-bg-color: var(--blog-foreground);
-      --d-button-primary-text-color: var(--blog-canvas);
-      --d-button-primary-icon-color: var(--blog-canvas);
-      --d-button-primary-bg-color--hover: var(--blog-link);
+      --d-comp-DButton-color-background-primary: var(--blog-foreground);
+      --d-comp-DButton-color-text-primary: var(--blog-canvas);
+      --d-comp-DButton-color-icon-primary: var(--blog-canvas);
+      --d-comp-DButton-color-background-primary-hovered: var(--blog-link);
       border-radius: 100px;
       padding-inline: 1.25em;
     }
@@ -137,6 +154,9 @@ html.discourse-blog-discussion {
 
     nav.post-controls {
       --primary-low-mid: var(--blog-muted);
+      --d-sys-color-text-default-disabled: var(--primary-low-mid);
+      --d-sys-color-border-strong: var(--primary-low-mid);
+      --d-sys-color-icon-faint: var(--primary-low-mid);
       --d-post-control-text-color: var(--blog-muted);
       --d-post-control-icon-color: var(--blog-muted);
       --d-post-control-create-text-color: var(--blog-foreground);

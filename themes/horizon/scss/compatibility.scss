@@ -19,13 +19,13 @@
 .b-header {
   .nav-pills > li > a:hover {
     .discourse-no-touch & {
-      color: var(--secondary);
+      color: var(--d-sys-color-text-inverse);
     }
   }
 
   .nav-pills > li > a:hover::after {
     .discourse-no-touch & {
-      background: var(--secondary);
+      background: var(--d-sys-color-background-default);
     }
   }
 }
@@ -42,7 +42,7 @@
   #main-outlet {
     div[class^="category-title-header"] {
       width: calc(100% - (2 * var(--space-4)));
-      border-radius: var(--d-border-radius-large);
+      border-radius: var(--d-sys-border-radius-lg);
       max-width: calc(1000px - 3rem) !important;
     }
 
@@ -56,8 +56,8 @@
 .livestream-topic.chat-enabled.archetype-regular {
   #custom-chat-container {
     margin-left: 0;
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
+    border-top-left-radius: var(--d-sys-border-radius-lg);
+    border-top-right-radius: var(--d-sys-border-radius-lg);
     border: 0;
   }
 

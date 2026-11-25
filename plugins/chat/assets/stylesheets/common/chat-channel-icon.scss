@@ -6,7 +6,7 @@
   align-items: center;
   flex-shrink: 0;
   font-size: var(--font-up-1);
-  color: var(--primary-medium);
+  color: var(--d-sys-color-text-faint);
   position: relative;
 
   // separate otherwise it is used on the channel titles too
@@ -19,7 +19,7 @@
     &.--emoji,
     &.--icon {
       @include viewport.until(sm) {
-        background: var(--primary-low);
+        background: var(--d-sys-color-background-neutral);
         border-radius: 100%;
 
         .emoji,
@@ -43,9 +43,9 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: rgb(var(--primary-rgb), 0.1);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
     box-sizing: border-box;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     padding: 0;
 
     .chat-channel-row & {
@@ -65,11 +65,11 @@
   }
 
   &__restricted-category-icon {
-    background-color: var(--secondary);
+    background-color: var(--d-sys-color-background-default);
     position: absolute;
     border-radius: 50%;
     padding: 2px 2px 3px;
-    color: var(--primary-high);
+    color: var(--d-sys-color-text-muted);
     height: 0.5rem;
     width: 0.5rem;
     right: -0.5rem;

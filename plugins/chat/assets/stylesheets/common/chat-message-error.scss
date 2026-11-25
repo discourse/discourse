@@ -1,5 +1,5 @@
 .chat-message-error {
-  color: var(--danger-medium);
+  color: var(--d-sys-color-text-danger);
 
   &__retry-btn {
     padding: 0.5em 0;
@@ -18,7 +18,7 @@
     .d-icon,
     &-title,
     &:hover .d-icon {
-      color: var(--danger) !important;
+      color: var(--d-sys-color-icon-danger) !important;
       font-size: var(--font-down-1);
     }
 
@@ -27,12 +27,12 @@
     }
 
     &-action {
-      color: var(--tertiary);
+      color: var(--d-sys-color-text-link);
       font-size: var(--font-down-1);
       margin-left: 0.25em;
 
       &:hover {
-        color: var(--tertiary-high);
+        color: var(--d-sys-color-background-accent);
         text-decoration: underline;
       }
     }

@@ -47,7 +47,7 @@ body > noscript {
 
   a {
     // we want all links to look like links
-    color: var(--tertiary) !important;
+    color: var(--d-sys-color-text-link) !important;
     text-decoration: underline !important;
   }
 
@@ -56,10 +56,10 @@ body > noscript {
     box-sizing: border-box;
     width: 100%;
     top: 0;
-    background-color: var(--header_background);
+    background-color: var(--d-comp-Header-color-background);
     padding: 10px;
     box-shadow: none;
-    border-bottom: 1px solid var(--header_primary-medium);
+    border-bottom: 1px solid var(--d-comp-Header-color-border-strong);
   }
 
   .header-buttons {
@@ -183,7 +183,7 @@ body > noscript {
     }
 
     .topic-list-item {
-      border-bottom: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--d-sys-color-border-default);
 
       > * {
         padding: 0.75em 0;
@@ -217,7 +217,7 @@ body > noscript {
     margin-top: 1em;
     margin-bottom: 2em;
     padding-top: 1.5em;
-    border-top: 1px solid var(--content-border-color);
+    border-top: 1px solid var(--d-sys-color-border-default);
   }
 
   .crawler-post-meta {
@@ -257,7 +257,7 @@ body > noscript {
     a {
       display: block;
       padding: 0.5em 0;
-      border-top: 1px solid var(--content-border-color);
+      border-top: 1px solid var(--d-sys-color-border-default);
     }
   }
 
@@ -286,12 +286,12 @@ body > noscript {
   code,
   blockquote,
   aside.quote .title {
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
   }
 
   .md-table {
     tr {
-      border: 1px solid var(--content-border-color);
+      border: 1px solid var(--d-sys-color-border-default);
     }
 
     th {
@@ -301,7 +301,7 @@ body > noscript {
     td,
     th {
       padding: 0.25em;
-      border-right: 1px solid var(--content-border-color);
+      border-right: 1px solid var(--d-sys-color-border-default);
     }
   }
 

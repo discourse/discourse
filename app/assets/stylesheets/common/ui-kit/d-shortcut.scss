@@ -13,9 +13,9 @@ kbd.d-shortcut {
   margin: 0;
   padding: var(--space-half) var(--space-2);
   border: 0;
-  border-radius: var(--d-border-radius);
-  background: var(--primary-low);
-  color: var(--primary-high);
+  border-radius: var(--d-sys-border-radius-md);
+  background: var(--d-sys-color-background-neutral);
+  color: var(--d-sys-color-text-muted);
   font-family: var(--font-family);
   font-size: var(--font-down-1);
   font-weight: 600;

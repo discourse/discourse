@@ -1,86 +1,125 @@
 :root {
   // global
-  --d-button-border-radius: var(--d-border-radius);
-  --d-button-transition: none;
-  --d-button-border: 1px solid transparent;
+  --d-comp-DButton-border-radius: var(--d-sys-border-radius-md);
+  --d-comp-DButton-motion-transition: none;
+  --d-comp-DButton-border-width: 1px;
+  --d-comp-DButton-color-border: transparent;
 
   // .btn-default
-  --d-button-default-text-color: var(--primary);
-  --d-button-default-text-color--hover: var(--secondary);
-  --d-button-default-bg-color: var(--primary-low);
-  --d-button-default-bg-color--hover: var(--primary-medium);
-  --d-button-default-icon-color: var(--primary-high);
-  --d-button-default-icon-color--hover: var(--primary-low);
-  --d-button-default-border: var(--d-button-border);
-  --d-button-default-border--hover: var(--d-button-border);
+  --d-comp-DButton-color-text-default: var(--d-sys-color-text-default);
+  --d-comp-DButton-color-text-default-hovered: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-background-default: var(
+    --d-sys-color-background-neutral
+  );
+  --d-comp-DButton-color-background-default-hovered: var(--primary-medium);
+  --d-comp-DButton-color-icon-default: var(--d-sys-color-icon-muted);
+  --d-comp-DButton-color-icon-default-hovered: var(--primary-low);
+  --d-comp-DButton-color-border-default: var(--d-comp-DButton-color-border);
+  --d-comp-DButton-color-border-default-hovered: var(
+    --d-comp-DButton-color-border
+  );
 
   // .btn-primary
-  --d-button-primary-text-color: var(--secondary);
-  --d-button-primary-text-color--hover: var(--secondary);
-  --d-button-primary-bg-color: var(--tertiary);
-  --d-button-primary-bg-color--hover: var(--tertiary-hover);
-  --d-button-primary-icon-color: var(--secondary);
-  --d-button-primary-icon-color--hover: var(--secondary);
-  --d-button-primary-border: var(--d-button-border);
-  --d-button-primary-border--hover: var(--d-button-border);
+  --d-comp-DButton-color-text-primary: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-text-primary-hovered: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-background-primary: var(
+    --d-sys-color-background-accent
+  );
+  --d-comp-DButton-color-background-primary-hovered: var(
+    --d-sys-color-background-accent-hovered
+  );
+  --d-comp-DButton-color-icon-primary: var(--d-sys-color-icon-inverse);
+  --d-comp-DButton-color-icon-primary-hovered: var(--d-sys-color-icon-inverse);
+  --d-comp-DButton-color-border-primary: var(--d-comp-DButton-color-border);
+  --d-comp-DButton-color-border-primary-hovered: var(
+    --d-comp-DButton-color-border
+  );
 
   // .btn-danger and .btn.cancel
-  --d-button-danger-text-color: var(--secondary);
-  --d-button-danger-text-color--hover: var(--secondary);
-  --d-button-danger-bg-color: var(--danger);
-  --d-button-danger-bg-color--hover: var(--danger-hover);
-  --d-button-danger-icon-color: var(--danger-low);
-  --d-button-danger-icon-color--hover: var(--danger-low);
-  --d-button-danger-border: var(--d-button-border);
-  --d-button-danger-border--hover: var(--d-button-border);
+  --d-comp-DButton-color-text-danger: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-text-danger-hovered: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-background-danger: var(
+    --d-sys-color-background-danger
+  );
+  --d-comp-DButton-color-background-danger-hovered: var(
+    --d-sys-color-background-danger-hovered
+  );
+  --d-comp-DButton-color-icon-danger: var(
+    --d-sys-color-background-danger-subtlest
+  );
+  --d-comp-DButton-color-icon-danger-hovered: var(
+    --d-sys-color-background-danger-subtlest
+  );
+  --d-comp-DButton-color-border-danger: var(--d-comp-DButton-color-border);
+  --d-comp-DButton-color-border-danger-hovered: var(
+    --d-comp-DButton-color-border
+  );
 
   // .btn-success and .btn.ok
-  --d-button-success-text-color: var(--secondary);
-  --d-button-success-text-color--hover: var(--secondary);
-  --d-button-success-bg-color: var(--success);
-  --d-button-success-bg-color--hover: var(--success-hover);
-  --d-button-success-icon-color: var(--success-low);
-  --d-button-success-icon-color--hover: var(--success-low);
-  --d-button-success-border: var(--d-button-border);
-  --d-button-success-border--hover: var(--d-button-border);
+  --d-comp-DButton-color-text-success: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-text-success-hovered: var(--d-sys-color-text-inverse);
+  --d-comp-DButton-color-background-success: var(
+    --d-sys-color-background-success
+  );
+  --d-comp-DButton-color-background-success-hovered: var(
+    --d-sys-color-background-success-hovered
+  );
+  --d-comp-DButton-color-icon-success: var(
+    --d-sys-color-background-success-subtlest
+  );
+  --d-comp-DButton-color-icon-success-hovered: var(
+    --d-sys-color-background-success-subtlest
+  );
+  --d-comp-DButton-color-border-success: var(--d-comp-DButton-color-border);
+  --d-comp-DButton-color-border-success-hovered: var(
+    --d-comp-DButton-color-border
+  );
 
   // .btn-flat
-  --d-button-flat-text-color: var(--tertiary);
-  --d-button-flat-text-color--hover: var(--primary);
-  --d-button-flat-icon-color: var(--primary-low-mid);
-  --d-button-flat-icon-color--hover: var(--primary);
-  --d-button-flat-bg-color: transparent;
-  --d-button-flat-bg-color--hover: var(--d-hover);
-  --d-button-flat-bg-color--focus: var(--d-hover);
-  --d-button-flat-text-color--disabled: var(--primary);
+  --d-comp-DButton-color-text-flat: var(--d-sys-color-text-link);
+  --d-comp-DButton-color-text-flat-hovered: var(--d-sys-color-text-default);
+  --d-comp-DButton-color-icon-flat: var(--d-sys-color-icon-faint);
+  --d-comp-DButton-color-icon-flat-hovered: var(--d-sys-color-icon-default);
+  --d-comp-DButton-color-background-flat: transparent;
+  --d-comp-DButton-color-background-flat-hovered: var(
+    --d-sys-color-background-default-hovered
+  );
+  --d-comp-DButton-color-background-flat-focused: var(
+    --d-sys-color-background-default-hovered
+  );
+  --d-comp-DButton-color-text-flat-disabled: var(--d-sys-color-text-default);
 
   // .btn-flat.close
-  --d-button-flat-close-text-color: var(--primary-high);
-  --d-button-flat-close-bg-color: transparent;
-  --d-button-flat-close-icon-color: var(--primary-high);
-  --d-button-flat-close-icon-color--hover: var(--primary);
+  --d-comp-DButton-color-text-close: var(--d-sys-color-text-muted);
+  --d-comp-DButton-color-background-close: transparent;
+  --d-comp-DButton-color-icon-close: var(--d-sys-color-icon-muted);
+  --d-comp-DButton-color-icon-close-hovered: var(--d-sys-color-icon-default);
 
   // .btn-transparent
-  --d-button-transparent-text-color: var(--primary);
-  --d-button-transparent-text-color--hover: var(--tertiary-hover);
-  --d-button-transparent-icon-color: var(--primary-high);
-  --d-button-transparent-icon-color--hover: var(--tertiary-hover);
+  --d-comp-DButton-color-text-transparent: var(--d-sys-color-text-default);
+  --d-comp-DButton-color-text-transparent-hovered: var(
+    --d-sys-color-text-link-hovered
+  );
+  --d-comp-DButton-color-icon-transparent: var(--d-sys-color-icon-muted);
+  --d-comp-DButton-color-icon-transparent-hovered: var(--tertiary-hover);
 }
 
 /* Base */
 @mixin btn(
-  $text-color: var(--d-button-default-text-color),
-  $bg-color: var(--d-button-default-bg-color),
-  $icon-color: var(--d-button-default-icon-color),
-  $hover-text-color: var(--d-button-default-text-color--hover),
-  $hover-bg-color: var(--d-button-default-bg-color--hover),
-  $hover-icon-color: var(--d-button-default-icon-color--hover),
-  $border: var(--d-button-border),
-  $hover-border: var(--d-button-border)
+  $text-color: var(--d-comp-DButton-color-text-default),
+  $bg-color: var(--d-comp-DButton-color-background-default),
+  $icon-color: var(--d-comp-DButton-color-icon-default),
+  $hover-text-color: var(--d-comp-DButton-color-text-default-hovered),
+  $hover-bg-color: var(--d-comp-DButton-color-background-default-hovered),
+  $hover-icon-color: var(--d-comp-DButton-color-icon-default-hovered),
+  $border: var(--d-comp-DButton-border-width) solid
+    var(--d-comp-DButton-color-border),
+  $hover-border: var(--d-comp-DButton-border-width) solid
+    var(--d-comp-DButton-color-border)
 ) {
   color: $text-color;
   background-color: $bg-color;
-  transition: var(--d-button-transition);
+  transition: var(--d-comp-DButton-motion-transition);
   border: $border;
 
   &:visited {
@@ -91,7 +130,7 @@
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
-    transition: var(--d-button-transition);
+    transition: var(--d-comp-DButton-motion-transition);
 
     /* For Windows High Contrast (see whcm.scss for more) */
     @media (forced-colors: active) {
@@ -212,11 +251,11 @@
   background: transparent;
   border: 0;
   padding: 0;
-  color: var(--tertiary);
+  color: var(--d-sys-color-text-link);
 
   @include hover {
     background-color: transparent;
-    color: var(--tertiary-hover);
+    color: var(--d-sys-color-text-link-hovered);
     border: 0;
 
     .d-icon {
@@ -230,7 +269,7 @@
   }
 
   &:focus-visible {
-    color: var(--tertiary);
+    color: var(--d-sys-color-text-link);
     background: transparent;
 
     @include default-focus;
@@ -238,7 +277,7 @@
 
   &[disabled],
   &.disabled {
-    color: var(--d-button-transparent-text-color);
+    color: var(--d-comp-DButton-color-text-transparent);
     cursor: not-allowed;
 
     &:not(.is-loading) {
@@ -257,73 +296,81 @@
 
 /* Default button */
 .btn-default {
-  border: var(--d-button-default-border);
-  border-radius: var(--d-button-border-radius);
+  border: var(--d-comp-DButton-border-width) solid
+    var(--d-comp-DButton-color-border-default);
+  border-radius: var(--d-comp-DButton-border-radius);
 
   @include hover {
-    border: var(--d-button-default-border--hover);
+    border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-default-hovered);
   }
 }
 
 /* Primary button */
 .btn-primary {
   @include btn(
-    $text-color: var(--d-button-primary-text-color),
-    $bg-color: var(--d-button-primary-bg-color),
-    $icon-color: var(--d-button-primary-icon-color),
-    $hover-text-color: var(--d-button-primary-text-color--hover),
-    $hover-bg-color: var(--d-button-primary-bg-color--hover),
-    $hover-icon-color: var(--d-button-primary-icon-color--hover),
-    $border: var(--d-button-primary-border),
-    $hover-border: var(--d-button-primary-border--hover)
+    $text-color: var(--d-comp-DButton-color-text-primary),
+    $bg-color: var(--d-comp-DButton-color-background-primary),
+    $icon-color: var(--d-comp-DButton-color-icon-primary),
+    $hover-text-color: var(--d-comp-DButton-color-text-primary-hovered),
+    $hover-bg-color: var(--d-comp-DButton-color-background-primary-hovered),
+    $hover-icon-color: var(--d-comp-DButton-color-icon-primary-hovered),
+    $border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-primary),
+    $hover-border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-primary-hovered)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Danger button */
 .btn-danger,
 .btn.cancel {
   @include btn(
-    $text-color: var(--d-button-danger-text-color),
-    $bg-color: var(--d-button-danger-bg-color),
-    $icon-color: var(--d-button-danger-icon-color),
-    $hover-text-color: var(--d-button-danger-text-color--hover),
-    $hover-bg-color: var(--d-button-danger-bg-color--hover),
-    $hover-icon-color: var(--d-button-danger-icon-color--hover),
-    $border: var(--d-button-danger-border),
-    $hover-border: var(--d-button-danger-border--hover)
+    $text-color: var(--d-comp-DButton-color-text-danger),
+    $bg-color: var(--d-comp-DButton-color-background-danger),
+    $icon-color: var(--d-comp-DButton-color-icon-danger),
+    $hover-text-color: var(--d-comp-DButton-color-text-danger-hovered),
+    $hover-bg-color: var(--d-comp-DButton-color-background-danger-hovered),
+    $hover-icon-color: var(--d-comp-DButton-color-icon-danger-hovered),
+    $border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-danger),
+    $hover-border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-danger-hovered)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Success button */
 .btn-success,
 .btn.ok {
   @include btn(
-    $text-color: var(--d-button-success-text-color),
-    $bg-color: var(--d-button-success-bg-color),
-    $icon-color: var(--d-button-success-icon-color),
-    $hover-text-color: var(--d-button-success-text-color--hover),
-    $hover-bg-color: var(--d-button-success-bg-color--hover),
-    $hover-icon-color: var(--d-button-success-icon-color--hover),
-    $border: var(--d-button-success-border),
-    $hover-border: var(--d-button-success-border--hover)
+    $text-color: var(--d-comp-DButton-color-text-success),
+    $bg-color: var(--d-comp-DButton-color-background-success),
+    $icon-color: var(--d-comp-DButton-color-icon-success),
+    $hover-text-color: var(--d-comp-DButton-color-text-success-hovered),
+    $hover-bg-color: var(--d-comp-DButton-color-background-success-hovered),
+    $hover-icon-color: var(--d-comp-DButton-color-icon-success-hovered),
+    $border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-success),
+    $hover-border: var(--d-comp-DButton-border-width) solid
+      var(--d-comp-DButton-color-border-success-hovered)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 }
 
 /* Social buttons */
 .btn-social {
   color: #000;
   background: #fff;
-  border-radius: var(--d-border-radius);
+  border-radius: var(--d-sys-border-radius-md);
 
   &:focus-visible {
     outline: 1px solid #000;
   }
 
   &[href] {
-    color: var(--secondary);
+    color: var(--d-sys-color-text-inverse);
   }
 
   &::before {
@@ -385,19 +432,19 @@
   }
 
   &.discourse_id {
-    background-color: var(--discourse_id-background);
-    color: var(--discourse_id-text);
+    background-color: var(--d-comp-DButton-color-background-primary);
+    color: var(--d-comp-DButton-color-text-primary);
 
     .d-icon {
-      color: var(--discourse_id-icon);
+      color: var(--d-comp-DButton-color-icon-primary);
     }
 
     &:hover {
-      background-color: var(--discourse_id-background-hover);
-      color: var(--discourse_id-text-hover);
+      background-color: var(--d-comp-DButton-color-background-primary-hovered);
+      color: var(--d-comp-DButton-color-text-primary-hovered);
 
       .d-icon {
-        color: var(--discourse_id-icon-hover);
+        color: var(--d-comp-DButton-color-icon-primary-hovered);
       }
     }
   }
@@ -422,72 +469,72 @@
 /* Bonus Buttons */
 .btn-flat {
   @include btn(
-    $text-color: var(--d-button-default-text-color),
-    $bg-color: var(--d-button-flat-bg-color),
-    $icon-color: var(--d-button-flat-icon-color),
-    $hover-text-color: var(--d-button-flat-text-color--hover),
-    $hover-bg-color: var(--d-button-flat-bg-color--hover),
-    $hover-icon-color: var(--d-button-flat-icon-color--hover)
+    $text-color: var(--d-comp-DButton-color-text-default),
+    $bg-color: var(--d-comp-DButton-color-background-flat),
+    $icon-color: var(--d-comp-DButton-color-icon-flat),
+    $hover-text-color: var(--d-comp-DButton-color-text-flat-hovered),
+    $hover-bg-color: var(--d-comp-DButton-color-background-flat-hovered),
+    $hover-icon-color: var(--d-comp-DButton-color-icon-flat-hovered)
   );
-  border-radius: var(--d-button-border-radius);
+  border-radius: var(--d-comp-DButton-border-radius);
 
   .discourse-no-touch & {
     &:focus-visible {
-      background: var(--d-button-flat-bg-color--focus);
+      background: var(--d-comp-DButton-color-background-flat-focused);
     }
   }
 
   &.close {
-    background: var(--d-button-flat-close-bg-color);
+    background: var(--d-comp-DButton-color-background-close);
 
     .d-icon {
-      color: var(--d-button-flat-close-icon-color);
+      color: var(--d-comp-DButton-color-icon-close);
     }
 
     .discourse-no-touch & {
       &:hover,
       &:focus-visible {
-        background: var(--d-button-flat-close-bg-color);
+        background: var(--d-comp-DButton-color-background-close);
 
         .d-icon {
-          color: var(--d-button-flat-close-icon-color--hover);
+          color: var(--d-comp-DButton-color-icon-close-hovered);
         }
       }
     }
 
     &:focus-visible {
-      background: var(--d-button-flat-close-bg-color);
+      background: var(--d-comp-DButton-color-background-close);
 
       .d-icon {
-        color: var(--d-button-flat-close-icon-color--hover);
+        color: var(--d-comp-DButton-color-icon-close-hovered);
       }
     }
   }
 
   &:focus-visible {
     outline: none;
-    background: var(--primary-low);
+    background: var(--d-sys-color-background-neutral);
 
     .d-icon {
-      color: var(--primary);
+      color: var(--d-sys-color-icon-default);
     }
   }
 }
 
 @mixin btn-colors($btn-type) {
-  color: var(--d-button-#{$btn-type}-bg-color);
+  color: var(--d-comp-DButton-color-background-#{$btn-type});
 
   .d-icon {
     color: currentcolor;
   }
 
   &:focus-visible {
-    color: var(--d-button-#{$btn-type}-bg-color--hover);
+    color: var(--d-comp-DButton-color-background-#{$btn-type}-hovered);
   }
 
   .discourse-no-touch & {
     &:hover {
-      color: var(--d-button-#{$btn-type}-bg-color--hover);
+      color: var(--d-comp-DButton-color-background-#{$btn-type}-hovered);
     }
   }
 }
@@ -498,10 +545,10 @@
   &.btn-icon,
   &.no-text {
     @include btn(
-      $text-color: var(--d-button-transparent-text-color),
+      $text-color: var(--d-comp-DButton-color-text-transparent),
       $bg-color: transparent,
-      $icon-color: var(--d-button-transparent-icon-color),
-      $hover-text-color: var(--d-button-transparent-text-color--hover),
+      $icon-color: var(--d-comp-DButton-color-icon-transparent),
+      $hover-text-color: var(--d-comp-DButton-color-text-transparent-hovered),
       $hover-bg-color: transparent,
       $hover-icon-color: currentcolor,
       $border: 0,
@@ -510,7 +557,7 @@
 
     &:focus-visible {
       background: transparent;
-      color: var(--d-button-transparent-text-color--hover);
+      color: var(--d-comp-DButton-color-text-transparent-hovered);
 
       .d-icon {
         color: currentcolor;
@@ -538,8 +585,8 @@
   }
 
   &.back-button {
-    --d-button-transparent-text-color: var(--tertiary);
-    --d-button-transparent-icon-color: var(--tertiary);
+    --d-comp-DButton-color-text-transparent: var(--d-sys-color-text-link);
+    --d-comp-DButton-color-icon-transparent: var(--d-sys-color-icon-accent);
     margin-bottom: 1em;
     padding-left: 0;
   }

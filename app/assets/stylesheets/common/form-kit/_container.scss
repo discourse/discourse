@@ -25,7 +25,7 @@
     gap: 0.25em;
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary);
+    color: var(--d-sys-color-text-default);
     font-weight: 600 !important;
   }
 
@@ -35,7 +35,7 @@
     gap: 0.25em;
     margin: 0;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
+    color: var(--d-sys-color-text-faint);
 
     > * {
       margin: 0;
