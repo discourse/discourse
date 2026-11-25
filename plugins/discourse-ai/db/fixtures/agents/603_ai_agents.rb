@@ -36,7 +36,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
     elsif [
           DiscourseAi::Agents::AdminDashboardHighlights,
           DiscourseAi::Agents::AskAiReporter,
-          DiscourseAi::Agents::DiscourseAdminAssistant,
+          DiscourseAi::Agents::AdminAssistant,
         ].include?(agent_class)
       agent.allowed_group_ids = [Group::AUTO_GROUPS[:admins]]
     elsif external_agent_ids.include?(id)
@@ -107,7 +107,7 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
 
   agent.response_format = instance.response_format
   agent.examples = instance.examples
-  agent.require_approval = true if agent_class == DiscourseAi::Agents::DiscourseAdminAssistant
+  agent.require_approval = true if agent_class == DiscourseAi::Agents::AdminAssistant
 
   agent.system_prompt = instance.system_prompt
   agent.top_p = instance.top_p

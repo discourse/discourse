@@ -20,12 +20,14 @@ register_asset "stylesheets/common/streaming.scss"
 register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
+register_asset "stylesheets/common/ai-review-bulk.scss"
 register_asset "stylesheets/common/ai-payload-viewer.scss"
 register_asset "stylesheets/common/ai-decoded-transcript.scss"
 
 register_asset "stylesheets/admin/ai-features-editor.scss", :admin
 register_asset "stylesheets/admin/ai-logs.scss", :admin
 register_asset "stylesheets/admin/ai-tool-arguments.scss", :admin
+register_asset "stylesheets/admin/ai-concepts.scss", :admin
 
 register_asset "stylesheets/modules/translation/admin/translations.scss", :admin
 
@@ -229,11 +231,10 @@ after_initialize do
                SiteSetting.ai_reviewable_action_suggestions_enabled
         next false
       end
-      name = object.ai_reviewable_suggestion&.action_name
-      name.present? &&
-        bundled_actions.any? do |bundle|
-          bundle.actions.any? { |action| action.action_name == name }
-        end
+      suggestion = object.ai_reviewable_suggestion
+      next false unless suggestion&.actionable?
+      name = suggestion.action_name
+      bundled_actions.any? { |bundle| bundle.actions.any? { |action| action.action_name == name } }
     end,
   ) { object.ai_reviewable_suggestion.action_name }
 
@@ -367,6 +368,7 @@ after_initialize do
     face-angry
     circle-info
     discourse-ai
+    code-merge
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 

@@ -3487,19 +3487,14 @@ te:
       create_long: "కొత్త వర్గాన్ని సృష్టించండి"
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
+      icon_search_placeholder: "శోధించండి…"
       description: "వివరణ"
-      icon: "చిహ్నం"
-      emoji: "ఇమోజి"
       background_color: "రంగు"
       color_validations:
         cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"
-        options:
-          icon: "చిహ్నం"
-          emoji: "ఇమోజి"
-      color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
       delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
       no_description: "ఈ వర్గానికి వివరణ రాయండి"
@@ -4056,6 +4051,7 @@ te:
       share: "షేర్ చేయండి"
       dismiss: "తీసివేయండి"
     mobile_tab_bar:
+      new_topic: "కొత్త విషయం"
       create: "సృష్టించండి"
       more: "ఇంకా"
       back: "వెనుకకు"

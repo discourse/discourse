@@ -3,8 +3,9 @@ require "swagger_helper"
 
 RSpec.describe "tags" do
   let(:admin) { Fabricate(:admin) }
-  let!(:tag) { Fabricate(:tag, name: "foo") }
-  let!(:tag_group) { Fabricate(:tag_group, tags: [tag]) }
+
+  fab!(:tag) { Fabricate(:tag, name: "foo") }
+  fab!(:tag_group) { Fabricate(:tag_group, tags: [tag]) }
 
   before do
     SiteSetting.tagging_enabled = true

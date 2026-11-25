@@ -38,6 +38,12 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      review_bulk:
+        refresh: "รีเฟรช"
+        columns:
+          user: "ผู้ใช้"
+          created: "สร้างแล้ว"
+          status: "สถานะ"
       copied: "คัดลอกแล้ว"
       ai_decoded_transcript:
         type: "ชนิด"
@@ -190,6 +196,22 @@ th:
         edit: "แก้ไข"
         delete: "ลบ"
         embedding: "ฝั่ง"
+      concepts:
+        edit: "แก้ไข"
+        delete: "ลบ"
+        columns:
+          status: "สถานะ"
+          topics: "หัวข้อ"
+          posts: "โพส"
+        statuses:
+          active: "ใช้งานอยู่"
+        form:
+          name: "ชื่อ"
+          description: "รายละเอียด"
+          status: "สถานะ"
+        topic_columns:
+          topic: "หัวข้อ"
+          relevance: "เกี่ยวข้อง"
       decision_models:
         no_preset: "ไม่มี"
         display_name: "ชื่อ"

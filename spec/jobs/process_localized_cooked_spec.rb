@@ -160,6 +160,14 @@ describe Jobs::ProcessLocalizedCooked do
       expect(topic_localization.excerpt).to eq("これは最初の投稿です。")
     end
 
+    it "leaves the excerpt empty while the first post is hidden" do
+      first_post.hide!(PostActionType.types[:off_topic])
+
+      job.execute(post_localization_id: first_post_localization.id)
+
+      expect(topic_localization.reload.excerpt).to be_nil
+    end
+
     it "does not update excerpt when processing non-first post" do
       second_post = Fabricate(:post, topic: topic, post_number: 2)
       second_post_localization =

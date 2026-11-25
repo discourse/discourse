@@ -117,7 +117,7 @@ export default class ComposerActions extends Component {
     } else if (currentAction === REPLY && this.composerModel?.whisper) {
       iconName = "far-eye-slash";
     } else {
-      iconName = "share";
+      iconName = "reply";
     }
 
     const availableActions = this._computeAvailableActions();

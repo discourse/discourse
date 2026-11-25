@@ -167,7 +167,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "never matches a blog without a category to a topic without one" do
-      SiteSetting.blog_category = Fabricate(:category).id
+      update_default_blog(category_id: Fabricate(:category).id)
       message = Fabricate(:private_message_topic)
 
       expect(other_blog.category_id).to be_nil
@@ -279,7 +279,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year and month" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
 
       expect(described_class.default_path(topic)).to eq("/2026/11/#{topic.slug}")
       expect(described_class.default_path(topic, date: Time.utc(2025, 2, 3))).to eq(
@@ -288,7 +288,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "prefixes the UTC year, month and day" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{day}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{day}/{slug}")
 
       expect(
         described_class.default_path(topic, date: Time.zone.parse("2026-11-07 02:00 +04:00")),
@@ -296,7 +296,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "suffixes a reserved slug wherever the format places it" do
-      SiteSetting.blog_path_format = "/{slug}/{id}"
+      update_default_blog(path_format: "/{slug}/{id}")
       topic.update_columns(slug: "about")
 
       path = described_class.default_path(topic)
@@ -330,7 +330,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "shortens a long slug to fit the format within the path limit" do
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
       topic.update_columns(slug: "a" * 235)
 
       path = described_class.default_path(topic)
@@ -340,7 +340,7 @@ RSpec.describe Blog::Publication do
     end
 
     it "renders a custom format with a fixed prefix and the topic id" do
-      SiteSetting.blog_path_format = "/news/{id}-{slug}"
+      update_default_blog(path_format: "/news/{id}-{slug}")
 
       expect(described_class.default_path(topic)).to eq("/news/#{topic.id}-#{topic.slug}")
     end
@@ -353,7 +353,7 @@ RSpec.describe Blog::Publication do
 
     before do
       freeze_time Time.utc(2026, 11, 6)
-      SiteSetting.blog_path_format = "/{year}/{month}/{slug}"
+      update_default_blog(path_format: "/{year}/{month}/{slug}")
     end
 
     it "moves a generated dated path to the new publication date" do

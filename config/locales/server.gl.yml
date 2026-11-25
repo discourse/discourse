@@ -3380,7 +3380,6 @@ gl:
       summer: "Verán"
       grey_amber: "Gris ámbar"
       latte: "Latte"
-      dark_rose: "Rosa escuro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3502,6 +3501,8 @@ gl:
         title: "Si"
       approve_post:
         title: "Si"
+      deny_and_delete_post:
+        complete: "Publicación eliminada."
       approve_post_closed:
         title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"

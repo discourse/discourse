@@ -1061,4 +1061,129 @@ RSpec.describe AppearanceStyles::Policy do
       )
     end
   end
+
+  describe "error messages" do
+    it "give the colors measured and the area to style, for every area at once" do
+      result =
+        run(
+          rules: [
+            {
+              area: "category_box",
+              declarations: {
+                "background-color" => "light-dark(#6b6b6b, #6b6b6b)",
+                "color" => "light-dark(#000000, #000000)",
+              },
+            },
+          ],
+        )
+
+      errors = result.errors.join("\n")
+      expect(errors).to include("(text #", "background #6b6b6b)")
+      expect(errors).to include("in a rule for the category_title area")
+      expect(errors).to include("in a rule for the category_description area")
+    end
+
+    it "suggest replacing a background variable with a rule, which then passes" do
+      result =
+        run(variables: { "--d-category-box-background-color" => "light-dark(#0f172a, #0f172a)" })
+
+      expect(result.errors.join).to include(
+        "instead of overriding --d-category-box-background-color, remove it and set both background-color and a readable color in a rule for the category_box area",
+      )
+
+      # what the hint asks for, plus the areas inside the box with their own text
+      white = "light-dark(#ffffff, #ffffff)"
+      expect_valid(
+        rules: [
+          {
+            area: "category_box",
+            declarations: {
+              "background-color" => "light-dark(#0f172a, #0f172a)",
+              "color" => white,
+            },
+          },
+          { area: "category_title", declarations: { "color" => white } },
+          { area: "category_description", declarations: { "color" => white } },
+        ],
+      )
+    end
+
+    it "report a failure in each mode, not only the first" do
+      result =
+        run(
+          rules: [
+            {
+              area: "header",
+              declarations: {
+                "background-color" => "light-dark(#777777, #777777)",
+                "color" => "light-dark(#888888, #888888)",
+              },
+            },
+          ],
+        )
+
+      errors = result.errors.join("\n")
+      expect(errors).to include("in light mode", "in dark mode")
+    end
+  end
+
+  context "with Horizon" do
+    def horizon(styles)
+      described_class.call(styles, base_theme_id: Theme::CORE_THEMES["horizon"])
+    end
+
+    it "allows non-color corners, spacing and typography" do
+      result =
+        horizon(
+          variables: {
+            "--d-border-radius" => "12px",
+          },
+          rules: [
+            {
+              area: "topic_list_item",
+              declarations: {
+                "padding" => "12px",
+                "font-weight" => "600",
+              },
+            },
+          ],
+        )
+      expect(result.errors).to eq([])
+    end
+
+    it "refuses color variables, including scoped rule variables" do
+      [
+        { variables: { "--d-sidebar-background" => "var(--secondary)" } },
+        {
+          rules: [
+            {
+              area: "topic_list_item",
+              declarations: {
+                "--d-sidebar-link-color" => "var(--primary)",
+              },
+            },
+          ],
+        },
+      ].each do |styles|
+        result = horizon(styles)
+        expect(result).not_to be_valid
+        expect(result.errors.join).to include("styles on Horizon can't set colors yet")
+      end
+    end
+
+    it "refuses backgrounds, colors and composite color-bearing properties" do
+      {
+        "color" => "var(--primary)",
+        "background" => "var(--secondary)",
+        "background-image" => "linear-gradient(var(--secondary), var(--tertiary))",
+        "border" => "1px solid var(--primary)",
+        "box-shadow" => "0 2px 8px rgba(var(--primary-rgb), 0.1)",
+        "opacity" => "0.8",
+      }.each do |property, value|
+        result = horizon(rules: [{ area: "topic_list_item", declarations: { property => value } }])
+        expect(result).not_to be_valid
+        expect(result.errors.join).to include("contrast can't be checked on Horizon")
+      end
+    end
+  end
 end

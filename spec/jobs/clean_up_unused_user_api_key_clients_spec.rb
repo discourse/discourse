@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpUnusedRegisteredUserApiKeyClients do
-  let!(:client1) { Fabricate(:user_api_key_client, auth_redirect: "https://remote.com/redirect") }
-  let!(:client2) do
+  fab!(:client1) { Fabricate(:user_api_key_client, auth_redirect: "https://remote.com/redirect") }
+  fab!(:client2) do
     Fabricate(:user_api_key_client, auth_redirect: "https://another-remote.com/redirect")
   end
-  let!(:client3) { Fabricate(:user_api_key_client) }
+  fab!(:client3, :user_api_key_client)
   let!(:key1) { Fabricate(:readonly_user_api_key, client: client1, last_used_at: 1.hour.ago) }
   let!(:key2) { Fabricate(:readonly_user_api_key, client: client1, last_used_at: 1.hour.ago) }
   let!(:key3) { Fabricate(:readonly_user_api_key, client: client2, last_used_at: 1.hour.ago) }

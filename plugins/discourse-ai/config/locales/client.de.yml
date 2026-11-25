@@ -243,6 +243,15 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      review_bulk:
+        refresh: "Aktualisieren"
+        columns:
+          user: "Nutzer"
+          reason: "Gemeldet als"
+          created: "Erstellt"
+          status: "Status"
+        status:
+          applying: "Wird angewendet…"
       dsa_classification:
         suggest: "Mit KI vorschlagen"
       copied: "Kopiert"
@@ -976,6 +985,27 @@ de:
         mcp_server_oauth_client_secret: "MCP-Server OAuth-Client-Geheimnis"
         modal:
           title: "Neue Anmeldedaten erstellen"
+      concepts:
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        columns:
+          status: "Status"
+          topics: "Themen"
+          posts: "Beiträge"
+        statuses:
+          all: "Alle Status"
+          active: "Aktiv"
+        form:
+          name: "Name"
+          description: "Beschreibung"
+          aliases: "Aliase"
+          status: "Status"
+        tagged_topics: "Themen mit Schlagwörtern"
+        topic_columns:
+          topic: "Thema"
+          primary: "Primär"
+          relevance: "Relevanz"
+        primary_badge: "Primär"
       decision_models:
         no_preset: "Keine Erfassung"
         display_name: "Name"

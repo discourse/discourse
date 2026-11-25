@@ -287,6 +287,28 @@ onDirtyCheck(transition) {
 <Form @onDirtyCheck={{this.onDirtyCheck}} />
 ```
 
+### @layout
+
+`stacked` (default) or `horizontal`. The horizontal layout puts each field's title in a label column and its control, help text, errors and description in a value column. Use it for settings pages that people revisit to check or change values; keep the stacked layout for forms filled in once.
+
+The description renders under the control and help text. Below the `sm` breakpoint (40rem), horizontal fields stack like the default layout, with the description above the control. Checkbox fields never stack. Every field keeps its title in the label column and its control in the value column, whatever its `@format`.
+
+Checkbox fields render their title in the label column and the checkbox, followed by the caption block if there is one, in the value column.
+
+**Example**
+
+```hbs
+<Form @layout="horizontal" as |form|>
+  <form.Field @name="title" @title="Site title" @type="input" as |field|>
+    <field.Control />
+  </form.Field>
+
+  <form.Field @name="enabled" @title="Enabled" @type="checkbox" as |field|>
+    <field.Control />
+  </form.Field>
+</Form>
+```
+
 # Field
 
 ## @name
@@ -657,6 +679,8 @@ Common control arguments:
 - `@collapseSwatchesLabel`: label for the collapsed swatches button
 - `@allowNamedColors`: allow named colors instead of only hex values
 - `@fallbackValue`: value to restore on blur when left blank
+
+The optional `<:prefix>` block replaces the `#` inside the hex prefix.
 
 **Example**
 

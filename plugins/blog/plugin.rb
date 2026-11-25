@@ -48,7 +48,9 @@ after_initialize do
     :blogs,
     include_condition: -> { UpcomingChanges.enabled?(:blog_enabled) },
   ) do
-    Blog::Instance.cached.map do |blog|
+    blogs = Blog::Instance.cached
+    blogs = blogs.select(&:published) if !scope.is_blog_contributor?
+    blogs.map do |blog|
       {
         id: blog.id,
         name: blog.name,
@@ -112,12 +114,6 @@ after_initialize do
     @blog_publication
   end
 
-  # Not `on`, which skips events while the plugin is disabled: the settings can
-  # still be changed then.
-  DiscourseEvent.on(:site_setting_changed) do |name| # rubocop:disable Discourse/Plugins/UsePluginInstanceOn
-    Blog::DefaultBlogMirror.sync! if Blog::DefaultBlogMirror.setting?(name.to_sym)
-  end
-
   # "New draft" sends the blog the editor was viewing.
   add_permitted_post_create_param(:blog_id)
   on(:topic_created) do |topic, opts, user|
@@ -132,17 +128,7 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name|
-    name = name.to_sym
-    if name == :blog_publisher_groups
-      Blog::Instance.category_ids.each do |category_id|
-        Blog::AddPublishersToPublicCategory.call(params: { category_id: })
-      end
-    end
-    if name == :blog_category
-      Blog::AddPublishersToPublicCategory.call(params: { category_id: SiteSetting.blog_category })
-    end
-    next if %i[blog_contributor_groups blog_editor_groups blog_publisher_groups].exclude?(name)
-    Blog::EnsureDraftsCategory.call(options: { create_missing: false })
+    Blog::ManagedCategories.sync_role_access if Blog::Roles::SETTINGS.include?(name.to_sym)
   end
 
   Discourse::Application.routes.prepend(&Blog::Routes::DRAW)

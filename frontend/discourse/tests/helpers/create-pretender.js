@@ -730,6 +730,11 @@ export function applyDefaultHandlers() {
     response(fixturesByUrl["/c/11/show.json"])
   );
 
+  // Creating a category lands on its (empty) topic list.
+  pretender.get("/c/testing/11/l/latest.json", () =>
+    response({ users: [], topic_list: { topics: [], per_page: 30 } })
+  );
+
   pretender.get("/categories/types", () =>
     response({
       types: [

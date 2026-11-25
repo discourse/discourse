@@ -242,4 +242,15 @@ RSpec.describe DiscourseDiff do
       )
     end
   end
+
+  describe "side_by_side_markdown tokenization" do
+    it "groups word characters with trailing spaces/tabs while splitting leading spaces and symbols" do
+      before = "  configure `redis_1`   \tand **yjit**!\nsecond line"
+      after = "  configure `redis_2`   \tand **ruby_yjit**?\nsecond line"
+
+      expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
+        "<table class=\"markdown\"><tr><td class=\"--previous\">  configure `<del>redis_1</del>`   \tand **<del>yjit</del>**<del>!</del>\n</td><td class=\"--current\">  configure `<ins>redis_2</ins>`   \tand **<ins>ruby_yjit</ins>**<ins>?</ins>\n</td></tr><tr><td class=\"--previous\">second line</td><td class=\"--current\">second line</td></tr></table>",
+      )
+    end
+  end
 end

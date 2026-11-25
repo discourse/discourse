@@ -127,8 +127,7 @@ module FileStore
     private
 
     def contained_path(url, *dirs)
-      path = File.expand_path("#{public_dir}#{url}")
-      path if path.start_with?(*dirs.map { File.join(public_dir, it, "") })
+      FileHelper.contained_path("#{public_dir}#{url}", *dirs.map { File.join(public_dir, it) })
     end
 
     def list_missing(model)

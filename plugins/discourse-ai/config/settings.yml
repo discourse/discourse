@@ -688,6 +688,7 @@ discourse_ai:
       - 4
   ai_reviewable_action_suggestions_enabled:
     default: false
+    client: true
     area: "ai-features/review_queue"
   ai_reviewable_action_decision_model:
     area: "ai-features/review_queue"
@@ -800,6 +801,7 @@ discourse_ai:
   inferred_concepts_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_background_match:
     default: false

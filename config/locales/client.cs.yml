@@ -544,9 +544,6 @@ cs:
       fonts:
         base_font: "Tělo"
         heading_font: "Nadpisy"
-      logo:
-        description: "Zobrazuje se v horní navigační liště webu a také v horní části e-mailových oznámení webu."
-        help_text: "Doporučená velikost je 600 x 80 pixelů."
       homepage:
         topics: "Témata"
         categories: "Kategorie"
@@ -1044,7 +1041,6 @@ cs:
         suspect_user: "Jedná se o uživatelský spam?"
         approve_post: "Schválit tento příspěvek?"
         approve_topic: "Schválit toto téma?"
-        something_wrong_with_post: "Je na tomto příspěvku něco špatně?"
       types:
         reviewable_flagged_post:
           title: "Nahlášený příspěvek"
@@ -4845,7 +4841,7 @@ cs:
       validations:
         icon_required: "Vyberte ikonu."
       name: "Název kategorie"
-      untitled: "Nepojmenovaná kategorie"
+      icon_search_placeholder: "Vyhledat..."
       description: "Popis"
       logo: "Obrázek loga kategorie"
       logo_dark: "Obrázek loga kategorie (tmavý režim)"
@@ -4853,9 +4849,6 @@ cs:
       background_image: "Obrázek pozadí kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý režim)"
       style: "Styl"
-      icon: "Ikona"
-      emoji: "Emotikon"
-      select_emoji: "Vyberte emotikon"
       background_color: "Barva"
       foreground_color: "Barva textu"
       color_validations:
@@ -4863,18 +4856,11 @@ cs:
         incorrect_length: "musí odpovídat formátu #RRGGBB nebo #RGB"
         non_hexdecimal: "musí obsahovat pouze hexadecimální znaky (0-9, AF)"
       styles:
-        type: "Styl"
         icon: "Ikona"
         emoji: "Smajlíky :)"
         square: "Čtverec"
-        options:
-          square: "Čtverec"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Používaná barva"
-      predefined_colors: "Předdefinované možnosti barev"
       name_placeholder: "Nejlépe jedno nebo dvě slova"
-      color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
       list: "Přehled kategorií"
@@ -7792,8 +7778,6 @@ cs:
           title: "Barvy"
           edit: "Upravit"
           view: "Zobrazit"
-          set_default_light: "Nastavit jako světlou paletu ve výchozím motivu (%{theme})"
-          set_default_dark: "Nastavit jako tmavou paletu ve výchozím motivu (%{theme})"
           set_default_success: "%{schemeName} nastavena jako výchozí paleta pro %{themeName}"
           saved_refreshing: "Uloženo! Obnovuji barvy..."
           from_theme: "Z motivu: %{name}"

@@ -96,9 +96,10 @@ module DiscourseEvents
           end
         end
 
+        max_attendees_limit = SiteSetting.discourse_post_event_max_attendees_limit
         if extracted_event[:"max-attendees"].present? &&
-             !extracted_event[:"max-attendees"].to_i.between?(1, Event::MAX_ATTENDEES_LIMIT)
-          add_error("invalid_max_attendees", maximum: Event::MAX_ATTENDEES_LIMIT)
+             !extracted_event[:"max-attendees"].to_i.between?(1, max_attendees_limit)
+          add_error("invalid_max_attendees", maximum: max_attendees_limit)
         end
 
         if extracted_event[:"recurrence-until"].present? &&
@@ -107,10 +108,18 @@ module DiscourseEvents
         end
 
         if extracted_event[:reminders].present?
-          invalid_reminders =
-            extracted_event[:reminders].split(",").reject { |r| Event.valid_reminder?(r) }
+          valid_reminders, invalid_reminders =
+            extracted_event[:reminders].split(",").partition { |r| Event.valid_reminder?(r) }
+
           if invalid_reminders.any?
             add_error("invalid_reminders", reminders: invalid_reminders.join(", "))
+          end
+
+          reminder_counts = valid_reminders.map { |r| Event.reminder_type(r) }.tally
+          Event::MAX_REMINDERS_PER_TYPE.each do |type, maximum|
+            if reminder_counts.fetch(type, 0) > maximum
+              add_error("too_many_reminders.#{type.underscore}", count: maximum)
+            end
           end
         end
 

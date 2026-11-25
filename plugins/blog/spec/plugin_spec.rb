@@ -5,7 +5,7 @@ RSpec.describe Blog do
     it "updates the default blog even while the blog is disabled" do
       SiteSetting.blog_enabled = false
 
-      SiteSetting.blog_title = "Field notes"
+      update_default_blog(name: "Field notes")
 
       expect(Blog::Instance.find_by(is_default: true).name).to eq("Field notes")
     end
@@ -36,7 +36,7 @@ RSpec.describe Blog do
 
     it "gives new publisher groups access to every blog's public category" do
       default_category = Fabricate(:category, permissions: { members.id => :full })
-      SiteSetting.blog_category = default_category.id
+      update_default_blog(category_id: default_category.id)
       other_category = Fabricate(:category, permissions: { members.id => :full })
       Blog::Instance.create!(name: "Engineering", slug: "engineering", category: other_category)
 
@@ -50,27 +50,9 @@ RSpec.describe Blog do
 
     it "gives new publisher groups access to the public category" do
       blog_category = Fabricate(:category, permissions: { members.id => :full })
-      SiteSetting.blog_category = blog_category.id
+      update_default_blog(category_id: blog_category.id)
 
       SiteSetting.blog_publisher_groups = publishers.id.to_s
-
-      expect(blog_category.reload.category_groups.pluck(:group_id)).to include(publishers.id)
-    end
-  end
-
-  describe "choosing the public blog category" do
-    fab!(:publishers, :group)
-    fab!(:members, :group)
-
-    before do
-      enable_blog!
-      SiteSetting.blog_publisher_groups = publishers.id.to_s
-    end
-
-    it "gives the publisher groups access to it" do
-      blog_category = Fabricate(:category, permissions: { members.id => :full })
-
-      SiteSetting.blog_category = blog_category.id
 
       expect(blog_category.reload.category_groups.pluck(:group_id)).to include(publishers.id)
     end

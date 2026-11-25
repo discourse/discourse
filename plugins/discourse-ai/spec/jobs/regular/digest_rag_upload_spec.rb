@@ -101,7 +101,10 @@ describe Jobs::DigestRagUpload do
     end
 
     context "when processing an upload for the first time" do
-      before { File.expects(:open).returns(document_file) }
+      before do
+        FileStore::LocalStore.any_instance.stubs(:download).returns("document")
+        File.expects(:open).with("document").returns(document_file)
+      end
 
       it "splits an upload into chunks" do
         job.execute(upload_id: upload.id, target_id: agent.id, target_type: agent.class.to_s)

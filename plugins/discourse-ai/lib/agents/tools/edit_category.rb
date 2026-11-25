@@ -93,7 +93,14 @@ module DiscourseAi
         def description_args
           {
             category_id: parameters[:category_id],
-            category_name: category ? "##{category.slug_ref}::category" : parameters[:category_id],
+            category_name:
+              (
+                if category
+                  DiscourseAi::AiBot::ChatToolApproval.format_category(category)
+                else
+                  parameters[:category_id]
+                end
+              ),
             fields: changes.keys.map { |field| "`#{field}`" }.join(", "),
           }
         end
@@ -116,7 +123,7 @@ module DiscourseAi
 
           I18n.t(
             "discourse_ai.ai_bot.chat_tool_approval.category_title",
-            category: "##{category.slug_ref}::category",
+            category: DiscourseAi::AiBot::ChatToolApproval.format_category(category),
           )
         end
 

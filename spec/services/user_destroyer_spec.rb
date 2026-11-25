@@ -279,10 +279,11 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user has posts" do
-      let!(:topic_starter) { Fabricate(:user) }
-      let!(:topic) { Fabricate(:topic, user: topic_starter) }
-      let!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
-      let!(:post) { Fabricate(:post, user: user, topic: topic) }
+      fab!(:topic_starter, :user)
+      fab!(:topic) { Fabricate(:topic, user: topic_starter) }
+      fab!(:first_post) { Fabricate(:post, user: topic_starter, topic: topic) }
+      # The post fabricator increments cached user stats; don't mutate the outer fixture.
+      fab!(:post) { Fabricate(:post, user: User.find(user.id), topic: topic) }
 
       context "when delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }

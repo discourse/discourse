@@ -1,5 +1,5 @@
 import type { LegacyResourceSchema } from "@warp-drive/core/types/schema/fields";
-import { attrs, withDefaults } from "../helpers.js";
+import { attrs, withDefaults } from "../helpers.ts";
 
 // Mirrors `GroupResource` (app/resources/group_resource.rb).
 export const GroupsSchema: LegacyResourceSchema = withDefaults({

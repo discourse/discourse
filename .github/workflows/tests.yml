@@ -281,9 +281,14 @@ jobs:
             exit 1
           fi
 
-      - name: Install playwright
+      - name: Install Playwright
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
-        run: pnpm playwright-install
+        run: |
+          if [[ "${{ matrix.build_type }}" == system && "${{ matrix.target }}" == core ]]; then
+            pnpm exec playwright install chromium
+          else
+            pnpm playwright-install
+          fi
 
       - name: Precompile the JS bundles
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
@@ -345,6 +350,9 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
+          DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL: "1"
+          DISCOURSE_SYSTEM_TEST_BATCH_V8_GC: "1"
+          DISCOURSE_SYSTEM_TEST_NODE_READ_FAST: "1"
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests

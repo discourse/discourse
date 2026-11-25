@@ -107,11 +107,12 @@ RSpec.describe BookmarkManager do
   end
 
   describe ".destroy_for_topic" do
-    let!(:topic) { Fabricate(:topic) }
-    let!(:bookmark1) do
+    fab!(:user)
+    fab!(:topic)
+    fab!(:bookmark1) do
       Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
     end
-    let!(:bookmark2) do
+    fab!(:bookmark2) do
       Fabricate(:bookmark, bookmarkable: Fabricate(:post, topic: topic), user: user)
     end
 

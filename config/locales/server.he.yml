@@ -4774,7 +4774,6 @@ he:
       dracula: "דרקולה"
       grey_amber: "ענבר אפור"
       latte: "לאטה"
-      dark_rose: "ורד כהה"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -5021,6 +5020,8 @@ he:
       approve_post:
         title: "כן"
         complete: "הפרסום אושר."
+      deny_and_delete_post:
+        complete: "פוסט נמחק."
       approve_post_closed:
         title: "כן"
         confirm: "נושא זה סגור. ליצור את הפוסט בכל אופן?"

@@ -31,6 +31,7 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
   model :preview_path
   model :preview_token, :store_working_copy
 
@@ -47,6 +48,10 @@ class Blog::BlogTheme::CreateWorkingPreview
   end
 
   def store_working_copy(params:, guardian:)
-    Blog::ThemePreview.store_working_copy(params.theme_attributes, user: guardian.user)
+    Blog::ThemePreview.store_working_copy(
+      params.theme_attributes,
+      user: guardian.user,
+      blog: Blog::Instance.default_blog,
+    )
   end
 end

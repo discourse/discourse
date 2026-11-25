@@ -12,6 +12,7 @@ class Blog::BlogTheme::Pull
   end
 
   policy :can_manage_themes
+  policy :custom_themes_allowed, class_name: Blog::BlogTheme::Policy::CustomThemesAllowed
   model :theme
   policy :imported_from_repository
   policy :can_import_repository

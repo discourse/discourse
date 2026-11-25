@@ -2281,19 +2281,14 @@ et:
       save_error: Kategooria salvestamisel tekkis viga.
       validations:
         icon_required: "Vali ikoon."
+      icon_search_placeholder: "Otsi..."
       description: "Kirjeldus"
-      icon: "Ikoon"
-      emoji: "Emotikon"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"
-        options:
-          icon: "Ikoon"
-          emoji: "Emotikon"
-      color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
       no_description: "Palun lisa sellele kategooriale kirjeldus."
@@ -2677,6 +2672,7 @@ et:
       share: "Jaga"
       dismiss: "Ignoreeri"
     mobile_tab_bar:
+      new_topic: "Uus teema"
       create: "Loo"
       more: "Veel"
       back: "Tagasi"

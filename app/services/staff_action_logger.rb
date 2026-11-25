@@ -963,6 +963,15 @@ class StaffActionLogger
     )
   end
 
+  def log_account_review_approved(user, reviewable_id:)
+    UserHistory.create!(
+      params(reviewable_id:).merge(
+        action: UserHistory.actions[:approve_account_review],
+        target_user_id: user.id,
+      ),
+    )
+  end
+
   def log_removed_avatar(user, opts = {})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(

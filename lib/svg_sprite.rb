@@ -115,6 +115,7 @@ module SvgSprite
         discourse-h4
         discourse-h5
         earth-americas
+        eject
         ellipsis
         ellipsis-vertical
         envelope

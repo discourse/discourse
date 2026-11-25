@@ -155,6 +155,22 @@ RSpec.describe UserSearch do
       end.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "only suggests members of a group with a public roster if the group itself is visible" do
+      group.update!(
+        visibility_level: Group.visibility_levels[:owners],
+        members_visibility_level: Group.visibility_levels[:public],
+      )
+      topic = Fabricate(:topic, category: category)
+
+      expect(search_for("", searching_user: searching_user, category_id: category.id)).to be_empty
+      expect(search_for("", searching_user: searching_user, topic_id: topic.id)).to be_empty
+
+      group.add_owner(searching_user)
+      expect(search_for("", searching_user: searching_user, category_id: category.id)).to eq(
+        [user.username],
+      )
+    end
+
     it "respects the group member visibility setting" do
       group.update(members_visibility_level: Group.visibility_levels[:owners])
       results = search_for("", searching_user: searching_user, category_id: category.id)

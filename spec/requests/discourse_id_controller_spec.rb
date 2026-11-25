@@ -6,7 +6,7 @@ RSpec.describe Users::DiscourseIdController do
   let(:identifier) { SecureRandom.hex }
   let(:provider_name) { "discourse_id" }
 
-  let!(:user) { Fabricate(:user) }
+  fab!(:user)
   let!(:user_associated_account) do
     Fabricate(:user_associated_account, user:, provider_name:, provider_uid: identifier)
   end

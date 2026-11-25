@@ -358,8 +358,11 @@ acceptance("Composer Actions", function (needs) {
     await click("article#post_3 button.reply");
 
     assert
-      .dom(".composer-actions-trigger svg.d-icon-share")
-      .exists("shows share icon when replying");
+      .dom(".composer-actions-trigger svg.d-icon-reply")
+      .hasStyle(
+        { transform: "matrix(-1, 0, 0, 1, 0, 0)" },
+        "the reply arrow points toward the reply target"
+      );
   });
 
   test("trigger shows correct icon for create topic mode", async function (assert) {

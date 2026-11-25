@@ -5090,7 +5090,6 @@ ru:
       dracula: "Дракула"
       grey_amber: "Серо-янтарная"
       latte: "Латте"
-      dark_rose: "Тёмная роза"
   wizard:
     title: "Настройка Discourse"
     step:
@@ -5353,6 +5352,8 @@ ru:
       approve_post:
         title: "Да"
         complete: "Публикация одобрена."
+      deny_and_delete_post:
+        complete: "Публикация удалена."
       approve_post_closed:
         title: "Да"
         confirm: "Эта тема закрыта. Всё равно создать публикацию?"

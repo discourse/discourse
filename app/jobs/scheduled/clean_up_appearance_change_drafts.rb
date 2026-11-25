@@ -8,7 +8,9 @@ module Jobs
 
     def execute(args)
       AppearanceChange.abandoned_drafts.find_each do |appearance_change|
-        appearance_change.discard!
+        AppearanceChange.transaction do
+          AppearanceChange.abandoned_drafts.lock.find_by(id: appearance_change.id)&.discard!
+        end
       rescue => e
         Discourse.handle_job_exception(
           e,

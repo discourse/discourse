@@ -316,6 +316,42 @@ en:
     discourse_ai:
       title: "AI"
       apply_review_suggestion: "Apply AI suggestion: %{action}"
+      review_bulk:
+        title: "AI Suggestions"
+        description: "These items have an action suggested by AI. Deselect any you disagree with, then apply the rest together."
+        more_pending:
+          one: "%{count} more suggestion will appear after these are handled."
+          other: "%{count} more suggestions will appear after these are handled."
+        apply:
+          one: "Apply %{count} suggestion"
+          other: "Apply %{count} suggestions"
+        refresh: "Refresh"
+        select_all: "Select all suggestions"
+        select_item: "Select review item %{id}"
+        untitled: "Review item %{id}"
+        confidence: "%{percent}% confident"
+        none: "There are no pending review items with an AI suggestion."
+        confirm:
+          one: "Apply the suggested action to %{count} review item?"
+          other: "Apply the suggested actions to %{count} review items?"
+        confirm_destructive:
+          one: "Apply the suggested action to %{count} review item? %{destructive} of the selected actions cannot be undone."
+          other: "Apply the suggested actions to %{count} review items? %{destructive} of the selected actions cannot be undone."
+        columns:
+          item: "Item"
+          user: "User"
+          reason: "Flagged as"
+          created: "Created"
+          action: "Suggested action"
+          status: "Status"
+        status:
+          applying: "Applying…"
+          applied: "Applied"
+          handled: "Already handled"
+        blocked:
+          needs_input: "Needs more input. Open the item to apply."
+          must_claim: "Unclaimed. Open the item to claim its topic and apply."
+          claimed_by_other: "Claimed by another user. Open the item for details."
       dsa_classification:
         suggest: "Suggest with AI"
         suggested_by_ai: "Suggested by AI"
@@ -1370,6 +1406,79 @@ en:
         modal:
           title: "Create new credential"
 
+      concepts:
+        short_title: "Concepts"
+        description: "Inspect, curate, and organize inferred concepts discovered across the forum"
+        chooser_placeholder: "Search concepts..."
+        new: "New concept"
+        edit: "Edit"
+        edit_heading: "Edit concept"
+        back: "Back to concepts"
+        run_curation: "Run curation"
+        curation_enqueued: "Concept curation queued to run in the background."
+        disabled_notice: "Inferred concepts generation is currently disabled. Existing records remain editable below, or you can enable the feature in"
+        disabled_notice_link: "AI features"
+        filter_placeholder: "Filter by name, description, or alias..."
+        no_results: "No concepts match these filters."
+        clear_filters: "Clear filters"
+        empty: "No inferred concepts yet"
+        load_more: "Load more"
+        saved: "Concept saved"
+        confirm_delete: "Delete \"%{name}\"? Its topic and post associations will be removed."
+        deleted: "Concept deleted"
+        promoted: "Concept promoted to active"
+        retired: "Concept retired"
+        reactivated: "Concept reactivated"
+        promote: "Promote to active"
+        retire: "Retire"
+        reactivate: "Reactivate"
+        delete: "Delete"
+        open_actions: "Concept actions"
+        parent_label: "Parent: %{name}"
+        columns:
+          name: "Concept"
+          status: "Status"
+          topics: "Topics"
+          posts: "Posts"
+        statuses:
+          all: "All statuses"
+          active: "Active"
+          candidate: "Candidate"
+          retired: "Retired"
+          active_count: "Active (%{count})"
+          candidate_count: "Candidate (%{count})"
+          retired_count: "Retired (%{count})"
+        sort:
+          usage: "Most used"
+          name: "Name (A–Z)"
+          created_at: "Newest"
+        form:
+          name: "Name"
+          description: "Description"
+          description_help: "Short summary of what belongs under this concept. Used when generating concept embeddings and prompting the classifier."
+          aliases: "Aliases"
+          aliases_help: "Comma-separated alternative names or acronyms (e.g. k8s, container orchestration)."
+          status: "Status"
+          parent: "Parent concept"
+          parent_none: "None (top-level)"
+        children: "Sub-concepts"
+        tagged_topics: "Tagged topics"
+        no_tagged_topics: "No visible public topics are tagged with this concept yet."
+        topic_columns:
+          topic: "Topic"
+          primary: "Primary"
+          relevance: "Relevance"
+        primary_badge: "Primary"
+        secondary_badge: "Secondary"
+        merge:
+          action: "Merge into..."
+          title: "Merge \"%{name}\""
+          description: "Moves all topic and post associations, aliases, and sub-concepts onto the target concept, then retires this concept."
+          target_label: "Target canonical concept"
+          target_placeholder: "Select a concept..."
+          submit: "Merge concept"
+          success: "Merged into \"%{target}\"."
+
       decision_models:
         seeded_description: "Pre-configured model"
         manage: "Manage decision models"
@@ -2197,3 +2306,4 @@ en:
           title: "AI-Flagged chat message"
         reviewable_ai_tool_action:
           title: "AI Tool Action"
+          approval_heading: "AI action approval"

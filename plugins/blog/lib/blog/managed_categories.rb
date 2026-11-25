@@ -5,15 +5,17 @@ module ::Blog
   module ManagedCategories
     MAX_NAME_ATTEMPTS = 10
 
-    def self.editorial_group_ids
-      (
-        SiteSetting.blog_contributor_groups_map + SiteSetting.blog_editor_groups_map +
-          SiteSetting.blog_publisher_groups_map
-      ).uniq
+    def self.drafts_permissions
+      existing_group_ids(Roles.editorial_group_ids).index_with do
+        CategoryGroup.permission_types[:full]
+      end
     end
 
-    def self.drafts_permissions
-      existing_group_ids(editorial_group_ids).index_with { CategoryGroup.permission_types[:full] }
+    def self.sync_role_access
+      Instance.category_ids.each do |category_id|
+        AddPublishersToPublicCategory.call(params: { category_id: })
+      end
+      EnsureDraftsCategory.call(options: { create_missing: false })
     end
 
     def self.drafts_permissions_current?(category)
@@ -30,7 +32,7 @@ module ::Blog
     def self.drafts_category_name
       base = I18n.t("blog.categories.drafts", locale: SiteSetting.default_locale)
       candidates = [base] + (2..MAX_NAME_ATTEMPTS).map { |n| "#{base} #{n}" }
-      candidates.find { |name| !top_level_name_taken?(name) } || "#{base} #{SecureRandom.hex(4)}"
+      candidates.find { |name| !category_name_taken?(name) } || "#{base} #{SecureRandom.hex(4)}"
     end
 
     def self.public_permissions
@@ -40,13 +42,18 @@ module ::Blog
     end
 
     def self.publisher_group_ids
-      existing_group_ids(SiteSetting.blog_publisher_groups_map)
+      existing_group_ids(Roles.publisher_group_ids)
     end
 
     # The default blog's category predates blog names, so it keeps its own name.
+    # Other blogs get "Engineering Blog", which rarely clashes with a category
+    # the community already has.
     def self.public_category_name(blog)
-      return blog.name if !blog.is_default?
-      I18n.t("blog.categories.public", locale: SiteSetting.default_locale)
+      locale = SiteSetting.default_locale
+      suffix = I18n.t("blog.categories.public", locale:)
+      return suffix if blog.is_default?
+      return blog.name if blog.name.downcase.end_with?(suffix.downcase)
+      I18n.t("blog.categories.public_named", name: blog.name, locale:)
     end
 
     def self.public_category_description
@@ -56,7 +63,7 @@ module ::Blog
     # An existing category with the default name is never adopted: it may belong
     # to something else, and adopting it would change who can post there.
     def self.public_category_name_taken?(blog)
-      top_level_name_taken?(public_category_name(blog))
+      category_name_taken?(public_category_name(blog))
     end
 
     # A category the blog also uses for something else is never its drafts category.
@@ -90,9 +97,8 @@ module ::Blog
     end
     private_class_method :existing_group_ids
 
-    def self.top_level_name_taken?(name)
+    def self.category_name_taken?(name)
       Category.where(parent_category_id: nil).where("LOWER(name) = LOWER(?)", name).exists?
     end
-    private_class_method :top_level_name_taken?
   end
 end

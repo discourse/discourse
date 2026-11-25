@@ -4705,7 +4705,6 @@ pt_BR:
       dracula: "Drácula"
       grey_amber: "Âmbar cinzento"
       latte: "Latte"
-      dark_rose: "Rosa-escuro"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -4965,6 +4964,8 @@ pt_BR:
       approve_post:
         title: "Sim"
         complete: "Postagem aprovada."
+      deny_and_delete_post:
+        complete: "Postagem excluída."
       approve_post_closed:
         title: "Sim"
         confirm: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"

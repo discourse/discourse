@@ -46,6 +46,8 @@ export default class BlogThemeEditor extends Component {
   @service modal;
   @service toasts;
   @service blogThemeActions;
+  @service site;
+  @service siteSettings;
 
   @tracked busy = false;
   @tracked tab = "design";
@@ -100,8 +102,21 @@ export default class BlogThemeEditor extends Component {
     return this.previewPage === "article" && !this.selectedArticle;
   }
 
+  // With several blogs, each blog picks its theme on its Theme tab.
+  get canActivate() {
+    return !(this.site.blogs?.length > 1);
+  }
+
   get actionsDisabled() {
     return this.busy || this.blogThemeActions.busy || this.hasUnsavedChanges;
+  }
+
+  get customLocked() {
+    return !this.siteSettings.blog_custom_themes_enabled;
+  }
+
+  get savingDisabled() {
+    return this.busy || this.customLocked;
   }
 
   get tabs() {
@@ -642,21 +657,21 @@ export default class BlogThemeEditor extends Component {
 
           <form.Actions>
             <form.Submit
-              @disabled={{this.busy}}
+              @disabled={{this.savingDisabled}}
               @label="blog.admin.save_draft"
             />
             <form.Button
               class="blog-theme-editor__preview-draft"
               @action={{this.openPreview}}
-              @disabled={{this.busy}}
+              @disabled={{this.savingDisabled}}
               @icon="eye"
               @label="blog.admin.preview_short"
             />
-            {{#if draft.id}}
+            {{#if (and draft.id this.canActivate)}}
               <form.Button
                 class="blog-theme-editor__activate"
                 @action={{this.activate}}
-                @disabled={{this.actionsDisabled}}
+                @disabled={{or this.actionsDisabled this.customLocked}}
                 @label="blog.admin.activate_theme"
               />
               <form.Button
@@ -688,7 +703,7 @@ export default class BlogThemeEditor extends Component {
               />{{/if}}
             <DButton
               @action={{this.pull}}
-              @disabled={{this.actionsDisabled}}
+              @disabled={{or this.actionsDisabled this.customLocked}}
               @label="blog.admin.pull_git"
             />
           </details>

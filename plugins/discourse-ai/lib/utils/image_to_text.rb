@@ -153,14 +153,9 @@ class DiscourseAi::Utils::ImageToText
   def extract_text_with_tesseract(page)
     # return nil if we can not find tessaract binary
     return nil if !self.class.tesseract_installed?
-    upload_path =
-      if page.local?
-        Discourse.store.path_for(page)
-      else
-        Discourse.store.download(page, max_file_size_kb: MAX_IMAGE_SIZE)
-      end
+    upload_path = Discourse.store.download(page, max_file_size_kb: MAX_IMAGE_SIZE)
 
-    return "" if !upload_path || !File.exist?(upload_path)
+    return "" if !upload_path
 
     tmp_output_file = Tempfile.new(%w[tesseract_output .txt])
     tmp_output = tmp_output_file.path

@@ -2364,21 +2364,16 @@ sr:
       save_error: Dogodila se greška pri čuvanju kategorije.
       validations:
         icon_required: "Odaberite ikonu."
+      icon_search_placeholder: "Pretraži"
       description: "Opis"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Boja"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
-        options:
-          icon: "Ikona"
-          emoji: "Emoji"
       category_types: "Tipovi kategorija"
       unknown_category_type: "Nepoznat tip kategorije"
       unknown_category_type_description: "Tip kategorije \"%{categoryType}\" nije podržan ili nije omogućen na ovoj kategoriji."
       category_types_no_results: "Nisu pronađeni drugi tipovi kategorija"
-      color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
@@ -2720,6 +2715,7 @@ sr:
       share: "Podeli"
       dismiss: "Odbaci"
     mobile_tab_bar:
+      new_topic: "Nova Tema"
       create: "Kreiraj"
       more: "Više"
       back: "Nazad"

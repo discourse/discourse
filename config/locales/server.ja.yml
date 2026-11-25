@@ -4523,7 +4523,6 @@ ja:
       dracula: "Dracula"
       grey_amber: "グレーアンバー"
       latte: "ラテ"
-      dark_rose: "ダークローズ"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4779,6 +4778,8 @@ ja:
       approve_post:
         title: "はい"
         complete: "投稿は承認されました。"
+      deny_and_delete_post:
+        complete: "投稿は削除されました。"
       approve_post_closed:
         title: "はい"
         confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"

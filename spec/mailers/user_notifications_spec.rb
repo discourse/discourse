@@ -1191,14 +1191,14 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_replied" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
-    let(:category) { Fabricate(:category, name: "India") }
-    let(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
-    let(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
-    let(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    fab!(:category) { Fabricate(:category, name: "India") }
+    fab!(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
+    fab!(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
+    fab!(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
 
-    let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-    let!(:hidden_tag_group) do
+    fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    fab!(:hidden_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
@@ -1481,8 +1481,8 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_posted" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
-    let(:topic) { Fabricate(:topic, title: "Super cool topic") }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
+    fab!(:topic) { Fabricate(:topic, title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic) }
     let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
@@ -2375,8 +2375,8 @@ RSpec.describe UserNotifications do
     end
 
     context "when showing the right name in 'From' field" do
-      let(:inviter) { Fabricate(:user) }
-      let(:invitee) { Fabricate(:user) }
+      fab!(:inviter, :user)
+      fab!(:invitee, :user)
 
       let(:notification) do
         Fabricate(

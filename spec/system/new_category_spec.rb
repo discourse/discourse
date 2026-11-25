@@ -31,7 +31,7 @@ describe "New Category" do
 
     category_page.save_settings
 
-    expect(page).to have_current_path("/c/new-category/edit/general")
+    expect(page).to have_current_path(%r{\A/c/new-category/\d+\z})
 
     category = Category.find_by(name: "New Category")
 

@@ -4842,7 +4842,6 @@ tr_TR:
       dracula: "Drakula"
       grey_amber: "Gri Kehribar"
       latte: "Latte"
-      dark_rose: "Kara Gül"
   wizard:
     title: "Discourse Kurulumu"
     step:
@@ -5102,6 +5101,8 @@ tr_TR:
       approve_post:
         title: "Evet"
         complete: "Gönderi onaylandı."
+      deny_and_delete_post:
+        complete: "Gönderi silindi."
       approve_post_closed:
         title: "Evet"
         confirm: "Bu konu kapalı. Yine de gönderiyi oluşturmak istiyor musunuz?"

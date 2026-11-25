@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit {
   display: flex;
   flex-direction: column;
@@ -7,5 +9,34 @@
   .alert {
     // we space elements with gap, so don't need the margin
     margin-bottom: 0;
+  }
+
+  &.--horizontal {
+    @include viewport.from(sm) {
+      gap: 0;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns:
+        clamp(8rem, 30%, 14rem)
+        minmax(0, 1fr)
+        calc(2 * (2.3em + 2px) + 0.5rem);
+      grid-template-areas:
+        "title content ."
+        "title description .";
+      align-items: baseline;
+      width: 100%;
+      column-gap: var(--space-4);
+      padding-block: var(--space-4);
+      border-top: 0.5px solid var(--content-border-color);
+
+      &:has(.form-kit__field-checkbox) {
+        align-items: center;
+      }
+    }
+
+    @include viewport.until(sm) {
+      padding-inline-start: var(--space-4);
+      gap: var(--space-1);
+    }
   }
 }

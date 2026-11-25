@@ -80,6 +80,9 @@ RSpec.describe DiscourseAi::Agents::AppearanceAuthoring::StyleAuthor do
       result = author
       system_prompt = prompts.first.messages.first[:content]
       expect(system_prompt).to include("- topic_list_item: Topic list rows [hover, odd, even]")
+      expect(system_prompt).to include(
+        "- category_title: Category headings on the categories page (inside category_box, has its own text color)",
+      )
       expect(system_prompt).to include("--d-border-radius: length, 0px to 32px")
       expect(system_prompt).not_to include("--d-skeleton")
     end

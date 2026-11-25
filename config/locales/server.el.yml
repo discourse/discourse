@@ -3037,7 +3037,6 @@ el:
       default: "Προεπιλογή"
       neutral: "Ουδέτερο"
       summer: "Καλοκαίρι"
-      dark_rose: "Σκούρο Τριαντάφυλλο"
   wizard:
     title: "Εγκατάσταση Discourse"
     step:
@@ -3213,6 +3212,8 @@ el:
       approve_post:
         title: "Ναι "
         complete: "Η ανάρτηση εγκρίθηκε."
+      deny_and_delete_post:
+        complete: "Ανάρτηση διαγράφηκε."
       approve_post_closed:
         title: "Ναι "
         confirm: "Αυτό το θέμα έχει κλείσει. Θέλετε να δημιουργήσετε την ανάρτηση ούτως ή άλλως;"

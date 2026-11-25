@@ -40,6 +40,12 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      review_bulk:
+        refresh: "రిఫ్రెష్ చేయండి"
+        columns:
+          user: "సభ్యుడు"
+          created: "సృష్టించిన"
+          status: "స్థితి"
       ai_decoded_transcript:
         type: "రకం"
         error: "లోపం"
@@ -219,6 +225,25 @@ te:
         edit: "సవరించండి"
         delete: "తొలగించు"
         embedding: "పొందుపరచడం"
+      concepts:
+        edit: "సవరించండి"
+        delete: "తొలగించు"
+        columns:
+          status: "స్థితి"
+          topics: "విషయాలు"
+          posts: "పోస్ట్‌లు"
+        statuses:
+          active: "క్రియాశీల"
+        form:
+          name: "పేరు"
+          description: "వివరణ"
+          status: "స్థితి"
+        tagged_topics: "ట్యాగ్ చేయబడిన విషయాలు"
+        topic_columns:
+          topic: "విషయం"
+          primary: "ప్రాథమిక"
+          relevance: "ఔచిత్యం"
+        primary_badge: "ప్రాథమిక"
       decision_models:
         no_preset: "ఏదీ లేదు"
         display_name: "పేరు"

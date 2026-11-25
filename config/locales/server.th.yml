@@ -652,6 +652,8 @@ th:
         title: "ใช่"
       approve_post:
         title: "ใช่"
+      deny_and_delete_post:
+        complete: "โพสต์ถูกลบ."
       approve_post_closed:
         title: "ใช่"
       reject_post_bundle:

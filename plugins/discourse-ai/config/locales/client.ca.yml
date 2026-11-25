@@ -38,6 +38,12 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualitza"
+        columns:
+          user: "Usuari"
+          created: "Creat"
+          status: "Estat"
       copied: "Copiat"
       ai_decoded_transcript:
         type: "Tipus"
@@ -224,6 +230,23 @@ ca:
         edit: "Edita"
         delete: "Suprimeix"
         embedding: "Incrustant"
+      concepts:
+        edit: "Edita"
+        delete: "Suprimeix"
+        columns:
+          status: "Estat"
+          topics: "Temes"
+          posts: "Publicacions"
+        statuses:
+          active: "Actiu"
+        form:
+          name: "Nom"
+          description: "Descripció"
+          status: "Estat"
+        tagged_topics: "Temes etiquetats"
+        topic_columns:
+          topic: "Tema"
+          relevance: "Importància"
       decision_models:
         no_preset: "Cap"
         display_name: "Nom"

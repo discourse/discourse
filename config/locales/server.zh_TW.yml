@@ -5130,7 +5130,6 @@ zh_TW:
       dracula: "德古拉"
       grey_amber: "灰琥珀色"
       latte: "拿鐵"
-      dark_rose: "深玫瑰"
   wizard:
     title: "Discourse 設置"
     step:
@@ -5410,6 +5409,10 @@ zh_TW:
       approve_post:
         title: "是"
         complete: "貼文已核准。"
+      deny_and_delete_post:
+        complete: "貼文已刪除。"
+      deny_and_keep_deleted:
+        complete: "貼文保持刪除狀態。"
       approve_post_closed:
         title: "是"
         confirm: "此主題已被關閉。仍要創建貼文嗎？"

@@ -162,8 +162,10 @@ module Live
     def can_speak_in_live_room?(room)
       return true if room.open?
       return true if user&.admin?
-      membership = room.membership_for(user)
-      membership&.can_speak? || false
+      return false if user.blank?
+      return true if room.membership_for(user)&.can_speak?
+
+      Live::StageRoles.session_speaker?(room, user.id)
     end
 
     # Camera and screen sharing are gated independently, per user: the room
@@ -200,11 +202,36 @@ module Live
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_live_room?(room)
       return false unless can_join_live_room?(room)
-      room.stage? && !can_speak_in_live_room?(room)
+      room.stage? && room.speak_requests_enabled? && !can_speak_in_live_room?(room)
     end
 
     def ensure_can_request_to_speak_in_live_room!(room)
+      if can_join_live_room?(room) && room.stage? && !can_speak_in_live_room?(room) &&
+           !room.speak_requests_enabled?
+        raise Discourse::InvalidAccess.new(
+                :live_speak_requests_disabled,
+                nil,
+                custom_message: "live.errors.speak_requests_disabled",
+              )
+      end
+
       unless can_request_to_speak_in_live_room?(room)
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
+      end
+    end
+
+    # Stage speakers (who are not room moderators, creators, or site admins)
+    # can voluntarily step down back to the audience.
+    def can_step_down_in_live_room?(room)
+      return false unless can_join_live_room?(room)
+      return false unless room.stage?
+      return false if user&.admin? || room.creator_id == user.id || room.moderator?(user)
+
+      room.membership_for(user)&.speaker? || Live::StageRoles.session_speaker?(room, user.id)
+    end
+
+    def ensure_can_step_down_in_live_room!(room)
+      unless can_step_down_in_live_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
       end
     end

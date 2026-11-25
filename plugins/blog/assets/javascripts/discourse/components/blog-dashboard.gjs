@@ -375,9 +375,7 @@ export default class BlogDashboard extends Component {
       </DPageHeader>
       {{#if this.data.error}}
         <DFlashMessage @flash={{this.data.error}} @type="warning" />
-        <a href="/admin/plugins/blog/settings?filter=category">{{i18n
-            "blog.settings"
-          }}</a>
+        <a href="/admin/plugins/blog/blogs">{{i18n "blog.settings"}}</a>
       {{/if}}
       <DFilterControls
         @array={{this.topics}}

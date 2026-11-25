@@ -89,4 +89,16 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
     expect(tag_stripper.finish).to eq("<thinking")
   end
+
+  it "streams many chunks inside a stripped tag linearly and preserves unclosed content on finish" do
+    streamed = +""
+    streamed << (tag_stripper << "<thin").to_s
+    streamed << (tag_stripper << "king>").to_s
+    200.times { |i| streamed << (tag_stripper << " step #{i} <other>").to_s }
+    streamed << (tag_stripper << "</thinking>visible reply").to_s
+
+    expect(streamed).to eq("visible reply")
+    expect(tag_stripper.finish).to eq("")
+    expect(tag_stripper.finish_visible).to eq("")
+  end
 end

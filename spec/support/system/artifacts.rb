@@ -14,6 +14,7 @@ module SystemArtifacts
           "#{example.metadata[:full_description].parameterize}-screenrecord.webm",
         )
 
+      FileUtils.mkdir_p(File.dirname(saved_path))
       FileUtils.mv(video, saved_path)
 
       if !ENV["CI"]

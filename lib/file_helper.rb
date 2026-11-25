@@ -42,6 +42,11 @@ class FileHelper
     filename.match?(supported_playable_media_regexp)
   end
 
+  def self.contained_path(path, *directories)
+    path = File.expand_path(path)
+    path if path.start_with?(*directories.map { File.join(File.expand_path(it), "") })
+  end
+
   # https://guides.rubyonrails.org/security.html#file-uploads
   def self.sanitize_filename(filename)
     filename.strip.tap do |name|
@@ -225,9 +230,13 @@ class FileHelper
     @@inline_safe_files ||= inline_images | Set.new(%w[pdf]) | supported_video | supported_audio
   end
 
+  def self.inline_safe_files_regexp
+    @@inline_safe_files_regexp ||= /\.(#{inline_safe_files.to_a.join("|")})\z/i
+  end
+
   def self.is_inline_safe?(filename)
     return false if filename.blank?
-    filename.downcase.end_with?(*inline_safe_files.map { |ext| ".#{ext}" })
+    filename.match?(inline_safe_files_regexp)
   end
 
   def self.supported_audio

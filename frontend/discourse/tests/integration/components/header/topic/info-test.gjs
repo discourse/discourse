@@ -3,7 +3,6 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import TopicInfo from "discourse/components/header/topic/info";
-import { forceMobile } from "discourse/lib/mobile";
 import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -38,30 +37,6 @@ module("Integration | Component | Header | Topic | Info", function (hooks) {
 
   hooks.afterEach(function () {
     sinon.restore();
-  });
-
-  test("shows the edit pencil with mobile footer navigation outside a titled page", async function (assert) {
-    forceMobile();
-    this.siteSettings.mobile_footer_navigation = true;
-    this.topic = createTopic(this);
-    this.topic.details.set("can_edit", true);
-
-    await renderComponent(this);
-
-    assert.dom(".header-title__edit").exists("the topic title can be edited");
-  });
-
-  test("hides the edit pencil when the topic cannot be edited", async function (assert) {
-    forceMobile();
-    this.siteSettings.mobile_footer_navigation = true;
-    this.topic = createTopic(this);
-    this.topic.details.set("can_edit", false);
-
-    await renderComponent(this);
-
-    assert
-      .dom(".header-title__edit")
-      .doesNotExist("the edit button requires topic edit permission");
   });
 
   test("routes flat topic title clicks to the first post", async function (assert) {

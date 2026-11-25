@@ -212,6 +212,13 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "更新"
+        columns:
+          user: "ユーザー"
+          reason: "通報:"
+          created: "作成"
+          status: "ステータス"
       dsa_classification:
         suggest: "AI で提案"
       ai_decoded_transcript:
@@ -724,6 +731,26 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      concepts:
+        edit: "編集"
+        delete: "削除"
+        columns:
+          status: "ステータス"
+          topics: "トピック"
+          posts: "投稿"
+        statuses:
+          all: "すべてのステータス"
+          active: "アクティブ"
+        form:
+          name: "名前"
+          description: "説明"
+          status: "ステータス"
+        tagged_topics: "タグ付きトピック"
+        topic_columns:
+          topic: "トピック"
+          primary: "プライマリー"
+          relevance: "関連性の高い項目"
+        primary_badge: "プライマリー"
       decision_models:
         no_preset: "なし"
         display_name: "名前"

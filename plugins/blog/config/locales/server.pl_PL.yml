@@ -9,24 +9,17 @@ pl_PL:
     problem:
       blog_not_ready: "Blog nie może publikować artykułów. %{reason} <a href='%{base_path}/admin/site_settings/category/all_results?filter=%{setting}'>Sprawdź ustawienia</a>"
       blog_not_ready_without_setting: "Blog nie może publikować artykułów. %{reason}"
+      blog_not_ready_for_blog: "„%{blog_name}” nie może publikować artykułów. %{reason} <a href='%{base_path}/admin/plugins/blog/blogs/%{blog_id}/settings'>Przejrzyj bloga</a>"
   site_settings:
+    blog_custom_themes_enabled: Zezwól witrynie na tworzenie, dostosowywanie i importowanie szablonów blogów. Gdy ta opcja jest wyłączona, blogi korzystają z wbudowanych szablonów.
+    blog_max_instances: Największa liczba blogów, jaką ta strona może mieć.
+    blog_custom_domains_enabled: Zezwól na serwowanie bloga z jego własnej domeny, a nie z adresu społeczności.
+    blog_role_groups_enabled: Pozwól witrynie wybrać, które grupy mają role autora bloga, redaktora i wydawcy. Gdy ta opcja jest wyłączona, role te ma tylko personel.
     blog_contributor_groups: Grupy, które mogą pisać i przesyłać własne wersje robocze bloga. Grupy te widzą kategorię „prywatne szkice”. Nie daje to uprawnień pracownikom forum.
     blog_editor_groups: Grupy, które mogą edytować i przesyłać dowolne szkice bloga, które widzą. Grupy te widzą kategorię szkiców prywatnych. Publikacja wymaga roli publikującego.
     blog_publisher_groups: Grupy, które mogą zatwierdzać, publikować, wycofywać i planować poprawki bloga, widzą je. Wydawcy mogą zatwierdzać swoje własne prace. Grupy te widzą kategorię prywatnych szkiców i mogą rozpoczynać tematy w publicznej kategorii bloga. Administratorzy zawsze zachowują dostęp.
     blog_enabled: "Blog zbudowany na Twojej społeczności. Pisz i recenzuj artykuły z zespołem redakcyjnym, publikuj je w serwisie /blog z własnym projektem i pozwól czytelnikom dyskutować na temat każdego artykułu w powiązanym temacie."
-    blog_url: Obsługuj bloga z własnego źródła HTTPS, bez ukośnika ani ścieżki, zamiast /blog na tej stronie. Nazwa musi różnić się od nazwy hosta dyskusji. Skonfiguruj tę nazwę hosta jako alias tej strony w połączeniu z serwerem proxy i bazą danych.
-    blog_category: Kategoria publiczna, w której toczy się dyskusja na temat każdego opublikowanego artykułu. Pozostaw puste pole, aby utworzyć kategorię po opublikowaniu pierwszego artykułu. Podkategorie nie są uwzględniane. Temat nigdy nie zostanie opublikowany tylko dlatego, że znajduje się w tej kategorii.
     blog_drafts_category: Prywatna kategoria dla szkiców. Jest tworzona i zarządzana przez bloga, a dostęp do niej mają tylko grupy ról bloga. Adresy URL do przesyłania nie są prywatne, gdy wyłączone jest bezpieczne przesyłanie.
-    blog_title: Nazwa bloga wyświetlana w nawigacji, tytułach stron i kanałach.
-    blog_description: Krótki opis strony głównej, kanału informacyjnego i wyszukiwarek.
-    blog_about: Treść w formacie Markdown dla strony „O mnie” na blogu.
-    blog_path_format: Szablon adresu dla nowych artykułów, np. /{year}/{month}/{slug}. Użyj {year}, {month}, {day}, {slug} i {id}, w tym {slug} lub {id}. Dopóki artykuł nie zostanie opublikowany po raz pierwszy, po jego tytule i dacie publikacji UTC będzie wyświetlany adres, którego nie wpisał redaktor. Opublikowane artykuły zachowują swoje adresy.
-    blog_posts_per_page: Liczba artykułów wyświetlanych na każdej stronie głównej lub stronie archiwum.
-    keywords:
-      blog_about: "o stronie"
-      blog_description: "slogan"
-      blog_path_format: "format adresu|format niestandardowy"
-      blog_title: "nazwa bloga"
   activerecord:
     attributes:
       blog/publication:
@@ -99,6 +92,7 @@ pl_PL:
     not_found_body: Być może został przeniesiony, powrócił do wersji roboczej lub nie został jeszcze opublikowany.
     categories:
       public: Blog
+      public_named: "Blog %{name}"
       public_description: Dyskusje na temat opublikowanych artykułów na blogu. Każdy artykuł otrzymuje tutaj temat po opublikowaniu i każdy może na niego odpowiedzieć.
       drafts: Szkice bloga
       drafts_description: Szkice artykułów blogowych, zarządzane przez bloga. Tylko grupy autorów, redaktorów i wydawców bloga widzą tę kategorię, a inne grupy dodane do niej są usuwane. Zmień te grupy w ustawieniach bloga.
@@ -109,10 +103,24 @@ pl_PL:
       category_unavailable: Nie udało się utworzyć publicznej kategorii bloga. Spróbuj ponownie lub wybierz kategorię w ustawieniach bloga.
       drafts_category_unavailable: Nie udało się przygotować kategorii prywatnych szkiców. Spróbuj ponownie.
       drafts_category_public: Kategoria „Szkice bloga” jest otwarta dla wszystkich, więc prace redakcyjne są wstrzymane. Usuń grupę „wszyscy” w ustawieniach bezpieczeństwa tej kategorii.
+      blog_category_is_drafts: Kategoria „Szkice” jest prywatna, więc nie można w niej umieszczać dyskusji z bloga. Wybierz inną kategorię.
       blog_fixed: Artykuł pozostaje na blogu, na którym został opublikowany.
+      blog_slug_locked: Na tym blogu opublikowano już artykuły, więc jego slug nie może się zmienić.
+      blog_category_locked: Na tym blogu opublikowano już artykuły, więc kategoria dyskusji nie może ulec zmianie.
+      blog_unpublished: "„%{name}” nie zostało jeszcze opublikowane. Opublikuj bloga w panelu administracyjnym przed publikacją artykułów."
+      blog_has_articles: Cofnij publikację lub usuń artykuły tego bloga przed jego usunięciem.
+      blog_limit:
+        one: "Ta witryna może mieć tylko %{count} blog."
+        few: "Ta witryna może mieć tylko %{count} blogi."
+        many: "Ta witryna może mieć tylko %{count} blogów."
+        other: "Ta witryna może mieć tylko %{count} blogów."
+      default_blog_published: Główny blog jest zawsze publikowany.
+      default_blog_undeletable: Głównego bloga nie można usunąć.
       path_format_blog_slug: "Adres każdego artykułu zaczynałby się od „%{slug}”, co jest adresem innego bloga. Wybierz inny format."
+      blog_slug_in_use: Ten slug jest już zajęty na innym blogu. Wybierz inny.
       blog_slug_reserved: Ten adres jest używany przez samego bloga. Wybierz inny.
       blog_slug_taken: Artykuł na blogu głównym zaczyna się już od tego adresu. Wybierz inny.
+      blog_url_unavailable: Blogi nie mogą używać na tej stronie własnych domen.
       blog_url_forum_host: Domena bloga musi różnić się od domeny społeczności.
       category_name_taken: "Kategoria o nazwie „%{name}” już istnieje, więc blog nie może utworzyć własnej. Wybierz publiczną kategorię bloga w ustawieniach bloga."
       published_page: Usuń publikację tego tematu ze strony przed opublikowaniem go na blogu.
@@ -126,6 +134,7 @@ pl_PL:
     explore_archive: Przeglądaj archiwum
     customizations_disabled: W przypadku wyświetlania tej strony niestandardowy CSS i JavaScript są wyłączone.
     themes:
+      custom_unavailable: Motywy niestandardowe nie są dostępne na tej stronie. Wybierz jeden z wbudowanych motywów.
       sample_article: Przykładowy artykuł (nie wybrano artykułu publicznego)
       sample_body: Opublikuj artykuł, aby zobaczyć jego rzeczywistą treść w tym odniesieniu.
       preview_diagnostic: "%{template}, wiersz %{line}: %{message}"

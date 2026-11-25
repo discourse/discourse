@@ -127,6 +127,18 @@ RSpec.describe SearchIndexer do
     expect(scrubbed).to eq("Discourse 51%20PM Untitled%20design%20(21)")
   end
 
+  it "scrubs plain formatted HTML without links or emoji and rejects excessive nesting" do
+    html = "<p>Hello <strong>world</strong> &amp; <code>friends</code>!</p>"
+    expect(SearchIndexer::HtmlScrubber.scrub(html)).to eq("Hello world & friends !")
+
+    expect(SearchIndexer::HtmlScrubber.scrub("<code>puts &quot;hi&quot; caf&eacute;</code>")).to eq(
+      'puts "hi" café',
+    )
+
+    deep = '<div title="x">' * Nokogiri::Gumbo::DEFAULT_MAX_TREE_DEPTH + "deep"
+    expect(SearchIndexer::HtmlScrubber.scrub(deep)).to eq("")
+  end
+
   it "correctly indexes a post according to version" do
     # Preparing so that they can be indexed to right version
     SearchIndexer.update_posts_index(

@@ -651,6 +651,44 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def rate_limit_search!
+    if current_user.present?
+      RateLimiter.new(
+        current_user,
+        "search-min",
+        SiteSetting.rate_limit_search_user,
+        1.minute,
+      ).performed!
+
+      return
+    end
+
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-sec",
+      SiteSetting.rate_limit_search_anon_user_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-min",
+      SiteSetting.rate_limit_search_anon_user_per_minute,
+      1.minute,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-sec",
+      SiteSetting.rate_limit_search_anon_global_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-min",
+      SiteSetting.rate_limit_search_anon_global_per_minute,
+      1.minute,
+    ).performed!
+  end
+
   def rate_limit_second_factor_by_ip!
     return if params[:second_factor_token].blank?
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!

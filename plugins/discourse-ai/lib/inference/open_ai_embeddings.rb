@@ -12,7 +12,7 @@ module DiscourseAi
 
       attr_reader :endpoint, :api_key, :model, :dimensions
 
-      def perform!(content)
+      def perform!(content, task: nil)
         headers = { "Content-Type" => "application/json" }
 
         if endpoint.include?("azure")

@@ -1636,7 +1636,7 @@ RSpec.describe PostAlerter do
 
     context "with push subscriptions" do
       before do
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
         SiteSetting.push_notification_time_window_mins = 10
       end
 
@@ -1753,7 +1753,7 @@ RSpec.describe PostAlerter do
 
       it "tells the push to keep an excerpt provided by the caller" do
         evil_trout.update_columns(last_seen_at: 1.hour.ago)
-        Fabricate(:push_subscription, user: evil_trout)
+        Fabricate(:bound_push_subscription, user: evil_trout)
 
         expect_enqueued_with(
           job: :deliver_push_notification,

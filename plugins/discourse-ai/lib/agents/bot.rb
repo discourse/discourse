@@ -214,6 +214,8 @@ module DiscourseAi
           end
           break if context.cancel_manager.cancelled?
 
+          agent.prepare_next_completion(prompt: prompt, context: context, llm: current_llm)
+
           if context.mcp_failure_limit_reached?
             prompt.push(type: :user, content: MCP_FAILURE_FINAL_ANSWER_HINT)
             prompt.tool_choice = :none
@@ -558,7 +560,7 @@ module DiscourseAi
         tool_action =
           AiToolAction.create!(
             tool_name: tool.name,
-            tool_parameters: tool.parameters,
+            tool_parameters: tool.parameters_for_approval,
             tool_options: tool.agent_options.to_h,
             ai_agent_id: @agent.id,
             bot_user_id: @bot_user.id,

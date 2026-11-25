@@ -3554,19 +3554,14 @@ sq:
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       validations:
         icon_required: "Zgjidhni një ikonë."
+      icon_search_placeholder: "Kërkoni…"
       description: "Përshkrimi"
-      icon: "Ikonë"
-      emoji: "Emoji"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
       styles:
         icon: "Ikonë"
         emoji: "Emoji"
-        options:
-          icon: "Ikonë"
-          emoji: "Emoji"
-      color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
       no_description: "Shto një përshkrim për këtë kategori."
@@ -3922,6 +3917,7 @@ sq:
       share: "Shpërndaje"
       dismiss: "Hiqe"
     mobile_tab_bar:
+      new_topic: "Temë e re"
       create: "Krijo"
       more: "Më shumë"
       back: "Kthehu mbrapa"

@@ -49,10 +49,4 @@ RSpec.describe Blog::PathFormat do
       end
     end
   end
-
-  it "guards the blog_path_format setting" do
-    expect { SiteSetting.blog_path_format = "/{title}" }.to raise_error(
-      Discourse::InvalidParameters,
-    )
-  end
 end

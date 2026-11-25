@@ -76,11 +76,11 @@ class User < ActiveRecord::Base
           class_name: "AnonymousUser",
           dependent: :destroy,
           strict_loading: false
+  # Retain the shadow marker after master deletion to prevent independent login.
   has_one :anonymous_user_shadow,
           ->(record) { where(active: true) },
           foreign_key: :master_user_id,
-          class_name: "AnonymousUser",
-          dependent: :destroy
+          class_name: "AnonymousUser"
   has_many :anonymous_user_shadows, foreign_key: :master_user_id, class_name: "AnonymousUser"
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
@@ -183,6 +183,9 @@ class User < ActiveRecord::Base
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
+  around_save :with_password_change_revocation,
+              if: -> { @raw_password && persisted? },
+              prepend: true
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -200,6 +203,7 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  before_destroy :revoke_credentials_before_destroy, prepend: true
   after_destroy :reassign_acl_ownership, unless: :new_record?
   after_destroy :clear_acls
 
@@ -218,7 +222,7 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
   end
 
-  after_save :expire_tokens_if_password_changed
+  after_save :clear_raw_password, if: -> { @raw_password }
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -610,19 +614,20 @@ class User < ActiveRecord::Base
 
     return true if everyone_shortcut || logged_in_shortcut
 
+    # Array#intersect? avoids allocating an intersection; it only accepts Arrays.
+    group_ids = group_ids.to_a unless group_ids.is_a?(Array)
+
     # Sometimes the system user doesn't have their auto groups
     # from some strange edge case, this handles it.
     if is_system_user? &&
          (
-           (
-             Group.auto_groups_between(:admins, :trust_level_4) -
-               [Group::AUTO_GROUPS[:anonymous_users]]
-           ) & group_ids
-         ).any?
+           Group.auto_groups_between(:admins, :trust_level_4) -
+             [Group::AUTO_GROUPS[:anonymous_users]]
+         ).intersect?(group_ids)
       return true
     end
 
-    (group_ids & belonging_to_group_ids).any?
+    group_ids.intersect?(belonging_to_group_ids)
   end
 
   def belonging_to_group_ids
@@ -895,7 +900,13 @@ class User < ActiveRecord::Base
     query = notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
     if max_notification_id = query.maximum(:id)
-      update!(seen_notification_id: max_notification_id)
+      self
+        .class
+        .where(id:)
+        .where("seen_notification_id < ?", max_notification_id)
+        .update_all(seen_notification_id: max_notification_id)
+      self.seen_notification_id = max_notification_id
+      clear_attribute_changes([:seen_notification_id])
       true
     else
       false
@@ -927,55 +938,17 @@ class User < ActiveRecord::Base
     seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
+  NOTIFICATIONS_STATE_LOCK_SECONDS = 5
+
   def publish_notifications_state
     return if !interactive_bot? && !allow_live_notifications?
 
-    # publish last notification json with the message so we can apply an update
-    notification = notifications.visible.order(created_at: :desc, id: :desc).first
-    json = NotificationSerializer.new(notification).as_json if notification
-
-    sql = <<~SQL
-       SELECT * FROM (
-         SELECT n.id, n.read FROM notifications n
-         LEFT JOIN topics t ON n.topic_id = t.id
-         WHERE
-          t.deleted_at IS NULL AND
-          n.high_priority AND
-          n.user_id = :user_id AND
-          NOT read
-        ORDER BY n.id DESC
-        LIMIT 20
-      ) AS x
-      UNION ALL
-      SELECT * FROM (
-       SELECT n.id, n.read FROM notifications n
-       LEFT JOIN topics t ON n.topic_id = t.id
-       WHERE
-        t.deleted_at IS NULL AND
-        (n.high_priority = FALSE OR read) AND
-        n.user_id = :user_id
-       ORDER BY n.id DESC
-       LIMIT 20
-      ) AS y
-    SQL
-
-    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
-
-    payload = {
-      unread_notifications: unread_notifications,
-      unread_high_priority_notifications: unread_high_priority_notifications,
-      read_first_notification: read_first_notification?,
-      last_notification: json,
-      recent: recent,
-      seen_notification_id: seen_notification_id,
-    }
-
-    payload[:all_unread_notifications_count] = all_unread_notifications_count
-    payload[:grouped_unread_notifications] = grouped_unread_notifications
-    payload[:available_notification_types] = available_notification_types
-    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
-
-    MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
+    DistributedMutex.synchronize(
+      "notifications_state_#{id}",
+      validity: NOTIFICATIONS_STATE_LOCK_SECONDS,
+    ) { publish_stored_notifications_state }
+  rescue Discourse::ReadOnly
+    publish_stored_notifications_state
   end
 
   def publish_do_not_disturb(ends_at: nil)
@@ -1084,9 +1057,8 @@ class User < ActiveRecord::Base
   end
 
   def password_expired?(password)
-    return false if user_password.nil? || user_password.password_expired_at.nil?
-    user_password.password_hash ==
-      hash_password(password, user_password.password_salt, user_password.password_algorithm)
+    return false unless user_password&.password_expired_at
+    user_password.matches_password?(password)
   end
 
   def confirm_password?(password)
@@ -1275,12 +1247,12 @@ class User < ActiveRecord::Base
   end
 
   def self.username_hash(username)
-    username
-      .each_char
-      .reduce(0) do |result, char|
-        [((result << 5) - result) + char.ord].pack("L").unpack("l").first
-      end
-      .abs
+    result = 0
+    username.each_codepoint do |cp|
+      result = (((result << 5) - result) + cp) & 0xFFFFFFFF
+      result -= 0x100000000 if result >= 0x80000000
+    end
+    result.abs
   end
 
   def self.default_template(username)
@@ -1317,6 +1289,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  LETTER_AVATAR_HEX_COLORS =
+    LetterAvatar::COLORS.map { |r, g, b| format("%02x%02x%02x", r, g, b) }.freeze
+  private_constant :LETTER_AVATAR_HEX_COLORS
+
   def self.letter_avatar_color(username)
     username ||= ""
     if SiteSetting.restrict_letter_avatar_colors.present?
@@ -1327,13 +1303,12 @@ class User < ActiveRecord::Base
       index = (num * hex_length) + num
       colors[index, hex_length]
     else
-      color = LetterAvatar::COLORS[color_index(username, LetterAvatar::COLORS.length)]
-      color.map { |c| c.to_s(16).rjust(2, "0") }.join
+      LETTER_AVATAR_HEX_COLORS[color_index(username, LETTER_AVATAR_HEX_COLORS.length)]
     end
   end
 
   def self.color_index(username, length)
-    Digest::MD5.hexdigest(username)[0...15].to_i(16) % length
+    (Digest::MD5.digest(username).unpack1("Q>") >> 4) % length
   end
 
   def is_system_user?
@@ -1840,6 +1815,24 @@ class User < ActiveRecord::Base
     SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
+  # An inactive or orphaned shadow is still a shadow, even when anonymous mode
+  # is disabled. Credential decisions must not use a cached association here.
+  def anonymous_shadow?
+    AnonymousUser.exists?(user_id: id)
+  end
+
+  # Lock separately from self: callers can have unsaved changes. Read the marker
+  # even for historical shadows; a nil identity means the master was deleted.
+  def with_credential_lock
+    User.transaction { User.uncached { yield lock_credential_identity } }
+  end
+
+  # Revoke browser sessions, their push subscriptions, and legacy shadow keys.
+  # The master's own authorized apps retain their independent lifecycle.
+  def revoke_family_sessions!
+    with_credential_lock { |identity| revoke_credentials!(family: identity) }
+  end
+
   def is_singular_admin?
     User.where(admin: true).where.not(id: id).human_users.blank?
   end
@@ -2121,6 +2114,55 @@ class User < ActiveRecord::Base
 
   protected
 
+  def notifications_state
+    # publish last notification json with the message so we can apply an update
+    notification = notifications.visible.order(created_at: :desc, id: :desc).first
+    json = NotificationSerializer.new(notification).as_json if notification
+
+    sql = <<~SQL
+       SELECT * FROM (
+         SELECT n.id, n.read FROM notifications n
+         LEFT JOIN topics t ON n.topic_id = t.id
+         WHERE
+          t.deleted_at IS NULL AND
+          n.high_priority AND
+          n.user_id = :user_id AND
+          NOT read
+        ORDER BY n.id DESC
+        LIMIT 20
+      ) AS x
+      UNION ALL
+      SELECT * FROM (
+       SELECT n.id, n.read FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        (n.high_priority = FALSE OR read) AND
+        n.user_id = :user_id
+       ORDER BY n.id DESC
+       LIMIT 20
+      ) AS y
+    SQL
+
+    recent = DB.query(sql, user_id: id).map! { |r| [r.id, r.read] }
+
+    payload = {
+      unread_notifications: unread_notifications,
+      unread_high_priority_notifications: unread_high_priority_notifications,
+      read_first_notification: read_first_notification?,
+      last_notification: json,
+      recent: recent,
+      seen_notification_id: seen_notification_id,
+    }
+
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:available_notification_types] = available_notification_types
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
+
+    payload
+  end
+
   def badge_grant
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
@@ -2153,27 +2195,6 @@ class User < ActiveRecord::Base
 
   def create_email_token
     email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
-  end
-
-  def expire_tokens_if_password_changed
-    # NOTE: setting raw password is the only valid way of changing a password
-    # the password field in the DB is actually hashed, nobody should be amending direct
-    if @raw_password
-      # Association in model may be out-of-sync
-      UserAuthToken.where(user_id: id).destroy_all
-      PushNotificationPusher.clear_subscriptions(self)
-
-      email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
-
-      # We should not carry this around after save
-      @raw_password = nil
-      @password_required = false
-    end
-  end
-
-  def hash_password(password, salt, algorithm)
-    raise StandardError.new("password is too long") if password.size > User.max_password_length
-    PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
   end
 
   def add_trust_level
@@ -2222,9 +2243,7 @@ class User < ActiveRecord::Base
 
           errors.add(:username, I18n.t(:"user.username.unique")) if existing.present? && !same_user
 
-          if confirm_password?(username) || confirm_password?(username.downcase)
-            errors.add(:username, :same_as_password)
-          end
+          errors.add(:username, :same_as_password) if matches_password_or_lowercase?(username)
         end
       end
   end
@@ -2232,10 +2251,12 @@ class User < ActiveRecord::Base
   def name_validator
     if name.present?
       name_pw = name[0...User.max_password_length]
-      if confirm_password?(name_pw) || confirm_password?(name_pw.downcase)
-        errors.add(:name, :same_as_password)
-      end
+      errors.add(:name, :same_as_password) if matches_password_or_lowercase?(name_pw)
     end
+  end
+
+  def matches_password_or_lowercase?(value)
+    user_password&.matches_password?(value) || user_password&.matches_password?(value.downcase)
   end
 
   def set_default_categories_preferences
@@ -2348,6 +2369,57 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  def publish_stored_notifications_state
+    self.class.uncached do
+      stored = self.class.find_by(id:)
+      next if !stored
+
+      MessageBus.publish("/notification/#{id}", stored.notifications_state, user_ids: [id])
+    end
+  end
+
+  # Called inside the transaction that needs the lock. If the master is gone,
+  # serialize local cleanup on the orphan itself, but never yield it as a master.
+  def lock_credential_identity
+    master_id = AnonymousUser.where(user_id: id).pick(:master_user_id)
+    identity = User.lock.find_by(id: master_id || id)
+    User.lock.find_by(id: id) if master_id && !identity
+    identity
+  end
+
+  def with_password_change_revocation
+    with_credential_lock do |identity|
+      next unless yield
+
+      # A shadow shares the lock, but a password change is local maintenance.
+      revoke_credentials!(family: identity == self ? identity : nil)
+      email_tokens.where("not expired").update_all(expired: true)
+    end
+  end
+
+  def clear_raw_password
+    @raw_password = nil
+    @password_required = false
+  end
+
+  def revoke_credentials_before_destroy
+    # Hold the same lock as an exchange until the deletion commits. On shadow
+    # deletion the dependent associations remove only that shadow's credentials.
+    with_credential_lock { |identity| revoke_credentials!(family: identity) if identity == self }
+  end
+
+  def revoke_credentials!(family:)
+    # Without a family identity, revoke only credentials owned by this shadow.
+    shadow_ids = family ? family.anonymous_user_shadows.pluck(:user_id) : [id]
+    user_ids = family ? [family.id, *shadow_ids] : shadow_ids
+
+    UserAuthToken.where(user_id: user_ids).find_each(&:destroy!)
+    if shadow_ids.present?
+      UserApiKey.where(user_id: shadow_ids, revoked_at: nil).update_all(revoked_at: Time.current)
+    end
+    PushSubscription.where(user_id: user_ids).delete_all
+  end
 
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)
