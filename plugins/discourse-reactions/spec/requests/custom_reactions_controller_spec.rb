@@ -183,6 +183,7 @@ describe DiscourseReactions::CustomReactionsController do
   end
 
   describe "#reactions_given" do
+    fab!(:moderator)
     fab!(:private_topic) { Fabricate(:private_message_topic, user: user_2) }
     fab!(:private_post) { Fabricate(:post, topic: private_topic) }
     fab!(:secure_group, :group)
@@ -260,6 +261,20 @@ describe DiscourseReactions::CustomReactionsController do
       )
     end
 
+    it "does not return reactions in private messages shared with non-admin viewers" do
+      TopicAllowedUser.create!(topic: private_topic, user: user_1)
+      TopicAllowedUser.create!(topic: private_topic, user: moderator)
+
+      [user_1, moderator].each do |viewer|
+        sign_in(viewer)
+        get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+        expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
+          private_post.id,
+        )
+      end
+    end
+
     it "does not return reactions for secure categories" do
       secure_group.add(user_2)
       sign_in(user_1)
@@ -301,6 +316,32 @@ describe DiscourseReactions::CustomReactionsController do
       expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
         whisper_post.id,
       )
+    end
+
+    it "only returns reactions in unlisted topics to the owner and staff" do
+      unlisted_topic = Fabricate(:topic, user: user_3, visible: false)
+      unlisted_post =
+        Fabricate(:post, topic: unlisted_topic, user: user_3, raw: "unlisted topic post body")
+      unlisted_reaction = Fabricate(:reaction, post: unlisted_post, reaction_value: "laughing")
+      Fabricate(:reaction_user, reaction: unlisted_reaction, user: user_2, post: unlisted_post)
+
+      sign_in(user_1)
+      get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.map { |reaction| reaction["post_id"] }).not_to include(
+        unlisted_post.id,
+      )
+      expect(response.body).not_to include(unlisted_topic.title, unlisted_post.excerpt)
+
+      [user_2, moderator, admin].each do |viewer|
+        sign_in(viewer)
+        get "/discourse-reactions/posts/reactions.json", params: { username: user_2.username }
+
+        expect(response.parsed_body.map { |reaction| reaction["post_id"] }).to include(
+          unlisted_post.id,
+        )
+      end
     end
 
     describe "a post with one of your reactions has been deleted" do
