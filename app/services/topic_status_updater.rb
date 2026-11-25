@@ -61,6 +61,11 @@ TopicStatusUpdater =
         UserProfile.remove_featured_topic_from_all_profiles(topic)
       end
 
+      if status.visible? && status.enabled? && topic.first_post_hidden?
+        topic.update_excerpt(nil)
+        topic.localizations.update_all(excerpt: nil)
+      end
+
       if status.visible? && result
         topic.update_category_topic_count_by(status.enabled? ? 1 : -1)
         UserStatCountUpdater.public_send(

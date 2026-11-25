@@ -533,7 +533,7 @@ class PostCreator
         attrs[:last_posted_at] = @post.created_at
         attrs[:last_post_user_id] = @post.user_id
         attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
-        attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+        attrs[:excerpt] = @post.excerpt_for_topic if new_topic? && !@post.hidden?
       end
 
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
