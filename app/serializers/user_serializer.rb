@@ -4,6 +4,39 @@ class UserSerializer < UserCardSerializer
   include UserTagNotificationsMixin
   include UserSidebarMixin
 
+  STAFF_ONLY_SETTINGS = {
+    username: {
+      check: ->(guardian, user) { guardian.can_edit_username?(user) },
+    },
+    profile_header: {
+      check: ->(guardian, user) { guardian.can_upload_profile_header?(user) },
+      groups: :profile_background_allowed_groups_map,
+      data: ->(user) { user.user_profile.profile_background_upload_id.present? },
+    },
+    card_background: {
+      check: ->(guardian, user) { guardian.can_upload_user_card_background?(user) },
+      groups: :user_card_background_allowed_groups_map,
+      data: ->(user) { user.user_profile.card_background_upload_id.present? },
+    },
+    ignored_users: {
+      check: ->(guardian, _user) { guardian.can_ignore_users? },
+      groups: :ignore_allowed_groups_map,
+      data: ->(user) { IgnoredUser.exists?(user_id: user.id) },
+    },
+    muted_users: {
+      check: ->(guardian, _user) { guardian.can_mute_users? },
+    },
+    private_messages: {
+      check: ->(guardian, _user) { guardian.can_send_private_messages? },
+      groups: :personal_message_enabled_groups_map,
+      data: ->(user) do
+        !user.user_option.allow_private_messages || user.user_option.enable_allowed_pm_users
+      end,
+    },
+  }
+
+  STAFF_GROUP_IDS = Group::AUTO_GROUPS.values_at(*Group::STAFF_GROUPS)
+
   attributes :bio_raw,
              :bio_cooked,
              :can_edit,
@@ -35,7 +68,11 @@ class UserSerializer < UserCardSerializer
     can_edit
   end
 
-  staff_attributes :post_count, :topic_count, :can_be_deleted, :can_delete_all_posts
+  staff_attributes :post_count,
+                   :topic_count,
+                   :can_be_deleted,
+                   :can_delete_all_posts,
+                   :staff_only_settings
 
   private_attributes :locale,
                      :muted_category_ids,
@@ -214,7 +251,9 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_edit
-    scope.can_edit?(object)
+    return @can_edit if defined?(@can_edit)
+
+    @can_edit = scope.can_edit?(object)
   end
 
   def can_edit_avatar
@@ -238,11 +277,11 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_upload_profile_header
-    scope.can_upload_profile_header?(object)
+    available_setting?(:profile_header)
   end
 
   def can_upload_user_card_background
-    scope.can_upload_user_card_background?(object)
+    available_setting?(:card_background)
   end
 
   ###
@@ -263,6 +302,18 @@ class UserSerializer < UserCardSerializer
 
   def can_delete_all_posts
     scope.can_delete_all_posts?(object)
+  end
+
+  def staff_only_settings
+    return [] if !scope.is_staff? || scope.is_me?(object)
+
+    @staff_only_settings ||=
+      STAFF_ONLY_SETTINGS.filter_map do |setting, rule|
+        next if restricted_to_staff?(rule[:groups]) && !rule[:data].call(object)
+        next if own_settings[setting] || !rule[:check].call(scope, object)
+
+        setting
+      end + staff_only_user_fields
   end
 
   ###
@@ -293,7 +344,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_mute_users
-    scope.can_mute_users?
+    available_setting?(:muted_users)
   end
 
   def ignored_usernames
@@ -301,7 +352,13 @@ class UserSerializer < UserCardSerializer
   end
 
   def can_ignore_users
-    scope.can_ignore_users?
+    available_setting?(:ignored_users)
+  end
+
+  def can_send_private_messages
+    return super if !can_edit
+
+    available_setting?(:private_messages)
   end
 
   def allowed_pm_usernames
@@ -397,6 +454,30 @@ class UserSerializer < UserCardSerializer
   end
 
   private
+
+  def available_setting?(setting)
+    return false if !can_edit
+
+    own_settings[setting] || staff_only_settings.include?(setting)
+  end
+
+  def own_settings
+    @own_settings ||=
+      begin
+        guardian = scope.is_me?(object) ? scope : object.guardian
+        STAFF_ONLY_SETTINGS.transform_values { |rule| rule[:check].call(guardian, object) }
+      end
+  end
+
+  def staff_only_user_fields
+    return [] if object.staff?
+
+    UserField.where(editable: false).pluck(:id).map { |id| :"user_field_#{id}" }
+  end
+
+  def restricted_to_staff?(groups)
+    groups.present? && (SiteSetting.public_send(groups) - STAFF_GROUP_IDS).empty?
+  end
 
   def custom_field_keys
     fields = super

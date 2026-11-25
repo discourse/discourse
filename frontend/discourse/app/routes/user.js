@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { RouteException } from "discourse/controllers/exception";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -41,6 +42,7 @@ export default class UserRoute extends DiscourseRoute {
 
     return user
       .findDetails()
+      .then(() => user.set("isCurrent", this.isCurrentUser(user)))
       .then(() => user.findStaffInfo())
       .then(() => user.statusManager.trackStatus())
       .catch(() => this.router.replaceWith("/404"));
@@ -120,11 +122,11 @@ export default class UserRoute extends DiscourseRoute {
 
   @action
   undoRevokeApiKey(key) {
-    key.undoRevoke();
+    key.undoRevoke().catch(popupAjaxError);
   }
 
   @action
   revokeApiKey(key) {
-    key.revoke();
+    key.revoke().catch(popupAjaxError);
   }
 }

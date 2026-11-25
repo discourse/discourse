@@ -2063,6 +2063,8 @@ en:
       unread_message_count: "Messages"
       admin_delete: "Delete"
       users: "Users"
+      staff_only_setting: "Staff only. %{username} can't change this."
+      self_only_setting: "Only %{username} can use this."
       muted_users: "Muted"
       muted_users_instructions: "Suppress all notifications and PMs from these users."
       allowed_pm_users: "Allowed"
@@ -2381,6 +2383,7 @@ en:
       change_username:
         title: "Change Username"
         confirm: "Are you absolutely sure you want to change your username?"
+        confirm_other: "Are you absolutely sure you want to change the username of %{username}?"
         taken: "Sorry, that username is taken."
         invalid: "That username is invalid. It must only include numbers and letters"
 
@@ -2395,6 +2398,7 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
         success_via_admin: "We've sent an email to that address. The user will need to follow the confirmation instructions in the email."
         success_staff: "We've sent an email to your current address. Please follow the confirmation instructions."
+        success_staff_via_admin: "We've sent an email to the user's current address. They will need to follow the confirmation instructions in the email."
         back_to_preferences: "Back to preferences"
         confirm_success: "Your email has been updated."
         confirm: "Confirm"

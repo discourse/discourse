@@ -87,7 +87,7 @@ export default class extends Controller {
   ];
 
   get canSee() {
-    return this.currentUser.id === this.model.id;
+    return this.model.isCurrent;
   }
 
   /** @returns {Array<{ id: number, name: string, slug?: string }>} */

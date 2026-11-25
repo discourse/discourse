@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import AccessNotice from "discourse/components/access-notice";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
@@ -24,10 +25,7 @@ export default class UserPasskeys extends Component {
   @service router;
 
   get showActions() {
-    return (
-      this.currentUser.id === this.args.model.id &&
-      !this.capabilities.isAppWebview
-    );
+    return this.args.model.isCurrent && !this.capabilities.isAppWebview;
   }
 
   async createPasskey() {
@@ -234,16 +232,19 @@ export default class UserPasskeys extends Component {
         {{/each}}
       </div>
 
-      {{#if this.showActions}}
-        <div class="controls pref-passkeys__add">
-          <DButton
-            class="btn-default"
-            @action={{this.addPasskey}}
-            @icon="plus"
-            @label="user.passkeys.add_passkey"
-          />
-        </div>
-      {{/if}}
+      {{#unless this.capabilities.isAppWebview}}
+        <AccessNotice @kind="self" @user={{@model}} as |disabled|>
+          <div class="controls pref-passkeys__add">
+            <DButton
+              class="btn-default"
+              @action={{this.addPasskey}}
+              @disabled={{disabled}}
+              @icon="plus"
+              @label="user.passkeys.add_passkey"
+            />
+          </div>
+        </AccessNotice>
+      {{/unless}}
     </div>
   </template>
 }
