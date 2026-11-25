@@ -46,6 +46,14 @@ const RoomTitle = <template>
 </template>;
 
 const RoomActions = <template>
+  {{#if @onPanelView}}
+    <DButton
+      class="btn-transparent live-room-header__panel-view"
+      @action={{@onPanelView}}
+      @icon="table-columns"
+      @label="live.room.panel_view"
+    />
+  {{/if}}
   {{#if @canOpenChat}}
     <DButton
       class="btn-transparent live-room-header__open-chat"
@@ -113,6 +121,7 @@ export default class LiveRoomHeader extends Component {
             <RoomActions
               @canOpenChat={{@canOpenChat}}
               @onOpenChat={{@onOpenChat}}
+              @onPanelView={{@onPanelView}}
               @room={{@room}}
             />
           </navbar.Actions>
@@ -130,6 +139,7 @@ export default class LiveRoomHeader extends Component {
             <RoomActions
               @canOpenChat={{@canOpenChat}}
               @onOpenChat={{@onOpenChat}}
+              @onPanelView={{@onPanelView}}
               @room={{@room}}
             />
           </div>

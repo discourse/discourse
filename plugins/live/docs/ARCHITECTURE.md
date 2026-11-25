@@ -32,6 +32,30 @@ Live adds lightweight WebRTC live rooms to Discourse without proxying audio/vide
   - `live-room` route/controller fetch full room metadata, render participant lists, and command the WebRTC service to join/leave rooms. `Live::VoiceCanvas` mounts `<audio>` sinks for local and remote streams during active calls.
   - Presentation layout automatically features the first screen share or active camera. A viewer can locally override that choice from a participant's video-tile menu; selecting a layout through the standard control restores automatic selection.
 
+## Context panel prototype
+
+A Context view registers its ID, translated label, and component together through
+the `page-shell-context-view` transformer. The page shell uses that list for
+the header picker and panel content. About is always available. The shell
+remembers the selected view per user and tab. Live separately remembers the
+room and offers its view once that room is available.
+
+Follow-up from the Context audit:
+
+- Keep a route to call controls or Leave when Context becomes unavailable,
+  including narrow layouts and Preferences. Keep the floating widget suppressed
+  for calls opened in Context.
+- Keep the active room accessible while a different room awaits confirmation or
+  joins. Cover cancellation and failed joins.
+- Make **Panel view** reopen Context on return from the full room and handle
+  destinations that lack Context.
+- Separate the Context tests from the legacy widget-mode tests and keep the
+  experiment's default-enable change in its own commit.
+- Verify microphone, camera, and screen sharing with two participants while
+  switching to About, closing Context, opening the full room, and resizing
+  across the Context breakpoint. The last video surface releasing its watch can
+  stop local video while the call remains connected.
+
 ## Message Flow
 
 1. User joins a room → `POST /live/rooms/:id/join` resolves the call's transport (pinned in Redis for the call's lifetime), adds them to Redis, and broadcasts the participants list. For LiveKit calls the response also carries the server URL and a short-lived access token.

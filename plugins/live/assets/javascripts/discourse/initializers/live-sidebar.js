@@ -1,7 +1,6 @@
 import { later, next } from "@ember/runloop";
 import noop from "discourse/helpers/noop";
 import { avatarUrl } from "discourse/lib/avatar-utils";
-import getURL from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
@@ -159,10 +158,6 @@ export default {
 
               if (state === "connecting") {
                 return i18n("live.room.connecting");
-              }
-
-              if (state === "connected") {
-                return i18n("live.room.open_page");
               }
 
               return (
@@ -696,16 +691,7 @@ export default {
 
         const connectionState = liveWebrtc.connectionStateFor(room.id);
 
-        if (event.shiftKey) {
-          // Hand the call over cleanly: two windows joined as the same user
-          // would fight over presence.
-          if (connectionState === "connected") {
-            liveWebrtc.leave(room);
-          }
-
-          window.open(getURL(`/live/r/${room.slug}?join`));
-          return;
-        }
+        const openedInContext = roomsService.openInContext(room);
 
         if (connectionState === "connecting") {
           return;
@@ -717,7 +703,7 @@ export default {
             currentRoute?.name === "live-room" &&
             currentRoute?.params?.slug === room.slug;
 
-          if (!onRoomPage) {
+          if (!openedInContext && !onRoomPage) {
             routerService.transitionTo("live-room", room.slug);
           }
         } else {

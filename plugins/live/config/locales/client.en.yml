@@ -93,6 +93,8 @@ en:
         type_stage_hint: "Participants join as listeners. Moderators can promote listeners to speakers."
         listeners_cannot_unmute: "Only speakers can unmute in this room."
         open_page: "Show full room view"
+        panel_view: "Panel view"
+        context_view: "Live"
         widget_mode: "Picture-in-picture"
         settings: "Call settings"
         more: "More options"

@@ -121,7 +121,10 @@ export default class LiveCallWidget extends Component {
 
   get shouldRender() {
     return (
-      !!this.room && !this.onActiveRoomPage && !this.liveWebrtc.callWidgetHidden
+      !!this.room &&
+      !this.onActiveRoomPage &&
+      this.liveRooms.contextRoomId !== this.room.id &&
+      !this.liveWebrtc.callWidgetHidden
     );
   }
 

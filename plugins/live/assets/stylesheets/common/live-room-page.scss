@@ -1387,3 +1387,50 @@ body.has-sidebar-page #main-outlet-wrapper:has(.live-room-header) {
   height: 100%;
   object-fit: cover;
 }
+
+.live-context-room {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+
+  &__expand {
+    align-self: flex-start;
+  }
+
+  .live-room-page.--in-context {
+    position: relative;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    block-size: auto;
+    border: 0;
+
+    .live-room-page__presentation {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .live-room-page__presentation-rail {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(6rem, 9rem);
+      grid-auto-rows: 5rem;
+      overflow-x: auto;
+    }
+
+    .chat-side-panel {
+      position: absolute;
+      inset: 0;
+      inline-size: auto;
+      background: var(--secondary);
+      animation-name: live-drawer-in;
+
+      &.--closing {
+        animation-name: live-drawer-out;
+      }
+
+      .live-chat {
+        min-inline-size: 0;
+      }
+    }
+  }
+}

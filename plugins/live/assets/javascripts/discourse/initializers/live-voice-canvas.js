@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import LiveContextRoom from "discourse/plugins/live/discourse/components/live/context-room";
 import LiveGlobalCallLayer from "discourse/plugins/live/discourse/components/live/global-call-layer";
 
 export default {
@@ -14,6 +15,22 @@ export default {
       }
 
       api.renderInOutlet("below-site-header", LiveGlobalCallLayer);
+      const liveRooms = owner.lookup("service:live-rooms");
+      api.registerValueTransformer("page-shell-context-view", ({ value }) => {
+        if (!liveRooms.contextRoom) {
+          return value;
+        }
+
+        return [
+          ...value,
+          {
+            id: "live",
+            label: "live.room.context_view",
+            component: LiveContextRoom,
+            preferred: liveRooms.prefersContextRoom,
+          },
+        ];
+      });
     });
   },
 };

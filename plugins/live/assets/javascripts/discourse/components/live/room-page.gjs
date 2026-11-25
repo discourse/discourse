@@ -95,6 +95,7 @@ export default class LiveRoomPage extends Component {
   @service currentUser;
   @service menu;
   @service modal;
+  @service pageShell;
   @service routeHistory;
   @service router;
   @service liveRooms;
@@ -105,8 +106,9 @@ export default class LiveRoomPage extends Component {
   @tracked gridGap = 0;
   @tracked gridFullscreen = false;
   @tracked fullscreenWithin = false;
-  // Stage rooms mirror a workshop: chat panel open, presenter featured.
-  @tracked chatOpen = !!this.args.openChat || this.#isStageRoom;
+  @tracked
+  chatOpen =
+    !!this.args.openChat || (this.#isStageRoom && !this.args.inContext);
   @tracked chatClosing = false;
   @tracked layoutMode = LAYOUT_AUTO;
   @tracked spotlightParticipantId = null;
@@ -654,6 +656,12 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
+  showPanelView() {
+    this.pageShell.selectContextView("live");
+    this.dockRoom();
+  }
+
+  @action
   openChat() {
     this.setChatOpen(true);
   }
@@ -678,7 +686,9 @@ export default class LiveRoomPage extends Component {
       }, 500);
     }
     this.chatOpen = open;
-    this.router.transitionTo({ queryParams: { chat: open } });
+    if (!this.args.inContext) {
+      this.router.transitionTo({ queryParams: { chat: open } });
+    }
   }
 
   @action
@@ -804,6 +814,7 @@ export default class LiveRoomPage extends Component {
     <section
       class={{dConcatClass
         "live-room-page"
+        (if @inContext "--in-context")
         (if this.chatVisible "--chat-open")
         (if this.presentationLayout "--presentation")
         (if this.tiledLayout "--tiled")
@@ -824,6 +835,12 @@ export default class LiveRoomPage extends Component {
         <LiveRoomHeader
           @canOpenChat={{this.canOpenChat}}
           @onOpenChat={{this.openChat}}
+          @onPanelView={{if
+            (and
+              (not @inContext) (eq this.liveRooms.contextRoomId this.room.id)
+            )
+            this.showPanelView
+          }}
           @room={{this.room}}
         />
 
@@ -1064,14 +1081,16 @@ export default class LiveRoomPage extends Component {
                         @suffixIcon="angle-right"
                       />
                     </dropdown.item>
-                    <dropdown.item>
-                      <DButton
-                        class="btn-transparent"
-                        @action={{fn this.dockAndClose roomMenu.close}}
-                        @icon="picture-in-picture"
-                        @label="live.room.widget_mode"
-                      />
-                    </dropdown.item>
+                    {{#unless (eq this.liveRooms.contextRoomId this.room.id)}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent"
+                          @action={{fn this.dockAndClose roomMenu.close}}
+                          @icon="picture-in-picture"
+                          @label="live.room.widget_mode"
+                        />
+                      </dropdown.item>
+                    {{/unless}}
                     {{#if (and this.tiledLayout this.tiles.length)}}
                       <dropdown.item>
                         <DButton

@@ -35,12 +35,17 @@ function sortParticipants(participants) {
 export default class LiveRoomsService extends Service {
   @service currentUser;
   @service messageBus;
+  @service pageShell;
+  @service router;
+  @service sessionStore;
   @service siteSettings;
   @service site;
 
   @tracked rooms = [];
   @tracked canCreateRoom = false;
 
+  prefersContextRoom = true;
+  #contextRoomId = tracked(null);
   #roomsById = new Map();
   #roomsBySlug = new Map();
   #roomSubscriptions = new Map();
@@ -63,6 +68,17 @@ export default class LiveRoomsService extends Service {
       return;
     }
 
+    if (this.currentUser) {
+      this.#contextRoomId.value =
+        this.sessionStore.getInt(this.#contextRoomStorageKey) || null;
+      // Preserve choices saved before the shell owned the selected view.
+      if (
+        this.sessionStore.getItem(this.#contextViewStorageKey) === "overview"
+      ) {
+        this.prefersContextRoom = false;
+      }
+    }
+
     this.ready = this.#bootstrap();
   }
 
@@ -74,6 +90,44 @@ export default class LiveRoomsService extends Service {
     });
     this.#roomSubscriptions.clear();
     this.#roomHandlers.clear();
+  }
+
+  get #contextRoomStorageKey() {
+    return `live-context-room:${this.currentUser.id}`;
+  }
+
+  get #contextViewStorageKey() {
+    return `${this.#contextRoomStorageKey}:view`;
+  }
+
+  get contextRoomId() {
+    return this.#contextRoomId.value;
+  }
+
+  get contextRoom() {
+    if (
+      !this.pageShell.canOpenContext ||
+      (this.pageShell.context !== "open" && !this.pageShell.closingContext) ||
+      this.router.currentRouteName === "live-room"
+    ) {
+      return null;
+    }
+
+    return this.rooms.find((room) => room.id === this.contextRoomId);
+  }
+
+  openInContext(room) {
+    if (
+      this.router.currentRouteName === "live-room" ||
+      !this.pageShell.openContext()
+    ) {
+      return false;
+    }
+
+    this.#contextRoomId.value = room.id;
+    this.sessionStore.setItem(this.#contextRoomStorageKey, room.id);
+    this.pageShell.selectContextView("live");
+    return true;
   }
 
   roomById(id) {

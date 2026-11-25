@@ -1,6 +1,6 @@
 plugins:
   live_enabled:
-    default: false
+    default: true
     client: true
     hidden: true
     upcoming_change:

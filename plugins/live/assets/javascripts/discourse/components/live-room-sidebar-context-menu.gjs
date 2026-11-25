@@ -11,6 +11,7 @@ import LiveRoomInfoModal from "./modal/live-room-info.gjs";
 
 export default class LiveRoomSidebarContextMenu extends Component {
   @service modal;
+  @service liveRooms;
   @service liveWebrtc;
   @service router;
   @service toasts;
@@ -32,7 +33,11 @@ export default class LiveRoomSidebarContextMenu extends Component {
   }
 
   get showWidgetToggle() {
-    return this.isConnected && !this.onRoomPage;
+    return (
+      this.isConnected &&
+      !this.onRoomPage &&
+      this.liveRooms.contextRoomId !== this.room.id
+    );
   }
 
   @action

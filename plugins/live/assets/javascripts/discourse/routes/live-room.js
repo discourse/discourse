@@ -10,6 +10,10 @@ export default class LiveRoomRoute extends DiscourseRoute {
   @service liveWebrtc;
   @service router;
 
+  buildRouteInfoMetadata() {
+    return { fullPage: true };
+  }
+
   async model(params) {
     await this.liveRooms.ready;
 
