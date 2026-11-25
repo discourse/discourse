@@ -14,6 +14,7 @@ module DiscourseAi
       WAVE_SIZE = 15
       DEFAULT_CONCURRENCY = 5
       INTERMEDIATE_CURATE_INTERVAL = 250
+      FEATURE_NAME = "inferred_concepts_generate"
 
       def self.status
         raw = Discourse.redis.get(STATE_KEY)
@@ -115,125 +116,150 @@ module DiscourseAi
           (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, MAX_SEED_TOPICS)
 
         DistributedMutex.synchronize(MUTEX_KEY, validity: MUTEX_VALIDITY) do
-          topic_ids = select_seed_topics(limit: effective_limit)
           started_at = Time.zone.now.iso8601
           initial_concepts = InferredConcept.count
-
-          write_progress(
-            "status" => "running",
-            "started_at" => started_at,
-            "updated_at" => started_at,
-            "processed" => 0,
-            "total" => topic_ids.size,
-          )
-
-          applier = Applier.new
-          retriever = CandidateRetriever.new
-          classifier = Classifier.new
-          manager = Manager.new
-          user = Discourse.system_user
-
           processed = 0
-          since_last_curate = 0
-          failed_error = nil
-
-          pool =
-            if @concurrency > 1 && topic_ids.size > 1
-              Scheduler::ThreadPool.new(min_threads: 0, max_threads: @concurrency, idle_time: 30)
-            end
+          total_topics = 0
 
           begin
-            topic_ids.each_slice(@wave_size) do |wave_ids|
-              unless LlmCreditAllocation.credits_available?(llm)
-                failed_error =
-                  I18n.t(
-                    "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
-                    reset_time: llm.llm_credit_allocation&.relative_reset_time || "",
-                  )
-                break
+            topic_ids = select_seed_topics(limit: effective_limit)
+            total_topics = topic_ids.size
+
+            write_progress(
+              "status" => "running",
+              "started_at" => started_at,
+              "updated_at" => started_at,
+              "processed" => 0,
+              "total" => total_topics,
+            )
+
+            applier = Applier.new
+            retriever = CandidateRetriever.new
+            classifier = Classifier.new
+            manager = Manager.new
+            user = Discourse.system_user
+
+            since_last_curate = 0
+            failed_error = nil
+
+            pool =
+              if @concurrency > 1 && total_topics > 1
+                Scheduler::ThreadPool.new(min_threads: 0, max_threads: @concurrency, idle_time: 30)
               end
 
-              work_items, skipped_count =
-                prepare_wave(wave_ids, applier: applier, retriever: retriever)
-              processed += skipped_count
+            begin
+              topic_ids.each_slice(@wave_size) do |wave_ids|
+                begin
+                  LlmCreditAllocation.check_credits!(llm, FEATURE_NAME)
+                rescue LlmCreditAllocation::CreditLimitExceeded => e
+                  failed_error = e.message
+                  break
+                end
 
-              wave_outcomes =
-                classify_wave(
-                  work_items,
-                  pool: pool,
-                  classifier: classifier,
-                  agent_class: agent_class,
-                  llm: llm,
-                  user: user,
+                work_items, skipped_count =
+                  prepare_wave(wave_ids, applier: applier, retriever: retriever)
+                processed += skipped_count
+
+                wave_outcomes =
+                  classify_wave(
+                    work_items,
+                    pool: pool,
+                    classifier: classifier,
+                    agent_class: agent_class,
+                    llm: llm,
+                    user: user,
+                  )
+
+                wave_outcomes.each do |outcome|
+                  item = outcome[:item]
+                  error = outcome[:error]
+
+                  if error.is_a?(LlmCreditAllocation::CreditLimitExceeded)
+                    failed_error ||= error.message
+                  elsif error
+                    processed += 1
+                    Discourse.warn_exception(
+                      error,
+                      message: "Failed seeding inferred concepts for topic #{item[:topic].id}",
+                    )
+                  else
+                    begin
+                      manager.apply_classification_result(
+                        item[:topic],
+                        outcome[:result],
+                        candidates: item[:candidates],
+                        digest: item[:digest],
+                        allow_new: true,
+                        applier: applier,
+                      )
+                      since_last_curate += 1
+                    rescue StandardError => e
+                      Discourse.warn_exception(
+                        e,
+                        message:
+                          "Failed applying seeded inferred concepts for topic #{item[:topic].id}",
+                      )
+                    end
+                    processed += 1
+                  end
+                end
+
+                flush_concept_embeddings
+
+                if failed_error.nil? && @curate_every > 0 && since_last_curate >= @curate_every &&
+                     processed < total_topics
+                  curate_seeded_concepts
+                  since_last_curate = 0
+                end
+
+                write_progress(
+                  "status" => "running",
+                  "started_at" => started_at,
+                  "updated_at" => Time.zone.now.iso8601,
+                  "processed" => processed,
+                  "total" => total_topics,
                 )
 
-              wave_outcomes.each do |outcome|
-                item = outcome[:item]
-                error = outcome[:error]
-
-                if error.is_a?(LlmCreditAllocation::CreditLimitExceeded)
-                  failed_error ||= error.message
-                elsif error
-                  processed += 1
-                  Discourse.warn_exception(
-                    error,
-                    message: "Failed seeding inferred concepts for topic #{item[:topic].id}",
-                  )
-                else
-                  manager.apply_classification_result(
-                    item[:topic],
-                    outcome[:result],
-                    candidates: item[:candidates],
-                    digest: item[:digest],
-                    allow_new: true,
-                    applier: applier,
-                  )
-                  processed += 1
-                  since_last_curate += 1
-                end
+                break if failed_error.present?
               end
-
-              flush_concept_embeddings
-
-              if failed_error.nil? && @curate_every > 0 && since_last_curate >= @curate_every &&
-                   processed < topic_ids.size
-                curate_seeded_concepts
-                since_last_curate = 0
+            ensure
+              if pool
+                pool.shutdown
+                pool.wait_for_termination(timeout: 30)
               end
-
-              write_progress(
-                "status" => "running",
-                "started_at" => started_at,
-                "updated_at" => Time.zone.now.iso8601,
-                "processed" => processed,
-                "total" => topic_ids.size,
-              )
-
-              break if failed_error.present?
             end
-          ensure
-            if pool
-              pool.shutdown
-              pool.wait_for_termination(timeout: 30)
-            end
+
+            flush_concept_embeddings
+            curate_seeded_concepts if since_last_curate > 0
+
+            now = Time.zone.now.iso8601
+            final_state = {
+              "status" => failed_error ? "failed" : "completed",
+              "started_at" => started_at,
+              "finished_at" => now,
+              "updated_at" => now,
+              "processed" => processed,
+              "total" => total_topics,
+              "concepts_created" => [InferredConcept.count - initial_concepts, 0].max,
+            }
+            final_state["error"] = failed_error if failed_error.present?
+
+            self.class.send(:write_state, final_state)
+          rescue StandardError => e
+            now = Time.zone.now.iso8601
+            self.class.send(
+              :write_state,
+              "status" => "failed",
+              "error" => e.message,
+              "started_at" => started_at,
+              "finished_at" => now,
+              "updated_at" => now,
+              "processed" => processed,
+              "total" => total_topics,
+              "concepts_created" => [InferredConcept.count - initial_concepts, 0].max,
+            )
+            raise
           end
-
-          flush_concept_embeddings
-          curate_seeded_concepts if since_last_curate > 0
-
-          now = Time.zone.now.iso8601
-          final_state = {
-            "status" => failed_error ? "failed" : "completed",
-            "started_at" => started_at,
-            "finished_at" => now,
-            "updated_at" => now,
-            "processed" => processed,
-            "total" => topic_ids.size,
-            "concepts_created" => [InferredConcept.count - initial_concepts, 0].max,
-          }
-          final_state["error"] = failed_error if failed_error.present?
-
-          self.class.send(:write_state, final_state)
         end
       end
 
@@ -266,13 +292,11 @@ module DiscourseAi
 
           candidates = retriever.retrieve(content: content, target: topic)
           work_items << { topic:, content:, digest:, candidates: }
-        rescue CandidateRetriever::EmbeddingsUnavailableError,
-               DiscourseAi::Embeddings::ProviderPausedError,
-               DiscourseAi::Inference::EmbeddingInferenceError => e
+        rescue StandardError => e
           skipped_count += 1
           Discourse.warn_exception(
             e,
-            message: "Failed retrieving candidates while seeding topic #{topic_id}",
+            message: "Failed preparing topic #{topic_id} for inferred concept seeding",
           )
         end
 

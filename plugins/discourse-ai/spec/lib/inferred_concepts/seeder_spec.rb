@@ -314,6 +314,140 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
       expect(state["error"]).to eq(I18n.t("discourse_ai.errors.no_default_llm"))
       expect(described_class).not_to be_seeding
     end
+
+    it "allows seeding at the credit hard limit when inferred_concepts_generate has zero feature cost" do
+      llm_model = LlmModel.find(SiteSetting.ai_default_llm_model)
+      llm_model.update!(id: -560)
+      SiteSetting.ai_default_llm_model = llm_model.id
+      Fabricate(:llm_credit_allocation, llm_model: llm_model, daily_credits: 10)
+      LlmCreditDailyUsage.create!(llm_model: llm_model, usage_date: Date.current, credits_used: 10)
+      LlmFeatureCreditCost.create!(
+        llm_model: llm_model,
+        feature_name: described_class::FEATURE_NAME,
+        credits_per_token: 0,
+      )
+
+      topic =
+        Fabricate(
+          :topic,
+          title: "Zero-cost feature seeded discussion",
+          category: Fabricate(:category),
+          word_count: 120,
+          like_count: 25,
+          posts_count: 5,
+          views: 250,
+        )
+      Fabricate(:post, topic: topic, post_number: 1, raw: "Content for zero-cost feature test.")
+      vector = [0.1] * vector_def.dimensions
+      DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      llm_response = {
+        matches: [],
+        proposed_new: [
+          {
+            name: "ZeroCostTheme",
+            description: "Allowed when feature cost is zero",
+            parent_concept_id: nil,
+          },
+        ],
+      }
+
+      state =
+        DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
+          seeder.seed!(limit: 5)
+        end
+
+      expect(state["status"]).to eq("completed")
+      expect(state["processed"]).to eq(1)
+      expect(InferredConcept.find_by(name: "ZeroCostTheme")).to be_present
+    end
+
+    it "logs and continues when persisting a single topic result raises an error" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "Topic triggering persistence failure",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Topic succeeding after failure",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Body for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ).and_return(
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "ResilientTheme",
+              description: "Persisted on surviving topic",
+              parent_concept_id: nil,
+            },
+          ],
+        },
+      )
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
+        :apply_classification_result,
+      ).and_wrap_original do |method, target, *args, **kwargs|
+        raise "DB write failure" if target.id == topic1.id
+
+        method.call(target, *args, **kwargs)
+      end
+
+      allow(Discourse).to receive(:warn_exception)
+
+      state = described_class.new(concurrency: 1, wave_size: 2).seed!(limit: 2)
+
+      expect(state["status"]).to eq("completed")
+      expect(state["processed"]).to eq(2)
+      expect(Discourse).to have_received(:warn_exception).once
+      expect(topic2.inferred_concepts.reload.map(&:name)).to eq(["ResilientTheme"])
+      expect(described_class.status["status"]).to eq("completed")
+    end
   end
 
   describe ".seeding?" do
