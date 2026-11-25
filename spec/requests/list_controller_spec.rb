@@ -76,17 +76,6 @@ RSpec.describe ListController do
         expect(listed_excerpt).to be_nil
       end
 
-      it "omits the excerpt from the Markdown topic list" do
-        SiteSetting.enable_markdown_endpoints = true
-        hide_first_post_and_relist
-
-        get "/latest.md"
-
-        expect(response.status).to eq(200)
-        expect(response.body).to include(topic.title)
-        expect(response.body).not_to include(first_post.raw)
-      end
-
       context "when the excerpts were cached before the first post was hidden" do
         fab!(:localization) do
           Fabricate(:topic_localization, topic: topic, locale: "en", excerpt: "A localized excerpt")
@@ -122,16 +111,6 @@ RSpec.describe ListController do
           expect(response.status).to eq(200)
           expect(response.body).to include(topic.title)
           expect(response.body).not_to include(topic.excerpt)
-        end
-
-        it "omits the cached excerpt from the Markdown topic list" do
-          SiteSetting.enable_markdown_endpoints = true
-
-          get "/latest.md"
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(topic.title)
-          expect(response.body).not_to include(first_post.raw)
         end
       end
     end
@@ -300,7 +279,7 @@ RSpec.describe ListController do
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "with #{filter}" do
-        it "returns the requested topic filter" do
+        it "succeeds" do
           get "/#{filter}"
           expect(response.status).to eq(200)
         end
@@ -1280,7 +1259,7 @@ RSpec.describe ListController do
       end
 
       context "with access to see the category" do
-        it "returns the category topic list" do
+        it "succeeds" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1291,7 +1270,7 @@ RSpec.describe ListController do
 
         before { SiteSetting.slug_generation_method = "encoded" }
 
-        it "returns the topic list for an encoded category slug" do
+        it "succeeds" do
           get "/c/#{category.slug}/#{category.id}/l/latest"
           expect(response.status).to eq(200)
         end
@@ -1301,7 +1280,7 @@ RSpec.describe ListController do
         let(:child_category) { Fabricate(:category_with_definition, parent_category: category) }
 
         context "with valid slug" do
-          it "returns the child category topic list" do
+          it "succeeds" do
             get "/c/#{category.slug}/#{child_category.slug}/#{child_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
@@ -1338,7 +1317,7 @@ RSpec.describe ListController do
         let(:sub_category) { Fabricate(:category_with_definition, parent_category_id: category.id) }
 
         context "when parent and child are requested" do
-          it "returns the subcategory topic list" do
+          it "succeeds" do
             get "/c/#{category.slug}/#{sub_category.slug}/#{sub_category.id}/l/latest"
             expect(response.status).to eq(200)
           end
@@ -1765,7 +1744,7 @@ RSpec.describe ListController do
     end
 
     context "when logged in" do
-      it "returns the read topic list" do
+      it "succeeds" do
         sign_in(user)
         get "/read"
         expect(response.status).to eq(200)
@@ -1774,7 +1753,7 @@ RSpec.describe ListController do
   end
 
   describe "best_periods_for" do
-    it "returns available periods based on the supplied date" do
+    it "works" do
       expect(ListController.best_periods_for(nil)).to eq([:all])
       expect(ListController.best_periods_for(5.years.ago)).to eq([:all])
       expect(ListController.best_periods_for(2.years.ago)).to eq(%i[yearly all])

@@ -662,7 +662,7 @@ RSpec.describe PostCreator do
             end
 
             context "with regular expressions" do
-              it "applies tags matched by regular expressions" do
+              it "works" do
                 SiteSetting.watched_words_regular_expressions = true
                 Fabricate(
                   :watched_word,
@@ -1616,7 +1616,7 @@ RSpec.describe PostCreator do
   end
 
   describe "read credit for creator" do
-    it "gives credit to creator" do
+    it "should give credit to creator" do
       post = create_post
       expect(
         PostTiming.find_by(
@@ -1807,7 +1807,7 @@ RSpec.describe PostCreator do
   end
 
   describe "#create!" do
-    it "returns the post if it was successfully created" do
+    it "should return the post if it was successfully created" do
       title = "This is a valid title"
       raw = "This is a really awesome post"
 
@@ -1819,7 +1819,7 @@ RSpec.describe PostCreator do
       expect(post.raw).to eq(raw)
     end
 
-    it "raises an error when post fails to be created" do
+    it "should raise an error when post fails to be created" do
       post_creator = PostCreator.new(user, title: "", raw: "")
       expect { post_creator.create! }.to raise_error(ActiveRecord::RecordNotSaved)
     end
@@ -1858,7 +1858,7 @@ RSpec.describe PostCreator do
 
     before { another_user.user_option.update!(allow_private_messages: false) }
 
-    it "is not valid" do
+    it "should not be valid" do
       post_creator =
         PostCreator.new(
           user,
@@ -1875,7 +1875,7 @@ RSpec.describe PostCreator do
       )
     end
 
-    it "is not valid if the name is downcased" do
+    it "should not be valid if the name is downcased" do
       post_creator =
         PostCreator.new(
           user,
@@ -1893,7 +1893,7 @@ RSpec.describe PostCreator do
     fab!(:muted_me) { evil_trout }
     fab!(:another_user, :user)
 
-    it "rejects a private message to a user who muted the sender" do
+    it "should fail" do
       updater = UserUpdater.new(muted_me, muted_me)
       updater.update_muted_users("#{user.username}")
 
@@ -1939,7 +1939,7 @@ RSpec.describe PostCreator do
     context "when post author is ignored" do
       let!(:ignored_user) { Fabricate(:ignored_user, user: ignorer, ignored_user: user) }
 
-      it "fails" do
+      it "should fail" do
         pc =
           PostCreator.new(
             user,
@@ -1984,7 +1984,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "succeeds" do
+      it "should succeed" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
         pc =
@@ -2006,7 +2006,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "fails" do
+      it "should fail" do
         allowed_user.user_option.update!(allow_private_messages: false)
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
@@ -2037,7 +2037,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: not_allowed_user, allowed_pm_user: allowed_user)
       end
 
-      it "fails" do
+      it "should fail" do
         not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
         pc =
@@ -2055,7 +2055,7 @@ RSpec.describe PostCreator do
         )
       end
 
-      it "succeeds when not enabled" do
+      it "should succeed when not enabled" do
         not_allowed_user.user_option.update!(enable_allowed_pm_users: false)
 
         pc =
@@ -2105,7 +2105,7 @@ RSpec.describe PostCreator do
         Fabricate(:allowed_pm_user, user: allowed_user, allowed_pm_user: sender)
       end
 
-      it "fails" do
+      it "should fail" do
         allowed_user.user_option.update!(enable_allowed_pm_users: true)
         not_allowed_user.user_option.update!(enable_allowed_pm_users: true)
 
