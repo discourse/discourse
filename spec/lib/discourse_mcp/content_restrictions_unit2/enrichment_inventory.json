@@ -295,13 +295,14 @@
         },
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 702,
+          "line": 704,
           "source": "class PerformReviewableAction"
         }
       ],
       "unit3_review": "Unit 3 filters reviewables by topic or queued category/tags, blocks account-deletion actions and any additional_fields while a rule is active, and removes queue counters. Permitted actions still dispatch Reviewable.perform; feedback paths are no longer unconditionally reachable under active rules.",
       "round3_review": "Before dispatch, publishing actions check queued title/raw; restoring actions check stored target-post raw. Existing account-deletion/additional_fields refusals remain. Native queued/recovery/unhide/feedback edges are retained conditionally, not certified for arbitrary plugin actions.",
-      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety."
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
+      "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional."
     },
     {
       "tool": "discourse_update_user",
@@ -963,14 +964,15 @@
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 411,
+          "line": 479,
           "source": "class UpdateSiteSetting"
         }
       ],
       "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks.",
       "round2_review": "The class and update! call moved one line because read-side redaction now uses any active policy, including PM-only. UpdateSiteSetting itself retains unenforced declarations, its validation/update body and setting/rebake hooks.",
       "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
-      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification."
+      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification.",
+      "unit4_review3_refresh": "Re-read at 7d1edac2d9b: read-side URL guarding grew; UpdateSiteSetting remains unenforced and still calls SiteSettingSupport.update!, preserving its native setting-change/rebake edges."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -1571,7 +1573,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/moderation.rb",
-          "line": 742,
+          "line": 744,
           "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
         }
       ],
@@ -1586,7 +1588,8 @@
       ],
       "unit3_review": "The dispatch remains at moderation.rb:692, but policy-aware lookup and action guards now precede it. Restricted reviewables answer as missing; account deletion and additional_fields are refused under any active rule. Downstream paths describe permitted dispatch, not unconditional feedback reachability.",
       "round3_review": "Dispatch moved to the refreshed line. In addition to earlier policy/action guards, queued publishing and target-post restoring actions now check stored text before reviewable.perform.",
-      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety."
+      "unit4_review2_refresh": "Re-read at cc81b6c5ea2: PerformReviewableAction moves 683 to 702 and reviewable.perform moves 723 to 742. Publishing now includes approve_post_closed and queued new topics pass prospective category/effective-tag checks before dispatch. Existing stored-text, lookup, account-deletion and additional-fields guards remain; native downstream edges describe permitted dispatch, not arbitrary plugin-action safety.",
+      "unit4_review3_refresh": "Re-read at 7d1edac2d9b: queued prospective validation now reads reviewable.create_options (hash tags by name, reviewable category); permitted reviewable.perform dispatch and its native graph edges remain conditional."
     },
     "category_create": {
       "trigger": "Category#create_category_definition",
@@ -1825,7 +1828,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 474,
+          "line": 542,
           "source": "SiteSettingSupport.update!("
         }
       ],
@@ -1836,7 +1839,8 @@
       "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules.",
       "round2_review": "Only the MCP read-side redaction guard added a preceding line; the write still invokes SiteSettingSupport.update! and the native SiteSetting::Update service. Setting hooks/rebake edges remain unchanged, and the write remains blocked by unenforced declarations under active rules.",
       "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules.",
-      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification."
+      "unit4_review1_refresh": "Re-read at ec0c8a3ac52: unit 3 round 3 URL resolution changes precede this write and move its evidence by 84 lines. UpdateSiteSetting retains unenforced declarations, confirmation/dependency/current-value checks, the SiteSettingSupport.update! call, service execution and verification; setting hooks and rebake edges retain their classification.",
+      "unit4_review3_refresh": "Re-read at 7d1edac2d9b: read-side URL guarding grew; UpdateSiteSetting remains unenforced and still calls SiteSettingSupport.update!, preserving its native setting-change/rebake edges."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",
@@ -3382,5 +3386,39 @@
       }
     ],
     "review": "Four stale exact-line occurrences confirmed RED before refresh. Re-read all four current declarations/calls and 446abae79e3..cc81b6c5ea2. PM creation and queued-topic approval gain prospective-tag gates; native graph edges and classifications remain conditional."
+  },
+  "unit4_review3_refresh": {
+    "revision": "7d1edac2d9ba44f789a039beedcd4a95809ff3a5",
+    "moves": [
+      {
+        "entry": "operation:discourse_perform_reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 702,
+        "current_line": 704,
+        "source": "class PerformReviewableAction"
+      },
+      {
+        "entry": "operation:discourse_update_site_setting",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "previous_line": 411,
+        "current_line": 479,
+        "source": "class UpdateSiteSetting"
+      },
+      {
+        "entry": "path:reviewable_action",
+        "file": "lib/discourse_mcp/tools/moderation.rb",
+        "previous_line": 742,
+        "current_line": 744,
+        "source": "reviewable.perform(request_context.user, action.server_action.to_sym, action_arguments)"
+      },
+      {
+        "entry": "path:settings",
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "previous_line": 474,
+        "current_line": 542,
+        "source": "SiteSettingSupport.update!("
+      }
+    ],
+    "review": "Seed 73019 observed all four stale exact-line occurrences RED before refresh. Re-read current declarations/calls and 4df55a811ad..7d1edac2d9b; only evidence locations and review metadata change. Historical refresh metadata is retained as history."
   }
 }

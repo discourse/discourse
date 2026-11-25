@@ -61,7 +61,7 @@ describe DiscourseMcp::Server do
   end
 
   %i[restricted allowed].each do |direction|
-    it "[cr-u3] uses full query permalink identity for #{direction} destinations" do
+    it "[cr-u3] conceals full query permalink URLs for #{direction} destinations" do
       path = "/review-two-query?view=seasonal"
       target, decoy =
         direction == :restricted ? [denied_topic, allowed_topic] : [allowed_topic, denied_topic]
@@ -72,15 +72,13 @@ describe DiscourseMcp::Server do
       [path, "#{Discourse.base_url}#{path}"].each { |url| review2_expect_kept(url) }
       forum_rule(denied_categories: [denied_category.id])
       aggregate_failures do
-        [path, "#{Discourse.base_url}#{path}"].each do |url|
-          direction == :restricted ? review2_expect_hidden(url) : review2_expect_kept(url)
-        end
+        [path, "#{Discourse.base_url}#{path}"].each { |url| review2_expect_hidden(url) }
       end
     end
   end
 
   %i[restricted allowed].each do |direction|
-    it "[cr-u3] gives a live #{direction} route precedence over a conflicting permalink" do
+    it "[cr-u3] conceals a live #{direction} route with a conflicting permalink" do
       target, decoy =
         direction == :restricted ? [denied_topic, allowed_topic] : [allowed_topic, denied_topic]
       path = "/t/#{target.id}.json"
@@ -92,14 +90,12 @@ describe DiscourseMcp::Server do
       [path, "#{Discourse.base_url}#{path}"].each { |url| review2_expect_kept(url) }
       forum_rule(denied_categories: [denied_category.id])
       aggregate_failures do
-        [path, "#{Discourse.base_url}#{path}"].each do |url|
-          direction == :restricted ? review2_expect_hidden(url) : review2_expect_kept(url)
-        end
+        [path, "#{Discourse.base_url}#{path}"].each { |url| review2_expect_hidden(url) }
       end
     end
   end
 
-  it "[cr-u3] follows query-sensitive permalink chains and keeps allowed chains" do
+  it "[cr-u3] conceals query-sensitive permalink chains including allowed chains" do
     paths =
       [denied_topic, allowed_topic].each_with_index.map do |topic, index|
         final = "/review-two-chain/#{index}?view=seasonal"
@@ -117,13 +113,13 @@ describe DiscourseMcp::Server do
     forum_rule(denied_categories: [denied_category.id])
     aggregate_failures do
       ["", Discourse.base_url].each do |base|
-        review2_expect_kept("#{base}#{paths.last}")
+        review2_expect_hidden("#{base}#{paths.last}")
         review2_expect_hidden("#{base}#{paths.first}")
       end
     end
   end
 
-  it "[cr-u3] conceals topic external identifiers and keeps allowed topics and user profiles" do
+  it "[cr-u3] conceals topic external identifiers including allowed topics and user profiles" do
     paths =
       [denied_topic, allowed_topic].map do |topic|
         path = "/t/external_id/#{topic.external_id}"
@@ -140,14 +136,14 @@ describe DiscourseMcp::Server do
     forum_rule(denied_categories: [denied_category.id])
     aggregate_failures do
       ["", Discourse.base_url].each do |base|
-        review2_expect_kept("#{base}#{profile}")
-        review2_expect_kept("#{base}#{paths.last}")
+        review2_expect_hidden("#{base}#{profile}")
+        review2_expect_hidden("#{base}#{paths.last}")
         review2_expect_hidden("#{base}#{paths.first}")
       end
     end
   end
 
-  it "[cr-u3] conceals unjudged engine event identifiers and keeps an allowed core topic URL" do
+  it "[cr-u3] conceals unjudged engine event identifiers and an allowed core topic URL" do
     SiteSetting.discourse_events_enabled = true
     SiteSetting.discourse_post_event_enabled = true
     events =
@@ -181,7 +177,7 @@ describe DiscourseMcp::Server do
     forum_rule(denied_categories: [denied_category.id])
     aggregate_failures do
       ["", Discourse.base_url].each do |base|
-        review2_expect_kept("#{base}#{core_path}")
+        review2_expect_hidden("#{base}#{core_path}")
         paths.each { |path| review2_expect_hidden("#{base}#{path}") }
       end
     end

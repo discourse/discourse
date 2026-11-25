@@ -40,20 +40,21 @@ describe DiscourseMcp::Server do
 
     aggregate_failures do
       url_pairs.each do |restricted_url, allowed_url|
-        expect_kept_url(allowed_url)
-        result = setting_url_response(restricted_url)
-        payloads(result).each do |payload|
-          expect(payload.fetch("site_settings")).to include(
-            a_hash_including(
-              "setting" => "tos_url",
-              "value" => nil,
-              "default" => nil,
-              "redacted" => true,
+        [restricted_url, allowed_url].each do |url|
+          result = setting_url_response(url)
+          payloads(result).each do |payload|
+            expect(payload.fetch("site_settings")).to include(
+              a_hash_including(
+                "setting" => "tos_url",
+                "value" => nil,
+                "default" => nil,
+                "redacted" => true,
+              ),
             ),
-          ),
-          "restricted URL retained: #{restricted_url} in #{payload.inspect}"
+            "local URL retained: #{url} in #{payload.inspect}"
+          end
+          expect_absent(result, [url], url)
         end
-        expect_absent(result, [restricted_url], restricted_url)
       end
     end
   end
@@ -221,7 +222,7 @@ describe DiscourseMcp::Server do
   end
 
   shared_examples "unrecognized setting URLs" do |rule_kind|
-    it "[cr-u3] ListSiteSettings conceals absolute and relative unrecognized local URLs under #{rule_kind} and keeps recognized allowed URLs" do
+    it "[cr-u3] ListSiteSettings conceals absolute and relative unrecognized local URLs under #{rule_kind} and recognized allowed URLs" do
       unrecognized_path = "/cru3-r3-browser-only/opaque-reference"
       recognized_path = "/t/#{allowed_topic.slug}/#{allowed_topic.id}"
       expect(Discourse.route_for(unrecognized_path)).to be_nil

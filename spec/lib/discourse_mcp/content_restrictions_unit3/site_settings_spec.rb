@@ -5,7 +5,7 @@ require_relative "server_support"
 describe DiscourseMcp::Server do
   include McpContentRestrictionsUnit3::ServerSupport
 
-  it "[cr-u3] ListSiteSettings conceals personal-message URLs with only private_messages active and preserves public URLs" do
+  it "[cr-u3] ListSiteSettings conceals personal-message URLs with only private_messages active and conceals public URLs" do
     message =
       Fabricate(
         :private_message_topic,
@@ -37,7 +37,12 @@ describe DiscourseMcp::Server do
       )
       payloads(public_response).each do |payload|
         expect(payload.fetch("site_settings")).to include(
-          a_hash_including("setting" => "tos_url", "value" => public_topic.url),
+          a_hash_including(
+            "setting" => "tos_url",
+            "value" => nil,
+            "default" => nil,
+            "redacted" => true,
+          ),
         )
       end
     end

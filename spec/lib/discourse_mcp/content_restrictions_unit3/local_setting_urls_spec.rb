@@ -101,7 +101,14 @@ describe DiscourseMcp::Server do
         urls.each do |restricted_url, allowed_url|
           response = setting_url_response(restricted_url)
           expect_absent(response, [restricted_url, *forbidden], "#{rule_kind} #{restricted_url}")
-          expect_setting_url(setting_url_response(allowed_url), allowed_url)
+          payloads(setting_url_response(allowed_url)).each do |payload|
+            expect(payload.fetch("site_settings").sole).to include(
+              "value" => nil,
+              "default" => nil,
+              "redacted" => true,
+            ),
+            "local URL retained: #{allowed_url}"
+          end
         end
       end
     end

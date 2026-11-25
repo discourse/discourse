@@ -1,5 +1,12 @@
 # Unit 3 content-restriction regression oracle
 
+The current setting-URL contract is recorded in
+[unit 4 review 3](../content_restrictions_unit4/REVIEW3.md): while any rule is
+active, local URLs in a setting's value or default conceal both fields,
+including allowed and recognized destinations, `/login`, CDN and upload hosts.
+External URLs and plain non-URL values remain readable. This supersedes the
+kept-local-URL controls described in the historical runs below.
+
 Test-only oracle for the five accepted findings in `fc63dd894d5..3af1cfab93a`.
 Every example contains `[cr-u3]`. Tools run through `DiscourseMcp::Server` with a real
 administrator, issued OAuth token, current registry scopes, schema-validated arguments and

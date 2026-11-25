@@ -348,3 +348,20 @@ live exact evidence occurrences and graph references were rechecked directly;
 56 operation rows, 55 distinct primitives, 116 paths and three exclusions remain.
 The post-refresh spec receipt is recorded in
 [review 2](../content_restrictions_unit4/REVIEW2.md).
+
+## Unit 4 review 3 evidence refresh at `7d1edac2d9b`
+
+Seed **73019** observed the exact-line example fail at all four stale locations
+before this refresh. Current declarations/calls and the
+`4df55a811ad..7d1edac2d9b` diff were re-read:
+
+| Source | Evidence move | Review |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/moderation.rb` | `PerformReviewableAction` 702 → 704; `reviewable.perform` 742 → 744 | Queued prospective validation now reads `reviewable.create_options`, including hash tags by name and the reviewable category. Permitted dispatch and downstream edges remain conditional. |
+| `lib/discourse_mcp/tools/site_settings.rb` | `UpdateSiteSetting` 411 → 479; `SiteSettingSupport.update!` 474 → 542 | Read-side URL guarding grew; the write remains unenforced and retains its setting-change/rebake edges. |
+
+`unit4_review3_refresh` records these moves; prior refresh metadata remains
+historical. All **245 live evidence occurrences** and graph references were
+checked twice directly after the update. Counts remain **56 operation rows,
+55 distinct write primitives, 116 paths, three exclusions**. The post-refresh
+RSpec result is recorded in [REVIEW3.md](../content_restrictions_unit4/REVIEW3.md).
