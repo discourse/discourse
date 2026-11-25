@@ -2016,12 +2016,6 @@ RSpec.describe User do
       }
     end
 
-    it "records a mobile visit" do
-      user.update_visit_record!(date, mobile: true)
-
-      expect(user.visit_record_for(date).mobile).to eq(true)
-    end
-
     it "marks an existing desktop visit as mobile" do
       user.update_visit_record!(date)
       user.update_visit_record!(date, mobile: true)

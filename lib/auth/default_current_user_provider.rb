@@ -271,7 +271,7 @@ class Auth::DefaultCurrentUserProvider
       ip = request.ip
       user_id = current_user.id
       old_ip = current_user.ip_address
-      mobile = !!MobileDetection.mobile_device?(request.user_agent)
+      mobile = MobileDetection.mobile_device?(request.user_agent)
 
       Scheduler::Defer.later "Updating Last Seen" do
         if User.should_update_last_seen?(user_id)

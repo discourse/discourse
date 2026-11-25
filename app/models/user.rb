@@ -1125,7 +1125,6 @@ class User < ActiveRecord::Base
     end
   rescue ActiveRecord::RecordNotUnique
     # concurrent "Updating Last Seen" defer block already inserted
-    user_visits.where(visited_at: date, mobile: false).update_all(mobile: true) if mobile
   end
 
   def update_timezone_if_missing(timezone)
