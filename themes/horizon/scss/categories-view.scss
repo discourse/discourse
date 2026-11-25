@@ -274,6 +274,10 @@
     display: none;
   }
 
+  h3 {
+    overflow: visible;
+  }
+
   @include viewport.from(sm) {
     margin-top: 0;
   }
@@ -328,6 +332,7 @@
 
         &__wrapper {
           display: flex;
+          overflow: visible;
         }
 
         &.--style-square::before {
@@ -347,6 +352,7 @@
           aspect-ratio: 1 / 1;
           height: auto;
           width: 13%;
+          max-width: 3em;
         }
       }
     }
