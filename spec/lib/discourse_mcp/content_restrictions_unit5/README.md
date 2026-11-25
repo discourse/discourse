@@ -119,3 +119,190 @@ LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
 ```
 
 Only the authorized test database was used. No production implementation, configuration, migration, or existing spec was changed; no git mutation or service management was performed.
+
+## Unit 5 review round 2 at `85c7e890132`
+
+This section records the accepted findings from `9b5114149e3..85c7e890132`
+and supersedes the earlier concurrency deferral for the specific schedules below.
+Production code remains untouched. The new [review2_spec.rb](review2_spec.rb)
+has **20 examples: 12 observed RED and eight observed GREEN controls**.
+All examples carry `[cr-u5]`. Seed **57219**, combined with unit 2 enrichment:
+**22 examples, 12 failures, zero pending, zero errors outside examples**.
+All 12 failures are RSpec expectation failures for the accepted defects;
+there are no fixture, connection, timeout, or thread exceptions.
+
+### Grounding and observable contracts
+
+Read Tag (including target_tag_validator and its validation condition), Category
+(callback order, deletion, definition and event paths), McpContentRule,
+DiscourseTagging.add_or_create_synonyms, site:import_structure, all existing unit 5
+specs, and support.rb. The bulk synonym service has a listed-tag guard at this
+HEAD; the plain model validator checks only existing synonyms and synonym targets.
+The site structure importer resolves target_tag and calls tag.update!(t), so
+plain update/update! need their own validation coverage.
+
+Finding 1 exercises both update and update!, both selected allow and deny lists,
+with a real persisted forum_content rule. A failed update must explain the
+content-rule restriction and leave persisted target_tag_id nil. The bang form
+must raise the ordinary ActiveRecord validation exception. Controls preserve
+unlisted-source conversion to a listed target, and conversion with no rule rows,
+through each public entry point.
+
+Finding 3 is pinned rather than deferred. Each race disables transactional
+fixtures, commits its target setup, and uses two real database connections with
+distinct PostgreSQL backend PIDs. The main connection performs a real destroy!
+inside an open transaction before starting the rule save on the second
+connection. That connection explicitly confirms the target is still visible:
+a plain existence check before saving is therefore insufficient.
+
+There are two commit-release schedules for each target kind and list side:
+rule_first waits for the rule transaction to commit before releasing the destroy;
+destroy_first pauses after save, commits the destroy, then releases the rule
+commit. If synchronization makes the save wait, the main connection releases the
+destroy only after PostgreSQL reports the worker blocked by that connection.
+The observable outcome pinned for this destroy-starts-first interleaving is a
+successful destroy, a false rule.save with model errors, and no persisted rule.
+The names describe the attempted commit-release schedule; a correctly blocked
+rule save necessarily finishes after the destroy instead. No proposed production
+class, constant, helper, or lock name is assumed.
+
+Queues provide the latches; PostgreSQL lock observation decides when a blocked
+save may proceed. There is no elapsed-time assumption of safety. Five/ten-second
+deadlines fail loudly instead of hanging. Ensure blocks release/join the worker,
+remove only the rule created by the example, and clean up any surviving fixture.
+Category fixtures skip definition topics and use the seeded system user.
+
+New fixed IDs are **113_577_001, 113_577_002, 113_578_001..113_578_004**,
+within the reserved unit 5 range. An ignored-file-inclusive numeric scan and
+source read confirmed none was already used by the existing unit 5 specs.
+
+### New example names, observed RED signatures, and controls
+
+The rows below are the full RSpec names from the seed-57219 receipt, checked
+against the source declarations. Each race reached the public-state assertions;
+none failed at its latch or database-connection preconditions.
+
+| New example name | Observed result/signature |
+| --- | --- |
+| `Tag#update / #update! [cr-u5] rejects update converting the allow-listed tag to a synonym` | RED: PLAIN SYNONYM UPDATE: listed tag conversion succeeded (true instead of false); content-rule explanation empty; persisted target_tag_id was 113577002 instead of nil. |
+| `Tag#update / #update! [cr-u5] rejects update converting the deny-listed tag to a synonym` | RED: PLAIN SYNONYM UPDATE: listed tag conversion succeeded (true instead of false); content-rule explanation empty; persisted target_tag_id was 113577002 instead of nil. |
+| `Tag#update / #update! [cr-u5] permits update converting an unlisted tag to a listed target` | GREEN control: returns true; unlisted source becomes a synonym of the listed target (113577002). |
+| `Tag#update / #update! [cr-u5] preserves update synonym conversion with no rule rows` | GREEN control: returns true; persisted target_tag_id is 113577002 with zero rule rows. |
+| `Tag#update / #update! [cr-u5] rejects update! converting the allow-listed tag to a synonym` | RED: expected ActiveRecord::RecordInvalid but nothing was raised; content-rule explanation empty; persisted target_tag_id was 113577002 instead of nil. |
+| `Tag#update / #update! [cr-u5] rejects update! converting the deny-listed tag to a synonym` | RED: expected ActiveRecord::RecordInvalid but nothing was raised; content-rule explanation empty; persisted target_tag_id was 113577002 instead of nil. |
+| `Tag#update / #update! [cr-u5] permits update! converting an unlisted tag to a listed target` | GREEN control: returns true; unlisted source becomes a synonym of the listed target (113577002). |
+| `Tag#update / #update! [cr-u5] preserves update! synonym conversion with no rule rows` | GREEN control: returns true; persisted target_tag_id is 113577002 with zero rule rows. |
+| `McpContentRule#save during target destruction [cr-u5] saves the deny rule while its listed category survives` | GREEN control: real forum_content rule and listed target both persist. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the deny rule racing category destruction with rule_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the deny rule racing category destruction with destroy_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] saves the allow rule while its listed tag survives` | GREEN control: real forum_content rule and listed target both persist. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the allow rule racing tag destruction with rule_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the allow rule racing tag destruction with destroy_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] saves the deny rule while its listed tag survives` | GREEN control: real forum_content rule and listed target both persist. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the deny rule racing tag destruction with rule_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the deny rule racing tag destruction with destroy_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] saves the allow rule while its listed category survives` | GREEN control: real forum_content rule and listed target both persist. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the allow rule racing category destruction with rule_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+| `McpContentRule#save during target destruction [cr-u5] refuses the allow rule racing category destruction with destroy_first commit release` | RED: RULE/DESTROY RACE: both target destroy and referencing rule save committed; save returned true, rule persisted, errors empty. Target visibility before save and target absence after commit both passed. |
+
+### Checks against weaker implementations
+
+The HEAD service-only synonym guard is an actual weaker implementation and all
+four plain-update examples fail against it. Allow-list cases distinguish a
+deny-only guard. The unlisted-source/listed-target controls distinguish a guard
+that blocks every conversion while any rule exists, or guards the target rather
+than the source. No-rule controls preserve the existing model behavior.
+
+For every race, the second connection sees the target before saving even though
+the first connection has already deleted it in an uncommitted transaction. Thus
+an unsynchronized target-existence validation would still admit the rule; both
+commit-release schedules expose that weaker approach. Four surviving-target
+controls (tag/category, allow/deny) reject a blanket ban on rule saves. These are
+fixture/state checks and reasoning about weaker implementations; no production
+mutation was made to simulate a fix, and no GREEN claim is made for the guards.
+
+### Disposition of declined finding 2
+
+Agree with the decline. Re-read generic_bulk.rb's category delta update and
+Base#update_records: parent_category_id is passed into the delta batch, staged
+through raw PG COPY, and applied with UPDATE ... FROM via @raw_connection.exec.
+That path does not invoke Category model validations or callbacks. Treating an
+operator-run bulk import as direct database authority is consistent with the
+stated trust boundary. This is a documented limit, not a guard promised by these
+specs. It does not excuse site:import_structure's ordinary tag.update! path,
+which is explicitly covered above.
+
+### Needs non-test gate
+
+- No accepted finding is deferred for inability to build a reliable test. The
+  race examples pin two specific destroy-starts-first schedules for directly
+  listed tags/categories on both sides; they do not prove all interleavings.
+  Implementation review must still check rule edits, rule-starts-first races,
+  category subtree/reparent races, synonym races, and cross-process coordination.
+- Bulk import delta updates and other operator raw SQL remain outside model-guard
+  guarantees by the accepted trust boundary. Plugin callback bypasses need their
+  own review; these tests do not certify them.
+- Error wording/localization as rendered to administrators and the deliberate
+  restriction notice remain the unit 6 UI gate. The synonym examples only assert
+  the observable content-rule explanation through model errors/exceptions.
+
+### Inventory refresh and run receipts
+
+The unit 2 baseline run (seed 57219) observed **2 examples, 1 failure** with exactly
+three stale category anchors, and no IndexError. Updated category_create
+**638 → 644**, category_update **652 → 658**, and category_events **1230 → 1236**
+after re-reading their bodies and the reviewed diff. Both enrichment examples
+then passed in the combined run; all **245 live evidence occurrences** and graph
+references were also checked directly after the refresh. Historical metadata is
+retained; unit5_review2_refresh records this revision. See the
+[unit 2 README](../content_restrictions_unit2/README.md).
+
+Run commands use the repository Ruby **4.0.7**, Bundler **4.0.23**, LOAD_PLUGINS=1,
+and only RAILS_DB=discourse_test_mcp_content through hc:
+
+```sh
+PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:$PATH \
+LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit5/review2_spec.rb \
+  spec/lib/discourse_mcp/content_restrictions_unit2/enrichment_spec.rb \
+  --seed 57219 --format documentation \
+  --format json --out /tmp/cr-u5-review2-combined-57219.json
+```
+
+Raw receipts: `/tmp/cr-u5-review2-inventory-before.json` (inventory RED),
+`/tmp/cr-u5-review2-red-57219.json` (initial regression run), and
+`/tmp/cr-u5-review2-combined-57219.json` (final examples plus refreshed inventory).
+The complete per-example result and signature inventory is preserved above, so
+this record does not depend on temporary files surviving.
+
+Final lint: `bin/lint --fix --verbose review2_spec.rb` passed RuboCop (one file,
+zero offenses) and Syntax Tree. The command used the explicit installed Ruby,
+Node and pnpm paths; initial attempts lacked the hc runtime paths, and the first
+successful linter launch identified two describe-method naming offenses, which
+were corrected before the passing run. bin/lint reports no configured core
+linter for these Markdown/JSON paths; JSON parsing and git diff --check pass.
+
+The final linted focused run with seed **57219** again produced **22 examples,
+12 intentional failures**. The second-seed run mixed all existing unit 5 specs
+with review2_spec.rb and unit 2 enrichment:
+
+```sh
+PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:$PATH \
+LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit5/ \
+  spec/lib/discourse_mcp/content_restrictions_unit2/enrichment_spec.rb \
+  --seed 57220 --format progress \
+  --format json --out /tmp/cr-u5-review2-full-57220.json
+```
+
+Observed **87 examples, 12 failures, zero pending, zero errors outside examples**.
+The exact same 12 new regression names failed for the same signatures; all eight
+new controls, all **65 existing unit 5 examples**, and both enrichment examples
+passed. No IndexError or concurrency timeout/fixture exception occurred. This
+checks repeatability and cleanup under a different example order without claiming
+coverage of every possible concurrency schedule. The complete live evidence and
+graph-reference check was repeated after the refresh, with no mismatches.
+
+Only the four authorized files changed. No production code, other spec,
+migration, core database, git history/index/ref mutation, or service management was
+part of this work; the new guards intentionally remain RED against HEAD.

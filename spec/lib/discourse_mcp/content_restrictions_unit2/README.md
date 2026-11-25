@@ -429,3 +429,33 @@ operation rows, 55 distinct write primitives, 116 paths and three exclusions**.
 Both enrichment examples pass in the final seed-86019 combined run, with no
 `IndexError`. Exact example names, calibration limits and RED signatures are recorded in
 [REVIEW6.md](../content_restrictions_unit4/REVIEW6.md).
+
+## Unit 5 review 2 evidence refresh at `85c7e890132`
+
+Seed **57219** observed **2 examples, 1 failure** before the refresh: exactly
+three stale category evidence assertions, with no `IndexError`. Read the current
+method bodies and `9b5114149e3..85c7e890132` before updating:
+
+| Source | Evidence move | Re-review |
+| --- | --- | --- |
+| `app/models/category.rb` | category_create 638 → 644 | The post build/save in create_category_definition remains the native cooking path after a permitted category save. |
+| `app/models/category.rb` | category_update 652 → 658 | revise_category_definition still revises the first post with skip_validations; the native revision/rebake edges remain after a permitted save. |
+| `app/models/category.rb` | category_events 1230 → 1236 | The three category event methods still dispatch DiscourseEvent.trigger; downstream listener edges remain after permitted mutations. |
+
+Six preceding callback-registration lines account for all three moves. The new
+save/destroy guards condition entry; these native bodies and their classifications
+are unchanged. `unit5_review2_refresh` records the moves and revision; historical
+metadata remains intact.
+
+After refresh, all **245 live evidence occurrences** and graph references were
+checked directly. Counts remain **56 operation rows, 55 distinct write primitives,
+116 paths and three exclusions**. Both enrichment examples pass in the combined
+seed-57219 run, with no `IndexError` (**22 examples, 12 intentional unit 5 regression
+failures, zero pending, zero errors outside examples**). Exact new names, RED
+signatures, controls, the bulk-import limit and run receipts are recorded in the
+[unit 5 review 2 section](../content_restrictions_unit5/README.md#unit-5-review-round-2-at-85c7e890132).
+
+The post-lint full unit 5 + enrichment repeat (seed **57220**) also passed both
+enrichment examples without `IndexError`: **87 examples, 12 intentional new unit 5
+failures**, all 65 existing unit 5 examples GREEN. A second direct comparison of
+all 245 live evidence occurrences and graph references found no mismatch.

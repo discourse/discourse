@@ -1614,7 +1614,7 @@
       "evidence": [
         {
           "file": "app/models/category.rb",
-          "line": 638,
+          "line": 644,
           "source": "post = t.posts.build(raw: description || post_template, user: user)"
         }
       ],
@@ -1630,7 +1630,7 @@
       "evidence": [
         {
           "file": "app/models/category.rb",
-          "line": 652,
+          "line": 658,
           "source": "topic.first_post.revise(user, { raw: description }, skip_validations: true)"
         }
       ],
@@ -2037,7 +2037,7 @@
       "evidence": [
         {
           "file": "app/models/category.rb",
-          "line": 1230,
+          "line": 1236,
           "source": "DiscourseEvent.trigger(event, self)"
         }
       ],
@@ -3570,5 +3570,32 @@
       }
     ],
     "review": "Seed 86019 observed the exact-line example RED with precisely two stale assertions, moderation.rb:714 and :759, before refresh; no IndexError occurred. Re-read both current bodies and the 78600db48de..763a20295f0 diff. The preceding PM-off revise/reject guard shifts the declaration to 719 and native dispatch to 764. Native conditional graph edges and classifications remain; historical refresh notes are retained."
+  },
+  "unit5_review2_refresh": {
+    "revision": "85c7e8901325aa6ed6411c4d47dff096d32f6a52",
+    "moves": [
+      {
+        "entry": "path:category_create",
+        "file": "app/models/category.rb",
+        "previous_line": 638,
+        "current_line": 644,
+        "source": "post = t.posts.build(raw: description || post_template, user: user)"
+      },
+      {
+        "entry": "path:category_update",
+        "file": "app/models/category.rb",
+        "previous_line": 652,
+        "current_line": 658,
+        "source": "topic.first_post.revise(user, { raw: description }, skip_validations: true)"
+      },
+      {
+        "entry": "path:category_events",
+        "file": "app/models/category.rb",
+        "previous_line": 1230,
+        "current_line": 1236,
+        "source": "DiscourseEvent.trigger(event, self)"
+      }
+    ],
+    "review": "Seed 57219 observed the exact-line example RED at exactly category.rb:638, :652 and :1230 before refresh; no IndexError occurred. Re-read the current category-definition creation/revision and category event bodies and the 9b5114149e3..85c7e890132 diff. Six preceding callback-registration lines move these anchors to 644, 658 and 1236. The new model guards condition category saves/destroys; the native post creation, revision and event paths retain their classifications and downstream edges after permitted operations. Historical refresh notes remain intact."
   }
 }
