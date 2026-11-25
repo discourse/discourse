@@ -83,7 +83,7 @@ just that component. (Semantic-token equivalents: `--token-radius-small|normal|l
 }
 ```
 
-Plus globals `--d-button-border-radius`, `--d-button-border`, `--d-button-transition`. Override
+Plus globals `--d-button-border-radius`, `--d-comp-DButton-border-width`, `--d-comp-DButton-color-border`, `--d-button-transition`. Override
 these to restyle every button of a variant without touching `.btn` selectors.
 
 ### Inputs & form elements

@@ -120,3 +120,13 @@
     color: var(--icon-color);
   }
 }
+
+.btn-social.discourse_id {
+  --d-comp-DButton-color-text-primary: var(--accent-text-color);
+  --d-comp-DButton-color-text-primary-hovered: var(--accent-text-color);
+  --d-comp-DButton-color-icon-primary: var(--accent-text-color);
+  --d-comp-DButton-color-icon-primary-hovered: var(--accent-text-color);
+  --d-comp-DButton-color-border-primary: var(
+    --d-comp-DButton-color-background-primary
+  );
+}
