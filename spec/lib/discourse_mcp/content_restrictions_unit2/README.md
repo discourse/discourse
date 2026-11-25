@@ -268,3 +268,14 @@ Observed the exact-line example RED before editing: 15 stale evidence occurrence
 The inventory records every affected row and exact move under `round2_review`; it preserves the previous review as historical evidence. Shared `settings` and `theme_code` paths have explicit re-review notes. The new round-2 oracle separately tests the remaining typed topic/post and local-route URL gaps.
 
 Validation at `c560ace5708`, seed `20914`: both enrichment examples pass after the refresh. All 245 exact evidence occurrences and graph references were also rechecked directly. See [round-2 verification](../content_restrictions_unit3/round2_verification.json) for the before/after results.
+
+## Unit 4 item B evidence refresh at `ae8d882a477`
+
+Observed the exact-line example RED before editing: six assertion failures at five distinct locations. Re-read every moved declaration and shared call in the current method bodies. All operation/path classifications and graph edges remain unchanged.
+
+| Evidence file | Prior → current lines | Review result |
+| --- | --- | --- |
+| `lib/discourse_mcp/tools/site_settings.rb` | 270 → 327, 333 → 390 | Read-side projection/redaction support shifted UpdateSiteSetting and its shared update! call. The write still invokes SiteSetting::Update; setting/rebake hooks and unenforced declarations remain. |
+| `lib/discourse_mcp/tools/themes.rb` | 247 → 254, 350 → 357, 387 → 394 | Preceding theme support shifted SetThemeCode/CreateTheme/UpdateTheme. Re-read their compilation, service and save bodies; their cooking edges and unenforced declarations remain. SetThemeCode occurs twice because it also anchors the shared theme_code path. |
+
+The machine-readable moves and row reviews are under `unit4_refresh_review`. Before/after run receipts are recorded in [unit 4 verification](../content_restrictions_unit4/verification.json).

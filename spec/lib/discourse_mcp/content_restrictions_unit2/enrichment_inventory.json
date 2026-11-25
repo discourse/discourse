@@ -931,12 +931,13 @@
         },
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 270,
+          "line": 327,
           "source": "class UpdateSiteSetting"
         }
       ],
       "unit3_review": "Only evidence locations moved for the write: UpdateSiteSetting remains unenforced for content/exit paths and still calls SiteSettingSupport.update!, which invokes SiteSetting::Update. Unit 3 read-side value/default redaction does not alter setting-change/rebake hooks.",
-      "round2_review": "The class and update! call moved one line because read-side redaction now uses any active policy, including PM-only. UpdateSiteSetting itself retains unenforced declarations, its validation/update body and setting/rebake hooks."
+      "round2_review": "The class and update! call moved one line because read-side redaction now uses any active policy, including PM-only. UpdateSiteSetting itself retains unenforced declarations, its validation/update body and setting/rebake hooks.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     {
       "tool": "discourse_set_theme_code",
@@ -953,11 +954,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 247,
+          "line": 254,
           "source": "class SetThemeCode"
         }
       ],
-      "round2_review": "Typed category/tag value/default redaction was added before this class. Compilation and UpdateTheme dispatch remain; returned theme_json now receives policy. The write remains unenforced under active rules; no new cooking path was added."
+      "round2_review": "Typed category/tag value/default redaction was added before this class. Compilation and UpdateTheme dispatch remain; returned theme_json now receives policy. The write remains unenforced under active rules; no new cooking path was added.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     {
       "tool": "discourse_create_theme",
@@ -974,11 +976,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 350,
+          "line": 357,
           "source": "class CreateTheme"
         }
       ],
-      "round2_review": "Themes::Create and its supplied fields remain unchanged. The returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules."
+      "round2_review": "Themes::Create and its supplied fields remain unchanged. The returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     {
       "tool": "discourse_update_theme",
@@ -995,11 +998,12 @@
         },
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 387,
+          "line": 394,
           "source": "class UpdateTheme"
         }
       ],
-      "round2_review": "The existing mutation transaction, relation/default handling, field updates and logging remain. Returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules."
+      "round2_review": "The existing mutation transaction, relation/default handling, field updates and logging remain. Returned theme_json now receives policy for typed category/tag redaction; the write remains unenforced under active rules.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     {
       "tool": "discourse_delete_theme",
@@ -1769,7 +1773,7 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/site_settings.rb",
-          "line": 333,
+          "line": 390,
           "source": "SiteSettingSupport.update!("
         }
       ],
@@ -1778,7 +1782,8 @@
         "setting_hooks"
       ],
       "unit3_review": "The SiteSettingSupport.update! call moved from line 283 to 332 due to read-side setting redaction. The update implementation and setting hooks did not change; the MCP write remains uncertified under active content rules.",
-      "round2_review": "Only the MCP read-side redaction guard added a preceding line; the write still invokes SiteSettingSupport.update! and the native SiteSetting::Update service. Setting hooks/rebake edges remain unchanged, and the write remains blocked by unenforced declarations under active rules."
+      "round2_review": "Only the MCP read-side redaction guard added a preceding line; the write still invokes SiteSettingSupport.update! and the native SiteSetting::Update service. Setting hooks/rebake edges remain unchanged, and the write remains blocked by unenforced declarations under active rules.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     "theme_code": {
       "trigger": "Theme writes install/update code and run permitted migrations",
@@ -1786,13 +1791,14 @@
       "evidence": [
         {
           "file": "lib/discourse_mcp/tools/themes.rb",
-          "line": 247,
+          "line": 254,
           "source": "class SetThemeCode"
         }
       ],
       "downstream": [],
       "note": "Blocked as exit_paths under every active rule; not claimed to cook nothing.",
-      "round2_review": "SetThemeCode still compiles CSS/JavaScript and delegates mutation to UpdateTheme. Shared theme_json now applies policy-aware typed category/tag redaction to write responses as well as GetTheme; mutation and cooking graph edges are unchanged. Topic/post object references remain the separately tested round-2 gap."
+      "round2_review": "SetThemeCode still compiles CSS/JavaScript and delegates mutation to UpdateTheme. Shared theme_json now applies policy-aware typed category/tag redaction to write responses as well as GetTheme; mutation and cooking graph edges are unchanged. Topic/post object references remain the separately tested round-2 gap.",
+      "unit4_refresh_review": "Re-read at ae8d882a477: preceding read-side redaction/support changes moved this evidence. Write validation, service/compilation calls, declarations and downstream cooking edges retain their previous classification; these writes remain blocked under active rules."
     },
     "create_events": {
       "trigger": "PostCreator emits topic_created and post_created",
@@ -3098,6 +3104,48 @@
         "old_line": 190,
         "line": 247,
         "source": "class SetThemeCode"
+      }
+    ]
+  },
+  "unit4_refresh_review": {
+    "revision": "ae8d882a47743b20498b224189c0b9c876e90bf6",
+    "scope": "Six stale occurrences at five distinct locations re-read in current method bodies; all evidence and graph references checked again after refresh. Historical review metadata retained. No classification or reachability change.",
+    "moves": [
+      {
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "source": "class UpdateSiteSetting",
+        "previous_line": 270,
+        "current_line": 327
+      },
+      {
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "source": "class SetThemeCode",
+        "previous_line": 247,
+        "current_line": 254
+      },
+      {
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "source": "class CreateTheme",
+        "previous_line": 350,
+        "current_line": 357
+      },
+      {
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "source": "class UpdateTheme",
+        "previous_line": 387,
+        "current_line": 394
+      },
+      {
+        "file": "lib/discourse_mcp/tools/site_settings.rb",
+        "source": "SiteSettingSupport.update!(",
+        "previous_line": 333,
+        "current_line": 390
+      },
+      {
+        "file": "lib/discourse_mcp/tools/themes.rb",
+        "source": "class SetThemeCode",
+        "previous_line": 247,
+        "current_line": 254
       }
     ]
   }
