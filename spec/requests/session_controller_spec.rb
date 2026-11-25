@@ -2997,6 +2997,36 @@ RSpec.describe SessionController do
         expect(response).to redirect_to(topic_invite.topic.relative_url)
       end
 
+      it "does not redirect to the topic associated to the invite when the user cannot see it" do
+        topic = Fabricate(:topic, title: "Planning thread for the autumn community meetup")
+        TopicInvite.create!(invite: invite, topic: topic)
+
+        topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        topic.update!(title: "Confidential: venue contract dispute with Harbour Hall")
+
+        login_with_sso_and_invite
+
+        redeemer = User.find_by_email("bob@bob.com")
+        expect(redeemer.guardian.can_see?(topic)).to eq(false)
+
+        expect(response.status).to eq(302)
+        expect(response.location).not_to include(topic.reload.slug)
+        expect(response).to redirect_to("/")
+      end
+
+      it "redirects to the topic when the invite's groups give the user access to it" do
+        group = Fabricate(:group)
+        topic = Fabricate(:topic, category: Fabricate(:private_category, group: group))
+        email_invite = Fabricate(:invite, email: "bob@bob.com", invited_by: admin)
+        TopicInvite.create!(invite: email_invite, topic: topic)
+        InvitedGroup.create!(invite: email_invite, group: group)
+
+        login_with_sso_and_invite(email_invite.invite_key)
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(topic.relative_url)
+      end
+
       it "adds the user to the appropriate invite groups" do
         invited_group = InvitedGroup.create!(invite: invite, group: Fabricate(:group))
         login_with_sso_and_invite

@@ -281,8 +281,7 @@ class SessionController < ApplicationController
           user.activate
           login_sso_user(sso, user)
 
-          topic = invite.topics.first
-          return_path = topic.present? ? path(topic.relative_url) : path("/")
+          return_path = invite_login_code_redirect(invite, user)
         elsif !user.active?
           activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
