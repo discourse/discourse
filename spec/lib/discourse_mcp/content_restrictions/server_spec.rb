@@ -15,7 +15,7 @@ describe DiscourseMcp::Server do
   let(:client) do
     McpOauthClient.create!(
       client_id: SecureRandom.hex,
-      name: "Content policy oracle",
+      name: "Content policy client",
       registration_type: "pre_registered",
       trust_state: "approved",
       redirect_uris: ["http://127.0.0.1/callback"],
@@ -102,7 +102,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] subtracts revoked scopes per request while preserving tokens grants OAuth and authorization status" do
+  it "subtracts revoked scopes per request while preserving tokens grants OAuth and authorization status" do
     original_scopes = token.scopes.dup
     original_eligible = DiscourseMcp::Access.eligible_scopes(admin)
     expect(original_scopes).to include("mcp:private-messages:read", "mcp:private-messages:write")
@@ -134,7 +134,7 @@ describe DiscourseMcp::Server do
     expect(DiscourseMcp::Authenticator.new(request).authenticate!.has_scopes?(revoked)).to eq(true)
   end
 
-  it "[cr-u1] gives revoked scopes a caller-provided not-found error and preserves ordinary scope challenges" do
+  it "gives revoked scopes a caller-provided not-found error and preserves ordinary scope challenges" do
     restrict_messages
     context = DiscourseMcp::RequestContext.new(token)
     not_found = "Missing record #{SecureRandom.hex(8)}"
@@ -159,7 +159,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] restores existing-token PM reads on the next server request after deleting the rule" do
+  it "restores existing-token PM reads on the next server request after deleting the rule" do
     name = "discourse_read_private_message"
     expect(
       tool(name, topic_id: message.topic_id).body.dig(:result, :structuredContent, :title),
@@ -172,7 +172,7 @@ describe DiscourseMcp::Server do
     expect(serialized(restored)).to include(canary)
   end
 
-  it "[cr-u1] hides every PM-scoped core tool and blocks calls before argument validation with policy audit outcomes" do
+  it "hides every PM-scoped core tool and blocks calls before argument validation with policy audit outcomes" do
     restrict_messages
     pm_scopes = %w[mcp:private-messages:read mcp:private-messages:write]
     pm_tools =
@@ -203,7 +203,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] excludes blocked tools resource templates and prompts and never invokes their implementations" do
+  it "excludes blocked tools resource templates and prompts and never invokes their implementations" do
     invoked = []
     registry = DiscourseMcp.registry
     %i[tool resource_template prompt].each do |kind|
@@ -239,7 +239,7 @@ describe DiscourseMcp::Server do
     expect(invoked).to eq([])
   end
 
-  it "[cr-u1] counts only usable exposed primitives for user eligibility" do
+  it "counts only usable exposed primitives for user eligibility" do
     name = "discourse_read_private_message"
     expose(:tool, name)
     expect(DiscourseMcp::Access.eligible_for_exposed_primitive?(admin)).to eq(true)
@@ -249,8 +249,8 @@ describe DiscourseMcp::Server do
     expect(DiscourseMcp::Access.eligible_for_exposed_primitive?(admin)).to eq(true)
   end
 
-  shared_examples "a PM identifier oracle" do |name, key, arguments|
-    it "[cr-u1] makes #{name} answer identically for a PM ID and a nonexistent ID without mutating the PM" do
+  shared_examples "a PM-indistinguishable identifier" do |name, key, arguments|
+    it "makes #{name} answer identically for a PM ID and a nonexistent ID without mutating the PM" do
       if name == "discourse_get_post_revision"
         SiteSetting.editing_grace_period = 0
         PostRevisor.new(message).revise!(admin, raw: "Revised #{message.raw}")
@@ -283,45 +283,48 @@ describe DiscourseMcp::Server do
     end
   end
 
-  include_examples "a PM identifier oracle", "discourse_read_topic", :topic_id, {}
-  include_examples "a PM identifier oracle", "discourse_read_post", :post_id, {}
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier", "discourse_read_topic", :topic_id, {}
+  include_examples "a PM-indistinguishable identifier", "discourse_read_post", :post_id, {}
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_read_topic_posts",
                    :topic_id,
                    { selection_mode: "latest" }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_get_post_replies",
                    :post_id,
                    { mode: "reply_ids" }
-  include_examples "a PM identifier oracle", "discourse_get_topic_view_stats", :topic_id, {}
-  include_examples "a PM identifier oracle", "discourse_get_post_revision", :post_id, {}
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
+                   "discourse_get_topic_view_stats",
+                   :topic_id,
+                   {}
+  include_examples "a PM-indistinguishable identifier", "discourse_get_post_revision", :post_id, {}
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_create_post",
                    :topic_id,
                    { raw: "An attempted reply long enough to be valid." }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_update_post",
                    :post_id,
                    { raw: "An attempted edit long enough to be valid." }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_update_topic",
                    :topic_id,
                    { title: "An attempted subject change" }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_post_set_deleted",
                    :post_id,
                    { deleted: true }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_set_topic_closed",
                    :topic_id,
                    { closed: true }
-  include_examples "a PM identifier oracle",
+  include_examples "a PM-indistinguishable identifier",
                    "discourse_set_topic_pin",
                    :topic_id,
                    { mode: "global" }
 
-  shared_examples "a PM resource oracle" do |kind|
-    it "[cr-u1] makes discourse.#{kind} resource responses identical for PM and nonexistent IDs" do
+  shared_examples "a PM-indistinguishable resource" do |kind|
+    it "makes discourse.#{kind} resource responses identical for PM and nonexistent IDs" do
       id = kind == "topic" ? message.topic_id : message.id
       model = kind == "topic" ? Topic : Post
       missing_id = model.unscoped.maximum(:id) + 10_000
@@ -335,10 +338,10 @@ describe DiscourseMcp::Server do
     end
   end
 
-  include_examples "a PM resource oracle", "topic"
-  include_examples "a PM resource oracle", "post"
+  include_examples "a PM-indistinguishable resource", "topic"
+  include_examples "a PM-indistinguishable resource", "post"
 
-  it "[cr-u1] makes the draft-reply prompt answer identically for PM and nonexistent topics" do
+  it "makes the draft-reply prompt answer identically for PM and nonexistent topics" do
     expose(:prompt, "discourse.draft_reply")
     id = message.topic_id
     missing_id = Topic.unscoped.maximum(:id) + 10_000
@@ -352,7 +355,7 @@ describe DiscourseMcp::Server do
     expect_no_private_content(private_response)
   end
 
-  it "[cr-u1] filters PM search hits and explicit topic filters while preserving public results if usable" do
+  it "filters PM search hits and explicit topic filters while preserving public results if usable" do
     SearchIndexer.enable
     public_post = Fabricate(:post, raw: "Public searchable evidence #{SecureRandom.hex(10)}")
     [message, public_post].each { |post| SearchIndexer.index(post, force: true) }
@@ -382,7 +385,7 @@ describe DiscourseMcp::Server do
     SearchIndexer.disable
   end
 
-  it "[cr-u1] removes PM notifications group summaries and reviewable mentions before the page limit" do
+  it "removes PM notifications group summaries and reviewable mentions before the page limit" do
     SiteSetting.enable_mentions = true
     public_notification = Fabricate(:notification, user: admin)
     reviewable = Fabricate(:reviewable_flagged_post, topic: message.topic, target: message)
@@ -411,7 +414,7 @@ describe DiscourseMcp::Server do
     expect(serialized(response)).not_to include(group.name)
   end
 
-  it "[cr-u1] removes live and deleted PM topic and post bookmarks before the page limit" do
+  it "removes live and deleted PM topic and post bookmarks before the page limit" do
     public_bookmark = Fabricate(:bookmark, user: admin, updated_at: 5.minutes.ago)
     [message.topic, message].each do |bookmarkable|
       Fabricate(
@@ -433,7 +436,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] reads PM reply compose and disguised stored drafts exactly as absent including deleted topics" do
+  it "reads PM reply compose and disguised stored drafts exactly as absent including deleted topics" do
     keys = [
       "topic_#{message.topic_id}",
       Draft::NEW_PRIVATE_MESSAGE,
@@ -463,7 +466,7 @@ describe DiscourseMcp::Server do
     expect_no_private_content(present)
   end
 
-  it "[cr-u1] makes PM draft writes answer like missing topics and preserves the stored private draft" do
+  it "makes PM draft writes answer like missing topics and preserves the stored private draft" do
     draft_key = "topic_#{message.topic_id}"
     missing_key = "topic_#{Topic.unscoped.maximum(:id) + 10_000}"
     Draft.set(admin, draft_key, 0, { reply: message.raw, action: "reply" }.to_json)
@@ -487,7 +490,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] hides PM reviewables and queue counts and matches nonexistent reviewable reads and actions" do
+  it "hides PM reviewables and queue counts and matches nonexistent reviewable reads and actions" do
     public_reviewable = Fabricate(:reviewable_flagged_post)
     private_reviewable = Fabricate(:reviewable_flagged_post, topic: message.topic, target: message)
     restrict_messages
@@ -519,7 +522,7 @@ describe DiscourseMcp::Server do
     expect(private_reviewable.reload).to be_pending
   end
 
-  it "[cr-u1] removes PM user activity even for an administrator reading their own private action types" do
+  it "removes PM user activity even for an administrator reading their own private action types" do
     public_post = Fabricate(:post, user: admin)
     [public_post, message].each do |post|
       UserAction.create!(
@@ -574,7 +577,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] suppresses private flag conversations attached to otherwise public reviewables" do
+  it "suppresses private flag conversations attached to otherwise public reviewables" do
     reporter = Fabricate(:user, refresh_auto_groups: true)
     result =
       PostActionCreator.notify_moderators(reporter, Fabricate(:post), "Flag conversation #{canary}")
@@ -592,7 +595,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] suppresses arbitrary webhook delivery bodies that may embed private-message content" do
+  it "suppresses arbitrary webhook delivery bodies that may embed private-message content" do
     hook = Fabricate(:web_hook)
     event =
       Fabricate(
@@ -611,7 +614,7 @@ describe DiscourseMcp::Server do
     expect(event.reload.payload).to include(message.raw)
   end
 
-  it "[cr-u1] keeps PM reads closed when persisted PM configuration violates its schema" do
+  it "keeps PM reads closed when persisted PM configuration violates its schema" do
     rule = restrict_messages
     rule.update_columns(config: { "unexpected" => SecureRandom.hex(10) })
     response = tool("discourse_read_post", post_id: message.id)
@@ -622,7 +625,7 @@ describe DiscourseMcp::Server do
     expect(DiscourseMcp::ContentPolicy.load).to be_active
   end
 
-  it "[cr-u1] denies PM content when a governing plugin rule has invalid config or a failing compiler" do
+  it "denies PM content when a governing plugin rule has invalid config or a failing compiler" do
     DiscourseMcp.registry.register_content_rule_kind(
       "oracle:closed",
       provider: "oracle",
@@ -653,7 +656,7 @@ describe DiscourseMcp::Server do
     end
   end
 
-  it "[cr-u1] blocks webhook delivery configuration every theme write and site-setting updates as exit paths" do
+  it "blocks webhook delivery configuration every theme write and site-setting updates as exit paths" do
     restrict_messages
     names = %w[
       discourse_create_webhook

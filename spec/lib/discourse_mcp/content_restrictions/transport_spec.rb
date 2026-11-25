@@ -3,7 +3,7 @@
 describe "MCP content policy transport", type: :request do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
-  it "[cr-u1] rejects blocked deferred tools synchronously without hijacking invoking or challenging" do
+  it "rejects blocked deferred tools synchronously without hijacking invoking or challenging" do
     SiteSetting.mcp_server_enabled = true
     registry = DiscourseMcp::Registry.new
     allow(DiscourseMcp).to receive(:registry).and_return(registry)
@@ -24,7 +24,7 @@ describe "MCP content policy transport", type: :request do
     client =
       McpOauthClient.create!(
         client_id: SecureRandom.hex,
-        name: "Deferred content policy oracle",
+        name: "Deferred content policy client",
         registration_type: "pre_registered",
         trust_state: "approved",
         redirect_uris: ["http://127.0.0.1/callback"],

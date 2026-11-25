@@ -5,7 +5,7 @@ describe Plugin::Instance do
     Discourse.plugins_by_name[name].tap { |plugin| skip "#{name} is not loaded" if plugin.nil? }
   end
 
-  it "[cr-u1] registers plugin data and rule kinds under the plugin provider and treats disabled plugins as orphans" do
+  it "registers plugin data and rule kinds under the plugin provider and treats disabled plugins as orphans" do
     skip "Plugins are not loaded" if Discourse.plugins_by_name.empty?
     registry = DiscourseMcp::Registry.new
     allow(DiscourseMcp).to receive(:registry).and_return(registry)
@@ -59,7 +59,7 @@ describe Plugin::Instance do
   end
 
   shared_examples "a plugin content declaration" do |provider, identifier|
-    it "[cr-u1] declares all five core data kinds for #{provider}" do
+    it "declares all five core data kinds for #{provider}" do
       loaded_plugin(provider)
       primitive = DiscourseMcp.registry.find(:tool, identifier)
       expect(primitive).to be_present
@@ -88,7 +88,7 @@ describe Plugin::Instance do
                    "discourse-events",
                    "discourse_calendar_event_list"
 
-  it "[cr-u1] blocks Data Explorer execution as unbounded while allowing query-definition reads as none" do
+  it "blocks Data Explorer execution as unbounded while allowing query-definition reads as none" do
     loaded_plugin("discourse-data-explorer")
     execute = DiscourseMcp.registry.find(:tool, "discourse_run_query")
     read = DiscourseMcp.registry.find(:tool, "discourse_get_query")
@@ -100,7 +100,7 @@ describe Plugin::Instance do
     expect(DiscourseMcp.primitive_usable?(read)).to eq(true)
   end
 
-  it "[cr-u1] leaves every chat primitive undeclared and blocked under an active rule" do
+  it "leaves every chat primitive undeclared and blocked under an active rule" do
     loaded_plugin("chat")
     primitives = DiscourseMcp.registry.all.select { |primitive| primitive.provider == "chat" }
     expect(primitives.map(&:identifier)).to contain_exactly(
@@ -115,7 +115,7 @@ describe Plugin::Instance do
     end
   end
 
-  it "[cr-u1] reports AI theme access unavailable when exposed theme tools are gate-blocked" do
+  it "reports AI theme access unavailable when exposed theme tools are gate-blocked" do
     loaded_plugin("discourse-ai")
     SiteSetting.mcp_server_enabled = true
     %w[discourse_get_theme discourse_create_theme discourse_update_theme].each do |identifier|
@@ -126,8 +126,8 @@ describe Plugin::Instance do
     expect(DiscourseAi::Agents::McpThemeAccess.ready?).to eq(false)
   end
 
-  shared_examples "a plugin PM mutation oracle" do |provider, identifier, setting, arguments|
-    it "[cr-u1] makes #{provider} mutations answer identically for PM and nonexistent IDs" do
+  shared_examples "a PM-indistinguishable plugin mutation" do |provider, identifier, setting, arguments|
+    it "makes #{provider} mutations answer identically for PM and nonexistent IDs" do
       loaded_plugin(provider)
       SiteSetting.public_send("#{setting}=", true)
       SiteSetting.mcp_server_enabled = true
@@ -142,7 +142,7 @@ describe Plugin::Instance do
       client =
         McpOauthClient.create!(
           client_id: SecureRandom.hex,
-          name: "Plugin policy oracle",
+          name: "Plugin policy client",
           registration_type: "pre_registered",
           trust_state: "approved",
           redirect_uris: ["http://127.0.0.1/callback"],
@@ -185,17 +185,17 @@ describe Plugin::Instance do
     end
   end
 
-  include_examples "a plugin PM mutation oracle",
+  include_examples "a PM-indistinguishable plugin mutation",
                    "discourse-reactions",
                    "discourse_reactions_post_reaction_set",
                    :discourse_reactions_enabled,
                    { reaction: "heart" }
-  include_examples "a plugin PM mutation oracle",
+  include_examples "a PM-indistinguishable plugin mutation",
                    "discourse-solved",
                    "discourse_solved_solution_set",
                    :solved_enabled,
                    { accepted: true }
-  include_examples "a plugin PM mutation oracle",
+  include_examples "a PM-indistinguishable plugin mutation",
                    "discourse-topic-voting",
                    "discourse_topic_voting_vote_set",
                    :topic_voting_enabled,

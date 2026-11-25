@@ -5,7 +5,7 @@ describe DiscourseMcp::Server do
   let(:client) do
     McpOauthClient.create!(
       client_id: SecureRandom.hex,
-      name: "Side channel oracle",
+      name: "Side channel client",
       registration_type: "pre_registered",
       trust_state: "approved",
       redirect_uris: ["http://127.0.0.1/callback"],
@@ -113,7 +113,7 @@ describe DiscourseMcp::Server do
       expect(shared_tag.reload.pm_topic_count).to eq(3)
     end
 
-    it "[cr-u1] omits PM-only tags and PM-derived counts from the entire tag list under PM-off" do
+    it "omits PM-only tags and PM-derived counts from the entire tag list under PM-off" do
       restrict_messages
 
       response = tool("discourse_tag_list", limit: 200)
@@ -128,7 +128,7 @@ describe DiscourseMcp::Server do
       expect(serialized(response)).not_to include(private_tag.name, "pm_topic_count")
     end
 
-    it "[cr-u1] preserves the staff tag list and public counts without rule rows" do
+    it "preserves the staff tag list and public counts without rule rows" do
       response = tool("discourse_tag_list", limit: 200)
 
       expect(content(response).fetch(:tags)).to contain_exactly(
@@ -141,7 +141,7 @@ describe DiscourseMcp::Server do
   end
 
   shared_examples "group PM metadata" do |name|
-    it "[cr-u1] removes PM presence and count fields from #{name} under PM-off" do
+    it "removes PM presence and count fields from #{name} under PM-off" do
       group = Fabricate(:group, has_messages: true)
       Fabricate(:group_private_message_post, user: admin, recipients: group)
       restrict_messages
@@ -165,7 +165,7 @@ describe DiscourseMcp::Server do
       end
     end
 
-    it "[cr-u1] preserves PM presence and count fields in #{name} without rule rows" do
+    it "preserves PM presence and count fields in #{name} without rule rows" do
       group = Fabricate(:group, has_messages: true)
       Fabricate(:group_private_message_post, user: admin, recipients: group)
       arguments =
@@ -187,7 +187,7 @@ describe DiscourseMcp::Server do
   include_examples "group PM metadata", "discourse_update_group"
 
   shared_examples "restricted request reasons" do |kind|
-    it "[cr-u1] hides membership request reasons with #{kind} active" do
+    it "hides membership request reasons with #{kind} active" do
       request = Fabricate(:group_request)
       activate_rule(kind)
 
@@ -207,7 +207,7 @@ describe DiscourseMcp::Server do
   include_examples "restricted request reasons", "PM-off"
   include_examples "restricted request reasons", "an unrelated rule"
 
-  it "[cr-u1] returns membership request reasons without rule rows" do
+  it "returns membership request reasons without rule rows" do
     request = Fabricate(:group_request)
 
     response = tool("discourse_list_group_membership_requests", name: request.group.name)
@@ -219,7 +219,7 @@ describe DiscourseMcp::Server do
     expect(serialized(response)).to include(request.reason)
   end
 
-  it "[cr-u1] refuses membership requests under PM-off without creating a request or PM" do
+  it "refuses membership requests under PM-off without creating a request or PM" do
     group = Fabricate(:group)
     group.add_owner(Fabricate(:user))
     group.update!(allow_membership_requests: true)
@@ -242,7 +242,7 @@ describe DiscourseMcp::Server do
     expect(group.users.exists?(id: admin.id)).to eq(false)
   end
 
-  it "[cr-u1] creates a membership request and its PM without rule rows" do
+  it "creates a membership request and its PM without rule rows" do
     group = Fabricate(:group)
     owner = Fabricate(:user)
     group.add_owner(owner)
@@ -266,7 +266,7 @@ describe DiscourseMcp::Server do
   end
 
   shared_examples "restricted request handling" do |action|
-    it "[cr-u1] refuses to #{action} a membership request under PM-off and preserves request and membership" do
+    it "refuses to #{action} a membership request under PM-off and preserves request and membership" do
       request = Fabricate(:group_request)
       attributes = request.attributes
       restrict_messages
@@ -292,7 +292,7 @@ describe DiscourseMcp::Server do
   include_examples "restricted request handling", "deny"
 
   shared_examples "moderation messages" do |operation|
-    it "[cr-u1] refuses a custom #{operation} message under PM-off and permits #{operation} without a message" do
+    it "refuses a custom #{operation} message under PM-off and permits #{operation} without a message" do
       user = Fabricate(:user)
       arguments = {
         username: user.username,
@@ -322,7 +322,7 @@ describe DiscourseMcp::Server do
       expect(user.reload.public_send("#{state}?")).to eq(true)
     end
 
-    it "[cr-u1] permits #{operation} with a custom message without rule rows" do
+    it "permits #{operation} with a custom message without rule rows" do
       user = Fabricate(:user)
       message = "Custom private explanation for #{user.username}"
 
@@ -353,7 +353,7 @@ describe DiscourseMcp::Server do
   include_examples "moderation messages", "silence"
 
   shared_examples "restricted reviewable actions" do |kind|
-    it "[cr-u1] refuses reviewable account deletion and delete-and-block with #{kind} active" do
+    it "refuses reviewable account deletion and delete-and-block with #{kind} active" do
       activate_rule(kind)
 
       [
@@ -381,7 +381,7 @@ describe DiscourseMcp::Server do
       end
     end
 
-    it "[cr-u1] refuses nonempty reviewable additional fields with #{kind} active" do
+    it "refuses nonempty reviewable additional fields with #{kind} active" do
       activate_rule(kind)
 
       [
@@ -414,7 +414,7 @@ describe DiscourseMcp::Server do
       end
     end
 
-    it "[cr-u1] permits ordinary reviewable actions without additional fields with #{kind} active" do
+    it "permits ordinary reviewable actions without additional fields with #{kind} active" do
       activate_rule(kind)
 
       [nil, {}].each do |fields|
@@ -439,7 +439,7 @@ describe DiscourseMcp::Server do
   include_examples "restricted reviewable actions", "PM-off"
   include_examples "restricted reviewable actions", "an unrelated rule"
 
-  it "[cr-u1] reports AI theme access restricted rather than successful ready or emergency-blocked under PM-off" do
+  it "reports AI theme access restricted rather than successful ready or emergency-blocked under PM-off" do
     plugin = Discourse.plugins_by_name["discourse-ai"]
     skip "discourse-ai is not loaded" if plugin.nil?
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
