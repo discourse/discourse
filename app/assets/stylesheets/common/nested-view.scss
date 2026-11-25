@@ -207,6 +207,22 @@
       line-height: var(--line-height-small);
     }
 
+    &__select.d-select {
+      flex-shrink: 0;
+      width: auto;
+      min-height: auto;
+      padding: 0.35em 0.55em;
+      line-height: var(--line-height-small);
+      color: var(--d-button-default-text-color);
+      background: var(--d-button-flat-bg-color);
+      border-color: transparent;
+      border-radius: var(--d-button-border-radius);
+
+      .discourse-no-touch &:hover {
+        background: var(--d-button-flat-bg-color--hover);
+      }
+    }
+
     .d-icon {
       margin-left: 0.15em;
     }

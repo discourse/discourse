@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
+import { fn, uniqueId } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 const SORT_OPTIONS = [
@@ -24,6 +25,13 @@ export default class NestedSortSelector extends Component {
         option.value !== "hot" ||
         this.siteSettings.nested_replies_hot_sort_enabled
     );
+  }
+
+  get sortChoices() {
+    return this.sortOptions.map((option) => ({
+      value: option.value,
+      name: i18n(option.labelKey),
+    }));
   }
 
   get currentSortLabel() {
@@ -46,35 +54,55 @@ export default class NestedSortSelector extends Component {
 
   <template>
     <div class="nested-sort-selector">
-      <span class="nested-sort-selector__label">
-        {{i18n "nested_replies.sort.label"}}:
-      </span>
+      {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+      {{#if this.siteSettings.enable_new_select_controls}}
+        {{#let (uniqueId) as |labelId|}}
+          <span class="nested-sort-selector__label" id={{labelId}}>
+            {{i18n "nested_replies.sort.label"}}:
+          </span>
 
-      <DMenu
-        @identifier="nested-sort-selector"
-        @onRegisterApi={{this.onRegisterApi}}
-        @placement="bottom-start"
-        @triggerClass="btn-flat nested-sort-selector__trigger"
-      >
-        <:trigger>
-          <span class="d-button-label">{{this.currentSortLabel}}</span>
-          {{dIcon "angle-down"}}
-        </:trigger>
+          <DSelect
+            class="nested-sort-selector__select"
+            @ariaLabelledBy={{labelId}}
+            @onChange={{@onChange}}
+            @options={{this.sortChoices}}
+            @required={{true}}
+            @value={{@current}}
+            @valueField="value"
+            @variant="static"
+          />
+        {{/let}}
+      {{else}}
+        <span class="nested-sort-selector__label">
+          {{i18n "nested_replies.sort.label"}}:
+        </span>
 
-        <:content>
-          <DDropdownMenu as |dropdown|>
-            {{#each this.sortOptions as |option|}}
-              <dropdown.item>
-                <DButton
-                  class={{if (eq @current option.value) "is-selected"}}
-                  @action={{fn this.changeSort option.value}}
-                  @translatedLabel={{i18n option.labelKey}}
-                />
-              </dropdown.item>
-            {{/each}}
-          </DDropdownMenu>
-        </:content>
-      </DMenu>
+        <DMenu
+          @identifier="nested-sort-selector"
+          @onRegisterApi={{this.onRegisterApi}}
+          @placement="bottom-start"
+          @triggerClass="btn-flat nested-sort-selector__trigger"
+        >
+          <:trigger>
+            <span class="d-button-label">{{this.currentSortLabel}}</span>
+            {{dIcon "angle-down"}}
+          </:trigger>
+
+          <:content>
+            <DDropdownMenu as |dropdown|>
+              {{#each this.sortOptions as |option|}}
+                <dropdown.item>
+                  <DButton
+                    class={{if (eq @current option.value) "is-selected"}}
+                    @action={{fn this.changeSort option.value}}
+                    @translatedLabel={{i18n option.labelKey}}
+                  />
+                </dropdown.item>
+              {{/each}}
+            </DDropdownMenu>
+          </:content>
+        </DMenu>
+      {{/if}}
     </div>
   </template>
 }
