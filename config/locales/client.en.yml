@@ -5459,6 +5459,7 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
+        public_current_comparison: "Last accessible version (%{from}) compared with the current post (%{to}). This is a summary across versions, not a single edit; intermediate versions are not shown."
         diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
         diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
         unlisted:

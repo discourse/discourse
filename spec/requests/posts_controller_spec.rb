@@ -3723,6 +3723,7 @@ RSpec.describe PostsController do
         post_with_following_hidden_revision.revise(post_owner, raw: "Following hidden secret")
         hidden_revision = post_with_following_hidden_revision.revisions.find_by(number: 3)
         hidden_revision.hide!
+        post_with_following_hidden_revision.revise(post_owner, raw: "Current public version")
 
         get "/posts/#{post_with_following_hidden_revision.id}/revisions/2.json"
 
@@ -3799,6 +3800,55 @@ RSpec.describe PostsController do
         expect(response.parsed_body).not_to have_key("post_type_changes")
         expect(response.parsed_body).not_to have_key("locale_changes")
         expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+    end
+
+    context "with a public current-body comparison" do
+      fab!(:revised_post) { Fabricate(:post, raw: "Original public body") }
+
+      before do
+        SiteSetting.editing_grace_period = 0
+        SiteSetting.edit_history_visible_to_public = true
+        revised_post.revise(revised_post.user, raw: "Last accessible body")
+        revised_post.revise(
+          revised_post.user,
+          raw: "Confidential historical body",
+          edit_reason: "Confidential historical reason",
+        )
+        revised_post.revise(revised_post.user, raw: "Later historical body")
+        revised_post.revise(revised_post.user, raw: "Current public body")
+        revised_post.revisions.find_by!(number: 3).hide!
+      end
+
+      it "returns only accessible body endpoints while keeping hidden history and raw versions protected" do
+        get "/posts/#{revised_post.id}/revisions/latest.json"
+
+        expect(response.status).to eq(200)
+        comparison = response.parsed_body.fetch("public_current_comparison")
+        expect(comparison).to include("from_version" => 2, "to_version" => 5)
+        expect(comparison["body_changes"]["side_by_side"]).to include("accessible", "Current")
+        expect(response.parsed_body["body_changes"]).to be_nil
+        [3, 4].each do |number|
+          revision = revised_post.revisions.find_by!(number: number)
+          expect(response.body).not_to include(revision.modifications["raw"].last)
+        end
+        expect(response.body).not_to include(
+          revised_post.revisions.find_by!(number: 3).modifications["edit_reason"].last,
+        )
+
+        get "/posts/#{revised_post.id}/revisions/3.json"
+        expect(response.status).to eq(403)
+        get "/posts/#{revised_post.id}.json", params: { version: 4 }
+        expect(response.status).to eq(403)
+      end
+
+      it "keeps the comparison unavailable when the live post is hidden" do
+        revised_post.update!(hidden: true)
+
+        get "/posts/#{revised_post.id}/revisions/latest.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body).not_to have_key("public_current_comparison")
       end
     end
 
