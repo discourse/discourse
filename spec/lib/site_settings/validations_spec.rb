@@ -135,56 +135,17 @@ RSpec.describe SiteSettings::Validations do
     end
   end
 
-  describe "enforce second factor & local/auth provider login interplay" do
-    describe "#validate_enforce_second_factor" do
-      context "when local logins are disabled" do
-        before { SiteSetting.enable_local_logins = false }
+  describe "second factor enrollment" do
+    it "can require enrollment before or after disabling local login" do
+      SiteSetting.enforce_second_factor = "staff"
+      SiteSetting.enable_local_logins = false
+      SiteSetting.enforce_second_factor = "all"
 
-        it "allows enforcement when local logins are disabled" do
-          expect { validations.validate_enforce_second_factor("all") }.not_to raise_error
-        end
-      end
-
-      context "when local logins are enabled" do
-        before { SiteSetting.enable_local_logins = true }
-
-        it "allows enforcement with local logins enabled" do
-          expect { validations.validate_enforce_second_factor("t") }.not_to raise_error
-        end
-      end
-
-      context "when SSO is enabled" do
-        let(:error_message) do
-          I18n.t(
-            "errors.site_settings.second_factor_cannot_be_enforced_with_discourse_connect_enabled",
-          )
-        end
-
-        before do
-          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
-          SiteSetting.discourse_connect_secret = "x" * 10
-          SiteSetting.enable_discourse_connect = true
-        end
-
-        it "rejects enforcement when SSO is enabled" do
-          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
-            Discourse::InvalidParameters,
-            error_message,
-          )
-        end
-      end
+      expect(SiteSetting.enforce_second_factor).to eq("all")
     end
+  end
 
-    describe "second factor enrollment with disabled local logins" do
-      it "can require enrollment before or after disabling local login" do
-        SiteSetting.enforce_second_factor = "staff"
-        SiteSetting.enable_local_logins = false
-        SiteSetting.enforce_second_factor = "all"
-
-        expect(SiteSetting.enforce_second_factor).to eq("all")
-      end
-    end
-
+  describe "settings validations" do
     describe "#validate_cors_origins" do
       let(:error_message) do
         I18n.t("errors.site_settings.cors_origins_should_not_have_trailing_slash")

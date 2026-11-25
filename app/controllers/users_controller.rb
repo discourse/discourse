@@ -1674,8 +1674,6 @@ class UsersController < ApplicationController
   end
 
   def list_second_factors
-    raise Discourse::NotFound unless second_factor_management_enabled?
-
     case second_factor_management_access(
       webauthn_supported: params[:webauthn_supported].to_s == "true",
     )
@@ -1806,7 +1804,8 @@ class UsersController < ApplicationController
       )
 
     if security_key && current_user.passkey_credential_ids.length == 1
-      if !current_user.has_password? && current_user.associated_accounts.blank?
+      if !current_user.has_password? && current_user.associated_accounts.blank? &&
+           current_user.single_sign_on_record.blank?
         return render json: { success: false, message: I18n.t("user.cannot_remove_all_auth") }
       end
     end
@@ -2422,8 +2421,6 @@ class UsersController < ApplicationController
   end
 
   def check_second_factor_management_session
-    raise Discourse::NotFound unless second_factor_management_enabled?
-
     case second_factor_management_access
     when :allowed
       nil
@@ -2437,11 +2434,6 @@ class UsersController < ApplicationController
     else
       raise Discourse::InvalidAccess
     end
-  end
-
-  def second_factor_management_enabled?
-    !SiteSetting.enable_discourse_connect &&
-      (SiteSetting.enable_local_logins || SiteSetting.enforce_second_factor_on_external_auth)
   end
 
   def summary_cache_key(user)

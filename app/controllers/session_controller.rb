@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
+  include LoginSecondFactor
+
   before_action :check_local_login_allowed,
                 only: %i[
                   create
@@ -28,6 +30,7 @@ class SessionController < ApplicationController
                                   :redeem_password_reset_code,
                                   :create_login_code,
                                   :verify_login_code,
+                                  :sso_login_second_factor,
                                   :second_factor_auth_perform
 
   # Every SessionController action is part of auth. An archived site permits
@@ -263,10 +266,10 @@ class SessionController < ApplicationController
       invite = validate_invitation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
-        raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
+        raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
 
-        if user.suspended?
-          render_sso_error(text: failed_to_login(user)[:error], status: 403)
+        if error = sso_account_login_error(user)
+          render_sso_error(text: error, status: 403)
           return
         end
 
@@ -280,7 +283,7 @@ class SessionController < ApplicationController
           invite.present? && user.invited_user.blank? && (user.active? || !sso.require_activation)
 
         if SiteSetting.must_approve_users? && !user.approved?
-          redeem_invitation(invite, sso, user) if can_redeem_invite
+          redeem_invitation(invite, user, **sso_invite_attributes(sso)) if can_redeem_invite
 
           if SiteSetting.discourse_connect_not_approved_url.present?
             redirect_to SiteSetting.discourse_connect_not_approved_url, allow_other_host: true
@@ -289,47 +292,40 @@ class SessionController < ApplicationController
           end
 
           return
-        elsif can_redeem_invite
-          redeem_invitation(invite, sso, user)
-
-          # we directly call user.activate here instead of going
-          # through the UserActivator path because we assume the account
-          # is valid from the SSO provider's POV and do not need to
-          # send an activation email to the user
-          user.activate
-          login_sso_user(sso, user)
-
-          topic = invite.topics.first
-          return_path = topic.present? ? path(topic.relative_url) : path("/")
-        elsif !user.active?
+        elsif !user.active? && !can_redeem_invite
           activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
           server_session["user_created_message"] = activation.message
           return redirect_to(users_account_created_path)
-        else
-          login_sso_user(sso, user)
         end
 
-        # If it's not a relative URL check the host
-        if return_path !~ %r{\A/[^/]}
-          begin
-            uri = URI(return_path)
-            if (uri.hostname == Discourse.current_hostname)
-              return_path = uri.to_s
-            elsif !domain_redirect_allowed?(uri.hostname)
-              return_path = path("/")
-            end
-          rescue StandardError
-            return_path = path("/")
+        # A same-account callback without an invite keeps the existing session and grants no new proof.
+        if user.id != current_user&.id || can_redeem_invite
+          start_login_second_factor!(
+            flow: "discourse_connect",
+            target_user: user,
+            callback_path: session_sso_login_second_factor_path,
+          ) do
+            {
+              identity_id: user.single_sign_on_record.id,
+              external_id: sso.external_id,
+              email: user.email,
+              return_path:,
+              initially_active: user.active?,
+              invite_id: can_redeem_invite ? invite.id : nil,
+              invite_attributes: can_redeem_invite ? sso_invite_attributes(sso) : nil,
+            }
           end
         end
 
-        # this can be done more surgically with a regex
-        # but it the edge case of never supporting redirects back to
-        # any url with `/session/sso` in it anywhere is reasonable
-        return_path = path("/") if return_path.include?(path("/session/sso"))
+        if can_redeem_invite
+          invite_path = redeem_sso_invitation(invite, user, **sso_invite_attributes(sso))
+          return_path = invite_path if invite_path
+        end
+        return render_sso_error(text: I18n.t("login.not_activated"), status: 403) if !user.active?
 
-        redirect_to return_path, allow_other_host: true
+        login_sso_user(user, sso:)
+        redirect_to sso_login_return_path(return_path), allow_other_host: true
       else
         render_sso_error(text: I18n.t("discourse_connect.not_found"), status: 500)
       end
@@ -366,6 +362,9 @@ class SessionController < ApplicationController
       render_sso_error(text: I18n.t("discourse_connect.invite_redeem_failed"), status: 412)
     rescue Invite::UserExists => e
       render_sso_error(text: e.message, status: 412)
+    rescue SecondFactor::AuthManager::SecondFactorRequired, Discourse::ReadOnly
+      # The application handles these responses; they are not SSO protocol errors.
+      raise
     rescue => e
       message = +"Failed to create or lookup user: #{e}."
       message << "  "
@@ -379,11 +378,52 @@ class SessionController < ApplicationController
     end
   end
 
-  def login_sso_user(sso, user)
-    connect_verbose_warn do
-      "Verbose SSO log: User was logged on #{user.username}\n\n#{sso.diagnostics}"
+  def sso_login_second_factor
+    raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
+    raise Discourse::InvalidAccess if ScreenedIpAddress.should_block?(request.remote_ip)
+
+    user, payload = complete_login_second_factor!(flow: "discourse_connect")
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
+
+    if user.email != payload[:email] ||
+         !SingleSignOnRecord.exists?(
+           id: payload[:identity_id],
+           user_id: user.id,
+           external_id: payload[:external_id],
+         )
+      raise Discourse::InvalidAccess
     end
-    log_on_user(user, replay_anonymous_action: true) if user.id != current_user&.id
+
+    if error = sso_account_login_error(user)
+      return render_json_error(error, status: :forbidden)
+    end
+    if SiteSetting.must_approve_users? && !user.approved?
+      return render_json_error(I18n.t("discourse_connect.account_not_approved"), status: :forbidden)
+    end
+    if user.staged? || (!user.active? && payload[:initially_active] != false)
+      return render_json_error(I18n.t("login.not_activated"), status: :forbidden)
+    end
+
+    return_path = payload[:return_path]
+    if payload[:invite_id] && user.invited_user.blank?
+      invite = Invite.find_by(id: payload[:invite_id])
+      attributes = payload[:invite_attributes].symbolize_keys
+      if invite&.redeemable? && (!invite.is_email_invite? || invite.email == attributes[:email])
+        invite_path = redeem_sso_invitation(invite, user, **attributes)
+        return_path = invite_path if invite_path
+      end
+    end
+    return render_json_error(I18n.t("login.not_activated"), status: :forbidden) if !user.active?
+
+    login_sso_user(user)
+    render json: { redirect_url: sso_login_return_path(return_path), reload: true }
+  rescue Invite::RedemptionFailed
+    render_json_error(
+      I18n.t("discourse_connect.invite_redeem_failed"),
+      status: :precondition_failed,
+    )
+  rescue Invite::UserExists => e
+    render_json_error(e.message, status: :precondition_failed)
   end
 
   def create
@@ -1593,14 +1633,35 @@ class SessionController < ApplicationController
     invite
   end
 
-  def redeem_invitation(invite, sso, redeeming_user)
+  def sso_invite_attributes(sso)
+    { username: sso.username, name: sso.name, email: sso.email }
+  end
+
+  def sso_account_login_error(user)
+    return user.suspended_message if user.suspended?
+    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)
+    end
+  end
+
+  def redeem_sso_invitation(invite, user, **attributes)
+    return unless redeem_invitation(invite, user, **attributes)
+
+    # The verified identity can activate the account without sending an activation email.
+    user.activate
+
+    topic = invite.topics.first
+    topic.present? ? path(topic.relative_url) : path("/")
+  end
+
+  def redeem_invitation(invite, redeeming_user, username:, name:, email:)
     InviteRedeemer.new(
       invite:,
-      username: sso.username,
-      name: sso.name,
+      username:,
+      name:,
       ip_address: request.remote_ip,
       session: server_session,
-      email: sso.email,
+      email:,
       redeeming_user:,
     ).redeem
 
@@ -1608,6 +1669,33 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
+  end
+
+  def login_sso_user(user, sso: nil)
+    connect_verbose_warn do
+      "Verbose SSO log: User was logged on #{user.username}\n\n#{sso&.diagnostics}"
+    end
+    return if user.id == current_user&.id
+
+    log_on_user(user, { authenticated_with_oauth: true }, replay_anonymous_action: true)
+    Auth::SecondFactorEnrollment.mark_external_login!(request, user)
+  end
+
+  def sso_login_return_path(return_path)
+    # Do not redirect back into the DiscourseConnect handshake.
+    return path("/") if return_path.include?(path("/session/sso"))
+    return path("/") if return_path.match?(/[\\[:cntrl:]]/)
+    return return_path if return_path.match?(%r{\A/[^/]})
+
+    uri = URI(return_path)
+    if (uri.is_a?(URI::HTTP) || uri.scheme.nil?) && uri.hostname.present? &&
+         (uri.hostname == Discourse.current_hostname || domain_redirect_allowed?(uri.hostname))
+      uri.to_s
+    else
+      path("/")
+    end
+  rescue URI::Error
+    path("/")
   end
 
   def domain_redirect_allowed?(hostname)

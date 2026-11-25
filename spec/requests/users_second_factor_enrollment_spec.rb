@@ -227,20 +227,151 @@ RSpec.describe UsersController do
       post "/u/create_second_factor_totp.json"
       expect(response).to have_http_status(:ok)
     end
+  end
 
-    it "keeps 2FA and passkey management disabled when enforce_second_factor_on_external_auth is false" do
-      SiteSetting.enable_passkeys = true
-      SiteSetting.enforce_second_factor_on_external_auth = false
-      sign_in_with_google
+  describe "second factor management with external authentication" do
+    before do
+      SiteSetting.discourse_connect_url = "https://example.com/sso"
+      SiteSetting.discourse_connect_secret = "external-login-test"
+      SiteSetting.enable_discourse_connect = true
+    end
+
+    def sign_in_with_discourse_connect
+      get "/session/sso"
+      sso =
+        DiscourseConnectBase.parse(
+          URI(response.location).query,
+          SiteSetting.discourse_connect_secret,
+        )
+      sso.external_id = "external-user"
+      sso.email = user.email
+      sso.username = user.username
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload)
+      expect(response).to have_http_status(:found)
+    end
+
+    it "enrolls a TOTP after a completed external login without confirming a local credential" do
+      sign_in_with_discourse_connect
 
       post "/u/second_factors.json"
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["totps"]).to eq([])
 
       post "/u/create_second_factor_totp.json"
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:ok)
+      key = response.parsed_body.fetch("key").delete(" ")
+
+      post "/u/enable_second_factor_totp.json",
+           params: {
+             name: "Authenticator",
+             second_factor_token: ROTP::TOTP.new(key).now,
+           }
+      expect(response).to have_http_status(:ok)
+      expect(user.totps.pluck(:name)).to eq(["Authenticator"])
+    end
+
+    it "manages native factors and regenerates backup codes after the external login" do
+      sign_in_with_discourse_connect
+      security_key = Fabricate(:user_security_key_with_random_credential, user: user)
+
+      put "/u/security_key.json", params: { id: security_key.id, name: "Updated key" }
+      expect(response).to have_http_status(:ok)
+      expect(security_key.reload.name).to eq("Updated key")
+
+      put "/u/second_factors_backup.json"
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["backup_codes"]).to be_present
+    end
+
+    it "requires a new provider sign-in when the grant expires" do
+      freeze_time
+      sign_in_with_discourse_connect
+      freeze_time 6.minutes.from_now
+
+      post "/u/second_factors.json"
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["external_login_required"]).to eq(true)
+
+      post "/u/create_second_factor_totp.json"
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+    end
+
+    it "does not carry the grant over to a different session for the same user" do
+      sign_in_with_discourse_connect
+      sign_in(user)
+
+      post "/u/create_second_factor_totp.json"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "does not grant enrollment access to an API request even when the browser holds the grant" do
+      sign_in_with_discourse_connect
+      api_key = Fabricate(:api_key, user: user)
+
+      post "/u/create_second_factor_totp.json",
+           headers: {
+             "Api-Key" => api_key.key,
+             "Api-Username" => user.username,
+           }
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "does not confirm the general-purpose trusted session or allow disabling passkeys via second-factor key endpoints" do
+      SiteSetting.enable_passkeys = true
+      passkey = Fabricate(:passkey_with_random_credential, user: user)
+      sign_in_with_discourse_connect
+
+      get "/u/trusted-session.json"
+      expect(response.parsed_body["success"]).to be_nil
+
+      put "/u/security_key.json", params: { id: passkey.id, disable: "true" }
+      expect(response).to have_http_status(:bad_request)
+      expect(passkey.reload.enabled).to eq(true)
+    end
+
+    it "registers and deletes passkeys during the external-login grant and requires re-login after expiry" do
+      SiteSetting.enable_passkeys = true
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+      attestation =
+        "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVikSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
+
+      freeze_time
+      sign_in_with_discourse_connect
 
       post "/u/create_passkey.json"
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["challenge"]).to be_present
+
+      simulate_localhost_passkey_challenge
+      post "/u/register_passkey.json",
+           params: {
+             name: "DiscourseConnect Passkey",
+             attestation: attestation,
+             clientData: Base64.encode64(passkey_client_data_param("webauthn.create").to_json),
+           }
+      expect(response).to have_http_status(:ok)
+      passkey_id = response.parsed_body.fetch("id")
+
+      delete "/u/delete_passkey/#{passkey_id}.json"
+      expect(response).to have_http_status(:ok)
+      expect(user.reload.passkey_credential_ids).to be_empty
+
+      freeze_time 6.minutes.from_now
+
+      post "/u/create_passkey.json"
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+
+      post "/u/register_passkey.json"
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
+
+      extra_passkey = Fabricate(:passkey_with_random_credential, user: user)
+      delete "/u/delete_passkey/#{extra_passkey.id}.json"
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body["error_type"]).to eq("second_factor_external_login_required")
     end
   end
 end

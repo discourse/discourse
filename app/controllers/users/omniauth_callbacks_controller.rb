@@ -82,8 +82,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if user = @auth_result.user
       unless pre_activation_blocked_message(user)
-        if SiteSetting.enforce_second_factor_on_external_auth &&
-             user.requires_second_factor_for_login?
+        if user.requires_second_factor_for_login?
           unless access_blocked_message(user, before_activation: true)
             start_login_second_factor!(
               flow: SECOND_FACTOR_FLOW,

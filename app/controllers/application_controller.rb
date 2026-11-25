@@ -921,19 +921,12 @@ class ApplicationController < ActionController::Base
   end
 
   def should_enforce_2fa?
-    enforcing_2fa =
-      (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
-        SiteSetting.enforce_second_factor == "all"
-    !disqualified_from_2fa_enforcement && enforcing_2fa &&
-      !current_user.has_any_second_factor_methods_enabled?
-  end
+    return false if request.format.json? || is_api? || current_user.anonymous?
 
-  def disqualified_from_2fa_enforcement
-    request.format.json? || is_api? || current_user.anonymous? ||
-      (
-        !SiteSetting.enforce_second_factor_on_external_auth &&
-          login_method == Auth::LOGIN_METHOD_OAUTH
-      )
+    (
+      SiteSetting.enforce_second_factor == "all" ||
+        (SiteSetting.enforce_second_factor == "staff" && current_user.staff?)
+    ) && !current_user.has_any_second_factor_methods_enabled?
   end
 
   def redirect_to_profile_if_required

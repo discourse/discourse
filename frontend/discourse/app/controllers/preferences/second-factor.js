@@ -12,7 +12,6 @@ import SecondFactorEditSecurityKey from "discourse/components/modal/second-facto
 import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
@@ -20,7 +19,6 @@ export default class SecondFactorController extends Controller {
   @service dialog;
   @service modal;
   @service router;
-  @service siteSettings;
 
   @tracked externalLoginRequired = false;
   @tracked localConfirmationRequired = false;
@@ -44,52 +42,6 @@ export default class SecondFactorController extends Controller {
 
   set backupEnabled(value) {
     set(this, "model.second_factor_backup_enabled", value);
-  }
-
-  @computed
-  get hasOAuth() {
-    return findAll().length > 0;
-  }
-
-  @computed(
-    "currentUser",
-    "siteSettings.enforce_second_factor_on_external_auth"
-  )
-  get showEnforcedWithOAuthNotice() {
-    return (
-      this.currentUser &&
-      this.currentUser.enforcedSecondFactor &&
-      this.hasOAuth &&
-      !this.siteSettings.enforce_second_factor_on_external_auth
-    );
-  }
-
-  @computed(
-    "currentUser",
-    "siteSettings.enforce_second_factor_on_external_auth"
-  )
-  get showEnforcedNotice() {
-    return (
-      this.currentUser &&
-      this.currentUser.enforcedSecondFactor &&
-      this.siteSettings.enforce_second_factor_on_external_auth
-    );
-  }
-
-  get isEnforcedForCurrentSession() {
-    return Boolean(
-      this.model?.enforcedSecondFactor &&
-      (this.siteSettings.enforce_second_factor_on_external_auth ||
-        this.model.login_method !== "oauth")
-    );
-  }
-
-  get isRequiredForCurrentSession() {
-    return Boolean(
-      this.model?.requiresSecondFactor &&
-      (this.siteSettings.enforce_second_factor_on_external_auth ||
-        this.model.login_method !== "oauth")
-    );
   }
 
   @computed("totps", "security_keys")
@@ -131,7 +83,7 @@ export default class SecondFactorController extends Controller {
         this.localConfirmationRequired = true;
         if (confirmOnEntry) {
           this.confirmLocalSession();
-        } else if (onEntry && !this.isEnforcedForCurrentSession) {
+        } else if (onEntry && !this.model.enforcedSecondFactor) {
           this.router.replaceWith("preferences.security");
         }
       } else {
@@ -161,7 +113,7 @@ export default class SecondFactorController extends Controller {
       await this.modal.show(SecondFactorAddTotp, {
         model: {
           secondFactor: this.model,
-          enforcedSecondFactor: this.isEnforcedForCurrentSession,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
@@ -178,7 +130,7 @@ export default class SecondFactorController extends Controller {
       await this.modal.show(SecondFactorAddSecurityKey, {
         model: {
           secondFactor: this.model,
-          enforcedSecondFactor: this.isEnforcedForCurrentSession,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
           markDirty: this.markDirty,
           onError: this.handleError,
         },
@@ -239,7 +191,7 @@ export default class SecondFactorController extends Controller {
 
   @action
   disableAllSecondFactors() {
-    if (this.isRequiredForCurrentSession) {
+    if (this.model.requiresSecondFactor) {
       this.dialog.alert(i18n("user.second_factor.enforced_notice"));
       return;
     }

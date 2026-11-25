@@ -54,25 +54,12 @@ export default class SecurityController extends Controller {
     return this.currentUser?.id === this.model.id;
   }
 
-  get secondFactorsAvailable() {
-    return (
-      !this.siteSettings.enable_discourse_connect &&
-      (this.siteSettings.enable_local_logins ||
-        this.siteSettings.enforce_second_factor_on_external_auth)
-    );
-  }
-
   get canManageSecondFactors() {
-    return (
-      this.secondFactorsAvailable &&
-      this.isCurrentUser &&
-      !this.model.is_anonymous
-    );
+    return this.isCurrentUser && !this.model.is_anonymous;
   }
 
   get canUsePasskeys() {
     return (
-      this.secondFactorsAvailable &&
       !this.model?.is_anonymous &&
       this.siteSettings.enable_passkeys &&
       isWebauthnSupported()

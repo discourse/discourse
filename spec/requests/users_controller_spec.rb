@@ -7898,7 +7898,10 @@ RSpec.describe UsersController do
 
             post "/users/create_second_factor_totp.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8210,7 +8213,10 @@ RSpec.describe UsersController do
 
             put "/users/second_factors_backup.json"
 
-            expect(response.status).to eq(404)
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["error_type"]).to eq(
+              "second_factor_external_login_required",
+            )
           end
         end
 
@@ -8910,26 +8916,20 @@ RSpec.describe UsersController do
         SiteSetting.enable_discourse_connect = true
       end
 
-      it "does not allow access" do
+      it "requires a recent external login" do
         post "/u/second_factors.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["external_login_required"]).to eq(true)
       end
     end
 
     context "when local logins are not enabled" do
       before { SiteSetting.enable_local_logins = false }
 
-      it "requires a recent external login when external auth 2FA is enabled" do
+      it "requires a recent external login" do
         post "/u/second_factors.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["external_login_required"]).to eq(true)
-      end
-
-      it "does not allow access when enforce_second_factor_on_external_auth is false" do
-        SiteSetting.enforce_second_factor_on_external_auth = false
-
-        post "/u/second_factors.json"
-        expect(response.status).to eq(404)
       end
     end
 

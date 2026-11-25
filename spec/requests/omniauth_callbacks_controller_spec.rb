@@ -1139,35 +1139,6 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
-      context "when user has TOTP enabled but enforce_second_factor_on_external_auth is false" do
-        before { user.create_totp(enabled: true) }
-
-        it "authenticates without TOTP when external authentication is exempt" do
-          SiteSetting.enforce_second_factor_on_external_auth = false
-          get "/auth/google_oauth2/callback.json"
-
-          expect(response.status).to eq(302)
-
-          data = JSON.parse(cookies[:authentication_data])
-
-          expect(data["authenticated"]).to eq(true)
-        end
-
-        it "activates unapproved users and queues approval when external auth 2FA is disabled" do
-          Jobs.run_immediately!
-          SiteSetting.enforce_second_factor_on_external_auth = false
-          SiteSetting.must_approve_users = true
-          user.reload.update!(active: false, approved: false)
-
-          get "/auth/google_oauth2/callback"
-          expect(response).to redirect_to("/")
-          expect(JSON.parse(cookies[:authentication_data])).to include("awaiting_approval" => true)
-          expect(user.reload).to have_attributes(active: true, email_confirmed?: true)
-          expect(ReviewableUser.pending.where(target: user)).to exist
-          expect(user.user_auth_tokens).to be_empty
-        end
-      end
-
       it "does not treat a passkey-only registration as second-factor enrollment" do
         SiteSetting.enable_passkeys = true
         SiteSetting.allow_passkeys_for_2fa = true
@@ -1320,21 +1291,6 @@ RSpec.describe Users::OmniauthCallbacksController do
           post "/auth/second-factor.json", params: { second_factor_nonce: nonce }, xhr: true
           expect(response.status).to eq(200)
           redirect_url = response.parsed_body.fetch("redirect_url")
-
-          get redirect_url
-          expect(response.status).to eq(302)
-          expect(URI(response.location).path).to eq("/session/2fa")
-        end
-
-        it "still prompts on the provider when enforce_second_factor_on_external_auth is false" do
-          SiteSetting.enforce_second_factor_on_external_auth = false
-          user.create_totp(enabled: true)
-          @sso.require_2fa = true
-          cookies[:sso_payload] = @sso.payload
-
-          get "/auth/google_oauth2/callback"
-          redirect_url = URI(response.location).request_uri
-          expect(redirect_url).to start_with("/session/sso_provider?")
 
           get redirect_url
           expect(response.status).to eq(302)

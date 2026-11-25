@@ -409,15 +409,4 @@ acceptance("User Preferences - Security with external auth", function (needs) {
       .hasText(i18n("user.passkeys.external_login_required"));
     assert.dom(".dialog-footer .btn-primary").hasText(i18n("user.log_out"));
   });
-
-  test("hides passkey and 2FA controls when external auth 2FA is disabled", async function (assert) {
-    this.siteSettings.enforce_second_factor_on_external_auth = false;
-
-    await visit("/u/eviltrout/preferences/security");
-
-    assert.dom(".pref-passkeys").doesNotExist("hides passkey management");
-    assert
-      .dom(".pref-second-factor")
-      .doesNotExist("hides two-factor management");
-  });
 });

@@ -56,6 +56,8 @@ describe ReadOnlyMixin do
       [SessionController, :verify_login_code],
       # Allows staff to verify a second factor during OAuth sign-in
       [SessionController, :second_factor_auth_perform],
+      # Allows staff to verify a second factor during DiscourseConnect sign-in
+      [SessionController, :sso_login_second_factor],
       # Allows staff to log in via OAuth
       [Users::OmniauthCallbacksController, :complete],
       [Users::OmniauthCallbacksController, :complete_second_factor],

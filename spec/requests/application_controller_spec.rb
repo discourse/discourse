@@ -332,16 +332,6 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
-    it "exempts OAuth users when second factor enforcement excludes external authentication" do
-      SiteSetting.enforce_second_factor = "all"
-      SiteSetting.enforce_second_factor_on_external_auth = false
-      sign_in(user)
-      user.user_auth_tokens.last.update(authenticated_with_oauth: true)
-
-      get "/"
-      expect(response.status).to eq(200)
-    end
-
     it "does not redirect anonymous users for enforced second factor" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_mode = true

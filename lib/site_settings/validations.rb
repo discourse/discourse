@@ -211,12 +211,6 @@ module SiteSettings::Validations
     validate_bucket_setting("s3_backup_bucket", SiteSetting.s3_upload_bucket, new_val)
   end
 
-  def validate_enforce_second_factor(new_val)
-    if new_val != "no" && SiteSetting.enable_discourse_connect?
-      validate_error :second_factor_cannot_be_enforced_with_discourse_connect_enabled
-    end
-  end
-
   def validate_cors_origins(new_val)
     return if new_val.blank?
     return if new_val.split("|").none?(%r{/\z})
