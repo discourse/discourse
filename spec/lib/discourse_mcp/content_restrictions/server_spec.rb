@@ -659,7 +659,6 @@ describe DiscourseMcp::Server do
       discourse_create_webhook
       discourse_update_webhook
       discourse_redeliver_webhook_event
-      discourse_ping_webhook
       discourse_update_site_setting
       discourse_set_theme_code
       discourse_create_theme
@@ -685,6 +684,27 @@ describe DiscourseMcp::Server do
         expect(DiscourseMcp.primitive_usable?(registered)).to eq(false)
         expect_blocked(tool(name))
       end
+    end
+
+    aggregate_failures("content-free webhook ping remains usable") do
+      registered = expose(:tool, "discourse_ping_webhook")
+      expect(DiscourseMcp.primitive_usable?(registered)).to eq(true)
+      hook = Fabricate(:web_hook, active: false)
+      response =
+        tool(
+          registered.identifier,
+          webhook_id: hook.id,
+          expected_destination_fingerprint: hook.destination_fingerprint,
+          confirm_external_request: true,
+        )
+      expect(response.http_status).to eq(200)
+      expect(response.body[:error]).to be_nil
+      expect(response.body.dig(:result, :isError)).not_to eq(true)
+      expect(response.body.dig(:result, :structuredContent)).to eq(
+        webhook_id: hook.id,
+        enqueued: true,
+        delivery_succeeded: nil,
+      )
     end
   end
 end

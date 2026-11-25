@@ -513,12 +513,13 @@ module DiscourseMcp
 
     class PingWebhook
       REQUIRED_SCOPES = CreateWebhook::REQUIRED_SCOPES
+      # A ping carries no payload, so it can't send content off-site.
       CONTENT = {
-        topics: :unenforced,
+        topics: :untouched,
         private_messages: :untouched,
-        categories: :unenforced,
-        tags: :unenforced,
-        exit_paths: :unenforced,
+        categories: :untouched,
+        tags: :untouched,
+        exit_paths: :untouched,
       }.freeze
       OUTPUT_SCHEMA =
         OutputSchema.object(
