@@ -788,77 +788,120 @@ RSpec.describe UsernameChanger do
         expect(notification_data(n10)).to eq(username_and_something_else("another_user"))
       end
 
-      it "refreshes paired name keys for the renamed user and leaves other actors untouched" do
-        renamed_user = Fabricate(:user, username: "alice", name: "Alice Admin")
+      it "updates or drops paired and post-author notification name keys on rename" do
+        renamed_user = Fabricate(:user, username: "alice", name: "Alice New")
+        editor = Fabricate(:user, username: "editor", name: "Ed Editor")
         notified_user = Fabricate(:user)
         p1 = Fabricate(:post, post_number: 1, user: renamed_user)
+        other_post = Fabricate(:post, post_number: 1, user: editor)
 
-        multi_actor =
+        multi =
           create_notification(
             :liked,
             notified_user,
             p1,
-            {
-              username: "alice",
-              name: "Alice Admin",
-              username2: "carol",
-              name2: "Carol Crafter",
-              count: 2,
-            },
+            { username: "alice", name: "Alice Old", username2: "carol", name2: "Carol", count: 2 },
           )
-        display =
+        paired =
           create_notification(
             :mentioned,
             notified_user,
             p1,
-            { display_username: "alice", display_name: "Old Alice Name" },
+            {
+              original_username: "alice",
+              original_name: "Alice Old",
+              display_username: "alice",
+              display_name: "Alice Old",
+            },
           )
-        without_name_key =
+        without_name =
           create_notification(:mentioned, notified_user, p1, { display_username: "alice" })
-
-        UsernameChanger.change(renamed_user, "bob")
-
-        expect(notification_data(multi_actor)).to eq(
-          username: "bob",
-          name: "Alice Admin",
-          username2: "carol",
-          name2: "Carol Crafter",
-          count: 2,
-        )
-        expect(notification_data(display)).to eq(
-          display_username: "bob",
-          display_name: "Alice Admin",
-        )
-        expect(notification_data(without_name_key)).to eq(display_username: "bob")
-      end
-
-      it "drops paired name keys when the renamed user no longer has a name" do
-        renamed_user = Fabricate(:user, username: "alice", name: "Alice Admin")
-        notified_user = Fabricate(:user)
-        p1 = Fabricate(:post, post_number: 1, user: renamed_user)
-
-        multi_actor =
+        collapsed =
           create_notification(
-            :liked,
+            :replied,
             notified_user,
             p1,
             {
-              username: "alice",
-              name: "Alice Admin",
-              username2: "carol",
-              name2: "Carol Crafter",
-              count: 2,
+              original_username: "carol",
+              display_username: "2 replies",
+              display_name: "Alice Old",
             },
           )
+        bystander_collapsed =
+          create_notification(
+            :replied,
+            notified_user,
+            other_post,
+            {
+              original_username: "carol",
+              display_username: "2 replies",
+              display_name: "Ed Editor",
+            },
+          )
+        editor_mention =
+          create_notification(
+            :group_mentioned,
+            notified_user,
+            p1,
+            { original_username: "editor", display_username: "editor", display_name: "Alice Old" },
+          )
+        other_post_edit =
+          create_notification(
+            :edited,
+            notified_user,
+            other_post,
+            { original_username: "alice", display_username: "alice", display_name: "Ed Editor" },
+          )
 
-        renamed_user.update!(name: nil)
         UsernameChanger.change(renamed_user, "bob")
 
-        expect(notification_data(multi_actor)).to eq(
+        expect(notification_data(multi)).to eq(
           username: "bob",
+          name: "Alice New",
           username2: "carol",
-          name2: "Carol Crafter",
+          name2: "Carol",
           count: 2,
+        )
+        expect(notification_data(paired)).to eq(
+          original_username: "bob",
+          original_name: "Alice New",
+          display_username: "bob",
+          display_name: "Alice New",
+        )
+        expect(notification_data(without_name)).to eq(display_username: "bob")
+        expect(notification_data(collapsed)[:display_name]).to eq("Alice New")
+        expect(notification_data(bystander_collapsed)[:display_name]).to eq("Ed Editor")
+        expect(notification_data(editor_mention)).to eq(
+          original_username: "editor",
+          display_username: "editor",
+        )
+        expect(notification_data(other_post_edit)).to eq(
+          original_username: "bob",
+          display_username: "bob",
+          display_name: "Ed Editor",
+        )
+
+        renamed_user.update!(name: nil)
+        UsernameChanger.change(renamed_user, "charlie")
+
+        expect(notification_data(multi)).to eq(
+          username: "charlie",
+          username2: "carol",
+          name2: "Carol",
+          count: 2,
+        )
+        expect(notification_data(paired)).to eq(
+          original_username: "charlie",
+          display_username: "charlie",
+        )
+        expect(notification_data(collapsed)).to eq(
+          original_username: "carol",
+          display_username: "2 replies",
+        )
+        expect(notification_data(other_post_edit)).to eq(
+          original_username: "charlie",
+          display_username: "charlie",
+          display_name: "Ed Editor",
         )
       end
     end

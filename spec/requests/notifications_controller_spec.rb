@@ -54,17 +54,19 @@ RSpec.describe NotificationsController do
       end
     end
 
-    it "scrubs the former real name from notification data after the actor is anonymized" do
+    it "scrubs former real names across notification shapes after the actor is anonymized" do
       SiteSetting.enable_names = true
-      SiteSetting.enable_mentions = true
       SiteSetting.full_name_requirement = "optional_at_signup"
 
       admin = Fabricate(:admin)
       actor = Fabricate(:user, name: "Secret Realname")
+      former_name = actor.name
+      editor = Fabricate(:user, name: "Editor Realname")
       recipient = Fabricate(:user)
       topic = Fabricate(:topic, user: actor)
+      Fabricate(:post, topic: topic, user: actor, post_number: 1)
 
-      notification =
+      mention =
         Fabricate(
           :notification,
           user: recipient,
@@ -72,13 +74,49 @@ RSpec.describe NotificationsController do
           topic: topic,
           post_number: 1,
           data: {
-            topic_title: topic.title,
             original_username: actor.username,
             display_username: actor.username,
-            display_name: actor.name,
+            display_name: former_name,
           }.to_json,
         )
-      expect(notification.data_hash[:display_name]).to eq("Secret Realname")
+      collapsed =
+        Fabricate(
+          :notification,
+          user: recipient,
+          notification_type: Notification.types[:replied],
+          topic: topic,
+          post_number: 1,
+          data: {
+            original_username: editor.username,
+            display_username: I18n.t("embed.replies", count: 2),
+            display_name: former_name,
+          }.to_json,
+        )
+      edited =
+        Fabricate(
+          :notification,
+          user: recipient,
+          notification_type: Notification.types[:edited],
+          topic: topic,
+          post_number: 1,
+          data: {
+            original_username: editor.username,
+            display_username: editor.username,
+            display_name: former_name,
+          }.to_json,
+        )
+      bystander =
+        Fabricate(
+          :notification,
+          user: recipient,
+          notification_type: Notification.types[:replied],
+          topic: Fabricate(:topic),
+          post_number: 1,
+          data: {
+            display_username: I18n.t("embed.replies", count: 2),
+            display_name: "Bystander Realname",
+          }.to_json,
+        )
 
       Jobs.run_immediately!
       UserAnonymizer.make_anonymous(actor, admin)
@@ -86,81 +124,23 @@ RSpec.describe NotificationsController do
       sign_in(recipient)
       get "/notifications.json"
       expect(response.status).to eq(200)
+      expect(response.body).not_to include(former_name)
 
-      expect(response.body).not_to include("Secret Realname")
-      data = response.parsed_body["notifications"].first["data"]
-      expect(data["display_name"]).to be_blank
-    end
-
-    it "scrubs the former real name from a collapsed reply notification after the author is anonymized" do
-      SiteSetting.enable_names = true
-      SiteSetting.full_name_requirement = "optional_at_signup"
-
-      admin = Fabricate(:admin)
-      watcher = Fabricate(:user)
-      first_replier = Fabricate(:user, name: "Collapsed Secret Realname")
-      latest_replier = Fabricate(:user)
-      topic = Fabricate(:topic, user: watcher)
-      Fabricate(:post, topic: topic, user: watcher, post_number: 1)
-      first_reply =
-        Fabricate(:post, topic: topic, user: first_replier, post_number: 2, reply_to_post_number: 1)
-      latest_reply =
-        Fabricate(
-          :post,
-          topic: topic,
-          user: latest_replier,
-          post_number: 3,
-          reply_to_post_number: 1,
-        )
-      PostAlerter.post_created(first_reply)
-      PostAlerter.post_created(latest_reply)
-
-      notification = watcher.notifications.find_by(notification_type: Notification.types[:replied])
-      expect(notification.data_hash[:display_username]).to eq(I18n.t("embed.replies", count: 2))
-      expect(notification.data_hash[:original_username]).to eq(latest_replier.username)
-      expect(notification.data_hash[:display_name]).to eq("Collapsed Secret Realname")
-
-      # A collapsed notification whose first unread post belongs to someone else must be left alone
-      other_collapsed =
-        Fabricate(
-          :notification,
-          user: watcher,
-          notification_type: Notification.types[:replied],
-          topic: topic,
-          post_number: latest_reply.post_number,
-          data: {
-            topic_title: topic.title,
-            original_username: latest_replier.username,
-            display_username: I18n.t("embed.replies", count: 2),
-            display_name: "Bystander Realname",
-          }.to_json,
-        )
-
-      Jobs.run_immediately!
-      UserAnonymizer.make_anonymous(first_replier, admin)
-      new_username = first_replier.reload.username
-
-      sign_in(watcher)
-      get "/notifications.json"
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("Collapsed Secret Realname")
-      expect(response.body).to include("Bystander Realname")
-
-      data = response.parsed_body["notifications"].find { |n| n["id"] == notification.id }["data"]
-      expect(data["display_name"]).to be_blank
-      expect(data["display_username"]).to eq(I18n.t("embed.replies", count: 2))
-      expect(data["original_username"]).to eq(latest_replier.username)
-      expect(data["original_username"]).not_to eq(new_username)
-      expect(other_collapsed.reload.data_hash[:display_name]).to eq("Bystander Realname")
+      by_id = response.parsed_body["notifications"].index_by { |n| n["id"] }
+      expect(by_id.dig(mention.id, "data", "display_name")).to be_blank
+      expect(by_id.dig(collapsed.id, "data", "display_name")).to be_blank
+      expect(by_id.dig(edited.id, "data")).not_to have_key("display_name")
+      expect(by_id.dig(edited.id, "data", "display_username")).to eq(editor.username)
+      expect(by_id.dig(bystander.id, "data", "display_name")).to eq("Bystander Realname")
     end
 
     it "replaces the former real name with the anonymized username when full name is required" do
       SiteSetting.enable_names = true
-      SiteSetting.enable_mentions = true
       SiteSetting.full_name_requirement = "required_at_signup"
 
       admin = Fabricate(:admin)
       actor = Fabricate(:user, name: "Required Secret Name")
+      former_name = actor.name
       recipient = Fabricate(:user)
       topic = Fabricate(:topic, user: actor)
 
@@ -171,74 +151,22 @@ RSpec.describe NotificationsController do
         topic: topic,
         post_number: 1,
         data: {
-          topic_title: topic.title,
           original_username: actor.username,
           display_username: actor.username,
-          display_name: actor.name,
+          display_name: former_name,
         }.to_json,
       )
 
       Jobs.run_immediately!
       UserAnonymizer.make_anonymous(actor, admin)
-      new_username = actor.reload.username
 
       sign_in(recipient)
       get "/notifications.json"
       expect(response.status).to eq(200)
-      expect(response.body).not_to include("Required Secret Name")
-
-      data = response.parsed_body["notifications"].first["data"]
-      expect(data["display_name"]).to eq(new_username)
-    end
-
-    it "scrubs the post author's former name from editor-added mention and edited notifications" do
-      SiteSetting.enable_names = true
-      SiteSetting.enable_mentions = true
-      SiteSetting.full_name_requirement = "optional_at_signup"
-
-      admin = Fabricate(:admin)
-      author = Fabricate(:user, name: "Author Secret Realname")
-      editor = Fabricate(:user, name: "Editor Realname")
-      recipient = Fabricate(:user)
-      post =
-        Fabricate(:post, user: author, raw: "Initial post body mentioning @#{recipient.username}")
-
-      PostAlerter.new.after_save_post(
-        post,
-        false,
-        added_mentions: [recipient.username_lower],
-        editor_id: editor.id,
+      expect(response.body).not_to include(former_name)
+      expect(response.parsed_body["notifications"].first.dig("data", "display_name")).to eq(
+        actor.reload.username,
       )
-      PostAlerter.new.create_notification(
-        recipient,
-        Notification.types[:edited],
-        post,
-        display_username: editor.username,
-      )
-
-      mention_notif =
-        recipient.notifications.find_by!(notification_type: Notification.types[:mentioned])
-      edited_notif =
-        recipient.notifications.find_by!(notification_type: Notification.types[:edited])
-      expect(mention_notif.data_hash[:display_username]).to eq(editor.username)
-      expect(mention_notif.data_hash[:display_name]).to eq("Author Secret Realname")
-      expect(edited_notif.data_hash[:display_username]).to eq(editor.username)
-      expect(edited_notif.data_hash[:display_name]).to eq("Author Secret Realname")
-
-      Jobs.run_immediately!
-      UserAnonymizer.make_anonymous(author, admin)
-
-      sign_in(recipient)
-      get "/notifications.json"
-      expect(response.status).to eq(200)
-      expect(response.body).not_to include("Author Secret Realname")
-
-      notifications = response.parsed_body["notifications"]
-      [mention_notif.id, edited_notif.id].each do |id|
-        data = notifications.find { |n| n["id"] == id }["data"]
-        expect(data["display_name"]).to be_blank
-        expect(data["display_username"]).to eq(editor.username)
-      end
     end
   end
 

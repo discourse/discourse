@@ -7,23 +7,10 @@ module Jobs
     # we are limiting it so only 1 per cluster runs
     cluster_concurrency 1
 
-    NOTIFICATION_USERNAME_NAME_PAIRS = {
-      original_username: :original_name,
-      display_username: :display_name,
-      username: :name,
-      username2: :name2,
-    }.freeze
-
-    UNPAIRED_POST_AUTHOR_NOTIFICATION_TYPES = [
-      Notification.types[:edited],
-      Notification.types[:mentioned],
-      Notification.types[:group_mentioned],
-    ].freeze
-
     def execute(args)
       @user_id = args[:user_id]
-      user = User.find_by(id: @user_id)
-      return unless user
+      @user = User.find_by(id: @user_id)
+      return unless @user
 
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
@@ -58,7 +45,7 @@ module Jobs
       update_post_custom_fields
 
       DiscourseEvent.trigger(:username_changed, @old_username, @new_username)
-      DiscourseEvent.trigger(:user_updated, user, %w[username])
+      DiscourseEvent.trigger(:user_updated, @user, %w[username])
     end
 
     def update_posts
@@ -118,82 +105,69 @@ module Jobs
     end
 
     def update_notifications
-      new_name = User.where(id: @user_id).pick(:name).presence
       params = {
         user_id: @user_id,
         old_username: @old_username,
         new_username: @new_username,
-        new_name: new_name,
+        new_name: (@user ? @user.name : User.where(id: @user_id).pick(:name)).presence,
         collapsed_types: PostAlerter::COLLAPSED_NOTIFICATION_TYPES,
-        unpaired_post_author_types: UNPAIRED_POST_AUTHOR_NOTIFICATION_TYPES,
+        unpaired_types: Notification.types.values_at(:edited, :mentioned, :group_mentioned),
       }
 
-      username_updates =
-        NOTIFICATION_USERNAME_NAME_PAIRS
-          .keys
-          .map do |k|
-            "'#{k}', CASE WHEN data::JSONB ->> '#{k}' = :old_username THEN :new_username END"
-          end
-          .join(",\n")
-
-      data_expr =
-        if new_name
-          name_updates =
-            NOTIFICATION_USERNAME_NAME_PAIRS
-              .map do |u_key, n_key|
-                "'#{n_key}', CASE WHEN data::JSONB ? '#{n_key}' AND data::JSONB ->> '#{u_key}' = :old_username THEN :new_name END"
-              end
-              .join(",\n")
-          "data::JSONB || jsonb_strip_nulls(jsonb_build_object(#{username_updates}, #{name_updates}))"
-        else
-          removals =
-            NOTIFICATION_USERNAME_NAME_PAIRS
-              .map do |u_key, n_key|
-                "CASE WHEN data::JSONB ->> '#{u_key}' = :old_username THEN ARRAY['#{n_key}'] ELSE ARRAY[]::text[] END"
-              end
-              .join(" || ")
-          "(data::JSONB || jsonb_strip_nulls(jsonb_build_object(#{username_updates}))) - (#{removals})"
-        end
-
-      where_clause =
-        NOTIFICATION_USERNAME_NAME_PAIRS
-          .keys
-          .map { |k| "data::JSONB ->> '#{k}' = :old_username" }
-          .join(" OR ")
-
-      DB.exec(<<~SQL, params)
-        UPDATE notifications
-        SET data = (#{data_expr})::JSON
-        WHERE #{where_clause}
+      # On edited and editor-added mention notifications, `display_name` belongs to the
+      # post author rather than `display_username` when another user edited the post.
+      display_name_paired = <<~SQL.squish
+        NOT (
+          notifications.notification_type IN (:unpaired_types)
+          AND EXISTS (
+            SELECT 1 FROM posts p
+            WHERE p.topic_id = notifications.topic_id
+              AND p.post_number = notifications.post_number
+              AND p.user_id IS DISTINCT FROM :user_id
+          )
+        )
       SQL
 
-      # Collapsed notifications store the first unread post's author in `display_name`
-      # while `display_username` holds a count string, and `edited` or editor-added
-      # mention notifications can pair the editor's `display_username` with the post
-      # author's `display_name`.
-      post_author_data_expr =
-        if new_name
-          "CASE WHEN notifications.notification_type IN (:collapsed_types) " \
-            "THEN notifications.data::JSONB || jsonb_build_object('display_name', :new_name) " \
-            "ELSE notifications.data::JSONB - 'display_name' END"
-        else
-          "notifications.data::JSONB - 'display_name'"
-        end
-
       DB.exec(<<~SQL, params)
         UPDATE notifications
-        SET data = (#{post_author_data_expr})::JSON
+        SET data = ((data::JSONB || jsonb_strip_nulls(jsonb_build_object(
+          'original_username', CASE WHEN data::JSONB ->> 'original_username' = :old_username THEN :new_username END,
+          'display_username',  CASE WHEN data::JSONB ->> 'display_username'  = :old_username THEN :new_username END,
+          'username',          CASE WHEN data::JSONB ->> 'username'          = :old_username THEN :new_username END,
+          'username2',         CASE WHEN data::JSONB ->> 'username2'         = :old_username THEN :new_username END,
+          'original_name',     CASE WHEN data::JSONB ? 'original_name' AND data::JSONB ->> 'original_username' = :old_username THEN :new_name END,
+          'display_name',      CASE WHEN data::JSONB ? 'display_name'  AND data::JSONB ->> 'display_username'  = :old_username AND #{display_name_paired} THEN :new_name END,
+          'name',              CASE WHEN data::JSONB ? 'name'          AND data::JSONB ->> 'username'          = :old_username THEN :new_name END,
+          'name2',             CASE WHEN data::JSONB ? 'name2'         AND data::JSONB ->> 'username2'         = :old_username THEN :new_name END
+        ))) - ARRAY[
+          CASE WHEN :new_name IS NULL AND data::JSONB ->> 'original_username' = :old_username THEN 'original_name' END,
+          CASE WHEN :new_name IS NULL AND data::JSONB ->> 'display_username'  = :old_username AND #{display_name_paired} THEN 'display_name' END,
+          CASE WHEN :new_name IS NULL AND data::JSONB ->> 'username'          = :old_username THEN 'name' END,
+          CASE WHEN :new_name IS NULL AND data::JSONB ->> 'username2'         = :old_username THEN 'name2' END
+        ])::JSON
+        WHERE data::JSONB ->> 'original_username' = :old_username
+           OR data::JSONB ->> 'display_username' = :old_username
+           OR data::JSONB ->> 'username' = :old_username
+           OR data::JSONB ->> 'username2' = :old_username
+      SQL
+
+      # Collapsed replies store the first unread post's author in `display_name` with a count
+      # in `display_username`; edited and editor-added mentions can pair editor + author.
+      DB.exec(<<~SQL, params)
+        UPDATE notifications
+        SET data = (CASE WHEN :new_name IS NOT NULL AND notifications.notification_type IN (:collapsed_types)
+          THEN notifications.data::JSONB || jsonb_build_object('display_name', :new_name)
+          ELSE notifications.data::JSONB - 'display_name' END)::JSON
         FROM posts p
         WHERE notifications.topic_id = p.topic_id
           AND notifications.post_number = p.post_number
           AND p.user_id = :user_id
           AND notifications.data::JSONB ? 'display_name'
           AND (
-            notifications.notification_type IN (:collapsed_types)
-            OR (
-              notifications.notification_type IN (:unpaired_post_author_types)
-              AND notifications.data::JSONB ->> 'display_username' IS DISTINCT FROM :new_username
-            )
+            (notifications.notification_type IN (:collapsed_types)
+              AND (:new_name IS NULL OR notifications.data::JSONB ->> 'display_name' IS DISTINCT FROM :new_name))
+            OR (notifications.notification_type IN (:unpaired_types)
+              AND notifications.data::JSONB ->> 'display_username' IS DISTINCT FROM :new_username)
           )
       SQL
     end
