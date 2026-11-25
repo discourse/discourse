@@ -161,7 +161,7 @@ acceptance("Blog admin with one blog", function (needs) {
     );
   });
 
-  test("offers an own domain only where the site allows it", async function (assert) {
+  test("offers a custom domain only where the site allows it", async function (assert) {
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
       .dom(".blog-settings .form-kit__field[data-name='url']")
@@ -171,15 +171,21 @@ acceptance("Blog admin with one blog", function (needs) {
     await visit("/admin/plugins/blog/blogs");
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
+      .dom(".blog-settings .form-kit__field[data-name='url'] input")
+      .isDisabled("the field is locked");
+    assert
       .dom(".blog-settings .form-kit__field[data-name='url']")
-      .doesNotExist("the field is hidden");
+      .includesText(
+        "Custom domains are not available on this site.",
+        "and says why"
+      );
 
     blog = { ...blog, url: "https://blog.example.com" };
     await visit("/admin/plugins/blog/blogs");
     await visit("/admin/plugins/blog/blogs/1/settings");
     assert
-      .dom(".blog-settings .form-kit__field[data-name='url']")
-      .exists("a blog that has an own domain can still clear it");
+      .dom(".blog-settings .form-kit__field[data-name='url'] input")
+      .isEnabled("a blog that has a custom domain can still clear it");
   });
 
   test("rejects a custom address format without a unique placeholder", async function (assert) {

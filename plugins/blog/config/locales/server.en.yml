@@ -7,7 +7,7 @@ en:
   site_settings:
     blog_custom_themes_enabled: Allow the site to create, customize and import blog themes. When disabled, blogs use the built-in designs.
     blog_max_instances: The most blogs this site can have.
-    blog_custom_domains_enabled: Allow a blog to be served from its own domain instead of the community's address.
+    blog_custom_domains_enabled: Allow a blog to be served from a custom domain instead of the community's address.
     blog_role_groups_enabled: Allow the site to choose which groups hold the blog contributor, editor and publisher roles. When disabled, only staff hold them.
     blog_contributor_groups: Groups that can write and submit their own blog drafts. These groups can see the private drafts category. This does not grant forum staff privileges.
     blog_editor_groups: Groups that can edit and submit any blog draft they can see. These groups can see the private drafts category. Publication requires the publisher role.
@@ -119,8 +119,8 @@ en:
       blog_slug_in_use: Another blog already uses that slug. Choose another one.
       blog_slug_reserved: That address is used by the blog itself. Choose another one.
       blog_slug_taken: An article on the main blog already starts with that address. Choose another one.
-      blog_url_unavailable: Blogs cannot use their own domain on this site.
-      blog_url_forum_host: A blog's own domain must differ from the community's.
+      blog_url_unavailable: Custom domains are not available on this site.
+      blog_url_forum_host: A blog's custom domain must differ from the community's.
       category_name_taken: "A category named “%{name}” already exists, so the blog cannot create its own. Choose the public blog category in the blog settings."
       published_page:
         Unpublish this topic from page publishing before publishing

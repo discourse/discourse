@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -58,6 +59,9 @@ export default class BlogThemesIndex extends Component {
           />
         </:actions>
       </DPageSubheader>
+      {{#if this.customThemesLocked}}
+        <PluginOutlet @name="blog-admin-custom-themes-unavailable" />
+      {{/if}}
       <div class="themes-cards-container">
         {{#each @model.themes key="id" as |theme|}}
           <BlogThemeCard

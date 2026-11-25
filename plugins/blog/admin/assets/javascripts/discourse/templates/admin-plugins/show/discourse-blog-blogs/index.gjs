@@ -1,4 +1,6 @@
 import { LinkTo } from "@ember/routing";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import DPageSubheader from "discourse/ui-kit/d-page-subheader";
@@ -16,13 +18,21 @@ export default <template>
   <section class="blog-blogs">
     <DPageSubheader @titleLabel={{i18n "blog.admin.blogs_tab"}}>
       <:actions as |actions|>
-        {{#if @model.can_add_blog}}
-          <actions.Primary
-            @icon="plus"
-            @label="blog.admin.add_blog"
-            @route="adminPlugins.show.discourse-blog-blogs.new"
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="blog-admin-add-blog-button"
+          @outletArgs={{lazyHash
+            actions=actions
+            canAddBlog=@model.can_add_blog
+          }}
+        >
+          {{#if @model.can_add_blog}}
+            <actions.Primary
+              @icon="plus"
+              @label="blog.admin.add_blog"
+              @route="adminPlugins.show.discourse-blog-blogs.new"
+            />
+          {{/if}}
+        </PluginOutlet>
       </:actions>
     </DPageSubheader>
     <table class="d-table blog-blogs__table">
