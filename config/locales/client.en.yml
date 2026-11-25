@@ -6777,6 +6777,7 @@ en:
         deselect_button_text: "Deselect all"
         reset_to_defaults: "Reset to defaults"
         filter_dropdown:
+          label: "Show"
           all: "All"
           selected: "Selected"
           unselected: "Unselected"

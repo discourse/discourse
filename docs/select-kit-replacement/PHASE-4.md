@@ -22,7 +22,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
     at the call site, with no recipe. It is required, because emptying it blanked the typed
     translation; the old control's "Select translation" row did the same. The system specs
     still drive the old control, since they run with the new controls off.
-  - ☐ Sidebar edit filter.
+  - ☑ Sidebar edit filter (`components/sidebar/edit-navigation-menu/modal.gjs`). A static
+    `DSelect` at the call site, required because "All" is its empty state, and named "Show".
+    The system specs still drive the old control through the modal's page object.
 - ☐ **DMenu:** the 10 `DropdownSelectBox` subclasses, user deletion, reviewable bundled actions,
   category and tag admin dropdowns, bulk-select bookmarks, and the admin "New bot" button
   (`admin/components/admin-new-bot-button.gjs`, added on `main` in #45212 and found 2026-11-24).

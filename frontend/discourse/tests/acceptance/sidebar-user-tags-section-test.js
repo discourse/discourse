@@ -1,8 +1,15 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  focus,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
   acceptance,
   publishToMessageBus,
@@ -840,6 +847,84 @@ acceptance(
           "/tag/tag3/3",
           "tag3 links to the latest topics list for the tag"
         );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Logged on user - Tags section - Editing with the new select controls",
+  function (needs) {
+    const FILTER = ".sidebar__edit-navigation-menu__filter-dropdown";
+    let tagRequests;
+
+    needs.settings({
+      enable_new_select_controls: true,
+      navigation_menu: "sidebar",
+      tagging_enabled: true,
+    });
+    needs.user({
+      display_sidebar_tags: true,
+      sidebar_tags: [
+        { id: 1, name: "tag1", slug: "tag1", pm_only: false },
+        { id: 2, name: "tag2", slug: "tag2", pm_only: false },
+      ],
+    });
+    needs.hooks.beforeEach(() => (tagRequests = []));
+    needs.pretender((server, helper) => {
+      server.get("/tags/list", (request) => {
+        tagRequests.push(request.queryParams);
+        return helper.response({
+          list_tags: [
+            { id: 1, name: "tag1" },
+            { id: 2, name: "tag2" },
+            { id: 3, name: "tag3" },
+          ],
+        });
+      });
+    });
+
+    async function openTagsModal() {
+      await visit("/");
+      await click(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+      );
+    }
+
+    test("filters the list by the tags that are selected or not", async function (assert) {
+      await openTagsModal();
+
+      assert
+        .dom(dSelect(FILTER).element())
+        .hasAria(
+          "label",
+          i18n("sidebar.edit_navigation_modal_form.filter_dropdown.label")
+        );
+      assert.dSelect(FILTER).hasValue("all");
+
+      await dSelect(FILTER).open();
+
+      assert.dSelect(FILTER).hasOptions(["all", "selected", "unselected"]);
+
+      await dSelect(FILTER).select("selected");
+
+      assert.strictEqual(tagRequests.at(-1).only_tags, "tag1,tag2");
+
+      await dSelect(FILTER).select("unselected");
+
+      assert.strictEqual(tagRequests.at(-1).exclude_tags, "tag1,tag2");
+
+      await dSelect(FILTER).select("all");
+
+      assert.deepEqual(tagRequests.at(-1), {}, "every tag is listed again");
+    });
+
+    test("keeps the filter when Backspace is pressed on it", async function (assert) {
+      await openTagsModal();
+      await dSelect(FILTER).select("selected");
+      await focus(dSelect(FILTER).element());
+      await triggerKeyEvent(dSelect(FILTER).element(), "keydown", "Backspace");
+
+      assert.dSelect(FILTER).hasValue("selected");
     });
   }
 );

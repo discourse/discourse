@@ -3,14 +3,18 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import withEventValue from "discourse/helpers/with-event-value";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuModal extends Component {
+  @service siteSettings;
+
   @tracked filter = "";
   @tracked filterDropdownValue = "all";
   filterDropdownContent = [
@@ -87,13 +91,31 @@ export default class SidebarEditNavigationMenuModal extends Component {
           </div>
 
           <div class="sidebar__edit-navigation-menu__filter-dropdown-wrapper">
-            <DropdownSelectBox
-              class="sidebar__edit-navigation-menu__filter-dropdown"
-              @content={{this.filterDropdownContent}}
-              @onChange={{this.onFilterDropdownChange}}
-              @options={{hash showCaret=true disabled=@loading}}
-              @value={{this.filterDropdownValue}}
-            />
+            {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+            {{#if this.siteSettings.enable_new_select_controls}}
+              <DSelect
+                class="sidebar__edit-navigation-menu__filter-dropdown"
+                @disabled={{@loading}}
+                @onChange={{this.onFilterDropdownChange}}
+                @options={{this.filterDropdownContent}}
+                @required={{true}}
+                @texts={{hash
+                  ariaLabel=(i18n
+                    "sidebar.edit_navigation_modal_form.filter_dropdown.label"
+                  )
+                }}
+                @value={{this.filterDropdownValue}}
+                @variant="static"
+              />
+            {{else}}
+              <DropdownSelectBox
+                class="sidebar__edit-navigation-menu__filter-dropdown"
+                @content={{this.filterDropdownContent}}
+                @onChange={{this.onFilterDropdownChange}}
+                @options={{hash showCaret=true disabled=@loading}}
+                @value={{this.filterDropdownValue}}
+              />
+            {{/if}}
           </div>
         </div>
       </:belowHeader>
