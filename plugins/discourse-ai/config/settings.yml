@@ -800,39 +800,49 @@ discourse_ai:
 
   inferred_concepts_enabled:
     default: false
-    client: true
-    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
-    area: "ai-features/inference"
-  inferred_concepts_background_match:
-    default: false
     client: false
+    validator: "DiscourseAi::Configuration::EmbeddingsDependencyValidator"
     area: "ai-features/inference"
   inferred_concepts_daily_topics_limit:
     default: 20
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_posts:
     default: 5
+    min: 1
+    max: 1000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_likes:
     default: 10
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_min_views:
     default: 100
+    min: 0
+    max: 1000000
     client: false
     area: "ai-features/inference"
   inferred_concepts_lookback_days:
     default: 30
+    min: 1
+    max: 3650
     client: false
     area: "ai-features/inference"
   inferred_concepts_daily_posts_limit:
     default: 30
+    min: 0
+    max: 500
     client: false
     area: "ai-features/inference"
   inferred_concepts_post_min_likes:
     default: 5
+    min: 0
+    max: 10000
     client: false
     area: "ai-features/inference"
   inferred_concepts_generate_agent:

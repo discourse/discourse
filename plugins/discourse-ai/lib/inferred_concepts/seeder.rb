@@ -5,7 +5,7 @@ module DiscourseAi
     class Seeder
       STATE_KEY = "discourse_ai:inferred_concepts:seed_state"
       MUTEX_KEY = "discourse_ai_seed_inferred_concepts"
-      MUTEX_VALIDITY = 30.minutes
+      MUTEX_VALIDITY = 6.hours
       STALE_AFTER = 1.hour
       TERMINAL_STATE_TTL = 24.hours
       RECENT_WINDOW = 2.years

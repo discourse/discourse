@@ -627,6 +627,7 @@ en:
           deduplicate_concepts: "Concepts deduplication"
           setting_groups:
             settings: "Basic Settings"
+            seeding_and_backfill: "Seeding and backfill"
             topic_criteria: "Topic Criteria"
             post_criteria: "Post Criteria"
             agents: "Agents"

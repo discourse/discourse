@@ -16,11 +16,14 @@ module Jobs
     private
 
     def process_popular_topics
+      limit = SiteSetting.inferred_concepts_daily_topics_limit.to_i
+      return if limit <= 0
+
       # Find candidate topics that are popular and don't have concepts yet
       manager = DiscourseAi::InferredConcepts::Manager.new
       candidates =
         manager.find_candidate_topics(
-          limit: SiteSetting.inferred_concepts_daily_topics_limit || 20,
+          limit: limit,
           min_posts: SiteSetting.inferred_concepts_min_posts || 5,
           min_likes: SiteSetting.inferred_concepts_min_likes || 10,
           min_views: SiteSetting.inferred_concepts_min_views || 100,
@@ -39,11 +42,14 @@ module Jobs
     end
 
     def process_popular_posts
+      limit = SiteSetting.inferred_concepts_daily_posts_limit.to_i
+      return if limit <= 0
+
       # Find candidate posts that are popular and don't have concepts yet
       manager = DiscourseAi::InferredConcepts::Manager.new
       candidates =
         manager.find_candidate_posts(
-          limit: SiteSetting.inferred_concepts_daily_posts_limit || 30,
+          limit: limit,
           min_likes: SiteSetting.inferred_concepts_post_min_likes || 5,
           exclude_first_posts: true,
           created_after: SiteSetting.inferred_concepts_lookback_days.days.ago,
