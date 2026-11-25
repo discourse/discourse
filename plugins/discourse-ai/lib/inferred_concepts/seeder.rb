@@ -10,6 +10,7 @@ module DiscourseAi
       TERMINAL_STATE_TTL = 24.hours
       RECENT_WINDOW = 2.years
       MIN_WORD_COUNT = 50
+      MAX_SEED_TOPICS = 20_000
       EMBED_FLUSH_INTERVAL = 15
       PROGRESS_UPDATE_INTERVAL = 10
 
@@ -81,7 +82,7 @@ module DiscourseAi
         return { "status" => "skipped" } unless can_seed?
 
         effective_limit =
-          (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, 2000)
+          (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, MAX_SEED_TOPICS)
 
         DistributedMutex.synchronize(MUTEX_KEY, validity: MUTEX_VALIDITY) do
           topic_ids = select_seed_topics(limit: effective_limit)
