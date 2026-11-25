@@ -24,6 +24,20 @@ export default <template>
         @formattedValue={{@stats.avg_duration}}
         @label={{i18n "discourse_workflows.stats.avg_run_time"}}
       />
+      {{#if @stats.ai_usage}}
+        <tiles.Tile
+          @formattedValue={{@stats.ai_usage.requests}}
+          @label={{i18n "discourse_workflows.stats.ai_requests"}}
+        />
+        <tiles.Tile
+          @formattedValue={{@stats.ai_usage.tokens}}
+          @label={{i18n "discourse_workflows.stats.ai_tokens"}}
+        />
+        <tiles.Tile
+          @formattedValue={{@stats.ai_usage.estimated_cost}}
+          @label={{i18n "discourse_workflows.stats.ai_estimated_cost"}}
+        />
+      {{/if}}
     </DStatTiles>
   {{/if}}
 </template>

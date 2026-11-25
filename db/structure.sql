@@ -20277,6 +20277,13 @@ CREATE INDEX idx_ai_api_audit_logs_user_id_id ON public.ai_api_audit_logs USING 
 
 
 --
+-- Name: idx_ai_api_audit_logs_workflow_usage; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_api_audit_logs_workflow_usage ON public.ai_api_audit_logs USING btree (((feature_context ->> 'workflow_id'::text)), created_at) WHERE ((feature_name)::text = 'workflow'::text);
+
+
+--
 -- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -26961,6 +26968,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261125161827'),
 ('20261124173030'),
 ('20261124170000'),
 ('20261124152608'),

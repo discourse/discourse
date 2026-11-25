@@ -19,6 +19,7 @@ module DiscourseAi
         DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
       SUBAGENT_FEATURE_CONTEXT_KEYS = %w[
+        workflow_id
         subagent_parent_agent_id
         subagent_agent_id
         subagent_depth

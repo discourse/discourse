@@ -9,6 +9,7 @@ module DiscourseAi
                  :provider_name,
                  :feature_name,
                  :feature_context,
+                 :workflow,
                  :language_model,
                  :llm_id,
                  :model_name,
@@ -37,6 +38,12 @@ module DiscourseAi
                  :raw_request_payload_truncated,
                  :raw_response_payload_truncated,
                  :payload_available
+
+      def workflow
+        id = DiscourseAi::WorkflowUsage.workflow_id(object)
+        name = DiscourseAi::WorkflowUsage.workflows_for([object])[id]
+        { id: id, name: name } if name
+      end
 
       def decoded_response
         DiscourseAi::AiApiAuditLogResponseDecoder.decode(
