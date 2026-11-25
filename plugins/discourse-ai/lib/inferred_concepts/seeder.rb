@@ -11,8 +11,9 @@ module DiscourseAi
       RECENT_WINDOW = 2.years
       MIN_WORD_COUNT = 50
       MAX_SEED_TOPICS = 20_000
-      EMBED_FLUSH_INTERVAL = 15
-      PROGRESS_UPDATE_INTERVAL = 10
+      WAVE_SIZE = 15
+      DEFAULT_CONCURRENCY = 5
+      INTERMEDIATE_CURATE_INTERVAL = 250
 
       def self.status
         raw = Discourse.redis.get(STATE_KEY)
@@ -64,6 +65,16 @@ module DiscourseAi
       end
       private_class_method :stale?
 
+      def initialize(
+        concurrency: DEFAULT_CONCURRENCY,
+        wave_size: WAVE_SIZE,
+        curate_every: INTERMEDIATE_CURATE_INTERVAL
+      )
+        @concurrency = concurrency.to_i.clamp(1, 20)
+        @wave_size = wave_size.to_i.clamp(1, 100)
+        @curate_every = curate_every.to_i
+      end
+
       def select_seed_topics(limit: SiteSetting.inferred_concepts_seed_topics_limit)
         target_limit = limit.to_i
         return [] if target_limit <= 0
@@ -81,6 +92,25 @@ module DiscourseAi
       def seed!(limit: nil)
         return { "status" => "skipped" } unless can_seed?
 
+        agent_class = Classifier.resolve_agent(allow_new: true)&.class
+        llm = agent_class ? Classifier.resolve_llm(allow_new: true, agent: agent_class.new) : nil
+        if agent_class.nil? || llm.nil?
+          now = Time.zone.now.iso8601
+          return(
+            self.class.send(
+              :write_state,
+              "status" => "failed",
+              "error" => I18n.t("discourse_ai.errors.no_default_llm"),
+              "started_at" => now,
+              "finished_at" => now,
+              "updated_at" => now,
+              "processed" => 0,
+              "total" => 0,
+              "concepts_created" => 0,
+            )
+          )
+        end
+
         effective_limit =
           (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, MAX_SEED_TOPICS)
 
@@ -97,20 +127,80 @@ module DiscourseAi
             "total" => topic_ids.size,
           )
 
+          applier = Applier.new
+          retriever = CandidateRetriever.new
+          classifier = Classifier.new
           manager = Manager.new
+          user = Discourse.system_user
+
           processed = 0
+          since_last_curate = 0
           failed_error = nil
 
-          topic_ids.each do |topic_id|
-            topic = Topic.find_by(id: topic_id)
-            next if topic.blank?
+          pool =
+            if @concurrency > 1 && topic_ids.size > 1
+              Scheduler::ThreadPool.new(min_threads: 0, max_threads: @concurrency, idle_time: 30)
+            end
 
-            manager.generate_concepts_from_topic(topic)
-            processed += 1
+          begin
+            topic_ids.each_slice(@wave_size) do |wave_ids|
+              unless LlmCreditAllocation.credits_available?(llm)
+                failed_error =
+                  I18n.t(
+                    "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
+                    reset_time: llm.llm_credit_allocation&.relative_reset_time || "",
+                  )
+                break
+              end
 
-            flush_concept_embeddings if (processed % EMBED_FLUSH_INTERVAL).zero?
+              work_items, skipped_count =
+                prepare_wave(wave_ids, applier: applier, retriever: retriever)
+              processed += skipped_count
 
-            if (processed % PROGRESS_UPDATE_INTERVAL).zero?
+              wave_outcomes =
+                classify_wave(
+                  work_items,
+                  pool: pool,
+                  classifier: classifier,
+                  agent_class: agent_class,
+                  llm: llm,
+                  user: user,
+                )
+
+              wave_outcomes.each do |outcome|
+                item = outcome[:item]
+                error = outcome[:error]
+
+                if error.is_a?(LlmCreditAllocation::CreditLimitExceeded)
+                  failed_error ||= error.message
+                elsif error
+                  processed += 1
+                  Discourse.warn_exception(
+                    error,
+                    message: "Failed seeding inferred concepts for topic #{item[:topic].id}",
+                  )
+                else
+                  manager.apply_classification_result(
+                    item[:topic],
+                    outcome[:result],
+                    candidates: item[:candidates],
+                    digest: item[:digest],
+                    allow_new: true,
+                    applier: applier,
+                  )
+                  processed += 1
+                  since_last_curate += 1
+                end
+              end
+
+              flush_concept_embeddings
+
+              if failed_error.nil? && @curate_every > 0 && since_last_curate >= @curate_every &&
+                   processed < topic_ids.size
+                curate_seeded_concepts
+                since_last_curate = 0
+              end
+
               write_progress(
                 "status" => "running",
                 "started_at" => started_at,
@@ -118,20 +208,18 @@ module DiscourseAi
                 "processed" => processed,
                 "total" => topic_ids.size,
               )
+
+              break if failed_error.present?
             end
-          rescue LlmCreditAllocation::CreditLimitExceeded => e
-            failed_error = e.message
-            break
-          rescue StandardError => e
-            processed += 1
-            Discourse.warn_exception(
-              e,
-              message: "Failed seeding inferred concepts for topic #{topic_id}",
-            )
+          ensure
+            if pool
+              pool.shutdown
+              pool.wait_for_termination(timeout: 30)
+            end
           end
 
           flush_concept_embeddings
-          curate_seeded_concepts
+          curate_seeded_concepts if since_last_curate > 0
 
           now = Time.zone.now.iso8601
           final_state = {
@@ -153,6 +241,85 @@ module DiscourseAi
 
       def can_seed?
         SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
+      end
+
+      def prepare_wave(wave_ids, applier:, retriever:)
+        topics_by_id = Topic.where(id: wave_ids).includes(:category, :tags).index_by(&:id)
+        work_items = []
+        skipped_count = 0
+
+        wave_ids.each do |topic_id|
+          topic = topics_by_id[topic_id]
+          next if topic.blank? || topic.deleted_at.present? || topic.private_message?
+
+          content = applier.topic_content_for_analysis(topic)
+          if content.blank?
+            skipped_count += 1
+            next
+          end
+
+          digest = applier.content_digest(content)
+          if InferredConceptTopic.where(topic_id: topic.id, digest: digest).exists?
+            skipped_count += 1
+            next
+          end
+
+          candidates = retriever.retrieve(content: content, target: topic)
+          work_items << { topic:, content:, digest:, candidates: }
+        rescue CandidateRetriever::EmbeddingsUnavailableError,
+               DiscourseAi::Embeddings::ProviderPausedError,
+               DiscourseAi::Inference::EmbeddingInferenceError => e
+          skipped_count += 1
+          Discourse.warn_exception(
+            e,
+            message: "Failed retrieving candidates while seeding topic #{topic_id}",
+          )
+        end
+
+        [work_items, skipped_count]
+      end
+
+      def classify_wave(work_items, pool:, classifier:, agent_class:, llm:, user:)
+        return [] if work_items.empty?
+
+        if pool.nil? || work_items.size <= 1
+          return(
+            work_items.map do |item|
+              result =
+                classifier.classify(
+                  item[:content],
+                  candidates: item[:candidates],
+                  allow_new: true,
+                  agent: agent_class.new,
+                  llm: llm,
+                  user: user,
+                )
+              { item:, result:, error: nil }
+            rescue StandardError => e
+              { item:, result: nil, error: e }
+            end
+          )
+        end
+
+        results = Queue.new
+        work_items.each do |item|
+          pool.post do
+            result =
+              classifier.classify(
+                item[:content],
+                candidates: item[:candidates],
+                allow_new: true,
+                agent: agent_class.new,
+                llm: llm,
+                user: user,
+              )
+            results << { item:, result:, error: nil }
+          rescue StandardError => e
+            results << { item:, result: nil, error: e }
+          end
+        end
+
+        Array.new(work_items.size) { results.pop }
       end
 
       def query_stratified_topic_ids(limit:, since:, exclude_ids:)

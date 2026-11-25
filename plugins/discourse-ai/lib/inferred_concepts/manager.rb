@@ -167,29 +167,14 @@ module DiscourseAi
         DiscourseAi::InferredConcepts::Finder.new.find_candidate_posts(**opts)
       end
 
-      private
-
-      def classify_target(target, join_model:, fk_column:, allow_new:)
-        return [] if ineligible_target?(target) || !DiscourseAi::Embeddings.enabled?
-
-        applier = Applier.new
-        content =
-          if target.is_a?(Topic)
-            applier.topic_content_for_analysis(target)
-          else
-            applier.post_content_for_analysis(target)
-          end
-        return [] if content.blank?
-
-        digest = applier.content_digest(content)
-        if join_model.where(fk_column => target.id, :digest => digest).exists?
-          return target.inferred_concepts.to_a
-        end
-
-        candidates = CandidateRetriever.new.retrieve(content: content, target: target)
-        return [] if !allow_new && candidates.empty?
-
-        result = Classifier.new.classify(content, candidates: candidates, allow_new: allow_new)
+      def apply_classification_result(
+        target,
+        result,
+        candidates:,
+        digest:,
+        allow_new: true,
+        applier: Applier.new
+      )
         candidates_by_id = candidates.index_by(&:id)
 
         match_entries =
@@ -223,6 +208,39 @@ module DiscourseAi
 
         promote_candidates!(applied)
         applied
+      end
+
+      private
+
+      def classify_target(target, join_model:, fk_column:, allow_new:)
+        return [] if ineligible_target?(target) || !DiscourseAi::Embeddings.enabled?
+
+        applier = Applier.new
+        content =
+          if target.is_a?(Topic)
+            applier.topic_content_for_analysis(target)
+          else
+            applier.post_content_for_analysis(target)
+          end
+        return [] if content.blank?
+
+        digest = applier.content_digest(content)
+        if join_model.where(fk_column => target.id, :digest => digest).exists?
+          return target.inferred_concepts.to_a
+        end
+
+        candidates = CandidateRetriever.new.retrieve(content: content, target: target)
+        return [] if !allow_new && candidates.empty?
+
+        result = Classifier.new.classify(content, candidates: candidates, allow_new: allow_new)
+        apply_classification_result(
+          target,
+          result,
+          candidates: candidates,
+          digest: digest,
+          allow_new: allow_new,
+          applier: applier,
+        )
       rescue CandidateRetriever::EmbeddingsUnavailableError,
              DiscourseAi::Embeddings::ProviderPausedError,
              DiscourseAi::Inference::EmbeddingInferenceError
