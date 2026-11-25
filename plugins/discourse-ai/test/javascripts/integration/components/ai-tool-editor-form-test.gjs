@@ -76,6 +76,28 @@ module("Integration | Component | AiToolEditorForm", function (hooks) {
     );
   });
 
+  test("leaves the model's uploads mutable", async function (assert) {
+    const tools = { content: [model] };
+    const llms = [];
+
+    await render(
+      <template>
+        <AiToolEditorForm
+          @editingModel={{model}}
+          @llms={{llms}}
+          @model={{model}}
+          @tools={{tools}}
+        />
+      </template>
+    );
+
+    assert.false(Object.isFrozen(model.rag_uploads), "keeps the array mutable");
+    assert.false(
+      Object.isFrozen(model.rag_uploads[0]),
+      "keeps the uploads mutable"
+    );
+  });
+
   test("lists each upload once after a new one finishes", async function (assert) {
     pretender.post(UPLOAD_PATH, () =>
       response({ upload: { id: 3, original_filename: "third.txt" } })

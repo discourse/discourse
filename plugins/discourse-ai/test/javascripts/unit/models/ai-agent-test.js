@@ -24,6 +24,18 @@ module("Unit | Model | ai-agent", function () {
     assert.deepEqual(aiAgentPOJO.subagent_ids, [3, 4]);
   });
 
+  test("toPOJO copies the RAG uploads", function (assert) {
+    const ragUploads = [{ id: 1, original_filename: "first.txt" }];
+    const aiAgentPOJO = AiAgent.create({ rag_uploads: ragUploads }).toPOJO();
+
+    assert.deepEqual(aiAgentPOJO.rag_uploads, ragUploads, "copies the values");
+    assert.notStrictEqual(
+      aiAgentPOJO.rag_uploads[0],
+      ragUploads[0],
+      "does not share the upload objects"
+    );
+  });
+
   test("fromPOJO", function (assert) {
     const properties = {
       id: 1,

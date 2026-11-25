@@ -50,8 +50,7 @@ export default class AiToolEditorForm extends Component {
       }
     );
 
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
+    // FormKit deep-freezes @data; copy so the model's own uploads stay mutable
     const ragUploads = this.args.editingModel.rag_uploads || [];
     const plainRagUploads =
       ragUploads.length > 0 ? toPlainObject(ragUploads) : [];
@@ -182,9 +181,7 @@ export default class AiToolEditorForm extends Component {
 
   @action
   updateUploads(form, uploads) {
-    // FormKit uses Immer proxies which cause issues when passed to upload handlers.
-    // Convert to plain objects to ensure compatibility.
-    form.set("rag_uploads", toPlainObject(uploads));
+    form.set("rag_uploads", uploads);
   }
 
   @action
