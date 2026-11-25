@@ -1,0 +1,1487 @@
+{
+  "version": "3.13.7",
+  "seed": 57019,
+  "examples": [
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:2]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied child to top_level",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied child to top_level",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.673284,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574001\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 2\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:9]",
+      "description": "[cr-u5] lets an admin move a category out of an allowed subtree",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin move a category out of an allowed subtree",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 69,
+      "run_time": 0.127343,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The move only shrinks access and is explicitly permitted by the plan."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:1]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied child to outside",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied child to outside",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.343052,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574001\n          got: 113574002\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 5\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:8]",
+      "description": "[cr-u5] lets an admin move a category into a denied subtree",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin move a category into a denied subtree",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 59,
+      "run_time": 0.10564,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The move only shrinks access and is explicitly permitted by the plan."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:13]",
+      "description": "[cr-u5] lets an admin rename a category inside a denied subtree",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin rename a category inside a denied subtree",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 112,
+      "run_time": 0.083836,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "An ordinary rename keeps category IDs and subtree coverage unchanged."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:7]",
+      "description": "[cr-u5] refuses moving an existing denied grandchild after the nesting limit is lowered",
+      "full_description": "CategoriesController#update [cr-u5] refuses moving an existing denied grandchild after the nesting limit is lowered",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 44,
+      "run_time": 0.107639,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:53:in 'block (4 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 26787\n          got: 113574002\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:55:in 'block (4 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:52:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200, parent moved outside after max_category_nesting was lowered to 2",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:11]",
+      "description": "[cr-u5] lets an admin move a denied category within the same denied subtree",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin move a denied category within the same denied subtree",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 89,
+      "run_time": 0.132382,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The category remains a descendant of the same denied root, preserving coverage."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:6]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied branch to top_level",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied branch to top_level",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.13497,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574001\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 14\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:12]",
+      "description": "[cr-u5] lets an admin move a directly denied root with its subtree intact",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin move a directly denied root with its subtree intact",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 101,
+      "run_time": 0.184283,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "Moving the denied root keeps its own ID and every descendant covered."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:3]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied grandchild to outside",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied grandchild to outside",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.164563,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574010\n          got: 113574002\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 18\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:10]",
+      "description": "[cr-u5] lets an admin move a category into an allowed subtree",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin move a category into an allowed subtree",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 79,
+      "run_time": 0.098931,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The plan explicitly permits a human admin to grow access by moving into an allowed subtree."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:4]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied grandchild to top_level",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied grandchild to top_level",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.106835,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574010\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 21\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:14]",
+      "description": "[cr-u5] lets an admin reparent and detach categories with no rules",
+      "full_description": "CategoriesController#update [cr-u5] lets an admin reparent and detach categories with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 123,
+      "run_time": 0.135276,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:1:5]",
+      "description": "[cr-u5] reports category errors when an admin moves a denied branch to outside",
+      "full_description": "CategoriesController#update [cr-u5] reports category errors when an admin moves a denied branch to outside",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 18,
+      "run_time": 0.10769,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY MOVE: denied subtree escaped\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:34:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 113574001\n          got: 113574002\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:36:in 'block (6 levels) in <main>'\n\n  4) expected: \"Amazing Category 23\"\n          got: \"A denied move must also keep the original name\"\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:37:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:33:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MOVE: denied subtree escaped; HTTP 200 instead of 422, parent and name changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:8]",
+      "description": "[cr-u5] lets an admin delete an unreferenced descendant of an allowed category",
+      "full_description": "CategoriesController#destroy [cr-u5] lets an admin delete an unreferenced descendant of an allowed category",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 221,
+      "run_time": 0.316975,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "Only direct allow references protect deletion; deleting this unreferenced descendant shrinks selected access."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:1]",
+      "description": "[cr-u5] reports category errors when an admin deletes a directly allow-referenced category",
+      "full_description": "CategoriesController#destroy [cr-u5] reports category errors when an admin deletes a directly allow-referenced category",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 141,
+      "run_time": 0.277666,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 5 failures from failure aggregation block:\n\n  1) CATEGORY DELETE: referenced category disappeared\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:149:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:151:in 'block (5 levels) in <main>'\n\n  4) expected: nil\n          got: 2026-11-25 18:23:03.983495000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:152:in 'block (5 levels) in <main>'\n\n  5) expected: nil\n          got: 2026-11-25 18:23:03.980525000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:153:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:148:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY DELETE: referenced category disappeared; HTTP 200, category deleted and definition topic/post soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:3]",
+      "description": "[cr-u5] reports category errors when an admin deletes a child inside a denied subtree",
+      "full_description": "CategoriesController#destroy [cr-u5] reports category errors when an admin deletes a child inside a denied subtree",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 159,
+      "run_time": 0.241403,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY DELETE: denied descendant disappeared\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:173:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:175:in 'block (5 levels) in <main>'\n\n  4) expected: nil\n          got: 2026-11-25 18:23:04.270847000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:176:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:172:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY DELETE: denied descendant disappeared; HTTP 200, descendant deleted and definition topic soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:7]",
+      "description": "[cr-u5] lets an admin delete an unreferenced category while another category is denied",
+      "full_description": "CategoriesController#destroy [cr-u5] lets an admin delete an unreferenced category while another category is denied",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 211,
+      "run_time": 0.277046,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The rule references another record; unreferenced deletion stays available."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:5]",
+      "description": "[cr-u5] refuses deleting an existing denied grandchild after the nesting limit is lowered",
+      "full_description": "CategoriesController#destroy [cr-u5] refuses deleting an existing denied grandchild after the nesting limit is lowered",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 181,
+      "run_time": 0.266822,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY DELETE: denied descendant disappeared\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:191:in 'block (4 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:193:in 'block (4 levels) in <main>'\n\n  4) expected: nil\n          got: 2026-11-25 18:23:04.818204000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:194:in 'block (4 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:190:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY DELETE: denied descendant disappeared; HTTP 200, grandchild deleted and definition soft-deleted after max_category_nesting was lowered to 2",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:2]",
+      "description": "[cr-u5] reports category errors when an admin deletes a directly deny-referenced category",
+      "full_description": "CategoriesController#destroy [cr-u5] reports category errors when an admin deletes a directly deny-referenced category",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 141,
+      "run_time": 0.292138,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 5 failures from failure aggregation block:\n\n  1) CATEGORY DELETE: referenced category disappeared\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:149:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:151:in 'block (5 levels) in <main>'\n\n  4) expected: nil\n          got: 2026-11-25 18:23:05.011912000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:152:in 'block (5 levels) in <main>'\n\n  5) expected: nil\n          got: 2026-11-25 18:23:05.010242000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:153:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:148:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY DELETE: referenced category disappeared; HTTP 200, category deleted and definition topic/post soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:4]",
+      "description": "[cr-u5] reports category errors when an admin deletes a grandchild inside a denied subtree",
+      "full_description": "CategoriesController#destroy [cr-u5] reports category errors when an admin deletes a grandchild inside a denied subtree",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 159,
+      "run_time": 0.281814,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) CATEGORY DELETE: denied descendant disappeared\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:173:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:175:in 'block (5 levels) in <main>'\n\n  4) expected: nil\n          got: 2026-11-25 18:23:05.386912000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:176:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb:172:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY DELETE: denied descendant disappeared; HTTP 200, descendant deleted and definition topic soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb[1:2:6]",
+      "description": "[cr-u5] lets an admin delete a category and soft-delete its definition with no rules",
+      "full_description": "CategoriesController#destroy [cr-u5] lets an admin delete a category and soft-delete its definition with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb",
+      "line_number": 198,
+      "run_time": 0.196635,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:6]",
+      "description": "[cr-u5] permits an unreferenced tag to become a synonym of a referenced target",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] permits an unreferenced tag to become a synonym of a referenced target",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 42,
+      "run_time": 0.01957,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The unreferenced source may become a synonym; the protected target retains its own ID."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:2]",
+      "description": "[cr-u5] refuses conversion of the allow-referenced tag to a synonym by name",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] refuses conversion of the allow-referenced tag to a synonym by name",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 15,
+      "run_time": 0.068934,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) SYNONYM SERVICE: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) expected: nil\n          got: 113571002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:26:in 'block (5 levels) in <main>'\n\n  3) expected: [113571001]\n          got: [113571002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "SYNONYM SERVICE: referenced tag conversion succeeded; true instead of failed-tag Hash, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:5]",
+      "description": "[cr-u5] converts a tag and transfers its topic tags with no rules",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] converts a tag and transfers its topic tags with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 33,
+      "run_time": 0.063848,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:3]",
+      "description": "[cr-u5] refuses conversion of the deny-referenced tag to a synonym by id",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] refuses conversion of the deny-referenced tag to a synonym by id",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 15,
+      "run_time": 0.065822,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) SYNONYM SERVICE: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) expected: nil\n          got: 113571002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:26:in 'block (5 levels) in <main>'\n\n  3) expected: [113571001]\n          got: [113571002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "SYNONYM SERVICE: referenced tag conversion succeeded; true instead of failed-tag Hash, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:1]",
+      "description": "[cr-u5] refuses conversion of the allow-referenced tag to a synonym by id",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] refuses conversion of the allow-referenced tag to a synonym by id",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 15,
+      "run_time": 0.063687,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) SYNONYM SERVICE: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) expected: nil\n          got: 113571002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:26:in 'block (5 levels) in <main>'\n\n  3) expected: [113571001]\n          got: [113571002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "SYNONYM SERVICE: referenced tag conversion succeeded; true instead of failed-tag Hash, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb[1:4]",
+      "description": "[cr-u5] refuses conversion of the deny-referenced tag to a synonym by name",
+      "full_description": "DiscourseTagging.add_or_create_synonyms [cr-u5] refuses conversion of the deny-referenced tag to a synonym by name",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb",
+      "line_number": 15,
+      "run_time": 0.062513,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) SYNONYM SERVICE: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) expected: nil\n          got: 113571002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:26:in 'block (5 levels) in <main>'\n\n  3) expected: [113571001]\n          got: [113571002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "SYNONYM SERVICE: referenced tag conversion succeeded; true instead of failed-tag Hash, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb[1:2]",
+      "description": "[cr-u3] conceals an invalid UTF-8 decoded host in setting default under forum_content without an error",
+      "full_description": "DiscourseMcp::Server#call [cr-u3] conceals an invalid UTF-8 decoded host in setting default under forum_content without an error",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb",
+      "line_number": 12,
+      "run_time": 0.430275,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "{\"status\" => 500, \"headers\" => {}, \"body\" => {\"jsonrpc\" => \"2.0\", \"id\" => 1, \"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}}}",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/server_support.rb:60:in 'McpContentRestrictionsUnit3::ServerSupport#expect_usable'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb:35:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "HTTP 500 / JSON-RPC -32603 \"Internal error\" instead of a usable settings response",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb[1:4]",
+      "description": "[cr-u3] conceals an invalid UTF-8 decoded host in setting default under private_messages without an error",
+      "full_description": "DiscourseMcp::Server#call [cr-u3] conceals an invalid UTF-8 decoded host in setting default under private_messages without an error",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb",
+      "line_number": 12,
+      "run_time": 0.280136,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "{\"status\" => 500, \"headers\" => {}, \"body\" => {\"jsonrpc\" => \"2.0\", \"id\" => 1, \"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}}}",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/server_support.rb:60:in 'McpContentRestrictionsUnit3::ServerSupport#expect_usable'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb:35:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "HTTP 500 / JSON-RPC -32603 \"Internal error\" instead of a usable settings response",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb[1:1]",
+      "description": "[cr-u3] conceals an invalid UTF-8 decoded host in setting value under forum_content without an error",
+      "full_description": "DiscourseMcp::Server#call [cr-u3] conceals an invalid UTF-8 decoded host in setting value under forum_content without an error",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb",
+      "line_number": 12,
+      "run_time": 0.266922,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "{\"status\" => 500, \"headers\" => {}, \"body\" => {\"jsonrpc\" => \"2.0\", \"id\" => 1, \"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}}}",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/server_support.rb:60:in 'McpContentRestrictionsUnit3::ServerSupport#expect_usable'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb:35:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "HTTP 500 / JSON-RPC -32603 \"Internal error\" instead of a usable settings response",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb[1:3]",
+      "description": "[cr-u3] conceals an invalid UTF-8 decoded host in setting value under private_messages without an error",
+      "full_description": "DiscourseMcp::Server#call [cr-u3] conceals an invalid UTF-8 decoded host in setting value under private_messages without an error",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb",
+      "line_number": 12,
+      "run_time": 0.260122,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "{\"status\" => 500, \"headers\" => {}, \"body\" => {\"jsonrpc\" => \"2.0\", \"id\" => 1, \"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}}}",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/server_support.rb:60:in 'McpContentRestrictionsUnit3::ServerSupport#expect_usable'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb:35:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "HTTP 500 / JSON-RPC -32603 \"Internal error\" instead of a usable settings response",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb[1:1]",
+      "description": "[cr-u4] refuses a labelled invalid UTF-8 decoded host under forum with the normal reference refusal",
+      "full_description": "DiscourseMcp::Server#call [cr-u4] refuses a labelled invalid UTF-8 decoded host under forum with the normal reference refusal",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb",
+      "line_number": 11,
+      "run_time": 0.288111,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "INVALID UTF-8 HOST: expected the normal reference refusal, not an internal error\nDiff:\n\n@@ -1,3 +1,3 @@\n-\"body\" => {\"id\" => 4, \"jsonrpc\" => \"2.0\", \"result\" => {\"_meta\" => {\"io.modelcontextprotocol/serverInfo\" => {\"name\" => \"discourse\", \"version\" => \"2026.12.0-latest\"}}, \"content\" => [{\"text\" => \"This capability is turned off by the site's AI content restrictions\", \"type\" => \"text\"}], \"isError\" => true, \"resultType\" => \"complete\"}},\n+\"body\" => {\"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}, \"id\" => 4, \"jsonrpc\" => \"2.0\"},\n \"headers\" => {},\n-\"status\" => 200,\n+\"status\" => 500,\n",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb:28:in 'block (4 levels) in <main>'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb:27:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "INVALID UTF-8 HOST: expected the normal reference refusal, not an internal error; HTTP 500 / -32603 instead of the HTTP 200 reference refusal",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb[1:2]",
+      "description": "[cr-u4] refuses a labelled invalid UTF-8 decoded host under pm with the normal reference refusal",
+      "full_description": "DiscourseMcp::Server#call [cr-u4] refuses a labelled invalid UTF-8 decoded host under pm with the normal reference refusal",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb",
+      "line_number": 11,
+      "run_time": 0.207109,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "INVALID UTF-8 HOST: expected the normal reference refusal, not an internal error\nDiff:\n\n@@ -1,3 +1,3 @@\n-\"body\" => {\"id\" => 4, \"jsonrpc\" => \"2.0\", \"result\" => {\"_meta\" => {\"io.modelcontextprotocol/serverInfo\" => {\"name\" => \"discourse\", \"version\" => \"2026.12.0-latest\"}}, \"content\" => [{\"text\" => \"This capability is turned off by the site's AI content restrictions\", \"type\" => \"text\"}], \"isError\" => true, \"resultType\" => \"complete\"}},\n+\"body\" => {\"error\" => {\"code\" => -32603, \"message\" => \"Internal error\"}, \"id\" => 4, \"jsonrpc\" => \"2.0\"},\n \"headers\" => {},\n-\"status\" => 200,\n+\"status\" => 500,\n",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb:28:in 'block (4 levels) in <main>'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb:27:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "INVALID UTF-8 HOST: expected the normal reference refusal, not an internal error; HTTP 500 / -32603 instead of the HTTP 200 reference refusal",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:3:2]",
+      "description": "[cr-u5] keeps a topicless deny-referenced tag while admin cleanup deletes an unused peer",
+      "full_description": "TagsController#destroy_unused [cr-u5] keeps a topicless deny-referenced tag while admin cleanup deletes an unused peer",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 100,
+      "run_time": 0.09055,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "ADMIN CLEANUP: referenced tag was deleted or unreferenced cleanup was blocked",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:110:in 'block (5 levels) in <main>'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:108:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN CLEANUP: referenced tag was deleted or unreferenced cleanup was blocked; surviving fixture IDs are []",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:3:3]",
+      "description": "[cr-u5] lets admin cleanup delete both unused tags with no rules",
+      "full_description": "TagsController#destroy_unused [cr-u5] lets admin cleanup delete both unused tags with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 116,
+      "run_time": 0.069844,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:3:1]",
+      "description": "[cr-u5] keeps a topicless allow-referenced tag while admin cleanup deletes an unused peer",
+      "full_description": "TagsController#destroy_unused [cr-u5] keeps a topicless allow-referenced tag while admin cleanup deletes an unused peer",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 100,
+      "run_time": 0.064746,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "ADMIN CLEANUP: referenced tag was deleted or unreferenced cleanup was blocked",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:110:in 'block (5 levels) in <main>'",
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:108:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN CLEANUP: referenced tag was deleted or unreferenced cleanup was blocked; surviving fixture IDs are []",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:4:2]",
+      "description": "[cr-u5] omits the deny-referenced tag from the admin unused-tag preview",
+      "full_description": "TagsController#list_unused [cr-u5] omits the deny-referenced tag from the admin unused-tag preview",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 131,
+      "run_time": 0.068109,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "UNUSED PREVIEW: referenced tag is offered for deletion",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:137:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "UNUSED PREVIEW: referenced tag is offered for deletion; preview includes both fixture names",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:4:1]",
+      "description": "[cr-u5] omits the allow-referenced tag from the admin unused-tag preview",
+      "full_description": "TagsController#list_unused [cr-u5] omits the allow-referenced tag from the admin unused-tag preview",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 131,
+      "run_time": 0.059218,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "UNUSED PREVIEW: referenced tag is offered for deletion",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:137:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "UNUSED PREVIEW: referenced tag is offered for deletion; preview includes both fixture names",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:4:3]",
+      "description": "[cr-u5] previews both unused tags with no rules",
+      "full_description": "TagsController#list_unused [cr-u5] previews both unused tags with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 144,
+      "run_time": 0.05914,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:3]",
+      "description": "[cr-u5] reports a failed tag for an admin converting the deny-referenced synonym by id",
+      "full_description": "TagsController#create_synonyms [cr-u5] reports a failed tag for an admin converting the deny-referenced synonym by id",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 56,
+      "run_time": 0.113679,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN SYNONYM: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:65:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: nil\n          got: 113573002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:68:in 'block (6 levels) in <main>'\n\n  4) expected: [113573001]\n          got: [113573002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:69:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:63:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN SYNONYM: referenced tag conversion succeeded; failed/failed_tags absent, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:2]",
+      "description": "[cr-u5] reports a failed tag for an admin converting the allow-referenced synonym by name",
+      "full_description": "TagsController#create_synonyms [cr-u5] reports a failed tag for an admin converting the allow-referenced synonym by name",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 56,
+      "run_time": 0.121416,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN SYNONYM: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:65:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: nil\n          got: 113573002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:68:in 'block (6 levels) in <main>'\n\n  4) expected: [113573001]\n          got: [113573002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:69:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:63:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN SYNONYM: referenced tag conversion succeeded; failed/failed_tags absent, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:4]",
+      "description": "[cr-u5] reports a failed tag for an admin converting the deny-referenced synonym by name",
+      "full_description": "TagsController#create_synonyms [cr-u5] reports a failed tag for an admin converting the deny-referenced synonym by name",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 56,
+      "run_time": 0.118738,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN SYNONYM: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:65:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: nil\n          got: 113573002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:68:in 'block (6 levels) in <main>'\n\n  4) expected: [113573001]\n          got: [113573002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:69:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:63:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN SYNONYM: referenced tag conversion succeeded; failed/failed_tags absent, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:6]",
+      "description": "[cr-u5] lets an admin add an unreferenced synonym to a protected target",
+      "full_description": "TagsController#create_synonyms [cr-u5] lets an admin add an unreferenced synonym to a protected target",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 85,
+      "run_time": 0.06645,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The unreferenced source may become a synonym; the protected target retains its own ID."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:5]",
+      "description": "[cr-u5] lets an admin convert a tag to a synonym with no rules",
+      "full_description": "TagsController#create_synonyms [cr-u5] lets an admin convert a tag to a synonym with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 75,
+      "run_time": 0.065976,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:2:1]",
+      "description": "[cr-u5] reports a failed tag for an admin converting the allow-referenced synonym by id",
+      "full_description": "TagsController#create_synonyms [cr-u5] reports a failed tag for an admin converting the allow-referenced synonym by id",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 56,
+      "run_time": 0.128524,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN SYNONYM: referenced tag conversion succeeded\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:65:in 'block (6 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: nil\n          got: 113573002\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:68:in 'block (6 levels) in <main>'\n\n  4) expected: [113573001]\n          got: [113573002]\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:69:in 'block (6 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:63:in 'block (5 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN SYNONYM: referenced tag conversion succeeded; failed/failed_tags absent, target_tag_id and topic tags changed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:1:1]",
+      "description": "[cr-u5] reports a content rule error to an admin deleting the allow-referenced tag",
+      "full_description": "TagsController#destroy [cr-u5] reports a content rule error to an admin deleting the allow-referenced tag",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 17,
+      "run_time": 0.129613,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN TAG DELETE: returned success\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:26:in 'block (5 levels) in <main>'\n\n  4) expected: [113573001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN TAG DELETE: returned success; HTTP 200 instead of 4xx, referenced tag and topic association deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:1:2]",
+      "description": "[cr-u5] reports a content rule error to an admin deleting the deny-referenced tag",
+      "full_description": "TagsController#destroy [cr-u5] reports a content rule error to an admin deleting the deny-referenced tag",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 17,
+      "run_time": 0.129249,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) ADMIN TAG DELETE: returned success\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:24:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:26:in 'block (5 levels) in <main>'\n\n  4) expected: [113573001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:27:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb:23:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "ADMIN TAG DELETE: returned success; HTTP 200 instead of 4xx, referenced tag and topic association deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:1:4]",
+      "description": "[cr-u5] lets an admin delete an unreferenced tag while another tag is protected",
+      "full_description": "TagsController#destroy [cr-u5] lets an admin delete an unreferenced tag while another tag is protected",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 41,
+      "run_time": 0.06753,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The rule references another record; unreferenced deletion stays available."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb[1:1:3]",
+      "description": "[cr-u5] lets an admin delete a tag with no rules",
+      "full_description": "TagsController#destroy [cr-u5] lets an admin delete a tag with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb",
+      "line_number": 32,
+      "run_time": 0.065086,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb[1:1]",
+      "description": "[cr-u5] keeps a topicless allow-referenced tag while the scheduled job deletes an unused peer",
+      "full_description": "Jobs::CleanUpTags#execute [cr-u5] keeps a topicless allow-referenced tag while the scheduled job deletes an unused peer",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb",
+      "line_number": 16,
+      "run_time": 0.020465,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "CLEANUP JOB: referenced tag was deleted or unreferenced cleanup was blocked",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb:24:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CLEANUP JOB: referenced tag was deleted or unreferenced cleanup was blocked; surviving fixture IDs are []",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb[1:2]",
+      "description": "[cr-u5] keeps a topicless deny-referenced tag while the scheduled job deletes an unused peer",
+      "full_description": "Jobs::CleanUpTags#execute [cr-u5] keeps a topicless deny-referenced tag while the scheduled job deletes an unused peer",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb",
+      "line_number": 16,
+      "run_time": 0.037721,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "CLEANUP JOB: referenced tag was deleted or unreferenced cleanup was blocked",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb:24:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CLEANUP JOB: referenced tag was deleted or unreferenced cleanup was blocked; surviving fixture IDs are []",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb[1:3]",
+      "description": "[cr-u5] deletes both old unused tags through the scheduled job with no rules",
+      "full_description": "Jobs::CleanUpTags#execute [cr-u5] deletes both old unused tags through the scheduled job with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb",
+      "line_number": 29,
+      "run_time": 0.011266,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[2:1]",
+      "description": "[cr-u5] returns category errors from the real updater when moving a denied branch outside",
+      "full_description": "CategoryUpdater.update [cr-u5] returns category errors from the real updater when moving a denied branch outside",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 83,
+      "run_time": 0.063897,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) CATEGORY UPDATER: denied branch escaped\n     Diff:\n     @@ -1 +1 @@\n     -false\n     +true\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:93:in 'block (3 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 26803\n          got: 26806\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:95:in 'block (3 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:92:in 'block (2 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY UPDATER: denied branch escaped; true instead of false, parent changed and model errors empty",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[2:2]",
+      "description": "[cr-u5] lets the updater move a branch with no rules",
+      "full_description": "CategoryUpdater.update [cr-u5] lets the updater move a branch with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 100,
+      "run_time": 0.051973,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[1:2:1]",
+      "description": "[cr-u5] returns model errors when directly detaching a denied grandchild",
+      "full_description": "Category#update [cr-u5] returns model errors when directly detaching a denied grandchild",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 64,
+      "run_time": 0.040076,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) CATEGORY MODEL MOVE: denied grandchild escaped\n     Diff:\n     @@ -1 +1 @@\n     -false\n     +true\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:72:in 'block (4 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: 26810\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:74:in 'block (4 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:71:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MODEL MOVE: denied grandchild escaped; true instead of false, parent detached and model errors empty",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[1:1:1]",
+      "description": "[cr-u5] returns model errors when directly destroying the allow-referenced category",
+      "full_description": "Category#destroy [cr-u5] returns model errors when directly destroying the allow-referenced category",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 14,
+      "run_time": 0.228766,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 5 failures from failure aggregation block:\n\n  1) CATEGORY MODEL DELETE: referenced category destroyed\n     Diff:\n     @@ -1 +1,61 @@\n     -false\n     +#<Category:0x0000000133368498\n     + id: 113575001,\n     + name: \"Amazing Category 40\",\n     + color: \"31416d\",\n     + topic_id: 68622,\n     + topic_count: 0,\n     + created_at: \"2026-11-25 18:23:10.079757000 +0000\",\n     + updated_at: \"2026-11-25 18:23:10.079757000 +0000\",\n     + user_id: 164251,\n     + topics_year: 0,\n     + topics_month: 0,\n     + topics_week: 0,\n     + slug: \"amazing-category-40\",\n     + description: nil,\n     + text_color: \"FFFFFF\",\n     + read_restricted: false,\n     + auto_close_hours: nil,\n     + post_count: 0,\n     + latest_post_id: nil,\n     + latest_topic_id: nil,\n     + position: 1,\n     + parent_category_id: nil,\n     + posts_year: 0,\n     + posts_month: 0,\n     + posts_week: 0,\n     + email_in: nil,\n     + email_in_allow_strangers: false,\n     + topics_day: 0,\n     + posts_day: 0,\n     + allow_badges: true,\n     + name_lower: \"amazing category 40\",\n     + auto_close_based_on_last_post: false,\n     + topic_template: nil,\n     + contains_messages: nil,\n     + sort_order: nil,\n     + sort_ascending: nil,\n     + uploaded_logo_id: nil,\n     + uploaded_background_id: nil,\n     + topic_featured_link_allowed: true,\n     + all_topics_wiki: false,\n     + show_subcategory_list: false,\n     + num_featured_topics: 3,\n     + default_view: nil,\n     + subcategory_list_style: \"rows_with_featured_topics\",\n     + default_top_period: \"all\",\n     + mailinglist_mirror: false,\n     + minimum_required_tags: 0,\n     + navigate_to_first_post_after_read: false,\n     + search_priority: 0,\n     + allow_global_tags: false,\n     + read_only_banner: nil,\n     + default_list_filter: \"all\",\n     + allow_unlimited_owner_edits_on_first_post: false,\n     + default_slow_mode_seconds: nil,\n     + uploaded_logo_dark_id: nil,\n     + uploaded_background_dark_id: nil,\n     + style_type: \"square\",\n     + emoji: nil,\n     + icon: nil,\n     + locale: nil,\n     + topic_title_placeholder: nil>\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:22:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:24:in 'block (5 levels) in <main>'\n\n  4) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:25:in 'block (5 levels) in <main>'\n\n  5) expected: nil\n          got: 2026-11-25 18:23:10.257620000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:26:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:21:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MODEL DELETE: referenced category destroyed; destroy returns the destroyed record instead of false, timer deleted and definition soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[1:1:3]",
+      "description": "[cr-u5] preserves a denied grandchild and its definition inside an outer destroy transaction",
+      "full_description": "Category#destroy [cr-u5] preserves a denied grandchild and its definition inside an outer destroy transaction",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 31,
+      "run_time": 0.25663,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 5 failures from failure aggregation block:\n\n  1) CATEGORY OUTER DELETE: denied grandchild destroyed\n     Diff:\n     @@ -1 +1,61 @@\n     -false\n     +#<Category:0x000000015ecadac8\n     + id: 26813,\n     + name: \"Amazing Category 44\",\n     + color: \"61267a\",\n     + topic_id: 68624,\n     + topic_count: 0,\n     + created_at: \"2026-11-25 18:23:10.418812000 +0000\",\n     + updated_at: \"2026-11-25 18:23:10.418812000 +0000\",\n     + user_id: 164251,\n     + topics_year: 0,\n     + topics_month: 0,\n     + topics_week: 0,\n     + slug: \"amazing-category-44\",\n     + description: nil,\n     + text_color: \"FFFFFF\",\n     + read_restricted: false,\n     + auto_close_hours: nil,\n     + post_count: 0,\n     + latest_post_id: nil,\n     + latest_topic_id: nil,\n     + position: 3,\n     + parent_category_id: 26812,\n     + posts_year: 0,\n     + posts_month: 0,\n     + posts_week: 0,\n     + email_in: nil,\n     + email_in_allow_strangers: false,\n     + topics_day: 0,\n     + posts_day: 0,\n     + allow_badges: true,\n     + name_lower: \"amazing category 44\",\n     + auto_close_based_on_last_post: false,\n     + topic_template: nil,\n     + contains_messages: nil,\n     + sort_order: nil,\n     + sort_ascending: nil,\n     + uploaded_logo_id: nil,\n     + uploaded_background_id: nil,\n     + topic_featured_link_allowed: true,\n     + all_topics_wiki: false,\n     + show_subcategory_list: false,\n     + num_featured_topics: 3,\n     + default_view: nil,\n     + subcategory_list_style: \"rows_with_featured_topics\",\n     + default_top_period: \"all\",\n     + mailinglist_mirror: false,\n     + minimum_required_tags: 0,\n     + navigate_to_first_post_after_read: false,\n     + search_priority: 0,\n     + allow_global_tags: false,\n     + read_only_banner: nil,\n     + default_list_filter: \"all\",\n     + allow_unlimited_owner_edits_on_first_post: false,\n     + default_slow_mode_seconds: nil,\n     + uploaded_logo_dark_id: nil,\n     + uploaded_background_dark_id: nil,\n     + style_type: \"square\",\n     + emoji: nil,\n     + icon: nil,\n     + locale: nil,\n     + topic_title_placeholder: nil>\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:42:in 'block (4 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:44:in 'block (4 levels) in <main>'\n\n  4) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:45:in 'block (4 levels) in <main>'\n\n  5) expected: nil\n          got: 2026-11-25 18:23:10.530934000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:46:in 'block (4 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:41:in 'block (3 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY OUTER DELETE: denied grandchild destroyed; destroy returns the destroyed record instead of false, timer deleted and definition soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[1:1:2]",
+      "description": "[cr-u5] returns model errors when directly destroying the deny-referenced category",
+      "full_description": "Category#destroy [cr-u5] returns model errors when directly destroying the deny-referenced category",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 14,
+      "run_time": 0.215471,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 5 failures from failure aggregation block:\n\n  1) CATEGORY MODEL DELETE: referenced category destroyed\n     Diff:\n     @@ -1 +1,61 @@\n     -false\n     +#<Category:0x000000015ecadd48\n     + id: 113575001,\n     + name: \"Amazing Category 40\",\n     + color: \"31416d\",\n     + topic_id: 68622,\n     + topic_count: 0,\n     + created_at: \"2026-11-25 18:23:10.079757000 +0000\",\n     + updated_at: \"2026-11-25 18:23:10.079757000 +0000\",\n     + user_id: 164251,\n     + topics_year: 0,\n     + topics_month: 0,\n     + topics_week: 0,\n     + slug: \"amazing-category-40\",\n     + description: nil,\n     + text_color: \"FFFFFF\",\n     + read_restricted: false,\n     + auto_close_hours: nil,\n     + post_count: 0,\n     + latest_post_id: nil,\n     + latest_topic_id: nil,\n     + position: 1,\n     + parent_category_id: nil,\n     + posts_year: 0,\n     + posts_month: 0,\n     + posts_week: 0,\n     + email_in: nil,\n     + email_in_allow_strangers: false,\n     + topics_day: 0,\n     + posts_day: 0,\n     + allow_badges: true,\n     + name_lower: \"amazing category 40\",\n     + auto_close_based_on_last_post: false,\n     + topic_template: nil,\n     + contains_messages: nil,\n     + sort_order: nil,\n     + sort_ascending: nil,\n     + uploaded_logo_id: nil,\n     + uploaded_background_id: nil,\n     + topic_featured_link_allowed: true,\n     + all_topics_wiki: false,\n     + show_subcategory_list: false,\n     + num_featured_topics: 3,\n     + default_view: nil,\n     + subcategory_list_style: \"rows_with_featured_topics\",\n     + default_top_period: \"all\",\n     + mailinglist_mirror: false,\n     + minimum_required_tags: 0,\n     + navigate_to_first_post_after_read: false,\n     + search_priority: 0,\n     + allow_global_tags: false,\n     + read_only_banner: nil,\n     + default_list_filter: \"all\",\n     + allow_unlimited_owner_edits_on_first_post: false,\n     + default_slow_mode_seconds: nil,\n     + uploaded_logo_dark_id: nil,\n     + uploaded_background_dark_id: nil,\n     + style_type: \"square\",\n     + emoji: nil,\n     + icon: nil,\n     + locale: nil,\n     + topic_title_placeholder: nil>\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:22:in 'block (5 levels) in <main>'\n\n  2) RULE EXPLANATION: expected an explanation that a content rule uses this target, got \"\"\n     Diff:\n     @@ -1 +1 @@\n     -/content.*(?:rule|restrict)/i\n     +\"\"\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/support.rb:22:in 'McpContentRestrictionsUnit5#expect_rule_explanation'\n\n  3) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:24:in 'block (5 levels) in <main>'\n\n  4) expected: true\n          got: false\n\n     (compared using ==)\n\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:25:in 'block (5 levels) in <main>'\n\n  5) expected: nil\n          got: 2026-11-25 18:23:10.739460000 +0000\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:26:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb:21:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "CATEGORY MODEL DELETE: referenced category destroyed; destroy returns the destroyed record instead of false, timer deleted and definition soft-deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb[1:1:4]",
+      "description": "[cr-u5] destroys a category and its dependent timer inside an outer transaction with no rules",
+      "full_description": "Category#destroy [cr-u5] destroys a category and its dependent timer inside an outer transaction with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb",
+      "line_number": 50,
+      "run_time": 0.209464,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:5]",
+      "description": "[cr-u5] propagates the deny-referenced tag destroy failure through an outer transaction",
+      "full_description": "Tag#destroy [cr-u5] propagates the deny-referenced tag destroy failure through an outer transaction",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 30,
+      "run_time": 0.085972,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:40:in 'block (5 levels) in <main>'\n\n  2) OUTER TRANSACTION: referenced tag disappeared\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:41:in 'block (5 levels) in <main>'\n\n  3) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:42:in 'block (5 levels) in <main>'\n\n  4) OUTER TRANSACTION: failed destroy was silently swallowed\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:43:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:34:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; OUTER TRANSACTION: referenced tag disappeared; continuation marker persisted and topic tag removed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:2]",
+      "description": "[cr-u5] propagates the allow-referenced tag destroy failure through an outer transaction",
+      "full_description": "Tag#destroy [cr-u5] propagates the allow-referenced tag destroy failure through an outer transaction",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 30,
+      "run_time": 0.089043,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:40:in 'block (5 levels) in <main>'\n\n  2) OUTER TRANSACTION: referenced tag disappeared\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:41:in 'block (5 levels) in <main>'\n\n  3) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:42:in 'block (5 levels) in <main>'\n\n  4) OUTER TRANSACTION: failed destroy was silently swallowed\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:43:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:34:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; OUTER TRANSACTION: referenced tag disappeared; continuation marker persisted and topic tag removed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:6]",
+      "description": "[cr-u5] preserves the deny-referenced synonym when its canonical tag is destroyed",
+      "full_description": "Tag#destroy [cr-u5] preserves the deny-referenced synonym when its canonical tag is destroyed",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 48,
+      "run_time": 0.022791,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:53:in 'block (5 levels) in <main>'\n\n  2) expected collection contained:  [113570001, 113570002]\n     actual collection contained:    []\n     the missing elements were:      [113570001, 113570002]\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:56:in 'block (5 levels) in <main>'\n\n  3) expected: 113570002\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:60:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:52:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; actual collection contained: []; canonical tag and protected synonym deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:1]",
+      "description": "[cr-u5] raises with a rule explanation when directly destroying the allow-referenced tag",
+      "full_description": "Tag#destroy [cr-u5] raises with a rule explanation when directly destroying the allow-referenced tag",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 15,
+      "run_time": 0.079255,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:21:in 'block (5 levels) in <main>'\n\n  2) TAG DESTROY: referenced tag disappeared\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:24:in 'block (5 levels) in <main>'\n\n  3) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:25:in 'block (5 levels) in <main>'\n\n  4) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:26:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:20:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; TAG DESTROY: referenced tag disappeared; topic/group associations removed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:3]",
+      "description": "[cr-u5] preserves the allow-referenced synonym when its canonical tag is destroyed",
+      "full_description": "Tag#destroy [cr-u5] preserves the allow-referenced synonym when its canonical tag is destroyed",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 48,
+      "run_time": 0.0295,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 3 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:53:in 'block (5 levels) in <main>'\n\n  2) expected collection contained:  [113570001, 113570002]\n     actual collection contained:    []\n     the missing elements were:      [113570001, 113570002]\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:56:in 'block (5 levels) in <main>'\n\n  3) expected: 113570002\n          got: nil\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:60:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:52:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; actual collection contained: []; canonical tag and protected synonym deleted",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:8]",
+      "description": "[cr-u5] destroys an unreferenced tag while another tag is protected",
+      "full_description": "Tag#destroy [cr-u5] destroys an unreferenced tag while another tag is protected",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 74,
+      "run_time": 0.023816,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "The rule references another record; unreferenced deletion stays available."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:7]",
+      "description": "[cr-u5] destroys tags and their synonyms inside an outer transaction with no rules",
+      "full_description": "Tag#destroy [cr-u5] destroys tags and their synonyms inside an outer transaction with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 65,
+      "run_time": 0.033562,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:1:4]",
+      "description": "[cr-u5] raises with a rule explanation when directly destroying the deny-referenced tag",
+      "full_description": "Tag#destroy [cr-u5] raises with a rule explanation when directly destroying the deny-referenced tag",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 15,
+      "run_time": 0.124804,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::MultipleExpectationsNotMetError",
+        "message": "Got 4 failures from failure aggregation block:\n\n  1) expected StandardError but nothing was raised\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:21:in 'block (5 levels) in <main>'\n\n  2) TAG DESTROY: referenced tag disappeared\n     Diff:\n     @@ -1 +1 @@\n     -true\n     +false\n     \n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:24:in 'block (5 levels) in <main>'\n\n  3) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:25:in 'block (5 levels) in <main>'\n\n  4) expected: [113570001]\n          got: []\n\n     (compared using ==)\n\n     ./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:26:in 'block (5 levels) in <main>'",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:20:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "expected StandardError but nothing was raised; TAG DESTROY: referenced tag disappeared; topic/group associations removed",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:2:2]",
+      "description": "[cr-u5] excludes a topicless deny-referenced tag while retaining unreferenced unused tags",
+      "full_description": "Tag.unused [cr-u5] excludes a topicless deny-referenced tag while retaining unreferenced unused tags",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 85,
+      "run_time": 0.028153,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "UNUSED SCOPE: referenced tag remains eligible for cleanup",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:93:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "UNUSED SCOPE: referenced tag remains eligible for cleanup; both fixture IDs remain eligible",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:2:1]",
+      "description": "[cr-u5] excludes a topicless allow-referenced tag while retaining unreferenced unused tags",
+      "full_description": "Tag.unused [cr-u5] excludes a topicless allow-referenced tag while retaining unreferenced unused tags",
+      "status": "failed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 85,
+      "run_time": 0.012122,
+      "pending_message": null,
+      "exception": {
+        "class": "RSpec::Expectations::ExpectationNotMetError",
+        "message": "UNUSED SCOPE: referenced tag remains eligible for cleanup",
+        "backtrace": [
+          "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb:93:in 'block (4 levels) in <main>'",
+          "./spec/support/discourse_event_helper.rb:42:in 'block (2 levels) in <main>'"
+        ]
+      },
+      "expected_baseline": "RED",
+      "declaration_verified": true,
+      "observed_red_signature": "UNUSED SCOPE: referenced tag remains eligible for cleanup; both fixture IDs remain eligible",
+      "assertion_level_failure": true
+    },
+    {
+      "id": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb[1:2:3]",
+      "description": "[cr-u5] includes both topicless tags in unused with no rules",
+      "full_description": "Tag.unused [cr-u5] includes both topicless tags in unused with no rules",
+      "status": "passed",
+      "file_path": "./spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb",
+      "line_number": 98,
+      "run_time": 0.009884,
+      "pending_message": null,
+      "expected_baseline": "GREEN",
+      "declaration_verified": true,
+      "baseline_green_reason": "No McpContentRule rows: preserves the existing core mutation, preview, or cleanup behavior."
+    }
+  ],
+  "summary": {
+    "duration": 12.540027,
+    "example_count": 71,
+    "failure_count": 47,
+    "pending_count": 0,
+    "errors_outside_of_examples_count": 0
+  },
+  "summary_line": "71 examples, 47 failures",
+  "oracle_receipt": {
+    "head": "afe9215fe56bb761309732ca0bd1087155a335d3",
+    "recorded_at_utc": "2026-11-25T18:24:00.885350+00:00",
+    "seed": 57019,
+    "hc_terminal": "t93",
+    "hc_name": "cr-u5-depth-final-red",
+    "exit_code": 1,
+    "command": "PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:$PATH LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec spec/lib/discourse_mcp/content_restrictions_unit5 spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb --seed 57019 --format documentation --format json --out spec/lib/discourse_mcp/content_restrictions_unit5/verification-rspec.json",
+    "runtime": {
+      "ruby": "4.0.7",
+      "bundler_lockfile": "4.0.23",
+      "database": "discourse_test_mcp_content",
+      "LOAD_PLUGINS": "1"
+    },
+    "unit5": {
+      "examples": 65,
+      "observed_red": 41,
+      "expected_green_observed_green": 24
+    },
+    "part_a": {
+      "unit3_examples": 4,
+      "unit4_examples": 2,
+      "observed_red": 6
+    },
+    "all_failures_assertion_level": true,
+    "source_sha256": {
+      "spec/lib/discourse_mcp/content_restrictions_unit5/category_model_spec.rb": "1bc107bf8b469e9f833b20634e2c2bfdbff1236a396d889ccf5aae7b526f9260",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb": "e52c9513aabfb9bc713bc8754b3e21b5fb3f1b78683d46195ae5a52b5faa0827",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/support.rb": "d5e30d79016299a57cc20a2bfe7d3401b2bf88e8db493820e19f573fcd9be48d",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/tag_cleanup_spec.rb": "e0710c1036cbd6df306843c582860a4b703eadc6c52769fcdcab1db355e03312",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/tag_model_spec.rb": "d3cd766e9d339dc471dbe53d63019350245032741ea4da7d2060c1760d85f927",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/tag_requests_spec.rb": "9de1bedf1a14442f157e8a8eea48783ff09c8cec919efc575495e4d9a6e6c514",
+      "spec/lib/discourse_mcp/content_restrictions_unit5/tag_synonyms_spec.rb": "1c39f641483a9fc6fe34ea174ef197ed03a006ae77e7d61edc644dc5c5ffc978",
+      "spec/lib/discourse_mcp/content_restrictions_unit3/review7_setting_urls_spec.rb": "3a89152d140c846352e1f477bb8b87c71ce107ca1358e4993bf1caa85d473a9b",
+      "spec/lib/discourse_mcp/content_restrictions_unit4/review7_spec.rb": "f757b09d5880c14b1c98ea2a4373091fe35352f4882c7c05eb866b11bf413d99"
+    },
+    "fixture_range_audit": {
+      "prior_ruby_json_files_scanned": 49,
+      "units": [
+        "content_restrictions",
+        "content_restrictions_unit2",
+        "content_restrictions_unit3",
+        "content_restrictions_unit4"
+      ],
+      "numeric_range_checked": [
+        113560000,
+        113579999
+      ],
+      "prior_literal_hits": 0,
+      "new_fixed_id_range": [
+        113570000,
+        113579999
+      ]
+    },
+    "runs": [
+      {
+        "terminal": "t8x",
+        "name": "cr-u5-baseline",
+        "examples": 66,
+        "failures": 47,
+        "purpose": "Preliminary calibration: plain authored %FF host loses href before policy; six cleanup assertions lazily reload deleted fab! records."
+      },
+      {
+        "terminal": "t8y",
+        "name": "cr-u5-calibrated",
+        "examples": 67,
+        "failures": 45,
+        "purpose": "All failures assertion-level after userinfo href calibration and capturing cleanup IDs before action; added no-rule unused preview control."
+      },
+      {
+        "terminal": "t91",
+        "name": "cr-u5-final-red",
+        "examples": 69,
+        "failures": 45,
+        "purpose": "Linted candidate before two final subtree-depth cases; all failures assertion-level."
+      },
+      {
+        "terminal": "t93",
+        "name": "cr-u5-depth-final-red",
+        "examples": 71,
+        "failures": 47,
+        "purpose": "Final linted oracle including moving/deleting an existing grandchild after the nesting limit is lowered; 47 assertion-level failures and 24 passing controls."
+      }
+    ],
+    "lint": {
+      "terminal": "t90",
+      "name": "cr-u5-lint-runtime",
+      "exit_code": 0,
+      "files_inspected": 9,
+      "rubocop": "passed; one fabricator shorthand autocorrected",
+      "syntax_tree": "passed",
+      "runtime_path": [
+        "ruby/4.0.7/bin",
+        "node/24.14.0/bin",
+        "pnpm/10.28.0"
+      ],
+      "initial_attempt": {
+        "terminal": "t8z",
+        "exit_code": 1,
+        "reason": "Missing Node runtime in hc PATH; pnpmfile failed before linters."
+      },
+      "followup": {
+        "terminal": "t92",
+        "name": "cr-u5-depth-lint",
+        "exit_code": 0,
+        "files_inspected": 1,
+        "rubocop": "passed; no offenses",
+        "syntax_tree": "passed",
+        "file": "spec/lib/discourse_mcp/content_restrictions_unit5/category_requests_spec.rb"
+      }
+    },
+    "constraints": {
+      "production_files_modified": false,
+      "git_mutations_performed": false,
+      "core_database_accessed": false,
+      "migrations_run": false,
+      "services_managed": false
+    }
+  }
+}
