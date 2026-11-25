@@ -259,7 +259,10 @@ Discourse::Application.routes.draw do
               path: "ai-concepts",
               controller: "discourse_ai/admin/ai_concepts" do
       member { post :merge }
-      collection { post :curate }
+      collection do
+        post :curate
+        post :seed
+      end
     end
   end
 end

@@ -51,6 +51,31 @@ RSpec.describe DiscourseAi::InferredConcepts::CandidateRetriever do
         expect(results).not_to include(retired_concept)
       end
 
+      it "filters to active concepts when active_only is true" do
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, target_vector, "topic-digest")
+
+        results =
+          retriever.retrieve(content: "irrelevant", target: topic, limit: 10, active_only: true)
+
+        expect(results).to eq([active_concept])
+        expect(results).not_to include(candidate_concept, retired_concept)
+      end
+
+      it "returns empty without generating an embedding when require_stored_embedding is true and target has none" do
+        topic_without_embedding = Fabricate(:topic)
+        allow(DiscourseAi::Embeddings::Vector).to receive(:instance)
+
+        results =
+          retriever.retrieve(
+            content: "Kubernetes cluster",
+            target: topic_without_embedding,
+            require_stored_embedding: true,
+          )
+
+        expect(results).to eq([])
+        expect(DiscourseAi::Embeddings::Vector).not_to have_received(:instance)
+      end
+
       it "propagates ProviderPausedError when embedding provider is paused" do
         DiscourseAi::Embeddings::ProviderHealth.request!(vector_def) do
           raise DiscourseAi::Inference::EmbeddingInferenceError.new(

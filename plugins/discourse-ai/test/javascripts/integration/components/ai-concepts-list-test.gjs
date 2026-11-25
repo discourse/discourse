@@ -190,4 +190,68 @@ module("Integration | Component | AiConceptsList", function (hooks) {
       .dom(".ai-concepts-list__no-results")
       .exists("renders no-results message when filters match nothing");
   });
+
+  test("allows starting and tracking initial seed from the empty state when enabled", async function (assert) {
+    let seedCalled = false;
+
+    pretender.post("/admin/plugins/discourse-ai/ai-concepts/seed.json", () => {
+      seedCalled = true;
+      return response(200, {
+        seed_status: {
+          status: "queued",
+          processed: 0,
+          total: 0,
+        },
+      });
+    });
+
+    const emptyEnabledModel = {
+      ai_concepts: [],
+      meta: {
+        counts: { active: 0, candidate: 0, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        seed_status: null,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{emptyEnabledModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__empty-description")
+      .exists("renders explanatory text on the enabled empty state");
+    assert
+      .dom(".ai-concepts-list__seed-btn")
+      .exists("renders Seed concepts button when enabled and empty");
+
+    await click(".ai-concepts-list__seed-btn");
+
+    assert.true(seedCalled, "posts to the seed endpoint when clicked");
+    assert
+      .dom(".ai-concepts-list__seed-status")
+      .exists("shows queued status banner after starting seed");
+    assert
+      .dom(".ai-concepts-list__refresh-btn")
+      .exists("shows Refresh button while seeding");
+
+    const emptyDisabledModel = {
+      ai_concepts: [],
+      meta: {
+        counts: { active: 0, candidate: 0, retired: 0 },
+        enabled: false,
+        embeddings_enabled: true,
+        seed_status: null,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{emptyDisabledModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__seed-btn")
+      .doesNotExist("hides Seed concepts button when feature is disabled");
+  });
 });

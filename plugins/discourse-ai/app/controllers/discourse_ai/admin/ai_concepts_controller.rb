@@ -40,6 +40,7 @@ module DiscourseAi
                    counts: counts,
                    enabled: SiteSetting.inferred_concepts_enabled,
                    embeddings_enabled: DiscourseAi::Embeddings.enabled?,
+                   seed_status: DiscourseAi::InferredConcepts::Seeder.status,
                  },
                }
       end
@@ -196,6 +197,28 @@ module DiscourseAi
         RateLimiter.new(current_user, "curate-inferred-concepts", 1, 1.minute).performed!
         Jobs.enqueue(:curate_inferred_concepts)
         head :no_content
+      end
+
+      def seed
+        unless SiteSetting.inferred_concepts_enabled && DiscourseAi::Embeddings.enabled?
+          return(
+            render_json_error(I18n.t("discourse_ai.concepts.errors.seed_unavailable"), status: 422)
+          )
+        end
+
+        if DiscourseAi::InferredConcepts::Seeder.seeding?
+          return(
+            render_json_error(I18n.t("discourse_ai.concepts.errors.seed_in_progress"), status: 422)
+          )
+        end
+
+        RateLimiter.new(current_user, "seed-inferred-concepts", 1, 5.minutes).performed!
+        DiscourseAi::InferredConcepts::Seeder.mark_queued!
+        Jobs.enqueue(:seed_inferred_concepts)
+
+        StaffActionLogger.new(current_user).log_custom("seed_ai_concepts")
+
+        render json: { seed_status: DiscourseAi::InferredConcepts::Seeder.status }
       end
 
       private

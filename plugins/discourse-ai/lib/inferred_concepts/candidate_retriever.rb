@@ -17,21 +17,28 @@ module DiscourseAi
         end
       end
 
-      def retrieve(content: nil, target: nil, limit: DEFAULT_LIMIT)
+      def retrieve(
+        content: nil,
+        target: nil,
+        limit: DEFAULT_LIMIT,
+        active_only: false,
+        require_stored_embedding: false
+      )
         unless DiscourseAi::Embeddings.enabled?
           raise EmbeddingsUnavailableError, "AI embeddings must be enabled"
         end
 
         return [] if ineligible_target?(target)
 
-        non_retired = InferredConcept.where.not(status: :retired)
-        return [] unless non_retired.exists?
+        concept_scope =
+          active_only ? InferredConcept.active : InferredConcept.where.not(status: :retired)
+        return [] unless concept_scope.exists?
 
-        vector = resolve_query_vector(content:, target:)
+        vector = resolve_query_vector(content:, target:, require_stored_embedding:)
         return [] if vector.blank?
 
-        results = vector_candidates(vector, non_retired:, limit:)
-        top_up_unembedded(results, non_retired:, limit:)
+        results = vector_candidates(vector, concept_scope:, active_only:, limit:)
+        top_up_unembedded(results, concept_scope:, limit:)
       end
 
       private
@@ -44,20 +51,25 @@ module DiscourseAi
           (topic.private_message? && !SiteSetting.ai_embeddings_generate_for_pms)
       end
 
-      def resolve_query_vector(content:, target:)
+      def resolve_query_vector(content:, target:, require_stored_embedding: false)
         if target.is_a?(Topic) || target.is_a?(Post)
           stored =
             DiscourseAi::Embeddings::Schema.for(target.class).find_by_target(target)&.embeddings
           return JSON.parse(stored) if stored.present?
         end
 
-        return if content.blank?
+        return if require_stored_embedding || content.blank?
 
         DiscourseAi::Embeddings::Vector.instance.vector_from(content, task: :query)
       end
 
-      def vector_candidates(vector, non_retired:, limit:)
-        statuses = [InferredConcept.statuses[:active], InferredConcept.statuses[:candidate]]
+      def vector_candidates(vector, concept_scope:, active_only:, limit:)
+        statuses =
+          if active_only
+            [InferredConcept.statuses[:active]]
+          else
+            [InferredConcept.statuses[:active], InferredConcept.statuses[:candidate]]
+          end
         table = DiscourseAi::Embeddings::Schema::INFERRED_CONCEPTS_TABLE
 
         candidate_ids =
@@ -73,13 +85,13 @@ module DiscourseAi
 
         return [] if candidate_ids.blank?
 
-        by_id = non_retired.where(id: candidate_ids).index_by(&:id)
+        by_id = concept_scope.where(id: candidate_ids).index_by(&:id)
         candidate_ids.filter_map { |id| by_id[id] }
       rescue DiscourseAi::Embeddings::Schema::MissingEmbeddingError
         []
       end
 
-      def top_up_unembedded(results, non_retired:, limit:)
+      def top_up_unembedded(results, concept_scope:, limit:)
         return results if results.size >= limit
 
         remaining = limit - results.size
@@ -87,7 +99,7 @@ module DiscourseAi
         table = DiscourseAi::Embeddings::Schema::INFERRED_CONCEPTS_TABLE
 
         unembedded =
-          non_retired
+          concept_scope
             .where.not(id: results.map(&:id))
             .where(
               "NOT EXISTS (SELECT 1 FROM #{table} e WHERE e.inferred_concept_id = inferred_concepts.id AND e.model_id = :model_id)",

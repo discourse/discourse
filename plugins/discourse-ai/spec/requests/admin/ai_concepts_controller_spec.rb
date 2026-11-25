@@ -269,6 +269,30 @@ RSpec.describe DiscourseAi::Admin::AiConceptsController do
     end
   end
 
+  describe "#seed" do
+    after { DiscourseAi::InferredConcepts::Seeder.reset_status! }
+
+    it "enqueues the seed job, exposes seed_status in #index, and guards duplicate or disabled runs" do
+      expect do post "/admin/plugins/discourse-ai/ai-concepts/seed.json" end.to change {
+        Jobs::SeedInferredConcepts.jobs.size
+      }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["seed_status"]["status"]).to eq("queued")
+
+      get "/admin/plugins/discourse-ai/ai-concepts.json"
+      expect(response.parsed_body["meta"]["seed_status"]["status"]).to eq("queued")
+
+      post "/admin/plugins/discourse-ai/ai-concepts/seed.json"
+      expect(response.status).to eq(422)
+
+      DiscourseAi::InferredConcepts::Seeder.reset_status!
+      SiteSetting.inferred_concepts_enabled = false
+      post "/admin/plugins/discourse-ai/ai-concepts/seed.json"
+      expect(response.status).to eq(422)
+    end
+  end
+
   describe "client translations" do
     it "keeps secrets.modal and concepts keys under their expected scopes" do
       expect(I18n.t("js.discourse_ai.secrets.modal.title")).to eq("Create new credential")

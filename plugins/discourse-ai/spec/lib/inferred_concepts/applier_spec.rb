@@ -193,6 +193,34 @@ RSpec.describe DiscourseAi::InferredConcepts::Applier do
       # Unchanged digest returns existing concepts without calling the LLM again
       expect(applier.match_existing_concepts(topic)).to contain_exactly(concept1)
     end
+
+    it "uses DecisionMatcher when a match decision model is configured" do
+      Fabricate(:post, topic: topic, post_number: 1, raw: "Ruby testing patterns", user: user)
+      decision_model = Fabricate(:decision_model)
+      SiteSetting.inferred_concepts_match_decision_model = decision_model.id
+
+      matched =
+        DiscourseAi::Decisions.with_canned_answers(c_0: 0.90, c_1: 0.40) do |canned|
+          out = applier.match_existing_concepts(topic)
+          expect(canned.calls.size).to eq(1)
+          out
+        end
+
+      expect(matched.size).to eq(1)
+      expect(topic.inferred_concepts.reload).to eq(matched)
+    end
+
+    it "raises decision errors when raise_on_error is true" do
+      Fabricate(:post, topic: topic, post_number: 1, raw: "Ruby testing patterns", user: user)
+      decision_model = Fabricate(:decision_model)
+      SiteSetting.inferred_concepts_match_decision_model = decision_model.id
+
+      DiscourseAi::Decisions.with_canned_answers(c_0: :refusal, c_1: :refusal) do
+        expect { applier.match_existing_concepts(topic, raise_on_error: true) }.to raise_error(
+          DiscourseAi::Decisions::RequestFailed,
+        )
+      end
+    end
   end
 
   describe "#match_existing_concepts_for_post" do
