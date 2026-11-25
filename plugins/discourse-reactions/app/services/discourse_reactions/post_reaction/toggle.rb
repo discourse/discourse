@@ -21,8 +21,7 @@ module DiscourseReactions
       try(Discourse::InvalidAccess) { step :toggle_reaction }
 
       step :publish_post_acted
-
-      only_if(:topic_has_audience) { step :publish_reaction_change }
+      step :publish_reaction_change
 
       private
 
@@ -56,15 +55,8 @@ module DiscourseReactions
         post.publish_change_to_clients!(:acted)
       end
 
-      def topic_has_audience(post:)
-        return if post.topic.blank?
-
-        audience = post.topic.secure_audience_publish_messages
-        audience[:user_ids] != [] && audience[:group_ids] != []
-      end
-
       def publish_reaction_change(post:, reaction_manager:)
-        MessageBus.publish(
+        post.publish_message!(
           "/topic/#{post.topic_id}/reactions",
           {
             post_id: post.id,
@@ -73,7 +65,6 @@ module DiscourseReactions
               reaction_manager.previous_reaction_value,
             ].compact.uniq,
           },
-          post.topic.secure_audience_publish_messages,
         )
       end
     end
