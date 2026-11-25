@@ -7,9 +7,9 @@ module DiscourseAi
       QUEUE_KEY = "discourse_ai:inferred_concepts:seed_queue"
       MUTEX_KEY = "discourse_ai_seed_inferred_concepts"
       MUTEX_VALIDITY = 5.minutes
-      STALE_AFTER = 1.hour
+      STALE_AFTER = 24.hours
       WAVE_STALE_AFTER = 5.minutes
-      QUEUE_TTL = 24.hours
+      QUEUE_TTL = STALE_AFTER
       TERMINAL_STATE_TTL = 24.hours
       RECENT_WINDOW = 2.years
       MIN_WORD_COUNT = 50
@@ -62,7 +62,11 @@ module DiscourseAi
         return false if state.blank? || %w[queued running].exclude?(state["status"])
         return false unless stalled?(state)
 
-        write_state(state.merge("updated_at" => Time.zone.now.iso8601))
+        refreshed_state = state.merge("updated_at" => Time.zone.now.iso8601)
+        Discourse.redis.multi do |tx|
+          tx.set(STATE_KEY, refreshed_state.to_json, ex: STALE_AFTER.to_i)
+          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i)
+        end
         Jobs.enqueue(:seed_inferred_concepts, run_id: state["run_id"])
         true
       end
@@ -187,20 +191,19 @@ module DiscourseAi
         begin
           LlmCreditAllocation.check_credits!(llm, FEATURE_NAME)
         rescue LlmCreditAllocation::CreditLimitExceeded => e
-          Discourse.redis.del(QUEUE_KEY)
           flush_concept_embeddings
           curate_seeded_concepts if state["since_last_curate"].to_i > 0
           return finalize_state(state, error: e.message), false, nil
         end
 
-        wave_ids = pop_wave_ids
+        wave_ids = peek_wave_ids
         if wave_ids.empty?
           flush_concept_embeddings
           curate_seeded_concepts if state["since_last_curate"].to_i > 0
           return finalize_state(state), false, nil
         end
 
-        process_popped_wave(
+        process_wave(
           state: state,
           wave_ids: wave_ids,
           enqueue_next: enqueue_next,
@@ -226,14 +229,7 @@ module DiscourseAi
           (limit || SiteSetting.inferred_concepts_seed_topics_limit).to_i.clamp(1, MAX_SEED_TOPICS)
         topic_ids = select_seed_topics(limit: effective_limit)
         now = Time.zone.now.iso8601
-
-        Discourse.redis.multi do |tx|
-          tx.del(QUEUE_KEY)
-          topic_ids.each_slice(1000) { |slice| tx.rpush(QUEUE_KEY, slice.map(&:to_s)) }
-          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i) if topic_ids.present?
-        end
-
-        write_progress(
+        initial_state = {
           "status" => "running",
           "run_id" => run_id || SecureRandom.hex(8),
           "started_at" => now,
@@ -242,22 +238,23 @@ module DiscourseAi
           "total" => topic_ids.size,
           "initial_concepts" => InferredConcept.count,
           "since_last_curate" => 0,
-        )
+        }
+
+        Discourse.redis.multi do |tx|
+          tx.del(QUEUE_KEY)
+          topic_ids.each_slice(1000) { |slice| tx.rpush(QUEUE_KEY, slice.map(&:to_s)) }
+          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i) if topic_ids.present?
+          tx.set(STATE_KEY, initial_state.to_json, ex: STALE_AFTER.to_i)
+        end
+
+        initial_state
       end
 
-      def pop_wave_ids
-        popped =
-          Discourse
-            .redis
-            .multi do |tx|
-              tx.lrange(QUEUE_KEY, 0, @wave_size - 1)
-              tx.ltrim(QUEUE_KEY, @wave_size, -1)
-            end
-            .first
-        Array(popped).map(&:to_i)
+      def peek_wave_ids
+        Array(Discourse.redis.lrange(QUEUE_KEY, 0, @wave_size - 1)).map(&:to_i)
       end
 
-      def process_popped_wave(state:, wave_ids:, enqueue_next:, agent_class:, llm:)
+      def process_wave(state:, wave_ids:, enqueue_next:, agent_class:, llm:)
         applier = Applier.new
         retriever = CandidateRetriever.new
         classifier = Classifier.new
@@ -328,7 +325,7 @@ module DiscourseAi
 
         flush_concept_embeddings
 
-        remaining = Discourse.redis.llen(QUEUE_KEY)
+        remaining = [Discourse.redis.llen(QUEUE_KEY) - wave_ids.size, 0].max
         next_state =
           state.merge(
             "processed" => processed,
@@ -337,7 +334,6 @@ module DiscourseAi
           )
 
         if failed_error.present?
-          Discourse.redis.del(QUEUE_KEY)
           curate_seeded_concepts if since_last_curate > 0
           return finalize_state(next_state, error: failed_error), false, nil
         end
@@ -347,15 +343,22 @@ module DiscourseAi
           return finalize_state(next_state), false, nil
         end
 
-        Discourse.redis.expire(QUEUE_KEY, QUEUE_TTL.to_i)
-
         if @curate_every > 0 && since_last_curate >= @curate_every
           curate_seeded_concepts
           next_state["since_last_curate"] = 0
         end
 
-        write_progress(next_state)
+        advance_wave!(wave_ids.size, next_state)
         [next_state, enqueue_next, next_state["run_id"]]
+      end
+
+      def advance_wave!(count, state)
+        Discourse.redis.multi do |tx|
+          tx.ltrim(QUEUE_KEY, count, -1)
+          tx.expire(QUEUE_KEY, QUEUE_TTL.to_i)
+          tx.set(STATE_KEY, state.to_json, ex: STALE_AFTER.to_i)
+        end
+        state
       end
 
       def finalize_state(state, error: nil)
@@ -372,7 +375,13 @@ module DiscourseAi
           "concepts_created" => [InferredConcept.count - initial_concepts, 0].max,
         }
         final_state["error"] = error if error.present?
-        self.class.send(:write_state, final_state)
+
+        Discourse.redis.multi do |tx|
+          tx.del(QUEUE_KEY)
+          tx.set(STATE_KEY, final_state.to_json, ex: TERMINAL_STATE_TTL.to_i)
+        end
+
+        final_state
       end
 
       def write_terminal_error_state(state, error_message)
@@ -505,10 +514,6 @@ module DiscourseAi
           ORDER BY category_rank ASC, engagement_score DESC, id DESC
           LIMIT :limit
         SQL
-      end
-
-      def write_progress(state)
-        self.class.send(:write_state, state)
       end
 
       def flush_concept_embeddings

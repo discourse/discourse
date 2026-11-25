@@ -551,6 +551,180 @@ RSpec.describe DiscourseAi::InferredConcepts::Seeder do
       duplicate_state = wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
       expect(duplicate_state["status"]).to eq("skipped")
     end
+
+    it "retains the active wave and replays unfinished topics after a mid-wave crash" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "Topic committed before crash",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Topic interrupted by worker kill",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      classified_contents = []
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ) do |_instance, content, **_opts|
+        classified_contents << content
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "CrashSafeTheme",
+              description: "Preserved across mid-wave crash recovery",
+              parent_concept_id: nil,
+            },
+          ],
+        }
+      end
+
+      worker_kill_error = Class.new(Exception)
+      crash_once = true
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Manager).to receive(
+        :apply_classification_result,
+      ).and_wrap_original do |method, target, *args, **kwargs|
+        if crash_once && target.id == topic2.id
+          crash_once = false
+          raise worker_kill_error, "Simulated SIGKILL"
+        end
+
+        method.call(target, *args, **kwargs)
+      end
+
+      queued = described_class.mark_queued!
+      wave_seeder = described_class.new(concurrency: 1, wave_size: 2)
+
+      expect do
+        wave_seeder.seed_wave!(limit: 2, run_id: queued["run_id"], enqueue_next: true)
+      end.to raise_error(worker_kill_error, "Simulated SIGKILL")
+
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(2)
+      expect(described_class.status["status"]).to eq("running")
+      expect(described_class.status["processed"]).to eq(0)
+
+      classified_contents.clear
+      recovered_state = wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
+
+      expect(classified_contents.size).to eq(1)
+      expect(classified_contents.first).to include(topic2.title)
+      expect(topic1.inferred_concepts.reload.map(&:name)).to eq(["CrashSafeTheme"])
+      expect(topic2.inferred_concepts.reload.map(&:name)).to eq(["CrashSafeTheme"])
+      expect(recovered_state["status"]).to eq("completed")
+      expect(recovered_state["processed"]).to eq(2)
+      expect(recovered_state["total"]).to eq(2)
+      expect(Discourse.redis.llen(described_class::QUEUE_KEY)).to eq(0)
+    end
+
+    it "keeps active run state valid across queue delays exceeding an hour" do
+      category = Fabricate(:category)
+      vector = [0.1] * vector_def.dimensions
+
+      topic1 =
+        Fabricate(
+          :topic,
+          title: "First backlogged wave discussion",
+          category: category,
+          word_count: 120,
+          like_count: 30,
+          posts_count: 5,
+          views: 250,
+        )
+      topic2 =
+        Fabricate(
+          :topic,
+          title: "Second backlogged wave discussion",
+          category: category,
+          word_count: 120,
+          like_count: 10,
+          posts_count: 5,
+          views: 200,
+        )
+      [topic1, topic2].each do |topic|
+        Fabricate(:post, topic: topic, post_number: 1, raw: "Content for #{topic.title}")
+        DiscourseAi::Embeddings::Schema.for(Topic).store(topic, vector, "topic-vec-#{topic.id}")
+      end
+
+      allow_any_instance_of(DiscourseAi::Embeddings::Vector).to receive(
+        :gen_bulk_reprensentations,
+      ).and_wrap_original do |_method, relation|
+        relation.each do |concept|
+          DiscourseAi::Embeddings::Schema.for(InferredConcept).store(concept, vector, "concept-vec")
+        end
+      end
+
+      curator =
+        instance_double(DiscourseAi::InferredConcepts::Curator, curate!: { merged_clusters: 0 })
+      allow(DiscourseAi::InferredConcepts::Curator).to receive(:new).and_return(curator)
+
+      allow_any_instance_of(DiscourseAi::InferredConcepts::Classifier).to receive(
+        :classify,
+      ).and_return(
+        {
+          matches: [],
+          proposed_new: [
+            {
+              name: "BacklogSafeTheme",
+              description: "Survived long queue backlog",
+              parent_concept_id: nil,
+            },
+          ],
+        },
+      )
+
+      freeze_time do
+        queued = described_class.mark_queued!
+        wave_seeder = described_class.new(concurrency: 1, wave_size: 1)
+
+        wave_seeder.seed_wave!(limit: 2, run_id: queued["run_id"], enqueue_next: true)
+        expect(Discourse.redis.ttl(described_class::STATE_KEY)).to be > 1.hour.to_i
+
+        freeze_time 2.hours.from_now
+
+        expect(described_class.status["status"]).to eq("running")
+        expect(described_class).to be_seeding
+        expect do expect(described_class.resume_if_stalled!).to eq(true) end.to change {
+          Jobs::SeedInferredConcepts.jobs.size
+        }.by(1)
+        expect(Jobs::SeedInferredConcepts.jobs.last["args"].first["run_id"]).to eq(queued["run_id"])
+
+        resumed_state = wave_seeder.seed_wave!(run_id: queued["run_id"], enqueue_next: true)
+        expect(resumed_state["status"]).to eq("completed")
+        expect(resumed_state["processed"]).to eq(2)
+        expect(resumed_state["total"]).to eq(2)
+      end
+    end
   end
 
   describe ".resume_if_stalled!" do
