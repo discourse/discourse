@@ -277,25 +277,29 @@ module DiscourseMcp
     # @param category_id [Integer, nil]
     # @param text [String, nil] The title and raw of a topic being created.
     # @param error [String] The `mcp.errors` key of the refusal.
+    # @param guardian [Guardian, nil] Whose permissions the save uses; the caller's by default.
     # @returns [Set<Integer>]
     def prospective_tag_ids!(
       request_context,
       tag_names:,
       category_id:,
       text: nil,
-      error: "content_policy_output_blocked"
+      error: "content_policy_output_blocked",
+      guardian: nil
     )
       # The names are resolved by the same steps that save them: the caller's
-      # tags first, then, for a new topic, the tags its watched words add on top.
-      names = DiscourseTagging.tags_for_saving(tag_param_names(tag_names), request_context.guardian)
-      names = Array(names)
+      # tags first, then, for a new topic, the tags its watched words add to the
+      # tags already saved.
+      category = Category.find_by(id: category_id)
+      names =
+        saved_tag_names(tag_param_names(tag_names), guardian || request_context.guardian, category)
       if text.present? && WordWatcher.words_for_action(:tag).present?
         names =
-          DiscourseTagging.tags_for_saving(
+          saved_tag_names(
             names + WordWatcher.new(text).tag_names,
             Discourse.system_user.guardian,
+            category,
           )
-        names = Array(names)
       end
       return Set.new if names.empty?
 
@@ -304,10 +308,27 @@ module DiscourseMcp
         raise_prospective_refusal!(error)
       end
 
-      tag_ids = tags.map { |tag| tag.target_tag_id || tag.id }.uniq
-      category = Category.find_by(id: category_id)
+      tags.map { |tag| tag.target_tag_id || tag.id }.uniq.to_set
+    end
+
+    # The tag names one tagging step stores: the names saving keeps, with
+    # synonyms replaced by their targets, plus the parent tags they require.
+    def saved_tag_names(names, guardian, category)
+      names = Array(DiscourseTagging.tags_for_saving(names, guardian))
+      return names if names.empty?
+
+      targets =
+        Tag
+          .where_name(names)
+          .joins(:target_tag)
+          .includes(:target_tag)
+          .to_h { |tag| [tag.name, tag.target_tag.name] }
+      names = names.map { |name| targets.fetch(name, name) }
+
+      tag_ids = Tag.where_name(names).pluck(:id)
       parent_tags_map = DiscourseTagging.parent_tags_map(tag_ids, category)
-      (tag_ids + DiscourseTagging.missing_parent_tag_ids(tag_ids, parent_tags_map)).to_set
+      parent_ids = DiscourseTagging.missing_parent_tag_ids(tag_ids, parent_tags_map)
+      names + Tag.where(id: parent_ids).pluck(:name)
     end
 
     # Refuses a write whose stored topic would be restricted. The default
@@ -319,6 +340,7 @@ module DiscourseMcp
     # @param text [String, nil] The title and raw of a topic being created.
     # @param private_message [Boolean]
     # @param error [String] The `mcp.errors` key of the refusal.
+    # @param guardian [Guardian, nil] Whose permissions the save uses; the caller's by default.
     # @returns [void]
     def ensure_prospective_topic!(
       request_context,
@@ -326,12 +348,14 @@ module DiscourseMcp
       category_id:,
       text: nil,
       private_message: false,
-      error: "content_policy_output_blocked"
+      error: "content_policy_output_blocked",
+      guardian: nil
     )
       policy = request_context.content_policy
       return if !policy.active?
 
-      tag_ids = prospective_tag_ids!(request_context, tag_names:, category_id:, text:, error:)
+      tag_ids =
+        prospective_tag_ids!(request_context, tag_names:, category_id:, text:, error:, guardian:)
       if !policy.allows_prospective_topic?(category_id:, tag_ids:, private_message:)
         raise_prospective_refusal!(error)
       end

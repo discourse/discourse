@@ -41,8 +41,9 @@ module DiscourseMcp
       end
 
       # While any rule is active, a setting's value and default are redacted
-      # when they name a restricted category, tag or topic, or link to one. A
-      # personal message is such a topic while agent access to them is off.
+      # when they name a restricted category, tag or topic, or hold a URL on
+      # this site. A personal message is such a topic while agent access to
+      # them is off.
       def redact(projected, policy)
         return projected if !policy.active?
 
@@ -69,228 +70,25 @@ module DiscourseMcp
             value.to_i.positive? && Topic.exists?(id: value.to_i) &&
               !policy.allows_topic_id?(value.to_i)
           else
-            items.any? { |item| restricted_local_url?(item, policy) }
+            items.any? { |item| local_url?(item) }
           end
         end
       end
 
-      MAX_REDIRECTS = 5
-      JUDGED_PARAMS = %i[topic_id post_id category_id tag_id category_slug_path_with_id].freeze
-      RECORD_ID_CONTROLLERS = %w[topics posts categories tags].freeze
-      # Controllers whose identifiers name records no content rule governs.
-      UNGOVERNED_CONTROLLERS = %w[users groups badges].freeze
-
-      # A local URL is restricted when anything it leads to on the site is: the
-      # records its route names through any parameter that identifies one, the
-      # destination of a redirect route, or the target of a permalink. They are
-      # resolved in the order the router serves them, so a live route wins over
-      # a permalink with the same path. A local URL that the server doesn't
-      # serve is restricted too, because the browser or a later redirect may
-      # still route it to restricted content. A URL to a record that doesn't
-      # exist is kept: settings are written by admins, and agents can't change
-      # them while a rule is active.
-      def restricted_local_url?(item, policy, hops: 0)
+      # A URL on this site is redacted whatever it points to: what a local URL
+      # leads to depends on routing, controllers, permalinks and redirects that
+      # can't all be judged, so none is shown while a rule is active. Relative
+      # references count as local, and so do the site's CDN and upload hosts.
+      def local_url?(item)
         item = item.to_s.strip
-        path, query = local_path(item)
-        return restricted_route?(Discourse.route_for(item), policy) if path.nil?
-        return true if hops > MAX_REDIRECTS
+        return true if item.start_with?("./", "../")
+        return false if !item.start_with?("/") && !item.match?(%r{\A[a-z][a-z0-9+.\-]*://}i)
+        return true if item.start_with?("/") && !item.start_with?("//")
 
-        full_path = query.present? ? "#{path}?#{query}" : path
-        route = recognize(path)
-        return restricted_route?(route, policy) if route && route[:controller] != "permalinks"
-
-        destination = redirect_destination(full_path)
-        return restricted_local_url?(destination, policy, hops: hops + 1) if destination
-
-        # Permalinks match the full path, query included.
-        permalink = Permalink.find_by_url(full_path)
-        return true if permalink.nil?
-
-        target = permalink.target_url
-        target.present? && restricted_local_url?(target, policy, hops: hops + 1)
-      end
-
-      # The path of a URL on this site, without the base path, and its query,
-      # or nil when the value isn't written as a URL to this site.
-      def local_path(item)
-        return if !item.start_with?("/") && !item.match?(%r{\Ahttps?://}i)
-
-        uri = URI.parse(item.start_with?("//") ? "http:#{item}" : item)
-        return if uri.host.present? && !local_host?(uri.host)
-
-        path = uri.path.to_s
-        path = path.delete_prefix(Discourse.base_path) if path.start_with?(Discourse.base_path)
-        [path.presence || "/", uri.query]
+        uri = URI.parse(item.start_with?("//") ? "https:#{item}" : item)
+        InternalHosts.include?(uri)
       rescue URI::Error
-        nil
-      end
-
-      def local_host?(host)
-        hosts = [Discourse.current_hostname, URI.parse(Discourse.base_url).host]
-        hosts.compact.map(&:downcase).include?(host.downcase)
-      end
-
-      def recognize(path)
-        Rails.application.routes.recognize_path(path)
-      rescue ActionController::RoutingError
-        nil
-      end
-
-      # Redirect routes aren't recognized as controller routes, so the first
-      # redirect route that matches resolves to its destination.
-      def redirect_destination(path)
-        request =
-          ActionDispatch::Request.new(
-            Rack::MockRequest.env_for(path, "HTTP_HOST" => Discourse.current_hostname),
-          )
-        Rails
-          .application
-          .routes
-          .router
-          .recognize(request) do |route, params|
-            next if route.app.engine? || !route.app.matches?(request)
-
-            endpoint = route.app.respond_to?(:app) ? route.app.app : route.app
-            return nil if !endpoint.respond_to?(:redirect?) || !endpoint.redirect?
-
-            destination = endpoint.path(params, request).to_s
-            return destination.match?(%r{\A(?:/|https?://)}i) ? destination : "/#{destination}"
-          end
-        nil
-      end
-
-      def restricted_route?(route, policy)
-        return false if route.blank?
-
-        restricted_route_topic?(route, policy) || restricted_route_category?(route, policy) ||
-          restricted_route_tag?(route, policy) || restricted_route_record?(route, policy)
-      end
-
-      # Any other parameter that identifies a record is judged through the
-      # model its controller or name points to, by the topic, post or category
-      # that record belongs to. An identifier that can't be judged that way is
-      # treated as restricted.
-      def restricted_route_record?(route, policy)
-        controller = route[:controller].to_s
-        return false if UNGOVERNED_CONTROLLERS.include?(controller)
-
-        route.any? do |key, value|
-          key = key.to_s
-          next false if value.blank? || JUDGED_PARAMS.include?(key.to_sym)
-          next false if !key.match?(/(?:\A|_)id\z/)
-          next false if key == "id" && RECORD_ID_CONTROLLERS.include?(controller)
-          next false if key == "external_id" && controller == "topics"
-
-          restricted_record?(route_model(controller, key), value, policy)
-        end
-      end
-
-      def route_model(controller, key)
-        names =
-          if key == "id"
-            [controller.classify]
-          else
-            name = key.delete_suffix("_id").classify
-            namespace = controller.include?("/") ? controller.split("/")[0...-1].join("/") : nil
-            [("#{namespace.classify}::#{name}" if namespace), name].compact
-          end
-        names
-          .lazy
-          .map(&:safe_constantize)
-          .find { |model| model.is_a?(Class) && model < ActiveRecord::Base }
-      end
-
-      def restricted_record?(model, value, policy)
-        return true if model.nil?
-
-        record = model.find_by(model.primary_key => value.to_s)
-        return false if record.nil?
-
-        links =
-          %i[topic_id post_id category_id topic post category].select do |name|
-            record.respond_to?(name)
-          end
-        return true if links.empty?
-
-        topic_ids = [record.try(:topic_id), record.try(:topic)&.id]
-        post_ids = [record.try(:post_id), record.try(:post)&.id].compact
-        topic_ids.concat(Post.with_deleted.where(id: post_ids).pluck(:topic_id)) if post_ids.any?
-        category_ids = [record.try(:category_id), record.try(:category)&.id].compact
-
-        topic_ids.compact.uniq.any? do |topic_id|
-          Topic.with_deleted.exists?(id: topic_id) && !policy.allows_topic_id?(topic_id)
-        end || category_ids.any? { |category_id| !policy.allows_category_id?(category_id) }
-      end
-
-      def restricted_route_topic?(route, policy)
-        topic_ids = []
-        topic_ids << route[:topic_id].to_i if numeric?(route[:topic_id])
-
-        post_ids = [route[:post_id]]
-        post_ids << route[:id] if route[:controller] == "posts"
-        post_ids = post_ids.select { |id| numeric?(id) }.map(&:to_i)
-        topic_ids.concat(Post.with_deleted.where(id: post_ids).pluck(:topic_id)) if post_ids.any?
-
-        if route[:controller] == "topics" && route[:id].present?
-          id = route[:id].to_s
-          topic_ids << id.to_i if numeric?(id)
-          topic_ids.concat(Topic.with_deleted.where(slug: id).pluck(:id))
-        end
-        if route[:controller] == "topics" && route[:external_id].present?
-          topic_ids.concat(
-            Topic.with_deleted.where(external_id: route[:external_id].to_s).pluck(:id),
-          )
-        end
-
-        Topic
-          .with_deleted
-          .where(id: topic_ids.uniq)
-          .pluck(:id)
-          .any? { |topic_id| !policy.allows_topic_id?(topic_id) }
-      end
-
-      def restricted_route_category?(route, policy)
-        categories = []
-        [
-          route[:category_slug_path_with_id],
-          (route[:path] if route[:controller] == "categories"),
-        ].compact_blank.each { |path| categories << Category.find_by_slug_path_with_id(path.to_s) }
-        if numeric?(route[:category_id])
-          categories << Category.find_by(id: route[:category_id].to_i)
-        end
-
-        slugs = [route[:category_slug]]
-        if route[:controller] == "categories" && route[:id].present?
-          categories << Category.find_by(id: route[:id].to_i) if numeric?(route[:id])
-          slugs << route[:id]
-        end
-        slugs = slugs.compact_blank.map(&:to_s)
-        categories.concat(Category.where(slug: slugs).to_a) if slugs.any?
-
-        categories.compact.any? { |category| !policy.allows_category_id?(category.id) }
-      end
-
-      # A numeric tag id falls back to a tag with that name, so both readings
-      # are checked.
-      def restricted_route_tag?(route, policy)
-        ids = [route[:tag_id]]
-        ids << route[:id] if route[:controller] == "tags"
-        ids = ids.compact_blank.map(&:to_s)
-        names = [
-          *ids,
-          route[:tag_name],
-          route[:tag_slug],
-          *route[:additional_tag_names].to_s.split("/"),
-        ]
-        names = names.compact_blank.map { |name| name.to_s.downcase }
-
-        tags = Tag.where(id: ids.select { |id| numeric?(id) }.map(&:to_i)).to_a
-        tags.concat(Tag.where("LOWER(name) IN (?) OR slug IN (?)", names, names).to_a) if names.any?
-        tags.any? { |tag| !policy.allows_tag?(tag) }
-      end
-
-      def numeric?(value)
-        value.to_s.match?(/\A\d+\z/)
+        true
       end
 
       def project(setting)

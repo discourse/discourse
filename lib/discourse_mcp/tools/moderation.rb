@@ -318,6 +318,16 @@ module DiscourseMcp
           text: "#{options[:title]} #{options[:raw]}",
           private_message: options[:archetype] == Archetype.private_message,
           error: "content_policy_blocked",
+          # Approval saves with the reviewer's permissions only when they are
+          # staff, and with the queued author's otherwise.
+          guardian:
+            (
+              if request_context.user.staff?
+                request_context.guardian
+              else
+                reviewable.target_created_by&.guardian
+              end
+            ),
         )
       end
 

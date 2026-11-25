@@ -46,6 +46,8 @@ module DiscourseMcp
     # element. Anchors' own `href` is judged separately.
     URL_ATTRIBUTE = /(?:\A|-)(?:src|srcset|poster|href|url)\z|\Adata\z/
     MENTION_PATHS = { "mention" => "u", "mention-group" => "groups" }.freeze
+    SHORT_URL = %r{\Aupload://[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)?\z}
+    SHORT_PATH = %r{\A(?:/[^/]+)*/uploads/short-url/[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)?\z}
     MENTION_NAME = /\A[\p{L}\p{M}\p{N}_][\p{L}\p{M}\p{N}_.\-]*\z/
     CODE_ANCESTORS = %w[code pre].freeze
     ONEBOX_CLASSES = %w[onebox inline-onebox inline-onebox-loading].freeze
@@ -153,6 +155,8 @@ module DiscourseMcp
       name = anchor.text.delete_prefix("@")
       return false if !anchor.text.start_with?("@") || anchor.element_children.any?
       return false if !name.match?(MENTION_NAME)
+      # Any other attribute could carry a second destination.
+      return false if anchor.attribute_nodes.any? { |node| %w[class href].exclude?(node.name) }
 
       expected = "#{Discourse.base_path}/#{MENTION_PATHS.fetch(mention_class)}/#{name}"
       CGI.unescape(anchor["href"].to_s).casecmp?(expected)
@@ -232,25 +236,7 @@ module DiscourseMcp
     end
 
     def internal_host?(uri)
-      uri.host.present? && internal_hosts.include?(uri.host.downcase)
-    end
-
-    def internal_hosts
-      @internal_hosts ||=
-        [
-          Discourse.current_hostname,
-          Discourse.base_url,
-          GlobalSetting.cdn_url,
-          SiteSetting.s3_cdn_url,
-          (Discourse.store.absolute_base_url if Discourse.store.external?),
-        ].compact_blank
-          .filter_map do |value|
-            value.include?("://") ? URI.parse(value).host : value
-          rescue URI::Error
-            nil
-          end
-          .map(&:downcase)
-          .to_set
+      InternalHosts.include?(uri)
     end
 
     # Only an upload this authorization created through MCP, and that no
@@ -260,18 +246,26 @@ module DiscourseMcp
     end
 
     # The renderer rewrites short URLs of existing uploads into full ones, so
-    # both forms are resolved.
+    # both forms are resolved. A short URL must have exactly the upload's shape,
+    # and no path may step out of where it points, so trailing segments can't
+    # lead the browser somewhere else.
     def upload_for(url)
       url = url.to_s.strip
       return if url.blank?
 
       if url.start_with?("upload://")
+        return if !url.match?(SHORT_URL)
+
         sha1 = Upload.sha1_from_short_url(url)
         return sha1 && Upload.find_by(sha1:)
       end
 
       uri = URI.parse(url)
+      return if traversing_path?(uri.path)
+
       if uri.path.to_s.include?("/uploads/short-url/") && (uri.host.blank? || internal_host?(uri))
+        return if !uri.path.match?(SHORT_PATH)
+
         sha1 = Upload.sha1_from_short_path(uri.path)
         return sha1 && Upload.find_by(sha1:)
       end
