@@ -459,3 +459,161 @@ synonym storage representation open; no implementation or GREEN-after-fix claim
 is made. Only `review3_spec.rb` and this README were edited. No commit, Git
 history mutation, migration, core database access, or service start/stop was
 performed.
+
+## Review round 4: JSON integer IDs and directly stored synonyms
+
+Review subject and execution **HEAD `4b3a489a72b`**, base **`c0d82ec53c1`**.
+The new `review4_spec.rb` reuses `support.rb`; all **78 examples** have
+`type: :request` and `[cr-u6]` in their names. Production code is unchanged.
+Assertions observe raw JSON responses, complete persisted rule attributes,
+`UserHistory` IDs, and topic visibility through `ContentPolicy.load.scope_topics`.
+The stored-synonym fixtures deliberately bypass the save endpoint.
+
+### RED inventory
+
+Final seed **68330**: **78 new examples, 18 RED, 60 GREEN, 0 pending, 0 errors
+outside examples**. The full unit 6 run has **148 examples / 18 failures**;
+all **70 earlier examples pass**. Every RED is an RSpec expectation failure.
+The 16 rejected-save examples each execute all four assertions and report four failures:
+
+- Expected HTTP **400**, got **200**.
+- Expected present `errors`, got **nil**.
+- Expected unchanged complete rows; create instead stores a new rule, and
+  replacement overwrites the previous denial and changes `updated_at`.
+- Expected unchanged `UserHistory` IDs; **one additional ID** appears.
+
+The first 16 full names have prefix
+`Admin::McpController#update_content_restriction [cr-u6] refuses raw JSON `
+and suffix ` without storage or logs`. Each row supplies the intervening text
+and its observed stored-config signature. The row/log failures above apply to
+every row, including both create and replace.
+
+| Example name between prefix and suffix | Observed stored-config RED signature |
+| --- | --- |
+| `allow.tag_ids whole float on create` | New row with `allow.tag_ids: [114620102.0]`, selected mode. |
+| `allow.tag_ids whole float on replace` | Prior `deny.tag_ids: [114620104]` cleared; `allow.tag_ids: [114620102.0]`, selected mode. |
+| `allow.tag_ids mixed integer and whole float on create` | New row with `allow.tag_ids: [114620102, 114620103.0]`, selected mode. |
+| `allow.tag_ids mixed integer and whole float on replace` | Prior denial cleared; `allow.tag_ids: [114620102, 114620103.0]`, selected mode. |
+| `deny.tag_ids whole float on create` | New row with `deny.tag_ids: [114620102.0]`. |
+| `deny.tag_ids whole float on replace` | `deny.tag_ids` changes from `[114620104]` to `[114620102.0]`. |
+| `deny.tag_ids mixed integer and whole float on create` | New row with `deny.tag_ids: [114620102, 114620103.0]`. |
+| `deny.tag_ids mixed integer and whole float on replace` | `deny.tag_ids` changes from `[114620104]` to `[114620102, 114620103.0]`. |
+| `allow.category_ids whole float on create` | New row with `allow.category_ids: [114620111.0]`, selected mode. |
+| `allow.category_ids whole float on replace` | Prior denial cleared; `allow.category_ids: [114620111.0]`, selected mode. |
+| `allow.category_ids mixed integer and whole float on create` | New row with `allow.category_ids: [114620111, 114620112.0]`, selected mode. |
+| `allow.category_ids mixed integer and whole float on replace` | Prior denial cleared; `allow.category_ids: [114620111, 114620112.0]`, selected mode. |
+| `deny.category_ids whole float on create` | New row with `deny.category_ids: [114620111.0]`. |
+| `deny.category_ids whole float on replace` | Prior denial cleared; `deny.category_ids: [114620111.0]`. |
+| `deny.category_ids mixed integer and whole float on create` | New row with `deny.category_ids: [114620111, 114620112.0]`. |
+| `deny.category_ids mixed integer and whole float on replace` | Prior denial cleared; `deny.category_ids: [114620111, 114620112.0]`. |
+
+The other two full names have prefix
+`Admin::McpController stored forum_content topic visibility `:
+
+| Example name | Observed RED signature |
+| --- | --- |
+| `[cr-u6] applies directly stored allow synonym ids to topics carrying the target tag` | Stored config assertion passes. Expected visible IDs `[114620121, 114620122]`, got `[114620122]`: target-tag topic missing. |
+| `[cr-u6] applies directly stored deny synonym ids to topics carrying the target tag` | Stored config assertion passes. Expected visible IDs `[114620123]`, got `[114620121, 114620123]`: target-tag topic remains reachable. |
+
+### GREEN inventory
+
+All **56** rejection controls pass: the same four fields and create/replace
+operations, with shape `fractional float`, `string`, `null`, `true`, `false`,
+`object`, or `array` in the rejection-name template above. They require exactly 400 with errors,
+unchanged complete rule rows, and unchanged IDs across all `UserHistory` rows.
+The fractional value is the first ID plus 0.5; strings contain an existing ID,
+and null/booleans are literal JSON array elements. Object elements contain an
+existing ID under `id`; nested-array elements contain an existing ID. This
+covers every JSON value type besides the permitted integer, with separate
+whole-valued and fractional float cases.
+
+These **four** positive controls also pass, under
+`Admin::McpController#update_content_restriction `:
+
+| Example name | Observed control |
+| --- | --- |
+| `[cr-u6] saves raw JSON integer allow.tag_ids on create and replace with topic visibility` | Both saves return 200, store the full supplied integer config, and add one history row. Selected mode shows both listed-tag topics and excludes the unrelated topic. |
+| `[cr-u6] saves raw JSON integer deny.tag_ids on create and replace with topic visibility` | Both saves return 200, store the full supplied integer config, and add one history row. Both listed-tag topics are hidden; the unrelated topic remains visible. |
+| `[cr-u6] saves raw JSON integer allow.category_ids on create and replace with topic visibility` | Both saves return 200, store the full supplied integer config, and add one history row. Selected mode shows topics in both listed categories and excludes the unrelated topic. |
+| `[cr-u6] saves raw JSON integer deny.category_ids on create and replace with topic visibility` | Both saves return 200, store the full supplied integer config, and add one history row. Topics in both listed categories are hidden; the unrelated topic remains visible. |
+
+### Decisions and fixture discrimination
+
+- New fixed IDs are tags **114_620_101** (target), **114_620_102** (its synonym),
+  **114_620_103** (ordinary), **114_620_104** (retained denial); categories
+  **114_620_111..112**; topics **114_620_121** (target tag/first category),
+  **114_620_122** (ordinary tag/second category), **114_620_123** (unrelated).
+  Before creating the file, `rg --files --no-ignore spec -g '*.rb' -g '*.json'`
+  and a plain/underscored numeric-literal scan of **2,741 files** found no
+  literals in **114_620_100..114_620_149**, including all earlier unit 6 files.
+- Every request sends an explicit JSON string with `Content-Type: application/json`.
+  Whole-valued floats retain `.0` on the wire. The mixed tag case is exactly
+  `[114620102, 114620103.0]`, with 102 a synonym of 101. The singleton float
+  case also exercises a synonym ID represented as a float. Category cases use
+  two existing categories, so target existence cannot explain refusal.
+- Both booleans are covered, as well as fractional floats, numeric strings,
+  literal null, objects, and nested arrays. Exactly 400 and a nonempty errors
+  payload are required; error wording and internal normalization/validation
+  choices remain open.
+- Every replacement first saves and verifies a different valid denial through
+  the endpoint: `deny.tag_ids: [114620104]`. Rejection must retain every row
+  attribute, including actor/timestamps, and every history ID. Allow candidates
+  use selected mode. These fixtures catch coercion, dropping invalid elements,
+  checking only the first element, replacing the old denial, and logging a
+  rejected operation. Successful integer creates/replacements prevent blanket
+  refusal or a successful no-op from satisfying the oracle.
+- Stored-synonym examples create an empty forum rule, then use `update_columns`
+  to write `[synonym.id, ordinary.id]` directly, verifying that exact config
+  survived storage before loading the policy. Both are valid integer configs;
+  endpoint rejection cannot satisfy these assertions. The ordinary-tag topic
+  distinguishes partial synonym handling from a broken whole list, and the
+  unrelated topic catches blanket allow/deny. An endpoint-only fix would leave
+  these two examples RED. These weaker implementations were checked against
+  the assertions; no production mutation was made within this restricted task.
+- Visibility assertions use unordered exact membership. The oracle leaves the
+  policy's internal normalization and future endpoint storage representation
+  open; the direct fixture must actually retain its supplied synonym ID.
+
+### Receipts and limits
+
+```sh
+hc run --bg --name cr-u6-review4-red --cwd "$PWD" \
+  'PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:/Users/saquetim/.local/share/mise/installs/pnpm/10.28.0:/Users/saquetim/.local/share/mise/installs/node/24.14.0/bin:$PATH \
+  LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit6/review4_spec.rb \
+  --seed 68328 --format documentation \
+  --format json --out /tmp/cr-u6-review4-68328.json'
+```
+
+The first RED receipt is `/tmp/cr-u6-review4-68328.json`: 62 examples, 18 RED,
+44 GREEN. The post-lint full-suite seed **68329** receipt is
+`/tmp/cr-u6-review4-68329.json`: 132 examples, the same 18 RED, with all earlier
+examples passing. Object/nested-array controls were then added, linted, and
+included in the final run:
+
+```sh
+hc run --bg --name cr-u6-review4-types-final --cwd "$PWD" \
+  'PATH=/Users/saquetim/.local/share/mise/installs/ruby/4.0.7/bin:/Users/saquetim/.local/share/mise/installs/pnpm/10.28.0:/Users/saquetim/.local/share/mise/installs/node/24.14.0/bin:$PATH \
+  LOAD_PLUGINS=1 RAILS_DB=discourse_test_mcp_content bin/rspec \
+  spec/lib/discourse_mcp/content_restrictions_unit6/*_spec.rb \
+  --seed 68330 --format documentation \
+  --format json --out /tmp/cr-u6-review4-68330.json'
+```
+
+Final JSON receipt: `/tmp/cr-u6-review4-68330.json`. All 18 RED names match the
+first run, each save RED still has four assertion failures, and both stored
+visibility signatures are unchanged. All 16 added object/array cases pass.
+Earlier rounds remain historical receipts for their stated baselines. No fix
+or GREEN-after-fix claim is made.
+
+Targeted `bin/lint --fix` passed RuboCop (one file, no offenses) and Syntax Tree
+before the final request run. The README was also supplied; `bin/lint` reported
+no core linter for it. `git diff --check` passed. HEAD remained `4b3a489a72b`.
+
+All requested behaviors have assertions at the permitted boundaries. The
+directly stored rule cases intentionally use fixture writes and public policy
+visibility rather than attempting an endpoint save that would normalize the
+fixture away. These tests do not establish concurrency or logger-failure
+atomicity. Only `review4_spec.rb` and this README are edited; no commit, stash,
+checkout, reset, amend, push, migration, core database access, or service
+start/stop is part of this task.
