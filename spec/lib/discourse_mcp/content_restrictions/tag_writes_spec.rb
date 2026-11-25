@@ -8,6 +8,25 @@ require_relative "write_support"
 describe DiscourseMcp::Server, "#call" do
   include_context "with MCP content write rules"
 
+  def assert_concealed_approval(arguments)
+    expect(Reviewable.exists?(id: McpContentWriteHelpers::MISSING_ID)).to eq(false)
+    missing =
+      rpc(
+        "discourse_perform_reviewable_action",
+        arguments.merge(reviewable_id: McpContentWriteHelpers::MISSING_ID),
+      )
+    expect_refusal(missing)
+    before_state = content_state
+    response = rpc("discourse_perform_reviewable_action", arguments)
+    aggregate_failures do
+      expect_refusal(response)
+      expect(JSON.generate(response)).to eq(JSON.generate(missing)),
+      "QUEUED CONCEALMENT: restricted approval must answer like a missing reviewable"
+      expect(content_state).to eq(before_state),
+      "WRITE ATOMICITY: refused reference persisted content"
+    end
+  end
+
   %i[create update draft].each do |operation|
     it "gives unknown and denied #{operation} tags the same refusal without implicitly creating tags" do
       name, base =
@@ -351,7 +370,11 @@ describe DiscourseMcp::Server, "#call" do
           end
         end
         activate!
-        assert_reference_write("discourse_perform_reviewable_action", args)
+        if restriction == :hash_tags
+          assert_concealed_approval(args)
+        else
+          assert_reference_write("discourse_perform_reviewable_action", args)
+        end
       end
     end
 
@@ -471,9 +494,10 @@ describe DiscourseMcp::Server, "#call" do
         expect_success(approve(control))
         expect(control.reload.status).to eq("approved")
         expect(control.target.topic.tags).to contain_exactly(allowed)
-        assert_reference_write(
-          "discourse_perform_reviewable_action",
-          { reviewable_id: reviewable.id, action_id: "approve_post", confirm: true },
+        assert_concealed_approval(
+          reviewable_id: reviewable.id,
+          action_id: "approve_post",
+          confirm: true,
         )
       end
     end
@@ -773,12 +797,24 @@ describe DiscourseMcp::Server, "#call" do
         end
         reviewable.reload
         activate!
-        expected = reference_error
+        expect(Reviewable.exists?(id: McpContentWriteHelpers::MISSING_ID)).to eq(false)
+        expected =
+          rpc(
+            "discourse_perform_reviewable_action",
+            {
+              reviewable_id: McpContentWriteHelpers::MISSING_ID,
+              action_id: "approve_post",
+              confirm: true,
+            },
+            access_token: reviewer_token,
+          )
+        expect_refusal(expected)
         before_state = persisted_state
         response = approve(reviewable, access_token: reviewer_token)
         aggregate_failures do
           expect_refusal(response)
-          expect(response).to eq(expected), "QUEUED FALLBACK: refusal envelope changed"
+          expect(JSON.generate(response)).to eq(JSON.generate(expected)),
+          "QUEUED FALLBACK: missing-reviewable envelope changed"
           expect(persisted_state).to eq(before_state),
           "QUEUED FALLBACK ATOMICITY: topic, post, tags or approval persisted"
         end
