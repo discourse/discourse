@@ -14,6 +14,7 @@ import { TrackedAsyncData } from "ember-async-data";
 import { hasContentPluginApiCallbacks } from "discourse/select-kit/lib/plugin-api";
 import type A11yService from "discourse/services/a11y";
 import type { CapabilitiesService } from "discourse/services/capabilities";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SelectHost, {
@@ -288,6 +289,11 @@ export default class DSelectList extends Component<DSelectListSignature> {
     return this.#listboxId;
   }
 
+  /** Names the held value for a single list's search, which shows no chip. */
+  get heldDescriptionId(): string {
+    return `${this.listboxId}-held`;
+  }
+
   get limitId(): string {
     return `${this.listboxId}-limit`;
   }
@@ -481,7 +487,10 @@ export default class DSelectList extends Component<DSelectListSignature> {
                 aria-invalid={{if @invalid "true"}}
                 class="d-select__filter"
                 id={{@id}}
-                @describedBy={{@describedBy}}
+                @describedBy={{this.host.describedBy
+                  (if this.engine.hasValue this.heldDescriptionId)
+                  @describedBy
+                }}
                 @editing={{true}}
                 @engine={{this.engine}}
                 @expanded={{true}}
@@ -509,6 +518,23 @@ export default class DSelectList extends Component<DSelectListSignature> {
                 }}
               {{/if}}
             </div>
+            {{#if this.engine.hasValue}}
+              {{! Resolving here also fills the root's name hooks for a held value no page lists. }}
+              <span class="sr-only" id={{this.heldDescriptionId}}>
+                <DAsyncContent @asyncData={{this.heldSelection}}>
+                  <:loading></:loading>
+                  <:content as |rows|>
+                    {{#each rows key="key" as |row|}}
+                      {{this.engine.text
+                        "optionSelected"
+                        (hash item=(this.engine.getSelectionLabel row.record))
+                      }}
+                    {{/each}}
+                  </:content>
+                  <:error></:error>
+                </DAsyncContent>
+              </span>
+            {{/if}}
           {{/if}}
         </:field>
         <:option as |option config|>

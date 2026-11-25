@@ -446,7 +446,9 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       own, so the modal never scrolls twice.
     - Engine changes for it: a single `DSelectList` shows no chip in its search field, since its
       selected row already shows the value, and `DSelectList` declares `@groupBy` and
-      `@groupHeader`, which it already passed to the engine.
+      `@groupHeader`, which it already passed to the engine. Without the chip, its search is
+      described as "Selected …" (2026-11-25), which also resolves a held value no page lists, so
+      the root's `data-name` is filled again.
   - ☐ `ColorPalettes` (the wizard). Rows show swatches.
   - ◐ `FontSelector`: the font list setting and the wizard. Each font renders in its typeface.
     - ☑ The font list setting (2026-11-19): `setting-field/font-list` and the older
@@ -455,16 +457,20 @@ See [`ROLLOUT.md`](ROLLOUT.md), *Waves*. See RFC: *Selected-value resolution*. R
       class sits on the root, so the field and its input share one typeface and nothing shifts on
       focus. The `body-font-*` and `heading-font-*` classes set the same family
       (`lib/stylesheet/importer.rb:117-122`), so one class serves `base_font` and `heading_font`.
-    - ☐ Engine question (found 2026-11-19): a single typeahead without a `:selection` block keeps
-      the held name as the input's text, and a click puts the caret where it lands
-      (`combobox-query-input.gts:169-175`), so typing appends to the name ("Interplayfair")
-      instead of replacing it. Keyboard focus selects the name. With a `:selection` block the
-      name is selected as it appears, so typing replaces it. Decide whether a click should select
-      the name for every single typeahead; a per-picker dummy block was rejected. `DSelectTimezone`
-      gets the selected name from its own `:selection` block, which draws the offset.
-    - ☐ The wizard (see below).
-  - ☐ The wizard's dropdown field, which renders `ColorPalettes`, `FontSelector` or `ComboBox`
-    dynamically. It moves with the colors and fonts.
+    - ☑ Engine question (found 2026-11-19, decided 2026-11-25): a single typeahead without a
+      `:selection` block kept the held name as the input's text, and a click put the caret where
+      it landed, so typing appended to the name ("Interplayfair"). Now the press that focuses the
+      input selects the name once it ends, as keyboard focus does; a press in an input that
+      already has focus still places the caret (`ComboboxQueryInput`'s `handleClick`).
+    - ☐ Extract `SelectFont` into a ui-kit recipe, so a font picker outside the settings can use
+      it (asked 2026-11-25).
+  - ☑ The wizard's dropdown field (2026-11-25). The plan expected `ColorPalettes`,
+    `FontSelector` and `ComboBox` here, but #32797 removed the styling step, so the server sends
+    only the setup step's Language field. Under the flag, the field's default branch renders a
+    typeahead `DSelect` over the field's choices, named by the field's label, with their
+    descriptions and icons, in the server's order. The palette, font and homepage branches stay
+    on select-kit: nothing reaches them, and nothing in all-the-repos imports them. The
+    appearance (design) wizard doesn't use select-kit.
   - ☑ `WatchedWords`, 1 site: the admin watched word form (`watched-word-form.gjs`), found
     2026-11-24 after the inventory missed it. It branches on the flag to a multiple `DSelect`
     (2026-11-24) that takes any typed word or phrase. Like the string lists, a removed word keeps

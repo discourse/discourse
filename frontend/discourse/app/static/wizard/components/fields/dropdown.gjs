@@ -7,6 +7,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import FontSelector from "discourse/select-kit/components/font-selector";
 import HomepageStyleSelector from "discourse/select-kit/components/homepage-style-selector";
 import { Choice } from "discourse/static/wizard/models/wizard";
+import DSelect from "discourse/ui-kit/select/d-select";
 import { i18n } from "discourse-i18n";
 
 export default class Dropdown extends Component {
@@ -99,6 +100,14 @@ export default class Dropdown extends Component {
     }
   }
 
+  /** Under the flag, a field with no picker of its own gets the new select. */
+  get usesNewSelect() {
+    return (
+      this.siteSettings.enable_new_select_controls &&
+      this.component === ComboBox
+    );
+  }
+
   keyPress(event) {
     event.stopPropagation();
   }
@@ -109,15 +118,31 @@ export default class Dropdown extends Component {
   }
 
   <template>
-    {{component
-      this.component
-      class="wizard-container__dropdown"
-      value=@field.value
-      content=@field.choices
-      nameProperty="label"
-      onChange=this.onChangeValue
-      tabindex="9"
-      options=(hash translatedNone=false)
-    }}
+    {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+    {{#if this.usesNewSelect}}
+      <DSelect
+        class="wizard-container__dropdown"
+        @descriptionField="description"
+        @iconField="icon"
+        @id={{@field.id}}
+        @labelField="label"
+        @onChange={{this.onChangeValue}}
+        @options={{@field.choices}}
+        @texts={{hash ariaLabel=@field.label}}
+        @value={{@field.value}}
+        @valueField="id"
+      />
+    {{else}}
+      {{component
+        this.component
+        class="wizard-container__dropdown"
+        value=@field.value
+        content=@field.choices
+        nameProperty="label"
+        onChange=this.onChangeValue
+        tabindex="9"
+        options=(hash translatedNone=false)
+      }}
+    {{/if}}
   </template>
 }

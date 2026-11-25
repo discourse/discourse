@@ -1,8 +1,11 @@
-import { render } from "@ember/test-helpers";
+import { findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Dropdown from "discourse/static/wizard/components/fields/dropdown";
+import WizardField from "discourse/static/wizard/components/wizard-field";
 import { Choice, Field } from "discourse/static/wizard/models/wizard";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DSelectDOM from "discourse/tests/helpers/d-select-dom";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -327,6 +330,62 @@ module(
           landingPage: i18n(`wizard.top_menu_items.top`).toLowerCase(),
         })
       );
+    });
+
+    module("with the new select controls", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.siteSettings.enable_new_select_controls = true;
+      });
+
+      test("picks a choice from a typeahead the field's label names", async function (assert) {
+        const field = new Field({
+          type: "dropdown",
+          id: "community_size",
+          label: "Community size",
+          value: "small",
+          choices: [
+            new Choice({ id: "small", label: "Small" }),
+            new Choice({
+              id: "large",
+              label: "Large",
+              description: "Hundreds of members a day",
+            }),
+          ],
+        });
+
+        await render(<template><WizardField @field={{field}} /></template>);
+
+        const FIELD = ".wizard-container__dropdown";
+        assert.dom(".select-kit").doesNotExist("the legacy select is gone");
+        assert.dSelect(FIELD).hasName("Small", "the field's value is held");
+        const input = new DSelectDOM(FIELD).controller;
+        assert.strictEqual(
+          input.id,
+          "community_size",
+          "the field's label points at the input"
+        );
+        assert
+          .dom(input)
+          .hasAria("label", "Community size", "and nothing renames it");
+
+        const select = dSelect(FIELD);
+        await select.open();
+
+        assert.deepEqual(
+          findAll("[role='option']").map((row) => row.dataset.name),
+          ["Small", "Large"],
+          "the choices keep the server's order"
+        );
+        assert
+          .dom(
+            "[role='option'][data-value='large'] .d-select__option-description"
+          )
+          .hasText("Hundreds of members a day");
+
+        await select.select("large");
+
+        assert.strictEqual(field.value, "large");
+      });
     });
   }
 );

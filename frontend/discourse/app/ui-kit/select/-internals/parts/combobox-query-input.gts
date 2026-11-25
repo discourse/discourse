@@ -83,9 +83,11 @@ interface ComboboxQueryInputSignature {
 /** Query input shared by typeahead triggers and visible-list search fields. */
 export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
   // Set on `pointerdown` (which fires just before the native focus) so the focus handler
-  // knows this focus came from a pointer press and must leave the caret where the click
-  // put it, rather than selecting the whole label.
+  // knows this focus came from a pointer press, whose label selection waits for the click.
   #pointerFocus = false;
+
+  // Set when a pointer press focused the input; the press's click selects the label.
+  #selectOnClick = false;
 
   get isCombobox(): boolean {
     return this.args.roleMode !== "search";
@@ -165,12 +167,25 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   }
 
   @action
+  handleClick(event: MouseEvent): void {
+    // The press that focused the input selects the label once it ends: selecting on focus
+    // would be undone as the browser places the caret. A later press, in an input that
+    // already has focus, leaves the caret where it lands, for editing.
+    if (!this.#selectOnClick) {
+      return;
+    }
+    this.#selectOnClick = false;
+    if (this.args.shouldSelectOnFocus?.() ?? true) {
+      this.#selectDisplayValue(event.target as HTMLInputElement);
+    }
+  }
+
+  @action
   handleFocus(event: FocusEvent): void {
-    // A pointer press positions the caret at the click; the browser owns that, so don't
-    // select the label over it. Keyboard focus (no preceding pointerdown) still selects.
     const pointerFocus = this.#pointerFocus;
     this.#pointerFocus = false;
     if (pointerFocus) {
+      this.#selectOnClick = true;
       return;
     }
 
@@ -225,8 +240,10 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   @action
   handleFocusout(event: FocusEvent): void {
     // Clear a pointerdown that never produced a focus (e.g. clicking an already-focused
-    // input) so the next keyboard focus is not mistaken for a pointer focus.
+    // input) so the next keyboard focus is not mistaken for a pointer focus, and a press
+    // whose click never came.
     this.#pointerFocus = false;
+    this.#selectOnClick = false;
     this.args.onBlur?.(event);
   }
 
@@ -290,6 +307,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
       {{on "pointerdown" this.handlePointerDown}}
       {{on "focus" this.handleFocus}}
+      {{on "click" this.handleClick}}
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
       {{didUpdate this.selectOnDisplayValue @displayValue}}

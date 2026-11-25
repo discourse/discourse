@@ -1612,7 +1612,9 @@ by mechanism.
   `@readonly`; overlay placement (`@placement` / `@offset`); `@onShow` / `@onClose`.
 - Custom option and selection markup (`:option` / `:selection` blocks; on the typeahead variant the
   `:selection` block is the resting/closed display: once the menu opens the built-in input shows
-  the editable label text, so it is not a live-while-editing surface); empty state
+  the editable label text, so it is not a live-while-editing surface. Focus selects that label,
+  whether it comes from the keyboard or from the press that focuses the input, so typing replaces
+  it; a press in an input that already has focus places the caret, for editing); empty state
   (the `noResults` text / `:empty`); loading skeleton (`@skeletonCount`, and a `:skeleton` block
   for one placeholder row); a muted source-error state with an optional retry (`@retryable`) and an
   `:error` consumer block.
@@ -1747,7 +1749,8 @@ several independent selects inside one `DMenu`. It is multi by default: pass an 
 and `@onChange` receives the new value and its record, or `null` when Backspace or Delete on an
 empty search clears it. Like a group of radio buttons, it shows the held value only by its
 option, which stays marked selected; pressing that option again changes nothing. The search
-field holds no chip. Where that option can scroll away, be filtered out or be left out with
+field holds no chip; it is described as "Selected Apple" instead, so a screen reader names the
+held value on arrival. Where that option can scroll away, be filtered out or be left out with
 `@hideSelected`, the page around the list shows the held value. `dSelect().remove()` rejects
 on a single list, since there is no chip to press. `@maximum` keeps its multi meaning, so a list that
 must hold one value at a time uses this mode rather than `@maximum={{1}}`, which refuses a

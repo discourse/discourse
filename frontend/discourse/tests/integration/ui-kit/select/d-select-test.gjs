@@ -267,6 +267,29 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
     );
   });
 
+  test("the press that focuses the field selects the held label, and a later press leaves the caret", async function (assert) {
+    await render(<template><DefaultHost @value={{2}} /></template>);
+    const input = find("[role='combobox']");
+
+    // A mouse press fires pointerdown before the focus; the click helper alone does not.
+    await triggerEvent(input, "pointerdown");
+    await click(input);
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [0, "Banana".length],
+      "the first press selects the label, so typing replaces it"
+    );
+
+    input.setSelectionRange(2, 2);
+    await triggerEvent(input, "pointerdown");
+    await click(input);
+    assert.deepEqual(
+      [input.selectionStart, input.selectionEnd],
+      [2, 2],
+      "a press in the focused field leaves the caret for editing"
+    );
+  });
+
   test("falls back to the label field when presentation blocks are omitted", async function (assert) {
     await render(<template><DefaultHost @value={{2}} /></template>);
 

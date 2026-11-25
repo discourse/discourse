@@ -2177,6 +2177,30 @@ module("Integration | ui-kit | select | DSelectList", function (hooks) {
       );
     });
 
+    test("the search says which value is held, as no chip shows it", async function (assert) {
+      const held = tracked(2);
+      await renderSingle(held);
+
+      /** The texts the search field's description points at. */
+      const described = () =>
+        (input().getAttribute("aria-describedby") ?? "")
+          .split(" ")
+          .map((id) => document.getElementById(id)?.textContent.trim());
+
+      assert.true(described().includes("Selected Banana"));
+
+      await click(rows()[2]);
+      assert.true(described().includes("Selected Cherry"), "it follows a pick");
+      assert.false(described().includes("Selected Banana"));
+
+      held.value = null;
+      await settled();
+      assert.false(
+        described().some((text) => text?.startsWith("Selected")),
+        "nothing held, nothing said"
+      );
+    });
+
     test("pressing the held row keeps it", async function (assert) {
       const held = tracked(2);
       const changes = await renderSingle(held);
