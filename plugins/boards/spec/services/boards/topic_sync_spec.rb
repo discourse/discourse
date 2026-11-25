@@ -829,6 +829,19 @@ RSpec.describe Boards::TopicSync do
       topic.update_status("visible", true, admin)
       expect(board.cards.reload.pluck(:topic_id)).to eq([topic.id])
     end
+
+    it "keeps a manually placed card in an untagged column, same as the backfill" do
+      untagged_column = Fabricate(:boards_column, board:, tag_id: nil)
+      topic.tags = []
+      card = Fabricate(:boards_topic_card, board:, column: untagged_column, topic:)
+      topic.update_columns(visible: false)
+
+      described_class.sync_topic(topic)
+      expect(board.cards.pluck(:id)).to eq([card.id])
+
+      described_class.backfill_board(board)
+      expect(board.cards.reload.pluck(:id)).to eq([card.id])
+    end
   end
 
   describe ".remove_topic" do

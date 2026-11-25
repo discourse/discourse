@@ -75,12 +75,14 @@ module Boards
         Card.transaction do
           snapshot = fetch_sync_snapshot(topic)
 
-          # Unlisted topics are not placed automatically, same as in the backfill
-          plan =
-            compute_sync_plan(
-              existing_cards: snapshot[:existing_cards],
-              matching_placements: topic.visible? ? snapshot[:matching_placements] : [],
-            )
+          matching_placements = snapshot[:matching_placements]
+          # Same as the backfill: unlisted topics are not placed in tagged columns, but manually
+          # placed cards in untagged columns are kept.
+          if !topic.visible?
+            matching_placements = matching_placements.select { |row| row[:column_tag_id].blank? }
+          end
+
+          plan = compute_sync_plan(existing_cards: snapshot[:existing_cards], matching_placements:)
           next if plan[:remove_card_ids].blank? && plan[:create_targets].blank?
 
           execute_sync_changes(
