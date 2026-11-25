@@ -102,12 +102,12 @@ module DiscourseMcp
         end
       end
 
-      # Theme settings can name categories and tags: list settings of those
-      # types, and objects settings with categories or tags properties. While a
-      # rule narrows topics, a setting that names a restricted one in its value
-      # or default has both left out.
+      # Theme settings can name categories, tags, topics and posts: list settings
+      # of the first two types, and objects settings with properties of any of
+      # them. While any rule is active, a setting that names a restricted one in
+      # its value or default has both left out.
       def redact_setting(setting, json, policy)
-        return json if !policy.restricts_forum?
+        return json if !policy.active?
 
         restricted =
           [json[:value], json[:default]].any? do |value|
@@ -134,25 +134,32 @@ module DiscourseMcp
           objects = Array(value).select { |object| object.is_a?(Hash) }
           objects = objects.map { |object| object.deep_stringify_keys.with_indifferent_access }
           schema = setting.schema.deep_symbolize_keys
-          category_ids =
-            SchemaSettingsObjectValidator.property_values_of_type(
-              schema:,
-              objects:,
-              type: "categories",
-            )
-          tags =
-            SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type: "tags")
-          category_ids.any? { |id| !policy.allows_category_id?(id.to_i) } ||
-            tags.any? do |tag|
-              if tag.is_a?(Integer)
-                policy.restricted_tag_ids.include?(tag)
-              else
-                !policy.allows_tag?(tag)
-              end
-            end
+          restricted_objects?(schema, objects, policy)
         else
           false
         end
+      end
+
+      def restricted_objects?(schema, objects, policy)
+        category_ids = property_values(schema, objects, "categories")
+        tags = property_values(schema, objects, "tags")
+        post_ids = property_values(schema, objects, "post").map(&:to_i)
+        topic_ids = property_values(schema, objects, "topic").map(&:to_i)
+        topic_ids += Post.with_deleted.where(id: post_ids).pluck(:topic_id)
+        topic_ids = Topic.with_deleted.where(id: topic_ids).pluck(:id)
+
+        category_ids.any? { |id| !policy.allows_category_id?(id.to_i) } ||
+          tags.any? do |tag|
+            if tag.is_a?(Integer)
+              policy.restricted_tag_ids.include?(tag)
+            else
+              !policy.allows_tag?(tag)
+            end
+          end || (topic_ids - policy.allowed_topic_ids(topic_ids).to_a).any?
+      end
+
+      def property_values(schema, objects, type)
+        SchemaSettingsObjectValidator.property_values_of_type(schema:, objects:, type:)
       end
 
       def theme_json(theme, policy)
@@ -328,8 +335,8 @@ module DiscourseMcp
     class GetTheme
       REQUIRED_SCOPES = [Scopes::THEMES_READ].freeze
       CONTENT = {
-        topics: :untouched,
-        private_messages: :untouched,
+        topics: :enforced,
+        private_messages: :enforced,
         categories: :enforced,
         tags: :enforced,
         exit_paths: :untouched,

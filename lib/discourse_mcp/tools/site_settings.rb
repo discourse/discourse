@@ -69,19 +69,76 @@ module DiscourseMcp
             value.to_i.positive? && Topic.exists?(id: value.to_i) &&
               !policy.allows_topic_id?(value.to_i)
           else
-            items.any? { |item| restricted_topic_url?(item, policy) }
+            items.any? { |item| restricted_local_url?(item, policy) }
           end
         end
       end
 
-      def restricted_topic_url?(item, policy)
-        return false if !item.include?("/t/")
+      # A local URL is restricted when its route names a restricted topic, post,
+      # category or tag through any parameter that identifies one, so every route
+      # shape for the same record is covered. A URL to a record that doesn't exist
+      # is kept: settings are written by admins, and agents can't change them
+      # while a rule is active.
+      def restricted_local_url?(item, policy)
+        item = item.to_s.strip
+        route = Discourse.route_for(item) || {}
+        route = route.merge(tag_name: path_tag_name(item)) if route.blank?
+        return false if route.blank? || route.values.all?(&:blank?)
 
-        route = Discourse.route_for(item)
-        return false if route.blank? || route[:controller] != "topics"
+        restricted_route_topic?(route, policy) || restricted_route_category?(route, policy) ||
+          restricted_route_tag?(route, policy)
+      end
 
-        topic_id = (route[:topic_id] || route[:id]).to_i
-        topic_id.positive? && Topic.exists?(id: topic_id) && !policy.allows_topic_id?(topic_id)
+      # Some tag paths are only routed in the browser, such as `/tags/<name>`,
+      # so a local path whose segment follows `tag` or `tags` is read as a tag
+      # name too.
+      def path_tag_name(item)
+        uri = URI.parse(item)
+        return if uri.host.present? && uri.host != Discourse.current_hostname
+
+        segments = uri.path.to_s.delete_prefix(Discourse.base_path).split("/").compact_blank
+        index = segments.index { |segment| %w[tag tags].include?(segment) }
+        CGI.unescape(segments[index + 1]) if index && segments[index + 1]
+      rescue URI::Error
+        nil
+      end
+
+      def restricted_route_topic?(route, policy)
+        topic_id =
+          case route[:controller]
+          when "posts"
+            post_id = route[:post_id] || route[:id]
+            Post.with_deleted.where(id: post_id.to_i).pick(:topic_id) if numeric?(post_id)
+          when "topics"
+            id = route[:topic_id] || route[:id]
+            numeric?(id) ? id.to_i : Topic.where(slug: id.to_s).pick(:id)
+          end
+        topic_id.present? && Topic.with_deleted.exists?(id: topic_id) &&
+          !policy.allows_topic_id?(topic_id)
+      end
+
+      def restricted_route_category?(route, policy)
+        path = route[:category_slug_path_with_id]
+        return false if path.blank?
+
+        category = Category.find_by_slug_path_with_id(path.to_s)
+        category.present? && !policy.allows_category_id?(category.id)
+      end
+
+      def restricted_route_tag?(route, policy)
+        tags = []
+        tags << Tag.find_by(id: route[:tag_id].to_i) if numeric?(route[:tag_id])
+        names = [route[:tag_name], route[:tag_slug], *route[:additional_tag_names].to_s.split("/")]
+        names.compact_blank.each do |name|
+          tags << (
+            Tag.where("LOWER(name) = ?", name.to_s.downcase).first || Tag.find_by(slug: name)
+          )
+        end
+        tags.compact.any? { |tag| !policy.allows_tag?(tag) }
+      end
+
+      def numeric?(value)
+        value.to_s.match?(/\A\d+\z/)
       end
 
       def project(setting)
