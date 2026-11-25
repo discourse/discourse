@@ -276,17 +276,32 @@ module DiscourseMcp
     # @param tag_names [Array<String>, nil]
     # @param category_id [Integer, nil]
     # @param text [String, nil] The title and raw of a topic being created.
+    # @param error [String] The `mcp.errors` key of the refusal.
     # @returns [Set<Integer>]
-    def prospective_tag_ids!(request_context, tag_names:, category_id:, text: nil)
-      names = Array(tag_names).map(&:to_s)
+    def prospective_tag_ids!(
+      request_context,
+      tag_names:,
+      category_id:,
+      text: nil,
+      error: "content_policy_output_blocked"
+    )
+      # Queued payloads may hold tags as `{ "name" => ... }` hashes.
+      names =
+        Array(tag_names).map { |tag| tag.is_a?(Hash) ? tag.with_indifferent_access[:name] : tag }
       names += WordWatcher.new(text).tag_names if text.present?
-      names = names.map { |name| DiscourseTagging.clean_tag(name) }.compact_blank.uniq
+      names = names.map { |name| name.to_s.strip }.compact_blank.uniq
       return Set.new if names.empty?
 
+      # Like saving tags, existing names match exactly before the rest are
+      # cleaned, so a stored name longer than the current limit still matches.
       tags = Tag.where_name(names).to_a
-      if tags.map { |tag| tag.name.downcase }.uniq.size < names.map(&:downcase).uniq.size
-        raise_prospective_refusal!
-      end
+      found = tags.map { |tag| tag.name.downcase }.to_set
+      remaining = names.reject { |name| found.include?(name.downcase) }
+      cleaned = remaining.map { |name| DiscourseTagging.clean_tag(name) }.compact_blank.uniq
+      tags += Tag.where_name(cleaned).to_a if cleaned.any?
+      found = tags.map { |tag| tag.name.downcase }.to_set
+      raise_prospective_refusal!(error) if cleaned.any? { |name| found.exclude?(name.downcase) }
+      raise_prospective_refusal!(error) if remaining.any? && cleaned.empty?
 
       tag_ids = tags.map { |tag| tag.target_tag_id || tag.id }.uniq
       category = Category.find_by(id: category_id)
@@ -294,32 +309,35 @@ module DiscourseMcp
       (tag_ids + DiscourseTagging.missing_parent_tag_ids(tag_ids, parent_tags_map)).to_set
     end
 
-    # Refuses a write whose stored topic would be restricted, with the same
-    # error a missing category gets.
+    # Refuses a write whose stored topic would be restricted. The default
+    # error is the one a missing category gets; writes that have no missing
+    # target to mirror pass the policy refusal instead.
     #
     # @param tag_names [Array<String>, nil]
     # @param category_id [Integer, nil]
     # @param text [String, nil] The title and raw of a topic being created.
     # @param private_message [Boolean]
+    # @param error [String] The `mcp.errors` key of the refusal.
     # @returns [void]
     def ensure_prospective_topic!(
       request_context,
       tag_names:,
       category_id:,
       text: nil,
-      private_message: false
+      private_message: false,
+      error: "content_policy_output_blocked"
     )
       policy = request_context.content_policy
       return if !policy.active?
 
-      tag_ids = prospective_tag_ids!(request_context, tag_names:, category_id:, text:)
+      tag_ids = prospective_tag_ids!(request_context, tag_names:, category_id:, text:, error:)
       if !policy.allows_prospective_topic?(category_id:, tag_ids:, private_message:)
-        raise_prospective_refusal!
+        raise_prospective_refusal!(error)
       end
     end
 
-    def raise_prospective_refusal!
-      raise ToolError, I18n.t("mcp.errors.content_policy_output_blocked")
+    def raise_prospective_refusal!(error = "content_policy_output_blocked")
+      raise ToolError, I18n.t("mcp.errors.#{error}")
     end
 
     # While any content rule is active, a tool may only point at uploads

@@ -273,7 +273,7 @@ module DiscourseMcp
       # can they pass extra fields, which reach the user as a personal message.
       # Actions that publish a queued post or show a hidden or deleted post
       # again, which cooks the post's stored raw.
-      PUBLISHING_ACTIONS = %w[approve_post revise_and_reject_post].freeze
+      PUBLISHING_ACTIONS = %w[approve_post approve_post_closed revise_and_reject_post].freeze
       RESTORING_ACTIONS = %w[
         approve_and_restore
         approve_and_unhide
@@ -298,6 +298,25 @@ module DiscourseMcp
         end
 
         request_context.authored_text.ensure_allowed!(*stored_texts(reviewable, server_action))
+        ensure_prospective_queued_topic!(reviewable, server_action, request_context)
+      end
+
+      # Approving a queued new topic creates it with the payload's category and
+      # tags plus the parent and watched-word tags they add, so the topic it
+      # would become must be allowed.
+      def ensure_prospective_queued_topic!(reviewable, server_action, request_context)
+        return if !PUBLISHING_ACTIONS.include?(server_action) || server_action.start_with?("revise")
+        return if !reviewable.is_a?(ReviewableQueuedPost) || reviewable.topic_id.present?
+
+        payload = reviewable.payload
+        ToolHelpers.ensure_prospective_topic!(
+          request_context,
+          tag_names: payload["tags"],
+          category_id: payload["category"].presence || reviewable.category_id,
+          text: "#{payload["title"]} #{payload["raw"]}",
+          private_message: payload["archetype"] == Archetype.private_message,
+          error: "content_policy_blocked",
+        )
       end
 
       # The stored text that an action would cook, which must pass the same

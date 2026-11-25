@@ -271,6 +271,14 @@ module DiscourseMcp
         options[:target_usernames] = usernames.uniq.join(",") if usernames.present?
         options[:target_group_names] = group_names.uniq.join(",") if group_names.present?
         options[:target_emails] = emails.uniq.join(",") if emails.present?
+        ToolHelpers.ensure_prospective_topic!(
+          request_context,
+          tag_names: nil,
+          category_id: nil,
+          text: "#{options[:title]} #{options[:raw]}",
+          private_message: true,
+          error: "content_policy_blocked",
+        )
         post = PostCreator.create!(request_context.user, options)
         ToolHelpers.text_and_structured(
           id: post.id,

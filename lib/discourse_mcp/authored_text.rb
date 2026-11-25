@@ -38,10 +38,14 @@ module DiscourseMcp
       "discourse_silence_user" => %w[reason message],
       "discourse_save_draft" => %w[title reply],
       "discourse_user_status_set" => %w[description],
+      "discourse_create_tag_group" => %w[name],
+      "discourse_update_tag_group" => %w[name],
     }.freeze
 
-    MEDIA_ELEMENTS = %w[img video audio source track picture embed object iframe].freeze
-    MEDIA_ATTRIBUTES = %w[src srcset poster data data-src data-orig-src data-orig-srcset].freeze
+    # Attributes that make the browser or a later rebake load a URL, on any
+    # element. Anchors' own `href` is judged separately.
+    URL_ATTRIBUTE = /(?:\A|-)(?:src|srcset|poster|href|url)\z|\Adata\z/
+    MENTION_PATHS = { "mention" => "u", "mention-group" => "groups" }.freeze
     CODE_ANCESTORS = %w[code pre].freeze
     ONEBOX_CLASSES = %w[onebox inline-onebox inline-onebox-loading].freeze
 
@@ -116,15 +120,14 @@ module DiscourseMcp
       end
 
       fragment.css("a").all? { |anchor| allowed_anchor?(anchor) } &&
-        fragment.css(MEDIA_ELEMENTS.join(", ")).all? { |element| allowed_media?(element) }
+        fragment.css("*").all? { |element| allowed_media?(element) }
     end
 
     def allowed_anchor?(anchor)
       classes = anchor.classes
       return false if classes.intersect?(ONEBOX_CLASSES)
-      if classes.intersect?(%w[mention mention-group])
-        return anchor.text.start_with?("@") && anchor.css("img").empty?
-      end
+      mention_class = (classes & MENTION_PATHS.keys).first
+      return genuine_mention?(anchor, mention_class) if mention_class
       href = anchor["href"].to_s.strip
       upload = upload_for(anchor["data-orig-href"].presence || href)
       return use_upload(upload) if upload
@@ -137,21 +140,41 @@ module DiscourseMcp
       !url_like?(anchor.text)
     end
 
+    # A mention links to the profile of the user or group it names, and to
+    # nothing else.
+    def genuine_mention?(anchor, mention_class)
+      name = anchor.text.delete_prefix("@")
+      return false if !anchor.text.start_with?("@") || name.blank? || anchor.element_children.any?
+
+      expected = "#{Discourse.base_path}/#{MENTION_PATHS.fetch(mention_class)}/#{name}"
+      CGI.unescape(anchor["href"].to_s).casecmp?(expected)
+    end
+
     def allowed_media?(element)
       if element.name == "img" && element.classes.include?("emoji")
-        return emoji_url?(element["src"])
+        return(
+          emoji_url?(element["src"]) &&
+            element.attribute_nodes.none? { |node| node.name.start_with?("data-") }
+        )
       end
 
-      MEDIA_ATTRIBUTES.all? do |attribute|
-        value = element[attribute]
-        next true if value.blank?
-        # A placeholder replaces the source of an image that references an
-        # upload, which `data-orig-src` then carries.
-        next true if attribute == "src" && element["data-orig-src"].present?
+      element.attribute_nodes.all? do |node|
+        next true if !node.name.match?(URL_ATTRIBUTE)
+        next true if element.name == "a" && %w[href data-orig-href].include?(node.name)
+        next true if node.value.blank?
+        # The renderer replaces the source of an image that references an
+        # upload with a placeholder, and `data-orig-src` carries the upload.
+        if node.name == "src" && element["data-orig-src"].present? && placeholder?(node.value)
+          next true
+        end
 
-        candidates = attribute.end_with?("srcset") ? srcset_urls(value) : [value]
+        candidates = node.name.end_with?("srcset") ? srcset_urls(node.value) : [node.value]
         candidates.all? { |url| granted?(url) }
       end
+    end
+
+    def placeholder?(src)
+      src == "#{Discourse.base_path}/images/transparent.png"
     end
 
     def allowed_text?(fragment)
@@ -171,11 +194,19 @@ module DiscourseMcp
       value.split(",").filter_map { |candidate| candidate.strip.split(/\s+/).first.presence }
     end
 
+    # Emoji come from the site itself, its CDN, or the configured emoji host.
     def emoji_url?(src)
       return false if src.blank?
 
-      path = URI.parse(src).path.to_s
-      path.start_with?("#{Discourse.base_path}/images/emoji/") && !internal_host?(URI.parse(src))
+      uri = URI.parse(src)
+      if uri.host.blank?
+        uri.scheme.blank? && uri.path.to_s.start_with?("#{Discourse.base_path}/images/emoji/")
+      elsif internal_host?(uri)
+        uri.path.to_s.start_with?("#{Discourse.base_path}/images/emoji/")
+      else
+        emoji_host = SiteSetting.external_emoji_url.presence
+        emoji_host.present? && src.start_with?("#{emoji_host.chomp("/")}/")
+      end
     rescue URI::Error
       false
     end

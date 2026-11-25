@@ -46,16 +46,64 @@ module DiscourseMcp
         .exists?
     end
 
+    POST_TOOLS = %w[
+      discourse_create_topic
+      discourse_create_post
+      discourse_update_post
+      discourse_create_private_message
+      discourse_reply_private_message
+    ].freeze
+
+    # The records a write tool stored the agent's text or uploads on, read
+    # from its result, as `[target_type, target_id]` pairs of upload
+    # references. A write whose result names no record, such as a queued
+    # post, records nothing, so its uploads can't be used again.
+    #
+    # @param tool_identifier [String]
+    # @param result [Hash] The tool's result.
+    # @param request_context [RequestContext]
+    # @returns [Set<Array(String, Integer)>]
+    def written_targets(tool_identifier, result, request_context)
+      data = (result.is_a?(Hash) && result[:structuredContent]).to_h.with_indifferent_access
+      records =
+        if POST_TOOLS.include?(tool_identifier)
+          [Post.find_by(id: data[:id])]
+        else
+          case tool_identifier
+          when "discourse_update_user"
+            user_records(User.find_by(id: request_context.user_id))
+          when "discourse_create_user"
+            user_records(User.find_by(id: data[:user_id]))
+          when "discourse_create_group", "discourse_update_group"
+            [Group.find_by(id: data[:id] || data.dig(:group, :id))]
+          when "discourse_create_category", "discourse_update_category"
+            category = Category.find_by(id: data[:id] || data.dig(:category, :id))
+            [category, category&.topic&.first_post]
+          when "discourse_save_draft"
+            [Draft.find_by(user_id: request_context.user_id, draft_key: data[:draft_key])]
+          else
+            []
+          end
+        end
+      records.compact.map { |record| [record.class.polymorphic_name, record.id] }.to_set
+    end
+
+    def user_records(user)
+      user ? [user, user.user_profile, user.user_avatar] : []
+    end
+
     # Records the references to granted uploads that a call created as records
     # the authorization wrote. A reference only counts when it was created
-    # after the call began, so a human's earlier use is never adopted.
+    # after the call began and its target is a record the call wrote, so a
+    # human's use, earlier or during the call, is never adopted.
     #
     # @param upload_ids [Enumerable<Integer>]
     # @param request_context [RequestContext]
     # @param since [Time] When the call began.
+    # @param targets [Set<Array(String, Integer)>] From `written_targets`.
     # @returns [void]
-    def record_written!(upload_ids, request_context, since:)
-      return if upload_ids.empty?
+    def record_written!(upload_ids, request_context, since:, targets:)
+      return if upload_ids.empty? || targets.empty?
 
       grants =
         McpUploadGrant
@@ -72,6 +120,7 @@ module DiscourseMcp
           .where(upload_id: grants.keys)
           .where("created_at >= ?", since)
           .pluck(:upload_id, :target_type, :target_id)
+          .select { |_, target_type, target_id| targets.include?([target_type, target_id]) }
           .map do |upload_id, target_type, target_id|
             { mcp_upload_grant_id: grants[upload_id], target_type:, target_id: }
           end

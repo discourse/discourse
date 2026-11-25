@@ -300,6 +300,7 @@ module DiscourseMcp
         request_context.authored_text.granted_upload_ids,
         request_context,
         since: started_at,
+        targets: UploadGrants.written_targets(tool.identifier, result, request_context),
       )
       result =
         request_context.content_policy.filter_tool_result(
