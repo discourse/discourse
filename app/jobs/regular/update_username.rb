@@ -14,6 +14,12 @@ module Jobs
       username2: :name2,
     }.freeze
 
+    UNPAIRED_POST_AUTHOR_NOTIFICATION_TYPES = [
+      Notification.types[:edited],
+      Notification.types[:mentioned],
+      Notification.types[:group_mentioned],
+    ].freeze
+
     def execute(args)
       @user_id = args[:user_id]
       user = User.find_by(id: @user_id)
@@ -119,6 +125,7 @@ module Jobs
         new_username: @new_username,
         new_name: new_name,
         collapsed_types: PostAlerter::COLLAPSED_NOTIFICATION_TYPES,
+        unpaired_post_author_types: UNPAIRED_POST_AUTHOR_NOTIFICATION_TYPES,
       }
 
       username_updates =
@@ -160,24 +167,34 @@ module Jobs
         WHERE #{where_clause}
       SQL
 
-      # Collapsed notifications store the first unread post's author in `display_name`,
-      # while `display_username` holds a translated count (e.g. "2 replies").
-      collapsed_data_expr =
+      # Collapsed notifications store the first unread post's author in `display_name`
+      # while `display_username` holds a count string, and `edited` or editor-added
+      # mention notifications can pair the editor's `display_username` with the post
+      # author's `display_name`.
+      post_author_data_expr =
         if new_name
-          "notifications.data::JSONB || jsonb_build_object('display_name', :new_name)"
+          "CASE WHEN notifications.notification_type IN (:collapsed_types) " \
+            "THEN notifications.data::JSONB || jsonb_build_object('display_name', :new_name) " \
+            "ELSE notifications.data::JSONB - 'display_name' END"
         else
           "notifications.data::JSONB - 'display_name'"
         end
 
       DB.exec(<<~SQL, params)
         UPDATE notifications
-        SET data = (#{collapsed_data_expr})::JSON
+        SET data = (#{post_author_data_expr})::JSON
         FROM posts p
-        WHERE notifications.notification_type IN (:collapsed_types)
-          AND notifications.topic_id = p.topic_id
+        WHERE notifications.topic_id = p.topic_id
           AND notifications.post_number = p.post_number
           AND p.user_id = :user_id
           AND notifications.data::JSONB ? 'display_name'
+          AND (
+            notifications.notification_type IN (:collapsed_types)
+            OR (
+              notifications.notification_type IN (:unpaired_post_author_types)
+              AND notifications.data::JSONB ->> 'display_username' IS DISTINCT FROM :new_username
+            )
+          )
       SQL
     end
 

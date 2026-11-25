@@ -190,6 +190,56 @@ RSpec.describe NotificationsController do
       data = response.parsed_body["notifications"].first["data"]
       expect(data["display_name"]).to eq(new_username)
     end
+
+    it "scrubs the post author's former name from editor-added mention and edited notifications" do
+      SiteSetting.enable_names = true
+      SiteSetting.enable_mentions = true
+      SiteSetting.full_name_requirement = "optional_at_signup"
+
+      admin = Fabricate(:admin)
+      author = Fabricate(:user, name: "Author Secret Realname")
+      editor = Fabricate(:user, name: "Editor Realname")
+      recipient = Fabricate(:user)
+      post =
+        Fabricate(:post, user: author, raw: "Initial post body mentioning @#{recipient.username}")
+
+      PostAlerter.new.after_save_post(
+        post,
+        false,
+        added_mentions: [recipient.username_lower],
+        editor_id: editor.id,
+      )
+      PostAlerter.new.create_notification(
+        recipient,
+        Notification.types[:edited],
+        post,
+        display_username: editor.username,
+      )
+
+      mention_notif =
+        recipient.notifications.find_by!(notification_type: Notification.types[:mentioned])
+      edited_notif =
+        recipient.notifications.find_by!(notification_type: Notification.types[:edited])
+      expect(mention_notif.data_hash[:display_username]).to eq(editor.username)
+      expect(mention_notif.data_hash[:display_name]).to eq("Author Secret Realname")
+      expect(edited_notif.data_hash[:display_username]).to eq(editor.username)
+      expect(edited_notif.data_hash[:display_name]).to eq("Author Secret Realname")
+
+      Jobs.run_immediately!
+      UserAnonymizer.make_anonymous(author, admin)
+
+      sign_in(recipient)
+      get "/notifications.json"
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("Author Secret Realname")
+
+      notifications = response.parsed_body["notifications"]
+      [mention_notif.id, edited_notif.id].each do |id|
+        data = notifications.find { |n| n["id"] == id }["data"]
+        expect(data["display_name"]).to be_blank
+        expect(data["display_username"]).to eq(editor.username)
+      end
+    end
   end
 
   context "when logged in" do
