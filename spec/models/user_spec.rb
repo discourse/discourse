@@ -2015,6 +2015,26 @@ RSpec.describe User do
         user.user_visits.where(visited_at: date).count
       }
     end
+
+    it "records a mobile visit" do
+      user.update_visit_record!(date, mobile: true)
+
+      expect(user.visit_record_for(date).mobile).to eq(true)
+    end
+
+    it "marks an existing desktop visit as mobile" do
+      user.update_visit_record!(date)
+      user.update_visit_record!(date, mobile: true)
+
+      expect(user.visit_record_for(date).mobile).to eq(true)
+    end
+
+    it "does not mark an existing mobile visit as desktop" do
+      user.update_visit_record!(date, mobile: true)
+      user.update_visit_record!(date)
+
+      expect(user.visit_record_for(date).mobile).to eq(true)
+    end
   end
 
   describe "email_confirmed?" do
