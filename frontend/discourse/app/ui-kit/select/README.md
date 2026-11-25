@@ -47,7 +47,8 @@ empty, error, minimum-query-length and mobile modal states. No panel is mounted 
 The panel is portaled, so styles on the root never reach it. Its overlay, `.d-select__content`,
 carries a `--kind-<kind>` modifier when the select has a `@kind`, which is how a recipe or theme
 styles one kind's panel, for example `.d-select__content.--kind-select-tag-filter` to set
-`--d-select-menu-min-width`.
+`--d-select-menu-min-width`. A caller that needs one panel styled, for a select inside a surface with its own colors or
+stacking, passes `@contentClass`, which lands on the overlay and the mobile modal.
 
 Tests drive a select through these hooks with `dSelect()` (actions) and `assert.dSelect()`
 (checks) from `discourse/tests/helpers/`, and with `PageObjects::Components::UiKit::DSelect.at`

@@ -224,6 +224,11 @@ export interface DSelectSignature {
     /** Whether the trigger shows its caret. Defaults to `true`; set `false` for an icon-only trigger. */
     showCaret?: boolean;
     /**
+     * A class for the portaled overlay and the mobile modal, which styles on the root never
+     * reach. Use it for a panel that needs its host's colors or stacking.
+     */
+    contentClass?: string;
+    /**
      * Show a clear control that empties the whole selection (all variants, whenever there is a
      * value). Purely a pointer affordance (`tabindex="-1"`).
      *
@@ -554,10 +559,19 @@ export default class DSelect extends Component<DSelectSignature> {
     }
   }
 
-  /** The overlay's classes, with a `--kind-<kind>` modifier when the select has a kind. */
+  /**
+   * The overlay's classes, with a `--kind-<kind>` modifier when the select has a kind, and the
+   * caller's `@contentClass`.
+   */
   get contentClass(): string {
     const kind = this.engine.kind;
-    return kind ? `d-select__content --kind-${kind}` : "d-select__content";
+    return [
+      "d-select__content",
+      kind && `--kind-${kind}`,
+      this.args.contentClass,
+    ]
+      .filter(Boolean)
+      .join(" ");
   }
 
   /** Stable id for the hidden value read after a `@ariaLabelledBy` caption. */

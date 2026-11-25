@@ -1198,6 +1198,17 @@ module(
       forceMobile();
     });
 
+    test("contentClass: the caller's class reaches the mobile modal", async function (assert) {
+      await render(
+        <template>
+          <DSelect @contentClass="fruit-stand" @options={{ITEMS}} />
+        </template>
+      );
+      await click(".d-select__trigger");
+
+      assert.dom(".fk-d-menu-modal").hasClass("fruit-stand");
+    });
+
     test("tapping the trigger opens a modal that hosts the focused query input", async function (assert) {
       await render(<template><Host /></template>);
 
@@ -4945,6 +4956,26 @@ module(
       await click("[role='combobox']");
 
       assert.dom(".d-select__content").hasClass("--kind-fruit");
+    });
+
+    test("contentClass: the caller's class reaches the portaled overlay", async function (assert) {
+      await render(
+        <template>
+          <DSelect
+            @contentClass="fruit-stand"
+            @kind="fruit"
+            @options={{ITEMS}}
+          />
+        </template>
+      );
+      await click("[role='combobox']");
+
+      assert
+        .dom(".d-select__content")
+        .hasClass("fruit-stand", "the caller's class is on the overlay");
+      assert
+        .dom(".d-select__content")
+        .hasClass("--kind-fruit", "beside the kind modifier");
     });
 
     test("searchIcon is absent unless asked for", async function (assert) {
