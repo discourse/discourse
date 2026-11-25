@@ -393,6 +393,7 @@ export default function () {
             this.route("new");
             this.route("edit", { path: "/:group_id/edit" });
           });
+          this.route("contentRestrictions", { path: "/content-restrictions" });
           this.route("capabilities");
           this.route("clients", function () {
             this.route("index", { path: "/" });

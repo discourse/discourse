@@ -32,6 +32,11 @@ export default <template>
         @route="adminConfig.mcp.access"
       />
       <DNavItem
+        class="admin-mcp-tabs__content-restrictions"
+        @label="admin.config.mcp.tabs.content_restrictions"
+        @route="adminConfig.mcp.contentRestrictions"
+      />
+      <DNavItem
         class="admin-mcp-tabs__clients"
         @label="admin.config.mcp.tabs.clients"
         @route="adminConfig.mcp.clients"

@@ -283,7 +283,8 @@ export default class AdminMcp extends Component {
         (this.primitiveState === "enabled" && primitive.enabled) ||
         (this.primitiveState === "disabled" && !primitive.enabled) ||
         (this.primitiveState === "unavailable" && !primitive.available) ||
-        (this.primitiveState === "blocked" && primitive.emergency_blocked);
+        (this.primitiveState === "blocked" && primitive.emergency_blocked) ||
+        (this.primitiveState === "restricted" && primitive.restricted);
 
       return matchesText && matchesGroup && matchesRisk && matchesState;
     });
@@ -315,7 +316,14 @@ export default class AdminMcp extends Component {
   }
 
   get primitiveStates() {
-    return ["all", "enabled", "disabled", "unavailable", "blocked"];
+    return [
+      "all",
+      "enabled",
+      "disabled",
+      "unavailable",
+      "blocked",
+      "restricted",
+    ];
   }
 
   get primitiveGroupByOptions() {
@@ -431,7 +439,13 @@ export default class AdminMcp extends Component {
   }
 
   get activityOutcomes() {
-    return ["all", "success", "error", "rate_limited"];
+    return [
+      "all",
+      "success",
+      "error",
+      "rate_limited",
+      "content_policy_blocked",
+    ];
   }
 
   get canLoadMoreActivity() {
@@ -1178,6 +1192,15 @@ export default class AdminMcp extends Component {
           </:actions>
         </DPageSubheader>
 
+        {{#if this.model.private_message_scopes_overridden}}
+          <p class="admin-mcp__notice admin-mcp__access-pm-overridden">
+            {{i18n "admin.config.mcp.access.private_messages_overridden"}}
+            <LinkTo @route="adminConfig.mcp.contentRestrictions">{{i18n
+                "admin.config.mcp.access.content_restrictions_link"
+              }}</LinkTo>
+          </p>
+        {{/if}}
+
         <table class="d-table admin-mcp__access-table">
           <thead class="d-table__header">
             <tr class="d-table__row">
@@ -1556,6 +1579,11 @@ export default class AdminMcp extends Component {
                         class="admin-mcp__unavailable"
                       >{{i18n
                           "admin.config.mcp.primitives.emergency_blocked"
+                        }}</p>{{/if}}
+                    {{#if primitive.restricted}}<p
+                        class="admin-mcp__unavailable admin-mcp__content-restricted"
+                      >{{i18n
+                          "admin.config.mcp.primitives.content_restricted"
                         }}</p>{{/if}}
                     <div class="admin-mcp__primitive-actions">
                       <DButton

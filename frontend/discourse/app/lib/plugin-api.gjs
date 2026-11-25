@@ -2,6 +2,7 @@
 import $ from "jquery";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { registerAdminReportRelatedItemsRenderer } from "discourse/admin/lib/admin-report-related-items";
+import { registerMcpContentRuleComponent } from "discourse/admin/lib/mcp-content-rule-components";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -3218,6 +3219,33 @@ class _PluginApi {
    */
   registerAdminDashboardSection(id, componentClass) {
     registerAdminDashboardSection(id, componentClass);
+  }
+
+  /**
+   * Registers the admin component that configures an MCP content rule kind on
+   * the MCP content restrictions page. The id must match the
+   * `admin_component_id` passed to `register_mcp_content_rule_kind`
+   * server-side.
+   *
+   * The component receives:
+   * - `@ruleKind` {Object} — the rule kind's entry from the content
+   *   restrictions payload, including `active`, `config`, `disables`,
+   *   `newly_disables` and `restricts`.
+   * - `@onSave` {Function} — call with the new config to turn the rule on or
+   *   update it. It asks for confirmation when tools would turn off.
+   * - `@onDelete` {Function} — call to turn the rule off.
+   *
+   * ```
+   * import MyRule from "discourse/plugins/my-plugin/admin/components/my-rule";
+   *
+   * api.registerMcpContentRuleComponent("my-plugin:my_rule", MyRule);
+   * ```
+   *
+   * @param {string} id - The rule kind's admin component id.
+   * @param {Component} componentClass - A Glimmer component for the rule kind.
+   */
+  registerMcpContentRuleComponent(id, componentClass) {
+    registerMcpContentRuleComponent(id, componentClass);
   }
 
   /**

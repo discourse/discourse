@@ -14,6 +14,7 @@ import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
 import { resetAdminDashboardSections } from "discourse/admin/lib/admin-dashboard-sections";
 import { resetAdminReportRelatedItemsRenderers } from "discourse/admin/lib/admin-report-related-items";
+import { resetMcpContentRuleComponents } from "discourse/admin/lib/mcp-content-rule-components";
 import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -221,6 +222,7 @@ export function testCleanup(app) {
   resetAdditionalReportModes();
   resetAdminReportRelatedItemsRenderers();
   resetAdminDashboardSections();
+  resetMcpContentRuleComponents();
   resetDeferredClassModifications();
   resetExtraClasses();
   clearOutletCache();
