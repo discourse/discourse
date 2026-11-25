@@ -289,6 +289,18 @@ RSpec.describe "Glimmer Header" do
     fab!(:topic)
     fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
 
+    it "keeps keyboard focus visible on the sticky topic and category links", mobile: true do
+      topic.update!(category: Fabricate(:category))
+      visit(topic.url(posts[3].post_number))
+      page.send_keys(:tab)
+
+      header.focus_topic_info_link(:title)
+      expect(header).to have_inset_topic_info_focus_outline(:title)
+
+      header.focus_topic_info_link(:category)
+      expect(header).to have_inset_topic_info_focus_outline(:category)
+    end
+
     it "only shows when scrolled down", mobile: true do
       visit "/t/#{topic.slug}/#{topic.id}"
 
