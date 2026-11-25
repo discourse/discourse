@@ -628,12 +628,12 @@ describe Post do
 
         context "when there are too many topic bump reminders" do
           it "raises an error" do
-            reminders = "bumpTopic.1.hours,bumpTopic.2.hours"
+            reminders = "bumpTopic.1.hours,bumpTopic.2.hours,bumpTopic.3.hours"
 
             expect { create_post_with_event(user, "reminders=\"#{reminders}\"") }.to raise_error(
               I18n.t(
                 "discourse_post_event.errors.models.event.too_many_reminders.bump_topic",
-                count: 1,
+                count: 2,
               ),
             )
           end
@@ -641,7 +641,8 @@ describe Post do
 
         context "when each reminder type is at its limit" do
           it "creates the event" do
-            reminders = "notification.1.minutes,notification.2.minutes,bumpTopic.1.hours"
+            reminders =
+              "notification.1.minutes,notification.2.minutes,bumpTopic.7.days,bumpTopic.1.days"
 
             post = create_post_with_event(user, "reminders=\"#{reminders}\"").reload
 
