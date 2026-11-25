@@ -254,4 +254,59 @@ module("Integration | Component | AiConceptsList", function (hooks) {
       .dom(".ai-concepts-list__seed-btn")
       .doesNotExist("hides Seed concepts button when feature is disabled");
   });
+
+  test("hides posts column when posts_enabled is false and shows it when true", async function (assert) {
+    const baseConcept = {
+      id: 1,
+      name: "Kubernetes",
+      aliases: [],
+      status: "active",
+      topics_count: 14,
+      posts_count: 3,
+    };
+
+    const hiddenPostsModel = {
+      ai_concepts: [baseConcept],
+      meta: {
+        total: 1,
+        page: 1,
+        per_page: 50,
+        has_more: false,
+        counts: { active: 1, candidate: 0, retired: 0 },
+        enabled: true,
+        embeddings_enabled: true,
+        posts_enabled: false,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{hiddenPostsModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__table thead th")
+      .exists({ count: 4 }, "omits posts header when posts_enabled is false");
+    assert
+      .dom('[data-concept-id="1"] td')
+      .exists({ count: 4 }, "omits posts cell when posts_enabled is false");
+
+    const shownPostsModel = {
+      ...hiddenPostsModel,
+      meta: {
+        ...hiddenPostsModel.meta,
+        posts_enabled: true,
+      },
+    };
+
+    await render(
+      <template><AiConceptsList @model={{shownPostsModel}} /></template>
+    );
+
+    assert
+      .dom(".ai-concepts-list__table thead th")
+      .exists({ count: 5 }, "shows posts header when posts_enabled is true");
+    assert
+      .dom('[data-concept-id="1"] td')
+      .exists({ count: 5 }, "shows posts cell when posts_enabled is true");
+  });
 });

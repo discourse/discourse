@@ -1483,7 +1483,18 @@ en:
           parent: "Parent concept"
           parent_none: "None (top-level)"
         children: "Sub-concepts"
+        neighbor_concepts: "Neighbor concepts"
+        neighbor_concepts_description: "Closest concepts by embedding similarity."
+        no_neighbor_concepts: "No similar concepts found yet. Embeddings may still be generating."
+        co_occurring_concepts: "Co-occurring concepts"
+        co_occurring_concepts_description: "Concepts that share the most topics with this one."
+        no_co_occurring_concepts: "No other concepts share topics with this one yet."
+        shared_topics_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
         tagged_topics: "Tagged topics"
+        tagged_topics_count: "Tagged topics (%{count})"
+        showing_top_topics: "Showing top %{shown} of %{total} visible topics."
         no_tagged_topics: "No visible public topics are tagged with this concept yet."
         topic_columns:
           topic: "Topic"

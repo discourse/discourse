@@ -65,6 +65,10 @@ export default class AiConceptsList extends Component {
     return Boolean(this.meta.has_more);
   }
 
+  get showPostsColumn() {
+    return this.meta.posts_enabled !== false;
+  }
+
   get canRunCuration() {
     return Boolean(this.meta.enabled && this.meta.embeddings_enabled);
   }
@@ -459,7 +463,9 @@ export default class AiConceptsList extends Component {
                 <th>{{i18n "discourse_ai.concepts.columns.name"}}</th>
                 <th>{{i18n "discourse_ai.concepts.columns.status"}}</th>
                 <th>{{i18n "discourse_ai.concepts.columns.topics"}}</th>
-                <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
+                {{#if this.showPostsColumn}}
+                  <th>{{i18n "discourse_ai.concepts.columns.posts"}}</th>
+                {{/if}}
                 <th></th>
               </tr>
             </thead>
@@ -523,12 +529,14 @@ export default class AiConceptsList extends Component {
                     </div>
                     {{concept.topics_count}}
                   </td>
-                  <td class="d-table__cell --detail">
-                    <div class="d-table__mobile-label">
-                      {{i18n "discourse_ai.concepts.columns.posts"}}
-                    </div>
-                    {{concept.posts_count}}
-                  </td>
+                  {{#if this.showPostsColumn}}
+                    <td class="d-table__cell --detail">
+                      <div class="d-table__mobile-label">
+                        {{i18n "discourse_ai.concepts.columns.posts"}}
+                      </div>
+                      {{concept.posts_count}}
+                    </td>
+                  {{/if}}
                   <td class="d-table__cell --controls">
                     <div class="d-table__cell-actions">
                       <DButton
