@@ -26,15 +26,17 @@ module DiscourseAi
         )
       end
 
-      def classify(content, candidates: [], allow_new: true)
+      def classify(content, candidates: [], allow_new: true, agent: nil, llm: nil, user: nil)
         empty = { matches: [], proposed_new: [] }
         return empty if content.blank? || (!allow_new && candidates.blank?)
 
-        agent = self.class.resolve_agent(allow_new:)
+        agent ||= self.class.resolve_agent(allow_new:)
         return empty if agent.nil?
 
-        llm = self.class.resolve_llm(allow_new:, agent:)
+        llm ||= self.class.resolve_llm(allow_new:, agent:)
         return empty if llm.nil?
+
+        user ||= Discourse.system_user
 
         payload = {
           content: content,
@@ -44,11 +46,11 @@ module DiscourseAi
         context =
           DiscourseAi::Agents::BotContext.new(
             messages: [{ type: :user, content: payload.to_json }],
-            user: Discourse.system_user,
+            user: user,
             feature_name: allow_new ? "inferred_concepts_generate" : "inferred_concepts_match",
           )
 
-        bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
+        bot = DiscourseAi::Agents::Bot.as(user, agent: agent, model: llm)
         structured_output = nil
 
         bot.reply(context) do |partial, _, type|
