@@ -31,7 +31,7 @@ RSpec.describe AppearanceStyles::VariableInventory do
       )
       expect(variables["--d-button-primary-bg-color"]).to include("type" => "color")
       expect(variables.keys).to all(match(/\A--(d|token|hljs)-/))
-      expect(inventory["palette_variables"]).to include("--primary", "--tertiary-low")
+      expect(inventory["palette_variables"]).to include("--primary", "--tertiary-50")
 
       expect(variables).not_to have_key("--d-theme-only-color")
       expect(variables["--d-hover"]["default"]).not_to eq("#ff00ff")

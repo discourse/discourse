@@ -994,8 +994,9 @@ module AppearanceStyles
 
     # Background and text variables that render together, found by naming
     # convention (-bg-color, -background-color or -background with
-    # -text-color or -color), plus the
-    # backgrounds whose text is listed above.
+    # -text-color or -color, and a component's -color-background with its
+    # -color-text and -color-icon), plus the backgrounds whose text is listed
+    # above.
     def variable_pairs
       @variable_pairs ||=
         begin
@@ -1015,6 +1016,12 @@ module AppearanceStyles
                 icon = "#{base}-icon-color#{state}"
                 texts = [named || texts.first, (icon if @registry[icon])]
               end
+              if (match = variable.name.match(/\A(--d-comp-.*-color)-background(-.+)?\z/))
+                base, rest = match.captures
+                named = "#{base}-text#{rest}"
+                icon = "#{base}-icon#{rest}"
+                texts = [(@registry[named] ? named : texts.first), (icon if @registry[icon])]
+              end
               texts.compact.map { |text| [variable.name, text] }
             end
           paired = pairs.map(&:last)
@@ -1032,7 +1039,8 @@ module AppearanceStyles
       variable.type == "color" &&
         (
           variable.name.match?(/-color(--[a-z-]+)?\z/) ||
-            variable.name.match?(/\A--token-color-(text|icon)-/)
+            variable.name.match?(/\A--token-color-(text|icon)-/) ||
+            variable.name.match?(/-color-(text|icon)(-|\z)/)
         ) && !variable.name.match?(/background|-bg-|bg-color|border|shadow|outline|divider|fill/)
     end
 
@@ -1041,9 +1049,9 @@ module AppearanceStyles
       case name
       when /\A--d-sidebar-/
         "--d-sidebar-background"
-      when /\A--d-header-/
+      when /\A--d-header-/, /\A--d-comp-Header-/
         "--header_background"
-      when /\A--token-color-/
+      when /\A--token-color-/, /\A--d-sys-color-/
         "--token-color-surface"
       else
         "--secondary"

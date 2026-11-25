@@ -33,6 +33,7 @@ RSpec.describe AppearanceStyles::Policy do
           "--d-link-color" => "light-dark(#06705a, #4fd)",
           "--d-sidebar-background" => "color-mix(in srgb, var(--secondary) 90%, var(--tertiary))",
           "--d-sidebar-link-icon-color" => "var(--primary-high)",
+          "--d-sidebar-suffix-color" => "var(--tertiary)",
         },
       )
     end
@@ -579,7 +580,7 @@ RSpec.describe AppearanceStyles::Policy do
       )
       expect_error(
         { variables: { "--d-link-color" => "light-dark(#ffffff, #000000)" } },
-        "--d-link-color on --secondary is",
+        "--d-link-color on --token-color-surface is",
       )
       expect_error(
         { variables: { "--d-button-primary-icon-color" => "var(--tertiary)" } },
