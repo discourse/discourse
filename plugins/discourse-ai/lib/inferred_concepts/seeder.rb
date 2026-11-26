@@ -493,7 +493,7 @@ module DiscourseAi
         end
 
         if @curate_every > 0 && since_last_curate >= @curate_every
-          curate_seeded_concepts
+          curate_seeded_concepts(max_passes: 1)
           next_state["since_last_curate"] = 0
         end
 
@@ -721,10 +721,14 @@ module DiscourseAi
         Discourse.warn_exception(e, message: "Failed embedding inferred concepts during seed")
       end
 
-      def curate_seeded_concepts
+      def curate_seeded_concepts(max_passes: Curator::DEFAULT_MAX_PASSES)
         return unless InferredConcept.where.not(status: :retired).exists?
 
-        Curator.new.curate!
+        if max_passes == Curator::DEFAULT_MAX_PASSES
+          Curator.new.curate!
+        else
+          Curator.new.curate!(max_passes: max_passes)
+        end
       rescue StandardError => e
         Discourse.warn_exception(e, message: "Failed curating seeded inferred concepts")
       end

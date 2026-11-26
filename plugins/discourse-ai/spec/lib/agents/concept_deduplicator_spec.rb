@@ -11,14 +11,22 @@ RSpec.describe DiscourseAi::Agents::ConceptDeduplicator do
     end
   end
 
+  describe "#thinking_effort" do
+    it "uses low thinking effort for nuanced merge decisions" do
+      expect(agent.thinking_effort).to eq("low")
+    end
+  end
+
   describe "#system_prompt" do
     let(:prompt) { agent.system_prompt }
 
-    it "specifies merges and reparents output instructions and locale" do
+    it "specifies merges, reparents, related_pairs signals, and locale" do
       expect(prompt).to include("merges")
       expect(prompt).to include("canonical_id")
       expect(prompt).to include("merge_ids")
       expect(prompt).to include("reparents")
+      expect(prompt).to include("related_pairs")
+      expect(prompt).to include("shared_topics")
       expect(prompt).to include(SiteSetting.default_locale)
     end
   end
