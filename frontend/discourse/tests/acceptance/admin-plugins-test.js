@@ -6,6 +6,41 @@ acceptance("Admin - Plugins", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
+    server.get("/admin/plugins/horizontal-test-plugin.json", () =>
+      helper.response({
+        id: "horizontal-test-plugin",
+        name: "horizontal-test-plugin",
+        humanized_name: "Horizontal test plugin",
+        has_settings: true,
+        use_horizontal_settings_form: true,
+      })
+    );
+
+    server.get("/admin/plugins/some-test-plugin.json", () =>
+      helper.response({
+        id: "some-test-plugin",
+        name: "some-test-plugin",
+        humanized_name: "Some test plugin",
+        has_settings: true,
+        use_horizontal_settings_form: false,
+      })
+    );
+
+    server.get("/admin/config/site_settings.json", () =>
+      helper.response({
+        site_settings: [
+          {
+            setting: "test_plugin_text",
+            description: "A text setting",
+            type: "string",
+            value: "Default text",
+            default: "Default text",
+            category: "plugins",
+          },
+        ],
+      })
+    );
+
     server.get("/admin/plugins", () =>
       helper.response({
         plugins: [
@@ -71,5 +106,21 @@ acceptance("Admin - Plugins", function (needs) {
     assert
       .dom(toggleSelector)
       .hasAria("checked", "false", "displays the plugin as enabled");
+  });
+
+  test("renders horizontal FormKit rows for a plugin that opts in", async function (assert) {
+    await visit("/admin/plugins/horizontal-test-plugin/settings");
+
+    assert
+      .dom('[data-setting="test_plugin_text"] .form-kit.--horizontal')
+      .exists("renders the setting in a horizontal FormKit row");
+  });
+
+  test("renders the standard layout for a plugin using the default", async function (assert) {
+    await visit("/admin/plugins/some-test-plugin/settings");
+
+    assert
+      .dom('[data-setting="test_plugin_text"] .setting-label')
+      .exists("renders the setting in the standard layout");
   });
 });

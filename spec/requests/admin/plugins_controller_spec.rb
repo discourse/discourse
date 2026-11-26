@@ -64,6 +64,16 @@ RSpec.describe Admin::PluginsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["name"]).to eq("csp_extension")
+        expect(response.parsed_body["use_horizontal_settings_form"]).to eq(false)
+      end
+
+      it "returns the horizontal settings form flag when a plugin opts in" do
+        Discourse.plugins_by_name["csp_extension"].use_horizontal_settings_form true
+
+        get "/admin/plugins/csp_extension.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["use_horizontal_settings_form"]).to eq(true)
       end
 
       it "returns a plugin with the discourse- prefix if the prefixless version is queried" do

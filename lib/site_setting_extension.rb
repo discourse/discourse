@@ -7,7 +7,7 @@ module SiteSettingExtension
   SiteSettingChangeResult = Struct.new(:previous_value, :new_value)
   InvalidSettingAccess = Class.new(StandardError)
 
-  delegate :description, :keywords, :placeholder, :humanized_name, to: SiteSettings::LabelFormatter
+  delegate :description, :keywords, :placeholder, to: SiteSettings::LabelFormatter
 
   # support default_locale being set via global settings
   # this also adds support for testing the extension and global settings
@@ -104,7 +104,10 @@ module SiteSettingExtension
     @theme_site_settings[provider.current_site] ||= {}
   end
 
-  #
+  def humanized_name(name)
+    SiteSettings::LabelFormatter.humanized_name(name, unit: units[name.to_sym])
+  end
+
   def humanized_names(name)
     @humanized_names ||= {}
     @humanized_names[name] ||= humanized_name(name)
@@ -141,6 +144,18 @@ module SiteSettingExtension
 
   def areas
     @areas ||= {}
+  end
+
+  def sections
+    @sections ||= {}
+  end
+
+  def units
+    @units ||= {}
+  end
+
+  def formats
+    @formats ||= {}
   end
 
   def mandatory_values
@@ -565,6 +580,9 @@ module SiteSettingExtension
         end
 
         opts[:plugin] = plugins[s] if plugins[s]
+        opts[:section] = sections[s] if sections[s]
+        opts[:unit] = units[s] if units[s]
+        opts[:format] = formats[s] if formats[s]
         opts[:upload] = upload_metadata if upload_metadata
 
         DiscoursePluginRegistry.apply_modifier(:site_setting_result, opts)
@@ -1446,6 +1464,25 @@ module SiteSettingExtension
         end
         areas[name] = split_areas
       end
+
+      if opts[:section]
+        sections[name] = opts[:section].to_s
+      else
+        sections.delete(name)
+      end
+
+      if opts[:unit]
+        units[name] = opts[:unit].to_s
+      else
+        units.delete(name)
+      end
+
+      if opts[:format]
+        formats[name] = opts[:format].to_s
+      else
+        formats.delete(name)
+      end
+
       hidden_settings_provider.add_hidden(name) if opts[:hidden]
 
       if GlobalSetting.respond_to?(name)

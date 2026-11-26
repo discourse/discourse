@@ -61,19 +61,40 @@ export default class AdminAreaSettings extends Component {
         SiteSetting.create(setting)
       );
       this.adminSiteSettingStore.register(siteSettings);
-      this.settings = [
-        {
-          name: "All",
-          nameKey: "all_results",
-          siteSettings,
-        },
-      ];
+      this.settings =
+        this.args.plugin && !this.args.area
+          ? this.#groupBySection(siteSettings)
+          : [this.#untitledGroup(siteSettings)];
     } catch (error) {
       // eslint-disable-next-line no-console
       console.warn(`Failed to load settings with error: ${error}`);
     } finally {
       this.loading = false;
     }
+  }
+
+  #untitledGroup(siteSettings = []) {
+    return { nameKey: "all_results", siteSettings };
+  }
+
+  #groupBySection(siteSettings) {
+    const groups = new Map([["", this.#untitledGroup()]]);
+
+    siteSettings.forEach((setting) => {
+      const section = setting.section ?? "";
+
+      if (!groups.has(section)) {
+        groups.set(section, {
+          name: i18n(`admin.site_settings.sections.${section}`),
+          nameKey: section,
+          siteSettings: [],
+        });
+      }
+
+      groups.get(section).siteSettings.push(setting);
+    });
+
+    return [...groups.values()].filter((group) => group.siteSettings.length);
   }
 
   <template>
@@ -88,6 +109,7 @@ export default class AdminAreaSettings extends Component {
     >
       {{#if this.showSettings}}
         <AdminFilteredSiteSettings
+          @formKitRows={{@formKitRows}}
           @initialFilter={{this.filter}}
           @onFilterChanged={{this.adminSettingsFilterChangedCallback}}
           @settings={{this.settings}}

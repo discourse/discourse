@@ -43,6 +43,10 @@
         overflow-wrap: anywhere;
         font-weight: normal !important;
         font-size: var(--font-0);
+
+        // Overrule all FK and settings widths since the grid layout will control the sizing
+        width: unset !important;
+        box-sizing: border-box;
       }
     }
 
@@ -105,9 +109,8 @@
     }
 
     .form-kit__field-checkbox & {
-      .--horizontal & {
-        width: 100%;
-      }
+      width: 100%;
+      max-width: var(--form-kit-max-input);
     }
   }
 

@@ -1,10 +1,8 @@
 en:
   site_settings:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
-    chat_enabled: "Enable chat."
-    chat_pinned_messages: "Enable pinned messages in chat channels."
     chat_thread_improvements: "Enable direct replies to specific messages within chat threads, and allow broadcasting thread replies back to the channel."
-    enable_public_channels: "Enable public channels based on categories."
+    chat_pinned_messages: "Enable pinned messages in chat channels."
     chat_allowed_groups: "Users in these groups can chat, except anonymous users who can only view chat when added to this setting. Adding anonymous users also lets search engines index public channels. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever. When anonymous users can view chat, deleted messages also drop out of search engine results over time, so short retention limits how much chat history can be found through search."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -14,8 +12,6 @@ en:
     chat_silence_user_sensitivity: "The likelihood that a user flagged in chat will be automatically silenced."
     chat_auto_silence_from_flags_duration: "Number of minutes that users will be silenced for when they are automatically silenced due to flagged chat messages."
     chat_duplicate_message_sensitivity: "The likelihood that a duplicate message by the same sender will be blocked in a short period. Decimal number between 0 and 1.0, with 1.0 being the highest setting (blocks messages more frequently in a shorter amount of time). Set to `0` to allow duplicate messages."
-    chat_minimum_message_length: "Minimum number of characters for a chat message."
-    chat_allow_uploads: "Allow uploads in public chat channels and direct message channels."
     chat_show_copy_button_on_codeblocks: "Show copy button on codeblocks in chat messages."
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
@@ -29,8 +25,7 @@ en:
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
     chat_preferred_index: "Preferred tab when loading /chat."
-    allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the {{setting:allow_anonymous_mode}} setting to be enabled."
-    chat_search_enabled: "Enable this setting to allow users to search chat messages."
+    allow_chat_in_anonymous_mode: "Allow users who are browsing your site anonymously to use chat."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."

@@ -98,7 +98,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
       </div>
 
       <div class="search controls">
-        <label>
+        <label class="checkbox-label">
           <Input
             class="toggle-overridden"
             id="setting-filter-toggle-overridden"

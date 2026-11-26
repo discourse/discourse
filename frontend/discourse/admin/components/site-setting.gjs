@@ -101,6 +101,45 @@ const TYPE_COMPONENTS = {
   icon: SettingIcon,
 };
 
+const SettingControls = <template>
+  {{#if (or @showSave @showReset)}}
+    <div class="setting-controls">
+      {{#if @showSave}}
+        <DButton
+          class="btn-success btn-small setting-controls__ok"
+          @action={{@onSave}}
+          @ariaLabel="admin.settings.save"
+          @icon="check"
+          @isLoading={{@isLoading}}
+        />
+        <DButton
+          class="btn-danger btn-small setting-controls__cancel"
+          @action={{@onCancel}}
+          @ariaLabel="admin.settings.cancel"
+          @icon="xmark"
+          @isLoading={{@isLoading}}
+        />
+      {{else}}
+        {{#if @showSecretToggle}}
+          <DButton
+            class="btn-default btn-small setting-toggle-secret"
+            @action={{@onToggleSecret}}
+            @ariaLabel="admin.settings.unmask"
+            @icon={{if @isSecret "far-eye" "far-eye-slash"}}
+          />
+        {{/if}}
+
+        <DButton
+          class="btn-default btn-small undo setting-controls__undo"
+          @action={{@onReset}}
+          @icon="arrow-rotate-left"
+          @title="admin.settings.reset"
+        />
+      {{/if}}
+    </div>
+  {{/if}}
+</template>;
+
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
@@ -363,6 +402,24 @@ export default class SiteSettingComponent extends Component {
     return (
       this.trackChanges && resolveSettingFieldType(this.definition).adminReady
     );
+  }
+
+  get useFormKitRow() {
+    return (
+      this.args.formKitRows &&
+      !this.args.inline &&
+      this.useFormKit &&
+      !this.settingEditButton &&
+      !this.defaultIsAvailable
+    );
+  }
+
+  get showSaveControls() {
+    return this.groupedDirty && this.canUpdate && !this.args.inline;
+  }
+
+  get showResetControls() {
+    return this.groupedOverridden && this.canUpdate && !this.args.inline;
   }
 
   get formKitData() {
@@ -732,191 +789,269 @@ export default class SiteSettingComponent extends Component {
   }
 
   <template>
-    <div
-      class="row setting
-        {{this.typeClass}}
-        {{if this.overridden 'overridden'}}
-        {{if this.isDisabled 'disabled'}}
-        {{if this.isDisabledByDependency 'disabled-by-dependency'}}
-        {{if @inline 'inline-dependent-setting'}}
-        {{if this.linkableSetting 'linkable'}}"
-      data-setting={{this.setting.setting}}
-      id={{if this.linkableSetting this.settingAnchorId}}
-      ...attributes
-    >
-      <div class="setting-label">
-        <div class="setting-label__heading">
-          <h3>
-            {{this.settingName}}
-
-            {{#if this.staffLogFilter}}
-              <LinkTo
-                class="staff-action-log-link"
-                title={{i18n "admin.settings.history"}}
-                @query={{hash filters=this.staffLogFilter force_refresh=true}}
-                @route="adminLogs.staffActionLogs"
-              >
-                <span class="history-icon">
-                  {{dIcon "clock-rotate-left"}}
-                </span>
-              </LinkTo>
-            {{/if}}
-          </h3>
-
-          {{#if this.linkableSetting}}
-            <a
-              aria-label={{this.settingLinkLabel}}
-              class="setting-link"
-              href={{this.settingLinkHref}}
-              title={{this.settingLinkLabel}}
-            >{{dIcon "link"}}</a>
-          {{/if}}
-        </div>
-
-        <PluginOutlet
-          @name="site-setting-after-label"
-          @outletArgs={{lazyHash setting=this.setting}}
-        />
-
-        {{#if this.defaultIsAvailable}}
-          <DButton
-            class="btn-link"
-            @action={{this.setDefaultValues}}
-            @translatedLabel={{this.setting.setDefaultValuesLabel}}
-          />
-        {{/if}}
-      </div>
-
-      <div class="setting-value">
-        {{#if this.settingEditButton}}
-          <DButton
-            class="btn-default setting-value-edit-button"
-            @action={{this.settingEditButton.action}}
-            @icon={{this.settingEditButton.icon}}
-            @label={{this.settingEditButton.label}}
-          />
-
-          <Description @description={{this.setting.description}} />
-          <JobStatus @progress={{this.progress}} @status={{this.status}} />
-        {{else}}
-          {{#if this.useFormKit}}
-            <Form
-              @data={{this.formKitData}}
-              @onRegisterApi={{this.registerFormApi}}
-              @onSet={{this.onFormSet}}
-              @onSubmit={{this.update}}
-              {{didUpdate this.syncFormValue this.buffered.value}}
-              {{linkifySettingLinks this.formInlineDescription}}
-              as |form|
-            >
-              <SettingDefinitionField
-                @definition={{this.definition}}
-                @disabled={{this.isDisabled}}
-                @form={{form}}
-                @format="full"
-                @showControlTitle={{false}}
-                @showDescription={{false}}
-                @showTitle={{false}}
-              />
-            </Form>
+    {{#if this.useFormKitRow}}
+      <div
+        class="row setting
+          {{this.typeClass}}
+          {{if this.overridden 'overridden'}}
+          {{if this.isDisabled 'disabled'}}
+          {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
+        data-setting={{this.setting.setting}}
+        ...attributes
+      >
+        <Form
+          @data={{this.formKitData}}
+          @layout="horizontal"
+          @onRegisterApi={{this.registerFormApi}}
+          @onSet={{this.onFormSet}}
+          @onSubmit={{this.update}}
+          {{didUpdate this.syncFormValue this.buffered.value}}
+          {{linkifySettingLinks this.setting.description}}
+          as |form|
+        >
+          <SettingDefinitionField
+            @definition={{this.definition}}
+            @disabled={{this.isDisabled}}
+            @form={{form}}
+            @showOptional={{false}}
+          >
             {{this.preview}}
-          {{else}}
-            <this.resolvedComponent
-              @allowAny={{this.allowAny}}
-              @changeValueCallback={{this.changeValueCallback}}
-              @disabled={{this.isDisabled}}
-              @isSecret={{this.isSecret}}
-              @preview={{this.preview}}
-              @setting={{this.setting}}
-              @setValidationMessage={{this.setValidationMessage}}
-              @value={{this.buffered.value}}
-              {{on "keydown" this._handleKeydown}}
-            />
-          {{/if}}
-          <SettingValidationMessage
-            @message={{this.setting.validationMessage}}
-          />
-          {{#if this.displayDescription}}
-            <Description @description={{this.setting.description}} />
+            {{#if this.setting.validationMessage}}
+              <SettingValidationMessage
+                @message={{this.setting.validationMessage}}
+              />
+            {{/if}}
             <JobStatus @progress={{this.progress}} @status={{this.status}} />
+            {{#if this.inlineDependentSettings.length}}
+              <div class="inline-dependent-settings">
+                {{#each this.inlineDependentSettings as |dependentSetting|}}
+                  <this.siteSettingComponent
+                    @inline={{true}}
+                    @setting={{dependentSetting}}
+                  />
+                {{/each}}
+              </div>
+            {{/if}}
+            <PluginOutlet
+              @name="site-setting-after-description"
+              @outletArgs={{lazyHash setting=this.setting}}
+            />
+            {{#if this.showThemeSiteSettingWarning}}
+              <div class="setting-override-warning setting-theme-warning">
+                <p class="setting-theme-warning__text">
+                  {{dIcon "paintbrush"}}
+                  {{this.themeSiteSettingWarningText}}
+                </p>
+              </div>
+            {{/if}}
+            {{#if this.showUpcomingChangeDefaultWarning}}
+              <div
+                class="setting-override-warning setting-upcoming-change-warning"
+              >
+                <p class="setting-upcoming-change-warning__text">
+                  {{dIcon "flask"}}
+                  {{this.upcomingChangeDefaultWarningText}}
+                </p>
+              </div>
+            {{/if}}
+            {{#if this.showDependsOnNotice}}
+              <div class="setting-override-warning setting-depends-on-notice">
+                <p class="setting-depends-on-notice__text">
+                  {{dIcon "link"}}
+                  {{this.dependsOnNoticeText}}
+                </p>
+              </div>
+            {{/if}}
+          </SettingDefinitionField>
+
+          {{#if (or this.showSaveControls this.showResetControls)}}
+            <form.Actions>
+              {{#if (and this.staffLogFilter (not this.showSaveControls))}}
+                <LinkTo
+                  class="btn btn-flat btn-icon no-text staff-action-log-link"
+                  title={{i18n "admin.settings.history"}}
+                  @query={{hash filters=this.staffLogFilter force_refresh=true}}
+                  @route="adminLogs.staffActionLogs"
+                >
+                  {{dIcon "clock-rotate-left"}}
+                </LinkTo>
+              {{/if}}
+              <SettingControls
+                @isLoading={{this.disableControls}}
+                @onCancel={{this.cancel}}
+                @onReset={{this.resetDefault}}
+                @onSave={{this.submit}}
+                @showReset={{this.showResetControls}}
+                @showSave={{this.showSaveControls}}
+              />
+            </form.Actions>
           {{/if}}
-          {{#if this.inlineDependentSettings.length}}
-            <div class="inline-dependent-settings">
-              {{#each this.inlineDependentSettings as |dependentSetting|}}
-                <this.siteSettingComponent
-                  @inline={{true}}
-                  @setting={{dependentSetting}}
-                />
-              {{/each}}
-            </div>
-          {{/if}}
+        </Form>
+      </div>
+    {{else}}
+      <div
+        class="row setting
+          {{this.typeClass}}
+          {{if this.overridden 'overridden'}}
+          {{if this.isDisabled 'disabled'}}
+          {{if this.isDisabledByDependency 'disabled-by-dependency'}}
+          {{if @inline 'inline-dependent-setting'}}
+          {{if this.linkableSetting 'linkable'}}"
+        data-setting={{this.setting.setting}}
+        id={{if this.linkableSetting this.settingAnchorId}}
+        ...attributes
+      >
+        <div class="setting-label">
+          <div class="setting-label__heading">
+            <h3>
+              {{this.settingName}}
+
+              {{#if this.staffLogFilter}}
+                <LinkTo
+                  class="staff-action-log-link"
+                  title={{i18n "admin.settings.history"}}
+                  @query={{hash filters=this.staffLogFilter force_refresh=true}}
+                  @route="adminLogs.staffActionLogs"
+                >
+                  <span class="history-icon">
+                    {{dIcon "clock-rotate-left"}}
+                  </span>
+                </LinkTo>
+              {{/if}}
+            </h3>
+
+            {{#if this.linkableSetting}}
+              <a
+                aria-label={{this.settingLinkLabel}}
+                class="setting-link"
+                href={{this.settingLinkHref}}
+                title={{this.settingLinkLabel}}
+              >{{dIcon "link"}}</a>
+            {{/if}}
+          </div>
+
           <PluginOutlet
-            @name="site-setting-after-description"
+            @name="site-setting-after-label"
             @outletArgs={{lazyHash setting=this.setting}}
           />
-          {{#if this.showThemeSiteSettingWarning}}
-            <div class="setting-override-warning setting-theme-warning">
-              <p class="setting-theme-warning__text">
-                {{dIcon "paintbrush"}}
-                {{this.themeSiteSettingWarningText}}
-              </p>
-            </div>
-          {{/if}}
-          {{#if this.showUpcomingChangeDefaultWarning}}
-            <div
-              class="setting-override-warning setting-upcoming-change-warning"
-            >
-              <p class="setting-upcoming-change-warning__text">
-                {{dIcon "flask"}}
-                {{this.upcomingChangeDefaultWarningText}}
-              </p>
-            </div>
-          {{/if}}
-          {{#if this.showDependsOnNotice}}
-            <div class="setting-override-warning setting-depends-on-notice">
-              <p class="setting-depends-on-notice__text">
-                {{dIcon "link"}}
-                {{this.dependsOnNoticeText}}
-              </p>
-            </div>
-          {{/if}}
-        {{/if}}
-      </div>
 
-      {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
-        <div class="setting-controls">
-          <DButton
-            class="ok setting-controls__ok"
-            @action={{this.submit}}
-            @ariaLabel="admin.settings.save"
-            @icon="check"
-            @isLoading={{this.disableControls}}
-          />
-          <DButton
-            class="cancel setting-controls__cancel"
-            @action={{this.cancel}}
-            @ariaLabel="admin.settings.cancel"
-            @icon="xmark"
-            @isLoading={{this.disableControls}}
-          />
+          {{#if this.defaultIsAvailable}}
+            <DButton
+              class="btn-link"
+              @action={{this.setDefaultValues}}
+              @translatedLabel={{this.setting.setDefaultValuesLabel}}
+            />
+          {{/if}}
         </div>
-      {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
-        {{#if (and this.setting.secret (not this.useFormKit))}}
-          <DButton
-            class="btn-default setting-toggle-secret"
-            @action={{this.toggleSecret}}
-            @ariaLabel="admin.settings.unmask"
-            @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
-          />
-        {{/if}}
 
-        <DButton
-          class="btn-default undo setting-controls__undo"
-          @action={{this.resetDefault}}
-          @icon="arrow-rotate-left"
-          @label="admin.settings.reset"
+        <div class="setting-value">
+          {{#if this.settingEditButton}}
+            <DButton
+              class="btn-default setting-value-edit-button"
+              @action={{this.settingEditButton.action}}
+              @icon={{this.settingEditButton.icon}}
+              @label={{this.settingEditButton.label}}
+            />
+
+            <Description @description={{this.setting.description}} />
+            <JobStatus @progress={{this.progress}} @status={{this.status}} />
+          {{else}}
+            {{#if this.useFormKit}}
+              <Form
+                @data={{this.formKitData}}
+                @onRegisterApi={{this.registerFormApi}}
+                @onSet={{this.onFormSet}}
+                @onSubmit={{this.update}}
+                {{didUpdate this.syncFormValue this.buffered.value}}
+                {{linkifySettingLinks this.formInlineDescription}}
+                as |form|
+              >
+                <SettingDefinitionField
+                  @definition={{this.definition}}
+                  @disabled={{this.isDisabled}}
+                  @form={{form}}
+                  @format="full"
+                  @showControlTitle={{false}}
+                  @showDescription={{false}}
+                  @showTitle={{false}}
+                />
+              </Form>
+              {{this.preview}}
+            {{else}}
+              <this.resolvedComponent
+                @allowAny={{this.allowAny}}
+                @changeValueCallback={{this.changeValueCallback}}
+                @disabled={{this.isDisabled}}
+                @isSecret={{this.isSecret}}
+                @preview={{this.preview}}
+                @setting={{this.setting}}
+                @setValidationMessage={{this.setValidationMessage}}
+                @value={{this.buffered.value}}
+                {{on "keydown" this._handleKeydown}}
+              />
+            {{/if}}
+            <SettingValidationMessage
+              @message={{this.setting.validationMessage}}
+            />
+            {{#if this.displayDescription}}
+              <Description @description={{this.setting.description}} />
+              <JobStatus @progress={{this.progress}} @status={{this.status}} />
+            {{/if}}
+            {{#if this.inlineDependentSettings.length}}
+              <div class="inline-dependent-settings">
+                {{#each this.inlineDependentSettings as |dependentSetting|}}
+                  <this.siteSettingComponent
+                    @inline={{true}}
+                    @setting={{dependentSetting}}
+                  />
+                {{/each}}
+              </div>
+            {{/if}}
+            <PluginOutlet
+              @name="site-setting-after-description"
+              @outletArgs={{lazyHash setting=this.setting}}
+            />
+            {{#if this.showThemeSiteSettingWarning}}
+              <div class="setting-override-warning setting-theme-warning">
+                <p class="setting-theme-warning__text">
+                  {{dIcon "paintbrush"}}
+                  {{this.themeSiteSettingWarningText}}
+                </p>
+              </div>
+            {{/if}}
+            {{#if this.showUpcomingChangeDefaultWarning}}
+              <div
+                class="setting-override-warning setting-upcoming-change-warning"
+              >
+                <p class="setting-upcoming-change-warning__text">
+                  {{dIcon "flask"}}
+                  {{this.upcomingChangeDefaultWarningText}}
+                </p>
+              </div>
+            {{/if}}
+            {{#if this.showDependsOnNotice}}
+              <div class="setting-override-warning setting-depends-on-notice">
+                <p class="setting-depends-on-notice__text">
+                  {{dIcon "link"}}
+                  {{this.dependsOnNoticeText}}
+                </p>
+              </div>
+            {{/if}}
+          {{/if}}
+        </div>
+
+        <SettingControls
+          @isLoading={{this.disableControls}}
+          @isSecret={{this.isSecret}}
+          @onCancel={{this.cancel}}
+          @onReset={{this.resetDefault}}
+          @onSave={{this.submit}}
+          @onToggleSecret={{this.toggleSecret}}
+          @showReset={{this.showResetControls}}
+          @showSave={{this.showSaveControls}}
+          @showSecretToggle={{and this.setting.secret (not this.useFormKit)}}
         />
-      {{/if}}
-    </div>
+      </div>
+    {{/if}}
   </template>
 }

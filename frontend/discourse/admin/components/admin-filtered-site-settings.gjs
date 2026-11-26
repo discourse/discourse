@@ -15,8 +15,9 @@ import { i18n } from "discourse-i18n";
 export default class AdminFilteredSiteSettings extends Component {
   @service adminSiteSettingStore;
 
-  @tracked matchedSettings;
+  @tracked matchedGroups;
   @tracked activeFilter = "";
+  @tracked onlyOverridden = false;
   @tracked loading = true;
 
   siteSettingFilter = new SiteSettingFilter(this.args.settings);
@@ -26,14 +27,24 @@ export default class AdminFilteredSiteSettings extends Component {
     this.filterChanged({ filter: "", onlyOverridden: false });
   }
 
-  get visibleSettings() {
-    return this.matchedSettings?.filter((setting) =>
-      this.adminSiteSettingStore.isVisible(setting, this.activeFilter)
-    );
+  get visibleGroups() {
+    return (this.matchedGroups ?? [])
+      .map((group) => ({
+        ...group,
+        titled: group.nameKey !== "all_results" && !this.isFiltering,
+        siteSettings: group.siteSettings.filter((setting) =>
+          this.adminSiteSettingStore.isVisible(setting, this.activeFilter)
+        ),
+      }))
+      .filter((group) => group.siteSettings.length > 0);
+  }
+
+  get isFiltering() {
+    return this.activeFilter !== "" || this.onlyOverridden;
   }
 
   get noResults() {
-    return isEmpty(this.visibleSettings) && !this.loading;
+    return isEmpty(this.visibleGroups) && !this.loading;
   }
 
   @action
@@ -44,14 +55,15 @@ export default class AdminFilteredSiteSettings extends Component {
   filterSettings(filterData) {
     this.args.onFilterChanged(filterData);
     this.activeFilter = filterData.filter ?? "";
-    this.matchedSettings = this.siteSettingFilter.filterSettings(
+    this.onlyOverridden = !!filterData.onlyOverridden;
+    this.matchedGroups = this.siteSettingFilter.filterSettings(
       filterData.filter,
       {
         includeAllCategory: false,
         onlyOverridden: filterData.onlyOverridden,
         dependsOn: filterData.dependsOn,
       }
-    )[0]?.siteSettings;
+    );
     this.loading = false;
   }
 
@@ -74,8 +86,18 @@ export default class AdminFilteredSiteSettings extends Component {
 
       <DConditionalLoadingSpinner @condition={{this.loading}}>
         <section class="admin-filtered-site-settings form-horizontal settings">
-          {{#each this.visibleSettings as |setting|}}
-            <SiteSetting @setting={{setting}} />
+          {{#each this.visibleGroups key="nameKey" as |group|}}
+            {{#if group.titled}}
+              <div class="form-kit__section-header">
+                <h2 class="form-kit__section-title">
+                  {{group.name}}
+                </h2>
+              </div>
+            {{/if}}
+
+            {{#each group.siteSettings as |setting|}}
+              <SiteSetting @formKitRows={{@formKitRows}} @setting={{setting}} />
+            {{/each}}
           {{/each}}
 
           {{#if this.noResults}}

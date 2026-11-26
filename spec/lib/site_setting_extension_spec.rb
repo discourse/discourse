@@ -1968,6 +1968,16 @@ RSpec.describe SiteSettingExtension do
     it "handles mixed case in setting names" do
       expect(SiteSetting.humanized_name(:opengraph_image)).to eq("OpenGraph image")
     end
+
+    it "removes the configured unit when it matches the end of the label" do
+      settings.setting(:dm_retention_days, 90, unit: "days")
+      settings.setting(:dm_retention_weekdays, 90, unit: "days")
+      settings.setting(:dm_retention_days_minimum, 90, unit: "days")
+
+      expect(settings.humanized_name(:dm_retention_days)).to eq("DM retention")
+      expect(settings.humanized_name(:dm_retention_weekdays)).to eq("DM retention weekdays")
+      expect(settings.humanized_name(:dm_retention_days_minimum)).to eq("DM retention days minimum")
+    end
   end
 
   describe "linkify" do

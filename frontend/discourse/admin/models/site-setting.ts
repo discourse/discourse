@@ -87,6 +87,9 @@ export interface SiteSettingWireRecord extends SettingTypeMetadata {
     change_setting_name: string;
   };
   plugin?: string;
+  section?: string;
+  unit?: string;
+  format?: string;
   upload?: {
     original_filename: string;
     human_filesize: string;
@@ -363,6 +366,8 @@ export default class SiteSetting extends EmberObject {
       mandatory_values: this.mandatory_values,
       disallowed_groups: this.disallowed_groups,
       currentSavedValue: this.value,
+      unit: this.unit,
+      format: this.format,
     };
   }
 

@@ -140,9 +140,9 @@ export default class SiteSettingFilter {
         matches.push(...siteSettings);
         matchesGroupedByCategory.push({
           nameKey: settingsCategory.nameKey,
-          name: i18n(
-            "admin.site_settings.categories." + settingsCategory.nameKey
-          ),
+          name:
+            settingsCategory.name ??
+            i18n("admin.site_settings.categories." + settingsCategory.nameKey),
           siteSettings: this.sortSettings(siteSettings),
           count: siteSettings.length,
         });

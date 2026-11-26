@@ -43,7 +43,9 @@ RSpec.describe "Admin tag list site setting" do
     tag_chooser.select_row_by_name(tag_2.name)
 
     expect(tag_chooser).to have_selected_names(tag_1.name, tag_2.name)
-    expect(settings_page.find_setting("digest_suppress_tags")).to have_css(".setting-controls__ok")
+    expect(settings_page.find_setting("digest_suppress_tags")).to have_css(
+      ".setting-controls .btn-success",
+    )
     expect(SiteSetting.digest_suppress_tags).to eq("")
   end
 end

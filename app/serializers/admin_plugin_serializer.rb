@@ -7,6 +7,7 @@ class AdminPluginSerializer < ApplicationSerializer
              :version,
              :url,
              :admin_route,
+             :use_horizontal_settings_form,
              :enabled,
              :enabled_setting,
              :has_settings,
@@ -82,6 +83,10 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def include_admin_route?
     admin_route.present?
+  end
+
+  def use_horizontal_settings_form
+    object.use_horizontal_settings_form?
   end
 
   def is_official

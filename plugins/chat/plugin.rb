@@ -33,6 +33,7 @@ register_svg_icon "thumbtack-slash"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
+use_horizontal_settings_form true
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 

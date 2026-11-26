@@ -4,7 +4,7 @@ import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 
 const FKCheckboxGroup = <template>
   <FKFieldset
-    class="form-kit__checkbox-group"
+    class="form-kit__checkbox-group --large"
     @description={{@description}}
     @title={{@title}}
   >

@@ -150,14 +150,14 @@ module PageObjects
         find(theme_site_setting_selector(setting_name)).find(
           ".setting-value input[type='checkbox']",
         ).click
-        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .btn-success").click
       end
 
       def reset_overridden_theme_site_setting(setting_name)
         find(theme_site_setting_selector(setting_name, overridden: true)).find(
           ".setting-controls__undo",
         ).click
-        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .btn-success").click
       end
 
       def has_no_themes_list?
@@ -203,7 +203,7 @@ module PageObjects
 
       def click_add_all_themes_button
         find(".relative-theme-selector .setting-label .btn-link").click
-        find(".setting-controls .ok").click
+        find(".setting-controls .btn-success").click
       end
 
       def has_no_page_header?
@@ -212,8 +212,8 @@ module PageObjects
 
       def reset_overridden_setting(setting_name)
         setting_section = find("section.theme.settings .setting[data-setting=\"#{setting_name}\"]")
-        setting_section.click_button(I18n.t("admin_js.admin.settings.reset"))
-        setting_section.find(".setting-controls .ok").click
+        setting_section.find(".setting-controls__undo").click
+        setting_section.find(".setting-controls .btn-success").click
       end
 
       def click_select_inactive_mode
@@ -289,7 +289,7 @@ module PageObjects
       end
 
       def relative_themes_save_button
-        find(".relative-theme-selector .setting-controls__ok")
+        find(".relative-theme-selector .setting-controls .btn-success")
       end
 
       def has_reset_button_for_setting?(css_selector)

@@ -10566,6 +10566,49 @@ en:
             label: "Add Emoji"
         nav_title: "Settings"
         no_results: "No results found."
+        units:
+          characters:
+            one: "character"
+            other: "characters"
+          days:
+            one: "day"
+            other: "days"
+          hours:
+            one: "hour"
+            other: "hours"
+          megapixels:
+            one: "megapixel"
+            other: "megapixels"
+          mentions:
+            one: "mention"
+            other: "mentions"
+          milliseconds:
+            one: "millisecond"
+            other: "milliseconds"
+          minutes:
+            one: "minute"
+            other: "minutes"
+          months:
+            one: "month"
+            other: "months"
+          percent:
+            one: "percent"
+            other: "percent"
+          posts:
+            one: "post"
+            other: "posts"
+          seconds:
+            one: "second"
+            other: "seconds"
+          tags:
+            one: "tag"
+            other: "tags"
+          topics:
+            one: "topic"
+            other: "topics"
+          users:
+            one: "user"
+            other: "users"
         more_site_setting_results:
           one: "There is more than %{count} result. Please refine your search or select a category."
           other: "There are more than %{count} results. Please refine your search or select a category."

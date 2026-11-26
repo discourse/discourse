@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-config-area-card {
   padding: var(--space-4);
   border: 1px solid var(--content-border-color);
@@ -94,6 +96,12 @@
   &__settings {
     .setting-label {
       margin-left: 18px;
+    }
+
+    .setting .form-kit__container-title {
+      @include viewport.from(sm) {
+        margin-left: 18px;
+      }
     }
   }
 
