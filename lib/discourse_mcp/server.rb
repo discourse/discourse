@@ -7,8 +7,6 @@ module DiscourseMcp
     PROTOCOL_META_KEY = "io.modelcontextprotocol/protocolVersion"
     CAPABILITIES_META_KEY = "io.modelcontextprotocol/clientCapabilities"
     SETUP_GUIDE_TOOL = "discourse_get_setup_guide"
-    SETUP_GUIDE_INSTRUCTIONS =
-      "When an administrator asks for help setting up or changing this community, call #{SETUP_GUIDE_TOOL} first and follow it."
 
     Response = Data.define(:http_status, :body, :headers)
 
@@ -214,7 +212,9 @@ module DiscourseMcp
     def instructions
       return @instructions if defined?(@instructions)
 
-      setup_guide = SETUP_GUIDE_INSTRUCTIONS if catalog.find(:tool, SETUP_GUIDE_TOOL)
+      if catalog.find(:tool, SETUP_GUIDE_TOOL)
+        setup_guide = I18n.t("mcp.setup_guide_instructions", tool: SETUP_GUIDE_TOOL)
+      end
       @instructions = [setup_guide, SiteSetting.mcp_server_instructions.presence].compact
         .join("\n\n")
         .presence

@@ -678,9 +678,21 @@ describe "MCP transport" do
       McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
     end
 
+    let(:setup_guide_instructions) do
+      I18n.t("mcp.setup_guide_instructions", tool: "discourse_get_setup_guide")
+    end
+
     it "points to the setup guide when the connection can use it" do
       expect(initialize_with(%w[mcp:profile:read mcp:site-settings:read])).to eq(
-        DiscourseMcp::Server::SETUP_GUIDE_INSTRUCTIONS,
+        setup_guide_instructions,
+      )
+    end
+
+    it "uses the site's wording for the pointer" do
+      TranslationOverride.upsert!("en", "mcp.setup_guide_instructions", "Start with %{tool}.")
+
+      expect(initialize_with(%w[mcp:profile:read mcp:site-settings:read])).to eq(
+        "Start with discourse_get_setup_guide.",
       )
     end
 
@@ -688,7 +700,7 @@ describe "MCP transport" do
       SiteSetting.mcp_server_instructions = "Write in a friendly tone."
 
       expect(initialize_with(%w[mcp:profile:read mcp:site-settings:read])).to eq(
-        "#{DiscourseMcp::Server::SETUP_GUIDE_INSTRUCTIONS}\n\nWrite in a friendly tone.",
+        "#{setup_guide_instructions}\n\nWrite in a friendly tone.",
       )
     end
 
