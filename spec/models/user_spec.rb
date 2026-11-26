@@ -3191,6 +3191,18 @@ RSpec.describe User do
       expect(messages.size).to eq(1)
     end
 
+    it "omits the last notification when the user can no longer see its topic" do
+      notification = Fabricate(:notification, user:)
+      notification.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
+
+      expect(message.data[:last_notification]).to be_nil
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
