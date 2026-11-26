@@ -21,6 +21,7 @@ function createSummaryNodeView() {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["details"],
   nodeViews: { summary: createSummaryNodeView },
 
   nodeSpec: {

@@ -142,6 +142,10 @@ export default class TextareaTextManipulation implements TextManipulation {
     });
   }
 
+  get element(): HTMLTextAreaElement {
+    return this.textarea;
+  }
+
   get value(): string {
     return this.textarea.value;
   }
@@ -162,6 +166,10 @@ export default class TextareaTextManipulation implements TextManipulation {
 
   insertText(text: string, options?: AddTextOptions): void {
     this.addText(this.getSelected(), text, options);
+  }
+
+  insertTypedText(text: string): void {
+    this.addText(this.getSelected(), text);
   }
 
   /** Returns the current selection, including its line's text. */
@@ -734,7 +742,7 @@ export default class TextareaTextManipulation implements TextManipulation {
   @bind
   emojiSelected(code: string): void {
     const selected = this.getSelected();
-    const captures = selected.pre.match(/\B:([\p{L}\p{N}_]*)$/u);
+    const captures = selected.pre.match(/\B:([\p{L}\p{N}_-]*)$/u);
 
     if (!captures) {
       if (selected.pre.match(/\S$/)) {
@@ -744,10 +752,11 @@ export default class TextareaTextManipulation implements TextManipulation {
       }
     } else {
       const numOfRemovedChars = captures[1].length;
+      const space = /^\s/.test(selected.post) ? "" : " ";
       this._insertAt(
         selected.start - numOfRemovedChars,
         selected.end,
-        `${code}:`
+        `${code}:${space}`
       );
     }
   }

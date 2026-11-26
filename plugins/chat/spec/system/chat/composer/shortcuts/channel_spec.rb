@@ -31,17 +31,19 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
 
       channel_page.composer.emphasized_text_shortcut
 
-      expect(channel_page.composer.value).to eq("_emphasized text_")
+      expect(channel_page.composer.value).to eq("*emphasized text*")
     end
   end
 
   context "when using meta + e" do
-    it "adds preformatted text" do
+    it "starts a code block on an empty line" do
       chat.visit_channel(channel_1)
 
       channel_page.composer.indented_text_shortcut
 
-      expect(channel_page.composer.value).to eq("`indent preformatted text by 4 spaces`")
+      expect(channel_page.composer.value).to eq(
+        "```\n#{I18n.t("js.composer.paste_code_text")}\n```",
+      )
     end
   end
 
@@ -62,7 +64,7 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
       channel_page.message_thread_indicator(thread.original_message).click
       channel_page.composer.emphasized_text_shortcut
 
-      expect(channel_page.composer.value).to eq("_emphasized text_")
+      expect(channel_page.composer.value).to eq("*emphasized text*")
       expect(thread_page.composer.value).to eq("")
 
       channel_page.composer.fill_in(with: "")
@@ -71,7 +73,7 @@ RSpec.describe "Chat | composer | shortcuts | channel" do
       thread_page.composer.emphasized_text_shortcut
 
       expect(channel_page.composer.value).to eq("")
-      expect(thread_page.composer.value).to eq("_emphasized text_")
+      expect(thread_page.composer.value).to eq("*emphasized text*")
     end
   end
 

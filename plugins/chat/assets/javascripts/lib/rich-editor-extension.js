@@ -5,6 +5,7 @@ import { buildTranscriptHeader } from "discourse/plugins/chat/discourse/lib/grou
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["chat-transcript"],
   nodeSpec: {
     chat: {
       attrs: {

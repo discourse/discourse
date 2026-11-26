@@ -394,6 +394,19 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 23);
   });
 
+  test("code button fences lines selected mid-line", async function (assert) {
+    this.value = "intro a\nb\noutro";
+
+    await render(<template><DEditor @value={{this.value}} /></template>);
+
+    const textarea = find("textarea.d-editor-input");
+    textarea.selectionStart = 6;
+    textarea.selectionEnd = 9;
+
+    await click("button.code");
+    assert.strictEqual(this.value, "intro \n```\na\nb\n```\noutro");
+  });
+
   test("code button does not reset undo history", async function (assert) {
     const value = tracked("existing");
 
@@ -1050,7 +1063,7 @@ third line`
 
     assert.strictEqual(
       value.value,
-      "starting to type an emoji like :woman_genie:",
+      "starting to type an emoji like :woman_genie: ",
       "it works when there is a partial emoji"
     );
   });

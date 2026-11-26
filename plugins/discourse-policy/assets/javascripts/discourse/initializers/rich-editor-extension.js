@@ -228,6 +228,7 @@ class PolicyNodeView {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["policy"],
   nodeSpec: {
     policy: {
       attrs: POLICY_ATTRIBUTES,

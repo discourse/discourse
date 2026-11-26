@@ -160,6 +160,7 @@ class MathNodeView {
 }
 
 const extension = {
+  markdownFeatures: ["discourse-math"],
   nodeViews: {
     math_inline: createMathNodeView,
     math_block: {

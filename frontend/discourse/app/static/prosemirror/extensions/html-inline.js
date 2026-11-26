@@ -397,6 +397,8 @@ function unwrapSmallRanges(state, ranges, schema) {
   return tr;
 }
 
+// Plugins emit inline HTML tokens even where the host doesn't cook raw inline
+// HTML, so only authoring it is limited to hosts that do.
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
@@ -526,7 +528,13 @@ const extension = {
       state.write(`</${node.attrs.tag}>`);
     },
   },
-  plugins({ pmState: { Plugin }, pmView: { Decoration, DecorationSet } }) {
+  plugins({
+    pmState: { Plugin },
+    pmModel: { Slice },
+    pmView: { Decoration, DecorationSet },
+    getContext,
+    utils: { convertFromMarkdown },
+  }) {
     function outlineDecorations(doc) {
       const decorations = [];
       doc.descendants((node, pos) => {
@@ -548,51 +556,89 @@ const extension = {
       return DecorationSet.create(doc, decorations);
     }
 
-    return new Plugin({
-      state: {
-        init: (_, state) => outlineDecorations(state.doc),
-        apply: (tr, set) => (tr.docChanged ? outlineDecorations(tr.doc) : set),
-      },
-      props: {
-        decorations(state) {
-          return this.getState(state);
-        },
-      },
-    });
-  },
-  inputRules: {
-    match: new RegExp(`<(${INPUT_RULE_TAGS.join("|")})>$`, "i"),
-    handler: (state, match, start, end) => {
-      const tag = match[1];
-
-      const markName = HTML_INLINE_MARKS[tag];
-
-      const tr = state.tr;
-
-      if (markName) {
-        tr.delete(start, end);
-        tr.insertText(" ");
-        tr.addMark(start, start + 1, state.schema.marks[markName].create());
-        tr.removeStoredMark(state.schema.marks[markName]);
-      } else {
-        tr.replaceWith(
-          start,
-          end,
-          state.schema.nodes.html_inline.create({ tag }, [
-            state.schema.text(" "),
-          ])
-        );
-
-        start += 1;
+    // a host that doesn't cook raw inline HTML may still cook some tags
+    const hostCooks = new Map();
+    function isCookedByHost(tag) {
+      if (!hostCooks.has(tag)) {
+        let cooked = false;
+        convertFromMarkdown(`<${tag}>x</${tag}>`).descendants((node) => {
+          cooked ||= node.type.name === "html_inline" && node.attrs.tag === tag;
+        });
+        hostCooks.set(tag, cooked);
       }
+      return hostCooks.get(tag);
+    }
 
-      tr.insertText(" ");
-      tr.setSelection(
-        state.selection.constructor.create(tr.doc, start, start + 1)
+    function shouldUnwrap(node) {
+      return (
+        node.type.name === "html_inline" && !isCookedByHost(node.attrs.tag)
       );
+    }
 
-      return tr;
-    },
+    function unwrapInlineHtml(fragment) {
+      const children = [];
+      fragment.forEach((node) => {
+        if (shouldUnwrap(node)) {
+          unwrapInlineHtml(node.content).forEach((child) =>
+            children.push(child)
+          );
+        } else {
+          children.push(
+            node.isLeaf ? node : node.copy(unwrapInlineHtml(node.content))
+          );
+        }
+      });
+      return Fragment.fromArray(children);
+    }
+
+    // unwrapped nodes on the slice's open edge no longer count toward its depth
+    function openDepthAfterUnwrap(fragment, depth, side) {
+      let unwrapped = 0;
+      let node = fragment[side];
+      for (let level = 0; level < depth && node; level++) {
+        if (shouldUnwrap(node)) {
+          unwrapped++;
+        }
+        node = node[side];
+      }
+      return depth - unwrapped;
+    }
+
+    return [
+      new Plugin({
+        state: {
+          init: (_, state) => outlineDecorations(state.doc),
+          apply: (tr, set) =>
+            tr.docChanged ? outlineDecorations(tr.doc) : set,
+        },
+        props: {
+          decorations(state) {
+            return this.getState(state);
+          },
+        },
+      }),
+      // a host that doesn't cook raw inline HTML would show pasted tags as text
+      new Plugin({
+        props: {
+          transformPasted(slice) {
+            const rules = getContext().markdownOptions?.markdownItRules;
+            if (!rules || rules.includes("html_inline")) {
+              return slice;
+            }
+
+            return new Slice(
+              unwrapInlineHtml(slice.content),
+              openDepthAfterUnwrap(
+                slice.content,
+                slice.openStart,
+                "firstChild"
+              ),
+              openDepthAfterUnwrap(slice.content, slice.openEnd, "lastChild")
+            );
+          },
+        },
+      }),
+    ];
   },
   commands: ({ schema }) => ({
     toggleSmall: () => (state, dispatch) => {
@@ -694,3 +740,42 @@ const extension = {
 };
 
 export default extension;
+
+/** @type {RichEditorExtension} */
+export const htmlInlineInput = {
+  markdownItRules: ["html_inline"],
+  inputRules: {
+    match: new RegExp(`<(${INPUT_RULE_TAGS.join("|")})>$`, "i"),
+    handler: (state, match, start, end) => {
+      const tag = match[1];
+
+      const markName = HTML_INLINE_MARKS[tag];
+
+      const tr = state.tr;
+
+      if (markName) {
+        tr.delete(start, end);
+        tr.insertText(" ");
+        tr.addMark(start, start + 1, state.schema.marks[markName].create());
+        tr.removeStoredMark(state.schema.marks[markName]);
+      } else {
+        tr.replaceWith(
+          start,
+          end,
+          state.schema.nodes.html_inline.create({ tag }, [
+            state.schema.text(" "),
+          ])
+        );
+
+        start += 1;
+      }
+
+      tr.insertText(" ");
+      tr.setSelection(
+        state.selection.constructor.create(tr.doc, start, start + 1)
+      );
+
+      return tr;
+    },
+  },
+};

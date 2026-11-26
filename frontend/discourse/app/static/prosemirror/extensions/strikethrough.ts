@@ -1,6 +1,7 @@
 import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 const extension: RichEditorExtension = {
+  markdownItRules: ["strikethrough"],
   markSpec: {
     strikethrough: {
       before: "link",

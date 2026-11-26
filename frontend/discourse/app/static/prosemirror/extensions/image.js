@@ -29,6 +29,7 @@ const UPLOAD_TIMEOUT = 30_000;
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownItRules: ["image"],
   nodeViews: {
     image: {
       component: MediaNodeView,
@@ -479,9 +480,16 @@ const extension = {
             return;
           }
 
-          const staff = getContext().currentUser?.staff;
-          // stop earlier if image extensions aren't allowed
-          if (!authorizesOneOrMoreImageExtensions(staff, siteSettings)) {
+          const { currentUser, uploadFiles } = getContext();
+          // stop earlier if image extensions aren't allowed, or nothing is
+          // around to upload them
+          if (
+            !authorizesOneOrMoreImageExtensions(
+              currentUser?.staff,
+              siteSettings
+            ) ||
+            (!uploadFiles && !appEvents.has("composer:add-files"))
+          ) {
             const tr = view.state.tr;
             const dataURIMap = dataImageUploader.getState(view.state);
 

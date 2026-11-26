@@ -7,9 +7,11 @@ import {
   render,
   settled,
   triggerKeyEvent,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DockedComposer from "discourse/components/docked-composer";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
@@ -492,6 +494,42 @@ module("Integration | Component | DockedComposer", function (hooks) {
     });
 
     assert.true(submitted, "Meta+Enter submits when submitOnEnter is false");
+  });
+
+  test("in the rich editor, Enter adds list items and Meta+Enter submits", async function (assert) {
+    const owner = getOwner(this);
+    owner
+      .lookup("service:current-user")
+      .set("user_option.composition_mode", USER_OPTION_COMPOSITION_MODES.rich);
+    owner.lookup("service:key-value-store").set({
+      key: "test-rich-enter",
+      value: "* item",
+    });
+
+    let submitted = false;
+    const handleSubmit = async () => {
+      submitted = true;
+      return { ok: true };
+    };
+
+    await render(
+      <template>
+        <DockedComposer
+          @composerEvents={{false}}
+          @draftKey="test-rich-enter"
+          @onSubmit={{handleSubmit}}
+        />
+      </template>
+    );
+    await waitFor(".d-editor-input.ProseMirror li");
+
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter");
+    assert.false(submitted, "Enter adds a list item");
+
+    await triggerKeyEvent(".d-editor-input", "keydown", "Enter", {
+      metaKey: true,
+    });
+    assert.true(submitted, "Meta+Enter still submits from a list");
   });
 
   test("auto resize does not render the manual resize handle", async function (assert) {

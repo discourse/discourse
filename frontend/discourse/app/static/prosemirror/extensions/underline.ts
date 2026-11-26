@@ -1,6 +1,7 @@
 import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 const extension: RichEditorExtension = {
+  markdownFeatures: ["bbcode-inline"],
   markSpec: {
     underline: {
       before: "link",

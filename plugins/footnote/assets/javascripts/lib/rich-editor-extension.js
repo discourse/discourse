@@ -141,6 +141,7 @@ function createFootnoteNodeView({
 
 /** @type {RichEditorExtension} */
 const extension = {
+  markdownFeatures: ["footnotes"],
   nodeViews: { footnote: createFootnoteNodeView },
   nodeSpec: {
     footnote: {

@@ -1,6 +1,7 @@
 import GridNodeView from "../components/grid-node-view.gjs";
 
 const extension = {
+  markdownFeatures: ["image-grid"],
   nodeViews: {
     grid: {
       component: GridNodeView,

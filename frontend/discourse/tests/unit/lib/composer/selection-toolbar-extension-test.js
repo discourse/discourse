@@ -1,8 +1,8 @@
 import { module, test } from "qunit";
 import sinon from "sinon";
-import richEditorSelectionToolbar from "discourse/plugins/chat/discourse/lib/rich-editor-selection-toolbar";
+import selectionToolbarExtension from "discourse/lib/composer/selection-toolbar-extension";
 
-module("Unit | Chat | rich editor selection toolbar", function () {
+module("Unit | Lib | composer | selection toolbar extension", function () {
   test("destroys an obsolete menu when a newer selection is already opening", async function (assert) {
     const pending = [];
     const menu = {
@@ -21,7 +21,7 @@ module("Unit | Chat | rich editor selection toolbar", function () {
         schema: { marks: {} },
       },
     };
-    const plugin = richEditorSelectionToolbar(() => ({})).plugins({
+    const plugin = selectionToolbarExtension(() => ({})).plugins({
       pmState: {
         Plugin: class {
           constructor(spec) {
@@ -30,6 +30,7 @@ module("Unit | Chat | rich editor selection toolbar", function () {
         },
       },
       getContext: () => ({ menu }),
+      utils: { getMarkRange: () => null },
     });
     const toolbar = plugin.view(view);
     const oldInstance = { destroy: sinon.spy() };
@@ -63,7 +64,7 @@ module("Unit | Chat | rich editor selection toolbar", function () {
 
   test("destroys a menu that finishes opening after editor teardown", async function (assert) {
     let resolve;
-    const plugin = richEditorSelectionToolbar(() => ({})).plugins({
+    const plugin = selectionToolbarExtension(() => ({})).plugins({
       pmState: {
         Plugin: class {
           constructor(spec) {
@@ -74,6 +75,7 @@ module("Unit | Chat | rich editor selection toolbar", function () {
       getContext: () => ({
         menu: { show: () => new Promise((r) => (resolve = r)) },
       }),
+      utils: { getMarkRange: () => null },
     });
     const view = {
       dom: document.createElement("div"),

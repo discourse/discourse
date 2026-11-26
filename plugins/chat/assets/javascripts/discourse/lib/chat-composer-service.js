@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 
 // The rich editor mounts asynchronously; a focus requested meanwhile is
@@ -11,7 +11,10 @@ let pendingFocus = null;
 
 export default class ChatComposerService extends Service {
   @service appEvents;
+  @service capabilities;
+  @service site;
 
+  /** @type {import("discourse/lib/composer/text-manipulation").TextManipulation | null} */
   @tracked editor;
   @tracked scroller;
 
@@ -78,24 +81,52 @@ export default class ChatComposerService extends Service {
     }
   }
 
+  /**
+   * @param {Object} [options]
+   * @param {boolean} [options.ensureAtEnd] moves the caret to the end
+   * @param {string} [options.addText] text typed while the editor wasn't focused
+   */
   @action
   focus(options = {}) {
+    const { editor } = this;
+
     // an outgoing composer's editor stays registered until it tears down
-    if (this.editor?.element?.isConnected) {
-      this.editor.focus(options);
-    } else if (this.#awaitingEditorFor) {
-      const pendingText =
-        pendingFocus?.owner === this ? pendingFocus.options.addText : null;
-      const addText = [pendingText, options.addText].filter(Boolean).join("");
-      pendingFocus = {
-        owner: this,
-        options: { ...options, addText: addText || null },
-      };
+    if (!editor?.element?.isConnected) {
+      if (this.#awaitingEditorFor) {
+        const pendingText =
+          pendingFocus?.owner === this ? pendingFocus.options.addText : null;
+        const addText = [pendingText, options.addText].filter(Boolean).join("");
+        pendingFocus = {
+          owner: this,
+          options: { ...options, addText: addText || null },
+        };
+      }
+      return;
     }
+
+    if (this.capabilities.isIpadOS || this.site.mobileView) {
+      return;
+    }
+
+    // inserted now to keep typed keys in order
+    if (options.addText) {
+      editor.insertTypedText(options.addText);
+    }
+
+    // Focusing fires the composer's focus handlers, which must not run inside
+    // the render that mounted the editor.
+    next(() => {
+      if (options.ensureAtEnd) {
+        editor.putCursorAtEnd();
+      } else {
+        editor.focus();
+      }
+    });
   }
 
   @action
   blur() {
-    this.editor?.blur();
+    const element = this.editor?.element;
+    next(() => element?.blur());
   }
 }
