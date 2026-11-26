@@ -118,7 +118,6 @@ export default class AdminOnboardingBanner extends Component {
   @service keyValueStore;
   @service messageBus;
   @service router;
-  @service siteSettings;
   @service toasts;
 
   @tracked activeTab = "steps";
@@ -250,7 +249,10 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   get showAgentTab() {
-    return this.siteSettings.mcp_server_enabled && !this.agentTabHidden;
+    return (
+      !!this.currentUser?.admin_onboarding_agent_available &&
+      !this.agentTabHidden
+    );
   }
 
   @action

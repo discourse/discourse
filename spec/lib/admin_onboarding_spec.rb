@@ -7,6 +7,32 @@ RSpec.describe AdminOnboarding do
 
   before { SiteSetting.enable_site_owner_onboarding = true }
 
+  describe ".agent_setup_available?" do
+    fab!(:setup_guide) do
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
+    end
+
+    before { SiteSetting.mcp_server_enabled = true }
+
+    it "is true when the MCP server offers the setup guide" do
+      expect(described_class.agent_setup_available?).to eq(true)
+    end
+
+    it "is false when the MCP server is disabled" do
+      SiteSetting.mcp_server_enabled = false
+
+      expect(described_class.agent_setup_available?).to eq(false)
+    end
+
+    it "is false when the setup guide is turned off or blocked" do
+      setup_guide.update!(enabled: false)
+      expect(described_class.agent_setup_available?).to eq(false)
+
+      setup_guide.update!(enabled: true, emergency_blocked: true)
+      expect(described_class.agent_setup_available?).to eq(false)
+    end
+  end
+
   describe ".complete_step" do
     def step_logs
       UserHistory.where(action: UserHistory.actions[:admin_onboarding_step_completed])

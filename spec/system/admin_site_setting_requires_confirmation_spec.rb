@@ -65,7 +65,6 @@ describe "Admin Site Setting Requires Confirmation" do
     end
 
     it "explains the effect of enabling the MCP server" do
-      SiteSetting.mcp_server_enabled = false
       settings_page.visit("mcp_server_enabled")
       settings_page.toggle_bool_setting("mcp_server_enabled")
 

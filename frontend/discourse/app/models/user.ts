@@ -185,6 +185,7 @@ export interface UserFields {
   avatar_template: string;
   added_at?: string;
   admin?: boolean;
+  admin_onboarding_agent_available?: boolean;
   admin_onboarding_channel_position?: number;
   admin_onboarding_completed_steps?: string[];
   all_unread_notifications_count?: number;

@@ -341,6 +341,11 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "AI agent tab" do
+    before do
+      SiteSetting.mcp_server_enabled = true
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
+    end
+
     it "starts on the step by step tab" do
       visit("/")
 
@@ -431,6 +436,15 @@ describe "Admin Onboarding Banner" do
 
     it "isn't offered when the MCP server is disabled" do
       SiteSetting.mcp_server_enabled = false
+
+      visit("/")
+
+      expect(banner).to be_visible
+      expect(banner).to have_no_tabs
+    end
+
+    it "isn't offered when agents can't use the setup guide" do
+      McpPrimitive.find_by!(identifier: "discourse_get_setup_guide").update!(enabled: false)
 
       visit("/")
 

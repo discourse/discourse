@@ -9,10 +9,7 @@ RSpec.describe DiscourseAi::Agents::Tools::EnableMcpThemeAccess do
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
   let(:tool) { described_class.new({}, bot_user: Discourse.system_user, llm: nil, context:) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.mcp_server_enabled = false
-  end
+  before { enable_current_plugin }
 
   def build_reviewable(tool_name: described_class.name)
     action =

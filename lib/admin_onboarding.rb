@@ -13,6 +13,13 @@ module AdminOnboarding
     owner_id == user.id && open_for?(owner_created_at)
   end
 
+  # Whether the owner can hand setup to an AI agent: the MCP server is on and
+  # offers the setup guide the agent is pointed at.
+  def self.agent_setup_available?
+    SiteSetting.mcp_server_enabled &&
+      McpPrimitive.exposed.exists?(kind: "tool", identifier: DiscourseMcp::Server::SETUP_GUIDE_TOOL)
+  end
+
   # Records the first time any admin completes a step, wherever they did it, and
   # ticks it off in the owner's checklist. Nothing is recorded once the owner
   # stops seeing the checklist, so the onboarding stats only cover onboarding.

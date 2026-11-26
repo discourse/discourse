@@ -143,7 +143,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
   needs.settings({
     enable_site_owner_onboarding: true,
-    mcp_server_enabled: false,
   });
 
   needs.hooks.beforeEach(function () {
@@ -838,12 +837,12 @@ const agentTab = () =>
 acceptance("Admin - Onboarding Banner - AI agent tab", function (needs) {
   needs.user({
     admin: true,
+    admin_onboarding_agent_available: true,
     show_site_owner_onboarding: true,
   });
 
   needs.settings({
     enable_site_owner_onboarding: true,
-    mcp_server_enabled: true,
   });
 
   test("starts on the step by step tab", async function (assert) {
@@ -902,13 +901,13 @@ acceptance(
   function (needs) {
     needs.user({
       admin: true,
+      admin_onboarding_agent_available: true,
       show_site_owner_onboarding: true,
       admin_onboarding_completed_steps: ["connect_agent"],
     });
 
     needs.settings({
       enable_site_owner_onboarding: true,
-      mcp_server_enabled: true,
     });
 
     test("shows that the agent is connected", async function (assert) {

@@ -579,6 +579,18 @@ RSpec.describe CurrentUserSerializer do
       expect(admin_serializer.as_json[:admin_onboarding_completed_steps]).to eq(["connect_agent"])
     end
 
+    it "includes whether the admin can hand setup to an AI agent" do
+      SiteSetting.mcp_server_enabled = true
+      expect(admin_serializer.as_json[:admin_onboarding_agent_available]).to eq(false)
+
+      McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
+      expect(
+        described_class.new(admin, scope: Guardian.new(admin), root: false).as_json[
+          :admin_onboarding_agent_available
+        ],
+      ).to eq(true)
+    end
+
     it "leaves out the completed steps when onboarding isn't shown" do
       serializer2 =
         described_class.new(another_admin, scope: Guardian.new(another_admin), root: false)

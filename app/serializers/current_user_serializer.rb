@@ -92,6 +92,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :show_site_owner_onboarding,
              :admin_onboarding_completed_steps,
              :admin_onboarding_channel_position,
+             :admin_onboarding_agent_available,
              :can_run_design_wizard,
              :can_use_dsa_account_email
 
@@ -228,6 +229,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def admin_onboarding_channel_position
     MessageBus.last_id(AdminOnboarding::STEP_COMPLETED_CHANNEL)
+  end
+
+  def include_admin_onboarding_agent_available?
+    include_show_site_owner_onboarding?
+  end
+
+  def admin_onboarding_agent_available
+    AdminOnboarding.agent_setup_available?
   end
 
   def include_has_unseen_features?

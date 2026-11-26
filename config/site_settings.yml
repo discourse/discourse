@@ -4504,7 +4504,7 @@ user_preferences:
 
 mcp:
   mcp_server_enabled:
-    default: true
+    default: false
     client: true
     area: "mcp"
     requires_confirmation: simple_on_enable

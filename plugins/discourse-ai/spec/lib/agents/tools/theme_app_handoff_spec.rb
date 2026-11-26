@@ -6,10 +6,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ThemeAppHandoff do
 
   let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
 
-  before do
-    enable_current_plugin
-    SiteSetting.mcp_server_enabled = false
-  end
+  before { enable_current_plugin }
 
   def invoke(**parameters)
     described_class.new(parameters, bot_user: Discourse.system_user, llm: nil, context:).invoke

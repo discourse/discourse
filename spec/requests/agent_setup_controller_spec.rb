@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe AgentSetupController do
+  before { SiteSetting.mcp_server_enabled = true }
+
   describe "#show" do
     it "explains how to connect an agent to this site's MCP server" do
       get "/agent-setup.md"
