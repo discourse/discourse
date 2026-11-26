@@ -3,17 +3,26 @@
 module DiscourseAi
   module InferredConcepts
     class Curator
-      DEFAULT_MAX_COSINE_DISTANCE = 0.25
-      NEIGHBOR_CANDIDATES_LIMIT = 40
-      NEIGHBORS_PER_CONCEPT = 15
+      TIGHT_MAX_COSINE_DISTANCE = 0.30
+      DEFAULT_MAX_COSINE_DISTANCE = 0.38
+      DEFAULT_MAX_PASSES = 3
+      NEIGHBOR_CANDIDATES_LIMIT = 100
+      NEIGHBORS_PER_CONCEPT = 20
       MAX_CLUSTER_SIZE = 25
+      MIN_CO_OCCURRENCE_SHARED_TOPICS = 3
+      MIN_CO_OCCURRENCE_OVERLAP_RATIO = 0.5
+      HIGH_CO_OCCURRENCE_SHARED_TOPICS = 10
+      HIGH_CO_OCCURRENCE_OVERLAP_RATIO = 0.35
+      MAX_RELATED_PAIRS = 40
       DEFAULT_STALE_CANDIDATE_AGE = 30.days
       MISSING_EMBEDDINGS_BATCH_LIMIT = 200
       MAX_DESCRIPTION_LENGTH = 1000
+      FEATURE_NAME = "inferred_concepts_deduplicate"
 
       def curate!(
         max_cosine_distance: DEFAULT_MAX_COSINE_DISTANCE,
-        stale_after: DEFAULT_STALE_CANDIDATE_AGE.ago
+        stale_after: DEFAULT_STALE_CANDIDATE_AGE.ago,
+        max_passes: DEFAULT_MAX_PASSES
       )
         unless DiscourseAi::Embeddings.enabled?
           return(
@@ -31,8 +40,8 @@ module DiscourseAi
         end
 
         reconciled_retired = reconcile_retired_associations!
-        dedup_stats = deduplicate_clusters!(max_cosine_distance: max_cosine_distance)
-        prune_stats = prune_stale_candidates!(stale_after: stale_after)
+        dedup_stats = deduplicate_clusters!(max_cosine_distance:, max_passes:)
+        prune_stats = prune_stale_candidates!(stale_after:)
         enqueued = enqueue_missing_embeddings
 
         dedup_stats.merge(prune_stats).merge(
@@ -65,34 +74,22 @@ module DiscourseAi
 
       def find_duplicate_clusters(
         max_cosine_distance: DEFAULT_MAX_COSINE_DISTANCE,
-        max_cluster_size: MAX_CLUSTER_SIZE
+        max_cluster_size: MAX_CLUSTER_SIZE,
+        include_co_occurrence: true
       )
-        return [] unless DiscourseAi::Embeddings.enabled?
-
-        vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
-        return [] if vector_def.nil?
-
-        edges = query_neighbor_edges(vector_def:, max_cosine_distance:)
-        return [] if edges.empty?
-
-        component_ids = build_clusters(edges, max_cluster_size:)
-        return [] if component_ids.empty?
-
-        concepts_by_id =
-          InferredConcept
-            .where.not(status: :retired)
-            .where(id: component_ids.flatten)
-            .index_by(&:id)
-
-        component_ids.filter_map do |ids|
-          cluster = ids.filter_map { |id| concepts_by_id[id] }
-          cluster if cluster.size >= 2
-        end
+        clusters, =
+          cluster_candidates(
+            max_cosine_distance: max_cosine_distance,
+            max_cluster_size: max_cluster_size,
+            include_co_occurrence: include_co_occurrence,
+          )
+        clusters
       end
 
       def deduplicate_clusters!(
         max_cosine_distance: DEFAULT_MAX_COSINE_DISTANCE,
-        max_cluster_size: MAX_CLUSTER_SIZE
+        max_cluster_size: MAX_CLUSTER_SIZE,
+        max_passes: DEFAULT_MAX_PASSES
       )
         stats = {
           clusters_processed: 0,
@@ -105,19 +102,90 @@ module DiscourseAi
         agent, llm = resolve_agent_and_llm
         return stats if agent.nil? || llm.nil?
 
-        clusters = find_duplicate_clusters(max_cosine_distance:, max_cluster_size:)
-        clusters.each do |cluster|
-          result = deduplicate_cluster(cluster, agent:, llm:)
-          stats[:clusters_processed] += 1
-          stats[:merges_applied] += result[:merges_applied]
-          stats[:concepts_retired] += result[:concepts_retired]
-          stats[:reparents_applied] += result[:reparents_applied]
+        evaluated_pairs = Set.new
+        pass_distances = build_pass_distances(max_cosine_distance:, max_passes:)
+        credit_exceeded = false
+
+        pass_distances.each_with_index do |distance, pass_index|
+          clusters, vector_similarities =
+            cluster_candidates(
+              max_cosine_distance: distance,
+              max_cluster_size: max_cluster_size,
+              include_co_occurrence: true,
+            )
+
+          pending_clusters =
+            clusters.select do |cluster|
+              cluster
+                .map(&:id)
+                .combination(2)
+                .any? do |a, b|
+                  pair = a < b ? [a, b] : [b, a]
+                  !evaluated_pairs.include?(pair)
+                end
+            end
+
+          if pending_clusters.empty?
+            break if distance >= max_cosine_distance
+            next
+          end
+
+          pass_merges = 0
+          updated_canonical_ids = Set.new
+
+          pending_clusters.each do |cluster|
+            begin
+              LlmCreditAllocation.check_credits!(llm, FEATURE_NAME)
+            rescue LlmCreditAllocation::CreditLimitExceeded
+              credit_exceeded = true
+              break
+            end
+
+            begin
+              result =
+                deduplicate_cluster(
+                  cluster,
+                  agent: agent,
+                  llm: llm,
+                  vector_similarities: vector_similarities,
+                  updated_canonical_ids: updated_canonical_ids,
+                )
+              cluster
+                .map(&:id)
+                .combination(2) { |a, b| evaluated_pairs << (a < b ? [a, b] : [b, a]) }
+
+              stats[:clusters_processed] += 1
+              stats[:merges_applied] += result[:merges_applied]
+              stats[:concepts_retired] += result[:concepts_retired]
+              stats[:reparents_applied] += result[:reparents_applied]
+              pass_merges += result[:merges_applied]
+            rescue StandardError => e
+              Discourse.warn_exception(
+                e,
+                message:
+                  "Failed deduplicating inferred concept cluster #{cluster.map(&:id).inspect}",
+              )
+            end
+          end
+
+          break if credit_exceeded
+          break if distance >= max_cosine_distance && pass_merges == 0
+
+          if updated_canonical_ids.present? && pass_index < pass_distances.size - 1
+            refresh_concept_embeddings(updated_canonical_ids)
+          end
         end
 
         stats
       end
 
-      def deduplicate_cluster(concepts, agent: nil, llm: nil)
+      def deduplicate_cluster(
+        concepts,
+        agent: nil,
+        llm: nil,
+        vector_similarities: {},
+        updated_canonical_ids: nil
+      )
         stats = { merges_applied: 0, concepts_retired: 0, reparents_applied: 0 }
         active_concepts = Array(concepts).reject(&:retired?)
         return stats if active_concepts.size < 2
@@ -128,9 +196,17 @@ module DiscourseAi
         return stats if agent.nil? || llm.nil?
 
         usage_counts = load_usage_counts(active_concepts.map(&:id))
+        ordered_concepts = active_concepts.sort_by { |c| [-(usage_counts[c.id] || 0), c.id] }
+        related_pairs =
+          load_cluster_pair_signals(
+            ordered_concepts,
+            usage_counts: usage_counts,
+            vector_similarities: vector_similarities,
+          )
+
         payload = {
           concepts:
-            active_concepts.map do |concept|
+            ordered_concepts.map do |concept|
               {
                 id: concept.id,
                 name: concept.name,
@@ -141,13 +217,14 @@ module DiscourseAi
                 usage_count: usage_counts[concept.id] || 0,
               }
             end,
+          related_pairs: related_pairs,
         }
 
         context =
           DiscourseAi::Agents::BotContext.new(
             messages: [{ type: :user, content: payload.to_json }],
             user: Discourse.system_user,
-            feature_name: "inferred_concepts_deduplicate",
+            feature_name: FEATURE_NAME,
           )
 
         bot = DiscourseAi::Agents::Bot.as(Discourse.system_user, agent: agent, model: llm)
@@ -159,7 +236,7 @@ module DiscourseAi
         return stats if structured_output.nil?
 
         plan = sanitize_plan(structured_output, active_concepts.map(&:id).to_set)
-        apply_plan(plan, active_concepts)
+        apply_plan(plan, active_concepts, updated_canonical_ids: updated_canonical_ids)
       end
 
       def prune_stale_candidates!(stale_after: DEFAULT_STALE_CANDIDATE_AGE.ago)
@@ -217,6 +294,162 @@ module DiscourseAi
       end
 
       private
+
+      def build_pass_distances(max_cosine_distance:, max_passes:)
+        passes = [max_passes.to_i, 1].max
+        if passes > 1 && max_cosine_distance > TIGHT_MAX_COSINE_DISTANCE
+          [TIGHT_MAX_COSINE_DISTANCE] + Array.new(passes - 1, max_cosine_distance)
+        else
+          Array.new(passes, max_cosine_distance)
+        end
+      end
+
+      def cluster_candidates(max_cosine_distance:, max_cluster_size:, include_co_occurrence:)
+        return [], {} unless DiscourseAi::Embeddings.enabled?
+
+        vector_def = EmbeddingDefinition.find_by(id: SiteSetting.ai_embeddings_selected_model)
+        return [], {} if vector_def.nil?
+
+        vector_edges = query_neighbor_edges(vector_def:, max_cosine_distance:)
+        vector_similarities =
+          vector_edges.each_with_object({}) do |(a, b, dist), acc|
+            acc[[a, b]] = (1.0 - dist.to_f).clamp(0.0, 1.0).round(4)
+          end
+
+        co_occurrence_edges = include_co_occurrence ? query_co_occurrence_edges : []
+        edges = vector_edges + co_occurrence_edges
+        return [], vector_similarities if edges.empty?
+
+        candidate_ids = edges.flat_map { |a, b, _| [a, b] }.uniq
+        usage_counts = load_usage_counts(candidate_ids)
+
+        component_ids = build_clusters(edges, max_cluster_size:, usage_counts:)
+        return [], vector_similarities if component_ids.empty?
+
+        concepts_by_id =
+          InferredConcept
+            .where.not(status: :retired)
+            .where(id: component_ids.flatten)
+            .index_by(&:id)
+
+        clusters =
+          component_ids.filter_map do |ids|
+            cluster = ids.filter_map { |id| concepts_by_id[id] }
+            cluster if cluster.size >= 2
+          end
+
+        [clusters, vector_similarities]
+      end
+
+      def query_co_occurrence_edges
+        statuses = [InferredConcept.statuses[:active], InferredConcept.statuses[:candidate]]
+
+        rows =
+          DB.query(
+            <<~SQL,
+              WITH topic_counts AS (
+                SELECT
+                  ict.inferred_concept_id AS concept_id,
+                  COUNT(DISTINCT ict.topic_id) AS topics_count
+                FROM inferred_concept_topics ict
+                INNER JOIN inferred_concepts c ON c.id = ict.inferred_concept_id
+                WHERE c.status IN (:statuses)
+                GROUP BY ict.inferred_concept_id
+              )
+              SELECT
+                ict1.inferred_concept_id AS source_id,
+                ict2.inferred_concept_id AS target_id,
+                COUNT(DISTINCT ict1.topic_id)::float / LEAST(tc1.topics_count, tc2.topics_count) AS overlap_ratio
+              FROM inferred_concept_topics ict1
+              INNER JOIN inferred_concept_topics ict2
+                ON ict2.topic_id = ict1.topic_id
+                AND ict1.inferred_concept_id < ict2.inferred_concept_id
+              INNER JOIN topic_counts tc1 ON tc1.concept_id = ict1.inferred_concept_id
+              INNER JOIN topic_counts tc2 ON tc2.concept_id = ict2.inferred_concept_id
+              GROUP BY
+                ict1.inferred_concept_id,
+                ict2.inferred_concept_id,
+                tc1.topics_count,
+                tc2.topics_count
+              HAVING
+                COUNT(DISTINCT ict1.topic_id) >= :min_shared
+                AND (
+                  COUNT(DISTINCT ict1.topic_id)::float / LEAST(tc1.topics_count, tc2.topics_count) >= :min_overlap
+                  OR (
+                    COUNT(DISTINCT ict1.topic_id) >= :high_shared
+                    AND COUNT(DISTINCT ict1.topic_id)::float / LEAST(tc1.topics_count, tc2.topics_count) >= :high_overlap
+                  )
+                )
+            SQL
+            statuses: statuses,
+            min_shared: MIN_CO_OCCURRENCE_SHARED_TOPICS,
+            min_overlap: MIN_CO_OCCURRENCE_OVERLAP_RATIO,
+            high_shared: HIGH_CO_OCCURRENCE_SHARED_TOPICS,
+            high_overlap: HIGH_CO_OCCURRENCE_OVERLAP_RATIO,
+          )
+
+        rows.map do |row|
+          [row.source_id, row.target_id, (1.0 - row.overlap_ratio.to_f).clamp(0.0, 1.0)]
+        end
+      end
+
+      def load_cluster_pair_signals(concepts, usage_counts:, vector_similarities:)
+        concept_ids = concepts.map(&:id)
+        return [] if concept_ids.size < 2
+
+        co_occurrence_rows = DB.query(<<~SQL, concept_ids: concept_ids)
+              SELECT
+                ict1.inferred_concept_id AS source_id,
+                ict2.inferred_concept_id AS target_id,
+                COUNT(DISTINCT ict1.topic_id) AS shared_topics
+              FROM inferred_concept_topics ict1
+              INNER JOIN inferred_concept_topics ict2
+                ON ict2.topic_id = ict1.topic_id
+                AND ict1.inferred_concept_id < ict2.inferred_concept_id
+              WHERE ict1.inferred_concept_id IN (:concept_ids)
+                AND ict2.inferred_concept_id IN (:concept_ids)
+              GROUP BY ict1.inferred_concept_id, ict2.inferred_concept_id
+            SQL
+
+        shared_by_pair =
+          co_occurrence_rows.each_with_object({}) do |row, acc|
+            acc[[row.source_id, row.target_id]] = row.shared_topics.to_i
+          end
+
+        signals = []
+        concept_ids.combination(2) do |id_a, id_b|
+          pair = id_a < id_b ? [id_a, id_b] : [id_b, id_a]
+          shared = shared_by_pair[pair] || 0
+          similarity = vector_similarities[pair]
+          next if shared == 0 && similarity.nil?
+
+          min_usage = [usage_counts[pair[0]] || 0, usage_counts[pair[1]] || 0].min
+          overlap_ratio = min_usage > 0 ? (shared.to_f / min_usage).clamp(0.0, 1.0).round(3) : 0.0
+
+          entry = { concept_ids: pair, shared_topics: shared, overlap_ratio: overlap_ratio }
+          entry[:similarity] = similarity if similarity.present?
+          signals << entry
+        end
+
+        signals
+          .sort_by do |entry|
+            [-entry[:shared_topics], -entry[:overlap_ratio], -(entry[:similarity] || 0.0)]
+          end
+          .first(MAX_RELATED_PAIRS)
+      end
+
+      def refresh_concept_embeddings(concept_ids)
+        return if concept_ids.blank? || !DiscourseAi::Embeddings.enabled?
+
+        DiscourseAi::Embeddings::Vector.instance.gen_bulk_reprensentations(
+          InferredConcept.where.not(status: :retired).where(id: concept_ids.to_a),
+        )
+      rescue StandardError => e
+        Discourse.warn_exception(
+          e,
+          message: "Failed refreshing embeddings for merged inferred concepts",
+        )
+      end
 
       def query_neighbor_edges(vector_def:, max_cosine_distance:)
         dimensions = vector_def.dimensions.to_i
@@ -289,33 +522,38 @@ module DiscourseAi
         []
       end
 
-      def build_clusters(edges, max_cluster_size:)
-        parent = {}
-        size = Hash.new(1)
+      def build_clusters(edges, max_cluster_size:, usage_counts: {})
+        adjacency = Hash.new { |h, k| h[k] = {} }
 
-        find_root = ->(id) do
-          parent[id] ||= id
-          while parent[id] != id
-            parent[id] = parent[parent[id]]
-            id = parent[id]
-          end
-          id
+        edges.each do |a, b, dist|
+          d = dist.to_f
+          adjacency[a][b] = d if !adjacency[a].key?(b) || d < adjacency[a][b]
+          adjacency[b][a] = d if !adjacency[b].key?(a) || d < adjacency[b][a]
         end
 
-        edges.each do |a, b, _dist|
-          ra = find_root.call(a)
-          rb = find_root.call(b)
-          next if ra == rb
-          next if size[ra] + size[rb] > max_cluster_size
+        return [] if adjacency.empty?
 
-          ra, rb = rb, ra if size[ra] < size[rb]
-          parent[rb] = ra
-          size[ra] += size[rb]
+        assigned = Set.new
+        clusters = []
+        seeds =
+          adjacency.keys.sort_by { |id| [-(usage_counts[id] || 0), adjacency[id].values.min, id] }
+
+        seeds.each do |seed|
+          next if assigned.include?(seed)
+
+          neighbors =
+            adjacency[seed]
+              .keys
+              .reject { |nid| assigned.include?(nid) }
+              .sort_by { |nid| [adjacency[seed][nid], -(usage_counts[nid] || 0), nid] }
+          next if neighbors.empty?
+
+          cluster = [seed] + neighbors.first([max_cluster_size - 1, 0].max)
+          cluster.each { |id| assigned << id }
+          clusters << cluster if cluster.size >= 2
         end
 
-        groups = Hash.new { |h, k| h[k] = [] }
-        parent.keys.each { |id| groups[find_root.call(id)] << id }
-        groups.values.select { |ids| ids.size >= 2 }
+        clusters
       end
 
       def resolve_agent_and_llm
@@ -398,7 +636,7 @@ module DiscourseAi
         { merges: merges, reparents: reparents }
       end
 
-      def apply_plan(plan, active_concepts)
+      def apply_plan(plan, active_concepts, updated_canonical_ids: nil)
         stats = { merges_applied: 0, concepts_retired: 0, reparents_applied: 0 }
         by_id = active_concepts.index_by(&:id)
         merger = Merger.new
@@ -415,6 +653,7 @@ module DiscourseAi
           )
           retired_count = InferredConcept.retired.where(id: duplicates.map(&:id)).count
           if retired_count > 0
+            updated_canonical_ids&.add(canonical.id)
             stats[:merges_applied] += 1
             stats[:concepts_retired] += retired_count
           end
