@@ -2,7 +2,8 @@
 
 module JsLocaleHelper
   def self.plugin_client_files(locale_str)
-    files = Dir["#{Rails.root.join("plugins/*/config/locales/client*.#{locale_str}.yml")}"]
+    files = Dir[Rails.root.join("plugins/*/config/locales/client*.#{locale_str}.yml").to_s]
+    files = files.select { |path| GlobalSetting.load_plugin?(File.basename(File.dirname(path, 3))) }
     I18n::Backend::DiscourseI18n.sort_locale_files(files)
   end
 
