@@ -102,6 +102,13 @@ export default class BlogArticleSettings extends Component {
   }
 
   @action
+  async cancel() {
+    if (await this.confirmClose()) {
+      this.args.closeModal();
+    }
+  }
+
+  @action
   setCover(upload, { set }) {
     set("cover_upload_id", upload?.id ?? "");
     set("cover_url", upload?.url ?? "");
@@ -152,6 +159,7 @@ export default class BlogArticleSettings extends Component {
       <:body>
         <Form
           class="blog-article-settings__form"
+          @commitOnSubmit={{false}}
           @data={{this.data}}
           @onRegisterApi={{this.registerForm}}
           @onSubmit={{this.save}}
@@ -299,7 +307,7 @@ export default class BlogArticleSettings extends Component {
           @disabled={{this.saving}}
           @label="blog.save"
         />
-        <DModalCancel @close={{@closeModal}} />
+        <DModalCancel @close={{this.cancel}} />
       </:footer>
     </DModal>
   </template>

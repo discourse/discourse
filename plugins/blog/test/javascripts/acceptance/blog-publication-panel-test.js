@@ -579,9 +579,32 @@ acceptance("Blog publication panel", function (needs) {
       );
     await click(".dialog-footer .btn-default");
     assert.dom(SETTINGS).exists("declining keeps the settings open");
-    await click(`${SETTINGS} .modal-close`);
+    await click(`${SETTINGS} .d-modal-cancel`);
+    assert
+      .dom(".dialog-body")
+      .includesText("Discard your unsaved changes", "Cancel asks as well");
     await click(".dialog-footer .btn-primary");
     assert.dom(SETTINGS).doesNotExist("confirming closes the settings");
+  });
+
+  test("still asks before discarding settings that failed to save", async function (assert) {
+    pretender.put("/blog-editor/publications/280.json", () =>
+      response(422, { errors: ["Path is already taken"] })
+    );
+
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings`);
+    await formKit(`${SETTINGS}__form`).field("path").fillIn("a-taken-path");
+    await click(`${SETTINGS}__save`);
+    await click(".dialog-footer .btn-primary");
+    await click(`${SETTINGS} .modal-close`);
+
+    assert
+      .dom(".dialog-body")
+      .includesText(
+        "Discard your unsaved changes",
+        "the rejected edits still count as unsaved"
+      );
   });
 
   test("the public discussion topic explains where replies appear", async function (assert) {
