@@ -269,7 +269,7 @@ acceptance("Live room in page shell Context", function (needs) {
       .dom(".page-shell-context-picker-trigger")
       .hasAttribute(
         "data-context-view",
-        "about",
+        "follow-page",
         "shows About before a room is selected"
       );
 

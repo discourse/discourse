@@ -13,17 +13,22 @@ export default class ContextPicker extends Component {
 
   labelFor = (view) => {
     const automatic = this.pageShell.automaticContextView;
-    return view.id === "about" && automatic.id !== "about"
+    return view.id === "follow-page"
       ? i18n("page_shell.context_follow_page", { view: i18n(automatic.label) })
       : i18n(view.label);
   };
 
-  iconFor = (view) =>
-    (view.id === "about" ? this.pageShell.automaticContextView : view).icon ??
-    "table-columns";
+  iconFor = (view) => view.icon ?? "table-columns";
+
+  get options() {
+    return [
+      { ...this.pageShell.automaticContextView, id: "follow-page" },
+      ...this.pageShell.contextViews,
+    ];
+  }
 
   get selectedOption() {
-    return this.pageShell.contextViews.find(
+    return this.options.find(
       (view) => view.id === this.pageShell.contextPickerValue
     );
   }
@@ -50,7 +55,7 @@ export default class ContextPicker extends Component {
       </:trigger>
       <:content as |menu|>
         <DDropdownMenu as |dropdown|>
-          {{#each this.pageShell.contextViews key="id" as |view|}}
+          {{#each this.options key="id" as |view|}}
             <dropdown.item>
               <DButton
                 aria-current={{if

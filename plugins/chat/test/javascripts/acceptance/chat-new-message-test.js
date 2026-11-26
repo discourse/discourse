@@ -478,7 +478,7 @@ acceptance("Chat | Page shell Context", function (needs) {
       .dom(picker)
       .hasAttribute(
         "data-context-view",
-        "about",
+        "follow-page",
         "closing Chat shows the default view"
       );
     await click(picker);

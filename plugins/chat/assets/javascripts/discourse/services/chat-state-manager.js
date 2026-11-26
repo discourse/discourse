@@ -284,7 +284,7 @@ export default class ChatStateManager extends Service {
       this.isDrawerInContext &&
       this.pageShell.selectedContextView.id === "chat"
     ) {
-      this.pageShell.selectContextView("about");
+      this.pageShell.selectContextView("follow-page");
     }
     this.isDrawerInContext = false;
     this.chatDrawerRouter.currentRouteName = null;

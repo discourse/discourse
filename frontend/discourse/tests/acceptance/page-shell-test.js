@@ -123,7 +123,7 @@ acceptance("Page shell | regions", function (needs) {
     const panel = "#page-shell-context .context-category-navigation";
     assert
       .dom(".page-shell-context-picker-trigger .d-button-label")
-      .hasText("About", "selects About as the fallback");
+      .hasText("Follow page (About)", "shows About as the automatic fallback");
     assert
       .dom(".page-shell-context-picker-trigger .d-icon-circle-info")
       .exists("shows the info icon for About");
@@ -214,7 +214,7 @@ acceptance("Page shell | regions", function (needs) {
       .dom(".page-shell-context-picker-trigger")
       .hasAttribute(
         "data-context-view",
-        "about",
+        "follow-page",
         "The Context selector is visible above the panel"
       );
 
@@ -355,7 +355,7 @@ acceptance("Page shell | regions", function (needs) {
     assert.dom(option).doesNotExist("removes Topic off a discussion");
     assert
       .dom(picker)
-      .hasAttribute("data-context-view", "about", "falls back to About");
+      .hasAttribute("data-context-view", "follow-page", "falls back to About");
   });
 
   test("Context remembers a page-aware selection across automatic fallbacks", async function (assert) {
@@ -369,7 +369,7 @@ acceptance("Page shell | regions", function (needs) {
       .dom(picker)
       .hasAttribute(
         "data-context-view",
-        "about",
+        "follow-page",
         "uses About outside a category"
       );
 
@@ -385,11 +385,38 @@ acceptance("Page shell | regions", function (needs) {
     await click(picker);
     await click('[data-context-view-option="about"]');
     assert
+      .dom("#page-shell-context .context-about")
+      .exists("opens About on a topic");
+    await click(picker);
+    await click('[data-context-view-option="follow-page"]');
+    assert
       .dom(`${picker} .d-button-label`)
       .hasText(
         "Follow page (Topic summary)",
         "clears the preference and follows Main"
       );
+
+    await click(picker);
+    await click('[data-context-view-option="about"]');
+    await visit("/latest");
+    assert
+      .dom(`${picker} .d-button-label`)
+      .hasText(
+        "Follow page (About)",
+        "navigation returns the About preview to Follow page"
+      );
+    await visit("/c/bug/1");
+    assert
+      .dom(`${picker} .d-button-label`)
+      .hasText(
+        "Follow page (Category guide)",
+        "About does not stick across pages"
+      );
+    await click(picker);
+    assert
+      .dom('[data-context-view-option="about"]')
+      .hasText("About", "keeps About in the category picker");
+    await click('[data-context-view-option="follow-page"]');
 
     await click("#toggle-context-panel");
     await visit("/latest");
