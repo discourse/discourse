@@ -43,11 +43,21 @@
 
       .empty-state__cta {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-        gap: 1rem;
-        margin-top: 1.5rem;
+        gap: var(--space-4);
+        margin-top: var(--space-6);
+      }
+
+      .empty-state__links {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+
+        a + a {
+          border-inline-start: 1px solid var(--content-border-color);
+          padding-inline-start: var(--space-3);
+        }
       }
     }
 

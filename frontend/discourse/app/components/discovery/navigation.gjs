@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
@@ -13,7 +12,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { isEmptyCategoryList } from "discourse/lib/empty-category";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -21,8 +19,6 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
-import { i18n } from "discourse-i18n";
 
 export default class DiscoveryNavigation extends Component {
   @service categoryTypeChooser;
@@ -41,17 +37,6 @@ export default class DiscoveryNavigation extends Component {
 
   get skipCategoriesNavItem() {
     return this.router.currentRoute.queryParams.f === TRACKED_QUERY_PARAM_VALUE;
-  }
-
-  get showBackToCategories() {
-    return (
-      this.currentUser?.admin &&
-      isEmptyCategoryList({
-        category: this.args.category,
-        tag: this.args.tag,
-        list: this.args.model,
-      })
-    );
   }
 
   get canCreateTopic() {
@@ -127,13 +112,6 @@ export default class DiscoveryNavigation extends Component {
       @filter={{this.filterMode}}
       @tag={{@tag}}
     />
-
-    {{#if this.showBackToCategories}}
-      <LinkTo class="category-back-link" @route="discovery.categories">
-        {{dIcon "chevron-left"}}
-        {{i18n "category.back_to_categories"}}
-      </LinkTo>
-    {{/if}}
 
     {{#if @category}}
       <PluginOutlet
