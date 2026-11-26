@@ -157,7 +157,7 @@ export default class TextareaTextManipulation implements TextManipulation {
   }
 
   insertBlock(text: string, options?: InsertBlockOptions): void {
-    this._addBlock(this.getSelected(), text, options);
+    this._addBlock(options?.selected ?? this.getSelected(), text, options);
   }
 
   insertText(text: string, options?: AddTextOptions): void {

@@ -37,8 +37,10 @@ export interface SelectedText {
   start: number;
   /** End offset of the selection. */
   end: number;
-  /** Selected text. */
+  /** Selected Markdown. */
   value: string;
+  /** Plain text of the selection when it differs from the editor’s Markdown representation. */
+  plainText?: string;
   /** Text before the selection. */
   pre: string;
   /** Text after the selection. */
@@ -94,6 +96,8 @@ export interface AddTextOptions {
 export interface InsertBlockOptions {
   /** Place the cursor on the first line inside a multiline block. */
   moveCursorInside?: boolean;
+  /** Replace the captured selection instead of the current selection. */
+  selected?: SelectedText;
 }
 
 export type AutocompleteOptions = Record<string, unknown> | "destroy";
@@ -176,7 +180,7 @@ export interface TextManipulation {
   ): void;
   /** Handles pasted content. */
   paste(event?: ClipboardEvent): void | Promise<void>;
-  /** Inserts a standalone block. */
+  /** Inserts a standalone block in place of the supplied or current selection. */
   insertBlock(block: string, options?: InsertBlockOptions): void;
   /** Inserts text at the current selection. */
   insertText(text: string, options?: AddTextOptions): void;
