@@ -189,19 +189,19 @@ acceptance("Password Reset", function (needs) {
 
   test("revokes apps authorized after the page loaded", async function (assert) {
     const captured = capturePasswordResetRequest();
-    PreloadStore.store("password_reset", { has_user_api_keys: false });
+    PreloadStore.store("password_reset", { has_connected_apps: false });
 
     await visit("/u/password-reset/myvalidtoken");
     assert.dom(".change-password-form__revoke-apps").doesNotExist();
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     await click(".password-reset form button[type='submit']");
-    assert.strictEqual(captured.body.revoke_user_api_keys, "true");
+    assert.strictEqual(captured.body.revoke_connected_apps, "true");
   });
 
   test("keeps connected apps when the option is unchecked", async function (assert) {
     const captured = capturePasswordResetRequest();
-    PreloadStore.store("password_reset", { has_user_api_keys: true });
+    PreloadStore.store("password_reset", { has_connected_apps: true });
 
     await visit("/u/password-reset/myvalidtoken");
     assert.dom(".change-password-form__revoke-apps-checkbox").isChecked();
@@ -209,6 +209,6 @@ acceptance("Password Reset", function (needs) {
     await click(".change-password-form__revoke-apps-checkbox");
     await fillIn(".password-reset input", "perf3ctly5ecur3");
     await click(".password-reset form button[type='submit']");
-    assert.strictEqual(captured.body.revoke_user_api_keys, "false");
+    assert.strictEqual(captured.body.revoke_connected_apps, "false");
   });
 });

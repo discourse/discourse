@@ -121,11 +121,11 @@ export default <template>
             </div>
           </div>
 
-          {{#if @controller.model.has_user_api_keys}}
+          {{#if @controller.model.has_connected_apps}}
             <label class="checkbox-label change-password-form__revoke-apps">
               <Input
                 class="change-password-form__revoke-apps-checkbox"
-                @checked={{@controller.revokeUserApiKeys}}
+                @checked={{@controller.revokeConnectedApps}}
                 @type="checkbox"
               />
               {{i18n "user.change_password.revoke_apps"}}

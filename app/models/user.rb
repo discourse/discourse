@@ -282,7 +282,10 @@ class User < ActiveRecord::Base
   attr_accessor :send_welcome_message
 
   # Set before saving a new password to also revoke the user's authorized apps
-  attr_accessor :revoke_user_api_keys_on_password_change
+  attr_accessor :revoke_connected_apps_on_password_change
+
+  # Counts of apps revoked by the last password change, when it revoked them
+  attr_reader :revoked_connected_apps
 
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
@@ -1834,6 +1837,11 @@ class User < ActiveRecord::Base
     User.transaction { User.uncached { yield lock_credential_identity } }
   end
 
+  def has_connected_apps?
+    UserApiKey.active.where(user_id: id).exists? ||
+      McpOauthAuthorization.where(user_id: id, revoked_at: nil).exists?
+  end
+
   # Revoke browser sessions, their push subscriptions, and legacy shadow keys.
   # The master's own authorized apps retain their independent lifecycle.
   def revoke_family_sessions!
@@ -2400,13 +2408,14 @@ class User < ActiveRecord::Base
   end
 
   def with_password_change_revocation
+    @revoked_connected_apps = nil
     with_credential_lock do |identity|
       next unless yield
 
       # A shadow shares the lock, but a password change is local maintenance.
       revoke_credentials!(
         family: identity == self ? identity : nil,
-        include_user_api_keys: revoke_user_api_keys_on_password_change,
+        include_connected_apps: revoke_connected_apps_on_password_change,
       )
       email_tokens.where("not expired").update_all(expired: true)
     end
@@ -2423,19 +2432,51 @@ class User < ActiveRecord::Base
     with_credential_lock { |identity| revoke_credentials!(family: identity) if identity == self }
   end
 
-  def revoke_credentials!(family:, include_user_api_keys: false)
+  def revoke_credentials!(family:, include_connected_apps: false)
     # Without a family identity, revoke only credentials owned by this shadow.
     shadow_ids = family ? family.anonymous_user_shadows.pluck(:user_id) : [id]
     user_ids = family ? [family.id, *shadow_ids] : shadow_ids
 
     UserAuthToken.where(user_id: user_ids).find_each(&:destroy!)
-    api_key_user_ids = include_user_api_keys ? user_ids : shadow_ids
-    if api_key_user_ids.present?
-      UserApiKey.where(user_id: api_key_user_ids, revoked_at: nil).update_all(
-        revoked_at: Time.current,
+    if shadow_ids.present?
+      UserApiKey.where(user_id: shadow_ids, revoked_at: nil).update_all(revoked_at: Time.current)
+    end
+    revoke_connected_apps!(user_ids:, owner_ids: user_ids - shadow_ids) if include_connected_apps
+    PushSubscription.where(user_id: user_ids).delete_all
+  end
+
+  # Authorized apps (user API keys and MCP authorizations) as listed under
+  # Preferences > Security. Revoking an MCP authorization also stops its
+  # outstanding codes, since code exchange checks the authorization.
+  def revoke_connected_apps!(user_ids:, owner_ids:)
+    now = Time.current
+    user_api_keys =
+      UserApiKey.where(user_id: owner_ids, revoked_at: nil).update_all(revoked_at: now)
+
+    mcp_authorization_ids =
+      McpOauthAuthorization.where(user_id: user_ids, revoked_at: nil).pluck(:id)
+    if mcp_authorization_ids.present?
+      McpOauthAccessToken.where(
+        mcp_oauth_authorization_id: mcp_authorization_ids,
+        revoked_at: nil,
+      ).update_all(revoked_at: now, updated_at: now)
+      McpOauthRefreshToken.where(
+        mcp_oauth_authorization_id: mcp_authorization_ids,
+        revoked_at: nil,
+      ).update_all(revoked_at: now, updated_at: now)
+      McpOauthAuthorization.where(id: mcp_authorization_ids).update_all(
+        status: "revoked",
+        revoked_at: now,
+        revoked_by_user_id: id,
+        revoked_reason: "password_reset",
+        updated_at: now,
       )
     end
-    PushSubscription.where(user_id: user_ids).delete_all
+
+    @revoked_connected_apps = {
+      user_api_keys: user_api_keys,
+      mcp_authorizations: mcp_authorization_ids.size,
+    }
   end
 
   def deactivate_anonymous_shadow_users!

@@ -907,7 +907,7 @@ class UsersController < ApplicationController
         security_key_required: @user.security_keys_enabled?,
         backup_enabled: @user.backup_codes_enabled?,
         multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        has_user_api_keys: UserApiKey.active.where(user_id: @user.id).exists?,
+        has_connected_apps: @user.has_connected_apps?,
       }
     end
 
@@ -996,10 +996,8 @@ class UsersController < ApplicationController
         @user.update_timezone_if_missing(params[:timezone]) if params[:timezone]
         @user.password = params[:password]
         @user.password_required!
-        revoke_user_api_keys = ActiveModel::Type::Boolean.new.cast(params[:revoke_user_api_keys])
-        @user.revoke_user_api_keys_on_password_change = revoke_user_api_keys
-        revoked_user_api_keys_count =
-          revoke_user_api_keys ? UserApiKey.active.where(user_id: @user.id).count : 0
+        @user.revoke_connected_apps_on_password_change =
+          ActiveModel::Type::Boolean.new.cast(params[:revoke_connected_apps])
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
@@ -1010,9 +1008,13 @@ class UsersController < ApplicationController
             @user.user_associated_accounts.destroy_all
           end
 
-          if revoked_user_api_keys_count > 0
-            history_details = "revoked_user_api_keys: #{revoked_user_api_keys_count}"
-          end
+          history_details =
+            @user
+              .revoked_connected_apps
+              &.select { |_, count| count > 0 }
+              &.map { |type, count| "revoked_#{type}: #{count}" }
+              &.join("\n")
+              .presence
 
           UserHistory.create!(
             target_user: @user,
@@ -1040,7 +1042,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-          has_user_api_keys: UserApiKey.active.where(user_id: @user.id).exists?,
+          has_connected_apps: @user.has_connected_apps?,
         }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))

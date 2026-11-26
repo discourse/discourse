@@ -60,7 +60,7 @@ module CurrentUser
 
   private
 
-  # Serialize issuing a credential (app key, one-time login token) with password
+  # Serialize issuing a credential (app key, MCP grant, login token) with password
   # change revocation, re-reading the credential that authenticated the request
   # under the lock so a request already in flight cannot outlive the reset.
   def with_revalidated_credential
