@@ -1,3 +1,7 @@
+# Copy this template to a private file. Converter imports use the full template.
+# For a native merge, configure site_settings and the optional preupload_* keys
+# below. Set extracted upload roots in the merge project's merge.yml.
+
 # Path configurations for IntermediateDB and UploadsDB that the import script generates.
 # When running inside a Docker container, these files should be located in the
 # /shared/import directory to ensure proper functioning.
@@ -34,6 +38,8 @@ fix_missing: false
 create_optimized_images: false
 
 site_settings:
+  # The standalone importer applies these five settings when creating uploads.
+  # Native preparation reads each original's secure flag from the restored database.
   authorized_extensions: "*"
   max_attachment_size_kb: 512_000
   max_image_size_kb: 102_400
@@ -51,6 +57,13 @@ site_settings:
   # Set this to true if the site is a multisite and configure the `multisite_db_name` accordingly
   multisite: false
   multisite_db_name: "default"
+
+# Optional top-level settings for native prepare-uploads.
+# List only sides that read from a separate hosted prefix. For example, when
+# keeping existing destination uploads, uncomment the next two lines.
+# preupload_read_prefixes:
+#   destination: "s3://example-bucket/retained"
+# preupload_workers: 20
 
 # Sometimes a file can be found at one of many locations. Here's a list of transformations that can
 # be applied to the path to try and find the file. The first transformation that results in a file

@@ -1,0 +1,628 @@
+#!/usr/bin/env python3
+"""Host-side preparation for the all-in-one Discourse merger."""
+import argparse
+import fcntl
+import json
+import os
+import re
+import secrets
+import shlex
+import shutil
+import socket
+import subprocess
+import sys
+import time
+from pathlib import Path
+from urllib.parse import urlsplit
+
+LABEL = "org.discourse.merge.run"
+PROJECT = "/shared/merge-project"
+CLI = "script/bulk_import/discourse_merger/cli.rb"
+ROLES = ("source", "destination")
+TEMPLATES = ["postgres", "redis", "web", "web.ratelimited"]
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def call(*args, **kwargs):
+    return subprocess.run(args, check=True, **kwargs)
+
+
+def output(*args):
+    return call(*args, stdout=subprocess.PIPE, text=True).stdout.strip()
+
+
+def write_json(path, value):
+    temp = path.with_suffix(".tmp")
+    temp.write_text(json.dumps(value, indent=2) + "\n")
+    temp.replace(path)
+
+
+def containers():
+    # Inspect only identity and mounts. Other containers can have private env settings.
+    ids = output("docker", "ps", "-aq", "--no-trunc").split()
+    fmt = '{{.Id}}\t{{.Name}}\t{{index .Config.Labels "' + LABEL + '"}}\t{{json .Mounts}}'
+    rows = []
+    for i in range(0, len(ids), 100):
+        for line in output("docker", "inspect", "-f", fmt, *ids[i:i+100]).splitlines():
+            cid, name, owner, mounts = line.split("\t", 3)
+            rows.append((cid, name.lstrip("/"), owner, json.loads(mounts)))
+    return rows
+
+
+def image_owner(tag):
+    ids = output("docker", "image", "ls", "-q", "--no-trunc", tag).split()
+    if not ids:
+        return None
+    fmt = '{{.Id}} {{index .Config.Labels "' + LABEL + '"}}'
+    image, _, owner = output("docker", "image", "inspect", "-f", fmt, tag).partition(" ")
+    return image, owner
+
+
+def overlap(a, b):
+    return a == b or a in b.parents or b in a.parents
+
+
+def safe_tree(path, rows):
+    require(path.resolve() == path, f"Unexpected symlink in {path}")
+    for _, name, _, mounts in rows:
+        for mount in mounts:
+            if mount.get("Source"):
+                require(not overlap(path, Path(mount["Source"]).resolve()),
+                        f"{name} still mounts storage overlapping {path}")
+    for line in Path("/proc/self/mountinfo").read_text().splitlines():
+        point = Path(re.sub(r"\\([0-7]{3})", lambda m: chr(int(m[1], 8)), line.split()[4]))
+        require(path != point and path not in point.parents, f"Host mount inside {path}: {point}")
+
+
+def origin(value):
+    u = urlsplit(value)
+    require(u.scheme in ("http", "https") and u.hostname and not u.username and not u.password
+            and re.fullmatch(r"[A-Za-z0-9.-]+", u.netloc.split(":")[0])
+            and u.path in ("", "/") and not u.query and not u.fragment, "Supply an HTTP site origin")
+    _ = u.port
+    return u
+
+
+def free_port(port):
+    with socket.socket() as sock:
+        sock.bind(("127.0.0.1", port))
+        return sock.getsockname()[1]
+
+
+def allocate_port(root, requested):
+    require(0 <= requested <= 65535, "Choose a TCP port between 1 and 65535")
+    reserved = set()
+    for path in root.glob("merge-*/state.json"):
+        state = json.loads(path.read_text())
+        if not state.get("cleaned"):
+            reserved.add(state["port"])
+    ids = output("docker", "ps", "-aq", "--no-trunc").split()
+    for i in range(0, len(ids), 100):
+        bindings = output("docker", "inspect", "-f", "{{json .HostConfig.PortBindings}}", *ids[i:i+100])
+        for line in bindings.splitlines():
+            for group in (json.loads(line) or {}).values():
+                reserved.update(int(b["HostPort"]) for b in (group or []) if b["HostPort"].isdigit())
+    require(not requested or requested not in reserved, f"Port {requested} is reserved")
+    for _ in range(100):
+        port = free_port(requested)
+        if port not in reserved:
+            return port
+    raise ValueError("Could not allocate a loopback port")
+
+
+def inspect_backup(value):
+    p = Path(value).resolve(strict=True)
+    require(p.is_file() and re.fullmatch(r"[\w.-]+\.(?:sql|tar)\.gz", p.name, re.ASCII)
+            and not p.name.startswith("-"), "Supply a native .tar.gz or .sql.gz backup")
+    with p.open("rb") as f:
+        require(f.read(2) == b"\x1f\x8b", f"Expected gzip backup: {p}")
+    version = re.search(r"-v(?:\d{4}-\d{1,2}-\d+(?:-latest(?:-\d+)?)?-)?(\d{14})\.(?:sql|tar)\.gz$", p.name)
+    require(version or not p.name.endswith(".sql.gz"), f"Keep the native schema version suffix on {p.name}")
+    s = p.stat()
+    return dict(path=str(p), schema=version[1] if version else None, size=s.st_size,
+                mtime=s.st_mtime_ns, inode=s.st_ino, dev=s.st_dev)
+
+
+class Run:
+    def __init__(self, path, data):
+        self.path, self.data = path, data
+        self.runtime = path / "runtime"
+        self.project = path / "project"
+        self.name = path.name
+        self.tag = f"local_discourse/{self.name}:latest"
+        self.owner = data["owner"]
+
+    def save(self):
+        write_json(self.path / "state.json", self.data)
+
+    def verify_runtime(self):
+        if self.runtime.exists():
+            st = self.runtime.lstat()
+            require(self.runtime.resolve() == self.runtime and
+                    self.data.get("storage_id") == [st.st_dev, st.st_ino],
+                    f"Run storage was replaced: {self.runtime}")
+        else:
+            require(not self.runtime.is_symlink(), "Run storage is a broken link")
+
+    def stage(self, name, action, *args):
+        if name in self.data["done"]:
+            return
+        print(f"{self.name} — {name}", flush=True)
+        self.data["active"] = name
+        self.save()
+        action(*args)
+        self.data["done"].append(name)
+        self.data["active"] = None
+        self.save()
+
+    def bootstrap_container(self, rows):
+        cidfile = self.runtime / "cids" / (self.name + "_bootstrap.cid")
+        if not cidfile.is_file():
+            return None
+        cid = cidfile.read_text().strip()
+        for found, name, owner, mounts in rows:
+            if found == cid:
+                expected = {"/shared": self.runtime / "seed", "/var/log": self.runtime / "seed/log/var-log"}
+                require(owner == self.owner and
+                        {m["Destination"]: Path(m["Source"]) for m in mounts} == expected,
+                        f"Unexpected ownership or mounts on bootstrap container {name}")
+                return cid
+        return None
+
+    def build(self):
+        r = self.runtime
+        image = image_owner(self.tag)
+        if image:
+            require(image[1] == self.owner, f"Image tag occupied: {self.tag}")
+        else:
+            rows = containers()
+            previous = self.bootstrap_container(rows)
+            if previous:
+                call("docker", "rm", "-f", previous)
+                rows = containers()
+            safe_tree(r, rows)
+            # Only reset the unpublished bootstrap workspace inside the reserved directory.
+            for child in r.iterdir():
+                if child.is_dir() and not child.is_symlink():
+                    shutil.rmtree(child)
+                else:
+                    child.unlink()
+            launcher = Path(self.data["launcher"])
+            for sub in ("templates", "containers", "cids", "seed/log/var-log"):
+                (r / sub).mkdir(parents=True)
+            # The private parent protects the seed. /shared must be traversable inside Docker.
+            for sub in ("seed", "seed/log", "seed/log/var-log"):
+                (r / sub).chmod(0o755)
+            shutil.copy2(launcher / "launcher", r)
+            files = [f"templates/{name}.template.yml" for name in TEMPLATES]
+            for f in files:
+                shutil.copy2(launcher / f, r / f)
+            config = dict(templates=files, params=dict(version=self.data["revision"]),
+                          env=self.env("destination"), volumes=[
+                              {"volume": {"host": str(r / "seed"), "guest": "/shared"}},
+                              {"volume": {"host": str(r / "seed/log/var-log"), "guest": "/var/log"}}])
+            if self.data["plugins"]:
+                commands = []
+                for url, commit in self.data["plugins"]:
+                    directory = url.rsplit("/", 1)[1].removesuffix(".git")
+                    commands.extend([f"git clone {url} {directory}", f"git -C {directory} checkout --detach {commit}"])
+                config["hooks"] = {"after_code": [{"exec": {"cd": "$home/plugins", "cmd": commands}}]}
+            (r / "containers" / (self.name + ".yml")).write_text(json.dumps(config))
+            with (self.path / "bootstrap.log").open("ab") as log:
+                call(r / "launcher", "bootstrap", self.name, "--skip-prereqs",
+                     "--docker-args", f"--label {LABEL}={self.owner}", cwd=r,
+                     stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT,
+                     pass_fds=(self.lock_fd,))
+            image = image_owner(self.tag)
+        require(image and image[1] == self.owner, "Bootstrap did not produce the owned image")
+        self.data["image"] = image[0]
+
+    def env(self, role):
+        u = origin(self.data["urls"][role])
+        env = dict(LANG="en_US.UTF-8", LC_ALL="en_US.UTF-8", DISCOURSE_HOSTNAME=u.hostname,
+                    DISCOURSE_PORT=str(u.port or (443 if u.scheme == "https" else 80)),
+                    DISCOURSE_FORCE_HTTPS=str(u.scheme == "https").lower(), DISCOURSE_DISABLE_EMAILS="yes",
+                    DISCOURSE_SKIP_EMAIL_SETUP="1", UNICORN_SIDEKIQS="0", BUNDLE_WITH="generic_import",
+                    RAILS_ENV="production")
+        if self.data["mode"] == "copy":
+            env["DISCOURSE_ENABLE_S3_UPLOADS"] = "false"
+        return env
+
+    def name_for(self, role):
+        return self.name + ("-source" if role == "source" else "")
+
+    def mounts(self, role):
+        root = self.runtime / role
+        mounts = {"/shared": (root, True), "/var/log": (root / "log/var-log", True)}
+        if role == "destination":
+            mounts[PROJECT] = (self.project, True)
+            for side, media in self.data["media"].items():
+                mounts["/mnt/" + side + "-uploads"] = (Path(media), False)
+        return mounts
+
+    def check_role(self, role, row):
+        cid, _, owner, mounts = row
+        require(owner == self.owner, f"Container name occupied: {self.name_for(role)}")
+        recorded = self.data.get("containers", {}).get(role)
+        require(not recorded or cid == recorded, f"Container identity changed on {self.name_for(role)}")
+        require(output("docker", "inspect", "-f", "{{.Image}}", cid) == self.data["image"],
+                f"Container image changed on {self.name_for(role)}")
+        actual = {m["Destination"]: (Path(m["Source"]), m["RW"]) for m in mounts}
+        require(actual == self.mounts(role), f"Mounts changed on {cid}. Inspect before continuing.")
+        return cid
+
+    def create(self, role):
+        name = self.name_for(role)
+        rows = containers()
+        root = self.runtime / role
+        safe_tree(root, [row for row in rows if row[1] != name])
+        if "restore-" + role in self.data["done"]:
+            st = root.stat()
+            require(self.data["storage"][role] == [st.st_dev, st.st_ino],
+                    f"Restored {role} storage changed")
+        for row in rows:
+            if row[1] == name:
+                return self.check_role(role, row)
+        if not root.exists():
+            partial = self.runtime / (role + ".part")
+            safe_tree(partial, rows)
+            call("cp", "-a", "--reflink=auto", str(self.runtime / "seed") + "/.", partial)
+            partial.rename(root)
+        args = ["docker", "create", "--name", name, "--label", f"{LABEL}={self.owner}", "--shm-size=512m"]
+        if role == "destination":
+            args += ["-p", f"127.0.0.1:{self.data['port']}:80"]
+        else:
+            args += ["--network", "none"]
+        for guest, (host, writable) in self.mounts(role).items():
+            args += ["--mount", f"type=bind,src={host},dst={guest}" + ("" if writable else ",readonly")]
+        for k, v in self.env(role).items():
+            args += ["-e", f"{k}={v}"]
+        # Keep workers down across restarts, including before and during restore.
+        boot = 'for s in unicorn pitchfork sidekiq cron nginx; do d=/etc/service/$s; if test -d "$d"; then touch "$d/down"; fi; done; exec /sbin/boot'
+        cid = output(*args, self.data["image"], "sh", "-ec", boot)
+        self.data.setdefault("containers", {})[role] = cid
+        self.save()
+        return cid
+
+    def check_build(self, cid, role):
+        repo = "/var/www/discourse"
+        git = ["docker", "exec", cid, "git", "-c", "safe.directory=*", "-C"]
+        require(output(*git, repo, "rev-parse", "HEAD") == self.data["revision"],
+                f"{role} image has a different Discourse revision")
+        for url, commit in self.data["plugins"]:
+            directory = url.rsplit("/", 1)[1].removesuffix(".git")
+            require(output(*git, f"{repo}/plugins/{directory}", "rev-parse", "HEAD") == commit,
+                    f"{role} image has a different revision of plugin {directory}")
+        call("docker", "exec", "-u", "discourse", "-w", repo, cid, "bundle", "exec", "ruby",
+             "-rrubyXL", CLI, "--help", stdout=subprocess.DEVNULL)
+
+    def restore(self, role, cid):
+        st = (self.runtime / role).stat()
+        self.data.setdefault("storage", {})[role] = [st.st_dev, st.st_ino]
+        item = self.data["backups"][role]
+        p = Path(item["path"])
+        require(inspect_backup(p) == item, f"{role} backup has changed. Start a fresh run.")
+        exe = ["docker", "exec", cid]
+        call(*exe, "install", "-d", "-m", "0700", "-o", "discourse", "-g", "discourse", "/shared/backups/default")
+        with p.open("rb") as f:
+            call("docker", "exec", "-i", "-u", "discourse", cid, "sh", "-ec",
+                 'umask 077; cat > "$1.part"; mv "$1.part" "$1"', "sh", "/shared/backups/default/" + p.name, stdin=f)
+        with (self.path / (role + "-restore.log")).open("ab") as log:
+            try:
+                call(*exe, "discourse", "enable_restore", stdout=log, stderr=subprocess.STDOUT)
+                call(*exe, "discourse", "restore", "--location", "local", p.name, stdout=log, stderr=subprocess.STDOUT)
+            finally:
+                call(*exe, "discourse", "disable_restore", stdout=log, stderr=subprocess.STDOUT)
+
+    def setup(self):
+        require(not self.data.get("retiring"), "Cleanup started. Continue cleanup.")
+        if "workbook" in self.data["done"]:
+            self.review()
+            return
+        self.verify_runtime()
+        require(self.runtime.is_dir(), "Run storage is missing")
+        self.stage("bootstrap", self.build)
+        ids = {}
+        for role in ROLES:
+            rows = containers()
+            step = "restore-" + role
+            if self.data.get("active") == step:
+                # A killed docker exec may still be restoring. Discard just this role's
+                # unconfirmed database and start it from the cold seed again.
+                for row in rows:
+                    if row[1] == self.name_for(role):
+                        call("docker", "rm", "-f", self.check_role(role, row))
+                self.data.get("containers", {}).pop(role, None)
+                self.save()
+                root = self.runtime / role
+                safe_tree(root, containers())
+                if root.exists():
+                    shutil.rmtree(root)
+            cid = self.create(role)
+            ids[role] = cid
+            if role == "destination" and self.data.get("active") == "prepare-source":
+                call("docker", "stop", cid, stdout=subprocess.DEVNULL)
+            call("docker", "start", cid, stdout=subprocess.DEVNULL)
+            exe = ["docker", "exec", cid]
+            call(*exe, "sh", "-ec", 'for i in $(seq 120); do pg_isready -q -h /var/run/postgresql -U discourse -d discourse && test "$(redis-cli ping)" = PONG && exit 0; sleep 1; done; exit 1')
+            self.check_build(cid, role)
+            self.stage(step, self.restore, role, cid)
+        src, dst = ids["source"], ids["destination"]
+        self.stage("prepare-source", self.prepare, src, dst)
+        self.stage("confirm-sites", self.confirm, ids)
+        self.stage("workbook", self.workbook, dst)
+        self.review()
+
+    def review(self):
+        workbook = self.project / "mappings.xlsx"
+        require(workbook.is_file(), "Review workbook missing from project")
+        cmd = ["docker", "exec", "-it", "-u", "discourse", "-w", "/var/www/discourse",
+               self.name, "bundle", "exec", "ruby", CLI]
+        if self.data["mode"] == "preuploaded":
+            print("Confirm preupload_locations in merge.yml and stage the private uploader settings.")
+            cmd.extend(["prepare-uploads", "--settings", "/path/to/private/uploads_importer.yml"])
+        else:
+            cmd.append("plan")
+        print(f"Edit {workbook}\nNext after review: {shlex.join(cmd + ['--directory', PROJECT])}")
+
+    @staticmethod
+    def identify(cid, db):
+        sql = """SELECT json_build_object('title', COALESCE((SELECT value FROM site_settings WHERE name='title'),'Discourse'), 'topics', count(*)) FROM topics"""
+        return json.loads(output("docker", "exec", "-u", "discourse", cid, "psql", "-XAt", "-d", db, "-c", sql))
+
+    def prepare(self, src, dst):
+        dump = self.runtime / "prepared.dump"
+        with dump.open("wb") as f:
+            call("docker", "exec", "-u", "postgres", src, "pg_dump", "-Fc", "--exclude-schema=backup", "discourse", stdout=f)
+        pg = ["docker", "exec", "-u", "postgres", dst]
+        call(*pg, "dropdb", "--if-exists", "incoming_forum")
+        call(*pg, "createdb", "incoming_forum")
+        with dump.open("rb") as f:
+            call("docker", "exec", "-i", "-u", "postgres", dst, "pg_restore", "-d", "incoming_forum",
+                 "--single-transaction", "--exit-on-error", "--no-owner", "--no-privileges", stdin=f)
+        call(*pg, "psql", "-X", "-v", "ON_ERROR_STOP=1", "-d", "incoming_forum", "-c",
+             "GRANT USAGE ON SCHEMA public TO discourse; GRANT SELECT ON ALL TABLES IN SCHEMA public TO discourse")
+        require(self.identify(src, "discourse") == self.identify(dst, "incoming_forum"), "Prepared source identity differs")
+        if self.data["mode"] == "copy":
+            source = self.runtime / "source/uploads/default"
+            target = self.runtime / "destination/incoming-uploads"
+            target.mkdir(exist_ok=True)
+            if source.is_dir():
+                call("cp", "-a", str(source) + "/.", target)
+            call("docker", "exec", dst, "chown", "-R", "discourse:discourse", "/shared/incoming-uploads")
+            call("docker", "exec", dst, "install", "-d", "-o", "discourse", "/shared/uploads/default")
+
+    def confirm(self, ids):
+        sites = {role: self.identify(ids[role], "discourse") for role in ROLES}
+        for role, site in sites.items():
+            print(f"{role}: {site['title']!r}, {site['topics']} topics")
+        require(input("Are these the intended source and destination? [y/N] ").lower() in ("yes", "y"),
+                "Stopped before mappings. Resume to confirm, or clean up and use corrected inputs.")
+        self.data["sites"] = sites
+
+    def workbook(self, dst):
+        # Existing init handles partial configuration and published mapping templates.
+        call("docker", "exec", dst, "sh", "-ec", """
+for svc in /etc/service/unicorn /etc/service/pitchfork /etc/service/sidekiq; do
+  test -d "$svc" || continue
+  sv -w 60 stop "$svc"
+  (cd "$svc/supervise"; chgrp discourse . status ok; chmod g+x .; chmod g+r status; chmod g+w ok)
+done
+chown discourse:discourse /shared/merge-project
+""")
+        if not (self.project / "merge.yml").exists():
+            cfg = dict(upload_mode=self.data["mode"], include_private_messages=self.data["pms"],
+                       import_tags=self.data["tags"])
+            for role, db in zip(ROLES, ("incoming_forum", "discourse")):
+                cfg[role] = dict(dbname=db, host="/var/run/postgresql", user="discourse")
+                cfg[role + "_url"] = self.data["urls"][role]
+                if role in self.data["media"]:
+                    cfg[role + "_upload_root"] = "/mnt/" + role + "-uploads"
+            if cfg["upload_mode"] == "copy":
+                cfg.update(source_upload_root="/shared/incoming-uploads", destination_upload_root="/shared/uploads/default")
+            call("docker", "exec", "-i", "-u", "discourse", dst, "sh", "-ec",
+                 'cd /shared/merge-project; umask 077; cat > merge.yml.part; mv merge.yml.part merge.yml',
+                 input=json.dumps(cfg).encode())
+        cli = ["docker", "exec", "-i", "-u", "discourse", "-w", "/var/www/discourse", dst,
+               "flock", PROJECT + "/setup.lock", "bundle", "exec", "ruby", CLI]
+        call(*cli, "init", "--directory", PROJECT, input=b"\n\n")
+        if not (self.project / "mappings.xlsx").exists():
+            call(*cli, "export-workbook", "--directory", PROJECT)
+
+    def cleanup(self, yes):
+        if self.data.get("cleaned"):
+            print(f"Already cleaned. Retained project: {self.project}")
+            return
+        self.verify_runtime()
+        rows = containers()
+        owned = []
+        bootstrap_id = self.bootstrap_container(rows)
+        for row in rows:
+            cid, name, owner, mounts = row
+            if owner != self.owner:
+                continue
+            role = next((s for s in ROLES if self.name_for(s) == name), None)
+            if role:
+                self.check_role(role, row)
+            elif cid != bootstrap_id:
+                continue  # Other containers can inherit the image's run label.
+            owned.append(cid)
+        safe_tree(self.runtime, [r for r in rows if r[0] not in owned])
+        image = image_owner(self.tag)
+        remove_tag = image and image[1] == self.owner and image[0] == self.data.get("image", image[0])
+        for role in ROLES:
+            backups = self.runtime / role / "backups/default"
+            original = Path(self.data["backups"][role]["path"]).name
+            if backups.is_dir():
+                for backup in backups.iterdir():
+                    if backup.name.endswith((".tar.gz", ".sql.gz")) and backup.name != original:
+                        raise ValueError(f"Move exported backup {backup} outside {self.runtime} before cleanup")
+        for cid, name, _, _ in rows:
+            if cid in owned:
+                print(f"Remove container {name} ({cid[:12]})")
+        if remove_tag:
+            print(f"Remove image tag {self.tag}")
+        if self.runtime.exists():
+            print(f"Remove directory {self.runtime}")
+        print(f"Keep {self.project} and private state/logs in {self.path}")
+        if not yes:
+            print("Preview only. Repeat cleanup with --yes to retire this run.")
+            return
+        self.data["retiring"] = True
+        self.save()
+        for cid in owned:
+            call("docker", "rm", "-f", cid)
+        if remove_tag:
+            require(image_owner(self.tag) == image, "Image tag changed during cleanup")
+            call("docker", "image", "rm", self.tag)
+        safe_tree(self.runtime, containers())
+        if self.runtime.exists():
+            shutil.rmtree(self.runtime)
+        self.data["cleaned"] = True
+        self.save()
+
+
+def new_run(args, root):
+    launcher = args.launcher.resolve(strict=True)
+    require((launcher / "launcher").is_file(), "Supply the discourse_docker launcher directory")
+    require(re.fullmatch("[0-9a-f]{40}", args.revision), "Supply a full Discourse commit hash")
+    backups = {s: inspect_backup(getattr(args, s)) for s in ROLES}
+    require(not os.path.samefile(backups["source"]["path"], backups["destination"]["path"]),
+            "Identify two different backup files")
+    for state in root.glob("merge-*/state.json"):
+        for item in backups.values():
+            require(not overlap(Path(item["path"]), state.parent / "runtime"),
+                    "Stage input backups outside disposable run storage")
+    origin(args.source_url)
+    require(re.fullmatch(r"[a-zA-Z0-9.-]+", args.review_host), "Supply a review hostname")
+    plugins = []
+    for plugin in args.plugin:
+        url, _, rev = plugin.rpartition("@")
+        require(re.fullmatch(r"https://[\w.-]+/(?:[\w-]+/)+[\w-]+(?:\.git)?", url)
+                and re.fullmatch("[0-9a-f]{40}", rev), "Specify each plugin as HTTPS-repository@full-commit")
+        plugins.append((url, rev))
+    media = {}
+    for role in ROLES:
+        value = getattr(args, role + "_media")
+        if value:
+            directory = value.resolve(strict=True)
+            require(args.mode == "preuploaded" and (directory / "original").is_dir()
+                    and not overlap(root, directory) and "," not in str(directory),
+                    "Supply an independent extracted preupload directory containing original/")
+            media[role] = str(directory)
+        if args.mode != "copy":
+            require(backups[role]["path"].endswith(".sql.gz"), "Stage SQL-only backups for remote media modes")
+    # The stock launcher splits its volume arguments on whitespace.
+    require(re.fullmatch(r"/[\w./-]+", str(root), re.ASCII), "Use a simple absolute run root for launcher mounts")
+    require(args.space_gib >= 0, "Space allowance must be nonnegative")
+    docker_root = Path(output("docker", "info", "--format", "{{.DockerRootDir}}"))
+    required = max(args.space_gib * 2**30, 6 * sum(b["size"] for b in backups.values()))
+    pools = {}
+    for path, amount in ((root, required), (docker_root, 5 * 2**30)):
+        dev = path.stat().st_dev
+        pools[dev] = (path, pools.get(dev, (None, 0))[1] + amount)
+    for path, amount in pools.values():
+        require(shutil.disk_usage(path).free >= amount, f"Insufficient space on {path}: need {amount:,} bytes free")
+    port = allocate_port(root, args.port)
+    name = "merge-" + secrets.token_hex(8)
+    names = (name, name + "-source", name + "-check")
+    for n in names:
+        require(not os.path.lexists(launcher / "containers" / (n + ".yml"))
+                and not os.path.lexists(launcher / "shared" / n), f"Launcher name occupied: {n}. Repeat setup.")
+    require(all(row[1] not in names for row in containers()) and not image_owner(f"local_discourse/{name}:latest"),
+            "Generated name occupied. Repeat setup.")
+    path = root / name
+    path.mkdir()
+    run = Run(path, dict(owner=secrets.token_hex(16), backups=backups, launcher=str(launcher),
+                         revision=args.revision, plugins=plugins, port=port, mode=args.mode, media=media,
+                         pms=not args.exclude_pms, tags=not args.exclude_tags, done=[],
+                         urls=dict(source=args.source_url, destination=f"http://{args.review_host}:{port}")))
+    run.runtime.mkdir()
+    st = run.runtime.stat()
+    run.data["storage_id"] = [st.st_dev, st.st_ino]
+    run.data["resources"] = {role: dict(name=run.name_for(role),
+        mounts={k: [str(v[0]), v[1]] for k, v in run.mounts(role).items()}) for role in ROLES}
+    run.save()
+    run.project.mkdir()
+    return run
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path("/var/discourse/merge-runs"))
+    subs = parser.add_subparsers(dest="command", required=True)
+    setup = subs.add_parser("setup", help="Create a review environment and export its workbook")
+    setup.add_argument("--launcher", type=Path, default=Path("/var/discourse"))
+    for k in ("source", "destination", "source-url", "revision"):
+        setup.add_argument("--" + k, required=True)
+    setup.add_argument("--review-host", default="merge.example.test")
+    setup.add_argument("--port", type=int, default=0, help="Loopback port (default: allocate)")
+    setup.add_argument("--mode", choices=("copy", "preserve_remote", "preuploaded"), default="copy")
+    for side in ROLES:
+        setup.add_argument("--" + side + "-media", type=Path)
+    setup.add_argument("--plugin", action="append", default=[], metavar="HTTPS_URL@COMMIT")
+    setup.add_argument("--space-gib", type=int, default=10, help="Minimum free run storage in GiB")
+    setup.add_argument("--exclude-pms", action="store_true")
+    setup.add_argument("--exclude-tags", action="store_true")
+    subs.add_parser("list", help="List run IDs and stages")
+    subs.add_parser("resume").add_argument("run")
+    cleanup = subs.add_parser("cleanup", help="Preview owned resources, then confirm with --yes")
+    cleanup.add_argument("run")
+    cleanup.add_argument("--yes", action="store_true")
+    args = parser.parse_args()
+    os.umask(0o077)
+    root = args.root.absolute()
+    require(root.resolve() == root, "Use a canonical run root")
+    if args.command == "setup":
+        root.mkdir(mode=0o700, exist_ok=True)
+    if not root.exists() and args.command == "list":
+        return
+    st = root.stat()
+    require(st.st_uid == os.geteuid() and st.st_mode & 0o077 == 0, "Run root must be private and owned by this operator")
+    if args.command == "list":
+        for file in sorted(root.glob("merge-*/state.json")):
+            state = json.loads(file.read_text())
+            status = "cleaned" if state.get("cleaned") else "retiring" if state.get("retiring") else state.get("active") or (state["done"] or ["allocated"])[-1]
+            print(file.parent.name, status)
+        return
+    endpoint = os.environ.get("DOCKER_HOST")
+    if not endpoint or os.environ.get("DOCKER_CONTEXT"):
+        endpoint = output("docker", "context", "inspect", "--format", "{{.Endpoints.docker.Host}}",
+                          output("docker", "context", "show"))
+    require(endpoint.startswith("unix://"), "Run merge-env on the Docker host with a local Unix socket")
+    if args.command == "setup":
+        with (root / ".allocation.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            run = new_run(args, root)
+    else:
+        require(re.fullmatch("merge-[a-f0-9]{16}", args.run), "Specify a run ID from list")
+        path = root / args.run
+        require(path.resolve() == path, "Unexpected symlink in run path")
+        run = Run(path, json.loads((path / "state.json").read_text()))
+    with (run.path / ".lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        run.lock_fd = lock.fileno()
+        run.data = json.loads((run.path / "state.json").read_text())
+        cmd = shlex.join([sys.argv[0], "--root", str(root)])
+        print(f"Run {run.name}. Resume: {cmd} resume {run.name}\nCleanup preview: {cmd} cleanup {run.name}", flush=True)
+        if args.command == "cleanup":
+            run.cleanup(args.yes)
+        else:
+            try:
+                run.setup()
+            except (ValueError, OSError, subprocess.SubprocessError, EOFError, KeyboardInterrupt):
+                stage = run.data.get("active")
+                print(f"Setup stopped ({stage or 'environment checks'}). Private logs: {run.path}. "
+                      "For restore or migration errors inspect the role's restore log and check the pinned build/plugins.", file=sys.stderr)
+                raise
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (ValueError, OSError, subprocess.SubprocessError, EOFError, KeyboardInterrupt) as e:
+        sys.exit(f"merge-env: {e}")

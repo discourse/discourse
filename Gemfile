@@ -249,6 +249,7 @@ if ENV["IMPORT"] == "1"
 end
 
 group :generic_import, optional: true do
+  gem "rubyXL", "~> 3.4.38", require: false
   gem "sqlite3"
   gem "redcarpet"
 end
