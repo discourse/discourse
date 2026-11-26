@@ -1465,6 +1465,23 @@ RSpec.describe User do
   end
 
   describe "passwords" do
+    it "takes the credential lock before writing a changed password" do
+      user = Fabricate(:user)
+      queries = []
+      subscriber =
+        ActiveSupport::Notifications.subscribe("sql.active_record") do |*, payload|
+          queries << payload[:sql]
+        end
+
+      user.update!(password: "a-new-secure-password")
+
+      ActiveSupport::Notifications.unsubscribe(subscriber)
+      lock = queries.index { |sql| sql.include?("FOR UPDATE") && sql.include?('"users"') }
+      write = queries.index { |sql| sql.match?(/\A(UPDATE|INSERT INTO) "user_passwords"/) }
+      expect(lock).to be_present
+      expect(lock).to be < write
+    end
+
     let(:user) { Fabricate.build(:user, active: false) }
 
     it "keeps the account inactive despite a valid password" do

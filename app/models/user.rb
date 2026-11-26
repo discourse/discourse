@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
   MAX_FILTER_TERMS = 50
+  ONE_TIME_PASSWORD_LIFETIME = 10.minutes
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
@@ -179,6 +180,7 @@ class User < ActiveRecord::Base
 
   before_validation :set_skip_validate_email
 
+  before_save :lock_for_password_change, if: -> { @raw_password && persisted? }, prepend: true
   before_save :update_usernames
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
@@ -276,6 +278,12 @@ class User < ActiveRecord::Base
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
+
+  # Set before saving a new password to also revoke the user's authorized apps
+  attr_accessor :revoke_connected_apps_on_password_change
+
+  # Counts of apps revoked by the last password change, when it revoked them
+  attr_reader :revoked_connected_apps
 
   # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
@@ -1021,6 +1029,20 @@ class User < ActiveRecord::Base
 
   def remove_password
     raise Discourse::InvalidAccess if !can_remove_password?
+
+    # Removing a password restores the nil salt that login tokens issued while
+    # the account was passwordless are bound to, so wait until any issued
+    # before this password was added have expired.
+    if user_password && user_password.created_at > ONE_TIME_PASSWORD_LIFETIME.ago
+      raise Discourse::InvalidAccess.new(
+              nil,
+              nil,
+              custom_message: "remove_password_too_soon",
+              custom_message_params: {
+                count: ONE_TIME_PASSWORD_LIFETIME.in_minutes.to_i,
+              },
+            )
+    end
 
     user_password.destroy if user_password
   end
@@ -1825,6 +1847,27 @@ class User < ActiveRecord::Base
     SiteSetting.allow_anonymous_mode && trust_level >= 1 && !!anonymous_user_master
   end
 
+  # Serializes issuing a credential with password-change revocation, which
+  # takes this lock in #expire_tokens_if_password_changed.
+  def with_credential_lock
+    User.transaction { User.uncached { yield User.lock.find_by(id: id) } }
+  end
+
+  # A one-time login token is bound to the password salt, so changing the
+  # password invalidates it. See #remove_password for a passwordless account.
+  def one_time_password_payload
+    { user_id: id, password_salt: user_password&.password_salt }.to_json
+  end
+
+  def one_time_password_payload_valid?(payload)
+    payload["user_id"] == id && payload["password_salt"] == user_password&.password_salt
+  end
+
+  def has_connected_apps?
+    UserApiKey.active.where(user_id: id).exists? ||
+      McpOauthAuthorization.where(user_id: id, revoked_at: nil).exists?
+  end
+
   def is_singular_admin?
     User.where(admin: true).where.not(id: id).human_users.blank?
   end
@@ -2140,13 +2183,23 @@ class User < ActiveRecord::Base
     email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
+  # Take the credential lock before the password is written and hold it until
+  # the save commits, so a credential issued concurrently either precedes the
+  # revocation in #expire_tokens_if_password_changed or sees the new password.
+  def lock_for_password_change
+    User.lock.find_by(id: id)
+  end
+
   def expire_tokens_if_password_changed
     # NOTE: setting raw password is the only valid way of changing a password
     # the password field in the DB is actually hashed, nobody should be amending direct
     if @raw_password
+      @revoked_connected_apps = nil
+
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
       PushNotificationPusher.clear_subscriptions(self)
+      revoke_connected_apps! if revoke_connected_apps_on_password_change
 
       email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
 
@@ -2333,6 +2386,25 @@ class User < ActiveRecord::Base
   end
 
   private
+
+  # Authorized apps (user API keys and MCP authorizations) as listed under
+  # Preferences > Security. Revoking an MCP authorization also stops its
+  # outstanding codes, since code exchange checks the authorization.
+  def revoke_connected_apps!
+    now = Time.current
+    user_api_keys = UserApiKey.active.where(user_id: id).update_all(revoked_at: now)
+
+    mcp_authorizations =
+      McpOauthAuthorization.where(user_id: id, revoked_at: nil).order(:id).lock.to_a
+    mcp_authorizations.each do |authorization|
+      authorization.revoke!(by_user: self, reason: "password_reset")
+    end
+
+    @revoked_connected_apps = {
+      user_api_keys: user_api_keys,
+      mcp_authorizations: mcp_authorizations.size,
+    }
+  end
 
   def deactivate_anonymous_shadow_users!
     update_anonymous_shadow_users!(active: false)

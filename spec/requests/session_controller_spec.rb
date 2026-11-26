@@ -4625,6 +4625,10 @@ RSpec.describe SessionController do
   end
 
   describe "#one_time_password" do
+    def store_otp(token, user)
+      Discourse.redis.setex "otp_#{token}", 10.minutes, user.one_time_password_payload
+    end
+
     context "with missing token" do
       it "returns the right response" do
         get "/session/otp"
@@ -4646,7 +4650,7 @@ RSpec.describe SessionController do
       context "when token is valid" do
         it "displays the one-time-password form" do
           token = SecureRandom.hex
-          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
+          store_otp(token, user)
 
           get "/session/otp/#{token}"
 
@@ -4655,7 +4659,7 @@ RSpec.describe SessionController do
           expect(response.body).to include(
             I18n.t("user_api_key.otp_confirmation.logging_in_as", username: user.username),
           )
-          expect(Discourse.redis.get("otp_#{token}")).to eq(user.username)
+          expect(Discourse.redis.get("otp_#{token}")).to be_present
 
           expect(session[:current_user_id]).to eq(nil)
         end
@@ -4663,7 +4667,7 @@ RSpec.describe SessionController do
         it "redirects an already logged-in user" do
           sign_in(user)
           token = SecureRandom.hex
-          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
+          store_otp(token, user)
 
           get "/session/otp/#{token}"
           expect(response.status).to eq(302)
@@ -4679,7 +4683,7 @@ RSpec.describe SessionController do
           expect(response.status).to eq(404)
 
           token = SecureRandom.hex
-          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
+          store_otp(token, user)
 
           post "/session/otp/#{token}"
 
@@ -4690,6 +4694,44 @@ RSpec.describe SessionController do
           get "/session/current.json"
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
+        end
+
+        it "rejects a token issued before the password changed" do
+          token = SecureRandom.hex
+          store_otp(token, user)
+          user.update!(password: "a-new-secure-password")
+
+          post "/session/otp/#{token}"
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(I18n.t("user_api_key.invalid_token"))
+          expect(session[:current_user_id]).to be_blank
+        end
+
+        it "rejects the token when the password changes while it is being redeemed" do
+          token = SecureRandom.hex
+          store_otp(token, user)
+          allow_any_instance_of(SessionController).to receive(
+            :login_error_check,
+          ).and_wrap_original do |original, *args|
+            user.reload.update!(password: "a-new-secure-password")
+            original.call(*args)
+          end
+
+          post "/session/otp/#{token}"
+
+          expect(response.body).to include(I18n.t("user_api_key.invalid_token"))
+          expect(session[:current_user_id]).to be_blank
+        end
+
+        it "rejects a token stored in the legacy username format" do
+          token = SecureRandom.hex
+          Discourse.redis.setex "otp_#{token}", 10.minutes, user.username
+
+          post "/session/otp/#{token}"
+
+          expect(response.body).to include(I18n.t("user_api_key.invalid_token"))
+          expect(session[:current_user_id]).to be_blank
         end
 
         context "when the admin IP allowlist is enabled" do
@@ -4703,7 +4745,7 @@ RSpec.describe SessionController do
               ip_address: "198.51.100.7",
               action_type: ScreenedIpAddress.actions[:allow_admin],
             )
-            Discourse.redis.setex "otp_#{token}", 10.minutes, admin.username
+            store_otp(token, admin)
           end
 
           it "does not log in the admin from an IP outside the allowlist" do
@@ -4714,7 +4756,7 @@ RSpec.describe SessionController do
               I18n.t("login.admin_not_allowed_from_ip_address", username: admin.username),
             )
             expect(session[:current_user_id]).to be_blank
-            expect(Discourse.redis.get("otp_#{token}")).to eq(admin.username)
+            expect(Discourse.redis.get("otp_#{token}")).to be_present
           end
 
           it "logs in the admin from an IP inside the allowlist" do

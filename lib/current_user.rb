@@ -54,6 +54,24 @@ module CurrentUser
 
   private
 
+  # Serialize issuing a credential (app key, MCP grant, login token) with password
+  # change revocation, re-reading the credential that authenticated the request
+  # under the lock so a request already in flight cannot outlive the reset.
+  def with_revalidated_credential
+    source = current_user
+    raise Discourse::InvalidAccess unless source
+
+    source.with_credential_lock do |identity|
+      raise Discourse::InvalidAccess unless identity == source
+      provider = current_user_provider
+      if provider.respond_to?(:authenticated_credential_user) &&
+           provider.authenticated_credential_user != source
+        raise Discourse::InvalidAccess
+      end
+      yield identity
+    end
+  end
+
   def current_user_provider
     @current_user_provider ||= Discourse.current_user_provider.new(request.env)
   end
