@@ -90,6 +90,45 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"]).to eq([])
       end
 
+      it "returns the e-mail address of a staged author created from an incoming message" do
+        SiteSetting.email_in = true
+        Fabricate(:category, email_in: "insights@forum.example", email_in_allow_strangers: true)
+        staged_email = %q("><img src=x>"@attacker.example)
+
+        Email::Processor.process!(<<~MAIL, source: :handle_mail)
+          From: #{staged_email}
+          To: insights@forum.example
+          Subject: hello from email
+          Date: Wed, 01 Jan 2026 00:00:00 +0000
+          Message-ID: <staged-insights@attacker.example>
+          MIME-Version: 1.0
+          Content-Type: text/plain; charset=utf-8
+
+          Hello from email.
+        MAIL
+
+        staged_user = User.find_by_email(staged_email)
+        expect(staged_user.staged).to eq(true)
+
+        flagger = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+        sign_in(flagger)
+        post "/post_actions.json",
+             params: {
+               id: Post.where(user: staged_user).order(:id).last.id,
+               post_action_type_id: PostActionType.types[:spam],
+             }
+        expect(response).to have_http_status(:ok)
+
+        sign_in(admin)
+        get "/review.json"
+        expect(response).to have_http_status(:ok)
+
+        json = response.parsed_body
+        reviewable = json["reviewables"].find { |it| it["target_created_by_id"] == staged_user.id }
+        expect(reviewable).to be_present
+        expect(json["users"].find { |it| it["id"] == staged_user.id }["email"]).to eq(staged_email)
+      end
+
       it "loads the acting user behind every author penalty in one query" do
         silencers =
           3.times.map do
