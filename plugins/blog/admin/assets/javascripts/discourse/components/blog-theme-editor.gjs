@@ -40,6 +40,45 @@ const PAGE_FOR_TEMPLATE = {
   template_not_found: "not_found",
 };
 
+// Interpolated labels need arguments a template cannot pass.
+function hiddenVariable(prefix, value) {
+  return (
+    prefix === "labels" && typeof value === "string" && value.includes("%{")
+  );
+}
+
+function describeVariable(path, value) {
+  if (Array.isArray(value)) {
+    return {
+      type: i18n("blog.admin.array_value"),
+      example: JSON.stringify(value).slice(0, 350),
+    };
+  }
+
+  if (value && typeof value === "object") {
+    return {};
+  }
+
+  return {
+    type: path.endsWith("_html")
+      ? i18n("blog.admin.trusted_html")
+      : i18n("blog.admin.escaped_text"),
+    example: String(value ?? "").slice(0, 350),
+  };
+}
+
+function describeCompletion(path, value, { variable }) {
+  if (!variable && hiddenVariable(path.slice(0, -1).join("."), value)) {
+    return null;
+  }
+
+  const { example } = describeVariable(path.join("."), value);
+  return {
+    detail: Array.isArray(value) ? i18n("blog.admin.array_value") : undefined,
+    info: example || undefined,
+  };
+}
+
 export default class BlogThemeEditor extends Component {
   @service router;
   @service dialog;
@@ -65,6 +104,9 @@ export default class BlogThemeEditor extends Component {
   @tracked pendingStartFrom = null;
   #catalogSequence = 0;
   #previewSequence = 0;
+  #templateView = null;
+  // Until the author places it, the cursor sits at the start of the template.
+  #templateFocused = false;
 
   @cached
   get state() {
@@ -172,19 +214,14 @@ export default class BlogThemeEditor extends Component {
     const rows = [];
     const visit = (object, prefix = "") => {
       for (const [key, value] of Object.entries(object || {})) {
-        if (
-          prefix === "labels" &&
-          typeof value === "string" &&
-          value.includes("%{")
-        ) {
+        if (hiddenVariable(prefix, value)) {
           continue;
         }
         const path = prefix ? `${prefix}.${key}` : key;
         if (Array.isArray(value)) {
           rows.push({
             path,
-            type: i18n("blog.admin.array_value"),
-            example: JSON.stringify(value).slice(0, 350),
+            ...describeVariable(path, value),
             snippet: `{% for item in ${path} %}{{ item.${key === "tags" ? "name" : "title"} }}{% endfor %}`,
           });
         } else if (value && typeof value === "object") {
@@ -192,23 +229,13 @@ export default class BlogThemeEditor extends Component {
         } else {
           rows.push({
             path,
-            type: path.endsWith("_html")
-              ? i18n("blog.admin.trusted_html")
-              : i18n("blog.admin.escaped_text"),
-            example: String(value ?? "").slice(0, 350),
+            ...describeVariable(path, value),
             snippet: `{{ ${path} }}`,
           });
         }
       }
     };
-    const sample = this.catalog?.variables || {};
-    visit({
-      site: sample.site,
-      article: sample.article,
-      articles: sample.articles,
-      page: sample.page,
-      labels: sample.labels,
-    });
+    visit(this.#sampleVariables);
     rows.unshift({
       path: "content_html",
       type: i18n("blog.admin.trusted_html"),
@@ -218,6 +245,33 @@ export default class BlogThemeEditor extends Component {
     return rows.filter((row) =>
       row.path.toLowerCase().includes(this.variableQuery.toLowerCase())
     );
+  }
+
+  // The editor watches this by identity, so it only changes with the catalog.
+  @cached
+  get liquidOptions() {
+    const scope = {
+      ...this.#sampleVariables,
+      content_html: i18n("blog.admin.layout_content"),
+    };
+    return {
+      scope,
+      // Standard Liquid would offer tags the strict renderer rejects.
+      tags: this.catalog?.tags ?? [],
+      filters: this.catalog?.filters ?? [],
+      describe: describeCompletion,
+    };
+  }
+
+  get #sampleVariables() {
+    const sample = this.catalog?.variables || {};
+    return {
+      site: sample.site,
+      article: sample.article,
+      articles: sample.articles,
+      page: sample.page,
+      labels: sample.labels,
+    };
   }
 
   @action
@@ -343,8 +397,54 @@ export default class BlogThemeEditor extends Component {
   }
 
   @action
+  templateFocused() {
+    this.#templateFocused = true;
+  }
+
+  @action
+  templateExtensions({ cmView }) {
+    return cmView.ViewPlugin.define((view) => {
+      this.#templateView = view;
+      this.#templateFocused = false;
+      return {
+        update: (update) => {
+          // Placing the cursor counts even when the window does not have focus.
+          if (update.transactions.some((tr) => tr.isUserEvent("select"))) {
+            this.#templateFocused = true;
+          }
+        },
+        destroy: () => {
+          this.#templateView = null;
+        },
+      };
+    });
+  }
+
+  @action
   insertVariable(variable) {
     if (!this.currentTemplate) {
+      return;
+    }
+
+    const view = this.#templateView;
+    if (view?.dom.isConnected) {
+      if (view.state.readOnly) {
+        return;
+      }
+
+      let edit;
+      if (this.#templateFocused) {
+        edit = view.state.replaceSelection(variable.snippet);
+      } else {
+        const end = view.state.doc.length;
+        const newline = end && view.state.sliceDoc(end - 1) !== "\n";
+        const insert = `${newline ? "\n" : ""}${variable.snippet}`;
+        edit = {
+          changes: { from: end, insert },
+          selection: { anchor: end + insert.length },
+        };
+      }
+      view.dispatch(edit, { scrollIntoView: true, userEvent: "input" });
       return;
     }
 
@@ -635,10 +735,13 @@ export default class BlogThemeEditor extends Component {
                       name={{field.name}}
                       @describedBy={{field.describedBy}}
                       @disabled={{field.disabled}}
+                      @extensions={{this.templateExtensions}}
                       @inputId={{field.id}}
                       @invalid={{if field.error true}}
-                      @language="html"
+                      @language="liquid"
+                      @languageOptions={{this.liquidOptions}}
                       @onChange={{field.set}}
+                      @onFocusIn={{this.templateFocused}}
                       @resizable={{true}}
                       @value={{field.value}}
                     />
