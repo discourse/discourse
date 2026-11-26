@@ -8,7 +8,6 @@ class DropBrowserPageviewEventSource < ActiveRecord::Migration[8.1]
     # finishes, so the trigger that discards them goes with the column.
     execute <<~SQL
       DROP TRIGGER IF EXISTS skip_piggyback_browser_pageview_events ON browser_pageview_events;
-      DROP FUNCTION IF EXISTS discourse_functions.skip_piggyback_browser_pageview_events();
     SQL
 
     # Dropping the column also drops idx_bpe_created_at_session_id, which

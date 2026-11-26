@@ -158,6 +158,23 @@ CREATE FUNCTION discourse_functions.raise_topic_timers_topic_id_readonly() RETUR
 $$;
 
 
+--
+-- Name: skip_piggyback_browser_pageview_events(); Type: FUNCTION; Schema: discourse_functions; Owner: -
+--
+
+CREATE FUNCTION discourse_functions.skip_piggyback_browser_pageview_events() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+  IF NEW.source = 1 THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN NEW;
+END;
+$$;
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -26944,6 +26961,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261126120000'),
 ('20261125161827'),
 ('20261124234323'),
 ('20261124173030'),
