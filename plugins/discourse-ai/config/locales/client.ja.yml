@@ -227,6 +227,9 @@ ja:
         type: "タイプ"
         error: "エラー"
         response: "応答"
+      post_image_captions:
+        image_descriptions:
+          apply: "適用"
       discourse_workflows:
         ai_agent:
           mode: "モード"
@@ -733,6 +736,8 @@ ja:
         tool: "ツール"
       concepts:
         edit: "編集"
+        seed:
+          refresh: "更新"
         delete: "削除"
         columns:
           status: "ステータス"
@@ -745,6 +750,8 @@ ja:
           name: "名前"
           description: "説明"
           status: "ステータス"
+        shared_topics_count:
+          other: "%{count}トピック"
         tagged_topics: "タグ付きトピック"
         topic_columns:
           topic: "トピック"

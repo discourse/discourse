@@ -3044,7 +3044,7 @@ sv:
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: ämnesförlopp
+        title: "ämnesförlopp"
         jump_prompt: "hoppa till…"
         jump_prompt_of:
           one: "av %{count} inlägg"

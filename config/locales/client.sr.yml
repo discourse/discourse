@@ -2145,7 +2145,7 @@ sr:
         back: "Nazad"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredak teme
+        title: "napredak teme"
         jump_prompt_to_date: "до датума"
         jump_prompt_or: "ili"
       notifications:

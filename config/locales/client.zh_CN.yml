@@ -4339,7 +4339,7 @@ zh_CN:
         back_description: "返回上一个未读帖子"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 话题进度
+        title: "话题进度"
         jump_prompt: "跳到…"
         jump_prompt_of:
           other: "/%{count} 个帖子"
@@ -5801,7 +5801,6 @@ zh_CN:
       create: "创建"
       menu: "菜单"
       more: "更多"
-      edit_topic: "编辑标题、类别和标签"
       menu_with_reviewables:
         other: "菜单， %{count} 项待审核"
       back: "返回"

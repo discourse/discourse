@@ -47,6 +47,9 @@ sw:
         type: "Aina"
         error: "Hitilafu"
         response: "Mwitikio"
+      post_image_captions:
+        image_descriptions:
+          apply: "Tumia"
       discourse_workflows:
         ai_tool:
           list_item: "Listi kitu"
@@ -210,6 +213,8 @@ sw:
         embedding: "Ambatanisha"
       concepts:
         edit: "Hariri"
+        seed:
+          refresh: "Rudisha Tena"
         delete: "Futa"
         columns:
           topics: "Mada"
@@ -219,6 +224,9 @@ sw:
         form:
           name: "Jina"
           description: "Maelezo"
+        shared_topics_count:
+          one: "%{count} topiki"
+          other: "%{count} Topiki"
         tagged_topics: "Mada zilizotajwa"
         topic_columns:
           topic: "Mada"

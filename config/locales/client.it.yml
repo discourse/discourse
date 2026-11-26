@@ -3574,7 +3574,7 @@ it:
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
         replies_short: "%{current} / %{total}"
       progress:
-        title: Avanzamento lettura argomento
+        title: "Avanzamento lettura argomento"
         jump_prompt: "vai a…"
         jump_prompt_of:
           one: "di %{count} messaggio"

@@ -3576,7 +3576,7 @@ fi:
         back_description: "Siirry takaisin ensimmäiseen lukemattomaan viestiin"
         replies_short: "%{current} / %{total}"
       progress:
-        title: ketjun edistyminen
+        title: "ketjun edistyminen"
         jump_prompt: "siirry…"
         jump_prompt_of:
           one: "%{count} viestistä"

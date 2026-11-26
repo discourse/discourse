@@ -48,6 +48,9 @@ th:
       ai_decoded_transcript:
         type: "ชนิด"
         error: "ผิดพลาด"
+      post_image_captions:
+        image_descriptions:
+          apply: "นำไปใช้"
       discourse_workflows:
         ai_tool:
           list_item: "รายการ"
@@ -198,6 +201,8 @@ th:
         embedding: "ฝั่ง"
       concepts:
         edit: "แก้ไข"
+        seed:
+          refresh: "รีเฟรช"
         delete: "ลบ"
         columns:
           status: "สถานะ"
@@ -209,6 +214,8 @@ th:
           name: "ชื่อ"
           description: "รายละเอียด"
           status: "สถานะ"
+        shared_topics_count:
+          other: "%{count}กระทู้"
         topic_columns:
           topic: "หัวข้อ"
           relevance: "เกี่ยวข้อง"

@@ -5052,7 +5052,8 @@ pl_PL:
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
         replies_short: "%{current} / %{total}"
       progress:
-        title: postęp tematu
+        title: "Postęp tematu"
+        position: "Postęp tematu, %{current} z %{total}"
         jump_prompt: "przejdź do…"
         jump_prompt_of:
           one: "z %{count} wpisu"
@@ -5776,7 +5777,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      back_to_categories: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
       moderation: "Moderacja"
@@ -6734,7 +6734,6 @@ pl_PL:
       create: "Utwórz"
       menu: "Menu"
       more: "Więcej"
-      edit_topic: "Edytuj tytuł, kategorię i tagi"
       menu_with_reviewables:
         one: "Menu, %{count} pozycja do przejrzenia"
         few: "Menu, %{count} pozycje do przejrzenia"

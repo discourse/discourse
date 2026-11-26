@@ -268,11 +268,9 @@ zh_TW:
         error: "錯誤"
         response: "回應"
       post_image_captions:
-        edit: "編輯 AI 圖片說明"
-        title: "編輯 AI 圖片說明"
-        description: "說明"
-        save: "保存說明"
         saved: "AI 圖片說明已保存"
+        image_descriptions:
+          apply: "應用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能體"
@@ -1057,6 +1055,8 @@ zh_TW:
           title: "創建新憑據"
       concepts:
         edit: "編輯"
+        seed:
+          refresh: "重新整理"
         delete: "刪除"
         columns:
           status: "狀態"
@@ -1070,6 +1070,8 @@ zh_TW:
           description: "描述"
           aliases: "別名"
           status: "狀態"
+        shared_topics_count:
+          other: "%{count} 個話題"
         tagged_topics: "帶標簽的主題"
         topic_columns:
           topic: "主題"

@@ -17,7 +17,6 @@ nb_NO:
         save: Lagre
         about_tab: Om
         blog_slug: Navn i URL
-        general_heading: Generelt
         settings_tab: Innstillinger
         theme_tab: Drakt
         column_name: Navn

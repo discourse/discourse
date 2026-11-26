@@ -41,6 +41,7 @@ et:
           column_title: "Pealkiri"
           icon: "Ikoon"
           color: "Värv"
+          icon_search_placeholder: "Otsi..."
           move_to_assigned_unassign: "Eemalda määramine"
           move_to_status_open: "Ava"
           move_to_status_closed: "Suletud"

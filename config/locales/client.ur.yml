@@ -4241,7 +4241,7 @@ ur:
         back_description: "اپنے آخری بغیر پڑھے دھاگے پر واپس جائیں"
         replies_short: "%{current}/ %{total}"
       progress:
-        title: موضوع کی پیش رَفت
+        title: "موضوع کی پیش رَفت"
         jump_prompt: "پر جائیں۔۔۔"
         jump_prompt_of:
           one: "کا %{count} دھاگہ"

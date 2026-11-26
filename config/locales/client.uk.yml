@@ -5053,7 +5053,7 @@ uk:
         back_description: "Повернутися до вашого останнього непрочитаного допису"
         replies_short: "%{current} / %{total}"
       progress:
-        title: просування по темі
+        title: "просування по темі"
         jump_prompt: "перейти до…"
         jump_prompt_of:
           one: "з %{count} допису"
@@ -6733,7 +6733,6 @@ uk:
       create: "Створити"
       menu: "Меню"
       more: "Більше"
-      edit_topic: "Редагувати назву, категорію та теги"
       menu_with_reviewables:
         one: "Меню, %{count} елемент для перегляду"
         few: "Меню, %{count} елементи для перегляду"

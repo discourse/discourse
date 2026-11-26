@@ -3549,7 +3549,7 @@ ja:
         back_description: "最後の未読の投稿に戻る"
         replies_short: "%{current} / %{total}"
       progress:
-        title: トピックの進捗
+        title: "トピックの進捗"
         jump_prompt: "ジャンプ…"
         jump_prompt_of:
           other: "/ %{count} の投稿"

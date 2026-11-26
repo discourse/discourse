@@ -2374,7 +2374,7 @@ gl:
         back_description: "Volver á última publicación pendente de lectura"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progreso do tema
+        title: "progreso do tema"
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicacións"

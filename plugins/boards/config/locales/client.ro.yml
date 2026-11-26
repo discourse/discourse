@@ -43,6 +43,8 @@ ro:
           column_title: "Titlu"
           icon: "Icon"
           color: "Culoare"
+          color_palette: "Paletă de culori"
+          icon_search_placeholder: "Caută…"
           tag: "Etichetă"
           move_to_status_open: "Deschide"
           move_to_status_closed: "Închis"

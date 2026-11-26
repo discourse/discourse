@@ -2943,7 +2943,7 @@ te:
         back_description: "మీ చివరిగా చదవని పోస్ట్‌కి తిరిగి వెళ్లండి"
         replies_short: "%{current} / %{total}"
       progress:
-        title: విషయపు పురోగతి
+        title: "విషయపు పురోగతి"
         jump_prompt: "కి వెళ్లండి…"
         jump_prompt_of:
           one: "యొక్క %{count} పోస్ట్"

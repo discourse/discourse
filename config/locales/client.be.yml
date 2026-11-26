@@ -1581,7 +1581,7 @@ be:
       timeline:
         back: "Назад"
       progress:
-        title: прагрэс у тэме
+        title: "прагрэс у тэме"
         jump_prompt_or: "або"
       notifications:
         reasons:

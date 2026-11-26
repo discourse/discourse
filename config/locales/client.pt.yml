@@ -3448,7 +3448,7 @@ pt:
         back_description: "Voltar à última publicação não lida"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "ir para..."
         jump_prompt_of:
           one: "de %{count} publicação"

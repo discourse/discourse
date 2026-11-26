@@ -4251,7 +4251,7 @@ ru:
         back_description: "Перейти к последнему непрочитанному сообщению"
         replies_short: "%{current} из %{total}"
       progress:
-        title: Текущее местоположение в теме
+        title: "Текущее местоположение в теме"
         jump_prompt: "перейти к…"
         jump_prompt_of:
           one: "из %{count} сообщения"

@@ -263,11 +263,9 @@ de:
         error: "Fehler"
         response: "Antwort"
       post_image_captions:
-        edit: "KI-Bildbeschriftung bearbeiten"
-        title: "KI-Bildbeschriftung bearbeiten"
-        description: "Beschriftung"
-        save: "Bildbeschriftung speichern"
         saved: "KI-Bildbeschriftung gespeichert"
+        image_descriptions:
+          apply: "Anwenden"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -987,6 +985,8 @@ de:
           title: "Neue Anmeldedaten erstellen"
       concepts:
         edit: "Bearbeiten"
+        seed:
+          refresh: "Aktualisieren"
         delete: "Löschen"
         columns:
           status: "Status"
@@ -1000,6 +1000,9 @@ de:
           description: "Beschreibung"
           aliases: "Aliase"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} Thema"
+          other: "%{count} Themen"
         tagged_topics: "Themen mit Schlagwörtern"
         topic_columns:
           topic: "Thema"

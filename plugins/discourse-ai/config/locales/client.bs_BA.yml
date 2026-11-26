@@ -49,6 +49,9 @@ bs_BA:
         type: "Tip"
         error: "Greška"
         response: "Odgovor"
+      post_image_captions:
+        image_descriptions:
+          apply: "Snimi"
       discourse_workflows:
         ai_tool:
           list_item: "Listaj predmet"
@@ -223,6 +226,8 @@ bs_BA:
         embedding: "Embedding"
       concepts:
         edit: "Izmijeni"
+        seed:
+          refresh: "Refresh"
         delete: "Delete"
         columns:
           status: "Status"
@@ -234,6 +239,10 @@ bs_BA:
           name: "Ime"
           description: "Opis"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} tema"
         topic_columns:
           topic: "Topic"
           relevance: "Bitnost"

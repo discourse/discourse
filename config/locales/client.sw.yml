@@ -1692,7 +1692,7 @@ sw:
         back_description: "Rudi kwenye chapisho la mwisho ambalo haujalisoma"
         replies_short: "%{current} / %{total}"
       progress:
-        title: maendeleo ya mada
+        title: "maendeleo ya mada"
         jump_prompt_or: "au"
       notifications:
         title: badilisha mara ngapi utapata taarifa kuhusu mada hii

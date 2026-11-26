@@ -51,6 +51,9 @@ sv:
         type: "Typ"
         error: "Fel"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Tillämpa"
       discourse_workflows:
         ai_tool:
           list_item: "Listobjekt"
@@ -250,6 +253,8 @@ sv:
         embedding: "Inbäddning"
       concepts:
         edit: "Redigera"
+        seed:
+          refresh: "Uppdatera"
         delete: "Radera"
         columns:
           status: "Status"
@@ -261,6 +266,9 @@ sv:
           name: "Namn"
           description: "Beskrivning"
           status: "Status"
+        shared_topics_count:
+          one: "%{count} ämne"
+          other: "%{count} ämnen"
         tagged_topics: "Taggade ämnen"
         topic_columns:
           topic: "Ämne"
