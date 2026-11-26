@@ -80,7 +80,7 @@ export default class ReviewableInsights extends Component {
     }
 
     if (user?.email) {
-      // staged users are created from inbound e-mail and skip address validation
+      // staged users skip email validation, so the address can contain markup
       activities.push(escape(user.email));
     }
 
