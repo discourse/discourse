@@ -4,6 +4,7 @@ module DiscourseAi
   module InferredConcepts
     class Applier
       MAX_CONTENT_CHARS = 12_000
+      NO_MATCH_CUSTOM_FIELD = "inferred_concepts_no_match"
       CandidateStub = Struct.new(:id, :name, :description, :aliases)
 
       # Associates the provided concepts with a topic
@@ -226,6 +227,10 @@ module DiscourseAi
         return [] if entries.empty?
 
         ActiveRecord::Base.transaction do
+          if target.is_a?(Topic)
+            TopicCustomField.where(topic_id: target.id, name: NO_MATCH_CUSTOM_FIELD).delete_all
+          end
+
           if digest.present?
             keep_ids = entries.map { |entry| entry[:concept].id }
             join_model

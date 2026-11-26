@@ -6,11 +6,14 @@ module Jobs
     sidekiq_options queue: "low", retry: false
     cluster_concurrency 1
 
-    CURSOR_KEY = "discourse_ai:inferred_concepts:backfill_cursor"
-    MAX_CONSECUTIVE_FAILURES = 3
+    BATCH_SIZE = 15
+    INFLIGHT_KEY = "discourse_ai:inferred_concepts:backfill_inflight"
+    INFLIGHT_TTL = 10.minutes
+    NO_MATCH_CUSTOM_FIELD = DiscourseAi::InferredConcepts::Applier::NO_MATCH_CUSTOM_FIELD
+    FEATURE_NAME = DiscourseAi::InferredConcepts::DecisionMatcher::FEATURE_NAME
 
-    def self.reset_cursor!
-      Discourse.redis.del(CURSOR_KEY)
+    def self.reset_inflight!
+      Discourse.redis.del(INFLIGHT_KEY)
     end
 
     def execute(_args)
@@ -43,64 +46,47 @@ module Jobs
       end
 
       limit_per_job = [base_budget, 12].max / 12
-      topics = backfill_topics(limit: limit_per_job, cursor_id: current_cursor_id).to_a
-      return if topics.empty?
+      inflight_ids = active_inflight_ids
+      remaining_slots = limit_per_job - inflight_ids.size
+      return if remaining_slots <= 0
 
-      applier = DiscourseAi::InferredConcepts::Applier.new
-      consecutive_failures = 0
-      had_failure = false
-      last_succeeded_id = nil
+      topic_ids = backfill_topic_ids(limit: remaining_slots, exclude_ids: inflight_ids)
+      return if topic_ids.empty?
 
-      topics.each do |topic|
-        unless credits_available?(decision_model, llm)
-          Rails.logger.info(
-            "Inferred concepts backfill paused: insufficient credits. Will resume when credits reset.",
-          )
-          break
-        end
-
-        begin
-          applier.match_existing_concepts(
-            topic,
-            active_only: true,
-            require_stored_embedding: true,
-            raise_on_error: true,
-          )
-          last_succeeded_id = topic.id unless had_failure
-          consecutive_failures = 0
-        rescue DiscourseAi::Decisions::CreditLimitExceeded, LlmCreditAllocation::CreditLimitExceeded
-          Rails.logger.info(
-            "Inferred concepts backfill paused: credit limit exceeded. Will resume when credits reset.",
-          )
-          break
-        rescue StandardError => e
-          had_failure = true
-          consecutive_failures += 1
-          Discourse.warn_exception(
-            e,
-            message: "Failed to backfill inferred concepts for topic #{topic.id}",
-          )
-          break if consecutive_failures >= MAX_CONSECUTIVE_FAILURES
-        end
+      claim_inflight_topics(topic_ids)
+      topic_ids.each_slice(BATCH_SIZE) do |batch|
+        Jobs.enqueue(:backfill_inferred_concepts_batch, topic_ids: batch)
       end
-
-      save_cursor(last_succeeded_id) if last_succeeded_id.present?
     end
 
     private
 
     def credits_available?(decision_model, llm)
       if decision_model
-        DecisionModelCreditAllocation.credits_available?(
-          decision_model,
-          DiscourseAi::InferredConcepts::DecisionMatcher::FEATURE_NAME,
-        )
+        DecisionModelCreditAllocation.check_credits!(decision_model, FEATURE_NAME)
       else
-        LlmCreditAllocation.credits_available?(llm)
+        LlmCreditAllocation.check_credits!(llm, FEATURE_NAME)
+      end
+      true
+    rescue DiscourseAi::Decisions::CreditLimitExceeded, LlmCreditAllocation::CreditLimitExceeded
+      false
+    end
+
+    def active_inflight_ids
+      now = Time.now.to_f
+      Discourse.redis.zremrangebyscore(INFLIGHT_KEY, "-inf", now)
+      Discourse.redis.zrange(INFLIGHT_KEY, 0, -1).map(&:to_i)
+    end
+
+    def claim_inflight_topics(topic_ids)
+      expires_at = Time.now.to_f + INFLIGHT_TTL.to_i
+      Discourse.redis.multi do |tx|
+        topic_ids.each { |id| tx.zadd(INFLIGHT_KEY, expires_at, id.to_s) }
+        tx.expire(INFLIGHT_KEY, (INFLIGHT_TTL + 5.minutes).to_i)
       end
     end
 
-    def backfill_topics(limit:, cursor_id:)
+    def backfill_topic_ids(limit:, exclude_ids:)
       model_id = SiteSetting.ai_embeddings_selected_model.to_i
       table = DiscourseAi::Embeddings::Schema::TOPICS_TABLE
       max_age_days = SiteSetting.inferred_concepts_backfill_max_age_days
@@ -116,20 +102,15 @@ module Jobs
           .where(
             "NOT EXISTS (SELECT 1 FROM inferred_concept_topics ict WHERE ict.topic_id = topics.id)",
           )
+          .where(
+            "NOT EXISTS (SELECT 1 FROM topic_custom_fields tcf WHERE tcf.topic_id = topics.id AND tcf.name = :no_match_field)",
+            no_match_field: NO_MATCH_CUSTOM_FIELD,
+          )
 
       scope = scope.where("topics.created_at >= ?", max_age_days.days.ago) if max_age_days > 0
+      scope = scope.where.not(id: exclude_ids) if exclude_ids.present?
 
-      scope = scope.where("topics.id < ?", cursor_id) if cursor_id.present?
-      scope.order("topics.id DESC").limit(limit)
-    end
-
-    def current_cursor_id
-      raw = Discourse.redis.get(CURSOR_KEY)
-      raw.presence&.to_i
-    end
-
-    def save_cursor(topic_id)
-      Discourse.redis.set(CURSOR_KEY, topic_id.to_s)
+      scope.order(Arel.sql("topics.last_posted_at DESC, topics.id DESC")).limit(limit).pluck(:id)
     end
   end
 end
