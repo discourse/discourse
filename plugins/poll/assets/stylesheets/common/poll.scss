@@ -25,7 +25,8 @@ div.poll-outer,
       width: 100%;
     }
 
-    li[data-poll-option-id] {
+    // A ranked-choice row holds its own select, so it isn't styled as a choice to click.
+    li[data-poll-option-id]:not(.ranked-choice-poll-option) {
       color: var(--primary);
       padding: 0.5em 0;
       word-break: break-word;
@@ -64,6 +65,23 @@ div.poll-outer,
         align-items: center;
         gap: 0.5em;
         padding: 0.5em;
+
+        // A flat button, as the menu it replaces was.
+        .ranked-choice-poll-option__rank.d-select {
+          flex: none;
+          width: auto;
+          min-height: auto;
+          padding: 0.5em 0.65em;
+          line-height: var(--line-height-small);
+          color: var(--d-button-default-text-color);
+          background: var(--d-button-flat-bg-color);
+          border-color: transparent;
+          border-radius: var(--d-button-border-radius);
+
+          .discourse-no-touch &:hover {
+            background: var(--d-button-flat-bg-color--hover);
+          }
+        }
       }
     }
 
@@ -307,7 +325,7 @@ div.poll-outer,
       overflow: visible;
       align-self: center;
 
-      li {
+      li:not(.ranked-choice-poll-option) {
         cursor: pointer;
         font-size: var(--font-up-1);
       }
@@ -704,4 +722,11 @@ body.crawler {
       color: var(--primary-medium);
     }
   }
+}
+
+// The panel renders outside the poll. The priority sits beside its rank.
+.ranked-choice-poll-option__rank-content .d-select__option-content {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
 }

@@ -3,14 +3,17 @@ import { trackedObject } from "@ember/reactive/collections";
 import {
   click,
   find,
+  findAll,
   focus,
   render,
   settled,
+  triggerKeyEvent,
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import dSelect from "discourse/tests/helpers/d-select-helper";
 import { i18n } from "discourse-i18n";
 import Poll from "discourse/plugins/poll/discourse/components/poll";
 
@@ -1102,3 +1105,182 @@ module("Component | Poll | ranked choice focus", function (hooks) {
     assert.dom(`${THIS} button`).hasText("1");
   });
 });
+
+module(
+  "Component | Poll | ranked choice with new select controls",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.siteSettings.enable_new_select_controls = true;
+      this.post = EmberObject.create({
+        id: 42,
+        topic: { archived: false },
+        user_id: 29,
+      });
+      this.poll = trackedObject({
+        name: "poll",
+        type: "ranked_choice",
+        status: "open",
+        results: "always",
+        options: [
+          {
+            id: "1f972d1df351de3ce35a787c89faad29",
+            html: "this",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+            html: "that",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "6c986ebcde3d5822a6e91a695c388094",
+            html: "other",
+            votes: 0,
+            rank: 0,
+          },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      });
+    });
+
+    const THIS = "1f972d1df351de3ce35a787c89faad29";
+    const THAT = "d7ebc3a9beea2e680815a1e4f57d6db6";
+
+    function rankOf(optionId) {
+      return `.ranked-choice-poll-option[data-poll-option-id='${optionId}'] .d-select`;
+    }
+
+    test("names each rank by its option and starts at Abstain", async function (assert) {
+      await render(
+        <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+      );
+
+      const [captionId] = dSelect(rankOf(THIS))
+        .element()
+        .getAttribute("aria-labelledby")
+        .split(" ");
+      assert.dom(`#${captionId}`).hasText("this");
+      assert.dSelect(rankOf(THIS)).hasValue(0);
+      assert
+        .dSelect(rankOf(THIS))
+        .hasLabel(i18n("poll.options.ranked_choice.abstain"));
+    });
+
+    test("lists Abstain, then each rank, describing both ends", async function (assert) {
+      await render(
+        <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+      );
+      await dSelect(rankOf(THIS)).open();
+
+      assert.dSelect(rankOf(THIS)).hasOptions([0, 1, 2, 3]);
+      assert.deepEqual(
+        findAll("[role='option']").map((row) => row.dataset.name),
+        [i18n("poll.options.ranked_choice.abstain"), "1", "2", "3"]
+      );
+      assert
+        .dom("[role='option'][data-value='1'] .d-select__option-description")
+        .hasText(i18n("poll.options.ranked_choice.highest_priority"));
+      assert
+        .dom("[role='option'][data-value='2'] .d-select__option-description")
+        .doesNotExist();
+      assert
+        .dom("[role='option'][data-value='3'] .d-select__option-description")
+        .hasText(i18n("poll.options.ranked_choice.lowest_priority"));
+    });
+
+    test("ranks an option, and back to Abstain, deciding whether the vote can be cast", async function (assert) {
+      await render(
+        <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+      );
+      await dSelect(rankOf(THIS)).select(1);
+
+      assert
+        .dom(
+          `.ranked-choice-poll-option[data-poll-option-id='${THIS}'][data-poll-option-rank='1']`
+        )
+        .exists();
+      assert.dSelect(rankOf(THIS)).hasLabel("1");
+      assert.dSelect(rankOf(THAT)).hasValue(0, "the other options keep theirs");
+      assert.dom(".poll-buttons .cast-votes").isEnabled();
+
+      await dSelect(rankOf(THIS)).select(0);
+
+      assert.dSelect(rankOf(THIS)).hasValue(0);
+      assert.dom(".poll-buttons .cast-votes").isDisabled();
+    });
+
+    test("keeps the rank when Backspace is pressed on it", async function (assert) {
+      await render(
+        <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+      );
+      await dSelect(rankOf(THIS)).select(2);
+      await focus(rankOf(THIS));
+      await triggerKeyEvent(rankOf(THIS), "keydown", "Backspace");
+
+      assert.dSelect(rankOf(THIS)).hasValue(2);
+    });
+
+    test("lists each option as a list item without a tab stop of its own", async function (assert) {
+      await render(
+        <template><Poll @poll={{this.poll}} @post={{this.post}} /></template>
+      );
+
+      assert
+        .dom(".ranked-choice-poll-options > li.ranked-choice-poll-option")
+        .exists({ count: 3 });
+      assert.dom(".ranked-choice-poll-option").doesNotHaveAttribute("tabindex");
+    });
+
+    test("styles a list item row as the row it replaces, not as a choice to click", async function (assert) {
+      await render(
+        <template>
+          <div class="poll-outer">
+            <Poll @poll={{this.poll}} @post={{this.post}} />
+          </div>
+        </template>
+      );
+      const row = find(
+        `.ranked-choice-poll-option[data-poll-option-id='${THIS}']`
+      );
+
+      assert.strictEqual(
+        getComputedStyle(row).fontSize,
+        getComputedStyle(row.parentElement).fontSize,
+        "the row keeps the poll's text size"
+      );
+      assert.notStrictEqual(
+        getComputedStyle(row).cursor,
+        "pointer",
+        "only the select inside the row is clickable"
+      );
+      assert.notStrictEqual(
+        getComputedStyle(row.querySelector(".option-text")).flexGrow,
+        "1",
+        "the option text doesn't stretch to fill the row"
+      );
+    });
+
+    test("keeps the login button's own look for anonymous users", async function (assert) {
+      this.owner.unregister("service:current-user");
+      await render(
+        <template>
+          <div class="poll-outer">
+            <Poll @poll={{this.poll}} @post={{this.post}} />
+          </div>
+        </template>
+      );
+      const button = find(".ranked-choice-poll-option .btn-default");
+
+      assert.notStrictEqual(
+        getComputedStyle(button).backgroundColor,
+        "rgba(0, 0, 0, 0)"
+      );
+      assert.notStrictEqual(getComputedStyle(button).borderStyle, "none");
+    });
+  }
+);

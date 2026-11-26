@@ -80,7 +80,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       (`ai-agent-list-editor.gjs`).
     - ☐ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). It ends with
       "Leave event" after a divider while the user is going.
-    - ☐ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`).
+    - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static,
+      required `DSelect` named by its option's text, styled as the flat button it replaces. The
+      trigger shows the number; the list marks both ends with the existing priority strings. Rows
+      are list items without a tab stop of their own. Rows are now keyed by option id (#46941), so
+      focus stays on the option just ranked.
     - ☐ live: the call submenus for devices, noise suppression, camera and layout
       (`live/call-submenu.gjs`).
     - ☐ discourse-workflows: the reference picker (`variable/reference-property-picker.gjs`), a
