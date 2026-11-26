@@ -91,6 +91,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
+  @tracked contextualToolbar;
   @tracked showFormattingBar = !!store.getObject("formatting_bar");
 
   formattingToolbar = this.#buildToolbar();
@@ -315,11 +316,20 @@ export default class ChatComposer extends Component {
     // Removing a focused editor mid-render would flip isFocused during the
     // same render that reads it.
     this.editor?.element.blur();
+    this.contextualToolbar = null;
 
     this.currentUser.set("user_option.composition_mode", preference);
     discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  replaceToolbar(toolbar, owner) {
+    if (toolbar === null && owner && this.contextualToolbar !== owner) {
+      return;
+    }
+    this.contextualToolbar = toolbar;
   }
 
   @action
@@ -718,7 +728,7 @@ export default class ChatComposer extends Component {
         ...getExtensions(),
         // the formatting bar already offers the same buttons
         richEditorSelectionToolbar(() =>
-          this.showFormattingBar ? null : selectionToolbar
+          this.showFormattingBar || this.contextualToolbar ? null : selectionToolbar
         ),
       ];
     }
@@ -1049,19 +1059,12 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if
-          (and
-            this.canUseRichEditor
-            this.showFormattingBar
-            this.editor
-            (not this.disabled)
-          )
-        }}
-          <div
-            aria-label={{i18n "chat.composer.formatting"}}
-            class="chat-composer__formatting-bar"
-            role="toolbar"
-          >
+        {{#if (and this.useRichEditor this.contextualToolbar (not this.disabled))}}
+          <div aria-label={{i18n "chat.composer.formatting"}} class="chat-composer__contextual-toolbar" role="toolbar">
+            <ToolbarButtons @data={{this.contextualToolbar}} />
+          </div>
+        {{else if (and this.canUseRichEditor this.showFormattingBar this.editor (not this.disabled))}}
+          <div aria-label={{i18n "chat.composer.formatting"}} class="chat-composer__formatting-bar" role="toolbar">
             <ToolbarButtons @data={{this.formattingToolbar}} />
           </div>
         {{/if}}
@@ -1099,6 +1102,7 @@ export default class ChatComposer extends Component {
                     @keymap={{this.richEditorKeymap}}
                     @onSetup={{this.setupRichEditor}}
                     @placeholder={{this.placeholder}}
+                    @replaceToolbar={{this.replaceToolbar}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
                     @uploadFiles={{this.uploadFiles}}

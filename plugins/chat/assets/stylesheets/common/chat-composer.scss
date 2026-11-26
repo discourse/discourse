@@ -260,3 +260,15 @@
     margin: 0;
   }
 }
+
+.chat-composer__contextual-toolbar {
+  display: flex;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow-x: auto;
+  padding: 0 1rem var(--space-1);
+
+  .toolbar__button {
+    flex-shrink: 0;
+  }
+}
