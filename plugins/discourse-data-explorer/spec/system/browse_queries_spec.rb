@@ -5,6 +5,7 @@ RSpec.describe "Browse queries" do
   fab!(:alice) { Fabricate(:user, username: "alice") }
 
   let(:queries_page) { PageObjects::Pages::DataExplorerQueries.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.data_explorer_enabled = true
@@ -81,8 +82,12 @@ RSpec.describe "Browse queries" do
     report_scope =
       AdminDashboardReport.where(source: "data_explorer_query", identifier: default_query.id.to_s)
 
-    queries_page.visit.search(default_query.name).toggle_dashboard(default_query)
+    queries_page.visit.search(default_query.name)
+    expect(queries_page).to have_queries([default_query])
 
+    queries_page.toggle_dashboard(default_query)
+
+    expect(toasts).to have_success(I18n.t("js.explorer.dashboard.added"))
     expect(queries_page).to have_dashboard_action(
       default_query,
       I18n.t("js.explorer.dashboard.remove"),
@@ -91,6 +96,7 @@ RSpec.describe "Browse queries" do
 
     queries_page.toggle_dashboard(default_query)
 
+    expect(toasts).to have_success(I18n.t("js.explorer.dashboard.removed"))
     expect(queries_page).to have_dashboard_action(
       default_query,
       I18n.t("js.explorer.dashboard.add"),

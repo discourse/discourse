@@ -49,7 +49,8 @@ RSpec.describe "Member upcoming changes" do
       expect(page).to have_css("body.uc-enable-upload-debug-mode")
     end
 
-    it "adds and removes the body class based on MessageBus subscription for client site settings" do
+    it "adds and removes the body class based on MessageBus subscription for client site settings",
+       browser_features: :simultaneous_browser_sessions do
       visit "/"
       expect(page).to have_css("body.uc-enable-upload-debug-mode")
 

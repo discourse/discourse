@@ -172,7 +172,7 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(composer).to have_value("```\n~~~\n```\n**bold**")
   end
 
-  it "ignores text/html content if Files are present" do
+  it "ignores text/html content if Files are present", browser_features: :image_clipboard do
     open_composer
     paste_and_click_image
     expect(composer).to have_no_animated_images
@@ -212,8 +212,18 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
   end
 
-  context "when unauthorized to upload" do
+  context "when unauthorized to upload", browser_features: :clipboard do
     before { SiteSetting.authorized_extensions = "" }
+
+    it "avoids triggering upload for paste", browser_features: :image_clipboard do
+      open_composer
+      cdp.allow_clipboard
+      cdp.copy_test_image
+      cdp.paste
+      expect(rich).to have_no_css("img")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("")
+    end
 
     it "lets the user paste independent documents without upload permission",
        aggregate_failures: true do
@@ -225,17 +235,6 @@ describe "Composer - ProseMirror - Pasting content" do
         expect(rich).to have_css("p", text: "Just some text")
         composer.toggle_rich_editor
         expect(composer).to have_value("Just some text")
-      end
-
-      reset_composer
-
-      aggregate_failures("avoids triggering upload for paste") do
-        cdp.allow_clipboard
-        cdp.copy_test_image
-        cdp.paste
-        expect(rich).to have_no_css("img")
-        composer.toggle_rich_editor
-        expect(composer).to have_value("")
       end
 
       reset_composer
@@ -348,7 +347,7 @@ describe "Composer - ProseMirror - Pasting content" do
     expect(rich).to have_no_css("code", text: "word")
   end
 
-  context "when pasting tables" do
+  context "when pasting tables", browser_features: :clipboard do
     it "normalizes pasted tables and handles empty rows" do
       cdp.allow_clipboard
       open_composer

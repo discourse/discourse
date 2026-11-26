@@ -114,7 +114,7 @@ module PageObjects
       private
 
       def open_menu(query)
-        page.find("#{row(query)} .query-row__menu-trigger").click
+        page.find("#{row(query)} .query-row__menu-trigger[aria-expanded='false']").click
       end
 
       def row(query)

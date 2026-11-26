@@ -541,7 +541,8 @@ describe "Admin Customize Themes" do
       expect(theme_page).to have_no_overridden_theme_site_setting("enable_welcome_banner")
     end
 
-    it "alters the UI via MessageBus when a theme site setting changes" do
+    it "alters the UI via MessageBus when a theme site setting changes",
+       browser_features: :simultaneous_browser_sessions do
       SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
       banner = PageObjects::Components::WelcomeBanner.new
       other_user = Fabricate(:user)

@@ -42,7 +42,7 @@ To minimize usage, make sure to run "Codespaces: Stop Current Codespace" from th
 
 ## Running tests
 
-The first time you run tests, you'll need to install testing dependencies, including Playwright and the `discourse_test` DB. You can run the `deps/testing` task to install those. Open the command palette, select "Tasks: Run Tasks". It will present a menu of tasks; select `deps/testing` off of that list.
+The first time you run tests, you'll need to install testing dependencies, including Chromium and the `discourse_test` DB. You can run the `deps/testing` task to install those. Open the command palette, select "Tasks: Run Tasks". It will present a menu of tasks; select `deps/testing` off of that list.
 
 Once the test dependencies are installed, you can run [`bin/lint`](https://meta.discourse.org/t/132947), [`bin/qunit`](https://meta.discourse.org/t/66857), or the [system specs](https://meta.discourse.org/t/325937)
 

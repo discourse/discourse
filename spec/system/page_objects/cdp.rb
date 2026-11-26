@@ -35,19 +35,24 @@ module PageObjects
     include RSpec::Matchers
 
     def allow_clipboard
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.context.grant_permissions(["clipboard-read"], origin: pw_page.url)
-        pw_page.context.grant_permissions(["clipboard-write"], origin: pw_page.url)
+      require_browser_feature(:clipboard)
+      page.driver.with_browser_page do |browser_page|
+        if browser_page.respond_to?(:prepare_clipboard)
+          browser_page.prepare_clipboard
+        else
+          browser_page.context.grant_permissions(["clipboard-read"], origin: browser_page.url)
+          browser_page.context.grant_permissions(["clipboard-write"], origin: browser_page.url)
+        end
       end
     end
 
     def read_clipboard
-      page.evaluate_async_script("navigator.clipboard.readText().then(arguments[0])")
+      evaluate_clipboard("navigator.clipboard.readText().then(arguments[0])")
     end
 
     def write_clipboard(content, html: false, plain_text: content)
       if html
-        page.evaluate_async_script(
+        evaluate_clipboard(
           "navigator.clipboard.write([
         new ClipboardItem({
           'text/html': new Blob([arguments[0]], { type: 'text/html' }),
@@ -58,7 +63,7 @@ module PageObjects
           plain_text,
         )
       else
-        page.evaluate_async_script(
+        evaluate_clipboard(
           "navigator.clipboard.writeText(arguments[0]).then(arguments[1])",
           content,
         )
@@ -66,11 +71,12 @@ module PageObjects
     end
 
     def copy_test_image
+      require_browser_feature(:image_clipboard)
       image_path = "spec/fixtures/images/logo.png"
       image_data = File.read(image_path)
       image_base64 = Base64.strict_encode64(image_data)
 
-      page.evaluate_async_script(<<~JAVASCRIPT)
+      evaluate_clipboard(<<~JAVASCRIPT)
         const htmlBlob = new Blob(['<img src="data:image/png;base64,placeholder"/>'], { type: 'text/html' });
         const imageBlob = new Blob([Uint8Array.from(atob("#{image_base64}"), c => c.charCodeAt(0))], { type: 'image/png' });
         const item = new ClipboardItem({ 'text/html': htmlBlob, 'image/png': imageBlob });
@@ -99,109 +105,56 @@ module PageObjects
     end
 
     def with_network_disconnected
-      page.driver.with_playwright_page do |pw_page|
-        cdp_client = pw_page.context.new_cdp_session(pw_page)
-
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: true,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
-
-        yield
-      ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
-      end
-    end
-
-    def with_slow_download
-      page.driver.with_playwright_page do |pw_page|
-        cdp_client = pw_page.context.new_cdp_session(pw_page)
-
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 20_000,
-            downloadThroughput: 1,
-            uploadThroughput: -1,
-          },
-        )
-
-        yield
-      ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
-      end
-    end
-
-    def with_slow_upload
-      page.driver.with_playwright_page do |pw_page|
-        cdp_client = pw_page.context.new_cdp_session(pw_page)
-
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: 1,
-          },
-        )
-
-        yield
-      ensure
-        cdp_client.send_message(
-          "Network.emulateNetworkConditions",
-          params: {
-            offline: false,
-            latency: 0,
-            downloadThroughput: -1,
-            uploadThroughput: -1,
-          },
-        )
+      require_browser_feature(:offline_emulation)
+      window = page.current_window
+      page.driver.with_browser_page do |browser_page|
+        context = browser_page.context
+        context.set_offline(offline: true)
+        begin
+          yield
+        ensure
+          page.within_window(window) { context.set_offline(offline: false) } if window.exists?
+        end
       end
     end
 
     # Holds matching requests in-flight for the duration of the block.
     def with_pending_requests(pattern)
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.route(pattern, ->(_route, _request) {})
-        yield
-      ensure
-        pw_page.unroute(pattern)
+      require_browser_feature(:network_interception)
+      page.driver.with_browser_page do |browser_page|
+        browser_page.route(pattern, ->(_route, _request) {})
+        begin
+          yield
+        ensure
+          browser_page.unroute(pattern)
+        end
       end
     end
 
     def with_paused_request(pattern)
+      require_browser_feature(:network_interception)
       paused_request = PausedRequest.new
       handler = paused_request.method(:intercept)
 
-      page.driver.with_playwright_page do |pw_page|
-        pw_page.route(pattern, handler, times: 1)
-        yield(paused_request)
-      ensure
-        paused_request.resume
-        pw_page.unroute(pattern, handler:)
+      page.driver.with_browser_page do |browser_page|
+        browser_page.route(pattern, handler, times: 1)
+        begin
+          yield(paused_request)
+        ensure
+          paused_request.resume
+          browser_page.unroute(pattern, handler:)
+        end
+      end
+    end
+
+    private
+
+    def evaluate_clipboard(script, *args)
+      require_browser_feature(:clipboard)
+      if page.driver.respond_to?(:evaluate_clipboard)
+        page.driver.evaluate_clipboard(script, *args)
+      else
+        page.evaluate_async_script(script, *args)
       end
     end
   end

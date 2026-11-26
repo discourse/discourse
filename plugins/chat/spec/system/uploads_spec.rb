@@ -179,7 +179,7 @@ describe "Uploading files in chat messages" do
 
       expect(page).to have_no_css(".chat-composer-upload")
       expect(page).to have_css(".chat-img-upload", count: 2)
-      expect(message_2.reload.uploads.count).to eq(2)
+      try_until_success { expect(message_2.reload.uploads.count).to eq(2) }
     end
   end
 

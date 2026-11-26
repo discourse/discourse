@@ -36,15 +36,16 @@ RSpec.describe "Nested view floating actions" do
     it "can close and reopen a topic via admin menu" do
       nested_view.visit_nested(topic)
       nested_view.click_admin_close_topic
+      wait_for(timeout: 5) { topic.reload.closed? }
 
       nested_view.open_admin_menu
       expect(page).to have_css(".topic-admin-open")
-      expect(topic.reload).to be_closed
 
       find(".topic-admin-open .btn").click
+      wait_for(timeout: 5) { !topic.reload.closed? }
+
       nested_view.open_admin_menu
       expect(page).to have_css(".topic-admin-close")
-      expect(topic.reload).not_to be_closed
     end
 
     it "hides floating actions when composer is open" do

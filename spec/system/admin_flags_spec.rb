@@ -226,7 +226,7 @@ describe "Admin Flags Page" do
       )
     end
 
-    it "keeps a flag where the admin dragged it" do
+    it "keeps a flag where the admin dragged it", browser_features: :native_drag do
       admin_flags_page.visit
 
       admin_flags_page.drag_flag_above("off_topic", "illegal")

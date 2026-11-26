@@ -50,7 +50,8 @@ shared_examples "forgot password scenarios" do
     end
 
     context "when user only has security key configured" do
-      it "allows resetting the password with a security key" do
+      it "allows resetting the password with a security key",
+         browser_features: :virtual_authenticator do
         with_security_key(user) do
           visit_reset_password_link
 
@@ -87,21 +88,21 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
       it "allows using a backup code instead of a security key to reset the password" do
-        with_security_key(user) do
-          visit_reset_password_link
+        Fabricate(:user_security_key_with_random_credential, user:)
 
-          user_reset_password_page.try_another_way
+        visit_reset_password_link
 
-          expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
+        user_reset_password_page.try_another_way
 
-          user_reset_password_page
-            .fill_in_backup_code("iAmValidBackupCode")
-            .submit_backup_code
-            .fill_in_new_password("newsuperpassword")
-            .submit_new_password
+        expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
 
-          expect(user_reset_password_page).to have_logged_in_user
-        end
+        user_reset_password_page
+          .fill_in_backup_code("iAmValidBackupCode")
+          .submit_backup_code
+          .fill_in_new_password("newsuperpassword")
+          .submit_new_password
+
+        expect(user_reset_password_page).to have_logged_in_user
       end
     end
 
@@ -110,21 +111,21 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user:) }
 
       it "allows switching between security keys, TOTP, and backup codes" do
-        with_security_key(user) do
-          visit_reset_password_link
+        Fabricate(:user_security_key_with_random_credential, user:)
 
-          user_reset_password_page.try_another_way
+        visit_reset_password_link
 
-          expect(user_reset_password_page).to have_totp_description
+        user_reset_password_page.try_another_way
 
-          user_reset_password_page.use_backup_codes
+        expect(user_reset_password_page).to have_totp_description
 
-          expect(user_reset_password_page).to have_backup_codes_description
+        user_reset_password_page.use_backup_codes
 
-          user_reset_password_page.use_totp
+        expect(user_reset_password_page).to have_backup_codes_description
 
-          expect(user_reset_password_page).to have_totp_description
-        end
+        user_reset_password_page.use_totp
+
+        expect(user_reset_password_page).to have_totp_description
       end
     end
 
@@ -132,21 +133,21 @@ shared_examples "forgot password scenarios" do
       fab!(:user_second_factor_totp) { Fabricate(:user_second_factor_totp, user:) }
 
       it "allows using TOTP instead of a security key to reset the password" do
-        with_security_key(user) do
-          visit_reset_password_link
+        Fabricate(:user_security_key_with_random_credential, user:)
 
-          user_reset_password_page.try_another_way
+        visit_reset_password_link
 
-          expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
+        user_reset_password_page.try_another_way
 
-          user_reset_password_page
-            .fill_in_totp(ROTP::TOTP.new(user_second_factor_totp.data).now)
-            .submit_totp
-            .fill_in_new_password("newsuperpassword")
-            .submit_new_password
+        expect(user_reset_password_page).to have_no_toggle_button_in_second_factor_form
 
-          expect(user_reset_password_page).to have_logged_in_user
-        end
+        user_reset_password_page
+          .fill_in_totp(ROTP::TOTP.new(user_second_factor_totp.data).now)
+          .submit_totp
+          .fill_in_new_password("newsuperpassword")
+          .submit_new_password
+
+        expect(user_reset_password_page).to have_logged_in_user
       end
     end
   end

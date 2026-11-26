@@ -17,7 +17,8 @@ RSpec.describe "Editing Sidebar Community Section" do
     expect(sidebar).to have_no_customize_community_section_button
   end
 
-  it "allows admin to edit community section and reset to default" do
+  it "allows admin to edit community section and reset to default",
+     browser_features: :native_drag do
     sign_in(admin)
 
     visit("/latest")
@@ -61,7 +62,7 @@ RSpec.describe "Editing Sidebar Community Section" do
   context "when enable_new_reordering_controls is enabled" do
     before { SiteSetting.enable_new_reordering_controls = true }
 
-    it "lets an admin reorder and reset the Community section" do
+    it "lets an admin reorder and reset the Community section", browser_features: :native_drag do
       sign_in(admin)
 
       visit("/latest")

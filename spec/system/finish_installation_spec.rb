@@ -56,7 +56,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(page).to have_current_path("/wizard")
+          expect(page).to have_current_path("/wizard/steps/setup")
 
           user1 = User.find_by_email("dev1@example.com")
           user2 = User.find_by_email("dev2@example.com")
@@ -91,7 +91,7 @@ RSpec.describe "Finish Installation" do
           finish_installation_page.visit_page
           finish_installation_page.click_login_with_discourse_id
 
-          expect(page).to have_current_path("/wizard")
+          expect(page).to have_current_path("/wizard/steps/setup")
         ensure
           reset_omniauth_config(:discourse_id)
         end
@@ -119,7 +119,7 @@ RSpec.describe "Finish Installation" do
             )
             finish_installation_page.visit("/discuss/finish-installation")
             finish_installation_page.click_login_with_discourse_id
-            expect(page).to have_current_path("/discuss/wizard")
+            expect(page).to have_current_path("/discuss/wizard/steps/setup")
           ensure
             reset_omniauth_config(:discourse_id)
           end

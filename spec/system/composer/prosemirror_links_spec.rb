@@ -156,11 +156,15 @@ describe "Composer - ProseMirror - Links" do
   it "closes toolbar when cursor moves outside link" do
     open_composer
     composer.type_content("Text before [Example](https://example.com),")
-    composer.send_keys(:left)
-    wait_for { page.has_css?("[data-identifier='composer-link-toolbar']") }
+    link = rich.find("a[href='https://example.com']", text: "Example")
+    page.execute_script(<<~JS, link)
+      const text = arguments[0].firstChild;
+      window.getSelection().setPosition(text, text.length - 1);
+    JS
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     expect(page).to have_css("a.composer-link-toolbar__visit", text: "example.com")
-    composer.send_keys(:right)
-    wait_for { page.has_no_css?("[data-identifier='composer-link-toolbar']") }
+    composer.send_keys(:right, :right)
+    expect(page).to have_no_css("[data-identifier='composer-link-toolbar']")
   end
 
   it "preserves emojis when editing a link via toolbar" do

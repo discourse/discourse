@@ -200,6 +200,9 @@ describe "Solved" do
 
       topic_page.accept_solution(solver_post2)
 
+      # The topic update can reset the accordion after the accept response renders it.
+      expect(MessageBusTestSync.flush!(page, timeout: Capybara.default_max_wait_time)).to be_blank
+
       expect(topic_page).to have_solution_info
       expect(topic_page).to have_accepted_solution(solver_post)
       expect(topic_page).to have_accepted_solution(solver_post2)

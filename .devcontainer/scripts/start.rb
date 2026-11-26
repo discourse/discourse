@@ -27,6 +27,6 @@ puts <<~TXT
     4. Open your browser to http://localhost:3000
 
   Running tests:
-    Run the "deps/testing" task once to install Playwright + discourse_test DB
+    Run the "deps/testing" task once to install Chromium + discourse_test DB
     Then you can run qunit and rspec tests (boot-dev server should be running)
 TXT

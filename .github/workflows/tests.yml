@@ -71,7 +71,6 @@ jobs:
       DISCOURSE_CI_MINIFY: ${{ matrix.build_type == 'system' && '1' || '' }}
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       QUNIT_REUSE_BUILD: 1
-      PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
       DEPRECATION_REPORT_GROUP: ${{ matrix.build_type }}-${{ matrix.target }}
 
     strategy:
@@ -281,25 +280,42 @@ jobs:
             exit 1
           fi
 
-      - name: Install Playwright
+      - name: Locate Chromium
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
+        env:
+          DISCOURSE_TEST_BROWSER_IMAGE_CACHE: /home/discourse/.cache
         run: |
-          if [[ "${{ matrix.build_type }}" == system && "${{ matrix.target }}" == core ]]; then
-            pnpm exec playwright install chromium
-          else
-            pnpm playwright-install
-          fi
+          chromium=$(script/test-chromium --install)
+          echo "Using $chromium"
+          echo "CHROMIUM_PATH=$chromium" >> "$GITHUB_ENV"
+
+      - name: Restore Chromium headless shell cache
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/discourse-test-browsers/chrome-headless-shell-*
+          key: chromium-headless-shell-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('script/test-chromium') }}
+
+      - name: Locate Chromium headless shell
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        env:
+          DISCOURSE_TEST_BROWSER_IMAGE_CACHE: /home/discourse/.cache
+        run: |
+          shell=$(script/test-chromium --install --headless-shell)
+          echo "Using $shell"
+          echo "CHROMIUM_HEADLESS_SHELL_PATH=$shell" >> "$GITHUB_ENV"
 
       - name: Precompile the JS bundles
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         run: bin/rake assets:precompile:asset_processor assets:precompile:pretty_text
 
-      - name: Deploy Playwright outside node_modules
+      - name: Stage the system test source map reader
         if: matrix.build_type == 'system'
         run: |
-          pnpm deploy --filter @discourse/playwright-runner --prod tmp/playwright
-          echo "PLAYWRIGHT_CLI_EXECUTABLE_PATH=$PWD/tmp/playwright/node_modules/.bin/playwright" >> $GITHUB_ENV
-          echo "NODE_PATH=$PWD/tmp/playwright/node_modules${NODE_PATH:+:$NODE_PATH}" >> $GITHUB_ENV
+          mkdir -p tmp/system-test/node_modules
+          source_map_path=$(cd frontend/discourse && node -p 'require("path").dirname(require.resolve("source-map-js/package.json"))')
+          cp -R "$source_map_path" tmp/system-test/node_modules/source-map-js
+          echo "NODE_PATH=$PWD/tmp/system-test/node_modules${NODE_PATH:+:$NODE_PATH}" >> "$GITHUB_ENV"
 
       # Drop node_modules to match production
       - name: Remove node_modules
@@ -350,9 +366,7 @@ jobs:
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-          DISCOURSE_SYSTEM_TEST_HEADLESS_SHELL: "1"
           DISCOURSE_SYSTEM_TEST_BATCH_V8_GC: "1"
-          DISCOURSE_SYSTEM_TEST_NODE_READ_FAST: "1"
         run: LD_PRELOAD="$RUBY_ALLOCATOR" RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests

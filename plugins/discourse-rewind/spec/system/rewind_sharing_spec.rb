@@ -48,10 +48,10 @@ describe "DiscourseRewind | rewind sharing" do
 
         dialog.click_yes
 
+        expect(rewind_page).to have_copy_link_button
+        expect(rewind_page.share_toggle).to be_checked
         current_user.reload
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(true)
-        expect(rewind_page.share_toggle).to be_checked
-        expect(rewind_page).to have_copy_link_button
       end
 
       it "does not enable sharing if user cancels confirmation" do
@@ -85,10 +85,10 @@ describe "DiscourseRewind | rewind sharing" do
 
         rewind_page.share_toggle.toggle
 
+        expect(rewind_page).to have_no_copy_link_button
+        expect(rewind_page.share_toggle).to be_unchecked
         current_user.reload
         expect(current_user.user_option.discourse_rewind_share_publicly).to eq(false)
-        expect(rewind_page.share_toggle).to be_unchecked
-        expect(rewind_page).to have_no_copy_link_button
       end
 
       context "when copying rewind link" do

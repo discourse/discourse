@@ -80,8 +80,8 @@ module PageObjects
         submenu.option(%([data-menu-option-id="#{sort}"])).click
       end
 
-      def toggle_channel_filter
-        find("[data-sidebar-action-id='toggleChannelFilter']").click
+      def toggle_channel_filter(section: channels_section)
+        section.find("button[data-sidebar-action-id='toggleChannelFilter']:enabled").click
       end
 
       def open_channel(channel)

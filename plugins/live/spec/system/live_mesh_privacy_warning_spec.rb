@@ -2,7 +2,7 @@
 
 require_relative "../support/live_fake_media"
 
-describe "Live mesh privacy warning" do
+describe "Live mesh privacy warning", browser_features: :document_preload do
   fab!(:user)
   fab!(:room) { Fabricate(:live_room, public: true) }
 

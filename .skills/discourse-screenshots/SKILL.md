@@ -41,7 +41,7 @@ TAKE_SCREENSHOTS=1 LOAD_PLUGINS=1 bin/rspec spec/system/theme_screenshots_spec.r
 | `LOAD_PLUGINS`          | `1`                 | Always set so chat and plugin routes work.                    |
 | `SCREENSHOTS_DIR`       | `tmp/theme-screenshots` | Where PNGs and the HTML viewer are written.              |
 | `SCREENSHOTS_MODES`     | `light,dark`        | Comma-separated color modes.                                  |
-| `SCREENSHOTS_DEVICES`   | `desktop,mobile`    | Comma-separated devices. Mobile uses Playwright WebKit.       |
+| `SCREENSHOTS_DEVICES`   | `desktop,mobile`    | Comma separated devices. Mobile uses Chromium device emulation.       |
 | `SCREENSHOTS_THEMES`    | `foundation,horizon`| Comma-separated built-in theme names to include.              |
 | `SCREENSHOTS_THEME_URL` | *(unset)*           | Git URL of a remote theme to install and add to the matrix.   |
 | `SCREENSHOTS_THEME_NAME`| repo name           | Filename label for the remote/extra theme.                    |

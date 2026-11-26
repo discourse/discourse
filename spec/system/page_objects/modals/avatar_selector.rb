@@ -44,8 +44,8 @@ module PageObjects
 
       def has_upload_warning_below_choice?
         body.has_css?(".avatar-choice--upload .warning") do |warning|
-          label = body.find("label[for='uploaded-avatar']").rect
-          warning.rect["y"] >= label["y"] + label["height"]
+          label = body.find("label[for='uploaded-avatar']").rect.symbolize_keys
+          warning.rect.symbolize_keys.fetch(:y) >= label.fetch(:y) + label.fetch(:height)
         end
       end
     end

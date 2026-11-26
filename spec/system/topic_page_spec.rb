@@ -173,13 +173,13 @@ describe "Topic page" do
     expect(page).to have_no_css(".topic-admin-menu-content")
   end
 
-  context "with End keyboard shortcut" do
+  context "with the keyboard shortcut to scroll to the end" do
     fab!(:posts) { Fabricate.times(25, :post, topic: topic) }
 
     it "loads last post" do
       visit "/t/#{topic.slug}/#{topic.id}/1"
 
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
 
       expect(find("#post_#{topic.highest_post_number}")).to be_visible
     end
@@ -236,7 +236,7 @@ describe "Topic page" do
 
       screenshot_marker(label: "topic-rich-content")
 
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
       expect(find("#post_#{topic2.reload.highest_post_number}")).to be_visible
     end
   end
@@ -247,14 +247,14 @@ describe "Topic page" do
 
       paragraph = find("#test-last-cooked-paragraph")
 
-      page.driver.with_playwright_page do |pw_page|
+      page.driver.with_browser_page do |browser_page|
         paragraph.hover
 
         rect = paragraph.native.bounding_box
         x = rect["x"] + rect["width"] / 2
         y = rect["y"] + rect["height"] / 2
 
-        pw_page.mouse.click(x, y, clickCount: 3)
+        browser_page.mouse.click(x, y, clickCount: 3)
       end
 
       # get the selected text in the browser

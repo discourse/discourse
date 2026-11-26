@@ -17,6 +17,7 @@ RSpec.describe "Category hashtag decoration" do
       <a class="hashtag-cooked" data-type="category" data-id='#{category.id}"><img class="id-injected-image">' data-style-type="square"><span class="hashtag-icon-placeholder"></span>#{category.name}</a>
     HTML
     composer.create
+    expect(composer).to be_closed
 
     topic = Topic.find_by!(title: "Hostile category hashtag attributes")
     sign_in(viewer)

@@ -25,10 +25,12 @@ describe "Back to live room button" do
       "#{Group::AUTO_GROUPS[:anonymous_users]}|#{Group::AUTO_GROUPS[:logged_in_users]}"
     chat_system_bootstrap(user, [channel])
     sign_in(user)
-    install_live_fake_media
   end
 
-  it "takes the user from a session thread straight into its live room" do
+  it "takes the user from a session thread straight into its live room",
+     browser_features: :document_preload do
+    install_live_fake_media
+
     session = Live::ChatSession.post_message!(room, user, "hi from the room")
     thread = Chat::Thread.find(session[:thread_id])
 

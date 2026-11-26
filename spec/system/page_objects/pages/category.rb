@@ -85,11 +85,14 @@ module PageObjects
         has_css?(".category-style-trigger") && has_no_css?(".category-style-trigger img.emoji")
       end
 
-      def save_settings
+      def save_settings(expect_success: false)
         if page.has_css?(".d-floating-control-bar", wait: 0)
           find(".d-floating-control-bar .btn-primary").click
         else
           find("#save-category").click
+        end
+        if expect_success
+          expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.saved"))
         end
         self
       end

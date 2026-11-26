@@ -29,7 +29,7 @@ RSpec.describe "Restore message" do
       expect(channel_page.messages).to have_action("restore", id: message_1.id)
     end
 
-    it "can't be restored by another user" do
+    it "can't be restored by another user", browser_features: :simultaneous_browser_sessions do
       using_session(:another_user) do
         sign_in(another_user)
         chat_page.visit_channel(channel_1)
@@ -50,7 +50,7 @@ RSpec.describe "Restore message" do
   context "when staff deletes user message" do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: regular_user) }
 
-    it "can't be restored by owner" do
+    it "can't be restored by owner", browser_features: :simultaneous_browser_sessions do
       using_session(:regular_user) do
         sign_in(regular_user)
         chat_page.visit_channel(channel_1)

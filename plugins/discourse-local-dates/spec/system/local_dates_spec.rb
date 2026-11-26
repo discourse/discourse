@@ -26,7 +26,11 @@ describe "Local dates" do
     Date.parse("#{year}-#{month}-#{day}").strftime("%A, %B %-d, %Y")
   end
 
-  it "renders local dates and date ranges correctly" do
+  it "renders local dates and date ranges correctly",
+     browser_skip: {
+       safari: "Requires a browser timezone override",
+       webkit: "Requires a browser timezone override",
+     } do
     using_browser_timezone("Asia/Singapore") do
       sign_in current_user
 

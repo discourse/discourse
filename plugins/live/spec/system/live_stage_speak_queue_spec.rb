@@ -5,7 +5,8 @@ require_relative "../support/live_fake_media"
 # NOTE: outside CI, core pins every test browser to one fixed
 # --remote-debugging-port, so these two-session specs need CI=1 in the
 # environment to launch the second browser locally.
-describe "Live stage speak queue" do
+describe "Live stage speak queue",
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
   fab!(:moderator, :user)
   fab!(:listener, :user)
   fab!(:room) do

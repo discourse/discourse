@@ -83,17 +83,11 @@ module PageObjects
       end
 
       def has_username_error?(message = nil)
-        field = find(".wizard-container__field", text: "Username")
-        return false if field[:class].exclude?("invalid")
-        return true if message.nil?
-        field.has_css?(".field-error-description", text: message)
+        has_field_error?("Username", message)
       end
 
       def has_password_error?(message = nil)
-        field = find(".wizard-container__field", text: "Password")
-        return false if field[:class].exclude?("invalid")
-        return true if message.nil?
-        field.has_css?(".field-error-description", text: message)
+        has_field_error?("Password", message)
       end
 
       def has_no_field_errors?
@@ -109,6 +103,12 @@ module PageObjects
       end
 
       private
+
+      def has_field_error?(label, message)
+        has_css?(".wizard-container__field.invalid", text: label) do |field|
+          !message || field.has_css?(".field-error-description", text: message, wait: 0)
+        end
+      end
 
       def computed_style(selector, property)
         page.evaluate_script(<<~JS)

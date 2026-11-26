@@ -12,7 +12,7 @@ RSpec.describe "Admin Chat CSV exports" do
     chat_system_bootstrap
   end
 
-  it "exports chat messages" do
+  it "exports chat messages", browser_features: :completed_downloads do
     Jobs.run_immediately!
     message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
     message_2 = Fabricate(:chat_message, created_at: 6.months.ago)

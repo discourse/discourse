@@ -73,12 +73,13 @@ describe "Composer - ProseMirror - Uploads" do
       expect(rich).to have_css("a[href]")
     end
 
-    it "shows both placeholders simultaneously during mixed upload" do
+    it "shows both placeholders simultaneously during mixed upload",
+       browser_features: :network_interception do
       open_composer
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
         expect(composer).to have_in_progress_uploads
         expect(rich).to have_css(".upload-placeholder.--image")
@@ -87,12 +88,12 @@ describe "Composer - ProseMirror - Uploads" do
     end
   end
 
-  describe "upload cancellation" do
+  describe "upload cancellation", browser_features: :network_interception do
     it "removes image placeholder when upload is cancelled" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(composer).to have_in_progress_uploads
         find("#cancel-file-upload").click
@@ -107,7 +108,7 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(composer).to have_in_progress_uploads
         find("#cancel-file-upload").click
@@ -122,7 +123,7 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(rich).to have_css(".upload-placeholder.--file")
 
@@ -136,7 +137,7 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(rich).to have_css(".upload-placeholder__overlay")
 
@@ -147,12 +148,12 @@ describe "Composer - ProseMirror - Uploads" do
     end
   end
 
-  describe "progress indicator" do
+  describe "progress indicator", browser_features: :network_interception do
     it "shows progress overlay on image placeholder" do
       open_composer
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(rich).to have_css(".upload-placeholder__overlay .upload-placeholder__progress")
       end
@@ -163,7 +164,7 @@ describe "Composer - ProseMirror - Uploads" do
       open_composer
 
       file_path = file_from_fixtures("large.pdf", "pdf").path
-      cdp.with_slow_upload do
+      cdp.with_pending_requests(%r{/uploads\.json(?:\?|$)}) do
         attach_file("file-uploader", file_path, make_visible: true)
         expect(rich).to have_css(".upload-placeholder.--file .upload-placeholder__progress")
       end

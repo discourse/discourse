@@ -338,7 +338,7 @@ describe "Topic bulk select" do
       expect(topic_list).to have_closed_status(topics.second)
     end
 
-    it "closes single topic" do
+    it "closes single topic", browser_features: :simultaneous_browser_sessions do
       # Watch the topic as a user
       sign_in(user)
       visit("/latest")

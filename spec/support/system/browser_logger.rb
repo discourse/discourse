@@ -2,17 +2,16 @@
 
 # Captures browser console messages and page errors during system specs
 # and dumps them into the failure output.
-class PlaywrightLogger
-  attr_reader :logs
-
+class SystemBrowserLogger
   def initialize(page)
+    @page = page
     @logs = []
 
     page.on(
       "console",
       ->(msg) do
         @logs << {
-          level: msg.type,
+          level: msg.type == "warning" ? "warn" : msg.type,
           message: msg.text,
           timestamp: Time.now.to_i * 1000,
           source: "console-api",
@@ -34,9 +33,14 @@ class PlaywrightLogger
     )
   end
 
+  def logs
+    @page.drain_browser_logs if @page.respond_to?(:drain_browser_logs)
+    @logs
+  end
+
   # Appends the captured console/page-error messages to a failure-output buffer,
   # skipping image/favicon load noise that's expected in system specs.
-  def append_failure_logs(lines)
+  def append_failure_logs(lines, logs: self.logs)
     lines << "~~~~~~~ JS LOGS ~~~~~~~"
 
     if logs.empty?

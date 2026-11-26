@@ -166,10 +166,8 @@ module PageObjects
         self
       end
 
-      # Clicked through the DOM. Stacked, this affordance sits past the left edge
-      # of the viewport, where a real click cannot land on it.
       def expand_schema
-        page.execute_script("document.querySelector('.schema__toggle.--expand').click()")
+        page.find(".schema__toggle.--expand").click
         self
       end
 

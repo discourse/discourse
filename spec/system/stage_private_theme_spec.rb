@@ -51,20 +51,23 @@ RSpec.describe "Stage a private theme" do
   end
 
   it "keeps installation unavailable when deploy key generation fails" do
-    page.driver.with_playwright_page do |playwright_page|
-      pattern = %r{/admin/themes/generate_key_pair}
-      playwright_page.route(
-        pattern,
-        ->(route, _request) { route.fulfill(status: 422, body: '{"errors":["failed"]}') },
-      )
-
-      themes_page.visit
-      install_modal = themes_page.click_install_button
-      install_modal.choose_remote_repository(repository_url)
-      expect(install_modal).to have_private_theme_actions_disabled
-    ensure
-      playwright_page.unroute(pattern)
+    key_generation_path = "#{Discourse.base_path}/admin/themes/generate_key_pair"
+    error_message = "Could not generate a deploy key"
+    Capybara.app.intercept do |env, app|
+      if env["REQUEST_METHOD"] == "POST" && env["PATH_INFO"] == key_generation_path
+        [422, { "Content-Type" => "application/json" }, [{ errors: [error_message] }.to_json]]
+      else
+        app.call(env)
+      end
     end
+
+    themes_page.visit
+    install_modal = themes_page.click_install_button
+    install_modal.choose_remote_repository(repository_url)
+
+    expect(dialog).to have_content(error_message)
+    dialog.click_ok
+    expect(install_modal).to have_private_theme_actions_disabled
   end
 
   it "shows a categorized error when finishing the installation fails" do

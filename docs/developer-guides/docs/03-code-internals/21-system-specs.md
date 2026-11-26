@@ -6,9 +6,9 @@ id: system-specs
 
 ## Background
 
-Rails system specs are used to simulate the actions of a real user using the app in a browser. We use the `Playwright ruby driver` which is becoming an industry standard. The tests run locally and in CI out of the box. Capybara is the test framework used on top of `rspec` to interact with the web browser, and it sends commands to `Playwright`.
+Rails system specs use RSpec and Discourse's Capybara driver. It talks to Chromium and Microsoft Edge over the Chrome DevTools Protocol, to Firefox over WebDriver BiDi, and to Safari and WebKitGTK over WebDriver.
 
-We currently only support running system specs in Chrome, make sure you have Chrome installed before proceeding. Run `pnpm i` to ensure Playwright is correctly set up.
+Run `pnpm i` and `script/test-chromium --install` to get the pinned Chromium build. Set `CHROMIUM_PATH` to use a different executable.
 
 Since the Discourse app is an Ember Single Page Application, there are some unique constraints and challenges to writing system specs. It's important to keep in mind that you should always be observing for changes in the DOM in your tests, not manually waiting for things to happen or adding artificial sleep time. Also, the JavaScript build is separate from the Rails server, which means you must be running the frontend bundler when writing system specs.
 
@@ -24,18 +24,39 @@ There are various environment flags that can be used to change how the spec is r
 
 ### Commonly Used
 
-- `PLAYWRIGHT_HEADLESS` - Set to `0` to open a browser while the spec is running. This will allow you to observe what is going on while the browser is being driven by the test harness. Combine with debugging tools and Chrome devtools to help write and debug specs.
+- `DISCOURSE_SYSTEM_BROWSER` selects `chromium`, `edge`, `firefox`, `safari`, or `webkit`. CI uses `chromium`.
+- Install Microsoft Edge for `edge` or Firefox for `firefox`. Set `EDGE_PATH` or `FIREFOX_PATH` to override the executable. Firefox needs version 159 or newer for color scheme emulation.
+- For Safari, enable Allow Remote Automation in Safari Settings on macOS. Run one Safari worker at a time because Safari allows one automation session. Keep Safari in the foreground on the Mac. When another app takes focus, Safari can report a successful click without delivering it to the page.
+- For `webkit` on Linux, install WebKitGTK MiniBrowser and its matching `WebKitWebDriver`. On Debian 13, install `webkitgtk-webdriver`. Debian 12 uses `webkit2gtk-driver`. Install `Xvfb` for headless runs.
+- Virtual WebAuthn requires Chromium or Edge. To test completed downloads in Safari, configure its dedicated download directory.
+- `SYSTEM_TEST_HEADLESS=0` opens the browser window for Chromium, Edge, Firefox, and WebKitGTK. Safari always opens a macOS automation window. WebKitGTK starts an Xvfb display for a local headless run and uses your X11 or Wayland session when headed.
 
 ### Rarely Used
 
-[details="These environment variables aren't often used but provide greater control over Playwright and Capybara"]
+- `BIDI_BROWSER_URL` connects Firefox tests to a remote WebDriver BiDi endpoint.
+- `SAFARIDRIVER_URL` connects Safari tests to a running `safaridriver` HTTP endpoint on macOS. Set `CAPYBARA_APP_HOST` to the test server URL that Safari can reach.
+- `SAFARI_DOWNLOAD_DIRECTORY` points to the dedicated Safari download directory visible to the Ruby process.
+- `WEBKIT_WEBDRIVER_PATH` and `WEBKIT_BROWSER_PATH` override the WebKitGTK driver and MiniBrowser executables. `WEBKIT_WEBDRIVER_URL` connects to an existing WebKitGTK WebDriver endpoint. When it runs on another host, set `CAPYBARA_APP_HOST` to the test server URL that MiniBrowser can reach.
+- `SYSTEM_TEST_DISABLE_VERBOSE_JS_LOGS=1` suppresses browser console logs in failure output.
+- `CAPYBARA_SERVER_HOST` and `CAPYBARA_SERVER_PORT` set the test server address and port.
+- `CAPYBARA_DEFAULT_MAX_WAIT_TIME` sets the default time for DOM assertions.
 
-- `CAPYBARA_REMOTE_DRIVER_URL` - Allows Capybara to control a remote Chrome browser instead of a local one.
-- `PLAYWRIGHT_DISABLE_VERBOSE_JS_LOGS` - By default JS logs are verbose, so errors from JS are shown when running system tests, you can disable this by setting it to `1`.
-- `CAPYBARA_SERVER_HOST` - The hostname of the server that Playwright Webdriver is running on.
-- `CAPYBARA_SERVER_PORT` - The port of the server that Playwright Webdriver is running on.
-- `CAPYBARA_DEFAULT_MAX_WAIT_TIME` - Overrides the default wait time when looking for DOM elements in Capybara.
-  [/details]
+### Browser specific skips
+
+Use `browser_features` to name a required fixture capability. For a browser specific limitation, use `browser_skip` with a reason. RSpec reports affected examples as skipped before setting up the browser.
+
+```ruby
+it "observes the intercepted request", browser_features: :network_interception do
+  # ...
+end
+
+it "restores the saved composer layout",
+   browser_skip: { safari: "Safari WebDriver loses localStorage during this flow" } do
+  # ...
+end
+```
+
+Safari and WebKitGTK skip examples that require `mobile`, `color_scheme`, `time`, or `timezone` metadata.
 
 ## Writing system specs
 
@@ -88,7 +109,7 @@ This will change the screen size with Capybara and `this.site.isMobileDevice` wi
 Many of these will be further expanded throughout this document, but this is a quick reference to come back to.
 
 1. Remember that you should never manually sleep or wait for things in system specs, see the Gotchas section below
-1. Do not store references to elements on the page in variables, they can quickly go "stale" in Playwright. Always `find` them again when you need them
+1. Do not store references to elements on the page in variables, they can quickly become stale after a browser rerender. Always `find` them again when you need them
 1. Refactor system spec code into Page Objects once a repetitive pattern is apparent
 1. RSpec expectations should be used very sparingly in Page Objects and preferably not at all, most expectations should be in the spec file
 1. Use high specificity CSS classes with BEM, these will aid in finding unique elements when writing system specs
@@ -495,7 +516,7 @@ JS
 
 Writing and debugging system specs can be tricky at times, especially when they become "flaky" and start failing in strange ways. These debugging tools help with writing the specs in the first place and figuring out what is wrong.
 
-- `:trace` allows to capture a trace in a zip file which you can load at https://trace.playwright.dev or locally through `pnpm dlx playwright show-trace /path/to/trace.zip`
+- `:trace` saves a Chromium trace as JSON. Open it in [Perfetto](https://ui.perfetto.dev/).
 
 ```rb
 it "shows bar", trace: true do
@@ -503,7 +524,7 @@ it "shows bar", trace: true do
 end
 ```
 
-- `:video` allows to capture a video of your spec
+- `:video` records a Chromium example to WebM. Install `ffmpeg` or set `FFMPEG_PATH`.
 
 ```rb
 it "shows bar", video: true do
@@ -511,11 +532,11 @@ it "shows bar", video: true do
 end
 ```
 
-- `pause_test` - This helper can be used in your spec to pause execution using `binding.pry` so you can inspect the page and other local spec variables. You can resume execution when done. This can be used with `PWDEBUG=1` to start the playwright debugger, this is currently limited.
-- `debugger` and `{{debugger}}` - If you are using `PLAYWRIGHT_HEADLESS=0` then any JavaScript debug breakpoints will be hit in the browser. The Ember `{{debugger}}` helper in templates works as well.
+- `pause_test` - This helper can be used in your spec to pause execution using `binding.pry` so you can inspect the page and other local spec variables. You can resume execution when done. Use the inspection links to open Chrome DevTools.
+- `debugger` and `{{debugger}}` - If you are using `SYSTEM_TEST_HEADLESS=0` then any JavaScript debug breakpoints will be hit in the browser. The Ember `{{debugger}}` helper in templates works as well.
 - Screenshots - Every time a system spec fails Capybara will produce a screenshot, typically in the `$REPO/tmp/capybara` directory. You can also manually call `save_screenshot` inside your spec to do this.
 - `save_and_open_page` - Use this to dump the current HTML of the page and open it in your browser.
-- `PLAYWRIGHT_SLOW_MO_MS=1000` allows you to have 1000ms delay on each action, useful to see what's happening in your test.
+- `SYSTEM_TEST_SLOW_MO_MS=1000` slows Chromium commands by one second while debugging.
 
 ### Getting screenshots from Github Actions
 

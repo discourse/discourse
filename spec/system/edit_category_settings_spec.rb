@@ -17,7 +17,7 @@ describe "Edit Category Settings" do
       category_page.visit_appearance(category)
 
       form.field("default_view").select("hot")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(form.field("default_view").value).to eq("hot")
 
@@ -36,7 +36,7 @@ describe "Edit Category Settings" do
 
       category_page.topic_posting_review_mode_chooser.expand
       category_page.topic_posting_review_mode_chooser.select_row_by_value("everyone")
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       category_page.visit_moderation(category)
       expect(category_page).to have_topic_posting_review_mode("everyone")
@@ -58,7 +58,7 @@ describe "Edit Category Settings" do
       category_page.topic_posting_review_group_chooser.select_row_by_value(group.id)
       category_page.topic_posting_review_group_chooser.collapse
 
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       category_page.visit_moderation(category)
       expect(category_page).to have_topic_posting_review_mode("everyone_except")

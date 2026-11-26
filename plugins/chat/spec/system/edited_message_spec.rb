@@ -20,7 +20,7 @@ RSpec.describe "Edited message" do
 
       before { channel_1.add(editing_user) }
 
-      it "shows as edited for all users" do
+      it "shows as edited for all users", browser_features: :simultaneous_browser_sessions do
         chat_page.visit_channel(channel_1)
 
         using_session(:user_1) do

@@ -88,16 +88,8 @@ RSpec.describe "Nested view post lifecycle" do
 
         nested_view.click_post_delete_button(root_reply)
         # The placeholder is optimistic; wait for the server before leaving the page.
-        response =
-          page.driver.with_playwright_page do |browser_page|
-            deletion = ->(response) do
-              response.request.method == "DELETE" &&
-                URI(response.url).path.end_with?("/posts/#{root_reply.id}")
-            end
-            browser_page.expect_response(deletion) { dialog.click_yes }
-          end
-
-        expect(response.status).to eq(200)
+        dialog.click_yes
+        try_until_success { expect(root_reply.reload).to be_user_deleted }
         expect(nested_view).to have_deleted_post_class_for(root_reply)
 
         page.refresh

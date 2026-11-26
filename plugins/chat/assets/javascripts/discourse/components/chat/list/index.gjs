@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { modifier } from "ember-modifier";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -63,6 +64,7 @@ export default class List extends Component {
         class={{if @collection.fetchedOnce "--loaded"}}
         ...attributes
         {{this.fill}}
+        {{didUpdate this.loadCollection @collection}}
       >
         {{#each this.collectionItemsMaybeFiltered as |item|}}
           {{yield (hash Item=(component this.itemComponent item=item))}}

@@ -63,9 +63,11 @@ describe "Content localization language switcher" do
     expect(switcher).to have_content("English")
     expect(switcher).to have_content("Japanese (日本語)")
     expect(switcher).to have_content("Spanish (Español)")
+    switcher.collapse
+    expect(page).to have_css("#{switcher_selector}[aria-expanded='false']")
 
     SiteSetting.content_localization_supported_locales = "ja"
-    visit("/")
+    page.refresh
 
     switcher.expand
     expect(switcher).not_to have_content("Español")
@@ -162,6 +164,7 @@ describe "Content localization language switcher" do
     expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
 
     switcher.collapse
+    expect(page).to have_css("#{switcher_selector}[aria-expanded='false']")
     language_switcher.select_language("ja")
     switcher.expand
 

@@ -1,41 +1,36 @@
 # frozen_string_literal: true
 
 describe "script encoding" do
+  let(:cdn_path) { "/__system_test_cdn" }
+  let(:cdn_url) { "#{Discourse.base_url_no_prefix}#{cdn_path}" }
   let(:js_cdn_requests) { [] }
 
-  before { stub_and_log_cdn_requests }
+  before do
+    requests = js_cdn_requests
+    prefix = cdn_path
+    base_path = Discourse.base_path
 
-  def stub_and_log_cdn_requests
-    page.driver.with_playwright_page do |page|
-      page.route(
-        "http://cdn.example.com/**/*",
-        ->(route, request) do
-          js_cdn_requests << request.url if request.url.end_with?(".js")
-          origin_uri = URI(request.frame.url)
-          request_uri = URI(request.url)
+    Capybara.app.intercept do |env, app|
+      path = env.fetch("PATH_INFO")
+      if path.start_with?("#{prefix}/")
+        requests << path if path.end_with?(".js")
 
-          # We don't actually have assets/br/ files or a CDN, so invisibly
-          # rewrite the request to the regular assets
-          mocked_result =
-            URI::HTTP.build(
-              scheme: origin_uri.scheme,
-              host: origin_uri.host,
-              port: origin_uri.port,
-              path: request_uri.path.sub("assets/br", "assets/js"),
-            )
+        # We don't actually have assets/br/ files or a CDN, so invisibly
+        # rewrite the request to the regular assets
+        asset_path = path.delete_prefix(prefix).delete_prefix(base_path)
+        asset_path = asset_path.sub(%r{\A/assets/br/}, "/assets/js/")
+        env = env.merge("PATH_INFO" => "#{base_path}#{asset_path}")
+      elsif path == "#{base_path}/latest"
+        encodings = env["HTTP_ACCEPT_ENCODING"].to_s.split(/,\s*/)
+        env = env.merge("HTTP_ACCEPT_ENCODING" => (encodings | ["br"]).join(", "))
+      end
 
-          response = route.fetch(url: mocked_result.to_s)
-          route.fulfill(
-            response:,
-            headers: response.headers.merge({ "access-control-allow-origin" => "*" }),
-          )
-        end,
-      )
+      app.call(env)
     end
   end
 
   context "without s3 assets" do
-    before { set_cdn_url "http://cdn.example.com" }
+    before { set_cdn_url cdn_url }
 
     it "loads JS chunks with the .js extension" do
       user = Fabricate(:admin)
@@ -64,7 +59,7 @@ describe "script encoding" do
       global_setting :s3_region, "ap-australia"
       global_setting :s3_access_key_id, "123"
       global_setting :s3_secret_access_key, "123"
-      global_setting :s3_cdn_url, "http://cdn.example.com"
+      global_setting :s3_cdn_url, cdn_url
     end
 
     it "loads JS chunks with the /br/ path" do

@@ -44,9 +44,22 @@ module PageObjects
       end
 
       def has_computed_color?(color)
+        expected_color = page.evaluate_script(<<~JS, color)
+          (() => {
+            const sample = document.createElement("span");
+            sample.style.backgroundColor = arguments[0];
+            document.body.append(sample);
+            try {
+              return getComputedStyle(sample).backgroundColor;
+            } finally {
+              sample.remove();
+            }
+          })()
+        JS
+
         expect(
           find("li.sidebar-section-link-wrapper[data-list-item-name='everything'] .active"),
-        ).to have_computed_style(backgroundColor: color)
+        ).to have_computed_style(backgroundColor: expected_color)
       end
     end
   end

@@ -30,6 +30,7 @@ describe "User preferences | Profile" do
       user_preferences_profile_page.visit(user)
       user_preferences_profile_page.hide_profile
       user_preferences_profile_page.save
+      expect(page).to have_css(".save-button .saved", exact_text: I18n.t("js.saved"))
       page.refresh
 
       expect(user_preferences_profile_page).to have_hidden_profile

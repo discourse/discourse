@@ -91,7 +91,8 @@ RSpec.describe "React to message" do
           expect(channel).to have_reaction(message_1, "grimacing")
         end
 
-        context "when current user has multiple sessions" do
+        context "when current user has multiple sessions",
+                browser_features: :simultaneous_browser_sessions do
           it "adds reaction on each session" do
             sign_in(current_user)
             chat.visit_channel(category_channel_1)

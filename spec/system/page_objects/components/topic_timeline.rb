@@ -21,8 +21,8 @@ module PageObjects
         )
       end
 
-      def drag_to_bottom
-        drag_with_pointer(from: SCROLLER_SELECTOR, to: { x: 20, y: scrollarea_bottom })
+      def drag_to_bottom(&block)
+        drag_with_pointer(from: SCROLLER_SELECTOR, to: { x: 20, y: scrollarea_bottom }, &block)
       end
 
       def drag_by(y:, &block)
@@ -52,8 +52,6 @@ module PageObjects
           (() => {
             const area = document.querySelector("#{SCROLLAREA_SELECTOR}");
             const box = area.getBoundingClientRect();
-            // Just inside the track, so the press lands on the scrollarea rather
-            // than whatever sits immediately below it.
             return box.bottom - 4;
           })()
         JS

@@ -57,6 +57,7 @@ describe "Post translations" do
       find("#translated-topic-title").fill_in(with: "Ceci est un sujet de test 0")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
@@ -84,6 +85,7 @@ describe "Post translations" do
       find("#translated-topic-title").fill_in(with: "Este es un tema de prueba 0")
       composer.fill_content("Hola mundo")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "es")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
@@ -150,6 +152,7 @@ describe "Post translations" do
       find("#translated-topic-title").fill_in(with: "C'est un sujet de test 0.")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
       expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
@@ -170,6 +173,7 @@ describe "Post translations" do
       find(".post-translations-modal__delete-action .btn").click
       expect(confirmation_dialog).to be_open
       confirmation_dialog.click_yes
+      expect(page).to have_no_css(".post-translations-modal")
 
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
     end
@@ -239,8 +243,9 @@ describe "Post translations" do
       composer.fill_title("Ceci est un sujet de test 1")
       composer.fill_content("Bonjour le monde")
       composer.submit
+      expect(composer).to be_closed
 
-      updated_post = Topic.last.posts.first
+      updated_post = Topic.find_by!(title: "Ceci est un sujet de test 1").first_post
       expect(updated_post.locale).to eq("fr")
     end
 

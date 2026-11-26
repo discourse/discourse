@@ -98,7 +98,7 @@ describe "Admin Dashboard Configure menu" do
         expect(page).to have_css(".d-reorderable-list__handle")
       end
 
-      it "reorders sections with a real browser drag" do
+      it "reorders sections with a real browser drag", browser_features: :native_drag do
         dashboard.visit
         dashboard.open_configure_menu
 

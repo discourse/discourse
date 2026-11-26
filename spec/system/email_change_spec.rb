@@ -63,10 +63,11 @@ describe "Changing email" do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]").click
 
+    expect(page).to have_current_path("/u/#{user.username}/preferences/account")
     expect(user.reload.primary_email.email).to eq(new_email)
   end
 
-  it "works when user has webauthn 2fa" do
+  it "works when user has webauthn 2fa", browser_features: :virtual_authenticator do
     with_security_key(user) do
       sign_in user
       visit generate_confirm_link
@@ -94,6 +95,7 @@ describe "Changing email" do
     find(".second-factor-token-input").fill_in with: second_factor.totp_object.now
     find("button[type=submit]:not([disabled])").click
 
+    expect(page).to have_current_path("/login")
     expect(user.reload.primary_email.email).to eq(new_email)
   end
 

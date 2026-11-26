@@ -173,8 +173,7 @@ export default {
     if (DEBUG && isRailsTesting()) {
       const setupDataElement = document.getElementById("data-discourse-setup");
       const isSettledDebugEnabled =
-        setupDataElement?.dataset.capybaraPlaywrightDebugClientSettled ===
-        "true";
+        setupDataElement?.dataset.systemTestDebugClientSettled === "true";
 
       const logSettledDebug = (...args) => {
         if (isSettledDebugEnabled) {

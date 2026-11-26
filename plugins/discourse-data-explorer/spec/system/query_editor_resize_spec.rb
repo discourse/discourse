@@ -52,9 +52,8 @@ RSpec.describe "Data explorer query editor resizing" do
       query_runner.collapse_schema
       expect(page).to have_css(".query-editor.no-schema")
 
-      # Stacked, the floor is what the panes rest at, not just a drag limit. The
-      # taller figure would leave the editor standing in space it cannot fill.
-      expect(query_runner.pane_floor).to be < with_schema
+      # The resize observer measures the new floor after the schema disappears.
+      try_until_success { expect(query_runner.pane_floor).to be < with_schema }
     end
   end
 

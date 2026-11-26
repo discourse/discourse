@@ -14,7 +14,7 @@ RSpec.describe "Send message" do
     chat_system_bootstrap
   end
 
-  context "with direct message channels" do
+  context "with direct message channels", browser_features: :simultaneous_browser_sessions do
     context "when users are not following the channel" do
       fab!(:channel_1) { Fabricate(:direct_message_channel, users: [user_1, user_2]) }
 

@@ -23,6 +23,7 @@ describe "Edit Category Security" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
 
   before { sign_in(current_user) }
 
@@ -45,7 +46,10 @@ describe "Edit Category Security" do
   it "can delete a group's permissions" do
     category_page.visit_security(category)
     category_permission_row.remove_group_permission(category_group_1.group.name)
+    expect(category_permission_row).to have_no_group_permission(category_group_1.group_name)
+    expect(category_page).to have_changes_banner
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_no_group_permission(category_group_1.group_name)
   end
@@ -55,6 +59,7 @@ describe "Edit Category Security" do
     category_page.visit_security(category)
     category_permission_row.toggle_group_permission(category_group_1.group.name, "create")
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_group_permission(category_group_1.group_name, %w[reply])
   end
@@ -65,12 +70,16 @@ describe "Edit Category Security" do
     category_permission_row.remove_group_permission("everyone")
     category_permission_row.remove_group_permission(group.name)
     form.field("security_add_group_id").select(Group::AUTO_GROUPS[:logged_in_users])
+    expect(category_permission_row).to have_group_permission("logged_in_users")
+    expect(category_page).to have_changes_banner
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_group_permission("logged_in_users")
 
     category_permission_row.toggle_group_permission("logged_in_users", "reply")
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_group_permission("logged_in_users", %w[reply])
 
@@ -79,6 +88,7 @@ describe "Edit Category Security" do
     expect(category_permission_row).to have_group_permission("logged_in_users", %w[reply])
     category_permission_row.toggle_group_permission("logged_in_users", "create")
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_group_permission("logged_in_users", %w[create reply])
 
@@ -86,6 +96,7 @@ describe "Edit Category Security" do
     category_page.visit_general(category)
     form.field("name").fill_in("Renamed logged-in category")
     category_page.save_settings
+    expect(toasts).to have_success(I18n.t("js.saved"))
     category_page.visit_security(category)
     expect(category_permission_row).to have_group_permission("logged_in_users", %w[create reply])
     expect(category_permission_row).to have_no_group_permission("everyone")

@@ -31,7 +31,13 @@ export default class ChatChannelFilter extends Component {
 
   @action
   clearInput() {
-    this.currentChannelFilter = "";
+    cancel(this.debouncedSearch);
+    if (this.searchRequest) {
+      this.searchRequest.abort();
+      this.searchRequest = null;
+      this.loadingSlider.transitionEnded();
+    }
+    this.clearFilteringState();
   }
 
   @action
@@ -90,10 +96,7 @@ export default class ChatChannelFilter extends Component {
     this.currentChannelFilter = event.target.value;
 
     if (isBlank(this.currentChannelFilter)) {
-      cancel(this, this.performSearch);
-      this.searchRequest?.abort?.();
-      this.clearFilteringState();
-      cancel(this.debouncedSearch);
+      this.clearInput();
       return;
     }
 
@@ -109,21 +112,23 @@ export default class ChatChannelFilter extends Component {
 
   async performSearch(query) {
     this.searchRequest?.abort?.();
+    this.noResults = false;
+    const searchRequest = ajax("/chat/api/search", {
+      data: {
+        query,
+        channel_id: this.args.channel.id,
+        exclude_threads: true,
+        sort: "latest",
+      },
+    });
+    this.searchRequest = searchRequest;
+    this.loadingSlider.transitionStarted();
 
     try {
-      this.noResults = false;
-      this.loadingSlider.transitionStarted();
-
-      this.searchRequest = ajax("/chat/api/search", {
-        data: {
-          query,
-          channel_id: this.args.channel.id,
-          exclude_threads: true,
-          sort: "latest",
-        },
-      });
-
-      const response = await this.searchRequest;
+      const response = await searchRequest;
+      if (this.searchRequest !== searchRequest) {
+        return;
+      }
 
       this.channelFilterResults = response.messages;
       this.currentChannelFilterResultIndex = 0;
@@ -135,9 +140,14 @@ export default class ChatChannelFilter extends Component {
 
       this.navigateToResult(this.channelFilterResults[0]);
     } catch (error) {
-      popupAjaxError(error);
+      if (this.searchRequest === searchRequest) {
+        popupAjaxError(error);
+      }
     } finally {
-      this.loadingSlider.transitionEnded();
+      if (this.searchRequest === searchRequest) {
+        this.searchRequest = null;
+        this.loadingSlider.transitionEnded();
+      }
     }
   }
 

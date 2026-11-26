@@ -84,6 +84,7 @@ export default class ComposerToolbarButtons extends Component {
                   button.className
                   (if (this.isButtonActive button) "--active")
                 }}
+                contenteditable="false"
                 rel={{if button.href "noopener noreferrer"}}
                 tabindex={{this.tabIndex button}}
                 target={{if button.href "_blank"}}

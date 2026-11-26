@@ -20,7 +20,9 @@ describe "DiscourseRewind | dismiss" do
     rewind_page.click_callout
 
     expect(rewind_page).to have_no_rewind_notification_active
-    expect(user.user_option.reload.discourse_rewind_dismissed_at).to be_present
+    try_until_success do
+      expect(user.user_option.reload.discourse_rewind_dismissed_at).to be_present
+    end
 
     visit("/")
     rewind_page.visit_my_activity

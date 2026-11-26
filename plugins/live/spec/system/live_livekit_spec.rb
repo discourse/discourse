@@ -25,7 +25,9 @@ require_relative "../support/live_fake_media"
 # getUserMedia here — the service acquires media itself (through the fakes)
 # and hands the SDK finished MediaStreamTracks via publishTrack, exactly as
 # it hands them to RTCPeerConnection on the mesh path.
-describe "Live LiveKit rooms", if: ENV["LIVE_LIVEKIT_TEST_URL"] do
+describe "Live LiveKit rooms",
+         if: ENV["LIVE_LIVEKIT_TEST_URL"],
+         browser_features: %i[simultaneous_browser_sessions document_preload] do
   fab!(:admin)
   fab!(:alice) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:bob) { Fabricate(:user, trust_level: TrustLevel[2]) }
@@ -52,7 +54,7 @@ describe "Live LiveKit rooms", if: ENV["LIVE_LIVEKIT_TEST_URL"] do
   # to the SFU. Belt and braces on top of the transport-pin assertion below:
   # a stale client bundle once ran this whole flow green on mesh.
   def install_sfu_connection_probe
-    page.driver.with_playwright_page { |pw| pw.add_init_script(script: <<~JS) }
+    page.driver.with_browser_page { |pw| pw.add_init_script(script: <<~JS) }
         window.__liveWsUrls = [];
         const NativeWebSocket = window.WebSocket;
         window.WebSocket = new Proxy(NativeWebSocket, {

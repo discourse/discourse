@@ -1,5 +1,6 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
 const fs = require("fs");
+const { execFileSync } = require("node:child_process");
 const path = require("path");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
@@ -11,19 +12,16 @@ const {
 require("./patch-testem-output")();
 require("./patch-testem-browser-watchdog")();
 
-const browser = process.env.TESTEM_DEFAULT_BROWSER || "Chrome";
-
-function playwrightChromiumPath() {
-  const executable = require("playwright-core").chromium.executablePath();
-  if (!fs.existsSync(executable)) {
-    throw new Error(
-      "Playwright's Chromium isn't installed. Run `pnpm playwright-install` and try again."
-    );
-  }
-  return executable;
-}
+const requestedBrowser = process.env.TESTEM_DEFAULT_BROWSER || "Chrome";
+const browser = requestedBrowser === "Chromium" ? "Chrome" : requestedBrowser;
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..");
+
+function chromiumPath() {
+  return execFileSync(path.join(REPO_ROOT, "script/test-chromium"), {
+    encoding: "utf8",
+  }).trim();
+}
 
 /**
  * Label identifying which CI run group produced a report, so the artifacts of a
@@ -284,7 +282,7 @@ module.exports = {
   chrome_stderr_info_only: true,
   browser_args: {
     Chrome: [
-      // Playwright also launches Chromium without the sandbox, which containers need
+      // The test container runs Chromium without its own sandbox.
       "--no-sandbox",
       process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
       "--disable-dev-shm-usage",
@@ -307,7 +305,7 @@ module.exports = {
 };
 
 if (browser === "Chrome") {
-  module.exports.browser_paths = { Chrome: playwrightChromiumPath() };
+  module.exports.browser_paths = { Chrome: chromiumPath() };
 }
 
 if (process.env.TESTEM_FIREFOX_PATH) {

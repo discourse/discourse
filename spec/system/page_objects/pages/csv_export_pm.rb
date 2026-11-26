@@ -13,8 +13,8 @@ module PageObjects
         Capybara.save_path = Downloads::FOLDER.join("_unused")
 
         zip_path =
-          page.driver.with_playwright_page do |pw_page|
-            pw_page.expect_download { click_link ".zip" }.path
+          page.driver.with_browser_page do |browser_page|
+            browser_page.expect_download { click_link ".zip" }.path
           end
 
         csv_path = unzip(zip_path).first
@@ -36,6 +36,7 @@ module PageObjects
       private
 
       def unzip(file)
+        FileUtils.mkdir_p(Downloads::FOLDER)
         paths = []
         Zip::File.open(file) do |zip_file|
           zip_file.each do |f|

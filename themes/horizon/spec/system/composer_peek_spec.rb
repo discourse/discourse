@@ -20,7 +20,10 @@ describe "Composer peek" do
     resize_window(width: 600) { expect(page).to have_no_css(".peek-mode-toggle") }
   end
 
-  it "turns on composer peek and remembers this preference on page load" do
+  it "turns on composer peek and remembers this preference on page load",
+     browser_skip: {
+       safari: "Safari WebDriver 26.6.2 loses local storage during the session",
+     } do
     topic_page.visit_topic(topic)
     topic_page.click_footer_reply
     expect(composer).to be_opened

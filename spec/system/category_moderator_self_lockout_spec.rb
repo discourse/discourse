@@ -14,6 +14,7 @@ describe "Category moderator self-lockout warning" do
   end
 
   let(:category_page) { PageObjects::Pages::Category.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
   let(:permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
@@ -67,6 +68,7 @@ describe "Category moderator self-lockout warning" do
     it "saves without showing dialog" do
       remove_everyone_and_add_restricted_group
       category_page.save_settings
+      expect(toasts).to have_success(I18n.t("js.saved"))
 
       expect(dialog).to be_closed
       expect(category.reload.category_groups.map(&:group_id)).to contain_exactly(

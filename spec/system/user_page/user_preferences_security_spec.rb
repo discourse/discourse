@@ -21,7 +21,7 @@ describe "User preferences | Security" do
   end
 
   shared_examples "security keys" do
-    it "adds a 2FA security key and logs in with it" do
+    it "adds a 2FA security key and logs in with it", browser_features: :virtual_authenticator do
       SiteSetting.enable_local_logins_via_code = false
 
       with_virtual_authenticator do
@@ -68,7 +68,8 @@ describe "User preferences | Security" do
   shared_examples "passkeys" do
     before { SiteSetting.enable_passkeys = true }
 
-    it "adds a passkey, removes user password, logs in with passkey" do
+    it "adds a passkey, removes user password, logs in with passkey",
+       browser_features: :virtual_authenticator do
       with_virtual_authenticator(
         hasUserVerification: true,
         hasResidentKey: true,

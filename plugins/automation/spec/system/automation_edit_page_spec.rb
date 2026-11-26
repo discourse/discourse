@@ -53,6 +53,9 @@ describe "DiscourseAutomation | Edit page" do
       automation_page.enabled_toggle.toggle
       expect(automation_page.enabled_toggle).to be_unchecked
       expect(automation_page.enabled_toggle).to be_disabled
+
+      # Move off the switch before hovering its new tooltip trigger.
+      automation_page.form.hover
       automation_page.enabled_toggle.label_component.hover
       expect(tooltip).to be_present(
         text: I18n.t("js.discourse_automation.models.automation.enable_toggle_disabled"),

@@ -46,7 +46,8 @@ RSpec.describe "Deleted message" do
     context "when the current user is not admin" do
       fab!(:current_user, :user)
 
-      it "does not error when coming back to the channel from another channel" do
+      it "does not error when coming back to the channel from another channel",
+         browser_features: :simultaneous_browser_sessions do
         message = Fabricate(:chat_message, chat_channel: channel_1)
         channel_2 = Fabricate(:category_channel, name: "other channel")
         channel_2.add(current_user)

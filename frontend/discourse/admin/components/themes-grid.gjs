@@ -15,17 +15,12 @@ export default class ThemesGrid extends Component {
   @cached
   get sortedThemes() {
     return this.args.themes.toSorted((a, b) => {
-      if (a.get("default")) {
-        return -1;
-      } else if (b.get("default")) {
-        return 1;
+      const aIsDefault = Boolean(a.get("default"));
+      const bIsDefault = Boolean(b.get("default"));
+      if (aIsDefault !== bIsDefault) {
+        return aIsDefault ? -1 : 1;
       }
-      if (a.id < 0) {
-        return a.id;
-      }
-      if (b.id < 0) {
-        return -b.id;
-      }
+      return Math.min(a.id, 0) - Math.min(b.id, 0);
     });
   }
 

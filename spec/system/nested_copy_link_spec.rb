@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Nested view copy link" do
+RSpec.describe "Nested view copy link", browser_features: :clipboard do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }

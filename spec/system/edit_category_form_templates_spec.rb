@@ -31,7 +31,7 @@ describe "Edit Category Form Templates" do
       expect(category_page).to have_no_d_editor
       category_page.select_form_template(form_template.name)
       expect(category_page).to have_selected_template(form_template.name)
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(Category.find_by_id(category.id).form_template_ids).to eq([form_template.id])
     end
@@ -41,7 +41,7 @@ describe "Edit Category Form Templates" do
       category_page.toggle_form_templates
       category_page.select_form_template(form_template.name)
       category_page.select_form_template(form_template_2.name)
-      category_page.save_settings
+      category_page.save_settings(expect_success: true)
 
       expect(Category.find_by_id(category.id).form_template_ids).to eq(
         [form_template.id, form_template_2.id],

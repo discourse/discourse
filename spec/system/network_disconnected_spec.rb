@@ -3,7 +3,8 @@
 RSpec.describe "Network Disconnected" do
   let(:cdp) { PageObjects::CDP.new }
 
-  it "NetworkConnectivity service adds class to DOM and displays offline indicator" do
+  it "NetworkConnectivity service adds class to DOM and displays offline indicator",
+     browser_features: :offline_emulation do
     SiteSetting.enable_offline_indicator = true
 
     visit("/c")

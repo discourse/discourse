@@ -48,14 +48,14 @@ RSpec.describe "Nested view cloaking" do
       nested_view.visit_nested(topic)
       expect(nested_view).to have_nested_view
 
-      send_keys(:end)
+      send_keys(SystemHelpers::PAGE_BOTTOM_KEY)
 
       expect(page).to have_css(
         ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",
         wait: 5,
       )
 
-      send_keys(:home)
+      send_keys(SystemHelpers::PAGE_TOP_KEY)
 
       expect(page).to have_no_css(
         ".nested-view__roots > .nested-post:first-child.nested-post--cloaked",

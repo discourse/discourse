@@ -1,0 +1,110 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "open3"
+require "rbconfig"
+require "tmpdir"
+
+version = "156.0.8078.4"
+valid_args = %w[--install --headless-shell]
+unless ARGV == ARGV.uniq && (ARGV - valid_args).empty?
+  abort "Usage: script/test-chromium [--install] [--headless-shell]"
+end
+
+install = ARGV.include?("--install")
+headless_shell = ARGV.include?("--headless-shell")
+binary = headless_shell ? "chrome-headless-shell" : "chrome"
+path_setting = headless_shell ? "CHROMIUM_HEADLESS_SHELL_PATH" : "CHROMIUM_PATH"
+
+if (override = ENV[path_setting]) && !override.empty?
+  abort "#{path_setting} is not executable: #{override}" unless File.executable?(override)
+  puts File.expand_path(override)
+  exit
+end
+
+cpu = RbConfig::CONFIG.fetch("host_cpu")
+platform, executable =
+  case RbConfig::CONFIG.fetch("host_os")
+  when /linux/
+    [cpu.match?(/arm64|aarch64/) ? "linux-arm64" : "linux64", binary]
+  when /darwin/
+    [
+      cpu.match?(/arm64|aarch64/) ? "mac-arm64" : "mac-x64",
+      (
+        if headless_shell
+          binary
+        else
+          "Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+        end
+      ),
+    ]
+  else
+    abort "Set #{path_setting} to a Chromium executable on this platform."
+  end
+
+cache =
+  File.expand_path(
+    "discourse-test-browsers",
+    ENV["XDG_CACHE_HOME"] || File.join(Dir.home, ".cache"),
+  )
+directory = File.join(cache, "#{binary}-#{version}-#{platform}")
+path = File.join(directory, executable)
+
+if install && !File.executable?(path) && platform.start_with?("linux") &&
+     (image_cache = ENV["DISCOURSE_TEST_BROWSER_IMAGE_CACHE"])
+  image_browser =
+    Dir
+      .glob(File.join(image_cache, "*", "*", "#{binary}-#{platform}", executable))
+      .find do |candidate|
+        next false unless File.file?(candidate) && File.executable?(candidate)
+
+        output, status = Open3.capture2(candidate, "--version")
+        status.success? && output.strip == "Google Chrome for Testing #{version}"
+      end
+  if image_browser
+    puts File.expand_path(image_browser)
+    exit
+  end
+end
+
+if install && !File.executable?(path)
+  FileUtils.mkdir_p(cache)
+  File.open(File.join(cache, ".#{binary}-#{version}-#{platform}.lock"), "w") do |lock|
+    lock.flock(File::LOCK_EX)
+    unless File.executable?(path)
+      Dir.mktmpdir("chrome-", cache) do |temporary|
+        archive = File.join(temporary, "chrome.zip")
+        source =
+          "https://storage.googleapis.com/chrome-for-testing-public/#{version}/#{platform}/#{binary}-#{platform}.zip"
+        system(
+          "curl",
+          "--fail",
+          "--location",
+          "--retry",
+          "3",
+          "--silent",
+          "--show-error",
+          "--output",
+          archive,
+          source,
+          exception: true,
+        )
+        if platform.start_with?("mac-")
+          system("/usr/bin/ditto", "-x", "-k", archive, temporary, exception: true)
+        else
+          require "bundler/setup"
+          require "zip"
+          Zip::File.extract_all(archive, temporary)
+        end
+        File.rename(File.join(temporary, "#{binary}-#{platform}"), directory)
+      end
+    end
+  end
+end
+
+unless File.executable?(path)
+  install_command = ["script/test-chromium", "--install", *ARGV.grep("--headless-shell")].join(" ")
+  abort "Chromium #{version} is unavailable. Run `#{install_command}`."
+end
+puts path

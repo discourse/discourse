@@ -9,7 +9,9 @@ module PageObjects
       end
 
       def save
-        find(".btn.no-text.btn-icon.ok").click
+        button = ".theme.translations .setting-controls__ok"
+        find(button).click
+        page.assert_no_selector(button)
         self
       end
 
