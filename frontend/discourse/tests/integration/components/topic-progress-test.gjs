@@ -41,7 +41,7 @@ module("Integration | Component | topic-progress", function (hooks) {
         .dom("#topic-progress")
         .hasAttribute(
           "style",
-          `--progress-bg-width: ${docked ? 100 : "30.00"}%`,
+          `--progress-bg-width: ${docked ? 100 : "30.00"}%;`,
           "the fill preserves the existing docked behavior"
         );
     });
@@ -62,6 +62,55 @@ module("Integration | Component | topic-progress", function (hooks) {
     assert
       .dom("#topic-progress-wrapper")
       .doesNotHaveAttribute("role", "the wrapper is unchanged");
+  });
+
+  test("moves the fill as soon as the topic scrolls", async function (assert) {
+    this.siteSettings.mobile_footer_navigation = false;
+    const topic = {
+      currentPost: 3,
+      postStream: { loaded: true, filteredPostsCount: 10 },
+    };
+    const appEvents = this.owner.lookup("service:app-events");
+
+    await render(<template><TopicProgress @topic={{topic}} /></template>);
+
+    assert
+      .dom("#topic-progress")
+      .hasAttribute(
+        "style",
+        "--progress-bg-width: 0%;",
+        "the fill starts empty"
+      );
+
+    appEvents.trigger("topic:current-post-scrolled", {
+      postIndex: 3,
+      percent: 0.325,
+    });
+
+    assert
+      .dom("#topic-progress")
+      .hasAttribute(
+        "style",
+        "--progress-bg-width: 32.50%;",
+        "the fill does not wait for a render"
+      );
+
+    appEvents.trigger("topic:current-post-scrolled", {
+      postIndex: 4,
+      percent: 0.4,
+    });
+    await settled();
+
+    assert
+      .dom("#topic-progress .nums")
+      .hasText("4 / 10", "the counter follows the current post");
+    assert
+      .dom("#topic-progress")
+      .hasAttribute(
+        "style",
+        "--progress-bg-width: 40.00%;",
+        "the fill survives the counter re-rendering"
+      );
   });
 
   module("with mobile navigation", function (nestedHooks) {
@@ -161,7 +210,7 @@ module("Integration | Component | topic-progress", function (hooks) {
         )
         .hasAttribute(
           "style",
-          "--progress-bg-width: 30.00%",
+          "--progress-bg-width: 30.00%;",
           "the fill matches the current position"
         );
 
