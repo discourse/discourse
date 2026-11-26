@@ -1,6 +1,6 @@
 # CSS variable migration: what is left
 
-The generated [open items](review/todo.md) and [names without a mapping entry](review/lint-errors.md) list the current state of the naming todo list below.
+The generated [open items](review/todo.md) and [names without a mapping entry](review/unmapped.md) list the current state of the naming todo list below.
 
 The counts come from the run on 2026-11-25, on `main` at `bce3afde1ff`. They change with each rebase. To get the current list, run the codemod and then `pnpm lint:css`. The [README](README.md) explains how to read the output.
 

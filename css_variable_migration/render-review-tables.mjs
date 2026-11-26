@@ -16,9 +16,13 @@ const HERE = join(ROOT, "css_variable_migration");
 const REVIEW = join(HERE, "review");
 const UNDECIDED_FILE = "tmp/css_variable_migration/undecided.json";
 
-// The stylesheets that `pnpm lint:css` checks, without Horizon for now.
+// The stylesheets that `pnpm lint:css` checks.
 const LINTED =
-  /^(app\/assets\/stylesheets\/|plugins\/[^/]+\/assets\/stylesheets\/|themes\/(?!horizon\/))/;
+  /^(app\/assets\/stylesheets\/|plugins\/[^/]+\/assets\/stylesheets\/|themes\/)/;
+const CORE_COMPONENTS =
+  /^app\/assets\/stylesheets\/common\/(components|ui-kit)\//;
+// A name that only tests or docs mention besides its stylesheet is still internal.
+const NOT_A_USE = /(^|\/)(tests?|spec)\/|\.md$|^css_variable_migration\//;
 
 const mapping = readJson(join(HERE, "mapping.json"));
 const definitions = readJson(join(HERE, "definitions.json"));
@@ -109,7 +113,7 @@ pages.push({
 });
 
 pages.push(todoPage());
-pages.push(lintErrorsPage());
+pages.push(unmappedPage());
 
 rmSync(REVIEW, { recursive: true, force: true });
 mkdirSync(REVIEW);
@@ -407,7 +411,7 @@ function indexPage() {
       [
         ["todo.md", "Open decisions and undecided split reads"],
         [
-          "lint-errors.md",
+          "unmapped.md",
           "Declared names that break the naming scheme, so they need a mapping entry",
         ],
         ...Object.values(SCOPES).map(({ file, shows }) => [file, shows]),
@@ -449,12 +453,43 @@ function findDeclarations() {
   return result;
 }
 
+// Every file that mentions each variable, apart from tests and docs.
+function findUses() {
+  const result = new Map();
+  for (const file of listFiles().filter((f) => !NOT_A_USE.test(f))) {
+    const text = readFileSync(join(ROOT, file), "utf8");
+    for (const [name] of text.matchAll(/--[a-zA-Z0-9][\w-]*/g)) {
+      if (!result.has(name)) {
+        result.set(name, new Set());
+      }
+      result.get(name).add(file);
+    }
+  }
+  return result;
+}
+
+function unmappedOwner(file) {
+  const owner = ownerOf(file);
+  if (owner !== "Core") {
+    return owner;
+  }
+  return CORE_COMPONENTS.test(file) ? "Core components" : "Core, other";
+}
+
+function ownerGroup(owner) {
+  if (owner.startsWith("Core")) {
+    return owner;
+  }
+  return owner.startsWith("Theme: ") ? "Bundled themes" : "Bundled plugins";
+}
+
 // Same check as the discourse/css-variable-names lint rule, per name instead of per declaration.
-function lintErrorsPage() {
+function unmappedPage() {
   const parse = createGrammar(
     readJson(join(ROOT, "app/assets/stylesheets/variable-vocabulary.json"))
   );
   const baseLayer = readJson(join(ROOT, BASE_LAYER_FILE));
+  const usedIn = findUses();
   const failing = [];
   for (const [name, allFiles] of declaredIn) {
     const files = allFiles.filter((file) => LINTED.test(file));
@@ -463,38 +498,63 @@ function lintErrorsPage() {
     }
     const [reason] = parse(name).errors;
     if (reason) {
-      failing.push({ name, reason, files, owner: ownerOf(files[0]) });
+      failing.push({
+        name,
+        reason,
+        files,
+        uses: usedIn.get(name)?.size ?? 0,
+        owner: unmappedOwner(files[0]),
+      });
     }
   }
 
+  const rank = (owner) =>
+    ["Core components", "Core, other"].indexOf(owner) + 1 || 3;
   const byOwner = [...Map.groupBy(failing, (item) => item.owner)].sort(
     ([a, x], [b, y]) =>
-      (a === "Core" ? -1 : b === "Core" ? 1 : y.length - x.length) ||
-      a.localeCompare(b)
+      rank(a) - rank(b) || y.length - x.length || a.localeCompare(b)
   );
+  const summary = (groups) =>
+    table(
+      ["Owner", "Names", "Used in one file", "Used in several files"],
+      groups.map(([owner, list]) => {
+        const single = list.filter((item) => item.uses <= 1).length;
+        return [owner, list.length, single, list.length - single];
+      })
+    );
+  const groupOrder = [
+    "Core components",
+    "Core, other",
+    "Bundled plugins",
+    "Bundled themes",
+  ];
+  const byGroup = [
+    ...Map.groupBy(failing, (item) => ownerGroup(item.owner)),
+  ].sort(([a], [b]) => groupOrder.indexOf(a) - groupOrder.indexOf(b));
 
   return {
-    file: "lint-errors.md",
+    file: "unmapped.md",
     entries: failing.length,
     open: failing.length,
     body: [
       "# Names without a mapping entry",
-      "Declared names that break the naming scheme, checked with the grammar that the `discourse/css-variable-names` lint rule uses. Each needs an entry in [mapping.json](../mapping.json). Reads of split variables are in [todo.md](todo.md). Horizon is left out for now.",
+      "Declared names that break the naming scheme, checked with the grammar that the `discourse/css-variable-names` lint rule uses. Each needs an entry in [mapping.json](../mapping.json). Reads of split variables are in [todo.md](todo.md).",
+      "Core components are the names first declared in `common/components` or `common/ui-kit`. The split follows the stylesheet's folder, so a name such as a sidebar variable in `common/base` counts as other core. Used in counts the files that mention the name, apart from tests and docs. A name used in one file is internal to its stylesheet.",
       `Run \`node css_variable_migration/render-review-tables.mjs\` to regenerate this page. See the [index](README.md) for the other tables.`,
+      "## Summary",
+      summary([...byGroup, ["Total", failing]]),
       "## By owner",
-      table(
-        ["Owner", "Names"],
-        byOwner.map(([owner, list]) => [owner, list.length])
-      ),
+      summary(byOwner),
       ...byOwner.map(
         ([owner, list]) =>
           `## ${owner}\n\n${table(
-            ["Variable", "Declared in", "Reason"],
+            ["Variable", "Declared in", "Used in", "Reason"],
             list
               .sort((a, b) => a.name.localeCompare(b.name))
-              .map(({ name, files, reason }) => [
+              .map(({ name, files, uses, reason }) => [
                 code(name),
                 linkFiles(files),
+                uses === 1 ? "1 file" : `${uses} files`,
                 escapeCell(reason),
               ])
           )}`

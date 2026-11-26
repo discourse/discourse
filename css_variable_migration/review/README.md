@@ -7,7 +7,7 @@ A split entry appears in every scope that one of its roles maps into. The base p
 | Table                              | Shows                                                                                            | Rows | Open |
 | ---------------------------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- |
 | [todo.md](todo.md)                 | Open decisions and undecided split reads                                                         | 569  | 569  |
-| [lint-errors.md](lint-errors.md)   | Declared names that break the naming scheme, so they need a mapping entry                        | 590  | 590  |
+| [unmapped.md](unmapped.md)         | Declared names that break the naming scheme, so they need a mapping entry                        | 602  | 602  |
 | [system.md](system.md)             | Entries that map to `--d-sys-*` tokens, by property                                              | 116  | 5    |
 | [components.md](components.md)     | Entries that map to `--d-comp-*` tokens, by component                                            | 116  |      |
 | [plugins.md](plugins.md)           | Entries that map to `--p-*` tokens, by plugin                                                    | 0    |      |
