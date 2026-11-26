@@ -10,12 +10,15 @@
       margin: 0;
       font-weight: normal !important;
       color: var(--primary);
-      font-size: var(--font-down-1-rem);
       cursor: pointer;
 
       .form-kit__field[data-disabled] & {
         cursor: not-allowed;
       }
+    }
+
+    &-description {
+      font-size: var(--font-down-1);
     }
   }
 
