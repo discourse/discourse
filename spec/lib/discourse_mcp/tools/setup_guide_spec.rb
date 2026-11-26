@@ -74,6 +74,30 @@ RSpec.describe DiscourseMcp::Tools::GetSetupGuide do
     )
   end
 
+  it "leaves out what this connection can't read" do
+    site = call(scopes: %w[mcp:profile:read mcp:site-settings:read]).dig(:structuredContent, :site)
+
+    expect(site.keys).to contain_exactly(
+      :url,
+      :settings,
+      :settings_at_default,
+      :logo_uploaded,
+      :tools,
+    )
+  end
+
+  it "needs both content and category access to list categories" do
+    site =
+      call(scopes: %w[mcp:site-settings:read mcp:content:read mcp:themes:read]).dig(
+        :structuredContent,
+        :site,
+      )
+
+    expect(site).not_to have_key(:categories)
+    expect(site[:seeded_topics]).to include(:welcome)
+    expect(site).to include(:default_theme, :color_palettes)
+  end
+
   it "lists only the tools this connection can use" do
     McpPrimitive.create!(kind: "tool", identifier: "discourse_get_setup_guide", enabled: true)
     McpPrimitive.create!(kind: "tool", identifier: "discourse_create_category", enabled: true)

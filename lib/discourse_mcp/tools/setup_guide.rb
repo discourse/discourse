@@ -6,6 +6,9 @@ module DiscourseMcp
       VERSION = 1
       GUIDE_PATH = File.expand_path("../guides/site_setup.md", __dir__)
       REQUIRED_SCOPES = [Scopes::SITE_SETTINGS_READ].freeze
+      THEME_SCOPES = [Scopes::THEMES_READ].freeze
+      CATEGORY_SCOPES = [Scopes::CONTENT_READ, Scopes::CATEGORIES_READ].freeze
+      TOPIC_SCOPES = [Scopes::CONTENT_READ].freeze
       MAX_CATEGORIES = 100
       MAX_COLOR_PALETTES = 50
       MAX_TEXT_LENGTH = 500
@@ -53,7 +56,6 @@ module DiscourseMcp
       end
 
       def self.site_snapshot(request_context)
-        theme = Theme.find_by(id: SiteSetting.default_theme_id)
         settings = {
           title: bounded(SiteSetting.title),
           site_description: bounded(SiteSetting.site_description),
@@ -69,18 +71,27 @@ module DiscourseMcp
             SiteSetting.get(name) == SiteSetting.defaults.get(name, locale)
           end
 
-        {
+        snapshot = {
           url: Discourse.base_url,
           settings:,
           settings_at_default: at_default.map(&:to_s),
           logo_uploaded:
             SiteSetting.logo.present? && SiteSetting.logo.id != SiteSetting.defaults[:logo].to_i,
-          default_theme: theme && theme_json(theme),
-          color_palettes: color_palettes(theme),
-          categories: categories(request_context.guardian),
-          seeded_topics: seeded_topics,
           tools: Catalog.new(request_context:).list(:tool).map(&:identifier),
         }
+
+        # Each part needs the scopes that the tools reading the same data need.
+        if request_context.has_scopes?(THEME_SCOPES)
+          theme = Theme.find_by(id: SiteSetting.default_theme_id)
+          snapshot[:default_theme] = theme && theme_json(theme)
+          snapshot[:color_palettes] = color_palettes(theme)
+        end
+        if request_context.has_scopes?(CATEGORY_SCOPES)
+          snapshot[:categories] = categories(request_context.guardian)
+        end
+        snapshot[:seeded_topics] = seeded_topics if request_context.has_scopes?(TOPIC_SCOPES)
+
+        snapshot
       end
       private_class_method :site_snapshot
 
