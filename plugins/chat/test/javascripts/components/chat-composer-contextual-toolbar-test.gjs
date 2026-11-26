@@ -2,7 +2,6 @@ import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
-import KeyValueStore from "discourse/lib/key-value-store";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatComposerPendingThread from "discourse/plugins/chat/discourse/components/chat/composer/pending-thread";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
@@ -10,12 +9,6 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 module("Component | ChatComposer | ContextualToolbar", function (hooks) {
   setupRenderingTest(hooks);
-
-  const store = new KeyValueStore("discourse_chat_composer_");
-
-  hooks.afterEach(function () {
-    store.remove("formatting_bar");
-  });
 
   hooks.beforeEach(function () {
     this.siteSettings.enable_composer_picker_and_rich_chat = true;
@@ -36,7 +29,7 @@ module("Component | ChatComposer | ContextualToolbar", function (hooks) {
   });
 
   test("temporarily replaces the formatting bar with link controls on narrow screens", async function (assert) {
-    store.setObject({ key: "formatting_bar", value: true });
+    this.owner.lookup("service:chat-formatting-bar").shown = true;
     await render(
       <template>
         <ChatComposerPendingThread
@@ -47,8 +40,7 @@ module("Component | ChatComposer | ContextualToolbar", function (hooks) {
       </template>
     );
     await waitFor(".chat-composer__input.ProseMirror");
-    const { view } = this.owner.lookup("service:chat-thread-composer").editor
-      .textManipulation;
+    const { view } = this.owner.lookup("service:chat-thread-composer").editor;
     view.dispatch(
       view.state.tr.setSelection(
         view.state.selection.constructor.create(view.state.doc, 3)
