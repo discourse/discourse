@@ -1,6 +1,9 @@
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { fillIn, findAll, render } from "@ember/test-helpers";
+import { fillIn, findAll, render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { timeShortcuts } from "discourse/lib/time-shortcut";
+import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -136,6 +139,131 @@ module(
 
       assert.true(this.input.includes("2033-01-01"));
       assert.true(this.input.includes("11:15"));
+    });
+
+    test("follows a new input", async function (assert) {
+      const timezone = this.currentUser.user_option.timezone;
+      this.clock = fakeTime("2100-12-13T08:00:00", timezone, true);
+      const input = tracked("2100-12-20 11:10");
+
+      await render(
+        <template><DFutureDateInput @input={{input.value}} /></template>
+      );
+
+      assert.strictEqual(this.subject.header().value(), "custom");
+      assert.dom(".date-picker").hasValue("2100-12-20");
+      assert.dom(".time-input").hasValue("11:10");
+
+      input.value = "2100-12-21 09:30";
+      await rerender();
+
+      assert.dom(".date-picker").hasValue("2100-12-21", "updates the date");
+      assert.dom(".time-input").hasValue("09:30", "updates the time");
+
+      input.value = timeShortcuts(timezone).tomorrow().time.format(FORMAT);
+      await rerender();
+
+      assert.strictEqual(
+        this.subject.header().value(),
+        "tomorrow",
+        "selects the matching shortcut"
+      );
+      assert
+        .dom(".future-date-input-date-picker")
+        .doesNotExist("hides the date picker");
+    });
+
+    test("keeps the custom pickers open when the input is cleared", async function (assert) {
+      const input = tracked(null);
+      const onChangeInput = (value) => (input.value = value);
+
+      await render(
+        <template>
+          <DFutureDateInput
+            @input={{input.value}}
+            @onChangeInput={{onChangeInput}}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+      await this.subject.selectRowByValue("custom");
+
+      assert
+        .dom(".future-date-input-date-picker")
+        .exists("shows the date picker");
+      assert.dom(".time-input").isDisabled("disables the time input");
+
+      await fillIn(".date-picker", "2100-12-20 ");
+
+      assert.true(input.value.includes("2100-12-20"), "updates the input");
+      assert.dom(".time-input").isNotDisabled("enables the time input");
+
+      input.value = null;
+      await rerender();
+
+      assert.strictEqual(this.subject.header().value(), "custom");
+      assert
+        .dom(".future-date-input-date-picker")
+        .exists("keeps the date picker");
+      assert
+        .dom(".future-date-input-time-picker")
+        .exists("keeps the time picker");
+      assert.dom(".date-picker").hasValue("2100-12-20", "keeps the date");
+    });
+
+    test("label, labelClasses and displayLabelIcon", async function (assert) {
+      const label = tracked("topic.slow_mode_update.enabled_until");
+
+      await render(
+        <template>
+          <DFutureDateInput
+            @displayLabelIcon="far-clock"
+            @label={{label.value}}
+            @labelClasses="slow-mode-label"
+          />
+        </template>
+      );
+
+      assert
+        .dom("label.slow-mode-label")
+        .hasText(i18n("topic.slow_mode_update.enabled_until"));
+      assert.dom("label .d-icon-far-clock").exists("renders the icon");
+
+      label.value = "admin.user.suspend_duration";
+      await rerender();
+
+      assert
+        .dom("label.slow-mode-label")
+        .hasText(i18n("admin.user.suspend_duration"), "updates the label");
+    });
+
+    test("doesn't mutate customShortcuts", async function (assert) {
+      const timezone = this.currentUser.user_option.timezone;
+      const customShortcuts = [timeShortcuts(timezone).tomorrow()];
+
+      await render(
+        <template>
+          <DFutureDateInput @customShortcuts={{customShortcuts}} />
+        </template>
+      );
+
+      assert.strictEqual(customShortcuts.length, 1);
+    });
+
+    test("doesn't render relative options with noRelativeOptions", async function (assert) {
+      await render(
+        <template>
+          <DFutureDateInput
+            @input="2100-12-20 11:10"
+            @noRelativeOptions={{true}}
+          />
+        </template>
+      );
+
+      assert.dom(".future-date-input-selector").doesNotExist();
+      assert.dom(".date-picker").hasValue("2100-12-20");
+      assert.dom(".time-input").hasValue("11:10");
     });
   }
 );
