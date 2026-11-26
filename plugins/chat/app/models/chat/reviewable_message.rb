@@ -175,7 +175,7 @@ module Chat
     end
 
     def perform_agree_and_delete(performed_by, args)
-      agree { chat_message.trash!(performed_by) }
+      agree { trash_message(performed_by) }
     end
 
     def perform_disagree_and_restore(performed_by, args)
@@ -197,7 +197,7 @@ module Chat
     end
 
     def perform_delete_and_ignore(performed_by, args)
-      ignore { chat_message.trash!(performed_by) }
+      ignore { trash_message(performed_by) }
     end
 
     def perform_agree_and_keep_deleted(performed_by, args)
@@ -205,6 +205,11 @@ module Chat
     end
 
     private
+
+    def trash_message(performed_by)
+      chat_message.trash!(performed_by)
+      Chat::Action::DestroyWatchedThreadNotifications.call([chat_message.id])
+    end
 
     def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
       case action_id

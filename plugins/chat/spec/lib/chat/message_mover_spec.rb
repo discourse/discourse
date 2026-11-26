@@ -187,6 +187,23 @@ describe Chat::MessageMover do
         expect(Chat::Thread.exists?(id: thread.id)).to eq(false)
       end
 
+      it "destroys the watched thread notifications of the moved thread" do
+        watcher = Fabricate(:user)
+        thread.add(watcher, notification_level: :watching)
+        notification =
+          Fabricate(
+            :notification,
+            user: watcher,
+            topic: nil,
+            notification_type: Notification.types[:chat_watched_thread],
+            data: { chat_thread_id: thread.id, description: message1.message }.to_json,
+          )
+
+        move!
+
+        expect(Notification.exists?(notification.id)).to eq(false)
+      end
+
       it "updates the tracking to the last non-deleted channel message for users whose last_read_message_id was the moved message" do
         membership_1 =
           Fabricate(

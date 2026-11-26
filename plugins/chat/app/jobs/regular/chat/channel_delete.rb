@@ -59,6 +59,8 @@ module Jobs
             deleted_by_id: chat_channel.deleted_by_id,
             deleted_at: Time.zone.now,
           )
+
+          ::Chat::Action::DestroyWatchedThreadNotifications.call(message_ids)
         end
       end
     end

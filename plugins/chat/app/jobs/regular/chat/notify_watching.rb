@@ -118,23 +118,28 @@ module Jobs
 
       def create_watched_thread_notification(thread_membership)
         thread = @chat_message.thread
-        description = thread.title.presence || thread.original_message.message
 
-        data = {
-          username: @creator.username,
-          chat_message_id: @chat_message.id,
-          chat_channel_id: @chat_channel.id,
-          chat_thread_id: @chat_message.thread_id,
-          last_read_message_id: thread_membership&.last_read_message_id,
-          description: description,
-          user_ids: [@chat_message.user_id],
-        }
+        ::Chat::Message.transaction do
+          original_message =
+            ::Chat::Message.lock("FOR SHARE").find_by(id: thread.original_message_id)
+          next if original_message.nil?
 
-        Notification.consolidate_or_create!(
-          notification_type: ::Notification.types[:chat_watched_thread],
-          user_id: thread_membership.user_id,
-          data: data.to_json,
-        )
+          data = {
+            username: @creator.username,
+            chat_message_id: @chat_message.id,
+            chat_channel_id: @chat_channel.id,
+            chat_thread_id: @chat_message.thread_id,
+            last_read_message_id: thread_membership&.last_read_message_id,
+            description: thread.title.presence || original_message.message,
+            user_ids: [@chat_message.user_id],
+          }
+
+          Notification.consolidate_or_create!(
+            notification_type: ::Notification.types[:chat_watched_thread],
+            user_id: thread_membership.user_id,
+            data: data.to_json,
+          )
+        end
       end
     end
   end

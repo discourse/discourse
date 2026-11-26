@@ -360,6 +360,7 @@ module Chat
           deleted_at: DateTime.now,
           deleted_by_id: chat_channel_archive.archived_by.id,
         )
+        Chat::Action::DestroyWatchedThreadNotifications.call(message_ids)
 
         @archived_messages_ids = (@archived_messages_ids + message_ids).uniq
         chat_channel_archive.update!(archived_messages: @archived_messages_ids.length)

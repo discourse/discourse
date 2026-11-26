@@ -53,6 +53,23 @@ RSpec.describe Chat::MessageDestroyer do
       expect { reviewable.reload }.to raise_exception(ActiveRecord::RecordNotFound)
     end
 
+    it "destroys watched thread notifications when a message started the thread" do
+      thread = Fabricate(:chat_thread, original_message: message_1)
+      thread.add(user_1, notification_level: :watching)
+      notification =
+        Fabricate(
+          :notification,
+          user: user_1,
+          topic: nil,
+          notification_type: Notification.types[:chat_watched_thread],
+          data: { chat_thread_id: thread.id, description: message_1.message }.to_json,
+        )
+
+      described_class.new.destroy_in_batches(Chat::Message.where(id: message_1.id))
+
+      expect(Notification.exists?(notification.id)).to eq(false)
+    end
+
     it "doesn't delete other messages" do
       message_2 = Fabricate(:chat_message, chat_channel: message_1.chat_channel)
 

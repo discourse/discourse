@@ -69,6 +69,7 @@ module Chat
         update_reply_references
         update_tracking_state
         update_thread_references(moved_thread_ids)
+        ::Chat::Action::DestroyWatchedThreadNotifications.call(@ordered_source_message_ids)
         delete_source_threads
       end
 
