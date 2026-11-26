@@ -24,6 +24,11 @@
   }
 }
 
+// Wide enough for the expanded layout's description to fit on one line.
+.d-select__content.topic-list-layout-content {
+  --d-select-menu-min-width: 14em;
+}
+
 .topic-list-layout-table-ai {
   .topic-list-item {
     .link-bottom-line {

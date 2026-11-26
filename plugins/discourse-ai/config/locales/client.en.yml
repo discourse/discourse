@@ -699,6 +699,7 @@ en:
         select_option: "Select an option..."
 
       layout:
+        label: "Layout"
         table: "Table"
         card: "Card"
 

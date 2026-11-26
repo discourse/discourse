@@ -80,6 +80,11 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       (`chat-search.gjs`).
     - ☐ discourse-ai: the gist toggle (`ai-gist-toggle.gjs`) and the agent list layout
       (`ai-agent-list-editor.gjs`).
+      - ☑ Gist toggle. A static `DSelect` that can't be emptied, named "Layout", showing only the
+        current layout's icon, with a check on the current one. It keeps the
+        `topic-list-layout-trigger` class that themes hide it by. A third-party theme hides it with
+        the old float-kit trigger classes too, so its author needs a migration note before the flag
+        defaults on.
     - ☐ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). It ends with
       "Leave event" after a divider while the user is going.
     - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static
