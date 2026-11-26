@@ -136,31 +136,3 @@
     width: 100%;
   }
 }
-
-.context-about {
-  overflow-wrap: anywhere;
-
-  .about__left-side {
-    flex: 2 1 18em;
-    min-inline-size: 0;
-  }
-
-  .about__right-side {
-    flex: 1 1 14em;
-    min-inline-size: 0;
-  }
-
-  .about__stats {
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .about-page-users-list {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14em), 1fr));
-  }
-
-  .about__admins,
-  .about__moderators {
-    margin-block-start: var(--space-4);
-  }
-}

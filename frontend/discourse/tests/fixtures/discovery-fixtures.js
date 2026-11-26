@@ -6661,4 +6661,9 @@ const discoveryFixtures = {
   },
 };
 
+discoveryFixtures["/c/bug/1/none/l/hot.json"] =
+  discoveryFixtures["/c/bug/1/l/latest.json"];
+discoveryFixtures["/c/feature/2/none/l/hot.json"] =
+  discoveryFixtures["/c/feature/2/l/latest.json"];
+
 export default discoveryFixtures;

@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import MobileTabBarBackButton from "discourse/components/mobile-tab-bar/back-button";
+import ContextPicker from "discourse/components/page-shell/context-picker";
 import ContextToggle from "discourse/components/page-shell/context-toggle";
 import PageShellRegion from "discourse/components/page-shell/region";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import DNativeSelect from "discourse/ui-kit/d-native-select";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "../plugin-outlet.gjs";
 import HeaderSearch from "./header-search.gjs";
@@ -155,19 +155,7 @@ export default class Contents extends Component {
           class="page-shell__header-context"
           inert={{if this.pageShell.closingContext true}}
         >
-          <DNativeSelect
-            aria-label={{i18n "page_shell.context_view"}}
-            @includeNone={{false}}
-            @onChange={{this.pageShell.selectContextView}}
-            @value={{this.pageShell.selectedContextView.id}}
-            as |select|
-          >
-            {{#each this.pageShell.contextViews key="id" as |view|}}
-              <select.Option @value={{view.id}}>
-                {{i18n view.label}}
-              </select.Option>
-            {{/each}}
-          </DNativeSelect>
+          <ContextPicker />
         </div>
       {{/if}}
 

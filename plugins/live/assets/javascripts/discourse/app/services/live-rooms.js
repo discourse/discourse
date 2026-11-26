@@ -44,7 +44,6 @@ export default class LiveRoomsService extends Service {
   @tracked rooms = [];
   @tracked canCreateRoom = false;
 
-  prefersContextRoom = true;
   #contextRoomId = tracked(null);
   #roomsById = new Map();
   #roomsBySlug = new Map();
@@ -71,12 +70,6 @@ export default class LiveRoomsService extends Service {
     if (this.currentUser) {
       this.#contextRoomId.value =
         this.sessionStore.getInt(this.#contextRoomStorageKey) || null;
-      // Preserve choices saved before the shell owned the selected view.
-      if (
-        this.sessionStore.getItem(this.#contextViewStorageKey) === "overview"
-      ) {
-        this.prefersContextRoom = false;
-      }
     }
 
     this.ready = this.#bootstrap();
@@ -94,10 +87,6 @@ export default class LiveRoomsService extends Service {
 
   get #contextRoomStorageKey() {
     return `live-context-room:${this.currentUser.id}`;
-  }
-
-  get #contextViewStorageKey() {
-    return `${this.#contextRoomStorageKey}:view`;
   }
 
   get contextRoomId() {

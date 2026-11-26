@@ -393,7 +393,7 @@ acceptance("Chat | Page shell Context", function (needs) {
   test("opens Chat in Context and keeps the channel when switching panel views", async function (assert) {
     const owner = getOwner(this);
     const pageShell = owner.lookup("service:page-shell");
-    const picker = ".page-shell__header-context select";
+    const picker = ".page-shell-context-picker-trigger";
     const chatInContext = "#page-shell-context .chat-drawer";
     const floatingChat = ".chat-drawer-outlet .chat-drawer";
 
@@ -402,7 +402,13 @@ acceptance("Chat | Page shell Context", function (needs) {
     await click(".chat-header-icon .btn");
 
     assert.strictEqual(currentURL(), "/latest", "keeps the forum page open");
-    assert.dom(picker).hasValue("chat", "selects Chat in the header picker");
+    assert
+      .dom(picker)
+      .hasAttribute(
+        "data-context-view",
+        "chat",
+        "selects Chat in the header picker"
+      );
     assert.dom(chatInContext).isVisible("opens Chat in Context");
     assert.dom(floatingChat).doesNotExist("keeps the floating drawer closed");
 
@@ -415,12 +421,25 @@ acceptance("Chat | Page shell Context", function (needs) {
         "opens the channel in Context"
       );
 
-    await fillIn(picker, "about");
+    await visit("/t/internationalization-localization/280");
+    assert
+      .dom(picker)
+      .hasAttribute(
+        "data-context-view",
+        "chat",
+        "keeps Chat selected on a topic"
+      );
+    assert.dom(chatInContext).isVisible("keeps the channel open");
+
+    await visit("/latest");
+    await click(picker);
+    await click('[data-context-view-option="about"]');
 
     assert.dom(chatInContext).doesNotExist("hides Chat in About");
     assert.dom(floatingChat).doesNotExist("leaves the floating drawer closed");
 
-    await fillIn(picker, "chat");
+    await click(picker);
+    await click('[data-context-view-option="chat"]');
 
     assert
       .dom(chatInContext)
@@ -455,12 +474,18 @@ acceptance("Chat | Page shell Context", function (needs) {
 
     await click(`${chatInContext} .c-navbar__close-drawer-button`);
 
-    assert.dom(picker).hasValue("about", "closing Chat shows the default view");
     assert
-      .dom(`${picker} option[value="chat"]`)
-      .exists("keeps Chat in the picker");
-
-    await fillIn(picker, "chat");
+      .dom(picker)
+      .hasAttribute(
+        "data-context-view",
+        "about",
+        "closing Chat shows the default view"
+      );
+    await click(picker);
+    assert
+      .dom('[data-context-view-option="chat"] .d-icon-d-chat')
+      .exists("keeps Chat and its icon in the picker");
+    await click('[data-context-view-option="chat"]');
     assert
       .dom(chatInContext)
       .hasAttribute(

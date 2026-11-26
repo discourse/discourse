@@ -125,6 +125,7 @@ class ChatSetupInit {
           ...value,
           {
             id: "chat",
+            icon: "d-chat",
             label: "chat.title_capitalized",
             component: ChatContextView,
           },

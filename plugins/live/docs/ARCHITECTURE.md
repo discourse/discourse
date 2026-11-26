@@ -36,9 +36,14 @@ Live adds lightweight WebRTC live rooms to Discourse without proxying audio/vide
 
 A Context view registers its ID, translated label, and component together through
 the `page-shell-context-view` transformer. The page shell uses that list for
-the header picker and panel content. About is always available. The shell
-remembers the selected view per user and tab. Live separately remembers the
-room and offers its view once that room is available.
+the header picker and panel content. An explicit action to open a room or channel
+selects its view. The shell remembers that selection per user and tab across
+navigation. A selected page-aware view resumes when it becomes available again.
+
+Follow page clears the selection. The shell then shows Topic summary on topics,
+Category guide on category listings, and About when neither applies. Navigation
+does not open a closed panel. Live separately remembers the room and offers its
+view once that room is available.
 
 Follow-up from the Context audit:
 

@@ -4,6 +4,8 @@
  * @type {Record<string, Record<string, unknown>>}
  */
 const categoryFixtures = {
+  "/c/1/leaderboard.json": { users: [] },
+  "/c/2/leaderboard.json": { users: [] },
   "/c/1/show.json": {
     category: {
       id: 1,

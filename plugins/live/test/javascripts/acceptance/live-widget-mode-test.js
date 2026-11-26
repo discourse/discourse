@@ -1,11 +1,5 @@
 import { getOwner } from "@ember/owner";
-import {
-  click,
-  currentURL,
-  fillIn,
-  visit,
-  waitUntil,
-} from "@ember/test-helpers";
+import { click, currentURL, visit, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
 import MentionsListEmptyState from "discourse/components/user-menu/mentions-list-empty-state";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -245,12 +239,12 @@ function setupContextRoomStorage(needs, roomId) {
     this.contextViewKey = `page-shell-context-view:${userId}`;
     if (roomId) {
       this.contextRoomStore.setItem(this.contextRoomKey, roomId);
+      this.contextRoomStore.setItem(this.contextViewKey, "live");
     }
   });
 
   needs.hooks.afterEach(function () {
     this.contextRoomStore.remove(this.contextRoomKey);
-    this.contextRoomStore.remove(`${this.contextRoomKey}:view`);
     this.contextRoomStore.remove(this.contextViewKey);
   });
 }
@@ -272,8 +266,12 @@ acceptance("Live room in page shell Context", function (needs) {
     await visit("/latest");
     await waitUntil(() => pageShell.canOpenContext);
     assert
-      .dom(".page-shell__header-context select")
-      .hasValue("about", "shows About before a room is selected");
+      .dom(".page-shell-context-picker-trigger")
+      .hasAttribute(
+        "data-context-view",
+        "about",
+        "shows About before a room is selected"
+      );
 
     await click("#toggle-context-panel");
     await click(".sidebar-section-link[data-link-name='live-room-1']");
@@ -282,8 +280,11 @@ acceptance("Live room in page shell Context", function (needs) {
     assert.deepEqual(joined, [ROOM.slug], "joins the room once");
     assert.dom(roomInContext).isVisible("opens Context with the room visible");
     assert
-      .dom(".page-shell__header-context select option:checked")
+      .dom(".page-shell-context-picker-trigger .d-button-label")
       .hasText("Live", "shows Live as the selected Context view");
+    assert
+      .dom(".page-shell-context-picker-trigger .d-icon-microphone-lines")
+      .exists("uses the same room icon as the sidebar");
     const owner = getOwner(this);
     assert.strictEqual(
       this.contextRoomStore.getInt(this.contextRoomKey),
@@ -326,7 +327,7 @@ acceptance("Live room in page shell Context", function (needs) {
   test("the Context picker switches between About and Live without rejoining", async function (assert) {
     const pageShell = getOwner(this).lookup("service:page-shell");
     const { joined, liveWebrtc } = stubJoin(this);
-    const picker = ".page-shell__header-context select";
+    const picker = ".page-shell-context-picker-trigger";
     const room = "#page-shell-context .live-room-page";
 
     withPluginApi((api) => {
@@ -345,12 +346,15 @@ acceptance("Live room in page shell Context", function (needs) {
     await click(".sidebar-section-link[data-link-name='live-room-1']");
     liveWebrtc.activeRoomId = ROOM.id;
 
+    await click(picker);
     assert
-      .dom(`${picker} option[value="about"]`)
+      .dom('[data-context-view-option="about"]')
       .hasText("About", "keeps About in the picker");
-    await fillIn(picker, "about");
+    await click('[data-context-view-option="about"]');
 
-    assert.dom(picker).hasValue("about", "selects About");
+    assert
+      .dom(picker)
+      .hasAttribute("data-context-view", "about", "selects About");
     assert
       .dom(room)
       .doesNotExist("shows the default panel instead of the room");
@@ -360,20 +364,30 @@ acceptance("Live room in page shell Context", function (needs) {
       ROOM.id,
       "keeps the call active"
     );
+    await click(picker);
     assert
-      .dom(`${picker} option[value="live"]`)
+      .dom('[data-context-view-option="live"]')
       .hasText("Live", "keeps Live in the picker");
 
-    await fillIn(picker, "mentions");
+    await click('[data-context-view-option="mentions"]');
 
-    assert.dom(picker).hasValue("mentions", "selects the additional view");
+    assert
+      .dom(picker)
+      .hasAttribute(
+        "data-context-view",
+        "mentions",
+        "selects the additional view"
+      );
     assert
       .dom("#page-shell-context .empty-state")
       .isVisible("renders the component registered with the additional option");
 
-    await fillIn(picker, "live");
+    await click(picker);
+    await click('[data-context-view-option="live"]');
 
-    assert.dom(picker).hasValue("live", "selects Live");
+    assert
+      .dom(picker)
+      .hasAttribute("data-context-view", "live", "selects Live");
     assert.dom(room).isVisible("restores the room");
     assert.deepEqual(joined, [ROOM.slug], "switching views does not rejoin");
   });
@@ -427,8 +441,12 @@ acceptance("Live room in page shell Context after reload", function (needs) {
       .dom("#page-shell-context .live-room-header__info-trigger")
       .hasText(ROOM.name, "shows the room remembered before the reload");
     assert
-      .dom(".page-shell__header-context select")
-      .hasValue("live", "shows Live for the restored room");
+      .dom(".page-shell-context-picker-trigger")
+      .hasAttribute(
+        "data-context-view",
+        "live",
+        "shows Live for the restored room"
+      );
     assert.deepEqual(joined, [], "leaves rejoining to the user");
   });
 });

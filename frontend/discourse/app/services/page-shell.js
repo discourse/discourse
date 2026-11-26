@@ -12,14 +12,15 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 /**
  * @typedef {object} ContextView
  * @property {string} id
+ * @property {string} [icon] Icon shown in the picker.
  * @property {string} label Translation key for the picker option.
  * @property {import("@glint/template").ComponentLike} component
- * @property {boolean} [preferred] Selects the view when the tab has no saved choice.
  */
 
 /** @type {ContextView} */
 const ABOUT_CONTEXT_VIEW = {
   id: "about",
+  icon: "circle-info",
   label: "about.simple_title",
   component: ContextAbout,
 };
@@ -27,6 +28,7 @@ const ABOUT_CONTEXT_VIEW = {
 /** @type {ContextView} */
 const TOPIC_CONTEXT_VIEW = {
   id: "topic",
+  icon: "file-lines",
   label: "page_shell.context_topic",
   component: ContextTopic,
 };
@@ -34,6 +36,7 @@ const TOPIC_CONTEXT_VIEW = {
 /** @type {ContextView} */
 const CATEGORY_CONTEXT_VIEW = {
   id: "category-guide",
+  icon: "folder",
   label: "page_shell.context_category",
   component: ContextCategory,
 };
@@ -108,9 +111,12 @@ export default class PageShell extends Service {
   constructor() {
     super(...arguments);
     this.#load();
-    this.#selectedContextViewId.value = this.sessionStore.getItem(
-      this.#contextViewStorageKey
-    );
+    const savedView = this.sessionStore.getItem(this.#contextViewStorageKey);
+    if (savedView === ABOUT_CONTEXT_VIEW.id) {
+      this.sessionStore.removeItem(this.#contextViewStorageKey);
+    } else {
+      this.#selectedContextViewId.value = savedView;
+    }
   }
 
   willDestroy() {
@@ -170,13 +176,25 @@ export default class PageShell extends Service {
     return [...views, ...applyValueTransformer("page-shell-context-view", [])];
   }
 
-  get selectedContextView() {
-    const selectedId = this.#selectedContextViewId.value;
+  get automaticContextView() {
     return (
-      (selectedId
-        ? this.contextViews.find((view) => view.id === selectedId)
-        : this.contextViews.find((view) => view.preferred)) ??
-      ABOUT_CONTEXT_VIEW
+      this.contextViews.find(
+        (view) => view === TOPIC_CONTEXT_VIEW || view === CATEGORY_CONTEXT_VIEW
+      ) ?? ABOUT_CONTEXT_VIEW
+    );
+  }
+
+  get contextPickerValue() {
+    return this.#explicitContextView?.id ?? ABOUT_CONTEXT_VIEW.id;
+  }
+
+  get selectedContextView() {
+    return this.#explicitContextView ?? this.automaticContextView;
+  }
+
+  get #explicitContextView() {
+    return this.contextViews.find(
+      (view) => view.id === this.#selectedContextViewId.value
     );
   }
 
@@ -186,8 +204,13 @@ export default class PageShell extends Service {
 
   @action
   selectContextView(id) {
-    this.#selectedContextViewId.value = id;
-    this.sessionStore.setItem(this.#contextViewStorageKey, id);
+    if (id === ABOUT_CONTEXT_VIEW.id) {
+      this.#selectedContextViewId.value = null;
+      this.sessionStore.removeItem(this.#contextViewStorageKey);
+    } else {
+      this.#selectedContextViewId.value = id;
+      this.sessionStore.setItem(this.#contextViewStorageKey, id);
+    }
   }
 
   openContext() {
