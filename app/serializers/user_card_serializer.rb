@@ -225,7 +225,7 @@ class UserCardSerializer < BasicUserSerializer
   end
 
   def include_featured_topic?
-    scope.can_see_topic?(object.user_profile.featured_topic)
+    scope.can_discover_topic?(object.user_profile.featured_topic)
   end
 
   def featured_topic
