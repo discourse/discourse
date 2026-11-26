@@ -13,6 +13,11 @@ export default class PollOptionsComponent extends Component {
     return this.args.votes.includes(option.id);
   };
 
+  /** An option's rank on the ballot, which is tracked, unlike the option itself. */
+  rankOf = (option) => {
+    return this.args.votes.find((vote) => vote.digest === option.id)?.rank ?? 0;
+  };
+
   get rankedChoiceDropdownContent() {
     let rankedChoiceDropdownContent = [];
 
@@ -22,7 +27,6 @@ export default class PollOptionsComponent extends Component {
     });
 
     this.args.options.forEach((option, i) => {
-      option.rank = 0;
       let priority = "";
 
       if (i === 0) {
@@ -62,10 +66,11 @@ export default class PollOptionsComponent extends Component {
         "options"
       }}
     >
-      {{#each @options key="rank" as |option|}}
+      {{#each @options key="id" as |option|}}
         {{#if @isRankedChoice}}
           <PollOptionRankedChoice
             @option={{option}}
+            @rank={{this.rankOf option}}
             @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
             @sendRank={{this.sendRank}}
           />
