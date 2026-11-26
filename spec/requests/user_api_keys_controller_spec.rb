@@ -1074,6 +1074,24 @@ RSpec.describe UserApiKeysController do
       expect(key.reload.revoked_at).to be_nil
     end
 
+    it "does not restore a key once a password change revokes the session mid-request" do
+      key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
+      user = key.user
+      sign_in(user)
+      allow_any_instance_of(UserApiKeysController).to receive(
+        :find_key,
+      ).and_wrap_original do |original|
+        found = original.call
+        user.reload.update!(password: "a-new-secure-password")
+        found
+      end
+
+      post "/user-api-key/undo-revoke.json", params: { id: key.id }
+
+      expect(response.status).to eq(403)
+      expect(key.reload.revoked_at).to be_present
+    end
+
     it "lets an admin restore an ordinary user's key" do
       key = Fabricate(:readonly_user_api_key, revoked_at: 1.day.ago)
       sign_in(Fabricate(:admin))

@@ -464,7 +464,7 @@ class UserApiKeysController < ApplicationController
     owner = key.user
     raise Discourse::InvalidAccess if !owner || owner.anonymous_shadow?
 
-    key.update_columns(revoked_at: nil)
+    with_revalidated_credential { key.update_columns(revoked_at: nil) }
     render json: success_json
   end
 
