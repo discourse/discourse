@@ -912,6 +912,33 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#leaderboard" do
+    it "ranks contributors by likes on visible posts in the category" do
+      topic = Fabricate(:topic, category:)
+      Fabricate(:post, topic:, user:, like_count: 2)
+      Fabricate(:post, topic:, user:, like_count: 3)
+      Fabricate(:post, topic:, user: admin, like_count: 4)
+      Fabricate(:post, topic:, user: admin, like_count: 10, hidden: true)
+      Fabricate(:post, user: admin, like_count: 10)
+
+      get "/c/#{category.id}/leaderboard.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].pluck("id", "likes_received")).to eq(
+        [[user.id, 5], [admin.id, 4]],
+      )
+    end
+
+    it "restricts the leaderboard to users who can see the category" do
+      category.set_permissions(admins: :full)
+      category.save!
+
+      get "/c/#{category.id}/leaderboard.json"
+
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "#show" do
     before do
       category.set_permissions(admins: :full)

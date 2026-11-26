@@ -28,5 +28,7 @@
  *
  * The initializer automatically picks up any new exports and registers them.
  */
+export { default as CategoryHotTopics } from "./category-hot-topics.gts";
+export { default as CategoryLeaderboard } from "./category-leaderboard.gts";
 export { default as BlockHead } from "./block-head.gts";
 export { default as BlockGroup } from "./block-group.gts";

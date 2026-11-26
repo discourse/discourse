@@ -9,6 +9,7 @@ class CategoriesController < ApplicationController
                    categories_and_top
                    categories_and_hot
                    show
+                   leaderboard
                    redirect
                    find_by_slug
                    visible_groups
@@ -16,7 +17,8 @@ class CategoriesController < ApplicationController
                    search
                  ]
 
-  before_action :fetch_category, only: %i[show update destroy visible_groups convert_nested_replies]
+  before_action :fetch_category,
+                only: %i[show leaderboard update destroy visible_groups convert_nested_replies]
   skip_before_action :check_xhr,
                      only: %i[
                        index
@@ -155,6 +157,34 @@ class CategoriesController < ApplicationController
     end
 
     render_serialized(@category, CategorySerializer)
+  end
+
+  def leaderboard
+    guardian.ensure_can_see!(@category)
+
+    likes_by_user =
+      Post
+        .visible
+        .joins(:user)
+        .merge(User.real)
+        .where(topics: { category_id: @category.id, archetype: Archetype.default })
+        .where(post_type: Post.types[:regular])
+        .where("posts.like_count > 0")
+        .group("posts.user_id")
+        .order(Arel.sql("SUM(posts.like_count) DESC, posts.user_id ASC"))
+        .limit(5)
+        .sum(:like_count)
+
+    users = User.where(id: likes_by_user.keys).index_by(&:id)
+    render json: {
+             users:
+               likes_by_user.filter_map do |id, likes|
+                 user = users[id]
+                 next unless user
+
+                 serialize_data(user, BasicUserSerializer, root: false).merge(likes_received: likes)
+               end,
+           }
   end
 
   def evaluate_permissions

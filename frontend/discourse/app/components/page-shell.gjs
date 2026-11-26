@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import PageShellControls from "discourse/components/page-shell/controls";
 import PageShellPanelSeparator from "discourse/components/page-shell/panel-separator";
 import bodyClass from "discourse/helpers/body-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import measurePageShell from "discourse/modifiers/measure-page-shell";
 import { i18n } from "discourse-i18n";
 
@@ -74,6 +76,13 @@ export default class PageShell extends Component {
             {{/if}}
             <div class="page-shell__context-content">
               <this.pageShell.selectedContextView.component />
+              <BlockOutlet
+                @name="page-shell-context"
+                @outletArgs={{lazyHash
+                  category=this.pageShell.contextCategory
+                  view=this.pageShell.selectedContextView.id
+                }}
+              />
             </div>
           </aside>
         {{/if}}

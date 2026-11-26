@@ -1475,6 +1475,7 @@ Discourse::Application.routes.draw do
     get "categories_and_hot" => "categories#categories_and_hot"
 
     get "c/:id/show" => "categories#show"
+    get "c/:id/leaderboard" => "categories#leaderboard", :constraints => { format: "json" }
     get "c/:id/visible_groups" => "categories#visible_groups"
 
     get "c/*category_slug/find_by_slug" => "categories#find_by_slug"

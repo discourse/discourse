@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import ContextAbout from "discourse/components/page-shell/context-about";
+import ContextCategory from "discourse/components/page-shell/context-category";
 import ContextTopic from "discourse/components/page-shell/context-topic";
 import discourseDebounce from "discourse/lib/debounce";
 import EmbedMode from "discourse/lib/embed-mode";
@@ -28,6 +29,13 @@ const TOPIC_CONTEXT_VIEW = {
   id: "topic",
   label: "page_shell.context_topic",
   component: ContextTopic,
+};
+
+/** @type {ContextView} */
+const CATEGORY_CONTEXT_VIEW = {
+  id: "category-guide",
+  label: "page_shell.context_category",
+  component: ContextCategory,
 };
 
 const STORAGE_KEY = "page-shell-panels";
@@ -72,6 +80,7 @@ function parsePanelPreference(name, stored, fallbackMode = "open") {
 
 export default class PageShell extends Service {
   @service currentUser;
+  @service discovery;
   @service header;
   @service keyValueStore;
   @service router;
@@ -138,12 +147,24 @@ export default class PageShell extends Service {
     return this.enabled && this.hasContextPanel && this.contextFits;
   }
 
+  get contextCategory() {
+    const topic = this.header.topicInfo;
+    return (
+      this.discovery.category ??
+      (topic?.isPrivateMessage ? null : topic?.category)
+    );
+  }
+
   /** @returns {ContextView[]} */
   @cached
   get contextViews() {
     const views = [ABOUT_CONTEXT_VIEW];
     if (this.canOpenContext && this.header.topicInfo) {
       views.push(TOPIC_CONTEXT_VIEW);
+    }
+
+    if (this.canOpenContext && this.contextCategory) {
+      views.push(CATEGORY_CONTEXT_VIEW);
     }
 
     return [...views, ...applyValueTransformer("page-shell-context-view", [])];

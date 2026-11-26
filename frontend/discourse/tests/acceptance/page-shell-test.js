@@ -3,6 +3,7 @@ import {
   click,
   fillIn,
   findAll,
+  select,
   settled,
   triggerKeyEvent,
   visit,
@@ -10,6 +11,7 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import AboutFixtures from "discourse/tests/fixtures/about";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Page shell | narrow screen menus", function (needs) {
@@ -86,6 +88,41 @@ acceptance("Page shell | regions", function (needs) {
         },
       });
     });
+    server.get("/c/bug/1/none/l/hot.json", () =>
+      helper.response(discoveryFixtures["/c/bug/1/l/latest.json"])
+    );
+    server.get("/c/1/leaderboard.json", () =>
+      helper.response({
+        users: [{ id: 32, username: "most-liked", likes_received: 12 }],
+      })
+    );
+  });
+
+  test("Category guide shows category information and both blocks", async function (assert) {
+    await visit("/c/bug/1");
+    await select(".page-shell__header-context select", "category-guide");
+
+    const guide = "#page-shell-context .context-category";
+    await waitFor(`${guide} .context-category__contributors li`);
+    await waitFor(`${guide} .context-category__topics li`);
+    assert.dom(`${guide} h2`).hasText("bug", "shows the current category");
+    assert
+      .dom(`${guide} .context-category__description`)
+      .exists("shows the description");
+    assert
+      .dom(`${guide} .context-category__topics a`)
+      .exists("lists links to hot topics");
+    assert
+      .dom(`${guide} .context-category__contributor-name`)
+      .hasText("most-liked", "links to the contributor");
+    assert
+      .dom(`${guide} .context-category__likes`)
+      .hasText("12 likes", "shows likes received");
+
+    await visit("/latest");
+    assert
+      .dom(".page-shell__header-context select option[value='category-guide']")
+      .doesNotExist("omits the category guide without a category");
   });
 
   test("About is the default Context view and uses the About page content", async function (assert) {
