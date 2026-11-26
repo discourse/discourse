@@ -7,7 +7,38 @@ module DiscourseMcp
     PROTOCOL_META_KEY = "io.modelcontextprotocol/protocolVersion"
     CAPABILITIES_META_KEY = "io.modelcontextprotocol/clientCapabilities"
 
-    Response = Data.define(:http_status, :body, :headers)
+    Response =
+      Data.define(:http_status, :body, :headers) do
+        def self.complete_result(values)
+          values.symbolize_keys.compact.merge(
+            resultType: "complete",
+            _meta: {
+              SERVER_INFO_META_KEY => {
+                name: SERVER_NAME,
+                version: Discourse::VERSION::STRING,
+              },
+            },
+          )
+        end
+
+        def self.success(id, result)
+          new(
+            http_status: 200,
+            body: {
+              jsonrpc: JSONRPC_VERSION,
+              id: id,
+              result: result,
+            },
+            headers: {
+            },
+          )
+        end
+
+        def encoded_body_within_limit
+          encoded = JSON.generate(body)
+          encoded if encoded.bytesize <= SiteSetting.mcp_max_response_bytes
+        end
+      end
 
     def initialize(request:, request_context:)
       @request = request
@@ -27,13 +58,14 @@ module DiscourseMcp
     def process(payload)
       validate_request!(payload)
       id = payload["id"]
+      request_context.request_id = id
       method = payload["method"]
       params = payload["params"].is_a?(Hash) ? payload["params"] : {}
       result = dispatch(method, params)
 
       return Response.new(http_status: 202, body: nil, headers: {}) if id.nil?
 
-      Response.new(http_status: 200, body: success(id, result), headers: {})
+      Response.success(id, result)
     rescue DiscourseMcp::Error => error
       Response.new(
         http_status: error.http_status,
@@ -41,8 +73,9 @@ module DiscourseMcp
         headers: error.headers,
       )
     rescue DiscourseMcp::ToolError => error
-      result = complete_result(content: [{ type: "text", text: error.message }], isError: true)
-      Response.new(http_status: 200, body: success(payload&.dig("id"), result), headers: {})
+      result =
+        Response.complete_result(content: [{ type: "text", text: error.message }], isError: true)
+      Response.success(payload&.dig("id"), result)
     rescue Discourse::InvalidAccess
       error = Error.new("Not authorized", code: -32_001, http_status: 403)
       Response.new(http_status: 403, body: failure(payload&.dig("id"), error), headers: {})
@@ -235,7 +268,7 @@ module DiscourseMcp
       if SiteSetting.mcp_server_instructions.present?
         result[:instructions] = SiteSetting.mcp_server_instructions
       end
-      complete_result(**result)
+      Response.complete_result(result)
     end
 
     def list_tools(params)
@@ -252,7 +285,7 @@ module DiscourseMcp
           value[:outputSchema] = tool.output_schema if tool.output_schema
           value
         end
-      complete_result(
+      Response.complete_result(
         tools: tools,
         nextCursor: next_cursor,
         ttlMs: SiteSetting.mcp_cache_ttl_ms,
@@ -268,7 +301,7 @@ module DiscourseMcp
       raise Error.new("Invalid tool arguments", code: -32_602, data: { errors: }) if errors.present?
 
       result = tool.implementation.call(arguments: arguments, request_context: request_context)
-      complete_result(**result.symbolize_keys)
+      Response.complete_result(result)
     rescue ActiveRecord::RecordInvalid => error
       raise ToolError, error.record.errors.full_messages.join(", ")
     rescue ActiveRecord::RecordNotSaved => error
@@ -278,7 +311,11 @@ module DiscourseMcp
     end
 
     def list_resources(params)
-      complete_result(resources: [], ttlMs: SiteSetting.mcp_cache_ttl_ms, cacheScope: "private")
+      Response.complete_result(
+        resources: [],
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
+        cacheScope: "private",
+      )
     end
 
     def list_resource_templates(params)
@@ -293,7 +330,7 @@ module DiscourseMcp
               description: resource.description,
             }
           end
-      complete_result(
+      Response.complete_result(
         resourceTemplates: templates,
         ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
@@ -307,7 +344,7 @@ module DiscourseMcp
       ensure_scopes!(resource)
 
       content = resource.implementation.call(uri: uri, request_context: request_context)
-      complete_result(
+      Response.complete_result(
         contents: [content],
         ttlMs: SiteSetting.mcp_cache_ttl_ms,
         cacheScope: "private",
@@ -336,7 +373,11 @@ module DiscourseMcp
               arguments: arguments,
             }
           end
-      complete_result(prompts: prompts, ttlMs: SiteSetting.mcp_cache_ttl_ms, cacheScope: "private")
+      Response.complete_result(
+        prompts: prompts,
+        ttlMs: SiteSetting.mcp_cache_ttl_ms,
+        cacheScope: "private",
+      )
     end
 
     def get_prompt(params)
@@ -346,11 +387,8 @@ module DiscourseMcp
       if errors.present?
         raise Error.new("Invalid prompt arguments", code: -32_602, data: { errors: })
       end
-      complete_result(
-        **prompt
-          .implementation
-          .call(arguments: arguments, request_context: request_context)
-          .symbolize_keys,
+      Response.complete_result(
+        prompt.implementation.call(arguments: arguments, request_context: request_context),
       )
     end
 
@@ -360,22 +398,6 @@ module DiscourseMcp
         .validate(arguments)
         .first(20)
         .map { |error| error.slice("type", "data_pointer", "schema_pointer") }
-    end
-
-    def complete_result(**values)
-      values.compact.merge(
-        resultType: "complete",
-        _meta: {
-          SERVER_INFO_META_KEY => {
-            name: SERVER_NAME,
-            version: Discourse::VERSION::STRING,
-          },
-        },
-      )
-    end
-
-    def success(id, result)
-      { jsonrpc: JSONRPC_VERSION, id: id, result: result }
     end
 
     def failure(id, error)
