@@ -19,6 +19,8 @@ import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import DSelect from "discourse/ui-kit/select/d-select";
+import { selectOption } from "discourse/ui-kit/select/select-engine";
 import { i18n } from "discourse-i18n";
 import AiAgent from "discourse/plugins/discourse-ai/discourse/admin/models/ai-agent";
 import AiAgentEditor from "./ai-agent-editor.gjs";
@@ -43,6 +45,7 @@ export default class AiAgentListEditor extends Component {
   @service dialog;
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked currentLayout = LAYOUT_BUTTONS[0];
   @tracked duplicateFilter = "";
@@ -78,6 +81,13 @@ export default class AiAgentListEditor extends Component {
 
     return agents.filter((agent) =>
       agent.name.toLocaleLowerCase().includes(filter)
+    );
+  }
+
+  /** The layouts as options, with their names translated. */
+  get layoutOptions() {
+    return LAYOUT_BUTTONS.map((button) =>
+      selectOption(button, { label: i18n(button.label) })
     );
   }
 
@@ -134,7 +144,7 @@ export default class AiAgentListEditor extends Component {
   }
 
   @action
-  onLayoutSelect(layoutId) {
+  changeLayout(layoutId) {
     const found = LAYOUT_BUTTONS.find((b) => b.id === layoutId);
     if (found) {
       this.currentLayout = found;
@@ -143,6 +153,11 @@ export default class AiAgentListEditor extends Component {
         value: layoutId,
       });
     }
+  }
+
+  @action
+  onLayoutSelect(layoutId) {
+    this.changeLayout(layoutId);
     this.dMenu.close();
   }
 
@@ -360,7 +375,29 @@ export default class AiAgentListEditor extends Component {
             @searchableProps={{this.searchableProps}}
           >
             <:actions>
-              {{#if this.capabilities.viewport.md}}
+              {{! TODO (select-kit-replacement-cleanup): Remove the legacy branch after rollout. }}
+              {{#if
+                (and
+                  this.capabilities.viewport.md
+                  this.siteSettings.enable_new_select_controls
+                )
+              }}
+                <DSelect
+                  class="ai-agent-list-editor__layout"
+                  @clearMode="never"
+                  @icon={{this.currentLayout.icon}}
+                  @iconField="icon"
+                  @iconOnly={{true}}
+                  @onChange={{this.changeLayout}}
+                  @options={{this.layoutOptions}}
+                  @placement="bottom-end"
+                  @selectedIcon="check"
+                  @showCaret={{false}}
+                  @texts={{hash ariaLabel=(i18n "discourse_ai.layout.label")}}
+                  @value={{this.currentLayout.id}}
+                  @variant="static"
+                />
+              {{else if this.capabilities.viewport.md}}
                 <DMenu
                   @autofocus={{true}}
                   @identifier="agent-list-layout"

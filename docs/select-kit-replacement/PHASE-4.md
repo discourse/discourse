@@ -78,13 +78,17 @@ See [`ROLLOUT.md`](ROLLOUT.md), *DMenu or DSelect* and *Waves*. Re-sequenced 202
       `chat-channel-list-sort-choice.gjs`), a channel's notification level
       (`chat-channel-sidebar-context-notification-submenu.gjs`) and the search sort
       (`chat-search.gjs`).
-    - ☐ discourse-ai: the gist toggle (`ai-gist-toggle.gjs`) and the agent list layout
+    - ☑ discourse-ai: the gist toggle (`ai-gist-toggle.gjs`) and the agent list layout
       (`ai-agent-list-editor.gjs`).
       - ☑ Gist toggle. A static `DSelect` that can't be emptied, named "Layout", showing only the
         current layout's icon, with a check on the current one. It keeps the
         `topic-list-layout-trigger` class that themes hide it by. A third-party theme hides it with
         the old float-kit trigger classes too, so its author needs a migration note before the flag
         defaults on.
+      - ☑ Agent list layout. The same pattern, offered only on medium and wider screens as before.
+        It opens at `bottom-end`: as the row's last control, the default placement had no room and
+        flipped above, as the old menu did. No other repository targets the old menu, so it takes a
+        BEM class, `ai-agent-list-editor__layout`.
     - ☐ discourse-events: the "Going" menu (`discourse-post-event/status.gjs`). It ends with
       "Leave event" after a divider while the user is going.
     - ☑ poll: a ranked-choice option's rank (`poll-option-ranked-choice-dropdown.gjs`). A static
