@@ -88,7 +88,6 @@ module Onebox
         use_ssl: uri.normalized_scheme == "https",
       ) do |http|
         http.read_timeout = Onebox.options.timeout
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE # Work around path building bugs
 
         headers ||= {}
 
@@ -154,11 +153,6 @@ module Onebox
         use_ssl: uri.is_a?(URI::HTTPS),
       ) do |http|
         http.read_timeout = Onebox.options.timeout
-        if uri.is_a?(URI::HTTPS)
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        end
-
         http.request_head([uri.path, uri.query].join("?")) do |response|
           return response.code.to_i == 200 ? response.content_length.presence : nil
         end
