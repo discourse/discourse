@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -24,12 +24,14 @@ import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import {
   SEND_SHORTCUT_META_ENTER,
   USER_OPTION_COMPOSITION_MODES,
 } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
+import KeyValueStore from "discourse/lib/key-value-store";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import loadRichEditor from "discourse/lib/load-rich-editor";
 import { cloneJSON } from "discourse/lib/object";
@@ -56,14 +58,20 @@ import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/compone
 import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
 import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/chat-replying-indicator";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import ChatFormattingToolbar, {
+  SELECTION_TOOLBAR_BUTTONS,
+} from "discourse/plugins/chat/discourse/lib/chat-formatting-toolbar";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import RichEditorInteractor from "discourse/plugins/chat/discourse/lib/rich-editor-interactor";
+import richEditorSelectionToolbar from "discourse/plugins/chat/discourse/lib/rich-editor-selection-toolbar";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create" with {
   discourseImport: "optional",
 };
 
 const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
+
+const store = new KeyValueStore("discourse_chat_composer_");
 
 export default class ChatComposer extends Component {
   @service site;
@@ -84,6 +92,10 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
   @tracked contextualToolbar;
+  @tracked showFormattingBar = !!store.getObject("formatting_bar");
+
+  formattingToolbar = this.#buildToolbar();
+  richEditorExtensions;
 
   #textareaInteractor;
   #addUploads;
@@ -342,6 +354,16 @@ export default class ChatComposer extends Component {
     if (this.useRichEditor) {
       this.#loadRichEditor();
     }
+  }
+
+  @action
+  toggleFormattingBar() {
+    if (!this.canUseRichEditor) {
+      return;
+    }
+
+    this.showFormattingBar = !this.showFormattingBar;
+    store.setObject({ key: "formatting_bar", value: this.showFormattingBar });
   }
 
   @action
@@ -694,8 +716,41 @@ export default class ChatComposer extends Component {
   }
 
   async #loadRichEditor() {
-    this.#richEditorLoading ??= loadRichEditor();
-    this.richEditorComponent ??= await this.#richEditorLoading;
+    this.#richEditorLoading ??= this.#importRichEditor();
+    await this.#richEditorLoading;
+  }
+
+  async #importRichEditor() {
+    const component = await loadRichEditor();
+
+    // read after the load, which registers the default extensions; touch
+    // devices keep their native selection menu
+    if (!this.capabilities.touch) {
+      const selectionToolbar = this.#buildToolbar(SELECTION_TOOLBAR_BUTTONS);
+      this.richEditorExtensions = [
+        ...getExtensions(),
+        // the formatting bar already offers the same buttons
+        richEditorSelectionToolbar(() =>
+          this.showFormattingBar || this.contextualToolbar
+            ? null
+            : selectionToolbar
+        ),
+      ];
+    }
+
+    this.richEditorComponent = component;
+  }
+
+  #buildToolbar(only) {
+    return new ChatFormattingToolbar({
+      siteSettings: this.siteSettings,
+      capabilities: this.capabilities,
+      site: this.site,
+      only,
+      getTextManipulation: () => this.editor?.textManipulation,
+      openLinkModal: () =>
+        this.openUpsertLinkModal(null, { context: this.context }),
+    });
   }
 
   #saveEditorPreference(preference) {
@@ -1019,6 +1074,21 @@ export default class ChatComposer extends Component {
           >
             <ToolbarButtons @data={{this.contextualToolbar}} />
           </div>
+        {{else if
+          (and
+            this.canUseRichEditor
+            this.showFormattingBar
+            this.editor
+            (not this.disabled)
+          )
+        }}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__formatting-bar"
+            role="toolbar"
+          >
+            <ToolbarButtons @data={{this.formattingToolbar}} />
+          </div>
         {{/if}}
 
         <div class="chat-composer__outer-container">
@@ -1048,6 +1118,7 @@ export default class ChatComposer extends Component {
                     @change={{this.onInput}}
                     @class="chat-composer__input"
                     @disabled={{this.disabled}}
+                    @extensions={{this.richEditorExtensions}}
                     @focusIn={{this.onTextareaFocusIn}}
                     @focusOut={{this.onTextareaFocusOut}}
                     @keymap={{this.richEditorKeymap}}
@@ -1087,9 +1158,11 @@ export default class ChatComposer extends Component {
 
             {{#each this.inlineButtons as |button|}}
               <DButton
-                class="-{{button.id}}"
+                aria-label={{button.ariaLabel}}
+                class={{dConcatClass (concat "-" button.id) button.classNames}}
                 disabled={{or this.disabled button.disabled}}
                 tabindex={{if button.disabled -1 0}}
+                title={{button.title}}
                 @icon={{button.icon}}
                 {{on "click" (fn this.handleInlineButtonAction button.action)}}
                 {{on "focus" (fn this.computeIsFocused true)}}
