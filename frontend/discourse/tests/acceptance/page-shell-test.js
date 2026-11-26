@@ -125,8 +125,8 @@ acceptance("Page shell | regions", function (needs) {
       .dom(".page-shell-context-picker-trigger .d-button-label")
       .hasText("Follow page (About)", "shows About as the automatic fallback");
     assert
-      .dom(".page-shell-context-picker-trigger .d-icon-circle-info")
-      .exists("shows the info icon for About");
+      .dom(".page-shell-context-picker-trigger .d-icon-bullseye")
+      .exists("shows the bullseye when Follow page displays About");
     assert.dom(`${panel} h2`).hasText("All topics", "labels the navigation");
     assert
       .dom(`${panel} a[href="/c/bug/1"]`)
@@ -330,6 +330,12 @@ acceptance("Page shell | regions", function (needs) {
         "follows the open topic automatically"
       );
     assert.dom(`${option} .d-icon-file-lines`).exists("shows the topic icon");
+    assert
+      .dom('[data-context-view-option="follow-page"] .d-icon-bullseye')
+      .exists("shows the bullseye for Follow page on topics");
+    assert
+      .dom('[data-context-view-option="about"] .d-icon-circle-info')
+      .exists("shows the info icon for the separate About option");
     await click(option);
 
     assert

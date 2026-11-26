@@ -22,7 +22,7 @@ export default class ContextPicker extends Component {
 
   get options() {
     return [
-      { ...this.pageShell.automaticContextView, id: "follow-page" },
+      { id: "follow-page", icon: "bullseye" },
       ...this.pageShell.contextViews,
     ];
   }

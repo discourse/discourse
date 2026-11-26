@@ -36,7 +36,7 @@ const TOPIC_CONTEXT_VIEW = {
 /** @type {ContextView} */
 const CATEGORY_CONTEXT_VIEW = {
   id: "category-guide",
-  icon: "folder",
+  icon: "book",
   label: "page_shell.context_category",
   component: ContextCategory,
 };
