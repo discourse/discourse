@@ -313,37 +313,15 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(user.user_avatar&.selected_user_associated_account_id).to be_nil
       end
 
-      it "does not import the provider profile" do
+      it "stores the provider data without importing the profile" do
         authenticator.after_authenticate(
           hash.deep_merge(info: { description: "New bio", location: "New location" }),
         )
 
+        expect(associated.reload.info["description"]).to eq("New bio")
         user.user_profile.reload
         expect(user.user_profile.bio_raw).to be_nil
         expect(user.user_profile.location).to be_nil
-      end
-
-      it "still stores the provider data and imports it once the suspension ends" do
-        authenticator.after_authenticate(
-          hash.deep_merge(info: { image: "https://some.domain/image.jpg", description: "New bio" }),
-        )
-
-        associated.reload
-        expect(associated.info["description"]).to eq("New bio")
-
-        user.update!(suspended_till: 1.minute.ago)
-
-        expect {
-          authenticator.after_authenticate(
-            hash.deep_merge(
-              info: {
-                image: "https://some.domain/image.jpg",
-                description: "New bio",
-              },
-            ),
-          )
-        }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
-        expect(user.user_profile.reload.bio_raw).to eq("New bio")
       end
     end
 

@@ -91,8 +91,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     # Save to the DB. Do this even if we don't have a user - it might be linked up later in after_create_account
     association.save!
 
-    # Update avatar/profile. Skip this for suspended accounts: their login is going to be refused,
-    # so they must not be able to change how their account is presented through the provider
+    # Suspended accounts are refused login, so the provider must not update their avatar/profile
     if !association.user&.suspended?
       UserAvatar.retrieve_for_associated_account(association)
       retrieve_profile(association.user, association.info)
