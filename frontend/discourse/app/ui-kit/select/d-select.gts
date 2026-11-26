@@ -169,8 +169,8 @@ export interface DSelectSignature {
     /**
      * Id of a visible caption that names the control, for a field whose caption is already on
      * the page. It replaces `texts.ariaLabel` on every part of the control, and the held value, or
-     * the count of a compact multiple select, is read after it. An enabled static trigger reads its
-     * value from its contents instead.
+     * the count of a compact multiple select, is read after it. An enabled static trigger that shows
+     * its value as text reads it from its contents instead.
      */
     ariaLabelledBy?: string;
     /**

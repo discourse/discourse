@@ -1076,6 +1076,31 @@ module("Integration | ui-kit | DSelect (trigger display)", function (hooks) {
       );
   });
 
+  test("an icon-only static trigger names its value, since it shows none", async function (assert) {
+    const held = tracked(2);
+    await render(
+      <template>
+        <DSelect
+          @icon="gear"
+          @iconOnly={{true}}
+          @options={{ITEMS}}
+          @texts={{hash ariaLabel="Settings"}}
+          @value={{held.value}}
+          @variant="static"
+        />
+      </template>
+    );
+
+    assert.dom("[role='combobox']").hasAria("label", "Settings, Banana");
+
+    held.value = 1;
+    await settled();
+
+    assert
+      .dom("[role='combobox']")
+      .hasAria("label", "Settings, Apple", "the name follows the value");
+  });
+
   test("@iconOnly is inert on the typeahead variant (editable input keeps its label)", async function (assert) {
     await render(
       <template>
@@ -2975,6 +3000,26 @@ module(
         </template>
       );
 
+      assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
+    });
+
+    test("an icon-only static trigger is named by the caption, then the value", async function (assert) {
+      await render(
+        <template>
+          <span id="fruit-caption">Fruit</span>
+          <DSelect
+            @ariaLabelledBy="fruit-caption"
+            @icon="gear"
+            @iconOnly={{true}}
+            @options={{ITEMS}}
+            @texts={{hash ariaLabel="Fruit"}}
+            @value={{1}}
+            @variant="static"
+          />
+        </template>
+      );
+
+      assert.dom(".d-select.--icon-only").exists();
       assert.strictEqual(this.nameOf(find(".d-select")), "Fruit Apple");
     });
 

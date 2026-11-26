@@ -188,6 +188,7 @@ export default class VariantPresenter
    * A focusable static combobox is the exception: browsers expose its contents as its value
    * and screen readers speak it beside the name, so composing it in read it twice. A disabled
    * one leaves the tab order, and browsers then expose no value, so it keeps the composed name.
+   * So does an icon-only one, whose contents hold no text to expose.
    *
    * Multi-select held labels are exposed through a separate description.
    */
@@ -198,7 +199,7 @@ export default class VariantPresenter
     if (
       this.#getArgs().multiple ||
       !this.showsValue ||
-      (this.isStatic && !this.isDisabled)
+      this.#contentsAreValue
     ) {
       return this.selectionLabel;
     }
@@ -375,8 +376,8 @@ export default class VariantPresenter
   /**
    * What a caption named by `@ariaLabelledBy` is followed by: the held value of a single select, or
    * the count of a compact multiple one. The caption replaces `label`, so the value the composed
-   * names carry has to be spoken after it. A focusable static combobox already exposes its value,
-   * so it gets none, as in {@link triggerRootLabel}.
+   * names carry has to be spoken after it. A focusable static combobox that shows its value as text
+   * already exposes it, so it gets none, as in {@link triggerRootLabel}.
    */
   get labelledValue(): string | undefined {
     if (this.#getArgs().multiple) {
@@ -390,7 +391,7 @@ export default class VariantPresenter
         }) || undefined
       );
     }
-    if (!this.showsValue || (this.isStatic && !this.isDisabled)) {
+    if (!this.showsValue || this.#contentsAreValue) {
       return undefined;
     }
     return this.fallbackSelectionLabel;
@@ -551,6 +552,14 @@ export default class VariantPresenter
   /** The filter input's prompt. */
   get searchPlaceholderText(): string {
     return this.#engine.text("searchPlaceholder");
+  }
+
+  /**
+   * Whether the browser exposes the trigger's contents as its value: a focusable static
+   * combobox that shows its value as text, so its name must not repeat it.
+   */
+  get #contentsAreValue(): boolean {
+    return this.isStatic && !this.isDisabled && !this.iconOnly;
   }
 
   /** Keeps typeahead reconciliation keyed to the displayed array. */

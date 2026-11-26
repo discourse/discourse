@@ -312,7 +312,7 @@ en:
           icon_try_this: "Choose a different language. The globe never changes: it names the field, not the value — unlike \"Icon that follows the selection\", whose glyph follows the value."
           icon_follows_description: "With `@iconField`, the trigger draws the held option's glyph before its label, so nothing in the example tracks the value. A fixed `@icon` would win over it, as the globe does in \"Leading icon\"."
           icon_follows_try_this: "Change the level and watch the trigger glyph change with it, unlike the globe in \"Leading icon\"."
-          icon_only_description: "`@iconOnly` drops the trigger's text, so the `ariaLabel` text becomes its accessible name and is required, along with `@icon`. It suits a toolbar, where space is tight and each glyph already names its value: an alignment icon needs no caption. A choice its glyph cannot carry alone, such as a notification level, keeps its text, as in \"Icon that follows the selection\"."
+          icon_only_description: "`@iconOnly` drops the trigger's text, so the `ariaLabel` text, followed by the held value, becomes its accessible name. The text is required, along with `@icon`. It suits a toolbar, where space is tight and each glyph already names its value: an alignment icon needs no caption. A choice its glyph cannot carry alone, such as a notification level, keeps its text, as in \"Icon that follows the selection\"."
           icon_only_try_this: "Pick Align right and watch the sample line move. The trigger's glyph changes with it."
           caret_description: "`@caretIcon` accepts a pair so the indicator can express open and closed states rather than rotating one glyph."
           caret_try_this: "Open and close it, watching the caret swap rather than spin."

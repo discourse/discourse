@@ -775,7 +775,7 @@ Two behaviours only appear once blocks are used together, and both are easy to g
   `@groupFooter`.
 - **Naming the control:** use the `ariaLabel` text, or `@ariaLabelledBy` with the id of a caption already
   on the page. Neither is drawn. `@ariaLabelledBy` names the trigger, its query input, the
-  list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption, except on an enabled static trigger, whose contents already are its value; an id missing from the page warns
+  list and the panel (the mobile modal too), and on the trigger the held value (or a compact multiple select's count) is read after the caption, except on an enabled static trigger that shows its value as text, whose contents already are its value; an id missing from the page warns
   in development. A wrapping `<label>` also works: the trigger renders an unrendered input as its first labelable
   descendant, so the browser resolves the label to that sink instead of to whichever button
   happens to come first (a chip's remove control, or the clear control). Without it, clicking a
@@ -1620,7 +1620,8 @@ by mechanism.
   single-select, when the arg is set.
 - Trigger variants (`@variant`: typeahead / button / static); a leading `@icon`; a label-less
   icon-only trigger on the button/static variants (`@iconOnly`, which needs `@icon` and a resolved
-  `ariaLabel` text for the accessible name, and is ignored with a warning without either); the
+  `ariaLabel` text, and is ignored with a warning without either; its accessible name is that text
+  followed by the held value, which the trigger no longer shows); the
   held option's icon (from `@iconField` or its `icon` setting) before its label when `@icon` is
   not set, hidden while a typed term shows; caret swap
   (`@caretIcon`) and caret suppression (`@showCaret={{false}}`); a trailing `@searchIcon` in a
