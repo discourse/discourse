@@ -5,10 +5,15 @@ import ReCaptcha from "../../components/re-captcha.gjs";
 import ReCaptchaV3 from "../../components/re-captcha-v3.gjs";
 
 export default class CaptchaFieldsConnector extends Component {
+  // Invitations and password resets are never challenged.
+  static shouldRender(args) {
+    return !["invite", "password-reset"].includes(args.context);
+  }
+
   @service siteSettings;
 
   <template>
-    <div class="code-login-after-code-outlet captcha-fields-connector">
+    <div class="code-login-email-step-fields-outlet captcha-fields-connector">
       <div class="input-group">
         {{#if (eq this.siteSettings.discourse_captcha_provider "hcaptcha")}}
           <HCaptcha @siteKey={{this.siteSettings.hcaptcha_site_key}} />
