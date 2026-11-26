@@ -355,3 +355,17 @@ html.has-full-page-chat {
     color: var(--tertiary);
   }
 }
+
+:is(.chat-cooked, .chat-composer__input.ProseMirror) {
+  h1 {
+    font-size: var(--font-up-2);
+  }
+
+  h2 {
+    font-size: var(--font-up-1);
+  }
+
+  :is(h3, h4, h5, h6) {
+    font-size: var(--font-0);
+  }
+}

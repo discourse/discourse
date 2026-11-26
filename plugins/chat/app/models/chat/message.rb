@@ -309,6 +309,9 @@ module Chat
       newline
       code
       fence
+      heading
+      lheading
+      hr
       image
       table
       linkify
@@ -328,15 +331,12 @@ module Chat
       features << "image-grid" if bot
       features << "emojiShortcuts" if SiteSetting.enable_emoji_shortcuts
 
-      rules = MARKDOWN_IT_RULES.dup
-      rules << "heading" if bot
-
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
       # generally up to date than the creating user.
       {
         features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
-        markdown_it_rules: rules,
+        markdown_it_rules: MARKDOWN_IT_RULES,
         force_quote_link: true,
         onebox_limit: PrettyText::NO_ONEBOX_LIMIT,
         user_id: opts[:user_id],

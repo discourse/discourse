@@ -585,6 +585,7 @@ en:
           other: "<span>%{commaSeparatedUsernames} and %{count} others reacted with </span>:%{emoji}:"
 
       composer:
+        formatting: "Formatting"
         toggle_toolbar: "Toggle toolbar"
         switch_to_markdown: "Switch to Markdown editor"
         switch_to_rich_text: "Switch to rich text editor"

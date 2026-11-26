@@ -162,6 +162,25 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.messages).to have_message(text: "selected text")
   end
 
+  it "keeps headings and horizontal rules when sending and editing" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("# Heading", :enter, "---", "after")
+
+    expect(channel_page.composer).to have_heading("Heading")
+    expect(channel_page.composer).to have_horizontal_rule
+    channel_page.composer.meta_enter_shortcut
+
+    expect(channel_page.messages).to have_heading("Heading")
+    expect(channel_page.messages).to have_horizontal_rule
+    page.refresh
+    expect(channel_page.messages).to have_heading("Heading")
+    expect(channel_page.messages).to have_horizontal_rule
+
+    channel_page.composer.edit_last_message_shortcut
+    expect(channel_page.composer).to have_heading("Heading")
+    expect(channel_page.composer).to have_horizontal_rule
+  end
+
   it "sends rich text as markdown" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.fill_in(with: "**bold** text")

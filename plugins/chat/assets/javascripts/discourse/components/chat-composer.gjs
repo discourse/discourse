@@ -17,6 +17,7 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
+import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import EmojiAutocompleteResults from "discourse/components/emoji-autocomplete-results";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
@@ -82,6 +83,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
+  @tracked contextualToolbar;
 
   #textareaInteractor;
   #addUploads;
@@ -302,11 +304,20 @@ export default class ChatComposer extends Component {
     // Removing a focused editor mid-render would flip isFocused during the
     // same render that reads it.
     this.editor?.element.blur();
+    this.contextualToolbar = null;
 
     this.currentUser.set("user_option.composition_mode", preference);
     discourseDebounce(this, this.#saveEditorPreference, preference, 1000);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  replaceToolbar(toolbar, owner) {
+    if (toolbar === null && owner && this.contextualToolbar !== owner) {
+      return;
+    }
+    this.contextualToolbar = toolbar;
   }
 
   @action
@@ -995,6 +1006,18 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
+        {{#if
+          (and this.useRichEditor this.contextualToolbar (not this.disabled))
+        }}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__contextual-toolbar"
+            role="toolbar"
+          >
+            <ToolbarButtons @data={{this.contextualToolbar}} />
+          </div>
+        {{/if}}
+
         <div class="chat-composer__outer-container">
           {{#if this.site.mobileView}}
             <ChatComposerDropdown
@@ -1027,6 +1050,7 @@ export default class ChatComposer extends Component {
                     @keymap={{this.richEditorKeymap}}
                     @onSetup={{this.setupRichEditor}}
                     @placeholder={{this.placeholder}}
+                    @replaceToolbar={{this.replaceToolbar}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
                     @uploadFiles={{this.uploadFiles}}
