@@ -26,6 +26,7 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { forceMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import dSelect from "discourse/tests/helpers/d-select-helper";
 import {
@@ -5283,3 +5284,51 @@ module("Integration | ui-kit | select | DSelect @required", function (hooks) {
       .doesNotHaveAria("required", "and a multi-select is not marked");
   });
 });
+
+module(
+  "Integration | ui-kit | select | DSelect (value that resets on read)",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    /**
+     * Holds a pick until its source changes, as a filter bar holds a sort until the URL changes.
+     * The field writes its new value the first time it is read after the change.
+     */
+    class ResettingHost extends Component {
+      @resettableTracked held = this.args.source.value;
+
+      @action
+      pick(value) {
+        this.held = value;
+      }
+
+      <template>
+        <DSelect
+          @onChange={{this.pick}}
+          @options={{ITEMS}}
+          @value={{this.held}}
+          @variant={{@variant}}
+        />
+      </template>
+    }
+
+    for (const variant of ["static", "button", "typeahead"]) {
+      test(`a ${variant} select follows a held value that resets when its source changes`, async function (assert) {
+        const source = tracked(1);
+
+        await render(
+          <template>
+            <ResettingHost @source={{source}} @variant={{variant}} />
+          </template>
+        );
+
+        assert.dSelect().hasValue(1);
+
+        source.value = 2;
+        await settled();
+
+        assert.dSelect().hasValue(2);
+      });
+    }
+  }
+);

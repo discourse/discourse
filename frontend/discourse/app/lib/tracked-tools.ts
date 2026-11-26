@@ -99,8 +99,15 @@ export function trackedObjectWithComputedSupport<T extends object>(obj: T): T {
   return outer;
 }
 
+/**
+ * A read never writes tracked state: a render may already have consumed it, as a modifier that
+ * read the value does when it re-runs, and Glimmer refuses that write. So the set value and the
+ * upstream it was checked against are plain fields, and only a set bumps `version` to re-render.
+ */
 class ResettableTrackedState {
-  @tracked currentValue: unknown;
+  @tracked version = 0;
+  hasSetValue = false;
+  setValue: unknown;
   previousUpstreamValue: unknown;
 }
 
@@ -159,16 +166,21 @@ export function resettableTracked(
       const upstreamValue = descriptor!.initializer?.call(this);
 
       if (upstreamValue !== state.previousUpstreamValue) {
-        state.currentValue = upstreamValue;
+        state.hasSetValue = false;
         state.previousUpstreamValue = upstreamValue;
       }
 
-      return state.currentValue;
+      // A set bumps it, so reading it lets a set value re-render.
+      void state.version;
+
+      return state.hasSetValue ? state.setValue : upstreamValue;
     },
 
     set(this: object, value: unknown) {
       const state = getOrCreateState(states, this);
-      state.currentValue = value;
+      state.setValue = value;
+      state.hasSetValue = true;
+      state.version++;
     },
   };
 }

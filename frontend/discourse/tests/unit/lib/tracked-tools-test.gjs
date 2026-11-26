@@ -1,9 +1,11 @@
 /* eslint-disable discourse/no-tracked-state-class -- tests `@tracked` class fields */
+import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { run } from "@ember/runloop";
-import { settled } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
+import { modifier } from "ember-modifier";
 import { module, test } from "qunit";
 import {
   autoTrackedArray,
@@ -11,8 +13,10 @@ import {
   enumerateTrackedEntries,
   enumerateTrackedKeys,
   isTrackedArray,
+  resettableTracked,
   trackedObjectWithComputedSupport,
 } from "discourse/lib/tracked-tools";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Unit | tracked-tools", function () {
   test("DeferredTrackedSet", async function (assert) {
@@ -945,5 +949,105 @@ module("Unit | tracked-tools", function () {
       assert.strictEqual(obj.a, undefined);
       assert.deepEqual(Object.keys(obj), ["b"]);
     });
+  });
+
+  module("@resettableTracked", function () {
+    class Source {
+      @tracked value = "a";
+    }
+
+    class Holder {
+      source = new Source();
+
+      @resettableTracked held = this.source.value;
+    }
+
+    test("follows its source until set, then keeps the set value", function (assert) {
+      const holder = new Holder();
+
+      assert.strictEqual(holder.held, "a");
+
+      holder.source.value = "b";
+      assert.strictEqual(holder.held, "b", "follows the source");
+
+      holder.held = "picked";
+      assert.strictEqual(holder.held, "picked", "keeps the set value");
+      assert.strictEqual(holder.held, "picked", "on every read");
+    });
+
+    test("takes the source again whenever it changes, even back to an earlier value", function (assert) {
+      const holder = new Holder();
+      assert.strictEqual(holder.held, "a");
+
+      holder.held = "picked";
+      assert.strictEqual(holder.held, "picked");
+
+      holder.source.value = "b";
+      assert.strictEqual(
+        holder.held,
+        "b",
+        "a new source replaces the set value"
+      );
+
+      holder.source.value = "a";
+      assert.strictEqual(
+        holder.held,
+        "a",
+        "so does a return to the source the value was set against"
+      );
+    });
+  });
+});
+
+module("Integration | tracked-tools | @resettableTracked", function (hooks) {
+  setupRenderingTest(hooks);
+
+  class Source {
+    @tracked value = "a";
+  }
+
+  class MarkedHolder extends Component {
+    @resettableTracked held = this.args.source.value;
+
+    mark = modifier((element) => {
+      element.dataset.held = this.held;
+    });
+
+    <template>
+      <div class="marked" {{this.mark}}></div>
+      <span class="held">{{this.held}}</span>
+    </template>
+  }
+
+  test("a modifier may read it before the template does when the source changes", async function (assert) {
+    const source = new Source();
+
+    await render(<template><MarkedHolder @source={{source}} /></template>);
+
+    source.value = "b";
+    await settled();
+
+    assert.dom(".held").hasText("b");
+    assert.dom(".marked").hasAttribute("data-held", "b");
+  });
+
+  test("a set value re-renders", async function (assert) {
+    const source = new Source();
+    let holder;
+
+    class CapturedHolder extends MarkedHolder {
+      constructor() {
+        super(...arguments);
+        holder = this;
+      }
+    }
+
+    await render(<template><CapturedHolder @source={{source}} /></template>);
+
+    holder.held = "picked";
+    await settled();
+
+    assert.dom(".held").hasText("picked");
+    assert.dom(".marked").hasAttribute("data-held", "picked");
   });
 });
