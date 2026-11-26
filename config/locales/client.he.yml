@@ -4117,7 +4117,7 @@ he:
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
         replies_short: "%{current} / %{total}"
       progress:
-        title: התקדמות נושא
+        title: "התקדמות נושא"
         jump_prompt: "מעבר אל…"
         jump_prompt_of:
           one: "מתוך פוסט %{count}"

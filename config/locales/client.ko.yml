@@ -2694,7 +2694,7 @@ ko:
         back_description: "읽지 않은 마지막 게시물로 이동합니다"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 진행 중인 주제
+        title: "진행 중인 주제"
         jump_prompt_of:
           other: "/ %{count}개의 게시물"
         jump_prompt_to_date: "현재까지"

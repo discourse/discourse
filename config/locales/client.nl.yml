@@ -3959,7 +3959,7 @@ nl:
         back_description: "Ga terug naar je laatste ongelezen bericht"
         replies_short: "%{current} / %{total}"
       progress:
-        title: topicvoortgang
+        title: "topicvoortgang"
         jump_prompt: "spring naar…"
         jump_prompt_of:
           one: "van %{count} bericht"

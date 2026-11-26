@@ -41,6 +41,7 @@ fa_IR:
           column_title: "عنوان"
           icon: "آیکن"
           color: "رنگ"
+          icon_search_placeholder: "جستجو…"
           tag: "برچسب"
           move_to_status_open: "باز"
           move_to_status_closed: "بسته شده"

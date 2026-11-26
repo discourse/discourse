@@ -3583,7 +3583,7 @@ vi:
         back_description: "Quay lại tút chưa đọc cuối cùng của bạn"
         replies_short: "%{current} / %{total}"
       progress:
-        title: tiến trình của chủ đề
+        title: "tiến trình của chủ đề"
         jump_prompt: "Nhảy đến…"
         jump_prompt_of:
           other: "trong %{count} tút"

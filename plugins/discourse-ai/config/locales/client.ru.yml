@@ -250,6 +250,9 @@ ru:
         type: "Тип"
         error: "Ошибка"
         response: "Ответ"
+      post_image_captions:
+        image_descriptions:
+          apply: "Применить"
       discourse_workflows:
         ai_agent:
           agent_id: "Агент"
@@ -795,6 +798,8 @@ ru:
         tool: "Инструмент"
       concepts:
         edit: "Изменить"
+        seed:
+          refresh: "Обновить"
         delete: "Удалить"
         columns:
           status: "Статус"
@@ -806,6 +811,11 @@ ru:
           name: "Название"
           description: "Описание"
           status: "Статус"
+        shared_topics_count:
+          one: "%{count} тема"
+          few: "%{count} тем"
+          many: "%{count} темы"
+          other: "%{count} темы"
         tagged_topics: "Темы с тегами"
         topic_columns:
           topic: "Тема"

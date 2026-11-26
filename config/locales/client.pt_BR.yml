@@ -3897,7 +3897,7 @@ pt_BR:
         back_description: "Voltar para a sua última postagem não lida"
         replies_short: "%{current}/%{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "pular para…"
         jump_prompt_of:
           one: "de %{count} postagem"

@@ -3977,7 +3977,7 @@ el:
         back_description: "Πήγαινε πίσω στην τελευταία αδιάβαστη ανάρτηση"
         replies_short: "%{current} / %{total}"
       progress:
-        title: πρόοδος θέματος
+        title: "πρόοδος θέματος"
         jump_prompt: "μετάβαση σε…"
         jump_prompt_of:
           one: "από %{count} ανάρτηση"

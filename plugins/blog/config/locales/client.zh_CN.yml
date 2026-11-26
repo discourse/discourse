@@ -76,7 +76,7 @@ zh_CN:
         save: 保存
         about_tab: 关于
         blog_slug: 缩略名
-        general_heading: 常规
+        blog_url: 自定义域名
         settings_tab: 设置
         theme_tab: 主题
         published_status: 已发布
@@ -87,7 +87,6 @@ zh_CN:
         select_theme: 选择主题
         path_formats:
           custom: 自定义
-        themes_index_description: 选择读者看到的界面设计。您可以自定义内置主题或编辑自己的主题；更改在您激活之前都将保持私密状态。
         thumbnail:
           journal: 日记
           headline: 保持好奇心。

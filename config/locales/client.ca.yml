@@ -2183,7 +2183,7 @@ ca:
         back_description: "Vés a la darrera publicació no llegida"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progrés del tema
+        title: "progrés del tema"
         jump_prompt_to_date: "fins a la data"
         jump_prompt_or: "o"
       notifications:

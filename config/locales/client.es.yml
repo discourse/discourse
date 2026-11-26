@@ -3915,7 +3915,7 @@ es:
         back_description: "Volver a la última publicación sin leer"
         replies_short: "%{current} / %{total}"
       progress:
-        title: avances
+        title: "avances"
         jump_prompt: "saltar a…"
         jump_prompt_of:
           one: "de %{count} publicación"

@@ -3340,7 +3340,7 @@ fa_IR:
         back_description: "بازگشت به اولین نوشته‌ی خوانده نشده"
         replies_short: "%{current} از %{total}"
       progress:
-        title: پیشرفت موضوع
+        title: "پیشرفت موضوع"
         jump_prompt: "برو به…"
         jump_prompt_of:
           one: "از %{count} نوشته"

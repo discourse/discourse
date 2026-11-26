@@ -178,6 +178,9 @@ sk:
         type: "Typ"
         error: "Chyba"
         response: "Odpoveď"
+      post_image_captions:
+        image_descriptions:
+          apply: "Použi"
       discourse_workflows:
         ai_tool:
           tool_ref: "Nástroj"
@@ -627,6 +630,8 @@ sk:
         tool: "Nástroj"
       concepts:
         edit: "Upraviť"
+        seed:
+          refresh: "Obnoviť"
         delete: "Odstrániť"
         columns:
           status: "Stav"
@@ -638,6 +643,11 @@ sk:
           name: "Meno"
           description: "Popis"
           status: "Stav"
+        shared_topics_count:
+          one: "%{count} téma"
+          few: "%{count} témy"
+          many: "%{count} tém"
+          other: "%{count} tém"
         tagged_topics: "Oštítkované témy"
         topic_columns:
           topic: "Téma"

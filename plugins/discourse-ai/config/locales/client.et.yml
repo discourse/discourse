@@ -49,6 +49,9 @@ et:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      post_image_captions:
+        image_descriptions:
+          apply: "Rakenda"
       discourse_workflows:
         ai_tool:
           list_item: "Loendi element"
@@ -220,6 +223,8 @@ et:
         embedding: "Sängitamine"
       concepts:
         edit: "Muuda"
+        seed:
+          refresh: "Värskenda"
         delete: "Kustuta"
         columns:
           status: "Staatus"
@@ -231,6 +236,9 @@ et:
           name: "Nimi"
           description: "Kirjeldus"
           status: "Staatus"
+        shared_topics_count:
+          one: "%{count} teema"
+          other: "%{count} teemat"
         tagged_topics: "Sildistatud teemad"
         topic_columns:
           topic: "Teema"

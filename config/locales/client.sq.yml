@@ -3216,7 +3216,7 @@ sq:
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresi i temës
+        title: "progresi i temës"
         jump_prompt: "shkoni në…"
         jump_prompt_of:
           one: "nga %{count} postim"

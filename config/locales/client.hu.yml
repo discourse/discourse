@@ -3821,7 +3821,7 @@ hu:
         back_description: "Vissza az utolsó olvasatlan bejegyzéshez"
         replies_short: "%{current} / %{total}"
       progress:
-        title: téma állapota
+        title: "téma állapota"
         jump_prompt: "ugrás…"
         jump_prompt_of:
           one: "a %{count} bejegyzésből"

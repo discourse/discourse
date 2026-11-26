@@ -3828,7 +3828,7 @@ sk:
         back_description: "Vrátiť sa k poslednému neprečítanému príspevku"
         replies_short: "%{current} / %{total}"
       progress:
-        title: pozícia v téme
+        title: "pozícia v téme"
         jump_prompt: "choď na..."
         jump_prompt_of:
           one: "z %{count} príspevku"

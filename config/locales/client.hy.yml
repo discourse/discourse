@@ -2797,7 +2797,7 @@ hy:
         back_description: "Վերադառնալ Ձեր վերջին չկարդացած գրառմանը"
         replies_short: "%{current} / %{total}"
       progress:
-        title: թեմայի ընթացքը
+        title: "թեմայի ընթացքը"
         jump_prompt_to_date: "դեպի ամսաթիվ"
         jump_prompt_or: "կամ"
       notifications:

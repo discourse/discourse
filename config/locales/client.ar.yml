@@ -5118,7 +5118,7 @@ ar:
         back_description: "الرجوع إلى آخر منشور غير مقروء"
         replies_short: "%{current}/%{total}"
       progress:
-        title: تقدُّم الموضوع
+        title: "تقدُّم الموضوع"
         jump_prompt: "الانتقال إلى…"
         jump_prompt_of:
           zero: "من %{count} منشورات"

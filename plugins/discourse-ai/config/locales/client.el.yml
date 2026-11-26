@@ -111,6 +111,9 @@ el:
         type: "Τύπος"
         error: "Σφάλμα"
         response: "Απάντηση"
+      post_image_captions:
+        image_descriptions:
+          apply: "Εφαρμογή"
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
@@ -373,6 +376,8 @@ el:
         embedding: "Ενσωμάτωση"
       concepts:
         edit: "Επεξεργασία"
+        seed:
+          refresh: "Ανανέωση"
         delete: "Σβήσιμο"
         columns:
           status: "Κατάσταση"
@@ -385,6 +390,9 @@ el:
           name: "Όνομα"
           description: "Περιγραφή"
           status: "Κατάσταση"
+        shared_topics_count:
+          one: "%{count} θέμα"
+          other: "%{count} θέματα"
         tagged_topics: "Θέματα με ετικέτα"
         topic_columns:
           topic: "Νήμα"

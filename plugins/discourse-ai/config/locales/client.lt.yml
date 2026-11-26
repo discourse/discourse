@@ -159,6 +159,9 @@ lt:
         type: "Tipas"
         error: "Klaida"
         response: "Atsakymas"
+      post_image_captions:
+        image_descriptions:
+          apply: "Kandidatuoti"
       discourse_workflows:
         ai_tool:
           tool_ref: "Įrankis"
@@ -473,6 +476,8 @@ lt:
         tool: "Įrankis"
       concepts:
         edit: "Redaguoti"
+        seed:
+          refresh: "Atnaujinti"
         delete: "Pašalinti"
         columns:
           status: "Statusas"
@@ -486,6 +491,11 @@ lt:
           description: "Aprašymas"
           aliases: "Aliasai"
           status: "Statusas"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} temų"
+          many: "%{count} temų"
+          other: "%{count} temų"
         tagged_topics: "Prisegtos temos"
         topic_columns:
           topic: "Tema"

@@ -3756,7 +3756,7 @@ hr:
         back_description: "Vrati se na posljednju nepročitanu poruku"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredak teme
+        title: "napredak teme"
         jump_prompt: "idite na"
         jump_prompt_of:
           one: "od %{count} objava"

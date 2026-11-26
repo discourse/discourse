@@ -2184,7 +2184,7 @@ bs_BA:
         back_description: "Vratite se nazad na vašu zadnju nepročitanu objavu"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progres teme
+        title: "progres teme"
         jump_prompt_to_date: "do datuma"
         jump_prompt_or: "ili"
       notifications:

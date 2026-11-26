@@ -3154,7 +3154,7 @@ nb_NO:
         back_description: "Gå tilbake til forrige uleste innlegg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: fremgang i emne
+        title: "fremgang i emne"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
       notifications:

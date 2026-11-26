@@ -2845,7 +2845,7 @@ ro:
         back_description: "Întoarce-te la ultima ta postare necitită"
         replies_short: "%{current} / %{total}"
       progress:
-        title: Evoluția subiectului
+        title: "Evoluția subiectului"
         jump_prompt_to_date: "la data"
         jump_prompt_or: "sau"
       notifications:

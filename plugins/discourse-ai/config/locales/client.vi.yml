@@ -110,11 +110,9 @@ vi:
         error: "Lỗi"
         response: "Đáp ứng"
       post_image_captions:
-        edit: "Không có tiến trình ngôn ngữ nào."
-        title: "Đã dịch %{translated}/%{total} sang %{language}"
-        description: "Chú thích"
-        save: "Lưu chú thích"
         saved: "Đã lưu chú thích hình ảnh Trí tuệ nhân tạo (AI)"
+        image_descriptions:
+          apply: "Áp dụng"
       discourse_workflows:
         ai_agent:
           mode: "Chế độ"
@@ -383,6 +381,8 @@ vi:
         embedding: "Nhúng"
       concepts:
         edit: "Sửa"
+        seed:
+          refresh: "Làm mới"
         delete: "Xóa"
         columns:
           status: "Trạng thái"
@@ -395,6 +395,8 @@ vi:
           name: "Tên"
           description: "Mô tả"
           status: "Trạng thái"
+        shared_topics_count:
+          other: "%{count} chủ đề"
         tagged_topics: "Những chủ đề được gắn thẻ"
         topic_columns:
           topic: "Chủ đề"

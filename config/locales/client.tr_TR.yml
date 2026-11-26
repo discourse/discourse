@@ -3985,7 +3985,7 @@ tr_TR:
         back_description: "Son okunmamış gönderinize geri dönün"
         replies_short: "%{current} / %{total}"
       progress:
-        title: konu ilerlemesi
+        title: "konu ilerlemesi"
         jump_prompt: "şuraya atla…"
         jump_prompt_of:
           one: "/ %{count} gönderi"

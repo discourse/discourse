@@ -4965,7 +4965,7 @@ lt:
         back_description: "Grįžkite prie paskutinio neskaityto įrašo"
         replies_short: "%{current} / %{total}"
       progress:
-        title: temos progresas
+        title: "temos progresas"
         jump_prompt: "peršokti į…"
         jump_prompt_of:
           one: "iš %{count} įrašo"

@@ -55,6 +55,9 @@ ko:
         type: "형식"
         error: "에러"
         response: "응답"
+      post_image_captions:
+        image_descriptions:
+          apply: "적용"
       discourse_workflows:
         ai_tool:
           list_item: "목록 항목"
@@ -260,6 +263,8 @@ ko:
         embedding: "삽입(Embedding)"
       concepts:
         edit: "편집"
+        seed:
+          refresh: "새로 고침"
         delete: "삭제"
         columns:
           status: "상태"
@@ -271,6 +276,8 @@ ko:
           name: "그룹명"
           description: "내용"
           status: "상태"
+        shared_topics_count:
+          other: "%{count}개의 글"
         tagged_topics: "태그된 토픽"
         topic_columns:
           topic: "글"

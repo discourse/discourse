@@ -2599,7 +2599,7 @@ bg:
       timeline:
         back: "Назад"
       progress:
-        title: прогрес на темата
+        title: "прогрес на темата"
         jump_prompt_to_date: "до дата"
         jump_prompt_or: "или"
       notifications:

@@ -68,6 +68,9 @@ ro:
         type: "Tip"
         error: "Eroare"
         response: "Răspuns"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplică"
       discourse_workflows:
         ai_agent:
           mode: "Mod"
@@ -285,6 +288,8 @@ ro:
         embedding: "Înglobare"
       concepts:
         edit: "Editează"
+        seed:
+          refresh: "Reîmprospătează"
         delete: "Șterge"
         columns:
           status: "Stare"
@@ -296,6 +301,10 @@ ro:
           name: "Nume"
           description: "Descriere"
           status: "Stare"
+        shared_topics_count:
+          one: "Un subiect"
+          few: "%{count} subiecte"
+          other: "%{count} de subiecte"
         tagged_topics: "Subiecte etichetate"
         topic_columns:
           topic: "Subiect"

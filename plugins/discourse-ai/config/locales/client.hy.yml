@@ -49,6 +49,9 @@ hy:
         type: "Տիպ"
         error: "Սխալ"
         response: "Արձագանք"
+      post_image_captions:
+        image_descriptions:
+          apply: "Կիրառել"
       discourse_workflows:
         ai_tool:
           list_item: "Ցանկի տարր"
@@ -219,6 +222,8 @@ hy:
         embedding: "Զետեղում"
       concepts:
         edit: "Խմբագրել"
+        seed:
+          refresh: "Թարմացնել"
         delete: "Ջնջել"
         columns:
           status: "Ստատուս"
@@ -230,6 +235,9 @@ hy:
           name: "Անուն"
           description: "Նկարագրություն"
           status: "Ստատուս"
+        shared_topics_count:
+          one: "%{count} թեմա"
+          other: "%{count} թեմա"
         tagged_topics: "Թեգերով թեմաներ"
         topic_columns:
           topic: "Թեմա"

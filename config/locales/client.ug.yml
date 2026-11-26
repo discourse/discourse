@@ -3855,7 +3855,7 @@ ug:
         back_description: "ئاخىرقى ئوقۇلمىغان يازمىڭىزغا قايتىدۇ"
         replies_short: "%{current} / %{total}"
       progress:
-        title: تېما ئىلگىرىلىشى
+        title: "تېما ئىلگىرىلىشى"
         jump_prompt: "ئاتلاش ئورنى…"
         jump_prompt_of:
           one: "/ %{count} يازما"

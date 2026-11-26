@@ -4195,7 +4195,7 @@ zh_TW:
         back_description: "回到最後一個未讀貼文"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 主題進度
+        title: "主題進度"
         jump_prompt: "跳到"
         jump_prompt_of:
           other: "%{count} 貼文"

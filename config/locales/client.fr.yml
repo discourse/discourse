@@ -4268,7 +4268,7 @@ fr:
         back_description: "Revenir au dernier message non lu"
         replies_short: "%{current}/%{total}"
       progress:
-        title: progression dans le sujet
+        title: "progression dans le sujet"
         jump_prompt: "accéder à…"
         jump_prompt_of:
           one: "sur %{count} message"

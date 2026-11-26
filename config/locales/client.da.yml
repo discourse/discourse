@@ -3062,7 +3062,7 @@ da:
         back_description: "Tilbage til dit seneste ulæste indlæg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: emnestatus
+        title: "emnestatus"
         jump_prompt: "spring til…"
         jump_prompt_of:
           one: "af %{count} indlæg"

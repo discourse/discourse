@@ -210,6 +210,8 @@ uk:
           column_title_required: "Потрібно вказати заголовок стовпця або назву тегу"
           icon: "Іконка"
           color: "Колір"
+          color_palette: "Кольорова палітра"
+          icon_search_placeholder: "Пошук…"
           default_sort: "Сортування за замовчуванням"
           default_sort_priority: "Пріоритет"
           default_sort_recency: "Останні"
@@ -224,8 +226,6 @@ uk:
           move_to_status_none: "Не змінюйте"
           move_to_status_open: "Відкрити"
           move_to_status_closed: "Закриті"
-          show_advanced: "Показати розширені параметри"
-          hide_advanced: "Приховати розширені параметри"
     keyboard_shortcuts_help:
       boards:
         title: "Дошки"

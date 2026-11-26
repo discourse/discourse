@@ -2600,7 +2600,7 @@ sl:
         back_description: "Pojdi nazaj na zadnji neprebrani prispevek"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredek teme
+        title: "napredek teme"
         jump_prompt_of:
           one: "od %{count} prispevka"
           two: "od %{count} prispevkov"

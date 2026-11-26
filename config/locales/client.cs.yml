@@ -4123,7 +4123,7 @@ cs:
         back_description: "Přejít na poslední nepřečtený příspěvek"
         replies_short: "%{current} / %{total}"
       progress:
-        title: pozice v tématu
+        title: "pozice v tématu"
         jump_prompt: "přejít na..."
         jump_prompt_of:
           one: "z %{count} příspěvku"

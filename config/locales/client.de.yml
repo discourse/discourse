@@ -4295,7 +4295,7 @@ de:
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
         replies_short: "%{current}/%{total}"
       progress:
-        title: Themen-Fortschritt
+        title: "Themen-Fortschritt"
         jump_prompt: "springe zu …"
         jump_prompt_of:
           one: "von %{count} Beitrag"

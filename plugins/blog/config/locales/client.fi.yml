@@ -18,7 +18,6 @@ fi:
         save: Tallenna
         about_tab: Tietoja
         blog_slug: Polkutunnus
-        general_heading: Yleistä
         settings_tab: Asetukset
         theme_tab: Värimaailma
         column_name: Nimi

@@ -84,13 +84,13 @@ ru:
           column_title: "Название"
           icon: "Значок"
           color: "Цвет"
+          color_palette: "Цветовая палитра"
+          icon_search_placeholder: "Поиск…"
           default_sort_priority: "Приоритет"
           tag: "Теги"
           move_to_assigned_unassign: "Снять ответственного"
           move_to_status_open: "Открытые"
           move_to_status_closed: "Закрытое"
-          show_advanced: "Показать расширенные параметры"
-          hide_advanced: "Скрыть расширенные параметры"
     keyboard_shortcuts_help:
       boards:
         title: "Доски"

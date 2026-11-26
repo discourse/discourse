@@ -45,6 +45,7 @@ pt:
           column_title: "Título"
           icon: "Ícone"
           color: "Cor"
+          icon_search_placeholder: "Pesquisar…"
           tag: "Etiqueta"
           move_to_assigned_unassign: "Cancelar atribuição"
           move_to_status_open: "Abrir"

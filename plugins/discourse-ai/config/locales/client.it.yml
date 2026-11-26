@@ -178,6 +178,9 @@ it:
         type: "Tipo"
         error: "Errore"
         response: "Risposta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Applica"
       discourse_workflows:
         ai_agent:
           mode: "Modalità"
@@ -627,6 +630,8 @@ it:
         tool: "Strumento"
       concepts:
         edit: "Modifica"
+        seed:
+          refresh: "Aggiorna"
         delete: "Elimina"
         columns:
           status: "Stato"
@@ -638,6 +643,9 @@ it:
           name: "Nome"
           description: "Descrizione"
           status: "Stato"
+        shared_topics_count:
+          one: "%{count} argomento"
+          other: "%{count} argomenti"
         tagged_topics: "Argomenti etichettati"
         topic_columns:
           topic: "Argomento"

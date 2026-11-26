@@ -1902,7 +1902,7 @@ et:
         back_description: "Mine tagasi oma viimase lugemata postituse juurde"
         replies_short: "%{current} / %{total}"
       progress:
-        title: teema edenemine
+        title: "teema edenemine"
         jump_prompt_or: "või"
       notifications:
         title: muuda, kui tihti sind sellest teemast teavitatakse
