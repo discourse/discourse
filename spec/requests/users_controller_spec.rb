@@ -335,6 +335,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -342,8 +343,27 @@ RSpec.describe UsersController do
 
       it "succeeds with a newly-created user" do
         user.update!(created_at: 1.minute.ago)
+        user.user_password.update_columns(created_at: 1.hour.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
+      end
+
+      it "waits until login tokens issued before a password was added expire" do
+        freeze_time
+        user.user_password.update_columns(created_at: 2.minutes.ago)
+        stub_server_session_confirmed
+
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("remove_password_too_soon", count: 10),
+        )
+        expect(user.reload.user_password).to be_present
+
+        freeze_time 9.minutes.from_now
+        put "/u/#{user.username}/remove-password.json"
+        expect(response.status).to eq(200)
+        expect(user.reload.user_password).to be_nil
       end
     end
 
@@ -378,6 +398,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a server session" do
+        user.user_password.update_columns(created_at: 1.hour.ago)
         stub_server_session_confirmed
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
@@ -627,6 +648,19 @@ RSpec.describe UsersController do
                 .details,
             ).to eq("revoked_user_api_keys: 1\nrevoked_mcp_authorizations: 1")
           end
+        end
+
+        it "leaves expired apps, which the form does not offer to revoke, alone" do
+          user_api_key.update!(expires_at: 1.day.ago)
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yHG32O",
+                revoke_connected_apps: true,
+              }
+
+          expect(response.parsed_body["success"]).to eq(true)
+          expect(user_api_key.reload.revoked_at).to be_nil
         end
 
         it "keeps authorized apps when the new password is rejected" do

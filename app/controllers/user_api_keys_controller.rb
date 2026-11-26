@@ -296,44 +296,41 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    with_revalidated_credential do
-      UserApiKey::DeviceAuth::Authorize.call(
-        device_auth_service_params(device_code: device_code, user_id: current_user.id),
-      ) do
-        on_success do
-          if params[:approval_token].present?
-            device_user_activation.delete_approval_token(params[:approval_token])
-          end
-          render_device_activation(
-            { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: false },
-          )
+    UserApiKey::DeviceAuth::Authorize.call(
+      device_auth_service_params(device_code: device_code, user_id: current_user.id).merge(
+        credential_lock: method(:with_revalidated_credential),
+      ),
+    ) do
+      on_success do
+        if params[:approval_token].present?
+          device_user_activation.delete_approval_token(params[:approval_token])
         end
-        on_model_not_found(:user) do
-          trace_device_auth(
-            "device_auth.authorize.failed",
-            reason: "user_not_found",
-            device_code: device_code,
-          )
-          raise Discourse::InvalidAccess
-        end
-        on_failed_step(:authorize_grant) do |failure|
-          render_device_activation(
-            {
-              state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE,
-              expired_code: true,
-            },
-            debug_reason: failure.error,
-          )
-        end
-        on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
-          trace_device_auth(
-            "device_auth.authorize.failed",
-            reason: exception.class.name,
-            exception: exception,
-            device_code: device_code,
-          )
-          raise exception
-        end
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_COMPLETE, denied: false },
+        )
+      end
+      on_model_not_found(:user) do
+        trace_device_auth(
+          "device_auth.authorize.failed",
+          reason: "user_not_found",
+          device_code: device_code,
+        )
+        raise Discourse::InvalidAccess
+      end
+      on_failed_step(:authorize_grant) do |failure|
+        render_device_activation(
+          { state: UserApiKey::DeviceAuth::DEVICE_ACTIVATION_STATE_ENTER_CODE, expired_code: true },
+          debug_reason: failure.error,
+        )
+      end
+      on_exceptions(Discourse::InvalidParameters, Discourse::InvalidAccess) do |exception|
+        trace_device_auth(
+          "device_auth.authorize.failed",
+          reason: exception.class.name,
+          exception: exception,
+          device_code: device_code,
+        )
+        raise exception
       end
     end
   end
@@ -720,13 +717,9 @@ class UserApiKeysController < ApplicationController
     end
 
     otp = SecureRandom.hex
-    # Bound to the password salt so a password change invalidates pending tokens
     Discourse.redis.setex "otp_#{otp}",
-                          10.minutes,
-                          {
-                            user_id: user.id,
-                            password_salt: user.user_password&.password_salt,
-                          }.to_json
+                          User::ONE_TIME_PASSWORD_LIFETIME,
+                          user.one_time_password_payload
 
     Base64.encode64(
       UserApiKey::DeviceAuth::Crypto.encrypt!(public_key, otp, padding: params[:padding]),

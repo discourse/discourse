@@ -4855,12 +4855,7 @@ RSpec.describe SessionController do
 
   describe "#one_time_password" do
     def store_otp(token, user)
-      Discourse.redis.setex "otp_#{token}",
-                            10.minutes,
-                            {
-                              user_id: user.id,
-                              password_salt: user.user_password&.password_salt,
-                            }.to_json
+      Discourse.redis.setex "otp_#{token}", 10.minutes, user.one_time_password_payload
     end
 
     context "with missing token" do

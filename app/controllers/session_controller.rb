@@ -908,7 +908,7 @@ class SessionController < ApplicationController
     return if !payload.is_a?(Hash)
 
     user = User.find_by(id: payload["user_id"])
-    user if user && user.user_password&.password_salt == payload["password_salt"]
+    user if user&.one_time_password_payload_valid?(payload)
   rescue JSON::ParserError
     nil
   end

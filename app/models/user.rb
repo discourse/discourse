@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
   MAX_FILTER_TERMS = 50
+  ONE_TIME_PASSWORD_LIFETIME = 10.minutes
   STAFF_REASON_SANITIZER = Rails::Html::SafeListSanitizer.new
   STAFF_REASON_ALLOWED_TAGS = %w[a br].freeze
   STAFF_REASON_ALLOWED_ATTRIBUTES = %w[href rel target].freeze
@@ -1007,6 +1008,20 @@ class User < ActiveRecord::Base
   def remove_password
     raise Discourse::InvalidAccess if !can_remove_password?
 
+    # Removing a password restores the nil salt that login tokens issued while
+    # the account was passwordless are bound to, so wait until any issued
+    # before this password was added have expired.
+    if user_password && user_password.created_at > ONE_TIME_PASSWORD_LIFETIME.ago
+      raise Discourse::InvalidAccess.new(
+              nil,
+              nil,
+              custom_message: "remove_password_too_soon",
+              custom_message_params: {
+                count: ONE_TIME_PASSWORD_LIFETIME.in_minutes.to_i,
+              },
+            )
+    end
+
     user_password.destroy if user_password
   end
 
@@ -1837,6 +1852,16 @@ class User < ActiveRecord::Base
     User.transaction { User.uncached { yield lock_credential_identity } }
   end
 
+  # A one-time login token is bound to the password salt, so changing the
+  # password invalidates it. See #remove_password for a passwordless account.
+  def one_time_password_payload
+    { user_id: id, password_salt: user_password&.password_salt }.to_json
+  end
+
+  def one_time_password_payload_valid?(payload)
+    payload["user_id"] == id && payload["password_salt"] == user_password&.password_salt
+  end
+
   def has_connected_apps?
     UserApiKey.active.where(user_id: id).exists? ||
       McpOauthAuthorization.where(user_id: id, revoked_at: nil).exists?
@@ -2450,32 +2475,17 @@ class User < ActiveRecord::Base
   # outstanding codes, since code exchange checks the authorization.
   def revoke_connected_apps!(user_ids:, owner_ids:)
     now = Time.current
-    user_api_keys =
-      UserApiKey.where(user_id: owner_ids, revoked_at: nil).update_all(revoked_at: now)
+    user_api_keys = UserApiKey.active.where(user_id: owner_ids).update_all(revoked_at: now)
 
-    mcp_authorization_ids =
-      McpOauthAuthorization.where(user_id: user_ids, revoked_at: nil).pluck(:id)
-    if mcp_authorization_ids.present?
-      McpOauthAccessToken.where(
-        mcp_oauth_authorization_id: mcp_authorization_ids,
-        revoked_at: nil,
-      ).update_all(revoked_at: now, updated_at: now)
-      McpOauthRefreshToken.where(
-        mcp_oauth_authorization_id: mcp_authorization_ids,
-        revoked_at: nil,
-      ).update_all(revoked_at: now, updated_at: now)
-      McpOauthAuthorization.where(id: mcp_authorization_ids).update_all(
-        status: "revoked",
-        revoked_at: now,
-        revoked_by_user_id: id,
-        revoked_reason: "password_reset",
-        updated_at: now,
-      )
+    mcp_authorizations =
+      McpOauthAuthorization.where(user_id: user_ids, revoked_at: nil).order(:id).lock.to_a
+    mcp_authorizations.each do |authorization|
+      authorization.revoke!(by_user: self, reason: "password_reset")
     end
 
     @revoked_connected_apps = {
       user_api_keys: user_api_keys,
-      mcp_authorizations: mcp_authorization_ids.size,
+      mcp_authorizations: mcp_authorizations.size,
     }
   end
 

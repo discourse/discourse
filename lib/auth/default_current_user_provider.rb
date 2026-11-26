@@ -158,12 +158,8 @@ class Auth::DefaultCurrentUserProvider
 
     request = @request
 
-    user_api_key = @env[USER_API_KEY]
+    user_api_key = presented_user_api_key
     api_key = @env[HEADER_API_KEY]
-
-    if @env.present? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
-      user_api_key ||= request[PARAMETER_USER_API_KEY]
-    end
 
     api_key ||= request[API_KEY] if @env.present? && request[API_KEY] && api_parameter_allowed?
 
@@ -329,11 +325,23 @@ class Auth::DefaultCurrentUserProvider
     if shared_key = @env["HTTP_X_SHARED_SESSION_KEY"]
       self.class.read_shared_session_key(shared_key)
     elsif is_user_api?
-      UserApiKey.active.where(key_hash: @hashed_user_api_key).first&.user
+      # Hash the presented key again: another provider instance, such as the
+      # overload protection middleware, may have authenticated this request.
+      user_api_key = presented_user_api_key
+      UserApiKey.active.find_by(key_hash: ApiKey.hash_key(user_api_key))&.user if user_api_key
     elsif is_api?
       user
-    elsif @user_token && UserAuthToken.where(id: @user_token.id, user_id: user.id).exists?
-      user
+    elsif @user_token && (auth_token = find_auth_token)
+      # As in #authenticated_session_user, but an impersonation session may
+      # still issue credentials for the impersonated user.
+      UserAuthToken.uncached do
+        session =
+          UserAuthToken
+            .matching_token_hash(UserAuthToken.hash_token(auth_token))
+            .lock
+            .find_by(id: @user_token.id)
+        user if session&.user == user
+      end
     end
   end
 
@@ -529,6 +537,14 @@ class Auth::DefaultCurrentUserProvider
 
   def parameter_api_patterns
     PARAMETER_API_PATTERNS + DiscoursePluginRegistry.api_parameter_routes
+  end
+
+  def presented_user_api_key
+    user_api_key = @env[USER_API_KEY]
+    if @env.present? && @request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+      user_api_key ||= @request[PARAMETER_USER_API_KEY]
+    end
+    user_api_key
   end
 
   # By default we only allow headers for sending API credentials
