@@ -136,7 +136,12 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       assert
         .dom(".d-editor-input")
         .hasValue("The image:\n[Uploading: avatar.png…]()\n");
-      document.querySelector("#reply-title").focus();
+      find("#reply-title").focus();
+      assert.dom("#reply-title").isFocused("focus moved to the title");
+    });
+
+    appEvents.on("composer:uploads-preprocessing-complete", () => {
+      assert.dom("#reply-title").isFocused("preprocessing preserves focus");
     });
 
     const image = createFile("avatar.png");
