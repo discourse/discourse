@@ -17,6 +17,13 @@ vi:
         desktop: Máy tính để bàn
         mobile: Điện thoại
         save: Lưu lại
+        about_tab: Giới thiệu
+        blog_slug: tên đường dẫn
+        settings_tab: Cài đặt
+        theme_tab: Giao diện
+        column_name: Tên
+        column_category: Danh mục
+        column_status: Trạng thái
         path_formats:
           custom: Tùy biến
         back_to_themes: Quay lại theme

@@ -320,7 +320,10 @@ class ReviewableAiPost < Reviewable
       action.label = "#{prefix}.title"
       action.description = "#{prefix}.description"
       action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
+      if confirm
+        action.confirm_message = "#{prefix}.confirm"
+        action.confirm_title = "#{prefix}.confirm_title"
+      end
     end
   end
 end

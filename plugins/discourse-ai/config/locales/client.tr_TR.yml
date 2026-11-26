@@ -239,6 +239,13 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      review_bulk:
+        refresh: "Yenile"
+        columns:
+          user: "Kullanıcı"
+          reason: "Bayrak ekleme nedeni:"
+          created: "Oluşturulma"
+          status: "Durum"
       dsa_classification:
         suggest: "YZ ile öner"
       copied: "Kopyalandı"
@@ -249,6 +256,9 @@ tr_TR:
         type: "Tür"
         error: "Hata"
         response: "Yanıt"
+      post_image_captions:
+        image_descriptions:
+          apply: "Uygula"
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
@@ -871,6 +881,31 @@ tr_TR:
         mcp_server_oauth_client_secret: "MCP sunucusu OAuth istemci gizli anahtarı"
         modal:
           title: "Yeni kimlik bilgisi oluştur"
+      concepts:
+        edit: "Düzenle"
+        seed:
+          refresh: "Yenile"
+        delete: "Sil"
+        columns:
+          status: "Durum"
+          topics: "Konular"
+          posts: "Gönderi"
+        statuses:
+          all: "Tüm durumlar"
+          active: "Aktif"
+        form:
+          name: "Ad"
+          description: "Açıklama"
+          status: "Durum"
+        shared_topics_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
+        tagged_topics: "Etiketli konular"
+        topic_columns:
+          topic: "Konu"
+          primary: "Birincil"
+          relevance: "İlgi"
+        primary_badge: "Birincil"
       decision_models:
         no_preset: "Hiçbiri"
         display_name: "Ad"

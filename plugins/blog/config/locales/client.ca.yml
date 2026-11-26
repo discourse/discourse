@@ -15,6 +15,12 @@ ca:
         desktop: Escriptori
         mobile: Mòbil
         save: Desa
+        about_tab: Quant a
+        settings_tab: Configuració
+        theme_tab: Aparença
+        column_name: Nom
+        column_category: Categoria
+        column_status: Estat
         path_formats:
           custom: Personalitzat
         themes: Aparences

@@ -2374,7 +2374,7 @@ gl:
         back_description: "Volver á última publicación pendente de lectura"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progreso do tema
+        title: "progreso do tema"
         jump_prompt_of:
           one: "de %{count} publicación"
           other: "de %{count} publicacións"
@@ -2856,18 +2856,12 @@ gl:
       validations:
         icon_required: "Seleccionar unha icona."
       description: "Descrición"
-      icon: "Icona"
-      emoji: "Emoji"
       background_color: "Cor"
       color_validations:
         cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"
-        options:
-          icon: "Icona"
-          emoji: "Emoji"
-      color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
       no_description: "Engada unha descrición a esta categoría."
@@ -3336,6 +3330,7 @@ gl:
       share: "Compartir"
       dismiss: "Desbotar"
     mobile_tab_bar:
+      new_topic: "Novo tema"
       create: "Crear"
       more: "Máis"
       back: "Volver"

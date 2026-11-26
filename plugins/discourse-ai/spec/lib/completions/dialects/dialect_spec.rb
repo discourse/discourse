@@ -47,6 +47,22 @@ RSpec.describe DiscourseAi::Completions::Dialects::Dialect do
       ]
     end
 
+    it "keeps recovered tool evidence as text in text-only assistant formats" do
+      prompt = DiscourseAi::Completions::Prompt.new("System")
+      prompt.push(type: :user, content: "Read the record")
+      prompt.push(type: :tool, id: "lost", content: ["First part", { upload_id: 123 }, "Last part"])
+      text = DiscourseAi::Completions::Prompt.text_only(prompt.messages.last)
+
+      dialects = DiscourseAi::Completions::Dialects
+      expect(
+        dialects::Command.new(prompt, llm_model).translate[:chat_history].last[:message],
+      ).to eq(text)
+      expect(dialects::Nova.new(prompt, llm_model).translate.messages.last[:content]).to eq(
+        [{ text: text }],
+      )
+      expect(dialects::Ollama.new(prompt, llm_model).translate.last[:content]).to eq(text)
+    end
+
     it "injects done message when tool_choice is :none and last message follows tool pattern" do
       tool_call_prompt = { name: "echo", arguments: { text: "test message" } }
 

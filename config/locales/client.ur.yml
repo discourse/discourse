@@ -595,9 +595,6 @@ ur:
       fonts:
         base_font: "متن"
         heading_font: "سرخیاں"
-      logo:
-        description: "سائٹ کی ٹاپ نیویگیشن کے ساتھ ساتھ سائٹ کی ای میل اطلاعات کے اوپری حصے پر ظاہر ہوتا ہے۔"
-        help_text: "تجویز کردہ سائز 600 x 80 پکسلز ہے۔"
       homepage:
         topics: "موضوعات"
         categories: "زمرہ جات"
@@ -4244,7 +4241,7 @@ ur:
         back_description: "اپنے آخری بغیر پڑھے دھاگے پر واپس جائیں"
         replies_short: "%{current}/ %{total}"
       progress:
-        title: موضوع کی پیش رَفت
+        title: "موضوع کی پیش رَفت"
         jump_prompt: "پر جائیں۔۔۔"
         jump_prompt_of:
           one: "کا %{count} دھاگہ"
@@ -4906,6 +4903,8 @@ ur:
         tag_group: "ٹیگ گروپ"
       topic_featured_link_allowed: "اس زمرہ میں نمایاں رابطوں کو اجازت دیں"
       delete: "زمرہ مٹائیں"
+      empty_state:
+        edit_category: "زمرہ ترمیم کریں"
       create: "نیا زمرہ"
       create_with_type: "نیا %{typeName} زمرہ"
       create_long: "نیا زمرہ بنائیں"
@@ -4926,7 +4925,7 @@ ur:
       validations:
         icon_required: "ایک آئکن منتخب کریں."
       name: "زمرے کا نام"
-      untitled: "بلا عنوان زمرہ"
+      icon_search_placeholder: "تلاش۔۔۔"
       description: "تفصیل"
       logo: "زمرے کا لوگو"
       logo_dark: "ڈارک موڈ زمرہ کا لوگو"
@@ -4934,10 +4933,6 @@ ur:
       background_image: "زمرے کے پس منظر کی تصویر"
       background_image_dark: "زمرے کے پس منظر کی ڈارک تصویر"
       style: "ظرز"
-      icon: "آئیکن"
-      emoji: "اِیمَوجی"
-      select_emoji: "ایموجی منتخب کریں"
-      select_icon: "آئیکن منتخب کریں"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
       color_validations:
@@ -4945,20 +4940,13 @@ ur:
         incorrect_length: "#RRGGBB یا #RGB فارمیٹ میں ہونا ضروری ہے"
         non_hexdecimal: "صرف ہیکساڈیسیمل اعداد و شمار (0-9، A-F) ضروری ہیں"
       styles:
-        type: "ظرز"
         icon: "آئیکن"
         emoji: "اِیمَوجی"
         square: "مربع"
-        options:
-          square: "مربع"
-          icon: "آئیکن"
-          emoji: "اِیمَوجی"
       color_used: "رنگ جواستعمال میں"
-      predefined_colors: "پہلے سے طے شدہ رنگ کے اختیارات"
       name_placeholder: "ایک یا دو الفاظ تجویز کیے گئے"
       category_types: "زمرے کی اقسام"
       unknown_category_type: "نامعلوم زمرہ کی قسم"
-      color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
       list: "زمرہ جات کی فہرست دیکھیں"
@@ -5660,7 +5648,6 @@ ur:
         other: "مسودات (%{count})"
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
-    theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
     theme_preview_failed: "تھیم دکھانے میں ناکام رہا کیونکہ یہ موجود نہیں یا آپ کے پاس اس تک رسائی کی اجازت نہیں۔"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:

@@ -2205,6 +2205,8 @@ pt:
         title: "Sim"
       approve_post:
         title: "Sim"
+      deny_and_delete_post:
+        complete: "Publicação eliminada."
       approve_post_closed:
         title: "Sim"
         complete: "Mensagem aprovada."

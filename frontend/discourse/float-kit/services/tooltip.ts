@@ -102,9 +102,9 @@ export default class Tooltip extends Service {
 
     tooltip.expanded = false;
 
-    if (this.registeredTooltips.has(tooltip)) {
-      this.registeredTooltips.delete(tooltip);
-    }
+    // No `has()` guard: probing a tracked set for an absent key makes it hold a strong
+    // reference to that key, which would retain every instance closed while unregistered.
+    this.registeredTooltips.delete(tooltip);
 
     await new Promise((resolve) =>
       schedule("afterRender", resolve as () => void)

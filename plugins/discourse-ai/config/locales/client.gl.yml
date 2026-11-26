@@ -40,11 +40,20 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualizar"
+        columns:
+          user: "Usuario"
+          created: "Creado"
+          status: "Estado"
       copied: "Copiado"
       ai_decoded_transcript:
         type: "Tipo"
         error: "Erro"
         response: "Resposta"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplicar"
       discourse_workflows:
         ai_tool:
           list_item: "Elemento da listaxe"
@@ -224,6 +233,30 @@ gl:
         edit: "Editar"
         delete: "Eliminar"
         embedding: "Incorporando"
+      concepts:
+        edit: "Editar"
+        seed:
+          refresh: "Actualizar"
+        delete: "Eliminar"
+        columns:
+          status: "Estado"
+          topics: "Temas"
+          posts: "Publicacións"
+        statuses:
+          active: "Activo"
+        form:
+          name: "Nome"
+          description: "Descrición"
+          status: "Estado"
+        shared_topics_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
+        tagged_topics: "Temas etiquetados"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primario"
+          relevance: "Relevancia"
+        primary_badge: "Primario"
       decision_models:
         no_preset: "Ningunha"
         display_name: "Nome"

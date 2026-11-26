@@ -3234,6 +3234,8 @@ da:
       approve_post:
         title: "Ja"
         complete: "Indlæg godkendt."
+      deny_and_delete_post:
+        complete: "Indlæg slettet."
       approve_post_closed:
         title: "Ja"
         complete: "Indlæg godkendt."

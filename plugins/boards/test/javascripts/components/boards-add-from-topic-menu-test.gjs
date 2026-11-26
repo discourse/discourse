@@ -169,7 +169,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       findAll(".dropdown-menu__subheader").map((element) =>
         element.textContent.trim()
       ),
-      ["Roadmap", "Already added"]
+      ["Add to column", "Already added"]
     );
     const [availableColumn, alreadyAddedColumn] = findAll(
       ".discourse-boards-add-from-topic-column-menu__column"
@@ -207,7 +207,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       findAll(".dropdown-menu__subheader").map((element) =>
         element.textContent.trim()
       ),
-      ["Roadmap"],
+      ["Add to column"],
       "does not render an empty Already added section"
     );
   });

@@ -132,6 +132,20 @@ RSpec.describe AdminUserListSerializer do
     end
   end
 
+  describe "#interactive_bot" do
+    fab!(:bot) { Fabricate(:bot, interactive_bot: true) }
+
+    it "includes interactivity for bots" do
+      json = described_class.new(bot, scope: guardian, root: false).as_json
+
+      expect(json[:interactive_bot]).to eq(true)
+    end
+
+    it "omits interactivity for humans" do
+      expect(serializer.as_json).not_to have_key(:interactive_bot)
+    end
+  end
+
   describe "#can_be_deleted" do
     it "is not included if the include_can_be_deleted option is not present" do
       json = AdminUserListSerializer.new(user, scope: guardian, root: false).as_json

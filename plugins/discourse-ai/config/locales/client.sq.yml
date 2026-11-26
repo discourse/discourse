@@ -37,10 +37,19 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      review_bulk:
+        refresh: "Rifresko"
+        columns:
+          user: "User"
+          created: "Krijuar"
+          status: "Status"
       copied: "Kopjuar"
       ai_decoded_transcript:
         type: "Lloji"
         error: "Gabim"
+      post_image_captions:
+        image_descriptions:
+          apply: "Apliko"
       discourse_workflows:
         ai_tool:
           list_item: "Element liste"
@@ -215,6 +224,29 @@ sq:
         edit: "Redaktoni"
         delete: "Fshij"
         embedding: "Embedding"
+      concepts:
+        edit: "Redaktoni"
+        seed:
+          refresh: "Rifresko"
+        delete: "Fshij"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Postime"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Emri"
+          description: "Përshkrimi"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} temë"
+          other: "%{count} tema"
+        topic_columns:
+          topic: "Topic"
+          primary: "Kryesor"
+          relevance: "Rëndësia"
+        primary_badge: "Kryesor"
       decision_models:
         no_preset: "Asnjë"
         display_name: "Emri"

@@ -15,6 +15,12 @@ ro:
         desktop: Desktop
         mobile: Mobil
         save: Salvează
+        about_tab: Despre
+        settings_tab: Setări
+        theme_tab: Temă
+        column_name: Nume
+        column_category: Categorie
+        column_status: Stare
         path_formats:
           custom: Personalizat
         new_theme_short: Temă nouă

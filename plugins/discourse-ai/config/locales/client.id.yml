@@ -93,10 +93,19 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Segarkan"
+        columns:
+          user: "Pengguna"
+          created: "Dibuat"
+          status: "Status"
       copied: "Disalin"
       ai_decoded_transcript:
         type: "Tipe"
         error: "Gangguan"
+      post_image_captions:
+        image_descriptions:
+          apply: "menerapkan"
       discourse_workflows:
         classify:
           name: "Nama"
@@ -258,6 +267,28 @@ id:
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
+      concepts:
+        edit: "Ubah"
+        seed:
+          refresh: "Segarkan"
+        delete: "Hapus"
+        columns:
+          status: "Status"
+          topics: "Topik"
+          posts: "Pos"
+        statuses:
+          active: "Aktif"
+        form:
+          name: "Nama"
+          description: "Deskripsi"
+          status: "Status"
+        shared_topics_count:
+          other: "%{count} topik"
+        tagged_topics: "Topik yang diberi tag"
+        topic_columns:
+          topic: "Topik"
+          primary: "Utama"
+        primary_badge: "Utama"
       decision_models:
         no_preset: "Tidak ada"
         display_name: "Nama"

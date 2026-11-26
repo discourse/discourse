@@ -244,6 +244,15 @@ zh_TW:
               description: "允許為系統使用者創建的貼文添加標簽。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "重新整理"
+        columns:
+          user: "使用者"
+          reason: "檢舉為"
+          created: "建立時間"
+          status: "狀態"
+        status:
+          applying: "套用中…"
       copied: "已複製"
       view_raw: "檢視原始內容"
       view_decoded: "檢視解碼後內容"
@@ -259,11 +268,9 @@ zh_TW:
         error: "錯誤"
         response: "回應"
       post_image_captions:
-        edit: "編輯 AI 圖片說明"
-        title: "編輯 AI 圖片說明"
-        description: "說明"
-        save: "保存說明"
         saved: "AI 圖片說明已保存"
+        image_descriptions:
+          apply: "應用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能體"
@@ -1046,6 +1053,31 @@ zh_TW:
         mcp_server_oauth_client_secret: "MCP 服務器 OAuth 客戶端密鑰"
         modal:
           title: "創建新憑據"
+      concepts:
+        edit: "編輯"
+        seed:
+          refresh: "重新整理"
+        delete: "刪除"
+        columns:
+          status: "狀態"
+          topics: "主題"
+          posts: "新發表的貼文"
+        statuses:
+          all: "所有狀態"
+          active: "啟用"
+        form:
+          name: "名稱"
+          description: "描述"
+          aliases: "別名"
+          status: "狀態"
+        shared_topics_count:
+          other: "%{count} 個話題"
+        tagged_topics: "帶標簽的主題"
+        topic_columns:
+          topic: "主題"
+          primary: "主要"
+          relevance: "相關性"
+        primary_badge: "主要"
       decision_models:
         no_preset: "無"
         display_name: "名稱"

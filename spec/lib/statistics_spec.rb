@@ -3,33 +3,33 @@
 RSpec.describe Statistics do
   def create_page_views_and_user_visit_records(date, users)
     freeze_time(date - 50.minutes) do
-      2.times { ApplicationRequest.increment!(:page_view_anon_browser) }
-      ApplicationRequest.increment!(:page_view_logged_in_browser)
+      2.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
+      ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
     end
 
     freeze_time(date - 3.days) do
-      ApplicationRequest.increment!(:page_view_anon_browser)
-      5.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+      ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+      5.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
     end
 
     freeze_time(date - 6.days) do
-      3.times { ApplicationRequest.increment!(:page_view_anon_browser) }
-      4.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+      3.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
+      4.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
     end
 
     freeze_time(date - 8.days) do
-      ApplicationRequest.increment!(:page_view_anon_browser)
-      ApplicationRequest.increment!(:page_view_logged_in_browser)
+      ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+      ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
     end
 
     freeze_time(date - 15.days) do
-      4.times { ApplicationRequest.increment!(:page_view_anon_browser) }
-      3.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+      4.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
+      3.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
     end
 
     freeze_time(date - 31.days) do
-      ApplicationRequest.increment!(:page_view_anon_browser)
-      ApplicationRequest.increment!(:page_view_logged_in_browser)
+      ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+      ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
     end
 
     UserVisit.create!(user_id: users[0].id, visited_at: date - 50.minutes)
@@ -212,23 +212,6 @@ RSpec.describe Statistics do
 
     after { ApplicationRequest.disable }
 
-    it "estimates visitors from beacon counters once beacons record traffic" do
-      ApplicationRequest.create!(
-        date: date.to_date,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-      ApplicationRequest.create!(
-        date: date.to_date,
-        req_type: :page_view_logged_in_browser_beacon,
-        count: 2,
-      )
-
-      freeze_time(date) do
-        expect(described_class.visitors).to eq(last_day: 5, "7_days": 8, "30_days": 11)
-      end
-    end
-
     it "estimates the number of visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do
         visitors = described_class.visitors
@@ -300,23 +283,6 @@ RSpec.describe Statistics do
     end
 
     after { ApplicationRequest.disable }
-
-    it "estimates EU visitors from beacon counters once beacons record traffic" do
-      ApplicationRequest.create!(
-        date: date.to_date,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-      ApplicationRequest.create!(
-        date: date.to_date,
-        req_type: :page_view_logged_in_browser_beacon,
-        count: 2,
-      )
-
-      freeze_time(date) do
-        expect(described_class.eu_visitors).to eq(last_day: 5, "7_days": 4, "30_days": 6)
-      end
-    end
 
     it "estimates the number of EU visitors for each of the previous 1 day, 7 days and 30 days periods" do
       freeze_time(date) do

@@ -89,16 +89,22 @@ describe "Composer redesign" do
     end
 
     it "lets the user hide and show the toolbar on mobile", mobile: true do
-      visit("/new-topic")
+      SiteSetting.tagging_enabled = true
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
 
-      expect(composer).to be_opened
-      expect(composer).to have_visible_toolbar
+      resize_window(width: 375) do
+        visit("/new-message")
 
-      composer.toggle_toolbar
-      expect(composer).to have_no_visible_toolbar
+        expect(composer).to be_opened
+        expect(composer).to have_stacked_message_tag_picker
+        expect(composer).to have_visible_toolbar
 
-      composer.toggle_toolbar
-      expect(composer).to have_visible_toolbar
+        composer.toggle_toolbar
+        expect(composer).to have_no_visible_toolbar
+
+        composer.toggle_toolbar
+        expect(composer).to have_visible_toolbar
+      end
     end
   end
 end

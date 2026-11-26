@@ -102,6 +102,7 @@ zh_CN:
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
       post_not_found: "帖子未找到"
+      post_not_created: "无法发布该帖子"
       user_directory_disabled: "用户目录已禁用"
       filter_only_for_filtered_view: "筛选功能仅在已筛选视图中受支持。"
       filter_required: "筛选视图需要一个非空白的筛选器。"
@@ -160,6 +161,10 @@ zh_CN:
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
+      webhook_event_not_deliverable: "此事件无法重新发送。请使用 ping 工具发送 ping 事件。"
+      webhook_event_not_found: "此事件不属于此 Webhook 或已不再可用。"
+      webhook_not_found: "未找到 Webhook"
+      webhook_unknown_selection: "%{field} 中的一个或多个 ID 未知或不可用"
       upload_not_found: "未找到上传文件"
       upload_too_large: "上传文件过大"
       user_create_failed: "无法创建用户"
@@ -2866,7 +2871,6 @@ zh_CN:
     enable_composer_redesign: "启用重新设计的编辑器。"
     enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
-    review_queue_consistent_answers: "统一所有审核队列问题的表述，让“是”始终表示存在问题，并将所有类型的审核结果标记为“确认存在问题”或“未发现问题”。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
@@ -5445,7 +5449,6 @@ zh_CN:
       dracula: "Dracula"
       grey_amber: "灰琥珀色"
       latte: "棕色"
-      dark_rose: "黑红"
   wizard:
     title: "Discourse 设置"
     step:
@@ -5647,8 +5650,6 @@ zh_CN:
     actions:
       answer_yes:
         title: "是"
-        delete_post_title: "是的，删除帖子"
-        keep_post_deleted_title: "是，保持帖子已删除状态"
       answer_no:
         title: "否"
       agree:
@@ -5695,6 +5696,7 @@ zh_CN:
       delete_and_ignore_replies:
         title: "删除帖子与回复，并忽略举报"
         description: "删除帖子及其所有回复，忽略举报，并将其从队列中移除；如果是第一个帖子，同时删除话题"
+        confirm_title: "删除帖子与回复，并忽略举报?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       delete_and_agree:
@@ -5704,6 +5706,7 @@ zh_CN:
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
+        confirm_title: "删除帖子和回复?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       disagree_and_restore:
@@ -5749,6 +5752,10 @@ zh_CN:
         title: "是"
         action_title: "批准帖子"
         complete: "帖子已被批准。"
+      deny_and_delete_post:
+        complete: "帖子已被删除。"
+      deny_and_keep_deleted:
+        complete: "帖子保持删除状态。"
       approve_post_closed:
         title: "是"
         confirm: "此话题已被关闭。仍要创建帖子吗？"
@@ -5770,11 +5777,13 @@ zh_CN:
         delete:
           title: "删除用户"
           description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址"
+          confirm_title: "删除 @%{username}？"
           confirm: "您确定要删除 @%{username} 吗？"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
+          confirm_title: "删除并阻止 @%{username} ？"
           confirm: "您确定要删除并屏蔽 @%{username} 吗？"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:

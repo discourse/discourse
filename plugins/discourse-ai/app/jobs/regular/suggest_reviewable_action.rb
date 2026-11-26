@@ -2,6 +2,8 @@
 
 module Jobs
   class SuggestReviewableAction < ::Jobs::Base
+    FEATURE_NAME = "reviewable_action"
+
     def execute(args)
       unless SiteSetting.discourse_ai_enabled &&
                SiteSetting.ai_reviewable_action_suggestions_enabled
@@ -9,6 +11,7 @@ module Jobs
       end
       model = DecisionModel.find_by(id: SiteSetting.ai_reviewable_action_decision_model.presence)
       return unless model
+      return unless DecisionModelCreditAllocation.credits_available?(model, FEATURE_NAME)
 
       reviewable = Reviewable.find_by(id: args[:reviewable_id])
       return unless reviewable&.pending?
@@ -16,7 +19,10 @@ module Jobs
 
       user = Discourse.system_user
       actions = available_actions(reviewable, user)
-      return if actions.empty?
+      if actions.empty?
+        record_suggestion(reviewable, model:, action_name: nil, confidence: nil)
+        return
+      end
 
       question = {
         name: "action",
@@ -28,31 +34,32 @@ module Jobs
         model.decide(
           context_for(reviewable),
           questions: [question],
-          feature_name: "reviewable_action",
+          feature_name: FEATURE_NAME,
           user:,
         )
       answer = result["action"]
-      return if answer.refusal? || !actions.include?(answer.choice)
-      if answer.confidence.nil? ||
-           answer.confidence < SiteSetting.ai_reviewable_action_min_confidence
-        return
-      end
-
-      reviewable.with_lock do
-        next unless reviewable.pending?
-        next unless available_actions(reviewable, user).key?(answer.choice)
-
-        AiReviewableSuggestion.find_or_create_by!(reviewable_id: reviewable.id) do |suggestion|
-          suggestion.assign_attributes(
-            decision_model: model,
-            action_name: answer.choice,
-            confidence: answer.confidence,
-          )
+      action_name, confidence =
+        if !answer.refusal? && actions.include?(answer.choice) && !answer.confidence.nil?
+          [answer.choice, answer.confidence]
+        else
+          [nil, nil]
         end
-      end
+
+      record_suggestion(reviewable, model:, action_name:, confidence:, user:)
     end
 
     private
+
+    def record_suggestion(reviewable, model:, action_name:, confidence:, user: nil)
+      reviewable.with_lock do
+        next unless reviewable.pending?
+        next if action_name.present? && !available_actions(reviewable, user).key?(action_name)
+
+        AiReviewableSuggestion.find_or_create_by!(reviewable_id: reviewable.id) do |suggestion|
+          suggestion.assign_attributes(decision_model: model, action_name:, confidence:)
+        end
+      end
+    end
 
     def available_actions(reviewable, user)
       reviewable.actions_for(user.guardian).to_a.index_by(&:action_name)

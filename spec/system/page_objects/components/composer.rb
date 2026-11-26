@@ -136,6 +136,20 @@ module PageObjects
         page.has_css?("#{@composer_id} .title-and-category .title-input")
       end
 
+      def has_stacked_message_tag_picker?
+        page.has_css?("#{@composer_id} .title-and-category > .tags-input") do |picker|
+          picker.evaluate_script(<<~JS)
+            (() => {
+              const row = this.parentElement;
+              const title = row.querySelector(".title-input").getBoundingClientRect();
+              const picker = this.getBoundingClientRect();
+              const bounds = row.getBoundingClientRect();
+              return picker.top >= title.bottom && picker.left >= bounds.left && picker.right <= bounds.right;
+            })()
+          JS
+        end
+      end
+
       def toggle_toolbar
         find("#{@composer_id} .toggle-toolbar").click
         self

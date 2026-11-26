@@ -198,6 +198,13 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      review_bulk:
+        refresh: "רענון"
+        columns:
+          user: "משתמש"
+          reason: "מסומן בתור"
+          created: "נוצר"
+          status: "מצב"
       dsa_classification:
         suggest: "הצעה עם בינה מלאכותית"
       copied: "הועתק"
@@ -207,6 +214,9 @@ he:
         type: "סוג"
         error: "תקלה"
         response: "תשובה"
+      post_image_captions:
+        image_descriptions:
+          apply: "החלה"
       discourse_workflows:
         ai_agent:
           mode: "מצב"
@@ -675,6 +685,33 @@ he:
         delete: "מחיקה"
         embedding: "שילוב (embedding)"
         tool: "כלי"
+      concepts:
+        edit: "עריכה"
+        seed:
+          refresh: "רענון"
+        delete: "מחיקה"
+        columns:
+          status: "מצב"
+          topics: "נושאים"
+          posts: "פרסומים"
+        statuses:
+          all: "כל המצבים"
+          active: "פעיל"
+        form:
+          name: "שם"
+          description: "תיאור"
+          aliases: "כינויים"
+          status: "מצב"
+        shared_topics_count:
+          one: "נושא"
+          two: "שני נושאים"
+          other: "שני נושאים"
+        tagged_topics: "נושאים מתויגים"
+        topic_columns:
+          topic: "נושא"
+          primary: "ראשית"
+          relevance: "רלוונטיות"
+        primary_badge: "ראשית"
       decision_models:
         no_preset: "ללא"
         display_name: "שם"

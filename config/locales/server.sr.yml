@@ -770,6 +770,8 @@ sr:
       approve_post:
         title: "Da"
         complete: "Post odobren."
+      deny_and_delete_post:
+        complete: "Post izbrisan."
       approve_post_closed:
         title: "Da"
         complete: "Post odobren."

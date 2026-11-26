@@ -12,12 +12,49 @@ describe "Topic page" do
     <p id="test-last-cooked-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc convallis volutpat risus. Nulla ac faucibus quam, quis cursus lorem. Sed rutrum eget nunc sed accumsan. Vestibulum feugiat mi vitae turpis tempor dignissim.</p>
     HTML
 
-  it "allows TOC anchor navigation" do
-    visit("/t/#{topic.slug}/#{topic.id}")
+  context "with participants and a code block" do
+    fab!(:participant, :user)
 
-    find("#toc-h2-testing .anchor", visible: :all).click
+    let(:topic_map) { PageObjects::Components::TopicMap.new }
 
-    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
+    before do
+      Fabricate.times(2, :post, topic:, user: participant)
+      Fabricate(:post, topic:, raw: "```\necho \"hello world\"\n```")
+    end
+
+    it "decorates the topic and allows TOC anchor navigation" do
+      visit("/t/#{topic.slug}/#{topic.id}")
+
+      expect(page).to have_css(".codeblock-button-wrapper")
+
+      page.send_keys(:tab)
+      topic_map.focus_first_summary_avatar
+      expect(topic_map).to have_inset_summary_avatar_focus_outline
+
+      find("#toc-h2-testing .anchor", visible: :all).click
+
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}#toc-h2-testing}, url: true)
+    end
+  end
+
+  context "when printing with the sidebar enabled" do
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    it "uses the full content width and hides navigation" do
+      SiteSetting.navigation_menu = "sidebar"
+      sign_in(admin)
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_sidebar_navigation
+
+      page.driver.with_playwright_page do |browser_page|
+        browser_page.emulate_media(media: "print")
+
+        expect(topic_page).to have_full_width_main_content
+        expect(topic_page).to have_print_navigation_hidden
+      ensure
+        browser_page.emulate_media(media: "screen")
+      end
+    end
   end
 
   context "with links to an anchor in another topic" do
@@ -45,17 +82,14 @@ describe "Topic page" do
       expect(top).to be_between(0, height)
     end
 
-    it "keeps the anchor in the URL and scrolls to it" do
+    it "keeps the anchor in the URL and scrolls to it, including through the slugless redirect" do
       visit("/t/#{source_topic.slug}/#{source_topic.id}")
 
       find("a.slugged-link").click
 
       expect_anchor_in_view
-    end
 
-    it "keeps the anchor through the slugless topic redirect" do
-      visit("/t/#{source_topic.slug}/#{source_topic.id}")
-
+      page.go_back
       find("a.slugless-link").click
 
       expect_anchor_in_view
@@ -77,18 +111,28 @@ describe "Topic page" do
     end
   end
 
-  context "with a post containing a code block" do
-    before { Fabricate(:post, topic: topic, raw: <<~RAW) }
-      this a code block
+  context "with left-to-right content on a right-to-left site", mobile: true do
+    fab!(:ltr_post) { Fabricate(:post, topic:, raw: <<~RAW) }
+      > An English quote
+
       ```
       echo "hello world"
       ```
-      RAW
+    RAW
 
-    it "includes the copy button" do
-      visit("/t/#{topic.slug}/#{topic.id}")
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+    let(:ltr_content_post) { PageObjects::Components::Post.new(ltr_post.post_number) }
 
-      expect(page).to have_css(".codeblock-button-wrapper")
+    before do
+      SiteSetting.default_locale = "ar"
+      SiteSetting.support_mixed_text_direction = true
+    end
+
+    it "places the quote border and code copy padding on the content's own sides" do
+      topic_page.visit_topic(topic)
+
+      expect(ltr_content_post).to have_ltr_quote_border_in_rtl_interface
+      expect(ltr_content_post).to have_ltr_code_copy_padding_in_rtl_interface
     end
   end
 

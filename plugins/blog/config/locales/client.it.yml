@@ -16,6 +16,13 @@ it:
         desktop: Desktop
         mobile: Mobile
         save: Salva
+        about_tab: Informazioni su
+        blog_slug: Abbreviazione
+        settings_tab: Impostazioni
+        theme_tab: Tema
+        column_name: Nome
+        column_category: Categoria
+        column_status: Stato
         path_formats:
           custom: Personalizzato
         back_to_themes: Torna ai temi

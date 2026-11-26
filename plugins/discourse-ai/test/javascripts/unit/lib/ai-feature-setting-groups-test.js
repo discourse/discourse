@@ -118,7 +118,32 @@ module("Unit | Lib | ai-feature-setting-groups", function () {
   test("returns correct groups for inference", function (assert) {
     const groups = getSettingGroupsForFeature("inference");
 
-    assert.strictEqual(groups.length, 4, "inference should have 4 groups");
+    assert.strictEqual(groups.length, 5, "inference should have 5 groups");
+    assert.deepEqual(
+      groups.map((group) => group.key),
+      [
+        "settings",
+        "seeding_and_backfill",
+        "topic_criteria",
+        "post_criteria",
+        "agents",
+      ],
+      "includes settings, seeding_and_backfill, criteria, and agents groups"
+    );
+
+    const allSettings = groups.flatMap((group) => group.settings);
+    assert.true(
+      allSettings.includes("inferred_concepts_match_decision_model"),
+      "includes decision model setting"
+    );
+    assert.true(
+      allSettings.includes("inferred_concepts_seed_topics_limit"),
+      "includes seed topics limit setting"
+    );
+    assert.false(
+      allSettings.includes("inferred_concepts_background_match"),
+      "excludes removed background match setting"
+    );
   });
 
   test("returns empty array for unknown feature", function (assert) {

@@ -8,12 +8,12 @@ RSpec.describe Blog::TemplateVariables do
 
   describe "#to_h" do
     it "describes the site and an unfiltered listing" do
-      SiteSetting.blog_about = "We publish **field notes**."
+      update_default_blog(about: "We publish **field notes**.")
 
       variables = described_class.new(title: "Home", publications: [publication]).to_h
 
       expect(variables["site"]).to include(
-        "title" => SiteSetting.blog_title,
+        "title" => Blog::Instance.default_blog.name,
         "url" => "https://blog.example.com/",
         "archive_url" => "https://blog.example.com/archive",
         "feed_url" => "https://blog.example.com/feed.xml",
@@ -22,7 +22,7 @@ RSpec.describe Blog::TemplateVariables do
       expect(variables["site"]["about_html"]).to include("<strong>field notes</strong>")
       expect(variables["page"]).to include(
         "title" => "Home",
-        "heading" => SiteSetting.blog_title,
+        "heading" => Blog::Instance.default_blog.name,
         "eyebrow" => I18n.t("blog.from_the_blog"),
         "archive" => false,
         "previous_url" => nil,
@@ -67,7 +67,7 @@ RSpec.describe Blog::TemplateVariables do
     end
 
     it "describes the page with the blog description" do
-      SiteSetting.blog_description = "Notes & stories"
+      update_default_blog(description: "Notes & stories")
 
       variables = described_class.new(tag:)
 
@@ -90,7 +90,7 @@ RSpec.describe Blog::TemplateVariables do
     end
 
     it "leaves the description out when the blog has none" do
-      SiteSetting.blog_description = ""
+      update_default_blog(description: "")
 
       expect(described_class.new.to_h["page"]["description_html"]).to be_nil
     end

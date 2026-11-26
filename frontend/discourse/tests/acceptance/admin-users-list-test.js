@@ -31,6 +31,7 @@ acceptance("Admin - Users List", function (needs) {
           id: -100,
           username: "helper_bot",
           post_count: 12,
+          interactive_bot: true,
           bot_creator: {
             username: "sam",
             avatar_template:
@@ -342,6 +343,34 @@ acceptance("Admin - Users List", function (needs) {
     }
   });
 
+  test("shows whether each bot is interactive only on the Bots tab", async function (assert) {
+    await visit("/admin/users/list/bots");
+
+    assert
+      .dom(".admin-users-list__interactive-header")
+      .hasText(
+        i18n("admin.users.bots.interactive_column"),
+        "labels the column"
+      );
+    assert
+      .dom(
+        '[data-user-id="-100"] .admin-users-list__interactive .directory-table__value'
+      )
+      .hasText(i18n("yes_value"), "shows interactive bots as Yes");
+    assert
+      .dom(
+        '[data-user-id="-101"] .admin-users-list__interactive .directory-table__value'
+      )
+      .hasText(i18n("no_value"), "shows other bots as No");
+
+    await visit("/admin/users/list/active");
+    assert
+      .dom(
+        ".admin-users-list__interactive-header, .admin-users-list__interactive"
+      )
+      .doesNotExist("omits the column on other tabs");
+  });
+
   test("shows posts created on Bots and sorts activity columns in both directions", async function (assert) {
     await visit("/admin/users/list/bots");
 
@@ -404,8 +433,8 @@ acceptance("Admin - Users List", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(7,/,
-        "accounts for Source and the two hidden columns"
+        /repeat\(8,/,
+        "accounts for Source, Interactive and the two hidden columns"
       );
 
     assert
@@ -440,7 +469,7 @@ acceptance("Admin - Users List", function (needs) {
 
     assert
       .dom(".users-list")
-      .hasAttribute("style", /repeat\(8,/, "adds the approval grid column");
+      .hasAttribute("style", /repeat\(9,/, "adds the approval grid column");
 
     await visit("/admin/users/list/active");
 
@@ -729,7 +758,7 @@ acceptance("Admin - Users List - moderator bots", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(6,/,
+        /repeat\(7,/,
         "does not reserve a Source grid column"
       );
 
@@ -740,7 +769,7 @@ acceptance("Admin - Users List - moderator bots", function (needs) {
       .dom(".users-list")
       .hasAttribute(
         "style",
-        /repeat\(7,/,
+        /repeat\(8,/,
         "adds only the approval grid column"
       );
     assert

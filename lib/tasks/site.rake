@@ -50,11 +50,7 @@ class ZippedSiteStructure
       return @uploads[upload.id]
     end
 
-    if upload.local?
-      local_path = Discourse.store.path_for(upload)
-    else
-      local_path = Discourse.store.download(upload)
-    end
+    local_path = Discourse.store.download(upload)
 
     zip_path = File.join("uploads", File.basename(local_path))
     zip_path = get_unique_path(zip_path)

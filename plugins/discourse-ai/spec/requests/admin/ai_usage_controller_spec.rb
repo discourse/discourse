@@ -47,6 +47,120 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         )
       end
 
+      it "includes a workflow breakdown only for attributed requests in the selected range" do
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Summary demo")
+        other_workflow =
+          Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Rewrite demo")
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "workflow",
+          feature_context: {
+            workflow_id: workflow.id.to_s,
+          },
+          llm_model: llm_model,
+          request_tokens: 100,
+          response_tokens: 30,
+          cache_read_tokens: 10,
+          estimated_cost: 0.0123,
+        )
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "workflow",
+          feature_context: {
+            workflow_id: other_workflow.id.to_s,
+          },
+          llm_model: llm_model,
+          request_tokens: 50,
+          response_tokens: 20,
+          estimated_cost: 0.002,
+        )
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "workflow",
+          feature_context: {
+            workflow_id: workflow.id.to_s,
+          },
+          created_at: 40.days.ago,
+        )
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "ai_bot",
+          feature_context: {
+            workflow_id: workflow.id.to_s,
+          },
+        )
+
+        get usage_report_path
+
+        expect(response.parsed_body["workflows"]).to match_array(
+          [
+            {
+              "id" => workflow.id,
+              "name" => workflow.name,
+              "requests" => 1,
+              "tokens" => 140,
+              "estimated_cost" => 0.0123,
+            },
+            {
+              "id" => other_workflow.id,
+              "name" => other_workflow.name,
+              "requests" => 1,
+              "tokens" => 70,
+              "estimated_cost" => 0.002,
+            },
+          ],
+        )
+
+        get usage_report_path, params: { feature: "ai_bot" }
+        expect(response.parsed_body["workflows"]).to eq([])
+
+        get usage_report_path,
+            params: {
+              feature: "workflow",
+              model: llm_model.id,
+              start_date: 1.day.ago.to_date.to_s,
+            }
+        expect(response.parsed_body["workflows"].pluck("id")).to match_array(
+          [workflow.id, other_workflow.id],
+        )
+
+        get usage_report_path, params: { model: 999_999 }
+        expect(response.parsed_body["workflows"]).to eq([])
+
+        get usage_report_path,
+            params: {
+              start_date: 50.days.ago.to_date.to_s,
+              end_date: 35.days.ago.to_date.to_s,
+            }
+        expect(response.parsed_body["workflows"].pluck("id")).to eq([workflow.id])
+      end
+
+      it "includes attributed compression while respecting the selected feature" do
+        workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+        Fabricate(
+          :ai_api_audit_log,
+          feature_name: "context_compression",
+          feature_context: {
+            workflow_id: workflow.id.to_s,
+          },
+          request_tokens: 40,
+          response_tokens: 10,
+        )
+
+        get usage_report_path
+        expect(response.parsed_body["workflows"]).to include(
+          hash_including("id" => workflow.id, "requests" => 1, "tokens" => 50),
+        )
+
+        get usage_report_path, params: { feature: "workflow" }
+        expect(response.parsed_body["workflows"]).to eq([])
+
+        get usage_report_path, params: { feature: "context_compression" }
+        expect(response.parsed_body["workflows"]).to include(
+          hash_including("id" => workflow.id, "requests" => 1, "tokens" => 50),
+        )
+      end
+
       it "returns correct data structure" do
         get usage_report_path
 
@@ -57,6 +171,7 @@ RSpec.describe DiscourseAi::Admin::AiUsageController do
         expect(json).to have_key("features")
         expect(json).to have_key("models")
         expect(json).to have_key("summary")
+        expect(json["workflows"]).to eq([])
       end
 
       it "reports rolled-up token totals exceeding the 32-bit integer range" do

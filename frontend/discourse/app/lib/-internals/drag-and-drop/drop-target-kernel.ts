@@ -197,9 +197,9 @@ const POSITION_CLASSES = Object.freeze({
  * Resolves a fixed position, or the side of the element's midpoint the pointer
  * is on, mapped through the target's writing direction.
  */
-function resolveDropPosition(
+export function resolveDropPosition(
   element: Element,
-  input: Input,
+  input: Pick<Input, "clientX" | "clientY">,
   { position, axis = "vertical" }: DropPositionOptions,
   rtl: boolean
 ): DropPosition {
@@ -215,7 +215,10 @@ function resolveDropPosition(
 }
 
 /** Positional feedback that keeps at most one indicator class active. */
-function createPositionIndicator(element: Element, positionlessClass?: string) {
+export function createPositionIndicator(
+  element: Element,
+  positionlessClass?: string
+) {
   let activeClass: string | null = null;
 
   return {

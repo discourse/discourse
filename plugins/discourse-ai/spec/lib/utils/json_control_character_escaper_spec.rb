@@ -42,5 +42,23 @@ RSpec.describe DiscourseAi::Utils::JsonControlCharacterEscaper do
 
       expect(JSON.parse(escaped)).to eq("message" => "path\\\tend")
     end
+
+    it "retains string and escape state across control-free chunks" do
+      chunks = [
+        '{"text":"plain chunk with \\"escaped quotes\\" and split quote' + "\\",
+        '" still inside string, now closing","next":"line1',
+        "\nline2\"}",
+      ]
+      escaper = described_class.new
+
+      escaped = chunks.map { |chunk| escaper.escape(chunk) }
+
+      expect(escaped.first).not_to be_frozen
+      expect(JSON.parse(escaped.join)).to eq(
+        "text" =>
+          'plain chunk with "escaped quotes" and split quote" still inside string, now closing',
+        "next" => "line1\nline2",
+      )
+    end
   end
 end

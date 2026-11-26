@@ -17,6 +17,15 @@ de:
         desktop: Desktop
         mobile: Mobil
         save: Speichern
+        about_tab: Details
+        blog_slug: Sprechender Name für URL
+        settings_tab: Einstellungen
+        theme_tab: Theme
+        column_name: Name
+        column_category: Kategorie
+        column_status: Status
+        needs_attention: Aufmerksamkeit erforderlich
+        select_theme: Theme auswählen
         path_formats:
           custom: Benutzerdefiniert
         back_to_themes: Zurück zu Themes

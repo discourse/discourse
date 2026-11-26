@@ -3,12 +3,12 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 
 export default class AiSearchDiscoveries extends Component {
   static shouldRender(args, context) {
-    const { siteSettings, currentUser } = context;
+    const { siteSettings } = context;
     return (
       siteSettings.discourse_ai_enabled &&
       siteSettings.ai_discover_enabled &&
       siteSettings.ai_discover_agent &&
-      currentUser?.can_use_ai_discover_agent
+      args.model?.can_use_ai_discover_agent
     );
   }
 

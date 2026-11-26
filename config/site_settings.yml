@@ -378,7 +378,7 @@ basic:
   desktop_category_page_style:
     client: true
     enum: "CategoryPageStyle"
-    default: "categories_and_latest_topics"
+    default: "categories_boxes"
     area: "categories|interface"
   mobile_category_page_style:
     client: true

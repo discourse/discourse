@@ -165,6 +165,10 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
+    # Suspended accounts are refused in Auth::Result#to_client_hash, so nothing about the login
+    # may be committed for them
+    return if user.suspended?
+
     if user.has_any_second_factor_methods_enabled? &&
          SiteSetting.enforce_second_factor_on_external_auth
       @auth_result.omniauth_disallow_totp = true

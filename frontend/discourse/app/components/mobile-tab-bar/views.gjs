@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 
 /**
- * Renders its block in the mobile tab bar's strip above the tabs, where the
+ * Renders its block in the mobile tab bar's navigation strip, where the
  * current section keeps its views, as the topic lists keep Latest and Top.
  * Renders nothing while the bar is hidden or off, so callers check
  * `mobileTabBar.enabled` only to render their usual navigation instead.

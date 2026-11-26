@@ -17,6 +17,15 @@ ar:
         desktop: سطح المكتب
         mobile: الجوَّال
         save: حفظ
+        about_tab: نبذة
+        blog_slug: المسار
+        settings_tab: الإعدادان
+        theme_tab: السمة
+        column_name: الاسم
+        column_category: الفئة
+        column_status: الحالة
+        needs_attention: يحتاج إلى انتباه
+        select_theme: تحديد السمة
         path_formats:
           custom: مخصَّصة
         back_to_themes: الرجوع إلى قائمة السمات

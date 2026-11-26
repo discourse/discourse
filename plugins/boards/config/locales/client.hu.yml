@@ -49,6 +49,8 @@ hu:
           column_title: "Cím"
           icon: "Ikon"
           color: "Szín"
+          color_palette: "Színpaletta"
+          icon_search_placeholder: "Keresés…"
           tag: "Címke"
           move_to_assigned_unassign: "Elvétel"
           move_to_status_open: "Nyitott"

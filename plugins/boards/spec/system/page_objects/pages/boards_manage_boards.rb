@@ -101,13 +101,7 @@ module PageObjects
       end
 
       def fill_modal_column_title(title)
-        modal = column_settings_modal
-        if modal.body.has_css?(".discourse-boards-editable-title__input", wait: 0)
-          modal.body.find(".discourse-boards-editable-title__input").fill_in(with: title)
-        else
-          modal.body.find(".discourse-boards-editable-title__text").click
-          modal.body.find(".discourse-boards-editable-title__input").fill_in(with: title)
-        end
+        column_settings_form.field("title").fill_in(title)
         self
       end
 
@@ -122,7 +116,10 @@ module PageObjects
       end
 
       def fill_modal_column_color(color)
-        column_settings_form.field("color").fill_in(color)
+        column_settings_modal.body.find(".discourse-boards-column-style-trigger").click
+        find(".discourse-boards-column-style-content input[name='color']").fill_in(with: color)
+        column_settings_modal.body.find(".discourse-boards-column-style-trigger").click
+        self
       end
 
       def column_by_title(title)

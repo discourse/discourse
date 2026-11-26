@@ -412,6 +412,8 @@ de:
           text_color: "textfarbe"
         approve_label: "Ja"
         reject_label: "Nein"
+        category_access_levels:
+          readonly: "Ansehen"
         empty_value: "Leer"
         approved: "Genehmigt von @%{username}."
         rejected: "Abgelehnt von @%{username}."
@@ -459,8 +461,7 @@ de:
         discourse_helper:
           name: "Discourse-Helfer"
           description: "KI-Bot, der auf die Unterstützung bei Discourse-bezogenen Aufgaben spezialisiert ist"
-        discourse_admin_assistant:
-          name: "Discourse Admin-Assistent"
+        admin_assistant:
           description: "Ein KI-Bot, der Fragen auf Discourse beantwortet und Administratoren bei der Verwaltung der Website-Einstellungen unterstützt"
         web_artifact_creator:
           name: "Web-Artefakt-Ersteller"
@@ -626,6 +627,7 @@ de:
         edit_tag: "Schlagwort bearbeiten"
         create_category: "Kategorie erstellen"
         edit_category: "Kategorie bearbeiten"
+        delete_category: "Kategorie löschen"
         set_topic_timer: "Themen-Timer einstellen"
         set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
@@ -848,6 +850,12 @@ de:
       edit_category:
         errors:
           not_found: "Kategorie nicht gefunden."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorie nicht gefunden."
+      delete_category:
+        errors:
+          not_found: "Kategorie nicht gefunden."
       change_topic_category:
         errors:
           not_found: "Thema nicht gefunden."
@@ -950,6 +958,8 @@ de:
           secret: "Die Website-Einstellung '%{setting_name}' enthält einen geheimen Wert und kann hier nicht gelesen werden."
           themeable: "Die Website-Einstellung '%{setting_name}' erfordert ein Theme und kann hier nicht gelesen werden."
     appearance_authoring:
+      component_on: "An"
+      component_off: "Aus"
       default_theme: "Standard-Theme"
       colors:
         light:

@@ -89,6 +89,10 @@ pl_PL:
       no_pinned_messages: "Żadnych przypiętych wiadomości na tym kanale."
       pin_message: "Przypnij wiadomość"
       unpin_message: "Odepnij wiadomość"
+      broadcast_to_channel: "Wyślij do #%{channelName}"
+      remove_broadcast_from_channel: "Usuń z #%{channelName}"
+      broadcast_to_dm: "Wyślij również na główny DM"
+      remove_broadcast_from_dm: "Usuń z głównego DM"
       pinned: "Przypięty"
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
@@ -625,6 +629,8 @@ pl_PL:
         bold_text: "pogrubiony tekst"
         code_text: "kod"
         send: "Wyślij"
+        broadcast_label: "Wyślij również na #%{channelName}"
+        broadcast_label_dm: "Wyślij również na główny DM"
       quote:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
@@ -670,9 +676,6 @@ pl_PL:
         history_label: "Historia"
         members_label: "Członkowie"
       admin:
-        bot_discoverability:
-          label: "Pokaż na czacie"
-          description: "Umożliw użytkownikom znalezienie tego bota podczas rozpoczynania bezpośredniej wiadomości na czacie"
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"
@@ -831,6 +834,8 @@ pl_PL:
           many: "%{count} odpowiedzi"
           other: "%{count} odpowiedzi"
         label: Wątek
+        broadcast_also_sent_to: "Wysłano do"
+        broadcast_sent_from_thread: "Wysłano z wątku"
         close: "Zamknij wątek"
         original_message:
           started_by: "Rozpoczęty przez"

@@ -13,10 +13,6 @@ export default {
       return;
     }
 
-    if (!this.rewind.active) {
-      return;
-    }
-
     withPluginApi((api) => {
       api.addUserNavSidebarLink("preferences", {
         name: "preferences-rewind",
@@ -25,10 +21,9 @@ export default {
         icon: "repeat",
         // Same conditions as `RewindPreferencesNav` in the horizontal nav: the
         // site setting gates the tab so it does not vanish when a user turns
-        // rewind off for themselves, and `active` reflects the viewer's state.
-        displayed: ({ siteSettings, owner }) =>
-          siteSettings.discourse_rewind_enabled &&
-          !!owner.lookup("service:rewind")?.active,
+        // rewind off for themselves.
+        displayed: ({ siteSettings, user }) =>
+          siteSettings.discourse_rewind_enabled && !!user?.is_rewind_active,
       });
 
       if (this.rewind.enabled) {
@@ -37,15 +32,18 @@ export default {
           route: "userActivity.rewind",
           label: "discourse_rewind.title",
           icon: "repeat",
+          displayed: ({ user }) => !!user?.is_rewind_active,
         });
 
-        api.addQuickAccessProfileItem({
-          icon: "repeat",
-          href: "/my/activity/rewind",
-          content: i18n("discourse_rewind.profile_link", {
-            rewindYear: this.rewind.fetchRewindYear,
-          }),
-        });
+        if (this.rewind.active) {
+          api.addQuickAccessProfileItem({
+            icon: "repeat",
+            href: "/my/activity/rewind",
+            content: i18n("discourse_rewind.profile_link", {
+              rewindYear: this.rewind.fetchRewindYear,
+            }),
+          });
+        }
       }
     });
   },

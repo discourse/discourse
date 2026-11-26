@@ -3,49 +3,48 @@ import Component from "@ember/component";
 import { action, computed, set } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
-import { trustHTML } from "@ember/template";
-import { classNameBindings } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+} from "@ember-decorators/component";
+import { modifier } from "ember-modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
+@attributeBindings("ariaLabel:aria-label")
 @classNameBindings("docked")
 export default class TopicProgress extends Component {
   @service mobileTabBar;
 
   elementId = "topic-progress-wrapper";
   docked = false;
+  showNavigation = true;
 
   /** @type {number | null} */
   progressPosition = null;
 
-  #dockFrame = null;
-  #postsObserver = null;
+  /**
+   * Written straight to the element: the fill moves on every scroll event,
+   * and a tracked value would re-validate the whole page each time.
+   */
+  syncProgressWidth = modifier((element) => {
+    this.#progressElement = element;
+    this.#writeProgressWidth();
 
-  // Docked once the posts end above the navigation, which the tab bar holds
-  // in place over the page
-  #checkDocked = () => {
-    cancelAnimationFrame(this.#dockFrame);
-    this.#dockFrame = requestAnimationFrame(() => {
-      const navigation = this.element?.parentElement;
-      const posts = navigation?.parentElement;
-
-      if (!posts) {
-        return;
+    return () => {
+      if (this.#progressElement === element) {
+        this.#progressElement = null;
       }
+    };
+  });
 
-      const docked =
-        posts.getBoundingClientRect().bottom <
-        navigation.getBoundingClientRect().bottom - 1;
+  /** @type {HTMLElement | null} */
+  #progressElement = null;
 
-      if (docked !== this.docked) {
-        this.set("docked", docked);
-      }
-    });
-  };
-
-  /** @type {number | string | null} */
-  _streamPercentage = null;
+  /** @type {number | string} */
+  #streamPercentage = 0;
 
   @computed("topic.postStream")
   get postStream() {
@@ -91,9 +90,31 @@ export default class TopicProgress extends Component {
     );
   }
 
-  @computed("_streamPercentage")
-  get progressStyle() {
-    return `--progress-bg-width: ${this._streamPercentage || 0}%`;
+  // The tab bar's markup is limited to sites trying it, so themes styling the
+  // progress elsewhere keep working
+  get ariaRole() {
+    return this.mobileTabBar.enabled &&
+      this.showNavigation &&
+      (!this.hideProgress || this.showBackButton)
+      ? "navigation"
+      : null;
+  }
+
+  get ariaLabel() {
+    return this.ariaRole ? i18n("topic.progress.title") : null;
+  }
+
+  @computed("progressPosition", "postStream.filteredPostsCount")
+  get progressLabel() {
+    const total = this.postStream?.filteredPostsCount;
+    if (!this.progressPosition || !total) {
+      return i18n("topic.progress.title");
+    }
+
+    return i18n("topic.progress.position", {
+      current: this.progressPosition,
+      total,
+    });
   }
 
   didInsertElement() {
@@ -104,23 +125,10 @@ export default class TopicProgress extends Component {
     if (this.prevEvent) {
       scheduleOnce("afterRender", this, this._topicScrolled, this.prevEvent);
     }
-
-    // The tab bar hides the progress at the end of the topic
-    if (this.mobileTabBar.enabled) {
-      window.addEventListener("scroll", this.#checkDocked, { passive: true });
-
-      // More posts loading moves the end of the topic without a scroll
-      this.#postsObserver = new ResizeObserver(this.#checkDocked);
-      this.#postsObserver.observe(this.element.parentElement.parentElement);
-      this.#checkDocked();
-    }
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
-    window.removeEventListener("scroll", this.#checkDocked);
-    this.#postsObserver?.disconnect();
-    cancelAnimationFrame(this.#dockFrame);
     this.appEvents.off(
       "topic:current-post-scrolled",
       this,
@@ -129,7 +137,7 @@ export default class TopicProgress extends Component {
   }
 
   click(e) {
-    if (e.target.closest("#topic-progress")) {
+    if (!this.mobileTabBar.enabled && e.target.closest("#topic-progress")) {
       this.onExpandToggle?.();
     }
   }
@@ -139,19 +147,26 @@ export default class TopicProgress extends Component {
     this.jumpToPost(this.get("topic.last_read_post_number"));
   }
 
-  _topicScrolled(event) {
-    if (this.docked && !this.mobileTabBar.enabled) {
-      this.setProperties({
-        progressPosition: this.get("postStream.filteredPostsCount"),
-        _streamPercentage: 100,
-      });
-      return;
-    }
+  #writeProgressWidth() {
+    this.#progressElement?.style.setProperty(
+      "--progress-bg-width",
+      `${this.#streamPercentage}%`
+    );
+  }
 
-    this.setProperties({
-      progressPosition: event.postIndex,
-      _streamPercentage: (event.percent * 100).toFixed(2),
-    });
+  _topicScrolled(event) {
+    const docked = this.docked && !this.mobileTabBar.enabled;
+
+    this.set(
+      "progressPosition",
+      docked ? this.get("postStream.filteredPostsCount") : event.postIndex
+    );
+
+    const percentage = docked ? 100 : (event.percent * 100).toFixed(2);
+    if (this.#streamPercentage !== percentage) {
+      this.#streamPercentage = percentage;
+      this.#writeProgressWidth();
+    }
   }
 
   <template>
@@ -159,31 +174,67 @@ export default class TopicProgress extends Component {
       {{yield}}
     {{/unless}}
 
-    {{#if this.showBackButton}}
-      <div class="progress-back-container">
-        <DButton
-          class="btn-primary btn-small progress-back"
-          @action={{this.goBack}}
-          @icon="arrow-down"
-          @label="topic.timeline.back"
-        />
-      </div>
-    {{/if}}
+    {{#if this.mobileTabBar.enabled}}
+      {{#if this.showNavigation}}
+        {{#if this.showBackButton}}
+          <div class="progress-back-container">
+            <DButton
+              class={{dConcatClass
+                "btn-small progress-back"
+                (if this.footerSlot "btn-default" "btn-primary")
+              }}
+              @action={{this.goBack}}
+              @ariaLabel={{if this.footerSlot "topic.timeline.back"}}
+              @icon="arrow-down"
+              @label={{unless this.footerSlot "topic.timeline.back"}}
+              @title="topic.timeline.back_description"
+            />
+          </div>
+        {{/if}}
 
-    <nav
-      aria-label={{i18n "topic.progress.title"}}
-      class={{if this.hideProgress "hidden"}}
-      id="topic-progress"
-      style={{trustHTML this.progressStyle}}
-      title={{i18n "topic.progress.title"}}
-    >
-      <div class="nums">
-        <span>{{this.progressPosition}}</span>
-        <span>/</span>
-        <span>{{this.postStream.filteredPostsCount}}</span>
-      </div>
-      <div class="bg"></div>
-    </nav>
+        <DButton
+          class="btn-transparent {{if this.hideProgress 'hidden'}}"
+          id="topic-progress"
+          @action={{this.onExpandToggle}}
+          @title="topic.progress.title"
+          @translatedAriaLabel={{this.progressLabel}}
+          {{this.syncProgressWidth}}
+        >
+          <span class="nums">
+            <span>{{this.progressPosition}}</span>
+            <span>/</span>
+            <span>{{this.postStream.filteredPostsCount}}</span>
+          </span>
+          <span class="bg"></span>
+        </DButton>
+      {{/if}}
+    {{else}}
+      {{#if this.showBackButton}}
+        <div class="progress-back-container">
+          <DButton
+            class="btn-primary btn-small progress-back"
+            @action={{this.goBack}}
+            @icon="arrow-down"
+            @label="topic.timeline.back"
+          />
+        </div>
+      {{/if}}
+
+      <nav
+        aria-label={{i18n "topic.progress.title"}}
+        class={{if this.hideProgress "hidden"}}
+        id="topic-progress"
+        title={{i18n "topic.progress.title"}}
+        {{this.syncProgressWidth}}
+      >
+        <div class="nums">
+          <span>{{this.progressPosition}}</span>
+          <span>/</span>
+          <span>{{this.postStream.filteredPostsCount}}</span>
+        </div>
+        <div class="bg"></div>
+      </nav>
+    {{/if}}
 
     <PluginOutlet @connectorTagName="div" @name="after-topic-progress" />
   </template>

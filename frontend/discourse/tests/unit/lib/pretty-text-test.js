@@ -1634,6 +1634,39 @@ var bar = 'bar';
     );
   });
 
+  test("custom cook functions defer engine setup only when requested", function (assert) {
+    let setups = 0;
+    let cookAuxiliary;
+
+    const primary = DiscourseMarkdownIt.withFeatures([
+      {
+        id: "auxiliary-cook",
+        priority: 0,
+        setup(helper) {
+          helper.registerPlugin(() => setups++);
+          helper.buildCookFunction((_, generateCookFunction) => {
+            generateCookFunction({}, () => {});
+            assert.strictEqual(setups, 2, "the default builds a second engine");
+
+            generateCookFunction({ lazy: true }, (cook) => {
+              cookAuxiliary = cook;
+            });
+          });
+        },
+      },
+    ]).withOptions({ siteSettings: {} });
+
+    primary.cook("Ordinary Markdown");
+    assert.strictEqual(setups, 2, "the lazy engine is still uninitialized");
+    assert.strictEqual(
+      cookAuxiliary("**Hello**"),
+      "<p><strong>Hello</strong></p>",
+      "the lazy cook renders Markdown on first use"
+    );
+    cookAuxiliary("Again");
+    assert.strictEqual(setups, 3, "repeated cooks reuse the same engine");
+  });
+
   test("features override", function (assert) {
     assert.cookedOptions(
       ":grin: @sam",

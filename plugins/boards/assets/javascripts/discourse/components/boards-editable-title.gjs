@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { emojiUnescape } from "discourse/lib/text";
@@ -40,9 +41,14 @@ class BoardsEditableTitleUi extends Component {
 
   @action
   finishEditing() {
-    const value = this.args.field.value?.trim() ?? "";
-    this.args.field.set(value);
     this.isEditing = false;
+
+    const value = this.args.field.value?.trim() ?? "";
+    if (value !== this.args.field.value) {
+      // Blur can fire mid-render when a modal stacked above autofocuses, and
+      // writing to the form there trips the backtracking assertion.
+      next(() => this.args.field.set(value));
+    }
   }
 
   @action

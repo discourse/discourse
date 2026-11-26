@@ -4523,7 +4523,6 @@ ja:
       dracula: "Dracula"
       grey_amber: "グレーアンバー"
       latte: "ラテ"
-      dark_rose: "ダークローズ"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4734,6 +4733,7 @@ ja:
       delete_and_ignore_replies:
         title: "投稿と返信を削除して通報を無視する"
         description: "キューから削除すると、投稿とそのすべての返信を削除して通報を無視します。最初の投稿である場合、トピックも削除されます"
+        confirm_title: "投稿と返信を削除して通報を無視する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4743,6 +4743,7 @@ ja:
       delete_and_agree_replies:
         title: "投稿と返信を削除する"
         description: "通報に同意し、この投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
+        confirm_title: "投稿と返信を削除する?"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:
@@ -4777,6 +4778,8 @@ ja:
       approve_post:
         title: "はい"
         complete: "投稿は承認されました。"
+      deny_and_delete_post:
+        complete: "投稿は削除されました。"
       approve_post_closed:
         title: "はい"
         confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"

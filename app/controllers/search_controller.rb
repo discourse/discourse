@@ -58,12 +58,9 @@ class SearchController < ApplicationController
     search_args[:session_id] = pageview_session_id
     search_args[:user_id] = current_user.id if current_user.present?
 
-    if rate_limit_search
-      return(
-        render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
-               status: :too_many_requests
-      )
-    elsif site_overloaded?
+    return if search_rate_limited?
+
+    if site_overloaded?
       result =
         Search::GroupedSearchResults.new(
           type_filter: search_args[:type_filter],
@@ -117,12 +114,9 @@ class SearchController < ApplicationController
       :restrict_to_archetype
     ].present?
 
-    if rate_limit_search
-      return(
-        render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
-               status: :too_many_requests
-      )
-    elsif site_overloaded?
+    return if search_rate_limited?
+
+    if site_overloaded?
       result =
         GroupedSearchResults.new(
           type_filter: search_args[:type_filter],
@@ -191,45 +185,13 @@ class SearchController < ApplicationController
     end
   end
 
-  def rate_limit_search
-    begin
-      if current_user.present?
-        RateLimiter.new(
-          current_user,
-          "search-min",
-          SiteSetting.rate_limit_search_user,
-          1.minute,
-        ).performed!
-      else
-        RateLimiter.new(
-          nil,
-          "search-min-#{request.remote_ip}-per-sec",
-          SiteSetting.rate_limit_search_anon_user_per_second,
-          1.second,
-        ).performed!
-        RateLimiter.new(
-          nil,
-          "search-min-#{request.remote_ip}-per-min",
-          SiteSetting.rate_limit_search_anon_user_per_minute,
-          1.minute,
-        ).performed!
-        RateLimiter.new(
-          nil,
-          "search-min-anon-global-per-sec",
-          SiteSetting.rate_limit_search_anon_global_per_second,
-          1.second,
-        ).performed!
-        RateLimiter.new(
-          nil,
-          "search-min-anon-global-per-min",
-          SiteSetting.rate_limit_search_anon_global_per_minute,
-          1.minute,
-        ).performed!
-      end
-    rescue RateLimiter::LimitExceeded => e
-      return e
-    end
+  def search_rate_limited?
+    rate_limit_search!
     false
+  rescue RateLimiter::LimitExceeded
+    render json: failed_json.merge(message: I18n.t("rate_limiter.slow_down")),
+           status: :too_many_requests
+    true
   end
 
   def block_crawler

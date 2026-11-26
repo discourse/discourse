@@ -59,7 +59,7 @@ class EmbedController < ApplicationController
       @create_url = "#{Discourse.base_url}/new-topic?#{create_url_params.to_query}"
     end
 
-    topic_query = TopicQuery.new(current_user, list_options)
+    topic_query = build_topic_query(list_options)
     top_period = params[:top_period]
     begin
       TopTopic.validate_period(top_period)

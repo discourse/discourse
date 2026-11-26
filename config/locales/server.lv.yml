@@ -663,6 +663,8 @@ lv:
         title: "Jā"
       approve_post:
         title: "Jā"
+      deny_and_delete_post:
+        complete: "Ieraksts dzēsts."
       approve_post_closed:
         title: "Jā"
       reject_post_bundle:

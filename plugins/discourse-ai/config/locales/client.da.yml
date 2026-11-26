@@ -46,11 +46,21 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      review_bulk:
+        refresh: "Genindlæs"
+        columns:
+          user: "Bruger"
+          reason: "Anmeldt som"
+          created: "Oprettet"
+          status: "Status"
       copied: "Kopieret"
       ai_decoded_transcript:
         type: "Type"
         error: "Fejl"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Anvend"
       discourse_workflows:
         ai_agent:
           mode: "Tilstand"
@@ -255,6 +265,30 @@ da:
         edit: "Rediger"
         delete: "Slet"
         embedding: "Indlejring"
+      concepts:
+        edit: "Rediger"
+        seed:
+          refresh: "Genindlæs"
+        delete: "Slet"
+        columns:
+          status: "Status"
+          topics: "Emner"
+          posts: "Indlæg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Navn"
+          description: "Beskrivelse"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
+        tagged_topics: "Markerede emner"
+        topic_columns:
+          topic: "Emne"
+          primary: "Primær"
+          relevance: "Relevans"
+        primary_badge: "Primær"
       decision_models:
         no_preset: "Ingen"
         display_name: "Navn"

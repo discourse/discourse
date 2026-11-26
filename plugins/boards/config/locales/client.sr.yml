@@ -36,4 +36,5 @@ sr:
           column_title: "Naslov"
           icon: "Ikona"
           color: "Boja"
+          icon_search_placeholder: "Pretraži"
           move_to_status_open: "Otvori"

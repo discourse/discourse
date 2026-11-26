@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BrowserPageviewEvent < ActiveRecord::Base
-  self.ignored_columns += %i[source] # TODO(02-2027): Remove after the column is dropped
+  self.ignored_columns += %i[source] # TODO(05-2027): Remove once DropBrowserPageviewEventSource is promoted
 
   MAX_SESSION_ID_LENGTH = 32
   MAX_URL_LENGTH = 2000
@@ -65,6 +65,7 @@ class BrowserPageviewEvent < ActiveRecord::Base
         entries.each do |entry|
           payload = deserialize_payload(entry)
           # Old processes can leave piggyback events in Redis during deployment.
+          # TODO(05-2027): Remove
           queued_attributes << (payload[:source] == 1 ? nil : attributes_from_payload(payload))
           processed += 1
         rescue => e
@@ -277,7 +278,7 @@ end
 #  idx_bpe_browser_backfill                     (created_at DESC,id DESC) WHERE (browser IS NULL)
 #  idx_bpe_crawler_created_at_covering          (created_at) WHERE (score > 55)
 #  idx_bpe_created_at_id                        (created_at DESC,id DESC)
-#  idx_bpe_created_at_session_id                (created_at,session_id,source)
+#  idx_bpe_created_at_session                   (created_at,session_id)
 #  idx_bpe_ip_created_at                        (ip_address,created_at)
 #  idx_bpe_referrer_backfill                    (created_at DESC,id DESC) WHERE ((referrer IS NOT NULL) AND ((normalized_referrer_version IS NULL) OR (normalized_referrer_version < 1)))
 #  idx_bpe_session_created_at_covering          (session_id,created_at)

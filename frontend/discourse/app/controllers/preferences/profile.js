@@ -94,9 +94,9 @@ export default class ProfileController extends Controller {
       });
   }
 
-  @computed("currentUser.needs_required_fields_check")
+  @computed("model.isCurrent", "currentUser.needs_required_fields_check")
   get showEnforcedRequiredFieldsNotice() {
-    return this.currentUser?.needs_required_fields_check;
+    return this.model.isCurrent && this.currentUser.needs_required_fields_check;
   }
 
   @computed("model.user_option.default_calendar")
@@ -157,7 +157,11 @@ export default class ProfileController extends Controller {
       .save(this.saveAttrNames)
       .then(({ user }) => {
         this.model.set("bio_cooked", user.bio_cooked);
-        this.currentUser.set("needs_required_fields_check", false);
+
+        if (this.model.isCurrent) {
+          this.currentUser.set("needs_required_fields_check", false);
+        }
+
         this.set("saved", true);
 
         const destinationUrl = cookie("destination_url");

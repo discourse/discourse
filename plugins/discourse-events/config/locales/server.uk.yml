@@ -43,6 +43,23 @@ uk:
         ```
     discourse_post_event_reminder:
       title: "Нагадування про подію"
+      subject_template: ":date: %{subject}"
+      text_body_template: |
+        **%{date_range} (%{timezone})**
+
+        %{description}
+
+        %{location_section}
+
+        #### Гості
+
+        %{guests}
+
+        %{additional_guests}
+
+        %{join_event}
+
+        [Перейти до теми події](%{event_url})
   site_settings:
     map_events_to_color: "Призначити колір для кожного тегу або категорії."
     map_events_title: "Перезаписує «Події» у заголовку бічної панелі «Майбутні події» для кожної категорії."
@@ -56,6 +73,7 @@ uk:
     discourse_post_event_allowed_custom_fields_invalid: "Ці назви користувацьких полів недійсні: %{names}. Назви повинні починатися та закінчуватися літерою або цифрою та використовувати одинарні крапки, тире або символи підкреслення як роздільники (наприклад: dress_code, live-stream, q.and.a)."
     discourse_post_event_allowed_custom_fields_collision: "Ці назви користувацьких полів перетворюються на однакові назви після нормалізації крапок, тире та регістру літер: %{names}. Кожне користувацьке поле має бути унікальним."
     discourse_post_event_allowed_custom_fields_reserved: "Ці назви користувацьких полів зарезервовані вбудованими параметрами подій (наприклад, назва, URL-адреса, статус, місцезнаходження): %{names}. Будь ласка, виберіть інші назви."
+    discourse_post_event_max_attendees_limit: "Максимальна кількість учасників, яку може зареєструвати подія. Це також найвища максимальна кількість учасників, яку може встановити автор події, і вона застосовується до подій, для яких її не встановлено."
     discourse_post_event_edit_notifications_time_extension: "Збільшує (у хвилинах) період після завершення події, коли запрошені, які `беруть участь` ще отримують сповіщення про редагування в оригінальному дописі."
     holiday_calendar_topic_id: "Ідентифікатор теми календаря свят/відсутності персоналу."
     holiday_status_emoji: Визначає емодзі, які використовуються для статусу свята.
@@ -76,7 +94,9 @@ uk:
     event_participation_buttons: "Список кнопок участі у заходах, які можуть використовувати користувачі."
     sidebar_show_upcoming_events: "Показати посилання на майбутні події на бічній панелі в розділі «Більше»."
     calendar_first_day_of_week: "Встановіть перший день тижня для відображення календаря. Доступні варіанти: субота, неділя або понеділок."
+    calendar_upcoming_events_default_category: "Категорія для нових подій, створених з календаря майбутніх подій. Якщо порожня або учасник не може створювати теми в цій категорії, використовується {{setting:default_composer_category}}."
     enable_events_category_type_setup: "Вмикає опцію типу категорії «Події» під час налаштування створення категорії."
+    enable_improved_event_reminders: "Дозволяє учасникам вибирати, чи надсилатимуться нагадування про події як особисті повідомлення, сповіщення чи взагалі ні."
     livestream_allowed_hosts: "Ведучі, які можна використовувати для прямої трансляції подій."
     livestream_allowed_hosts_invalid: "Ці записи не є хостами: %{hosts}. Введіть хост окремо (наприклад, zoom.us), що дозволить усі URL-адреси на ньому та його піддоменах."
     livestream_zoom_enabled: "Увімкнути вбудовування відео Zoom для тем прямих трансляцій."
@@ -90,12 +110,21 @@ uk:
         before: "%{title} ось-ось розпочнеться"
         ongoing: "%{title} триває"
         after: "%{title} закінчилась"
+      location: |-
+        #### Розташування
+
+        %{location}
       guest: "- %{name}"
+      guest_with_role: "- %{name} (*%{role}*)"
+      roles:
+        organizer: "Органайзер"
+        host: "Хост"
       additional_guests:
         one: "  та %{count} інший"
         few: "  та %{count} інші"
         many: "  та %{count} інші"
         other: "  та %{count} інші"
+      join_event: "[Приєднатися до події](%{url})"
     category_type:
       default_calendar_view:
         label: "Стандартний вигляд календаря"
@@ -124,6 +153,14 @@ uk:
     livestream:
       chat:
         topic_reference_message: "Цей канал призначений для події [%{title}] (%{url}) - відвідайте тему для подробиць та відповідайте."
+        transcript_heading: "Розшифровка чату"
+        transcript_heading_dated: "Розшифровка чату для %{date}"
+        transcript_edit_reason: "Додано стенограму чату в прямому ефірі"
+        transcript_earlier_messages:
+          one: "%{count} попереднє повідомлення знаходиться в [каналі чату](%{url})."
+          few: "%{count} попередні повідомлення знаходиться в [каналі чату](%{url})."
+          many: "%{count} попередніх повідомлень знаходиться в [каналі чату](%{url})."
+          other: "%{count} попередніх повідомлень знаходиться в [каналі чату](%{url}).."
       zoom:
         frame_title: "Вебінар у Zoom"
         frame_join: "Приєднатися до вебінару"
@@ -136,6 +173,7 @@ uk:
     holiday_status:
       description: "У відпустці"
   discourse_post_event:
+    zoom_guest: "Гість"
     event_excerpt:
       summary: "📅 %{summary}"
       separator: " · "
@@ -143,6 +181,21 @@ uk:
       date_with_timezone: "%{date} (%{timezone})"
       date_format: "%B %-d, %Y"
       datetime_format: "%B %-d, %Y %-I:%M %p"
+    filter:
+      description:
+        event: "Показати теми з подією"
+        event_any_of: "Показати теми з подією в будь-якому з указаних станів (розділені комами)"
+        exclude_event: "Виключити теми з подією у вказаному стані"
+        event_any: "Показати теми з подією"
+        event_upcoming: "Показати теми з подією, яка ще не розпочалася"
+        event_ongoing: "Показати теми з подією, яка відбувається зараз"
+        event_past: "Показати теми з подією, яка завершилася"
+        event_after: "Показати теми з подією, що починається в день або після певної дати (РРРР-ММ-ДД)"
+        event_before: "Показати теми з подією, що починається раніше певної дати (РРРР-ММ-ДД)"
+        event_attending: "Показати теми з подією, на яку збирається користувач"
+        event_attending_me: "Події, на які ви збираєтеся"
+        order_event_start: "Сортувати за датою початку події (спочатку найновіші)"
+        order_event_start_asc: "Сортувати за датою початку події (спочатку найближчі)"
     notifications:
       before_event_reminder: "%{title} ось-ось розпочнеться."
       after_event_reminder: "%{title} закінчилась."
@@ -158,11 +211,28 @@ uk:
           raw_invitees_length: "Подія обмежена %{count} користувачами/групами."
           raw_invitees:
             only_group: "Подія приймає лише назви груп."
+          ends_at_before_starts_at: "Подія має закінчуватися після її початку."
           max_attendees_reached: "Цей захід повний."
           start_must_be_present_and_a_valid_date: "Подія вимагає дійсної дати початку."
           end_must_be_a_valid_date: "Дата закінчення повинна бути дійсною датою."
+          recurrence_until_must_be_a_valid_date: "Дата завершення повторення має бути дійсною."
+          invalid_max_attendees: "Максимальна кількість учасників має бути числом від 1 до %{maximum}."
+          invalid_reminders: "Недійсні нагадування: %{reminders}."
+          too_many_reminders:
+            notification:
+              one: "Подія може мати щонайбільше %{count} нагадування про сповіщення."
+              few: "Подія може мати щонайбільше %{count} нагадувань про сповіщення."
+              many: "Подія може мати щонайбільше %{count} нагадувань про сповіщення."
+              other: "Подія може мати щонайбільше %{count} нагадувань про сповіщення."
+            bump_topic:
+              one: "Подія може мати щонайбільше %{count} нагадування про підвищення теми."
+              few: "Подія може мати не більше ніж %{count} нагадувань про оновлення теми."
+              many: "Подія може мати не більше ніж %{count} нагадувань про оновлення теми."
+              other: "Подія може мати не більше ніж %{count} нагадувань про оновлення теми."
+          invalid_recurrence: "Повторення має бути одним із значень: %{recurrences}."
           invalid_timezone: "Часовий пояс не розпізнано."
           invalid_url: "URL-адреса має бути дійсною веб-адресою."
+          invalid_recording_url: "Запис має бути дійсною веб-адресою."
           acting_user_not_allowed_to_create_event: "Поточний користувач не може створювати події."
           acting_user_not_allowed_to_act_on_this_event: "Поточний користувач не має права впливати на цю подію."
           invalid_allowed_groups: "Неправильні дозволені групи."
@@ -176,6 +246,14 @@ uk:
           custom_field_is_invalid: "Користувацьке поле `%{field}` не допускається."
           name:
             length: "Довжина назви події має бути від %{minimum} до %{maximum} символів."
+          description:
+            length: "Опис події обмежено %{maximum} символами."
+          url:
+            length: "URL-адреса події обмежена кількістю символів %{maximum}."
+          location:
+            length: "Місце події обмежено %{maximum} символами."
+          recording:
+            length: "Посилання для запису події обмежене %{maximum} символами."
   discourse_push_notifications:
     popup:
       event_reminder: "Нагадування про подію"

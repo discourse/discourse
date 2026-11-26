@@ -36,11 +36,31 @@ const POST_COOKED_DECORATORS = [
 
 export const STREAM_HTML_DECORATOR = Symbol("stream-html-decorator");
 
+/**
+ * Per-decorator states of each shared `@decoratorState`. Both levels are weak
+ * so a decorator created per component instance is released with it, instead
+ * of living as long as the shared state.
+ */
+const DECORATOR_STATES = new WeakMap();
+
+function decoratorStatesFor(sharedState) {
+  if (!sharedState) {
+    return new WeakMap();
+  }
+
+  let states = DECORATOR_STATES.get(sharedState);
+  if (!states) {
+    states = new WeakMap();
+    DECORATOR_STATES.set(sharedState, states);
+  }
+  return states;
+}
+
 export default class PostCookedHtml extends Component {
   @service currentUser;
 
   #pendingDecoratorCleanup = [];
-  #decoratorState = this.args.decoratorState || trackedMap();
+  #decoratorStates = decoratorStatesFor(this.args.decoratorState);
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -97,12 +117,10 @@ export default class PostCookedHtml extends Component {
 
     decorators.forEach((decorator) => {
       try {
-        let decoratorState;
-        if (this.#decoratorState.has(decorator)) {
-          decoratorState = this.#decoratorState.get(decorator);
-        } else {
+        let decoratorState = this.#decoratorStates.get(decorator);
+        if (!decoratorState) {
           decoratorState = trackedMap();
-          this.#decoratorState.set(decorator, decoratorState);
+          this.#decoratorStates.set(decorator, decoratorState);
         }
 
         const owner = getOwner(this);

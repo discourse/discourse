@@ -17,6 +17,7 @@ module TestSetup
     SiteIconManager.disable
     WordWatcher.disable_cache
     UpcomingChanges.clear_caches!
+    EmbeddableHost.clear_cache!
 
     previous_default_theme_id = SiteSetting.default_theme_id
     SiteSetting.provider.clear

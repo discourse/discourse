@@ -32,6 +32,7 @@ module DiscourseAi
                     :server_owned_tools,
                     :runtime_tools,
                     :runtime_tools_llm_model_id,
+                    :admin_assistant_tool_groups,
                     :authorized_image_upload_ids,
                     :view_image_invocations,
                     :execution_context,

@@ -111,6 +111,70 @@ describe "Search" do
 
       expect(search_page).to have_warning_message
     end
+
+    it "lets the user type a full year into the posted date filter" do
+      visit("/search?expanded=true")
+
+      # Day and month share a value so the result is the same in every locale's segment order.
+      search_page.type_post_date("03032025")
+
+      expect(search_page).to have_post_date("2025-03-03")
+    end
+  end
+
+  describe "when going back to a non-Posts tab" do
+    before do
+      SearchIndexer.enable
+      SearchIndexer.index(topic, force: true)
+      SearchIndexer.index(topic2, force: true)
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
+    end
+
+    after { SearchIndexer.disable }
+
+    it "finds the category again when going back from a category result" do
+      category = Fabricate(:category, name: "Test Search")
+
+      visit("/search")
+      search_page.type_in_search("test")
+      search_page.click_search_button
+      expect(search_page).to have_search_result
+
+      search_page.click_search_type("categories_tags")
+      expect(page).to have_current_path("/search?q=test&search_type=categories_tags")
+      expect(search_page).to have_active_search_type("categories_tags")
+
+      search_page.click_category_result(category.name)
+      expect(page).to have_current_path(category.url)
+
+      page.go_back
+      expect(page).to have_current_path("/search?q=test&search_type=categories_tags")
+      expect(search_page).to have_active_search_type("categories_tags")
+      expect(search_page).to have_category_result(category.name)
+    end
+
+    it "finds the user again when going back to the Users tab" do
+      user = Fabricate(:user, username: "testsearcher")
+      sign_in(post.user)
+
+      visit("/search")
+      search_page.type_in_search("test")
+      search_page.click_search_button
+      expect(search_page).to have_search_result
+
+      search_page.click_search_type("users")
+      expect(page).to have_current_path("/search?q=test&search_type=users")
+      expect(search_page).to have_active_search_type("users")
+      expect(search_page).to have_user_result(user.username)
+
+      click_logo
+      expect(page).to have_current_path("/")
+
+      page.go_back
+      expect(page).to have_current_path("/search?q=test&search_type=users")
+      expect(search_page).to have_active_search_type("users")
+      expect(search_page).to have_user_result(user.username)
+    end
   end
 
   describe "when search menu on desktop" do

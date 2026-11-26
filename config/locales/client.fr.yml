@@ -563,9 +563,6 @@ fr:
       fonts:
         base_font: "Corps"
         heading_font: "Titres"
-      logo:
-        description: "Apparaît dans la barre de navigation supérieure du site, ainsi qu'en haut des notifications par e-mail du site."
-        help_text: "La taille recommandée est de 600 x 80 pixels."
       homepage:
         topics: "Sujets"
         categories: "Catégories"
@@ -1033,7 +1030,6 @@ fr:
         suspect_user: "Cet utilisateur est-il un spammeur ?"
         approve_post: "Approuver cette publication ?"
         approve_topic: "Approuver ce sujet ?"
-        something_wrong_with_post: "Y a-t-il un problème avec ce message ?"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
@@ -4272,7 +4268,7 @@ fr:
         back_description: "Revenir au dernier message non lu"
         replies_short: "%{current}/%{total}"
       progress:
-        title: progression dans le sujet
+        title: "progression dans le sujet"
         jump_prompt: "accéder à…"
         jump_prompt_of:
           one: "sur %{count} message"
@@ -4942,6 +4938,8 @@ fr:
         delete_title: "Supprimer cette catégorie"
         delete_description: "Une fois supprimée, cette catégorie et ses paramètres ne pourront pas être récupérés. Les sujets qu'elle contient devront être réattribués au préalable."
         delete_title_forbidden: "Impossible de supprimer cette catégorie"
+      empty_state:
+        edit_category: "Modifier la catégorie"
       create: "Nouvelle catégorie"
       create_with_type: "Nouvelle catégorie %{typeName}"
       create_long: "Créer une nouvelle catégorie"
@@ -4970,7 +4968,7 @@ fr:
         icon_required: "Sélectionner une icône."
         groups_required: "Sélectionnez au moins un groupe pour ce mode d'approbation."
       name: "Nom de la catégorie"
-      untitled: "Catégorie sans titre"
+      icon_search_placeholder: "Recherche…"
       description: "Description"
       logo: "Image du logo de la catégorie"
       logo_dark: "Image du logo de la catégorie en mode sombre"
@@ -4978,10 +4976,6 @@ fr:
       background_image: "Image d'arrière-plan de la catégorie"
       background_image_dark: "Image d'arrière-plan de la catégorie en mode sombre"
       style: "Style"
-      icon: "Icône"
-      emoji: "Émoji"
-      select_emoji: "Sélectionner un émoji"
-      select_icon: "Sélectionner une icône"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
       color_validations:
@@ -4989,22 +4983,15 @@ fr:
         incorrect_length: "doit correspondre au format #RRGGBB ou #RGB"
         non_hexdecimal: "ne doit contenir que des caractères hexadécimaux (0-9, AF)"
       styles:
-        type: "Style"
         icon: "Icône"
         emoji: "Émoji"
         square: "Carré"
-        options:
-          square: "Carré"
-          icon: "Icône"
-          emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
-      predefined_colors: "Options de couleurs prédéfinies"
       name_placeholder: "Un ou deux mots recommandés"
       category_types: "Types de catégories"
       unknown_category_type: "Type de catégorie inconnu"
       unknown_category_type_description: "Le type de catégorie « %{categoryType} » n'est pas pris en charge ou n'est pas activé dans cette catégorie."
       category_types_no_results: "Aucun autre type de catégorie n'a été trouvé"
-      color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Une erreur s'est produite lors de la suppression de la catégorie."
       list: "Répertorier les catégories"
@@ -5783,7 +5770,6 @@ fr:
         other: "Brouillons (%{count})"
     safe_mode:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
-    theme_preview_notice: "Vous prévisualisez actuellement un thème. Fermez cet onglet ou cette fenêtre de navigateur pour revenir à la configuration normale de votre site."
     theme_preview_failed: "Impossible de prévisualiser le thème, car il n'existe pas ou vous n'avez pas l'autorisation d'y accéder."
     image_removed: "(image supprimée)"
     pause_notifications:
@@ -8192,8 +8178,6 @@ fr:
           title: "Couleurs"
           edit: "Modifier"
           view: "Afficher"
-          set_default_light: "Définir comme palette claire sur le thème par défaut (%{theme})"
-          set_default_dark: "Définir comme palette sombre sur le thème par défaut (%{theme})"
           set_default_success: "%{schemeName} défini comme palette par défaut pour %{themeName}"
           saved_refreshing: "Enregistré ! Actualisation des couleurs..."
           from_theme: "Du thème : %{name}"

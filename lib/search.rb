@@ -165,18 +165,20 @@ class Search
       end
     end
 
-    data.gsub!(/\S+/) do |str|
-      if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
-        begin
-          uri = URI.parse(Regexp.last_match[1])
-          uri.query = nil
-          str = uri.to_s
-        rescue URI::Error
-          # don't fail if uri does not parse
+    if data.include?("http://") || data.include?("https://")
+      data.gsub!(URL_TOKEN_REGEXP) do |str|
+        if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
+          begin
+            uri = URI.parse(Regexp.last_match[1])
+            uri.query = nil
+            str = uri.to_s
+          rescue URI::Error
+            # don't fail if uri does not parse
+          end
         end
-      end
 
-      str
+        str
+      end
     end
 
     data
@@ -240,8 +242,14 @@ class Search
       end
   end
 
+  DIGITS_ONLY_REGEXP = /\A\d+\z/
+  NON_URI_CHARACTER_REGEXP = /[^\x00-\x7F]|\A[^?]*[^!-~]/
+  URL_TOKEN_REGEXP = %r{(?<=\A|\s)"?https?://\S+}
+  private_constant :DIGITS_ONLY_REGEXP, :NON_URI_CHARACTER_REGEXP, :URL_TOKEN_REGEXP
+
   def self.need_segmenting?(data)
-    return false if data.match?(/\A\d+\z/)
+    return false if DIGITS_ONLY_REGEXP.match?(data)
+    return true if NON_URI_CHARACTER_REGEXP.match?(data)
     !URI.parse(data).path.to_s.start_with?("/")
   rescue URI::InvalidURIError
     true

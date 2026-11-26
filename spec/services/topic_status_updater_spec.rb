@@ -308,6 +308,33 @@ RSpec.describe TopicStatusUpdater do
     end
   end
 
+  describe "relisting a topic" do
+    fab!(:first_post, :post)
+    fab!(:topic) { first_post.topic }
+    fab!(:topic_localization) { Fabricate(:topic_localization, topic: topic) }
+
+    before do
+      topic.update_columns(visible: false, excerpt: "A cached excerpt")
+      topic_localization.update_columns(excerpt: "A cached localized excerpt")
+    end
+
+    it "clears cached excerpts when the first post is hidden" do
+      first_post.update_columns(hidden: true)
+
+      described_class.new(topic, admin).update!("visible", true)
+
+      expect(topic.reload.excerpt).to be_nil
+      expect(topic_localization.reload.excerpt).to be_nil
+    end
+
+    it "keeps cached excerpts when the first post is visible" do
+      described_class.new(topic, admin).update!("visible", true)
+
+      expect(topic.reload.excerpt).to eq("A cached excerpt")
+      expect(topic_localization.reload.excerpt).to eq("A cached localized excerpt")
+    end
+  end
+
   describe "tracking state notifications on visibility change" do
     before { SiteSetting.experimental_topic_category_change_notification = true }
 

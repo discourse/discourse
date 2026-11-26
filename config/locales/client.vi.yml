@@ -445,9 +445,6 @@ vi:
       fonts:
         base_font: "Thân"
         heading_font: "Tiêu đề"
-      logo:
-        description: "Xuất hiện trên thanh điều hướng chính của trang web, cũng như ở phần đầu của thông báo email."
-        help_text: "Kích thước đề xuất là 600x80 pixel."
       homepage:
         topics: "Các chủ đề"
         categories: "Danh mục"
@@ -3586,7 +3583,7 @@ vi:
         back_description: "Quay lại tút chưa đọc cuối cùng của bạn"
         replies_short: "%{current} / %{total}"
       progress:
-        title: tiến trình của chủ đề
+        title: "tiến trình của chủ đề"
         jump_prompt: "Nhảy đến…"
         jump_prompt_of:
           other: "trong %{count} tút"
@@ -4197,7 +4194,7 @@ vi:
       validations:
         icon_required: "Chọn một biểu tượng."
       name: "Tên chuyên mục"
-      untitled: "Chuyên mục chưa đặt tên"
+      icon_search_placeholder: "Tìm kiếm…"
       description: "Mô tả"
       logo: "Logo của chuyên mục"
       logo_dark: "Logo Chế độ tối của chuyên mục"
@@ -4205,9 +4202,6 @@ vi:
       background_image: "Ảnh nền của chuyên mục"
       background_image_dark: "Ảnh nền Chế độ tối của chuyên mục"
       style: "Phong cách"
-      icon: "Biểu tượng"
-      emoji: "Emoji"
-      select_emoji: "Chọn biểu tượng cảm xúc"
       background_color: "Màu sắc"
       foreground_color: "Màu chữ"
       color_validations:
@@ -4215,18 +4209,11 @@ vi:
         incorrect_length: "Phải tuân thủ định dạng #RRGGBB hoặc #RGB"
         non_hexdecimal: "Chỉ được chứa các ký tự (0-9, A-F)"
       styles:
-        type: "Phong cách"
         icon: "Biểu tượng"
         emoji: "Emoji"
         square: "Vuông"
-        options:
-          square: "Vuông"
-          icon: "Biểu tượng"
-          emoji: "Emoji"
       color_used: "Màu đang được sử dụng"
-      predefined_colors: "Các tùy chọn màu sắc có sẵn"
       name_placeholder: "Một hoặc hai từ được đề xuất"
-      color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
       delete_error: "Có lỗi xảy ra khi xóa chuyên mục này"
       list: "Danh sách chuyên mục"
@@ -4868,7 +4855,6 @@ vi:
         other: "Bản nháp (%{count})"
     safe_mode:
       enabled: "Chế độ an toàn được bật, để thoát khỏi chế độ an toàn, hãy đóng cửa sổ trình duyệt này"
-    theme_preview_notice: "Bạn hiện đang xem trước một theme. Hãy đóng tab hoặc cửa sổ trình duyệt này để quay lại cấu hình trang web bình thường của bạn."
     theme_preview_failed: "Không thể xem trước theme vì theme đó không tồn tại hoặc bạn không có quyền truy cập."
     image_removed: "(hình ảnh đã bị xóa)"
     pause_notifications:
@@ -6984,8 +6970,6 @@ vi:
           title: "Màu sắc"
           edit: "Sửa"
           view: "Xem"
-          set_default_light: "Đặt làm bảng màu sáng trên chủ đề mặc định (%{theme})"
-          set_default_dark: "Đặt bảng màu tối làm mặc định cho chủ đề (%{theme})"
           set_default_success: "%{schemeName} đặt làm bảng mặc định cho %{themeName}"
           saved_refreshing: "Đã lưu! Đang làm mới màu..."
           from_theme: "Từ theme: %{name}"

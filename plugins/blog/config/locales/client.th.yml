@@ -12,6 +12,12 @@ th:
         preview_archive: คลัง
         mobile: โทรศัพท์
         save: บันทึก
+        about_tab: เกี่ยวกับ
+        settings_tab: การตั้งค่า
+        theme_tab: ธีม
+        column_name: ชื่อ
+        column_category: หมวดหมู่
+        column_status: สถานะ
         themes: ธีม
         theme_name: ชื่อธีม
         edit: แก้ไข

@@ -174,10 +174,7 @@ export default class NestedPost extends Component {
     if (!this.isRoot || !this.args.getCloakingData) {
       return { active: false };
     }
-    return this.args.getCloakingData(this.args.post, {
-      above: this.args.cloakAbove,
-      below: this.args.cloakBelow,
-    });
+    return this.args.getCloakingData(this.args.post);
   }
 
   get avatarColorStyle() {

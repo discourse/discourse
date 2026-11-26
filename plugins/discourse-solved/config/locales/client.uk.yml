@@ -94,8 +94,18 @@ uk:
                 tooltip: "Тенденція середнього часу відповіді."
   js:
     discourse_workflows:
+      node_unavailable:
+        requires_solved: "Потрібно, щоб плагін Solved був увімкнений"
+      nodes:
+        "trigger:solution_changed": "Рішення змінено"
+      node_descriptions:
+        "trigger:solution_changed": "Спрацьовує, коли відповідь прийнято як рішення або її прийняття скасовується."
       solution_changed:
+        changes: "Зміни"
+        changes_description: "Залиште поле порожнім, щоб узгодити будь-які зміни."
+        changes_accepted: "Схвалено"
         changes_removed: "Вилучені"
+        changes_placeholder: "Будь-які зміни"
         tag_names: "Теґи"
         tag_names_description: "Активувати лише для тем, які мають хоча б один із цих тегів"
     notifications:

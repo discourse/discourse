@@ -721,7 +721,6 @@ sv:
         is_this_post: "Är detta %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "eller"
         something_else_wrong: "Är det något fel med denna %{reviewable_type}?"
-        something_wrong_with_post: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
@@ -3045,7 +3044,7 @@ sv:
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
         replies_short: "%{current} / %{total}"
       progress:
-        title: ämnesförlopp
+        title: "ämnesförlopp"
         jump_prompt: "hoppa till…"
         jump_prompt_of:
           one: "av %{count} inlägg"
@@ -3598,19 +3597,14 @@ sv:
       save_error: Ett fel inträffade då kategorin skulle sparas.
       validations:
         icon_required: "Välj en ikon."
+      icon_search_placeholder: "Sök…"
       description: "Beskrivning"
-      icon: "Ikon"
-      emoji: "Emoji"
       background_color: "Färg"
       color_validations:
         cant_be_empty: "kan inte vara tomt"
       styles:
         icon: "Ikon"
         emoji: "Emoji"
-        options:
-          icon: "Ikon"
-          emoji: "Emoji"
-      color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
       no_description: "Lägg till en beskrivning för den här kategorin."
@@ -4165,6 +4159,7 @@ sv:
       share: "Dela"
       dismiss: "Avfärda"
     mobile_tab_bar:
+      new_topic: "Nytt ämne"
       create: "Skapa"
       more: "Mer"
       back: "Tillbaka"

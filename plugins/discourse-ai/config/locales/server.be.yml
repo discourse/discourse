@@ -41,6 +41,8 @@ be:
           color: "колер"
         approve_label: "Так"
         reject_label: "Не"
+        category_access_levels:
+          readonly: "Праглядаць"
       tool_summary:
         search: "Пошук"
       tool_help:
@@ -59,6 +61,12 @@ be:
         errors:
           not_found: "Тэма не знойдзена."
       edit_category:
+        errors:
+          not_found: "Катэгорыя не знойдзена."
+      set_category_permissions:
+        errors:
+          not_found: "Катэгорыя не знойдзена."
+      delete_category:
         errors:
           not_found: "Катэгорыя не знойдзена."
       change_topic_category:

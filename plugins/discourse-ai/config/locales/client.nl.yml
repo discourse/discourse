@@ -239,6 +239,13 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "Vernieuwen"
+        columns:
+          user: "Gebruiker"
+          reason: "Gemarkeerd als"
+          created: "Gemaakt"
+          status: "Status"
       dsa_classification:
         suggest: "Voorstellen met AI"
       copied: "Gekopieerd"
@@ -249,6 +256,9 @@ nl:
         type: "Type"
         error: "Fout"
         response: "Antwoord"
+      post_image_captions:
+        image_descriptions:
+          apply: "Toepassen"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -871,6 +881,31 @@ nl:
         mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
         modal:
           title: "Nieuwe aanmeldingsgegevens maken"
+      concepts:
+        edit: "Bewerken"
+        seed:
+          refresh: "Vernieuwen"
+        delete: "Verwijderen"
+        columns:
+          status: "Status"
+          topics: "Topics"
+          posts: "Berichten"
+        statuses:
+          all: "Alle statussen"
+          active: "Actief"
+        form:
+          name: "Naam"
+          description: "Beschrijving"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
+        tagged_topics: "Topics met tags"
+        topic_columns:
+          topic: "Topic"
+          primary: "Primair"
+          relevance: "Relevantie"
+        primary_badge: "Primair"
       decision_models:
         no_preset: "Geen"
         display_name: "Naam"

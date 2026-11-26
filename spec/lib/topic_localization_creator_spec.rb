@@ -78,6 +78,15 @@ describe TopicLocalizationCreator do
       expect(localization.excerpt).to eq("これは投稿の内容です。")
     end
 
+    it "sets excerpt to nil when the first post is hidden" do
+      Fabricate(:post_localization, post: first_post, locale: locale)
+      first_post.update!(hidden: true)
+
+      localization = described_class.create(topic:, locale:, title:, user:)
+
+      expect(localization.excerpt).to be_nil
+    end
+
     it "sets excerpt to nil when no post localization exists" do
       localization = described_class.create(topic:, locale:, title:, user:)
 

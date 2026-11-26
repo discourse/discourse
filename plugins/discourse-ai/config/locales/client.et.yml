@@ -38,11 +38,20 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      review_bulk:
+        refresh: "Värskenda"
+        columns:
+          user: "Kasutaja"
+          created: "Loodud"
+          status: "Staatus"
       copied: "Kopeeritud"
       ai_decoded_transcript:
         type: "Tüüp"
         error: "Viga"
         response: "Vastus"
+      post_image_captions:
+        image_descriptions:
+          apply: "Rakenda"
       discourse_workflows:
         ai_tool:
           list_item: "Loendi element"
@@ -212,6 +221,28 @@ et:
         edit: "Muuda"
         delete: "Kustuta"
         embedding: "Sängitamine"
+      concepts:
+        edit: "Muuda"
+        seed:
+          refresh: "Värskenda"
+        delete: "Kustuta"
+        columns:
+          status: "Staatus"
+          topics: "Teemasid"
+          posts: "Postitust"
+        statuses:
+          active: "Aktiivne"
+        form:
+          name: "Nimi"
+          description: "Kirjeldus"
+          status: "Staatus"
+        shared_topics_count:
+          one: "%{count} teema"
+          other: "%{count} teemat"
+        tagged_topics: "Sildistatud teemad"
+        topic_columns:
+          topic: "Teema"
+          relevance: "Asjakohasus"
       decision_models:
         no_preset: "Pole"
         display_name: "Nimi"

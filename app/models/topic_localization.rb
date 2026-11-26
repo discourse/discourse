@@ -12,7 +12,7 @@ class TopicLocalization < ActiveRecord::Base
   validates :locale, uniqueness: { scope: :topic_id }
 
   def update_excerpt(cooked: nil)
-    return if cooked.blank?
+    return if cooked.blank? || topic.first_post_hidden?
 
     excerpt =
       Post.excerpt(

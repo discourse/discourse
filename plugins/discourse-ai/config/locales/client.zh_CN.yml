@@ -310,6 +310,15 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "刷新"
+        columns:
+          user: "用户"
+          reason: "被标记为"
+          created: "创建时间"
+          status: "状态"
+        status:
+          applying: "应用…"
       dsa_classification:
         suggest: "通过 AI 提出建议"
         suggested_by_ai: "由 AI 建议"
@@ -330,11 +339,9 @@ zh_CN:
         error: "错误"
         response: "回答"
       post_image_captions:
-        edit: "编辑 AI 图片说明"
-        title: "编辑 AI 图片说明"
-        description: "说明"
-        save: "保存说明"
         saved: "AI 图片说明已保存"
+        image_descriptions:
+          apply: "应用"
       discourse_workflows:
         ai_agent:
           agent_id: "智能体"
@@ -1193,6 +1200,34 @@ zh_CN:
         decision_model: "决策模型"
         modal:
           title: "创建新凭据"
+      concepts:
+        edit: "编辑"
+        seed:
+          refresh: "刷新"
+        load_more: "加载更多"
+        delete: "删除"
+        parent_label: "父级： %{name}"
+        columns:
+          status: "状态"
+          topics: "话题"
+          posts: "帖子"
+        statuses:
+          all: "所有状态"
+          active: "有效"
+        form:
+          name: "名称"
+          description: "描述"
+          aliases: "别名"
+          status: "状态"
+        shared_topics_count:
+          other: "%{count} 个话题"
+        tagged_topics: "带标签的话题"
+        topic_columns:
+          topic: "话题"
+          primary: "主要"
+          relevance: "相关性"
+        primary_badge: "主要"
+        secondary_badge: "次要"
       decision_models:
         seeded_description: "预配置模型"
         manage: "管理决策模型"

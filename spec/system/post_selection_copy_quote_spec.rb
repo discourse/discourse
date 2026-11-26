@@ -11,6 +11,10 @@ describe "Post selection | Copy quote" do
   fab!(:current_user, :admin)
 
   def select_list_items(post_selector, start_li_index, end_li_index)
+    # Copying closes the old toolbar asynchronously. Wait for it to leave
+    # before selecting another range so we click the new selection's button.
+    expect(page).to have_no_css(topic_page.copy_quote_button_selector, visible: :all)
+
     js = <<-JS
       const cooked = document.querySelector(arguments[0]);
       const listItems = cooked.querySelectorAll('li');

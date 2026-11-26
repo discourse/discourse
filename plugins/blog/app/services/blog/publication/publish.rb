@@ -14,6 +14,7 @@ class Blog::Publication::Publish
   model :publication
   policy :can_publish_article
   policy :blog_ready, class_name: Blog::Policy::Ready
+  policy :blog_published, class_name: Blog::Publication::Policy::BlogPublished
 
   only_if(:releasing_current_draft) do
     step :submit_current_draft

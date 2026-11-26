@@ -1,3 +1,4 @@
+@use "lib/viewport";
 @import "colors";
 @import "typography";
 
@@ -1232,6 +1233,25 @@
   &__decision {
     color: var(--primary-high);
     font-size: var(--font-down-1);
+  }
+}
+
+.styleguide-horizontal-form {
+  .form-kit__section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  &__settings {
+    margin-top: var(--space-8);
+
+    @include viewport.until(sm) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
   }
 }
 

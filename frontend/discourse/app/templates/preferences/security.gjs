@@ -1,6 +1,7 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
+import AccessNotice from "discourse/components/access-notice";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserApiKeys from "discourse/components/user-preferences/user-api-keys";
@@ -66,26 +67,27 @@ export default <template>
       <UserPasskeys @model={{@model}} />
     {{/if}}
 
-    {{#if @controller.isCurrentUser}}
-      <div
-        class="control-group pref-second-factor"
-        data-setting-name="user-second-factor"
-      >
-        <label class="control-label">{{i18n "user.second_factor.title"}}</label>
-        <div class="instructions">
-          {{i18n "user.second_factor.short_description"}}
-        </div>
+    <div
+      class="control-group pref-second-factor"
+      data-setting-name="user-second-factor"
+    >
+      <label class="control-label">{{i18n "user.second_factor.title"}}</label>
+      <div class="instructions">
+        {{i18n "user.second_factor.short_description"}}
+      </div>
 
+      <AccessNotice @kind="self" @user={{@model}} as |disabled|>
         <div class="controls pref-second-factor">
           <DButton
             class="btn-default btn-second-factor"
             @action={{@controller.manage2FA}}
+            @disabled={{disabled}}
             @icon="lock"
             @label="user.second_factor.enable"
           />
         </div>
-      </div>
-    {{/if}}
+      </AccessNotice>
+    </div>
   {{/if}}
 
   <PluginOutlet @name="user-preferences-security-after-password" />
@@ -105,6 +107,7 @@ export default <template>
             <div class="auth-token-icon">{{dIcon token.icon}}</div>
             {{#unless token.is_active}}
               <AuthTokenDropdown
+                @isCurrentUser={{@model.isCurrent}}
                 @revokeAuthToken={{@controller.revokeAuthToken}}
                 @showToken={{@controller.showToken}}
                 @token={{token}}

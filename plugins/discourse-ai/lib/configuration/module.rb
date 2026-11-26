@@ -86,6 +86,8 @@ module DiscourseAi
               INFERENCE,
               enabled_by_setting: "inferred_concepts_enabled",
               features: DiscourseAi::Configuration::Feature.inference_features,
+              extra_check: -> { DiscourseAi::Embeddings.enabled? },
+              setup_check: -> { DiscourseAi::Embeddings.enabled? },
               # Nothing displays the concepts yet, so admins would pay for output they cannot see.
               visible: false,
             ),

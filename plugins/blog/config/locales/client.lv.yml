@@ -13,6 +13,12 @@ lv:
         desktop: Personālais dators
         mobile: Mobilais
         save: Saglabāt
+        about_tab: Par
+        settings_tab: Iestatījumi
+        theme_tab: Tēma
+        column_name: Vārds
+        column_category: Sadaļa
+        column_status: Statuss
         themes: Dizaini
         edit: Labot
         preview: Priekšskatījums

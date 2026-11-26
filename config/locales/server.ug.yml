@@ -4466,7 +4466,6 @@ ug:
       dracula: "دراكۇلا"
       grey_amber: "ساغۇچ كۈلرەڭ"
       latte: "سۇس قوڭۇر"
-      dark_rose: "توق قىزىل"
   wizard:
     title: "Discourse تەڭشەك"
     step:
@@ -4672,6 +4671,7 @@ ug:
       delete_and_agree_replies:
         title: "يازما ۋە جاۋابنى ئۆچۈر"
         description: "پاش قىلىشقا قوشۇلۇپ بۇ يازما ۋە ئۇنىڭ جاۋابلىرىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا تېمىنىمۇ ئۆچۈرىدۇ."
+        confirm_title: "يازما ۋە جاۋابنى ئۆچۈر?"
         confirm: "راستتىنلا يازمىنىڭ ئىنكاسلىرىنىمۇ قوشۇپ ئۆچۈرەمسىز؟"
         complete: "يازما ۋە جاۋاب ئۆچۈرۈلدى."
       disagree_and_restore:
@@ -4703,6 +4703,8 @@ ug:
       approve_post:
         title: "ھەئە"
         complete: "يازما تەستىقلاندى."
+      deny_and_delete_post:
+        complete: "يازما ئۆچۈرۈلدى."
       approve_post_closed:
         title: "ھەئە"
         confirm: "بۇ تېما تاقالدى. تېمىنى قۇرۇۋېرەمسىز؟"

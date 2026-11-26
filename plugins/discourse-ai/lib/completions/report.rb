@@ -7,7 +7,7 @@ module DiscourseAi
       LLM_MODEL_JOIN = "LEFT JOIN llm_models ON llm_models.id = ai_api_request_stats.llm_id"
       LLM_MODEL_ID_PATTERN = /^-?\d+$/
 
-      attr_reader :start_date, :end_date, :base_query, :timezone
+      attr_reader :start_date, :end_date, :base_query, :timezone, :feature_filter, :model_filter
 
       def initialize(
         start_date: 30.days.ago,
@@ -217,6 +217,7 @@ module DiscourseAi
       end
 
       def filter_by_feature(feature_name)
+        @feature_filter = feature_name
         if feature_name == UNKNOWN_FEATURE
           @base_query = base_query.where("coalesce(feature_name, '') = ''")
         else
@@ -226,6 +227,7 @@ module DiscourseAi
       end
 
       def filter_by_model(model_identifier)
+        @model_filter = model_identifier
         if model_identifier.to_s.match?(LLM_MODEL_ID_PATTERN)
           model = LlmModel.find_by(id: model_identifier)
           if model

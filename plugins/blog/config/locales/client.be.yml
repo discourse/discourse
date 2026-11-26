@@ -12,6 +12,12 @@ be:
         preview_archive: У Архіў
         mobile: Мабільная
         save: Захаваць
+        about_tab: Пра тэму
+        settings_tab: Налады
+        theme_tab: Тэма
+        column_name: Імя
+        column_category: Катэгорыя
+        column_status: Статус
         edit: Рэдагаваць
         preview: Перадпрагляд
         customize: Кастамізаваць

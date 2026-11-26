@@ -62,11 +62,16 @@ module DiscourseAi
 
       image_nodes(doc).each do |img|
         base62_sha1 = image_node_base62_sha1(img)
-        description = captions[base62_sha1]
-        next if description.blank?
+        caption = captions[base62_sha1]
+        next if caption.blank?
 
-        aria_description = aria_description(description, locale)
-        img[ARIA_DESCRIPTION_ATTRIBUTE] = aria_description
+        img[ARIA_DESCRIPTION_ATTRIBUTE] = (
+          if caption.manual?
+            caption.description
+          else
+            aria_description(caption.description, locale)
+          end
+        )
       end
     end
 
@@ -134,8 +139,8 @@ module DiscourseAi
           if description.blank?
             record_attempt(post, upload, base62_sha1, locale, error: "blank_response")
           else
-            record_attempt(post, upload, base62_sha1, locale, description: description)
-            generated_count += 1
+            generated_count +=
+              record_attempt(post, upload, base62_sha1, locale, description: description)
           end
         rescue StandardError => e
           record_attempt(post, upload, base62_sha1, locale, error: e.message)
@@ -183,10 +188,10 @@ module DiscourseAi
       captions = captions_for(post.id, locale, base62_sha1s)
 
       base62_sha1s.filter_map do |base62_sha1|
-        description = captions[base62_sha1]
-        next if description.blank?
+        caption = captions[base62_sha1]
+        next if caption.blank?
 
-        { base62_sha1: base62_sha1, description: description }
+        { base62_sha1: base62_sha1, description: caption.description }
       end
     end
 
@@ -202,7 +207,7 @@ module DiscourseAi
 
       return if image_caption.blank? || image_caption.description.blank?
 
-      image_caption.update!(description: description, last_error: nil)
+      image_caption.update!(description: description, source: :manual, last_error: nil)
       SearchIndexer.index(post, force: true)
       refresh_cooked(post, locale)
 
@@ -358,8 +363,8 @@ module DiscourseAi
       AiPostImageCaption
         .where(post_id: post_id, locale: locale, base62_sha1: base62_sha1s)
         .where.not(description: nil)
-        .pluck(:base62_sha1, :description)
-        .to_h
+        .select(:base62_sha1, :description, :source)
+        .index_by(&:base62_sha1)
     end
 
     def captions_with_locale_fallback(post, locale, base62_sha1s, captions)
@@ -425,8 +430,7 @@ module DiscourseAi
         upload = uploads_by_base62_sha1[base62_sha1]
         next if upload.blank? || !captionable_upload?(upload, post)
 
-        record_reused_caption(post, upload, base62_sha1, locale, description)
-        reused_count += 1
+        reused_count += record_reused_caption(post, upload, base62_sha1, locale, description)
       end
 
       reused_count
@@ -438,6 +442,7 @@ module DiscourseAi
             SELECT DISTINCT ON (base62_sha1) base62_sha1, description
             FROM ai_post_image_captions
             WHERE locale = :locale
+              AND source = 'ai'
               AND base62_sha1 IN (:base62_sha1s)
               AND post_id <> :post_id
               AND description IS NOT NULL
@@ -480,6 +485,7 @@ module DiscourseAi
               base62_sha1,
               locale,
               description,
+              source,
               attempts,
               last_attempted_at,
               last_error,
@@ -493,6 +499,7 @@ module DiscourseAi
               :base62_sha1,
               :locale,
               :description,
+              :source,
               1,
               :now,
               :last_error,
@@ -502,16 +509,19 @@ module DiscourseAi
           ON CONFLICT (post_id, locale, base62_sha1) DO UPDATE SET
             upload_id = EXCLUDED.upload_id,
             description = EXCLUDED.description,
+            source = EXCLUDED.source,
             attempts = ai_post_image_captions.attempts + 1,
             last_attempted_at = EXCLUDED.last_attempted_at,
             last_error = EXCLUDED.last_error,
             updated_at = EXCLUDED.updated_at
+          WHERE ai_post_image_captions.description IS NULL
         SQL
         post_id: post.id,
         upload_id: upload.id,
         base62_sha1: base62_sha1,
         locale: locale,
         description: description,
+        source: description.present? ? "ai" : "unknown",
         last_error: error,
         now: now,
       )
@@ -529,6 +539,7 @@ module DiscourseAi
               base62_sha1,
               locale,
               description,
+              source,
               attempts,
               created_at,
               updated_at
@@ -540,6 +551,7 @@ module DiscourseAi
               :base62_sha1,
               :locale,
               :description,
+              'ai',
               0,
               :now,
               :now
@@ -547,10 +559,12 @@ module DiscourseAi
           ON CONFLICT (post_id, locale, base62_sha1) DO UPDATE SET
             upload_id = EXCLUDED.upload_id,
             description = EXCLUDED.description,
+            source = EXCLUDED.source,
             attempts = 0,
             last_attempted_at = NULL,
             last_error = NULL,
             updated_at = EXCLUDED.updated_at
+          WHERE ai_post_image_captions.description IS NULL
         SQL
         post_id: post.id,
         upload_id: upload.id,
