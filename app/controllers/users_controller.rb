@@ -1369,11 +1369,14 @@ class UsersController < ApplicationController
 
     @user = User.find_by_username_or_email(params[:username].to_s) if params[:username].present?
 
-    raise Discourse::NotFound unless @user
-
-    if !current_user&.staff? && @user.id != session[SessionController::ACTIVATE_USER_KEY]
+    # Authorize before reporting a missing account, otherwise the 403/404 split
+    # reveals to non-staff callers whether an email address is registered.
+    if !current_user&.staff? &&
+         (@user.blank? || @user.id != session[SessionController::ACTIVATE_USER_KEY])
       raise Discourse::InvalidAccess.new
     end
+
+    raise Discourse::NotFound if @user.blank?
 
     session.delete(SessionController::ACTIVATE_USER_KEY)
 
