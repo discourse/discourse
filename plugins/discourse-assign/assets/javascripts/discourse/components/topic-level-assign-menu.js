@@ -104,7 +104,7 @@ export default {
           const icon =
             assignment.assigned_to_type === "User"
               ? avatarHtml(assignee, "small")
-              : iconHTML("group-times");
+              : iconHTML("users");
           return {
             id: `unassign-assignment-${assignment.id}`,
             name: trustHTML(label),
@@ -227,7 +227,7 @@ function unassignFromPostButton(postId, assignment) {
     icon = avatarHtml(assignment.assigned_to, "small");
   } else {
     assignee = assignment.assigned_to.name;
-    icon = iconHTML("group-times");
+    icon = iconHTML("users");
   }
 
   const escapedAssignee = escapeExpression(assignee);
