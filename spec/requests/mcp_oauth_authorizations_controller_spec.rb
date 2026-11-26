@@ -197,12 +197,111 @@ describe McpOauthAuthorizationsController do
 
     expect(response.status).to eq(200)
     document = Nokogiri.HTML5(response.body)
-    expect(document.at_css(".mcp-consent__scope-summary").text.squish).to eq(
-      "Partial consent client requested 3 permissions. Your account is eligible for 1.",
+    expect(
+      document
+        .css(".authorize-api-key__permissions .mcp-consent__scope")
+        .map { |item| item["data-scope"] },
+    ).to eq(["mcp:profile:read"])
+    expect(document.at_css(".mcp-consent__withheld summary").text.squish).to eq(
+      I18n.t("mcp.oauth.withheld_permissions", count: 2),
     )
-    expect(document.css(".mcp-consent__granted-scopes code").map(&:text)).to eq(
-      ["mcp:profile:read"],
-    )
+    expect(
+      document.css(".mcp-consent__withheld .mcp-consent__scope").map { |item| item["data-scope"] },
+    ).to eq(%w[mcp:content:read mcp:content:write])
+  end
+
+  describe "consent page" do
+    fab!(:client) do
+      McpOauthClient.create!(
+        client_id: "consent-page-copy-client",
+        name: "Consent page copy client",
+        registration_type: "pre_registered",
+        trust_state: "approved",
+        redirect_uris: %w[https://assistant.example.com/callback http://127.0.0.1/callback],
+      )
+    end
+
+    before do
+      McpGroupScope.ensure_admins!
+      sign_in(admin)
+    end
+
+    def consent_page(scope:, redirect_uri: "https://assistant.example.com/callback")
+      get "/oauth2/mcp/authorize",
+          params: {
+            client_id: client.client_id,
+            redirect_uri:,
+            response_type: "code",
+            code_challenge: "a" * 43,
+            code_challenge_method: "S256",
+            resource: DiscourseMcp.resource_url,
+            scope:,
+          }
+
+      expect(response.status).to eq(200)
+      Nokogiri.HTML5(response.body)
+    end
+
+    it "describes permissions in plain words, split by how much they affect the site" do
+      document = consent_page(scope: "mcp:profile:read mcp:content:write mcp:site-settings:write")
+
+      expect(document.css(".mcp-consent__section-title").map(&:text)).to eq(
+        [I18n.t("mcp.oauth.scope_sections.member"), I18n.t("mcp.oauth.scope_sections.manage")],
+      )
+      expect(
+        document
+          .css(".authorize-api-key__permissions .mcp-consent__scope")
+          .map { |item| item.text.squish },
+      ).to eq(
+        [
+          I18n.t("mcp.oauth.scopes.mcp_profile_read"),
+          I18n.t("mcp.oauth.scopes.mcp_content_write"),
+          I18n.t("mcp.oauth.scopes.mcp_site_settings_write"),
+        ],
+      )
+    end
+
+    it "shows a permission nobody described as the scope itself" do
+      allow(DiscourseMcp::ScopePresenter).to receive(:label).and_call_original
+      allow(DiscourseMcp::ScopePresenter).to receive(:label).with("mcp:content:read").and_return(
+        nil,
+      )
+
+      document = consent_page(scope: "mcp:profile:read mcp:content:read")
+
+      expect(document.at_css(".mcp-consent__scope[data-scope='mcp:content:read'] code").text).to eq(
+        "mcp:content:read",
+      )
+    end
+
+    it "only lists requested permissions that this site offers" do
+      document = consent_page(scope: "mcp:profile:read totally:made-up")
+
+      expect(document.text).not_to include("totally:made-up")
+    end
+
+    it "says where authorizing sends the person" do
+      document = consent_page(scope: "mcp:profile:read")
+      expect(document.at_css(".authorize-api-key__redirect-url strong").text).to eq(
+        "assistant.example.com",
+      )
+
+      document =
+        consent_page(scope: "mcp:profile:read", redirect_uri: "http://127.0.0.1:53682/callback")
+      expect(document.at_css(".authorize-api-key__redirect-url").text.squish).to eq(
+        I18n.t("mcp.oauth.redirect_local_html", host: "127.0.0.1:53682"),
+      )
+    end
+
+    it "shows the app's name as text, without characters that change its direction" do
+      client.update!(name: "Evil\u202E<img src=x>")
+
+      document = consent_page(scope: "mcp:profile:read")
+
+      expect(document.at_css("h1 bdi").text).to eq("Evil<img src=x>")
+      expect(document.css(".mcp-consent img:not(.avatar)")).to be_empty
+      expect(response.body).not_to include("\u202E")
+    end
   end
 
   it "grants only the requested scopes available to the user" do

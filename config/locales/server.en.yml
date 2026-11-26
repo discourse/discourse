@@ -207,23 +207,58 @@ en:
       user_not_found: "User not found"
       user_update_required: "Provide at least one profile field to update"
     oauth:
-      authorize_title: "Authorize MCP client"
-      client_request: "%{client_name} is requesting access to %{site_name}."
-      client_id: "Client ID"
-      redirect_uri: "Redirect URI"
+      # %{client_name} is the name of the app asking for access.
+      page_title: 'Authorize "%{client_name}" - %{site_name}'
+      authorize_title_html: 'Authorize "%{client_name}"'
+      logged_in_as: "Logged in as"
+      permissions_header_html: 'This will allow "%{client_name}" to:'
+      scope_sections:
+        member: "Use the site as you"
+        manage: "Manage the site"
+      withheld_permissions:
+        one: "%{count} requested permission won't be granted"
+        other: "%{count} requested permissions won't be granted"
+      withheld_explanation: "Your account can't give these permissions, so some of the app's features may not work."
+      acts_as_you: "The app acts as you, so it can only do what your account can do. Anything it reads through this connection is sent to it."
+      # %{host} is the website, or the address of an app on this device, that authorizing opens.
+      redirect_html: "Authorizing will redirect you to %{host}."
+      redirect_local_html: "Authorizing will redirect you to an app on this device (%{host})."
+      app_details: "App details"
+      client_id: "App ID"
+      redirect_url: "Redirect URL"
       resource: "MCP server"
-      requested_permission_count:
-        one: "%{client_name} requested %{count} permission."
-        other: "%{client_name} requested %{count} permissions."
-      eligible_permission_count:
-        one: "Your account is eligible for %{count}."
-        other: "Your account is eligible for %{count}."
-      granted_permissions:
-        one: "The following permission will be granted"
-        other: "The following permissions will be granted"
-      guardian_notice: "The client acts as your account and remains subject to your normal Discourse permissions."
-      deny: "Deny"
+      scope_ids: "Scopes"
       approve: "Authorize"
+      cancel: "Cancel"
+      disconnect_html: 'You can disconnect the app at any time from <a href="%{url}">MCP Apps</a> in your security preferences.'
+      # Each completes the sentence "This will allow "App" to:".
+      scopes:
+        mcp_profile_read: "See your username and profile"
+        mcp_profile_write: "Update your profile"
+        mcp_content_read: "Read and search topics, posts, and profiles, plus your notifications and bookmarks"
+        mcp_content_write: "Create and edit topics and posts, delete your posts, and upload files"
+        mcp_private_messages_read: "Read your personal messages"
+        mcp_private_messages_write: "Send personal messages and add people to them"
+        mcp_drafts_read: "Read your drafts"
+        mcp_drafts_write: "Save and delete your drafts"
+        mcp_groups_read: "See groups, their members, and membership requests"
+        mcp_groups_write: "Create, edit, and delete groups, and manage their members"
+        mcp_repository_read: "Read Discourse's source code and authoring guides"
+        mcp_site_settings_read: "See site settings"
+        mcp_site_settings_write: "Change site settings"
+        mcp_themes_read: "See themes and theme components"
+        mcp_themes_write: "Install, edit, and delete themes, including their code"
+        mcp_categories_read: "See category settings"
+        mcp_categories_write: "Create, edit, and delete categories"
+        mcp_tag_groups_read: "See tag groups"
+        mcp_tag_groups_write: "Create, edit, and delete tag groups"
+        mcp_users_read: "List and filter users, as staff see them"
+        mcp_users_write: "Create users, and activate, approve, or deactivate accounts"
+        mcp_moderation_read: "See the review queue and moderation history"
+        mcp_moderation_write: "Act on flagged posts, suspend or silence users, and close or pin topics"
+        mcp_reports_read: "See site reports"
+        mcp_webhooks_read: "See webhooks and their delivery history"
+        mcp_webhooks_write: "Create, edit, and delete webhooks, which send site data to other services"
     admin:
       site_enabled: "Enable the MCP server site setting"
       primitives_enabled: "Enable at least one primitive in Capabilities"

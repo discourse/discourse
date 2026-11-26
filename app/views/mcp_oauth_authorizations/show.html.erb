@@ -1,37 +1,69 @@
-<% content_for :title do %><%= t("mcp.oauth.authorize_title") %><% end %>
+<% content_for :title do %><%= t("mcp.oauth.page_title", client_name: @client_name, site_name: SiteSetting.title) %><% end %>
 
-<div class="mcp-consent">
-  <h1><%= t("mcp.oauth.authorize_title") %></h1>
-  <p><%= t("mcp.oauth.client_request", client_name: @client.name, site_name: SiteSetting.title) %></p>
+<div class="authorize-api-key mcp-consent">
+  <h1><%= t("mcp.oauth.authorize_title_html", client_name: tag.bdi(@client_name)) %></h1>
 
-  <dl>
-    <dt><%= t("mcp.oauth.client_id") %></dt>
-    <dd><code><%= @client.client_id %></code></dd>
-    <dt><%= t("mcp.oauth.redirect_uri") %></dt>
-    <dd><code><%= params[:redirect_uri] %></code></dd>
-    <dt><%= t("mcp.oauth.resource") %></dt>
-    <dd><code><%= params[:resource] %></code></dd>
-  </dl>
+  <div class="authorize-api-key__user">
+    <span class="authorize-api-key__user-label"><%= t("mcp.oauth.logged_in_as") %></span>
+    <img alt="" class="avatar" height="24" src="<%= current_user.avatar_template_url.gsub("{size}", "48") %>" width="24">
+    <span class="authorize-api-key__username"><%= current_user.username %></span>
+  </div>
 
-  <p class="mcp-consent__scope-summary">
-    <%= t("mcp.oauth.requested_permission_count", client_name: @client.name, count: @requested_scopes.length) %>
-    <%= t("mcp.oauth.eligible_permission_count", count: @granted_scopes.length) %>
-  </p>
+  <div class="authorize-api-key__summary">
+    <div class="authorize-api-key__permissions">
+      <p class="authorize-api-key__permissions-header"><%= t("mcp.oauth.permissions_header_html", client_name: tag.bdi(@client_name)) %></p>
+      <% @scope_sections.each do |section| %>
+        <% if @scope_sections.size > 1 %>
+          <h2 class="mcp-consent__section-title"><%= t("mcp.oauth.scope_sections.#{section.name}") %></h2>
+        <% end %>
+        <%= render "scopes", items: section.items %>
+      <% end %>
+    </div>
 
-  <h2><%= t("mcp.oauth.granted_permissions", count: @granted_scopes.length) %></h2>
-  <ul class="mcp-consent__granted-scopes">
-    <% @granted_scopes.each do |scope| %>
-      <li><code><%= scope %></code></li>
+    <% if @withheld_scopes.present? %>
+      <details class="mcp-consent__withheld">
+        <summary><%= t("mcp.oauth.withheld_permissions", count: @withheld_scopes.size) %></summary>
+        <p><%= t("mcp.oauth.withheld_explanation") %></p>
+        <%= render "scopes", items: @withheld_scopes %>
+      </details>
     <% end %>
-  </ul>
 
-  <p><%= t("mcp.oauth.guardian_notice") %></p>
+    <div class="authorize-api-key__summary-notice">
+      <p><%= t("mcp.oauth.acts_as_you") %></p>
+    </div>
+  </div>
+
+  <div class="authorize-api-key__redirect">
+    <p class="authorize-api-key__redirect-url"><%= mcp_redirect_notice(params[:redirect_uri]) %></p>
+  </div>
+
+  <details class="mcp-consent__details">
+    <summary><%= t("mcp.oauth.app_details") %></summary>
+    <dl>
+      <dt><%= t("mcp.oauth.client_id") %></dt>
+      <dd><code><%= @client.client_id %></code></dd>
+      <dt><%= t("mcp.oauth.redirect_url") %></dt>
+      <dd><code><%= params[:redirect_uri] %></code></dd>
+      <dt><%= t("mcp.oauth.resource") %></dt>
+      <dd><code><%= params[:resource] %></code></dd>
+      <dt><%= t("mcp.oauth.scope_ids") %></dt>
+      <dd class="mcp-consent__scope-ids">
+        <% @granted_scopes.each do |scope| %>
+          <code><%= scope %></code>
+        <% end %>
+      </dd>
+    </dl>
+  </details>
 
   <%= form_with url: oauth2_mcp_authorize_path, method: :post do |form| %>
     <% %i[client_id redirect_uri response_type code_challenge code_challenge_method resource scope state].each do |key| %>
       <%= form.hidden_field key, value: params[key] if params[key].present? %>
     <% end %>
-    <%= form.button t("mcp.oauth.deny"), name: "decision", value: "deny", class: "btn btn-default" %>
-    <%= form.button t("mcp.oauth.approve"), name: "decision", value: "approve", class: "btn btn-primary" %>
+    <div class="authorize-api-key__buttons">
+      <%= form.button t("mcp.oauth.approve"), name: "decision", value: "approve", class: "btn btn-primary" %>
+      <%= form.button t("mcp.oauth.cancel"), name: "decision", value: "deny", class: "btn btn-default" %>
+    </div>
   <% end %>
+
+  <p class="mcp-consent__disconnect"><%= t("mcp.oauth.disconnect_html", url: path("/my/preferences/security")) %></p>
 </div>
