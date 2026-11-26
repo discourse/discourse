@@ -15,6 +15,13 @@ hr:
         desktop: Desktop
         mobile: Mobilni
         save: Spremi
+        about_tab: O nama
+        blog_slug: Puž
+        settings_tab: Postavke
+        theme_tab: Tema
+        column_name: Ime
+        column_category: Kategorija
+        column_status: Statust
         path_formats:
           custom: Posebna
         back_to_themes: Natrag na teme
@@ -53,7 +60,11 @@ hr:
         edit: Uredi
         status: Statust
         replies: Odgovori
+        title: Titula
+        page: Stranica
+      all: Sve
       drafts: Skice
+      pages: Stranice
       preview: Pregled
       unpublish: Poništi objavljivanje
       appearance_link: Izgled

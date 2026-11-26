@@ -375,7 +375,7 @@ class ApplicationController < ActionController::Base
                    request.params[:action] == "find_by_slug"
                )
             opts[:extras] = {
-              title: I18n.t("page_not_found.page_title"),
+              title: error_page_title(status_code),
               html: build_not_found_page(error_page_opts),
               group: error_page_opts[:group],
             }
@@ -651,6 +651,44 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def rate_limit_search!
+    if current_user.present?
+      RateLimiter.new(
+        current_user,
+        "search-min",
+        SiteSetting.rate_limit_search_user,
+        1.minute,
+      ).performed!
+
+      return
+    end
+
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-sec",
+      SiteSetting.rate_limit_search_anon_user_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-#{request.remote_ip}-per-min",
+      SiteSetting.rate_limit_search_anon_user_per_minute,
+      1.minute,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-sec",
+      SiteSetting.rate_limit_search_anon_global_per_second,
+      1.second,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "search-min-anon-global-per-min",
+      SiteSetting.rate_limit_search_anon_global_per_minute,
+      1.minute,
+    ).performed!
+  end
+
   def rate_limit_second_factor_by_ip!
     return if params[:second_factor_token].blank?
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
@@ -831,7 +869,7 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
-  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.ts`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
@@ -850,7 +888,8 @@ class ApplicationController < ActionController::Base
       server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
-          Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
+          !SiteSetting.invite_only && Discourse.enabled_authenticators.one? &&
+          !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -965,6 +1004,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def error_page_title(status)
+    I18n.t(status == 403 ? "page_forbidden.page_title" : "page_not_found.page_title")
+  end
+
   def build_not_found_page(opts = {})
     if SiteSetting.bootstrap_error_pages?
       initialize_application_layout_preloader
@@ -998,7 +1041,7 @@ class ApplicationController < ActionController::Base
     end
 
     @container_class = "wrap not-found-container"
-    @page_title = I18n.t("page_not_found.page_title")
+    @page_title = error_page_title(opts[:status])
     @title =
       if opts[:custom_message]
         I18n.t(opts[:custom_message], opts[:custom_message_params] || {})

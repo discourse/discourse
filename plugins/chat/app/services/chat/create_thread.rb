@@ -32,6 +32,7 @@ module Chat
     policy :can_create_thread_in_channel
     policy :threading_enabled_for_channel
     model :original_message
+    policy :can_see_message_thread
 
     transaction do
       model :thread, :find_or_create_thread
@@ -69,6 +70,12 @@ module Chat
 
     def fetch_original_message(channel:, params:)
       ::Chat::Message.find_by(id: params.original_message_id, chat_channel_id: params.channel_id)
+    end
+
+    def can_see_message_thread(original_message:, guardian:)
+      return true if original_message.thread.blank?
+
+      guardian.can_see_chat_thread?(original_message.thread)
     end
 
     def find_or_create_thread(channel:, original_message:, params:)

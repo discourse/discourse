@@ -79,7 +79,43 @@ module PageObjects
         self
       end
 
+      def delete(query)
+        open_menu(query)
+        page.find(".query-row__delete").click
+        PageObjects::Components::Dialog.new.click_danger
+        self
+      end
+
+      def toggle_dashboard(query)
+        open_menu(query)
+        page.find(".query-row__dashboard-toggle").click
+        self
+      end
+
+      def has_dashboard_action?(query, label)
+        open_menu(query)
+        found = page.has_css?(".query-row__dashboard-toggle", exact_text: label)
+        page.send_keys(:escape)
+        found
+      end
+
+      def has_no_query?(query)
+        page.has_no_css?(row(query))
+      end
+
+      def has_no_delete_option?(query)
+        open_menu(query)
+        absent =
+          page.has_css?(".query-row__dashboard-toggle") && page.has_no_css?(".query-row__delete")
+        page.send_keys(:escape)
+        absent
+      end
+
       private
+
+      def open_menu(query)
+        page.find("#{row(query)} .query-row__menu-trigger").click
+      end
 
       def row(query)
         "#{ROW}:has(a[href$='/queries/#{query.id}'])"

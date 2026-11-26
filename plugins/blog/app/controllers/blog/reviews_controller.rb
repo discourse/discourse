@@ -31,6 +31,7 @@ module ::Blog
                    reviews,
                    ReviewSerializer,
                    active_review_ids: Review.accessible_ids(reviews, @topic),
+                   blog: Review.blog_for_topic(@topic.id),
                    feedback_counts: ReviewFeedback.where(review: reviews).group(:review_id).count,
                  ),
                more: records.length > REVIEWS_PER_PAGE,
@@ -46,6 +47,7 @@ module ::Blog
                        review,
                        root: false,
                        active_review_ids: Review.accessible_ids([review], topic),
+                       blog: Review.blog_for_topic(topic.id),
                      ).as_json,
                  },
                  status: :created
@@ -55,6 +57,9 @@ module ::Blog
         on_failed_policy(:can_edit_blog_topic) { raise Discourse::InvalidAccess }
         on_failed_policy(:blog_is_ready) do |policy|
           raise Discourse::InvalidParameters.new(policy.reason)
+        end
+        on_failed_step(:ensure_drafts_category) do |step|
+          raise Discourse::InvalidParameters.new(step.error)
         end
         on_failed_policy(:topic_is_reviewable) { raise Discourse::InvalidAccess }
         on_failed_policy(:within_review_limit) do

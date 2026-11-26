@@ -1,3 +1,4 @@
+import randomUUID from "discourse/lib/random-uuid";
 import {
   FORM_TRIGGER_WEBHOOK_ID_KEY,
   NODE_DIRECT_SETTING_KEYS,
@@ -76,7 +77,7 @@ export default class WorkflowNode {
   }
 
   constructor(args = {}) {
-    this.id = args.id?.toString() ?? args.clientId ?? crypto.randomUUID();
+    this.id = args.id?.toString() ?? args.clientId ?? randomUUID();
     this.clientId = args.clientId ?? this.id;
     this.type = args.type;
     this.typeVersion = args.typeVersion ?? "1.0";

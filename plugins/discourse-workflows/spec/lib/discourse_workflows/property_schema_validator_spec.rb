@@ -333,6 +333,34 @@ RSpec.describe DiscourseWorkflows::PropertySchemaValidator do
       expect(errors.first).to include("Hash")
     end
 
+    it "rejects unknown visibility operators and malformed metadata flags" do
+      errors =
+        validate(
+          option_id: {
+            type: :integer,
+          },
+          detail: {
+            type: :string,
+            display_options: {
+              hide: {
+                option_id: [
+                  { condition: { metadata_flg: { collection: "options", flag: "hide_detail" } } },
+                  { condition: { metadata_flag: { collection: "options", flag: "" } } },
+                ],
+              },
+            },
+          },
+        )
+
+      expect(errors).to contain_exactly(
+        a_string_including("display_options.hide.option_id.0.condition", ":metadata_flg"),
+        a_string_including(
+          "display_options.hide.option_id.1.condition.metadata_flag",
+          "collection and flag",
+        ),
+      )
+    end
+
     it "requires display_options rule values to be arrays" do
       errors =
         validate(

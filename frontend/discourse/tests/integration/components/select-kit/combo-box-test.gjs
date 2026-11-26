@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
@@ -30,24 +31,24 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
   });
 
   test("selecting a row with a blank value", async function (assert) {
     setDefaultState(this, {
       content: [{ value: "", name: "default" }, ...DEFAULT_CONTENT],
-      value: "latest",
-      onChange: (value) => this.set("value", value),
     });
+    const value = tracked("latest");
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <ComboBox
           @content={{this.content}}
           @nameProperty="name"
-          @onChange={{this.onChange}}
+          @onChange={{onChange}}
           @options={{hash castInteger=true}}
-          @value={{this.value}}
+          @value={{value.value}}
           @valueProperty="value"
         />
       </template>
@@ -56,7 +57,7 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue("");
 
-    assert.strictEqual(this.value, "", "onChange receives the blank value");
+    assert.strictEqual(value.value, "", "onChange receives the blank value");
     assert.strictEqual(
       this.subject.header().name(),
       "default",
@@ -65,20 +66,17 @@ module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   });
 
   test("options.clearable", async function (assert) {
-    setDefaultState(this, {
-      clearable: true,
-      onChange: (value) => {
-        this.set("value", value);
-      },
-    });
+    setDefaultState(this, { clearable: true });
+    const value = tracked(DEFAULT_VALUE);
+    const onChange = (newValue) => (value.value = newValue);
 
     await render(
       <template>
         <ComboBox
           @content={{this.content}}
-          @onChange={{this.onChange}}
+          @onChange={{onChange}}
           @options={{hash clearable=this.clearable}}
-          @value={{this.value}}
+          @value={{value.value}}
         />
       </template>
     );

@@ -6,27 +6,25 @@ export default class PreferencesInterface extends RestrictedUserRoute {
     controller.set("model", user);
 
     const userThemeIds = user.get("user_option.theme_ids");
-    const themeId = controller.isViewingOwnProfile
+    const themeId = user.isCurrent
       ? currentThemeId()
       : (userThemeIds?.[0] ?? currentThemeId());
 
-    const textSize = controller.isViewingOwnProfile
+    const textSize = user.isCurrent
       ? user.get("currentTextSize")
       : user.get("user_option.text_size");
 
     controller.setProperties({
       textSize,
       themeId,
+      currentThemeId: themeId,
       makeThemeDefault:
-        !controller.isViewingOwnProfile ||
-        !userThemeIds ||
-        themeId === userThemeIds[0],
+        !user.isCurrent || !userThemeIds || themeId === userThemeIds[0],
       makeTextSizeDefault:
-        !controller.isViewingOwnProfile ||
-        textSize === user.get("user_option.text_size"),
+        !user.isCurrent || textSize === user.get("user_option.text_size"),
     });
 
-    if (controller.isViewingOwnProfile) {
+    if (user.isCurrent) {
       controller.setProperties({
         selectedColorSchemeId: controller.getSelectedColorSchemeId(),
         selectedDarkColorSchemeId: controller.session.userDarkSchemeId,

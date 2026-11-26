@@ -37,6 +37,27 @@ RSpec.describe "AI Usage Admin Page" do
     end
   end
 
+  it "lets admins see usage for workflows that made AI requests" do
+    create_usage(llm_model, feature: "workflow")
+    ai_usage_page.visit
+    expect(ai_usage_page).to have_no_workflows_table
+
+    workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Summary demo")
+    Fabricate(
+      :ai_api_audit_log,
+      feature_name: "workflow",
+      feature_context: {
+        workflow_id: workflow.id.to_s,
+      },
+      llm_model: llm_model,
+      request_tokens: 100,
+      response_tokens: 30,
+    )
+
+    ai_usage_page.visit
+    expect(ai_usage_page).to have_workflow_usage(workflow, requests: 1, tokens: 130)
+  end
+
   context "when filtering by model" do
     fab!(:other_model) { Fabricate(:llm_model, display_name: "Other Model", name: "other-model") }
 

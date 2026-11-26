@@ -83,47 +83,41 @@ module DiscourseAi
         end
         return :not_needed if size < capacity * @threshold / 100.0
 
-        protected_user_index ||=
-          prompt.messages.rindex { |message| message[:type] == :user && !transient_hint?(message) }
+        protected_user_index = prompt.user_request_index(protected_user_index)
         raise Error.new("missing_current_request", prompt: prompt) if !protected_user_index
 
         # Prefer complete earlier turns. Never detach provider metadata or a pending
         # call from its batch. A completed current-turn batch can be summarized only
         # when retaining it would prevent hard fit.
-        source = prompt.messages[1...protected_user_index]
+        source =
+          prompt.messages[1...protected_user_index].reject do |message|
+            Prompt.transient_user?(message)
+          end
         tail = prompt.messages[protected_user_index..]
         # Captured before completed current-turn evidence can move into the summary
         # source: dropping may only cut earlier turns, never actions that already ran.
-        history = source.reject { |message| transient_hint?(message) }
+        history = source
         current_turn = tail
         if size > capacity && !fits?(prompt, [prompt.messages.first, *tail], **options)
-          pending_ids =
-            prompt.messages.filter_map { |message| message[:id] if message[:type] == :tool_call }
-          result_ids =
-            prompt.messages.filter_map { |message| message[:id] if message[:type] == :tool }
-          if prompt.messages.none? { |message|
-               message[:type] == :tool_call && message[:id].blank?
-             } && (pending_ids - result_ids).empty?
+          # Name-only exchanges can be replayed, but do not prove completion for compression.
+          if tail.none? { |message| message[:type] == :tool_call && message[:id].blank? } &&
+               ToolCallBatch.each_incomplete_index(tail).first.nil?
             source += tail.reject { |message| message[:type] == :user }
-            tail = normalize_users(tail.select { |message| message[:type] == :user })
+            tail =
+              normalize_users(
+                tail.select do |message|
+                  message[:type] == :user && !Prompt.synthetic_user?(message)
+                end,
+              )
           end
         end
         if size > capacity && !fits?(prompt, [prompt.messages.first, *tail], **options)
           raise Error.new("hard_overflow", prompt: prompt)
         end
-        source = source.reject { |message| transient_hint?(message) }
-        attachments = @llm.context_attachments(source)
+        attachments = @llm.context_attachments(source, prompt: prompt)
         checkpoint_only =
           PromptMessagesBuilder.compression_checkpoint_index(source) == 0 &&
-            source
-              .drop(2)
-              .each_slice(2)
-              .all? do |message, acknowledgement|
-                message[:type] == :user &&
-                  Array(message[:content]).first.to_s.start_with?(
-                    "Retained historical attachments",
-                  ) && acknowledgement&.dig(:content) == RETAINED_ATTACHMENTS_ACK
-              end
+            PromptMessagesBuilder.checkpoint_end(source, 0) == source.length
         if source.empty? || checkpoint_only
           return :not_needed if size <= capacity
           return drop_oldest_history!(prompt, history, current_turn, "hard_overflow", **options)
@@ -153,8 +147,8 @@ module DiscourseAi
             raise Error.new("summary_over_capacity", prompt: prompt)
           end
           return :cancelled if cancel_manager&.cancelled?
-          @protected_user_index = messages.length - tail.length
-          prompt.messages.replace(messages)
+          @protected_user_index = candidate.messages.length - tail.length
+          prompt.messages.replace(candidate.messages)
           :compressed
         rescue LlmQuotaUsage::QuotaExceededError, LlmCreditAllocation::CreditLimitExceeded
           raise
@@ -194,9 +188,7 @@ module DiscourseAi
         checkpoint_index = PromptMessagesBuilder.compression_checkpoint_index(history)
         first_cut = checkpoint_index ? checkpoint_index + 2 : 0
         starts =
-          (first_cut...history.length).select do |index|
-            history[index][:type] == :user && !transient_hint?(history[index])
-          end
+          (first_cut...history.length).select { |index| Prompt.user_request?(history[index]) }
         starts << history.length
         start =
           starts.bsearch do |candidate|
@@ -222,7 +214,7 @@ module DiscourseAi
 
         retained = []
         @llm
-          .context_attachments(history[0...start])
+          .context_attachments(history[0...start], prompt: prompt)
           .reverse_each do |attachment|
             candidate = [attachment, *retained]
             retained = candidate if fits?(prompt, build.call(notice, start, candidate), **options)
@@ -231,7 +223,7 @@ module DiscourseAi
         Rails.logger.warn(
           "DiscourseAi: context_preparation reason=history_dropped original_reason=#{reason} dropped_history_messages=#{start}#{self.class.log_context(prompt)}",
         )
-        messages = build.call(notice, start, retained)
+        messages = copy_prompt(prompt, build.call(notice, start, retained)).messages
         @protected_user_index = messages.length - tail.length
         prompt.messages.replace(messages)
         :compressed
@@ -288,7 +280,7 @@ module DiscourseAi
       end
 
       def summarize(source, prompt:, **options)
-        evidence = @llm.context_evidence(source)
+        evidence = @llm.context_evidence(source, prompt: prompt)
         remaining = evidence.to_json
         offset = 0
         summary = nil
@@ -362,11 +354,6 @@ module DiscourseAi
           raise Error.new("empty_summary", prompt: prompt) if summary.blank?
         end
         summary
-      end
-
-      def transient_hint?(message)
-        message[:type] == :user &&
-          DiscourseAi::Agents::Bot::TRANSIENT_TOKEN_BUDGET_HINTS.include?(message[:content])
       end
     end
   end

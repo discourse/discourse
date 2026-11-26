@@ -43,6 +43,7 @@ nb_NO:
           column_title: "Tittel"
           icon: "Ikon"
           color: "Farge"
+          icon_search_placeholder: "Søk…"
           move_to_assigned_unassign: "Fjern tildelning"
           move_to_status_open: "Åpne"
           move_to_status_closed: "Lukket"

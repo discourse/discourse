@@ -248,7 +248,10 @@ export default class UserCardContents extends CardContentsBase {
         .map((field) => {
           set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields ? userFields[field.get("id")] : null;
-          return isEmpty(value) ? null : EmberObject.create({ value, field });
+          // Unchecked confirmations are hidden; 0 in a number field is shown.
+          return isEmpty(value) || value === false
+            ? null
+            : EmberObject.create({ value, field });
         })
         .filter((item) => item != null);
     }
@@ -891,31 +894,29 @@ export default class UserCardContents extends CardContentsBase {
             <div class="card-row">
               <div class="public-user-fields">
                 {{#each this.publicUserFields as |uf|}}
-                  {{#if uf.value}}
-                    <div
-                      class="public-user-field public-user-field__{{uf.field.dasherized_name}}"
-                    >
-                      <span class="user-field-name">{{uf.field.name}}:</span>
-                      <span class="user-field-value">
-                        {{#each uf.value as |v|}}
-                          {{! some values are arrays }}
-                          <span class="user-field-value-list-item">
-                            {{#if uf.field.searchable}}
-                              <LinkTo
-                                @query={{hash name=v}}
-                                @route="users"
-                                {{on "click" (fn this.refreshRoute v)}}
-                              >{{v}}</LinkTo>
-                            {{else}}
-                              {{v}}
-                            {{/if}}
-                          </span>
-                        {{else}}
-                          {{uf.value}}
-                        {{/each}}
-                      </span>
-                    </div>
-                  {{/if}}
+                  <div
+                    class="public-user-field public-user-field__{{uf.field.dasherized_name}}"
+                  >
+                    <span class="user-field-name">{{uf.field.name}}:</span>
+                    <span class="user-field-value">
+                      {{#each uf.value as |v|}}
+                        {{! some values are arrays }}
+                        <span class="user-field-value-list-item">
+                          {{#if uf.field.searchable}}
+                            <LinkTo
+                              @query={{hash name=v}}
+                              @route="users"
+                              {{on "click" (fn this.refreshRoute v)}}
+                            >{{v}}</LinkTo>
+                          {{else}}
+                            {{v}}
+                          {{/if}}
+                        </span>
+                      {{else}}
+                        {{uf.value}}
+                      {{/each}}
+                    </span>
+                  </div>
                 {{/each}}
               </div>
             </div>

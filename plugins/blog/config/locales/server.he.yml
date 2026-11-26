@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 he:
+  site_settings:
+    blog_custom_domains_enabled: לאפשר הגשת בלוג משם תחום מותאם אישית במקום מכתובת הקהילה.
   blog:
     home: בית
     posted_by: פורסם על ידי
@@ -14,10 +16,14 @@ he:
     about: אודות
     community: קהילה
     preview: תצוגה מקדימה
+    author: מחבר/ת
     search: חיפוש
     replies:
       one: "תגובה"
       two: "שתי תגובות"
       other: "שתי תגובות"
+    errors:
+      blog_url_unavailable: שמות תחום מותאמים אישית אינם זמינים לאתר הזה.
+      blog_url_forum_host: שם תחום מותאם לבלוג חייב להיות שונה מזה של הקהילה.
     themes:
       default: ברירת מחדל

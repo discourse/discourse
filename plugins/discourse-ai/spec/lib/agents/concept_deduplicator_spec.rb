@@ -14,18 +14,64 @@ RSpec.describe DiscourseAi::Agents::ConceptDeduplicator do
   describe "#system_prompt" do
     let(:prompt) { agent.system_prompt }
 
-    it "specifies output format" do
-      expect(prompt).to include("streamlined_tags")
-      expect(prompt).to include('"streamlined_tags": ["tag1", "tag3"]')
+    it "specifies merges and reparents output instructions and locale" do
+      expect(prompt).to include("merges")
+      expect(prompt).to include("canonical_id")
+      expect(prompt).to include("merge_ids")
+      expect(prompt).to include("reparents")
+      expect(prompt).to include(SiteSetting.default_locale)
     end
   end
 
   describe "#response_format" do
-    it "defines correct response format" do
+    it "defines strict schemas for merges and reparents" do
       format = agent.response_format
 
       expect(format).to eq(
-        [{ "array_type" => "string", "key" => "streamlined_tags", "type" => "array" }],
+        [
+          {
+            "key" => "merges",
+            "type" => "array",
+            "array_type" => "object",
+            "items" => {
+              "type" => "object",
+              "additionalProperties" => false,
+              "required" => %w[canonical_id merge_ids description],
+              "properties" => {
+                "canonical_id" => {
+                  "type" => "integer",
+                },
+                "merge_ids" => {
+                  "type" => "array",
+                  "items" => {
+                    "type" => "integer",
+                  },
+                },
+                "description" => {
+                  "type" => "string",
+                },
+              },
+            },
+          },
+          {
+            "key" => "reparents",
+            "type" => "array",
+            "array_type" => "object",
+            "items" => {
+              "type" => "object",
+              "additionalProperties" => false,
+              "required" => %w[concept_id parent_concept_id],
+              "properties" => {
+                "concept_id" => {
+                  "type" => "integer",
+                },
+                "parent_concept_id" => {
+                  "type" => "integer",
+                },
+              },
+            },
+          },
+        ],
       )
     end
   end

@@ -97,6 +97,8 @@ interface ProsemirrorEditorSignature {
     categoryId?: number;
     /** Class added to the editable element. */
     class?: string;
+    /** Enable the post composer image descriptions control. */
+    composerImageDescriptions?: boolean;
     /** Whether the default schema and editor behavior are included. */
     includeDefault?: boolean;
     /** Extensions used instead of the globally registered extensions. */
@@ -185,6 +187,7 @@ export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignat
         placeholder: this.args.placeholder,
         topicId: this.args.topicId,
         categoryId: this.args.categoryId,
+        composerImageDescriptions: this.args.composerImageDescriptions,
         session: this.session,
         menu: this.menu,
         capabilities: this.capabilities,

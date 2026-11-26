@@ -107,7 +107,7 @@ module FileStore
     end
 
     def download!(*, **)
-      perform_download(*, **)
+      perform_download(*, **) || raise(DownloadError)
     rescue StandardError
       raise DownloadError
     end
@@ -187,6 +187,8 @@ module FileStore
     private
 
     def perform_download(object, max_file_size_kb: nil)
+      return local_file(object) if object.local?
+
       DistributedMutex.synchronize("download_#{object.sha1}", validity: 3.minutes) do
         name = object.respond_to?(:original_filename) ? object.original_filename : object.url
         extension = File.extname(name)
@@ -222,6 +224,11 @@ module FileStore
 
         get_from_cache(filename)
       end
+    end
+
+    def local_file(object)
+      path = path_for(object)
+      path if path && File.file?(path)
     end
 
     def not_implemented

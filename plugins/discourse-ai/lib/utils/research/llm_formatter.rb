@@ -4,11 +4,18 @@ module DiscourseAi
   module Utils
     module Research
       class LlmFormatter
-        def initialize(filter, max_tokens_per_batch:, tokenizer:, max_tokens_per_post:)
+        def initialize(
+          filter,
+          max_tokens_per_batch:,
+          tokenizer:,
+          max_tokens_per_post:,
+          guardian: nil
+        )
           @filter = filter
           @max_tokens_per_batch = max_tokens_per_batch
           @tokenizer = tokenizer
           @max_tokens_per_post = max_tokens_per_post
+          @guardian = guardian || Guardian.new
           @to_process = filter_to_hash
         end
 
@@ -136,7 +143,10 @@ module DiscourseAi
           header << "Category: #{topic.category.name}\n" if topic.category
 
           # Add tags
-          header << "Tags: #{topic.tags.map(&:name).join(", ")}\n" if topic.tags.present?
+          if @guardian.can_see_tags?(topic)
+            visible_tags = topic.visible_tags(@guardian)
+            header << "Tags: #{visible_tags.map(&:name).join(", ")}\n" if visible_tags.present?
+          end
 
           # Add creation date
           header << "Created: #{format_date(topic.created_at)}\n"

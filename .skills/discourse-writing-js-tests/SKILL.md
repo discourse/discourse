@@ -126,11 +126,17 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
   `{ stubRouter: true }` to stub `service:router`.
 - Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
   the rendered DOM with `find` (first match) / `findAll` (all matches).
+- Don't use `this.set(...)` / `this.setProperties(...)` on the test context. Before render,
+  assign natively (`this.title = "a"`) or use a local constant.
 - To change an argument after render, hold it in a standalone `tracked()` (from
-  `@glimmer/tracking`) instead of a test-only class with `@tracked` fields:
+  `@glimmer/tracking`), not `this.set(...)` or a test-only class with `@tracked` fields:
   `const title = tracked("a")`, pass `@title={{title.value}}`, then `title.value = "b"` and
-  `await settled()`. Start empty values as `tracked(undefined)`, since a bare `tracked()`
-  returns a decorator. Writing an equal value (`Object.is`) does not re-render.
+  `await rerender()` before the next assertion or interaction (`settled()` if the change
+  starts async work). A callback that writes a value back (`@onChange`) assigns it too:
+  `(newTitle) => (title.value = newTitle)`; a value a callback only records for assertions
+  is a plain `let`. Keep a class when it also holds callbacks or untracked state. For
+  `trackedObject` models and the traps (the decorator overload, equal-value writes), see
+  `docs/developer-guides/docs/03-code-internals/33-component-tests.md`.
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 

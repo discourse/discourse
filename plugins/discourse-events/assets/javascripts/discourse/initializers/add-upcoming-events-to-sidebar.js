@@ -1,5 +1,11 @@
+import { routeWithin } from "discourse/lib/mobile-tab-bar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
+import {
+  ATTENDANCE_CHANGE_EVENTS,
+  forgetPersonalEvents,
+} from "../lib/personal-events-check.js";
+import { UPCOMING_EVENTS_TAB_KEY } from "../lib/upcoming-events-tab.js";
 
 export default {
   name: "add-upcoming-events-to-sidebar",
@@ -20,6 +26,32 @@ export default {
             defaultPrefixValue = "calendar-day";
           };
         });
+
+        api.addSidebarPanel(
+          (BaseCustomSidebarPanel) =>
+            class UpcomingEventsPanel extends BaseCustomSidebarPanel {
+              hidden = true;
+              key = UPCOMING_EVENTS_TAB_KEY;
+
+              get mobileTab() {
+                return {
+                  label: i18n("discourse_events.title"),
+                  icon: "calendar-day",
+                  url: "/upcoming-events",
+                  ownsRoute: (route) =>
+                    routeWithin(route, "discourse-post-event-upcoming-events"),
+                };
+              }
+            }
+        );
+
+        const currentUser = api.getCurrentUser();
+        if (currentUser) {
+          const appEvents = container.lookup("service:app-events");
+          ATTENDANCE_CHANGE_EVENTS.forEach((event) =>
+            appEvents.on(event, () => forgetPersonalEvents(currentUser))
+          );
+        }
       });
     }
   },

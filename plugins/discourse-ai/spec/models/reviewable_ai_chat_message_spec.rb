@@ -9,6 +9,30 @@ RSpec.describe ReviewableAiChatMessage, type: :model do
 
   before { enable_current_plugin }
 
+  describe "#build_actions" do
+    it "requests classification for keeping a deleted message removed" do
+      chat_message.trash!
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_keep_deleted",
+        "agree_and_silence",
+        "agree_and_suspend",
+      )
+    end
+
+    it "requests classification for actions that restrict content or the author" do
+      actions = reviewable.actions_for(moderator.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "agree_and_silence",
+        "agree_and_suspend",
+        "agree_and_delete",
+        "delete_and_agree",
+      )
+    end
+  end
+
   describe "#perform" do
     it "suspends the author and deletes the flagged message" do
       reviewable.update!(target_created_by: user)

@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 describe DiscourseTopicVoting do
-  let!(:user0) { Fabricate(:user) }
-  let!(:user1) { Fabricate(:user) }
+  fab!(:user0, :user)
 
-  let(:category1) { Fabricate(:category) }
-  let(:category2) { Fabricate(:category) }
+  fab!(:category1, :category)
+  fab!(:category2, :category)
 
-  let!(:topic0) { Fabricate(:topic, category: category1) }
-  let!(:topic1) { Fabricate(:topic, category: category2) }
+  fab!(:topic0) { Fabricate(:topic, category: category1) }
+  fab!(:topic1) { Fabricate(:topic, category: category2) }
 
   before do
     SiteSetting.topic_voting_enabled = true
@@ -137,7 +136,7 @@ describe DiscourseTopicVoting do
   end
 
   context "when a topic is moved to a category" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let(:post0) { Fabricate(:post, topic: topic0, post_number: 1) }
     let(:post1) { Fabricate(:post, topic: topic1, post_number: 1) }
 
@@ -221,8 +220,8 @@ describe DiscourseTopicVoting do
   end
 
   context "when a category has voting enabled/disabled" do
-    let(:category3) { Fabricate(:category) }
-    let(:topic2) { Fabricate(:topic, category: category3) }
+    fab!(:category3, :category)
+    fab!(:topic2) { Fabricate(:topic, category: category3) }
 
     before do
       DiscourseTopicVoting::CategorySetting.create!(category: category1)

@@ -27,13 +27,24 @@ class Chat::Action::SearchForMessages < Service::ActionBase
       Chat::Action::SearchMessage::ProcessSearchQuery.call(
         query:,
         guardian:,
-        messages:
-          Chat::Message.joins(:chat_channel).where(
-            chat_channels: {
-              id: channel || Chat::ChannelFetcher.all_secured_channel_ids(guardian),
-            },
-          ),
+        messages: searchable_messages,
       )
+  end
+
+  def searchable_messages
+    messages =
+      Chat::Message.joins(:chat_channel).where(
+        chat_channels: {
+          id: channel || Chat::ChannelFetcher.all_secured_channel_ids(guardian),
+        },
+      )
+
+    return messages if can_see_deleted_threads?
+    messages.excluding_deleted_threads
+  end
+
+  def can_see_deleted_threads?
+    channel ? guardian.can_moderate_chat?(channel.chatable) : guardian.is_staff?
   end
 
   def sorted_and_filtered_messages

@@ -378,6 +378,8 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
+    keywords:
+      company_url: "เว็บไซต์"
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:
@@ -650,6 +652,8 @@ th:
         title: "ใช่"
       approve_post:
         title: "ใช่"
+      deny_and_delete_post:
+        complete: "โพสต์ถูกลบ."
       approve_post_closed:
         title: "ใช่"
       reject_post_bundle:

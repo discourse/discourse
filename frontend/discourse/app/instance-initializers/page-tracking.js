@@ -1,9 +1,3 @@
-import { getOwner } from "@ember/owner";
-import {
-  resetAjax,
-  trackNextAjaxAsPageview,
-  trackNextAjaxAsTopicView,
-} from "discourse/lib/ajax";
 import { sendBeaconPageview } from "discourse/lib/beacon-pageview";
 import EmbedMode from "discourse/lib/embed-mode";
 import {
@@ -13,22 +7,19 @@ import {
 } from "discourse/lib/page-tracker";
 
 let _preNavigationUrl = null;
+let _isErrorPage = false;
 
 export default {
   after: "inject-objects",
   before: "message-bus",
 
   initialize(owner) {
-    // Tell our AJAX system to track a page transition
     // eslint-disable-next-line ember/no-private-routing-service
     const router = owner.lookup("router:main");
-    router.on("routeWillChange", this.handleRouteWillChange);
-    const isErrorPage =
+    _isErrorPage =
       document.querySelector("meta#discourse-error")?.dataset.discourseError ===
       "true";
-    if (!isErrorPage) {
-      router.on("routeDidChange", this.handleRouteDidChange);
-    }
+    router.on("routeDidChange", this.handleRouteDidChange);
 
     let appEvents = owner.lookup("service:app-events");
     let documentTitle = owner.lookup("service:document-title");
@@ -99,6 +90,11 @@ export default {
       return;
     }
 
+    if (_isErrorPage && !transition.from) {
+      _preNavigationUrl = window.location.href;
+      return;
+    }
+
     const trackingSessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
@@ -121,60 +117,13 @@ export default {
       url: window.location.href,
       referrer: referrerUrl,
       topicId,
+      navigation: !!transition.from,
     });
 
     _preNavigationUrl = window.location.href;
   },
 
-  handleRouteWillChange(transition) {
-    // The initial transition is tracked by handleRouteDidChange.
-    if (!transition.from) {
-      return;
-    }
-
-    // Ignore intermediate transitions (e.g. loading substates)
-    if (transition.isIntermediate) {
-      return;
-    }
-
-    const trackingSessionId = document.querySelector(
-      "meta[name=discourse-track-view-session-id]"
-    )?.content;
-    let trackingUrl, trackingReferrer;
-
-    if (trackingSessionId) {
-      const owner = getOwner(this);
-      const router = owner.lookup("service:router");
-      let path = transition.intent?.url;
-      if (!path) {
-        try {
-          path = router.urlFor(
-            transition.to.name,
-            ...Object.values(transition.to.params)
-          );
-        } catch {}
-      }
-
-      // The path may not be generated when there is a middle transition leading to another path.
-      // That should not be counted as a page view.
-      if (!path) {
-        return;
-      }
-      trackingUrl = new URL(path, window.location.origin).href;
-      trackingReferrer = window.location.href;
-    }
-    trackNextAjaxAsPageview(trackingSessionId, trackingUrl, trackingReferrer);
-
-    if (
-      transition.to.name === "topic.fromParamsNear" ||
-      transition.to.name === "topic.fromParams"
-    ) {
-      trackNextAjaxAsTopicView(transition.to.parent.params.id);
-    }
-  },
-
   teardown() {
     resetPageTracking();
-    resetAjax();
   },
 };

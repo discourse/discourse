@@ -16,6 +16,13 @@ fi:
         desktop: Työpöytä
         mobile: Mobiili
         save: Tallenna
+        about_tab: Tietoja
+        blog_slug: Polkutunnus
+        settings_tab: Asetukset
+        theme_tab: Värimaailma
+        column_name: Nimi
+        column_category: Luokka
+        column_status: Tila
         path_formats:
           custom: Mukautettu
         back_to_themes: Takaisin teemoihin
@@ -56,7 +63,11 @@ fi:
         edit: Muokkaa
         status: Tila
         replies: Vastaukset
+        title: Otsikko
+        page: Sivu
+      all: Kaikki
       drafts: Luonnokset
+      pages: Sivut
       preview: Esikatselu
       unpublish: Peru julkaisu
       appearance_link: Ulkoasu

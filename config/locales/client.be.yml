@@ -718,7 +718,6 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
-        something_wrong_with_post: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_flagged_post:
           noun: "пост"
@@ -1378,6 +1377,8 @@ be:
       sort_label: "сартаваць па"
     composer:
       options: "Параметры"
+      ai_content:
+        details: "Падрабязнасці"
       posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
       drafts_offline: "чарнавікі па-за сеткай"
@@ -1580,7 +1581,7 @@ be:
       timeline:
         back: "Назад"
       progress:
-        title: прагрэс у тэме
+        title: "прагрэс у тэме"
         jump_prompt_or: "або"
       notifications:
         reasons:
@@ -1658,6 +1659,10 @@ be:
         public: "Публічная"
       change_timestamp:
         action: "змяніць пазнаку часу"
+      multi_select:
+        select: "Выбраць"
+        select_post:
+          label: "Выбраць"
     post_list:
       title: "Апошнія паведамленні"
     post:
@@ -1722,18 +1727,12 @@ be:
       creation_error: Падчас стварэння катэгорыі адбылася памылка.
       save_error: Падчас захавання катэгорыі адбылася памылка.
       description: "Апісанне"
-      icon: "Значок"
-      emoji: "Эмодзі"
       background_color: "Колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
       styles:
         icon: "Значок"
         emoji: "Эмодзі"
-        options:
-          icon: "Значок"
-          emoji: "Эмодзі"
-      color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўнены, што хочаце выдаліць гэту катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
       latest_topics: "Апошнія тэмы"
@@ -1964,6 +1963,12 @@ be:
     footer_nav:
       back: "Назад"
       share: "Абагуліць"
+    mobile_tab_bar:
+      new_topic: "Новая тэма"
+      create: "Ствараць"
+      more: "Яшчэ"
+      back: "Назад"
+      topics: "тэмы"
     trust_levels:
       names:
         newuser: "новы карыстальнік"
@@ -2951,6 +2956,8 @@ be:
           dropdown: "Выпадаючы спіс"
       site_text:
         search_label: "Пошук"
+        preview:
+          default: "Прадвызначаная"
         theme_disabled: "Адключаныя"
         edit: "рэдагаваць"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"

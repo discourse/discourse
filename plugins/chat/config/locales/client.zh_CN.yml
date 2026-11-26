@@ -574,9 +574,6 @@ zh_CN:
         history_label: "历史记录"
         members_label: "成员"
       admin:
-        bot_discoverability:
-          label: "在聊天中显示"
-          description: "让用户在发起聊天私信时找到这个机器人。"
         title: "聊天"
         export_messages:
           title: "导出聊天消息"
@@ -707,19 +704,6 @@ zh_CN:
         action: "举报消息"
       anonymous_flagging:
         description: "如需举报非法内容，请联系 <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
-      emoji_picker:
-        favorites: "常用"
-        smileys_&_emotion: "笑脸和情感"
-        objects: "物体"
-        people_&_body: "人和身体"
-        travel_&_places: "旅行和地点"
-        animals_&_nature: "动物和自然"
-        food_&_drink: "食品和饮料"
-        activities: "活动"
-        flags: "旗帜"
-        symbols: "符号"
-        search_placeholder: "按表情符号名称和别名搜索…"
-        no_results: "没有结果"
       thread:
         title: "标题"
         view_thread: 查看消息串

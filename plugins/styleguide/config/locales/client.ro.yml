@@ -45,6 +45,9 @@ ro:
           title: "Sistem corpuri de literă"
         colors:
           title: "Culori"
+        design_variables:
+          type: "Tip"
+          default: "Implicit"
         drag_and_drop:
           locked: "Blocat"
         icons:

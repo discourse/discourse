@@ -50,6 +50,8 @@ gl:
           color: "cor"
         approve_label: "Si"
         reject_label: "Non"
+        category_access_levels:
+          readonly: "Ver"
       tool_summary:
         search: "Buscar"
         time: "Hora"
@@ -68,6 +70,12 @@ gl:
         errors:
           not_found: "Non foi posíbel atopar o tema."
       edit_category:
+        errors:
+          not_found: "Non foi posíbel atopar a categoría."
+      set_category_permissions:
+        errors:
+          not_found: "Non foi posíbel atopar a categoría."
+      delete_category:
         errors:
           not_found: "Non foi posíbel atopar a categoría."
       change_topic_category:

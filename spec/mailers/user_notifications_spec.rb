@@ -6,7 +6,7 @@ RSpec.describe UserNotifications do
   describe "#get_context_posts" do
     fab!(:category)
 
-    it "does not include hidden/deleted/user_deleted posts in context" do
+    it "excludes hidden and deleted context posts and limits whispers to whisperers" do
       post1 = create_post
       _post2 = Fabricate(:post, topic: post1.topic, deleted_at: 1.day.ago)
       _post3 = Fabricate(:post, topic: post1.topic, user_deleted: true)
@@ -20,12 +20,34 @@ RSpec.describe UserNotifications do
 
       # default is only post #1
       expect(UserNotifications.get_context_posts(last, nil, post1.user).count).to eq(1)
-      # staff members can also see the whisper
-      moderator = build(:moderator)
-      moderator.user_option = UserOption.new
-      moderator.user_option.email_previous_replies = UserOption.previous_replies_type[:always]
-      tu = TopicUser.new(topic: post1.topic, user: moderator)
-      expect(UserNotifications.get_context_posts(last, tu, tu.user).count).to eq(2)
+      whisper_group = Fabricate(:group)
+      SiteSetting.whispers_allowed_groups = whisper_group.id.to_s
+
+      moderator = Fabricate(:moderator)
+      moderator.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      moderator_topic_user = TopicUser.new(topic: post1.topic, user: moderator)
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
+
+      whisperer = Fabricate(:moderator)
+      whisper_group.add(whisperer)
+      whisperer.user_option.update!(
+        email_previous_replies: UserOption.previous_replies_type[:always],
+      )
+      whisperer_topic_user = TopicUser.new(topic: post1.topic, user: whisperer)
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+
+      expect(UserNotifications.get_context_posts(last, moderator_topic_user, whisperer).to_a).to eq(
+        [_post7, post1],
+      )
+      expect(UserNotifications.get_context_posts(last, whisperer_topic_user, moderator).to_a).to eq(
+        [post1],
+      )
     end
 
     it "allows users to control context" do
@@ -157,19 +179,6 @@ RSpec.describe UserNotifications do
 
   describe ".post_approved" do
     fab!(:post)
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions when DSA reporting and an appeal address are configured" do
-        mail = UserNotifications.post_approved(user, notification_data_hash: { post_url: post.url })
-
-        expect(mail.body.decoded).to include("To appeal this decision, contact appeals@example.com")
-      end
-    end
 
     it "addresses the post approval email to the user with a subject and body" do
       subject =
@@ -1182,14 +1191,14 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_replied" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe") }
-    let(:category) { Fabricate(:category, name: "India") }
-    let(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
-    let(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
-    let(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe") }
+    fab!(:category) { Fabricate(:category, name: "India") }
+    fab!(:tag1) { Fabricate(:tag, name: "Taggo", public_topic_count: 1) }
+    fab!(:tag2) { Fabricate(:tag, name: "Taggie", public_topic_count: 3) }
+    fab!(:tag3) { Fabricate(:tag, name: "Teggo", public_topic_count: 2) }
 
-    let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
-    let!(:hidden_tag_group) do
+    fab!(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+    fab!(:hidden_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
 
@@ -1472,8 +1481,8 @@ RSpec.describe UserNotifications do
   end
 
   describe ".user_posted" do
-    let(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
-    let(:topic) { Fabricate(:topic, title: "Super cool topic") }
+    fab!(:response_by_user) { Fabricate(:user, name: "John Doe", username: "john") }
+    fab!(:topic) { Fabricate(:topic, title: "Super cool topic") }
     let(:post) { Fabricate(:post, topic: topic) }
     let(:response) { Fabricate(:post, topic: topic, user: response_by_user) }
     let(:user) { Fabricate(:user) }
@@ -1719,6 +1728,33 @@ RSpec.describe UserNotifications do
 
       expect(mail.body).to include(
         "[group1 (2)](http://test.localhost/g/group1), [group2 (1)](http://test.localhost/g/group2), [one](http://test.localhost/u/one), [two](http://test.localhost/u/two)",
+      )
+    end
+
+    it "doesn't include hidden group member counts in the recipient's participant list" do
+      hidden_members_group =
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user), Fabricate(:user)],
+        )
+      hidden_members_group.reload
+      topic.allowed_users = [user]
+      topic.allowed_groups = [hidden_members_group]
+
+      mail =
+        UserNotifications.user_private_message(
+          user,
+          post: response,
+          notification_type: notification.notification_type,
+          notification_data_hash: notification.data_hash,
+        )
+
+      expect(mail.body.to_s).not_to include(
+        "[#{hidden_members_group.name} (#{hidden_members_group.user_count})]",
+      )
+      expect(mail.body.to_s).to include(
+        "[#{hidden_members_group.name}](#{hidden_members_group.full_url})",
       )
     end
 
@@ -2339,8 +2375,8 @@ RSpec.describe UserNotifications do
     end
 
     context "when showing the right name in 'From' field" do
-      let(:inviter) { Fabricate(:user) }
-      let(:invitee) { Fabricate(:user) }
+      fab!(:inviter, :user)
+      fab!(:invitee, :user)
 
       let(:notification) do
         Fabricate(
@@ -2710,120 +2746,6 @@ RSpec.describe UserNotifications do
     end
   end
 
-  describe ".account_silenced" do
-    fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:silence_user]) }
-
-    context "when the dsa_reporting_enabled site setting is enabled" do
-      before do
-        enable_dsa_reporting
-        SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
-      end
-
-      it "includes appeal instructions for temporary and permanent silences without a reviewable" do
-        [1.day.from_now, 1000.years.from_now].each do |deadline|
-          user.silenced_till = deadline
-
-          mail = UserNotifications.account_silenced(user, user_history:)
-
-          expect(mail.body.decoded).to include(
-            "To appeal this decision, contact appeals@example.com",
-          )
-        end
-      end
-    end
-
-    it "adds the silenced_till date in user's timezone" do
-      user.user_option.timezone = "Asia/Tbilisi" # GMT+4
-      user.silenced_till = DateTime.parse("May 25, 2020, 12:00pm")
-
-      mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-      expect(mail.body).to include("May 25, 2020,  4:00pm (UTC+04:00)")
-    end
-
-    it "uses the offset at the silence end date across daylight saving changes" do
-      user.user_option.timezone = "America/New_York"
-
-      {
-        "2027-01-15T17:00:00Z" => "UTC-05:00",
-        "2027-07-15T17:00:00Z" => "UTC-04:00",
-      }.each do |deadline, offset|
-        user.silenced_till = Time.iso8601(deadline)
-        email = UserNotifications.account_silenced(user, user_history:)
-
-        expect(email.body.decoded).to include(offset)
-      end
-    end
-
-    it "falls back to UTC for an unrecognized timezone" do
-      user.user_option.timezone = "Not/A_Timezone"
-      user.silenced_till = Time.iso8601("2027-01-15T17:00:00Z")
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("UTC+00:00")
-    end
-
-    it "uses the recipient locale and customized date format and wrapper" do
-      SiteSetting.allow_user_locale = true
-      user.locale = "fr"
-      user.user_option.timezone = "Asia/Kolkata"
-      user.silenced_till = Time.iso8601("2027-01-15T12:00:00Z")
-      TranslationOverride.upsert!(:fr, "time.formats.long", "%d/%m/%Y à %H:%M")
-      TranslationOverride.upsert!(
-        :fr,
-        "user_notifications.account_silenced.date_with_timezone",
-        "%{date} (heure UTC%{offset})",
-      )
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).to include("15/01/2027 à 17:30 (heure UTC+05:30)")
-    end
-
-    it "keeps permanent silences free of an expiry date" do
-      user.silenced_till = 1000.years.from_now
-
-      email = UserNotifications.account_silenced(user, user_history:)
-
-      expect(email.body.decoded).not_to include("UTC", "until")
-    end
-
-    context "when user doesn't have timezone set" do
-      before { user.user_option.timezone = nil }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-
-    context "when user timezone is blank" do
-      before { user.user_option.timezone = "" }
-
-      it "doesn't raise error" do
-        expect { UserNotifications.account_silenced(user) }.not_to raise_error
-      end
-
-      it "adds the silenced_till date in UTC" do
-        date = "May 25, 2020, 12:00pm"
-        user.silenced_till = DateTime.parse(date)
-
-        mail = UserNotifications.account_silenced(user, { user_history: user_history })
-
-        expect(mail.body).to include("#{date} (UTC+00:00)")
-      end
-    end
-  end
-
   describe ".account_deleted" do
     fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
 
@@ -3080,12 +3002,6 @@ RSpec.describe UserNotifications do
 
       it "has improved version for account_suspended without email_prefix" do
         improved = I18n.t("user_notifications.account_suspended.subject_template_improved")
-
-        expect(improved).not_to include("%{email_prefix}")
-      end
-
-      it "has improved version for account_silenced without email_prefix" do
-        improved = I18n.t("user_notifications.account_silenced.subject_template_improved")
 
         expect(improved).not_to include("%{email_prefix}")
       end

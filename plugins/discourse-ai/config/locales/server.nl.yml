@@ -38,12 +38,6 @@ nl:
         description: "Triageer berichten met behulp van een groot taalmodel"
         notify_author_pm:
           subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
-          body: |
-            Hallo @%{username},
-
-            Je bericht in '%{topic_title}' is tijdelijk verwijderd en in onze beoordelingswachtrij geplaatst zodat een moderator ernaar kan kijken. Als het wordt goedgekeurd, wordt het automatisch hersteld.
-
-            Referentie: %{post_url}
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -129,6 +123,12 @@ nl:
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
+    keywords:
+      ai_default_llm_model: "standaard taalmodel"
+      ai_discord_search_enabled: "discord-integratie"
+      ai_helper_automatic_chat_thread_title: "chatthreadtitels"
+      ai_summarization_enabled: "samenvattingen"
+      ai_summary_gists_enabled: "korte samenvattingen voor topiclijst"
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -363,6 +363,8 @@ nl:
           text_color: "tekstkleur"
         approve_label: "Ja"
         reject_label: "Nee"
+        category_access_levels:
+          readonly: "Weergeven"
         empty_value: "Leeg"
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
@@ -552,6 +554,7 @@ nl:
         edit_tag: "Tag bewerken"
         create_category: "Categorie maken"
         edit_category: "Categorie bewerken"
+        delete_category: "Categorie verwijderen"
         set_topic_timer: "Topictimer instellen"
         set_slow_mode: "Langzame modus instellen"
         move_posts: "Berichten verplaatsen"
@@ -747,6 +750,12 @@ nl:
       edit_category:
         errors:
           not_found: "Categorie niet gevonden."
+      set_category_permissions:
+        errors:
+          not_found: "Categorie niet gevonden."
+      delete_category:
+        errors:
+          not_found: "Categorie niet gevonden."
       change_topic_category:
         errors:
           not_found: "Topic niet gevonden."
@@ -824,6 +833,8 @@ nl:
           not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
           not_found: "Item in de beoordelingswachtrij niet gevonden"
     appearance_authoring:
+      component_on: "Aan"
+      component_off: "Uit"
       default_theme: "Standaardthema"
       colors:
         light:

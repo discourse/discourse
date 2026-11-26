@@ -300,6 +300,36 @@ RSpec.describe InviteRedeemer do
       InviteRedeemer.new(invite: invite, email: invite.email, username: username, name: name)
     end
 
+    context "with an invite link and a staged user whose domain is now blocked" do
+      fab!(:staged) { Fabricate(:staged, email: "invitee@account.com") }
+      fab!(:invite) { Fabricate(:invite, email: nil) }
+
+      before { SiteSetting.blocked_email_domains = "account.com" }
+
+      it "redeems the invite when the provider grants an override for the verified email" do
+        session = {
+          authentication: {
+            email: staged.email,
+            email_valid: true,
+            skip_email_validation: true,
+          },
+        }
+        redeemer = described_class.new(invite:, email: staged.email, session:)
+
+        expect(redeemer.redeem).to eq(staged)
+        expect(staged.reload).not_to be_staged
+        expect(invite.reload).to be_redeemed
+      end
+
+      it "leaves the invite and staged user unchanged without an override" do
+        redeemer = described_class.new(invite:, email: staged.email)
+
+        expect { redeemer.redeem }.to raise_error(ActiveRecord::RecordInvalid)
+        expect(staged.reload).to be_staged
+        expect(invite.reload).not_to be_redeemed
+      end
+    end
+
     it "rejects an unverified supplied email when the user's primary email does not match the invite" do
       invite = Fabricate(:invite, email: "invited@example.com")
       user = Fabricate(:user, email: "other@example.com")
@@ -430,6 +460,26 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
       end
 
+      it "stores numbers and discards values that aren't numbers for number fields" do
+        age_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        score_field = Fabricate(:user_field, field_type: "number", requirement: "optional")
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: {
+              age_field.id.to_s => " 42 ",
+              score_field.id.to_s => "abc",
+            },
+          ).redeem
+
+        expect(user.custom_fields["user_field_#{age_field.id}"]).to eq("42")
+        expect(user.custom_fields["user_field_#{score_field.id}"]).to be_nil
+      end
+
       it "assigns signup fields while preserving hidden staged fields" do
         visible_field = Fabricate(:user_field, show_on_signup: true, editable: false)
         hidden_field = Fabricate(:user_field, show_on_signup: false, editable: false)
@@ -480,6 +530,35 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field_1.id}"]).to eq(nil)
         expect(user.custom_fields["user_field_#{optional_field_2.id}"]).to eq("true")
         expect(user.custom_fields["user_field_#{optional_field_3.id}"]).to eq(nil)
+      end
+
+      it "only sets dropdown and multiselect values that are configured options" do
+        dropdown_field =
+          Fabricate(:user_field, field_type: "dropdown", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Engineering")
+          end
+        multiselect_field =
+          Fabricate(:user_field, field_type: "multiselect", requirement: "optional").tap do |field|
+            field.user_field_options.create!(value: "Axe")
+            field.user_field_options.create!(value: "Sword")
+          end
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: {
+              dropdown_field.id.to_s => "Staff",
+              multiselect_field.id.to_s => %w[Axe Juice Sword],
+            },
+          ).redeem
+
+        expect(user).to be_present
+        expect(user.custom_fields["user_field_#{dropdown_field.id}"]).to be_nil
+        expect(user.custom_fields["user_field_#{multiselect_field.id}"]).to eq(%w[Axe Sword])
       end
 
       it "does not add user to group if inviter does not have permissions" do

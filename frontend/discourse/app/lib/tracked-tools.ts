@@ -173,63 +173,6 @@ export function resettableTracked(
   };
 }
 
-/**
- * @decorator
- *
- * Same as `@tracked`, but skips notifying about updates if the value is unchanged. This introduces some
- * performance overhead, so should only be used where excessive downstream re-evaluations are a problem.
- *
- * @example
- *
- * ```js
- * class UserRenameForm {
- *   ⁣@dedupeTracked fullName;
- * }
- *
- * const form = new UserRenameForm();
- * form.fullName = "Alice"; // Downstream consumers will be notified
- * form.fullName = "Alice"; // Downstream consumers will not be re-notified
- * form.fullName = "Bob"; // Downstream consumers will be notified
- * ```
- *
- */
-export function dedupeTracked(target: object, key: string): void;
-export function dedupeTracked(
-  target: object,
-  key: string,
-  desc: FieldDescriptor
-): TrackedAccessor;
-export function dedupeTracked(
-  target: object,
-  key: string,
-  desc?: FieldDescriptor
-): TrackedAccessor {
-  // Babel supplies desc even though TypeScript checks fields with two arguments.
-  const { initializer } = desc!;
-  const { get, set } = (tracked as TrackedFieldDecorator)(target, key, desc!);
-
-  const values = new WeakMap<object, unknown>();
-
-  return {
-    get(this: object) {
-      if (!values.has(this)) {
-        const value = initializer?.call(this);
-        values.set(this, value);
-        set.call(this, value);
-      }
-
-      return get.call(this);
-    },
-
-    set(this: object, value: unknown) {
-      if (!values.has(this) || values.get(this) !== value) {
-        values.set(this, value);
-        set.call(this, value);
-      }
-    },
-  };
-}
-
 export class DeferredTrackedSet<T = unknown> {
   #set: Set<T>;
 

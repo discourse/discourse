@@ -602,7 +602,8 @@ export default class Post extends RestModel {
   get url(): string {
     return postUrl(
       this.topic?.slug || this.topic_slug,
-      this.topic_id || this.get("topic.id"),
+      // `get` returns `unknown`, and a loaded topic's id is a number.
+      this.topic_id || (this.get("topic.id") as number),
       this.post_number
     );
   }

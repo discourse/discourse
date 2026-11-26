@@ -23,11 +23,19 @@ import BlogThemeFields from "./blog-theme-fields.gjs";
 import BlogThemePreview from "./modal/blog-theme-preview.gjs";
 import BlogThemeVariables from "./modal/blog-theme-variables.gjs";
 
-const TEMPLATE_NAMES = ["layout", "index", "article", "about", "not_found"];
+const TEMPLATE_NAMES = [
+  "layout",
+  "index",
+  "article",
+  "page",
+  "about",
+  "not_found",
+];
 
 const PAGE_FOR_TEMPLATE = {
   template_index: "index",
   template_article: "article",
+  template_page: "page",
   template_about: "about",
   template_not_found: "not_found",
 };
@@ -38,6 +46,8 @@ export default class BlogThemeEditor extends Component {
   @service modal;
   @service toasts;
   @service blogThemeActions;
+  @service site;
+  @service siteSettings;
 
   @tracked busy = false;
   @tracked tab = "design";
@@ -86,11 +96,27 @@ export default class BlogThemeEditor extends Component {
   }
 
   get previewUnavailable() {
+    if (this.previewPage === "page") {
+      return !this.catalog?.has_page;
+    }
     return this.previewPage === "article" && !this.selectedArticle;
+  }
+
+  // With several blogs, each blog picks its theme on its Theme tab.
+  get canActivate() {
+    return !(this.site.blogs?.length > 1);
   }
 
   get actionsDisabled() {
     return this.busy || this.blogThemeActions.busy || this.hasUnsavedChanges;
+  }
+
+  get customLocked() {
+    return !this.siteSettings.blog_custom_themes_enabled;
+  }
+
+  get savingDisabled() {
+    return this.busy || this.customLocked;
   }
 
   get tabs() {
@@ -631,21 +657,21 @@ export default class BlogThemeEditor extends Component {
 
           <form.Actions>
             <form.Submit
-              @disabled={{this.busy}}
+              @disabled={{this.savingDisabled}}
               @label="blog.admin.save_draft"
             />
             <form.Button
               class="blog-theme-editor__preview-draft"
               @action={{this.openPreview}}
-              @disabled={{this.busy}}
+              @disabled={{this.savingDisabled}}
               @icon="eye"
               @label="blog.admin.preview_short"
             />
-            {{#if draft.id}}
+            {{#if (and draft.id this.canActivate)}}
               <form.Button
                 class="blog-theme-editor__activate"
                 @action={{this.activate}}
-                @disabled={{this.actionsDisabled}}
+                @disabled={{or this.actionsDisabled this.customLocked}}
                 @label="blog.admin.activate_theme"
               />
               <form.Button
@@ -677,7 +703,7 @@ export default class BlogThemeEditor extends Component {
               />{{/if}}
             <DButton
               @action={{this.pull}}
-              @disabled={{this.actionsDisabled}}
+              @disabled={{or this.actionsDisabled this.customLocked}}
               @label="blog.admin.pull_git"
             />
           </details>

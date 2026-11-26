@@ -16,6 +16,13 @@ fa_IR:
         desktop: کامپیوتر
         mobile: موبایل
         save: ذخیره
+        about_tab: درباره
+        blog_slug: نشانک (slug)
+        settings_tab: تنظیم
+        theme_tab: قالب
+        column_name: نام
+        column_category: دسته‌بندی
+        column_status: وضعیت
         path_formats:
           custom: سفارشی
         new_theme_short: پوسته جدید
@@ -54,7 +61,11 @@ fa_IR:
         edit: ویرایش
         status: وضعیت
         replies: پاسخ‌ها
+        title: عنوان
+        page: صفحه
+      all: همه
       drafts: پیش‌نویس‌ها
+      pages: صفحه
       preview: پیش‌نمایش
       unpublish: لغو انتشار
       appearance_link: ظاهر

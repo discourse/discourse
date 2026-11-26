@@ -14,6 +14,15 @@ export function isTopLevel(href) {
   return !hasExtra;
 }
 
+// Whether the child at `index` of an inline token starts a line indented by
+// whitespace, which opts a lone link out of a full onebox.
+export function hasLeadingSpace(inlineToken, index) {
+  const prev = inlineToken.children[index - 1];
+  return index === 0
+    ? !!inlineToken.leading_space
+    : prev.tag === "br" && !!prev.leading_space;
+}
+
 function applyOnebox(state, silent) {
   if (silent || !state.tokens) {
     return;
@@ -42,13 +51,10 @@ function applyOnebox(state, silent) {
             continue;
           }
 
-          if (j === 0 && token.leading_space) {
+          if (hasLeadingSpace(token, j)) {
             mode = INLINE;
-          } else if (j > 0) {
-            let prevSibling = children[j - 1];
-            if (prevSibling.tag !== "br" || prevSibling.leading_space) {
-              mode = INLINE;
-            }
+          } else if (j > 0 && children[j - 1].tag !== "br") {
+            mode = INLINE;
           }
 
           // look ahead for soft or hard break

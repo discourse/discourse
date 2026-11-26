@@ -27,6 +27,7 @@ class LiveWebrtcStub extends Service {
   @tracked pttEnabled = false;
 
   screenShareSupported = true;
+  watchingCalls = [];
 
   get activeRoom() {
     return this.liveRooms.roomById(this.activeRoomId);
@@ -68,9 +69,34 @@ class LiveWebrtcStub extends Service {
     return false;
   }
 
-  setWatching() {}
+  acquireVideoWatch(roomId) {
+    this.watchingCalls.push({ roomId, watching: true });
+    return () => this.watchingCalls.push({ roomId, watching: false });
+  }
+
   join() {}
   leave() {}
+  acceptSpeakInvitation() {
+    this.acceptedInviteRoomIds = [
+      ...(this.acceptedInviteRoomIds || []),
+      ...arguments,
+    ];
+  }
+
+  declineSpeakInvitation() {
+    this.declinedInviteRoomIds = [
+      ...(this.declinedInviteRoomIds || []),
+      ...arguments,
+    ];
+  }
+
+  stepDownFromStage() {
+    this.steppedDownRoomIds = [
+      ...(this.steppedDownRoomIds || []),
+      ...arguments,
+    ];
+  }
+
   toggleMute() {}
   toggleDeafen() {}
   toggleCamera() {}
@@ -181,6 +207,42 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       };
       this.liveRooms.rooms = [this.room];
     };
+  });
+
+  test("room page watch follows room changes and teardown", async function (assert) {
+    const showPage = tracked(true);
+    const room = tracked(this.room);
+    await render(
+      <template>
+        {{#if showPage.value}}
+          <LiveRoomPage @room={{room.value}} />
+        {{/if}}
+      </template>
+    );
+    assert.deepEqual(this.liveWebrtc.watchingCalls, [
+      { roomId: 1, watching: true },
+    ]);
+
+    room.value = { ...this.room, id: 2, slug: "second-room" };
+    this.liveRooms.rooms = [room.value];
+    await settled();
+    assert.deepEqual(
+      this.liveWebrtc.watchingCalls[1],
+      { roomId: 1, watching: false },
+      "releases the captured original room"
+    );
+    assert.deepEqual(
+      this.liveWebrtc.watchingCalls.at(-1),
+      { roomId: 2, watching: true },
+      "watches the replacement room"
+    );
+
+    showPage.value = false;
+    await settled();
+    assert.deepEqual(this.liveWebrtc.watchingCalls.at(-1), {
+      roomId: 2,
+      watching: false,
+    });
   });
 
   test("defaults to the tiled layout with the layout switcher available", async function (assert) {
@@ -540,5 +602,139 @@ module("Integration | Component | Live | RoomPage", function (hooks) {
       .dom(".live-room-page")
       .hasClass("--chat-open", "the chat panel is open by default");
     assert.dom(".live-chat").exists("mounts the chat panel");
+  });
+
+  test("stage rooms separate speakers on stage from listeners in the audience with raised hands first", async function (assert) {
+    this.room.room_type = "stage";
+    this.room.chat_available = false;
+    this.room.active_participants = [
+      {
+        id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+        role: "participant",
+      },
+      {
+        id: 2,
+        username: "host",
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/{size}.png",
+        role: "moderator",
+      },
+      {
+        id: 3,
+        username: "panelist",
+        avatar_template: "/letter_avatar_proxy/v4/letter/p/{size}.png",
+        role: "speaker",
+      },
+      {
+        id: 4,
+        username: "zoe",
+        avatar_template: "/letter_avatar_proxy/v4/letter/z/{size}.png",
+        role: "participant",
+        hand_raised_at: 100,
+      },
+    ];
+    this.liveRooms.rooms = [this.room];
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(".live-room-page__presentation .live-video-tile")
+      .exists(
+        { count: 2 },
+        "only moderators and speakers render as stage tiles"
+      );
+    assert
+      .dom(
+        ".live-video-tile[data-user-id='2'] .live-video-tile__role.--moderator"
+      )
+      .exists("renders moderator role badge on stage tile");
+    assert
+      .dom(
+        ".live-video-tile[data-user-id='3'] .live-video-tile__role.--speaker"
+      )
+      .exists("renders speaker role badge on stage tile");
+
+    assert
+      .dom(".live-room-page__audience-member")
+      .exists({ count: 2 }, "renders listeners in the audience section");
+    assert
+      .dom(".live-room-page__audience-member:first-child")
+      .hasAttribute(
+        "data-user-id",
+        "4",
+        "pins raised-hand listener to the front of the audience"
+      );
+
+    assert
+      .dom(".live-call-controls__mic-combo")
+      .doesNotExist("hides the microphone toggle for stage listeners");
+    assert
+      .dom(".live-call-controls__raise-hand")
+      .exists("shows raise hand for stage listeners");
+  });
+
+  test("stage invitation banner lets an invited listener join the stage or decline", async function (assert) {
+    this.room.room_type = "stage";
+    this.room.chat_available = false;
+    this.room.active_participants = [
+      {
+        id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+        role: "participant",
+        speak_invited_at: 123,
+        speak_invited_by: "host",
+      },
+      {
+        id: 2,
+        username: "host",
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/{size}.png",
+        role: "moderator",
+      },
+    ];
+    this.liveRooms.rooms = [this.room];
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(".live-room-page__stage-invite")
+      .exists("renders the invitation banner for the invited listener");
+
+    await click(".live-room-page__stage-invite-accept");
+    assert.deepEqual(this.liveWebrtc.acceptedInviteRoomIds, [1]);
+
+    await click(".live-room-page__stage-invite-decline");
+    assert.deepEqual(this.liveWebrtc.declinedInviteRoomIds, [1]);
+  });
+
+  test("stage speakers see the step-down control and can move back to audience", async function (assert) {
+    this.currentUser.set("admin", false);
+    this.room.room_type = "stage";
+    this.room.chat_available = false;
+    this.room.creator_id = 2;
+    this.room.active_participants = [
+      {
+        id: this.currentUser.id,
+        username: this.currentUser.username,
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+        role: "speaker",
+      },
+      {
+        id: 2,
+        username: "host",
+        avatar_template: "/letter_avatar_proxy/v4/letter/h/{size}.png",
+        role: "moderator",
+      },
+    ];
+    this.liveRooms.rooms = [this.room];
+
+    await render(<template><LiveRoomPage @room={{this.room}} /></template>);
+
+    assert
+      .dom(".live-call-controls__step-down")
+      .exists("renders Move to audience control for stage speakers");
+    await click(".live-call-controls__step-down");
+    assert.deepEqual(this.liveWebrtc.steppedDownRoomIds, [1]);
   });
 });

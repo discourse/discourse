@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import EmptyCategory from "discourse/components/discovery/empty-category";
 import DiscoveryTopicsList from "discourse/components/discovery-topics-list";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";
 import NewListHeaderControlsWrapper from "discourse/components/new-list-header-controls-wrapper";
@@ -12,6 +13,7 @@ import List from "discourse/components/topic-list/list";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { isEmptyCategoryList } from "discourse/lib/empty-category";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
@@ -104,10 +106,23 @@ export default class DiscoveryTopics extends Component {
     return !this.new || this.currentUser?.unified_new_enabled;
   }
 
+  get showEmptyCategory() {
+    return isEmptyCategoryList({
+      category: this.args.category,
+      tag: this.args.tag,
+      list: this.args.model,
+    });
+  }
+
   get showEmptyFilterEducationInFooter() {
     const topicsLength = this.args.model.get("topics.length");
 
-    if (!this.allLoaded || topicsLength > 0 || !this.currentUser) {
+    if (
+      !this.allLoaded ||
+      topicsLength > 0 ||
+      !this.currentUser ||
+      this.showEmptyCategory
+    ) {
       return false;
     }
 
@@ -285,6 +300,14 @@ export default class DiscoveryTopics extends Component {
           @enabled={{@model.canLoadMore}}
           @isLoading={{@model.loadingMore}}
           @rootMargin={{LOAD_MORE_ROOT_MARGIN}}
+        />
+      {{/if}}
+
+      {{#if this.showEmptyCategory}}
+        <EmptyCategory
+          @category={{@category}}
+          @createTopic={{@createTopic}}
+          @createTopicDisabled={{@createTopicDisabled}}
         />
       {{/if}}
 

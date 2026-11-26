@@ -81,12 +81,12 @@ module("Integration | Component | AdminReport", function (hooks) {
   });
 
   test("options", async function (assert) {
-    this.set("options", {
+    this.options = {
       table: {
         perPage: 4,
         total: false,
       },
-    });
+    };
 
     await render(
       <template>

@@ -26,6 +26,21 @@ RSpec.describe Jobs::PullUserProfileHotlinkedImages do
       expect(user.user_profile.reload.bio_cooked).to include(Upload.last.url)
     end
 
+    it "does not copy a secure upload whose URL sits outside the site's subfolder" do
+      enable_secure_uploads
+      upload = Fabricate(:secure_upload_s3, secure: true)
+      FileStore::S3Store.any_instance.stubs(:signed_url_for_path).returns(image_url)
+      FileStore::S3Store.any_instance.stubs(:store_upload).returns(upload.url)
+
+      secure_url = Discourse.base_url + Upload.secure_uploads_url_from_upload_url(upload.url)
+      set_subfolder "/forum"
+      user.user_profile.update!(bio_raw: "<img src='#{secure_url}'>")
+
+      expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.not_to change {
+        Upload.count
+      }
+    end
+
     it "handles nil bio" do
       expect { Jobs::PullUserProfileHotlinkedImages.new.execute(user_id: user.id) }.not_to change {
         Upload.count

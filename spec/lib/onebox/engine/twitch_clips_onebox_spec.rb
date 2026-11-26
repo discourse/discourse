@@ -7,12 +7,6 @@ RSpec.describe Onebox::Engine::TwitchClipsOnebox do
     %r{<iframe src="https://clips\.twitch\.tv/embed\?clip=CheerfulAliveFoxUWot-3FacBI-00c45Ptvd&amp;parent=#{hostname}}
   end
 
-  it "has the iframe with the correct channel" do
-    expect(
-      Onebox.preview("https://clips.twitch.tv/CheerfulAliveFoxUWot-3FacBI-00c45Ptvd", options).to_s,
-    ).to match(expected)
-  end
-
   it "handles all possible clips urls" do
     expect(
       Onebox.preview(

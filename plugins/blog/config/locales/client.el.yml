@@ -16,6 +16,14 @@ el:
         desktop: Για υπολογιστές
         mobile: Mobile
         save: Αποθήκευση
+        about_tab: Σχετικά
+        blog_slug: Slug
+        settings_tab: Ρυθμίσεις
+        theme_tab: Θέμα
+        column_name: Όνομα
+        column_category: Κατηγορία
+        column_status: Κατάσταση
+        select_theme: Επιλογή θέματος
         path_formats:
           custom: Προσαρμοσμένο
         back_to_themes: Πίσω στα θέματα
@@ -55,7 +63,11 @@ el:
         edit: Επεξεργασία
         status: Κατάσταση
         replies: Απαντήσεις
+        title: Τίτλος
+        page: Σελίδα
+      all: Όλα
       drafts: Προσχέδια
+      pages: Σελίδες
       preview: Προεπισκόπηση
       unpublish: Κατάργηση δημοσίευσης
       appearance_link: Εμφάνιση

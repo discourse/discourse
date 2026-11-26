@@ -125,9 +125,10 @@ class TopicQuery
       list = user_personal_and_groups_private_messages(user)
 
       list =
-        list.joins(
-          "JOIN topic_tags tt ON tt.topic_id = topics.id JOIN tags t ON t.id = tt.tag_id",
-        ).where("t.name = ?", @options[:tags][0])
+        list
+          .joins("JOIN topic_tags tt ON tt.topic_id = topics.id JOIN tags t ON t.id = tt.tag_id")
+          .where("t.name = ?", @options[:tags][0])
+          .where(tt: { tag_id: DiscourseTagging.visible_tags(@guardian).select(:id) })
 
       create_list(:private_messages, {}, list)
     end
@@ -266,7 +267,7 @@ class TopicQuery
 
     def private_messages_default_scope(user)
       options = @options
-      options.reverse_merge!(per_page: per_page_setting)
+      per_page = options[:per_page]&.to_i || per_page_setting
 
       result =
         Topic
@@ -279,11 +280,11 @@ class TopicQuery
 
       result = apply_ordering(result, options) if !options[:skip_ordering]
       result = result.includes(:tags) if SiteSetting.tagging_enabled
-      result = result.limit(options[:per_page]) unless options[:limit] == false
+      result = result.limit(per_page) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
 
       if options[:page]
-        offset = options[:page].to_i * options[:per_page]
+        offset = options[:page].to_i * per_page
         result = result.offset(offset) if offset > 0
       end
 

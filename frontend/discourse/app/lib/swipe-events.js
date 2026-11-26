@@ -59,6 +59,10 @@ export function shouldDeferSwipeToContent(swipeState, container) {
   let element = swipeState.originalEvent?.target;
 
   while (element && element !== container) {
+    if (element.hasAttribute?.("data-swipe-ignore")) {
+      return true;
+    }
+
     if (element.scrollHeight > element.clientHeight) {
       const style = window.getComputedStyle(element);
 

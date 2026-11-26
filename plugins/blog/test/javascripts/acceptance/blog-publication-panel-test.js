@@ -454,6 +454,11 @@ acceptance("Blog publication panel", function (needs) {
         "ada,bob",
         "co-authors are sent as one list of usernames"
       );
+      assert.strictEqual(
+        data.get("publication[page]"),
+        "true",
+        "the standalone page setting is saved"
+      );
       publication = { ...publication, excerpt: "A revised introduction" };
       return response(publication);
     });
@@ -481,6 +486,7 @@ acceptance("Blog publication panel", function (needs) {
     await formKit(`${PANEL}__form`)
       .field("canonical_url")
       .fillIn("https://example.com/original");
+    await formKit(`${PANEL}__form`).field("page").toggle();
     await formKit(`${PANEL}__form`).submit();
     assert
       .dom(`${PANEL}__badge`)
@@ -563,5 +569,96 @@ acceptance("Blog publication panel", function (needs) {
     assert
       .dom(`${PANEL}__changed`)
       .includesText("Body", "drift since the frozen revision is still listed");
+  });
+});
+
+acceptance("Blog publication panel with several blogs", function (needs) {
+  needs.user({ admin: true });
+  needs.settings({ blog_enabled: true });
+  needs.site({
+    blogs: [
+      {
+        id: 1,
+        name: "The blog",
+        is_default: true,
+        base_url: "https://blog.example.com",
+        category_id: 3,
+        path_format: "/{slug}",
+      },
+      {
+        id: 2,
+        name: "Engineering",
+        is_default: false,
+        base_url: "https://blog.example.com/blog/engineering",
+        category_id: 4,
+        path_format: "/{year}/{slug}",
+      },
+    ],
+  });
+
+  let publication;
+
+  needs.hooks.beforeEach(() => {
+    publication = {
+      id: 280,
+      role: "draft",
+      status: "draft",
+      title: "An unfinished story",
+      path: "/an-unfinished-story",
+      url: "https://blog.example.com/an-unfinished-story",
+      excerpt: "",
+      meta_description: "",
+      canonical_url: "",
+      featured: false,
+      changes: [],
+      draft_updated_at: "2026-09-01T10:00:00Z",
+      source_topic_id: 280,
+      source_url: TOPIC_URL,
+      preview_url: "/blog-editor/preview/280",
+      published: false,
+      live: false,
+      draft: true,
+      can_publish: true,
+      review_feedback_count: 0,
+      blog_id: 1,
+      can_change_blog: true,
+    };
+    pretender.get("/t/280.json", () => {
+      const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
+      topic.blog_publication = publication;
+      return response(topic);
+    });
+    pretender.get("/blog-editor/publications/280.json", () =>
+      response(publication)
+    );
+  });
+
+  test("moves a draft to another blog from its settings", async function (assert) {
+    let savedBlogId;
+    pretender.put("/blog-editor/publications/280.json", (request) => {
+      savedBlogId = new URLSearchParams(request.requestBody).get(
+        "publication[blog_id]"
+      );
+      publication = { ...publication, blog_id: 2 };
+      return response(publication);
+    });
+
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings-toggle`);
+    await formKit(`${PANEL}__form`).field("blog_id").select(2);
+    await formKit(`${PANEL}__form`).submit();
+
+    assert.strictEqual(savedBlogId, "2", "the chosen blog is saved");
+  });
+
+  test("hides the blog choice once the article has a discussion", async function (assert) {
+    publication = { ...publication, can_change_blog: false };
+
+    await visit(TOPIC_URL);
+    await click(`${PANEL}__settings-toggle`);
+
+    assert
+      .dom(`${PANEL}__form [name="blog_id"]`)
+      .doesNotExist("a published article stays on its blog");
   });
 });

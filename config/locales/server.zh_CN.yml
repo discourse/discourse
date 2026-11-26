@@ -75,6 +75,7 @@ zh_CN:
       date_with_timezone: "%{date} (%{timezone})"
   mcp:
     errors:
+      authoring_guide_unavailable: "指南不可用。请从本站存储库的 .skills/ 或 docs/developer-guides/ 目录下选择一个 Markdown 文件（最大 256 KiB）。"
       category_create_failed: "无法创建类别。"
       category_delete_confirmation_required: "类别删除必须得到确认"
       category_delete_name_mismatch: "类别名称不匹配"
@@ -101,6 +102,7 @@ zh_CN:
       invalid_directory_period: "无效的目录时间范围"
       invalid_reply_mode: "无效回复模式"
       post_not_found: "帖子未找到"
+      post_not_created: "无法发布该帖子"
       user_directory_disabled: "用户目录已禁用"
       filter_only_for_filtered_view: "筛选功能仅在已筛选视图中受支持。"
       filter_required: "筛选视图需要一个非空白的筛选器。"
@@ -159,6 +161,10 @@ zh_CN:
       topic_not_found: "找不到话题"
       topic_update_required: "至少提供一个要更新的主题字段"
       top_period_only_for_top_view: "热门时间范围仅支持热门视图"
+      webhook_event_not_deliverable: "此事件无法重新发送。请使用 ping 工具发送 ping 事件。"
+      webhook_event_not_found: "此事件不属于此 Webhook 或已不再可用。"
+      webhook_not_found: "未找到 Webhook"
+      webhook_unknown_selection: "%{field} 中的一个或多个 ID 未知或不可用"
       upload_not_found: "未找到上传文件"
       upload_too_large: "上传文件过大"
       user_create_failed: "无法创建用户"
@@ -456,6 +462,7 @@ zh_CN:
         auto_generated_email_error: "当 'precedence' 标头设置为 list、junk、bulk 或 auto_reply，或者任何其他标头包含 auto-submitted、auto-replied 或 auto-generated 时，就会发生这种情况。"
         no_body_detected_error: "当我们无法提取正文且没有附件时，就会发生这种情况。"
         no_sender_detected_error: "当我们在“发件人”标头中找不到有效的电子邮件地址时，就会发生这种情况。"
+        authentication_failed_error: "当收到的电子邮件认证需要审核时会发生这种情况，但该操作会立即生效，无法排队处理。"
         from_reply_by_address_error: "当“发件人”标头与回复电子邮件地址时，就会发生这种情况。"
         inactive_user_error: "当发件人不活跃时，就会发生这种情况。"
         suspended_user_error: "当发件人被暂停使用时会发生这种情况。"
@@ -701,10 +708,10 @@ zh_CN:
   no_mentions_allowed_newuser: "抱歉，新用户无法提及其他用户。"
   too_many_mentions_newuser:
     other: "抱歉，新用户在一个帖子中只能提及 %{count} 个用户。"
-  no_embedded_media_allowed_group: "抱歉，您无法在帖子中嵌入媒体条目。"
-  no_embedded_media_allowed: "抱歉，新用户不能在帖子中嵌入媒体条目。"
+  no_embedded_media_allowed_group: "对不起，你不能在帖子中包含图片、视频或音频。你可以在句子里链接到它们。"
+  no_embedded_media_allowed: "对不起，新用户不能在帖子中包含图片、视频或音频。你可以在句子里链接到它们。"
   too_many_embedded_media:
-    other: "抱歉，新用户在一个帖子中只能添加 %{count} 个媒体条目。"
+    other: "抱歉，新用户只能在帖子中包含 %{count} 个图片、视频或音频文件。"
   no_attachments_allowed: "抱歉，新用户不能在帖子中上传附件。"
   too_many_attachments:
     other: "抱歉，新用户在一个帖子中仅能上传 %{count} 个附件。"
@@ -2816,8 +2823,6 @@ zh_CN:
     default_watched_precedence_over_muted: "如果用户正在关注的类别或标签中有他们已设为免打扰的类别或标签，则通知他们"
     company_name: "您的公司或组织的名称。"
     company_url: "公司或机构的网站网址（可选）。"
-    governing_law: "指定管辖网站法律方面（包括《服务条款》和《隐私政策》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。"
-    city_for_disputes: "指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
     shared_drafts_allowed_groups: "允许这些群组中的用户查看和编辑共享草稿。"
     push_notifications_prompt: "显示推送通知的用户同意横幅。此设置会触发一个提示，要求用户同意向其发送推送通知。只有在推送通知尚未启用、用户的设备支持推送通知、用户发布了帖子或正在使用渐进式 Web 应用 (PWA) 时，才会出现该提示。如果用户已经忽略了提示或授予/拒绝了权限，提示将不会再次显示。"
@@ -2846,7 +2851,6 @@ zh_CN:
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
-    concord_in_wizard: "在设计向导中提供 Concord 和通用聊天主页。"
     enable_site_owner_onboarding: "在首页上向新管理员显示面板以帮助他们开始。重新启用此设置以再次查看入门步骤。"
     site_owner_onboarding_max_days: "站点创建后显示入门横幅的最大天数。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
@@ -2867,7 +2871,6 @@ zh_CN:
     enable_composer_redesign: "启用重新设计的编辑器。"
     enable_new_reordering_controls: "在列表设置、管理列表、用户目录列和侧边栏链接上使用共享的重新排序控件，使每个控件都具有相同的拖动手柄、移动菜单和键盘支持。"
     enable_main_outlet_grid_layout_change: "将编辑器放置在主布局网格内，以便主题可以将其定位在网格列中，并使用更窄的侧边栏。"
-    review_queue_consistent_answers: "统一所有审核队列问题的表述，让“是”始终表示存在问题，并将所有类型的审核结果标记为“确认存在问题”或“未发现问题”。"
     enable_composer_toolbar_customization: "允许成员在其界面偏好设置中选择哪些按钮显示在编辑器工具栏中。"
     prioritize_recently_used_tags: "如果在创建或编辑话题时添加标签，会在列表顶部显示该成员最近在自己的话题中使用过的标签，然后再显示论坛最热门的标签。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
@@ -2919,7 +2922,6 @@ zh_CN:
     enable_new_defaults_for_trust_level_3_requirements: "我们更新了 TL3 的默认要求，使其对大型活跃社区的成员更加合理。如果您之前覆盖了这些设置，即将进行的更改将不会产生任何影响。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动式 'Dismiss...' 按钮，以方便用户访问，并腾出话题列表顶部的空间"
     rename_faq_to_guidelines: "此次更改将“常见问题解答”页面重命名为“准则”。“常见问题解答”页面仍可通过 /faq 访问。{{setting:faq_url}} 设置与以前一样有效。"
-    enable_category_hashtag_cards: "当用户点击类别标签时，如果用户有权查看该类别，则显示一个浮动类别卡片。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
@@ -3022,10 +3024,29 @@ zh_CN:
       mediaconvert_output_subdirectory_required: "MediaConvert 输出子目录为必选项。"
       s3_credentials_required_for_video_conversion: "需要具有 S3 凭据才能进行视频转换。请配置 S3 访问密钥或启用 IAM 配置文件。"
     keywords:
+      about_banner_image: "横幅图片"
+      about_page_extra_groups: "群组列表"
+      about_page_extra_groups_initial_members: "展开成员"
+      about_page_extra_groups_order: "排序顺序"
+      about_page_extra_groups_show_description: "包括描述"
       clean_up_inactive_users_after_days: "已停用|闲置|未激活"
+      company_url: "网站"
+      default_composition_mode: "rte|富文本|输入框|Markdown|富文本编辑器"
+      embed_full_app: "完整应用模式"
+      extended_site_description: "社区描述"
+      large_icon: "方形图标"
+      logo: "主要徽标"
+      logo_dark: "深色主要徽标"
+      logo_small: "小徽标"
+      logo_small_dark: "深色小徽标"
       navigation_menu: "边栏|标题下拉菜单"
       purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
-      default_composition_mode: "rte|富文本|输入框|Markdown|富文本编辑器"
+      short_site_description: "社区标题"
+      site_contact_group_name: "网站联系群组"
+      site_contact_username: "网站联系人名称"
+      site_description: "社区摘要"
+      title: "社区名称"
+      welcome_banner_image: "背景图片"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3618,20 +3639,6 @@ zh_CN:
       title: "帖子被隐藏"
       preview: "由于社区成员的举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        此帖子由于社区举报而被隐藏，因此请考虑根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后编辑您的帖子，然后它将自动被取消隐藏**。
-
-        不过，如果帖子再次由于社区举报而被隐藏，它将保持隐藏至管理人员介入。
-
-        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     reviewable_queued_post_revise_and_reject_edit_post: "您可以编辑下方的原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "您可以编辑下方的原帖并重新提交，以进行建议的更改。"
     reviewable_queued_post_revise_and_reject_edit_topic: "您可以编辑下方的话题原帖并重新提交以进行建议的更改，或者如果您有任何疑问，请回复此消息。"
@@ -3684,31 +3691,9 @@ zh_CN:
       title: "帖子被再次隐藏"
       preview: "由于社区成员的再次举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏，已通知管理人员"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被重新隐藏。
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        此帖子被社区举报，现已被隐藏。**由于此帖子已被隐藏超过一次，您的帖子现在将持续隐藏，直至由管理人员处理**。
-
-        有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     queued_by_staff:
       title: "帖子需要审批"
       subject_template: "帖子被管理人员隐藏，等待审批"
-      text_body_template: |
-        您好，
-
-        这是一封由 %{site_name} 自动发送的邮件，旨在通知您的帖子已被隐藏。
-
-        <%{base_url}%{url}>
-
-        在管理人员审核之前，您的帖子将保持隐藏状态。
-
-        有关更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     flags_disagreed:
       title: "遭到举报的帖子被管理人员恢复"
       subject_template: "遭到举报的帖子被管理人员恢复"
@@ -4249,6 +4234,9 @@ zh_CN:
         作为预防措施，您的新帐户已被禁止创建新回复或话题，直到管理人员可以审核您的帐户。对于任何不便之处，我们深表歉意。
 
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
+    moderator_silence:
+      date_with_timezone: "%{date} (UTC%{offset})"
+      subject_template: "您的帐户已被禁言"
     silenced_by_staff:
       title: "被管理人员禁言"
       preview: "帐户已被临时暂停。"
@@ -4275,16 +4263,6 @@ zh_CN:
     user_automatically_silenced_with_reason:
       title: "用户被自动禁言"
       subject_template: "新用户 %{username} 因社区举报被禁言"
-      text_body_template: |
-        这是一条由系统发送的消息。
-
-        新用户 [%{username}](%{user_url}) 已被自动禁言。
-
-        原因 - %{reason}
-
-        请[审核举报内容](%{base_url}/review)。如果 %{username} 被错误地禁言，请点击[此用户管理页面](%{user_url})中的解除禁言按钮。
-
-        此阈值可以通过 `silence_new_user` 站点设置进行更改。
     spam_post_blocked:
       title: "垃圾信息帖子被屏蔽"
       subject_template: "新用户 %{username} 的帖子因重复链接被屏蔽"
@@ -4630,51 +4608,10 @@ zh_CN:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停，直至 %{suspended_till}。
-
-        原因 - %{reason}
-
-        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_suspended_forever:
       title: "帐户被封禁"
       subject_template: "[%{email_prefix}] 您的帐户已被封禁"
       subject_template_improved: "您的帐户已被封禁"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被暂停。
-
-        原因 - %{reason}
-
-        如需更多帮助，请参阅我们的[社区准则](%{base_url}/guidelines)。
-    account_silenced:
-      date_with_timezone: "%{date} (UTC%{offset})"
-      title: "帐户被禁言"
-      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
-      subject_template_improved: "您的帐户已被禁言"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言，直至 %{silenced_till}。
-
-        原因 - %{reason}
-
-        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
-    account_silenced_forever:
-      title: "帐户被禁言"
-      subject_template: "[%{email_prefix}] 您的帐户已被禁言"
-      subject_template_improved: "您的帐户已被禁言"
-      text_body_template: |
-        您好，
-
-        这是来自 %{site_name} 的自动消息，通知您您的帐户已被禁言。
-
-        原因 - %{reason}
-
-        如需更多指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     account_deleted:
       title: "帐户已删除"
       subject_template: "[%{email_prefix}] 您的帐户已被删除"
@@ -4879,10 +4816,6 @@ zh_CN:
     signup_after_reject:
       title: "拒绝后注册"
       subject_template: "您加入 %{site_name} 的请求被拒绝"
-      text_body_template: |
-        一名管理人员拒绝了您在 %{site_name} 上的帐户。
-
-        %{reject_reason}
     signup:
       title: "注册"
       preview: "确认您的帐户。"
@@ -5152,10 +5085,8 @@ zh_CN:
       本网站由您[友好的版主团队](%{base_path}/about)和*您*（社区）共同运营。如果您对事情的运作方式有任何其他疑问，请在%{feedback_category}中开设新话题，我们一起讨论！如果您有无法通过元话题或举报解决的严重或紧急问题，请[联系版主](%{base_path}/about)。
   tos_topic:
     title: "服务条款"
-    body: "<h2 id=\"heading--change-me\"><a href=\"#heading--change-me\">更改我</a></h2>\n\n论坛管理员，下面是隐私政策的示例起始模板，您需要自定义该模板以满足您的网站需求。\n\n这些条款并不制约 <%{base_url}> 下的本互联网论坛的使用，但有一天可能制约。这种情况下，要使用本论坛，您必须同意运营本论坛的公司 %{company_name} 的这些条款。\n\n本公司可能根据其他条款提供其他产品和服务。这些条款仅适用于本论坛的使用。\n\n跳转到：\n\n- [重要条款](#heading--important-terms)\n- [您使用本论坛的权限](#heading--permission)\n- [论坛使用条件](#heading--conditions)\n- [可接受的使用](#heading--acceptable-use)\n- [内容标准](#heading--content-standards)\n- [执法](#heading--enforcement)\n- [您的帐户](#heading--your-account)\n- [您的内容](#heading--your-content)\n- [您的责任](#heading--responsibility)\n- [免责声明](#heading--disclaimers)\n- [责任限制](#heading--liability)\n- [反馈](#heading--feedback)\n- [终止](#heading--termination)\n- [争议](#heading--disputes)\n- [一般条款](#heading--general)\n- [联系方式](#heading--contact)\n- [变更](#heading--changes)\n\n<h2 id=\"heading--important-terms\"><a href=\"#heading--important-terms\">重要条款</a></h2>\n\n***这些条款包括许多影响您的权利和责任的重要条款，如[免责声明](#heading--disclaimers)中的免责声明、[责任限制](#heading--liability)中本公司对您的责任限制、您同意依据[使用的责任](#heading--responsibility)赔偿本公司因您滥用本论坛而造成的损失并同意依据[争议](#heading--disputes)解决争议。***\n\n<h2 id=\"heading--permission\"><a href=\"#heading--permission\">您使用本论坛的权限</a></h2>\n\n本公司依据这些条款向您授予使用本论坛的权限。每个人都需要同意这些条款才能使用本论坛。\n\n<h2 id=\"heading--conditions\"><a href=\"#heading--conditions\">论坛使用条件</a></h2>\n\n您使用本论坛的权限受以下条件限制：\n\n1. 您必须年满十八周岁。\n\n2. 如果本公司直接联系您，表示您无法再使用本论坛，您将无法再使用本论坛。\n\n3. 您必须按照[可接受的使用](#heading--acceptable-use)和[内容标准](#heading--content-standards)使用本论坛。\n\n<h2 id=\"heading--acceptable-use\"><a href=\"#heading--acceptable-use\">可接受的使用</a></h2>\n\n1. 在使用本论坛时不得违反法律。\n\n2. 未经他人特别许可，不得在本论坛上使用或试图使用他人的帐户。\n\n3. 不得在本论坛上购买、出售或以其他方式交易用户名或其他唯一标识符。\n\n4. 不得通过本论坛发送广告、连锁信或其他征求，也不得使用本论坛收集地址或其他个人数据，将其用于商业邮寄名单或数据库。\n\n5. 不得自动访问本论坛，或监控本论坛，如通过网页抓取工具、浏览器插件或加载项，或其他非 Web 浏览器的计算机程序。如果您运行公开的搜索引擎，您可以爬取本论坛来为搜索引擎建立索引。\n\n6. 不得使用本论坛向分发名单、新闻组或群组邮件别名发送电子邮件。\n\n7. 不得虚假地暗示您隶属于本公司或得到本公司的认可。\n\n8. 不得在其他网页上对本论坛上的图片或其他非超文本内容建立超链接。\n\n9. 不得从在本论坛上下载的材料中删除任何显示专有所有权的标记。\n\n10. 不得在其他网站上使用 `<iframe>` 显示本论坛的任何部分。\n\n11. 不得禁用、避免或规避本论坛的任何安全或访问限制。\n\n12. 不得通过不合理的请求量，或旨在对本论坛底层的信息系统施加不合理负载的请求，对本论坛的基础架构造成压力。\n\n13. 不得通过本论坛冒充他人。\n\n14. 不得鼓励或帮助任何人违反这些条款。\n\n<h2 id=\"heading--content-standards\"><a href=\"#heading--content-standards\">内容标准</a></h2>\n\n1. 不得向本论坛提交非法、冒犯性或伤害他人的内容。这包括存在骚扰、不当、辱骂或仇恨行为的内容。\n\n2. 不得向本论坛提交违反法律、侵犯任何人的知识产权、侵犯任何人隐私或违反您与他人签订的协议的内容。\n\n3. 不得向本论坛提交包含恶意计算机代码（如计算机病毒或间谍软件）的内容。\n\n4. 不得以占位符形式向本论坛提交内容来保留特定地址、用户名或其他唯一标识符。\n\n5. 不得使用本论坛披露您无权披露的信息，如他人的机密或个人信息。\n\n<h2 id=\"heading--enforcement\"><a href=\"#heading--enforcement\">执法</a></h2>\n\n本公司可以在最大的法律范围内调查和起诉违反这些条款的行为。本公司可以通知执法部门并与之合作起诉违反法律和这些条款的行为。\n\n本公司保留出于任何理由更改、编辑和删除本论坛内容的权利。如果您认为有人在向本论坛提交内容时违反了这些条款，请[立即联系我们](#heading--contact)。 \n\n<h2 id=\"heading--your-account\"><a href=\"#heading--your-account\">您的帐户</a></h2>\n\n您必须创建并登录帐户才能使用本论坛的某些功能。\n\n要创建帐户，您必须提供有关自己的一些信息。如果您创建帐户，您同意至少提供有效的电子邮件地址，并使该地址保持最新状态。您可以随时通过向 <%{contact_email}> 发送电子邮件关闭您的帐户。\n\n您同意对使用您的帐户执行的所有操作负责，无论该操作是否经过您的授权，直到您关闭您的帐户或通知本公司您的帐户被盗用。如果您怀疑您的帐户被盗用，您同意立即通知本公司。您同意为您的帐户选择安全的密码并对其保密。\n\n根据其处理版权相关撤除请求的政策，或者如果本公司合理地认为您违反了这些条款中的任何规则，本公司可能会限制、暂停或关闭您在本论坛上的帐户。\n\n<h2 id=\"heading--your-content\"><a href=\"#heading--your-content\">您的内容</a></h2>\n\n这些条款中的任何内容都不赋予本公司对您在本论坛分享的知识产权的任何所有权，例如您的帐户信息、帖子或您提交给本论坛的其他内容。这些条款中的任何内容也不赋予您对本公司知识产权的任何所有权。\n\n在您与本公司之间，您仍然对您提交到本论坛的内容全权负责。您同意不会错误地暗示您提交到本论坛的内容由本公司倡议或已获得本公司批准。这些条款并不要求本公司根据这些条款存储、维护或提供您提交的内容的副本，也不要求本公司对其进行更改。\n\n您提交到本论坛的内容属于您，您可以决定为他人赋予何种权限。但您至少应允许本公司向本论坛其他用户提供您提交到本论坛的内容。该特殊许可允许公司复制、发布和分析您提交到本论坛的内容。 \n\n当您提交的内容从本论坛中删除时，无论是由您还是由本公司删除，当最后一份副本从公司的备份、缓存和其他系统中消失时，本公司的特殊许可即告终止。您对提交的内容申请的其他许可，如[知识共享](https://creativecommons.org)许可，可以在您的内容删除后继续。这些许可可能授予他人或本公司再次通过本论坛分享您的内容的权利。 \n\n接收您提交到本论坛的内容的其他人可能会违反您的内容许可条款。您同意本公司不为这些违规行为或其后果对您负责。\n\n<h2 id=\"heading--responsibility\"><a href=\"#heading--responsibility\">您的责任</a></h2>\n\n您同意赔偿本公司因您违反这些条款，或因其他人使用您在本论坛上的帐户违反这些条款而被他人提起的法律索赔。您和本公司都同意尽快就您可能需要赔偿本公司的任何法律索赔通知对方。如果本公司未能及时通知您某项法律索赔，您不必就您本可以通过及时通知进行辩护或减轻的损失对本公司进行赔偿。您同意允许本公司控制对您必须赔偿本公司的法律索赔进行的调查、辩护和解决，并配合这些努力。本公司同意，未经您事先同意，不会同意任何替您认错或给您强加义务的和解。 \n\n<h2 id=\"heading--disclaimers\"><a href=\"#heading--disclaimers\">免责声明</a></h2>\n\n***您接受使用本论坛和本论坛内容的所有风险。在法律允许的范围内，本公司及其供应商按原样提供本论坛，不提供任何保证。***\n\n本论坛可以超链接到和集成其他人运营的本论坛和服务。本公司不对他人运营的服务或可能提供的内容做出任何保证。使用他人运营的服务可能受您与运营该服务的一方之间的其他条款制约。 \n\n<h2 id=\"heading--liability\"><a href=\"#heading--liability\">责任限制</a></h2>\n\n***当您同意这些条款时，本公司及其供应商均不为其人员无法合理预见的违约损害对您承担责任。***\n\n***在法律允许的范围内，对于与本论坛或本论坛内容有关的任何类型的索赔，对您的全部责任将限制在 50 美元。***\n\n<h2 id=\"heading--feedback\"><a href=\"#heading--feedback\">反馈</a></h2>\n\n本公司欢迎您对本论坛提供反馈和建议。请参阅以下[联系方式](#heading--contact)部分，了解与我们联系的方式。\n\n您同意本公司可以自由地根据您提供的反馈和建议采取行动，并且本公司不必通知您相关反馈已被使用，也不必获得您的使用许可或向您付款。您同意不提交您认为可能属于您自己或他人机密或专有信息的反馈或建议。\n\n<h2 id=\"heading--termination\"><a href=\"#heading--termination\">终止</a></h2>\n\n您或本公司可以随时终止这些条款中所述的协议。当我们的协议终止时，您使用本论坛的权限即告终止。\n\n以下条款在我们的协议终止后仍然有效：[您的内容](#heading--your-content)、[反馈](#heading--feedback)、[您的责任](#heading--responsibility)、[免责声明](#heading--disclaimers)、[责任限制](#heading--liability)和[一般条款](#heading--general)。\n\n<h2 id=\"heading--disputes\"><a href=\"#heading--disputes\">争议</a></h2>\n\n%{governing_law} 将管控与这些条款或您对本论坛的使用有关的任何争议。\n\n您和本公司同意仅在%{city_for_disputes}的州或联邦法院寻求与这些条款相关的禁令。您和本公司均不反对这些法院的管辖权、诉讼地或审判地。\n\n***您和本公司将通过具有约束力的美国仲裁协会仲裁解决任何争议，而不是根据《计算机欺诈和滥用法案》寻求禁令或索赔。仲裁将遵循美国仲裁协会的 Commercial Arbitration Rules（商业仲裁规则）和 Supplementary Procedures for Consumer Related Disputes（消费者相关争议补充程序）。仲裁将在%{city_for_disputes}进行。无论您是作为原告还是集体成员，您都将以个人身份解决任何争议，而不是作为集体诉讼或其他代表人诉讼的一部分。未经本公司许可，任何仲裁员不得将任何争议与任何其他仲裁合并。***\n\n任何仲裁裁决都将包括仲裁费用、合理的律师费和证人的合理费用。您和本公司可以在任何有管辖权的法院进行仲裁裁决。\n\n<h2 id=\"heading--general\"><a href=\"#heading--general\">一般条款</a></h2>\n\n如果这些条款中的某项规定无法按书面规定执行，但可以通过修改使其可以执行，则应在必要的最低范围内修改该规定，使其可以执行。否则，应删除该规定。\n\n您不得转让您与本公司签订的协议。本公司可以将您的协议转让给本公司的任何附属公司、获得本公司控制权的任何其他公司或购买与本论坛相关的公司资产的任何其他公司。任何试图违反这些条款进行的转让均不具有法律效力。\n\n行使本协议项下的任何权利和对任何违反本协议的行为不予追究均不表示对违反本协议的任何其他行为不予追究。\n\n这些条款包含了您与本公司之间就您对本论坛使用达成的所有协议条款。这些条款完全取代关于您的本论坛使用的任何其他协议，无论是否为书面协议。\n\n<h2 id=\"heading--contact\"><a href=\"#heading--contact\">联系方式</a></h2>\n\n您可以通过以下方式根据这些条款通知本公司，以及将问题发送给本公司：<%{contact_email}>。 \n\n本公司可能会根据这些条款，使用您在本论坛上为您的帐户提供的电子邮件地址，或通过在本论坛首页或您的帐户页面上发布消息来通知您。\n\n<h2 id=\"heading--changes\"><a href=\"#heading--changes\">变更</a></h2>\n\n本公司上次更新这些条款的日期为 [在此处插入上次更新日期]，并可能再次更新这些条款。本公司将在本论坛上发布所有更新。对于包含重大变更的更新，如果您创建了帐户并提供了有效的电子邮件地址，本公司同意向您发送电子邮件。本公司还可能在本论坛上通过特殊消息或提醒来宣布更新。 \n\n当您注意到这些条款的更新后，您必须同意这些新条款才能继续使用本论坛。\n"
   privacy_topic:
     title: "隐私政策"
-    body: "## [论坛管理员，下面是一个您应该为您的网站定制的隐私政策的示例起始模板。]\n\n<a name=\"collect\"></a>\n\n## [我们收集哪些信息？](#collect)\n\n当您在我们的网站上注册时，我们会收集您的信息，当您通过阅读、撰写和评价本论坛上分享的内容参与本论坛时，我们会收集您的数据。\n\n在我们的网站上注册时，您可能会被要求输入您的姓名和电子邮件地址。不过，您可以在不注册的情况下访问我们的网站。您的电子邮件地址将通过包含唯一链接的电子邮件进行验证。如果访问了该链接，我们便知道您对该电子邮件地址有控制权。 \n\n在注册和发帖时，我们会记录帖子所来自的 IP 地址。我们还可能保留服务器日志，其中包含向我们的服务器发送的每个请求的 IP 地址。 \n\n<a name=\"use\"></a>\n\n## [我们使用您的信息做什么](#use)\n\n我们从您处收集的任何信息都可能通过下列一种方式使用：\n\n* 个性化设置您的体验 &mdash; 您的信息可以帮助我们更好地满足您的个人需求。\n* 改进我们的网站 &mdash; 我们根据您提供给我们的信息和反馈，不断努力改进我们的网站。 \n* 改进客户服务 &mdash; 您的信息可以帮助我们更高效地回应您的客户服务请求和支持需求。\n* 定期发送电子邮件 &mdash; 您提供的电子邮件地址可能被用于向您发送信息、您请求的关于话题变更的通知、回应您的用户名、回复查询和/或其他请求或问题。\n\n<a name=\"protect\"></a>\n\n## [我们如何保护您的信息？](#protect)\n\n我们采取各种安全措施，确保在您输入、提交或访问您的个人信息时您个人信息的安全。\n\n<a name=\"data-retention\"></a>\n\n## [数据保留策略是什么？](#data-retention)\n\n我们会尽最大努力：\n\n* 将服务器日志保留不超过 [天数] 天。\n\n<a name=\"cookies\"></a>\n\n## [我们使用 Cookie 吗？](#cookies)\n\n是的。Cookie 是在您允许的情况下，网站或其服务提供商通过您的 Web 浏览器传输到您计算机硬盘上的小文件。这些 Cookie 使网站能够识别您的浏览器，并且如果您有注册帐户，将其与您的注册帐户相关联。\n\n我们使用 Cookie 来了解和保存您的偏好以便将来访问，并收集关于网站流量和网站互动的汇总数据，以便将来可以提供更好的网站体验和工具。我们可能与第三方服务提供商签订合同，以帮助我们更好地了解我们的网站访客。这些服务提供商不允许使用代表我们收集的信息，除非为了帮助我们开展和改进业务。\n\n<a name=\"disclose\"></a>\n\n## [我们是否向外界披露任何信息？](#disclose)\n\n我们不向外界出售、交易或以其他方式转让您的个人身份信息。这不包括协助我们运营网站、经营业务或为您提供服务的可信第三方，前提是这些第三方同意对这些信息保密。当我们认为为了遵守法律、执行我们的网站政策或保护我们或他人的权利、财产或安全而适合发布时，我们也可能发布您的信息。不过，无法识别个人身份的访客信息可能被提供给其他方，用于营销、广告或其他用途。\n\n<a name=\"third-party\"></a>\n\n## [第三方链接](#third-party)\n\n有时，我们可能自行决定在我们的网站上包含或提供第三方产品或服务。这些第三方网站具有单独和独立的隐私政策。因此，我们对这些链接网站的内容和活动不承担责任和义务。尽管如此，我们仍努力保护我们网站的完整性并欢迎对这些网站提供任何反馈。\n\n<a name=\"coppa\"></a>\n\n## [美国《儿童在线隐私保护法》合规性](#coppa)\n\n我们的网站、产品和服务全部面向 18 岁或以上人群。如果此服务器在美国，而且您未满 18 岁，根据 COPPA（[儿童在线隐私保护法](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)），请勿使用本网站。\n\n<a name=\"online\"></a>\n\n## [仅在线隐私政策](#online)\n\n本在线隐私政策仅适用于通过我们的网站收集的信息，不适用于离线收集的信息。\n\n<a name=\"consent\"></a>\n\n## [您的同意](#consent)\n\n使用本网站，即表示您同意我们网站的隐私政策。\n\n<a name=\"changes\"></a>\n\n## [我们隐私政策的变更](#changes)\n\n如果我们决定更改我们的隐私政策，我们将在此页面上发布这些变更。 \n\n本文档为 CC-BY-SA。它的最后更新日期为 [在此处插入最后更新日期]。\n"
   badges:
     errors:
       cant_delete_system_badge: 系统徽章无法删除。
@@ -5518,7 +5449,6 @@ zh_CN:
       dracula: "Dracula"
       grey_amber: "灰琥珀色"
       latte: "棕色"
-      dark_rose: "黑红"
   wizard:
     title: "Discourse 设置"
     step:
@@ -5720,8 +5650,6 @@ zh_CN:
     actions:
       answer_yes:
         title: "是"
-        delete_post_title: "是的，删除帖子"
-        keep_post_deleted_title: "是，保持帖子已删除状态"
       answer_no:
         title: "否"
       agree:
@@ -5768,6 +5696,7 @@ zh_CN:
       delete_and_ignore_replies:
         title: "删除帖子与回复，并忽略举报"
         description: "删除帖子及其所有回复，忽略举报，并将其从队列中移除；如果是第一个帖子，同时删除话题"
+        confirm_title: "删除帖子与回复，并忽略举报?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       delete_and_agree:
@@ -5777,6 +5706,7 @@ zh_CN:
       delete_and_agree_replies:
         title: "删除帖子和回复"
         description: "同意举报并删除此帖子及其所有回复；如果是第一个帖子，同时删除话题。"
+        confirm_title: "删除帖子和回复?"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       disagree_and_restore:
@@ -5822,6 +5752,10 @@ zh_CN:
         title: "是"
         action_title: "批准帖子"
         complete: "帖子已被批准。"
+      deny_and_delete_post:
+        complete: "帖子已被删除。"
+      deny_and_keep_deleted:
+        complete: "帖子保持删除状态。"
       approve_post_closed:
         title: "是"
         confirm: "此话题已被关闭。仍要创建帖子吗？"
@@ -5843,11 +5777,13 @@ zh_CN:
         delete:
           title: "删除用户"
           description: "删除用户，但不屏蔽其电子邮件地址或 IP 地址"
+          confirm_title: "删除 @%{username}？"
           confirm: "您确定要删除 @%{username} 吗？"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "删除用户并屏蔽其电子邮件地址和 IP 地址"
+          confirm_title: "删除并阻止 @%{username} ？"
           confirm: "您确定要删除并屏蔽 @%{username} 吗？"
           complete: "用户已被删除并被屏蔽。"
       confirm_spam:

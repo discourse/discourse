@@ -50,6 +50,15 @@ store
 
 /* AdminUser: `/admin/users/:id` details and `/admin/users/list` rows. */
 
+expectTypeOf<AdminUserFields["interactive_bot"]>().toEqualTypeOf<
+  boolean | undefined
+>();
+expectTypeOf<AdminUser["interactive_bot"]>().toEqualTypeOf<
+  boolean | undefined
+>();
+expectTypeOf(AdminUser.find(1, { raw: true }))
+  .resolves.toHaveProperty("interactive_bot")
+  .toEqualTypeOf<boolean | undefined>();
 expectTypeOf(AdminUser.find(1)).resolves.toEqualTypeOf<AdminUser>();
 expectTypeOf(
   AdminUser.find("1", { raw: false })

@@ -25,6 +25,7 @@ const MIN_HEIGHT_TIMELINE = 325;
 // values read through injected fetchers rather than a back-reference to the
 // component, so tracking is preserved without coupling.
 class TopicNavigationInfo {
+  @tracked progressDocked = false;
   @tracked topicProgressExpanded = false;
 
   /** @type {{ postIndex: number | null, percent: number } | null} */
@@ -50,6 +51,7 @@ class TopicNavigationInfo {
 export default class TopicNavigation extends Component {
   @service appEvents;
   @service composer;
+  @service mobileTabBar;
   @service modal;
   @service site;
 
@@ -64,6 +66,40 @@ export default class TopicNavigation extends Component {
   /** @type {HTMLElement | null} */
   movingElement = null;
   pxClosed = 0;
+  observeTopicEnd = modifierFn((navigation, [enabled, footerSlot]) => {
+    if (!enabled) {
+      if (this.info.progressDocked) {
+        this.info.progressDocked = false;
+      }
+      return;
+    }
+
+    const posts = navigation.parentElement;
+    const anchor = footerSlot ?? navigation;
+    let frame;
+    const check = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const docked =
+          posts.getBoundingClientRect().bottom <
+          anchor.getBoundingClientRect().bottom - 1;
+        if (this.info.progressDocked !== docked) {
+          this.info.progressDocked = docked;
+        }
+      });
+    };
+
+    const observer = new ResizeObserver(check);
+    observer.observe(posts);
+    observer.observe(anchor);
+    window.addEventListener("scroll", check, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("scroll", check);
+    };
+  });
   setupSwipe = modifierFn((element) => {
     if (!this.site.mobileView) {
       return;
@@ -108,6 +144,15 @@ export default class TopicNavigation extends Component {
       this.#fitsTimeline,
       { topic: this.args.topic }
     );
+  }
+
+  get footerProgressSlot() {
+    const { viewsSlot } = this.mobileTabBar;
+    return viewsSlot &&
+      this.info.withTopicProgress &&
+      !this.mobileTabBar.barTabs.length
+      ? viewsSlot
+      : null;
   }
 
   get #fitsTimeline() {
@@ -304,12 +349,16 @@ export default class TopicNavigation extends Component {
         (if this.info.withTopicProgress "with-topic-progress")
       }}
       ...attributes
+      {{this.observeTopicEnd
+        (and this.mobileTabBar.enabled this.info.withTopicProgress)
+        this.footerProgressSlot
+      }}
       {{this.setupSwipe}}
       {{dCloseOnClickOutside this.closeOnClickOutside}}
     >
       {{! Fully rerender when topic changes (see 4f328089d6f). }}
       {{#each (array @topic) key="id"}}
-        {{yield this.info this.toggleProgressExpansion}}
+        {{yield this.info this.toggleProgressExpansion this.footerProgressSlot}}
       {{/each}}
     </div>
   </template>

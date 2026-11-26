@@ -27,7 +27,7 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "serves the blog under /blog when the blog URL is the forum's own hostname" do
-      SiteSetting.blog_url = "https://test.localhost"
+      update_default_blog(url: "https://test.localhost")
       sign_in(admin)
       get "/blog-editor.json"
       expect(response.status).to eq(200)
@@ -99,7 +99,7 @@ RSpec.describe "Blog publication", type: :request do
       end
     end
 
-    it "rejects drafts categories that ordinary groups can read" do
+    it "makes a drafts category that ordinary groups can read private again" do
       group = Fabricate(:group)
       drafts.set_permissions(group.name => :full, :staff => :full)
       drafts.save!
@@ -109,8 +109,10 @@ RSpec.describe "Blog publication", type: :request do
               excerpt: "A draft",
             },
           }
-      expect(response.status).to eq(400)
-      expect(Blog::Publication.where(topic_id: topic.id)).not_to exist
+      expect(response.status).to eq(200)
+      expect(drafts.reload.category_groups.pluck(:group_id)).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+      )
     end
   end
 
@@ -404,7 +406,7 @@ RSpec.describe "Blog publication", type: :request do
     end
 
     it "serves robots, the About page, and tag pages from the same published set" do
-      SiteSetting.blog_about = "We publish **field notes** from the team."
+      update_default_blog(about: "We publish **field notes** from the team.")
       DiscourseTagging.tag_topic_by_names(
         publication.discussion_topic,
         Guardian.new(admin),
@@ -458,7 +460,7 @@ RSpec.describe "Blog publication", type: :request do
       expect(response.body).to include(publication.url)
       expect(html.at_css('meta[name="description"]')["content"]).to eq("Writes about the field.")
 
-      SiteSetting.blog_description = "Notes from the team."
+      update_default_blog(description: "Notes from the team.")
       SiteSetting.hide_user_profiles_from_public = true
       get author_url
       expect(response.status).to eq(200)
@@ -477,6 +479,47 @@ RSpec.describe "Blog publication", type: :request do
 
       expect(response.status).to eq(200)
       expect(response.body).not_to include("Writes about")
+    end
+
+    it "serves a standalone page at its path while leaving it out of listings and the feed" do
+      update_blog_metadata(publication, admin, page: true)
+      publish_blog_draft(publication, admin)
+
+      get publication.url
+      expect(response.status).to eq(200)
+      html = Nokogiri.HTML5(response.body)
+      expect(html.at_css("h1").text).to eq(publication.article.title)
+      expect(html.at_css("#discussion")).to be_nil
+      expect(html.at_css('a[href*="/author/"]')).to be_nil
+      expect(html.at_css('meta[property="og:type"]')["content"]).to eq("website")
+      expect(JSON.parse(html.at_css('script[type="application/ld+json"]').text)["@type"]).to eq(
+        "WebPage",
+      )
+
+      theme =
+        create_blog_theme(
+          {
+            "name" => "Pages",
+            "accent_color" => "d64b2a",
+            "paper_color" => "f5f0e6",
+            "ink_color" => "19382d",
+            "css" => "",
+            "javascript" => "",
+            "template_page" => "<p id=custom>{{ article.title }}</p>",
+          },
+          user: admin,
+        )
+      activate_blog_theme(theme, user: admin)
+      get publication.url
+      expect(Nokogiri.HTML5(response.body).at_css("#custom").text).to eq(publication.article.title)
+
+      %w[/ /archive /feed.xml].each do |path|
+        get "https://blog.example.com#{path}"
+        expect(response.body).not_to include(publication.url)
+      end
+
+      get "https://blog.example.com/sitemap.xml"
+      expect(response.body).to include(publication.url)
     end
 
     it "credits co-authors in the byline and lists the article on their author pages" do

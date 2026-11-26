@@ -5,13 +5,11 @@ import { i18n } from "discourse-i18n";
 // NOTE: When updating this file you also must consider the ProseMirror rich editor extension
 // for chat transcripts, because it manually constructs the same HTML structure as this rule.
 
-let customMarkdownCookFn;
-
-const chatTranscriptRule = {
+const createChatTranscriptRule = (getCookFunction) => ({
   tag: "chat",
 
   replace: function (state, tagInfo, content) {
-    // Shouldn't really happen but we don't want to break rendering if it does
+    const customMarkdownCookFn = getCookFunction();
     if (!customMarkdownCookFn) {
       return;
     }
@@ -350,9 +348,11 @@ const chatTranscriptRule = {
     state.push("div_chat_transcript_wrap_close", "div", -1);
     return true;
   },
-};
+});
 
 export function setup(helper) {
+  let customMarkdownCookFn;
+
   helper.allowList([
     "svg[class=fa d-icon d-icon-discourse-threads svg-icon svg-node]",
     "use[href=#discourse-threads]",
@@ -388,7 +388,10 @@ export function setup(helper) {
 
   helper.registerPlugin((md) => {
     if (md.options.discourse.features["chat-transcript"]) {
-      md.block.bbcode.ruler.push("chat-transcript", chatTranscriptRule);
+      md.block.bbcode.ruler.push(
+        "chat-transcript",
+        createChatTranscriptRule(() => customMarkdownCookFn)
+      );
     }
   });
 
@@ -406,6 +409,7 @@ export function setup(helper) {
 
     generateCookFunction(
       {
+        lazy: true,
         featuresOverride: chatAdditionalOpts.limited_pretty_text_features,
         markdownItRules,
         hashtagLookup: opts.discourse.hashtagLookup,

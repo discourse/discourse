@@ -34,6 +34,57 @@ RSpec.describe DiscourseAi::Agents::Bot do
   end
 
   describe "#reply" do
+    it "disables tools and requests one final explanation after repeated MCP failures" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "Fix the theme" }],
+        )
+      3.times do
+        context.record_mcp_failure(
+          server_id: 1,
+          tool_name: "discourse_update_theme",
+          message: "Invalid source",
+        )
+      end
+      DiscourseAi::Completions::Llm.with_prepared_responses(
+        ["The theme was not changed because the source was invalid."],
+      ) do |canned, _, prompts|
+        bot.reply(context)
+        expect(canned.completions).to eq(1)
+        expect(prompts.last.tool_choice).to eq(:none)
+        expect(prompts.last.messages.last[:content]).to eq(
+          described_class::MCP_FAILURE_FINAL_ANSWER_HINT,
+        )
+      end
+    end
+
+    it "clears the MCP failure limit when a reused context starts a new root turn" do
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          user: user,
+          messages: [{ type: :user, content: "Fix the theme" }],
+        )
+      3.times do
+        context.record_mcp_failure(
+          server_id: 1,
+          tool_name: "discourse_update_theme",
+          message: "Invalid source",
+        )
+      end
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Not changed."]) { bot.reply(context) }
+      expect(context.mcp_failure_limit_reached?).to eq(true)
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["Hello again."]) do |_, _, prompts|
+        bot.reply(context)
+        expect(context.mcp_failure_limit_reached?).to eq(false)
+        expect(prompts.last.tool_choice).not_to eq(:none)
+        expect(prompts.last.messages.map { |m| m[:content] }).not_to include(
+          described_class::MCP_FAILURE_FINAL_ANSWER_HINT,
+        )
+      end
+    end
+
     it "sets top_p, temperature, and thinking_effort params" do
       SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
@@ -155,6 +206,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
             :source => "context",
             "subagent_depth" => 1,
             "subagent_agent_id" => 7,
+            "workflow_id" => "17",
           },
         )
 
@@ -177,6 +229,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
           "source" => "caller",
           "subagent_depth" => 1,
           "subagent_agent_id" => 7,
+          "workflow_id" => "17",
         )
       end
     end

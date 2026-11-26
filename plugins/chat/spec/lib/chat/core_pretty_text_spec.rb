@@ -115,6 +115,22 @@ RSpec.describe PrettyText do
     expect(doc.css("#pwn")).to be_empty
   end
 
+  it "keeps transcript bodies sanitized when the parent cook disables sanitization" do
+    cooked = PrettyText.cook(<<~MD, sanitize: false)
+      <kbd data-label="outer">A</kbd>
+
+      [chat quote="alice;101;2023-12-01T21:10:53Z"]
+      <kbd data-label="inner">B</kbd>
+      [/chat]
+    MD
+
+    doc = Nokogiri::HTML5.fragment(cooked)
+    expect(doc.at_css('kbd[data-label="outer"]').text).to eq("A")
+    quoted_key = doc.at_css(".chat-transcript-messages kbd")
+    expect(quoted_key.text).to eq("B")
+    expect(quoted_key["data-label"]).to be_nil
+  end
+
   it "converts HTML entities" do
     cooked = PrettyText.cook("The micro sign: &#181;")
     expect(cooked).to include("The micro sign: µ")

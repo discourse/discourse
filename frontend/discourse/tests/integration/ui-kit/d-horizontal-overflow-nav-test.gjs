@@ -15,14 +15,9 @@ import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 
 const ITEMS = Array.from({ length: 10 }, (_, index) => `Item ${index + 1}`);
 
-class PortalState {
-  @tracked show = false;
-  @tracked target = null;
-}
-
 const LateNavItems = <template>
-  {{#if @state.show}}
-    {{#in-element @state.target}}
+  {{#if @show}}
+    {{#in-element @target}}
       {{#each @items as |item index|}}
         <li style="flex: 0 0 80px">
           <a
@@ -344,14 +339,19 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
   });
 
   test("overflow strip: late portaled items are measured and reveal the active item", async function (assert) {
-    const state = new PortalState();
+    const show = tracked(false);
+    const target = tracked(null);
 
     await render(
       <template>
         <div style="width: 200px">
           <DHorizontalOverflowNav id="late-nav" @ariaLabel="Late navigation" />
         </div>
-        <LateNavItems @items={{ITEMS}} @state={{state}} />
+        <LateNavItems
+          @items={{ITEMS}}
+          @show={{show.value}}
+          @target={{target.value}}
+        />
       </template>
     );
 
@@ -362,8 +362,8 @@ module("Integration | ui-kit | DHorizontalOverflowNav", function (hooks) {
       revealCalls++;
       nativeScrollTo(options);
     };
-    state.target = list;
-    state.show = true;
+    target.value = list;
+    show.value = true;
     await settled();
     await nextFrame();
 

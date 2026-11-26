@@ -40,12 +40,24 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      review_bulk:
+        refresh: "Uppdatera"
+        columns:
+          user: "Användare"
+          created: "Skapade"
+          status: "Status"
       copied: "Kopierad"
       ai_decoded_transcript:
         type: "Typ"
         error: "Fel"
         response: "Svar"
+      post_image_captions:
+        image_descriptions:
+          apply: "Tillämpa"
       discourse_workflows:
+        ai_tool:
+          list_item: "Listobjekt"
+          add_list_item: "Lägg till objekt"
         classify:
           text: "Text"
           upload_ids: "Bilder"
@@ -83,6 +95,9 @@ sv:
           enabled: "Aktiverad"
         search:
           name: "Sök"
+        review_queue:
+          setting_groups:
+            settings: "Inställningar"
         image_caption:
           setting_groups:
             settings: "Inställningar"
@@ -236,6 +251,30 @@ sv:
         edit: "Redigera"
         delete: "Radera"
         embedding: "Inbäddning"
+      concepts:
+        edit: "Redigera"
+        seed:
+          refresh: "Uppdatera"
+        delete: "Radera"
+        columns:
+          status: "Status"
+          topics: "Ämnen"
+          posts: "Inlägg"
+        statuses:
+          active: "Aktiv"
+        form:
+          name: "Namn"
+          description: "Beskrivning"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} ämne"
+          other: "%{count} ämnen"
+        tagged_topics: "Taggade ämnen"
+        topic_columns:
+          topic: "Ämne"
+          primary: "Primär"
+          relevance: "Relevans"
+        primary_badge: "Primär"
       decision_models:
         no_preset: "Ingen"
         display_name: "Namn"

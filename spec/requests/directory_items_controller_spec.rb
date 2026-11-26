@@ -20,7 +20,7 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "with limit parameter" do
-    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
+    fab!(:users) { Fabricate.times(DirectoryItemsController::PAGE_SIZE + 10, :user) }
 
     before { DirectoryItem.refresh! }
 
@@ -312,6 +312,36 @@ RSpec.describe DirectoryItemsController do
           { data[:field].id.to_s => { "searchable" => true, "value" => [data[:value]] } },
         )
       end
+    end
+
+    it "orders users numerically by number user fields and returns numbers" do
+      group.add(walter_white)
+      [walter_white, stage_user, evil_trout].each do |directory_user|
+        directory_user.update!(trust_level: TrustLevel[2])
+      end
+      number_field = Fabricate(:user_field, field_type: "number", show_on_profile: true)
+
+      { walter_white => "10", stage_user => "9", evil_trout => "-50" }.each do |user, value|
+        UserCustomField.create!(user_id: user.id, name: "user_field_#{number_field.id}", value:)
+      end
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            group: group.name,
+            order: number_field.name,
+            user_field_ids: number_field.id.to_s,
+            asc: true,
+          }
+      expect(response.status).to eq(200)
+
+      users = response.parsed_body["directory_items"].map { |item| item["user"] }
+      expect(users.map { |user| user["username"] }).to eq(
+        [evil_trout.username, stage_user.username, walter_white.username],
+      )
+      expect(users.map { |user| user["user_fields"][number_field.id.to_s]["value"] }).to eq(
+        [[-50], [9], [10]],
+      )
     end
 
     it "does not order anonymous users by private user fields" do

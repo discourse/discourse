@@ -35,13 +35,19 @@ describe "Admin Backups Page" do
 
   after { teardown_local_backups(root_directory: root_directory) }
 
-  it "shows a list of backups" do
+  it "lets an admin list and restore backups and see backup settings" do
     backups_page.visit_page
     expect(backups_page).to have_backup_listed("b.tar.gz")
     expect(backups_page).to have_backup_listed("old.tar.gz")
+
+    backups_page.expand_backup_row_menu("b.tar.gz")
+    expect(backups_page).to have_css(backups_page.row_button_selector("restore"))
+
+    backups_page.click_tab("settings")
+    expect(settings_page).to have_setting("enable_backups")
   end
 
-  it "can download a backup, which sends an email" do
+  it "lets an admin download and delete a backup" do
     backups_page.visit_page
     backups_page.download_backup("b.tar.gz")
     expect(page).to have_content(I18n.t("admin_js.admin.backups.operations.download.alert"))
@@ -52,19 +58,11 @@ describe "Admin Backups Page" do
         backup_file_path: Discourse.base_url + "/admin/backups/b.tar.gz",
       },
     )
-  end
+    dialog.click_ok
 
-  it "can delete a backup" do
-    backups_page.visit_page
     backups_page.delete_backup("b.tar.gz")
     dialog.click_yes
     expect(backups_page).to have_no_backup_listed("b.tar.gz")
-  end
-
-  it "can restore a backup" do
-    backups_page.visit_page
-    backups_page.expand_backup_row_menu("b.tar.gz")
-    expect(backups_page).to have_css(backups_page.row_button_selector("restore"))
   end
 
   it "can toggle read-only mode" do
@@ -74,12 +72,6 @@ describe "Admin Backups Page" do
     expect(page).to have_content(I18n.t("js.read_only_mode.enabled"))
     backups_page.toggle_read_only
     expect(page).to have_no_content(I18n.t("js.read_only_mode.enabled"))
-  end
-
-  it "can see backup site settings" do
-    backups_page.visit_page
-    backups_page.click_tab("settings")
-    expect(settings_page).to have_setting("enable_backups")
   end
 
   it "shows only settings tab when backups are not enabled" do

@@ -14,6 +14,7 @@ de:
     about: Details
     community: Community
     preview: Vorschau
+    author: Autor
     search: Suche
     replies:
       one: "%{count} Antwort"

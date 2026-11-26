@@ -146,6 +146,16 @@ describe "Classifying reviewable moderation" do
       "The EU Digital Services Act asks platforms to record why content was moderated.",
     )
 
+    category_help = "Select the EU Digital Services Act category that best describes the violation."
+    modal.hover_category_help
+
+    expect(modal).to have_classification_help(category_help)
+
+    modal.click_category_help
+
+    expect(modal).to have_no_classification_help(category_help)
+    expect(modal).to have_no_classification_menu
+
     modal.open_rule_menu
 
     expect(modal).to have_rule_option(rule[:ground], explanation: rule[:explanation])
@@ -156,16 +166,16 @@ describe "Classifying reviewable moderation" do
 
     modal.close_rule_menu
 
-    expect(modal).to have_no_rule_menu
+    expect(modal).to have_no_classification_menu
 
     modal.confirm("Continue to editor")
 
-    expect(modal).to have_required_errors
+    expect(modal).to have_accessible_field_description("community_rule", "Required", invalid: true)
 
     modal.select_rule(rule[:ground])
 
     expect(modal).to have_selected_rule(rule[:ground])
-    expect(modal).to have_accessible_rule_description(rule[:ground])
+    expect(modal).to have_accessible_selection("community_rule", rule[:ground])
     expect(page).to have_no_text(rule[:explanation])
     expect(modal).to have_selected_category(category)
 

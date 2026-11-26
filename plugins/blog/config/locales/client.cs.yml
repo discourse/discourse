@@ -17,6 +17,13 @@ cs:
         desktop: Desktop
         mobile: Mobilní verze
         save: Uložit
+        about_tab: O tomto webu
+        blog_slug: URL
+        settings_tab: Nastavení
+        theme_tab: Téma
+        column_name: Jméno
+        column_category: Kategorie
+        column_status: Stav
         path_formats:
           custom: Přizpůsobené
         back_to_themes: Zpět na motivy
@@ -56,7 +63,11 @@ cs:
         edit: Upravit
         status: Stav
         replies: Odpovědi
+        title: Název
+        page: Stránka
+      all: Vše
       drafts: Koncepty
+      pages: Stránek
       preview: Náhled
       unpublish: Zrušit publikování
       appearance_link: Vzhled

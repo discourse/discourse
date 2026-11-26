@@ -63,7 +63,9 @@ module DiscourseMcp
            !authorization.consent_current?(consent_required_at: consent_required_at)
         return "consent_required"
       end
-      return "access_removed" if (required_scopes - eligible_scopes).present?
+      if eligible_scopes.empty? || (required_scopes - eligible_scopes).present?
+        return "access_removed"
+      end
 
       "active"
     end

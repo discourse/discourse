@@ -8,6 +8,10 @@ module PageObjects
         self
       end
 
+      def has_public_user_field?(name, value:)
+        page.has_css?(".public-user-fields .public-user-field", text: "#{name}: #{value}")
+      end
+
       def find(selector)
         page.find(".new-user-wrapper #{selector}")
       end

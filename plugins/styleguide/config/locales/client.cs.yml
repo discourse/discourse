@@ -50,6 +50,9 @@ cs:
           title: "Systém písem"
         colors:
           title: "Barvy"
+        design_variables:
+          type: "Typ"
+          default: "Výchozí"
         dialog:
           title: "Dialog"
         drag_and_drop:

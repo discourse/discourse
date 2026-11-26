@@ -31,10 +31,36 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         %w[approve_post reviewables.actions.approve_post.action_title],
       )
     end
+
+    it "names both actions for a new topic" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post_topic)
+
+      actions = reviewable.actions_for(moderator.guardian)
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_topic.title")
+      expect(actions.to_a.find { |action| action.server_action == "approve_post" }.label).to eq(
+        "reviewables.actions.approve_topic.title",
+      )
+    end
+
+    it "keeps the closed-topic confirmation on Approve post" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post, topic: Fabricate(:topic, closed: true))
+
+      action =
+        reviewable
+          .actions_for(moderator.guardian)
+          .to_a
+          .find { |candidate| candidate.server_action == "approve_post_closed" }
+
+      expect(action.label).to eq("reviewables.actions.approve_post.action_title")
+      expect(action.confirm_message).to eq("reviewables.actions.approve_post_closed.confirm")
+    end
   end
 
   describe "creating a post" do
-    let!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
 
     context "when creating" do
@@ -551,7 +577,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when updating an existing reviewable" do
-      let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
+      fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
       let(:user_stats) { reviewable.target_created_by.user_stat }
 
       context "when status changes from 'pending' to something else" do
@@ -791,7 +817,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when the dsa_reporting_enabled site setting is enabled" do
-      let(:reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:reviewable, :reviewable_queued_post)
 
       before do
         freeze_time

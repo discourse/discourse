@@ -937,6 +937,11 @@ class Plugin::Instance
     seed_data[key] = value
   end
 
+  # The callback receives the first admin after moderation has been granted.
+  def register_first_admin_bootstrap(&block)
+    DiscoursePluginRegistry.register_first_admin_bootstrap(block, self)
+  end
+
   def register_seed_path_builder(&block)
     DiscoursePluginRegistry.register_seed_path_builder(&block)
   end

@@ -11,8 +11,9 @@ require "tempfile"
 RSpec.describe Migrations::Reporting::Tui do
   let(:driver) { TuiReporterDriver::PATH }
 
-  # Runs the driver to completion, returns [raw_output, status]. `actions` is a
-  # list of [delay_seconds, :signal|:resize, arg] performed against the PTY.
+  # Runs the driver to completion, returns [raw_output, status]. `actions` run in
+  # order against the PTY: [:await, text], [:sleep, seconds], [:signal, name] or
+  # [:resize, [rows, cols]].
   def run_under_pty(scenario:, rows:, cols:, term: "xterm-256color", actions: [], stty_file: nil)
     env = { "TUI_DRIVER_SCENARIO" => scenario, "TERM" => term }
     env["TUI_DRIVER_STTY_FILE"] = stty_file if stty_file
@@ -24,15 +25,28 @@ RSpec.describe Migrations::Reporting::Tui do
     out_mutex = Mutex.new
     pump =
       Thread.new do
-        loop { out_mutex.synchronize { out << reader.readpartial(65_536) } }
+        loop do
+          chunk = reader.readpartial(65_536)
+          out_mutex.synchronize { out << chunk }
+        end
       rescue EOFError, Errno::EIO
         nil
       end
 
-    start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    actions.each do |delay, kind, arg|
-      sleep([start + delay - Process.clock_gettime(Process::CLOCK_MONOTONIC), 0].max)
+    actions.each do |kind, arg|
       case kind
+      when :await
+        # Boot time varies a lot on CI; a signal sent before the driver is inside
+        # its `rescue Interrupt` kills it instead of testing the reporter.
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 30
+        until out_mutex.synchronize { out.include?(arg) }
+          if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+            raise "driver never printed #{arg.inspect}"
+          end
+          sleep 0.05
+        end
+      when :sleep
+        sleep arg
       when :signal
         Process.kill(arg, pid)
       when :resize
@@ -41,6 +55,7 @@ RSpec.describe Migrations::Reporting::Tui do
     end
 
     _, status = Process.wait2(pid)
+    pid = nil
     pump.join(2)
     begin
       reader.close
@@ -48,6 +63,11 @@ RSpec.describe Migrations::Reporting::Tui do
       nil
     end
     [out_mutex.synchronize { out.dup.force_encoding("UTF-8") }, status]
+  ensure
+    if pid
+      Process.kill("KILL", pid)
+      Process.wait(pid)
+    end
   end
 
   def run_piped(scenario:, term: "xterm-256color")
@@ -81,7 +101,7 @@ RSpec.describe Migrations::Reporting::Tui do
         scenario: "interrupt",
         rows: 20,
         cols: 100,
-        actions: [[1.5, :signal, "INT"]],
+        actions: [[:await, "Posts"], [:sleep, 0.5], [:signal, "INT"]],
         stty_file: stty.path,
       )
 

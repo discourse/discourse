@@ -93,6 +93,10 @@ discourse_events:
   discourse_post_event_max_bulk_invitees:
     default: 500
     hidden: true
+  discourse_post_event_max_attendees_limit:
+    default: 1500
+    min: 1
+    hidden: true
   discourse_post_event_edit_notifications_time_extension:
     default: 0
     min: 0
@@ -151,7 +155,7 @@ discourse_events:
     hidden: true
     client: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/412427"
   livestream_allowed_hosts:

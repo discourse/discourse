@@ -35,6 +35,7 @@ const SPECIAL_LINKS_MAP = {
 };
 
 export default class CommunitySection {
+  @service mobileTabBar;
   @service router;
   @service topicTrackingState;
 
@@ -78,7 +79,7 @@ export default class CommunitySection {
         return filtered;
       }, [])
       .concat(this.apiPrimaryLinks)
-      .filter((link) => link.shouldDisplay);
+      .filter((link) => link.shouldDisplay && !this.#heldByTabBar(link));
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
@@ -93,7 +94,7 @@ export default class CommunitySection {
         return filtered;
       }, [])
       .concat(this.apiSecondaryLinks)
-      .filter((link) => link.shouldDisplay);
+      .filter((link) => link.shouldDisplay && !this.#heldByTabBar(link));
   }
 
   teardown() {
@@ -104,6 +105,19 @@ export default class CommunitySection {
     [...this.links, ...this.moreLinks].forEach((sectionLink) => {
       sectionLink.teardown?.();
     });
+  }
+
+  // The tab bar's own tabs already lead to topics and to other sections
+  #heldByTabBar(link) {
+    if (!this.mobileTabBar.enabled) {
+      return false;
+    }
+
+    if (link instanceof EverythingSectionLink) {
+      return this.mobileTabBar.barTabs.length > 0;
+    }
+
+    return this.mobileTabBar.leadsToSectionTab(link);
   }
 
   #generateLink(link, inMoreDrawer = false) {

@@ -11,6 +11,12 @@ id:
         insert: Masukkan
         preview_archive: Arsip
         save: Simpan
+        about_tab: Tentang
+        settings_tab: Pengaturan
+        theme_tab: Tema
+        column_name: Nama
+        column_category: Kategori
+        column_status: Status
         edit: Ubah
         customize: Sesuaikan
         export: Ekspor
@@ -36,4 +42,6 @@ id:
         edit: Ubah
         status: Status
         replies: balasan
+        title: Judul
+      all: Semua
       drafts: Konsep

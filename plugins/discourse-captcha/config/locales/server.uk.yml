@@ -5,10 +5,25 @@
 # https://translate.discourse.org/
 
 uk:
+  discourse_captcha:
+    configuration_test:
+      v3_success: "Ваші ключі reCAPTCHA v3 працюють. Цей тест набрав %{score}, що відповідає порогу реєстрації %{threshold}."
+      v3_low_score: "Ваші ключі reCAPTCHA v3 працюють, але цей тест має результат %{score}, що нижче порогу реєстрації %{threshold}."
+      success: "Перевірка успішна. Ваші збережені ключі CAPTCHA працюють на цьому сайті."
+      errors:
+        not_configured: "Виберіть постачальника CAPTCHA та збережіть обидва ключі в налаштуваннях перед тестуванням."
+        configuration_changed: "Налаштування CAPTCHA змінилися. Оновіть цю сторінку та спробуйте ще раз."
+        invalid_secret: "Постачальник CAPTCHA відхилив секретний ключ. Перевірте збережений секретний ключ у налаштуваннях."
+        key_mismatch: "Ключ сайту та секретний ключ не збігаються. Перевірте, чи обидва ключі належать до однієї конфігурації у вашого провайдера."
+        invalid_response: "Відповідь CAPTCHA була недійсною. Розпочніть новий тест і спробуйте ще раз."
+        expired: "Термін дії завдання минув або його вже перевірено. Розпочніть новий тест і завершіть його ще раз."
+        unavailable: "Не вдалося зв’язатися з постачальником CAPTCHA або він повернув неочікувану відповідь. Спробуйте пізніше."
+        verification_failed: "Постачальник CAPTCHA відхилив завдання. Перевірте збережені ключі та конфігурацію постачальника, а потім повторіть спробу."
   dashboard:
     problem:
       hcaptcha_configuration: "Виникла проблема з конфігурацією HCaptcha `site_key` або `secret_key`"
       recaptcha_configuration: "Виникла проблема з конфігурацією вашого ReCaptcha `site_key` або `secret_key`"
+      recaptcha_v3_configuration: "Виникла проблема з конфігурацією ReCaptcha v3 `site_key` або `secret_key`"
   admin:
     site_settings:
       categories:
@@ -18,5 +33,10 @@ uk:
     discourse_captcha_provider: "Виберіть постачальника капчі. Це вимагає, щоб ви володіли обліковим записом обраного провайдера"
     hcaptcha_site_key: "Ключ сайту hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Секретний ключ hCaptcha з вашого облікового запису <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
+    recaptcha_v2_site_key: "Ключ сайту ReCaptcha v2 з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> . Використовується лише тоді, коли постачальник капчі налаштовано на reCaptcha v2."
+    recaptcha_v2_secret_key: "Секретний ключ ReCaptcha v2 з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a> . Використовується лише тоді, коли постачальник капчі налаштовано на reCaptcha v2."
+    recaptcha_v3_site_key: "Ключ сайту ReCaptcha v3 з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_v3_secret_key: "Секретний ключ ReCaptcha v3 з вашого облікового запису <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_v3_score_threshold: "Мінімальний бал, який має набрати команда reCaptcha v3, щоб реєстрацію було прийнято. Нижчі значення є більш поблажливими, вищі — сильнішим захистом від ботів."
   captcha_verification_failed: "Не вдалося перевірити капчу"
   captcha_not_configured: "Captcha увімкнено, але не налаштовано належним чином. Зверніться до адміністратора сайту."

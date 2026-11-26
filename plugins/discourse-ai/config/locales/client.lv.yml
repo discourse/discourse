@@ -38,12 +38,23 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      review_bulk:
+        refresh: "Pārlādēt"
+        columns:
+          user: "Lietotājs"
+          created: "Radīts"
+          status: "Statuss"
       copied: "Nokopēts"
       ai_decoded_transcript:
         type: "Tips"
         error: "Kļūda..."
         response: "Atbilde"
+      post_image_captions:
+        image_descriptions:
+          apply: "Pielietot"
       discourse_workflows:
+        ai_tool:
+          list_item: "Saraksta punkts"
         classify:
           text: "Teksts"
           upload_ids: "Attēli"
@@ -78,6 +89,9 @@ lv:
           enabled: "Ieslēgts"
         search:
           name: "Meklēt"
+        review_queue:
+          setting_groups:
+            settings: "Iestatījumi"
         image_caption:
           setting_groups:
             settings: "Iestatījumi"
@@ -211,6 +225,30 @@ lv:
         edit: "Labot"
         delete: "Dzēst"
         embedding: "Ieguldīšana"
+      concepts:
+        edit: "Labot"
+        seed:
+          refresh: "Pārlādēt"
+        delete: "Dzēst"
+        columns:
+          status: "Statuss"
+          topics: "Tēmas"
+          posts: "Ieraksti"
+        statuses:
+          active: "Aktīvs"
+        form:
+          name: "Vārds"
+          description: "Apraksts"
+          status: "Statuss"
+        shared_topics_count:
+          zero: "%{count} tēmas"
+          one: "%{count} tēma"
+          other: "%{count} tēmas"
+        topic_columns:
+          topic: "Tēmas"
+          primary: "Primārais"
+          relevance: "Nozīmīgums"
+        primary_badge: "Primārais"
       decision_models:
         no_preset: "Nav"
         display_name: "Vārds"

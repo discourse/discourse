@@ -105,16 +105,10 @@ class TopicsFilter
 
     keywords = query_string.scan(TOKENIZER_PATTERN).reject { |word| word.include?(":") }.join(" ")
 
-    if keywords.present? && keywords.length >= SiteSetting.min_search_term_length
-      ts_query = Search.ts_query(term: keywords)
-      @scope = @scope.where(<<~SQL)
-          topics.id IN (
-            SELECT topic_id
-            FROM post_search_data
-            JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
-          )
-        SQL
+    if Topic::KeywordSearch.valid_term?(keywords)
+      posts = Post.all
+      posts = posts.where.not(post_type: Post.types[:whisper]) unless @guardian.can_see_whispers?
+      @scope = @scope.with_post_keywords(keywords, posts)
     end
 
     @scope
@@ -746,7 +740,11 @@ class TopicsFilter
     values.each do |_, value|
       tag_group_ids = TagGroup.visible(@guardian).where_name(strip_quotes(value)).pluck(:id)
 
-      tag_ids = TagGroupMembership.where(tag_group_id: tag_group_ids).select(:tag_id)
+      tag_ids =
+        TagGroupMembership.where(
+          tag_group_id: tag_group_ids,
+          tag_id: DiscourseTagging.visible_tags(@guardian).select(:id),
+        ).select(:tag_id)
 
       @scope = @scope.where(id: TopicTag.where(tag_id: tag_ids).select(:topic_id))
     end

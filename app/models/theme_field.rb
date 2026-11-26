@@ -174,11 +174,7 @@ class ThemeField < ActiveRecord::Base
 
     return "Error with #{name}: No upload found for the provided upload_id" if upload.nil?
 
-    if Discourse.store.external?
-      path = Discourse.store.download(upload)
-    else
-      path = Discourse.store.path_for(upload)
-    end
+    path = Discourse.store.download(upload)
 
     return "Error with #{name}: Could not download icon sprite" if path.nil?
 

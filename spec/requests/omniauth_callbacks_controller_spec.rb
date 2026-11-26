@@ -1267,6 +1267,54 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
   end
 
+  describe "when the matched user is suspended" do
+    fab!(:user) { Fabricate(:user, username: "mallory", name: "Old Name", active: false) }
+
+    before do
+      Fabricate(
+        :user_associated_account,
+        user: user,
+        provider_name: "twitter",
+        provider_uid: "1234",
+      )
+      enable_auth_provider(:twitter)
+      user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
+
+      OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+        provider: "twitter",
+        uid: "1234",
+        info:
+          OmniAuth::AuthHash::InfoHash.new(
+            email: user.email,
+            nickname: "provider_username",
+            name: "Provider Name",
+          ),
+      )
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+    end
+
+    after do
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+    end
+
+    it "refuses the login without activating the user, applying overrides or logging on" do
+      SiteSetting.auth_overrides_name = true
+      SiteSetting.auth_overrides_username = true
+
+      expect { get "/auth/twitter/callback.json" }.not_to change { UserAuthToken.count }
+
+      data = JSON.parse(cookies[:authentication_data])
+      expect(data["suspended"]).to eq(true)
+      expect(data["authenticated"]).to be_falsey
+      expect(session[:current_user_id]).to be_nil
+
+      user.reload
+      expect(user.active).to eq(false)
+      expect(user.name).to eq("Old Name")
+      expect(user.username).to eq("mallory")
+    end
+  end
+
   describe "with a fake provider" do
     class FakeAuthenticator < Auth::ManagedAuthenticator
       class Strategy

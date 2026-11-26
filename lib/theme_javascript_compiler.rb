@@ -57,6 +57,7 @@ class ThemeJavascriptCompiler
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
+    @error = CompileError.new(message)
     @content = "throw new Error(#{message.to_json});\n"
     @external_plugin_imports = []
     [@content, @source_map]
@@ -65,6 +66,11 @@ class ThemeJavascriptCompiler
   def content
     compile!
     @content
+  end
+
+  def error
+    compile!
+    @error
   end
 
   def source_map

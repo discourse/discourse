@@ -70,6 +70,27 @@ RSpec.describe DiscourseAi::Embeddings::Strategies::Truncation do
         expect(prepared_text).to include("#{posts_needed}: This is a test post with some content")
       end
     end
+
+    it "prepares and truncates inferred concept text including aliases and embed_prompt" do
+      open_ai_embedding_def.update!(max_sequence_length: 40)
+      concept =
+        Fabricate.build(
+          :inferred_concept,
+          name: "Rate Limiting",
+          description: "Protecting endpoints from burst traffic and abuse " * 10,
+          aliases: %w[throttling quotas],
+        )
+
+      prepared_text = truncation.prepare_target_text(concept, open_ai_embedding_def)
+
+      expect(prepared_text).to include("Rate Limiting")
+      expect(open_ai_embedding_def.tokenizer.size(prepared_text)).to be <=
+        open_ai_embedding_def.max_sequence_length
+
+      open_ai_embedding_def.update!(embed_prompt: prefix)
+      prefixed_text = truncation.prepare_target_text(concept, open_ai_embedding_def)
+      expect(prefixed_text).to start_with(prefix)
+    end
   end
 
   describe "#prepare_query_text" do

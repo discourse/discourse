@@ -8,11 +8,14 @@ class Blog::Article::List
     "blog_revisions.data->>'title' ILIKE :pattern OR blog_revisions.data->>'excerpt' ILIKE :pattern"
 
   params do
+    attribute :blog_id, :integer
     attribute :page, :integer
     attribute :query, :string
     attribute :tag_slug, :string
     attribute :author_username, :string
     attribute :archive, :boolean, default: false
+
+    validates :blog_id, presence: true
 
     before_validation do
       self.page = [page.to_i, 1].max
@@ -26,6 +29,7 @@ class Blog::Article::List
     def featured_first? = !archive && query.blank? && tag_slug.blank? && author_username.blank?
   end
 
+  model :blog
   model :tag, optional: true
   policy :requested_tag_is_visible
   model :author, optional: true
@@ -35,6 +39,10 @@ class Blog::Article::List
   model :listing, :paginate_publications
 
   private
+
+  def fetch_blog(params:)
+    Blog::Instance.find_cached(params.blog_id)
+  end
 
   def fetch_tag(params:)
     return if params.tag_slug.blank?
@@ -50,8 +58,8 @@ class Blog::Article::List
     User.human_users.find_by(username_lower: User.normalize_username(params.author_username))
   end
 
-  def fetch_publications(params:, tag:, author:)
-    publications = Blog::Publication.publicly_visible
+  def fetch_publications(params:, blog:, tag:, author:)
+    publications = Blog::Publication.publicly_visible.where(blog_id: blog.id).articles
     if params.query.present?
       publications = publications.where(SEARCH_SQL, pattern: params.search_pattern)
     end
@@ -71,8 +79,8 @@ class Blog::Article::List
     params.author_username.blank? || (author.present? && publications.exists?)
   end
 
-  def paginate_publications(params:, publications:)
-    per_page = SiteSetting.blog_posts_per_page
+  def paginate_publications(params:, blog:, publications:)
+    per_page = blog.posts_per_page
     window =
       publications
         .offset(params.offset(per_page))

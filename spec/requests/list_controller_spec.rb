@@ -159,6 +159,104 @@ RSpec.describe ListController do
       end
     end
 
+    context "when a relisted topic has a hidden first post" do
+      fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
+
+      before do
+        SiteSetting.always_include_topic_excerpts = true
+        first_post.sync_first_post_caches
+      end
+
+      def hide_first_post_and_relist
+        first_post.hide!(PostActionType.types[:off_topic])
+        topic.update_status(
+          "visible",
+          true,
+          Discourse.system_user,
+          visibility_reason_id: Topic.visibility_reasons[:manually_relisted],
+        )
+      end
+
+      def listed_excerpt
+        response.parsed_body["topic_list"]["topics"].find { |listed| listed["id"] == topic.id }[
+          "excerpt"
+        ]
+      end
+
+      it "omits the localized excerpt from the JSON topic list" do
+        SiteSetting.content_localization_enabled = true
+        topic.update!(locale: "ja")
+        localization =
+          Fabricate(:topic_localization, topic: topic, locale: "en", excerpt: "A localized excerpt")
+        hide_first_post_and_relist
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(localization.reload.excerpt).to be_nil
+        expect(listed_excerpt).to be_nil
+      end
+
+      it "omits the excerpt from the Markdown topic list" do
+        SiteSetting.enable_markdown_endpoints = true
+        hide_first_post_and_relist
+
+        get "/latest.md"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(topic.title)
+        expect(response.body).not_to include(first_post.raw)
+      end
+
+      context "when the excerpts were cached before the first post was hidden" do
+        fab!(:localization) do
+          Fabricate(:topic_localization, topic: topic, locale: "en", excerpt: "A localized excerpt")
+        end
+
+        before do
+          first_post.update_columns(hidden: true, hidden_at: Time.zone.now)
+          topic.update_columns(
+            locale: "ja",
+            pinned_at: 1.hour.ago,
+            pinned_globally: true,
+            pinned_until: 1.week.from_now,
+          )
+        end
+
+        it "omits the cached excerpts from the JSON topic list" do
+          get "/latest.json"
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.excerpt).to be_present
+          expect(listed_excerpt).to be_nil
+
+          SiteSetting.content_localization_enabled = true
+          get "/latest.json"
+
+          expect(localization.reload.excerpt).to be_present
+          expect(listed_excerpt).to be_nil
+        end
+
+        it "omits the cached excerpt from the pinned crawler topic list" do
+          get "/latest", params: { _escaped_fragment_: "true" }
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(topic.title)
+          expect(response.body).not_to include(topic.excerpt)
+        end
+
+        it "omits the cached excerpt from the Markdown topic list" do
+          SiteSetting.enable_markdown_endpoints = true
+
+          get "/latest.md"
+
+          expect(response.status).to eq(200)
+          expect(response.body).to include(topic.title)
+          expect(response.body).not_to include(first_post.raw)
+        end
+      end
+    end
+
     context "when params are invalid" do
       it "returns 400 when page is a negative integer string" do
         get "/latest?page=-1"
@@ -339,6 +437,56 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       parsed = response.parsed_body
       expect(parsed["topic_list"]["topics"].length).to eq(1)
+    end
+
+    it "leaves a search shorter than the minimum length unlimited" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      2.times { get "/latest.json", params: { search: "ke" } }
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not reveal topics that only match non-visible post content" do
+      visible_topic = Fabricate(:topic_with_op, raw: "The public prefix oracle content")
+      whisper_topic = Fabricate(:topic_with_op, raw: "A public topic")
+      hidden_topic = Fabricate(:topic_with_op, raw: "Another public topic")
+      deleted_topic = Fabricate(:topic_with_op, raw: "Yet another public topic")
+
+      whisper_post =
+        Fabricate(
+          :post,
+          topic: whisper_topic,
+          raw: "The staff prefix oracle content",
+          post_type: Post.types[:whisper],
+        )
+      hidden_post =
+        Fabricate(
+          :post,
+          topic: hidden_topic,
+          raw: "The flagged prefix oracle content",
+          hidden: true,
+        )
+      deleted_post =
+        Fabricate(:post, topic: deleted_topic, raw: "The deleted prefix oracle content")
+
+      with_search_indexer_enabled do
+        [visible_topic, whisper_post, hidden_post, deleted_post].each do |record|
+          SearchIndexer.index(record, force: true)
+        end
+      end
+      deleted_post.trash!
+
+      get "/latest.json", params: { search: "prefix" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to contain_exactly(
+        visible_topic.id,
+      )
+      expect(response.body).not_to include(whisper_post.raw)
+      expect(response.body).not_to include(hidden_post.raw)
+      expect(response.body).not_to include(deleted_post.raw)
     end
 
     it "shows correct title if topic list is set for homepage" do
@@ -720,7 +868,7 @@ RSpec.describe ListController do
     end
 
     describe "when user not in personal_message_enabled_groups group" do
-      let!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+      fab!(:topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
       before do
         group.add(user)
@@ -823,17 +971,11 @@ RSpec.describe ListController do
   end
 
   describe "#group_topics" do
-    %i[user user2].each do |user|
-      let(user) do
-        user = Fabricate(:user)
-        group.add(user)
-        user
-      end
-    end
-
-    let!(:topic) { Fabricate(:topic, user: user) }
-    let!(:topic2) { Fabricate(:topic, user: user2) }
-    let!(:another_topic) { Fabricate(:topic) }
+    fab!(:group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:other_group_member) { Fabricate(:user).tap { |member| group.add(member) } }
+    fab!(:topic) { Fabricate(:topic, user: group_member) }
+    fab!(:topic2) { Fabricate(:topic, user: other_group_member) }
+    fab!(:another_topic, :topic)
 
     describe "when an invalid group name is given" do
       it "returns the expected response" do
@@ -911,7 +1053,7 @@ RSpec.describe ListController do
     end
 
     describe "for a group user" do
-      before { sign_in(user) }
+      before { sign_in(group_member) }
 
       it "allows viewing topics started by group members" do
         get "/topics/groups/#{group.name}.json"
@@ -958,6 +1100,17 @@ RSpec.describe ListController do
       expect(response.status).to eq(200)
       expect(response.media_type).to eq("application/rss+xml")
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
+    end
+
+    it "charges a keyword feed once against the search limit" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+
+      get "/latest.rss", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:too_many_requests)
     end
 
     it "localizes latest RSS from Accept-Language for clients classified as crawlers" do
@@ -1691,6 +1844,15 @@ RSpec.describe ListController do
       expect(json["topic_list"]["topics"].pluck("id")).to eq(
         [topic_ids[1], topic_ids[2], topic_ids[0]],
       )
+
+      get "/topics/private-messages/#{user.username}.json",
+          params: {
+            order: "activity",
+            page: 1,
+            per_page: 1,
+          }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["topic_list"]["topics"].pluck("id")).to eq([topic_ids[2]])
     end
   end
 
@@ -2206,6 +2368,42 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
+    end
+
+    context "when rate limited" do
+      before do
+        RateLimiter.enable
+        SiteSetting.rate_limit_search_anon_user_per_minute = 1
+      end
+
+      it "charges a keyword filter once against the shared search limit" do
+        get "/filter.json", params: { q: "keyword", search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/latest.json", params: { search: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "shares the user's search limit only with lists that search posts" do
+        SiteSetting.enable_unified_new = true
+        SiteSetting.rate_limit_search_user = 1
+        sign_in(user)
+
+        get "/topics/private-messages/#{user.username}.json", params: { search: "ignored" }
+        expect(response).to have_http_status(:ok)
+
+        get "/filter.json", params: { q: "keyword" }
+        expect(response).to have_http_status(:ok)
+
+        get "/search/query.json", params: { term: "keyword" }
+        expect(response).to have_http_status(:too_many_requests)
+      end
+
+      it "leaves filters without keywords unlimited" do
+        2.times { get "/filter.json", params: { q: "status:open" } }
+
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     it "keeps anonymous repeated negated filters from amplifying SQL" do

@@ -45,6 +45,27 @@ module PageObjects
         find("#{TOPIC_MAP_KLASS} .topic-map__users-list").all(".poster.trigger-user-card")
       end
 
+      def focus_first_summary_avatar
+        find("#{TOPIC_MAP_KLASS} .--users-summary a.poster", match: :first).execute_script(
+          "this.focus()",
+        )
+      end
+
+      def has_inset_summary_avatar_focus_outline?
+        has_css?("#{TOPIC_MAP_KLASS} .--users-summary a.poster:focus-visible") do |link|
+          link.evaluate_script(<<~JS)
+            (() => {
+              const { outlineWidth, outlineOffset } = getComputedStyle(this);
+              const avatar = this.getBoundingClientRect();
+              const row = this.closest(".--users-summary").getBoundingClientRect();
+              return parseFloat(outlineWidth) > 0 &&
+                parseFloat(outlineOffset) <= -parseFloat(outlineWidth) &&
+                avatar.top >= row.top && avatar.bottom <= row.bottom;
+            })()
+          JS
+        end
+      end
+
       def expanded_avatars_details
         find("#{TOPIC_MAP_KLASS} .topic-map__users-trigger").click
         find("#{TOPIC_MAP_KLASS} .topic-map__users-content").all(".poster.trigger-user-card")

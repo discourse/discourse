@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Makes a saved appearance change live and records what it replaces so
-# AppearanceChange::Revert can switch back.
+# AppearanceChange::Revert can switch back. A new version of a theme takes its
+# name, and the version it replaces is kept as the previous one.
 #
 # What it replaces is recorded before anything changes. Site settings can't
 # be rolled back with the palettes, so if a later step fails after they were
@@ -17,15 +18,23 @@ class AppearanceChange::Activate
 
   model :appearance_change
   policy :can_edit_theme
+  only_if(:component) do
+    policy :can_edit_parent_theme
+    policy :attached_to_parent
+    policy :can_edit_replaced_components
+  end
   policy :not_applied
   policy :palettes_exist
+  only_if(:replaces_version) { policy :can_edit_versions }
   model :replaced_state
   step :record_pending_activation
   only_if(:changes_site_settings) { step :apply_site_settings }
 
   transaction do
     only_if(:changes_palettes) { step :assign_palettes }
+    only_if(:component) { step :enable_component }
     step :record_activation
+    only_if(:replaces_version) { step :replace_previous_version }
   end
 
   private
@@ -54,12 +63,37 @@ class AppearanceChange::Activate
     appearance_change.record_pending_activation!(replaced_state)
   end
 
+  def component(appearance_change:)
+    appearance_change.kind_component?
+  end
+
+  # enabling the component changes what its theme shows
+  def can_edit_parent_theme(guardian:, appearance_change:)
+    guardian.can_edit_theme?(appearance_change.parent_theme)
+  end
+
+  def attached_to_parent(appearance_change:)
+    appearance_change.attached_to_parent?
+  end
+
+  # making it live turns them off
+  def can_edit_replaced_components(guardian:, appearance_change:)
+    appearance_change.enabled_sibling_components.all? { guardian.can_edit_theme?(it) }
+  end
+
+  # The earlier components it replaces are disabled, not removed, so
+  # switching back can enable them again.
+  def enable_component(appearance_change:)
+    appearance_change.enabled_sibling_components.find_each { it.update!(enabled: false) }
+    appearance_change.theme.update!(enabled: true)
+  end
+
   def changes_palettes(appearance_change:)
-    !appearance_change.kind_theme?
+    appearance_change.assigns_palettes?
   end
 
   def assign_palettes(appearance_change:)
-    appearance_change.theme.update!(
+    appearance_change.palette_theme.update!(
       color_scheme: appearance_change.light_color_scheme,
       dark_color_scheme: appearance_change.dark_color_scheme,
     )
@@ -67,6 +101,23 @@ class AppearanceChange::Activate
 
   def record_activation(appearance_change:, replaced_state:)
     appearance_change.update!(previous_state: replaced_state, activated_at: Time.zone.now)
+  end
+
+  def replaces_version(appearance_change:)
+    (appearance_change.kind_theme? || appearance_change.kind_component?) &&
+      appearance_change.replaces_theme_id.present?
+  end
+
+  # Making a version live renames the one it replaces and may remove the one
+  # before that, so the administrator has to be able to change both.
+  def can_edit_versions(guardian:, appearance_change:)
+    appearance_change.versions_changed_on_activation.all? do |theme|
+      guardian.can_edit_theme_relations?(theme, child_theme_ids: [], parent_theme_ids: [])
+    end
+  end
+
+  def replace_previous_version(appearance_change:)
+    appearance_change.replace_previous_version!
   end
 
   def changes_site_settings(appearance_change:)

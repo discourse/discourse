@@ -11,6 +11,13 @@ describe PasswordHasher do
       expect(result).to eq("8d4f9a685ff73eef7b06e07ab5889784775290a0a9cebb6eb4492a695c93a51e")
     end
 
+    it "depends on both the password and the salt" do
+      algorithm = "$pbkdf2-sha256$i=3,l=32$"
+      digest = hash(algorithm:)
+      expect(hash(algorithm:, password: "otherpass")).not_to eq(digest)
+      expect(hash(algorithm:, salt: "othersalt")).not_to eq(digest)
+    end
+
     it "supports different iteration numbers" do
       iter_3 = hash(algorithm: "$pbkdf2-sha256$i=3,l=32$")
       iter_4 = hash(algorithm: "$pbkdf2-sha256$i=4,l=32$")

@@ -43,8 +43,8 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   let!(:query_group1) { Fabricate(:query_group, query: query1, group: group0) }
   let!(:query_group2) { Fabricate(:query_group, query: query1, group: group1) }
   # User is member of both groups.
-  let!(:group_user1) { Fabricate(:group_user, user: user, group: group0) }
-  let!(:group_user2) { Fabricate(:group_user, user: user, group: group1) }
+  fab!(:group_user1) { Fabricate(:group_user, user: user, group: group0) }
+  fab!(:group_user2) { Fabricate(:group_user, user: user, group: group1) }
 
   # Group 1 also has access to query2.
   let!(:query_group3) { Fabricate(:query_group, query: query2, group: group1) }
@@ -53,7 +53,7 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
   let!(:query_group4) { Fabricate(:query_group, query: query1, group: group2) }
 
   # User is a member of Group 3, which has no access to Query 1.
-  let!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
+  fab!(:group_user3) { Fabricate(:group_user, user: user, group: group3) }
 
   # User bookmarked the same Query 1 twice, from different Groups (0 and 1)
   let!(:bookmark1) do
@@ -102,6 +102,17 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
       # bookmarks is now empty, because user is not a member of any Groups with permission to see the query
       expect(registered_bookmarkable.perform_list_query(user, guardian)).to be_empty
     end
+  end
+
+  it "exports links only for visible report bookmarks" do
+    job = Jobs::ExportUserArchive.new
+    job.archive_for_user = user
+    links = job.bookmarks_export.to_h { |id, _type, link, *| [id, link] }
+
+    expect(links.fetch(query_group1.id)).to eq(
+      "#{Discourse.base_url}/g/#{group0.name}/reports/#{query1.id}",
+    )
+    expect(links.fetch(query_group4.id)).to eq("")
   end
 
   describe "#perform_search_query" do

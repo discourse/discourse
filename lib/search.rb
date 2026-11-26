@@ -165,18 +165,20 @@ class Search
       end
     end
 
-    data.gsub!(/\S+/) do |str|
-      if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
-        begin
-          uri = URI.parse(Regexp.last_match[1])
-          uri.query = nil
-          str = uri.to_s
-        rescue URI::Error
-          # don't fail if uri does not parse
+    if data.include?("http://") || data.include?("https://")
+      data.gsub!(URL_TOKEN_REGEXP) do |str|
+        if str =~ %r{\A["]?((https?://)[\S]+)["]?\z}
+          begin
+            uri = URI.parse(Regexp.last_match[1])
+            uri.query = nil
+            str = uri.to_s
+          rescue URI::Error
+            # don't fail if uri does not parse
+          end
         end
-      end
 
-      str
+        str
+      end
     end
 
     data
@@ -240,8 +242,14 @@ class Search
       end
   end
 
+  DIGITS_ONLY_REGEXP = /\A\d+\z/
+  NON_URI_CHARACTER_REGEXP = /[^\x00-\x7F]|\A[^?]*[^!-~]/
+  URL_TOKEN_REGEXP = %r{(?<=\A|\s)"?https?://\S+}
+  private_constant :DIGITS_ONLY_REGEXP, :NON_URI_CHARACTER_REGEXP, :URL_TOKEN_REGEXP
+
   def self.need_segmenting?(data)
-    return false if data.match?(/\A\d+\z/)
+    return false if DIGITS_ONLY_REGEXP.match?(data)
+    return true if NON_URI_CHARACTER_REGEXP.match?(data)
     !URI.parse(data).path.to_s.start_with?("/")
   rescue URI::InvalidURIError
     true
@@ -681,8 +689,7 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
-      tag_id = target_tag_id || tag_id
+      tag_id = DiscourseTagging.visible_tag_ids_resolving_synonyms([category_slug], @guardian).first
       if tag_id
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -692,7 +699,7 @@ class Search
           )
         SQL
       else
-        if tag_group_id = TagGroup.find_id_by_slug(category_slug)
+        if tag_group_id = TagGroup.visible(@guardian).find_id_by_slug(category_slug)
           posts.where(<<~SQL, tag_group_id)
             topics.id IN (
               SELECT DISTINCT(tt.topic_id)
@@ -702,6 +709,7 @@ class Search
                 FROM tag_group_memberships
                 WHERE tag_group_id = ?
               )
+              AND tt.tag_id IN (#{visible_tags.select(:id).to_sql})
             )
           SQL
 
@@ -949,7 +957,7 @@ class Search
       posts.where(
         "topics.id #{modifier} IN (
         SELECT tt.topic_id
-        FROM topic_tags tt, tags
+        FROM topic_tags tt, (#{visible_tags.to_sql}) tags
         WHERE tt.tag_id = tags.id
         GROUP BY tt.topic_id
         HAVING to_tsvector(#{default_ts_config}, #{Search.wrap_unaccent("array_to_string(array_agg(lower(tags.name)), ' ')")}) @@ to_tsquery(#{default_ts_config}, ?)
@@ -957,8 +965,7 @@ class Search
         Search.unaccent(tags.join("&")),
       )
     else
-      tags = resolve_tag_synonyms(match.split(","))
-      tag_ids = Tag.where_name(tags).pluck(:id)
+      tag_ids = DiscourseTagging.visible_tag_ids_resolving_synonyms(match.split(","), @guardian)
       return positive ? posts.none : posts if tag_ids.empty?
 
       posts.where(
@@ -971,9 +978,13 @@ class Search
     end
   end
 
+  def visible_tags
+    @visible_tags ||= DiscourseTagging.visible_tags(@guardian)
+  end
+
   def resolve_tag_synonyms(tag_names)
     synonym_map =
-      Tag
+      visible_tags
         .where_name(tag_names)
         .where.not(target_tag_id: nil)
         .includes(:target_tag)

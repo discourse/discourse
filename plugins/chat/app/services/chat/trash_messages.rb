@@ -108,6 +108,10 @@ module Chat
         end
       end
       Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, params.message_ids)
+      messages
+        .filter_map(&:thread)
+        .uniq
+        .each { |thread| Chat::Publisher.publish_thread_original_message_metadata!(thread) }
     end
   end
 end

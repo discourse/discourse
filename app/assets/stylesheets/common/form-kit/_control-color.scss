@@ -113,7 +113,6 @@
 }
 
 .form-kit__control-color-swatches-btn {
-  --d-button-default-border: 1px solid var(--d-button-default-bg-color); // match input height
   width: var(--color-button-width);
   height: var(--color-button-height);
 }
@@ -137,6 +136,16 @@
   .color-swatches-menu-content & {
     padding: var(--space-2);
   }
+}
+
+// The control can sit in a modal, or in a menu raised above one.
+.fk-d-menu.color-swatches-menu-content {
+  z-index: z("modal", "dialog");
+}
+
+// The mobile sheet opens from inside such a menu, so it must cover it.
+.fk-d-menu-modal.color-swatches-menu-content {
+  z-index: calc(z("modal", "dialog") + 1);
 }
 
 .color-swatches-menu-content {

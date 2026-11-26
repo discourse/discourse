@@ -614,7 +614,6 @@ bg:
           title: "Всичко"
       context_question:
         delimiter: "или"
-        something_wrong_with_post: "Има ли нещо нередно с тази публикация?"
       types:
         reviewable_flagged_post:
           title: "Маркирана публикация"
@@ -2116,6 +2115,10 @@ bg:
     composer:
       emoji: "Емошънка :)"
       options: "Опции"
+      ai_content:
+        code: "Код"
+        quote: "Цитат"
+        details: "Детайли"
       whisper: "шепот"
       unlist: "скрити"
       add_warning: "Това е официално предупреждение."
@@ -2596,7 +2599,7 @@ bg:
       timeline:
         back: "Назад"
       progress:
-        title: прогрес на темата
+        title: "прогрес на темата"
         jump_prompt_to_date: "до дата"
         jump_prompt_or: "или"
       notifications:
@@ -2788,10 +2791,8 @@ bg:
           label: "избрани"
           title: "Кликнете, за да премахнете публикацията от избора"
         select_replies:
-          label: "избери +отговори "
           title: "Добавете публикация и всички нейни отговори към избора"
         select_below:
-          label: "изберете + по-долу"
           title: "Добавете публикация и всичко след нея към избор"
         delete: изтрий избраните
         cancel: прекрати избирането
@@ -2998,18 +2999,12 @@ bg:
       validations:
         icon_required: "Изберете икона."
       description: "Описание"
-      icon: "Икона"
-      emoji: "Емотикони"
       background_color: "Цвят"
       color_validations:
         cant_be_empty: "не може да бъде празно"
       styles:
         icon: "Икона"
         emoji: "Емотикони"
-        options:
-          icon: "Икона"
-          emoji: "Емотикони"
-      color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
       no_description: "Моля, добавете описание за тази категория. "
@@ -3382,6 +3377,15 @@ bg:
       back: "Назад"
       share: "Споделяне"
       dismiss: "Отмени"
+    mobile_tab_bar:
+      new_topic: "Нова тема"
+      create: "Създай"
+      more: "Повече"
+      back: "Назад"
+      topics: "Теми"
+      drafts:
+        one: "Чернови (%{count})"
+        other: "Чернови (%{count})"
     pause_notifications:
       label: "Пауза на известията"
       options:
@@ -4541,6 +4545,8 @@ bg:
           dropdown: "Падащо"
       site_text:
         search_label: "Търсене"
+        preview:
+          default: "По подразбиране"
         theme_disabled: "Деактивирани"
         edit: "Редактирай"
         revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
@@ -4612,7 +4618,7 @@ bg:
           modal_title: Групи значки
         granted_by: Присъдена от
         granted_at: Присъдена на
-        reason_help: (Връзка към публикация или тема)
+        reason_help: Връзка към публикация или тема
         save: Запази
         delete: Изтрий
         delete_confirm: Искате ли да изтриете тази значка?

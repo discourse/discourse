@@ -213,11 +213,6 @@ pt:
         short:
           one: "%{count} dia"
           other: "%{count} dias"
-      emoji_picker:
-        objects: "Objetos"
-        activities: "Atividades"
-        flags: "Sinalizações"
-        symbols: "Símbolos"
       thread:
         title: "Título"
         replies:

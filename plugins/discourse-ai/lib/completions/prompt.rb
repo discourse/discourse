@@ -6,8 +6,23 @@ module DiscourseAi
       include UploadEncoding
 
       INVALID_TURN = Class.new(StandardError)
+      VALID_MESSAGE_TYPES = %i[system user model tool tool_call].freeze
+      NO_TURN_SEPARATOR = Object.new.freeze
+      private_constant :VALID_MESSAGE_TYPES, :NO_TURN_SEPARATOR
 
-      attr_reader :messages, :tools, :system_message_text
+      HISTORY_PREAMBLE = {
+        type: :user,
+        content:
+          "The following is retained conversation history; earlier user context is unavailable.",
+        turn_separator: true,
+      }.freeze
+      ASSISTANT_CONTINUATION = {
+        type: :user,
+        content: "Continuation of the assistant response follows.",
+        turn_separator: true,
+      }.freeze
+
+      attr_reader :messages, :tools, :system_message_text, :original_message_count
       attr_accessor :topic_id,
                     :post_id,
                     :max_pixels,
@@ -22,6 +37,29 @@ module DiscourseAi
         else
           message[:content]
         end
+      end
+
+      def self.synthetic_user?(message)
+        message == HISTORY_PREAMBLE || message == ASSISTANT_CONTINUATION
+      end
+
+      def self.transient_user?(message)
+        synthetic_user?(message) || PromptHints.budget_hint?(message)
+      end
+
+      def self.user_request?(message)
+        message[:type] == :user && !transient_user?(message)
+      end
+
+      def self.historical_tool_evidence(message)
+        details = message.slice(:type, :id, :name).to_json
+        {
+          type: :model,
+          content: [
+            "Incomplete historical tool evidence (not executable): #{details}\n",
+            *Array(message[:content]),
+          ],
+        }
       end
 
       def initialize(
@@ -46,19 +84,58 @@ module DiscourseAi
         @messages = []
 
         if system_message_text
-          @system_message_text = system_message_text
-          @messages << { type: :system, content: @system_message_text }
-        else
-          @system_message_text = messages.find { |m| m[:type] == :system }&.dig(:content)
+          system_message = { type: :system, content: system_message_text }
+          validate_message(system_message)
+          append_message(system_message, stage: :initialize, index: 0)
         end
 
-        @messages.concat(messages)
-
-        @messages.each { |message| validate_message(message) }
-        @messages.each_cons(2) { |last_turn, new_turn| validate_turn(last_turn, new_turn) }
+        first_input_index = @messages.length
+        @original_message_count = first_input_index + messages.length
+        messages.each { |message| validate_message(message) }
+        incomplete_tools = ToolCallBatch.each_incomplete_index(messages, keep_pending: true).to_set
+        messages.each_with_index do |message, input_index|
+          index = first_input_index + input_index
+          previous_count = @messages.length
+          append_message(
+            message,
+            stage: :initialize,
+            index: index,
+            incomplete_tool: incomplete_tools.include?(input_index),
+          )
+          if @messages.length != previous_count + 1
+            (@message_offset_changes ||= []) << [index + 1, @messages.length - index - 1]
+          end
+        end
 
         self.tools = tools
         @tool_choice = tool_choice
+      end
+
+      def user_request_index(preferred = nil)
+        if preferred.is_a?(Integer) && (0...messages.length).cover?(preferred) &&
+             self.class.user_request?(messages[preferred])
+          return preferred
+        end
+
+        messages.rindex { |message| self.class.user_request?(message) }
+      end
+
+      def normalized_user_request_index(offset)
+        if offset.is_a?(Integer) && (0...original_message_count).cover?(offset)
+          index = normalized_message_offset(offset)
+          return user_request_index(index) if index < normalized_message_offset(offset + 1)
+        end
+        user_request_index
+      end
+
+      # A boundary follows the recovery (if any) for each input turn before it.
+      def normalized_message_offset(offset)
+        return offset unless @message_offset_changes && (0..original_message_count).cover?(offset)
+
+        @message_offset_changes.reverse_each do |boundary, delta|
+          return offset + delta if offset >= boundary
+        end
+        offset
       end
 
       def tools=(tools)
@@ -111,12 +188,14 @@ module DiscourseAi
             )
             last_response_message = messages.last
           when String
-            if messages.last&.dig(:type) == :model
-              messages.last[:content] = messages.last[:content] + message
+            last_message = messages.last
+            if last_message.equal?(@streamed_model_message) &&
+                 last_message&.dig(:content).is_a?(String)
+              last_message[:content] += message
             else
               push(type: :model, content: message, **thinking_attrs.call)
             end
-            last_response_message = messages.last
+            last_response_message = @streamed_model_message = messages.last
           when ToolResult
             push(
               type: :tool,
@@ -141,10 +220,13 @@ module DiscourseAi
         name: nil,
         thinking: nil,
         thinking_provider_info: nil,
-        provider_data: nil
+        provider_data: nil,
+        turn_separator: NO_TURN_SEPARATOR
       )
-        return if type == :system
         new_message = { type: type, content: content }
+        new_message[:turn_separator] = turn_separator unless turn_separator.equal?(
+          NO_TURN_SEPARATOR,
+        )
         new_message[:name] = name.to_s if name
         new_message[:id] = id.to_s if id
         new_message[:thinking] = thinking if thinking
@@ -159,9 +241,9 @@ module DiscourseAi
         end
 
         validate_message(new_message)
-        validate_turn(messages.last, new_message)
-
-        messages << new_message
+        index = @next_push_index || original_message_count
+        @next_push_index = index + 1
+        append_tool_checked_message(new_message, index: index)
       end
 
       def has_tools?
@@ -323,9 +405,9 @@ module DiscourseAi
       end
 
       def validate_message(message)
-        valid_types = %i[system user model tool tool_call]
-        if !valid_types.include?(message[:type])
-          raise ArgumentError, "message type must be one of #{valid_types}"
+        raise ArgumentError, "message must be a hash" unless message.is_a?(Hash)
+        if !VALID_MESSAGE_TYPES.include?(message[:type])
+          raise ArgumentError, "message type must be one of #{VALID_MESSAGE_TYPES}"
         end
 
         valid_keys = %i[
@@ -338,9 +420,13 @@ module DiscourseAi
           thinking_signature
           redacted_thinking_signature
           provider_data
+          turn_separator
         ]
         if (invalid_keys = message.keys - valid_keys).any?
           raise ArgumentError, "message contains invalid keys: #{invalid_keys}"
+        end
+        if message.key?(:turn_separator) && !self.class.synthetic_user?(message)
+          raise ArgumentError, "turn_separator must identify a canonical synthetic user message"
         end
 
         if message[:content].is_a?(Array)
@@ -364,18 +450,74 @@ module DiscourseAi
         end
       end
 
-      def validate_turn(last_turn, new_turn)
-        valid_types = %i[tool tool_call model user]
-        raise INVALID_TURN if !valid_types.include?(new_turn[:type])
-
-        if last_turn[:type] == :system && %i[tool tool_call model].include?(new_turn[:type])
-          raise INVALID_TURN
+      def append_tool_checked_message(message, index:)
+        return append_message(message, stage: :push, index: index) if message[:type] == :system
+        unless ToolCallBatch.tool_message?(message) || ToolCallBatch.tool_message?(messages.last)
+          return append_message(message, stage: :push, index: index)
         end
 
-        if new_turn[:type] == :tool && !%i[tool_call tool].include?(last_turn[:type])
-          raise INVALID_TURN
+        # Context preparation can replace messages in place, so derive the batch
+        # from the actual tail instead of keeping a tracker on the prompt.
+        start = ToolCallBatch.trailing_start(messages)
+        batch = messages.drop(start) << message
+        incomplete_tools = ToolCallBatch.each_incomplete_index(batch, keep_pending: true).to_set
+        first = incomplete_tools.min
+        return append_message(message, stage: :push, index: index) unless first
+
+        # Re-append the affected suffix so recovered evidence gets the same
+        # separators as it would in a constructed prompt.
+        messages.slice!((start + first)..)
+        (first...batch.length).each do |batch_index|
+          append_message(
+            batch[batch_index],
+            stage: :push,
+            index: batch_index == batch.length - 1 ? index : start + batch_index,
+            incomplete_tool: incomplete_tools.include?(batch_index),
+          )
         end
-        raise INVALID_TURN if new_turn[:type] == :model && last_turn[:type] == :model
+        messages
+      end
+
+      def append_message(message, stage:, index:, incomplete_tool: false)
+        previous_role = messages.last&.dig(:type)
+        next_role = message[:type]
+
+        if next_role == :system
+          if stage == :initialize && index.zero?
+            @system_message_text = message[:content]
+            return messages << message
+          end
+
+          warn_recovery(stage, index, previous_role, next_role, :misplaced_system_message)
+          return
+        end
+
+        role = incomplete_tool ? :model : next_role
+
+        if %i[model tool_call].include?(role) && (previous_role.nil? || previous_role == :system)
+          separator = HISTORY_PREAMBLE
+          reason = previous_role == :system ? :system_followed_by_non_user : :missing_initial_user
+        elsif role == :model && previous_role == :model
+          separator = ASSISTANT_CONTINUATION
+          reason = :consecutive_model_messages
+        end
+
+        if incomplete_tool
+          reason = next_role == :tool ? :orphan_tool_result : :incomplete_tool_call
+          message = self.class.historical_tool_evidence(message)
+        end
+
+        warn_recovery(stage, index, previous_role, next_role, reason) if reason
+        messages << separator.dup if separator
+        messages << message
+      end
+
+      def warn_recovery(stage, index, previous_role, next_role, reason)
+        previous_role = :none if VALID_MESSAGE_TYPES.exclude?(previous_role)
+        Rails.logger.warn(
+          "Invalid prompt turn: stage=#{stage} index=#{index} previous=#{previous_role} " \
+            "next=#{next_role} reason=#{reason}",
+        )
       end
     end
   end

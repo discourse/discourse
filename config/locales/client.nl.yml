@@ -514,9 +514,6 @@ nl:
       fonts:
         base_font: "Inhoud"
         heading_font: "Koppen"
-      logo:
-        description: "Wordt weergegeven in de bovenste navigatiebalk van de site en bovenaan de e-mailmeldingen van de site."
-        help_text: "De aanbevolen grootte is 600 x 80 pixels."
       homepage:
         topics: "Topics"
         categories: "Categorieën"
@@ -975,7 +972,6 @@ nl:
         suspect_user: "Is deze gebruiker een spammer?"
         approve_post: "Dit bericht goedkeuren?"
         approve_topic: "Dit topic goedkeuren?"
-        something_wrong_with_post: "Is er iets mis met dit bericht?"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
@@ -2935,6 +2931,9 @@ nl:
         size_too_small: "%{provided_file_size} is kleiner dan de minimaal vereiste %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji zoeken
+      search_placeholder: "Zoek op emojinaam en -alias..."
+      no_results: "Geen resultaten"
+      favorites: "Veel gebruikt"
       smileys_&_emotion: Smileys en emoji's
       people_&_body: Mensen en lichaam
       animals_&_nature: Dieren en natuur
@@ -2987,6 +2986,10 @@ nl:
       emoji: "Emoji :)"
       more_emoji: "meer…"
       options: "Opties"
+      ai_content:
+        code: "Code"
+        quote: "Citeren"
+        details: "Details"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
@@ -3956,7 +3959,7 @@ nl:
         back_description: "Ga terug naar je laatste ongelezen bericht"
         replies_short: "%{current} / %{total}"
       progress:
-        title: topicvoortgang
+        title: "topicvoortgang"
         jump_prompt: "spring naar…"
         jump_prompt_of:
           one: "van %{count} bericht"
@@ -4212,10 +4215,8 @@ nl:
           label: "geselecteerd"
           title: "Klik om bericht te verwijderen uit selectie"
         select_replies:
-          label: "selecteer +antwoorden"
           title: "Bericht en alle antwoorden erop toevoegen aan selectie"
         select_below:
-          label: "selecteer +hieronder"
           title: "Bericht en alle erna toevoegen aan selectie"
         delete: geselecteerde verwijderen
         cancel: selectie annuleren
@@ -4244,6 +4245,7 @@ nl:
         actions: "Bulkacties"
     post:
       accessible_heading: "geplaatst door %{username} %{date}"
+      ai_generated: "AI"
       heading_anchor: "Koptekstlink"
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -4605,6 +4607,8 @@ nl:
         tag_group: "Taggroep"
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       delete: "Categorie verwijderen"
+      empty_state:
+        edit_category: "Categorie bewerken"
       create: "Nieuwe categorie"
       create_with_type: "Nieuwe categorie %{typeName}"
       create_long: "Nieuwe categorie maken"
@@ -4629,7 +4633,7 @@ nl:
         icon_required: "Selecteer een pictogram."
         groups_required: "Selecteer minstens één groep voor deze goedkeuringsmodus."
       name: "Categorienaam"
-      untitled: "Categorie zonder titel"
+      icon_search_placeholder: "Zoeken…"
       description: "Beschrijving"
       logo: "Logoafbeelding categorie"
       logo_dark: "Logoafbeelding categorie donkere modus"
@@ -4637,10 +4641,6 @@ nl:
       background_image: "Achtergrondafbeelding categorie"
       background_image_dark: "Achtergrondafbeelding donkere categorie"
       style: "Stijl"
-      icon: "Pictogram"
-      emoji: "Emoji"
-      select_emoji: "Selecteer emoji"
-      select_icon: "Selecteer pictogram"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
       color_validations:
@@ -4648,18 +4648,11 @@ nl:
         incorrect_length: "moet voldoen aan de indeling #RRGGBB of #RGB"
         non_hexdecimal: "mag alleen hexadecimale tekens bevatten (0-9, A-F)"
       styles:
-        type: "Stijl"
         icon: "Pictogram"
         emoji: "Emoji"
         square: "Vierkant"
-        options:
-          square: "Vierkant"
-          icon: "Pictogram"
-          emoji: "Emoji"
       color_used: "Kleur in gebruik"
-      predefined_colors: "Voorgedefinieerde kleuropties"
       name_placeholder: "Eén of twee woorden aanbevolen"
-      color_placeholder: "Elke webkleur"
       delete_confirm: "Weet je zeker dat je deze categorie wilt verwijderen?"
       delete_error: "Er is een fout opgetreden bij het verwijderen van de categorie."
       list: "Categorieën weergeven"
@@ -5354,9 +5347,17 @@ nl:
       forward: "Volgende"
       share: "Delen"
       dismiss: "Sluiten"
+    mobile_tab_bar:
+      new_topic: "Nieuw topic"
+      create: "Maken"
+      more: "Meer"
+      back: "Terug"
+      topics: "Topics"
+      drafts:
+        one: "Concepten (%{count})"
+        other: "Concepten (%{count})"
     safe_mode:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
-    theme_preview_notice: "Je bekijkt momenteel een themavoorbeeld. Sluit dit browsertabblad of -venster om terug te gaan naar je normale siteconfiguratie."
     theme_preview_failed: "Het voorbeeld van het thema bekijken is mislukt, omdat het niet bestaat of omdat je geen toestemming hebt om het te openen."
     image_removed: "(afbeelding verwijderd)"
     pause_notifications:
@@ -6959,14 +6960,6 @@ nl:
           company_name: "Naam"
           company_url: "Website"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Toepasselijk recht"
-          governing_law_placeholder: "Provincie, staat of land"
-          governing_law_help: |
-            Geef aan onder welk rechtsgebied de juridische voorwaarden van de site vallen. Dit is doorgaans het rechtsgebied waar het bedrijf is gevestigd of actief is.
-          city_for_disputes: "Plaats voor geschillen"
-          city_for_disputes_placeholder: "Plaats"
-          city_for_disputes_help: |
-            Geef de plaats op waar juridische geschillen met betrekking tot dit forum worden afgehandeld.
           extra_groups:
             heading: "Groepsvermelding"
             description: "Extra groepen om weer te geven op de Over-pagina."
@@ -7530,8 +7523,6 @@ nl:
           title: "Kleuren"
           edit: "Bewerken"
           view: "Bekijken"
-          set_default_light: "Instellen als licht palet voor standaardthema (%{theme})"
-          set_default_dark: "Instellen als donker palet voor standaardthema (%{theme})"
           set_default_success: "%{schemeName} instellen als standaard palet voor %{themeName}"
           saved_refreshing: "Opgeslagen! Kleuren vernieuwen..."
           from_theme: "Van thema: %{name}"
@@ -8171,7 +8162,6 @@ nl:
         silence_duration: "Hoelang wordt de gebruiker gedempt?"
         silence_reason_title: "Reden van dempen"
         silence_reason_placeholder: "Reden van dempen"
-        silence_message: "E-mailbericht"
         suspended_until: "(tot %{until})"
         suspend_forever: "Voor altijd schorsen"
         cant_suspend: "Deze gebruiker kan niet worden geschorst."
@@ -8485,6 +8475,8 @@ nl:
       site_text:
         description: "Je kunt elke tekst op je forum aanpassen."
         search_label: "Zoeken"
+        preview:
+          default: "Standaard"
         theme_disabled: "Uitgeschakeld"
         filters: "Filters"
         status:
@@ -8658,7 +8650,7 @@ nl:
           modal_title: Badgegroeperingen
         granted_by: Toegekend door
         granted_at: Toegekend op
-        reason_help: (Een link naar een bericht of topic)
+        reason_help: Een link naar een bericht of topic
         save: Opslaan
         delete: Verwijderen
         delete_confirm: Weet je zeker dat je deze badge wilt verwijderen?

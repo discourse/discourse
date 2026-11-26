@@ -7,10 +7,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ListReviewables do
 
   fab!(:admin)
 
-  before do
-    enable_current_plugin
-    SiteSetting.ai_bot_enabled = true
-  end
+  include_context "with AI bot enabled"
 
   def tool(params = nil, user: admin, **kwargs)
     params ||= kwargs

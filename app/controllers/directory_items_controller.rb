@@ -44,18 +44,17 @@ class DirectoryItemsController < ApplicationController
     if params[:user_field_ids]
       serializer_opts[:user_custom_field_map] = {}
 
-      allowed_field_ids =
-        if guardian.is_staff?
-          UserField.pluck(:id)
-        else
-          UserField.public_fields.pluck(:id)
-        end
+      allowed_field_types =
+        (guardian.is_staff? ? UserField.all : UserField.public_fields).pluck(:id, :field_type).to_h
 
-      user_field_ids = params[:user_field_ids].split("|").map(&:to_i) & allowed_field_ids
+      user_field_ids = params[:user_field_ids].split("|").map(&:to_i) & allowed_field_types.keys
       user_field_ids.each do |user_field_id|
         serializer_opts[:user_custom_field_map][
           "#{User::USER_FIELD_PREFIX}#{user_field_id}"
         ] = user_field_id
+      end
+      serializer_opts[:number_user_field_ids] = user_field_ids.select do |user_field_id|
+        allowed_field_types[user_field_id] == "number"
       end
     end
 

@@ -515,9 +515,6 @@ hu:
       fonts:
         base_font: "Törzs"
         heading_font: "Címsorok"
-      logo:
-        description: "Megjelenik a webhely felső navigációs sávjában, valamint a webhely e-mail-értesítéseinek felső részén."
-        help_text: "Az ajánlott méret 600×80 képpont."
       homepage:
         topics: "Témák"
         categories: "Kategóriák"
@@ -963,7 +960,6 @@ hu:
         suspect_user: "Ez felhasználói spam?"
         approve_post: "Jóváhagyod ezt a bejegyzést?"
         approve_topic: "Jóváhagyod ezt a témát?"
-        something_wrong_with_post: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
@@ -2906,6 +2902,9 @@ hu:
         size_too_small: "%{provided_file_size} kisebb, mint a minimálisan megengedett %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emodzsi keresése
+      search_placeholder: "Keresés emodzsinév és álnév alapján…"
+      no_results: "Nincs találat"
+      favorites: "Gyakran használt"
       smileys_&_emotion: Mosolyok és érzelmek
       people_&_body: Emberek és test
       animals_&_nature: Állatok és természet
@@ -2947,6 +2946,10 @@ hu:
       emoji: "Emodzsi :)"
       more_emoji: "további…"
       options: "Beállítások"
+      ai_content:
+        code: "Kód"
+        quote: "Idézet"
+        details: "Részletek"
       whisper: "suttogás"
       unlist: "nem listázott"
       add_warning: "Ez egy hivatalos figyelmeztetés."
@@ -3818,7 +3821,7 @@ hu:
         back_description: "Vissza az utolsó olvasatlan bejegyzéshez"
         replies_short: "%{current} / %{total}"
       progress:
-        title: téma állapota
+        title: "téma állapota"
         jump_prompt: "ugrás…"
         jump_prompt_of:
           one: "a %{count} bejegyzésből"
@@ -4068,10 +4071,8 @@ hu:
           label: "kiválasztott"
           title: "Kattintson a bejegyzés eltávolításához a kiválasztásból"
         select_replies:
-          label: "kiválasztás válaszokkal együtt"
           title: "A hozzászólás és összes válaszának hozzáadása a kiválasztáshoz"
         select_below:
-          label: "Kiválasztás az alatt lévőkkel együtt"
           title: "A bejegyzés és az összes utána következő hozzáadása a kiválasztáshoz"
         delete: kiválasztottak törlése
         cancel: kiválasztások visszavonása
@@ -4467,7 +4468,7 @@ hu:
         emoji_required: "Válassz egy emojit."
         icon_required: "Válasszon ikont."
       name: "Kategória neve"
-      untitled: "Névtelen kategória"
+      icon_search_placeholder: "Keresés…"
       description: "Leírás"
       logo: "Kategória logója"
       logo_dark: "Sötét mód kategória logóképe"
@@ -4475,9 +4476,6 @@ hu:
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
       style: "Stílus"
-      icon: "Ikon"
-      emoji: "Hangulatjel"
-      select_emoji: "Válasszon emojit"
       background_color: "Szín"
       foreground_color: "Szöveg színe"
       color_validations:
@@ -4485,18 +4483,11 @@ hu:
         incorrect_length: "#RRGGBB vagy #RGB formátumnak kell lennie"
         non_hexdecimal: "csak hexadecimális karaktereket tartalmazhat (0-9, AF)"
       styles:
-        type: "Stílus"
         icon: "Ikon"
         emoji: "Emodzsi"
         square: "Négyzet"
-        options:
-          square: "Négyzet"
-          icon: "Ikon"
-          emoji: "Emodzsi"
       color_used: "Használt szín"
-      predefined_colors: "Előre definiált színválaszték"
       name_placeholder: "Egy-két szó ajánlott"
-      color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztos, hogy törli ezt a kategóriát?"
       delete_error: "Hiba történt a kategória törlése során."
       list: "Kategóriák felsorolása"
@@ -5185,9 +5176,17 @@ hu:
       forward: "Előre"
       share: "Megosztás"
       dismiss: "Elvet"
+    mobile_tab_bar:
+      new_topic: "Új téma"
+      create: "Létrehozás"
+      more: "Több"
+      back: "Vissza"
+      topics: "Témák"
+      drafts:
+        one: "Vázlatok (%{count})"
+        other: "Vázlatok (%{count})"
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, a biztonságos módból való kilépéshez zárja be ezt a keresési lapot"
-    theme_preview_notice: "Épp egy téma előnézetét nézi, zárba be a böngészőlapot vagy ablakot, hogy visszatérjen a webhelykonfigurációhoz."
     theme_preview_failed: "Nem sikerült megtekinteni a témát, mert nem létezik, vagy nincs hozzáférési jogosultsága."
     image_removed: "(kép eltávolítva)"
     pause_notifications:
@@ -6760,14 +6759,6 @@ hu:
           company_name: "Név"
           company_url: "Weboldal"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Irányadó jog"
-          governing_law_placeholder: "Tartomány, állam vagy ország"
-          governing_law_help: |
-            Adja meg a webhely jogi feltételeihez tartozó joghatóságot, általában ott, ahol a vállalat be van jegyezve vagy ahol működik.
-          city_for_disputes: "Város a vitákért"
-          city_for_disputes_placeholder: "Város"
-          city_for_disputes_help: |
-            Adja meg a várost a fórummal kapcsolatos jogi viták rendezésére.
           extra_groups:
             heading: "Csoportos felsorolás"
             description: "További csoportok megjelenítése a Névjegy oldalon."
@@ -7319,8 +7310,6 @@ hu:
           title: "Színek"
           edit: "Szerkesztés"
           view: "Megtekintés"
-          set_default_light: "Beállítás világos palettának az alapértelmezett témán (%{theme})"
-          set_default_dark: "Sötét paletta beállítása az alapértelmezett témán (%{theme})"
           set_default_success: "%{schemeName} beállítva alapértelmezett palettának %{themeName} számára"
           saved_refreshing: "Mentve! Frissítő színek..."
           from_theme: "Téma forrása: %{name}"
@@ -7959,7 +7948,6 @@ hu:
         silence_duration: "Mennyi ideig lesz elnémítva a felhasználó?"
         silence_reason_title: "Némítás oka"
         silence_reason_placeholder: "Némítás oka"
-        silence_message: "E-mail üzenet"
         suspended_until: "(eddig: %{until})"
         suspend_forever: "Örökre felfüggeszteni"
         cant_suspend: "Ez a felhasználó nem lett felfüggesztve"
@@ -8279,6 +8267,8 @@ hu:
       site_text:
         description: "Bármelyik szöveget személyre szabhatja a fórumon."
         search_label: "Keresés"
+        preview:
+          default: "Alapértelmezett"
         theme_disabled: "Kikapcsolva"
         filters: "Szűrők"
         status:
@@ -8445,7 +8435,7 @@ hu:
           modal_title: Jelvénycsoportok
         granted_by: Megadta
         granted_at: Megadta
-        reason_help: (Hivatkozás egy bejegyzéshez vagy témához)
+        reason_help: Hivatkozás egy bejegyzéshez vagy témához
         save: Mentés
         delete: Törlés
         delete_confirm: Biztos, hogy törli ezt a jelvényt?

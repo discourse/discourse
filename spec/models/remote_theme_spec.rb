@@ -108,6 +108,41 @@ RSpec.describe RemoteTheme do
 
     around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
+    context "when replacing a text setting with a translation" do
+      let(:theme) do
+        add_to_git_repo(initial_repo, "settings.yaml" => "header: ''", "locales/en.yml" => "en: {}")
+        RemoteTheme.import_theme(initial_repo_url)
+      end
+
+      it "preserves the saved heading through the update and translation compilation" do
+        theme.update_setting(:header, "HELLO")
+        theme.save!
+        theme.default_translation_data
+        add_to_git_repo(
+          initial_repo,
+          "settings.yaml" => "{}",
+          "locales/en.yml" => "en:\n  header: ''\n",
+          "migrations/settings/0002-migrate-header.js" => <<~JS,
+            export default function migrate(settings, helpers) {
+              helpers.migrateSettingToTranslation("header", "header");
+              return settings;
+            }
+          JS
+        )
+
+        theme.remote_theme.update_from_remote
+
+        theme.reload
+        override =
+          theme.theme_translation_overrides.find_by!(locale: "en", translation_key: "header")
+        expect(override.value).to eq("HELLO")
+        expect(override.status).to eq("up_to_date")
+        expect(theme.theme_settings.exists?(name: "header")).to eq(false)
+        field = theme.theme_fields.find_by!(target_id: Theme.targets[:translations], name: "en")
+        expect(field.javascript_cache.content).to include("HELLO")
+      end
+    end
+
     context "when adding translatable object fields" do
       let(:old_settings) do
         File.read(file_from_fixtures("translatable_objects.yaml", "theme_settings")) + <<~YAML

@@ -30,13 +30,9 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "banner visibility" do
-    it "shows the onboarding banner for admin users" do
+    it "shows the onboarding banner with all three steps for admin users" do
       visit("/")
       expect(banner).to be_visible
-    end
-
-    it "shows all three onboarding steps" do
-      visit("/")
       expect(banner.step_names).to eq(%w[select_theme create_category invite_collaborators])
     end
 
@@ -67,7 +63,12 @@ describe "Admin Onboarding Banner" do
       )
     end
 
-    it "takes the admin to the category setup and completes once a category is saved" do
+    it "only completes the step after the admin saves a new category" do
+      visit("/")
+      expect(banner.step_not_completed?("create_category")).to eq(true)
+
+      open_category_form_from_banner
+
       visit("/")
       expect(banner.step_not_completed?("create_category")).to eq(true)
 
@@ -75,20 +76,12 @@ describe "Admin Onboarding Banner" do
 
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
-      expect(page).to have_current_path("/c/announcements/edit/general")
+      expect(page).to have_current_path(%r{\A/c/announcements/\d+\z})
 
       try_until_success { expect(create_category_step_logged?).to eq(true) }
 
       visit("/")
       expect(banner.step_completed?("create_category")).to eq(true)
-    end
-
-    it "stays open when the admin leaves the category setup without saving" do
-      visit("/")
-      open_category_form_from_banner
-
-      visit("/")
-      expect(banner.step_not_completed?("create_category")).to eq(true)
     end
 
     it "stays open when an existing category is edited" do
@@ -104,12 +97,17 @@ describe "Admin Onboarding Banner" do
   end
 
   describe "invite collaborators step" do
-    it "marks step as complete after creating invite" do
+    it "only completes the step after the admin creates an invite" do
       visit("/")
       expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
 
       banner.click_step_action("invite_collaborators")
+      expect(create_invite_modal).to be_open
+      create_invite_modal.close
+      expect(create_invite_modal).to be_closed
+      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
 
+      banner.click_step_action("invite_collaborators")
       expect(create_invite_modal).to be_open
       create_invite_modal.save_button.click
       expect(create_invite_modal).to have_copy_button
@@ -118,28 +116,14 @@ describe "Admin Onboarding Banner" do
 
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
     end
-
-    it "does not mark step complete if modal is cancelled" do
-      visit("/")
-      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
-      banner.click_step_action("invite_collaborators")
-
-      expect(create_invite_modal).to be_open
-      create_invite_modal.close
-
-      expect(banner.step_not_completed?("invite_collaborators")).to eq(true)
-    end
   end
 
   describe "select theme step" do
-    it "opens the design wizard as a sheet" do
-      visit("/")
-      expect(banner.step_not_completed?("select_theme")).to eq(true)
-
-      banner.click_step_action("select_theme")
-
-      expect(design_wizard_panel).to be_visible
-      expect(design_wizard_panel).to have_site_sidebar
+    let(:dark_only_palette) do
+      ColorScheme.create_from_base(
+        name: "Midnight",
+        base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+      )
     end
 
     it "docks to the bottom edge on a narrow viewport, leaving the preview visible" do
@@ -180,11 +164,14 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to have_selected_theme(Theme.horizon_theme)
     end
 
-    it "does not mark the step complete when closed without saving" do
+    it "opens the design wizard as a sheet and leaves the step incomplete on close" do
       visit("/")
+      expect(banner.step_not_completed?("select_theme")).to eq(true)
+
       banner.click_step_action("select_theme")
 
       expect(design_wizard_panel).to be_visible
+      expect(design_wizard_panel).to have_site_sidebar
 
       design_wizard_panel.next_step
       design_wizard_panel.select_palette("default")
@@ -198,21 +185,21 @@ describe "Admin Onboarding Banner" do
     end
 
     it "saves a light only site" do
+      dark_only_palette
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
       expect(design_wizard_panel).to have_palette_mode("both")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "dark")
-      expect(design_wizard_panel).to have_selected_palette_name("Default", mode: "light")
+      expect(design_wizard_panel).to have_selected_palette("default")
 
-      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette_mode("dark")
+      expect(design_wizard_panel).to have_palette("custom_#{dark_only_palette.id}")
+
       design_wizard_panel.select_palette_mode("light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{dark_only_palette.id}")
 
-      expect(design_wizard_panel).to have_no_palette_row(mode: "dark")
-
-      design_wizard_panel.select_palette("solarized", mode: "light")
+      design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -230,10 +217,7 @@ describe "Admin Onboarding Banner" do
       design_wizard_panel.next_step
 
       design_wizard_panel.select_palette_mode("dark")
-
-      expect(design_wizard_panel).to have_no_palette_row(mode: "light")
-
-      design_wizard_panel.select_palette("dracula", mode: "dark")
+      design_wizard_panel.select_palette("dracula")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -244,13 +228,16 @@ describe "Admin Onboarding Banner" do
       expect(theme.dark_color_scheme.base_scheme_id).to eq(dracula_id)
     end
 
-    it "saves the light and dark palettes picked separately" do
+    it "saves both palettes of the pair picked for light and dark" do
+      dark_only_palette
       visit("/")
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
-      design_wizard_panel.select_palette("solarized", mode: "light")
-      design_wizard_panel.select_palette("wcag", mode: "dark")
+      expect(design_wizard_panel).to have_palette("dracula")
+      expect(design_wizard_panel).to have_no_palette("custom_#{dark_only_palette.id}")
+
+      design_wizard_panel.select_palette("solarized")
       design_wizard_panel.next_step
       design_wizard_panel.save
 
@@ -260,11 +247,11 @@ describe "Admin Onboarding Banner" do
         ColorScheme::NAMES_TO_ID_MAP["Solarized Light"],
       )
       expect(theme.dark_color_scheme.base_scheme_id).to eq(
-        ColorScheme::NAMES_TO_ID_MAP["WCAG Dark"],
+        ColorScheme::NAMES_TO_ID_MAP["Solarized Dark"],
       )
     end
 
-    it "offers palettes admins created in the mode their colors suit" do
+    it "offers palettes admins created only in the mode their colors suit" do
       night =
         ColorScheme.create_from_base(
           name: "Night",
@@ -275,12 +262,16 @@ describe "Admin Onboarding Banner" do
       banner.click_step_action("select_theme")
       design_wizard_panel.next_step
 
-      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}", mode: "light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}")
 
-      design_wizard_panel.select_palette("custom_#{night.id}", mode: "dark")
+      design_wizard_panel.select_palette_mode("light")
 
-      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}", mode: "dark")
-      expect(design_wizard_panel).to have_selected_palette("default", mode: "light")
+      expect(design_wizard_panel).to have_no_palette("custom_#{night.id}")
+
+      design_wizard_panel.select_palette_mode("dark")
+      design_wizard_panel.select_palette("custom_#{night.id}")
+
+      expect(design_wizard_panel).to have_selected_palette("custom_#{night.id}")
 
       design_wizard_panel.next_step
       design_wizard_panel.save
@@ -305,6 +296,7 @@ describe "Admin Onboarding Banner" do
     end
 
     it "previews and applies the design choices and marks step complete" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       visit("/")
       banner.click_step_action("select_theme")
 
@@ -317,7 +309,7 @@ describe "Admin Onboarding Banner" do
       expect(design_wizard_panel).to be_visible
 
       design_wizard_panel.next_step
-      design_wizard_panel.select_palette("royal", mode: "light")
+      design_wizard_panel.select_palette("royal")
       expect(design_wizard_panel).to have_palette_preview
 
       design_wizard_panel.next_step
@@ -354,7 +346,7 @@ describe "Admin Onboarding Banner" do
       open_category_form_from_banner
       category_form.field("name").fill_in("Announcements")
       category_page.save_settings
-      expect(page).to have_current_path("/c/announcements/edit/general")
+      expect(page).to have_current_path(%r{\A/c/announcements/\d+\z})
       visit("/")
 
       expect(banner.step_completed?("create_category")).to eq(true)

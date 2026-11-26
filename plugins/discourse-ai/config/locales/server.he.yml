@@ -28,12 +28,6 @@ he:
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
         notify_author_pm:
           subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
-          body: |
-            שלום ‎@%{username},
-
-            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
-
-            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
@@ -104,6 +98,11 @@ he:
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_backfill_hourly_rate: "מספר הפוסטים והנושאים לתרגום לשעה במהלך פעולות מילוי לאחור. יש להגדיר ל־0 כדי להשבית מילוי לאחור של תרגומים אוטומטית לתוכן קיים."
     ai_usage_rollup_after_days: "מספר הימים לשמירת סטטיסטיקות שימוש בבינה מלאכותית לפי בקשה לפני גלגולן לצבירה יומית. הגדרה ל־0 תשבית איסופים."
+    keywords:
+      ai_default_llm_model: "מודל שפה כברירת מחדל"
+      ai_discord_search_enabled: "שילוב מול Discord"
+      ai_summarization_enabled: "סיכומים"
+      ai_summary_gists_enabled: "תקצירים מקוצרים של רשימת הנושאים"
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -284,6 +283,8 @@ he:
           text_color: "צבע הטקסט"
         approve_label: "כן"
         reject_label: "לא"
+        category_access_levels:
+          readonly: "לראות"
         empty_value: "ריק"
       agents:
         cannot_have_duplicate_tools: "לא יכולים להיות כלים כפולים"
@@ -441,6 +442,7 @@ he:
         edit_post: "עריכת פוסט"
         edit_tag: "עריכת תגית"
         create_category: "יצירת קטגוריה"
+        delete_category: "מחיקת קטגוריה"
         search: "חיפוש"
         tags: "הצגת תגיות"
         time: "מועד"
@@ -550,6 +552,12 @@ he:
         errors:
           not_found: "הנושא לא נמצא."
       edit_category:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      set_category_permissions:
+        errors:
+          not_found: "לא נמצאה קטגוריה."
+      delete_category:
         errors:
           not_found: "לא נמצאה קטגוריה."
       change_topic_category:

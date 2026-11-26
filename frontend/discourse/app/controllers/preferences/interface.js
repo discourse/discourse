@@ -16,7 +16,6 @@ import {
   SEND_SHORTCUT_META_ENTER,
 } from "discourse/lib/constants";
 import { normalizeUnderstoodLanguages } from "discourse/lib/content-localization";
-import { deepEqual } from "discourse/lib/object";
 import { formatShortcut } from "discourse/lib/shortcut-format";
 import {
   currentThemeId,
@@ -60,16 +59,6 @@ export default class InterfaceController extends Controller {
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
   subpageTitle = i18n("user.preferences_nav.interface");
-
-  @computed("model.id", "currentUser.id")
-  get canPreviewColorScheme() {
-    return deepEqual(this.model?.id, this.currentUser?.id);
-  }
-
-  @computed("model.id", "currentUser.id")
-  get isViewingOwnProfile() {
-    return deepEqual(this.model?.id, this.currentUser?.id);
-  }
 
   @computed("makeThemeDefault")
   get saveAttrNames() {
@@ -206,7 +195,7 @@ export default class InterfaceController extends Controller {
 
   @computed("themeId")
   get themeIdChanged() {
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return false;
     }
 
@@ -251,7 +240,7 @@ export default class InterfaceController extends Controller {
 
   @computed("model.user_option.theme_ids", "themeId")
   get showThemeSetDefault() {
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return false;
     }
 
@@ -263,7 +252,7 @@ export default class InterfaceController extends Controller {
 
   @computed("model.user_option.text_size", "textSize")
   get showTextSetDefault() {
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return false;
     }
 
@@ -395,7 +384,7 @@ export default class InterfaceController extends Controller {
     if (this.selectedInterfaceColorModeId) {
       return this.selectedInterfaceColorModeId;
     }
-    if (this.isViewingOwnProfile) {
+    if (this.model.isCurrent) {
       if (this.interfaceColor.colorModeIsAuto) {
         return INTERFACE_COLOR_MODES.AUTO;
       }
@@ -505,7 +494,7 @@ export default class InterfaceController extends Controller {
       .then(() => {
         this.set("saved", true);
 
-        if (this.isViewingOwnProfile) {
+        if (this.model.isCurrent) {
           if (makeThemeDefault) {
             setLocalTheme([]);
           } else {
@@ -565,7 +554,7 @@ export default class InterfaceController extends Controller {
 
   @action
   selectTextSize(newSize) {
-    if (this.isViewingOwnProfile) {
+    if (this.model.isCurrent) {
       const classList = document.documentElement.classList;
 
       TEXT_SIZES.forEach((name) => {
@@ -591,7 +580,7 @@ export default class InterfaceController extends Controller {
       previewingColorScheme: this.#shouldEnablePreview(false),
     });
 
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return;
     }
 
@@ -610,7 +599,7 @@ export default class InterfaceController extends Controller {
       previewingColorScheme: this.#shouldEnablePreview(true),
     });
 
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return;
     }
 
@@ -626,9 +615,9 @@ export default class InterfaceController extends Controller {
   @action
   selectColorMode(modeId) {
     this.selectedInterfaceColorModeId = modeId;
-    this.set("previewingColorScheme", this.isViewingOwnProfile);
+    this.set("previewingColorScheme", this.model.isCurrent);
 
-    if (!this.isViewingOwnProfile) {
+    if (!this.model.isCurrent) {
       return;
     }
 
@@ -645,7 +634,7 @@ export default class InterfaceController extends Controller {
       previewingColorScheme: false,
     });
 
-    if (this.isViewingOwnProfile) {
+    if (this.model.isCurrent) {
       const originalMode = this.model.user_option.interface_color_mode;
       if (originalMode === INTERFACE_COLOR_MODES.AUTO) {
         this.interfaceColor.useAutoMode();
@@ -691,7 +680,7 @@ export default class InterfaceController extends Controller {
 
   #shouldEnablePreview(isDarkMode) {
     return (
-      this.isViewingOwnProfile &&
+      this.model.isCurrent &&
       (isDarkMode ? this.isInDarkMode : this.isInLightMode)
     );
   }

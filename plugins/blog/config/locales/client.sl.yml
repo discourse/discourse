@@ -14,6 +14,12 @@ sl:
         desktop: Namizno
         mobile: Mobilno
         save: Shrani
+        about_tab: O nas
+        settings_tab: Nastavitve
+        theme_tab: Videz
+        column_name: Ime
+        column_category: Kategorija
+        column_status: Status
         path_formats:
           custom: Po meri
         themes: Videzi
@@ -48,6 +54,8 @@ sl:
         edit: Uredi
         status: Status
         replies: Odgovori
+        title: Naziv
+      all: Vsi
       drafts: Osnutki
       preview: Predogled
       appearance_link: Videz

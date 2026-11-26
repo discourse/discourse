@@ -50,6 +50,9 @@ ja:
             delete_ai_embedding: "AI 埋め込みを削除"
             update_ai_spam_settings: "AI スパム設定を更新"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_tool": "AI ツール"
     discourse_automation:
       scriptables:
         llm_report:
@@ -209,6 +212,13 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      review_bulk:
+        refresh: "更新"
+        columns:
+          user: "ユーザー"
+          reason: "通報:"
+          created: "作成"
+          status: "ステータス"
       dsa_classification:
         suggest: "AI で提案"
       ai_decoded_transcript:
@@ -217,9 +227,18 @@ ja:
         type: "タイプ"
         error: "エラー"
         response: "応答"
+      post_image_captions:
+        image_descriptions:
+          apply: "適用"
       discourse_workflows:
         ai_agent:
           mode: "モード"
+        ai_tool:
+          tool_ref: "ツール"
+          list_item: "リスト項目"
+          add_list_item: "項目を追加"
+        mcp_tool:
+          tool_name: "ツール"
         classify:
           text: "テキスト"
           upload_ids: "画像"
@@ -343,6 +362,9 @@ ja:
             access_permissions: "アクセスと権限"
             enabled_features: "有効な機能"
             automation: "自動化"
+        review_queue:
+          setting_groups:
+            settings: "設定"
         image_caption:
           setting_groups:
             settings: "設定"
@@ -712,6 +734,30 @@ ja:
         delete: "削除"
         embedding: "埋め込み"
         tool: "ツール"
+      concepts:
+        edit: "編集"
+        seed:
+          refresh: "更新"
+        delete: "削除"
+        columns:
+          status: "ステータス"
+          topics: "トピック"
+          posts: "投稿"
+        statuses:
+          all: "すべてのステータス"
+          active: "アクティブ"
+        form:
+          name: "名前"
+          description: "説明"
+          status: "ステータス"
+        shared_topics_count:
+          other: "%{count}トピック"
+        tagged_topics: "タグ付きトピック"
+        topic_columns:
+          topic: "トピック"
+          primary: "プライマリー"
+          relevance: "関連性の高い項目"
+        primary_badge: "プライマリー"
       decision_models:
         no_preset: "なし"
         display_name: "名前"
@@ -1004,7 +1050,6 @@ ja:
         filter_standalone: "単発"
       ai_bot:
         title: "AI ボット"
-        llm: "モデル:"
         pm_warning: "AI チャットボットのメッセージは、モデレーターによって定期的に監視されます。"
         cancel_streaming: "返信を停止する"
         try_again: "やり直す"
@@ -1061,9 +1106,9 @@ ja:
           mixtral-8x7B-Instruct-V0:
             "1": "Mixtral-8x7B V0.1"
         conversations:
+          tab_label: "AI"
           header: "どのようなご用件ですか？"
           submit: "質問を送信"
-          disclaimer: "生成 AI は間違いを犯す可能性があります。重要な情報は確認してください。"
           placeholder: "質問する..."
           new: "新しい質問"
           min_input_length_message:

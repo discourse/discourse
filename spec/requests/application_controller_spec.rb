@@ -20,19 +20,72 @@ RSpec.describe ApplicationController do
   describe "shared session key" do
     before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
 
-    it "renders the meta tag for a logged-in user" do
-      sign_in(user)
-
+    def rendered_shared_key
       get "/latest"
+      expect(response.status).to eq(200)
+      Nokogiri::HTML5.parse(response.body).at_css("meta[name='shared_session_key']")["content"]
+    end
 
-      expect(response.body).to match(/<meta name="shared_session_key" content="[^"]+">/)
+    def poll_as(key)
+      poller = open_session
+      poller.get "/session/current.json", headers: { "HTTP_X_SHARED_SESSION_KEY" => key }
+      poller.response
+    end
+
+    it "invalidates each previous polling key when switching, and the last one on ordinary logout" do
+      SiteSetting.allow_anonymous_mode = true
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:trust_level_1].to_s
+      SiteSetting.log_out_strict = false
+      master = Fabricate(:user, trust_level: TrustLevel[1])
+      other_device = open_session
+      other_device.sign_in(master)
+      sign_in(master)
+      original_key = rendered_shared_key
+      expect(poll_as(original_key).parsed_body.dig("current_user", "id")).to eq(master.id)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+      shadow_key = rendered_shared_key
+      shadow_id = master.reload.shadow_user.id
+      expect(poll_as(shadow_key).parsed_body.dig("current_user", "id")).to eq(shadow_id)
+      expect(poll_as(original_key).status).to eq(404)
+
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(200)
+      master_key = rendered_shared_key
+      expect(master_key).not_to eq(shadow_key)
+      expect(poll_as(master_key).parsed_body.dig("current_user", "id")).to eq(master.id)
+      expect(poll_as(shadow_key).status).to eq(404)
+
+      delete "/session/#{master.username}.json"
+      expect(response.status).to eq(302)
+      expect(poll_as(master_key).status).to eq(404)
+      expect(UserAuthToken.where(user_id: [master.id, shadow_id]).count).to eq(1)
+      other_device.get "/session/current.json"
+      expect(other_device.response.parsed_body.dig("current_user", "id")).to eq(master.id)
+    end
+
+    it "does not exchange polling identities when impersonation starts or stops" do
+      admin = Fabricate(:admin)
+      sign_in(admin)
+      admin_key = rendered_shared_key
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
+      expect(response.status).to eq(200)
+      impersonated_key = rendered_shared_key
+      expect(poll_as(admin_key).status).to eq(404)
+      expect(poll_as(impersonated_key).parsed_body.dig("current_user", "id")).to eq(user.id)
+
+      delete "/admin/impersonate.json"
+      expect(response.status).to eq(200)
+      expect(poll_as(rendered_shared_key).parsed_body.dig("current_user", "id")).to eq(admin.id)
+      expect(poll_as(impersonated_key).status).to eq(404)
     end
 
     it "authenticates a login-required route via the header" do
       SiteSetting.login_required = true
-      token = UserAuthToken.generate!(user_id: user.id)
-      key = SecureRandom.hex
-      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
+      sign_in(user)
+      key = rendered_shared_key
+      reset!
 
       get "/latest.json"
       expect(response.status).to eq(403)
@@ -169,6 +222,37 @@ RSpec.describe ApplicationController do
       enable_auth_provider(:github)
       get "/"
       expect(response).not_to redirect_to("/login")
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with a sole authenticator" do
+      enable_auth_provider(:google_oauth2)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/latest"
+      expect(response).to redirect_to("/login")
+
+      get "/login"
+      expect(response.status).to eq(200)
+
+      invite = Fabricate(:invite, invited_by: admin)
+      get "/invites/#{invite.invite_key}"
+      expect(response.status).to eq(200)
+    end
+
+    it "keeps invite-only visitors on site with Discourse ID" do
+      enable_auth_provider(:discourse_id)
+      SiteSetting.enable_local_logins = false
+      SiteSetting.invite_only = true
+
+      get "/"
+      expect(response.status).to eq(200)
+
+      get "/login"
       expect(response.status).to eq(200)
     end
 
@@ -663,6 +747,28 @@ RSpec.describe ApplicationController do
           expect(response).to have_http_status(:not_found)
           expect(response.body).not_to include(topic.title)
         end
+      end
+
+      it "does not retain topics converted to private messages" do
+        Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+        topic = Fabricate(:topic_with_op)
+
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to include(topic.title)
+
+        admin = sign_in(Fabricate(:admin))
+        put "/t/#{topic.id}/convert-topic/private.json"
+
+        expect(response).to have_http_status(:ok)
+        expect(topic.reload).to be_private_message
+
+        delete "/session/#{admin.username}.json"
+        get "/missing-route"
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).not_to include(topic.title)
       end
 
       it "does not retain topics after a category becomes restricted" do

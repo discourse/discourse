@@ -6,6 +6,7 @@ import { editorFilters } from "discourse/plugins/blog/discourse/lib/blog-editor-
 export default class BlogEditorRoute extends DiscourseRoute {
   @service currentUser;
   @service router;
+  @service site;
 
   beforeModel(transition) {
     if (!this.currentUser) {
@@ -20,7 +21,7 @@ export default class BlogEditorRoute extends DiscourseRoute {
   model(params, transition) {
     if (this.currentUser?.can_blog_edit ?? this.currentUser?.staff) {
       return ajax("/blog-editor.json", {
-        data: editorFilters(transition.to.queryParams),
+        data: editorFilters(transition.to.queryParams, this.site.blogs),
       });
     }
   }

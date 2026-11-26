@@ -14,11 +14,20 @@ module DiscourseAi
           can_create_color_scheme: "palettes_unavailable",
           can_create_needed_palettes: "palettes_unavailable",
           can_edit_theme: "theme_not_editable",
+          can_edit_parent_theme: "theme_not_editable",
+          can_edit_replaced_components: "theme_not_editable",
+          can_edit_restored_components: "theme_not_editable",
+          supported_parent_theme: "theme_not_editable",
           not_applied: "already_live",
           applied: "not_live",
           palettes_exist: "palettes_missing",
           palettes_available_to_theme: "palettes_missing",
           restorable: "cannot_restore",
+          attached_to_parent: "theme_changed",
+          replaceable_component: "theme_changed",
+          allowed_theme_repo: "theme_repo_not_allowed",
+          approved_target_matches: "approval_required",
+          not_default: "theme_already_default",
         }.freeze
 
         def self.requires_approval?
@@ -88,6 +97,10 @@ module DiscourseAi
               FAILED_POLICIES[policy]
             elsif result["result.model.appearance_change"]&.failure?
               "not_found"
+            elsif result["result.model.popular_theme"]&.failure?
+              "not_popular"
+            elsif result["result.step.import_theme"]&.failure?
+              "install_failed"
             else
               "failed"
             end

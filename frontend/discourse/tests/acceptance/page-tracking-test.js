@@ -1,27 +1,10 @@
-import { getOwner } from "@ember/owner";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { ajax } from "discourse/lib/ajax";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-const trackViewHeaderName = "Discourse-Track-View";
-
 function setupPretender(server, helper) {
   server.post("/srv/pv", () => helper.response({}));
-
-  server.get("/fake-analytics-endpoint", (request) => {
-    if (request.requestHeaders[trackViewHeaderName]) {
-      throw "Fake analytics endpoint was called with track-view header";
-    }
-    return helper.response({});
-  });
-}
-
-function setupFakeAnalytics(ref) {
-  getOwner(ref)
-    .lookup("service:router")
-    .on("routeDidChange", () => ajax("/fake-analytics-endpoint"));
 }
 
 function setupTrackingSessionId(needs) {
@@ -42,27 +25,41 @@ function setupTrackingSessionId(needs) {
   });
 }
 
-function assertRequests({ assert, tracked, untracked, beacons, message }) {
-  let trackedCount = 0,
-    untrackedCount = 0,
-    beaconCount = 0;
-
-  const requests = pretender.handledRequests;
-  requests.forEach((request) => {
-    if (request.url === "/srv/pv") {
-      beaconCount++;
-    } else if (request.requestHeaders[trackViewHeaderName]) {
-      trackedCount++;
-    } else {
-      untrackedCount++;
-    }
-  });
-
-  assert.strictEqual(trackedCount, tracked, `${message} (tracked)`);
-  assert.strictEqual(untrackedCount, untracked, `${message} (untracked)`);
-  assert.strictEqual(beaconCount, beacons, `${message} (beacons)`);
+function assertBeacon(assert, { navigation }, message) {
+  const beacons = pretender.handledRequests.filter(
+    (request) => request.url === "/srv/pv"
+  );
+  assert.strictEqual(beacons.length, 1, message);
+  assert.strictEqual(
+    JSON.parse(beacons[0].requestBody).navigation,
+    navigation,
+    `${message} with the expected navigation flag`
+  );
 
   pretender.handledRequests = [];
+}
+
+async function navigateAndAssertBeacons(assert) {
+  await visit("/");
+  assertBeacon(
+    assert,
+    { navigation: undefined },
+    "sends a beacon for the initial page load"
+  );
+
+  await click("#site-logo");
+  assertBeacon(
+    assert,
+    { navigation: true },
+    "sends a beacon for reloading latest"
+  );
+
+  await visit("/t/-/280");
+  assertBeacon(
+    assert,
+    { navigation: true },
+    "sends a beacon for navigating to a topic"
+  );
 }
 
 acceptance("Page tracking - loading slider", function (needs) {
@@ -70,43 +67,8 @@ acceptance("Page tracking - loading slider", function (needs) {
   needs.pretender(setupPretender);
   setupTrackingSessionId(needs);
 
-  test("sets the Discourse-Track-View header on the navigation request", async function (assert) {
-    setupFakeAnalytics(this);
-
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 1,
-      beacons: 0,
-      message: "no tracked requests before app boot",
-    });
-
-    await visit("/");
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 2,
-      beacons: 1,
-      message: "no ajax tracked for initial page load",
-    });
-
-    await click("#site-logo");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      beacons: 1,
-      message: "tracked one pageview for reloading latest",
-    });
-
-    await visit("/t/-/280");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      beacons: 1,
-      message: "tracked one pageview for navigating to topic",
-    });
+  test("sends one beacon per navigation", async function (assert) {
+    await navigateAndAssertBeacons(assert);
   });
 });
 
@@ -118,43 +80,8 @@ acceptance("Page tracking - loading spinner", function (needs) {
     page_loading_indicator: "spinner",
   });
 
-  test("sets the Discourse-Track-View header on the navigation request", async function (assert) {
-    setupFakeAnalytics(this);
-
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 1,
-      beacons: 0,
-      message: "no tracked requests before app boot",
-    });
-
-    await visit("/");
-    assertRequests({
-      assert,
-      tracked: 0,
-      untracked: 2,
-      beacons: 1,
-      message: "no ajax tracked for initial page load",
-    });
-
-    await click("#site-logo");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      beacons: 1,
-      message: "tracked one pageview for reloading latest",
-    });
-
-    await visit("/t/-/280");
-    assertRequests({
-      assert,
-      tracked: 1,
-      untracked: 1,
-      beacons: 1,
-      message: "tracked one pageview for navigating to topic",
-    });
+  test("sends one beacon per navigation", async function (assert) {
+    await navigateAndAssertBeacons(assert);
   });
 });
 

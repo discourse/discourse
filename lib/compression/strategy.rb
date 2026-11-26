@@ -22,7 +22,7 @@ module Compression
           next if !is_file?(entry) && !is_directory?(entry)
 
           entry_path = build_entry_path(sanitized_dest_path, entry, sanitized_compressed_file_path)
-          next if !is_safe_path_for_extraction?(entry_path, sanitized_dest_path)
+          next if !FileHelper.contained_path(entry_path, sanitized_dest_path)
 
           FileUtils.mkdir_p(File.dirname(entry_path))
           if is_file?(entry)
@@ -78,10 +78,6 @@ module Compression
       end
 
       remaining_size
-    end
-
-    def is_safe_path_for_extraction?(path, dest_directory)
-      File.expand_path(path).start_with?(dest_directory)
     end
   end
 end

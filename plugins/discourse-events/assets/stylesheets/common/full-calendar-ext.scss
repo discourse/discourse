@@ -105,6 +105,30 @@
 
 #upcoming-events-calendar {
   height: 100%;
+
+  // Paging and day/week switching are secondary to the calendar itself
+  .fc-header-toolbar
+    :is(
+      .fc-prev-button,
+      .fc-next-button,
+      .fc-button-group:has(.fc-timeGridDay-button) > .fc-button
+    ) {
+    align-self: center;
+    font-size: var(--font-down-1);
+  }
+
+  @include viewport.until(md) {
+    .fc-header-toolbar > .fc-toolbar-chunk:last-child {
+      flex: auto;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      > .fc-button-group:last-child {
+        align-self: center;
+        margin-inline-start: auto;
+      }
+    }
+  }
 }
 
 [data-identifier="post-event-tooltip"] img.only-emoji {

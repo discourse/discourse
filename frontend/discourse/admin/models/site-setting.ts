@@ -114,8 +114,6 @@ export interface SiteSettingFields extends Omit<
   default: SettingValue;
   key?: string;
   label?: string;
-  valueProperty?: string | null;
-  nameProperty?: string | null;
   disabled?: boolean;
   weight?: number;
   defaultValues?: string;
@@ -129,17 +127,10 @@ export interface SiteSettingFields extends Omit<
 /** TODO(typescript-pending): remove this projection when SettingObjectHelper types its setting and getters. */
 type TypedSettingObjectHelper = Omit<
   SettingObjectHelper,
-  | "settingObj"
-  | "computedValueProperty"
-  | "computedNameProperty"
-  | "validValues"
-  | "anyValue"
+  "settingObj" | "validValues"
 > & {
   settingObj: SiteSetting;
-  computedValueProperty: string | null;
-  computedNameProperty: string | null;
   validValues: SettingChoice[];
-  anyValue: boolean | undefined;
 };
 
 /** TODO(typescript-pending): use BufferedProxy's content generic once it publishes one. */
@@ -266,24 +257,6 @@ export default class SiteSetting extends EmberObject {
     set(this, "settingObjectHelper.overridden", value);
   }
 
-  @computed("settingObjectHelper.computedValueProperty")
-  get computedValueProperty(): string | null {
-    return this.settingObjectHelper?.computedValueProperty;
-  }
-
-  set computedValueProperty(value: string | null) {
-    set(this, "settingObjectHelper.computedValueProperty", value);
-  }
-
-  @computed("settingObjectHelper.computedNameProperty")
-  get computedNameProperty(): string | null {
-    return this.settingObjectHelper?.computedNameProperty;
-  }
-
-  set computedNameProperty(value: string | null) {
-    set(this, "settingObjectHelper.computedNameProperty", value);
-  }
-
   @computed("settingObjectHelper.validValues")
   get validValues(): SettingChoice[] {
     return this.settingObjectHelper?.validValues;
@@ -304,15 +277,6 @@ export default class SiteSetting extends EmberObject {
 
   set allowsNone(value: string | undefined) {
     set(this, "settingObjectHelper.allowsNone", value);
-  }
-
-  @computed("settingObjectHelper.anyValue")
-  get anyValue(): boolean | undefined {
-    return this.settingObjectHelper?.anyValue;
-  }
-
-  set anyValue(value: boolean | undefined) {
-    set(this, "settingObjectHelper.anyValue", value);
   }
 
   @computed("setting")
@@ -349,6 +313,11 @@ export default class SiteSetting extends EmberObject {
       type: this.type,
       list_type: this.list_type,
       subtype: this.settingSubtype,
+      secret: this.secret,
+      placeholder: this.placeholder,
+      authorized_extensions: this.authorized_extensions,
+      max_file_size_kb: this.max_file_size_kb,
+      upload: this.upload,
       min: this.min,
       max: this.max,
       choices: this.choices,

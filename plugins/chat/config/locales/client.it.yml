@@ -593,19 +593,6 @@ it:
         notify_moderators: "Questo messaggio richiede l'attenzione dello staff per motivi diversi da quelli sopra indicati"
       flagging:
         action: "Segnala messaggio"
-      emoji_picker:
-        favorites: "Utilizzati di frequente"
-        smileys_&_emotion: "Faccine ed emoticon"
-        objects: "Oggetti"
-        people_&_body: "Persone e corpo"
-        travel_&_places: "Viaggi e luoghi"
-        animals_&_nature: "Animali e natura"
-        food_&_drink: "Cibo e bevande"
-        activities: "Attività"
-        flags: "Segnalazioni"
-        symbols: "Simboli"
-        search_placeholder: "Cerca per nome emoji e alias..."
-        no_results: "Nessun risultato"
       thread:
         title: "Titolo"
         view_thread: Visualizza thread

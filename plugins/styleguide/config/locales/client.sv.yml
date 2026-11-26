@@ -42,6 +42,9 @@ sv:
           title: "Teckensnittssystem"
         colors:
           title: "Färger"
+        design_variables:
+          type: "Typ"
+          default: "Standard"
         icons:
           title: "Ikoner"
           full_list: "Se hela listan över Font Awesome-ikoner"

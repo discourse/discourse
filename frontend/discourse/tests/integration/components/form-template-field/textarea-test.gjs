@@ -22,7 +22,7 @@ module(
         label: "My text label",
         placeholder: "Enter text here",
       };
-      this.set("attributes", attributes);
+      this.attributes = attributes;
 
       await render(
         <template>
@@ -44,7 +44,7 @@ module(
       const attributes = {
         placeholder: "Enter text here",
       };
-      this.set("attributes", attributes);
+      this.attributes = attributes;
 
       await render(
         <template>

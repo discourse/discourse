@@ -9,8 +9,21 @@ module Live
     # the call, and mesh rooms must make zero HTTP requests.
     class RoomServiceClient
       TIMEOUT_SECONDS = 2
+      HUMAN_IDENTITY = /\A[1-9]\d*\z/
 
       class << self
+        def participant_user_ids(room)
+          return [] if Live::ParticipantTracker.pinned_transport(room.id) == "mesh"
+
+          result = list_participants(Livekit.room_name(room))
+          return [] unless result[:ok]
+
+          Array(result.dig(:data, "participants")).filter_map do |participant|
+            identity = participant["identity"].to_s
+            identity.to_i if identity.match?(HUMAN_IDENTITY)
+          end
+        end
+
         def remove_participant(room, user_id, identity: nil)
           call(
             room,
@@ -55,6 +68,45 @@ module Live
           )
         end
 
+        # Best-effort server-side mute of a participant's published microphone
+        # track(s), leaving their publish grant intact so they can unmute later.
+        def mute_participant_audio(room, user_id, identity: nil)
+          return false unless sync?(room, agent_cleanup: false)
+
+          livekit_room = Livekit.room_name(room)
+          participant_id = identity || participant_identity(room, user_id)
+          response =
+            post(
+              "GetParticipant",
+              { room: livekit_room, identity: participant_id },
+              { roomAdmin: true, room: livekit_room },
+            )
+          return false unless response.status == 200
+
+          data = JSON.parse(response.body)
+          tracks =
+            Array(data["tracks"]).select do |track|
+              track["type"].to_s.upcase == "AUDIO" && track["source"].to_s.upcase == "MICROPHONE" &&
+                !track["muted"]
+            end
+          return true if tracks.empty?
+
+          tracks.all? do |track|
+            call(
+              room,
+              "MutePublishedTrack",
+              body: {
+                identity: participant_id,
+                track_sid: track["sid"],
+                muted: true,
+              },
+            )
+          end
+        rescue StandardError => e
+          Live.warn("[live-livekit] MutePublishedTrack failed for room #{room.id}: #{e.class}")
+          false
+        end
+
         def delete_room(room)
           # LiveKit guards DeleteRoom behind the roomCreate grant; a
           # room-scoped roomAdmin token gets "permissions denied".
@@ -74,6 +126,20 @@ module Live
           probe(
             "ListParticipants",
             body: {
+              room: livekit_room,
+            },
+            grants: {
+              roomAdmin: true,
+              room: livekit_room,
+            },
+          )
+        end
+
+        def expel(livekit_room, identity)
+          probe(
+            "RemoveParticipant",
+            body: {
+              identity:,
               room: livekit_room,
             },
             grants: {

@@ -184,6 +184,14 @@ export default class AiLogDetailModal extends Component {
     return this.log?.post_id ? getURL(`/p/${this.log.post_id}`) : null;
   }
 
+  get workflowUrl() {
+    return this.log?.workflow?.id
+      ? getURL(
+          `/admin/plugins/discourse-workflows/workflows/${this.log.workflow.id}`
+        )
+      : null;
+  }
+
   @action
   async load() {
     this.loading = true;
@@ -325,6 +333,11 @@ export default class AiLogDetailModal extends Component {
               <div><dt>{{i18n "discourse_ai.logs.post"}}</dt><dd><a
                     href={{this.postUrl}}
                   >{{this.log.post_id}}</a></dd></div>
+            {{/if}}
+            {{#if this.workflowUrl}}
+              <div><dt>{{i18n "discourse_ai.logs.workflow"}}</dt><dd><a
+                    href={{this.workflowUrl}}
+                  >{{this.log.workflow.name}}</a></dd></div>
             {{/if}}
           </dl>
 

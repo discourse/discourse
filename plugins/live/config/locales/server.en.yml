@@ -1,5 +1,7 @@
 en:
   site_settings:
+    live_file_transfer_max_size_mb: "Maximum size per live-room file in MiB (1 MiB = 1,048,576 bytes), from 1 to 102400 (100 GiB). Default: 100 MiB. Temporary receive disk reservations are limited to twice this value, including files awaiting deletion; browser storage quotas still apply. The streaming window remains 256 KiB. Requires {{setting:live_enabled}} and sender access through {{setting:live_file_transfer_allowed_groups}}."
+    live_file_transfer_allowed_groups: "Groups that can send files in peer-to-peer live rooms, up to {{setting:live_file_transfer_max_size_mb}}. Empty disables all file transfers. Senders also need access through {{setting:live_allowed_groups}}; anyone in the same mesh room can receive files. Recipients must accept and explicitly save files. Files are encrypted in transit (TURN may relay traffic), are not uploaded to Discourse, and are not scanned for viruses. Not available in LiveKit rooms."
     live_verbose_logging: "Log Live diagnostic information and warnings in server logs and browser consoles. Disabled by default. Logs exclude credentials, transcripts, signaling payloads, and raw error details."
     live_enabled: "Live brings integrated voice and video rooms to Discourse, with screen sharing, background blur, noise suppression, live subtitles, direct calls, room chat, and group-based permissions. Members can keep browsing while they talk, with no external app required."
     live_allowed_groups: "Groups that can access live rooms."
@@ -67,6 +69,7 @@ en:
       watercooler_description: "Join for casual drop-in voice chats with other community members."
     chat:
       default_thread_title: "Voice chat in %{room}"
+      default_attachment_opener: "In %{room}"
       default_thread_opener: "In %{room} - %{message}"
     onebox:
       inline_to_room: "Live: %{room_name}"
@@ -92,6 +95,12 @@ en:
       cannot_kick_self: "You cannot kick yourself from the room."
       cannot_kick_creator: "You cannot kick the room creator."
       listeners_cannot_unmute: "Listeners cannot unmute in a Stage room."
+      speak_requests_disabled: "Requests to speak are currently paused in this stage room."
+      speak_request_cooldown:
+        one: "Please wait %{count} second before raising your hand again."
+        other: "Please wait %{count} seconds before raising your hand again."
+      already_speaker: "That participant can already speak in this room."
+      no_speak_invitation: "You don't have a pending invitation to speak in this room."
       video_not_allowed: "You are not allowed to share your camera in this room."
       screen_share_not_allowed: "You are not allowed to share your screen in this room."
       local_recording_not_allowed: "You are not allowed to record calls in this room."

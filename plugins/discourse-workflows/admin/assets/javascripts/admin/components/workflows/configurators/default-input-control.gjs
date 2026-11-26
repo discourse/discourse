@@ -9,6 +9,12 @@ export default <template>
     @session={{@session}}
     @supportsExpression={{@supportsExpression}}
   >
-    <@field.Control placeholder={{@placeholder}} />
+    <@field.Control
+      placeholder={{@placeholder}}
+      step={{if
+        (or (eq @schema.type "number") (eq @schema.type "float"))
+        "any"
+      }}
+    />
   </ExpressionWrapper>
 </template>

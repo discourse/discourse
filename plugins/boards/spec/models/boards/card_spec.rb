@@ -179,6 +179,124 @@ RSpec.describe Boards::Card do
     end
   end
 
+  describe ".topic_visible_to" do
+    subject(:visible_cards) { described_class.topic_visible_to(guardian) }
+
+    fab!(:user)
+    fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    fab!(:public_card) { Fabricate(:boards_topic_card, board:, column:, topic:) }
+    fab!(:private_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: private_category),
+      )
+    end
+    fab!(:floater_card) { Fabricate(:boards_card, board:, column:) }
+    fab!(:deleted_topic_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, deleted_at: 1.day.ago),
+      )
+    end
+    fab!(:private_message_card) do
+      Fabricate(:boards_topic_card, board:, column:, topic: Fabricate(:private_message_topic))
+    end
+    fab!(:category_definition_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:category_with_definition).topic,
+      )
+    end
+
+    context "when the user cannot see the topic of a card" do
+      let(:guardian) { user.guardian }
+
+      it "returns the topic cards that the user can see" do
+        expect(visible_cards).to contain_exactly(public_card)
+      end
+    end
+
+    context "when the user is an admin" do
+      let(:guardian) { admin.guardian }
+
+      it "returns the cards of the topics that a topic list can show" do
+        expect(visible_cards).to contain_exactly(public_card, private_card)
+      end
+    end
+  end
+
+  describe ".outside_constraints" do
+    subject(:excluded_cards) { described_class.outside_constraints(category_ids:, tag_ids:) }
+
+    fab!(:other_category, :category)
+    fab!(:matching_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category:, tags: [tag]),
+      )
+    end
+    fab!(:untagged_card) { Fabricate(:boards_topic_card, board:, column:, topic:) }
+    fab!(:other_category_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category: other_category, tags: [tag]),
+      )
+    end
+    fab!(:deleted_topic_card) do
+      Fabricate(
+        :boards_topic_card,
+        board:,
+        column:,
+        topic: Fabricate(:topic, category:, tags: [tag], deleted_at: 1.day.ago),
+      )
+    end
+    fab!(:floater_card) { Fabricate(:boards_card, board:, column:) }
+
+    let(:category_ids) { [] }
+    let(:tag_ids) { [] }
+
+    context "when the constraints are empty" do
+      it "returns no cards" do
+        expect(excluded_cards).to be_empty
+      end
+    end
+
+    context "when the constraints have categories" do
+      let(:category_ids) { [category.id] }
+
+      it "returns the topic cards in other categories" do
+        expect(excluded_cards).to contain_exactly(other_category_card)
+      end
+    end
+
+    context "when the constraints have tags" do
+      let(:tag_ids) { [tag.id] }
+
+      it "returns the topic cards without any of the tags" do
+        expect(excluded_cards).to contain_exactly(untagged_card)
+      end
+    end
+
+    context "when the constraints have categories and tags" do
+      let(:category_ids) { [category.id] }
+      let(:tag_ids) { [tag.id] }
+
+      it "returns the topic cards outside the categories or without the tags" do
+        expect(excluded_cards).to contain_exactly(untagged_card, other_category_card)
+      end
+    end
+  end
+
   describe ".normalize_tag_ids!" do
     it "rejects malformed tag ids" do
       expect { described_class.normalize_tag_ids!(["#{tag.id}abc"]) }.to raise_error(

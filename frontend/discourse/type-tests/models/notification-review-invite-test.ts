@@ -15,6 +15,7 @@ import Reviewable, {
   IGNORED,
   PENDING,
   REJECTED,
+  type ReviewableAction,
   type ReviewableClaim,
   type ReviewableFields,
   type ReviewableHistoryEntry,
@@ -118,6 +119,7 @@ expectTypeOf(reviewable.score).toEqualTypeOf<number>();
 expectTypeOf(reviewable.version).toEqualTypeOf<number>();
 expectTypeOf(reviewable.can_edit).toEqualTypeOf<boolean>();
 expectTypeOf(reviewable.created_from_flag).toEqualTypeOf<boolean>();
+expectTypeOf(reviewable.signup_approval).toEqualTypeOf<boolean | undefined>();
 // The store swaps side-loaded ids for records, or null when a record is missing.
 expectTypeOf(reviewable.created_by).toEqualTypeOf<User | null>();
 expectTypeOf(reviewable.topic).toEqualTypeOf<Topic | null | undefined>();
@@ -202,6 +204,9 @@ reviewable.claimed_by = { user, automatic: false };
 reviewable.claimed_by = null;
 expectTypeOf<ReviewableWireFields["created_by_id"]>().toEqualTypeOf<number>();
 expectTypeOf<ReviewableWireFields>().not.toHaveProperty("created_by");
+expectTypeOf<ReviewableAction["confirm_title"]>().toEqualTypeOf<
+  string | undefined
+>();
 expectTypeOf<ReviewableScore["score_type"]>().toBeNullable();
 expectTypeOf<ReviewableHistoryEntry>().not.toExtend<EmberObject>();
 expectTypeOf(

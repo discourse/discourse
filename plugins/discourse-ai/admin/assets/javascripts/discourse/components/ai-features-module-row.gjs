@@ -15,7 +15,7 @@ import AiFeaturesFeatureRow from "./ai-features-feature-row.gjs";
 import AiFeaturesStatus from "./ai-features-status.gjs";
 
 const AUTOMATION_MODULES = ["automation_reports", "automation_triage"];
-const MODULES_WITHOUT_GROUPS = ["spam", "sentiment"];
+const MODULES_WITHOUT_GROUPS = ["spam", "sentiment", "review_queue"];
 
 /**
  * A collapsible AI module row and its features.

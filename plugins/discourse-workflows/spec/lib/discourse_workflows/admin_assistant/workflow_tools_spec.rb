@@ -426,7 +426,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   it "hides tools and authoring instructions when public capability is unavailable" do
     DiscourseWorkflows::AdminAssistant::Capability.stubs(:status).returns(:unconfigured)
     context = DiscourseAi::Agents::BotContext.new(user: admin, messages: [])
-    assistant = DiscourseAi::Agents::DiscourseAdminAssistant.new
+    assistant = DiscourseAi::Agents::AdminAssistant.new
 
     expect(assistant.runtime_tools(context:)).not_to include(
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
@@ -438,7 +438,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
   end
 
   it "registers both workflow tools for the admin assistant and pending replay" do
-    tools = DiscourseAi::Agents::DiscourseAdminAssistant.new.tools
+    tools = DiscourseAi::Agents::AdminAssistant.new.tools
     expect(tools).to include(DiscourseWorkflows::AdminAssistant::GenerateWorkflow, described_class)
     expect(DiscourseAi::Agents::Agent.external_tool_by_name("CreateWorkflow")).to eq(
       described_class,
@@ -447,7 +447,7 @@ RSpec.describe DiscourseWorkflows::AdminAssistant::CreateWorkflow do
       DiscourseWorkflows::AdminAssistant::GenerateWorkflow,
     )
     prompt =
-      DiscourseAi::Agents::DiscourseAdminAssistant.new.craft_prompt(
+      DiscourseAi::Agents::AdminAssistant.new.craft_prompt(
         DiscourseAi::Agents::BotContext.new(user: admin, messages: []),
       )
     expect(prompt.system_message_text).to include(

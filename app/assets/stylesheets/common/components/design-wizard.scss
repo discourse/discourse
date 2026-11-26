@@ -1,24 +1,6 @@
 @use "lib/viewport";
 @import "common/foundation/mixins";
 
-// Common stylesheets compile with the active scheme injected into
-// $primary/$secondary/$tertiary, so referencing those (or their derived shades)
-// would let the previewed palette restyle the tool. Pin base-light instead.
-$dw-primary: #222;
-$dw-secondary: #fff;
-$dw-tertiary: #08c;
-$dw-tertiary-hover: #069;
-$dw-tertiary-high: #0aadff;
-$dw-selected: #d1f0ff;
-$dw-hover: #f2f2f2;
-$dw-primary-very-low: #f8f8f8;
-$dw-primary-low: #e9e9e9;
-$dw-primary-low-mid: #bdbdbd;
-$dw-primary-medium: #919191;
-$dw-primary-high: #646464;
-$dw-primary-very-high: #434343;
-$dw-button-default-border: #d3d3d3;
-
 // px, so the reserved space matches the panel, whose font size is pinned
 $dw-docked-width: 375px;
 $dw-floating-width: 432px;
@@ -49,68 +31,10 @@ html.design-wizard-floating {
 .design-wizard,
 .design-wizard__restore,
 .design-wizard__font-select-content {
-  --primary: #{$dw-primary};
-  --secondary: #{$dw-secondary};
-  --d-content-background: #{$dw-secondary};
-  --tertiary: #{$dw-tertiary};
-  --tertiary-hover: #{$dw-tertiary-hover};
-  --tertiary-low: #{$dw-selected};
-  --primary-very-low: #{$dw-primary-very-low};
-  --primary-low: #{$dw-primary-low};
-  --primary-low-mid: #{$dw-primary-low-mid};
-  --primary-medium: #{$dw-primary-medium};
-  --primary-high: #{$dw-primary-high};
-  --primary-very-high: #{$dw-primary-very-high};
-  --d-hover: #{$dw-hover};
-  --d-link-color: #{$dw-tertiary};
-  --primary-100: #{$dw-hover};
-  --primary-200: #{$dw-primary-low};
-  --tertiary-300: #{$dw-selected};
-  --tertiary-high: #{$dw-tertiary-high};
-
-  // Theme-defined button accents, including Horizon's button overrides.
-  --accent-color: #{$dw-tertiary};
-  --accent-text-color: #{$dw-secondary};
-  --button-box-shadow: #{$dw-selected};
-  --content-border-color: #{$dw-primary-low};
-
-  // Default buttons keep the modernized Foundation treatment.
-  --d-button-default-text-color: #{$dw-primary-very-high};
-  --d-button-default-text-color--hover: #{$dw-primary};
-  --d-button-default-bg-color: #{$dw-secondary};
-  --d-button-default-bg-color--hover: #{$dw-primary-low};
-  --d-button-default-icon-color: #{$dw-primary-very-high};
-  --d-button-default-icon-color--hover: #{$dw-primary};
-  --d-button-default-border: 1px solid #{$dw-button-default-border};
-  --d-button-default-border--hover: 1px solid #{$dw-primary-low-mid};
-  --d-button-primary-text-color: #{$dw-secondary};
-  --d-button-primary-text-color--hover: #{$dw-secondary};
-  --d-button-primary-bg-color: #{$dw-tertiary};
-  --d-button-primary-bg-color--hover: #{$dw-tertiary-hover};
-  --d-button-primary-icon-color: #{$dw-secondary};
-  --d-button-primary-icon-color--hover: #{$dw-secondary};
-  --d-button-flat-text-color: #{$dw-tertiary};
-  --d-button-flat-text-color--hover: #{$dw-primary};
-  --d-button-flat-icon-color: #{$dw-primary-low-mid};
-  --d-button-flat-icon-color--hover: #{$dw-primary};
-  --d-button-flat-bg-color: transparent;
-  --d-button-flat-bg-color--hover: #{$dw-hover};
-  --d-button-flat-bg-color--focus: #{$dw-hover};
-  --d-button-flat-text-color--disabled: #{$dw-primary};
-  --d-button-flat-close-text-color: #{$dw-primary-high};
-  --d-button-flat-close-bg-color: transparent;
-  --d-button-flat-close-icon-color: #{$dw-primary-high};
-  --d-button-flat-close-icon-color--hover: #{$dw-primary};
-  --d-button-transparent-text-color: #{$dw-primary};
-  --d-button-transparent-text-color--hover: #{$dw-tertiary-hover};
-  --d-button-transparent-icon-color: #{$dw-primary-high};
-  --d-button-transparent-icon-color--hover: #{$dw-tertiary-hover};
-
   // rem-based, so the previewed theme's root font size would otherwise rescale
   // the tool's spacing despite the pinned font-size below
   --space: 4px;
   color: var(--primary);
-  color-scheme: light;
   font-family:
     system-ui,
     -apple-system,
@@ -527,6 +451,25 @@ html.design-wizard-floating {
     gap: var(--space-4);
   }
 
+  &__manage-palettes {
+    margin: 0;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--content-border-color);
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__manage-palettes-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--tertiary);
+
+    .d-icon {
+      font-size: var(--font-down-1);
+    }
+  }
+
   &__homepage-card,
   &__style-block {
     background: none;
@@ -545,14 +488,6 @@ html.design-wizard-floating {
       border-color: var(--tertiary);
       box-shadow: 0 0 0 1px var(--tertiary);
     }
-  }
-
-  &__color-description,
-  &__logo-description,
-  &__logo-help {
-    margin: 0;
-    font-size: var(--font-down-1);
-    color: var(--primary-high);
   }
 
   &__logo-field {
@@ -595,28 +530,6 @@ html.design-wizard-floating {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-  }
-
-  &__palette-row-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2);
-  }
-
-  &__palette-row-title {
-    font-size: var(--font-down-1);
-    font-weight: 600;
-    color: var(--primary);
-  }
-
-  &__palette-row-selected {
-    min-width: 0;
-    overflow: hidden;
-    font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   &__palette-cards {
@@ -694,12 +607,18 @@ html.design-wizard-floating {
     border-radius: var(--d-border-radius);
     background: var(--content-background);
 
+    .d-button-label {
+      @include ellipsis;
+      min-width: 0;
+    }
+
     &:hover {
       background: var(--content-background);
     }
   }
 
   &__font-select-caret.d-icon.d-icon-angle-down.svg-icon {
+    flex-shrink: 0;
     margin-inline-start: var(--space-1);
     color: var(--primary-medium);
   }

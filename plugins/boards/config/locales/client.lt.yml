@@ -43,6 +43,8 @@ lt:
           column_title: "Antraštė"
           icon: "Ikona"
           color: "Spalva"
+          color_palette: "Spalvų paletė"
+          icon_search_placeholder: "Paieška…"
           tag: "Žymėti"
           move_to_status_open: "Atidaryti"
           move_to_status_closed: "Uždaryta"
