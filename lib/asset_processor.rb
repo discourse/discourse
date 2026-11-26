@@ -3,7 +3,7 @@
 class AssetProcessor
   # Bump only when theme JS output changes; it rebakes every theme on every site. Plugin builds
   # also key on the processor's digest, so JS changes there rebuild them without a bump.
-  BASE_COMPILER_VERSION = 120
+  BASE_COMPILER_VERSION = 122
 
   BUNDLE =
     PrecompiledBundle.new(
@@ -133,7 +133,14 @@ class AssetProcessor
   def self.v8_call(*args)
     mutex.synchronize do
       result = v8.call_await(*args)
-      v8.low_memory_notification if GlobalSetting.mini_racer_single_threaded
+      collect = GlobalSetting.mini_racer_single_threaded
+      if collect && Rails.env.test?
+        # Amortize explicit collections in test runs; automatic GC still runs between notifications.
+        @v8_calls_since_gc ||= 0
+        collect = @v8_calls_since_gc.zero?
+        @v8_calls_since_gc = (@v8_calls_since_gc + 1) % 256
+      end
+      v8.low_memory_notification if collect
       result
     end
   rescue MiniRacer::ScriptTerminatedError => e

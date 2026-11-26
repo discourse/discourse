@@ -19,6 +19,7 @@ module DiscourseAi
               DiscourseAi::Evals::Runners::Summarization,
               DiscourseAi::Evals::Runners::Inference,
               DiscourseAi::Evals::Runners::DataExplorer,
+              DiscourseAi::Evals::Runners::AppearanceStyles,
             ]
             klass = registry.find { |runner| runner.can_handle?(feature) }
             klass&.new(feature.split(":").last, agent_prompt) if klass

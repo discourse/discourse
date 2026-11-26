@@ -1,0 +1,354 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    # What the Admin Assistant's appearance tools share: who can use them, the
+    # drafts they sign, and how they describe palettes on approval cards.
+    module AppearanceAuthoring
+      # Changing colors and fonts, creating new palettes, and creating a new
+      # theme are checked as separate features. Without new palettes, the
+      # tools choose from the palettes a theme can already use.
+      FEATURE = :appearance_authoring
+      PALETTE_FEATURE = :palette_authoring
+      THEME_FEATURE = :theme_authoring
+      # Styles beyond colors and fonts, which always come in a new theme.
+      STYLE_FEATURE = :style_authoring
+
+      # The colors approval cards compare, as [palette, color name].
+      KEY_COLORS = [
+        %w[light tertiary],
+        %w[light header_background],
+        %w[light quaternary],
+        %w[dark tertiary],
+      ].freeze
+      HEX_COLOR = /\A\h{6}\z/
+      HEX_INPUT = /\A#?(\h{3}|\h{6})\z/
+
+      # A palette or theme generated for an administrator, waiting to be saved.
+      class Draft < Tools::DraftReference
+        class << self
+          private
+
+          def draft_kind
+            "appearance"
+          end
+        end
+      end
+
+      def self.visible?(user)
+        !!user&.admin? && access(user:, phase: :visibility).allowed
+      end
+
+      # Returns why the user can't change the site's appearance, or nil when
+      # they can. A new theme comes with new palettes, and styles come with a
+      # new theme, or with a new component (new_component) for the theme the
+      # site keeps, which only brings palettes when new_palettes says so.
+      def self.denial(
+        user:,
+        phase:,
+        new_theme: false,
+        new_palettes: false,
+        styles: false,
+        new_component: false
+      )
+        return I18n.t("discourse_ai.appearance_authoring.not_allowed") if !user&.admin?
+
+        access = access(user:, phase:)
+        if !access.allowed
+          return access.message.presence || I18n.t("discourse_ai.appearance_authoring.unavailable")
+        end
+
+        refusal = style_denial(user:, phase:) if styles
+        new_theme ||= styles && !new_component
+        # a component is a theme record too, so it follows the same limits
+        refusal ||= theme_denial(user:, phase:) if new_theme || new_component
+        refusal || (palette_denial(user:, phase:) if new_theme || new_palettes)
+      end
+
+      # Returns why the user can't create new palettes, or nil when they can.
+      def self.palette_denial(user:, phase:)
+        access = access(user:, phase:, feature: PALETTE_FEATURE)
+        if !access.allowed
+          return(
+            access.message.presence ||
+              I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
+          )
+        end
+
+        if !user.guardian.can_create_color_scheme?
+          I18n.t("discourse_ai.appearance_authoring.palettes_unavailable")
+        end
+      end
+
+      def self.style_denial(user:, phase:)
+        access = access(user:, phase:, feature: STYLE_FEATURE)
+        return if access.allowed
+
+        access.message.presence || I18n.t("discourse_ai.appearance_authoring.styles_unavailable")
+      end
+      private_class_method :style_denial
+
+      def self.theme_denial(user:, phase:)
+        access = access(user:, phase:, feature: THEME_FEATURE)
+        if !access.allowed
+          return(
+            access.message.presence ||
+              I18n.t("discourse_ai.appearance_authoring.themes_unavailable")
+          )
+        end
+
+        # sites that only allow themes from approved repositories can't add local ones
+        if !user.guardian.can_create_theme? || !Theme.allowed_remote_theme_ids.nil?
+          I18n.t("discourse_ai.appearance_authoring.themes_unavailable")
+        end
+      end
+      private_class_method :theme_denial
+
+      def self.access(user:, phase:, feature: FEATURE)
+        AdminAssistantAccess.check(feature:, user:, phase:)
+      end
+      private_class_method :access
+
+      # A theme's light and dark palettes as { "color name" => "hex" }. A theme
+      # without a light palette uses core's colors, and one without a dark
+      # palette has no dark mode.
+      def self.theme_palettes(theme)
+        {
+          light: palette_colors(theme&.color_scheme) || normalize_colors(ColorScheme.base_colors),
+          dark: palette_colors(theme&.dark_color_scheme),
+        }
+      end
+
+      def self.change_palettes(appearance_change)
+        if uses_theme_palettes?(appearance_change)
+          return theme_palettes(appearance_change.palette_theme)
+        end
+
+        {
+          light: palette_colors(appearance_change.light_color_scheme),
+          dark: palette_colors(appearance_change.dark_color_scheme),
+        }
+      end
+
+      # Every color a palette needs, filling in the ones core derives (hover
+      # and selected) or falls back to.
+      def self.complete_palette(colors)
+        resolved = AppearanceStyles::PaletteColors.new(colors.to_h)
+        AppearanceStyles::PaletteColors::BASE_NAMES.index_with do |name|
+          resolved[AppearanceStyles::PaletteColors::BASE_VARIABLES[name] || "--#{name}"]
+        end
+      end
+
+      def self.palette_colors(color_scheme)
+        normalize_colors(color_scheme.resolved_colors) if color_scheme
+      end
+
+      # Approval card rows for the key colors that differ between two sets of
+      # palettes.
+      def self.color_changes(before:, after:)
+        KEY_COLORS.filter_map do |mode, name|
+          from = before[mode.to_sym]&.[](name)
+          to = after[mode.to_sym]&.[](name)
+          next if !to.to_s.match?(HEX_COLOR) || from == to
+
+          {
+            label: color_label(mode, name),
+            before: from ? "##{from}" : empty_value,
+            after: "##{to}",
+            before_color: (from if from.to_s.match?(HEX_COLOR)),
+            after_color: to,
+          }.compact
+        end
+      end
+
+      # Approval card rows for the fonts that would change.
+      def self.font_changes(site_settings)
+        site_settings
+          .to_h
+          .slice(*AppearanceChange::SITE_SETTING_NAMES)
+          .filter_map do |setting_name, key|
+            current = SiteSetting.get(setting_name)
+            next if key.blank? || current == key
+
+            {
+              label: I18n.t("discourse_ai.appearance_authoring.fonts.#{setting_name}"),
+              before: font_name(current),
+              after: font_name(key),
+            }
+          end
+      end
+
+      MAX_STYLE_ROWS = 12
+
+      # Approval card rows for a draft's styles, as the policy describes them.
+      # For a new version, only what differs from the styles it replaces,
+      # including the ones it removes.
+      def self.style_changes(styles, palettes:, previous: nil)
+        after = style_values(styles, palettes)
+        before = style_values(previous, palettes)
+
+        rows =
+          after.filter_map do |label, value|
+            next if before[label] == value
+            { label:, before: before[label] || empty_value, after: value }
+          end
+        rows +=
+          before
+            .except(*after.keys)
+            .map { |label, value| { label:, before: value, after: empty_value } }
+
+        if rows.size > MAX_STYLE_ROWS
+          more = {
+            label: I18n.t("discourse_ai.appearance_authoring.more_styles"),
+            before: empty_value,
+            after: (rows.size - MAX_STYLE_ROWS).to_s,
+          }
+          rows = rows.first(MAX_STYLE_ROWS) << more
+        end
+        rows
+      end
+
+      def self.style_values(styles, palettes)
+        return {} if styles.blank?
+        AppearanceStyles::Policy
+          .call(styles, palettes:)
+          .changes
+          .to_h { |change| [change.label, change.value] }
+      end
+      private_class_method :style_values
+
+      # A component turned on or off by making a change live or switching back.
+      def self.component_change(component, enabled:)
+        on = I18n.t("discourse_ai.appearance_authoring.component_on")
+        off = I18n.t("discourse_ai.appearance_authoring.component_off")
+        {
+          label: I18n.t("discourse_ai.appearance_authoring.component_label", name: component.name),
+          before: enabled ? off : on,
+          after: enabled ? on : off,
+        }
+      end
+
+      def self.default_theme_change(from:, to:)
+        {
+          label: I18n.t("discourse_ai.appearance_authoring.default_theme"),
+          before: from&.name || empty_value,
+          after: to&.name || empty_value,
+        }
+      end
+
+      def self.color_label(mode, name)
+        I18n.t("discourse_ai.appearance_authoring.colors.#{mode}.#{name}", default: name.to_s)
+      end
+
+      def self.font_name(key)
+        DiscourseFonts.fonts.find { |font| font[:key] == key }&.dig(:name) || key.to_s
+      end
+
+      # The key of the Discourse font a name or key refers to, such as "lora"
+      # for "Lora", or nil when Discourse doesn't offer that font.
+      def self.font_key(name)
+        normalized = normalize_font_name(name)
+        return if normalized.blank?
+
+        DiscourseFonts
+          .fonts
+          .find do |font|
+            [font[:key], font[:name]].any? { |value| normalize_font_name(value) == normalized }
+          end
+          &.dig(:key)
+      end
+
+      # Six-digit lowercase hex for a hex color such as "#635BFF" or "fa0", or
+      # nil for anything else.
+      def self.parse_hex(value)
+        digits = value.to_s.strip[HEX_INPUT, 1]
+        return if digits.nil?
+
+        digits = digits.chars.map { |digit| digit * 2 }.join if digits.length == 3
+        digits.downcase
+      end
+
+      # Lets staff see a saved change before it goes live. The link fixes the
+      # theme, both palettes and the change's fonts, so an administrator's own
+      # theme or palette choice can't change what the preview shows.
+      def self.preview_url(appearance_change)
+        light, dark = preview_palette_ids(appearance_change)
+        component = appearance_change.kind_component?
+        query = {
+          preview_theme_id:
+            component ? appearance_change.parent_theme_id : appearance_change.theme_id,
+          preview_component_ids: (appearance_change.theme_id if component),
+          # what making it live turns off, such as the version it replaces
+          preview_hide_component_ids:
+            (
+              if component
+                appearance_change.enabled_sibling_components.pluck(:id).join(",").presence
+              end
+            ),
+          preview_color_scheme_id: light,
+          preview_dark_color_scheme_id: dark,
+          preview_base_font: appearance_change.site_settings["base_font"],
+          preview_heading_font: appearance_change.site_settings["heading_font"],
+        }.compact
+        "#{Discourse.base_url}/?#{query.to_query}"
+      end
+
+      # A theme the site installed or already had shows its own current
+      # palettes, which an administrator may have changed since it was saved.
+      # Where it has none for a mode, the preview says so ("none") rather than
+      # leaving the viewer's own palette choice in its place.
+      def self.preview_palette_ids(appearance_change)
+        if !uses_theme_palettes?(appearance_change)
+          return appearance_change.light_color_scheme_id, appearance_change.dark_color_scheme_id
+        end
+
+        theme = appearance_change.palette_theme
+        light = theme.color_scheme_id
+        dark = theme.dark_color_scheme_id
+        dark ||= light if theme.theme_modifier_set&.only_theme_color_schemes
+        [light, dark].map { |id| id || ApplicationHelper::NO_PALETTE }
+      end
+      private_class_method :preview_palette_ids
+
+      # Changes that keep the palettes their theme has now: an installed or
+      # existing theme, and a component change that brings no palettes.
+      def self.uses_theme_palettes?(change)
+        change.kind_existing_theme? || change.kind_installed_theme? ||
+          (change.kind_component? && !change.assigns_palettes?)
+      end
+      private_class_method :uses_theme_palettes?
+
+      def self.safe_mode_url
+        "#{Discourse.base_url}/?safe_mode=no_themes"
+      end
+
+      def self.status(appearance_change)
+        if appearance_change.applied?
+          "live"
+        elsif appearance_change.draft?
+          "draft"
+        else
+          "not_live"
+        end
+      end
+
+      # Colors as { "color name" => "six-digit lowercase hex" }.
+      def self.normalize_colors(colors)
+        colors.to_h.transform_values do |hex|
+          hex = hex.to_s.downcase
+          hex.length == 3 ? hex.gsub(/(\h)/, '\1\1') : hex
+        end
+      end
+
+      def self.empty_value
+        I18n.t("discourse_ai.ai_bot.chat_tool_approval.empty_value")
+      end
+      private_class_method :empty_value
+
+      def self.normalize_font_name(name)
+        name.to_s.downcase.gsub(/[^a-z0-9]/, "")
+      end
+      private_class_method :normalize_font_name
+    end
+  end
+end

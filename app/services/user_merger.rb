@@ -10,6 +10,8 @@ class UserMerger
   end
 
   def merge!
+    raise Discourse::InvalidParameters.new(:target_user) if @source_user.id == @target_user.id
+
     update_username
     move_posts
     update_user_ids

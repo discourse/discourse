@@ -3,6 +3,10 @@
 class ReviewablePost < Reviewable
   include ReviewableActionBuilder
 
+  def self.approval_style?
+    true
+  end
+
   def self.additional_args(params)
     ReviewableActionBuilder.penalty_args(params)
   end
@@ -38,39 +42,37 @@ class ReviewablePost < Reviewable
   end
 
   def build_combined_actions(actions, guardian, args)
-    if post.trashed? && guardian.can_recover_post?(post)
-      build_action(actions, :approve_and_restore, icon: "check")
-    elsif post.hidden?
-      build_action(actions, :approve_and_unhide, icon: "check")
-    else
-      build_action(actions, :approve, icon: "check")
-    end
+    consistent_answers = Reviewable.consistent_answers_for?(guardian)
+    build_approve_action(actions, guardian, consistent_answers:) if !consistent_answers
 
+    bundle_label = consistent_answers ? "deny_post" : "reject_post_bundle"
     reject =
       actions.add_bundle(
         "#{id}-reject-post",
         icon: "xmark",
-        label: "reviewables.actions.reject_post_bundle.title",
+        label: "reviewables.actions.#{bundle_label}.title",
       )
 
-    can_penalize = guardian.can_suspend?(target_created_by)
-
-    if post.trashed?
-      if can_penalize
-        build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
-      else
-        actions.add(:reject_and_keep_deleted, bundle: reject) do |a|
-          a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
-        end
+    removal_action, removal_wording =
+      if post.trashed?
+        %i[reject_and_keep_deleted deny_and_keep_deleted]
+      elsif guardian.can_delete_post_or_topic?(post)
+        [:reject_and_delete, post.is_first_post? ? :deny_and_delete_topic : :deny_and_delete_post]
       end
-    elsif guardian.can_delete_post_or_topic?(post)
-      if can_penalize
-        build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+    if removal_action
+      if consistent_answers || guardian.can_suspend?(target_created_by)
+        build_action(
+          actions,
+          removal_action,
+          icon: "trash-can",
+          translation_prefix: ("reviewables.actions.#{removal_wording}" if consistent_answers),
+          bundle: reject,
+          dsa_classification_required: true,
+        )
       else
-        actions.add(:reject_and_delete, bundle: reject) do |a|
+        actions.add(removal_action, bundle: reject, dsa_classification_required: true) do |a|
           a.icon = "trash-can"
-          a.label = "reviewables.actions.reject_and_delete_standalone.title"
+          a.label = "reviewables.actions.#{removal_action}_standalone.title"
         end
       end
     end
@@ -80,7 +82,16 @@ class ReviewablePost < Reviewable
       bundle: reject,
       silence: :reject_and_silence,
       suspend: :reject_and_suspend,
+      silence_options: {
+        translation_prefix: ("reviewables.actions.silence_user" if consistent_answers),
+      },
+      suspend_options: {
+        translation_prefix: ("reviewables.actions.suspend_user" if consistent_answers),
+      },
+      dsa_classification_required: true,
     )
+
+    build_approve_action(actions, guardian, consistent_answers:) if consistent_answers
   end
 
   def perform_approve(performed_by, _args)
@@ -125,6 +136,28 @@ class ReviewablePost < Reviewable
   end
 
   private
+
+  def build_approve_action(actions, guardian, consistent_answers:)
+    if post.trashed? && guardian.can_recover_post?(post)
+      action = :approve_and_restore
+      if post.is_first_post? && (post.topic.nil? || post.topic.trashed?)
+        wording = :approve_and_restore_topic
+      end
+    elsif post.hidden?
+      action = :approve_and_unhide
+    else
+      action = :approve
+      wording = :approve_post
+    end
+    prefix = "reviewables.actions.#{wording || action}" if consistent_answers
+    build_action(
+      actions,
+      action,
+      icon: "check",
+      label: ("#{prefix}.action_title" if prefix),
+      translation_prefix: prefix,
+    )
+  end
 
   def dsa_statement_attributes(action_id:, result:, automated_detection:, automated_decision:)
     case action_id

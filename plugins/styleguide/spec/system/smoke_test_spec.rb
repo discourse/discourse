@@ -24,6 +24,7 @@ RSpec.describe "Styleguide Smoke Test" do
       { href: "/atoms/topic-link", title: "Topic Link and Status" },
       { href: "/atoms/segmented-control", title: "Segmented Control (Button toggle group)" },
       { href: "/atoms/shortcut", title: "Shortcut" },
+      { href: "/atoms/design-variables", title: "Design variables" },
     ],
     "molecules" => [
       { href: "/molecules/bread-crumbs", title: "Bread Crumbs" },
@@ -237,6 +238,7 @@ RSpec.describe "Styleguide Smoke Test" do
       sign_in(admin)
     end
 
+    # rubocop:disable Discourse/NoIterationOverRSpecDefinitions
     sections.each do |section, items|
       items.each do |item|
         it "renders the #{section}: #{item[:title]} page correctly" do
@@ -246,6 +248,7 @@ RSpec.describe "Styleguide Smoke Test" do
         end
       end
     end
+    # rubocop:enable Discourse/NoIterationOverRSpecDefinitions
   end
 
   context "when the styleguide is enabled for everyone" do

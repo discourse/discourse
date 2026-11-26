@@ -19,12 +19,13 @@ module DiscourseAi
       end
 
       def build
-        logs = AskAiLog.where(asked_at: @start_date..@end_date)
-        questions, askers, average_ms =
+        logs = AskAiLog.asked.where(asked_at: @start_date..@end_date)
+        questions, askers, average_ms, cache_hits =
           logs.pick(
             Arel.sql("COUNT(*)"),
             Arel.sql("COUNT(DISTINCT user_id)"),
             Arel.sql("AVG(time_to_first_answer_ms)"),
+            Arel.sql("COUNT(*) FILTER (WHERE cache_hit)"),
           )
         outcomes = logs.group(:ask_outcome).count
         daily_counts = logs.group("DATE(asked_at)").count
@@ -43,6 +44,7 @@ module DiscourseAi
           questions:,
           askers:,
           average_first_answer_ms: average_ms,
+          cache_hits:,
           outcomes:
             %w[answered no_answer failed cancelled].map do |outcome|
               { outcome:, count: outcomes.fetch(outcome, 0) }

@@ -119,7 +119,69 @@ module PageObjects
       end
 
       def has_highlighted_post?(post)
-        has_css?(".nested-post--highlighted [data-post-number='#{post.post_number}']", wait: 5)
+        has_css?(
+          ".nested-post[data-highlighted] > .nested-post__main > [data-post-number='#{post.post_number}']",
+          wait: 5,
+        )
+      end
+
+      def has_no_highlighted_post?(post)
+        has_no_css?(
+          ".nested-post[data-highlighted] > .nested-post__main > [data-post-number='#{post.post_number}']",
+          wait: 5,
+        )
+      end
+
+      def remember_highlighted_post(post)
+        page.execute_script(<<~JS)
+          window.previousHighlightedPost = document
+            .querySelector(".nested-post[data-highlighted] [data-post-number='#{post.post_number}']")
+            .closest(".nested-post");
+        JS
+      end
+
+      def previous_post_highlighted?
+        page.evaluate_script("window.previousHighlightedPost.hasAttribute('data-highlighted')")
+      end
+
+      def enable_highlight_animations
+        page.execute_script(<<~JS)
+          // Override Capybara's zero duration while retaining the production animation and selector.
+          const style = document.createElement("style");
+          style.textContent = ".nested-post[data-highlighted] { animation-duration: 2s !important; }";
+          document.head.appendChild(style);
+        JS
+      end
+
+      def force_highlight_restart(post)
+        page.evaluate_async_script(<<~JS)
+          const done = arguments[0];
+          const post = document.querySelector(".nested-post [data-post-number='#{post.post_number}']").closest(".nested-post");
+          const original = post.getAnimations().find(animation => animation.animationName === "nested-post-highlight");
+          if (!original) {
+            done({ hadAnimation: false });
+            return;
+          }
+          original.pause();
+          original.currentTime = 1000;
+
+          const observer = new MutationObserver(() => {
+            if (!post.hasAttribute("data-highlighted")) {
+              return;
+            }
+            observer.disconnect();
+            const restarted = post.getAnimations().find(animation => animation.animationName === "nested-post-highlight");
+            done({
+              hadAnimation: true,
+              sameElement: post === document.querySelector(".nested-post [data-post-number='#{post.post_number}']").closest(".nested-post"),
+              newAnimation: !!restarted && restarted !== original,
+              startsAtBeginning: !!restarted && restarted.currentTime === 0,
+              previousAnimationCancelled: original.playState === "idle",
+            });
+          });
+          observer.observe(post, { attributes: true, attributeFilter: ["data-highlighted"] });
+          Discourse.__container__.lookup("service:app-events").trigger("nested:scroll-to-target");
+        JS
       end
 
       def has_reply_button_for?(post)

@@ -7,8 +7,17 @@
 hr:
   js:
     dsa_notice:
+      choice_title: "Nezakonito je."
       title: "Prijavite ilegalni sadržaj"
       email: "E-mail adresa"
+    code_editor:
+      search:
+        replace: "Zamijeni"
+        next: "Sljedeći"
+        previous: "Prethodni"
+        close: "Zatvori"
+      fold:
+        to: "za"
     user_api_key:
       authorize: "Odobriti"
       deny: "Odustani"
@@ -28,6 +37,7 @@ hr:
     access_control:
       manage:
         access_permission_editor: "Urednik"
+        access_permission_owner: "Vlasnik"
         access_permission_remove: "Ukloni"
     number:
       format:
@@ -473,26 +483,18 @@ hr:
       title: "Nove i nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Natrag"
     design_wizard:
       back: "Natrag"
       next: "Sljedeći"
       sections:
-        theme: "Tema"
         fonts: "Fontovi"
+        logo: "Logo"
         homepage: "Početna stranica"
-        welcome_banner: "Banner dobrodošlice"
-        search: "Pretraživanje"
       theme:
         selected: "Odabrano"
-      colors:
-        light: "Svjetlo"
-        dark: "Tamno"
       fonts:
-        base_font: "Osnovni font"
-        heading_font: "Font zaglavlja"
+        base_font: "Tijelo"
+        heading_font: "Naslovi"
       homepage:
         topics: "Tema"
         categories: "Kategorije"
@@ -749,7 +751,6 @@ hr:
         placeholder: "ovdje upišite naslov poruke, URL ili id"
     dsa_statements:
       category: "Kategorija"
-      saving: "Spremanje…"
     review:
       show_more: "Prikaži više"
       show_less: "Prikaži manje"
@@ -2865,6 +2866,7 @@ hr:
         size_too_small: "%{provided_file_size} je manje od minimalno dopuštene vrijednosti %{min_file_size}"
     emoji_picker:
       filter_placeholder: Traži emotikone
+      no_results: "Nema rezultata"
       smileys_&_emotion: Smajlići i emotikoni
       people_&_body: Ljudi i tijelo
       animals_&_nature: Životinje i priroda
@@ -2884,6 +2886,7 @@ hr:
       default: Prilagođeni emojiji
     filter_controls:
       reset: "Resetirati"
+      sort_label: "Sortiraj po"
     shared_drafts:
       title: "Dijeljene skice"
       notice: "Ova je tema vidljiva samo onima koji mogu objaviti zajedničke skice."
@@ -2898,6 +2901,10 @@ hr:
       emoji: "Emoji :)"
       more_emoji: "više…"
       options: "Mogućnosti"
+      ai_content:
+        code: "Šifra"
+        quote: "Citat"
+        details: "Detalji"
       whisper: "šapat"
       unlist: "neobjavljeno"
       add_warning: "Ovo je službeno upozorenje."
@@ -3749,7 +3756,7 @@ hr:
         back_description: "Vrati se na posljednju nepročitanu poruku"
         replies_short: "%{current} / %{total}"
       progress:
-        title: napredak teme
+        title: "napredak teme"
         jump_prompt: "idite na"
         jump_prompt_of:
           one: "od %{count} objava"
@@ -4009,10 +4016,8 @@ hr:
           label: "odabran"
           title: "Kliknite da biste uklonili post iz izbora"
         select_replies:
-          label: "odaberi +odgovori"
           title: "Dodajte post i sve njegove odgovore odabiru"
         select_below:
-          label: "odaberite +ispod"
           title: "Dodaj post i sve nakon toga na odabir"
         delete: obriši odabrano
         cancel: odustani od odabranog
@@ -4268,6 +4273,9 @@ hr:
           few: "Jeste li sigurni da želite spojiti %{count} postova?"
           other: "Jeste li sigurni da želite spojiti ovih %{count} objava?"
       revisions:
+        visibility:
+          hidden:
+            title: "Skriveno"
         locale:
           no_locale_set: "Nije postavljen jezik"
           locale_removed: "Jezik uklonjen"
@@ -4276,9 +4284,6 @@ hr:
           previous: "Prethodna revizija"
           next: "Sljedeća revizija"
           last: "Zadnja revizija"
-          hide: "Sakrij reviziju"
-          show: "Pokaži reviziju"
-          destroy: "Izbrišite izmjene"
           destroy_confirm: "Jeste li sigurni da želite izbrisati sve izmjene ove objave? Ova je radnja trajna."
           revert: "Vrati se na reviziju %{revision}"
           edit_wiki: "Uredite Wiki"
@@ -4345,7 +4350,6 @@ hr:
     category:
       none: "(nema kategorije)"
       all: "Sve kategorije"
-      choose: "Kategorija&hellip;"
       edit: "Izmijeni"
       edit_title: "Uredite ovu kategoriju"
       edit_dialog_title: "Uredi: %{categoryName}"
@@ -4389,27 +4393,19 @@ hr:
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:
         icon_required: "Odaberi ikonu."
+      icon_search_placeholder: "Traži…"
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
       style: "Stil"
-      icon: "Ikona"
-      emoji: "Emoji"
       background_color: "Boja"
       foreground_color: "Boja teksta"
       color_validations:
         cant_be_empty: "ne može biti prazno"
       styles:
-        type: "Stil"
         icon: "Ikona"
         emoji: "Emoji"
         square: "Kvadrat"
-        options:
-          square: "Kvadrat"
-          icon: "Ikona"
-          emoji: "Emoji"
       color_used: "Boja u upotrebi"
-      predefined_colors: "Unaprijed definirane opcije boja"
-      color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
       no_description: "Molimo dodajte opis ovoj kategoriji."
@@ -5048,9 +5044,18 @@ hr:
       forward: "Naprijed"
       share: "Dijeli"
       dismiss: "Skloni"
+    mobile_tab_bar:
+      new_topic: "Nova tema"
+      create: "Stvorite"
+      more: "Više"
+      back: "Natrag"
+      topics: "Tema"
+      drafts:
+        one: "Skice (%{count})"
+        few: "Skice (%{count})"
+        other: "Skice (%{count})"
     safe_mode:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
-    theme_preview_notice: "Trenutno pregledavate temu, zatvorite ovu karticu ili prozor preglednika da biste se vratili na uobičajenu konfiguraciju web stranice."
     image_removed: "(slika uklonjena)"
     pause_notifications:
       title: "Pauzirajte obavijesti za"
@@ -5447,13 +5452,12 @@ hr:
           title: "Napredno"
       upcoming_changes:
         name: "Ime"
-        enabled: "Omogućeno"
+        enabled: "Omogućeno?"
+        feedback: "Povratne informacije"
         select_groups: "Odaberite grupe"
+        settings: "Postavke"
         permanent_notice: "Ova promjena je sada trajna i uskoro će biti uklonjena. Više ne možete odustati."
-        permanent_soon_notice: "Ova će promjena uskoro postati trajna. Više nećete moći odustati."
         preview: "Pregled"
-        enabled_for_options:
-          everyone: "Svi"
         statuses:
           experimental: "Eksperimentalno"
         impact_roles:
@@ -5471,6 +5475,9 @@ hr:
           impact_role_admins: "Admini"
           impact_role_moderators: "Moderatori"
           impact_role_staff: "Osoblje"
+        sort:
+          status: "Statust"
+          name: "Ime"
       config:
         about:
           title: "O vašoj web stranici"
@@ -5861,32 +5868,15 @@ hr:
           anonymous_human: "Anonimno"
       dashboard:
         title: "Nadzorna ploča"
-        last_updated: "Nadzorna ploča ažurirana:"
-        discourse_last_updated: "Ažuriran Discourse:"
         version: "Verzija"
         up_to_date: "Imate ažurnu verziju!"
         updates_available: "Dopune su dostupne."
-        please_update: "Molimo ažurirajte!"
-        no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
-        stale_data: "Nije dugo učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
-        installed_version: "Instalirano"
-        github: "GitHub"
-        problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         dismiss_notice: "Zanemari"
         new_features:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
           learn_more: "Saznajte više..."
-        last_checked: "Zadnje provjereno"
         refresh_problems: "Osvježi"
-        no_problems: "Nisu pronađeni problemi."
-        moderators: "Moderatori:"
-        admins: "Admini:"
-        silenced: "Utišano:"
-        suspended: "Suspendirani:"
-        private_messages_short: "Poruke"
-        private_messages_title: "Poruke"
-        mobile_title: "Mobilni"
         space_used: "%{usedSize} korišteno"
         space_used_and_free: "%{usedSize} (%{freeSize} dostupno)"
         uploads: "Prijenosi"
@@ -5896,20 +5886,7 @@ hr:
           few: "%{count} sigurnosna kopija na %{location}"
           other: "%{count} sigurnosnih kopije na %{location}"
         lastest_backup: "Najnovije: %{date}"
-        traffic_short: "Promet"
-        traffic: "Aplikacijski internetski upiti"
-        page_views: "Pregledi stranica"
-        page_views_short: "Pregledi stranica"
-        show_traffic_report: "Prikaži detaljni izvještaj o prometu"
-        community_health: Zdravlje zajednice
-        moderators_activity: Aktivnost moderatora
         whats_new_in_discourse: Što ima novo u Discourse?
-        activity_metrics: Metrika aktivnosti
-        all_reports: "Sva izvješća"
-        general_tab: "Općenito"
-        moderation_tab: "Moderiranje"
-        security_tab: "Sigurnost"
-        reports_tab: "Izvještaji"
         report_filter_any: "bilo koji"
         disabled: Onemogućeno
         timeout_error: Žao nam je, upit traje predugo, odaberite kraći interval
@@ -5945,7 +5922,6 @@ hr:
             title: "Sistem"
             status: "Statust"
             discourse_updated: "Ažuriran Discourse"
-            dashboard_updated: "Nadzorna ploča ažurirana"
         reports_section:
           header_action: "Upravljanje"
           no_data: "Nema podataka za prikaz"
@@ -5957,11 +5933,6 @@ hr:
           series:
             anonymous: "Anonimno"
           crawler_learn_more: "Saznajte više"
-        period:
-          last_7_days: "Zadnjih 7 dana"
-          last_30_days: "Zadnjih 30 dana"
-          last_3_months: "Posljednjih 3 mjeseci"
-          custom: "Posebna"
         reports:
           trend_title: "%{percent} promjena. Trenutno %{current}, bilo je %{prev} u prethodnom razdoblju."
           today: "Danas"
@@ -5994,9 +5965,6 @@ hr:
               one: "%{count} objava"
               few: "%{count} objava"
               other: "%{count} objava"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnici pretraživanja</a>'
-            disabled: 'Izvješće o pretraživanju u trendu je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upita za pretraživanje dnevnika</a> za prikupljanje podataka.'
           sort_button: "Sortiraj po %{column}"
           sort_ascending: "uzlazno"
           sort_descending: "silazno"
@@ -6346,14 +6314,9 @@ hr:
             Korisničko ime osoblja za slanje svih automatiziranih poruka. Ako je ostavljeno prazno, koristit će se zadani račun sustava.
           site_contact_group_help: |
             Grupa koja je pozvana na sve automatski poslane osobne poruke.
-          your_organization_description: "Ove podatke ćemo koristiti u Uvjetima pružanja usluge i Obavijesti o privatnosti kako bismo pokazali tko upravlja stranicom i pod kojom jurisdikcijom."
           company_name: "Ime"
-          company_name_warning: |
-            Ako se ostavi prazno, neće se pružiti standardni Uvjeti pružanja usluge ili Obavijest o privatnosti.
           company_url: "Web stranica"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "Mjerodavno pravo i nadležnost"
-          city_for_disputes_placeholder: "Grad"
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
@@ -6501,7 +6464,6 @@ hr:
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
           uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
-          error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
         operations:
           failed: "%{operation} neuspješna. Molimo provjerite zapise."
@@ -7160,6 +7122,10 @@ hr:
           all: "Svi korisnici"
           activated: "Aktivirano"
         approved: "Potvrđeni?"
+        source: "Izvor"
+        bots:
+          name: "Ime"
+          username: "Korisničko ime"
         titles:
           active: "Aktivni korisnici"
           new: "Novi korisnici"
@@ -7195,16 +7161,12 @@ hr:
           no_constructive_purpose: "Njihova djela nemaju konstruktivnu svrhu osim stvaranja neslaganja unutar zajednice"
           custom: "Prilagođeno…"
         suspend_message: "E-mail poruka"
-        suspend_message_placeholder: "Po želji navedite više informacija o suspenziji i ona će biti poslana korisniku e-mailom."
         suspended_by: "Suspendirao/la"
         silence_reason: "Razlog"
         silenced_by: "Utišao/la"
         silence_modal_title: "Utišaj korisnika"
         silence_duration: "Koliko dugo će korisnik biti utišan?"
-        silence_reason_label: "Zašto utišavate ovog korisnika?"
         silence_reason_placeholder: "Razlog utišavanja"
-        silence_message: "Pošaljite poruku e-mailom"
-        silence_message_placeholder: "(ostavite praznim za slanje standardne poruke)"
         suspended_until: "(do %{until})"
         suspend_forever: "Zauvijek suspendirajte"
         cant_suspend: "Ovaj korisnik ne može biti suspendiran."
@@ -7478,6 +7440,8 @@ hr:
       site_text:
         description: "Možete prilagoditi bilo koji tekst na svom forumu."
         search_label: "Pretraživanje"
+        preview:
+          default: "Zadano"
         theme_disabled: "Onemogućeno"
         filters: "Filteri"
         edit: "Uredi"
@@ -7587,7 +7551,7 @@ hr:
           modal_title: Grupiranja znački
         granted_by: Dodijelio/la
         granted_at: Dodijeljeno pri
-        reason_help: (Poveznica na objavu ili temu)
+        reason_help: Poveznica na objavu ili temu
         save: Spremi
         delete: Obriši
         delete_confirm: Jeste li sigurni da želite izbrisati ovu značku?

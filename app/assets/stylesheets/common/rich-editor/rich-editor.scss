@@ -704,6 +704,14 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1;
+    appearance: none;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    text-align: start;
   }
 }
 

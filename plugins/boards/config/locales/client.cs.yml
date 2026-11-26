@@ -39,7 +39,11 @@ cs:
         unassign_from_topic: "Zrušit přiřazení @%{username} k tématu"
         unassign_from_post: "Zrušit přiřazení @%{username} z #%{post_number}"
         edit_assignments: "Upravit přidělení..."
-        created_by: "Vytvořil/a"
+        owners:
+          one: "Vlastník"
+          few: "Vlastníci"
+          many: "Vlastníci"
+          other: "Vlastníci"
       manage:
         name: "Jméno"
         slug: "URL"
@@ -51,6 +55,8 @@ cs:
           column_title: "Název"
           icon: "Ikona"
           color: "Barva"
+          color_palette: "Barevná paleta"
+          icon_search_placeholder: "Vyhledat..."
           tag: "Štítek"
           move_to_assigned_unassign: "Odebrat přidělení"
           move_to_status_open: "Otevřeno"

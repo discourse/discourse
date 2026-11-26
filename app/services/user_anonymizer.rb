@@ -19,7 +19,7 @@ class UserAnonymizer
   end
 
   def make_anonymous
-    User.transaction do
+    @user.with_credential_lock do
       @prev_emails =
         UserEmail.where(user_id: @user.id).pluck(:email) |
           UserAssociatedAccount.where(user_id: @user.id).pluck(Arel.sql("info->>'email'")).compact
@@ -72,10 +72,8 @@ class UserAnonymizer
       @user.user_associated_accounts.destroy_all
       @user.api_keys.destroy_all
       @user.user_api_keys.destroy_all
-      @user.user_auth_tokens.destroy_all
       @user.user_second_factors.destroy_all
       UserSecurityKey.where(user_id: @user.id).delete_all
-      @user.push_subscriptions.destroy_all
       PostReplyKey.where(user_id: @user.id).delete_all
       @user.user_emails.secondary.destroy_all
 

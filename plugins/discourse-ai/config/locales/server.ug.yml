@@ -18,6 +18,9 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "ئەخلەت ئۇچۇر بايقاش"
       navigation:
         settings:
           title: "بېكەت تەڭشىكى"
@@ -58,6 +61,8 @@ ug:
           text_color: "تېكىست رەڭگى"
         approve_label: "ھەئە"
         reject_label: "ياق"
+        category_access_levels:
+          readonly: "كۆرسەت"
         empty_value: "بوش"
       agents:
         titles_generator:
@@ -101,6 +106,7 @@ ug:
         suspend_user: "ئىشلەتكۈچىنى توختات"
         silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
+        delete_category: "سەھىپە ئۆچۈر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
         time: "ۋاقىت"
@@ -150,6 +156,12 @@ ug:
       edit_category:
         errors:
           not_found: "سەھىپە تېپىلمىدى."
+      set_category_permissions:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
+      delete_category:
+        errors:
+          not_found: "سەھىپە تېپىلمىدى."
       change_topic_category:
         errors:
           not_found: "تېما تېپىلمىدى."
@@ -170,6 +182,22 @@ ug:
         errors:
           not_allowed: "تەكشۈرۈش ئۆچىرىتىنى زىيارەت قىلىشىڭىزغا يول قويۇلمىغان"
           not_found: "تەكشۈرۈش ئۆچرىتى تۈرى تېپىلمىدى"
+    appearance_authoring:
+      component_on: "ئوچۇق"
+      component_off: "تاقاق"
+      default_theme: "كۆڭۈلدىكى ئۆرنەك"
+      colors:
+        light:
+          header_background: "بەت قاش"
+      fonts:
+        base_font: "مەزمۇن خەت نۇسخىسى"
+        heading_font: "ماۋزۇ خەت نۇسخىسى"
+    mcp_theme_access:
+      "on": "ئوچۇق"
+      "off": "تاقاق"
+      none: "يوق"
+    mcp_app_setup:
+      none: "يوق"
     reviewables:
       ai_tool_action:
         approve:

@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import AccessNotice from "discourse/components/access-notice";
 import CalendarSubscriptionUrl from "discourse/components/calendar-subscription-url";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -26,7 +28,15 @@ export default class CalendarSubscriptions extends Component {
     this.loadStatus();
   }
 
+  @action
   async loadStatus() {
+    this.urls = null;
+
+    if (!this.args.controller.model.isCurrent) {
+      this.hasSubscription = false;
+      return;
+    }
+
     try {
       const result = await ajax("/calendar-subscriptions.json");
       this.hasSubscription = result.has_subscription;
@@ -82,69 +92,75 @@ export default class CalendarSubscriptions extends Component {
       @name="calendar-preferences"
       @outletArgs={{lazyHash model=@controller.model}}
     />
-    <div class="calendar-subscriptions">
-      <p class="calendar-subscriptions__description">
-        {{i18n "user.calendar_subscriptions.description"}}
-      </p>
+    <div
+      class="calendar-subscriptions"
+      {{didUpdate this.loadStatus @controller.model}}
+    >
+      <AccessNotice @kind="self" @user={{@controller.model}} as |disabled|>
+        <p class="calendar-subscriptions__description">
+          {{i18n "user.calendar_subscriptions.description"}}
+        </p>
 
-      {{#if this.urls}}
-        <div class="calendar-subscriptions__urls">
-          <div class="alert alert-info calendar-subscriptions__warning">
-            {{dIcon "triangle-exclamation"}}
-            {{i18n "user.calendar_subscriptions.urls_warning"}}
+        {{#if this.urls}}
+          <div class="calendar-subscriptions__urls">
+            <div class="alert alert-info calendar-subscriptions__warning">
+              {{dIcon "triangle-exclamation"}}
+              {{i18n "user.calendar_subscriptions.urls_warning"}}
+            </div>
+
+            <CalendarSubscriptionUrl
+              @description={{i18n
+                "user.calendar_subscriptions.bookmarks_description"
+              }}
+              @label={{i18n "user.calendar_subscriptions.bookmarks"}}
+              @url={{this.urls.bookmarks}}
+            />
+
+            <PluginOutlet
+              @name="calendar-subscriptions-feeds"
+              @outletArgs={{lazyHash urls=this.urls}}
+            />
+
+            <div class="calendar-subscriptions__actions">
+              <DButton
+                class="btn-danger"
+                @action={{this.revokeSubscription}}
+                @label="user.calendar_subscriptions.revoke"
+              />
+            </div>
           </div>
-
-          <CalendarSubscriptionUrl
-            @description={{i18n
-              "user.calendar_subscriptions.bookmarks_description"
-            }}
-            @label={{i18n "user.calendar_subscriptions.bookmarks"}}
-            @url={{this.urls.bookmarks}}
+        {{else if this.hasSubscription}}
+          <div class="calendar-subscriptions__active">
+            <p class="calendar-subscriptions__active-status">
+              {{dIcon "check"}}
+              {{i18n "user.calendar_subscriptions.active_subscription"}}
+            </p>
+            <div class="calendar-subscriptions__actions">
+              <DButton
+                class="btn-primary"
+                @action={{this.regenerateUrls}}
+                @icon="arrows-rotate"
+                @isLoading={{this.loading}}
+                @label="user.calendar_subscriptions.regenerate"
+              />
+              <DButton
+                class="btn-danger"
+                @action={{this.revokeSubscription}}
+                @label="user.calendar_subscriptions.revoke"
+              />
+            </div>
+          </div>
+        {{else if (eq this.hasSubscription false)}}
+          <DButton
+            class="btn-primary"
+            @action={{this.generateUrls}}
+            @disabled={{disabled}}
+            @icon="calendar-days"
+            @isLoading={{this.loading}}
+            @label="user.calendar_subscriptions.generate"
           />
-
-          <PluginOutlet
-            @name="calendar-subscriptions-feeds"
-            @outletArgs={{lazyHash urls=this.urls}}
-          />
-
-          <div class="calendar-subscriptions__actions">
-            <DButton
-              class="btn-danger"
-              @action={{this.revokeSubscription}}
-              @label="user.calendar_subscriptions.revoke"
-            />
-          </div>
-        </div>
-      {{else if this.hasSubscription}}
-        <div class="calendar-subscriptions__active">
-          <p class="calendar-subscriptions__active-status">
-            {{dIcon "check"}}
-            {{i18n "user.calendar_subscriptions.active_subscription"}}
-          </p>
-          <div class="calendar-subscriptions__actions">
-            <DButton
-              class="btn-primary"
-              @action={{this.regenerateUrls}}
-              @icon="arrows-rotate"
-              @isLoading={{this.loading}}
-              @label="user.calendar_subscriptions.regenerate"
-            />
-            <DButton
-              class="btn-danger"
-              @action={{this.revokeSubscription}}
-              @label="user.calendar_subscriptions.revoke"
-            />
-          </div>
-        </div>
-      {{else if (eq this.hasSubscription false)}}
-        <DButton
-          class="btn-primary"
-          @action={{this.generateUrls}}
-          @icon="calendar-days"
-          @isLoading={{this.loading}}
-          @label="user.calendar_subscriptions.generate"
-        />
-      {{/if}}
+        {{/if}}
+      </AccessNotice>
     </div>
   </template>
 }

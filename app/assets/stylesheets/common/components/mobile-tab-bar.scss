@@ -1,0 +1,739 @@
+html.mobile-tab-bar-visible {
+  --mobile-tab-bar-control-size: 2.5rem;
+  --mobile-tab-bar-controls-height: calc(
+    var(--mobile-tab-bar-control-size) + var(--space-2)
+  );
+  --mobile-tab-bar-item-size: 2.25rem;
+  --mobile-tab-bar-views-gap: var(--space-1);
+  --mobile-tab-bar-views-height: calc(
+    var(--mobile-tab-bar-item-size) + var(--space-1)
+  );
+  --mobile-tab-bar-bottom-inset: max(
+    var(--space-2),
+    env(safe-area-inset-bottom)
+  );
+  --mobile-tab-bar-side-inset: var(--space-3);
+  --mobile-tab-bar-corner-radius: var(--d-button-border-radius);
+
+  // Set here rather than on the bar, so the page's own bubbles over it match.
+  // The theme's button radius, so containers match the buttons beside them
+  --mobile-tab-bar-radius: var(--d-button-border-radius);
+
+  // Kept close, as the controls have no border to set them off
+  --mobile-tab-bar-shadow:
+    0 1px 2px rgb(0, 0, 0, 0.12), 0 2px 6px rgb(0, 0, 0, 0.08);
+
+  // Layouts across the app already clear the footer nav by this height plus
+  // the safe area, so it gives back whatever of the safe area the bar sits in
+  --footer-nav-height: calc(
+    var(--mobile-tab-bar-controls-height) +
+      var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+  );
+
+  // What a collapsed composer resting on the bar adds to its height, for
+  // anything else floating above the bar to clear
+  --mobile-tab-bar-composer-offset: 0px;
+
+  // How far up the screen the bar reaches right now, as parts of it tuck
+  // away, for whatever floats above it to follow. Layouts keep clearing the
+  // full `--footer-nav-height`, so content doesn't jump as it moves.
+  --mobile-tab-bar-current-height: calc(
+    var(--footer-nav-height) + env(safe-area-inset-bottom)
+  );
+
+  @media (display-mode: standalone) {
+    --mobile-tab-bar-side-inset: var(--space-5);
+
+    // Other platforms may reserve this inset for system navigation controls.
+    --mobile-tab-bar-bottom-inset: max(
+      var(--space-5),
+      env(safe-area-inset-bottom)
+    );
+
+    &.ios-device {
+      --mobile-tab-bar-bottom-inset: max(
+        var(--space-5),
+        min(env(safe-area-inset-bottom), var(--space-6))
+      );
+    }
+  }
+
+  &:has(#reply-control.draft, #reply-control.saving) {
+    --mobile-tab-bar-composer-offset: calc(
+      var(--composer-collapsed-height) + var(--mobile-tab-bar-views-gap)
+    );
+  }
+
+  &:has(.mobile-tab-bar:not(.--no-tabs) > .mobile-tab-bar__views > *) {
+    --footer-nav-height: calc(
+      var(--mobile-tab-bar-controls-height) +
+        var(--mobile-tab-bar-views-height) + var(--mobile-tab-bar-views-gap) +
+        var(--mobile-tab-bar-bottom-inset) - env(safe-area-inset-bottom)
+    );
+  }
+
+  &.mobile-tab-bar-views-tucked {
+    --mobile-tab-bar-current-height: calc(
+      var(--mobile-tab-bar-controls-height) + var(--mobile-tab-bar-bottom-inset)
+    );
+  }
+
+  &.mobile-tab-bar-tucked:not(:has(.mobile-tab-bar :focus-visible)) {
+    --mobile-tab-bar-current-height: var(--mobile-tab-bar-bottom-inset);
+  }
+
+  &.mobile-tab-bar-actions-tucked:not(:has(.mobile-tab-bar :focus-visible)) {
+    --mobile-tab-bar-progress-height: var(--mobile-tab-bar-item-size);
+    --mobile-tab-bar-current-height: calc(
+      var(--mobile-tab-bar-progress-height) + var(--mobile-tab-bar-bottom-inset)
+    );
+  }
+}
+
+@mixin mobile-tab-bar-floating($fill: true) {
+  border-radius: var(--mobile-tab-bar-radius);
+  box-shadow: var(--mobile-tab-bar-shadow);
+
+  @if $fill {
+    background: var(--header_background);
+  }
+}
+
+.mobile-tab-bar {
+  --mobile-tab-bar-controls-gap: var(--space-2);
+  --mobile-tab-bar-inner-radius: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: z("footer-nav");
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--mobile-tab-bar-views-gap);
+  width: 100%;
+  height: calc(var(--footer-nav-height) + env(safe-area-inset-bottom));
+  padding: 0 var(--mobile-tab-bar-side-inset) var(--mobile-tab-bar-bottom-inset);
+  box-sizing: border-box;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--secondary-rgb), 0),
+    rgb(var(--secondary-rgb), 0.2) 25%,
+    rgb(var(--secondary-rgb), 0.5) 50%,
+    rgb(var(--secondary-rgb), 0.75) 75%,
+    rgb(var(--secondary-rgb), 1)
+  );
+  pointer-events: none;
+
+  @include unselectable;
+  transition:
+    transform 200ms ease,
+    opacity 200ms ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  &.--with-hub:not(.--no-tabs) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: end;
+    column-gap: var(--mobile-tab-bar-controls-gap);
+
+    .mobile-tab-bar__views {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &.--no-tabs {
+    --mobile-tab-bar-views-height: var(--mobile-tab-bar-controls-height);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mobile-tab-bar-controls-gap);
+    background: none;
+
+    .mobile-tab-bar__menu {
+      flex: none;
+      width: var(--mobile-tab-bar-controls-height);
+
+      @include mobile-tab-bar-floating($fill: false);
+    }
+
+    .mobile-tab-bar__views {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mobile-tab-bar__create::after {
+      @include mobile-tab-bar-floating($fill: false);
+    }
+
+    &.--with-hub > .mobile-tab-bar__create {
+      margin-inline-start: auto;
+    }
+
+    &.--topic {
+      --mobile-tab-bar-edge-width: var(--mobile-tab-bar-controls-height);
+      display: grid;
+      grid-template-columns:
+        var(--mobile-tab-bar-edge-width) minmax(0, 1fr)
+        minmax(0, var(--mobile-tab-bar-progress-width))
+        minmax(0, 1fr) var(--mobile-tab-bar-edge-width);
+
+      .mobile-tab-bar__menu {
+        justify-self: start;
+      }
+
+      .mobile-tab-bar__views {
+        // The counter ends at the edge of the center column. The back button
+        // can grow into the space before it without moving the counter.
+        grid-column: 2 / 4;
+        place-self: end;
+      }
+
+      .mobile-tab-bar__create {
+        grid-column: 4 / 6;
+        justify-self: end;
+        max-width: 100%;
+      }
+
+      .mobile-tab-bar__menu,
+      .mobile-tab-bar__create,
+      .mobile-tab-bar__hub {
+        transition: inherit;
+      }
+
+      &.--with-hub {
+        container: mobile-tab-bar-topic / inline-size;
+
+        // Leave equal space on both sides of the timeline for two buttons.
+        --mobile-tab-bar-edge-width: min(
+          var(--mobile-tab-bar-controls-height),
+          calc(
+            (100% - var(--mobile-tab-bar-progress-width)) /
+              4 - var(--mobile-tab-bar-controls-gap)
+          )
+        );
+
+        .mobile-tab-bar__menu,
+        .mobile-tab-bar__hub {
+          width: 100%;
+        }
+
+        .mobile-tab-bar__create {
+          grid-column: 4;
+          min-width: 0;
+        }
+
+        .mobile-tab-bar__hub {
+          grid-column: 5;
+        }
+
+        @container mobile-tab-bar-topic (width < 25rem) {
+          .mobile-tab-bar__login .d-button-label {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  &.--actions-tucked:not(:has(:focus-visible)) {
+    .mobile-tab-bar__menu,
+    .mobile-tab-bar__create,
+    .mobile-tab-bar__hub {
+      opacity: 0;
+      transform: translateY(calc(100% + var(--mobile-tab-bar-bottom-inset)));
+      pointer-events: none;
+    }
+  }
+
+  // Off screen but still reachable from the keyboard, which brings it back
+  &.--tucked:not(:has(:focus-visible)) {
+    opacity: 0;
+    transform: translateY(100%);
+
+    .mobile-tab-bar__views,
+    .mobile-tab-bar__controls,
+    .mobile-tab-bar__hub {
+      pointer-events: none;
+    }
+  }
+
+  &.--views-tucked &__views {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+  }
+
+  &__views {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: clip;
+    pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
+    transition:
+      transform 200ms ease,
+      opacity 200ms ease,
+      visibility 200ms;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    &:not(:has(> *)) {
+      display: none;
+    }
+
+    > * {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    > :first-child {
+      flex: 1 1 auto;
+    }
+  }
+
+  &__views .nav-pills {
+    --fade-width: 1.5rem;
+    flex-wrap: nowrap;
+    gap: 0;
+    margin: 0;
+
+    @include horizontal-scroll-strip;
+
+    > li {
+      flex: none;
+    }
+
+    > li > a {
+      min-height: var(--mobile-tab-bar-views-height);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--mobile-tab-bar-inner-radius);
+      color: var(--header_primary-high);
+      font-size: var(--font-down-1);
+
+      &::after,
+      &:hover::after,
+      &.active::after {
+        display: none;
+      }
+
+      &:not(.active) {
+        @include hover {
+          background: var(--d-hover);
+          color: var(--header_primary);
+        }
+      }
+
+      &.active {
+        background: var(--d-selected);
+        color: var(--d-nav-color--active);
+        font-weight: bold;
+      }
+    }
+
+    .navigation-item__count {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      right: calc(var(--space-1) * -1);
+    }
+
+    // Holds each label's bold width, so the views don't shift as the
+    // current view changes
+    [data-label] {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      &::before {
+        content: attr(data-label);
+        height: 0;
+        overflow: hidden;
+        font-weight: bold;
+        visibility: hidden;
+      }
+    }
+  }
+
+  &__views > .nav-pills:last-child > li {
+    flex: 1 0 auto;
+
+    > a {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  // Outweighs the topic lists' own layout for their nav, which wraps
+  &__views #navigation-bar {
+    flex-wrap: nowrap;
+    margin-right: 0;
+  }
+
+  &__views .navigation-options__trigger {
+    flex: none;
+    width: var(--mobile-tab-bar-views-height);
+    height: var(--mobile-tab-bar-views-height);
+    padding: 0;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+
+    .d-icon {
+      margin: 0;
+      color: var(--header_primary-medium);
+    }
+  }
+
+  &__controls {
+    container: mobile-tab-bar-controls / inline-size;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: none;
+    align-items: center;
+    height: var(--mobile-tab-bar-controls-height);
+    box-sizing: border-box;
+    pointer-events: auto;
+
+    @include mobile-tab-bar-floating;
+    border-bottom-left-radius: var(--mobile-tab-bar-corner-radius);
+    border-bottom-right-radius: var(--mobile-tab-bar-corner-radius);
+  }
+
+  &__menu,
+  &__hub,
+  &__tabs,
+  &__create {
+    flex: none;
+    height: var(--mobile-tab-bar-controls-height);
+    pointer-events: auto;
+    border-radius: var(--mobile-tab-bar-inner-radius);
+  }
+
+  &__menu,
+  &__hub,
+  &__create {
+    width: var(--mobile-tab-bar-control-size);
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  &__menu,
+  &__hub,
+  &__views .progress-back {
+    --d-button-default-bg-color: var(--header_background);
+    --d-button-default-bg-color--hover: var(--d-hover);
+    --d-button-default-icon-color: var(--header_primary);
+    --d-button-default-icon-color--hover: var(--header_primary);
+    --d-button-default-border: 0;
+    --d-button-default-border--hover: 0;
+  }
+
+  &__hub {
+    width: var(--mobile-tab-bar-controls-height);
+    padding: 0;
+
+    @include mobile-tab-bar-floating($fill: false);
+  }
+
+  &__menu {
+    --mobile-tab-bar-badge-background: var(--d-button-default-bg-color);
+    position: relative;
+    flex: 1 1 0;
+    min-width: var(--mobile-tab-bar-control-size);
+    padding: 0;
+    border-start-start-radius: var(--mobile-tab-bar-radius);
+    border-end-start-radius: var(--mobile-tab-bar-corner-radius);
+
+    .mobile-tab-bar__badge {
+      top: var(--space-2);
+      left: 55%;
+    }
+
+    .mobile-tab-bar__count {
+      outline: 2px solid var(--mobile-tab-bar-badge-background);
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
+      );
+    }
+
+    @include hover {
+      --mobile-tab-bar-badge-background: var(
+        --d-button-default-bg-color--hover
+      );
+    }
+
+    &[aria-expanded="true"].btn-default {
+      --mobile-tab-bar-badge-background: var(--d-selected);
+      background: var(--d-selected);
+
+      @include hover {
+        background: var(--d-selected);
+      }
+
+      .d-icon {
+        color: var(--d-nav-color--active);
+      }
+    }
+  }
+
+  &__login.btn-primary {
+    gap: var(--space-2);
+    width: auto;
+    min-width: var(--mobile-tab-bar-controls-height);
+    padding-inline: var(--space-3);
+
+    .d-button-label {
+      max-width: 8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  @container mobile-tab-bar-controls (width < 22rem) {
+    &__tabs:has(
+        .mobile-tab-bar__tab ~ .mobile-tab-bar__tab ~ .mobile-tab-bar__tab
+      )
+      ~ .mobile-tab-bar__login
+      .d-button-label {
+      display: none;
+    }
+  }
+
+  @container mobile-tab-bar-controls (width < 16rem) {
+    &__login .d-button-label {
+      display: none;
+    }
+  }
+
+  &__create {
+    --mobile-tab-bar-create-background: var(--d-button-primary-bg-color);
+    position: relative;
+    isolation: isolate;
+    width: var(--mobile-tab-bar-controls-height);
+
+    &.btn-primary {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+
+      &:focus-visible {
+        background: transparent;
+      }
+
+      @include hover {
+        border: 0;
+        background: transparent;
+      }
+    }
+
+    // Round only the painted surface so the entire square remains tappable.
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      border-start-end-radius: var(--mobile-tab-bar-radius);
+      border-end-end-radius: var(--mobile-tab-bar-corner-radius);
+      background: var(--mobile-tab-bar-create-background);
+      box-shadow: 0 3px 3px -1px rgb(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
+      );
+    }
+
+    @include hover {
+      --mobile-tab-bar-create-background: var(
+        --d-button-primary-bg-color--hover
+      );
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    flex: var(--mobile-tab-bar-tab-count, 1) 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    &:last-child {
+      border-start-end-radius: var(--mobile-tab-bar-radius);
+      border-end-end-radius: var(--mobile-tab-bar-corner-radius);
+    }
+  }
+
+  &__track {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  &__highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--mobile-tab-bar-highlight-width, 0);
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    background: var(--d-selected);
+    transform: translateX(var(--mobile-tab-bar-highlight-x, 0));
+    pointer-events: none;
+
+    .--no-section & {
+      opacity: 0;
+    }
+
+    [data-sliding] > & {
+      transition:
+        transform 250ms ease,
+        width 250ms ease,
+        opacity 250ms ease;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+
+  &__tab {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--mobile-tab-bar-inner-radius);
+    color: var(--header_primary-medium);
+
+    // The highlight behind it is its pill; outweighs the transparent button
+    // style it's built on
+    &.--active.btn-transparent {
+      color: var(--d-nav-color--active);
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  &__indicator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .d-icon {
+      margin: 0;
+      font-size: var(--font-0);
+      color: inherit;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -0.2rem;
+    left: 55%;
+    display: flex;
+  }
+
+  &__count,
+  &__views .navigation-item__count {
+    min-width: 1rem;
+    padding: 0 0.3em;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-3);
+    font-weight: bold;
+    line-height: 1rem;
+    text-align: center;
+  }
+
+  @media (display-mode: standalone) {
+    padding-inline: max(
+        var(--mobile-tab-bar-side-inset),
+        env(safe-area-inset-left)
+      )
+      max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
+
+    &__create .d-icon-pencil {
+      transform: translate(-1px, -1px);
+    }
+  }
+}
+
+html.keyboard-visible .mobile-tab-bar {
+  display: none;
+}
+
+.mobile-tab-bar__more-item {
+  .d-button-label {
+    flex: 1 1 auto;
+    text-align: start;
+  }
+
+  &.--active {
+    background: var(--d-selected);
+    color: var(--d-nav-color--active);
+
+    .d-icon {
+      color: inherit;
+    }
+  }
+}
+
+.mobile-tab-bar__more-badge {
+  display: flex;
+  margin-left: auto;
+}
+
+// A collapsed composer sits on the bar rather than under it
+html.mobile-tab-bar-visible #reply-control {
+  &.draft,
+  &.saving {
+    // Above the bar's fade, which would otherwise wash over it
+    z-index: z("footer-nav") + 1;
+    bottom: calc(
+      var(--mobile-tab-bar-current-height) + var(--mobile-tab-bar-views-gap)
+    );
+    left: var(--mobile-tab-bar-side-inset);
+    right: var(--mobile-tab-bar-side-inset);
+    max-width: none;
+    margin-top: 0;
+    padding-bottom: 0;
+    border-radius: var(--mobile-tab-bar-radius);
+    box-shadow: var(--mobile-tab-bar-shadow);
+    transition:
+      height 0.2s,
+      min-height 0.2s,
+      bottom 200ms ease;
+
+    @media (display-mode: standalone) {
+      left: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-left));
+      right: max(var(--mobile-tab-bar-side-inset), env(safe-area-inset-right));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}

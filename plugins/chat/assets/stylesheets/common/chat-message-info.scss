@@ -5,7 +5,8 @@
   gap: 0.25rem;
 
   .chat-thread & {
-    &:has(.chat-message-info__original-message) {
+    &:has(.chat-message-info__original-message),
+    &:has(.chat-message-info__broadcast) {
       flex-wrap: wrap;
     }
   }
@@ -88,7 +89,7 @@
   }
 }
 
-.chat-message-info__original-message {
+@mixin chat-message-info-chip {
   @include ellipsis;
   display: flex;
   align-items: center;
@@ -131,5 +132,17 @@
   &__text,
   &__text:visited {
     color: var(--primary);
+  }
+}
+
+.chat-message-info__original-message {
+  @include chat-message-info-chip;
+}
+
+.chat-message-info__broadcast {
+  @include chat-message-info-chip;
+
+  .d-icon {
+    color: var(--tertiary);
   }
 }

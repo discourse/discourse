@@ -145,7 +145,7 @@ Sources: [the interactive styleguide](https://meta.discourse.org/styleguide/orga
 
 ### CSS
 
-Use the `.d-modal` classes as an achor to override core, and avoid the legacy `.modal selector.
+Use the `.d-modal` classes as an anchor to override core, and avoid the legacy `.modal selector.
 
 4 modifiers available:
 

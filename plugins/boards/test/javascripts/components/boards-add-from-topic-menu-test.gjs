@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   findAll,
@@ -48,7 +49,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       });
     });
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     const renderPromise = render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -84,7 +85,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       })
     );
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     await render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -118,7 +119,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       })
     );
 
-    this.set("data", { topic: { id: 1 } });
+    this.data = { topic: { id: 1 } };
 
     await render(
       <template><BoardsAddFromTopicMenu @data={{this.data}} /></template>
@@ -142,7 +143,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
   });
 
   test("groups columns by topic membership", async function (assert) {
-    this.set("data", {
+    const data = tracked({
       board: Board.create(
         board(1, "Roadmap", [
           {
@@ -160,7 +161,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
 
     await render(
       <template>
-        <BoardsAddFromTopicColumnSubmenu @data={{this.data}} />
+        <BoardsAddFromTopicColumnSubmenu @data={{data.value}} />
       </template>
     );
 
@@ -168,7 +169,7 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       findAll(".dropdown-menu__subheader").map((element) =>
         element.textContent.trim()
       ),
-      ["Roadmap", "Already added"]
+      ["Add to column", "Already added"]
     );
     const [availableColumn, alreadyAddedColumn] = findAll(
       ".discourse-boards-add-from-topic-column-menu__column"
@@ -194,19 +195,19 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
     assert.dom(".d-button__suffix-icon", availableColumn).doesNotExist();
     assert.dom(".d-button__suffix-icon", alreadyAddedColumn).exists();
 
-    this.set("data", {
+    data.value = {
       board: Board.create(
         board(1, "Roadmap", [{ id: 12, title: "Next", icon: "clock" }])
       ),
       topic: { id: 1 },
-    });
+    };
     await settled();
 
     assert.deepEqual(
       findAll(".dropdown-menu__subheader").map((element) =>
         element.textContent.trim()
       ),
-      ["Roadmap"],
+      ["Add to column"],
       "does not render an empty Already added section"
     );
   });
@@ -222,12 +223,12 @@ module("Integration | Component | BoardsAddFromTopicMenu", function (hooks) {
       return response({});
     });
 
-    this.set("data", {
+    this.data = {
       board: Board.create(
         board(1, "Roadmap", [{ id: 11, title: "Next", icon: "clock" }])
       ),
       topic: { id: 1 },
-    });
+    };
 
     await render(
       <template>

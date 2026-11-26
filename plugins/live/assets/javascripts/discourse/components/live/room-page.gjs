@@ -6,39 +6,52 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { cancel, next } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { isTesting } from "discourse/lib/environment";
 import { homepageNavigationDestination } from "discourse/lib/homepage-router-overrides";
 import discourseLater from "discourse/lib/later";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import virtualElementFromPoint from "discourse/lib/virtual-element-from-point";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import {
   toggleFullscreen,
   trackFullscreen,
+  trackFullscreenWithin,
 } from "../../lib/live/fullscreen.js";
 import { activeRingingEntries } from "../../lib/live/ringing.js";
 import { speakQueue } from "../../lib/live/speak-queue.js";
 import {
-  bestRowHeight,
-  DEFAULT_TILE_ASPECT,
+  isStageSpeaker,
+  sortStageAudience,
+} from "../../lib/live/stage-roles.js";
+import {
+  computeRoomGrid,
   trackGridSize,
 } from "../../lib/live/video-grid-layout.js";
+import watchRoom from "../../lib/live/watch-room.js";
 import LiveInviteAgentButton from "../live-invite-agent-button.gjs";
+import LiveParticipantSidebarContextMenu from "../live-participant-sidebar-context-menu.gjs";
+import LiveConnectionDiagnosticsModal from "../modal/live-connection-diagnostics.gjs";
 import LiveInviteUsersModal from "../modal/live-invite-users.gjs";
 import LiveRoomInfoModal from "../modal/live-room-info.gjs";
 import LiveCallControls from "./call-controls.gjs";
 import LiveCallSubmenu from "./call-submenu.gjs";
 import LiveCaptionOverlay from "./caption-overlay.gjs";
 import LiveChatPanel from "./chat-panel.gjs";
-import LiveRecordingBadge from "./recording-badge.gjs";
+import LiveLocalRecordingMenuItem from "./local-recording-menu-item.gjs";
+import LiveReactionOverlay from "./reaction-overlay.gjs";
+import LiveReactionPicker from "./reaction-picker.gjs";
 import LiveRingingTile from "./ringing-tile.gjs";
+import LiveRoomHeader from "./room-header.gjs";
 import LiveSpeakQueue from "./speak-queue.gjs";
-import LiveTranscriptBadge from "./transcript-badge.gjs";
 import LiveVideoTile from "./video-tile.gjs";
 
 const ROOM_MENU = "live-room-menu";
@@ -47,8 +60,35 @@ const SUBMENU = "live-call-submenu";
 const ROOM_PATH_PREFIX = "/live/r/";
 
 const MOBILE_VIDEO_TILE_BUDGET = 4;
+const LAYOUT_AUTO = "auto";
 const LAYOUT_PRESENTATION = "presentation";
 const LAYOUT_TILED = "tiled";
+const LAYOUT_VIDEO_WAIT_MS = 300;
+
+/**
+ * Resolves once every video under `element` has a frame, or after `timeout`
+ * ms, so a layout animation never flies empty tiles around.
+ */
+function videoFramesReady(element, timeout) {
+  const pending = [...element.querySelectorAll("video")].filter(
+    (video) => video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA
+  );
+  if (!pending.length) {
+    return Promise.resolve();
+  }
+
+  return Promise.race([
+    Promise.all(
+      pending.map(
+        (video) =>
+          new Promise((resolve) =>
+            video.addEventListener("loadeddata", resolve, { once: true })
+          )
+      )
+    ),
+    new Promise((resolve) => setTimeout(resolve, timeout)),
+  ]);
+}
 
 export default class LiveRoomPage extends Component {
   @service capabilities;
@@ -63,13 +103,20 @@ export default class LiveRoomPage extends Component {
   @tracked gridWidth = 0;
   @tracked gridHeight = 0;
   @tracked gridGap = 0;
-  @tracked tileAspects = new Map();
   @tracked gridFullscreen = false;
+  @tracked fullscreenWithin = false;
   // Stage rooms mirror a workshop: chat panel open, presenter featured.
   @tracked chatOpen = !!this.args.openChat || this.#isStageRoom;
   @tracked chatClosing = false;
-  @tracked layoutMode = this.#isStageRoom ? LAYOUT_PRESENTATION : LAYOUT_TILED;
+  @tracked layoutMode = LAYOUT_AUTO;
   @tracked spotlightParticipantId = null;
+
+  /**
+   * What the stage renders. It trails the resolved values so followLayout can
+   * animate from the old arrangement; the template must read these.
+   */
+  @tracked shownLayout = this.resolvedLayout;
+  @tracked shownFeaturedId = this.featuredParticipantId;
 
   // Ring windows expire by wall clock, which nothing tracked observes — a
   // coarse ticker re-evaluates them so "Calling…" tiles disappear on time.
@@ -78,6 +125,7 @@ export default class LiveRoomPage extends Component {
   gridElement = null;
   trackGridSize = trackGridSize;
   trackFullscreen = trackFullscreen;
+  trackFullscreenWithin = trackFullscreenWithin;
   #chatCloseFallback = null;
   #ringingTicker = null;
 
@@ -94,13 +142,6 @@ export default class LiveRoomPage extends Component {
     super.willDestroy(...arguments);
     clearInterval(this.#ringingTicker);
     cancel(this.#chatCloseFallback);
-    const liveWebrtc = this.liveWebrtc;
-    const roomId = this.args.room.id;
-    const keepVideo = liveWebrtc.isActiveRoom(roomId);
-
-    next(() => {
-      liveWebrtc.setWatching(roomId, false, { keepVideo });
-    });
   }
 
   get #isStageRoom() {
@@ -138,20 +179,77 @@ export default class LiveRoomPage extends Component {
     return this.room.active_participants || [];
   }
 
+  get #ownParticipant() {
+    return this.participants.find(
+      (participant) => Number(participant?.id) === this.currentUser?.id
+    );
+  }
+
+  get pendingSpeakInvitation() {
+    if (!this.joined || !this.isStageRoom) {
+      return null;
+    }
+    const own = this.#ownParticipant;
+    if (!own || isStageSpeaker(own) || !own.speak_invited_at) {
+      return null;
+    }
+    return {
+      username: own.speak_invited_by || "",
+      invitedAt: own.speak_invited_at,
+    };
+  }
+
+  get stageParticipants() {
+    if (!this.isStageRoom) {
+      return this.participants;
+    }
+    return this.participants.filter(
+      (participant) =>
+        isStageSpeaker(participant) || this.#isPublishing(participant)
+    );
+  }
+
+  get audienceParticipants() {
+    if (!this.isStageRoom) {
+      return [];
+    }
+    const listeners = this.participants.filter(
+      (participant) =>
+        !isStageSpeaker(participant) && !this.#isPublishing(participant)
+    );
+    return sortStageAudience(listeners).map((participant) => ({
+      participant,
+      isSelf: Number(participant.id) === this.currentUser?.id,
+      displayName: prioritizeNameInUx(participant.name)
+        ? participant.name
+        : participant.username,
+      handRaised: !!participant.hand_raised_at,
+      invited: !!participant.speak_invited_at,
+    }));
+  }
+
   get tiles() {
+    const stageList = this.stageParticipants;
     const budget = this.capabilities.viewport.md
       ? Infinity
       : MOBILE_VIDEO_TILE_BUDGET;
     const videoParticipantIds = new Set();
 
-    const spotlightParticipant = this.participants.find(
+    // Whoever can take the stage gets live video first, so a featured feed is
+    // never demoted to an avatar by cameras earlier in the roster.
+    const spotlightParticipant = stageList.find(
       (participant) => participant.id === this.spotlightParticipantId
     );
-    if (spotlightParticipant && this.#isPublishing(spotlightParticipant)) {
-      videoParticipantIds.add(spotlightParticipant.id);
-    }
+    const prioritized = [
+      spotlightParticipant,
+      ...this.remoteScreenSharers,
+      ...stageList,
+    ];
 
-    for (const participant of this.participants) {
+    for (const participant of prioritized) {
+      if (!participant) {
+        continue;
+      }
       if (videoParticipantIds.size >= budget) {
         break;
       }
@@ -160,7 +258,7 @@ export default class LiveRoomPage extends Component {
       }
     }
 
-    return this.participants.map((participant) => {
+    return stageList.map((participant) => {
       const isSelf = participant.id === this.currentUser?.id;
       return {
         participant,
@@ -175,9 +273,23 @@ export default class LiveRoomPage extends Component {
     return activeRingingEntries(this.room, this.ringingClock);
   }
 
-  get presentationTile() {
+  /**
+   * Excludes your own share: featuring it to yourself mirrors the screen back
+   * into itself.
+   */
+  get remoteScreenSharers() {
+    return this.participants.filter(
+      (participant) =>
+        participant.is_screen_sharing && participant.id !== this.currentUser?.id
+    );
+  }
+
+  get featuredTile() {
     return (
       this.tiles.find((tile) => tile.spotlighted) ??
+      this.tiles.find(
+        (tile) => tile.participant.is_screen_sharing && !tile.isSelf
+      ) ??
       this.tiles.find((tile) => tile.participant.is_screen_sharing) ??
       this.tiles.find((tile) => tile.showVideo && !tile.isSelf) ??
       this.tiles.find((tile) => tile.showVideo) ??
@@ -188,20 +300,87 @@ export default class LiveRoomPage extends Component {
     );
   }
 
+  get featuredParticipantId() {
+    if (this.resolvedLayout !== LAYOUT_PRESENTATION) {
+      return null;
+    }
+    return this.featuredTile?.participant.id ?? null;
+  }
+
+  /**
+   * Stays on the outgoing participant while a change waits to animate, so the
+   * stage is not swapped underneath the old view.
+   */
+  get presentationTile() {
+    return (
+      this.tiles.find((tile) => tile.participant.id === this.shownFeaturedId) ??
+      this.featuredTile
+    );
+  }
+
   get presentationRailTiles() {
     const featuredId = this.presentationTile?.participant.id;
     return this.tiles.filter((tile) => tile.participant.id !== featuredId);
   }
 
+  // In a one-to-one call your own camera is the least useful tile to you, so
+  // it floats in a corner and the other person gets the whole stage.
+  get pipTile() {
+    if (
+      !this.tiledLayout ||
+      this.tiles.length !== 2 ||
+      this.ringingEntries.length
+    ) {
+      return null;
+    }
+    return this.tiles.find((tile) => tile.isSelf) ?? null;
+  }
+
+  get gridTiles() {
+    const pipId = this.pipTile?.participant.id;
+    return this.tiles.filter((tile) => tile.participant.id !== pipId);
+  }
+
+  get autoLayout() {
+    return this.layoutMode === LAYOUT_AUTO;
+  }
+
+  /**
+   * The layout the room should show. Auto features a stage room's presenter, a
+   * pinned participant, or another participant's screen share.
+   */
+  get resolvedLayout() {
+    if (!this.autoLayout) {
+      return this.layoutMode;
+    }
+
+    if (this.#isStageRoom || this.spotlightParticipantId) {
+      return LAYOUT_PRESENTATION;
+    }
+
+    return this.remoteScreenSharers.length ? LAYOUT_PRESENTATION : LAYOUT_TILED;
+  }
+
   get tiledLayout() {
-    return this.layoutMode === LAYOUT_TILED;
+    return this.shownLayout === LAYOUT_TILED;
   }
 
   get presentationLayout() {
-    return this.layoutMode === LAYOUT_PRESENTATION;
+    return this.shownLayout === LAYOUT_PRESENTATION;
+  }
+
+  get #animatesLayout() {
+    return (
+      typeof document.startViewTransition === "function" &&
+      !isTesting() &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
   }
 
   get layoutIcon() {
+    if (this.autoLayout) {
+      return "wand-magic-sparkles";
+    }
     return this.presentationLayout ? "person-chalkboard" : "table-cells";
   }
 
@@ -221,26 +400,20 @@ export default class LiveRoomPage extends Component {
       return null;
     }
 
-    const aspects = [
-      ...this.tiles.map(
-        (tile) =>
-          this.tileAspects.get(tile.participant.id) ?? DEFAULT_TILE_ASPECT
-      ),
-      ...this.ringingEntries.map(() => DEFAULT_TILE_ASPECT),
-    ];
+    const grid = computeRoomGrid({
+      width: this.gridWidth,
+      height: this.gridHeight,
+      count: this.gridTiles.length + this.ringingEntries.length,
+      gap: this.gridGap,
+    });
 
-    const rowHeight = bestRowHeight(
-      this.gridWidth,
-      this.gridHeight,
-      aspects,
-      this.gridGap
-    );
-
-    if (rowHeight <= 0) {
+    if (!grid) {
       return null;
     }
 
-    return trustHTML(`--live-tile-height: ${rowHeight}px;`);
+    return trustHTML(
+      `--live-tile-width: ${grid.tileWidth}px; --live-tile-height: ${grid.tileHeight}px; --live-grid-line-width: ${grid.lineWidth}px;`
+    );
   }
 
   get chatAvailable() {
@@ -251,8 +424,8 @@ export default class LiveRoomPage extends Component {
     return this.chatOpen && this.joined && this.chatAvailable;
   }
 
-  get chatToggleTitle() {
-    return this.chatOpen ? i18n("live.chat.close") : i18n("live.chat.open");
+  get canOpenChat() {
+    return this.joined && this.chatAvailable && !this.chatVisible;
   }
 
   get chatRendered() {
@@ -286,17 +459,59 @@ export default class LiveRoomPage extends Component {
       : i18n("live.transcript.draft_topic");
   }
 
+  get canDiagnoseConnection() {
+    return this.liveWebrtc.canDiagnoseConnection(this.room?.id);
+  }
+
   @action
   toggleSpotlight(participantId) {
     this.spotlightParticipantId =
       this.spotlightParticipantId === participantId ? null : participantId;
-    this.layoutMode = LAYOUT_PRESENTATION;
+
+    // Auto already features a pinned participant and falls back once they are
+    // unpinned; only a fixed tiled layout needs switching.
+    if (this.layoutMode === LAYOUT_TILED) {
+      this.layoutMode = LAYOUT_PRESENTATION;
+    }
   }
 
   @action
   setLayoutMode(layoutMode) {
     this.spotlightParticipantId = null;
     this.layoutMode = layoutMode;
+  }
+
+  /**
+   * Moves the stage to the resolved layout, gliding each tile to its new spot
+   * where view transitions are supported.
+   */
+  @action
+  followLayout(element) {
+    // Re-rendering the stage would unmount whatever is fullscreen and drop the
+    // viewer out of it, so changes wait until fullscreen ends.
+    if (
+      this.fullscreenWithin ||
+      (this.shownLayout === this.resolvedLayout &&
+        this.shownFeaturedId === this.featuredParticipantId)
+    ) {
+      return;
+    }
+
+    if (!this.#animatesLayout) {
+      this.#showResolvedLayout();
+      return;
+    }
+
+    document.startViewTransition(async () => {
+      if (this.isDestroying) {
+        return;
+      }
+      // Read again: the layout may have moved on before the old view was
+      // captured.
+      this.#showResolvedLayout();
+      await new Promise((resolve) => schedule("afterRender", resolve));
+      await videoFramesReady(element, LAYOUT_VIDEO_WAIT_MS);
+    });
   }
 
   @action
@@ -345,14 +560,8 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
-  watchRoom() {
-    next(this, () => {
-      if (this.isDestroying) {
-        return;
-      }
-
-      this.liveWebrtc.setWatching(this.args.room.id, true);
-    });
+  setFullscreenWithin(isFullscreen) {
+    this.fullscreenWithin = isFullscreen;
   }
 
   @action
@@ -363,22 +572,6 @@ export default class LiveRoomPage extends Component {
   @action
   toggleGridFullscreen() {
     toggleFullscreen(this.gridElement);
-  }
-
-  @action
-  reportTileAspect(participantId, aspect) {
-    const current = this.tileAspects.get(participantId) ?? null;
-    if (current === aspect) {
-      return;
-    }
-
-    const nextAspects = new Map(this.tileAspects);
-    if (aspect) {
-      nextAspects.set(participantId, aspect);
-    } else {
-      nextAspects.delete(participantId);
-    }
-    this.tileAspects = nextAspects;
   }
 
   @action
@@ -400,6 +593,42 @@ export default class LiveRoomPage extends Component {
   @action
   leaveRoom() {
     this.liveWebrtc.leave(this.room);
+  }
+
+  @action
+  async acceptSpeakInvitation() {
+    await this.liveWebrtc.acceptSpeakInvitation(this.room.id);
+  }
+
+  @action
+  async declineSpeakInvitation() {
+    await this.liveWebrtc.declineSpeakInvitation(this.room.id);
+  }
+
+  @action
+  openAudienceMemberMenu(entry, event) {
+    if (!this.joined) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    const anchor =
+      event.type === "contextmenu"
+        ? virtualElementFromPoint(event.clientX, event.clientY)
+        : event.target.closest(".live-room-page__audience-member");
+    this.menu.show(anchor, {
+      identifier: "live-participant-menu",
+      component: LiveParticipantSidebarContextMenu,
+      placement: "top-start",
+      modalForMobile: true,
+      data: {
+        room: this.room,
+        participant: entry.participant,
+        canManageRoom: this.room?.can_manage,
+        isCurrentUser: entry.isSelf,
+      },
+    });
   }
 
   @action
@@ -425,8 +654,8 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
-  toggleChat() {
-    this.setChatOpen(!this.chatOpen);
+  openChat() {
+    this.setChatOpen(true);
   }
 
   @action
@@ -464,6 +693,14 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
+  openConnectionDiagnostics(closeMenu) {
+    closeMenu?.();
+    this.modal.show(LiveConnectionDiagnosticsModal, {
+      model: { room: this.room },
+    });
+  }
+
+  @action
   openRoomInfo(closeMenu) {
     closeMenu?.();
     this.modal.show(LiveRoomInfoModal, { model: { room: this.room } });
@@ -476,15 +713,15 @@ export default class LiveRoomPage extends Component {
   }
 
   @action
-  dockAndClose(closeMenu) {
+  toggleFullscreenFromMenu(closeMenu) {
+    this.toggleGridFullscreen();
     closeMenu?.();
-    this.dockRoom();
   }
 
   @action
-  toggleChatFromMenu(closeMenu) {
+  dockAndClose(closeMenu) {
     closeMenu?.();
-    this.toggleChat();
+    this.dockRoom();
   }
 
   @action
@@ -506,20 +743,31 @@ export default class LiveRoomPage extends Component {
       ROOM_MENU,
       [
         {
+          id: LAYOUT_AUTO,
+          label: i18n("live.video.layout_auto"),
+          icon: "wand-magic-sparkles",
+          selected: this.autoLayout,
+        },
+        {
           id: LAYOUT_PRESENTATION,
           label: i18n("live.video.layout_presentation"),
           icon: "person-chalkboard",
-          selected: this.presentationLayout,
+          selected: this.layoutMode === LAYOUT_PRESENTATION,
         },
         {
           id: LAYOUT_TILED,
           label: i18n("live.video.layout_tiled"),
           icon: "table-cells",
-          selected: this.tiledLayout,
+          selected: this.layoutMode === LAYOUT_TILED,
         },
       ],
       this.setLayoutMode
     );
+  }
+
+  #showResolvedLayout() {
+    this.shownLayout = this.resolvedLayout;
+    this.shownFeaturedId = this.featuredParticipantId;
   }
 
   #isPublishing(participant) {
@@ -560,90 +808,113 @@ export default class LiveRoomPage extends Component {
         (if this.presentationLayout "--presentation")
         (if this.tiledLayout "--tiled")
       }}
-      {{didInsert this.watchRoom}}
+      {{watchRoom this.liveWebrtc this.room.id}}
       {{didInsert this.autoJoinIfRequested}}
       {{didUpdate this.reconcileSpotlight this.participants}}
+      {{didUpdate
+        this.followLayout
+        this.resolvedLayout
+        this.featuredParticipantId
+        this.fullscreenWithin
+      }}
+      {{this.trackFullscreenWithin this.setFullscreenWithin}}
     >
-      <div class="live-room-page__body">
-        <div class="live-room-page__main">
-          <header class="live-room-page__header">
-            <div class="live-room-page__title-row">
-              <h1 class="live-room-page__title">{{this.room.name}}</h1>
-              <LiveRecordingBadge @room={{this.room}} />
-              <LiveTranscriptBadge @room={{this.room}} />
+
+      <div class="live-room-page__main">
+        <LiveRoomHeader
+          @canOpenChat={{this.canOpenChat}}
+          @onOpenChat={{this.openChat}}
+          @room={{this.room}}
+        />
+
+        <div class="live-room-page__stage">
+          {{#if this.pendingSpeakInvitation}}
+            <div class="live-room-page__stage-invite" role="status">
+              <span class="live-room-page__stage-invite-text">
+                {{dIcon "microphone"}}
+                {{i18n
+                  "live.stage.invited_to_speak_banner"
+                  username=this.pendingSpeakInvitation.username
+                }}
+              </span>
+              <div class="live-room-page__stage-invite-actions">
+                <DButton
+                  class="btn-primary btn-small live-room-page__stage-invite-accept"
+                  @action={{this.acceptSpeakInvitation}}
+                  @icon="microphone"
+                  @label="live.stage.join_stage"
+                />
+                <DButton
+                  class="btn-default btn-small live-room-page__stage-invite-decline"
+                  @action={{this.declineSpeakInvitation}}
+                  @label="live.stage.decline_invitation"
+                />
+              </div>
             </div>
-            {{#if this.room.description_excerpt}}
-              <p class="live-room-page__description">
-                {{this.room.description_excerpt}}
-              </p>
-            {{/if}}
-          </header>
-
-          <div class="live-room-page__stage">
-            {{#if this.tiles.length}}
-              {{#if this.presentationLayout}}
-                <div class="live-room-page__presentation">
-                  <div class="live-room-page__presentation-main">
-                    <LiveVideoTile
-                      @isSelf={{this.presentationTile.isSelf}}
-                      @onAspect={{this.reportTileAspect}}
-                      @onSpotlight={{this.toggleSpotlight}}
-                      @participant={{this.presentationTile.participant}}
-                      @room={{this.room}}
-                      @showVideo={{this.presentationTile.showVideo}}
-                      @spotlighted={{this.presentationTile.spotlighted}}
-                    />
-                  </div>
-
-                  {{#if
-                    (or
-                      this.presentationRailTiles.length
-                      this.ringingEntries.length
-                    )
-                  }}
-                    <div class="live-room-page__presentation-rail">
-                      {{#each
-                        this.presentationRailTiles key="participant.id"
-                        as |tile|
-                      }}
-                        <LiveVideoTile
-                          @isSelf={{tile.isSelf}}
-                          @onAspect={{this.reportTileAspect}}
-                          @onSpotlight={{this.toggleSpotlight}}
-                          @participant={{tile.participant}}
-                          @room={{this.room}}
-                          @showVideo={{tile.showVideo}}
-                          @spotlighted={{tile.spotlighted}}
-                        />
-                      {{/each}}
-                      {{#each this.ringingEntries key="user.id" as |entry|}}
-                        <LiveRingingTile @user={{entry.user}} />
-                      {{/each}}
-                    </div>
-                  {{/if}}
+          {{/if}}
+          {{#if this.tiles.length}}
+            {{#if this.presentationLayout}}
+              <div class="live-room-page__presentation">
+                <div class="live-room-page__presentation-main">
+                  <LiveVideoTile
+                    @animatesLayout={{true}}
+                    @isSelf={{this.presentationTile.isSelf}}
+                    @onSpotlight={{this.toggleSpotlight}}
+                    @participant={{this.presentationTile.participant}}
+                    @room={{this.room}}
+                    @showVideo={{this.presentationTile.showVideo}}
+                    @spotlighted={{this.presentationTile.spotlighted}}
+                  />
                 </div>
-              {{else}}
-                <div
-                  class="live-room-page__grid"
-                  style={{this.gridStyle}}
-                  {{didInsert this.registerGrid}}
-                  {{this.trackGridSize this.updateGridSize}}
-                  {{this.trackFullscreen this.setGridFullscreen}}
-                >
-                  <button
-                    aria-label={{this.gridFullscreenTitle}}
-                    class="btn btn-icon no-text live-room-page__fullscreen"
-                    title={{this.gridFullscreenTitle}}
-                    type="button"
-                    {{on "click" this.toggleGridFullscreen}}
-                  >
-                    {{dIcon (if this.gridFullscreen "compress" "expand")}}
-                  </button>
 
-                  {{#each this.tiles key="participant.id" as |tile|}}
+                {{#if
+                  (or
+                    this.presentationRailTiles.length this.ringingEntries.length
+                  )
+                }}
+                  <div class="live-room-page__presentation-rail">
+                    {{#each
+                      this.presentationRailTiles key="participant.id"
+                      as |tile|
+                    }}
+                      <LiveVideoTile
+                        @animatesLayout={{true}}
+                        @isSelf={{tile.isSelf}}
+                        @onSpotlight={{this.toggleSpotlight}}
+                        @participant={{tile.participant}}
+                        @room={{this.room}}
+                        @showVideo={{tile.showVideo}}
+                        @spotlighted={{tile.spotlighted}}
+                      />
+                    {{/each}}
+                    {{#each this.ringingEntries key="user.id" as |entry|}}
+                      <LiveRingingTile @user={{entry.user}} />
+                    {{/each}}
+                  </div>
+                {{/if}}
+              </div>
+            {{else}}
+              <div
+                class="live-room-page__grid"
+                style={{this.gridStyle}}
+                {{didInsert this.registerGrid}}
+                {{this.trackGridSize this.updateGridSize}}
+                {{this.trackFullscreen this.setGridFullscreen}}
+              >
+                {{#if this.gridFullscreen}}
+                  <DButton
+                    class="btn-icon no-text live-room-page__fullscreen"
+                    @action={{this.toggleGridFullscreen}}
+                    @icon="discourse-compress"
+                    @translatedAriaLabel={{this.gridFullscreenTitle}}
+                    @translatedTitle={{this.gridFullscreenTitle}}
+                  />
+                {{/if}}
+                <div class="live-room-page__tiles">
+                  {{#each this.gridTiles key="participant.id" as |tile|}}
                     <LiveVideoTile
+                      @animatesLayout={{true}}
                       @isSelf={{tile.isSelf}}
-                      @onAspect={{this.reportTileAspect}}
                       @onSpotlight={{this.toggleSpotlight}}
                       @participant={{tile.participant}}
                       @room={{this.room}}
@@ -655,178 +926,264 @@ export default class LiveRoomPage extends Component {
                     <LiveRingingTile @user={{entry.user}} />
                   {{/each}}
                 </div>
-              {{/if}}
-            {{else}}
-              <div class="live-room-page__empty">
-                {{i18n "live.room_page.empty"}}
+                {{#if this.pipTile}}
+                  <LiveVideoTile
+                    class="live-room-page__pip"
+                    @animatesLayout={{true}}
+                    @isSelf={{this.pipTile.isSelf}}
+                    @onSpotlight={{this.toggleSpotlight}}
+                    @participant={{this.pipTile.participant}}
+                    @room={{this.room}}
+                    @showVideo={{this.pipTile.showVideo}}
+                    @spotlighted={{this.pipTile.spotlighted}}
+                  />
+                {{/if}}
               </div>
             {{/if}}
-            {{#if this.joined}}
-              <LiveCaptionOverlay @room={{this.room}} />
-            {{/if}}
-
-            <footer class="live-room-page__controls">
-              {{#if this.joined}}
-                <LiveCallControls @room={{this.room}} />
-                {{#if this.isStageRoom}}
-                  <DMenu
-                    @ariaLabel={{i18n "live.stage.queue_title"}}
-                    @identifier="live-speak-queue-menu"
-                    @modalForMobile={{true}}
-                    @placement="top-end"
-                    @title={{i18n "live.stage.queue_title"}}
-                    @triggerClass="btn-default live-speak-queue-trigger"
+          {{else if this.audienceParticipants.length}}
+            <div class="live-room-page__stage-empty">
+              {{i18n "live.stage.stage_empty"}}
+            </div>
+          {{else}}
+            <div class="live-room-page__empty">
+              {{i18n "live.room_page.empty"}}
+            </div>
+          {{/if}}
+          {{#if this.audienceParticipants.length}}
+            <section
+              aria-label={{i18n "live.stage.audience"}}
+              class="live-room-page__audience"
+            >
+              <div class="live-room-page__audience-header">
+                <span class="live-room-page__audience-title">
+                  {{i18n
+                    "live.stage.audience_count"
+                    count=this.audienceParticipants.length
+                  }}
+                </span>
+              </div>
+              <div class="live-room-page__audience-list">
+                {{#each
+                  this.audienceParticipants key="participant.id"
+                  as |entry|
+                }}
+                  <DButton
+                    class={{dConcatClass
+                      "btn-transparent live-room-page__audience-member"
+                      (if entry.isSelf "--self")
+                      (if entry.handRaised "--hand-raised")
+                      (if entry.invited "--invited")
+                    }}
+                    data-user-id={{entry.participant.id}}
+                    @action={{this.openAudienceMemberMenu}}
+                    @actionParam={{entry}}
+                    @disabled={{not this.joined}}
+                    @forwardEvent={{true}}
+                    {{on "contextmenu" (fn this.openAudienceMemberMenu entry)}}
                   >
-                    <:trigger>
-                      {{dIcon "list-ol"}}
-                      {{#if this.speakQueueCount}}
-                        <span
-                          class="live-speak-queue-trigger__count"
-                        >{{this.speakQueueCount}}</span>
-                      {{/if}}
-                    </:trigger>
-                    <:content>
-                      <LiveSpeakQueue @room={{this.room}} />
-                    </:content>
-                  </DMenu>
-                {{/if}}
+                    {{dAvatar entry.participant imageSize="small"}}
+                    <span
+                      class="live-room-page__audience-name"
+                    >{{entry.displayName}}</span>
+                    {{#if entry.handRaised}}
+                      {{dIcon
+                        "hand"
+                        class="live-room-page__audience-hand"
+                        title="live.participant.status_hand_raised"
+                      }}
+                    {{/if}}
+                    {{#if entry.invited}}
+                      <span class="live-room-page__audience-invited-badge">
+                        {{i18n "live.stage.invited_badge"}}
+                      </span>
+                    {{/if}}
+                  </DButton>
+                {{/each}}
+              </div>
+            </section>
+          {{/if}}
+          {{#if this.joined}}
+            <LiveCaptionOverlay @room={{this.room}} />
+            <LiveReactionOverlay @room={{this.room}} />
+          {{/if}}
+
+          <footer class="live-room-page__controls">
+            {{#if this.joined}}
+              <LiveCallControls @room={{this.room}} />
+              <LiveReactionPicker @room={{this.room}} />
+              {{#if this.isStageRoom}}
                 <DMenu
-                  @ariaLabel={{i18n "live.room.more"}}
-                  @icon="ellipsis-vertical"
-                  @identifier="live-room-menu"
+                  @ariaLabel={{i18n "live.stage.queue_title"}}
+                  @identifier="live-speak-queue-menu"
                   @modalForMobile={{true}}
                   @placement="top-end"
-                  @title={{i18n "live.room.more"}}
-                  @triggerClass="btn-default"
+                  @title={{i18n "live.stage.queue_title"}}
+                  @triggerClass="btn-default live-speak-queue-trigger"
                 >
-                  <:content as |roomMenu|>
-                    <DDropdownMenu as |dropdown|>
-                      <LiveInviteAgentButton
-                        @closeMenu={{roomMenu.close}}
-                        @item={{dropdown.item}}
-                        @room={{this.room}}
-                      />
-                      {{#if this.chatAvailable}}
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent"
-                            @action={{fn
-                              this.toggleChatFromMenu
-                              roomMenu.close
-                            }}
-                            @icon={{if
-                              this.chatVisible
-                              "comment-slash"
-                              "far-comment"
-                            }}
-                            @translatedLabel={{this.chatToggleTitle}}
-                          />
-                        </dropdown.item>
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent live-room-page__layout-trigger"
-                          @action={{this.openLayoutMenu}}
-                          @forwardEvent={{true}}
-                          @icon={{this.layoutIcon}}
-                          @label="live.room.layout"
-                          @suffixIcon="angle-right"
-                        />
-                      </dropdown.item>
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent"
-                          @action={{fn this.dockAndClose roomMenu.close}}
-                          @icon="compress"
-                          @label="live.room.widget_mode"
-                        />
-                      </dropdown.item>
-                      {{#if this.room.can_invite}}
-                        <dropdown.item>
-                          <DButton
-                            class="btn-transparent"
-                            @action={{fn this.openInviteModal roomMenu.close}}
-                            @icon="user-plus"
-                            @label="live.invite.menu"
-                          />
-                        </dropdown.item>
-                      {{/if}}
-                      {{#if this.transcriptAvailable}}
-                        <dropdown.item>
-                          <DButton
-                            class={{dConcatClass
-                              "btn-transparent live-room-page__transcript-toggle"
-                              (if this.transcribing "--recording")
-                            }}
-                            @action={{fn
-                              this.toggleTranscriptFromMenu
-                              roomMenu.close
-                            }}
-                            @icon={{if
-                              this.transcribing
-                              "stop"
-                              "closed-captioning"
-                            }}
-                            @translatedLabel={{this.transcriptToggleTitle}}
-                          />
-                        </dropdown.item>
-                        {{#if this.transcriptDraftable}}
-                          <dropdown.item>
-                            <DButton
-                              class="btn-transparent live-room-page__transcript-draft"
-                              @action={{fn
-                                this.draftTranscriptTopic
-                                roomMenu.close
-                              }}
-                              @icon="far-file-lines"
-                              @translatedLabel={{this.transcriptDraftLabel}}
-                            />
-                          </dropdown.item>
-                        {{/if}}
-                      {{/if}}
-                      <dropdown.item>
-                        <DButton
-                          class="btn-transparent"
-                          @action={{fn this.openRoomInfo roomMenu.close}}
-                          @icon="circle-info"
-                          @label="live.room.info"
-                        />
-                      </dropdown.item>
-                    </DDropdownMenu>
+                  <:trigger>
+                    {{dIcon "list-ol"}}
+                    {{#if this.speakQueueCount}}
+                      <span
+                        class="live-speak-queue-trigger__count"
+                      >{{this.speakQueueCount}}</span>
+                    {{/if}}
+                  </:trigger>
+                  <:content>
+                    <LiveSpeakQueue @room={{this.room}} />
                   </:content>
                 </DMenu>
-                <DButton
-                  class="btn-danger live-room-page__leave"
-                  @action={{this.leaveRoom}}
-                  @icon="phone-slash"
-                  @label="live.room.leave"
-                />
-              {{else}}
-                <DButton
-                  class="btn-primary live-room-page__join"
-                  @action={{this.joinRoom}}
-                  @disabled={{this.connecting}}
-                  @icon="phone"
-                  @isLoading={{this.connecting}}
-                  @label="live.room.join"
-                />
               {{/if}}
-            </footer>
-          </div>
+              <DMenu
+                @ariaLabel={{i18n "live.room.more"}}
+                @icon="ellipsis-vertical"
+                @identifier="live-room-menu"
+                @modalForMobile={{true}}
+                @placement="top-end"
+                @title={{i18n "live.room.more"}}
+                @triggerClass="btn-default"
+              >
+                <:content as |roomMenu|>
+                  <DDropdownMenu as |dropdown|>
+                    <LiveInviteAgentButton
+                      @closeMenu={{roomMenu.close}}
+                      @item={{dropdown.item}}
+                      @room={{this.room}}
+                    />
+                    <LiveLocalRecordingMenuItem
+                      @closeMenu={{roomMenu.close}}
+                      @item={{dropdown.item}}
+                      @room={{this.room}}
+                    />
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent live-room-page__layout-trigger"
+                        @action={{this.openLayoutMenu}}
+                        @forwardEvent={{true}}
+                        @icon={{this.layoutIcon}}
+                        @label="live.room.layout"
+                        @suffixIcon="angle-right"
+                      />
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.dockAndClose roomMenu.close}}
+                        @icon="picture-in-picture"
+                        @label="live.room.widget_mode"
+                      />
+                    </dropdown.item>
+                    {{#if (and this.tiledLayout this.tiles.length)}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent live-room-page__fullscreen-trigger"
+                          @icon="discourse-expand"
+                          @translatedLabel={{this.gridFullscreenTitle}}
+                          {{on
+                            "click"
+                            (fn this.toggleFullscreenFromMenu roomMenu.close)
+                          }}
+                        />
+                      </dropdown.item>
+                    {{/if}}
+                    {{#if this.room.can_invite}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent"
+                          @action={{fn this.openInviteModal roomMenu.close}}
+                          @icon="user-plus"
+                          @label="live.invite.menu"
+                        />
+                      </dropdown.item>
+                    {{/if}}
+                    {{#if this.transcriptAvailable}}
+                      <dropdown.item>
+                        <DButton
+                          class={{dConcatClass
+                            "btn-transparent live-room-page__transcript-toggle"
+                            (if this.transcribing "--recording")
+                          }}
+                          @action={{fn
+                            this.toggleTranscriptFromMenu
+                            roomMenu.close
+                          }}
+                          @icon={{if
+                            this.transcribing
+                            "stop"
+                            "closed-captioning"
+                          }}
+                          @translatedLabel={{this.transcriptToggleTitle}}
+                        />
+                      </dropdown.item>
+                      {{#if this.transcriptDraftable}}
+                        <dropdown.item>
+                          <DButton
+                            class="btn-transparent live-room-page__transcript-draft"
+                            @action={{fn
+                              this.draftTranscriptTopic
+                              roomMenu.close
+                            }}
+                            @icon="far-file-lines"
+                            @translatedLabel={{this.transcriptDraftLabel}}
+                          />
+                        </dropdown.item>
+                      {{/if}}
+                    {{/if}}
+                    {{#if this.canDiagnoseConnection}}
+                      <dropdown.item>
+                        <DButton
+                          class="btn-transparent live-connection-diagnostics-trigger"
+                          @action={{fn
+                            this.openConnectionDiagnostics
+                            roomMenu.close
+                          }}
+                          @icon="stethoscope"
+                          @label="live.connection_diagnostics.menu"
+                        />
+                      </dropdown.item>
+                    {{/if}}
+                    <dropdown.item>
+                      <DButton
+                        class="btn-transparent"
+                        @action={{fn this.openRoomInfo roomMenu.close}}
+                        @icon="circle-info"
+                        @label="live.room.info"
+                      />
+                    </dropdown.item>
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
+              <DButton
+                class="btn-danger live-room-page__leave"
+                @action={{this.leaveRoom}}
+                @icon="phone-slash"
+                @label="live.room.leave"
+              />
+            {{else}}
+              <DButton
+                class="btn-primary live-room-page__join"
+                @action={{this.joinRoom}}
+                @disabled={{this.connecting}}
+                @icon="phone"
+                @isLoading={{this.connecting}}
+                @label="live.room.join"
+              />
+            {{/if}}
+          </footer>
         </div>
-
-        {{#if this.chatRendered}}
-          <aside
-            class={{dConcatClass
-              "live-room-page__sidebar"
-              (if this.chatClosing "--closing")
-            }}
-            {{on "animationend" this.chatAnimationEnded}}
-          >
-            <LiveChatPanel @onClose={{this.closeChat}} @room={{this.room}} />
-          </aside>
-        {{/if}}
       </div>
+
+      {{#if this.chatRendered}}
+        <aside
+          class={{dConcatClass
+            "chat-side-panel"
+            (if this.chatClosing "--closing")
+          }}
+          {{on "animationend" this.chatAnimationEnded}}
+        >
+          <LiveChatPanel @onClose={{this.closeChat}} @room={{this.room}} />
+        </aside>
+      {{/if}}
+
     </section>
   </template>
 }

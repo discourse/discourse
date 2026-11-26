@@ -25,6 +25,9 @@ vi:
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Phát hiện rác rưởi"
       navigation:
         settings:
           title: "Cài đặt trang web"
@@ -65,11 +68,14 @@ vi:
           text_color: "màu chữ"
         approve_label: "Đồng ý"
         reject_label: "Không"
+        category_access_levels:
+          readonly: "Xem"
       agents:
         smart_dates:
           name: "Ngày thông minh"
       tool_summary:
         create_category: "Tạo chuyên mục"
+        delete_category: "Xóa chuyên mục"
         search: "Tìm kiếm"
         time: "Thời gian"
         summarize: "Tóm tắt"
@@ -98,6 +104,12 @@ vi:
       edit_category:
         errors:
           not_found: "Không tìm thấy chuyên mục."
+      set_category_permissions:
+        errors:
+          not_found: "Không tìm thấy chuyên mục."
+      delete_category:
+        errors:
+          not_found: "Không tìm thấy chuyên mục."
       change_topic_category:
         errors:
           not_found: "Không tìm thấy chủ đề."
@@ -114,6 +126,18 @@ vi:
       assign:
         errors:
           not_found: "Không tìm thấy chủ đề."
+    appearance_authoring:
+      default_theme: "Theme mặc định"
+      colors:
+        light:
+          header_background: "Header"
+      fonts:
+        base_font: "Phông chữ"
+        heading_font: "Phông chữ tiêu đề"
+    mcp_theme_access:
+      none: "không có gì"
+    mcp_app_setup:
+      none: "không có gì"
     reviewables:
       ai_tool_action:
         approve:

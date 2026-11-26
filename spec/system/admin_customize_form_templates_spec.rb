@@ -2,7 +2,7 @@
 
 describe "Admin Customize Form Templates" do
   let(:form_template_page) { PageObjects::Pages::FormTemplate.new }
-  let(:ace_editor) { PageObjects::Components::AceEditor.new }
+  let(:code_editor) { PageObjects::Components::CodeEditor.new }
 
   fab!(:admin)
   fab!(:form_template)
@@ -16,31 +16,20 @@ describe "Admin Customize Form Templates" do
   describe "when visiting the page to customize form templates" do
     before { category.update!(form_template_ids: [form_template.id]) }
 
-    it "shows existing form templates in a table" do
+    it "shows the template and the categories using it" do
       form_template_page.visit
 
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_form_template(form_template.name)
-    end
-
-    it "shows the categories using each form template" do
-      form_template_page.visit
-
-      expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_category_in_template_row(category.name)
     end
 
-    it "shows the form-template structure in a modal" do
+    it "shows the template structure and lets the admin switch to its preview" do
       form_template_page.visit
 
       form_template_page.click_view_form_template
       expect(form_template_page).to have_template_structure("- type: input")
-    end
 
-    it "shows a template preview when the preview is toggled" do
-      form_template_page.visit
-
-      form_template_page.click_view_form_template
       form_template_page.click_toggle_preview
       expect(form_template_page).to have_input_field("input")
     end
@@ -69,7 +58,7 @@ describe "Admin Customize Form Templates" do
     it "prefills the form data" do
       visit("/admin/customize/form-templates/#{form_template.id}")
       expect(form_template_page).to have_name_value(form_template.name)
-      expect(ace_editor).to have_content(form_template.template)
+      expect(code_editor).to have_value(form_template.template)
     end
   end
 
@@ -77,7 +66,7 @@ describe "Admin Customize Form Templates" do
     form_template_page.visit_new
     form_template_page.type_in_template_name("New Template")
     form_template_page.click_quick_insert(field_type)
-    expect(ace_editor).to have_text(content)
+    expect(code_editor).to have_value_including(content)
   end
 
   describe "when visiting the page to create a new form template" do
@@ -88,26 +77,23 @@ describe "Admin Customize Form Templates" do
       sample_template = "- type: input\n  id: name"
 
       form_template_page.type_in_template_name(sample_name)
-      ace_editor.type_input(sample_template)
+      code_editor.type_input(sample_template)
       form_template_page.click_save_button
       expect(form_template_page).to have_form_template(sample_name)
     end
 
-    it "disables saving until the form is complete" do
+    it "keeps Save and Preview disabled until the form is complete" do
       form_template_page.visit_new
-      expect(form_template_page).to have_save_button_with_state(disabled: true)
-      form_template_page.type_in_template_name("New Template")
-      expect(form_template_page).to have_save_button_with_state(disabled: true)
-      ace_editor.type_input("- type: input")
-      expect(form_template_page).to have_save_button_with_state(disabled: false)
-    end
 
-    it "disables previewing until the form is complete" do
-      form_template_page.visit_new
+      expect(form_template_page).to have_save_button_with_state(disabled: true)
       expect(form_template_page).to have_preview_button_with_state(disabled: true)
+
       form_template_page.type_in_template_name("New Template")
+      expect(form_template_page).to have_save_button_with_state(disabled: true)
       expect(form_template_page).to have_preview_button_with_state(disabled: true)
-      ace_editor.type_input("- type: input")
+
+      code_editor.type_input("- type: input")
+      expect(form_template_page).to have_save_button_with_state(disabled: false)
       expect(form_template_page).to have_preview_button_with_state(disabled: false)
     end
 
@@ -124,7 +110,7 @@ describe "Admin Customize Form Templates" do
       sample_template = "- type: input\n  id: name"
 
       form_template_page.type_in_template_name(sample_name)
-      ace_editor.type_input(sample_template)
+      code_editor.type_input(sample_template)
 
       form_template_page.click_preview_button
       expect(form_template_page).to have_preview_modal
@@ -139,7 +125,7 @@ describe "Admin Customize Form Templates" do
     it "shows the template preview from the preview button" do
       form_template_page.visit_new
       form_template_page.type_in_template_name("New Template")
-      ace_editor.type_input("- type: input\n  id: name")
+      code_editor.type_input("- type: input\n  id: name")
       form_template_page.click_preview_button
 
       expect(form_template_page).to have_preview_modal
@@ -171,7 +157,7 @@ describe "Admin Customize Form Templates" do
           tag_group: "#{tag_group.name}"
       YAML
 
-      ace_editor.type_input(template)
+      code_editor.type_input(template)
       form_template_page.click_preview_button
 
       YAML

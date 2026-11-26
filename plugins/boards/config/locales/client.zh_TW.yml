@@ -37,7 +37,8 @@ zh_TW:
         unassign_from_topic: "取消 @%{username} 的主題指派"
         unassign_from_post: "取消 @%{username} 對 #%{post_number} 的指派"
         edit_assignments: "編輯指派…"
-        created_by: "創建者"
+        owners:
+          other: "所有者"
       manage:
         name: "名稱"
         slug: "縮寫"
@@ -49,10 +50,10 @@ zh_TW:
           column_title: "標題"
           icon: "圖標"
           color: "顏色"
+          color_palette: "色彩調色盤"
+          icon_search_placeholder: "搜尋…"
           default_sort_priority: "優先級"
           tag: "標簽"
           move_to_assigned_unassign: "取消指派"
           move_to_status_open: "開放"
           move_to_status_closed: "已關閉"
-          show_advanced: "顯示高級選項"
-          hide_advanced: "隱藏高級選項"

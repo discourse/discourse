@@ -100,5 +100,19 @@ module("Integration | Component | FloatKit | DToast", function (hooks) {
         "5000",
         "it `converts `long` to 5000ms"
       );
+
+    toast = new DToastInstance(getOwner(this), {
+      duration: "extra-long",
+      data: { message: "test" },
+    });
+    await render(<template><DToast @toast={{toast}} /></template>);
+
+    assert
+      .dom(".fk-d-toast")
+      .hasAttribute(
+        "data-test-duration",
+        "15000",
+        "it converts `extra-long` to 15000ms"
+      );
   });
 });

@@ -50,6 +50,8 @@ hy:
           color: "գույն"
         approve_label: "Այո"
         reject_label: "Ոչ"
+        category_access_levels:
+          readonly: "Դիտել"
       tool_summary:
         search: "Որոնում"
         time: "Ժամ"
@@ -70,6 +72,12 @@ hy:
       edit_category:
         errors:
           not_found: "Կատեգորիան չի գտնվել."
+      set_category_permissions:
+        errors:
+          not_found: "Կատեգորիան չի գտնվել."
+      delete_category:
+        errors:
+          not_found: "Կատեգորիան չի գտնվել."
       change_topic_category:
         errors:
           not_found: "Թեման չի գտնվել."
@@ -86,6 +94,14 @@ hy:
       assign:
         errors:
           not_found: "Թեման չի գտնվել."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Վերնամաս"
+    mcp_theme_access:
+      none: "ոչ մեկը"
+    mcp_app_setup:
+      none: "ոչ մեկը"
     reviewables:
       ai_tool_action:
         approve:

@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import PostEventBuilder from "discourse/plugins/discourse-events/discourse/components/modal/post-event-builder";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-events/discourse/models/discourse-post-event-event";
@@ -56,6 +57,61 @@ module("Integration | Component | Modal | PostEventBuilder", function (hooks) {
     getOwner(this).register("service:current-user", this.user, {
       instantiate: false,
     });
+  });
+
+  test("reminder edits persist in advanced settings and the saved event", async function (assert) {
+    const event = eventWith({
+      reminders: [
+        { type: "notification", value: 15, unit: "minutes", period: "before" },
+        { type: "notification", value: 30, unit: "minutes", period: "before" },
+      ],
+    });
+    let savedEvent;
+    await renderAdvanced(event, {
+      onUpdate: (startsAt, endsAt, updatedEvent) => {
+        savedEvent = updatedEvent;
+      },
+    });
+
+    await fillIn('[data-name="reminders.1.value"] input', "2");
+    assert
+      .dom('[data-name="reminders.1.value"] input')
+      .hasValue("2", "the number does not reset");
+
+    await formKit().field("reminders.1.unit").select("hours");
+    assert
+      .dom('[data-name="reminders.1.unit"] select')
+      .hasValue("hours", "the unit does not reset");
+
+    await fillIn('[data-name="location"] input', "Sydney");
+    assert
+      .dom('[data-name="reminders.1.value"] input')
+      .hasValue("2", "the number survives another field edit");
+    assert
+      .dom('[data-name="reminders.1.unit"] select')
+      .hasValue("hours", "the unit survives another field edit");
+
+    await click(".btn-primary");
+    assert.strictEqual(
+      Number(savedEvent.reminders[1].value),
+      2,
+      "saves the edited number"
+    );
+    assert.strictEqual(
+      savedEvent.reminders[1].unit,
+      "hours",
+      "saves the edited unit"
+    );
+    assert.strictEqual(
+      Number(savedEvent.reminders[0].value),
+      15,
+      "leaves the other reminder unchanged"
+    );
+    assert.strictEqual(
+      savedEvent.reminders[0].unit,
+      "minutes",
+      "leaves the other unit unchanged"
+    );
   });
 
   test("advanced screen renders an existing image upload as its URL", async function (assert) {

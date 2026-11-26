@@ -420,11 +420,6 @@ RSpec.describe OptimizedImage do
       context "when the thumbnail is properly generated" do
         before { OptimizedImage.expects(:resize).returns(true) }
 
-        it "does not download a copy of the original image" do
-          store.expects(:download).never
-          OptimizedImage.create_for(upload, 100, 200)
-        end
-
         it "closes and removes the tempfile" do
           Tempfile.any_instance.expects(:close!)
           OptimizedImage.create_for(upload, 100, 200)
@@ -520,7 +515,7 @@ class FakeInternalStore
     false
   end
 
-  def path_for(upload)
+  def download(upload)
     upload.url
   end
 

@@ -65,7 +65,7 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-      list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
+      list = build_topic_query(list_opts).public_send("list_#{filter}")
 
       if guardian.can_create_shared_draft? && @category.present?
         if @category.id == SiteSetting.shared_drafts_category.to_i
@@ -120,7 +120,7 @@ class ListController < ApplicationController
     end
 
     define_method("category_#{filter}") do
-      canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
+      canonical_list_url(@category.url)
       public_send(filter, category: @category.id)
     end
 
@@ -140,8 +140,7 @@ class ListController < ApplicationController
       end
     end
 
-    user = current_user
-    list = TopicQuery.new(user, topic_query_opts).list_filter
+    list = build_topic_query(topic_query_opts).list_filter
     list.more_topics_url = construct_url_with(:next, topic_query_opts)
     list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
 
@@ -149,7 +148,7 @@ class ListController < ApplicationController
   end
 
   def category_default
-    canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
+    canonical_list_url(@category.url)
     public_send(category_default_view, category: @category.id)
   end
 
@@ -339,8 +338,7 @@ class ListController < ApplicationController
       top_options[:per_page] = top_options[:per_page].presence ||
         SiteSetting.topics_per_period_in_top_page
 
-      user = current_user
-      list = TopicQuery.new(user, top_options).list_top_for(period)
+      list = build_topic_query(top_options).list_top_for(period)
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
@@ -409,7 +407,7 @@ class ListController < ApplicationController
   end
 
   def topic_query(user = current_user, opts = {})
-    TopicQuery.new(user, build_topic_list_options.merge(opts))
+    build_topic_query(build_topic_list_options.merge(opts), user:)
   end
 
   def filtered_topic_list_url(base_url, extra_params = {})
@@ -469,15 +467,10 @@ class ListController < ApplicationController
     end
     real_slug = @category.full_slug("/")
     if CGI.unescape(current_slug) != CGI.unescape(real_slug)
-      path = CGI.unescape(request.path)
-      query = request.query_string
-      new_path = path.gsub(current_slug, real_slug)
-      url = query.present? ? "#{new_path}?#{query}" : new_path
-      if ActionController::Base.config.relative_url_root
-        url = url.sub(ActionController::Base.config.relative_url_root, "")
-      end
-
-      return redirect_to path(url), status: :moved_permanently
+      return(
+        redirect_to category_redirect_url(category_slug_path_with_id, real_slug),
+                    status: :moved_permanently
+      )
     end
 
     @description_meta =
@@ -492,8 +485,25 @@ class ListController < ApplicationController
     end
   end
 
+  # The canonical URL of the category, keeping whatever followed the slug path
+  # in the request (such as "/l/latest" or ".json") and the query string.
+  #
+  # `canonical_slug_path` comes from `Category#url` and is already encoded. It
+  # is used rather than substituting into the request path: with encoded slugs
+  # the decoded path contains raw non-ASCII characters, which Rails refuses to
+  # redirect to.
+  def category_redirect_url(requested_slug_path, canonical_slug_path)
+    requested_prefix = "/c/#{requested_slug_path}"
+    path_info = UrlHelper.unencode(request.path_info)
+    rest = path_info.start_with?(requested_prefix) ? path_info.delete_prefix(requested_prefix) : ""
+
+    url = "#{Discourse.base_path}/c/#{canonical_slug_path}#{rest}"
+    url = "#{url}?#{request.query_string}" if request.query_string.present?
+    url
+  end
+
   def generate_list_for(action, target_user, opts)
-    TopicQuery.new(current_user, opts).public_send("list_#{action}", target_user)
+    build_topic_query(opts).public_send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix = nil)

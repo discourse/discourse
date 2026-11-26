@@ -210,20 +210,21 @@ export default class InitialOptions extends Component {
                 @suggestionKeyword={{this.contextTypeKeyword}}
                 @withInLabel={{this.withInLabel}}
               />
+            {{/if}}
 
-              {{#if
-                (and
-                  this.currentUser
-                  this.siteSettings.log_search_queries
-                  this.displayInitialOptions
-                )
-              }}
-                <RecentSearches
-                  @closeSearchMenu={{@closeSearchMenu}}
-                  @location={{@location}}
-                  @searchTermChanged={{@searchTermChanged}}
-                />
-              {{/if}}
+            {{! history is not a shortcut, so dropping the shortcuts keeps it }}
+            {{#if
+              (and
+                this.currentUser
+                this.siteSettings.log_search_queries
+                this.displayInitialOptions
+              )
+            }}
+              <RecentSearches
+                @closeSearchMenu={{@closeSearchMenu}}
+                @location={{@location}}
+                @searchTermChanged={{@searchTermChanged}}
+              />
             {{/if}}
           {{else}}
             <RandomQuickTip

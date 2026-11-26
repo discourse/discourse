@@ -111,8 +111,8 @@ class Middleware::RequestTracker
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
       elsif data[:is_embed]
-        # Embed pageviews are counted in the browser/beacon branches below so
-        # community-traffic counters stay unpolluted by iframe traffic.
+        # Embed pageviews are counted from beacons below so community-traffic
+        # counters stay unpolluted by iframe traffic.
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
@@ -124,25 +124,15 @@ class Middleware::RequestTracker
 
     if tracks_browser_page_view?(data)
       if data[:is_embed]
-        ApplicationRequest.increment!(:page_view_embed) if data[:is_beacon]
-      elsif data[:is_beacon]
-        if data[:has_auth_cookie]
-          ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
-          if data[:is_mobile]
-            ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
-          end
-        else
-          ApplicationRequest.increment!(:page_view_anon_browser_beacon)
-          ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
+        ApplicationRequest.increment!(:page_view_embed)
+      elsif data[:has_auth_cookie]
+        ApplicationRequest.increment!(:page_view_logged_in_browser_beacon)
+        if data[:is_mobile]
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile_beacon)
         end
       else
-        if data[:has_auth_cookie]
-          ApplicationRequest.increment!(:page_view_logged_in_browser)
-          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
-        else
-          ApplicationRequest.increment!(:page_view_anon_browser)
-          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
-        end
+        ApplicationRequest.increment!(:page_view_anon_browser_beacon)
+        ApplicationRequest.increment!(:page_view_anon_browser_mobile_beacon) if data[:is_mobile]
       end
 
       if data[:topic_id].present? && (!data[:has_auth_cookie] || data[:current_user_id].present?) &&
@@ -285,7 +275,6 @@ class Middleware::RequestTracker
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
-        headers["X-Discourse-BrowserPageView"] = "1" if data[:browser_page_view]
       end
 
       if @@detailed_request_loggers
@@ -300,12 +289,6 @@ class Middleware::RequestTracker
     result = nil
     info = nil
     gc_stat_timing = nil
-
-    # Doing this before the app.call will allow us to have this data available
-    # in the MessageBus middleware to add headers in the 004-message_bus.rb initializer.
-    if !env["discourse.request_tracker.skip"]
-      env["discourse.view_tracking_data"] = self.class.extract_view_tracking_data(env, nil, nil)
-    end
 
     request = Rack::Request.new(env)
     cookie = find_auth_cookie(env)
@@ -358,11 +341,6 @@ class Middleware::RequestTracker
         env["discourse.request_tracker.skip"] = true
         result = [403, {}, []]
       end
-      return result
-    end
-
-    if self.class.is_pageview_tracking_request?(request)
-      result = [204, {}, []]
       return result
     end
 
@@ -580,51 +558,25 @@ class Middleware::RequestTracker
 
   def self.extract_view_tracking_data(env, status, headers)
     request = Rack::Request.new(env)
-    status ||= 200
-    headers ||= {}
+    if is_beacon_tracking_request?(request)
+      return extract_beacon_view_tracking_data(env, accepted: status == 204)
+    end
 
-    return extract_beacon_view_tracking_data(env) if is_beacon_tracking_request?(request)
-
-    is_html_request = headers["Content-Type"]&.include?("text/html")
-    is_ajax_request = request.xhr?
-
-    # This Discourse-Track-View request header is set in `lib/ajax.js`,
-    # whenever the user navigates between Ember routes, to indicate a
-    # browser page view.
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
-    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
 
-    # An HTML response to a GET request is tracked implicitly, these do
-    # not count as browser page views but they do count as legacy page views.
-    implicit_track_view =
-      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !is_ajax_request &&
-        is_html_request
+    # Tabs loaded before the beacon carried `navigation` still flag in-app
+    # navigations with this header.
+    # TODO(01-2027): Remove
+    previous_release_navigation = status == 200 && %w[1 true].include?(env_track_view)
 
-    env_deferred_track_view = env["HTTP_DISCOURSE_TRACK_VIEW_DEFERRED"]
-    deferred_track_view =
-      %w[1 true].include?(env_deferred_track_view) && !is_pageview_tracking_request?(request)
+    # An HTML response to a GET request counts as a legacy page view.
+    track_view =
+      previous_release_navigation ||
+        (
+          status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
+            headers["Content-Type"]&.include?("text/html")
+        )
 
-    # This only indicates that we are tracking a page view of some kind, not
-    # using an API key. In #log_request is where we are determining which
-    # of these count as browser page views.
-    #
-    # Explicit and implicit page views count as legacy page views. Explicit,
-    # deferred, and beacon page views count as browser page views (BPVs).
-    #
-    # If this is true, then the X-Discourse-TrackView header is included in
-    # the response.
-    track_view = !!(explicit_track_view || implicit_track_view)
-    browser_page_view = !!(explicit_track_view || deferred_track_view)
-
-    topic_id = env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]&.to_i
-    tracking_url = env["HTTP_DISCOURSE_TRACK_VIEW_URL"]&.slice(0, MAX_URL_LENGTH)
-    tracking_referrer = env["HTTP_DISCOURSE_TRACK_VIEW_REFERRER"]&.slice(0, MAX_URL_LENGTH)
-    tracking_session_id =
-      env["HTTP_DISCOURSE_TRACK_VIEW_SESSION_ID"]&.slice(0, MAX_SESSION_ID_LENGTH)
-    user_agent = env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH)
-
-    # An embedded pageview is either an initial HTML load carrying `?embed_mode=true`,
-    # or a subsequent XHR from inside the embed iframe which sets the header below.
     # Use `request.GET` (query-string only) rather than `request.params` so a missing
     # or malformed request body cannot raise from here.
     embed_mode_param =
@@ -639,17 +591,10 @@ class Middleware::RequestTracker
       embed_mode_param == "true" || %w[1 true].include?(env["HTTP_DISCOURSE_TRACK_VIEW_EMBED"])
 
     {
-      track_view: track_view,
-      explicit_track_view: explicit_track_view,
-      deferred_track_view: deferred_track_view,
-      implicit_track_view: implicit_track_view,
-      browser_page_view: browser_page_view,
-      is_embed: is_embed,
-      topic_id: topic_id,
-      tracking_url: tracking_url,
-      tracking_referrer: tracking_referrer,
-      tracking_session_id: tracking_session_id,
-      user_agent: user_agent,
+      track_view: !!track_view,
+      browser_page_view: false,
+      is_embed:,
+      user_agent: env["HTTP_USER_AGENT"]&.slice(0, MAX_USER_AGENT_LENGTH),
     }
   end
 
@@ -658,7 +603,7 @@ class Middleware::RequestTracker
     return false if data[:is_crawler]
     return true if data[:has_auth_cookie]
     return false if SiteSetting.login_required
-    return false if data[:is_beacon] && CrawlerDetection.crawler_ip?(data[:request_remote_ip])
+    return false if CrawlerDetection.crawler_ip?(data[:request_remote_ip])
     true
   end
 
@@ -666,19 +611,14 @@ class Middleware::RequestTracker
     request.post? && request.path == Discourse.beacon_pv_tracking_path
   end
 
-  def self.is_pageview_tracking_request?(request)
-    request.post? && request.path == "#{Discourse.base_path}/pageview"
-  end
-
   def self.same_origin_request?(request)
     origin = request.get_header("HTTP_ORIGIN").presence || request.referer.presence
     return false if origin.blank?
 
-    canonical_uri = URI.parse(Discourse.base_url_no_prefix)
-    origin_uri = URI.parse(origin)
-
-    canonical_uri.scheme == origin_uri.scheme && canonical_uri.host == origin_uri.host &&
-      canonical_uri.port == origin_uri.port
+    # Only the host is compared because sites behind a TLS-terminating proxy
+    # can have an http base URL while browsers send an https Origin.
+    origin_host = URI.parse(origin).host
+    origin_host.present? && origin_host.casecmp?(URI.parse(Discourse.base_url_no_prefix).host)
   rescue URI::Error
     false
   end
@@ -727,7 +667,7 @@ class Middleware::RequestTracker
   end
   private_class_method :read_json_body
 
-  def self.extract_beacon_view_tracking_data(env)
+  def self.extract_beacon_view_tracking_data(env, accepted:)
     data = read_json_body(env) || {}
 
     topic_id = data["topic_id"]&.to_i
@@ -744,11 +684,10 @@ class Middleware::RequestTracker
     is_embed = data["embed"] == true
 
     {
-      track_view: false,
-      explicit_track_view: false,
-      implicit_track_view: false,
-      browser_page_view: true,
-      is_beacon: true,
+      # The initial load is already counted by its HTML response, so only
+      # in-app navigations count as legacy page views.
+      track_view: accepted && data["navigation"] == true,
+      browser_page_view: accepted,
       is_embed: is_embed,
       topic_id: topic_id,
       tracking_url: tracking_url,
@@ -761,7 +700,6 @@ class Middleware::RequestTracker
   private_class_method :extract_beacon_view_tracking_data
 
   def self.track_browser_pageview(data)
-    return if !data[:is_beacon]
     return if !tracks_browser_page_view?(data)
 
     payload = build_browser_pageview_event_payload(data)
@@ -828,7 +766,7 @@ class Middleware::RequestTracker
   private
 
   def instrument_browser_page_view(env, request, data)
-    return unless data[:is_beacon]
+    return unless data[:browser_page_view]
     return unless DiscourseLograge.enabled?
     return unless self.class.bpv_notifications_enabled
 

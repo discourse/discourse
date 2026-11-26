@@ -54,8 +54,6 @@ export default class Nested extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked cloakAbove = 0;
-  @tracked cloakBelow = 0;
   @tracked focusDirection = "forward";
   @tracked focusedPath = [];
 
@@ -69,6 +67,7 @@ export default class Nested extends Component {
   #nextTimer = null;
   #retryTimer = null;
   #highlightTimer = null;
+  #highlightedPost = null;
   #lastScrollKey = null;
   #lastRestoredScrollY = null;
   #activeScrollAnchorKey = null;
@@ -156,7 +155,7 @@ export default class Nested extends Component {
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
     this.#cancelScrollRestoration();
-    clearTimeout(this.#highlightTimer);
+    this.#clearTargetHighlight();
     this.persistScrollAnchor();
     window.removeEventListener("popstate", this.#onPopstate);
     window.removeEventListener("scroll", this.#onScroll);
@@ -273,12 +272,6 @@ export default class Nested extends Component {
 
   postLevelScrollAnchor(anchor) {
     return Number.isFinite(anchor?.scrollY) ? null : anchor;
-  }
-
-  @action
-  setCloakingBoundaries(above, below) {
-    this.cloakAbove = above;
-    this.cloakBelow = below;
   }
 
   @action
@@ -747,6 +740,13 @@ export default class Nested extends Component {
     return current === target;
   }
 
+  #clearTargetHighlight() {
+    clearTimeout(this.#highlightTimer);
+    this.#highlightTimer = null;
+    this.#highlightedPost?.removeAttribute("data-highlighted");
+    this.#highlightedPost = null;
+  }
+
   #scheduleTargetScroll({ force = false } = {}) {
     if (!this.args.targetPostNumber || this.isMobileFocused) {
       return;
@@ -760,7 +760,7 @@ export default class Nested extends Component {
     this.#lastScrollKey = scrollKey;
     cancel(this.#nextTimer);
     cancel(this.#retryTimer);
-    clearTimeout(this.#highlightTimer);
+    this.#clearTargetHighlight();
     this.#scrollAttempts = 0;
     this.#nextTimer = next(this, this.#scrollToTarget);
   }
@@ -776,11 +776,15 @@ export default class Nested extends Component {
     );
 
     if (target) {
+      // Flush highlight removal so reusing this element starts a new animation.
+      const rect = target.getBoundingClientRect();
       const postEl = target.closest(".nested-post");
       if (postEl) {
-        postEl.classList.add("nested-post--highlighted");
+        // Glimmer owns the wrapper class and can overwrite it during rerenders.
+        postEl.setAttribute("data-highlighted", "");
+        this.#highlightedPost = postEl;
         this.#highlightTimer = setTimeout(
-          () => postEl.classList.remove("nested-post--highlighted"),
+          () => this.#clearTargetHighlight(),
           2000
         );
       }
@@ -791,7 +795,6 @@ export default class Nested extends Component {
       const banner = document.querySelector(
         ".nested-context-view > .nested-context-view__banner"
       );
-      const rect = target.getBoundingClientRect();
       window.scrollTo({
         top:
           window.scrollY +
@@ -841,7 +844,6 @@ export default class Nested extends Component {
         eyeline=false
         headerOffset=this.header.headerOffset
         screenTrack=this.screenTrack
-        setCloakingBoundaries=this.setCloakingBoundaries
         topicId=@topic.id
       }}
     >
@@ -928,8 +930,6 @@ export default class Nested extends Component {
                 @changeNotice={{@changeNotice}}
                 @changePostOwner={{@changePostOwner}}
                 @children={{focusedNode.children}}
-                @cloakAbove={{this.cloakAbove}}
-                @cloakBelow={{this.cloakBelow}}
                 @collapseFromDepth={{this.collapseFromDepth}}
                 @deletePost={{@deletePost}}
                 @depth={{0}}
@@ -1068,8 +1068,6 @@ export default class Nested extends Component {
               @changeNotice={{@changeNotice}}
               @changePostOwner={{@changePostOwner}}
               @children={{node.children}}
-              @cloakAbove={{this.cloakAbove}}
-              @cloakBelow={{this.cloakBelow}}
               @collapseFromDepth={{this.collapseFromDepth}}
               @deletePost={{@deletePost}}
               @depth={{0}}
@@ -1124,6 +1122,11 @@ export default class Nested extends Component {
         />
       {{/if}}
 
+      <PluginOutlet
+        @connectorTagName="div"
+        @name="topic-footer-presence"
+        @outletArgs={{lazyHash model=@topic}}
+      />
       <PluginOutlet
         @connectorTagName="div"
         @name="topic-above-footer-buttons"

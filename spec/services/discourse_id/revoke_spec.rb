@@ -81,13 +81,30 @@ RSpec.describe DiscourseId::Revoke do
       it { is_expected.to fail_to_find_a_model(:associated_account) }
     end
 
+    context "when account registration is incomplete" do
+      before { uaa.update!(user: nil) }
+
+      it { is_expected.to run_successfully }
+    end
+
     context "when everything is ok" do
       before { UserAuthToken.generate!(user_id: user.id) }
 
       it { is_expected.to run_successfully }
 
-      it "destroys user auth tokens" do
+      it "revokes sessions, linked shadow keys, and push subscriptions" do
+        shadow = Fabricate(:user)
+        user.anonymous_user_shadows.create!(user: shadow, active: true)
+        shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+        shadow_key = Fabricate(:user_api_key, user: shadow)
+        master_key = Fabricate(:user_api_key, user:)
+        Fabricate(:push_subscription, user:)
+
         expect { result }.to change { UserAuthToken.where(user_id: user.id).count }.by(-1)
+        expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+        expect(shadow_key.reload.revoked_at).to be_present
+        expect(master_key.reload.revoked_at).to be_nil
+        expect(user.push_subscriptions).to be_empty
       end
     end
   end

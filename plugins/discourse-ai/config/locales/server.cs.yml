@@ -13,8 +13,6 @@ cs:
       presets:
         image_generation_custom:
           name: "Přizpůsobené"
-        image_generation_openai:
-          name: "OpenAI"
     ai_helper:
       prompts:
         translate: Přeložit do %{language}
@@ -25,6 +23,8 @@ cs:
         illustrate_post: "Ilustrovat příspěvek"
         replace_dates: "Chytré datumy"
     ai_bot:
+      sources:
+        spam_detection: "Detekce spamu"
       navigation:
         settings:
           title: "Nastavení webu"
@@ -71,6 +71,8 @@ cs:
           text_color: "barva textu"
         approve_label: "Ano"
         reject_label: "Ne"
+        category_access_levels:
+          readonly: "Prohlížet"
       agents:
         custom_prompt:
           name: "Vlastní pokyn"
@@ -83,6 +85,7 @@ cs:
         silence_user: "Ztišit uživatele"
         edit_post: "Upravit příspěvek"
         create_category: "Vytvořit kategorii"
+        delete_category: "Smazat kategorii"
         move_posts: "Přesunout příspěvky"
         search: "Vyhledávání"
         tags: "Seznam značek"
@@ -109,6 +112,12 @@ cs:
       edit_category:
         errors:
           not_found: "Kategorie nebyla nalezena."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
+      delete_category:
+        errors:
+          not_found: "Kategorie nebyla nalezena."
       change_topic_category:
         errors:
           not_found: "Téma nenalezeno."
@@ -125,6 +134,22 @@ cs:
       assign:
         errors:
           not_found: "Téma nenalezeno."
+    appearance_authoring:
+      component_on: "Zapnuto"
+      component_off: "Vypnuto"
+      default_theme: "Výchozí motiv"
+      colors:
+        light:
+          header_background: "Hlavička"
+      fonts:
+        base_font: "Písmo obsahu"
+        heading_font: "Písmo nadpisů"
+    mcp_theme_access:
+      "on": "Zapnuto"
+      "off": "Vypnuto"
+      none: "žádný"
+    mcp_app_setup:
+      none: "žádný"
     reviewables:
       ai_tool_action:
         approve:

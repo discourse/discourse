@@ -58,6 +58,7 @@ export default class ChatChannel {
   @tracked title;
   @tracked slug;
   @tracked description;
+  @tracked emoji;
   @tracked status;
   @tracked activeThread;
   @tracked meta;
@@ -220,10 +221,6 @@ export default class ChatChannel {
 
   get displayTitle() {
     return this.unicodeTitle ?? this.title;
-  }
-
-  get escapedDescription() {
-    return escapeExpression(this.description?.trim());
   }
 
   get slugifiedTitle() {

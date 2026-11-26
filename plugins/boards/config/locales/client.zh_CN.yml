@@ -129,7 +129,8 @@ zh_CN:
         constraint_fix_tags: "添加看板标签"
         constraint_fix_confirm: "移动和更新"
         constraint_tooltip: "本看板中只允许有这些类别和标签的主题。"
-        created_by: "创建者"
+        owners:
+          other: "所有者"
         show_older_cards: "显示 %{count} 旧卡片"
         errors:
           category_unavailable: "该目标类别已不再可用。请在创建主题前更新看板或列设置。"
@@ -188,6 +189,8 @@ zh_CN:
           column_title_required: "列标题或标签名称为必填项"
           icon: "图标"
           color: "颜色"
+          color_palette: "调色板"
+          icon_search_placeholder: "搜索…"
           default_sort: "默认排序"
           default_sort_priority: "优先级"
           default_sort_recency: "最近"
@@ -202,8 +205,6 @@ zh_CN:
           move_to_status_none: "不要改变"
           move_to_status_open: "已打开"
           move_to_status_closed: "已关闭"
-          show_advanced: "显示高级选项"
-          hide_advanced: "隐藏高级选项"
     keyboard_shortcuts_help:
       boards:
         title: "看板"

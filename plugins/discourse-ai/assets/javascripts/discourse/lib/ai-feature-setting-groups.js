@@ -42,6 +42,18 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  review_queue: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.review_queue.setting_groups.settings",
+      settings: [
+        "ai_reviewable_action_suggestions_enabled",
+        "ai_reviewable_action_decision_model",
+        "ai_reviewable_action_min_confidence",
+      ],
+    },
+  ],
+
   image_caption: [
     {
       key: "settings",
@@ -136,6 +148,31 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  sentiment: [
+    ...["sentiment", "emotion"].map((type) => ({
+      key: type,
+      titleKey: `discourse_ai.features.sentiment.setting_groups.${type}`,
+      settings: [
+        type === "sentiment"
+          ? "ai_sentiment_enabled"
+          : "ai_sentiment_emotion_enabled",
+        `ai_sentiment_${type}_classification_strategy`,
+        `ai_sentiment_${type}_agent`,
+        `ai_sentiment_${type}_decision_model`,
+      ],
+    })),
+    {
+      key: "background_processing",
+      titleKey:
+        "discourse_ai.features.sentiment.setting_groups.background_processing",
+      descriptionKey: "discourse_ai.features.sentiment.background_description",
+      settings: [
+        "ai_sentiment_backfill_maximum_posts_per_hour",
+        "ai_sentiment_backfill_post_max_age_days",
+      ],
+    },
+  ],
+
   summarization: [
     {
       key: "settings",
@@ -202,39 +239,6 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
-  translation: [
-    {
-      key: "settings",
-      titleKey: "discourse_ai.features.translation.setting_groups.settings",
-      settings: ["ai_translation_enabled"],
-    },
-    {
-      key: "agents",
-      titleKey: "discourse_ai.features.translation.setting_groups.agents",
-      settings: [
-        "ai_translation_locale_detector_agent",
-        "ai_translation_post_raw_translator_agent",
-        "ai_translation_topic_title_translator_agent",
-        "ai_translation_short_text_translator_agent",
-      ],
-    },
-    {
-      key: "backfill_and_limits",
-      titleKey:
-        "discourse_ai.features.translation.setting_groups.backfill_and_limits",
-      settings: [
-        "ai_translation_backfill_hourly_rate",
-        "ai_translation_category_scope",
-        "ai_translation_categories",
-        "ai_translation_personal_messages",
-        "ai_translation_include_bot_content",
-        "ai_translation_backfill_start_date",
-
-        "ai_translation_verbose_logs",
-      ],
-    },
-  ],
-
   discord: [
     {
       key: "settings",
@@ -261,18 +265,30 @@ export const AI_FEATURE_SETTING_GROUPS = {
     {
       key: "settings",
       titleKey: "discourse_ai.features.inference.setting_groups.settings",
-      settings: ["inferred_concepts_enabled"],
+      settings: [
+        "inferred_concepts_enabled",
+        "inferred_concepts_lookback_days",
+      ],
+    },
+    {
+      key: "seeding_and_backfill",
+      titleKey:
+        "discourse_ai.features.inference.setting_groups.seeding_and_backfill",
+      settings: [
+        "inferred_concepts_seed_topics_limit",
+        "inferred_concepts_backfill_maximum_topics_per_hour",
+        "inferred_concepts_backfill_max_age_days",
+        "inferred_concepts_backfill_minimum_word_count",
+      ],
     },
     {
       key: "topic_criteria",
       titleKey: "discourse_ai.features.inference.setting_groups.topic_criteria",
       settings: [
-        "inferred_concepts_background_match",
         "inferred_concepts_daily_topics_limit",
         "inferred_concepts_min_posts",
         "inferred_concepts_min_likes",
         "inferred_concepts_min_views",
-        "inferred_concepts_lookback_days",
       ],
     },
     {
@@ -289,6 +305,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
       settings: [
         "inferred_concepts_generate_agent",
         "inferred_concepts_match_agent",
+        "inferred_concepts_match_decision_model",
         "inferred_concepts_deduplicate_agent",
       ],
     },

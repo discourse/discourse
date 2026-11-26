@@ -34,6 +34,9 @@ gl:
           title: "Sistema de tipos de letra"
         colors:
           title: "Cores"
+        design_variables:
+          type: "Tipo"
+          default: "Predeterminado"
         icons:
           title: "Iconas"
           full_list: "Vexa a listaxe completa das iconas dos tipos de letra"

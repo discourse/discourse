@@ -7,7 +7,13 @@ export function hasPendingBeaconRequests() {
   return _pendingBeaconRequests > 0;
 }
 
-export function sendBeaconPageview({ sessionId, url, referrer, topicId }) {
+export function sendBeaconPageview({
+  sessionId,
+  url,
+  referrer,
+  topicId,
+  navigation,
+}) {
   if (!sessionId) {
     return;
   }
@@ -20,6 +26,9 @@ export function sendBeaconPageview({ sessionId, url, referrer, topicId }) {
   };
   if (topicId) {
     body.topic_id = topicId;
+  }
+  if (navigation) {
+    body.navigation = true;
   }
   if (EmbedMode.enabled) {
     body.embed = true;

@@ -49,6 +49,30 @@ export default class AiDiscobotDiscoveries extends Component {
     }
   });
 
+  trackResultClicks = modifier((element) => {
+    const results = element.closest(".results");
+    const onResultChosen = (event) => {
+      if (event.type === "keydown" && event.key !== "Enter") {
+        return;
+      }
+      const link = event.target.closest?.(
+        "a.search-link, .ai-search-answer a:not(.ai-search-answer__ask-community)"
+      );
+      if (link) {
+        this.aiSearchSession.recordResultClick(this.term);
+      }
+    };
+
+    // captured because a result's own handlers navigate and close the menu first
+    const options = { capture: true };
+    results?.addEventListener("click", onResultChosen, options);
+    results?.addEventListener("keydown", onResultChosen, options);
+    return () => {
+      results?.removeEventListener("click", onResultChosen, options);
+      results?.removeEventListener("keydown", onResultChosen, options);
+    };
+  });
+
   followScope = modifier((element, [scope]) => {
     const timer = next(() => this.aiSearchSession.updateContextScope(scope));
     return () => cancel(timer);
@@ -104,6 +128,7 @@ export default class AiDiscobotDiscoveries extends Component {
         {{this.connectMenu}}
         {{this.followScope this.currentScope}}
         {{this.guardResults this.search.results}}
+        {{this.trackResultClicks}}
       ></span>
       {{#if this.searched}}
         <AiSearchTabs />

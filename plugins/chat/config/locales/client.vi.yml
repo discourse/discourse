@@ -37,8 +37,6 @@ vi:
         confirm:
           other: "Bạn có chắc chắn muốn xoá %{count} tin nhắn không vậy?"
       channel_settings:
-        edit: "Sửa"
-        add: "Thêm"
         notification_settings_context: "Thông báo"
         join: "Tham gia"
         leave: "Rời nhóm"
@@ -135,16 +133,17 @@ vi:
       search_view:
         filter_placeholder: Tìm tin nhắn
       about_view:
-        title: Tiêu đề
         name: Tên
         description: Mô tả
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
           members: Thành viên kênh
+          preferences: Thiết lập
           settings: Cài đặt
           search: Tìm kiếm
         remove_member: "Xóa"
+        members_title: "%{channel} thành viên"
       new_message_modal:
         title: Gửi tin nhắn
         user_search_placeholder: "...thêm thành viên"
@@ -192,6 +191,7 @@ vi:
       settings:
         follow: "Tham gia"
         followed: "Đã tham gia"
+        muted_until_hint: "đến %{until}"
         threading_enabled: "Đã bật"
         threading_disabled: "Vô hiệu hóa"
         notifications: "Thông báo"
@@ -199,8 +199,6 @@ vi:
         save: "Lưu lại"
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
-        admin_title: "Quản trị"
-        settings_title: "Cài đặt"
         category_label: "Chuyên mục"
         history_label: "Lịch sử"
         members_label: "Các thành viên"
@@ -246,19 +244,6 @@ vi:
       flags:
         illegal: "Tút này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
         notify_moderators: "Thông báo này yêu cầu BQT chú ý vì một lý do khác không được liệt kê ở trên."
-      emoji_picker:
-        favorites: "Được sử dụng gần đây"
-        smileys_&_emotion: "Mặt cười và cảm xúc"
-        objects: "Vật thể"
-        people_&_body: "Con người và cơ thể"
-        travel_&_places: "Du lịch và địa điểm"
-        animals_&_nature: "Động vật và thiên nhiên"
-        food_&_drink: "Đồ ăn và thức uống"
-        activities: "Hoạt động"
-        flags: "Lá cờ"
-        symbols: "Ký hiệu"
-        search_placeholder: "Tìm theo tên emoji và viết tắt..."
-        no_results: "Không có kết quả"
       thread:
         title: "Tiêu đề"
         replies:

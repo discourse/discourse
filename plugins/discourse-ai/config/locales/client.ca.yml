@@ -38,12 +38,23 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      review_bulk:
+        refresh: "Actualitza"
+        columns:
+          user: "Usuari"
+          created: "Creat"
+          status: "Estat"
       copied: "Copiat"
       ai_decoded_transcript:
         type: "Tipus"
         error: "Error"
         response: "Reacció"
+      post_image_captions:
+        image_descriptions:
+          apply: "Aplica"
       discourse_workflows:
+        ai_tool:
+          list_item: "Element de llista"
         classify:
           text: "Text"
           upload_ids: "Imatges"
@@ -61,20 +72,26 @@ ca:
       llm_selector:
         none: "Cap"
       features:
-        disabled: "(desactivat)"
-        groups: "Grups:"
+        table:
+          status: "Estat"
+          enabled: "Activat"
+          groups: "Grups"
+        chatbot:
+          places:
+            none: "No disponible"
         no_groups: "Cap"
         edit: "Configuració"
-        expand_list:
-          one: "(%{count} més)"
-          other: "(%{count} més)"
         nav:
           enabled: "Activat"
         filters:
-          all: "Tots"
           reset: "Restableix"
+        sentiment:
+          enabled: "Activat"
         search:
           name: "Cerca"
+        review_queue:
+          setting_groups:
+            settings: "Configuració"
         image_caption:
           setting_groups:
             settings: "Configuració"
@@ -84,7 +101,17 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
+          ai_translation_personal_messages:
+            choices:
+              none: "Cap"
+              all: "Tots"
+          content_localization_language_switcher:
+            choices:
+              none: "Ningú"
+              all: "Tothom"
         model_progress:
           detail:
             columns:
@@ -99,6 +126,8 @@ ca:
               title: "Categories"
             tag:
               title: "Etiquetes"
+        admin_actions:
+          enabled: "Activat"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -115,6 +144,8 @@ ca:
             other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
+        no_llm_selected: "Cap"
+        no_decision_model_selected: "Cap"
         last_seven_days: "Els darrers 7 dies"
         enable: "Activa"
         test_modal:
@@ -202,6 +233,28 @@ ca:
         edit: "Edita"
         delete: "Suprimeix"
         embedding: "Incrustant"
+      concepts:
+        edit: "Edita"
+        seed:
+          refresh: "Actualitza"
+        delete: "Suprimeix"
+        columns:
+          status: "Estat"
+          topics: "Temes"
+          posts: "Publicacions"
+        statuses:
+          active: "Actiu"
+        form:
+          name: "Nom"
+          description: "Descripció"
+          status: "Estat"
+        shared_topics_count:
+          one: "%{count} tema"
+          other: "%{count} temes"
+        tagged_topics: "Temes etiquetats"
+        topic_columns:
+          topic: "Tema"
+          relevance: "Importància"
       decision_models:
         no_preset: "Cap"
         display_name: "Nom"

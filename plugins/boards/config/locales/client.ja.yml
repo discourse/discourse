@@ -38,7 +38,8 @@ ja:
         unassign_from_topic: "トピックから @%{username} の割り当てを解除"
         unassign_from_post: "#%{post_number} から @%{username} の割り当てを解除"
         edit_assignments: "割り当てを編集..."
-        created_by: "作成者"
+        owners:
+          other: "オーナー"
       manage:
         name: "名前"
         slug: "スラッグ"
@@ -50,6 +51,8 @@ ja:
           column_title: "タイトル"
           icon: "アイコン"
           color: "色"
+          color_palette: "色パレット"
+          icon_search_placeholder: "検索…"
           default_sort_priority: "優先度"
           tag: "タグ"
           move_to_assigned_unassign: "割り当て解除"

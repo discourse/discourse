@@ -4,6 +4,13 @@ import {
   convertIconClass,
   iconElement,
   iconHTML,
+  isExistingIconId,
+  registerIconRenderer,
+  renderIcon,
+  replaceIcon,
+  REPLACEMENTS,
+  setIconList,
+  SVG_NAMESPACE,
 } from "discourse/lib/icon-library";
 
 module("Unit | Utility | icon-library", function (hooks) {
@@ -57,5 +64,83 @@ module("Unit | Utility | icon-library", function (hooks) {
       "aria-label": "<script>alert(1)",
     });
     assert.true(html.includes("aria-label='&lt;script&gt;alert(1)'"));
+  });
+
+  test("iconHTML renders the label, title and extra class", function (assert) {
+    const html = iconHTML("bars", {
+      class: "gadget",
+      label: "Menu",
+      title: "cancel",
+      "aria-label": "Open menu",
+    });
+
+    assert.strictEqual(
+      html,
+      `<span class="svg-icon-title" title="Cancel"><svg class='fa d-icon d-icon-bars svg-icon fa-width-auto gadget svg-string' width='1em' height='1em' aria-hidden='false' aria-label='Open menu' xmlns="${SVG_NAMESPACE}"><use href="#bars" /></svg><span class="sr-only">Menu</span></span>`
+    );
+  });
+
+  test("iconElement wraps the icon in a title span", function (assert) {
+    const icon = iconElement("bars", { title: "Menu" });
+
+    assert.strictEqual(icon.tagName, "SPAN");
+    assert.strictEqual(icon.getAttribute("title"), "Menu");
+    assert.strictEqual(icon.firstChild.namespaceURI, SVG_NAMESPACE);
+    assert.strictEqual(icon.firstChild.getAttribute("aria-hidden"), "true");
+    assert.strictEqual(icon.querySelector("use").getAttribute("href"), "#bars");
+  });
+
+  test("replaceIcon renders the destination icon", function (assert) {
+    try {
+      replaceIcon("gadget-source", "heart");
+
+      assert.true(iconHTML("gadget-source").includes('href="#heart"'));
+      assert.true(
+        iconHTML("gadget-source").includes("d-icon-gadget-source"),
+        "keeps the source id for the class"
+      );
+    } finally {
+      delete REPLACEMENTS["gadget-source"];
+    }
+  });
+
+  test("renderIcon picks the renderer for the render type", function (assert) {
+    assert.strictEqual(renderIcon("string", "bars"), iconHTML("bars"));
+    assert.strictEqual(
+      renderIcon("gadget-type", "bars"),
+      undefined,
+      "nothing when no renderer handles the type"
+    );
+  });
+
+  test("registerIconRenderer runs before the earlier renderers", function (assert) {
+    registerIconRenderer({
+      name: "gizmo",
+      string(icon, params) {
+        if (icon.id === "gizmo-icon") {
+          return `gizmo:${icon.replacementId}:${params.class}`;
+        }
+      },
+    });
+
+    assert.strictEqual(
+      iconHTML("gizmo-icon", { class: "big" }),
+      "gizmo:undefined:big"
+    );
+    assert.true(
+      iconHTML("bars").includes('href="#bars"'),
+      "falls through when the renderer returns nothing"
+    );
+  });
+
+  test("isExistingIconId checks the icon list", function (assert) {
+    try {
+      setIconList(["bars", "heart"]);
+
+      assert.true(isExistingIconId("bars"));
+      assert.false(isExistingIconId("gizmo-icon"));
+    } finally {
+      setIconList([]);
+    }
   });
 });

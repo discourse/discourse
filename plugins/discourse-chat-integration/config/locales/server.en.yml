@@ -116,6 +116,7 @@ en:
   dashboard:
     problem:
       channel_errors: "Some chat integration channels have errors. Visit <a href='%{base_path}/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more."
+      telegram_webhook_secret_missing: "Telegram slash commands stopped working because the Telegram access token changed or chat integration was disabled. Disable the Telegram provider and set it up again in <a href='%{base_path}/admin/plugins/discourse-chat-integration'>the chat integration section</a>."
 
   discourse_automation:
     scriptables:

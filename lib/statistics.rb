@@ -93,13 +93,16 @@ class Statistics
     periods
       .map do |(period, key)|
         anon_page_views =
-          ApplicationRequest.browser_pageview_count_for_period(:page_view_anon_browser, period)
+          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser_beacon, period)
 
         logged_in_visitors = logged_in_visitors_count(period)
         next key, anon_page_views if logged_in_visitors == 0
 
         logged_in_page_views =
-          ApplicationRequest.browser_pageview_count_for_period(:page_view_logged_in_browser, period)
+          ApplicationRequest.request_type_count_for_period(
+            :page_view_logged_in_browser_beacon,
+            period,
+          )
         next key, anon_page_views + logged_in_visitors if logged_in_page_views == 0
 
         total_visitors = logged_in_visitors
@@ -117,9 +120,12 @@ class Statistics
     periods
       .map do |(period, key)|
         logged_in_page_views =
-          ApplicationRequest.browser_pageview_count_for_period(:page_view_logged_in_browser, period)
+          ApplicationRequest.request_type_count_for_period(
+            :page_view_logged_in_browser_beacon,
+            period,
+          )
         anon_page_views =
-          ApplicationRequest.browser_pageview_count_for_period(:page_view_anon_browser, period)
+          ApplicationRequest.request_type_count_for_period(:page_view_anon_browser_beacon, period)
 
         all_logged_in_visitors = logged_in_visitors_count(period)
         eu_logged_in_visitors = eu_logged_in_visitors_count(period)
@@ -161,7 +167,7 @@ class Statistics
   # instantly.
   def self.onboarding_minutes_to
     signed_up_at = first_admin_created_at
-    steps = UserHistory::ADMIN_ONBOARDING_STEPS
+    steps = onboarding_step_names
 
     return steps.index_with(nil).symbolize_keys.merge(completed: nil) if signed_up_at.nil?
 
@@ -181,9 +187,11 @@ class Statistics
   end
 
   def self.onboarding_step_events
-    onboarding_events(:admin_onboarding_step_completed).where(
-      subject: UserHistory::ADMIN_ONBOARDING_STEPS,
-    )
+    onboarding_events(:admin_onboarding_step_completed).where(subject: onboarding_step_names)
+  end
+
+  def self.onboarding_step_names
+    UserHistory::ADMIN_ONBOARDING_STEPS + UserHistory::RETIRED_ADMIN_ONBOARDING_STEPS
   end
 
   # Reported as 1/0 flags rather than booleans, to match the integer shape of

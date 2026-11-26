@@ -2,7 +2,7 @@
 
 # This log formatter limits the number of characters in each log message to prevent malicious requests from filling up the disk
 # in a short amount of time. The number of characters is determined by the `log_line_max_chars` global setting which can be
-# configured via the `DISCOURSE_MAX_LOG_LINES` environment variable or via the `discourse_defaults.conf` file.
+# configured via the `DISCOURSE_LOG_LINE_MAX_CHARS` environment variable.
 class TruncateLogsFormatter < ::ActiveSupport::Logger::SimpleFormatter
   include ::ActiveSupport::TaggedLogging::Formatter
 

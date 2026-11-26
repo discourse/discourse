@@ -7,6 +7,8 @@ class Report
 
   RELATED_ITEMS_LIMIT = 50
 
+  VALID_TYPE_REGEX = /\A[a-z0-9_]+\z/
+
   FILTERS = %i[
     name
     start_date
@@ -457,7 +459,7 @@ class Report
       elsif filter == :page_view_legacy_total
         legacy_page_view_requests
       else
-        ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
+        ApplicationRequest.where(req_type: ApplicationRequest.stored_req_type_id(filter))
       end
 
     report.icon = "file" if filter == :page_view_total

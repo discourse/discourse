@@ -164,6 +164,25 @@ RSpec.describe "Chat composer rich editor" do
     expect(channel_page.messages).to have_message(text: "selected text")
   end
 
+  it "keeps headings and horizontal rules when sending and editing" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.input.send_keys("# Heading", :enter, "---", "after")
+
+    expect(channel_page.composer).to have_heading("Heading")
+    expect(channel_page.composer).to have_horizontal_rule
+    channel_page.composer.meta_enter_shortcut
+
+    expect(channel_page.messages).to have_heading("Heading")
+    expect(channel_page.messages).to have_horizontal_rule
+    page.refresh
+    expect(channel_page.messages).to have_heading("Heading")
+    expect(channel_page.messages).to have_horizontal_rule
+
+    channel_page.composer.edit_last_message_shortcut
+    expect(channel_page.composer).to have_heading("Heading")
+    expect(channel_page.composer).to have_horizontal_rule
+  end
+
   it "sends rich text as markdown" do
     chat_page.visit_channel(channel_1)
     channel_page.composer.fill_in(with: "**bold** text")
@@ -217,6 +236,17 @@ RSpec.describe "Chat composer rich editor" do
     channel_page.composer.cancel_shortcut
 
     expect(channel_page.composer).to be_editing_no_message
+  end
+
+  it "doesn't select the parent node on Escape inside a list" do
+    chat_page.visit_channel(channel_1)
+    channel_page.composer.fill_in(with: "- item")
+
+    expect(channel_page.composer.input).to have_css("li")
+
+    channel_page.composer.input.send_keys(:escape)
+
+    expect(channel_page.composer.input).to have_no_css(".ProseMirror-selectednode")
   end
 
   it "applies formatting shortcuts as marks" do

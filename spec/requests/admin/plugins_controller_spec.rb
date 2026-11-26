@@ -42,12 +42,17 @@ RSpec.describe Admin::PluginsController do
 
   describe "#show" do
     before do
-      spoiler_alert =
-        Plugin::Instance.parse_from_source(Rails.root.join("plugins/spoiler-alert/plugin.rb").to_s)
-      poll = Plugin::Instance.parse_from_source(Rails.root.join("plugins/poll/plugin.rb").to_s)
+      csp_extension =
+        Plugin::Instance.parse_from_source(
+          Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb").to_s,
+        )
+      my_plugin =
+        Plugin::Instance.parse_from_source(
+          Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb").to_s,
+        )
 
       Discourse.stubs(:plugins_by_name).returns(
-        { "discourse-spoiler-alert" => spoiler_alert, "poll" => poll },
+        { "csp_extension" => csp_extension, "discourse-plugin-name" => my_plugin },
       )
     end
 
@@ -55,17 +60,17 @@ RSpec.describe Admin::PluginsController do
       before { sign_in(admin) }
 
       it "returns a plugin" do
-        get "/admin/plugins/poll.json"
+        get "/admin/plugins/csp_extension.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["name"]).to eq("poll")
+        expect(response.parsed_body["name"]).to eq("csp_extension")
       end
 
       it "returns a plugin with the discourse- prefix if the prefixless version is queried" do
-        get "/admin/plugins/spoiler-alert.json"
+        get "/admin/plugins/plugin-name.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["name"]).to eq("spoiler-alert")
+        expect(response.parsed_body["name"]).to eq("plugin-name")
       end
 
       it "404s if the plugin is not found" do
@@ -76,10 +81,9 @@ RSpec.describe Admin::PluginsController do
       end
 
       it "404s if the plugin is not visible" do
-        poll = Discourse.plugins_by_name["poll"]
-        poll.stubs(:visible?).returns(false)
+        Discourse.plugins_by_name["csp_extension"].stubs(:visible?).returns(false)
 
-        get "/admin/plugins/poll.json"
+        get "/admin/plugins/csp_extension.json"
         expect(response.status).to eq(404)
       end
     end
@@ -88,10 +92,10 @@ RSpec.describe Admin::PluginsController do
       before { sign_in(moderator) }
 
       it "returns plugins" do
-        get "/admin/plugins/poll.json"
+        get "/admin/plugins/csp_extension.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["name"]).to eq("poll")
+        expect(response.parsed_body["name"]).to eq("csp_extension")
       end
     end
 
@@ -99,7 +103,7 @@ RSpec.describe Admin::PluginsController do
       before { sign_in(user) }
 
       it "denies access with a 404 response" do
-        get "/admin/plugins/poll.json"
+        get "/admin/plugins/csp_extension.json"
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

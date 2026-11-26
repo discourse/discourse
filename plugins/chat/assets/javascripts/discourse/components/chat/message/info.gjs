@@ -70,6 +70,24 @@ export default class ChatMessageInfo extends Component {
     return this.args.interactive !== false;
   }
 
+  get broadcastLink() {
+    const { message, threadContext } = this.args;
+
+    if (!message?.broadcasted) {
+      return null;
+    }
+    if (threadContext) {
+      return { route: this.route, models: this.routeModels };
+    }
+    if (message.threadId) {
+      return {
+        route: "chat.channel.thread.near-message",
+        models: [...message.channel.routeModels, message.threadId, message.id],
+      };
+    }
+    return null;
+  }
+
   get #user() {
     return this.args.message?.user;
   }
@@ -168,15 +186,33 @@ export default class ChatMessageInfo extends Component {
           </span>
         {{/if}}
 
-        {{#if this.siteSettings.chat_pinned_messages}}
-          {{#if (and @message.pinned (not (eq @context "pinned")))}}
-            <span
-              class="chat-message-info__pinned"
-              title={{i18n "chat.pinned"}}
-            >
-              {{dIcon "thumbtack"}}
+        {{#if this.broadcastLink}}
+          <LinkTo
+            class="chat-message-info__broadcast"
+            @models={{this.broadcastLink.models}}
+            @route={{this.broadcastLink.route}}
+          >
+            <span class="chat-message-info__broadcast__text">
+              {{i18n
+                (if
+                  @threadContext
+                  "chat.thread.broadcast_also_sent_to"
+                  "chat.thread.broadcast_sent_from_thread"
+                )
+              }}
             </span>
-          {{/if}}
+            {{#if @threadContext}}
+              <ChannelTitle @channel={{@message.channel}} />
+            {{else}}
+              {{dIcon "discourse-threads"}}
+            {{/if}}
+          </LinkTo>
+        {{/if}}
+
+        {{#if (and @message.pinned (not (eq @context "pinned")))}}
+          <span class="chat-message-info__pinned" title={{i18n "chat.pinned"}}>
+            {{dIcon "thumbtack"}}
+          </span>
         {{/if}}
 
         {{#if this.isFlagged}}

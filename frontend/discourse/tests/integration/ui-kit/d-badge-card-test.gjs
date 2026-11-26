@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DBadgeCard from "discourse/ui-kit/d-badge-card";
@@ -86,5 +86,69 @@ module("Integration | ui-kit | DBadgeCard", function (hooks) {
     assert
       .dom(".badge-link")
       .hasAttribute("href", "/badges/1/custombadge?username=bob");
+  });
+
+  test("a large card shows the long description without a link", async function (assert) {
+    const badge = {
+      slug: "custombadge",
+      name: "Custom",
+      description: "Short",
+      long_description: "Much longer",
+    };
+
+    await render(
+      <template><DBadgeCard @badge={{badge}} @size="large" /></template>
+    );
+
+    assert.dom(".badge-card").hasClass("--badge-large");
+    assert.dom(".badge-summary").hasText("Much longer");
+    assert.dom(".badge-link").doesNotExist("the name is not a link");
+  });
+
+  test("a medium card shows the description", async function (assert) {
+    const badge = {
+      slug: "custombadge",
+      description: "Short",
+      long_description: "Much longer",
+    };
+
+    await render(<template><DBadgeCard @badge={{badge}} /></template>);
+
+    assert.dom(".badge-card").hasClass("--badge-medium");
+    assert.dom(".badge-summary").hasText("Short");
+  });
+
+  test("@canFavorite offers to favorite the badge", async function (assert) {
+    const badge = { slug: "custombadge" };
+    let favorited = false;
+    const onFavoriteClick = () => (favorited = true);
+
+    await render(
+      <template>
+        <DBadgeCard
+          @badge={{badge}}
+          @canFavorite={{true}}
+          @canFavoriteMoreBadges={{true}}
+          @onFavoriteClick={{onFavoriteClick}}
+        />
+        <DBadgeCard
+          @badge={{badge}}
+          @canFavorite={{true}}
+          @canFavoriteMoreBadges={{false}}
+        />
+      </template>
+    );
+
+    assert.dom(".badge-card.--can-favorite").exists({ count: 2 });
+    assert
+      .dom(":nth-child(1 of .badge-card) .favorite-btn")
+      .isNotDisabled()
+      .hasAttribute("title", /./, "the button explains itself");
+    assert
+      .dom(":nth-child(2 of .badge-card) .favorite-btn")
+      .isDisabled("no more badges can be favorited");
+
+    await click(":nth-child(1 of .badge-card) .favorite-btn");
+    assert.true(favorited, "@onFavoriteClick is called");
   });
 });

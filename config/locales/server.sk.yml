@@ -584,13 +584,6 @@ sk:
     few: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     many: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
     other: "Ľutujeme, noví používatelia môžu zmieniť v príspevku maximálne %{count} používatelov."
-  no_embedded_media_allowed_group: "Ľutujeme, do príspevku nemôžete vložiť mediálne položky."
-  no_embedded_media_allowed: "Je nám ľúto, ale noví používatelia nemôžu vkladať mediálne položky do príspevkov."
-  too_many_embedded_media:
-    one: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba jednu vloženú mediálnu položku."
-    few: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    many: "Ľutujeme, noví používatelia môžu do príspevku vložiť iba %{count} vložených mediálnych položiek."
-    other: "Je nám ľúto, ale noví používatelia môžu do príspevku vložiť len %{count} vložené mediálne položky."
   no_attachments_allowed: "Ľutujeme, noví používatelia nemôžu vkladať prílohy do príspevkov."
   too_many_attachments:
     one: "Ľutujeme, noví používatelia môžu vložiť maximálne jednu prílohu do príspevku."
@@ -2391,7 +2384,6 @@ sk:
     enable_names: "Na profile zobraziť plné používateľské meno, karty a emaily používateľa. Vypnite na schovanie plného mena všade."
     display_name_on_posts: "Na príspevkoch zobraziť okrem @loginpoužívateľa i plné meno používateľa."
     show_time_gap_days: "Koľko dní musí uplynúť medzi dvoma príspevkami v téme, aby sa medzi nimi zobrazila časová medzera."
-    short_progress_text_threshold: "Ak počet príspevkov v téme presiahne toto číslo, ukazateľ priebehu zobrazí iba aktuálne číslo príspevku. Túto hodnotu možno budete potrebovať zmeniť, ak zmeníte šírku ukazateľa priebehu."
     highlighted_languages: "Zahrnuté pravidlá zvýrazňovania syntaxe. (Varovanie: zahrnutie príliš veľkého počtu jazykov môže mať vplyv na výkon) pozri: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pre demo"
     show_copy_button_on_codeblocks: "Pridanie tlačidla do kódových blokov na skopírovanie obsahu bloku do schránky používateľa."
     embed_any_origin: "Povoľte vkladanie obsahu bez ohľadu na jeho pôvod. Toto sa vyžaduje v prípade mobilných aplikácií so statickým HTML."
@@ -2504,9 +2496,7 @@ sk:
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
     automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
-    company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
-    governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
-    city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
+    company_name: "Názov vašej spoločnosti alebo organizácie."
     shared_drafts_category: "Povoľte funkciu Zdieľané koncepty určením kategórie pre koncepty tém. Témy v tejto kategórii budú pre používateľov zo zoznamu tém odstránené."
     shared_drafts_allowed_groups: "Povoľte používateľom v týchto skupinách vidieť a upravovať zdieľané návrhy."
     push_notifications_prompt: "Zobrazenie bannera so súhlasom používateľa pre push oznámenia. Toto nastavenie spustí výzvu, ktorá požiada používateľov o povolenie posielať im push oznámenia. Zobrazí sa len vtedy, keď push oznámenia ešte nie sú povolené, zariadenie používateľa ich podporuje a používateľ buď odoslal príspevok, alebo používa progresívnu webovú aplikáciu (PWA). Výzva sa už nezobrazí, ak ju používateľ už zamietol alebo udelil/odmietol povolenie."
@@ -2519,9 +2509,6 @@ sk:
     sitemap_page_size: "Počet adries URL, ktoré sa majú zahrnúť do každej stránky mapy lokality. Maximálne 50 000"
     enable_user_status: "Umožniť používateľom nastaviť vlastnú správu o stave (emoji + popis)."
     enable_user_tips: "Povolenie nových tipov pre používateľov, ktoré popisujú kľúčové funkcie pre používateľov"
-    dashboard_hidden_reports: "Povoliť skrytie zadaných správ z hlavného panela."
-    dashboard_visible_tabs: "Vyberte, ktoré karty hlavného panela budú viditeľné."
-    dashboard_general_tab_activity_metrics: "Na karte Všeobecné vyberte správy, ktoré sa majú zobrazovať ako metriky aktivity."
     gravatar_name: "Zadajte názov poskytovateľa služby Gravatar. Tento názov sa zvyčajne používa na identifikáciu zdroja, ktorý poskytuje avatary Gravatar na lokalitu."
     gravatar_base_url: "Zadajte adresu URL na prístup k rozhraniu API poskytovateľa Gravatar. Toto nastavenie je rozhodujúce pre konverziu e-mailových adries na adresy URL Gravataru, v ktorých sú uložené obrázky avataru."
     share_quote_buttons: "Určite, ktoré položky a v akom poradí sa zobrazia vo widgete na zdieľanie citácií."
@@ -2620,10 +2607,27 @@ sk:
       mediaconvert_role_arn_required: "Pri používaní AWS MediaConvert na konverziu videa sa vyžaduje rola AWS IAM ARN."
       s3_credentials_required_for_video_conversion: "Na konverziu videa sú potrebné poverenia S3. Nakonfigurujte prístupové kľúče S3 alebo povoľte profil IAM."
     keywords:
+      about_banner_image: "obrázok bannera"
+      about_page_extra_groups: "zoznam skupín"
+      about_page_extra_groups_initial_members: "rozšírenie počtu členov"
+      about_page_extra_groups_order: "poradie triedenia"
+      about_page_extra_groups_show_description: "zahrnúť popis"
       clean_up_inactive_users_after_days: "deaktivované|neaktívne|neaktivované"
+      company_url: "webová stránka"
+      default_composition_mode: "rte|formátovaný text|kompozer|markdown|editor formátovaného textu"
+      extended_site_description: "popis komunity"
+      large_icon: "štvorcová ikona"
+      logo: "primárne logo"
+      logo_dark: "primárne logo tmavé"
+      logo_small: "malé logo"
+      logo_small_dark: "malé logo tmavé"
       navigation_menu: "bočný panel|rozbaľovacie okno záhlavia"
       purge_unactivated_users_grace_period_days: "deaktivované|neaktívne|neaktivované"
-      default_composition_mode: "rte|formátovaný text|kompozer|markdown|editor formátovaného textu"
+      short_site_description: "názov spoločenstva"
+      site_contact_group_name: "kontaktná skupina stránky"
+      site_contact_username: "kontaktné meno stránky"
+      site_description: "súhrn komunity"
+      title: "názov komunity"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3149,22 +3153,6 @@ sk:
     post_hidden:
       title: "Príspevok je skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj,**
-
-        Toto je automatická správa od %{site_name}, ktorá vás informuje, že váš príspevok bol skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Tento príspevok bol skrytý kvôli upozorneniam od komunity, preto zvážte, ako môžete upraviť svoj príspevok podľa ich spätnej väzby. **Svoj príspevok môžete upraviť po %{edit_delay} minútach a automaticky bude opäť zobrazený.**
-
-        Ak však bude príspevok skrytý komunitou druhýkrát, zostane skrytý, kým ho nevybaví personál.
-
-        Pre ďalšie pokyny sa pozrite na naše [pravidlá komunity](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject:
       title: "Spätná väzba na váš príspevok"
       subject_template: "Spätná väzba na váš príspevok v %{topic_title}"
@@ -3174,33 +3162,9 @@ sk:
     post_hidden_again:
       title: "Príspevok je opäť skrytý"
       subject_template: "Príspevok skrytý kvôli označeniam komunity, personál bol informovaný"
-      text_body_template: |
-        Dobrý deň,
-
-        Toto je automatická správa z %{site_name} , ktorá vás informuje, že váš príspevok bol opäť skrytý.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Komunita označila tento príspevok a teraz je skrytý. **Vzhľadom na to, že tento príspevok bol skrytý viac ako raz, váš príspevok teraz zostane skrytý, kým sa ním nebude zaoberať člen personálu **.
-
-        Ďalšie pokyny nájdete v našich [komunitných pravidlách](%{base_url}/guidelines).
     queued_by_staff:
       title: "Príspevok vyžaduje schválenie"
       subject_template: "Príspevok skrytý personálom, čaká na schválenie"
-      text_body_template: |
-        ### Preklad
-
-        **Ahoj,**
-
-        Toto je automatická správa od %{site_name}, ktorá vás informuje, že váš príspevok bol skrytý.
-
-        <%{base_url}%{url}>
-
-        Váš príspevok zostane skrytý, kým ho nepreskúma člen personálu.
-
-        Pre ďalšie pokyny sa pozrite na naše [pravidlá komunity](%{base_url}/guidelines).
     flags_disagreed:
       title: "Personál obnovil označený príspevok"
       subject_template: "Personál obnovil označený príspevok"
@@ -4023,12 +3987,6 @@ sk:
     account_suspended_forever:
       title: "Účet pozastavený"
       subject_template: "[%{email_prefix}] Váš účet bol pozastavený"
-    account_silenced:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
-    account_silenced_forever:
-      title: "Účet umlčaný"
-      subject_template: "[%{email_prefix}] Váš účet bol stíšený"
     account_deleted:
       title: "Účet bol odstránený"
       subject_template: "[%{email_prefix}] Vaše konto bolo vymazané"
@@ -4199,10 +4157,6 @@ sk:
     signup_after_reject:
       title: "Registrácia po odmietnutí"
       subject_template: "Boli ste odmietnutí na stránke %{site_name}"
-      text_body_template: |
-        Člen personálu zamietol vaše konto na stránke %{site_name}.
-
-        %{reject_reason}
     signup:
       title: "Registrácia"
       subject_template: "[%{email_prefix}] Potvrďte svoj nový účet"
@@ -4778,7 +4732,12 @@ sk:
   design_wizard:
     palette_pairs:
       default: "Predvolené"
+      neutral: "Neutrálna"
+      shades_of_blue: "Odtiene modrej"
+      summer: "Leto"
       dracula: "Dracula"
+      grey_amber: "Šedý jantár"
+      latte: "Laté"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -4816,6 +4775,17 @@ sk:
     graph_title: "Počet vyhľadávaní"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Každý deň"
+        every_weekday: "Každý pracovný deň"
+        weekdays:
+          sunday: "Nedeľa"
+          monday: "Pondelok"
+          tuesday: "Utorok"
+          wednesday: "Streda"
+          thursday: "Štvrtok"
+          friday: "Piatok"
+          saturday: "Sobota"
       user_joined_community: "Pripojil sa k %{date}"
     google_meet:
       meeting_code: "Kód:"
@@ -4823,6 +4793,8 @@ sk:
       truncated_file: "Tento súbor bol skrátený."
       show_original: "zobraziť originál"
     github:
+      header:
+        success: "Úspech"
       binary_file: "Tento súbor je binárny."
       truncated_file: "Tento súbor bol skrátený."
       show_original: "zobraziť originál"
@@ -4836,10 +4808,11 @@ sk:
       review_by: "Recenzia od"
       pr_summary: "%{commits} revízie zmenili súbory %{changed_files} s pridaním %{additions} a odstránením %{deletions}"
       no_description: "Prispejte k vývoju %{repo} vytvorením účtu na GitHub."
-      status_date:
-        open: "otvorené"
-        approved: "schválený"
-        closed: "hlasovanie ukončené"
+      pr_status:
+        draft: "Návrh"
+        open: "Zahájiť"
+        approved: "Schválený"
+        closed: "Hlasovanie ukončené"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} Vás zmienil v "%{topic}" - %{site_title}'
@@ -4929,6 +4902,10 @@ sk:
       no_context:
         watched_word: "Tento príspevok obsahoval sledované slovo. Ďalšie informácie nájdete na %{link} ."
     actions:
+      answer_yes:
+        title: "Áno"
+      answer_no:
+        title: "Nie"
       agree:
         title: "Áno"
       agree_and_keep:
@@ -4972,6 +4949,7 @@ sk:
       delete_and_agree_replies:
         title: "Odstrániť príspevok a odpovede"
         description: "Súhlasiť s označením a vymazať tento príspevok a všetky jeho odpovede; ak je prvý príspevok, vymazať aj tému."
+        confirm_title: "Odstrániť príspevok a odpovede?"
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
@@ -5002,6 +4980,8 @@ sk:
       approve_post:
         title: "Áno"
         complete: "Príspevok schválený."
+      deny_and_delete_post:
+        complete: "Príspevok zmazaný."
       approve_post_closed:
         title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"

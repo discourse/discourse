@@ -1,5 +1,4 @@
 import { dependentKeyCompat } from "@ember/object/compat";
-import { isPresent } from "@ember/utils";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { deepEqual } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
@@ -25,31 +24,6 @@ export default class SettingObjectHelper {
   }
 
   @dependentKeyCompat
-  get computedValueProperty() {
-    if (isPresent(this.settingObj.get("valueProperty"))) {
-      return this.settingObj.get("valueProperty");
-    }
-
-    const first = this.validValues?.[0];
-    if (first && typeof first === "object" && "value" in first) {
-      return "value";
-    }
-    return null;
-  }
-
-  @dependentKeyCompat
-  get computedNameProperty() {
-    if (isPresent(this.settingObj.get("nameProperty"))) {
-      return this.settingObj.get("nameProperty");
-    }
-
-    if (isPresent(this.validValues?.[0]?.name)) {
-      return "name";
-    }
-    return null;
-  }
-
-  @dependentKeyCompat
   get validValues() {
     const originalValidValues = this.settingObj.get("valid_values");
     const values = [];
@@ -71,10 +45,5 @@ export default class SettingObjectHelper {
       return "admin.settings.none";
     }
     return undefined;
-  }
-
-  @dependentKeyCompat
-  get anyValue() {
-    return this.settingObj.get("allow_any");
   }
 }

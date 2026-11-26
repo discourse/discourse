@@ -37,11 +37,22 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      review_bulk:
+        refresh: "Osveži"
+        columns:
+          user: "Korisnik"
+          created: "Napravljeno"
+          status: "Status"
       copied: "Kopirano"
       ai_decoded_transcript:
         type: "Tip"
         error: "Greška"
+      post_image_captions:
+        image_descriptions:
+          apply: "Primeni"
       discourse_workflows:
+        ai_tool:
+          list_item: "Predmet popisa"
         classify:
           upload_ids: "Slike"
           name: "Ime foruma"
@@ -58,24 +69,28 @@ sr:
       llm_selector:
         none: "Ništa"
       features:
-        disabled: "(isključeno)"
-        groups: "Grupe:"
+        table:
+          status: "Status"
+          enabled: "Omogućeno"
+          groups: "Grupe"
+        chatbot:
+          places:
+            none: "Nije dostupno"
         no_groups: "Ništa"
         edit: "Podešavanje"
-        expand_list:
-          one: "(još %{count} članova)"
-          few: "(još %{count} člana)"
-          other: "(još %{count} članova)"
-        collapse_list: "(pokaži manje)"
         nav:
           enabled: "Omogućeno"
         filters:
-          all: "Sve"
           reset: "Reset"
+        sentiment:
+          enabled: "Omogućeno"
         search:
           name: "Pretraži"
         admin_dashboard:
           highlights: "Istaknuto"
+        review_queue:
+          setting_groups:
+            settings: "Podešavanje"
         image_caption:
           setting_groups:
             settings: "Podešavanje"
@@ -84,7 +99,17 @@ sr:
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
-        category_scope: "Kategorije"
+        settings:
+          ai_translation_category_scope:
+            label: "Kategorije"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ništa"
+              all: "Sve"
+          content_localization_language_switcher:
+            choices:
+              none: "Niko"
+              all: "Svi"
         model_progress:
           detail:
             columns:
@@ -99,6 +124,8 @@ sr:
               title: "Kategorije"
             tag:
               title: "Tagovi"
+        admin_actions:
+          enabled: "Omogućeno"
         stats:
           eta_hours:
             one: "%{count} сат"
@@ -115,6 +142,8 @@ sr:
             other: "%{count} poruka"
       spam:
         short_title: "Nepoželjno"
+        no_llm_selected: "Ništa"
+        no_decision_model_selected: "Ništa"
         last_seven_days: "Последњих 7 дана"
         enable: "Omogući"
         test_modal:
@@ -189,6 +218,32 @@ sr:
         edit: "Izmeni"
         delete: "Obriši"
         embedding: "Ugrađivanje"
+      concepts:
+        edit: "Izmeni"
+        seed:
+          refresh: "Osveži"
+        delete: "Obriši"
+        columns:
+          status: "Status"
+          topics: "Teme"
+          posts: "Poruka"
+        statuses:
+          active: "Aktivni"
+        form:
+          name: "Ime foruma"
+          description: "Opis"
+          aliases: "Alijasi"
+          status: "Status"
+        shared_topics_count:
+          one: "%{count} tema"
+          few: "%{count} tema"
+          other: "%{count} tema"
+        tagged_topics: "Označene teme"
+        topic_columns:
+          topic: "Tema"
+          primary: "Primarna"
+          relevance: "Relevantnost"
+        primary_badge: "Primarna"
       decision_models:
         no_preset: "Ništa"
         display_name: "Ime foruma"

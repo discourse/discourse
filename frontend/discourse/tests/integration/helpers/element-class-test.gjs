@@ -29,11 +29,11 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
   });
 
   test("Dynamic classes", async function (assert) {
-    this.set("dynamic", "bar");
-    await render(<template>{{bodyClass this.dynamic}}</template>);
+    const dynamic = tracked("bar");
+    await render(<template>{{bodyClass dynamic.value}}</template>);
     assert.dom(document.body).hasClass("bar");
 
-    this.set("dynamic", "baz");
+    dynamic.value = "baz";
     await settled();
     assert.dom(document.body).hasClass("baz");
     assert

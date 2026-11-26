@@ -95,17 +95,19 @@ export default class EmailController extends Controller {
       () => {
         this.set("success", true);
 
-        if (this.model.staff) {
+        if (!this.model.isCurrent) {
+          this.set(
+            "successMessage",
+            i18n(
+              this.model.staff
+                ? "user.change_email.success_staff_via_admin"
+                : "user.change_email.success_via_admin"
+            )
+          );
+        } else if (this.model.staff) {
           this.set("successMessage", i18n("user.change_email.success_staff"));
         } else {
-          if (this.currentUser.admin) {
-            this.set(
-              "successMessage",
-              i18n("user.change_email.success_via_admin")
-            );
-          } else {
-            this.set("successMessage", i18n("user.change_email.success"));
-          }
+          this.set("successMessage", i18n("user.change_email.success"));
         }
       },
       (e) => {

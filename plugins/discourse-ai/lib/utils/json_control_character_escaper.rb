@@ -8,8 +8,9 @@ module DiscourseAi
     # Formatting whitespace outside strings must remain unchanged when repairing those values.
     # Instances retain lexical state and must be scoped to one JSON document.
     class JsonControlCharacterEscaper
+      CONTROL_CHARACTERS = /[\x00-\x1F]/
       SPECIAL_CHARACTERS = /["\\\x00-\x1F]/
-      private_constant :SPECIAL_CHARACTERS
+      private_constant :CONTROL_CHARACTERS, :SPECIAL_CHARACTERS
 
       def self.escape(json)
         new.escape(json)
@@ -21,6 +22,11 @@ module DiscourseAi
       end
 
       def escape(json)
+        if !CONTROL_CHARACTERS.match?(json)
+          advance_state_without_controls(json)
+          return +json.dup
+        end
+
         scanner = StringScanner.new(json)
         escaped = +""
 
@@ -42,6 +48,30 @@ module DiscourseAi
       end
 
       private
+
+      def advance_state_without_controls(json)
+        inside_string = @inside_string
+        escaping_character = @escaping_character
+        i = 0
+        len = json.bytesize
+
+        while i < len
+          byte = json.getbyte(i)
+          if !inside_string
+            inside_string = true if byte == 34 # '"'
+          elsif escaping_character
+            escaping_character = false
+          elsif byte == 92 # '\\'
+            escaping_character = true
+          elsif byte == 34 # '"'
+            inside_string = false
+          end
+          i += 1
+        end
+
+        @inside_string = inside_string
+        @escaping_character = escaping_character
+      end
 
       def append_special_character(escaped, character)
         if !@inside_string

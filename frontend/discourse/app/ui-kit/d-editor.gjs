@@ -28,7 +28,6 @@ import Toolbar, {
 } from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
-import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
 import { getRegister } from "discourse/lib/get-owner";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
@@ -50,13 +49,6 @@ export function addToolbarCallback(func) {
 }
 export function clearToolbarCallbacks() {
   _createCallbacks = [];
-}
-
-export function onToolbarCreate(func) {
-  deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
-    id: "discourse.d-editor.on-toolbar-create",
-  });
-  addToolbarCallback(func);
 }
 
 @classNames("d-editor")
@@ -217,6 +209,7 @@ export default class DEditor extends Component {
    * @property {function} toggleDirection - Toggles text direction
    * @property {function} getText - Gets the text
    * @property {function} addText - Adds text
+   * @property {function} insertBlock - Inserts a standalone block
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
    * @property {import("discourse/lib/composer/text-manipulation").TextManipulation["commands"]} commands - Available commands
@@ -473,13 +466,17 @@ export default class DEditor extends Component {
       return;
     }
 
-    const cooked = await this.cachedCookAsync(this.value, this.markdownOptions);
+    const rawText = this.value;
+    const cooked = await this.cachedCookAsync(rawText, this.markdownOptions);
 
-    if (this.preview === cooked || this.isDestroying) {
+    if (
+      (this.preview?.html === cooked && this.preview?.rawText === rawText) ||
+      this.isDestroying
+    ) {
       return;
     }
 
-    this.preview = cooked;
+    this.preview = { html: cooked, rawText };
   }
 
   @observes("ready", "value", "processPreview")
@@ -660,6 +657,7 @@ export default class DEditor extends Component {
             @categoryId={{@categoryId}}
             @change={{this.onChange}}
             @class="d-editor-input"
+            @composerImageDescriptions={{@composerImageDescriptions}}
             @disabled={{this.disabled}}
             @focusIn={{this.handleFocusIn}}
             @focusOut={{this.handleFocusOut}}
@@ -686,14 +684,18 @@ export default class DEditor extends Component {
 
       {{#if @hijackPreview}}
         <div class="d-editor-preview-wrapper">
-          <@hijackPreview.component @model={{@hijackPreview.model}} />
+          <@hijackPreview.component
+            @decoratePreviewImageControls={{@decoratePreviewImageControls}}
+            @model={{@hijackPreview.model}}
+          />
         </div>
       {{else}}
         <DEditorPreview
           @forcePreview={{this.forcePreview}}
           @onPreviewUpdated={{this.previewUpdated}}
           @outletArgs={{this.outletArgs}}
-          @preview={{this.preview}}
+          @preview={{this.preview.html}}
+          @rawText={{this.preview.rawText}}
         />
       {{/if}}
     </div>

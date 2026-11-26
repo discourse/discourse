@@ -10,23 +10,18 @@ describe "Admin User Page" do
 
   before { sign_in(current_user) }
 
-  context "when visiting an admin's page" do
+  context "when visiting an admin's or a moderator's page" do
     fab!(:admin)
-
-    before { admin_user_page.visit(admin) }
-
-    it "doesn't display the suspend or silence buttons" do
-      expect(admin_user_page).to have_no_suspend_button
-      expect(admin_user_page).to have_no_silence_button
-    end
-  end
-
-  context "when visiting a moderator's page" do
     fab!(:moderator)
 
-    before { admin_user_page.visit(moderator) }
+    it "doesn't display the suspend or silence buttons for staff accounts" do
+      admin_user_page.visit(admin)
 
-    it "doesn't display the suspend or silence buttons" do
+      expect(admin_user_page).to have_no_suspend_button
+      expect(admin_user_page).to have_no_silence_button
+
+      admin_user_page.visit(moderator)
+
       expect(admin_user_page).to have_no_suspend_button
       expect(admin_user_page).to have_no_silence_button
     end
@@ -52,9 +47,9 @@ describe "Admin User Page" do
     fab!(:another_mod) { Fabricate(:moderator, ip_address: user.ip_address) }
     fab!(:another_admin) { Fabricate(:admin, ip_address: user.ip_address) }
 
-    before { admin_user_page.visit(user) }
-
     it "can list accounts with identical IPs" do
+      admin_user_page.visit(user)
+
       find(".ip-lookup-trigger").click
 
       expect(page).to have_content("#{I18n.t("js.ip_lookup.other_accounts")}\n3")
@@ -66,11 +61,35 @@ describe "Admin User Page" do
     end
 
     it "displays the suspend and silence buttons" do
+      admin_user_page.visit(user)
+
       expect(admin_user_page).to have_suspend_button
       expect(admin_user_page).to have_silence_button
     end
 
+    it "asks for confirmation before granting moderation" do
+      admin_user_page.visit(user)
+
+      dialog = PageObjects::Components::Dialog.new
+
+      admin_user_page.click_grant_moderation_button
+      expect(dialog).to have_content(
+        I18n.t("admin_js.admin.user.grant_moderation_confirm", username: user.username),
+      )
+
+      dialog.click_no
+      expect(dialog).to be_closed
+      expect(user.reload.moderator).to eq(false)
+
+      admin_user_page.click_grant_moderation_button
+      dialog.click_yes
+      expect(page).to have_no_css(".btn.grant-moderation")
+      expect(user.reload.moderator).to eq(true)
+    end
+
     it "displays username in the title" do
+      admin_user_page.visit(user)
+
       expect(page).to have_css(".display-row.username")
       expect(page.title).to eq("#{user.username} - Users - Admin - Discourse")
     end
@@ -96,38 +115,30 @@ describe "Admin User Page" do
         admin_user_page.open_upcoming_changes_modal
       end
 
-      context "when the change is enabled for everyone" do
-        before { SiteSetting.enable_upload_debug_mode = true }
+      it "shows the upcoming change enabled or disabled for everyone with the matching reason" do
+        SiteSetting.enable_upload_debug_mode = true
+        admin_user_page.visit(user)
+        open_upcoming_changes
+        expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+        expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+        expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+          "enabled_for_everyone",
+        )
+        expect(
+          admin_user_page.upcoming_change("enable_upload_debug_mode"),
+        ).to have_no_specific_groups
 
-        it "displays the upcoming change with enabled status and correct reason" do
-          admin_user_page.visit(user)
-          open_upcoming_changes
-          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
-            "enabled_for_everyone",
-          )
-          expect(
-            admin_user_page.upcoming_change("enable_upload_debug_mode"),
-          ).to have_no_specific_groups
-        end
-      end
-
-      context "when the change is disabled for everyone" do
-        before { SiteSetting.enable_upload_debug_mode = false }
-
-        it "displays the upcoming change with disabled status and correct reason" do
-          admin_user_page.visit(user)
-          open_upcoming_changes
-          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
-          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
-            "enabled_for_no_one",
-          )
-          expect(
-            admin_user_page.upcoming_change("enable_upload_debug_mode"),
-          ).to have_no_specific_groups
-        end
+        SiteSetting.enable_upload_debug_mode = false
+        admin_user_page.visit(user)
+        open_upcoming_changes
+        expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+        expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_disabled
+        expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+          "enabled_for_no_one",
+        )
+        expect(
+          admin_user_page.upcoming_change("enable_upload_debug_mode"),
+        ).to have_no_specific_groups
       end
 
       context "when the change is enabled for specific groups" do
@@ -140,41 +151,30 @@ describe "Admin User Page" do
           )
         end
 
-        context "when the user belongs to one of those groups" do
-          before { group1.add(user) }
+        it "shows the groups the user belongs to as they are added" do
+          group1.add(user)
+          admin_user_page.visit(user)
+          open_upcoming_changes
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+            "in_specific_groups",
+          )
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_specific_groups(["test_group_1"])
 
-          it "displays the upcoming change with enabled status, correct reason, and specific groups" do
-            admin_user_page.visit(user)
-            open_upcoming_changes
-            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
-              "in_specific_groups",
-            )
-            expect(
-              admin_user_page.upcoming_change("enable_upload_debug_mode"),
-            ).to have_specific_groups(["test_group_1"])
-          end
-        end
-
-        context "when the user belongs to multiple groups" do
-          before do
-            group1.add(user)
-            group2.add(user)
-          end
-
-          it "displays the upcoming change with all groups" do
-            admin_user_page.visit(user)
-            open_upcoming_changes
-            expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
-            expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
-              "in_specific_groups",
-            )
-            expect(
-              admin_user_page.upcoming_change("enable_upload_debug_mode"),
-            ).to have_specific_groups(%w[test_group_1 test_group_2])
-          end
+          group2.add(user)
+          admin_user_page.visit(user)
+          open_upcoming_changes
+          expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to be_enabled
+          expect(admin_user_page.upcoming_change("enable_upload_debug_mode")).to have_reason(
+            "in_specific_groups",
+          )
+          expect(
+            admin_user_page.upcoming_change("enable_upload_debug_mode"),
+          ).to have_specific_groups(%w[test_group_1 test_group_2])
         end
 
         context "when the user does not belong to any of those groups" do
@@ -221,17 +221,16 @@ describe "Admin User Page" do
     end
 
     describe "the suspend user modal" do
-      it "displays the list of users who share the same IP but are not mods or admins" do
+      before { admin_user_page.visit(user) }
+
+      it "suspends the user along with a selected similar user and unsuspends the user" do
         admin_user_page.click_suspend_button
 
         expect(suspend_user_modal.similar_users).to contain_exactly(similar_user.username)
         expect(admin_user_page.similar_users_warning).to include(
           I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
         )
-      end
 
-      it "suspends the user along with selected similar users and unsuspends the user" do
-        admin_user_page.click_suspend_button
         suspend_user_modal.select_similar_user(similar_user.username)
         suspend_user_modal.fill_in_suspend_reason("spamming")
         suspend_user_modal.set_future_date("tomorrow")
@@ -263,17 +262,15 @@ describe "Admin User Page" do
     end
 
     describe "the silence user modal" do
-      it "displays the list of users who share the same IP but are not mods or admins" do
+      before { admin_user_page.visit(user) }
+
+      it "silences and unsilences the user after showing the shared-IP matches" do
         admin_user_page.click_silence_button
 
         expect(silence_user_modal.similar_users).to contain_exactly(similar_user.username)
         expect(admin_user_page.similar_users_warning).to include(
           I18n.t("admin_js.admin.user.other_matches", count: 1, username: user.username),
         )
-      end
-
-      it "silence and unsilence the user" do
-        admin_user_page.click_silence_button
 
         silence_user_modal.fill_in_silence_reason("spamming")
         silence_user_modal.set_future_date("tomorrow")
@@ -292,7 +289,7 @@ describe "Admin User Page" do
     fab!(:user)
     fab!(:group)
 
-    it "saves and displays the added group" do
+    it "saves, displays and removes the added group" do
       admin_user_page.visit(user)
 
       group_chooser = admin_user_page.custom_groups_chooser
@@ -305,10 +302,7 @@ describe "Admin User Page" do
       expect(admin_user_page).to have_custom_group(group.name)
 
       expect(GroupUser.exists?(user:, group:)).to eq(true)
-    end
 
-    it "saves and removes the group from the list" do
-      group.add(user)
       admin_user_page.visit(user)
       expect(admin_user_page).to have_custom_group(group.name)
 
@@ -331,24 +325,16 @@ describe "Admin User Page" do
     context "when visiting a regular user's page" do
       fab!(:user)
 
-      context "when moderators_change_trust_levels setting is enabled" do
-        before { SiteSetting.moderators_change_trust_levels = true }
+      it "enables the trust level dropdown only when moderators_change_trust_levels is enabled" do
+        SiteSetting.moderators_change_trust_levels = true
+        admin_user_page.visit(user)
 
-        it "the dropdown to change trust level is enabled" do
-          admin_user_page.visit(user)
+        expect(admin_user_page).to have_change_trust_level_dropdown_enabled
 
-          expect(admin_user_page).to have_change_trust_level_dropdown_enabled
-        end
-      end
+        SiteSetting.moderators_change_trust_levels = false
+        admin_user_page.visit(user)
 
-      context "when moderators_change_trust_levels setting is disabled" do
-        before { SiteSetting.moderators_change_trust_levels = false }
-
-        it "the dropdown to change trust level is disabled" do
-          admin_user_page.visit(user)
-
-          expect(admin_user_page).to have_change_trust_level_dropdown_disabled
-        end
+        expect(admin_user_page).to have_change_trust_level_dropdown_disabled
       end
     end
   end

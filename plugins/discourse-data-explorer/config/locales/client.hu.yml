@@ -30,7 +30,6 @@ hu:
       description_placeholder: "Adjon meg egy leírást"
       ai:
         generate: "Generálás"
-        optional: "nem kötelező"
       import:
         unparseable_json: "Nem értelmezhető JSON-fájl."
         wrong_json: "Hibás JSON-fájl. A JSON-fájlnak kellene tartalmaznia egy „query” objektumot, amelynek legalább egy „sql” tulajdonsággal kell rendelkeznie."
@@ -66,7 +65,7 @@ hu:
       max_result_count:
         one: "Az első %{count} találat megjelenítése."
         other: "Az első %{count} találat megjelenítése."
-      query_name: "Lekérdezés"
+      name: "Név"
       query_groups: "Csoportok"
       query_tags: "Címkék"
       link: "Hivatkozás ehhez:"

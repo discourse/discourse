@@ -340,11 +340,11 @@ RSpec.describe CategoryUser do
   end
 
   describe "#notification_levels_for" do
-    let!(:category1) { Fabricate(:category) }
-    let!(:category2) { Fabricate(:category) }
-    let!(:category3) { Fabricate(:category) }
-    let!(:category4) { Fabricate(:category) }
-    let!(:category5) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
+    fab!(:category3, :category)
+    fab!(:category4, :category)
+    fab!(:category5, :category)
 
     context "for anon" do
       let(:user) { nil }

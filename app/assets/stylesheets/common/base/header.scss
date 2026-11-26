@@ -15,6 +15,8 @@
 }
 
 .d-header {
+  --d-header-badge-top: -4px;
+  --d-header-badge-right: -2px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -227,10 +229,11 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    top: -4px;
+    top: var(--d-header-badge-top);
     min-width: 0.6em;
     left: auto;
-    right: -3px;
+    right: var(--d-header-badge-right);
+    z-index: 1; // overhangs the neighboring icon's hover background
 
     &.with-icon {
       &.new-pms {
@@ -389,6 +392,11 @@
     display: block;
 
     @include ellipsis;
+  }
+
+  // the wrapper clips overflow, so keep the outline inside the link
+  :is(.topic-link, a.badge-category__wrapper):focus-visible {
+    outline-offset: -2px;
   }
 
   .topic-statuses {
@@ -551,8 +559,12 @@ $mobile-avatar-height: 1.532em;
   overflow: auto;
 }
 
-.mobile-view {
-  // Hide header avatar + icons while topic title is visible in mobile header
+// With footer navigation the topic title stays docked on scroll up, even
+// after the header actions return.
+.mobile-view:not(.mobile-tab-bar-visible),
+.mobile-view:is(.mobile-tab-bar-tucked, .mobile-tab-bar-actions-tucked):not(
+    :has(.mobile-tab-bar :focus-visible)
+  ) {
   .extra-info-wrapper ~ .panel {
     .before-header-panel-outlet,
     .header-buttons,

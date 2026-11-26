@@ -7,15 +7,15 @@ RSpec.describe "tasks/uploads" do
   end
 
   describe "uploads:secure_upload_analyse_and_update" do
+    fab!(:post_1, :post)
+    fab!(:post_2, :post)
+    fab!(:post_3, :post)
+
     let!(:uploads) { [multi_post_upload_1, upload_1, upload_2, upload_3] }
     let(:multi_post_upload_1) { Fabricate(:upload_s3) }
     let(:upload_1) { Fabricate(:upload_s3) }
     let(:upload_2) { Fabricate(:upload_s3) }
     let(:upload_3) { Fabricate(:upload_s3, original_filename: "test.pdf", extension: "pdf") }
-
-    let!(:post_1) { Fabricate(:post) }
-    let!(:post_2) { Fabricate(:post) }
-    let!(:post_3) { Fabricate(:post) }
 
     before do
       UploadReference.create(target: post_1, upload: multi_post_upload_1)
@@ -211,9 +211,10 @@ RSpec.describe "tasks/uploads" do
       end
     end
 
+    fab!(:post_1, :post)
+    fab!(:post_2, :post)
+
     let!(:uploads) { [upload_1, upload_2, upload_3, upload_4, upload_5] }
-    let(:post_1) { Fabricate(:post) }
-    let(:post_2) { Fabricate(:post) }
     let(:draft) { Fabricate(:draft) }
     let(:upload_1) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }
     let(:upload_2) { Fabricate(:upload_s3, secure: true, access_control_post: post_1) }
@@ -255,6 +256,24 @@ RSpec.describe "tasks/uploads" do
       expect(Jobs::SyncAccessControlForUploads.jobs.last["args"][0]["upload_ids"]).to match_array(
         [upload_1.id, upload_2.id, upload_3.id, upload_4.id, upload_6.id],
       )
+    end
+  end
+
+  describe "uploads:gather" do
+    let(:public_dir) { Dir.mktmpdir }
+
+    before { Rails.stubs(:public_path).returns(Pathname.new(public_dir)) }
+    after { FileUtils.rm_rf(public_dir) }
+
+    it "moves uploads from other site folders" do
+      upload = Fabricate(:upload, url: "/uploads/other/original/1X/it's.png")
+      FileUtils.mkdir_p(File.join(public_dir, "uploads/other/original/1X"))
+      File.write(File.join(public_dir, upload.url), "a")
+
+      capture_stdout { invoke_rake_task("uploads:gather") }
+
+      expect(upload.reload.url).to eq("/uploads/default/original/1X/it's.png")
+      expect(File.read(File.join(public_dir, upload.url))).to eq("a")
     end
   end
 

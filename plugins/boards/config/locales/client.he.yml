@@ -38,7 +38,10 @@ he:
         unassign_from_topic: "ביטול הקצאת ‎@%{username} מנושא"
         unassign_from_post: "ביטול הקצאת ‎@%{username} ממס׳ %{post_number}"
         edit_assignments: "עריכת הקצאות…"
-        created_by: "נוצר על ידי"
+        owners:
+          one: "בעלות"
+          two: "מנהלים"
+          other: "מנהלים"
       manage:
         name: "שם"
         slug: "מזהה ייצוגי"
@@ -50,6 +53,8 @@ he:
           column_title: "כותרת"
           icon: "סמל"
           color: "צבע"
+          color_palette: "ערכת צבעים"
+          icon_search_placeholder: "חיפוש…"
           default_sort_priority: "עדיפות"
           tag: "תגית"
           move_to_assigned_unassign: "ביטול הקצאה"

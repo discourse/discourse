@@ -13,6 +13,7 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -457,6 +458,10 @@ export default class AiUsage extends Component {
   @bind
   takeUsers(start, end) {
     return this.data.users.slice(start, end);
+  }
+
+  workflowUrl(id) {
+    return getURL(`/admin/plugins/discourse-workflows/workflows/${id}`);
   }
 
   normalizeTimeSeriesData(data) {
@@ -1186,6 +1191,46 @@ export default class AiUsage extends Component {
                 {{/if}}
               </:content>
             </AdminConfigAreaCard>
+
+            {{#if this.data.workflows.length}}
+              <AdminConfigAreaCard
+                class="ai-usage__workflows"
+                @heading="discourse_ai.usage.workflows_breakdown"
+              >
+                <:content>
+                  <table class="ai-usage__workflows-table">
+                    <thead>
+                      <tr>
+                        <th>{{i18n "discourse_ai.usage.workflow"}}</th>
+                        <th>{{i18n "discourse_ai.usage.usage_count"}}</th>
+                        <th>{{i18n "discourse_ai.usage.total_tokens"}}</th>
+                        <th>{{i18n "discourse_ai.usage.total_spending"}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each this.data.workflows as |workflow|}}
+                        <tr class="ai-usage__workflows-row">
+                          <td class="ai-usage__workflows-cell">
+                            <a
+                              href={{this.workflowUrl workflow.id}}
+                            >{{workflow.name}}</a>
+                          </td>
+                          <td class="ai-usage__workflows-cell">{{number
+                              workflow.requests
+                            }}</td>
+                          <td class="ai-usage__workflows-cell">{{number
+                              workflow.tokens
+                            }}</td>
+                          <td
+                            class="ai-usage__workflows-cell"
+                          >{{this.formatSpending workflow.estimated_cost}}</td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </:content>
+              </AdminConfigAreaCard>
+            {{/if}}
           </div>
         </DConditionalLoadingSpinner>
       </div>

@@ -17,7 +17,7 @@ RSpec.describe DiscourseWorkflows::DataTableRowsController do
 
   shared_examples "requires admin" do |method, path_proc, params_proc = nil|
     it "returns 404 when not logged in" do
-      sign_in(Fabricate(:anonymous))
+      reset!
       public_send(
         method,
         instance_exec(&path_proc),

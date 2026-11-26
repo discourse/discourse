@@ -379,12 +379,34 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     expect(staff_ratio).to be_nil
   end
 
+  it "counts mobile pageviews once in the traffic volume" do
+    ApplicationRequest.create!(
+      date: 40.days.ago.to_date,
+      req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
+      count: 100,
+    )
+    ApplicationRequest.create!(
+      date: 5.days.ago.to_date,
+      req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
+      count: 100,
+    )
+    ApplicationRequest.create!(
+      date: 5.days.ago.to_date,
+      req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_mobile_beacon],
+      count: 100,
+    )
+
+    traffic_volume = compute.fetch(:signals).find { |signal| signal[:key] == :traffic_volume }
+
+    expect(traffic_volume).to be_nil
+  end
+
   it "reports a traffic spike WITHOUT a source when no referrer dominates" do
     base = 29.days.ago.to_date
     base.upto(Date.current) do |date|
       ApplicationRequest.create!(
         date: date,
-        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
         count: date == 20.days.ago.to_date ? 5000 : 100,
       )
     end
@@ -403,7 +425,7 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     base.upto(Date.current) do |date|
       ApplicationRequest.create!(
         date: date,
-        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
         count: date == spike_day ? 5000 : 100,
       )
     end
@@ -426,7 +448,7 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     base.upto(Date.current) do |date|
       ApplicationRequest.create!(
         date: date,
-        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
         count: date == spike_day ? 5000 : 100,
       )
     end
@@ -450,7 +472,7 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     base.upto(Date.current) do |date|
       ApplicationRequest.create!(
         date: date,
-        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser],
+        req_type: ApplicationRequest.req_types[:page_view_logged_in_browser_beacon],
         count: date == spike_day ? 5000 : 100,
       )
     end

@@ -7,42 +7,37 @@ describe "User preferences | Interface" do
 
   before { sign_in(user) }
 
-  describe "Bookmarks" do
-    it "changes the bookmark after notification preference" do
-      user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
+  it "changes the bookmark and send shortcut preferences" do
+    SiteSetting.content_localization_enabled = true
 
-      dropdown = PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
+    user_preferences_page.visit(user)
+    click_link(I18n.t("js.user.preferences_nav.interface"))
 
-      # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
-      expect(dropdown).to have_selected_value(Bookmark.auto_delete_preferences[:clear_reminder])
-
-      dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
-      click_button(I18n.t("js.save"))
-
-      expect(
-        UserOption.exists?(
-          user_id: user.id,
-          bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
-        ),
-      ).to be_truthy
+    resize_window(width: 320) do
+      expect(user_preferences_interface_page).to have_understood_languages_picker_within_form
     end
-  end
 
-  describe "Send shortcut" do
-    it "changes the send shortcut preference" do
-      user_preferences_page.visit(user)
-      click_link(I18n.t("js.user.preferences_nav.interface"))
+    bookmark_dropdown = PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
+    send_shortcut_dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
 
-      dropdown = PageObjects::Components::SelectKit.new("#user-send-shortcut")
+    # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
+    expect(bookmark_dropdown).to have_selected_value(
+      Bookmark.auto_delete_preferences[:clear_reminder],
+    )
+    expect(send_shortcut_dropdown).to have_selected_value("enter")
 
-      expect(dropdown).to have_selected_value("enter")
+    bookmark_dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
+    send_shortcut_dropdown.select_row_by_value("meta_enter")
+    click_button(I18n.t("js.save"))
 
-      dropdown.select_row_by_value("meta_enter")
-      click_button(I18n.t("js.save"))
-
-      expect(UserOption.exists?(user_id: user.id, send_shortcut: "meta_enter")).to be_truthy
-    end
+    expect(page).to have_css(".saved")
+    expect(
+      UserOption.exists?(
+        user_id: user.id,
+        bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
+        send_shortcut: "meta_enter",
+      ),
+    ).to be_truthy
   end
 
   describe "Default Home Page" do

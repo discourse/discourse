@@ -46,6 +46,8 @@ bg:
           color: "цвят"
         approve_label: "Да"
         reject_label: "Не"
+        category_access_levels:
+          readonly: "Виж"
       tool_summary:
         suspend_user: "Спиране на потребителя"
         silence_user: "Заглушаване на потребителя"
@@ -81,6 +83,14 @@ bg:
       assign:
         errors:
           not_found: "Темата не е намерена."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Хедър"
+    mcp_theme_access:
+      none: "без подкатегория"
+    mcp_app_setup:
+      none: "без подкатегория"
     reviewables:
       ai_tool_action:
         approve:

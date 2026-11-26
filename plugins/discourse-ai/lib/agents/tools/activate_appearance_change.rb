@@ -1,0 +1,182 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    module Tools
+      # Makes a saved appearance change live for everyone, once an
+      # administrator approves it.
+      class ActivateAppearanceChange < AppearanceChangeTool
+        def self.name
+          "activate_appearance_change"
+        end
+
+        def self.signature
+          {
+            name:,
+            description:
+              "Requests approval to make a saved appearance change live for everyone: its palettes, its fonts and, for a new theme, making it the default theme. Only when the administrator asks to make it live.",
+            parameters: [
+              {
+                name: "appearance_change_id",
+                type: "integer",
+                required: true,
+                description: "The ID returned by save_appearance_change or list_appearance_changes",
+              },
+            ],
+          }
+        end
+
+        def approval_title
+          return I18n.t("discourse_ai.appearance_authoring.not_found") if appearance_change.nil?
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.activate_appearance_title",
+            name: appearance_change.name,
+          )
+        end
+
+        def approval_changes
+          return [] if appearance_change.nil?
+
+          live_theme =
+            if appearance_change.new_default_theme?
+              Theme.find_default
+            else
+              appearance_change.palette_theme
+            end
+          changes =
+            AppearanceAuthoring.color_changes(
+              before: AppearanceAuthoring.theme_palettes(live_theme),
+              after: AppearanceAuthoring.change_palettes(appearance_change),
+            )
+          changes += AppearanceAuthoring.font_changes(appearance_change.site_settings)
+          if appearance_change.new_default_theme?
+            changes << AppearanceAuthoring.default_theme_change(
+              from: live_theme,
+              to: appearance_change.theme,
+            )
+          end
+          changes + component_changes
+        end
+
+        def approval_details
+          return I18n.t("discourse_ai.appearance_authoring.not_found") if appearance_change.nil?
+
+          key =
+            (
+              if appearance_change.kind_component?
+                "activate_component_details"
+              else
+                "activate_appearance_details"
+              end
+            )
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.#{key}",
+            preview_url: AppearanceAuthoring.preview_url(appearance_change),
+            theme: appearance_change.parent_theme&.name,
+          )
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.activate_appearance_question")
+        end
+
+        def validation_error
+          refusal =
+            AppearanceAuthoring.denial(
+              user: context.user,
+              phase: execution_phase,
+              styles: appearance_change&.styled? || false,
+              # its palettes, if any, were created when it was saved
+              new_component: appearance_change&.kind_component? || false,
+            )
+          return error_response(refusal) if refusal
+          if appearance_change.nil?
+            return error_response(I18n.t("discourse_ai.appearance_authoring.not_found"))
+          end
+          if !styles_still_checked?
+            return error_response(I18n.t("discourse_ai.appearance_authoring.theme_changed"))
+          end
+          if appearance_change.applied?
+            return error_response(I18n.t("discourse_ai.appearance_authoring.already_live"))
+          end
+          if !context.user.guardian.can_edit_theme?(appearance_change.theme)
+            return error_response(I18n.t("discourse_ai.appearance_authoring.theme_not_editable"))
+          end
+
+          nil
+        end
+
+        def invoke
+          if (error = validation_error)
+            return error
+          end
+
+          with_approval do
+            result =
+              AppearanceChange::Activate.call(
+                params: {
+                  appearance_change_id: appearance_change.id,
+                },
+                guardian: context.user.guardian,
+              )
+            next failure_response(result) if result.failure?
+
+            {
+              status: "success",
+              message:
+                I18n.t("discourse_ai.appearance_authoring.live", name: appearance_change.name),
+              safe_mode_url: AppearanceAuthoring.safe_mode_url,
+            }
+          end
+        rescue ActiveRecord::ActiveRecordError
+          error_response(I18n.t("discourse_ai.appearance_authoring.failed"))
+        end
+
+        private
+
+        # What goes live has to be what was checked: a theme someone changed
+        # since it was saved is theirs to publish, and styles are checked
+        # again in case the rules got stricter since.
+        def styles_still_checked?
+          return true if !appearance_change.kind_theme? && !appearance_change.kind_component?
+          return false if !appearance_change.theme_unchanged?
+          return true if !appearance_change.styled?
+
+          AppearanceStyles::Policy.call(
+            appearance_change.styles,
+            palettes: AppearanceAuthoring.change_palettes(appearance_change),
+            base_theme_id: appearance_change.parent_theme_id,
+          ).valid?
+        end
+
+        # A component's styles, and the earlier ones of the same theme it
+        # turns off.
+        def component_changes
+          return [] if !appearance_change.kind_component?
+
+          rows =
+            AppearanceAuthoring.style_changes(
+              appearance_change.styles,
+              palettes: AppearanceAuthoring.change_palettes(appearance_change),
+            )
+          rows << AppearanceAuthoring.component_change(appearance_change.theme, enabled: true)
+          appearance_change.enabled_sibling_components.each do |component|
+            rows << AppearanceAuthoring.component_change(component, enabled: false)
+          end
+          rows
+        end
+
+        def appearance_change
+          return @appearance_change if defined?(@appearance_change)
+          @appearance_change =
+            AppearanceChange.includes(:theme).find_by(id: parameters[:appearance_change_id].to_i)
+        end
+
+        def approved_parameters?(tool_parameters)
+          tool_parameters["appearance_change_id"].to_i == appearance_change&.id
+        end
+      end
+    end
+  end
+end

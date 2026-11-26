@@ -81,6 +81,8 @@ class TopicsFilter
       filters[FILTER_ALIASES[key] || key] << [key_prefix, value]
     end
 
+    negated_topic_scopes = []
+
     filters.each do |filter, pairs|
       if SELF_NEGATING_FILTERS.include?(filter)
         positive, negated = pairs, []
@@ -93,21 +95,20 @@ class TopicsFilter
 
       apply_filter(**filter_arguments(filter, positive)) if positive.present?
 
-      negated.each { |pair| apply_negated_filter(**filter_arguments(filter, [pair])) }
+      negated.each do |pair|
+        matched_topics = apply_negated_filter(**filter_arguments(filter, [pair]))
+        negated_topic_scopes << matched_topics if matched_topics
+      end
     end
+
+    negated_topic_scopes.each { |matched_topics| @scope = @scope.where.not(id: matched_topics) }
 
     keywords = query_string.scan(TOKENIZER_PATTERN).reject { |word| word.include?(":") }.join(" ")
 
-    if keywords.present? && keywords.length >= SiteSetting.min_search_term_length
-      ts_query = Search.ts_query(term: keywords)
-      @scope = @scope.where(<<~SQL)
-          topics.id IN (
-            SELECT topic_id
-            FROM post_search_data
-            JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
-          )
-        SQL
+    if Topic::KeywordSearch.valid_term?(keywords)
+      posts = Post.all
+      posts = posts.where.not(post_type: Post.types[:whisper]) unless @guardian.can_see_whispers?
+      @scope = @scope.with_post_keywords(keywords, posts)
     end
 
     @scope
@@ -138,6 +139,10 @@ class TopicsFilter
 
       if @guardian.can_see_deleted_topics?(category)
         @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
+
+        if !@guardian.can_delete_all_posts_and_topics?
+          @scope = @scope.where(category_id: @guardian.category_group_moderator_scope.select(:id))
+        end
       else
         @scope = @scope.none
       end
@@ -363,8 +368,9 @@ class TopicsFilter
     @loaded_topic_users_reference = loaded_topic_users_reference
     @topic_notification_levels = topic_notification_levels
     @topic_ids = topic_ids
+    @scope = scope_before_filter
 
-    @scope = filter_acted ? scope_before_filter.where.not(id: matched_topics) : scope_before_filter
+    matched_topics if filter_acted
   end
 
   def invalid_filter!(token)
@@ -522,6 +528,7 @@ class TopicsFilter
         WHERE p.topic_id = topics.id
           AND #{column} IN (#{ids.join(",")})
           AND p.deleted_at IS NULL
+          AND p.post_type <> #{Post.types[:small_action]}
           #{whisper_condition("p")}
       )
     SQL
@@ -733,7 +740,11 @@ class TopicsFilter
     values.each do |_, value|
       tag_group_ids = TagGroup.visible(@guardian).where_name(strip_quotes(value)).pluck(:id)
 
-      tag_ids = TagGroupMembership.where(tag_group_id: tag_group_ids).select(:tag_id)
+      tag_ids =
+        TagGroupMembership.where(
+          tag_group_id: tag_group_ids,
+          tag_id: DiscourseTagging.visible_tags(@guardian).select(:id),
+        ).select(:tag_id)
 
       @scope = @scope.where(id: TopicTag.where(tag_id: tag_ids).select(:topic_id))
     end

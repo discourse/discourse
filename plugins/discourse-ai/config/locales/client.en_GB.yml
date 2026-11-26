@@ -14,7 +14,9 @@ en_GB:
               label: "Categories"
     discourse_ai:
       translations:
-        category_scope: "Categories"
+        settings:
+          ai_translation_category_scope:
+            label: "Categories"
         model_progress:
           targets:
             category:
@@ -30,5 +32,8 @@ en_GB:
       tools:
         description: "Description"
         summary: "Summary"
+      concepts:
+        form:
+          description: "Description"
       mcp_servers:
         description: "Description"

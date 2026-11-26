@@ -77,10 +77,16 @@ body.has-full-page-chat .sidebar-wrapper,
   --scrollbarThumbBg: var(--d-selected);
 }
 
-.sidebar-section-link-wrapper .sidebar-section-link:focus,
-.sidebar-section-link-wrapper .sidebar-section-link:hover {
-  .d-icon {
+.sidebar-section-link-wrapper .sidebar-section-link {
+  &:focus-visible .d-icon {
     color: var(--primary);
+  }
+
+  @media (hover: hover) {
+    &:hover .d-icon,
+    &:focus .d-icon {
+      color: var(--primary);
+    }
   }
 }
 

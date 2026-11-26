@@ -33,6 +33,12 @@ module Live
       user.in_any_groups?(SiteSetting.live_direct_calls_allowed_groups_map)
     end
 
+    # Only initiators need the sender group; recipients only need room access.
+    def can_send_live_file?
+      return false unless can_access_live?
+      user.in_any_groups?(SiteSetting.live_file_transfer_allowed_groups_map)
+    end
+
     # A specific user may be rung only by callers they could receive a
     # personal message from: muting or ignoring the caller, disabling
     # personal messages, or an allowlist that omits the caller all block the
@@ -59,6 +65,22 @@ module Live
 
     def ensure_can_manage_live_room!(room)
       unless can_manage_live_room?(room)
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
+      end
+    end
+
+    # Deleting discards the room for everyone, so it stays with its owner and
+    # staff rather than extending to room moderators. Ephemeral rooms are torn
+    # down by their own lifecycle.
+    def can_delete_live_room?(room)
+      return false unless can_access_live?
+      return false if !room || room.ephemeral?
+
+      is_staff? || room.creator_id == user.id
+    end
+
+    def ensure_can_delete_live_room!(room)
+      unless can_delete_live_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
       end
     end
@@ -140,8 +162,10 @@ module Live
     def can_speak_in_live_room?(room)
       return true if room.open?
       return true if user&.admin?
-      membership = room.membership_for(user)
-      membership&.can_speak? || false
+      return false if user.blank?
+      return true if room.membership_for(user)&.can_speak?
+
+      Live::StageRoles.session_speaker?(room, user.id)
     end
 
     # Camera and screen sharing are gated independently, per user: the room
@@ -167,15 +191,47 @@ module Live
       live_media_entitlements(room)[:can_screen_share]
     end
 
+    # Local recordings never touch the server; this only gates the control
+    # and the roster flag that tells everyone else a recording is running.
+    def can_record_live_locally?
+      return false unless can_access_live?
+      user.in_any_groups?(SiteSetting.live_local_recording_allowed_groups_map)
+    end
+
     # Only stage-room listeners have anything to request — anyone who can
     # already speak (including admins and everyone in open rooms) cannot.
     def can_request_to_speak_in_live_room?(room)
       return false unless can_join_live_room?(room)
-      room.stage? && !can_speak_in_live_room?(room)
+      room.stage? && room.speak_requests_enabled? && !can_speak_in_live_room?(room)
     end
 
     def ensure_can_request_to_speak_in_live_room!(room)
+      if can_join_live_room?(room) && room.stage? && !can_speak_in_live_room?(room) &&
+           !room.speak_requests_enabled?
+        raise Discourse::InvalidAccess.new(
+                :live_speak_requests_disabled,
+                nil,
+                custom_message: "live.errors.speak_requests_disabled",
+              )
+      end
+
       unless can_request_to_speak_in_live_room?(room)
+        raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
+      end
+    end
+
+    # Stage speakers (who are not room moderators, creators, or site admins)
+    # can voluntarily step down back to the audience.
+    def can_step_down_in_live_room?(room)
+      return false unless can_join_live_room?(room)
+      return false unless room.stage?
+      return false if user&.admin? || room.creator_id == user.id || room.moderator?(user)
+
+      room.membership_for(user)&.speaker? || Live::StageRoles.session_speaker?(room, user.id)
+    end
+
+    def ensure_can_step_down_in_live_room!(room)
+      unless can_step_down_in_live_room?(room)
         raise Discourse::InvalidAccess.new(I18n.t("live.errors.not_authorized"))
       end
     end

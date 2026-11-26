@@ -7,11 +7,23 @@
 zh_TW:
   js:
     dsa_notice:
+      choice_title: "違法"
+      go_back: "返回"
       title: "檢舉非法內容"
       email: "電子郵件地址"
       resend_email_code: "重新傳送代碼"
     ace_editor:
       resize: "調整程式碼編輯器大小"
+    code_editor:
+      resize: "調整程式碼編輯器大小"
+      search:
+        replace: "取代"
+        next: "下一步"
+        previous: "上一個"
+        close: "關閉"
+        go: "開始"
+      fold:
+        to: "發至"
     user_api_key:
       title: '授權「%{application_name}」'
       authorize: "授權"
@@ -61,6 +73,7 @@ zh_TW:
       manage:
         access_permission_editor: "編輯"
         access_permission_editor_description: "可為此實體建立及編輯內容"
+        access_permission_owner: "擁有者"
         access_permission_viewer: "觀看者"
         access_permission_viewer_description: "可檢視此實體的內容"
         access_permission_remove: "移除"
@@ -507,44 +520,25 @@ zh_TW:
       dismiss: "略過設定"
       select_theme:
         title: "自訂你的網站"
-        description: "選擇顏色、字型以及網站的版面配置。"
         action: "查看選項"
         completed: "變更選項"
         show_light_screenshot: "顯示淺色模式截圖"
         show_dark_screenshot: "顯示深色模式截圖"
+      create_category:
+        action: "建立分類"
       invite_collaborators:
         title: "邀請協作者"
         description: "早期成員能讓社群活起來。"
         action: "建立邀請"
         completed: "邀請更多人"
-      start_posting:
-        title: "開始發文"
-        description: "提供大家可討論的內容。"
-        action: "查看點子"
-        completed: "查看更多點子"
-        choose_option: "你想如何開始？"
-        predefined_topics: "破冰話題範本"
-        predefined_topics_subtitle: "讓新成員有話題可聊；選擇範本後可自行編輯。"
-        predefined_topics_description: "從對話開場白集合中挑選，讓討論持續進行。"
-        use_predefined: "瀏覽範本"
-        back: "上一步"
-        icebreakers:
-          introduce_yourself:
-            title: "介紹自己"
-            body: "歡迎來到社群！讓我們互相認識。請介紹一下自己並分享你的興趣。我先說：我熱愛科技，也喜歡教導他人！"
     design_wizard:
       title: "自訂你的網站"
-      subtitle: "選擇顏色、字型以及網站的版面配置。"
       step_label: "前往第 %{index} 個步驟"
       save: "儲存並完成"
       back: "上一步"
       next: "下一步"
       launch: "設計精靈"
       launch_description: "請再次仔細檢視您網站的主題、配色、字型和版面配置。"
-      intro:
-        description: "此精靈將引導您設定網站的主題、顏色、字型、首頁版面配置、歡迎橫幅以及搜尋樣式。"
-        autosave: "每個步驟都會隨操作即時儲存，因此成員可以立即看到變更。關閉時，您可以還原所有變更。"
-        start: "開始使用"
       close:
         message: "您已儲存網站設計的一些變更。要保留這些變更嗎？"
         message_without_revert: "您已儲存網站設計的一些變更，無法在此處還原。"
@@ -552,54 +546,23 @@ zh_TW:
         revert: "還原變更"
         continue_editing: "繼續編輯"
       sections:
-        theme: "佈景主題"
-        colors: "預設色彩"
         fonts: "字型"
+        logo: "標誌"
         homepage: "首頁"
-        welcome_banner: "歡迎橫幅"
-        search: "搜索"
       theme:
         selected: "已選"
         applying: "套用中…"
         custom_theme_notice: "你的網站目前使用 %{name} 作為預設佈景主題。請選擇下方的佈景主題進行預覽。儲存後將取代目前的佈景主題。"
-      colors:
-        light: "淺色"
-        dark: "深色"
-        dark_only: "%{name} 僅有深色模式"
-        both_modes: "每個調色盤皆包含相對應的淺色與深色模式"
-        user_selectable: "讓會員切換調色盤"
-        user_selectable_description: "在選單中顯示這些可供會員選擇的調色盤"
       fonts:
-        base_font: "基礎字型"
-        heading_font: "標題字型"
+        base_font: "內文"
       homepage:
         topics: "主題"
         categories: "分類"
-        topic_page_type: "主題頁面類型"
-        topic_pages:
-          latest: "依最近活動時間排序主題，最新在前。"
-          new: "最近幾天建立的主題，最新在前。"
-          hot: "目前熱門的主題，綜合整體人氣與近期互動情況。"
         category_page_style: "分類頁面樣式"
         styles:
           boxes: "方塊"
           with_topics: "含主題的分類"
           only: "僅分類"
-      welcome_banner:
-        enable: "套用中…"
-        enable_description: "向訪客顯示您的網站名稱和搜尋框"
-        location: "橫幅位置"
-        locations:
-          below_site_header: "網站頁首下方"
-          above_topic_content: "主題列表上方"
-      search:
-        experiences:
-          search_icon:
-            title: "搜尋圖示"
-            description: "標題列中的放大鏡圖示可開啟搜尋功能。"
-          search_field:
-            title: "搜尋欄位"
-            description: "頁首處設有完整的搜尋欄，且始終顯示。"
     about:
       edit: "編輯此頁"
       simple_title: "關於"
@@ -834,7 +797,6 @@ zh_TW:
     dsa_statements:
       category: "分類"
       category_prompt: "選擇一個分類"
-      saving: "正在儲存..."
     review:
       show_more: "顯示更多"
       show_less: "顯示更少"
@@ -2582,6 +2544,7 @@ zh_TW:
       no_results: "沒有結果"
       search: "搜尋…"
       label: "選取選項"
+      remove_item: "移除 %{name}"
     d_otp:
       screen_reader:
         other: 輸入 %{count} 個數字
@@ -2643,7 +2606,6 @@ zh_TW:
         <b>{relativeAge}</b> – <a href="{url}" target="_blank">{rate, plural, other {# 個錯誤/分鐘}}</a>超過了 {limit, plural, other {# 個錯誤/分鐘}} 的網站設定上限。
     learn_more: "了解更多…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>了解更多…</a>"
-    feedback_with_link: "<a href='%{url}' target='_blank'>意見回饋…</a>"
     mute: 靜音
     unmute: 取消靜音
     last_post: 最新貼文
@@ -3032,6 +2994,9 @@ zh_TW:
         size_too_small: "%{provided_file_size} 小於允許的最小值 %{min_file_size}"
     emoji_picker:
       filter_placeholder: 搜尋表情符號
+      search_placeholder: "按表情符號名稱和別名搜尋…"
+      no_results: "沒有結果"
+      favorites: "常用"
       smileys_&_emotion: 表情符號
       people_&_body: 人們
       animals_&_nature: 動物與自然
@@ -3054,6 +3019,7 @@ zh_TW:
     filter_controls:
       reset: "重置"
       toggle: "切換下拉式篩選器"
+      sort_label: "排序依據"
     d_icon_grid_picker:
       select_icon: "選擇圖示"
       search_label: "搜尋圖示"
@@ -3161,6 +3127,10 @@ zh_TW:
       emoji: "表情符號 :)"
       more_emoji: "更多…"
       options: "選項"
+      ai_content:
+        code: "程式碼"
+        quote: "引用"
+        details: "詳細資訊"
       whisper: "密談"
       unlist: "不公開"
       add_warning: "這是正式警告。"
@@ -4225,7 +4195,7 @@ zh_TW:
         back_description: "回到最後一個未讀貼文"
         replies_short: "%{current} / %{total}"
       progress:
-        title: 主題進度
+        title: "主題進度"
         jump_prompt: "跳到"
         jump_prompt_of:
           other: "%{count} 貼文"
@@ -4470,10 +4440,8 @@ zh_TW:
           label: "已選取"
           title: "點擊後將文章移除"
         select_replies:
-          label: "選取＋回覆"
           title: "將貼文及所有回覆加入選取列表"
         select_below:
-          label: "選取 + 底下"
           title: "將此貼文及其所有以下貼文加入選取列表"
         delete: 刪除選取的貼文
         cancel: 取消選取
@@ -4500,6 +4468,7 @@ zh_TW:
         actions: "批次操作"
     post:
       accessible_heading: "%{username} 於 %{date} 發布的貼文"
+      ai_generated: "AI"
       heading_anchor: "標題連結"
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -4738,9 +4707,6 @@ zh_TW:
           previous: "上一版"
           next: "下一版"
           last: "最新版"
-          hide: "隱藏修訂紀錄"
-          show: "顯示修訂紀錄"
-          destroy: "刪除修訂"
           destroy_confirm: "您確定要刪除此帖子的所有修訂嗎？此操作是永久性的。"
           revert: "還原至修訂版 %{revision}"
           edit_wiki: "編輯共筆"
@@ -4817,7 +4783,6 @@ zh_TW:
     category:
       none: "( 無分類 )"
       all: "所有分類"
-      choose: "選擇一個分類&hellip;"
       edit: "編輯"
       edit_title: "編輯此類別"
       edit_dialog_title: "編輯：%{categoryName}"
@@ -4865,6 +4830,8 @@ zh_TW:
         delete_title: "刪除此分類"
         delete_description: "刪除後，將無法復原此分類及其設定。你必須先重新指派其中的主題。"
         delete_title_forbidden: "無法刪除此分類"
+      empty_state:
+        edit_category: "編輯分類"
       create: "新分類"
       create_with_type: "新的 %{typeName} 分類"
       create_long: "建立新的分類"
@@ -4893,7 +4860,7 @@ zh_TW:
         icon_required: "選擇圖示."
         groups_required: "請為此核准模式選擇至少一個群組。"
       name: "分類名稱"
-      untitled: "未命名分類"
+      icon_search_placeholder: "搜尋…"
       description: "描述"
       logo: "分類標誌圖片"
       logo_dark: "深色模式分類標誌圖片"
@@ -4901,10 +4868,6 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色模式分類背景圖片"
       style: "樣式"
-      icon: "圖示"
-      emoji: "Emoji"
-      select_emoji: "選擇表情符號"
-      select_icon: "選擇圖示"
       background_color: "顏色"
       foreground_color: "文字顏色"
       color_validations:
@@ -4912,22 +4875,15 @@ zh_TW:
         incorrect_length: "必須符合 #RRGGBB 或 #RGB 格式"
         non_hexdecimal: "只能包含十六進位字元（0-9、A-F）"
       styles:
-        type: "樣式"
         icon: "圖示"
         emoji: "Emoji"
         square: "方形"
-        options:
-          square: "方形"
-          icon: "圖示"
-          emoji: "Emoji"
       color_used: "使用中的顏色"
-      predefined_colors: "預先定義的顏色選項"
       name_placeholder: "建議使用一到兩個字"
       category_types: "分類類型"
       unknown_category_type: "未知的分類類型"
       unknown_category_type_description: "分類類型「%{categoryType}」不受支援，或未在此分類中啟用。"
       category_types_no_results: "找不到其他分類類型"
-      color_placeholder: "任何網頁顏色"
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
       list: "列出分類"
@@ -5675,9 +5631,16 @@ zh_TW:
       forward: "前進"
       share: "分享"
       dismiss: "忽略"
+    mobile_tab_bar:
+      new_topic: "新主題"
+      create: "創建"
+      more: "更多"
+      back: "上一步"
+      topics: "主題"
+      drafts:
+        other: "草稿（%{count}）"
     safe_mode:
       enabled: "安全模式已經開啟，關閉該瀏覽器窗口以退出安全模式"
-    theme_preview_notice: "您當前正在預覽佈景主題，請關閉此瀏覽器標籤頁或窗口以返回到正常網站配置。"
     theme_preview_failed: "無法預覽佈景主題，因為它不存在，或你沒有存取權。"
     image_removed: "(圖片被移除)"
     pause_notifications:
@@ -6086,24 +6049,23 @@ zh_TW:
         name: "名稱"
         plugin: "外掛程式"
         metadata: "中繼資料"
-        enabled: "啟用"
-        enabled_for: "啟用對象…"
+        enabled: "已啟用？"
         show_image: "顯示圖片"
-        edit_groups: "編輯選擇加入群組"
+        feedback: "意見回饋"
+        toggle: "啟用 %{name}"
         groups_updated: "群組已更新！"
         save_groups: "儲存群組"
         add_groups_to_enable: "新增群組以啟用此功能"
         no_changes_to_save: "沒有可儲存的變更"
         select_groups: "選擇群組…"
         opt_in_groups: "選擇加入群組"
-        show_related_settings: "顯示相關設定…"
+        settings: "設置"
         opt_in_groups_instructions: "選擇加入群組可讓特定使用者群組在變更發布給所有人之前先行測試。請注意，一旦變更進展至「穩定」狀態，這些群組將不再適用。"
         enabled_for_throttle: "你變更此項目啟用對象的速度過快。請稍候幾秒再試一次。"
         change_enabled_for_success: "你已為 %{enabledFor} 啟用此變更"
         change_disabled: "你已選擇不使用此變更"
         depends_on_notice: "此變更需要啟用 %{dependencyLinks}。"
         permanent_notice: "此變更現已成為永久項目，且即將被移除。你已無法選擇停用。"
-        permanent_soon_notice: "此變更即將成為永久項目。之後你將無法選擇停用。"
         permanent_no_group_selection: "不適用；永久變更會套用至所有群組。"
         no_changes: "目前沒有即將推出的變更。"
         preview: "預覽"
@@ -6111,7 +6073,6 @@ zh_TW:
         default_warning_short: "此設定的預設值已變更；請前往<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即將推出的變更</a>頁面瞭解詳情。"
         enabled_for_options:
           no_one: "沒有人"
-          everyone: "所有使用者"
           staff: "僅限 %{staffGroupName}"
           specific_groups: "特定群組"
           specific_groups_with_group_names:
@@ -6163,6 +6124,9 @@ zh_TW:
           impact_role_staff: "管理員"
           impact_role_all_members: "所有成員"
           impact_role_developers: "開發人員"
+        sort:
+          status: "狀態"
+          name: "名稱"
       config:
         about:
           title: "關於您的網站"
@@ -6791,25 +6755,15 @@ zh_TW:
           combined: "結果包含最近 %{limit} 次瀏覽，起始時間為 %{pageviewLimitDate} %{pageviewLimitTime}。不包含所選日期範圍內更早的瀏覽量；%{date} 之前的瀏覽量資料已無法取得。"
       dashboard:
         title: "控制台"
-        last_updated: "儀表板更新："
-        discourse_last_updated: "話語更新："
         version: "版本"
         up_to_date: "你使用的是最新版本!"
         up_to_date_newer_commits:
           other: "你目前使用的是最新版本，但有 %{count} 項新變更可用。"
         updates_available: "有更新可以安裝。"
-        please_update: "請更新！"
-        no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
-        stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         version_check_pending: "看起來您最近更新了。極好的！"
-        installed_version: "已安裝"
-        latest_version: "可用"
-        github: "GitHub"
         commit_on_github: "在 GitHub 上查看提交 %{sha}"
-        changelog: "變更記錄"
         commits_ahead:
           other: "自此版本系列開始後，正在執行另外 %{count} 項變更"
-        problems_found: "根據您現在網站設定的建議"
         dismiss_notice: "忽略"
         site_advice:
           title:
@@ -6820,16 +6774,7 @@ zh_TW:
           no_new_features_found: "摘要中沒有項目，或你選取的篩選條件沒有傳回結果。你可以在 <a href='%{url}' target='_blank'>Discourse Releases 網站</a>查看先前的新功能公告。"
           no_new_features_error: "載入摘要時發生錯誤。你可以在 <a href='%{url}' target='_blank'>Discourse Releases 網站</a>查看先前的新功能公告。"
           learn_more: "了解更多..."
-        last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
-        no_problems: "未發現任何問題。"
-        moderators: "板主："
-        admins: "管理員："
-        silenced: "已靜音："
-        suspended: "已停權:"
-        private_messages_short: "訊息"
-        private_messages_title: "訊息"
-        mobile_title: "行動裝置"
         space_used: "已使用 %{usedSize}"
         space_used_and_free: "%{usedSize}（%{freeSize}自由）"
         uploads: "上傳檔案"
@@ -6837,20 +6782,7 @@ zh_TW:
         backup_count:
           other: "%{count}備份在%{location}"
         lastest_backup: "最新：%{date}"
-        traffic_short: "流量"
-        traffic: "網頁應用程式請求數"
-        page_views: "瀏覽數"
-        page_views_short: "瀏覽數"
-        show_traffic_report: "顯示詳細的流量報表"
-        community_health: 社群健康度
-        moderators_activity: 管理員活動紀錄
         whats_new_in_discourse: Discourse 新增了什麼？
-        activity_metrics: 活動數值
-        all_reports: "所有報告"
-        general_tab: "一般"
-        moderation_tab: "管理"
-        security_tab: "安全性"
-        reports_tab: "報告"
         report_filter_any: "任何"
         disabled: 停用
         timeout_error: 很抱歉，查詢所花的時間太久，請選一個短一點的間隔
@@ -7081,7 +7013,6 @@ zh_TW:
             latest_backup: "上次備份：%{date}"
             manage_backups: "管理備份"
             discourse_updated: "Discourse 已更新"
-            dashboard_updated: "儀表板已更新"
         reports_section:
           header_action: "管理"
           description: "釘選標準報表或 Data Explorer 查詢，以追蹤對社群重要的資訊。"
@@ -7185,12 +7116,6 @@ zh_TW:
             crawlers: "爬蟲"
           see_details: "查看詳情"
           crawler_learn_more: "了解更多"
-        period:
-          last_7_days: "過去 7 天"
-          last_30_days: "過去 30 天"
-          last_3_months: "過去 3 個月"
-          custom: "客製"
-          custom_range: "%{start} – %{end}"
         reports:
           trend_title: "%{percent}更改，最近更改時間是在%{current}。"
           percent_change_tooltip: "%{percent} 更改。"
@@ -7232,9 +7157,6 @@ zh_TW:
               other: "%{count} 篇貼文"
             deselect: "取消選取 %{name}"
             fetch_error: "無法載入此群組的用戶。"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
-            disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
           average_chart_label: 顯示平均值，而非總計
           sort_button: "依 %{column}排序"
           sort_button_current: "依 %{column}、%{direction} 排序"
@@ -7416,7 +7338,6 @@ zh_TW:
               list: 列出最新貼文和私人貼文。也支援 RSS。
             revisions:
               read: "取得最新或特定的修訂版本。"
-              modify: "隱藏、顯示或還原修訂。"
               permanently_delete: "永久刪除修訂。"
             tags:
               list: 列出標籤。
@@ -7698,21 +7619,10 @@ zh_TW:
           site_contact_group_help: |
             受邀接收所有自動發送的私人訊息的群組。
           your_organization: "你的組織"
-          your_organization_description: "我們將在《服務條款》和《隱私聲明》中顯示此資訊來表明此網站的運營方和司法管轄區。"
           company_name: "名字"
           company_name_placeholder: "ExampleCo"
-          company_name_warning: |
-            如果留空，則不會提供模板服務條款或隱私權通知。
           company_url: "網站"
           company_url_placeholder: "https://example-co.com"
-          governing_law: "適用於法律"
-          governing_law_placeholder: "省、州或國家"
-          governing_law_help: |
-            指定網站法律條款的司法管轄區，通常是公司註冊地或營運地。
-          city_for_disputes: "爭議城市"
-          city_for_disputes_placeholder: "城市"
-          city_for_disputes_help: |
-            指定解決與該論壇相關的法律糾紛的城市。
           extra_groups:
             heading: "群組清單"
             description: "要顯示在「關於」頁面的額外群組。"
@@ -7923,7 +7833,6 @@ zh_TW:
           uploading: "上傳中..."
           uploading_progress: "正在上傳… %{progress}%"
           success: "%{filename}已成功上傳，該檔案正在被處理中，需花費幾分鐘才會顯示於列表。"
-          error: "上載時發生問題： '%{filename}': %{message}"
         settings: "設定"
         operations:
           is_running: "一個操作目前正在執行…"
@@ -8287,8 +8196,6 @@ zh_TW:
           title: "顏色"
           edit: "編輯"
           view: "查看"
-          set_default_light: "設為預設佈景主題（%{theme}）的淺色調色盤"
-          set_default_dark: "設為預設佈景主題（%{theme}）的深色調色盤"
           set_default_success: "已將 %{schemeName} 設為 %{themeName} 的預設調色盤"
           saved_refreshing: "已儲存！正在重新整理色彩…"
           from_theme: "來自佈景主題：%{name}"
@@ -8898,6 +8805,11 @@ zh_TW:
           activated: "已啟動"
           not_activated: "未啟用"
         approved: "已批准？"
+        source: "來源："
+        bots:
+          name: "名稱"
+          username: "使用者名"
+          trust_level: "信任等級"
         titles:
           active: "活躍使用者"
           new: "新使用者"
@@ -8924,6 +8836,7 @@ zh_TW:
           title: "刪除此使用者的所有關聯帳號"
           text: "刪除關聯的帳戶"
       user:
+        bot: "機器人"
         suspend_failed: "將此使用者停權時發生錯誤 %{error}"
         unsuspend_failed: "恢復此使用者的權限時發生錯誤 %{error}"
         suspend_duration: "停權使用者至："
@@ -8939,16 +8852,13 @@ zh_TW:
           no_constructive_purpose: "除了在社區內引起異議外，該使用者的行動沒有任何建設性的目的"
           custom: "自訂…"
         suspend_message: "Email 訊息"
-        suspend_message_placeholder: "提供更多停權使用者的原因，並且會以郵件發信給該使用者。（可選）"
         suspended_by: "將其停權者"
         silence_reason: "原因"
         silenced_by: "已靜音，由"
         silence_modal_title: "將使用者靜音"
         silence_duration: "這位使用者將會被靜音多久？"
-        silence_reason_label: "您為何要將這位使用者靜音？"
+        silence_reason_title: "禁言原因"
         silence_reason_placeholder: "靜音原因"
-        silence_message: "Email 訊息"
-        silence_message_placeholder: "(留白以傳送預設訊息)"
         suspended_until: "(直到%{until})"
         suspend_forever: "永久停權"
         cant_suspend: "這位使用者無法被停權。"
@@ -9262,6 +9172,8 @@ zh_TW:
       site_text:
         description: "您可以自訂論壇上的任何文字。"
         search_label: "搜索"
+        preview:
+          default: "默認"
         theme_disabled: "已停用"
         filters: "過濾器"
         status:
@@ -9434,7 +9346,7 @@ zh_TW:
           modal_title: 徽章群組
         granted_by: 升級者為
         granted_at: 升級在
-        reason_help: (連結至貼文或話題)
+        reason_help: 連結至貼文或話題
         save: 儲存
         delete: 刪除
         delete_confirm: 你確定要刪除徽章 ?

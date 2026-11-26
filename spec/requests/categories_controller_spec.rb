@@ -16,6 +16,7 @@ RSpec.describe CategoriesController do
     end
 
     it "properly preloads topic list" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
       get "/categories"
@@ -26,7 +27,23 @@ RSpec.describe CategoriesController do
       end
     end
 
+    it "charges the search limit only for a category layout that loads a topic list" do
+      RateLimiter.enable
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
+      SiteSetting.desktop_category_page_style = "categories_only"
+
+      get "/categories", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/categories_and_latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:ok)
+
+      get "/categories_and_latest.json", params: { search: "keyword" }
+      expect(response).to have_http_status(:too_many_requests)
+    end
+
     it "does not build a topic list for crawlers" do
+      SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
       SiteSetting.categories_topics = 5
       SiteSetting.categories_topics.times { Fabricate(:topic) }
 
@@ -54,6 +71,12 @@ RSpec.describe CategoriesController do
       get "/category/uncategorized"
       expect(response).to have_http_status(:found)
       expect(response).to redirect_to("/c/uncategorized")
+    end
+
+    it "encodes characters that are invalid in a URL when redirecting /category paths" do
+      get "/category/lounge%5B/quote%5D"
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/lounge%5B/quote%5D")
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
@@ -554,9 +577,10 @@ RSpec.describe CategoriesController do
     context "when a moderator evaluates public permissions" do
       fab!(:moderator)
 
-      [false, true].each do |granular_permissions|
-        it "retains access with granular pseudogroup behavior #{granular_permissions}" do
-          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = granular_permissions
+      shared_examples "evaluating moderator access to category grants" do |granular_permissions_enabled:|
+        it "retains moderator access when evaluating an everyone grant" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+            granular_permissions_enabled
           sign_in(moderator)
           category.set_permissions(everyone: :readonly)
           category.save!
@@ -575,6 +599,16 @@ RSpec.describe CategoriesController do
             "current_user_will_lose_access" => false,
           )
         end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "evaluating moderator access to category grants",
+                         granular_permissions_enabled: true
       end
     end
 
@@ -641,6 +675,23 @@ RSpec.describe CategoriesController do
         post "/categories.json", params: { name: "hello", color: "ff0", text_color: "fff" }
 
         expect(response).to be_forbidden
+      end
+
+      it "returns read-only permission to a moderator who creates a read-only category" do
+        SiteSetting.moderators_manage_categories = true
+        sign_in(Fabricate(:moderator))
+        readonly = CategoryGroup.permission_types[:readonly]
+
+        post "/categories.json",
+             params: {
+               name: "Announcements",
+               permissions: {
+                 everyone: readonly,
+               },
+             }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body.dig("category", "permission")).to eq(readonly)
       end
 
       it "raises an exception when the name is missing" do
@@ -732,6 +783,7 @@ RSpec.describe CategoriesController do
           cat_json = response.parsed_body["category"]
           expect(cat_json).to be_present
           expect(cat_json["moderating_group_ids"]).to eq([group.id])
+          expect(cat_json["permission"]).to eq(CategoryGroup.permission_types[:full])
           expect(cat_json["name"]).to eq("hello")
           expect(cat_json["slug"]).to eq("hello-cat")
           expect(cat_json["color"]).to eq("ff0")
@@ -801,6 +853,7 @@ RSpec.describe CategoriesController do
                   "icon" => "memo",
                   "id" => "discussion",
                   "name" => I18n.t("category_types.discussion.name"),
+                  "svg_icon" => "comment",
                   "title" => "discussion",
                   "visible" => true,
                 },
@@ -991,6 +1044,47 @@ RSpec.describe CategoriesController do
       sign_in(admin)
       post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#set_notifications" do
+    subject(:set_notifications) do
+      post "/category/#{category_id}/notifications.json", params: { notification_level: }
+    end
+
+    let(:category_id) { category.id }
+    let(:notification_level) { CategoryUser.notification_levels[:tracking] }
+
+    before { sign_in(user) }
+
+    context "when the user can see the category" do
+      it "sets the notification level" do
+        expect { set_notifications }.to change {
+          CategoryUser.find_by(user:, category:)&.notification_level
+        }.to(notification_level)
+      end
+    end
+
+    context "when the user cannot see the category" do
+      let(:category) { Fabricate(:private_category, group: Fabricate(:group)) }
+
+      it "refuses the request" do
+        set_notifications
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it "stores no notification level" do
+        expect { set_notifications }.not_to change(CategoryUser, :count)
+      end
+    end
+
+    context "when the category does not exist" do
+      let(:category_id) { -1 }
+
+      it "returns not found" do
+        set_notifications
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
@@ -1859,7 +1953,7 @@ RSpec.describe CategoriesController do
   end
 
   describe "#categories_and_topics" do
-    before { 10.times { Fabricate(:topic) } }
+    fab!(:topics) { Fabricate.times(10, :topic) }
 
     it "works when SiteSetting.categories_topics is non-null" do
       SiteSetting.categories_topics = 5

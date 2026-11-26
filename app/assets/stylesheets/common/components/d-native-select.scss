@@ -1,8 +1,8 @@
 .d-native-select {
   width: 100%;
   height: 2.25em;
-  background: var(--secondary);
-  border: 1px solid var(--primary-400);
+  background: var(--token-color-background-input);
+  border: var(--d-input-border);
   border-radius: var(--d-input-border-radius);
   box-sizing: border-box;
   margin: 0;
@@ -24,7 +24,7 @@
   &:active {
     // these `!important` flags are another great case for having a button element without that pesky default styling
     &:not(:disabled) {
-      background-color: var(--secondary) !important;
+      background-color: var(--token-color-background-input) !important;
       color: var(--primary) !important;
       border-color: var(--tertiary);
       outline: 2px solid var(--tertiary);
@@ -38,7 +38,7 @@
 
   &:hover:not(:disabled) {
     .discourse-no-touch & {
-      background-color: var(--secondary);
+      background-color: var(--token-color-background-input);
       color: var(--primary);
       border-color: var(--tertiary);
 

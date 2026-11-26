@@ -1,0 +1,839 @@
+# frozen_string_literal: true
+
+RSpec.describe DiscourseAi::Agents::Tools::GenerateAppearanceChange do
+  fab!(:admin)
+  fab!(:moderator)
+
+  let(:context) { DiscourseAi::Agents::BotContext.new(user: admin, messages: []) }
+
+  before do
+    enable_current_plugin
+    Theme.foundation_theme.set_default!
+  end
+
+  def invoke(**parameters)
+    described_class.new(parameters, bot_user: Discourse.system_user, llm: nil, context:).invoke
+  end
+
+  def draft(result)
+    DiscourseAi::Agents::AppearanceAuthoring::Draft.read(result[:draft_token])
+  end
+
+  def access_modifier(feature, message)
+    proc do |decision, request|
+      decision.deny!(message) if request.feature == feature
+      decision
+    end
+  end
+
+  it "builds readable palettes for the current theme without changing the site" do
+    palettes = ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c")
+    result = nil
+
+    expect { result = invoke(name: "Acme", brand_color: "#E8590C") }.not_to change {
+      ColorScheme.count
+    }
+    expect(result).to include(
+      status: "success",
+      name: "Acme",
+      saves_as:
+        I18n.t(
+          "discourse_ai.appearance_authoring.palettes_target",
+          theme: Theme.foundation_theme.name,
+        ),
+    )
+    expect(result[:readability_adjustments]).to include(
+      { color: "Links and buttons", from: "#e8590c", to: "##{palettes.light["tertiary"]}" },
+    )
+    expect(draft(result)).to include(
+      kind: "palettes",
+      theme_id: Theme.foundation_theme.id,
+      user_id: admin.id,
+      light_colors: palettes.light,
+      dark_colors: palettes.dark,
+    )
+  end
+
+  it "drafts a new theme when asked, warning when the site's layout would change" do
+    Theme.horizon_theme.set_default!
+
+    result = invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)
+
+    expect(result[:saves_as]).to eq(
+      I18n.t(
+        "discourse_ai.appearance_authoring.new_theme_target_with_layout_change",
+        theme: Theme.horizon_theme.name,
+      ),
+    )
+    expect(draft(result)).to include(kind: "theme")
+    expect(draft(result)).not_to have_key(:theme_id)
+  end
+
+  it "only uses fonts Discourse offers" do
+    result = invoke(name: "Acme", brand_color: "#e8590c", body_font: "Lora")
+
+    expect(result[:fonts]).to eq("base_font" => "Lora")
+    expect(draft(result)[:site_settings]).to eq("base_font" => "lora")
+    expect(invoke(name: "Acme", brand_color: "#e8590c", heading_font: "Comic Sans")[:error]).to eq(
+      I18n.t(
+        "discourse_ai.appearance_authoring.unknown_font",
+        font: "Comic Sans",
+        fonts: DiscourseFonts.fonts.map { |font| font[:name] }.join(", "),
+      ),
+    )
+  end
+
+  it "refuses requests it can't carry out" do
+    expect(invoke(name: "Acme", brand_color: "orange")).to eq(
+      status: "error",
+      error: I18n.t("discourse_ai.appearance_authoring.invalid_color", colors: "orange"),
+    )
+    expect(invoke(name: " ", brand_color: "#e8590c")[:error]).to eq(
+      I18n.t("discourse_ai.appearance_authoring.name_required"),
+    )
+    expect(invoke(name: "Acme")[:error]).to eq(
+      I18n.t("discourse_ai.appearance_authoring.brand_color_required"),
+    )
+
+    context.user = moderator
+    expect(invoke(name: "Acme", brand_color: "#e8590c")[:error]).to eq(
+      I18n.t("discourse_ai.appearance_authoring.not_allowed"),
+    )
+  end
+
+  it "lets a plugin keep new themes off while palettes stay available" do
+    plugin = Plugin::Instance.new
+    modifier = access_modifier(:theme_authoring, "New themes aren't available here.")
+    plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+    expect(invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)[:error]).to eq(
+      "New themes aren't available here.",
+    )
+    expect(invoke(name: "Acme", brand_color: "#e8590c")[:status]).to eq("success")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_feature_access, &modifier)
+  end
+
+  context "when the site can't have new palettes" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier) { access_modifier(:palette_authoring, "New palettes aren't available here.") }
+    let(:horizon) { Theme.horizon_theme }
+
+    before do
+      SystemThemesManager.sync_theme!("horizon")
+      horizon.set_default!
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+    end
+
+    after do
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
+    it "uses the closest of the palettes the theme can use, and says why" do
+      clover = ColorScheme.find_by(theme: horizon, name: "Clover")
+      clover_dark = ColorScheme.find_by(theme: horizon, name: "Clover Dark")
+      result = nil
+
+      expect { result = invoke(name: "Acme", brand_color: "#1ed760") }.not_to change {
+        ColorScheme.count
+      }
+      expect(result).to include(
+        status: "success",
+        name: "Clover",
+        note: "New palettes aren't available here.",
+        saves_as:
+          I18n.t(
+            "discourse_ai.appearance_authoring.existing_palettes_target",
+            palette: "Clover",
+            theme: horizon.name,
+          ),
+      )
+      expect(draft(result)).to include(
+        kind: "existing_palettes",
+        theme_id: horizon.id,
+        light_palette_id: clover.id,
+        dark_palette_id: clover_dark.id,
+      )
+    end
+
+    it "says when the theme already uses the closest palettes" do
+      horizon.update!(
+        color_scheme: ColorScheme.find_by(theme: horizon, name: "Clover"),
+        dark_color_scheme: ColorScheme.find_by(theme: horizon, name: "Clover Dark"),
+      )
+
+      expect(invoke(name: "Acme", brand_color: "#1ed760")).to eq(
+        status: "no_change",
+        message:
+          I18n.t(
+            "discourse_ai.appearance_authoring.already_closest",
+            palette: "Clover",
+            theme: horizon.name,
+          ),
+        note: "New palettes aren't available here.",
+      )
+    end
+
+    it "still drafts a font change when the theme already uses the closest palettes" do
+      clover = ColorScheme.find_by(theme: horizon, name: "Clover")
+      clover_dark = ColorScheme.find_by(theme: horizon, name: "Clover Dark")
+      horizon.update!(color_scheme: clover, dark_color_scheme: clover_dark)
+
+      result = invoke(name: "Acme", brand_color: "#1ed760", body_font: "Lora")
+      expect(result).to include(status: "success", fonts: { "base_font" => "Lora" })
+
+      appearance_change =
+        AppearanceChange::DraftExistingPalettes.call(
+          params:
+            draft(result).slice(
+              *%i[
+                theme_id
+                name
+                light_palette_id
+                dark_palette_id
+                site_settings
+                light_colors
+                dark_colors
+              ],
+            ),
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      expect(appearance_change.applied?).to eq(false)
+
+      expect {
+        AppearanceChange::Activate.call(
+          params: {
+            appearance_change_id: appearance_change.id,
+          },
+          guardian: admin.guardian,
+        )
+      }.to change { SiteSetting.base_font }.to("lora")
+      expect(appearance_change.reload.applied?).to eq(true)
+    end
+
+    it "doesn't draft a new theme, which would need new palettes" do
+      expect(invoke(name: "Acme", brand_color: "#1ed760", new_theme: true)[:error]).to eq(
+        "New palettes aren't available here.",
+      )
+    end
+  end
+
+  it "uses existing palettes once the site can't create more" do
+    plugin = Plugin::Instance.new
+    modifier = proc { false }
+    plugin.register_modifier(:user_guardian_can_create_color_scheme, &modifier)
+
+    result = invoke(name: "Acme", brand_color: "#0033cc")
+
+    expect(result).to include(
+      status: "success",
+      note: I18n.t("discourse_ai.appearance_authoring.palettes_unavailable"),
+    )
+    expect(draft(result)[:kind]).to eq("existing_palettes")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin,
+      :user_guardian_can_create_color_scheme,
+      &modifier
+    )
+  end
+
+  it "doesn't draft a new theme on a site that can't create themes" do
+    plugin = Plugin::Instance.new
+    modifier = proc { false }
+    plugin.register_modifier(:user_guardian_can_create_theme, &modifier)
+
+    expect(invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)[:error]).to eq(
+      I18n.t("discourse_ai.appearance_authoring.themes_unavailable"),
+    )
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :user_guardian_can_create_theme, &modifier)
+  end
+
+  it "is only offered to administrators who can change how the site looks" do
+    expect(described_class.available_for_context?(context)).to eq(true)
+
+    plugin = Plugin::Instance.new
+    modifier = access_modifier(:appearance_authoring, nil)
+    plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+    expect(described_class.available_for_context?(context)).to eq(false)
+
+    context.user = moderator
+    expect(described_class.available_for_context?(context)).to eq(false)
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :admin_assistant_feature_access, &modifier)
+  end
+
+  context "with a website" do
+    fab!(:llm_model)
+
+    let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+    let(:page_url) { "https://brand.example.com/" }
+    let(:design) do
+      {
+        "brand_color" => "#635bff",
+        "accent_color" => "",
+        "header_color" => "",
+        "candidates" => ["#635bff"],
+        "dark" => false,
+        "confidence" => "high",
+        "body_font" => "lora",
+        "body_font_exact" => true,
+        "heading_font" => "merriweather",
+        "heading_font_exact" => false,
+      }
+    end
+
+    before do
+      stub_request(:get, /.*/).to_return(status: 404)
+      stub_request(:get, page_url).to_return(
+        headers: {
+          "Content-Type" => "text/html",
+        },
+        body: '<meta name="theme-color" content="#635bff">',
+      )
+    end
+
+    # The model's answer about the website's design.
+    def invoke_with_design(answer = design, **parameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses([answer]) do
+        described_class.new(parameters, bot_user: Discourse.system_user, llm:, context:).invoke
+      end
+    end
+
+    it "takes the brand color and the fonts Discourse offers from it" do
+      result = invoke_with_design(name: "Acme", website_url: "brand.example.com")
+
+      expect(result).to include(status: "success", fonts: { "base_font" => "Lora" })
+      expect(result[:website]).to eq(
+        domain: "brand.example.com",
+        brand_color_confidence: :high,
+        dark_website: false,
+        closest_available_fonts: {
+          headings: "Merriweather",
+        },
+      )
+      expect(draft(result)[:light_colors]).to eq(
+        ColorSchemes::Action::BuildFromBrand.call(brand: "635bff").light,
+      )
+    end
+
+    it "gives a new theme the website's button shape" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "8"),
+          name: "Acme",
+          website_url: "brand.example.com",
+          new_theme: true,
+        )
+
+      expect(result[:style_changes]).to eq(["--d-button-border-radius: 8px"])
+      expect(result[:website]).to include(button_radius: "8px")
+      expect(draft(result)[:styles]).to eq("variables" => { "--d-button-border-radius" => "8px" })
+    end
+
+    it "uses core's pill shape for fully rounded buttons" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "9999"),
+          name: "Acme",
+          website_url: "brand.example.com",
+          new_theme: true,
+        )
+
+      expect(draft(result)[:styles]["variables"]).to eq(
+        "--d-button-border-radius" => "var(--d-border-radius-pill)",
+      )
+    end
+
+    it "only changes colors and fonts on the current theme" do
+      result =
+        invoke_with_design(
+          design.merge("button_radius" => "8"),
+          name: "Acme",
+          website_url: "brand.example.com",
+        )
+
+      expect(draft(result)).not_to have_key(:styles)
+    end
+
+    it "asks which color is the brand when the website doesn't point clearly at one" do
+      answer = design.merge("confidence" => "medium", "candidates" => %w[#635bff #0066cc])
+
+      expect(invoke_with_design(answer, name: "Acme", website_url: page_url)).to eq(
+        status: "needs_brand_color",
+        message:
+          I18n.t(
+            "discourse_ai.appearance_authoring.confirm_brand_color",
+            domain: "brand.example.com",
+          ),
+        candidates: %w[#635bff #0066cc],
+      )
+    end
+
+    it "says when the website has no clear brand color" do
+      answer = design.merge("brand_color" => "", "candidates" => [], "confidence" => "low")
+
+      expect(invoke_with_design(answer, name: "Acme", website_url: page_url)).to eq(
+        status: "needs_brand_color",
+        message:
+          I18n.t(
+            "discourse_ai.appearance_authoring.no_brand_color_found",
+            domain: "brand.example.com",
+          ),
+      )
+    end
+
+    it "uses a brand color the administrator picked over the website's" do
+      result = invoke_with_design(name: "Acme", website_url: page_url, brand_color: "#0066cc")
+
+      expect(draft(result)[:light_colors]).to eq(
+        ColorSchemes::Action::BuildFromBrand.call(brand: "0066cc").light,
+      )
+    end
+
+    it "says when it can't read the website" do
+      stub_request(:get, page_url).to_return(status: 404)
+
+      expect(invoke_with_design(name: "Acme", website_url: page_url)[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.website_unreadable", url: page_url),
+      )
+    end
+
+    it "says it can't read the website when the model fails, instead of failing the reply" do
+      failure = DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new("unavailable")
+
+      expect(invoke_with_design(failure, name: "Acme", website_url: page_url)[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.website_unreadable", url: page_url),
+      )
+    end
+
+    it "limits how often an administrator can have websites read" do
+      RateLimiter.enable
+
+      stub_const(described_class, :WEBSITE_LOOKUPS_PER_HOUR, 1) do
+        expect(
+          invoke_with_design(name: "Acme", website_url: page_url, brand_color: "#0066cc"),
+        ).to include(status: "success")
+        expect(
+          invoke_with_design(name: "Acme", website_url: page_url, brand_color: "#0066cc"),
+        ).to eq(
+          status: "error",
+          error: I18n.t("discourse_ai.appearance_authoring.website_rate_limited"),
+        )
+      end
+    end
+  end
+
+  context "with styles" do
+    fab!(:llm_model)
+
+    let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+    let(:styles_answer) do
+      {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "rules" => [],
+        "unsupported" => ["Add a shop link to the header"],
+      }
+    end
+
+    def invoke_with_styles(answers = [styles_answer], **parameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses(answers) do
+        described_class.new(parameters, bot_user: Discourse.system_user, llm:, context:).invoke
+      end
+    end
+
+    it "drafts a new theme with checked styles, keeping the current colors" do
+      result = invoke_with_styles(name: "Acme", styles: "Rounder corners, and a shop link")
+
+      expect(result).to include(
+        status: "success",
+        style_changes: ["--d-border-radius: 12px"],
+        not_supported: ["Add a shop link to the header"],
+      )
+      expect(draft(result)).to include(
+        kind: "theme",
+        styles: {
+          "variables" => {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+      expect(draft(result)[:light_colors]).to eq(
+        DiscourseAi::Agents::AppearanceAuthoring.complete_palette(
+          DiscourseAi::Agents::AppearanceAuthoring.theme_palettes(Theme.foundation_theme)[:light],
+        ),
+      )
+    end
+
+    it "uses new palettes too when given a brand color" do
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+
+      expect(draft(result)[:light_colors]).to eq(
+        ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c").light,
+      )
+    end
+
+    it "says when no styles pass the checks" do
+      bad = {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "url(x)" }],
+        "rules" => [],
+        "unsupported" => [],
+      }
+
+      result = invoke_with_styles([bad] * 3, name: "Acme", styles: "Rounder corners")
+
+      expect(result[:error]).to eq(I18n.t("discourse_ai.appearance_authoring.styles_failed"))
+    end
+
+    it "says when the styles can't make any of the change" do
+      none = { "variables" => [], "rules" => [], "unsupported" => ["Add a carousel"] }
+
+      result = invoke_with_styles([none], name: "Acme", styles: "Add a carousel")
+
+      expect(result[:error]).to eq(
+        I18n.t("discourse_ai.appearance_authoring.styles_unsupported", requests: "Add a carousel"),
+      )
+    end
+
+    context "when the live theme is one the assistant made" do
+      let(:live_styles) { { "variables" => { "--d-border-radius" => "8px" } } }
+      let!(:live_change) do
+        theme = Fabricate(:theme)
+        css = AppearanceStyles::Policy.call(live_styles).css
+        theme.set_field(target: :common, name: :scss, value: css)
+        theme.save!
+        theme.set_default!
+        Fabricate(:theme_appearance_change, name: "Acme", theme:, styles: live_styles, css:)
+      end
+
+      it "drafts a new version of it from its current styles" do
+        result = nil
+        DiscourseAi::Completions::Llm.with_prepared_responses([styles_answer]) do |_, _, prompts|
+          result =
+            described_class.new(
+              { name: "Something else", styles: "Rounder corners" },
+              bot_user: Discourse.system_user,
+              llm:,
+              context:,
+            ).invoke
+          request = prompts.first.messages.find { |message| message[:type] == :user }
+          expect(request[:content]).to include('{"variables":{"--d-border-radius":"8px"}}')
+        end
+
+        expect(result[:saves_as]).to eq(
+          I18n.t("discourse_ai.appearance_authoring.new_version_target", name: "Acme"),
+        )
+        expect(draft(result)).to include(
+          kind: "theme",
+          name: "Acme",
+          replaces_theme_id: live_change.theme_id,
+        )
+      end
+
+      it "drafts a new version without styles when asked to remove the last one" do
+        result =
+          invoke_with_styles(
+            [{ "variables" => [], "rules" => [], "unsupported" => [] }],
+            name: "Acme",
+            styles: "Go back to square corners",
+          )
+
+        expect(result[:status]).to eq("success")
+        expect(draft(result)).to include(replaces_theme_id: live_change.theme_id)
+        expect(draft(result)[:styles]).to be_blank
+      end
+
+      it "doesn't drop the current styles for a request it can't make" do
+        result =
+          invoke_with_styles(
+            [{ "variables" => [], "rules" => [], "unsupported" => ["Add a carousel"] }],
+            name: "Acme",
+            styles: "Add a carousel",
+          )
+
+        expect(result[:error]).to eq(
+          I18n.t(
+            "discourse_ai.appearance_authoring.styles_unsupported",
+            requests: "Add a carousel",
+          ),
+        )
+      end
+
+      it "makes a separate theme when asked for a new one" do
+        result = invoke_with_styles(name: "Other", styles: "Rounder corners", new_theme: true)
+
+        expect(draft(result)).not_to have_key(:replaces_theme_id)
+      end
+
+      it "makes a separate theme once someone has edited the live one by hand" do
+        live_change.theme.set_field(target: :common, name: :scss, value: "body { color: red; }")
+        live_change.theme.save!
+
+        result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+        expect(draft(result)).not_to have_key(:replaces_theme_id)
+      end
+    end
+
+    it "lets a plugin keep styles off" do
+      plugin = Plugin::Instance.new
+      modifier = access_modifier(:style_authoring, "Styles aren't available here.")
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      expect(invoke_with_styles(name: "Acme", styles: "Rounder corners")[:error]).to eq(
+        "Styles aren't available here.",
+      )
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+  end
+
+  context "with Horizon" do
+    fab!(:llm_model)
+
+    let(:llm) { DiscourseAi::Completions::Llm.proxy(llm_model) }
+    let(:horizon) { Theme.horizon_theme }
+    let(:corners_answer) do
+      {
+        "variables" => [{ "name" => "--d-border-radius", "value" => "12px" }],
+        "rules" => [],
+        "unsupported" => [],
+      }
+    end
+    let(:shadow_only_answer) do
+      { "variables" => [], "rules" => [], "unsupported" => ["A shadow on topic rows"] }
+    end
+
+    before do
+      SystemThemesManager.sync_theme!("horizon")
+      horizon.set_default!
+    end
+
+    def invoke_with_styles(answers = [corners_answer], **parameters)
+      DiscourseAi::Completions::Llm.with_prepared_responses(answers) do |_, _, prompts|
+        @prompts = prompts
+        described_class.new(parameters, bot_user: Discourse.system_user, llm:, context:).invoke
+      end
+    end
+
+    it "drafts the styles as a component of Horizon, keeping its colors, and says colors aren't available" do
+      result = invoke_with_styles(name: "Rounded", styles: "Rounder corners")
+
+      expect(result).to include(
+        status: "success",
+        style_changes: ["--d-border-radius: 12px"],
+        saves_as: I18n.t("discourse_ai.appearance_authoring.component_target", theme: horizon.name),
+      )
+      expect(draft(result)).to include(
+        kind: "component",
+        parent_theme_id: horizon.id,
+        styles: {
+          "variables" => {
+            "--d-border-radius" => "12px",
+          },
+        },
+      )
+      expect(draft(result)).not_to have_key(:light_colors)
+      expect(@prompts.first.messages.map { it[:content] }.join).to include(
+        "added to the Horizon theme",
+      )
+    end
+
+    it "drafts new palettes for Horizon with the styles when colors are asked for too" do
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+
+      palettes = ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c")
+      expect(draft(result)).to include(
+        kind: "component",
+        light_colors: palettes.light,
+        dark_colors: palettes.dark,
+      )
+    end
+
+    it "still drafts the colors when none of the styles can be made, and says so" do
+      result =
+        invoke_with_styles(
+          [shadow_only_answer],
+          name: "Acme",
+          brand_color: "#e8590c",
+          styles: "A shadow on topic rows",
+        )
+
+      expect(result).to include(status: "success", not_supported: ["A shadow on topic rows"])
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+    end
+
+    it "keeps the live component's styles when only the colors in a request can be made" do
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+
+      result =
+        invoke_with_styles(
+          [shadow_only_answer],
+          name: "Acme",
+          brand_color: "#e8590c",
+          styles: "A shadow on topic rows",
+        )
+
+      expect(result).to include(status: "success", not_supported: ["A shadow on topic rows"])
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+      expect(draft(result)).not_to have_key(:replaces_theme_id)
+    end
+
+    it "refuses when none of the styles can be made and no colors were asked for" do
+      result = invoke_with_styles([shadow_only_answer], name: "Acme", styles: "A shadow")
+
+      expect(result).to include(status: "error")
+    end
+
+    it "makes a separate theme when one is asked for" do
+      result = invoke_with_styles(name: "Acme", styles: "Rounder corners", new_theme: true)
+
+      expect(draft(result)).to include(kind: "theme")
+      expect(draft(result)).not_to have_key(:parent_theme_id)
+
+      result = invoke(name: "Acme", brand_color: "#e8590c", new_theme: true)
+      expect(draft(result)).to include(kind: "theme")
+    end
+
+    it "drafts styles without new palettes on a site that can't create palettes" do
+      plugin = Plugin::Instance.new
+      modifier = access_modifier(:palette_authoring, "No new palettes here.")
+      plugin.register_modifier(:admin_assistant_feature_access, &modifier)
+
+      result = invoke_with_styles(name: "Rounded", styles: "Rounder corners")
+      expect(draft(result)).to include(kind: "component")
+
+      result = invoke_with_styles(name: "Acme", brand_color: "#e8590c", styles: "Rounder corners")
+      expect(result).to eq(status: "error", error: "No new palettes here.")
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :admin_assistant_feature_access,
+        &modifier
+      )
+    end
+
+    it "keeps changing only colors on Horizon itself" do
+      result = invoke(name: "Acme", brand_color: "#e8590c")
+
+      expect(draft(result)).to include(kind: "palettes", theme_id: horizon.id)
+    end
+
+    it "keeps editing the live component after a later change gave Horizon other colors" do
+      palettes = ColorSchemes::Action::BuildFromBrand.call(brand: "e8590c")
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            light_colors: palettes.light,
+            dark_colors: palettes.dark,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+      other = ColorSchemes::Action::BuildFromBrand.call(brand: "0a7d4f")
+      colors =
+        AppearanceChange::DraftPalettes.call(
+          params: {
+            name: "Green",
+            theme_id: horizon.id,
+            light_colors: other.light,
+            dark_colors: other.dark,
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: colors.id,
+        },
+        guardian: admin.guardian,
+      )
+      expect(live.reload).not_to be_applied
+
+      result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+      expect(draft(result)).to include(kind: "component", replaces_theme_id: live.theme_id)
+    end
+
+    it "drafts a new version of the live component the assistant added" do
+      live =
+        AppearanceChange::DraftComponent.call(
+          params: {
+            name: "Rounded",
+            parent_theme_id: horizon.id,
+            styles: {
+              variables: {
+                "--d-border-radius" => "8px",
+              },
+            },
+          },
+          guardian: admin.guardian,
+        )[
+          :appearance_change
+        ]
+      AppearanceChange::Activate.call(
+        params: {
+          appearance_change_id: live.id,
+        },
+        guardian: admin.guardian,
+      )
+
+      result = invoke_with_styles(name: "Other", styles: "Rounder corners")
+
+      expect(draft(result)).to include(
+        kind: "component",
+        name: "Rounded",
+        replaces_theme_id: live.theme_id,
+      )
+      expect(@prompts.first.messages.map { it[:content] }.join).to include(
+        '{"variables":{"--d-border-radius":"8px"}}',
+      )
+    end
+  end
+end

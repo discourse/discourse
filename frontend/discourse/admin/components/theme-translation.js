@@ -1,13 +1,20 @@
+import { cached } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse/lib/get-url";
 import SiteSettingComponent from "./site-setting.gjs";
 
 export default class ThemeTranslation extends SiteSettingComponent {
-  type = "string";
   trackChanges = false;
 
   get setting() {
     return this.args.translation;
+  }
+
+  @cached
+  get definition() {
+    const { key } = this.args.translation;
+
+    return { ...this.args.translation.definition, key, label: key };
   }
 
   get settingName() {

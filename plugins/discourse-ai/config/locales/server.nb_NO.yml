@@ -50,6 +50,8 @@ nb_NO:
           color: "farge"
         approve_label: "Ja"
         reject_label: "Nei"
+        category_access_levels:
+          readonly: "Se"
       tool_summary:
         search: "Søk"
         time: "Tid"
@@ -71,6 +73,12 @@ nb_NO:
       edit_category:
         errors:
           not_found: "Kategorien finnes ikke."
+      set_category_permissions:
+        errors:
+          not_found: "Kategorien finnes ikke."
+      delete_category:
+        errors:
+          not_found: "Kategorien finnes ikke."
       change_topic_category:
         errors:
           not_found: "Fant ikke emnet."
@@ -87,6 +95,14 @@ nb_NO:
       assign:
         errors:
           not_found: "Fant ikke emnet."
+    appearance_authoring:
+      colors:
+        light:
+          header_background: "Hode"
+    mcp_theme_access:
+      none: "ingen"
+    mcp_app_setup:
+      none: "ingen"
     reviewables:
       ai_tool_action:
         approve:

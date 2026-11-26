@@ -39,7 +39,9 @@ es:
         unassign_from_topic: "Anular asignación de @%{username} del tema"
         unassign_from_post: "Anular asignación de @%{username} de #%{post_number}"
         edit_assignments: "Editar asignaciones..."
-        created_by: "Creado por"
+        owners:
+          one: "Propietario"
+          other: "Propietarios"
       manage:
         name: "Nombre"
         slug: "Slug"
@@ -51,10 +53,10 @@ es:
           column_title: "Título"
           icon: "Icono"
           color: "Color"
+          color_palette: "Paleta de colores"
+          icon_search_placeholder: "Buscar…"
           default_sort_priority: "Prioridad"
           tag: "Etiquetar"
           move_to_assigned_unassign: "Anular asignación"
           move_to_status_open: "Abierto"
           move_to_status_closed: "Cerrado"
-          show_advanced: "Mostrar opciones avanzadas"
-          hide_advanced: "Ocultar opciones avanzadas"

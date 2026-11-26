@@ -4,7 +4,7 @@ describe DiscourseAutomation::AdminAutomationsController do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "#trigger" do
-    fab!(:automation)
+    fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::RECURRING) }
 
     describe "access" do
       context "when user is not logged in" do
@@ -134,6 +134,86 @@ describe DiscourseAutomation::AdminAutomationsController do
         expect(first["foo"]).to eq("1")
         expect(first["bar"]).to eq("2")
         expect(response.status).to eq(200)
+      end
+    end
+
+    describe "with a granular API key" do
+      fab!(:admin)
+      fab!(:private_message_recipient, :user)
+      fab!(:private_post) do
+        Fabricate(
+          :post,
+          topic: Fabricate(:private_message_topic, recipient: private_message_recipient),
+          raw: "private post excerpt",
+        )
+      end
+      fab!(:like) do
+        Fabricate(
+          :post_action,
+          post: private_post,
+          post_action_type_id: PostActionType.types[:like],
+        )
+      end
+      fab!(:automation) do
+        Fabricate(
+          :automation,
+          script: DiscourseAutomation::Scripts::EMAIL_ON_FLAGGED_POST,
+          trigger: DiscourseAutomation::Triggers::POST_FLAG_CREATED,
+        )
+      end
+      let(:api_key) do
+        Fabricate(
+          :api_key,
+          user: admin,
+          api_key_scopes: [
+            Fabricate.build(:api_key_scope, resource: "automation", action: "trigger_automation"),
+          ],
+        )
+      end
+
+      before do
+        Jobs.run_later!
+        SiteSetting.disable_emails = "no"
+        automation.upsert_field!(
+          "email_template",
+          "message",
+          {
+            value:
+              I18n.t("discourse_automation.scriptables.email_on_flagged_post.default_template"),
+          },
+        )
+        automation.upsert_field!("recipients", "users", { value: ["attacker@example.com"] })
+      end
+
+      it "blocks a forged like from an event-only automation" do
+        get "/posts/#{private_post.id}.json",
+            headers: {
+              HTTP_API_KEY: api_key.key,
+              HTTP_API_USERNAME: admin.username,
+            }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(like.post_action_type_id).to eq(PostActionType.types[:like])
+
+        trigger_jobs_count = Jobs::DiscourseAutomation::Trigger.jobs.size
+        email_jobs_count = Jobs::DiscourseAutomation::SendFlagEmail.jobs.size
+        deliveries_count = ActionMailer::Base.deliveries.size
+
+        post "/automations/#{automation.id}/trigger.json",
+             params: {
+               post_action_id: like.id,
+             },
+             headers: {
+               HTTP_API_KEY: api_key.key,
+               HTTP_API_USERNAME: admin.username,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
+        expect(Jobs::DiscourseAutomation::Trigger.jobs.size).to eq(trigger_jobs_count)
+        expect(Jobs::DiscourseAutomation::SendFlagEmail.jobs.size).to eq(email_jobs_count)
+        expect(ActionMailer::Base.deliveries.size).to eq(deliveries_count)
       end
     end
   end

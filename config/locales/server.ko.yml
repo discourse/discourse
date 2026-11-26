@@ -330,10 +330,6 @@ ko:
   no_mentions_allowed_newuser: "신규 사용자는 다른 사용자를 멘션할 수 없습니다."
   too_many_mentions_newuser:
     other: "신규 사용자는 게시물에서 %{count}명의 사용자만 멘션할 수 있습니다."
-  no_embedded_media_allowed_group: "죄송합니다. 게시물에 미디어 항목을 포함할 수 없습니다."
-  no_embedded_media_allowed: "신규 사용자는 게시물에 미디어 항목을 임베드할 수 없습니다."
-  too_many_embedded_media:
-    other: "신규 사용자는 게시물에 미디어 항목을 %{count}개만 임베드할 수 있습니다."
   no_attachments_allowed: "신규 사용자는 게시물에 파일을 첨부할 수 없습니다."
   too_many_attachments:
     other: "신규 사용자는 게시물에 %{count}개의 파일만 첨부할 수 있습니다."
@@ -1720,7 +1716,6 @@ ko:
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
-    short_progress_text_threshold: "주제의 게시물 수가 이 수를 초과하면 진행률 표시줄에 현재 게시물 번호만 표시됩니다. 진행률 표시줄의 너비를 변경하는 경우 이 값을 변경해야 할 수도 있습니다."
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 임베드 가능한 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_set_canonical_url: "임베드된 주제의 표준 URL을 임베드 콘텐츠의 URL로 설정합니다."
@@ -1793,9 +1788,6 @@ ko:
     push_notifications_icon: "알림 코너에 표시되는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG를 사용하는 것이 좋습니다."
     base_font: "사이트에서 대부분의 텍스트에 사용할 기본 글꼴입니다. 테마는 `--font-family` CSS 사용자 지정 프로퍼티를 통해 오버라이드할 수 있습니다."
     heading_font: "사이트 헤딩에 사용할 폰트입니다. 테마는 `--heading-font-family` CSS 사용자 지정 프로퍼티를 통해 재정의할 수 있습니다."
-    dashboard_hidden_reports: "대시보드에서 지정된 리포트를 숨기도록 허용합니다."
-    dashboard_visible_tabs: "표시할 대시보드 탭을 선택합니다."
-    dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
     share_quote_buttons: "인용 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "인용 공유 버튼을 언제 표시할지 결정합니다. 표시 안 함, 익명 사용자만, 모든 사용자 중 선택합니다. "
     errors:
@@ -1845,6 +1837,9 @@ ko:
       markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
+    keywords:
+      company_url: "웹 사이트"
+      title: "커뮤니티 이름"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2176,48 +2171,12 @@ ko:
     post_hidden:
       title: "숨겨진 게시물"
       subject_template: "커뮤니티 신고로 숨겨진 게시물"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        이 게시물은 커뮤니티 신고로 인해 숨겨졌으므로 커뮤니티 피드백을 반영하여 게시물을 되살릴 방법을 고려해 보시기 바랍니다. **%{edit_delay}분 후에 게시물을 편집할 수 있으며 자동으로 숨김 해제됩니다.**
-
-        하지만 게시물이 커뮤니티에 의해 한 번 더 숨겨질 경우 운영진이 처리할 때까지 숨겨진 상태로 유지됩니다.
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     post_hidden_again:
       title: "다시 숨겨진 게시물"
       subject_template: "커뮤니티 신고로 숨겨진 게시물, 운영진 알림 전송됨"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 다시 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        커뮤니티 신고로 인해 게시물이 숨겨졌습니다. **게시물이 두 번째 숨겨졌으므로 이제 이 게시물은 운영진이 처리할 때까지 숨겨진 상태로 유지됩니다.**
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     queued_by_staff:
       title: "승인이 필요한 게시물"
       subject_template: "운영진이 숨긴 게시물, 승인 대기 중"
-      text_body_template: |
-        안녕하세요,
-
-        게시물이 숨겨졌음을 알리기 위해 %{site_name}에서 보낸 자동 메시지입니다.
-
-        <%{base_url}%{url}>
-
-        게시물은 운영진이 검토할 때까지 숨겨진 상태로 유지됩니다.
-
-        자세한 내용은 [커뮤니티 가이드라인](%{base_url}/guidelines)을 참조하세요.
     flags_disagreed:
       title: "운영진이 복원한 신고된 게시물"
       subject_template: "운영진이 복원한 신고된 게시물"
@@ -2949,12 +2908,6 @@ ko:
     account_suspended_forever:
       title: "계정이 정지됨"
       subject_template: "[%{email_prefix}] 계정이 정지되었습니다"
-    account_silenced:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
-    account_silenced_forever:
-      title: "계정이 차단됨"
-      subject_template: "[%{email_prefix}] 계정이 차단되었습니다"
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
@@ -3113,10 +3066,6 @@ ko:
     signup_after_reject:
       title: "가입 거부"
       subject_template: "%{site_name}에서 가입이 거부되었습니다."
-      text_body_template: |
-        운영진이 %{site_name} 계정 가입을 거부했습니다.
-
-        %{reject_reason}
     signup:
       title: "가입"
       subject_template: "[%{email_prefix}] 새 계정 확인"
@@ -3553,6 +3502,11 @@ ko:
   design_wizard:
     palette_pairs:
       default: "기본"
+      neutral: "중립국"
+      shades_of_blue: "푸른 그늘"
+      summer: "여름"
+      grey_amber: "회색 호박색"
+      latte: "라떼"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3573,13 +3527,29 @@ ko:
   search_logs:
     graph_title: "검색 횟수"
   onebox:
+    discourse:
+      recurrence:
+        every_day: "매일"
+        ordinals:
+          last: "마지막"
+        weekdays:
+          sunday: "일요일"
+          monday: "월요일"
+          tuesday: "화요일"
+          wednesday: "수요일"
+          thursday: "목요일"
+          friday: "금요일"
+          saturday: "토요일"
     google_meet:
       meeting_code: "코드:"
     github:
+      header:
+        success: "성공"
       opened: "열림"
       closed: "닫힘"
-      status_date:
-        open: "열림"
+      pr_status:
+        draft: "임시저장"
+        open: "열기"
         approved: "승인"
         closed: "닫힘"
   discourse_push_notifications:
@@ -3637,6 +3607,10 @@ ko:
       links:
         category: 카테고리 설정
     actions:
+      answer_yes:
+        title: "예"
+      answer_no:
+        title: "아니오"
       agree:
         title: "예"
       agree_and_keep_deleted:
@@ -3670,6 +3644,8 @@ ko:
         title: "예"
       approve_post:
         title: "예"
+      deny_and_delete_post:
+        complete: "게시물 삭제됨."
       approve_post_closed:
         title: "예"
         confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"

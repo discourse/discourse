@@ -73,15 +73,6 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
-  .form-kit__conditional-display-content {
-    // prevent content shift when changing style options
-    min-height: 2.6em;
-
-    &:has(.badge-category__wrapper) {
-      justify-content: center;
-    }
-  }
-
   .--radio-cards {
     .form-kit__container-title {
       max-width: var(--form-kit-max-input);
@@ -97,13 +88,6 @@ $number-input-width: var(--form-kit-small-input);
 
   .add-required-tag-group {
     align-self: start;
-  }
-
-  #control-icon,
-  #control-emoji {
-    &.form-kit__field .form-kit__container-content {
-      width: auto;
-    }
   }
 
   .edit-category-page-header {
@@ -151,6 +135,67 @@ $number-input-width: var(--form-kit-small-input);
     }
   }
 
+  .edit-category-tab-topic-template {
+    .select-category-template__info {
+      margin-block: 0.25rem;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .form-kit__conditional-display {
+    .form-kit__container-content:has(.is-disabled) {
+      // select-kit has pointer-events disabled, so we need to style the parent
+      cursor: not-allowed;
+    }
+  }
+
+  .edit-category-tab-localizations {
+    .btn-default {
+      align-self: start;
+    }
+  }
+
+  .d-floating-control-bar {
+    max-width: var(--form-kit-max-input);
+    flex-direction: row-reverse;
+    align-items: center;
+    bottom: var(--powered-by-height, 0);
+
+    @include viewport.until(sm) {
+      &__label {
+        display: none;
+      }
+
+      // The ui-kit stylesheet is imported ahead of this one, so these overrides
+      // now win ties against its base rules. That includes its footer-nav
+      // offset, which this block has to restore rather than inherit.
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--space-4)
+        );
+      }
+    }
+
+    @include viewport.from(sm) {
+      bottom: calc(var(--powered-by-height, 0px) + var(--space-5));
+
+      .footer-nav-visible & {
+        bottom: calc(
+          var(--footer-nav-height) + env(safe-area-inset-bottom) +
+            var(--powered-by-height, 0px) + var(--space-5)
+        );
+      }
+    }
+
+    &__controls {
+      flex-direction: row-reverse;
+      margin-right: auto;
+    }
+  }
+}
+
+.edit-category {
   &__footer {
     grid-area: footer;
 
@@ -205,53 +250,47 @@ $number-input-width: var(--form-kit-small-input);
       }
     }
   }
+}
 
-  .edit-category-tab-topic-template {
-    .select-category-template__info {
-      margin-block: 0.25rem;
-      font-size: var(--font-down-1);
+.category-name-style {
+  width: 100%;
+
+  &__name {
+    width: 100%;
+  }
+
+  &__square {
+    background: currentcolor;
+    border-radius: 0.15em;
+  }
+
+  &__tabs .d-tabs__strip {
+    margin-block-end: var(--space-2);
+  }
+
+  &__color-warning.btn {
+    --d-button-transparent-icon-color: var(--danger);
+    --d-button-transparent-text-color--hover: var(--danger);
+    flex: 1;
+    padding: 0;
+  }
+
+  &__color .form-kit__control-color-input-prefix {
+    .fk-d-tooltip__trigger,
+    .fk-d-tooltip__trigger-container {
+      flex: 1;
+      align-self: stretch;
     }
   }
 
-  .form-kit__conditional-display {
-    .form-kit__container-content:has(.is-disabled) {
-      // select-kit has pointer-events disabled, so we need to style the parent
-      cursor: not-allowed;
-    }
-  }
-
-  .edit-category-tab-localizations {
-    .btn-default {
-      align-self: start;
-    }
-  }
-
-  .admin-changes-banner {
-    max-width: var(--form-kit-max-input);
-    flex-direction: row-reverse;
-    align-items: center;
-    bottom: var(--powered-by-height, 0);
-
-    @include viewport.until(sm) {
-      &__main-label {
-        display: none;
-      }
+  &__tabs .d-tabs__panel > &__color {
+    .form-kit__container-content,
+    .form-kit__control-color-input-picker {
+      width: 100%;
     }
 
-    @include viewport.from(sm) {
-      bottom: calc(var(--powered-by-height, 0px) + var(--space-5));
-
-      .footer-nav-visible & {
-        bottom: calc(
-          var(--footer-nav-height) + env(safe-area-inset-bottom) +
-            var(--powered-by-height, 0px) + var(--space-5)
-        );
-      }
-    }
-
-    .controls {
-      flex-direction: row-reverse;
-      margin-right: auto;
+    .form-kit__control-color-picker-wrapper {
+      flex: 1;
     }
   }
 }
@@ -262,14 +301,9 @@ $number-input-width: var(--form-kit-small-input);
     font-size: var(--font-down-1);
     color: var(--primary-high);
 
-    // field renders as an excerpt, so these hit nothing of importance atm
-    // > :first-child {
-    //   margin-top: 0;
-    // }
-
-    // > :last-child {
-    //   margin-bottom: 0;
-    // }
+    p {
+      margin: 0;
+    }
   }
 
   .description-content {

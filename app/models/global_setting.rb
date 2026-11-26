@@ -12,11 +12,14 @@ class GlobalSetting
 
   REDIS_VALIDATE_SECONDS = 30
 
+  DEFAULTS_PATH = File.expand_path("../../config/global_settings.yml", __dir__)
+  LEGACY_CONFIG_PATH = File.expand_path("../../config/discourse.conf", __dir__)
+
   # In Rails secret_key_base is used to encrypt the cookie store
   # the cookie store contains session data
   # Discourse also uses this secret key to digest user auth tokens
   # This method will
-  # - use existing token if already set in ENV or discourse.conf
+  # - use existing token if already set in ENV
   # - generate a token on the fly if needed and cache in redis
   # - skips caching generated token to redis if redis is skipped
   # - enforce rules about token format falling back to redis if needed
@@ -55,8 +58,7 @@ class GlobalSetting
   end
 
   def self.load_defaults
-    default_provider =
-      FileProvider.from(File.expand_path("../../../config/discourse_defaults.conf", __FILE__))
+    default_provider = FileProvider.new(DEFAULTS_PATH)
     default_provider
       .keys
       .concat(@provider.keys)
@@ -305,45 +307,18 @@ class GlobalSetting
     end
   end
 
-  class FileProvider < BaseProvider
-    attr_reader :data
-    def self.from(file)
-      parse(file) if File.exist?(file)
-    end
-
-    def initialize(file)
-      @file = file
-      @data = {}
-    end
-
-    def read
-      ERB
-        .new(File.read(@file))
-        .result()
-        .split("\n")
-        .each do |line|
-          if line =~ /\A\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
-            @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
-          end
-        end
+  class FileProvider
+    def initialize(path)
+      @data = YAML.safe_load_file(path).symbolize_keys
     end
 
     def lookup(key, default)
-      var = @data[key]
-      resolve(var, var.nil? ? default : "")
+      @data.key?(key) ? @data[key] : default
     end
 
     def keys
       @data.keys
     end
-
-    def self.parse(file)
-      provider = new(file)
-      provider.read
-      provider
-    end
-
-    private_class_method :parse
   end
 
   class EnvProvider < BaseProvider
@@ -374,15 +349,12 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-  def self.configure!(
-    path: File.expand_path("../../../config/discourse.conf", __FILE__),
-    use_blank_provider: Rails.env.test?
-  )
-    if use_blank_provider
-      @provider = BlankProvider.new
-    else
-      @provider = FileProvider.from(path) || EnvProvider.new
+  def self.configure!(use_blank_provider: Rails.env.test?)
+    if File.exist?(LEGACY_CONFIG_PATH)
+      raise "#{LEGACY_CONFIG_PATH} is not supported. Move its settings to DISCOURSE_* env vars and delete it."
     end
+
+    @provider = use_blank_provider ? BlankProvider.new : EnvProvider.new
   end
 
   def self.load_plugins?
@@ -392,6 +364,11 @@ class GlobalSetting
   def self.plugins_to_load
     filter = load_plugins_filter
     filter.is_a?(Array) ? filter : nil
+  end
+
+  def self.load_plugin?(dir_name)
+    filter = load_plugins_filter
+    filter.is_a?(Array) ? filter.include?(dir_name) : filter == :all
   end
 
   # Returns `:all`, `:none`, or an array of plugin directory names.

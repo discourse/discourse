@@ -133,6 +133,7 @@ export default class SignupPageController extends Controller {
   @computed(
     "hasAuthOptions",
     "canCreateLocal",
+    "requireInviteCode",
     "siteSettings.enable_local_logins_via_code",
     "siteSettings.enable_local_logins_via_email",
     "skipConfirmation"
@@ -142,6 +143,7 @@ export default class SignupPageController extends Controller {
       this.siteSettings.enable_local_logins_via_code &&
       this.siteSettings.enable_local_logins_via_email &&
       this.canCreateLocal &&
+      !this.requireInviteCode &&
       !this.hasAuthOptions &&
       !this.skipConfirmation
     );

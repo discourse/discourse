@@ -28,6 +28,40 @@ describe Chat::Publisher do
       end
     end
 
+    context "when the message is a broadcasted thread reply" do
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
+      before do
+        channel.update!(threading_enabled: true)
+        message_1.update!(thread: thread)
+        message_2.update!(thread: thread, broadcasted: true)
+      end
+
+      it "publishes deletes to both the thread bus and the channel bus" do
+        publishes = MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }
+
+        thread_publish =
+          publishes.find { |p| p.channel == "/chat/#{channel.id}/thread/#{thread.id}" }
+        channel_publish = publishes.find { |p| p.channel == "/chat/#{channel.id}" }
+
+        expect(thread_publish.data["type"]).to eq("delete")
+        expect(channel_publish.data["type"]).to eq("delete")
+      end
+
+      context "when threading is disabled after the broadcast" do
+        before { channel.update!(threading_enabled: false) }
+
+        it "publishes the delete without touching the thread bus" do
+          publishes =
+            MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }
+          channels = publishes.map(&:channel)
+
+          expect(channels).to include("/chat/#{channel.id}")
+          expect(channels).not_to include("/chat/#{channel.id}/thread/#{thread.id}")
+        end
+      end
+    end
+
     context "when the message is in a thread and the channel has threading_enabled" do
       before do
         thread = Fabricate(:chat_thread, channel: channel)
@@ -271,6 +305,65 @@ describe Chat::Publisher do
             "chat-restricted-category-group-#{group_id}"
           end,
         )
+      end
+
+      shared_examples "delivering messages to eligible logged in users" do |enabled:|
+        it "bounds logged-in category delivery by chat eligibility with granular permissions #{enabled}" do
+          SiteSetting.granular_anonymous_and_logged_in_groups_permissions = enabled
+          category = Fabricate(:category, permissions: { logged_in_users: :full })
+          restricted_channel = Fabricate(:category_channel, chatable: category)
+          message = Fabricate(:chat_message, chat_channel: restricted_channel)
+          chat_group = Fabricate(:group)
+          SiteSetting.chat_allowed_groups = chat_group.id
+          user = Fabricate(:user)
+          user_group_ids = [
+            Group::AUTO_GROUPS[:trust_level_0],
+            Group::AUTO_GROUPS[:logged_in_users],
+          ]
+
+          published_message =
+            MessageBus
+              .track_publish(described_class.root_message_bus_channel(restricted_channel.id)) do
+                described_class.publish_new!(restricted_channel, message, staged_id)
+              end
+              .first
+
+          expect(published_message.group_ids).to contain_exactly(
+            *Chat::CategoryChannel::STAFF_GROUP_IDS.map do |group_id|
+              "chat-restricted-category-group-#{group_id}"
+            end,
+            "chat-restricted-category-group-#{Group::AUTO_GROUPS[:logged_in_users]}",
+          )
+          expect(
+            MessageBus::Client.new(
+              client_id: "chat-disallowed",
+              user_id: user.id,
+              group_ids: Chat.message_bus_group_ids_for(user_group_ids),
+              message_bus: MessageBus,
+            ).allowed?(published_message),
+          ).to eq(false)
+          expect(
+            MessageBus::Client.new(
+              client_id: "chat-allowed",
+              user_id: user.id,
+              group_ids: Chat.message_bus_group_ids_for(user_group_ids + [chat_group.id]),
+              message_bus: MessageBus,
+            ).allowed?(published_message),
+          ).to eq(true)
+          expect(
+            MessageBus::Client.new(client_id: "anonymous", message_bus: MessageBus).allowed?(
+              published_message,
+            ),
+          ).to eq(false)
+        end
+      end
+
+      context "when granular permissions are disabled" do
+        include_examples "delivering messages to eligible logged in users", enabled: false
+      end
+
+      context "when granular permissions are enabled" do
+        include_examples "delivering messages to eligible logged in users", enabled: true
       end
 
       it "publishes to trust level 0 when chat is allowed for everyone" do

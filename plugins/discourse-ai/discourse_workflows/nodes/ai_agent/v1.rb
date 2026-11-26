@@ -402,6 +402,9 @@ if defined?(DiscourseWorkflows)
                 guardian: runner.guardian,
                 messages: [{ type: :user, content: content }],
                 feature_name: "workflow",
+                feature_context: {
+                  workflow_id: exec_ctx.get_workflow.id,
+                },
                 execution_context: execution_context,
                 cancel_manager: cancel_manager,
               )

@@ -26,6 +26,10 @@ module PageObjects
         page.has_no_css?(RICH_EDITOR)
       end
 
+      def has_no_onebox_images?(url:)
+        page.has_no_css?("#{RICH_EDITOR} .onebox[data-onebox-src='#{url}'] img[src]", visible: :all)
+      end
+
       def has_no_animated_images?
         page.has_no_css?("#{RICH_EDITOR} .composer-image-node img") do |image|
           image.evaluate_script("getComputedStyle(this).animationName") != "none"
@@ -98,6 +102,14 @@ module PageObjects
         page.has_css?("#{@composer_id} .composer-footer__toolbar .d-editor-button-bar")
       end
 
+      def has_uncollapsed_footer_toolbar?
+        page.has_css?("#{@composer_id} .composer-footer__toolbar", wait: 2) do |toolbar|
+          panel = page.find("#{@composer_id} .composer-footer .submit-panel", wait: false)
+          toolbar.evaluate_script("this.getBoundingClientRect().width") >=
+            panel.evaluate_script("this.getBoundingClientRect().width")
+        end
+      end
+
       def has_title_below_category_row?
         page.has_css?("#{@composer_id} .title-and-category ~ .title-input")
       end
@@ -122,6 +134,20 @@ module PageObjects
 
       def has_title_in_category_row?
         page.has_css?("#{@composer_id} .title-and-category .title-input")
+      end
+
+      def has_stacked_message_tag_picker?
+        page.has_css?("#{@composer_id} .title-and-category > .tags-input") do |picker|
+          picker.evaluate_script(<<~JS)
+            (() => {
+              const row = this.parentElement;
+              const title = row.querySelector(".title-input").getBoundingClientRect();
+              const picker = this.getBoundingClientRect();
+              const bounds = row.getBoundingClientRect();
+              return picker.top >= title.bottom && picker.left >= bounds.left && picker.right <= bounds.right;
+            })()
+          JS
+        end
       end
 
       def toggle_toolbar

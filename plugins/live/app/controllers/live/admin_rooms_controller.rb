@@ -30,6 +30,11 @@ module Live
       room = Live::Room.find(params[:id])
 
       if room.update(room_params)
+        Live::StageRoles.sync_room_type_change!(room) if room.saved_change_to_room_type?
+        if room.saved_change_to_room_type? || room.saved_change_to_speak_requests_enabled?
+          Live::DirectoryBroadcaster.broadcast(action: :updated, room: room)
+        end
+        Live::ParticipantEvictor.evict_unauthorized!(room)
         render_serialized room, AdminRoomSerializer, root: :room
       else
         render_json_error room
@@ -52,6 +57,7 @@ module Live
       room = Live::Room.find(params[:id])
       participant_ids = Live::ParticipantTracker.user_ids(room.id)
 
+      Live::StageRoles.clear_session_speakers!(room)
       Live::AgentManager.evict_agents_in_room!(room)
       participant_ids.each { |user_id| Live::RoomBroadcaster.publish_kick(room, user_id) }
 
@@ -69,6 +75,7 @@ module Live
           :public,
           :max_participants,
           :room_type,
+          :speak_requests_enabled,
           :video_enabled,
           :livekit_enabled,
           :chat_channel_id,

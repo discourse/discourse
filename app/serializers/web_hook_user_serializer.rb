@@ -47,6 +47,7 @@ class WebHookUserSerializer < UserSerializer
     sidebar_category_ids
     sidebar_tags
     can_pick_theme_with_custom_homepage
+    staff_only_settings
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_email?

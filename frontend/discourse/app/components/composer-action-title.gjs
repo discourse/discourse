@@ -32,7 +32,7 @@ export default class ComposerActionTitle extends Component {
       return null;
     }
     return trustHTML(
-      `${iconHTML("share", { class: "reply-to-glyph" })}
+      `${iconHTML("reply", { class: "reply-to-glyph" })}
        ${originalUser.avatar}
        <span class="original-username">${escape(originalUser.username)}</span>`
     );

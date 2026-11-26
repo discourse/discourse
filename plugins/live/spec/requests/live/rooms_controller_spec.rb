@@ -1058,6 +1058,58 @@ RSpec.describe Live::RoomsController do
       expect(metadata[:is_transcribing]).to eq(false)
     end
 
+    context "when recording locally" do
+      it "sets and clears the recording flag for allowed users" do
+        SiteSetting.live_local_recording_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(true)
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to eq(false)
+      end
+
+      it "rejects starting when the user's groups can't record" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: true,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(403)
+        metadata = Live::ParticipantTracker.get_metadata(room.id, user.id)
+        expect(metadata[:is_recording_locally]).to be_nil
+      end
+
+      # Losing the permission mid-recording must not strand the indicator.
+      it "always allows clearing the flag" do
+        SiteSetting.live_local_recording_allowed_groups = ""
+
+        post "/live/rooms/#{room.id}/state.json",
+             params: {
+               recording_locally: false,
+               participant_session_id: @participant_session_id,
+             }
+
+        expect(response.status).to eq(204)
+      end
+    end
+
     it "rejects video when no group is allowed to share a camera" do
       SiteSetting.live_video_allowed_groups = ""
 
@@ -1319,6 +1371,31 @@ RSpec.describe Live::RoomsController do
       expect(response.parsed_body["room"]["max_quality_profile"]).to eq("high")
     end
 
+    it "kicks participants who no longer qualify when the room is made private" do
+      resuming_user = Fabricate(:user)
+      room.update!(creator: room_owner)
+      room.room_memberships.create!(user: other_participant)
+      Live::ParticipantTracker.add(room.id, user.id)
+      Live::ParticipantTracker.add(room.id, other_participant.id)
+      Live::ParticipantTracker.add(room.id, resuming_user.id)
+      Live::ParticipantTracker.update_metadata(room.id, resuming_user.id, { role: "participant" })
+      Live::ParticipantTracker.create_participant_session!(room.id, resuming_user.id)
+      Live::ParticipantTracker.expire_presence(room.id, resuming_user.id)
+      sign_in(room_owner)
+
+      messages =
+        MessageBus.track_publish(Live.room_channel(room.id)) do
+          put "/live/rooms/#{room.id}.json", params: { room: { public: false } }
+        end
+
+      expect(response.status).to eq(200)
+      expect(
+        messages.select { |m| m.data[:type] == "kicked" }.flat_map(&:user_ids),
+      ).to contain_exactly(user.id, resuming_user.id)
+      expect(Live::ParticipantTracker.user_ids(room.id)).to contain_exactly(other_participant.id)
+      expect(Live::ParticipantTracker.participant_session?(room.id, resuming_user.id)).to eq(false)
+    end
+
     it "clears the room-level quality cap when set to site_default" do
       private_room.update!(max_quality_profile: Live::Room::QUALITY_PROFILES["standard"])
       sign_in(room_owner)
@@ -1352,6 +1429,27 @@ RSpec.describe Live::RoomsController do
 
       expect(response.status).to eq(200)
       expect(Live::Room.exists?(private_room.id)).to eq(false)
+    end
+
+    it "returns 403 for a room moderator who is not the creator" do
+      private_room.room_memberships.create!(
+        user: other_participant,
+        role: Live::RoomMembership::ROLE_MODERATOR,
+      )
+      sign_in(other_participant)
+
+      delete "/live/rooms/#{private_room.id}.json"
+
+      expect(response.status).to eq(403)
+      expect(Live::Room.exists?(private_room.id)).to eq(true)
+    end
+
+    it "serializes can_delete for the creator" do
+      sign_in(room_owner)
+
+      get "/live/rooms/#{private_room.id}.json"
+
+      expect(response.parsed_body.dig("room", "can_delete")).to eq(true)
     end
 
     it "broadcasts the destroy to the members the room had" do
@@ -2185,6 +2283,30 @@ RSpec.describe Live::RoomsController do
     end
 
     describe "#chat_message" do
+      it "accepts attachments without text and returns the accepted message ID" do
+        SiteSetting.chat_allow_uploads = true
+        upload = Fabricate(:upload, user: user)
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { upload_ids: [upload.id] }
+
+        expect(response.status).to eq(200)
+        thread = Chat::Thread.find(response.parsed_body["thread_id"])
+        expect(response.parsed_body["message_id"]).to eq(thread.original_message_id)
+        expect(thread.original_message.uploads).to contain_exactly(upload)
+      end
+
+      it "rejects requests without content instead of creating an automatic opener" do
+        sign_in(user)
+        join_room!(user)
+
+        post "/live/rooms/#{room.id}/chat_message.json", params: { message: " " }
+
+        expect(response.status).to eq(422)
+        expect(channel.chat_messages).to be_empty
+      end
+
       it "requires authentication" do
         post "/live/rooms/#{room.id}/chat_message.json", params: { message: "hi" }
 

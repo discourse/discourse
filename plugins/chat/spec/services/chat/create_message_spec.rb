@@ -264,6 +264,47 @@ RSpec.describe Chat::CreateMessage do
       end
     end
 
+    context "when broadcast is requested" do
+      let(:params) do
+        { chat_channel_id: channel.id, message: content, thread_id: thread.id, broadcast: true }
+      end
+
+      before { SiteSetting.chat_thread_improvements = true }
+
+      it "flags the new message as broadcasted and updates the channel last message" do
+        expect(result).to run_successfully
+        expect(result.message_instance.broadcasted?).to be(true)
+        expect(channel.reload.last_message_id).to eq(result.message_instance.id)
+      end
+
+      context "when the chat_thread_improvements upcoming change is off" do
+        before { SiteSetting.chat_thread_improvements = false }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
+      end
+
+      context "when the channel has threading disabled" do
+        before { channel.update!(threading_enabled: false) }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
+      end
+
+      context "when the message is not in a thread" do
+        let(:params) { { chat_channel_id: channel.id, message: content, broadcast: true } }
+
+        it "sends the message without the broadcast flag" do
+          expect(result).to run_successfully
+          expect(result.message_instance.broadcasted?).to be(false)
+        end
+      end
+    end
+
     context "when user is silenced" do
       before { UserSilencer.new(user).silence }
 
@@ -469,10 +510,10 @@ RSpec.describe Chat::CreateMessage do
                   end
 
                   context "when thread is part of the provided channel" do
-                    let(:thread) { Fabricate(:chat_thread, channel: channel) }
+                    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
                     context "when replying to an existing message" do
-                      let(:reply_to) { Fabricate(:chat_message, chat_channel: channel) }
+                      fab!(:reply_to) { Fabricate(:chat_message, chat_channel: channel) }
 
                       context "when reply thread does not match the provided thread" do
                         let!(:another_thread) do

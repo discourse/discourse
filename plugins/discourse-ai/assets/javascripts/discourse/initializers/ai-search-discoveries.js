@@ -3,6 +3,7 @@ import { getOwner } from "@ember/owner";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { SEARCH_TYPE_DEFAULT } from "discourse/controllers/full-page-search";
 import { apiInitializer } from "discourse/lib/api";
+import { updateRecentSearches } from "discourse/lib/search";
 import { i18n } from "discourse-i18n";
 import { contextPlace } from "../lib/ai-search-scope.js";
 import { SEARCH_TYPE_ASK_AI } from "../lib/full-page-search-types.js";
@@ -18,8 +19,13 @@ export default apiInitializer((api) => {
     currentUser?.can_use_ai_discover_agent &&
     currentUser.user_option?.ai_search_discoveries !== false;
 
-  if (settings.ai_discover_enabled && currentUser?.can_use_ai_discover_agent) {
+  if (settings.ai_discover_enabled && settings.ai_discover_agent) {
     api.addSaveableUserOption("ai_search_discoveries", { page: "interface" });
+  }
+
+  if (settings.ai_ask_ai_enabled) {
+    // listed as saveable so the preferences page sends it with the rest
+    api.addSaveableUserOption("ai_ask_ai_default", { page: "interface" });
   }
 
   if (!settings.ai_ask_ai_enabled || !currentUser?.can_use_ask_ai) {
@@ -28,9 +34,6 @@ export default apiInitializer((api) => {
     }
     return;
   }
-
-  // listed as saveable so the preferences page sends it with the rest
-  api.addSaveableUserOption("ai_ask_ai_default", { page: "interface" });
 
   const search = api.container.lookup("service:search");
   const discobotDiscoveries = api.container.lookup(
@@ -46,6 +49,9 @@ export default apiInitializer((api) => {
   const aiSearchSession = api.container.lookup("service:ai-search-session");
 
   const startCombined = (query, { trigger }) => {
+    // the session searches on its own rather than through the menu, which is
+    // what would otherwise add the term to recent searches
+    updateRecentSearches(currentUser, query);
     // the session runs the keyword searches, so the menu is switched to
     // showing topics
     aiSearchSession.showTopicsInMenu?.();
@@ -57,22 +63,12 @@ export default apiInitializer((api) => {
   if (combinedSearch) {
     aiSearchSession.subscribe();
 
-    const contextKey = () => contextPlace(search.searchContext)?.key ?? null;
-    let lastContextKey = contextKey();
-
+    // the search stays across pages, as the menu's own does
     api.onPageChange(() => {
       aiSearchSession.forgetSearches();
-
-      // A search belongs to where it was made. Somewhere else it would run
-      // again in the new scope the moment the menu opened, so it is cleared.
-      const key = contextKey();
-      if (key !== lastContextKey) {
-        lastContextKey = key;
-        aiSearchSession.reset();
-        search.activeGlobalSearchTerm = "";
-        search.noResults = false;
-        search.results = {};
-      }
+      aiSearchSession.leaveTopicScope(
+        contextPlace(search.searchContext)?.key ?? null
+      );
     });
   }
 
@@ -228,7 +224,7 @@ export default apiInitializer((api) => {
 
       discobotDiscoveries.loadRecentAsks();
 
-      return [
+      const merged = [
         ...discobotDiscoveries.recentAsks.map((ask) => ({
           ...ask,
           icon: "far-discobot",
@@ -236,6 +232,23 @@ export default apiInitializer((api) => {
         })),
         ...value,
       ];
+
+      if (!combinedSearch) {
+        return merged;
+      }
+
+      // Every combined search is logged as a search and may also be an ask,
+      // and either row repeats it the same way, so a term is listed once, as
+      // its latest use.
+      const at = (entry) => Date.parse(entry.at ?? "") || -Infinity;
+      const latest = new Map();
+      for (const entry of merged) {
+        const seen = latest.get(entry.term);
+        if (!seen || at(entry) > at(seen)) {
+          latest.set(entry.term, entry);
+        }
+      }
+      return [...latest.values()];
     }
   );
 
@@ -274,7 +287,7 @@ export default apiInitializer((api) => {
       args.updatedTerm
     ) {
       search.activeGlobalSearchTerm = args.updatedTerm;
-      startCombined(args.updatedTerm, { trigger: "recent" });
+      startCombined(args.updatedTerm.trim(), { trigger: "recent" });
       return false;
     }
 
@@ -303,12 +316,13 @@ export default apiInitializer((api) => {
       if (combinedSearch) {
         if (!event.shiftKey && query) {
           // A search already on screen for this term is not run again, unless
-          // its answer broke down. Enter on it opens the full page instead, as
-          // a second enter does in the menu, whose own handling is skipped
-          // because the menu never saw the first.
+          // its answer broke down or it was made somewhere else. Enter on it
+          // opens the full page instead, as a second enter does in the menu,
+          // whose own handling is skipped because the menu never saw the first.
           if (
             aiSearchSession.isActiveFor(query) &&
-            !aiSearchSession.answerErrored
+            !aiSearchSession.answerErrored &&
+            aiSearchSession.searchedFrom(aiSearchSession.contextScope?.key)
           ) {
             searchTerm.args.fullSearch();
             searchTerm.args.closeSearchMenu();

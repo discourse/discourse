@@ -85,6 +85,14 @@ RSpec.describe GlobalSetting do
     end
   end
 
+  describe ".configure!" do
+    it "raises when config/discourse.conf exists" do
+      File.stubs(:exist?).with(GlobalSetting::LEGACY_CONFIG_PATH).returns(true)
+
+      expect { GlobalSetting.configure! }.to raise_error(/discourse\.conf is not supported/)
+    end
+  end
+
   describe ".redis_config" do
     describe "when replica config is not present" do
       it "does not set any custom client nor replica config" do
@@ -125,62 +133,32 @@ RSpec.describe GlobalSetting::EnvProvider do
 end
 
 RSpec.describe GlobalSetting::FileProvider do
-  it "can parse a simple file" do
-    f = Tempfile.new("foo")
-    f.write("  # this is a comment\n")
-    f.write("\n")
-    f.write(" a = 1000  # this is a comment\n")
-    f.write("b = \"10 # = 00\"  # this is a # comment\n")
-    f.write("c = \'10 # = 00\' # this is a # comment\n")
-    f.write("d =\n")
-    f.write("#f = 1\n")
-    f.write("a1 = 1\n")
-    f.close
+  it "reads typed values from a YAML file" do
+    file = Tempfile.new(%w[global_settings .yml])
+    file.write(<<~YAML)
+      # a comment
+      int: 1000
+      negative_int: -1
+      bool: false
+      string: "10 # = 00"
+      blank:
+    YAML
+    file.close
 
-    provider = GlobalSetting::FileProvider.from(f.path)
+    provider = GlobalSetting::FileProvider.new(file.path)
 
-    expect(provider.lookup(:a, "")).to eq 1000
-    expect(provider.lookup(:b, "")).to eq "10 # = 00"
-    expect(provider.lookup(:c, "")).to eq "10 # = 00"
-    expect(provider.lookup(:d, "bob")).to eq nil
-    expect(provider.lookup(:e, "bob")).to eq "bob"
-    expect(provider.lookup(:f, "bob")).to eq "bob"
-    expect(provider.lookup(:a1, "")).to eq 1
-
-    expect(provider.keys.sort).to eq %i[a a1 b c d]
-
-    f.unlink
+    expect(provider.keys).to contain_exactly(:int, :negative_int, :bool, :string, :blank)
+    expect(provider.lookup(:int, nil)).to eq(1000)
+    expect(provider.lookup(:negative_int, nil)).to eq(-1)
+    expect(provider.lookup(:bool, true)).to eq(false)
+    expect(provider.lookup(:string, nil)).to eq("10 # = 00")
+    expect(provider.lookup(:blank, "default")).to be_nil
+    expect(provider.lookup(:missing, "default")).to eq("default")
+  ensure
+    file&.unlink
   end
 
-  it "uses ERB" do
-    f = Tempfile.new("foo")
-    f.write("a = <%= 500 %>  # this is a comment\n")
-    f.close
-
-    provider = GlobalSetting::FileProvider.from(f.path)
-
-    expect(provider.lookup(:a, "")).to eq 500
-
-    f.unlink
-  end
-
-  it "can coerce negative integers" do
-    f = Tempfile.new("foo")
-    f.write("negative_int = -1\n")
-    f.write("positive_int = 100\n")
-    f.write("zero = 0\n")
-    f.close
-
-    provider = GlobalSetting::FileProvider.from(f.path)
-
-    expect(provider.lookup(:negative_int, "")).to eq(-1)
-    expect(provider.lookup(:positive_int, "")).to eq(100)
-    expect(provider.lookup(:zero, "")).to eq(0)
-
-    f.unlink
-  end
-
-  describe ".load_plugins? and .plugins_to_load" do
+  describe ".load_plugins?, .plugins_to_load and .load_plugin?" do
     around do |example|
       original = ENV["LOAD_PLUGINS"]
       example.run
@@ -192,12 +170,14 @@ RSpec.describe GlobalSetting::FileProvider do
       ENV["LOAD_PLUGINS"] = "1"
       expect(GlobalSetting.load_plugins?).to eq(true)
       expect(GlobalSetting.plugins_to_load).to be_nil
+      expect(GlobalSetting.load_plugin?("chat")).to eq(true)
     end
 
     it "treats `0` as load-none" do
       ENV["LOAD_PLUGINS"] = "0"
       expect(GlobalSetting.load_plugins?).to eq(false)
       expect(GlobalSetting.plugins_to_load).to be_nil
+      expect(GlobalSetting.load_plugin?("chat")).to eq(false)
     end
 
     it "parses a comma-separated list, stripping whitespace and empty entries" do
@@ -209,6 +189,8 @@ RSpec.describe GlobalSetting::FileProvider do
     it "tolerates `plugins/foo` entries by taking the basename" do
       ENV["LOAD_PLUGINS"] = "plugins/chat,plugins/automation"
       expect(GlobalSetting.plugins_to_load).to eq(%w[chat automation])
+      expect(GlobalSetting.load_plugin?("chat")).to eq(true)
+      expect(GlobalSetting.load_plugin?("poll")).to eq(false)
     end
 
     it "raises when given a list outside of dev/test" do

@@ -23,10 +23,7 @@ module JsonApiKit
         record.public_send(name)
       end
 
-      def column_for(schema)
-        return if value || readable.per_record?
-        schema.column(name)
-      end
+      def requires_full_record? = value.present? || readable.per_record?
 
       private
 

@@ -123,6 +123,31 @@ RSpec.describe Emoji do
       Emoji.clear_cache
       expect(Emoji.lookup_unicode("peach")).not_to eq("🍑")
     end
+
+    it "is not poisoned by user-supplied emoji names that mimic deny list cache keys" do
+      SiteSetting.emoji_deny_list = "peach"
+      Emoji.clear_cache
+
+      Emoji.exists?("denied_emojis:peach")
+      Emoji.exists?("denied_emojis_set:peach")
+
+      expect(Emoji.denied).to include("peach")
+      expect(Emoji.lookup_unicode("peach")).not_to eq("🍑")
+    end
+
+    it "respects emoji deny list aliases and avoids Redis when deny list is blank" do
+      SiteSetting.emoji_deny_list = ""
+      Discourse.cache.expects(:fetch).never
+      expect(Emoji.denied).to be_nil
+      expect(Emoji.gsub_emoji_to_unicode("Plain title without colons")).to eq(
+        "Plain title without colons",
+      )
+      expect(Emoji.gsub_emoji_to_unicode("Ship it :rocket:")).to eq("Ship it 🚀")
+
+      SiteSetting.emoji_deny_list = "+1"
+      expect(Emoji.lookup_unicode("+1")).to eq("")
+      expect(Emoji.lookup_unicode("thumbsup")).to eq("")
+    end
   end
 
   describe ".url_for" do
@@ -314,6 +339,11 @@ RSpec.describe Emoji do
     it "creates emoji with group when known" do
       emoji = Emoji.create_from_db_item("name" => "scotland")
       expect(emoji.group).to eq("flags")
+    end
+
+    it "flags emojis that have an animation" do
+      expect(Emoji.create_from_db_item("name" => "wink").animated).to eq(true)
+      expect(Emoji.create_from_db_item("name" => "abacus").animated).to eq(false)
     end
 
     it "returns nil when group is unknown" do

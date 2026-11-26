@@ -520,11 +520,6 @@ es:
   too_many_mentions_newuser:
     one: "Lo sentimos, pero los usuarios nuevos solo pueden mencionar a un usuario en una publicación."
     other: "Lo sentimos, los usuarios nuevos solo pueden mencionar a %{count} usuarios en una publicación."
-  no_embedded_media_allowed_group: "Lo sentimos, no puedes insertar elementos multimedia en una publicación."
-  no_embedded_media_allowed: "Lo sentimos, los nuevos usuarios no pueden insertar elementos multimedia en las publicaciones."
-  too_many_embedded_media:
-    one: "Lo sentimos, los nuevos usuarios solo pueden poner un elemento multimedia incrustado en una publicación."
-    other: "Lo sentimos, los nuevos usuarios solo pueden poner %{count} elementos multimedia incrustados en una publicación."
   no_attachments_allowed: "Lo sentimos, los usuarios nuevos no pueden adjuntar archivos en publicaciones."
   too_many_attachments:
     one: "Lo sentimos, los usuarios nuevos solo pueden adjuntar un archivo por publicación"
@@ -2320,7 +2315,6 @@ es:
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
     show_time_gap_days: "Si entre dos publicaciones han pasado este número de días, mostrar el lapso de tiempo en el tema."
-    short_progress_text_threshold: "Después de que el número de publicaciones en un tema alcance esta cifra, la barra de progreso solo mostrará el número de publicaciones actual. Si cambias la anchura de la barra de progreso, deberías revisar este valor."
     highlighted_languages: "Incluye reglas de resaltado sintáctico. (Advertencia: incluir demasiados idiomas puede afectar al rendimiento) ver: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> para ver una demostración"
     show_copy_button_on_codeblocks: "Añadir un botón para copiar el contenido de los bloques de código al portapapeles."
     embed_any_origin: "Permitir la inserción de contenido sin importar su origen. Esto se requiere para aplicaciones móviles con HTML estático."
@@ -2438,9 +2432,7 @@ es:
     create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
     default_watched_precedence_over_muted: "Notificar a los usuarios sobre temas en categorías o etiquetas que están observando y que también pertenezcan a una que hayan silenciado"
-    company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
-    governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
-    city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
+    company_name: "Nombre de tu empresa u organización."
     shared_drafts_category: "Activa la característica de borradores compartidos designando una categoría para borradores de temas. Los temas de esta categoría se eliminarán de las listas de temas para los miembros del personal."
     shared_drafts_allowed_groups: "Permite a los usuarios de estos grupos ver y editar Borradores compartidos."
     push_notifications_prompt: "Mostrar un banner de consentimiento del usuario para las notificaciones push. Este ajuste activa un aviso pidiendo permiso a los usuarios para enviarles notificaciones push. Solo aparece cuando las notificaciones push no están ya activadas, son compatibles con el dispositivo del usuario y este ha realizado una publicación o está utilizando una Aplicación Web Progresiva (PWA). El aviso no se volverá a mostrar si el usuario ya lo ha descartado o ha concedido/denegado el permiso."
@@ -2454,9 +2446,6 @@ es:
     enable_user_status: "Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
     enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio pueda ser limitado. Debe limitarse a 12 caracteres. Ten en cuenta que cambiar este título puede enviar un aviso a los usuarios de la PWA pidiéndoles que actualicen o desinstalen la aplicación."
-    dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
-    dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
-    dashboard_general_tab_activity_metrics: "Selecciona las denuncias que se muestran como medidas de actividad en la pestaña general."
     gravatar_enabled: "Usa el servicio <a href='https://gravatar.com/'>Gravatar</a> para los avatares de usuario. Desactivar esto evitará que los usuarios cambien a Gravatar para sus avatares, pero no afectará a quienes ya lo usan."
     gravatar_name: "Especifica el nombre del proveedor del servicio Gravatar. Este nombre se utiliza normalmente para identificar la fuente que proporciona avatares Gravatar al sitio."
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
@@ -2576,10 +2565,29 @@ es:
       mediaconvert_output_subdirectory_required: "Se requiere el subdirectorio de salida de MediaConvert."
       s3_credentials_required_for_video_conversion: "Se requieren credenciales de S3 para la conversión de video. Configura las claves de acceso de S3 o activa el perfil IAM."
     keywords:
+      about_banner_image: "imagen del banner"
+      about_page_extra_groups: "listado de grupos"
+      about_page_extra_groups_initial_members: "ampliación de miembros"
+      about_page_extra_groups_order: "orden de clasificación"
+      about_page_extra_groups_show_description: "incluir descripción"
       clean_up_inactive_users_after_days: "desactivado|inactivo|no activado"
+      company_url: "página web"
+      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
+      embed_full_app: "modo de aplicación completa"
+      extended_site_description: "descripción de la comunidad"
+      large_icon: "icono cuadrado"
+      logo: "logotipo principal"
+      logo_dark: "logotipo principal oscuro"
+      logo_small: "logotipo pequeño"
+      logo_small_dark: "logotipo pequeño oscuro"
       navigation_menu: "barra lateral|menú desplegable de encabezado"
       purge_unactivated_users_grace_period_days: "desactivado|inactivo|no activado"
-      default_composition_mode: "rte|texto enriquecido|compositor|markdown|editor enriquecido"
+      short_site_description: "título de la comunidad"
+      site_contact_group_name: "grupo de contacto del sitio"
+      site_contact_username: "nombre del contacto del sitio"
+      site_description: "resumen comunitario"
+      title: "nombre de la comunidad"
+      welcome_banner_image: "imagen de fondo"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -3107,20 +3115,6 @@ es:
       title: "Publicación oculta"
       preview: "Publicación oculta debido a que miembros de la comunidad la han denunciado."
       subject_template: "Publicación ocultada debido a denuncias de la comunidad"
-      text_body_template: |
-        Hola:
-
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        Esta publicación se ocultó debido a denuncias de la comunidad. Por esto, por favor, considera cómo podrías editar tus publicaciones teniendo en cuenta esta respuesta de la comunidad. **Podrás editar tu publicación dentro de %{edit_delay} minutos y la misma dejará de estar oculta automáticamente.**
-
-        Sin embargo, si la comunidad oculta la publicación una segunda vez, se mantendrá oculta hasta que un miembro del equipo la gestione.
-
-        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     reviewable_queued_post_revise_and_reject_edit_post: "Puedes editar tu mensaje original a continuación y volver a enviarlo para hacer los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta."
     reviewable_queued_post_revise_and_reject_edit_post_no_reply: "Puedes editar tu publicación original a continuación y volver a enviarla para realizar los cambios sugeridos."
     reviewable_queued_post_revise_and_reject_edit_topic: "Puedes editar la publicación original de tu tema a continuación y volver a enviarlo para hacer los cambios sugeridos, o responder a este mensaje si tienes alguna pregunta."
@@ -3173,31 +3167,9 @@ es:
       title: "Publicación ocultada de nuevo"
       preview: "Publicación oculta de nuevo por miembros de la comunidad."
       subject_template: "Publicación ocultada debido a denuncias de la comunidad, se ha informado al personal"
-      text_body_template: |
-        Hola:
-
-        Este es un mensaje automático de %{site_name} para informarte que tu publicación ha sido ocultada de nuevo.
-
-        <%{base_url}%{url}>
-
-        %{flag_reason}
-
-        La comunidad reportó esta publicación y ahora se encuentra oculta. **Dado que esta publicación se ha ocultado más de una vez, tu publicación se mantendrá oculta hasta que la gestione un miembro del equipo.**
-
-        Para más consejos, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     queued_by_staff:
       title: "La publicación requiere aprobación"
       subject_template: "Publicación oculta por el personal, esperando aprobación"
-      text_body_template: |
-        Hola,
-
-        Esto es un mensaje automático de %{site_name} para hacerte saber que hemos ocultado tu publicación.
-
-        <%{base_url}%{url}>
-
-        Tu publicación ha sido ocultada hasta que la revisemos.
-
-        Para más información, consulta nuestras [directrices de la comunidad](%{base_url}/guidelines).
     flags_disagreed:
       title: "Publicación denunciada recuperada por el personal"
       subject_template: "Publicación denunciada recuperada por el personal"
@@ -3703,16 +3675,6 @@ es:
     user_automatically_silenced_with_reason:
       title: "Usuario silenciado automáticamente"
       subject_template: "Usuario nuevo %{username} silenciado por denuncias de la comunidad"
-      text_body_template: |
-        Este es un mensaje automático.
-
-        El nuevo usuario [%{username}](%{user_url}) se ha silenciado automáticamente.
-
-        Motivo: %{reason}
-
-        Por favor, [revisa las denuncias](%{base_url}/review). Si %{username} se ha silenciado incorrectamente, haz clic en el botón de dejar de silenciar en [la página de administración de este usuario](%{user_url}).
-
-        Este umbral puede cambiarse a través de la opción «silence_new_user».
     spam_post_blocked:
       title: "Publicación con spam bloqueada"
       subject_template: "Publicaciones del usuario nuevo %{username} bloqueadas debido a la repetición de enlaces."
@@ -4041,12 +4003,6 @@ es:
     account_suspended_forever:
       title: "Cuenta suspendida"
       subject_template: "[%{email_prefix}] Tu cuenta ha sido suspendida"
-    account_silenced:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
-    account_silenced_forever:
-      title: "Cuenta silenciada"
-      subject_template: "[%{email_prefix}] Tu cuenta ha sido silenciada"
     account_deleted:
       title: "Cuenta eliminada"
       subject_template: "[%{email_prefix}] Tu cuenta se ha eliminado"
@@ -4228,10 +4184,6 @@ es:
     signup_after_reject:
       title: "Registro: después de rechazo"
       subject_template: "Te han rechazado la cuenta en %{site_name}"
-      text_body_template: |
-        Un miembro del equipo de %{site_name} ha rechazado la creación de tu cuenta.
-
-        %{reject_reason}
     signup:
       title: "Regístrate"
       preview: "Confirma tu cuenta."
@@ -4830,7 +4782,12 @@ es:
   design_wizard:
     palette_pairs:
       default: "Por defecto"
+      neutral: "Neutro"
+      shades_of_blue: "Matices de azul"
+      summer: "Verano"
       dracula: "Drácula"
+      grey_amber: "Gris ámbar"
+      latte: "Latte"
   wizard:
     title: "Instalación de Discourse"
     step:
@@ -4870,6 +4827,19 @@ es:
     graph_title: "Análisis de búsquedas"
   onebox:
     discourse:
+      recurrence:
+        every_day: "Cada día"
+        every_weekday: "Todos los días de la semana"
+        ordinals:
+          last: "últimos"
+        weekdays:
+          sunday: "Domingo"
+          monday: "Lunes"
+          tuesday: "Martes"
+          wednesday: "Miércoles"
+          thursday: "Jueves"
+          friday: "Viernes"
+          saturday: "Sábado"
       user_joined_community: "Se unió el %{date}"
     google_meet:
       meeting_code: "Código:"
@@ -4877,6 +4847,9 @@ es:
       truncated_file: "Este archivo se ha truncado."
       show_original: "mostrar original"
     github:
+      header:
+        file: "Archivo"
+        success: "Éxito"
       binary_file: "Este archivo es binario."
       truncated_file: "Este archivo se ha truncado."
       show_original: "mostrar original"
@@ -4890,21 +4863,12 @@ es:
       review_by: "Revisado por"
       pr_summary: "%{commits} commits cambiaron %{changed_files} archivos con %{additions} adiciones y %{deletions} eliminaciones"
       no_description: "Contribuye al desarrollo de %{repo} creando una cuenta en GitHub."
-      pr_title:
-        default: "Pull request"
-        draft: "Borrador de pull request"
-        open: "Pull request abierta"
-        approved: "Pull request aprobada"
-        changes_requested: "Cambios solicitados"
-        merged: "Pull request fusionada"
-        closed: "Pull request cerrada"
-      status_date:
-        open: "abierto"
-        draft: "borrador"
-        approved: "aprobado"
-        changes_requested: "cambios solicitados"
-        merged: "fusionado"
-        closed: "cerrado"
+      pr_status:
+        draft: "Borrador"
+        open: "Abierto"
+        approved: "Aprobado"
+        merged: "Fusionado"
+        closed: "Cerrado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} te mencionó en «%{topic}» - %{site_title}'
@@ -4994,6 +4958,10 @@ es:
       no_context:
         watched_word: "Esta publicación incluía una palabra vigilada. Consulta los %{link} para obtener más información."
     actions:
+      answer_yes:
+        title: "Sí"
+      answer_no:
+        title: "No"
       agree:
         title: "Sí"
       agree_and_keep:
@@ -5034,6 +5002,7 @@ es:
       delete_and_ignore_replies:
         title: "Eliminar publicación y respuestas, ignorar denuncia"
         description: "Elimina la publicación y todas sus respuestas, luego ignora la denuncia eliminándola de la cola; si es la primera publicación, elimina también el tema"
+        confirm_title: "Eliminar publicación y respuestas, ignorar denuncia?"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       delete_and_agree:
@@ -5043,6 +5012,7 @@ es:
       delete_and_agree_replies:
         title: "Eliminar publicación y respuestas"
         description: "Aceptar la denuncia y eliminar esta publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema."
+        confirm_title: "Eliminar publicación y respuestas?"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       disagree_and_restore:
@@ -5077,6 +5047,8 @@ es:
       approve_post:
         title: "Sí"
         complete: "Publicación aprobada."
+      deny_and_delete_post:
+        complete: "Publicación eliminada."
       approve_post_closed:
         title: "Sí"
         confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"

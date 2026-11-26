@@ -564,22 +564,50 @@ RSpec.describe DiscourseAi::Completions::OpenAiMessageProcessor do
     expect(tool.parameters).to eq({ kind: "group", query: "friend" })
   end
 
-  it "raises on invalid tool arguments" do
-    processor = described_class.new
+  it "falls back to empty parameters when streamed arguments cannot be parsed" do
+    processor = described_class.new(partial_tool_calls: true)
 
+    # A model that closes the parameter with the wrong markup leaves the
+    # server-side tool parser emitting an unterminated JSON string.
     processor.process_streamed_message(
       chunk(
         delta: {
           tool_calls: [
-            { index: 0, id: "call_group", function: { name: "resolve", arguments: "not-json" } },
+            {
+              index: 0,
+              id: "call_summary",
+              function: {
+                name: "set_topic_summary",
+                arguments: "{\"summary\": \"A short gist.</summary>\\n</invoke>\\n\\n<tool_call>",
+              },
+            },
           ],
         },
       ),
     )
 
-    expect {
-      processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
-    }.to raise_error(JSON::ParserError)
+    tool = processor.process_streamed_message(chunk(delta: {}, finish_reason: "tool_calls"))
+
+    expect(tool).to have_attributes(name: "set_topic_summary", parameters: {}, partial: false)
+  end
+
+  it "falls back to empty parameters when non-streamed arguments cannot be parsed" do
+    processor = described_class.new
+
+    result =
+      processor.process_message(
+        choices: [
+          {
+            message: {
+              tool_calls: [
+                { id: "call_group", function: { name: "resolve", arguments: "not-json" } },
+              ],
+            },
+          },
+        ],
+      )
+
+    expect(result.first).to have_attributes(name: "resolve", parameters: {})
   end
 
   it "separates uncached, cache-read, and cache-write input tokens" do

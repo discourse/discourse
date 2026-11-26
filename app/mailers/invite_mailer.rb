@@ -25,10 +25,12 @@ class InviteMailer < ActionMailer::Base
       )
 
     # If they were invited to a topic
-    if invite_to_topic && first_topic.present?
+    if invite_to_topic && first_topic.present? && invite.invited_by.guardian.can_see?(first_topic)
       # get topic excerpt
       topic_excerpt = ""
-      topic_excerpt = first_topic.excerpt.tr("\n", " ") if first_topic.excerpt
+      if first_topic.excerpt && !first_topic.first_post_hidden?
+        topic_excerpt = first_topic.excerpt.tr("\n", " ")
+      end
 
       topic_title = first_topic.try(:title)
       if SiteSetting.private_email?

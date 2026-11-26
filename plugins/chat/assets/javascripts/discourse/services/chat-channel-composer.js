@@ -27,17 +27,10 @@ export default class ChatChannelComposer extends ChatComposerService {
     this.chat.activeMessage = null;
 
     if (message.channel.threadingEnabled) {
-      if (!message.thread?.id) {
+      if (!message.thread) {
         try {
           this.loadingSlider.transitionStarted();
-          const threadObject = await this.chatApi.createThread(
-            message.channel.id,
-            message.id
-          );
-          message.thread = message.channel.threadsManager.add(
-            message.channel,
-            threadObject
-          );
+          message.thread = await this.#resolveThread(message);
         } finally {
           this.loadingSlider.transitionEnded();
         }
@@ -61,5 +54,20 @@ export default class ChatChannelComposer extends ChatComposerService {
       message.channel.draft.inReplyTo = message;
       this.focus({ ensureAtEnd: true });
     }
+  }
+
+  async #resolveThread(message) {
+    if (message.threadId) {
+      return message.channel.threadsManager.find(
+        message.channel.id,
+        message.threadId
+      );
+    }
+
+    const threadObject = await this.chatApi.createThread(
+      message.channel.id,
+      message.id
+    );
+    return message.channel.threadsManager.add(message.channel, threadObject);
   }
 }

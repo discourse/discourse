@@ -23,6 +23,7 @@ RSpec.describe ReviewableUserSerializer do
 
   it "includes the user fields for review" do
     json = ReviewableUserSerializer.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+    expect(json[:signup_approval]).to eq(true)
     expect(json[:user_id]).to eq(reviewable.target_id)
     expect(json[:payload]["username"]).to eq(user.username)
     expect(json[:payload]["email"]).to eq(user.email)

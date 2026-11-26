@@ -57,6 +57,8 @@ export interface PluginContext {
   hashtagContext?: string;
   /** ID of the category being edited. */
   categoryId?: number;
+  /** Whether the host enables post composer image descriptions. */
+  composerImageDescriptions?: boolean;
   /** Current application session. */
   session: Session;
   /** Service used to show contextual menus. */
@@ -249,6 +251,8 @@ export type DiscourseMarkdownSerializerState = MarkdownSerializerState & {
   inTable?: boolean;
   inAutolink?: boolean;
   linkMarkup?: string;
+  linkifyEnd?: number;
+  out: string;
 };
 
 export type SerializeNodeFn = (

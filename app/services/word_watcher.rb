@@ -2,7 +2,8 @@
 
 class WordWatcher
   REPLACEMENT_LETTER = CGI.unescape_html("&#9632;")
-  CACHE_VERSION = 3
+  CACHE_VERSION = 4
+  GENERATION_KEY = "generation"
 
   def initialize(raw)
     @raw = raw
@@ -10,20 +11,35 @@ class WordWatcher
 
   @cache_enabled = true
 
+  def self.enable_cache
+    @cache_enabled = true
+  end
+
   def self.disable_cache
     @cache_enabled = false
+    @compiled_regexps_cache&.hash&.clear
   end
 
   def self.cache_enabled?
     @cache_enabled
   end
 
+  def self.compiled_regexps_cache
+    @compiled_regexps_cache ||= DistributedCache.new("word_watcher_compiled_regexps")
+  end
+  private_class_method :compiled_regexps_cache
+
   def self.cache_key(action)
     "watched-words-list:v#{CACHE_VERSION}:#{action}"
   end
 
+  # Runs after commit so other workers cannot rebuild from pre-update rows
+  # once the cache has been invalidated.
   def self.clear_cache!
-    WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+    DB.after_commit do
+      WatchedWord.actions.each { |action, _| Discourse.cache.delete(cache_key(action)) }
+      compiled_regexps_cache.clear(after_commit: false)
+    end
   end
 
   def self.words_for_action(action)
@@ -34,10 +50,24 @@ class WordWatcher
       .pluck(:word, :replacement, :case_sensitive, :html)
       .to_h do |w, r, c, h|
         opts = { word: w, replacement: r, case_sensitive: c }.compact
-        opts[:html] = true if h
+        if h
+          opts[:replacement] = self_contained_html(opts[:replacement])
+          opts[:html] = true
+        end
         [word_to_regexp(w, match_word: false), opts]
       end
   end
+
+  # HTML replacements are concatenated with the surrounding content before
+  # sanitization, so they must be balanced for both the sanitizer and an HTML
+  # parser. Sanitizing first removes raw-text content the two read differently.
+  def self.self_contained_html(html)
+    return html if html.blank?
+
+    Nokogiri::HTML5.fragment(PrettyText.sanitize(html)).to_html
+  end
+
+  private_class_method :self_contained_html
 
   def self.words_for_action_exist?(action)
     WatchedWord.where(action: WatchedWord.actions[action.to_sym]).exists?
@@ -54,26 +84,82 @@ class WordWatcher
   end
 
   def self.regexps_for_action(action)
-    words = cached_words_for_action(action)
-    return if words.blank?
+    return cached_regexps_for_action(action) if cache_enabled?
 
-    words.each_with_object({}) do |(_, attrs), hash|
-      regexp = word_to_regexp(attrs[:word])
-      begin
-        Regexp.new(regexp)
-        hash[regexp] = attrs
-      rescue RegexpError => e
-        Rails.logger.warn(
-          "Watched word '#{attrs[:word]}' has invalid regex '#{regexp}' for #{action}: #{e.message}",
-        )
-      end
+    build_regexps_for_action(action)
+  end
+
+  def self.cached_regexps_for_action(action)
+    key = "regexps:#{action}:#{SiteSetting.watched_words_regular_expressions?}"
+    fetch_from_compiled_cache(key) do
+      build_regexps_for_action(action, words: words_for_action(action).presence)
     end
   end
+  private_class_method :cached_regexps_for_action
+
+  def self.build_regexps_for_action(action, words: cached_words_for_action(action))
+    return if words.blank?
+
+    words
+      .each_with_object({}) do |(_, attrs), hash|
+        regexp = word_to_regexp(attrs[:word])
+        begin
+          Regexp.new(regexp)
+          hash[regexp] = attrs.freeze
+        rescue RegexpError => e
+          Rails.logger.warn(
+            "Watched word '#{attrs[:word]}' has invalid regex '#{regexp}' for #{action}: #{e.message}",
+          )
+        end
+      end
+      .freeze
+  end
+  private_class_method :build_regexps_for_action
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
   def self.compiled_regexps_for_action(action, raise_errors: false)
-    words = cached_words_for_action(action)
+    return cached_compiled_regexps_for_action(action) if cache_enabled? && !raise_errors
+
+    build_compiled_regexps_for_action(action, raise_errors: raise_errors)
+  end
+
+  # Values are built straight from the database, never from the Redis word
+  # list, which a concurrent miss can repopulate with pre-commit rows right
+  # after a clear. They are stored in this process only; invalidation is what
+  # gets distributed. The generation token is wiped
+  # by any clear, so a build that started before a clear never outlives it.
+  def self.fetch_from_compiled_cache(key)
+    store = compiled_regexps_cache.hash
+    return store[key] if store.key?(key)
+
+    token = (store[GENERATION_KEY] ||= Object.new)
+    value = yield
+    if store[GENERATION_KEY].equal?(token)
+      store[key] = value
+      store.delete(key) if !store[GENERATION_KEY].equal?(token)
+    end
+    value
+  end
+  private_class_method :fetch_from_compiled_cache
+
+  def self.cached_compiled_regexps_for_action(action)
+    key = "#{action}:#{SiteSetting.watched_words_regular_expressions?}"
+    fetch_from_compiled_cache(key) do
+      build_compiled_regexps_for_action(
+        action,
+        raise_errors: false,
+        words: words_for_action(action).presence,
+      ).freeze
+    end
+  end
+  private_class_method :cached_compiled_regexps_for_action
+
+  def self.build_compiled_regexps_for_action(
+    action,
+    raise_errors: false,
+    words: cached_words_for_action(action)
+  )
     return [] if words.blank?
 
     words
@@ -118,6 +204,7 @@ class WordWatcher
       end
       .compact
   end
+  private_class_method :build_compiled_regexps_for_action
 
   def self.serialized_regexps_for_action(action)
     compiled_regexps_for_action(action).map { |r| { r.source => { case_sensitive: !r.casefold? } } }
@@ -261,6 +348,8 @@ class WordWatcher
   end
 
   def self.replace_text_with_regexp(text, regexp, replacement)
+    return text if !regexp.match?(text)
+
     text.gsub(regexp) do |match|
       prefix = ""
       # match may be prefixed with a non-word character from the non-capturing group
@@ -314,13 +403,36 @@ class WordWatcher
   private_class_method :match_word_regexp
 
   def self.replace(text, watch_word_type)
-    regexps_for_action(watch_word_type)
-      .to_a
-      .reduce(text) do |t, (word_regexp, attrs)|
-        case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
-        replace_text_with_regexp(t, Regexp.new(word_regexp, case_flag), attrs[:replacement])
+    pairs =
+      if cache_enabled?
+        cached_replace_regexps_for_action(watch_word_type)
+      else
+        build_replace_regexps(regexps_for_action(watch_word_type))
       end
-  end
+    return text if pairs.blank?
 
+    pairs.reduce(text) do |t, (regexp, replacement)|
+      replace_text_with_regexp(t, regexp, replacement)
+    end
+  end
   private_class_method :replace
+
+  def self.cached_replace_regexps_for_action(action)
+    key = "replace_pairs:#{action}:#{SiteSetting.watched_words_regular_expressions?}"
+    fetch_from_compiled_cache(key) do
+      regexps = build_regexps_for_action(action, words: words_for_action(action).presence)
+      build_replace_regexps(regexps).freeze
+    end
+  end
+  private_class_method :cached_replace_regexps_for_action
+
+  def self.build_replace_regexps(regexps)
+    return [] if regexps.blank?
+
+    regexps.map do |word_regexp, attrs|
+      case_flag = attrs[:case_sensitive] ? nil : Regexp::IGNORECASE
+      [Regexp.new(word_regexp, case_flag), attrs[:replacement]].freeze
+    end
+  end
+  private_class_method :build_replace_regexps
 end

@@ -32,7 +32,8 @@ ko:
           other: "%{count} 댓글"
         assign: "할당"
         unassign: "할당 해제"
-        created_by: "작성자"
+        owners:
+          other: "소유자"
       manage:
         name: "그룹명"
         slug: "강타"
@@ -43,6 +44,7 @@ ko:
           column_title: "제목"
           icon: "아이콘"
           color: "색상"
+          icon_search_placeholder: "검색…"
           tag: "태그"
           move_to_assigned_unassign: "할당 해제"
           move_to_status_open: "열기"

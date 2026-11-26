@@ -86,6 +86,16 @@ RSpec.describe SearchController do
       expect(response.status).to eq(400)
     end
 
+    it "rejects oversized search text in full-page and header searches" do
+      term = (1..51).map { |number| "word#{number}" }.join(" ")
+
+      get "/search.json", params: { q: term }
+      expect(response.status).to eq(400)
+
+      get "/search/query.json", params: { term: term }
+      expect(response.status).to eq(400)
+    end
+
     it "can search correctly" do
       SiteSetting.use_pg_headlines_for_excerpt = true
 
@@ -292,6 +302,17 @@ RSpec.describe SearchController do
       log = SearchLog.where(id: search_log_id).first
       expect(log).to be_present
       expect(log.term).to eq("wookie")
+    end
+
+    it "returns results without logging a derived query" do
+      SiteSetting.log_search_queries = true
+      term = "awesome topic:#{awesome_topic.id}"
+
+      get "/search/query.json", params: { term: term, skip_search_log: true }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["posts"].pluck("id")).to eq([awesome_post.id])
+      expect(SearchLog.where(term: term)).to be_empty
     end
 
     it "logs the pageview session the search was made from" do
@@ -551,6 +572,25 @@ RSpec.describe SearchController do
               q: "awesome",
               context: "tag",
               context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "doesn’t work for tags restricted to a private category" do
+        category_tag = Fabricate(:tag)
+        awesome_topic.tags << category_tag
+        CategoryTag.create!(
+          category: Fabricate(:private_category, group: Fabricate(:group)),
+          tag: category_tag,
+        )
+
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: category_tag.name,
               skip_context: false,
             }
 

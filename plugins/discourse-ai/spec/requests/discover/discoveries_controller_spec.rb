@@ -193,6 +193,119 @@ describe DiscourseAi::Discover::DiscoveriesController do
 
         expect(response.status).to eq(409)
       end
+
+      it "charges a request that names a deferred search but asks to defer again once it is used" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          params = {
+            query:,
+            deferred_ask_log_id: response.parsed_body["ask_log_id"],
+            defer_if_precise: true,
+          }
+
+          expect {
+            post "/discourse-ai/discoveries/reply",
+                 params: params.merge(request_id: SecureRandom.uuid)
+          }.not_to change { AskAiLog.count }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).not_to have_key("answer_deferred")
+
+          post "/discourse-ai/discoveries/reply",
+               params: params.merge(request_id: SecureRandom.uuid)
+          expect(response.status).to eq(429)
+        end
+      end
+
+      it "charges and refuses a deferred answer requested with a malformed id" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 2) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          deferred_ask_log_id = response.parsed_body["ask_log_id"]
+          params = { query:, deferred_ask_log_id: [deferred_ask_log_id] }
+
+          expect {
+            post "/discourse-ai/discoveries/reply",
+                 params: params.merge(request_id: SecureRandom.uuid)
+          }.to not_change { AskAiLog.count }.and not_change { Jobs::StreamDiscoverReply.jobs.size }
+          expect(response.status).to eq(400)
+
+          post "/discourse-ai/discoveries/reply",
+               params: params.merge(request_id: SecureRandom.uuid)
+          expect(response.status).to eq(429)
+          expect(AskAiLog.find(deferred_ask_log_id)).to be_ask_outcome_skipped
+        end
+      end
+
+      it "lets the reader request a deferred answer after using every search" do
+        RateLimiter.enable
+        stub_const(DiscourseAi::Discoveries, :ASK_RATE_LIMIT, 1) do
+          query = "password status:open"
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id:,
+                 defer_if_precise: true,
+               }
+          deferred_ask_log_id = response.parsed_body["ask_log_id"]
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+          expect(response.status).to eq(200)
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+          expect(response.status).to eq(429)
+
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query: "What is Discourse?",
+                 request_id: SecureRandom.uuid,
+               }
+          expect(response.status).to eq(429)
+        end
+      end
+
+      it "returns a 409 when a deferred answer was already requested" do
+        query = "password status:open"
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+             }
+        deferred_ask_log_id = response.parsed_body["ask_log_id"]
+        2.times do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 deferred_ask_log_id:,
+               }
+        end
+
+        expect(response.status).to eq(409)
+      end
     end
   end
 
@@ -263,6 +376,123 @@ describe DiscourseAi::Discover::DiscoveriesController do
         ask_intent_model: "lookup",
         ask_intent_probability: 0.7,
       )
+    end
+
+    it "defers a standalone URL and records when the reader requests the answer" do
+      query = "https://example.com/t/password-reset?from=search#instructions"
+      expect do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+               classify_intent: true,
+             }
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+
+      log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+      expect(response.parsed_body).to include("answer_deferred" => true)
+      expect(response.parsed_body).not_to have_key("intent")
+      expect(log).to have_attributes(
+        answer_deferred_reason: "url_lookup",
+        ask_outcome: "skipped",
+        answer_requested_at: nil,
+      )
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { ask_ai_log_id: log.id, query: }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id: SecureRandom.uuid,
+               deferred_ask_log_id: log.id,
+             }
+      end
+
+      expect(response.parsed_body).not_to have_key("answer_deferred")
+      expect(log.reload).to have_attributes(
+        answer_deferred_reason: "url_lookup",
+        answer_requested_at: be_present,
+      )
+    end
+
+    it "defers exact visible usernames and display names" do
+      SiteSetting.enable_names = true
+      SearchIndexer.enable
+      account = Fabricate(:user, username: "graceh", name: "Grace Hopper", trust_level: 2)
+      contributor = Fabricate(:user, username: "forumcontributor", trust_level: 2)
+      Fabricate(:post, user: contributor)
+
+      expect do
+        [contributor.username.upcase, account.name.downcase].each do |query|
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 defer_if_precise: true,
+               }
+
+          log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+          expect(log).to have_attributes(
+            answer_deferred_reason: "exact_user_match",
+            ask_outcome: "skipped",
+          )
+        end
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+    end
+
+    it "defers canonically equivalent Unicode usernames of contributors" do
+      SiteSetting.unicode_usernames = true
+      account = Fabricate(:user, username: "Löwe", trust_level: 2)
+      Fabricate(:post, user: account)
+
+      expect do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query: "LO\u0308WE",
+               request_id:,
+               defer_if_precise: true,
+             }
+      end.not_to change(Jobs::StreamDiscoverReply.jobs, :size)
+
+      expect(response.parsed_body).to include("answer_deferred" => true)
+      log = AskAiLog.find(response.parsed_body.fetch("ask_log_id"))
+      expect(log.answer_deferred_reason).to eq("exact_user_match")
+    end
+
+    it "queues an answer when a search only matches the username of an account with no posts" do
+      account = Fabricate(:user, username: "docker", trust_level: 2)
+      query = account.username
+
+      expect_enqueued_with(job: :stream_discover_reply, args: { query: }) do
+        post "/discourse-ai/discoveries/reply",
+             params: {
+               query:,
+               request_id:,
+               defer_if_precise: true,
+             }
+      end
+
+      expect(response.parsed_body).not_to have_key("answer_deferred")
+    end
+
+    it "keeps questions with URLs and queries for hidden profiles eligible for an answer" do
+      SiteSetting.allow_users_to_hide_profile = true
+      account = Fabricate(:user, username: "hiddenaccount", trust_level: 2)
+      Fabricate(:post, user: account)
+      account.user_option.update!(hide_profile: true)
+
+      ["What does https://example.com describe?", account.username].each do |query|
+        expect_enqueued_with(job: :stream_discover_reply, args: { query: }) do
+          post "/discourse-ai/discoveries/reply",
+               params: {
+                 query:,
+                 request_id: SecureRandom.uuid,
+                 defer_if_precise: true,
+               }
+        end
+
+        expect(response.parsed_body).not_to have_key("answer_deferred")
+      end
     end
 
     it "answers a scoped search from the whole site when the model says it is about the site" do
@@ -405,6 +635,54 @@ describe DiscourseAi::Discover::DiscoveriesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body).not_to have_key("intent")
       expect(AskAiLog.last).to have_attributes(ask_intent_heuristic: "", ask_intent_model: "")
+    end
+  end
+
+  describe "#record_tabs timings and result clicks" do
+    fab!(:llm_model)
+    fab!(:ai_agent) do
+      Fabricate(
+        :ai_agent,
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        default_llm_id: llm_model.id,
+      )
+    end
+    fab!(:ask_log) { AskAiLog.create!(user:, query: "password reset", asked_at: Time.current) }
+
+    before do
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_ask_ai_agent = ai_agent.id
+    end
+
+    it "records when the tab opened, the answer was seen and a result was opened, keeping each first report" do
+      2.times do |attempt|
+        put "/discourse-ai/discoveries/tabs",
+            params: {
+              ask_log_id: ask_log.id,
+              tab_opened: "ask",
+              tab_opened_after_ms: 900 + attempt,
+              answer_seen_after_ms: 4000 + attempt,
+              result_clicked_tab: "ask",
+              result_clicked_after_ms: 9000 + attempt,
+            }
+      end
+
+      expect(ask_log.reload).to have_attributes(
+        ask_tab_opened_after_ms: 900,
+        ask_answer_seen_after_ms: 4000,
+        ask_result_clicked_tab: "ask",
+        ask_result_clicked_after_ms: 9000,
+      )
+    end
+
+    it "rejects an unknown clicked tab" do
+      put "/discourse-ai/discoveries/tabs",
+          params: {
+            ask_log_id: ask_log.id,
+            result_clicked_tab: "nope",
+          }
+
+      expect(response.status).to eq(400)
     end
   end
 

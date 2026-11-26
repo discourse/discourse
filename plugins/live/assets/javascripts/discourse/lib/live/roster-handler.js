@@ -1,6 +1,7 @@
 import { i18n } from "discourse-i18n";
 import liveLog from "discourse/plugins/live/discourse/lib/live/logger";
 import {
+  playHandRaisedSound,
   playUserJoinedSound,
   playUserLeftSound,
   stopCallSounds,
@@ -27,6 +28,7 @@ export default class RosterHandler {
   #getRoom;
   #isActiveRoom;
   #isConnectingRoom;
+  #isShowingRoomPage;
   #isMeshRoom;
   #registerTrack;
   #getRemoteUserIds;
@@ -39,8 +41,11 @@ export default class RosterHandler {
   #getLocalStream;
   #acquireMicrophone;
   #setMicEnabled;
+  #getPttEnabled;
   #stopLocalAudio;
   #ensureLocalAudioMonitor;
+  #acceptSpeakInvitation;
+  #declineSpeakInvitation;
 
   constructor({
     peerManager,
@@ -53,6 +58,7 @@ export default class RosterHandler {
     getRoom,
     isActiveRoom,
     isConnectingRoom,
+    isShowingRoomPage = () => false,
     isMeshRoom,
     registerTrack,
     getRemoteUserIds = () => [],
@@ -65,8 +71,11 @@ export default class RosterHandler {
     getLocalStream,
     acquireMicrophone,
     setMicEnabled,
+    getPttEnabled = () => false,
     stopLocalAudio,
     ensureLocalAudioMonitor,
+    acceptSpeakInvitation = () => {},
+    declineSpeakInvitation = () => {},
   }) {
     this.#peerManager = peerManager;
     this.#signaling = signaling;
@@ -78,6 +87,7 @@ export default class RosterHandler {
     this.#getRoom = getRoom;
     this.#isActiveRoom = isActiveRoom;
     this.#isConnectingRoom = isConnectingRoom;
+    this.#isShowingRoomPage = isShowingRoomPage;
     this.#isMeshRoom = isMeshRoom;
     this.#registerTrack = registerTrack;
     this.#getRemoteUserIds = getRemoteUserIds;
@@ -90,15 +100,26 @@ export default class RosterHandler {
     this.#getLocalStream = getLocalStream;
     this.#acquireMicrophone = acquireMicrophone;
     this.#setMicEnabled = setMicEnabled;
+    this.#getPttEnabled = getPttEnabled;
     this.#stopLocalAudio = stopLocalAudio;
     this.#ensureLocalAudioMonitor = ensureLocalAudioMonitor;
+    this.#acceptSpeakInvitation = acceptSpeakInvitation;
+    this.#declineSpeakInvitation = declineSpeakInvitation;
   }
 
   isRoleChangeInProgress(roomId) {
     return this.#roleChangeInProgress.has(roomId);
   }
 
-  async handleParticipants(roomId, payload) {
+  /**
+   * @param {number} roomId
+   * @param {object} payload - Roster broadcast from the server.
+   * @param {object} [options]
+   * @param {Set<number>} [options.offeringPeerIds] - Peers whose offer is
+   *   already waiting to be handled, so a new peer answers it and does not
+   *   send a competing offer.
+   */
+  async handleParticipants(roomId, payload, { offeringPeerIds } = {}) {
     const participants = payload.participants || [];
     const participantIds = new Set(
       participants.map((participant) => Number(participant.id))
@@ -171,7 +192,9 @@ export default class RosterHandler {
 
           liveLog.info("[live] creating peer connection");
 
-          await this.#createAndOfferPeer(roomId, participantId);
+          await this.#createAndOfferPeer(roomId, participantId, {
+            awaitOffer: offeringPeerIds?.has(participantId),
+          });
         } else {
           this.#presencePending.clear(roomId, participantId);
         }
@@ -241,6 +264,9 @@ export default class RosterHandler {
         (p) => Number(p?.id) === targetUserId
       );
       if (participant) {
+        if (this.#isActiveRoom(roomId)) {
+          playHandRaisedSound(this.#getChatSound());
+        }
         this.#toasts.default({
           duration: 5000,
           data: {
@@ -251,6 +277,103 @@ export default class RosterHandler {
         });
       }
     }
+  }
+
+  handleSpeakInvitation(roomId, payload) {
+    const targetUserId = Number(payload.user_id);
+    const isSelf = targetUserId === this.#getCurrentUserId();
+
+    if (isSelf && payload.invited) {
+      if (this.#isActiveRoom(roomId)) {
+        playHandRaisedSound(this.#getChatSound());
+      }
+      // The room page surfaces the invite in an inline banner with the same
+      // actions. The call widget has no banner, so it still needs the toast.
+      if (this.#isShowingRoomPage(roomId)) {
+        return;
+      }
+      this.#toasts.default({
+        duration: 15000,
+        data: {
+          message: i18n("live.stage.invited_to_speak_toast", {
+            username: payload.inviter_username || "",
+          }),
+          actions: [
+            {
+              label: i18n("live.stage.join_stage"),
+              class: "btn-primary",
+              action: () => this.#acceptSpeakInvitation(roomId),
+            },
+            {
+              label: i18n("live.stage.decline_invitation"),
+              class: "btn-default",
+              action: () => this.#declineSpeakInvitation(roomId),
+            },
+          ],
+        },
+      });
+      return;
+    }
+
+    if (isSelf && !payload.invited && payload.reason === "withdrawn") {
+      this.#toasts.default({
+        duration: 5000,
+        data: { message: i18n("live.stage.invitation_withdrawn") },
+      });
+      return;
+    }
+
+    const room = this.#getRoom(roomId);
+    if (
+      !isSelf &&
+      !payload.invited &&
+      payload.reason === "declined" &&
+      room?.can_manage
+    ) {
+      const participant = (room.active_participants || []).find(
+        (p) => Number(p?.id) === targetUserId
+      );
+      if (participant) {
+        this.#toasts.default({
+          duration: 5000,
+          data: {
+            message: i18n("live.stage.invitation_declined_toast", {
+              username: participant.username,
+            }),
+          },
+        });
+      }
+    }
+  }
+
+  async handleRoomTypeChange(roomId, newRoomType) {
+    const room = this.#getRoom(roomId);
+    if (!room) {
+      return;
+    }
+
+    const canSpeakNow = participantCanSpeak(room, this.#getCurrentUserId());
+    let toastKey = "live.stage.room_now_open";
+    if (newRoomType !== "open") {
+      toastKey = canSpeakNow
+        ? "live.stage.room_now_stage_speaker"
+        : "live.stage.room_now_stage";
+    }
+
+    // Someone else changed the room, so a listener who can now speak stays
+    // off air: the microphone is only captured once they unmute themselves.
+    await this.#reconfigureLocalMediaForRole(roomId, canSpeakNow, {
+      acquireMicrophone: false,
+      toastMessage: i18n(toastKey),
+      toastType: newRoomType === "open" ? "success" : "default",
+    });
+  }
+
+  // Captures and publishes the microphone that a room type change left
+  // unacquired. Resolves to whether the microphone is now available.
+  async acquireDeferredMicrophone(roomId) {
+    await this.#reconfigureLocalMediaForRole(roomId, true);
+    return !!this.#getLocalStream();
   }
 
   #syncRemoteMediaTracks(roomId, participants) {
@@ -339,7 +462,21 @@ export default class RosterHandler {
 
   async #handleOwnRoleChange(roomId, newRole) {
     const canSpeak = newRole === "speaker" || newRole === "moderator";
+    await this.#reconfigureLocalMediaForRole(roomId, canSpeak, {
+      toastMessage: i18n(
+        canSpeak
+          ? "live.stage.promoted_to_speaker"
+          : "live.stage.demoted_to_listener"
+      ),
+      toastType: canSpeak ? "success" : "default",
+    });
+  }
 
+  async #reconfigureLocalMediaForRole(
+    roomId,
+    canSpeak,
+    { acquireMicrophone = true, toastMessage, toastType = "default" } = {}
+  ) {
     // Block handleParticipants while we reconfigure the local stream,
     // so the subsequent "participants" broadcast doesn't create peers
     // before the mic is ready.
@@ -357,33 +494,43 @@ export default class RosterHandler {
 
     if (canSpeak) {
       if (!this.#getLocalStream()) {
-        // The acquisition callback owns the user-facing failure feedback
-        // (permission help modal or toast).
-        const acquired = await this.#acquireMicrophone();
-        if (!acquired) {
-          this.#roleChangeInProgress.delete(roomId);
-          return;
-        }
+        if (acquireMicrophone) {
+          // The acquisition callback owns the user-facing failure feedback
+          // (permission help modal or toast).
+          const acquired = await this.#acquireMicrophone();
+          if (!acquired) {
+            this.#roleChangeInProgress.delete(roomId);
+            return;
+          }
 
-        this.#setMicEnabled(true);
+          this.#setMicEnabled(!this.#getPttEnabled());
+        } else {
+          this.#setMicEnabled(false);
+        }
       }
 
-      this.#ensureLocalAudioMonitor(roomId);
+      if (this.#getLocalStream()) {
+        this.#ensureLocalAudioMonitor(roomId);
+      }
 
-      this.#toasts.success({
-        duration: 5000,
-        data: { message: i18n("live.stage.promoted_to_speaker") },
-      });
+      if (toastMessage) {
+        this.#toasts[toastType]({
+          duration: 5000,
+          data: { message: toastMessage },
+        });
+      }
     } else {
       if (this.#getLocalVideoKind()) {
         await this.#stopLocalVideo();
       }
       this.#stopLocalAudio();
       this.#setMicEnabled(false);
-      this.#toasts.default({
-        duration: 5000,
-        data: { message: i18n("live.stage.demoted_to_listener") },
-      });
+      if (toastMessage) {
+        this.#toasts[toastType]({
+          duration: 5000,
+          data: { message: toastMessage },
+        });
+      }
     }
 
     this.#roleChangeInProgress.delete(roomId);
@@ -414,9 +561,9 @@ export default class RosterHandler {
     }
   }
 
-  async #createAndOfferPeer(roomId, remoteUserId) {
+  async #createAndOfferPeer(roomId, remoteUserId, { awaitOffer = false } = {}) {
     await this.#peerManager.create(roomId, remoteUserId);
-    if (this.#getCurrentUserId() <= remoteUserId) {
+    if (!awaitOffer && this.#getCurrentUserId() <= remoteUserId) {
       await this.#peerManager.initiateOffer(roomId, remoteUserId);
     } else {
       this.#peerManager.scheduleOfferRetry(roomId, remoteUserId);

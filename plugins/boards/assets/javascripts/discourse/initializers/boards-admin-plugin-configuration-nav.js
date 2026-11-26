@@ -12,7 +12,7 @@ export default {
     }
 
     withPluginApi((api) => {
-      api.setAdminPluginIcon(PLUGIN_ID, "boards");
+      api.setAdminPluginIcon(PLUGIN_ID, "table-columns");
     });
   },
 };

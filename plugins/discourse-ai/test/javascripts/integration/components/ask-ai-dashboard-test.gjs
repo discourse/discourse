@@ -1,4 +1,4 @@
-import { trackedObject } from "@ember/reactive/collections";
+import { tracked } from "@glimmer/tracking";
 import {
   click,
   find,
@@ -22,27 +22,29 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
   });
 
   test("waits for refreshed dashboard dates before allowing report generation", async function (assert) {
-    const state = trackedObject({
-      loading: true,
-      data: { questions: 1, start_date: "2026-08-01", end_date: "2026-08-31" },
+    const loading = tracked(true);
+    const data = tracked({
+      questions: 1,
+      start_date: "2026-08-01",
+      end_date: "2026-08-31",
     });
     await render(
       <template>
         <ModalContainer /><AskAiDashboard
-          @data={{state.data}}
-          @loading={{state.loading}}
+          @data={{data.value}}
+          @loading={{loading.value}}
         />
       </template>
     );
     assert
       .dom(".ask-ai-reports__generate")
       .isDisabled("cannot capture stale dates during refresh");
-    state.data = {
+    data.value = {
       questions: 1,
       start_date: "2026-09-01",
       end_date: "2026-09-09",
     };
-    state.loading = false;
+    loading.value = false;
     await settled();
     await click(".ask-ai-reports__generate");
     assert
@@ -64,6 +66,7 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
       ],
       questions: 12,
       askers: 4,
+      cache_hits: 3,
       average_first_answer_ms: 1500,
       outcomes: [
         { outcome: "answered", count: 8 },
@@ -75,7 +78,10 @@ module("Integration | Component | AskAiDashboard", function (hooks) {
     };
     await render(<template><AskAiDashboard @data={{data}} /></template>);
 
-    assert.dom(".ask-ai-dashboard__metric").exists({ count: 3 });
+    assert.dom(".ask-ai-dashboard__metric").exists({ count: 4 });
+    assert
+      .dom('[data-metric="cache-hits"] .db-section__metric-number')
+      .hasText("3", "cached answers returned are counted separately");
     assert
       .dom(".ask-ai-dashboard__activity h3 a")
       .doesNotExist("keeps headings unlinked without Data Explorer");

@@ -12,10 +12,16 @@ module DiscourseReactions
 
       def self.call(arguments:, request_context:)
         reaction = arguments.fetch("reaction")
+        target_post =
+          DiscourseMcp::ToolHelpers.visible_post!(
+            arguments.fetch("post_id"),
+            request_context,
+            access: :write,
+          )
 
         DiscourseReactions::PostReaction::Toggle.call(
           params: {
-            post_id: arguments.fetch("post_id"),
+            post_id: target_post.id,
             reaction:,
           },
           guardian: request_context.guardian,

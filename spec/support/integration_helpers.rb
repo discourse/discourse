@@ -27,8 +27,15 @@ module IntegrationHelpers
   end
 
   def sign_in(user)
-    get "/session/#{user.encoded_username}/become"
+    get "/session/#{user.encoded_username}/become", params: { redirect: "false" }
+    raise "Could not sign in #{user.username} (HTTP #{response.status})" unless response.successful?
     user
+  end
+
+  def sign_in_and_switch_to_anonymous_mode(master)
+    sign_in(master)
+    post "/u/toggle-anon.json"
+    expect(response.status).to eq(200)
   end
 
   def sign_out

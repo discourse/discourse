@@ -62,6 +62,18 @@ describe "Composer redesign" do
       expect(composer).to be_opened
       expect(composer).to have_footer_toolbar
     end
+
+    it "keeps the toolbar laid out as the composer narrows past the footer breakpoint" do
+      visit("/new-topic")
+
+      expect(composer).to be_opened
+
+      [560, 610, 625, 638, 655, 700].each do |width|
+        resize_window(width: width, height: 900) do
+          expect(composer).to have_uncollapsed_footer_toolbar, "toolbar collapsed at #{width}px"
+        end
+      end
+    end
   end
 
   context "when enable_composer_redesign is disabled" do
@@ -77,16 +89,22 @@ describe "Composer redesign" do
     end
 
     it "lets the user hide and show the toolbar on mobile", mobile: true do
-      visit("/new-topic")
+      SiteSetting.tagging_enabled = true
+      SiteSetting.pm_tags_allowed_for_groups = Group::AUTO_GROUPS[:trust_level_0]
 
-      expect(composer).to be_opened
-      expect(composer).to have_visible_toolbar
+      resize_window(width: 375) do
+        visit("/new-message")
 
-      composer.toggle_toolbar
-      expect(composer).to have_no_visible_toolbar
+        expect(composer).to be_opened
+        expect(composer).to have_stacked_message_tag_picker
+        expect(composer).to have_visible_toolbar
 
-      composer.toggle_toolbar
-      expect(composer).to have_visible_toolbar
+        composer.toggle_toolbar
+        expect(composer).to have_no_visible_toolbar
+
+        composer.toggle_toolbar
+        expect(composer).to have_visible_toolbar
+      end
     end
   end
 end

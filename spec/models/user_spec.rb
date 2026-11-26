@@ -101,9 +101,11 @@ RSpec.describe User do
 
     it "returns true if the user is in the group" do
       expect(user.in_any_groups?([group.id])).to eq(false)
+      expect(user.in_any_groups?(Set[group.id])).to eq(false)
       group.add(user)
       user.reload
       expect(user.in_any_groups?([group.id])).to eq(true)
+      expect(user.in_any_groups?(Set[group.id])).to eq(true)
     end
 
     it "always returns true for system user for automated groups" do
@@ -307,6 +309,32 @@ RSpec.describe User do
   end
 
   describe "Validations" do
+    it "rejects matches against the stored password without upgrading a legacy hash" do
+      password = "myawesomepassword"
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      salt = user.user_password.password_salt
+      hash = PasswordHasher.hash_password(password:, salt:, algorithm:)
+      user.user_password.update_columns(
+        password_hash: hash,
+        password_algorithm: algorithm,
+        password_expired_at: 1.day.ago,
+      )
+      expect(user.password_expired?(password)).to be(true)
+      expect(user.password_expired?("different password")).to be(false)
+
+      user.assign_attributes(username: password.capitalize, name: password.capitalize, password:)
+
+      expect(user).not_to be_valid
+      expect(user.errors.of_kind?(:username, :same_as_password)).to be(true)
+      expect(user.errors.of_kind?(:name, :same_as_password)).to be(true)
+      expect(user.user_password.errors.of_kind?(:password, :same_as_current)).to be(true)
+      expect(user.user_password.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_salt: salt,
+        password_hash: hash,
+      )
+    end
+
     describe "#username" do
       it { is_expected.to validate_presence_of :username }
 
@@ -646,6 +674,21 @@ RSpec.describe User do
     end
   end
 
+  describe "#user_fields" do
+    fab!(:number_field) { Fabricate(:user_field, field_type: "number") }
+
+    it "returns numbers for number fields" do
+      values =
+        %w[42 -2.5 1e3 abc].map do |stored_value|
+          user.set_user_field(number_field.id, stored_value)
+          user.save_custom_fields
+          user.reload.user_fields[number_field.id.to_s]
+        end
+
+      expect(values).to eql([42, -2.5, 1000, nil])
+    end
+  end
+
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
@@ -827,6 +870,137 @@ RSpec.describe User do
       expect(messages[0].user_ids).to eq([shadow_user.id])
       expect(messages[0].data).to eq(shadow_user.id)
     end
+
+    def historical_shadow
+      shadow = Fabricate(:user)
+      AnonymousUser.create!(user: shadow, master_user: master_user, active: false)
+      shadow
+    end
+
+    it "identifies historical and orphaned shadows independently of anonymous posting eligibility" do
+      shadow = Fabricate(:user, trust_level: TrustLevel[0])
+      expect(shadow.anonymous_user_master).to be_nil
+      AnonymousUser.create!(user_id: shadow.id, master_user_id: master_user.id, active: false)
+      SiteSetting.anonymous_posting_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+      SiteSetting.allow_anonymous_mode = false
+
+      expect(master_user.anonymous_shadow?).to eq(false)
+      expect(shadow.anonymous_shadow?).to eq(true)
+
+      master_user.destroy!
+
+      expect(shadow.reload.anonymous_shadow?).to eq(true)
+    end
+
+    it "revokes family sessions and only unrevoked shadow keys using current membership" do
+      freeze_time(Time.zone.now.change(usec: 0))
+      shadow = AnonymousShadowCreator.get(master_user)
+      master_user.anonymous_user_shadows.load
+      previous_shadow = historical_shadow
+      outsider = Fabricate(:user)
+      users = [master_user, shadow, previous_shadow, outsider]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      master_key, shadow_key, previous_shadow_key, outsider_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+      revoked_key = Fabricate(:user_api_key, user: previous_shadow, revoked_at: 1.day.ago)
+
+      master_user.revoke_family_sessions!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        outsider.id,
+      )
+      expect(
+        PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id),
+      ).to contain_exactly(outsider.id)
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(outsider_key.reload.revoked_at).to be_nil
+      expect(shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(previous_shadow_key.reload.revoked_at).to eq_time(Time.zone.now)
+      expect(revoked_key.reload.revoked_at).to eq_time(1.day.ago)
+    end
+
+    it "revokes the family when a historical shadow explicitly revokes credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      previous_shadow = historical_shadow
+      master_key = Fabricate(:user_api_key, user: master_user)
+      sibling_key = Fabricate(:user_api_key, user: shadow)
+      users = [master_user, shadow, previous_shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+
+      previous_shadow.revoke_family_sessions!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(sibling_key.reload.revoked_at).to be_present
+      expect(master_key.reload.revoked_at).to be_nil
+    end
+
+    it "revokes only the historical shadow's credentials when its password changes" do
+      sibling = AnonymousShadowCreator.get(master_user)
+      shadow = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      subscriptions = users.map { |owner| Fabricate(:push_subscription, user: owner) }
+      keys = users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.update!(password: SecureRandom.hex)
+
+      remaining = [master_user.id, sibling.id]
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to match_array(remaining)
+      expect(PushSubscription.where(id: subscriptions.map(&:id)).pluck(:user_id)).to match_array(
+        remaining,
+      )
+      expect(UserApiKey.where(id: keys.map(&:id), revoked_at: nil).pluck(:user_id)).to match_array(
+        remaining,
+      )
+    end
+
+    it "revokes both current and historical shadow credentials when the master is destroyed" do
+      shadows = [AnonymousShadowCreator.get(master_user), historical_shadow]
+      tokens = shadows.map { |shadow| UserAuthToken.generate!(user_id: shadow.id) }
+      keys = shadows.map { |shadow| Fabricate(:user_api_key, user: shadow) }
+
+      master_user.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id))).to be_empty
+      expect(keys.map { |key| key.reload.revoked_at }).to all(be_present)
+    end
+
+    it "removes a single shadow without revoking master or sibling credentials" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      users = [master_user, sibling, shadow]
+      tokens = users.map { |owner| UserAuthToken.generate!(user_id: owner.id) }
+      master_key, sibling_key, shadow_key =
+        users.map { |owner| Fabricate(:user_api_key, user: owner) }
+
+      shadow.destroy!
+
+      expect(UserAuthToken.where(id: tokens.map(&:id)).pluck(:user_id)).to contain_exactly(
+        master_user.id,
+        sibling.id,
+      )
+      expect(master_key.reload.revoked_at).to be_nil
+      expect(sibling_key.reload.revoked_at).to be_nil
+      expect(UserApiKey.exists?(shadow_key.id)).to eq(false)
+    end
+
+    it "cleans up only the calling shadow's credentials when its master is missing" do
+      shadow = AnonymousShadowCreator.get(master_user)
+      sibling = historical_shadow
+      master_user.destroy!
+      shadow_token = UserAuthToken.generate!(user_id: shadow.id)
+      sibling_token = UserAuthToken.generate!(user_id: sibling.id)
+      shadow_key = Fabricate(:user_api_key, user: shadow)
+      sibling_key = Fabricate(:user_api_key, user: sibling)
+
+      shadow.revoke_family_sessions!
+
+      expect(UserAuthToken.exists?(shadow_token.id)).to eq(false)
+      expect(UserAuthToken.exists?(sibling_token.id)).to eq(true)
+      expect(shadow_key.reload.revoked_at).to be_present
+      expect(sibling_key.reload.revoked_at).to be_nil
+    end
   end
 
   describe "delete posts in batches" do
@@ -868,6 +1042,28 @@ RSpec.describe User do
       expect(Post.where(id: post_ids)).to be_empty
       expect(Reviewable.where(created_by: user).count).to eq(0)
       expect(ReviewableNote.where(reviewable_id: reviewable.id).count).to eq(0)
+    end
+
+    it "keeps reviewables for posts the user flagged first" do
+      other_flagger = Fabricate(:user)
+      reviewable =
+        Fabricate(
+          :reviewable_flagged_post,
+          created_by: user,
+          reviewable_scores: [
+            Fabricate.build(:reviewable_score, user: user, status: :pending),
+            Fabricate.build(:reviewable_score, user: other_flagger, status: :pending),
+          ],
+        )
+
+      posts
+      user.delete_posts_in_batches(guardian, 20)
+
+      expect(reviewable.reload).to be_pending
+      expect(reviewable.reviewable_scores.pending.pluck(:user_id)).to contain_exactly(
+        user.id,
+        other_flagger.id,
+      )
     end
 
     it "does not allow non moderators to delete all posts" do
@@ -1190,59 +1386,164 @@ RSpec.describe User do
     context "when Unicode usernames are disabled" do
       before { SiteSetting.unicode_usernames = false }
 
-      %w[
-        first.last
-        first
-        first-last
-        _name
-        first_last
-        mc.hammer_nose
-        UPPERCASE
-        sgif
-      ].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows first.last" do
+        assert_good("first.last")
       end
 
-      %w[
-        traildot.
-        has\ space
-        double__underscore
-        with%symbol
-        Exclamation!
-        @twitter
-        my@email.com
-        .tester
-        sa$sy
-        sam.json
-        sam.xml
-        sam.html
-        sam.htm
-        sam.js
-        sam.woff
-        sam.Png
-        sam.gif
-      ].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows first" do
+        assert_good("first")
+      end
+
+      it "allows first-last" do
+        assert_good("first-last")
+      end
+
+      it "allows _name" do
+        assert_good("_name")
+      end
+
+      it "allows first_last" do
+        assert_good("first_last")
+      end
+
+      it "allows mc.hammer_nose" do
+        assert_good("mc.hammer_nose")
+      end
+
+      it "allows UPPERCASE" do
+        assert_good("UPPERCASE")
+      end
+
+      it "allows sgif" do
+        assert_good("sgif")
+      end
+
+      it "disallows traildot." do
+        assert_bad("traildot.")
+      end
+
+      it "disallows has space" do
+        assert_bad("has space")
+      end
+
+      it "disallows double__underscore" do
+        assert_bad("double__underscore")
+      end
+
+      it "disallows with%symbol" do
+        assert_bad("with%symbol")
+      end
+
+      it "disallows Exclamation!" do
+        assert_bad("Exclamation!")
+      end
+
+      it "disallows @twitter" do
+        assert_bad("@twitter")
+      end
+
+      it "disallows my@email.com" do
+        assert_bad("my@email.com")
+      end
+
+      it "disallows .tester" do
+        assert_bad(".tester")
+      end
+
+      it "disallows sa$sy" do
+        assert_bad("sa$sy")
+      end
+
+      it "disallows sam.json" do
+        assert_bad("sam.json")
+      end
+
+      it "disallows sam.xml" do
+        assert_bad("sam.xml")
+      end
+
+      it "disallows sam.html" do
+        assert_bad("sam.html")
+      end
+
+      it "disallows sam.htm" do
+        assert_bad("sam.htm")
+      end
+
+      it "disallows sam.js" do
+        assert_bad("sam.js")
+      end
+
+      it "disallows sam.woff" do
+        assert_bad("sam.woff")
+      end
+
+      it "disallows sam.Png" do
+        assert_bad("sam.Png")
+      end
+
+      it "disallows sam.gif" do
+        assert_bad("sam.gif")
       end
     end
 
     context "when Unicode usernames are enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      %w[Джофрэй Джо.фрэй Джофр-эй Д.жофрэй 乔夫雷 乔夫_雷 _乔夫雷].each do |username|
-        it "allows #{username}" do
-          assert_good(username)
-        end
+      it "allows Джофрэй" do
+        assert_good("Джофрэй")
       end
 
-      %w[.Джофрэй Джофрэй. Джо\ фрэй Джоф__рэй 乔夫雷.js 乔夫雷. 乔夫%雷].each do |username|
-        it "disallows #{username}" do
-          assert_bad(username)
-        end
+      it "allows Джо.фрэй" do
+        assert_good("Джо.фрэй")
+      end
+
+      it "allows Джофр-эй" do
+        assert_good("Джофр-эй")
+      end
+
+      it "allows Д.жофрэй" do
+        assert_good("Д.жофрэй")
+      end
+
+      it "allows 乔夫雷" do
+        assert_good("乔夫雷")
+      end
+
+      it "allows 乔夫_雷" do
+        assert_good("乔夫_雷")
+      end
+
+      it "allows _乔夫雷" do
+        assert_good("_乔夫雷")
+      end
+
+      it "disallows .Джофрэй" do
+        assert_bad(".Джофрэй")
+      end
+
+      it "disallows Джофрэй." do
+        assert_bad("Джофрэй.")
+      end
+
+      it "disallows Джо фрэй" do
+        assert_bad("Джо фрэй")
+      end
+
+      it "disallows Джоф__рэй" do
+        assert_bad("Джоф__рэй")
+      end
+
+      it "disallows 乔夫雷.js" do
+        assert_bad("乔夫雷.js")
+      end
+
+      it "disallows 乔夫雷." do
+        assert_bad("乔夫雷.")
+      end
+
+      it "disallows 乔夫%雷" do
+        assert_bad("乔夫%雷")
       end
     end
   end
@@ -1466,6 +1767,16 @@ RSpec.describe User do
 
   describe "passwords" do
     let(:user) { Fabricate.build(:user, active: false) }
+
+    it "does not lock a credential identity or sweep credentials on creation" do
+      queries = track_sql_queries { user.save! }
+
+      expect(queries.grep(/FROM "anonymous_users"|FROM "users".*FOR UPDATE/i)).to be_empty
+      expect(
+        queries.grep(/(?:FROM|UPDATE) "(?:user_auth_tokens|user_api_keys|push_subscriptions)"/i),
+      ).to be_empty
+      expect(user.email_tokens.where(expired: false)).to exist
+    end
 
     it "keeps the account inactive despite a valid password" do
       user.password = "ilovepasta"
@@ -1703,6 +2014,20 @@ RSpec.describe User do
       expect { user.update_visit_record!(date) }.not_to change {
         user.user_visits.where(visited_at: date).count
       }
+    end
+
+    it "marks an existing desktop visit as mobile" do
+      user.update_visit_record!(date)
+      user.update_visit_record!(date, mobile: true)
+
+      expect(user.visit_record_for(date).mobile).to eq(true)
+    end
+
+    it "does not mark an existing mobile visit as desktop" do
+      user.update_visit_record!(date, mobile: true)
+      user.update_visit_record!(date)
+
+      expect(user.visit_record_for(date).mobile).to eq(true)
     end
   end
 
@@ -2010,6 +2335,28 @@ RSpec.describe User do
       expect(User.letter_avatar_color("username_two")).to eq("ED207B")
       expect(User.letter_avatar_color("username_three")).to eq("AAAAAA")
       expect(User.letter_avatar_color("username_four")).to eq("77FF33")
+    end
+  end
+
+  describe ".username_hash and default .letter_avatar_color" do
+    it "computes 32-bit signed wraparound hashes identically across ASCII and Unicode usernames" do
+      %w[a alice super_long_moderator_username_2026 日本語ユーザー].each do |name|
+        reference =
+          name
+            .each_char
+            .reduce(0) { |res, ch| [((res << 5) - res) + ch.ord].pack("L").unpack("l").first }
+            .abs
+        expect(User.username_hash(name)).to eq(reference)
+      end
+    end
+
+    it "formats default LetterAvatar::COLORS hex strings accurately" do
+      SiteSetting.restrict_letter_avatar_colors = ""
+      %w[system alice codinghorror 日本語].each do |name|
+        idx = Digest::MD5.hexdigest(name)[0...15].to_i(16) % LetterAvatar::COLORS.length
+        expected = LetterAvatar::COLORS[idx].map { |c| c.to_s(16).rjust(2, "0") }.join
+        expect(User.letter_avatar_color(name)).to eq(expected)
+      end
     end
   end
 
@@ -2361,65 +2708,23 @@ RSpec.describe User do
     end
   end
 
-  describe "hash_passwords" do
-    let(:too_long) { "x" * (User.max_password_length + 1) }
-
-    def hash(password, salt, algorithm = UserPassword::TARGET_PASSWORD_ALGORITHM)
-      User.new.send(:hash_password, password, salt, algorithm)
-    end
-
-    it "returns the same hash for the same password and salt" do
-      expect(hash("poutine", "gravy")).to eq(hash("poutine", "gravy"))
-    end
-
-    it "returns a different hash for the same salt and different password" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("fries", "gravy"))
-    end
-
-    it "returns a different hash for the same password and different salt" do
-      expect(hash("poutine", "gravy")).not_to eq(hash("poutine", "cheese"))
-    end
-
-    it "raises an error when passwords are too long" do
-      expect { hash(too_long, "gravy") }.to raise_error(StandardError)
-    end
-
-    it "uses the target algorithm for new users" do
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-    end
-
-    it "can use an older algorithm to verify existing passwords, then upgrade" do
-      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
-      expect(old_algorithm).not_to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-
+  describe "#confirm_password?" do
+    it "upgrades a stored legacy hash only after a correct password" do
       password = "poutine"
-      old_hash = hash(password, user.salt, old_algorithm)
+      credential = user.user_password
+      algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      hash = PasswordHasher.hash_password(password:, salt: credential.password_salt, algorithm:)
+      credential.update_columns(password_hash: hash, password_algorithm: algorithm)
 
-      user.user_password.update_columns(password_algorithm: old_algorithm, password_hash: old_hash)
+      expect(user.confirm_password?("notthepassword")).to be(false)
+      expect(credential.reload).to have_attributes(
+        password_algorithm: algorithm,
+        password_hash: hash,
+      )
 
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # With an incorrect attempt, should return false with no side effects
-      expect(user.confirm_password?("notthepassword")).to eq(false)
-      expect(user.password_algorithm).to eq(old_algorithm)
-      expect(user.password_hash).to eq(old_hash)
-
-      # Should correctly verify against old algorithm
-      expect(user.confirm_password?(password)).to eq(true)
-
-      # Auto-upgrades to new algorithm
-      expected_new_hash = hash(password, user.salt, UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And persists to the db
-      user.reload
-      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_hash).to eq(expected_new_hash)
-
-      # And can still log in
-      expect(user.confirm_password?(password)).to eq(true)
+      expect(user.confirm_password?(password)).to be(true)
+      expect(credential.reload.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
+      expect(user.reload.confirm_password?(password)).to be(true)
     end
   end
 
@@ -2849,6 +3154,55 @@ RSpec.describe User do
   end
 
   describe "#publish_notifications_state" do
+    it "publishes the state stored in the database, not the one held in memory" do
+      Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: Notification.maximum(:id))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { in_memory.publish_notifications_state }
+          .first
+
+      expect(message.data).to include(
+        seen_notification_id: user.seen_notification_id,
+        unread_notifications: 0,
+      )
+    end
+
+    it "counts and publishes under a per-user lock" do
+      DistributedMutex
+        .expects(:synchronize)
+        .with("notifications_state_#{user.id}", validity: User::NOTIFICATIONS_STATE_LOCK_SECONDS)
+        .yields
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
+    it "still publishes when the lock cannot be taken" do
+      DistributedMutex.stubs(:synchronize).raises(Discourse::ReadOnly)
+
+      messages =
+        MessageBus.track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+
+      expect(messages.size).to eq(1)
+    end
+
+    it "omits the last notification when the user can no longer see its topic" do
+      notification = Fabricate(:notification, user:)
+      notification.topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+
+      message =
+        MessageBus
+          .track_publish("/notification/#{user.id}") { user.publish_notifications_state }
+          .first
+
+      expect(message.data[:last_notification]).to be_nil
+    end
+
     it "publishes the message sorted by descending ID" do
       notification = Fabricate(:notification, user: user)
       notification2 = Fabricate(:notification, user: user, read: true)
@@ -2915,6 +3269,33 @@ RSpec.describe User do
 
       expect(message.data[:unread_notifications]).to eq(1)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
+    end
+
+    it "does not publish a reviewable mention the user can no longer access" do
+      SiteSetting.enable_mentions = true
+      moderator = Fabricate(:moderator, last_seen_at: Time.zone.now)
+      reviewable = Fabricate(:reviewable_flagged_post)
+      ReviewableNote.create!(
+        reviewable:,
+        user: Fabricate(:admin),
+        content: "@#{moderator.username}",
+      )
+      mention = moderator.notifications.find_by!(notification_type: Notification.types[:mentioned])
+
+      publish_last_notification = -> do
+        MessageBus
+          .track_publish("/notification/#{moderator.id}") { moderator.publish_notifications_state }
+          .first
+          .data[
+          :last_notification
+        ]
+      end
+
+      expect(publish_last_notification.call[:notification][:id]).to eq(mention.id)
+
+      reviewable.update!(reviewable_by_moderator: false)
+
+      expect(publish_last_notification.call).to be_nil
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
@@ -3086,6 +3467,29 @@ RSpec.describe User do
       )
     end
 
+    it "preserves staged data when registration policy excludes the email" do
+      notification = Fabricate(:notification, user: user)
+      SiteSetting.blocked_email_domains = "account.com"
+
+      events =
+        DiscourseEvent.track_events do
+          expect { user.unstage! }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+
+      expect(user.reload.staged).to eq(true)
+      expect(user.custom_fields[User::FROM_STAGED]).to be_nil
+      expect(user.notifications).to include(notification)
+      expect(events.map { |event| event[:event_name] }).not_to include(:user_unstaged)
+    end
+
+    it "allows promotion when the domain is allowed" do
+      SiteSetting.allowed_email_domains = "account.com"
+
+      user.unstage!
+
+      expect(user.reload.staged).to eq(false)
+    end
+
     it "correctly unstages a user" do
       user.unstage!
       expect(user.staged).to eq(false)
@@ -3167,6 +3571,30 @@ RSpec.describe User do
     it "filters by username" do
       filter_by(:filter_by_username)
     end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "ignores blank terms" do
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username(["", "filter_term_a", nil])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect { User.filter_by_username(Array.new(51) { |i| "filter_term_#{i}" }) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
   end
 
   describe "#filter_by_username_or_email" do
@@ -3181,6 +3609,31 @@ RSpec.describe User do
 
     it "filters by username" do
       filter_by(:filter_by_username_or_email)
+    end
+
+    it "matches comma separated terms literally instead of as a regular expression" do
+      other_user = Fabricate(:user, username: "filter_term_b")
+      user.update!(username: "filter_term_a")
+
+      expect(User.filter_by_username_or_email(%w[filter_term_.])).to be_empty
+      expect(User.filter_by_username_or_email(%w[( filter_term_b])).to eq([other_user])
+      expect(User.filter_by_username_or_email(%w[filter_term_a filter_term_b])).to contain_exactly(
+        user,
+        other_user,
+      )
+    end
+
+    it "matches email terms exactly" do
+      user.update!(email: "filter@example.com")
+      Fabricate(:user, email: "not_filter@example.com")
+
+      expect(User.filter_by_username_or_email(%w[filter@example.com])).to eq([user])
+    end
+
+    it "rejects more than 50 terms" do
+      expect {
+        User.filter_by_username_or_email(Array.new(51) { |i| "filter_term_#{i}" })
+      }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -3859,17 +4312,25 @@ RSpec.describe User do
   end
 
   describe "#username_equals_to?" do
-    [
-      ["returns true for equal usernames", "john", "john", true],
-      ["returns false for different usernames", "john", "bill", false],
-      ["considers usernames that are different only in case as equal", "john", "JoHN", true],
-    ].each do |testcase_name, current_username, another_username, is_equal|
-      it "#{testcase_name}" do
-        user = Fabricate(:user, username: current_username)
-        result = user.username_equals_to?(another_username)
+    it "returns true for equal usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("john")
 
-        expect(result).to be(is_equal)
-      end
+      expect(result).to be(true)
+    end
+
+    it "returns false for different usernames" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("bill")
+
+      expect(result).to be(false)
+    end
+
+    it "considers usernames that are different only in case as equal" do
+      user = Fabricate(:user, username: "john")
+      result = user.username_equals_to?("JoHN")
+
+      expect(result).to be(true)
     end
 
     it "considers usernames that are equal after unicode normalization as equal" do
@@ -3881,6 +4342,44 @@ RSpec.describe User do
       result = user.username_equals_to?(raw)
 
       expect(result).to be(true)
+    end
+  end
+
+  describe ".whisperers" do
+    subject(:whisperers) { User.whisperers.where(id: candidates) }
+
+    fab!(:group)
+    fab!(:admin)
+    fab!(:moderator)
+    fab!(:member, :user)
+    fab!(:regular_user, :user)
+
+    let(:candidates) { [admin, moderator, member, regular_user] }
+
+    before { group.add(member) }
+
+    context "when a group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = group.id.to_s }
+
+      it "returns administrators and members of the whisper groups" do
+        expect(whisperers).to contain_exactly(admin, member)
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
+    end
+
+    context "when no group can whisper" do
+      before { SiteSetting.whispers_allowed_groups = "" }
+
+      it "returns no user" do
+        expect(whisperers).to be_empty
+      end
+
+      it "returns the users who are whisperers" do
+        expect(whisperers).to match_array(candidates.select(&:whisperer?))
+      end
     end
   end
 
@@ -4061,6 +4560,16 @@ RSpec.describe User do
   end
 
   describe "#bump_last_seen_notification!" do
+    it "never moves the marker backward when another request already moved it further" do
+      notification = Fabricate(:notification, user:)
+      in_memory = User.find(user.id)
+      user.update!(seen_notification_id: notification.id + 1)
+
+      in_memory.bump_last_seen_notification!
+
+      expect(user.reload.seen_notification_id).to eq(notification.id + 1)
+    end
+
     it "doesn't error if there are no notifications" do
       Notification.destroy_all
       expect(user.bump_last_seen_notification!).to eq(false)
@@ -4132,6 +4641,29 @@ RSpec.describe User do
     fab!(:admin)
     fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
+
+    shared_examples "including logged in categories in secured scopes" do |granular_permissions_enabled:|
+      it "includes logged in categories for users and excludes anonymous access" do
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions =
+          granular_permissions_enabled
+        category = Fabricate(:category, permissions: { logged_in_users: :readonly })
+
+        expect(user.secure_category_ids).to eq([category.id])
+        expect(user.guardian.can_see_category?(category)).to eq(true)
+        expect(Category.secured(user.guardian).exists?(id: category.id)).to eq(true)
+        expect(Category.secured(Guardian.new).exists?(id: category.id)).to eq(false)
+      end
+    end
+
+    context "when granular permissions are disabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: false
+    end
+
+    context "when granular permissions are enabled" do
+      include_examples "including logged in categories in secured scopes",
+                       granular_permissions_enabled: true
+    end
 
     it "allows admin to see all secure categories" do
       expect(admin.secure_category_ids).to include(private_category.id)

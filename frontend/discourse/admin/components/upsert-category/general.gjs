@@ -8,19 +8,17 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import EmojiPicker from "discourse/components/emoji-picker";
+import CategoryNameStyle from "discourse/admin/components/upsert-category/name-style";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import categoryStyleType from "discourse/lib/category-style-type";
 import {
   availableCategoryType,
   unavailableBadgeText,
 } from "discourse/lib/category-type-utils";
-import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
@@ -34,9 +32,7 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
-import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import DMultiSelect from "discourse/ui-kit/d-multi-select";
-import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -166,32 +162,6 @@ export default class UpsertCategoryGeneral extends Component {
     // If max_category_nesting is 2, only top-level categories can be parents
     // If max_category_nesting is 3, subcategories can also be parents
     return this.siteSettings.max_category_nesting > 2;
-  }
-
-  get backgroundColors() {
-    const categories = this.site.get("categoriesList");
-    return uniqueItemsFromArray(
-      this.siteSettings.category_colors
-        .split("|")
-        .filter(Boolean)
-        .map((i) => i.toUpperCase())
-        .concat(categories.map((c) => c.color.toUpperCase()))
-    );
-  }
-
-  get usedBackgroundColors() {
-    const categories = this.site.get("categoriesList");
-    const categoryId = this.args.category.id;
-    const categoryColor = this.args.category.color;
-
-    return categories
-      .map((c) => {
-        return categoryId &&
-          categoryColor?.toUpperCase() === c.color.toUpperCase()
-          ? null
-          : c.color.toUpperCase();
-      })
-      .filter((item) => item != null);
   }
 
   get categoryVisibility() {
@@ -333,17 +303,6 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  buildTransientModel(transientData) {
-    return Category.create({
-      id: transientData.id,
-      name: transientData.name || i18n("category.untitled"),
-      color: transientData.color,
-      text_color: transientData.text_color,
-      parent_category_id: transientData.parent_category_id,
-    });
-  }
-
-  @action
   onChangeVisibility(value) {
     // Wrapped so consumers can intercept the change; skipping `next` vetoes it.
     return applyBehaviorTransformer(
@@ -450,85 +409,10 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  async onBackgroundColorSet(value, { set }) {
-    const color = value?.replace(/^#/, "") ?? "";
-
-    await set("color", color);
-
-    if (color) {
-      const whiteDiff = this.#colorDifference(color, CATEGORY_TEXT_COLORS[0]);
-      const blackDiff = this.#colorDifference(color, CATEGORY_TEXT_COLORS[1]);
-      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
-
-      this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
-    }
-  }
-
-  @action
-  onStyleTypeChange(value) {
-    this.args.form.set("style_type", value);
-  }
-
-  @action
-  validateEmoji(name, value, { addError, data }) {
-    if (data.style_type === "emoji" && !value) {
-      addError(name, {
-        title: i18n("category.emoji"),
-        message: i18n("category.validations.emoji_required"),
-      });
-    }
-  }
-
-  @action
-  validateIcon(name, value, { addError, data }) {
-    if (data.style_type === "icon" && !value) {
-      addError(name, {
-        title: i18n("category.icon"),
-        message: i18n("category.validations.icon_required"),
-      });
-    }
-  }
-
-  @action
   goToSecurityTab(event) {
     if (event.target.tagName === "A") {
       event.preventDefault();
       this.args.setSelectedTab?.("security");
-    }
-  }
-
-  @action
-  validateColor(name, color, { addError }) {
-    color = color.trim();
-
-    let title;
-    if (name === "color") {
-      title = i18n("category.background_color");
-    } else {
-      throw new Error(`unknown title for category attribute ${name}`);
-    }
-
-    if (!color) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.cant_be_empty"),
-      });
-      return;
-    }
-
-    if (color.length !== 3 && color.length !== 6) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.incorrect_length"),
-      });
-      return;
-    }
-
-    if (!/^[0-9A-Fa-f]+$/.test(color)) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.non_hexdecimal"),
-      });
     }
   }
 
@@ -582,22 +466,6 @@ export default class UpsertCategoryGeneral extends Component {
     );
   }
 
-  #colorDifference(color1, color2) {
-    const r1 = parseInt(color1.substr(0, 2), 16);
-    const g1 = parseInt(color1.substr(2, 2), 16);
-    const b1 = parseInt(color1.substr(4, 2), 16);
-
-    const r2 = parseInt(color2.substr(0, 2), 16);
-    const g2 = parseInt(color2.substr(2, 2), 16);
-    const b2 = parseInt(color2.substr(4, 2), 16);
-
-    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
-    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
-    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
-
-    return rDiff + gDiff + bDiff;
-  }
-
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
@@ -626,7 +494,7 @@ export default class UpsertCategoryGeneral extends Component {
     {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
       <@form.Field
         @format="max"
-        @name="category_types"
+        @name="category_type_ids"
         @showOptional={{false}}
         @title={{i18n "category.category_types"}}
         @type="custom"
@@ -701,137 +569,11 @@ export default class UpsertCategoryGeneral extends Component {
         </@form.Alert>
       {{/if}}
 
-      {{#unless @category.isUncategorizedCategory}}
-        <@form.Field
-          @format="max"
-          @name="name"
-          @title={{i18n "category.name"}}
-          @type="input"
-          @validation="required"
-          as |field|
-        >
-          <field.Control
-            class="category-name"
-            data-1p-ignore
-            placeholder={{i18n "category.name_placeholder"}}
-            @maxlength="50"
-          />
-        </@form.Field>
-      {{/unless}}
-
-      <@form.Field
-        @format="max"
-        @name="color"
-        @onSet={{this.onBackgroundColorSet}}
-        @title={{i18n "category.background_color"}}
-        @type="color"
-        @validate={{this.validateColor}}
-        @validation="required"
-        as |field|
-      >
-        <field.Control
-          @collapseSwatches={{true}}
-          @collapseSwatchesLabel={{i18n "category.color_palette"}}
-          @colors={{this.backgroundColors}}
-          @fallbackValue={{@category.color}}
-          @usedColors={{this.usedBackgroundColors}}
-        />
-      </@form.Field>
-
-      <@form.Field
-        @format="max"
-        @name="style_type"
-        @title={{i18n "category.style"}}
-        @type="custom"
-        as |styleField|
-      >
-        <styleField.Control>
-          <@form.ConditionalContent
-            @activeName={{or
-              (categoryStyleType (or styleField.value @category.styleType))
-              "square"
-            }}
-            @onChange={{this.onStyleTypeChange}}
-            as |cc|
-          >
-            <cc.Conditions as |Condition|>
-              <Condition @name="icon">
-                {{i18n "category.styles.icon"}}
-              </Condition>
-              {{#if this.siteSettings.enable_emoji}}
-                <Condition @name="emoji">
-                  {{i18n "category.styles.emoji"}}
-                </Condition>
-              {{/if}}
-              <Condition @name="square">
-                {{i18n "category.styles.square"}}
-              </Condition>
-            </cc.Conditions>
-
-            <cc.Contents as |Content|>
-              <Content @name="icon">
-                <@form.Field
-                  @format="max"
-                  @name="icon"
-                  @showTitle={{false}}
-                  @title={{i18n "category.icon"}}
-                  @type="custom"
-                  @validate={{this.validateIcon}}
-                  as |field|
-                >
-                  <field.Control>
-                    <DIconGridPicker
-                      @iconColor={{concat "#" @transientData.color}}
-                      @onChange={{field.set}}
-                      @showCaret={{true}}
-                      @showSelectedName={{true}}
-                      @value={{field.value}}
-                    />
-                  </field.Control>
-                </@form.Field>
-              </Content>
-
-              <Content @name="emoji">
-                <@form.Field
-                  @format="max"
-                  @name="emoji"
-                  @showTitle={{false}}
-                  @title={{i18n "category.emoji"}}
-                  @type="custom"
-                  @validate={{this.validateEmoji}}
-                  as |field|
-                >
-                  <field.Control>
-                    <EmojiPicker
-                      @btnClass="btn-default btn-emoji"
-                      @didSelectEmoji={{field.set}}
-                      @emoji={{field.value}}
-                      @icon={{null}}
-                      @label={{unless
-                        field.value
-                        (i18n "category.select_emoji")
-                      }}
-                      @modalForMobile={{false}}
-                      @showCaret={{true}}
-                      @showSelectedName={{true}}
-                    />
-                  </field.Control>
-                </@form.Field>
-              </Content>
-
-              <Content @name="square">
-                {{trustHTML
-                  (dCategoryBadge
-                    (this.buildTransientModel @transientData)
-                    styleType="square"
-                    previewColor=true
-                  )
-                }}
-              </Content>
-            </cc.Contents>
-          </@form.ConditionalContent>
-        </styleField.Control>
-      </@form.Field>
+      <CategoryNameStyle
+        @category={{@category}}
+        @data={{@transientData}}
+        @form={{@form}}
+      />
 
       {{#if this.showDescription}}
         <div

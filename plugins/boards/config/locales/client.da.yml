@@ -32,7 +32,9 @@ da:
           other: "%{count} svar"
         assign: "Tildel"
         unassign: "Fjern tildeling"
-        created_by: "Oprettet af"
+        owners:
+          one: "Ejer"
+          other: "Ejere"
       manage:
         name: "Navn"
         slug: "Alias (Slug)"
@@ -43,6 +45,7 @@ da:
           column_title: "Titel"
           icon: "Ikon"
           color: "Farve"
+          icon_search_placeholder: "Søg…"
           tag: "Mærke"
           move_to_assigned_unassign: "Fjern tildeling"
           move_to_status_open: "Åbn"

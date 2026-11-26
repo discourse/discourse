@@ -6,6 +6,15 @@
 
 pt:
   js:
+    dsa_notice:
+      go_back: "Anterior"
+    code_editor:
+      search:
+        next: "Próximo"
+        previous: "Anterior"
+        close: "Fechar"
+      fold:
+        to: "para"
     user_api_key:
       authorize: "Autorizar"
       deny: "Cancelar"
@@ -24,6 +33,7 @@ pt:
     access_control:
       manage:
         access_permission_editor: "Editor"
+        access_permission_owner: "Dono(a)"
         access_permission_remove: "Remover"
     number:
       format:
@@ -436,30 +446,15 @@ pt:
       title: "Tópicos Novos e Não Lidos"
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
-    admin_onboarding_banner:
-      start_posting:
-        back: "Anterior"
-        category_unavailable: "Esta categoria não está disponível para publicação."
-        icebreakers:
-          plan_categories:
-            title: "Por que categorias devemos começar?"
-            body: "Vamos descobrir como organizar as coisas antes do lançamento! Sobre o que as pessoas mais vão querer falar? Podemos começar com algumas categorias e acrescentar outras depois."
-          plan_invites:
-            title: "Que membros devemos convidar antes do lançamento?"
-            body: "É melhor juntar-se a uma comunidade que já tenha alguns membros. Quem devemos convidar em primeiro lugar? Pense em pessoas que gostem de conversar, de ajudar os outros e ficariam entusiasmadas por participar desde o início."
-          write_your_own:
-            title: "Escreva o seu próprio"
-            body: "Inicie uma conversa com um tema adequado à sua comunidade."
     design_wizard:
       back: "Anterior"
       next: "Próximo"
       sections:
-        theme: "Tema"
+        logo: "Logótipo"
         homepage: "Página de início"
-        search: "Procurar"
-      colors:
-        light: "Claro"
-        dark: "Escuro"
+      fonts:
+        base_font: "Corpo"
+        heading_font: "Cabeçalhos"
       homepage:
         topics: "Tópicos"
         categories: "Categorias"
@@ -697,7 +692,6 @@ pt:
         placeholder: "digite aqui o título da mensagem, url ou id"
     dsa_statements:
       category: "Categoria"
-      saving: "Guardando..."
     review:
       show_more: "Mostrar mais"
       show_less: "Mostrar menos"
@@ -2065,6 +2059,7 @@ pt:
         redeemed_tab_with_count: "Resgatados (%{count})"
         invited_via: "Convite"
         invited_via_link: "link %{key} (%{count} / %{max} resgatado)"
+        invited_via_link_without_key: "link (%{count} / %{max} resgatados)"
         groups: "Grupos"
         topic: "Tópico"
         sent: "Criado/Último Enviado"
@@ -2349,6 +2344,7 @@ pt:
       no_results: "Sem resultados"
       search: "Pesquisar…"
       label: "Selecionar opções"
+      remove_item: "Remover %{name}"
     d_otp:
       screen_reader:
         one: Insira um número
@@ -2750,6 +2746,7 @@ pt:
         size_too_small: "%{provided_file_size} é menor do que o mínimo permitido %{min_file_size}"
     emoji_picker:
       filter_placeholder: Pesquisar por emoji
+      no_results: "Sem resultados"
       smileys_&_emotion: Smileys e Emojis
       people_&_body: Pessoas e Corpo
       animals_&_nature: Animais e Natureza
@@ -2769,6 +2766,7 @@ pt:
       default: Emojis Personalizados
     filter_controls:
       reset: "Repor"
+      sort_label: "Ordenar por"
     shared_drafts:
       title: "Rascunhos Partilhados"
       notice: "Este tópico é visível apenas para quem pode publicar rascunhos partilhados."
@@ -2783,6 +2781,10 @@ pt:
       emoji: "Emoji :)"
       more_emoji: "mais…"
       options: "Opções"
+      ai_content:
+        code: "Código"
+        quote: "Citar"
+        details: "Detalhes"
       whisper: "susurro"
       unlist: "não listado"
       add_warning: "Este é um aviso oficial."
@@ -3446,7 +3448,7 @@ pt:
         back_description: "Voltar à última publicação não lida"
         replies_short: "%{current} / %{total}"
       progress:
-        title: progresso do tópico
+        title: "progresso do tópico"
         jump_prompt: "ir para..."
         jump_prompt_of:
           one: "de %{count} publicação"
@@ -3682,10 +3684,8 @@ pt:
           label: "selecionado"
           title: "Clique para desseleccionar a mensagem"
         select_replies:
-          label: "selecione +respostas"
           title: "Adicionar o post e todas as suas respostas à seleção"
         select_below:
-          label: "Selecione +abaixo"
           title: "Adicionar a postagem e tudo após ela à seleção"
         delete: eliminar selecionados
         cancel: cancelar seleção
@@ -3703,6 +3703,7 @@ pt:
         select_all: "Selecionar tudo"
         clear_all: "Limpar tudo"
     post:
+      ai_generated: "IA"
       confirm_delete: "Tem a certeza que deseja eliminar esta publicação?"
       quote_reply: "Citar"
       quote_reply_shortcut: "Citar (ou pressione q)"
@@ -3878,6 +3879,9 @@ pt:
           notify_moderators: "Sinalizou isto para moderação"
           notify_user: "Enviou uma mensagem para este utilizador"
       revisions:
+        visibility:
+          hidden:
+            title: "Escondido"
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"
@@ -3886,9 +3890,6 @@ pt:
           previous: "Revisão anterior"
           next: "Revisão seguinte"
           last: "Última revisão"
-          hide: "Ocultar revisão"
-          show: "Mostrar revisão"
-          destroy: "Eliminar revisões"
           destroy_confirm: "Tem certeza que deseja eliminar todas as revisões desta publicação? Esta ação é permanente."
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
@@ -3949,7 +3950,6 @@ pt:
     category:
       none: "(sem categoria)"
       all: "Todas as categorias"
-      choose: "Categoria&hellip;"
       edit: "Editar"
       edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
@@ -3984,25 +3984,18 @@ pt:
       save_error: Ocorreu um erro ao guardar a categoria.
       validations:
         icon_required: "Selecione um ícone."
+      icon_search_placeholder: "Pesquisar…"
       description: "Descrição"
       style: "Estilo"
-      icon: "Ícone"
-      emoji: "Emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
         cant_be_empty: "não pode estar vazio"
       styles:
-        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         square: "Quadrado"
-        options:
-          square: "Quadrado"
-          icon: "Ícone"
-          emoji: "Emoji"
       color_used: "Cor em utilização"
-      color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
       no_description: "Por favor adicione uma descrição para esta categoria."
@@ -4481,6 +4474,15 @@ pt:
       forward: "Avançar"
       share: "Partilhar"
       dismiss: "Marcar como visto"
+    mobile_tab_bar:
+      new_topic: "Novo tópico"
+      create: "Criar"
+      more: "Mais"
+      back: "Anterior"
+      topics: "Tópicos"
+      drafts:
+        one: "Rascunhos (%{count})"
+        other: "Rascunhos (%{count})"
     safe_mode:
       enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
     image_removed: "(imagem removida)"
@@ -4635,10 +4637,10 @@ pt:
           title: "Avançado"
       upcoming_changes:
         name: "Nome"
-        enabled: "Ativado"
+        enabled: "Ativado?"
+        feedback: "Opinião"
+        settings: "Configurações"
         preview: "Pré-visualização"
-        enabled_for_options:
-          everyone: "Todos"
         statuses:
           experimental: "Experimental"
         impact_roles:
@@ -4658,6 +4660,9 @@ pt:
           impact_role_admins: "Administradores"
           impact_role_moderators: "Moderadores"
           impact_role_staff: "Pessoal"
+        sort:
+          status: "Estado"
+          name: "Nome"
       config:
         about:
           title: "Sobre o seu ''site''"
@@ -4915,30 +4920,14 @@ pt:
           anonymous_human: "Anónimo"
       dashboard:
         title: "Painel de Administração"
-        last_updated: "Painel atualizado:"
-        discourse_last_updated: "Discourse atualizado:"
         version: "Versão"
         up_to_date: "Está atualizado!"
         updates_available: "Há atualizações disponíveis."
-        no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
-        stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
-        installed_version: "Instalado"
-        github: "GitHub"
-        problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         dismiss_notice: "Ignorar"
         new_features:
           title: "O que é novo?"
           learn_more: "Saiba mais..."
-        last_checked: "Última verificação"
         refresh_problems: "Atualizar"
-        no_problems: "Nenhum problema encontrado."
-        moderators: "Moderadores:"
-        admins: "Administradores:"
-        silenced: "Silenciado:"
-        suspended: "Suspenso: "
-        private_messages_short: "Msgs"
-        private_messages_title: "Mensagens"
-        mobile_title: "Móvel"
         space_used: "%{usedSize} usado"
         space_used_and_free: "%{usedSize} (%{freeSize} livre)"
         uploads: "Uploads"
@@ -4947,20 +4936,7 @@ pt:
           one: "%{count} backup em %{location}"
           other: "%{count} backups em %{location}"
         lastest_backup: "Mais recente: %{date}"
-        traffic_short: "Tráfego"
-        traffic: "Pedidos de aplicação web"
-        page_views: "Exibições de Página"
-        page_views_short: "Exibições de Página"
-        show_traffic_report: "Mostrar Relatório Detalhado do Tráfego"
-        community_health: Saúde da comunidade
-        moderators_activity: Atividade de moderadores
         whats_new_in_discourse: O que há de novo no Discourse?
-        activity_metrics: Métricas de Atividade
-        all_reports: "Todos os relatórios"
-        general_tab: "Geral"
-        moderation_tab: "Moderação"
-        security_tab: "Segurança"
-        reports_tab: "Relatórios"
         report_filter_any: "qualquer"
         disabled: Desativado
         timeout_error: A consulta está demorando muito, escolha um intervalo mais curto
@@ -4996,7 +4972,6 @@ pt:
             title: "Sistema"
             status: "Estado"
             discourse_updated: "Discourse atualizado"
-            dashboard_updated: "Painel atualizado"
         reports_section:
           header_action: "Gerir"
           no_data: "Sem dados para exibir"
@@ -5008,10 +4983,6 @@ pt:
           series:
             anonymous: "Anónimo"
           crawler_learn_more: "Saiba mais"
-        period:
-          last_7_days: "Últimos 7 Dias"
-          last_30_days: "Últimos 30 Dias"
-          custom: "Personalizar"
         reports:
           trend_title: "Mudança de %{percent}. Atualmente %{current}, era %{prev} no período anterior."
           today: "Hoje"
@@ -5042,8 +5013,6 @@ pt:
             posts_count:
               one: "%{count} mensagem"
               other: "%{count} mensagens"
-          trending_search:
-            more: '<a href="%{basePath}/admin/logs/search_logs">Pesquisar logs</a>'
           sort_button: "Organizado por %{column}"
           sort_ascending: "ascendente"
           sort_descending: "descendente"
@@ -5368,7 +5337,6 @@ pt:
           title: "Carregar uma cópia de segurança para esta instância"
           uploading: "A enviar…"
           success: "'%{filename}' foi enviado com sucesso. O arquivo está sendo processado e levará até um minuto para aparecer na lista."
-          error: "Verificou-se um erro no carregamento de '%{filename}': %{message}"
         settings: "Configurações"
         operations:
           failed: "A %{operation} falhou. Por favor verifique o registo dos logs."
@@ -5841,6 +5809,9 @@ pt:
           silenced: "Silenciado"
           staged: "Não Confirmado"
         approved: "Aprovado?"
+        bots:
+          name: "Nome"
+          username: "Nome de Utilizador"
         titles:
           active: "Utilizadores ativos"
           pending: "Utilizadores com Confirmação Pendente"
@@ -5859,6 +5830,7 @@ pt:
           title: "Mostrar carga SSO"
           text: "Mostrar"
       user:
+        bot: "Robô"
         suspend_failed: "Ocorreu um erro ao suspender este utilizador %{error}"
         unsuspend_failed: "Ocorreu um erro ao retirar a suspensão deste utilizador %{error}"
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."
@@ -6043,6 +6015,8 @@ pt:
           dropdown: "Lista pendente"
       site_text:
         search_label: "Procurar"
+        preview:
+          default: "Predefinição"
         theme_disabled: "Desativado"
         filters: "Filtros"
         edit: "Editar"
@@ -6117,7 +6091,7 @@ pt:
           modal_title: Grupos de Crachás
         granted_by: Concedido Por
         granted_at: Concedido Em
-        reason_help: (Uma ligação para uma publicação ou tópico)
+        reason_help: Uma ligação para uma publicação ou tópico
         save: Guardar
         delete: Apagar
         delete_confirm: Tem a certeza que quer eliminar este crachá?

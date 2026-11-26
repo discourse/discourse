@@ -29,6 +29,19 @@ RSpec.describe PrettyText do
     expect(PrettyText.format_for_email(cooked_html, post)).to match_html(email_formatted)
   end
 
+  it "does not raise when a lazy video container has no link" do
+    cooked_html = <<~HTML
+      <div class="youtube-onebox lazy-video-container" data-video-title="No link here">
+        not a video
+      </div>
+    HTML
+
+    email = PrettyText.format_for_email(cooked_html, post)
+
+    expect(email).not_to include("lazy-video-container")
+    expect(Nokogiri::HTML5.fragment(email).at_css("p").text).to eq("No link here")
+  end
+
   it "preserves lazy video titles as link text in emails" do
     video_title = 'Video <img src=x onerror="alert(1)">'
     cooked_html = <<~HTML

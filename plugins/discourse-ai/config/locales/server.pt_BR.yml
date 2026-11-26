@@ -35,12 +35,6 @@ pt_BR:
         description: "Postagens de triagem usando um modelo de linguagem grande"
         notify_author_pm:
           subject: "Sua postagem foi temporariamente removida para análise"
-          body: |
-            Olá @%{username},
-
-            Sua postagem em “%{topic_title}” foi temporariamente removida e colocada em nossa fila de revisão para ser analisada por um moderador. Se aprovada, ela será restaurada automaticamente.
-
-            Referência: %{post_url}
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"
@@ -63,7 +57,6 @@ pt_BR:
     ai_toxicity_flag_threshold_threat: "Ameaça"
     ai_toxicity_flag_threshold_sexual_explicit: "Conteúdo sexual explícito"
     ai_toxicity_groups_bypass: "Os(as) usuários(as) não terão suas postagens classificadas pelo módulo de toxicidade."
-    ai_sentiment_enabled: "Ative o módulo de sentimento."
     ai_sentiment_inference_service_api_endpoint: "URL em que a API está em execução para o módulo de sentimento"
     ai_sentiment_inference_service_api_key: "Chave de API para a API de sentimento"
     ai_nsfw_detection_enabled: "Ative o módulo NSFW."
@@ -120,6 +113,12 @@ pt_BR:
     ai_translation_include_bot_content: "Quando ativada, também enviará para tradução o conteúdo escrito por bots (IDs de usuário abaixo de 0)."
     ai_translation_backfill_hourly_rate: "Número de posts e tópicos a serem traduzidos por hora durante operações de backfill. Defina como 0 para desativar o backfill automático de traduções para conteúdo existente."
     ai_usage_rollup_after_days: "Número de dias para manter as estatísticas de uso de IA por solicitação antes de consolidá-las em agregados diários. Defina como 0 para desativar rollups."
+    keywords:
+      ai_default_llm_model: "modelo de linguagem padrão"
+      ai_discord_search_enabled: "integração com o Discourse"
+      ai_helper_automatic_chat_thread_title: "títulos de threads de chat"
+      ai_summarization_enabled: "resumos"
+      ai_summary_gists_enabled: "resumos breves da lista de tópicos"
   reviewables:
     reasons:
       flagged_by_toxicity: O plugin de IA sinalizou isto após classificar como tóxico.
@@ -134,88 +133,60 @@ pt_BR:
       yaxis: "Data"
     emotion_admiration:
       title: "🤩 Admiração"
-      description: "Postagens classificadas com o gesto de admiração pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_amusement:
       title: "😄 Diversão"
-      description: "Postagens classificadas com o gesto de diversão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_anger:
       title: "😠 Raiva"
-      description: "Postagens classificadas com o gesto de raiva pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_annoyance:
       title: "😒 Aborrecimento"
-      description: "Postagens classificadas com o gesto de aborrecimento pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_approval:
       title: "👍 Aprovação"
-      description: "Postagens classificadas com o gesto de aprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_caring:
       title: "🤗 Carinho"
-      description: "Postagens classificadas com o gesto de carinho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_confusion:
       title: "😕 Confusão"
-      description: "Postagens classificadas com o gesto de confusão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_curiosity:
       title: "🤔 Curiosidade"
-      description: "Postagens classificadas com o gesto de curiosidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_desire:
       title: "😍 Desejo"
-      description: "Postagens classificadas com o gesto de desejo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disappointment:
       title: "😞 Decepção"
-      description: "Postagens classificadas com o gesto de decepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disapproval:
       title: "👎 Desaprovação"
-      description: "Postagens classificadas com o gesto de desaprovação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_disgust:
       title: "🤢 Repulsa"
-      description: "Postagens classificadas com o gesto de desgosto pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_embarrassment:
       title: "😳 Vergonha"
-      description: "Postagens classificadas com o gesto de vergonha pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_excitement:
       title: "🤪 Empolgação"
-      description: "Postagens classificadas com o gesto de empolgação pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_fear:
       title: "😨 Medo"
-      description: "Postagens classificadas com o gesto de medo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_gratitude:
       title: "🙏 Gratidão"
-      description: "Postagens classificadas com o gesto de gratidão pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_grief:
       title: "😢 Pesar"
-      description: "Postagens classificadas com o gesto de pesar pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_joy:
       title: "😊 Alegria"
-      description: "Postagens classificadas com o gesto de alegria pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_love:
       title: '❤️ Amor'
-      description: "Postagens classificadas com o gesto de amor pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_nervousness:
       title: "😰 Nervosismo"
-      description: "Postagens classificadas com o gesto de nervosismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_neutral:
       title: "😐 Neutro"
-      description: "Postagens classificadas com o gesto de neutralidade pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_optimism:
       title: "🌟 Otimismo"
-      description: "Postagens classificadas com o gesto de otimismo pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_pride:
       title: "🦁 Orgulho"
-      description: "Postagens classificadas com o gesto de orgulho pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_realization:
       title: "💡 Percepção"
-      description: "Postagens classificadas com o gesto de percepção pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_relief:
       title: "😌 Alívio"
-      description: "Postagens classificadas com o gesto de alívio pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_remorse:
       title: "😔 Remorso"
-      description: "Postagens classificadas com o gesto de remorso pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_sadness:
       title: "😭 Tristeza"
-      description: "Postagens classificadas com o gesto de tristeza pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
     emotion_surprise:
       title: "😲 Surpresa"
-      description: "Postagens classificadas com o gesto de surpresa pela IA, usando o modelo \"SamLowe/roberta-base-go_emotions\"."
   discourse_ai:
     ai_artifact:
       errors:
@@ -242,10 +213,6 @@ pt_BR:
           name: "Geração de imagens..."
         image_generation_custom:
           name: "Personalizadas"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -307,6 +274,9 @@ pt_BR:
       configuration_missing: "Não foi encontrada a configuração de detecção de spam de IA. Adicione a configuração em \"Administração > Plugins > Discourse AI > Spam\" antes de ativar."
       logging_subject: "Detecção de spam"
     ai_bot:
+      sources:
+        historical: "Discourse IA"
+        spam_detection: "Detecção de spam"
       navigation:
         settings:
           title: "Configurações do site"
@@ -353,6 +323,8 @@ pt_BR:
           text_color: "cor do texto"
         approve_label: "Sim"
         reject_label: "Não"
+        category_access_levels:
+          readonly: "Ver"
         empty_value: "Vazio"
         unexpected_error: "ocorreu um erro inesperado."
       agents:
@@ -519,6 +491,7 @@ pt_BR:
         edit_post: "Editar postagem"
         edit_tag: "Editar tag"
         create_category: "Criar categoria"
+        delete_category: "Excluir categoria"
         move_posts: "Mover postagens"
         search: "Pesquisar"
         tags: "Listar etiquetas"
@@ -635,6 +608,12 @@ pt_BR:
       edit_category:
         errors:
           not_found: "Categoria não encontrada."
+      set_category_permissions:
+        errors:
+          not_found: "Categoria não encontrada."
+      delete_category:
+        errors:
+          not_found: "Categoria não encontrada."
       change_topic_category:
         errors:
           not_found: "Tópico não encontrado."
@@ -651,6 +630,22 @@ pt_BR:
       assign:
         errors:
           not_found: "Tópico não encontrado."
+    appearance_authoring:
+      component_on: "Ligado"
+      component_off: "Desligado"
+      default_theme: "Tema padrão"
+      colors:
+        light:
+          header_background: "Cabeçalho"
+      fonts:
+        base_font: "Fonte do corpo"
+        heading_font: "Fonte do cabeçalho"
+    mcp_theme_access:
+      "on": "Ligado"
+      "off": "Desligado"
+      none: "nenhum(a)"
+    mcp_app_setup:
+      none: "nenhum(a)"
     reviewables:
       ai_tool_action:
         title: "Ação de ferramenta de IA"
@@ -705,6 +700,7 @@ pt_BR:
       cannot_edit_builtin: "Não é possível editar um modelo integrado."
       secret_required: "É necessário selecionar uma credencial."
       secret_not_found: "A credencial selecionada não existe"
+      missing_provider_param: "%{param} Não pode ficar em branco"
       configuration:
         disable_embeddings: "Você precisa desativar \"incorporações com IA ativadas\" primeiro."
         choose_model: "Defina o \"modelo selecionado de incorporações com IA\" primeiro."

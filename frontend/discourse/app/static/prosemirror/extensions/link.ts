@@ -121,6 +121,7 @@ const extension: RichEditorExtension = {
         }
 
         if (linkMarkup === "linkify") {
+          state.linkifyEnd = state.out.length;
           return "";
         }
 

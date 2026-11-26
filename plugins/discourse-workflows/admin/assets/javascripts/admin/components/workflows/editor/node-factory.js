@@ -1,3 +1,4 @@
+import randomUUID from "discourse/lib/random-uuid";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import {
@@ -9,7 +10,7 @@ import WorkflowNode from "../../../models/workflow-node.js";
 
 const NODE_DEFAULTS = {
   "trigger:webhook": () => ({
-    path: crypto.randomUUID(),
+    path: randomUUID(),
     http_method: "GET",
   }),
   "trigger:schedule": () => ({

@@ -98,15 +98,31 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      review_bulk:
+        refresh: "Ανανέωση"
+        columns:
+          user: "Χρήστης"
+          reason: "Αναφορά ως"
+          created: "Δημιουργήθηκε"
+          status: "Κατάσταση"
       copied: "Αντιγράφηκε"
       ai_decoded_transcript:
         arguments: "Παράμετροι"
         type: "Τύπος"
         error: "Σφάλμα"
         response: "Απάντηση"
+      post_image_captions:
+        image_descriptions:
+          apply: "Εφαρμογή"
       discourse_workflows:
         ai_agent:
           mode: "Λειτουργία"
+        ai_tool:
+          arguments: "Παράμετροι"
+          list_item: "Στοιχείο Λίστας"
+          add_list_item: "Προσθήκη στοιχείου"
+        mcp_tool:
+          arguments: "Παράμετροι"
         classify:
           text: "Κείμενο"
           upload_ids: "Εικόνες"
@@ -127,23 +143,34 @@ el:
         none: "Κανένα"
       features:
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
-        disabled: "(απενεργοποιημένο)"
-        groups: "Ομάδες:"
+        table:
+          status: "Κατάσταση"
+          enabled: "Ενεργοποιημένη"
+          feature: "Λειτουργία"
+          groups: "Ομάδες"
+        who_can_use:
+          no_one: "Κανέναν"
+        status:
+          "on": "Ενεργό"
+          "off": "Ανενεργό"
+        chatbot:
+          places:
+            personal_messages: "Προσωπικά μηνύματα"
+            chat_direct_messages: "Μηνύματα συνομιλίας"
+            none: "Μη διαθέσιμο "
+        toggle: "Ενεργοποίηση %{name}"
         no_agent: "Δεν έχει οριστεί"
         no_groups: "Κανένα"
         edit: "Ρυθμίσεις"
-        expand_list:
-          one: "(%{count} περισσότερο)"
-          other: "(%{count} περισσότερα)"
-        collapse_list: "(δείξε λιγότερα)"
         nav:
           enabled: "Ενεργοποιημένη"
           not_enabled: "Μη ενεργοποιημένη"
         filters:
-          all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
+        sentiment:
+          enabled: "Ενεργοποιημένη"
         search:
           name: "Αναζήτηση"
         admin_dashboard:
@@ -154,6 +181,9 @@ el:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
             automation: "Αυτοματισμός"
+        review_queue:
+          setting_groups:
+            settings: "Ρυθμίσεις"
         image_caption:
           setting_groups:
             settings: "Ρυθμίσεις"
@@ -165,7 +195,20 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
-        category_scope: "Κατηγορίες"
+        sections:
+          advanced: "Προχωρημένα"
+        settings:
+          ai_translation_category_scope:
+            label: "Κατηγορίες"
+          ai_translation_personal_messages:
+            label: "Προσωπικά μηνύματα"
+            choices:
+              none: "Κανένα"
+              all: "Όλα"
+          content_localization_language_switcher:
+            choices:
+              none: "Κανένας"
+              all: "Όλοι"
         model_progress:
           detail:
             retry: "Επανάληψη"
@@ -181,6 +224,8 @@ el:
               title: "Κατηγορίες"
             tag:
               title: "Ετικέτες"
+        admin_actions:
+          enabled: "Ενεργοποιημένη"
         stats:
           eta_minutes:
             one: "%{count} λεπτό"
@@ -200,6 +245,8 @@ el:
             label: "Μετάφραση"
       spam:
         short_title: "Ανεπιθύμητα"
+        no_llm_selected: "Κανένα"
+        no_decision_model_selected: "Κανένα"
         last_seven_days: "Τελευταίες 7 ημέρες"
         false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
@@ -327,6 +374,29 @@ el:
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
         embedding: "Ενσωμάτωση"
+      concepts:
+        edit: "Επεξεργασία"
+        seed:
+          refresh: "Ανανέωση"
+        delete: "Σβήσιμο"
+        columns:
+          status: "Κατάσταση"
+          topics: "Θέματα"
+          posts: "Αναρτήσεις"
+        statuses:
+          all: "Όλες οι καταστάσεις"
+          active: "Ενεργό"
+        form:
+          name: "Όνομα"
+          description: "Περιγραφή"
+          status: "Κατάσταση"
+        shared_topics_count:
+          one: "%{count} θέμα"
+          other: "%{count} θέματα"
+        tagged_topics: "Θέματα με ετικέτα"
+        topic_columns:
+          topic: "Νήμα"
+          relevance: "Συνάφεια"
       decision_models:
         no_preset: "Κανένα"
         display_name: "Όνομα"
@@ -455,7 +525,6 @@ el:
         filter_conversation: "Συνομιλία"
       ai_bot:
         title: "AI bot"
-        llm: "Μοντέλο:"
         try_again: "Δοκιμάστε ξανά"
         shortcut_title: "Ξεκινήστε ένα ΠΜ με ένα AI bot"
         shortcut_link: "AI bot"

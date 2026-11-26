@@ -38,12 +38,6 @@ nl:
         description: "Triageer berichten met behulp van een groot taalmodel"
         notify_author_pm:
           subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
-          body: |
-            Hallo @%{username},
-
-            Je bericht in '%{topic_title}' is tijdelijk verwijderd en in onze beoordelingswachtrij geplaatst zodat een moderator ernaar kan kijken. Als het wordt goedgekeurd, wordt het automatisch hersteld.
-
-            Referentie: %{post_url}
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -66,7 +60,6 @@ nl:
     ai_toxicity_flag_threshold_threat: "Bedreiging"
     ai_toxicity_flag_threshold_sexual_explicit: "Seksueel expliciet"
     ai_toxicity_groups_bypass: "De berichten van gebruikers in die groepen worden niet geclassificeerd door de toxiciteitsmodule."
-    ai_sentiment_enabled: "Schakel de sentimentmodule in."
     ai_sentiment_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de sentimentmodule"
     ai_sentiment_inference_service_api_key: "API-sleutel voor de sentiment-API"
     ai_nsfw_detection_enabled: "Schakel de NVWW-module in."
@@ -130,6 +123,12 @@ nl:
     ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
     ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
     ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
+    keywords:
+      ai_default_llm_model: "standaard taalmodel"
+      ai_discord_search_enabled: "discord-integratie"
+      ai_helper_automatic_chat_thread_title: "chatthreadtitels"
+      ai_summarization_enabled: "samenvattingen"
+      ai_summary_gists_enabled: "korte samenvattingen voor topiclijst"
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -144,88 +143,60 @@ nl:
       yaxis: "Datum"
     emotion_admiration:
       title: "🤩 Bewondering"
-      description: "Berichten geclassificeerd met de emotie bewondering via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
       title: "😄 Geamuseerd"
-      description: "Berichten geclassificeerd met de emotie geamuseerd via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
       title: "😠 Boosheid"
-      description: "Berichten geclassificeerd met de emotie woede via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
       title: "😒 Ergernis"
-      description: "Berichten geclassificeerd met de emotie ergernis via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
       title: "👍 Goedkeuring"
-      description: "Berichten geclassificeerd met de emotie goedkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
       title: "🤗 Zorgzaam"
-      description: "Berichten geclassificeerd met de emotie zorgzaam via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
       title: "😕 Verwarring"
-      description: "Berichten geclassificeerd met de emotie verwarring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
       title: "🤔 Nieuwsgierigheid"
-      description: "Berichten geclassificeerd met de emotie nieuwsgierigheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
       title: "😍 Verlangen"
-      description: "Berichten geclassificeerd met de emotie verlangen via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
       title: "😞 Teleurstelling"
-      description: "Berichten geclassificeerd met de emotie teleurstelling via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
       title: "👎 Afkeuring"
-      description: "Berichten geclassificeerd met de emotie afkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
       title: "🤢 Afschuw"
-      description: "Berichten geclassificeerd met de emotie afschuw via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
       title: "😳 Schaamte"
-      description: "Berichten geclassificeerd met de emotie schaamte via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
       title: "🤪 Opwinding"
-      description: "Berichten geclassificeerd met de emotie opwinding via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
       title: "😨 Angst"
-      description: "Berichten geclassificeerd met de emotie angst via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
       title: "🙏 Dankbaarheid"
-      description: "Berichten geclassificeerd met de emotie dankbaarheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
       title: "😢 Verdriet"
-      description: "Berichten geclassificeerd met de emotie verdriet via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
       title: "😊 Vreugde"
-      description: "Berichten geclassificeerd met de emotie vreugde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Liefde'
-      description: "Berichten geclassificeerd met de emotie liefde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
       title: "😰 Nervositeit"
-      description: "Berichten geclassificeerd met de emotie nervositeit via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
       title: "😐 Neutraal"
-      description: "Berichten geclassificeerd met de emotie neutraal via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
       title: "🌟 Optimisme"
-      description: "Berichten geclassificeerd met de emotie optimisme via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
       title: "🦁 Trots"
-      description: "Berichten geclassificeerd met de emotie trots via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
       title: "💡 Besef"
-      description: "Berichten geclassificeerd met de emotie besef via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
       title: "😌 Opluchting"
-      description: "Berichten geclassificeerd met de emotie oplichting via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
       title: "😔 Spijt"
-      description: "Berichten geclassificeerd met de emotie spijt via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
       title: "😭 Droefheid"
-      description: "Berichten geclassificeerd met de emotie droefheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
       title: "😲 Verrassing"
-      description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
       errors:
@@ -252,10 +223,6 @@ nl:
           name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
-        image_generation_openai:
-          name: "OpenAI"
-        image_generation_gemini:
-          name: "Nano Banana"
         image_generation_flux:
           name: "FLUX 1.1 Pro"
         image_generation_flux2:
@@ -347,6 +314,9 @@ nl:
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
+      sources:
+        historical: "Discourse AI"
+        spam_detection: "Spamdetectie"
       navigation:
         settings:
           title: "Site-instellingen"
@@ -393,6 +363,8 @@ nl:
           text_color: "tekstkleur"
         approve_label: "Ja"
         reject_label: "Nee"
+        category_access_levels:
+          readonly: "Weergeven"
         empty_value: "Leeg"
         unexpected_error: "er is een onverwachte fout opgetreden"
       agents:
@@ -582,6 +554,7 @@ nl:
         edit_tag: "Tag bewerken"
         create_category: "Categorie maken"
         edit_category: "Categorie bewerken"
+        delete_category: "Categorie verwijderen"
         set_topic_timer: "Topictimer instellen"
         set_slow_mode: "Langzame modus instellen"
         move_posts: "Berichten verplaatsen"
@@ -777,6 +750,12 @@ nl:
       edit_category:
         errors:
           not_found: "Categorie niet gevonden."
+      set_category_permissions:
+        errors:
+          not_found: "Categorie niet gevonden."
+      delete_category:
+        errors:
+          not_found: "Categorie niet gevonden."
       change_topic_category:
         errors:
           not_found: "Topic niet gevonden."
@@ -853,6 +832,24 @@ nl:
         errors:
           not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
           not_found: "Item in de beoordelingswachtrij niet gevonden"
+    appearance_authoring:
+      component_on: "Aan"
+      component_off: "Uit"
+      default_theme: "Standaardthema"
+      colors:
+        light:
+          header_background: "Koptekst"
+      fonts:
+        base_font: "Lettertype inhoud"
+        heading_font: "Lettertype kop"
+    mcp_theme_access:
+      "on": "Aan"
+      "off": "Uit"
+      none: "geen"
+      changes:
+        server: "MCP-server"
+    mcp_app_setup:
+      none: "geen"
     reviewables:
       ai_tool_action:
         title: "AI-toolactie"
@@ -912,6 +909,7 @@ nl:
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
       secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"
       secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
+      missing_provider_param: "%{param} mag niet leeg zijn"
       configuration:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."

@@ -10,7 +10,7 @@ RSpec.describe JsonApiKit::DefaultSort do
       let(:ordering) { { created_at: :sideways } }
 
       it "rejects the direction" do
-        expect { default_sort }.to raise_error(ArgumentError, /unknown direction: sideways/)
+        expect { default_sort }.to raise_error(ArgumentError, /Unknown sort direction: :sideways/)
       end
     end
   end

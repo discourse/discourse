@@ -58,8 +58,8 @@ RSpec.describe "Drawer" do
         page.find(".c-navbar__channel-title").click
       end
 
-      it "opens channel settings page" do
-        expect(drawer_page).to have_channel_settings
+      it "opens channel preferences page" do
+        expect(drawer_page).to have_channel_preferences
       end
 
       it "has tabs for settings and members" do

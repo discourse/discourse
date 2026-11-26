@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
@@ -89,6 +89,37 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
         '.hashtag-autocomplete__option .hashtag-autocomplete__text img.emoji[title="bug"]'
       )
       .exists();
+  });
+
+  test("escapes hashtag display text in the composer preview", async function (assert) {
+    const name = '<b id="hashtag-injected">Meeting</b>';
+    pretender.get("/hashtags", () =>
+      response({
+        category: [
+          {
+            id: 28,
+            text: name,
+            slug: "meeting-room",
+            ref: "meeting-room",
+            type: "category",
+            style_type: "square",
+            relative_url: "/c/meeting-room/28",
+          },
+        ],
+      })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await simulateKeys(".d-editor-input", "Visit #meeting-room ");
+    await waitFor(".d-editor-preview a.hashtag-cooked");
+
+    assert
+      .dom(".d-editor-preview a.hashtag-cooked")
+      .hasText(name, "the name remains literal text");
+    assert
+      .dom(".d-editor-preview #hashtag-injected")
+      .doesNotExist("the name does not create an element");
   });
 
   test("autocomplete supports periods in the middle of tag names", async function (assert) {

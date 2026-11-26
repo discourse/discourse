@@ -226,133 +226,181 @@ RSpec.describe Report do
     end
   end
 
-  %i[signup topic post flag like email].each do |arg|
-    describe "#{arg} report" do
-      pluralized = arg.to_s.pluralize
+  shared_examples "report totals over time" do |report_type:|
+    pluralized = report_type.to_s.pluralize
 
-      let(:report) { Report.find(pluralized) }
+    let(:report) { Report.find(pluralized) }
 
-      context "with no #{pluralized}" do
-        it "returns an empty report" do
-          expect(report.data).to be_blank
+    context "with no #{pluralized}" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
+      end
+    end
+
+    context "with #{pluralized}" do
+      before(:each) do
+        freeze_time_safe
+
+        if report_type == :flag
+          user = Fabricate(:user, refresh_auto_groups: true)
+          topic = Fabricate(:topic, user: user)
+          builder = ->(dt) do
+            PostActionCreator.create(
+              user,
+              Fabricate(:post, topic: topic, user: user),
+              :spam,
+              created_at: dt,
+            )
+          end
+        elsif report_type == :signup
+          builder = ->(dt) { Fabricate(:user, created_at: dt) }
+        else
+          user = Fabricate(:user)
+          factories = { email: :email_log }
+          builder = ->(dt) do
+            Fabricate(factories[report_type] || report_type, created_at: dt, user: user)
+          end
         end
+
+        [
+          DateTime.now,
+          1.hour.ago,
+          1.hour.ago,
+          1.day.ago,
+          2.days.ago,
+          30.days.ago,
+          35.days.ago,
+        ].each(&builder)
       end
 
-      context "with #{pluralized}" do
-        before(:each) do
-          freeze_time_safe
-
-          if arg == :flag
-            user = Fabricate(:user, refresh_auto_groups: true)
-            topic = Fabricate(:topic, user: user)
-            builder = ->(dt) do
-              PostActionCreator.create(
-                user,
-                Fabricate(:post, topic: topic, user: user),
-                :spam,
-                created_at: dt,
-              )
-            end
-          elsif arg == :signup
-            builder = ->(dt) { Fabricate(:user, created_at: dt) }
-          else
-            user = Fabricate(:user)
-            factories = { email: :email_log }
-            builder = ->(dt) { Fabricate(factories[arg] || arg, created_at: dt, user: user) }
-          end
-
-          [
-            DateTime.now,
-            1.hour.ago,
-            1.hour.ago,
-            1.day.ago,
-            2.days.ago,
-            30.days.ago,
-            35.days.ago,
-          ].each(&builder)
-        end
-
-        it "returns today's, total and previous 30 day's data" do
-          expect(report.data.select { |v| v[:x].today? }).to be_present
-          expect(report.total).to eq 7
-          expect(report.prev30Days).to be_present
-        end
+      it "returns today's, total and previous 30 day's data" do
+        expect(report.data.select { |v| v[:x].today? }).to be_present
+        expect(report.total).to eq 7
+        expect(report.prev30Days).to be_present
       end
     end
   end
 
-  %i[
-    http_total
-    http_2xx
-    http_background
-    http_3xx
-    http_4xx
-    http_5xx
-    page_view_crawler
-    page_view_logged_in
-    page_view_anon
-  ].each do |request_type|
-    describe "#{request_type} request reports" do
-      let(:report) do
-        Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
-      end
+  context "for signup totals" do
+    include_examples "report totals over time", report_type: :signup
+  end
 
-      context "with no #{request_type} records" do
-        it "returns an empty report" do
-          expect(report.data).to be_blank
-        end
-      end
+  context "for topic totals" do
+    include_examples "report totals over time", report_type: :topic
+  end
 
-      context "with #{request_type}" do
-        before do
-          freeze_time_safe
-          application_requests = [
-            {
-              date: 35.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 35,
-            },
-            {
-              date: 7.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 8,
-            },
-            { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
-            {
-              date: 1.day.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 2,
-            },
-            {
-              date: 2.days.ago.to_time,
-              req_type: ApplicationRequest.req_types[request_type.to_s],
-              count: 3,
-            },
-          ]
-          ApplicationRequest.insert_all(application_requests)
-        end
+  context "for post totals" do
+    include_examples "report totals over time", report_type: :post
+  end
 
-        it "returns a report with data" do
-          # expected number of records
-          expect(report.data.count).to eq 4
+  context "for flag totals" do
+    include_examples "report totals over time", report_type: :flag
+  end
 
-          # sorts the data from oldest to latest dates
-          expect(report.data[0][:y]).to eq(8) # 7 days ago
-          expect(report.data[1][:y]).to eq(3) # 2 days ago
-          expect(report.data[2][:y]).to eq(2) # 1 day ago
-          expect(report.data[3][:y]).to eq(1) # today
+  context "for like totals" do
+    include_examples "report totals over time", report_type: :like
+  end
 
-          # today's data
-          expect(report.data.find { |value| value[:x] == Date.today }).to be_present
+  context "for email totals" do
+    include_examples "report totals over time", report_type: :email
+  end
 
-          # total data
-          expect(report.total).to eq 49
+  shared_examples "a request type report" do |request_type:|
+    let(:report) do
+      Report.find("#{request_type}_reqs", start_date: 10.days.ago.to_time, end_date: Time.now)
+    end
 
-          #previous 30 days of data
-          expect(report.prev30Days).to eq 35
-        end
+    context "with no #{request_type} records" do
+      it "returns an empty report" do
+        expect(report.data).to be_blank
       end
     end
+
+    context "with #{request_type}" do
+      before do
+        freeze_time_safe
+        application_requests = [
+          {
+            date: 35.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 35,
+          },
+          {
+            date: 7.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 8,
+          },
+          { date: Time.now, req_type: ApplicationRequest.req_types[request_type.to_s], count: 1 },
+          {
+            date: 1.day.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 2,
+          },
+          {
+            date: 2.days.ago.to_time,
+            req_type: ApplicationRequest.req_types[request_type.to_s],
+            count: 3,
+          },
+        ]
+        ApplicationRequest.insert_all(application_requests)
+      end
+
+      it "returns a report with data" do
+        # expected number of records
+        expect(report.data.count).to eq 4
+
+        # sorts the data from oldest to latest dates
+        expect(report.data[0][:y]).to eq(8) # 7 days ago
+        expect(report.data[1][:y]).to eq(3) # 2 days ago
+        expect(report.data[2][:y]).to eq(2) # 1 day ago
+        expect(report.data[3][:y]).to eq(1) # today
+
+        # today's data
+        expect(report.data.find { |value| value[:x] == Date.today }).to be_present
+
+        # total data
+        expect(report.total).to eq 49
+
+        #previous 30 days of data
+        expect(report.prev30Days).to eq 35
+      end
+    end
+  end
+
+  context "for http_total request totals" do
+    include_examples "a request type report", request_type: :http_total
+  end
+
+  context "for http_2xx request totals" do
+    include_examples "a request type report", request_type: :http_2xx
+  end
+
+  context "for http_background request totals" do
+    include_examples "a request type report", request_type: :http_background
+  end
+
+  context "for http_3xx request totals" do
+    include_examples "a request type report", request_type: :http_3xx
+  end
+
+  context "for http_4xx request totals" do
+    include_examples "a request type report", request_type: :http_4xx
+  end
+
+  context "for http_5xx request totals" do
+    include_examples "a request type report", request_type: :http_5xx
+  end
+
+  context "for page_view_crawler request totals" do
+    include_examples "a request type report", request_type: :page_view_crawler
+  end
+
+  context "for page_view_logged_in request totals" do
+    include_examples "a request type report", request_type: :page_view_logged_in
+  end
+
+  context "for page_view_anon request totals" do
+    include_examples "a request type report", request_type: :page_view_anon
   end
 
   describe "page_view_legacy_total_reqs" do
@@ -385,10 +433,10 @@ RSpec.describe Report do
       it "works and does not count browser or mobile pageviews" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
         4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
         CachedCounting.flush
@@ -405,24 +453,6 @@ RSpec.describe Report do
     end
 
     let(:report) { Report.find("page_view_total_reqs") }
-
-    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
-      SiteSetting.use_legacy_pageviews = false
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser,
-        count: 4,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-
-      expect(report.data).to eq([{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }])
-      expect(report.total).to eq(12)
-    end
 
     context "with no data" do
       it "returns no page-view requests" do
@@ -449,10 +479,10 @@ RSpec.describe Report do
         it "works and does not count browser or mobile pageviews" do
           3.times { ApplicationRequest.increment!(:page_view_crawler) }
           8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
           2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
           2.times { ApplicationRequest.increment!(:page_view_anon) }
-          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
           CachedCounting.flush
@@ -467,10 +497,10 @@ RSpec.describe Report do
         it "works and does not count mobile pageviews, and only counts browser pageviews" do
           3.times { ApplicationRequest.increment!(:page_view_crawler) }
           8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+          6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
           2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
           2.times { ApplicationRequest.increment!(:page_view_anon) }
-          1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
 
           CachedCounting.flush
@@ -1644,15 +1674,13 @@ RSpec.describe Report do
 
   describe "report_top_ignored_users" do
     let(:report) { Report.find("top_ignored_users") }
-    let(:tarek) { Fabricate(:user, username: "tarek") }
-    let(:john) { Fabricate(:user, username: "john") }
-    let(:matt) { Fabricate(:user, username: "matt") }
 
     context "with data" do
-      before do
-        Fabricate(:ignored_user, user: tarek, ignored_user: john)
-        Fabricate(:ignored_user, user: tarek, ignored_user: matt)
-      end
+      fab!(:tarek) { Fabricate(:user, username: "tarek") }
+      fab!(:john) { Fabricate(:user, username: "john") }
+      fab!(:matt) { Fabricate(:user, username: "matt") }
+      fab!(:ignored_john) { Fabricate(:ignored_user, user: tarek, ignored_user: john) }
+      fab!(:ignored_matt) { Fabricate(:ignored_user, user: tarek, ignored_user: matt) }
 
       it "returns ignored-user counts" do
         expect(report.data.length).to eq(2)
@@ -1721,9 +1749,9 @@ RSpec.describe Report do
       it "returns consolidated browser-detection data" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1743,9 +1771,9 @@ RSpec.describe Report do
       it "gives the same total as page_view_total_reqs" do
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1774,9 +1802,9 @@ RSpec.describe Report do
 
         3.times { ApplicationRequest.increment!(:page_view_crawler) }
         8.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
 
         CachedCounting.flush
 
@@ -1810,7 +1838,7 @@ RSpec.describe Report do
 
     let(:reports) { Report.find("site_traffic") }
 
-    it "reports initial beacon pageviews even without piggyback history" do
+    it "splits browser pageviews from other pageviews" do
       ApplicationRequest.create!(
         date: Date.current,
         req_type: :page_view_anon_browser_beacon,
@@ -1829,57 +1857,6 @@ RSpec.describe Report do
       expect(series["page_view_anon_browser"]).to eq([{ x: Date.current, y: 8 }])
       expect(series["page_view_logged_in_browser"]).to eq([{ x: Date.current, y: 2 }])
       expect(series["page_view_other"]).to eq([{ x: Date.current, y: 2 }])
-    end
-
-    it "keeps piggyback counts in the browser series after an isolated day of beacon data" do
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser_beacon,
-        count: 1,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 30)
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon, count: 30)
-
-      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
-
-      expect(series["page_view_anon_browser"].last).to eq({ x: Date.current, y: 30 })
-      expect(series["page_view_other"].last).to eq({ x: Date.current, y: 0 })
-    end
-
-    it "reads days with beacon traffic from beacons and the rest from piggyback counters" do
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_anon_browser,
-        count: 4,
-      )
-      ApplicationRequest.create!(
-        date: Date.current - 2,
-        req_type: :page_view_logged_in_browser,
-        count: 6,
-      )
-      ApplicationRequest.create!(date: Date.current, req_type: :page_view_anon_browser, count: 3)
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_anon_browser_beacon,
-        count: 8,
-      )
-      ApplicationRequest.create!(
-        date: Date.current,
-        req_type: :page_view_logged_in_browser_beacon,
-        count: 2,
-      )
-
-      series = reports.data.to_h { |entry| [entry[:req], entry[:data]] }
-
-      expect(series["page_view_anon_browser"]).to eq(
-        [{ x: Date.current - 2, y: 4 }, { x: Date.current, y: 8 }],
-      )
-      expect(series["page_view_logged_in_browser"]).to eq(
-        [{ x: Date.current - 2, y: 6 }, { x: Date.current, y: 2 }],
-      )
-      expect(series["page_view_other"]).to eq(
-        [{ x: Date.current - 2, y: 0 }, { x: Date.current, y: 0 }],
-      )
     end
 
     context "with no data" do
@@ -1910,8 +1887,8 @@ RSpec.describe Report do
           .each do |date, logged_in_count|
             ApplicationRequest.write_cache!(:page_view_anon, 2, date)
             ApplicationRequest.write_cache!(:page_view_logged_in, logged_in_count, date)
-            ApplicationRequest.write_cache!(:page_view_anon_browser, 5, date)
-            ApplicationRequest.write_cache!(:page_view_logged_in_browser, 1, date)
+            ApplicationRequest.write_cache!(:page_view_anon_browser_beacon, 5, date)
+            ApplicationRequest.write_cache!(:page_view_logged_in_browser_beacon, 1, date)
           end
 
         series = reports.data.index_by { |report| report[:req] }
@@ -1931,9 +1908,9 @@ RSpec.describe Report do
         Fabricate(:embeddable_host)
 
         2.times { ApplicationRequest.increment!(:page_view_anon) }
-        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
         3.times { ApplicationRequest.increment!(:page_view_logged_in) }
-        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
         4.times { ApplicationRequest.increment!(:page_view_embed) }
         CachedCounting.flush
 
@@ -1955,8 +1932,8 @@ RSpec.describe Report do
         before { SiteSetting.improved_crawler_detection = true }
 
         it "reclassifies likely crawlers out of the logged in and anonymous series" do
-          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
-          20.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          10.times { ApplicationRequest.increment!(:page_view_logged_in_browser_beacon) }
+          20.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           CachedCounting.flush
 
           Fabricate(
@@ -1991,7 +1968,7 @@ RSpec.describe Report do
         it "leaves the series out and keeps counts intact when the change is disabled" do
           SiteSetting.improved_crawler_detection = false
 
-          10.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+          10.times { ApplicationRequest.increment!(:page_view_anon_browser_beacon) }
           CachedCounting.flush
 
           Fabricate(
@@ -2327,10 +2304,7 @@ RSpec.describe Report do
       it "with category filtering" do
         report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
 
-        expect(report.data.length).to eq(3)
-        expect(report.data[0][:username]).to eq("jonah")
-        expect(report.data[1][:username]).to eq("jake")
-        expect(report.data[2][:username]).to eq("john")
+        expect(report.data.map { |row| row[:username] }).to contain_exactly("jonah", "jake", "john")
       end
     end
   end

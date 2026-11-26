@@ -30,7 +30,8 @@ vi:
         assigned_to: "Được chỉ định cho"
         topic_reply_count:
           other: "%{count} trả lời"
-        created_by: "Tạo bởi"
+        owners:
+          other: "Chủ sở hữu"
       manage:
         name: "Tên"
         slug: "tên đường dẫn"
@@ -42,6 +43,8 @@ vi:
           column_title: "Tiêu đề"
           icon: "Biểu tượng"
           color: "Màu sắc"
+          color_palette: "Bảng màu"
+          icon_search_placeholder: "Tìm kiếm…"
           tag: "Thẻ"
           move_to_status_open: "Mở"
           move_to_status_closed: "Đã đóng"

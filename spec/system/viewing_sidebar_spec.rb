@@ -66,9 +66,7 @@ describe "Viewing sidebar" do
       let(:more_trigger_selector) do
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
       end
-      let(:more_links_selector) do
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
-      end
+      let(:more_links_selector) { ".sidebar-more-section-content" }
 
       it "toggles the more menu and handles click outside to close it" do
         visit("/latest")

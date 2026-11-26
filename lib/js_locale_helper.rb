@@ -2,7 +2,8 @@
 
 module JsLocaleHelper
   def self.plugin_client_files(locale_str)
-    files = Dir["#{Rails.root.join("plugins/*/config/locales/client*.#{locale_str}.yml")}"]
+    files = Dir[Rails.root.join("plugins/*/config/locales/client*.#{locale_str}.yml").to_s]
+    files = files.select { |path| GlobalSetting.load_plugin?(File.basename(File.dirname(path, 3))) }
     I18n::Backend::DiscourseI18n.sort_locale_files(files)
   end
 
@@ -371,9 +372,7 @@ module JsLocaleHelper
     if hash.is_a?(Hash)
       hash.each do |key, value|
         if value.is_a?(Hash)
-          message_formats.merge!(
-            strip_out_message_formats!(value, join_key(prefix, key), message_formats),
-          )
+          strip_out_message_formats!(value, join_key(prefix, key), message_formats)
         elsif key.to_s.end_with?("_MF")
           message_formats[join_key(prefix, key)] = value
           hash.delete(key)

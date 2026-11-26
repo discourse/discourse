@@ -104,17 +104,20 @@ RSpec.describe SvgSprite do
   end
 
   it "picks up a new badge icon in the picker list" do
-    expect(SvgSprite.picker_icon_ids(nil, true)).not_to include("seedling")
+    expect(SvgSprite.picker_sprite_icon_ids(nil)).not_to include("seedling")
 
     Fabricate(:badge, name: "Seedling Badge", icon: "seedling")
 
-    expect(SvgSprite.picker_icon_ids(nil, true)).to include("seedling")
+    expect(SvgSprite.picker_sprite_icon_ids(nil)).to include("seedling")
   end
 
   it "renders legacy icon names without offering them in the full picker list" do
+    ids =
+      SvgSprite.icon_picker_search("user", false, page: 0, per_page: 1000)[:icons].map { _1[:id] }
+
     expect(SvgSprite.search("user-large")).to match(/user-large/)
-    expect(SvgSprite.picker_icon_ids(nil, false)).to include("user")
-    expect(SvgSprite.picker_icon_ids(nil, false)).not_to include("user-large")
+    expect(ids).to include("user")
+    expect(ids).not_to include("user-large")
   end
 
   it "includes icons from badges" do
@@ -182,7 +185,10 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons defined in icon type site settings" do
-    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+    SiteSetting.load_settings(
+      Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s,
+      plugin: SiteSetting::SAMPLE_TEST_PLUGIN.name,
+    )
 
     SiteSetting.reaction_flair = "dragon"
     SvgSprite.expire_cache
@@ -217,7 +223,10 @@ RSpec.describe SvgSprite do
   end
 
   it "includes icons defined in icon properties of objects type site settings" do
-    SiteSetting.load_settings(Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s)
+    SiteSetting.load_settings(
+      Rails.root.join("spec/fixtures/site_settings/icon_settings.yml").to_s,
+      plugin: SiteSetting::SAMPLE_TEST_PLUGIN.name,
+    )
 
     SiteSetting.reaction_list = [{ name: "party", icon: "dragon" }].to_json
     SvgSprite.expire_cache
@@ -357,6 +366,99 @@ RSpec.describe SvgSprite do
       SvgSprite.all_icons
 
       expect(called).to eq(true)
+    end
+  end
+
+  describe "symbol sources registered by plugins" do
+    let(:plugin) do
+      Class
+        .new(Plugin::Instance) do
+          attr_accessor :enabled
+          attr_accessor :name
+
+          def enabled?
+            @enabled
+          end
+        end
+        .new
+    end
+
+    let(:pro_symbols) do
+      {
+        "fal-blender" => '<symbol id="fal-blender" viewBox="0 0 512 512"><path d="M1"/></symbol>',
+        "fal-guitar" => '<symbol id="fal-guitar" viewBox="0 0 512 512"><path d="M2"/></symbol>',
+      }
+    end
+
+    after do
+      DiscoursePluginRegistry._raw_svg_symbol_sources.clear
+      DiscoursePluginRegistry._raw_svg_icon_sources.clear
+    end
+
+    def symbol_source(symbols)
+      Struct
+        .new(:all) do
+          def symbols(icon_ids) = all.slice(*icon_ids)
+
+          def search_icon_ids(keyword, limit:)
+            all.keys.select { |id| id.include?(keyword) }.sort.first(limit)
+          end
+        end
+        .new(symbols)
+    end
+
+    it "adds the symbols of icons in use to the sprite" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_symbol_source(symbol_source(pro_symbols), plugin)
+      DiscoursePluginRegistry.register_svg_icon_source(-> { ["fal-blender"] }, plugin)
+
+      expect(SvgSprite.bundle).to include(pro_symbols["fal-blender"])
+      expect(SvgSprite.bundle).not_to include(pro_symbols["fal-guitar"])
+      expect(SvgSprite.search("fal-guitar")).to eq(pro_symbols["fal-guitar"])
+    end
+
+    it "lists the source's icons in the icon picker" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_symbol_source(symbol_source(pro_symbols), plugin)
+
+      result = SvgSprite.icon_picker_search("fal-", false, page: 0, per_page: 10)
+
+      expect(result[:icons]).to contain_exactly(
+        { id: "fal-blender", symbol: pro_symbols["fal-blender"] },
+        { id: "fal-guitar", symbol: pro_symbols["fal-guitar"] },
+      )
+    end
+
+    it "pages through the sprite's icons before the source's other icons" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_symbol_source(symbol_source(pro_symbols), plugin)
+      DiscoursePluginRegistry.register_svg_icon_source(-> { ["fal-guitar"] }, plugin)
+
+      first = SvgSprite.icon_picker_search("fal-", false, page: 0, per_page: 1)
+      second = SvgSprite.icon_picker_search("fal-", false, page: 1, per_page: 1)
+
+      expect(first).to eq(icons: [{ id: "fal-guitar" }], has_more: true)
+      expect(second).to eq(
+        icons: [{ id: "fal-blender", symbol: pro_symbols["fal-blender"] }],
+        has_more: false,
+      )
+    end
+
+    it "ignores sources belonging to disabled plugins" do
+      plugin.enabled = false
+      DiscoursePluginRegistry.register_svg_symbol_source(symbol_source(pro_symbols), plugin)
+
+      expect(SvgSprite.search("fal-guitar")).to eq(false)
+    end
+
+    it "keeps core symbols when a source provides the same icon" do
+      plugin.enabled = true
+      DiscoursePluginRegistry.register_svg_symbol_source(
+        symbol_source("user" => '<symbol id="user"><path d="M3"/></symbol>'),
+        plugin,
+      )
+
+      expect(SvgSprite.search("user")).to eq(SvgSprite.core_svgs["user"])
     end
   end
 

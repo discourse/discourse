@@ -51,6 +51,7 @@ pl_PL:
         archived: "Zarchiwizowane"
       topic_footer:
         add_to_board: "Dodaj do tablicy"
+        add_to_column: "Dodaj do kolumny"
         already_added: "Już dodano"
         no_boards: "Brak dostępnych tablic"
       topic_pill:
@@ -141,7 +142,11 @@ pl_PL:
         constraint_fix_tags: "Dodaj tag tablicy"
         constraint_fix_confirm: "Przenieś i zaktualizuj"
         constraint_tooltip: "Na tym forum dozwolone są wyłącznie tematy zawierające poniższe kategorie i tagi."
-        created_by: "Stworzono przez"
+        owners:
+          one: "Właściciel"
+          few: "Właściciele"
+          many: "Właściciele"
+          other: "Właściciele"
         show_older_cards: "Pokaż starsze karty: %{count}"
         errors:
           category_unavailable: "Kategoria docelowa nie jest już dostępna. Zaktualizuj ustawienia tablicy lub kolumny przed utworzeniem tematu."
@@ -206,6 +211,11 @@ pl_PL:
           column_title_required: "Tytuł kolumny lub nazwa tagu jest wymagana"
           icon: "Ikona"
           color: "Kolor"
+          color_palette: "Paleta kolorów"
+          name_and_style: "Nazwa i styl kolumny"
+          choose_style: "Wybierz ikonę kolumny i kolor"
+          choose_style_with_icon: "Wybierz ikonę kolumny i kolor (aktualnie jest to ikona %{name})"
+          icon_search_placeholder: "Szukaj…"
           default_sort: "Sortowanie domyślne"
           default_sort_priority: "Priorytet"
           default_sort_recency: "Niedawność"
@@ -220,8 +230,6 @@ pl_PL:
           move_to_status_none: "Nie zmieniaj"
           move_to_status_open: "Otwórz"
           move_to_status_closed: "Zamknięte"
-          show_advanced: "Pokaż opcje zaawansowane"
-          hide_advanced: "Ukryj opcje zaawansowane"
     keyboard_shortcuts_help:
       boards:
         title: "Tablice"

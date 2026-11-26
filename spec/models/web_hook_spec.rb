@@ -6,6 +6,34 @@ RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :last_delivery_status }
   it { is_expected.to validate_presence_of :web_hook_event_types }
 
+  it "does not add a marker query per event when destroying a loaded delivery history" do
+    marker_queries =
+      [1, 4].map do |count|
+        hook = Fabricate(:web_hook)
+        events = Fabricate.times(count, :web_hook_event, web_hook: hook)
+        events.each { |entry| RedeliveringWebhookEvent.create!(web_hook_event: entry) }
+        hook.reload.web_hook_events.load
+        queries = track_sql_queries { hook.destroy! }
+        expect(WebHookEvent.where(id: events.map(&:id))).not_to exist
+        expect(RedeliveringWebhookEvent.where(web_hook_event_id: events.map(&:id))).not_to exist
+        queries.count { |query| query.match?(/SELECT.*"redelivering_webhook_events"/) }
+      end
+    expect(marker_queries.last).to eq(marker_queries.first)
+  end
+
+  it "binds the destination fingerprint to a purpose-specific server key" do
+    hook = Fabricate(:web_hook)
+    original = hook.destination_fingerprint
+    expect(original).to match(/\A[a-f0-9]{64}\z/)
+    expect(hook.reload.destination_fingerprint).to eq(original)
+    expect(original).not_to eq(Digest::SHA256.hexdigest(hook.payload_url))
+    hook.payload_url = "https://meta.discourse.org/changed"
+    expect(hook.destination_fingerprint).not_to eq(original)
+    hook.reload
+    allow(RailsMultisite::ConnectionManagement).to receive(:current_db).and_return("another_site")
+    expect(hook.destination_fingerprint).not_to eq(original)
+  end
+
   describe "#content_types" do
     subject(:content_types) { WebHook.content_types }
 
@@ -94,6 +122,12 @@ RSpec.describe WebHook do
 
       describe "wildcard web hooks" do
         fab!(:wildcard_hook, :wildcard_web_hook)
+
+        it "matches wildcard hooks without explicit event subscriptions" do
+          wildcard_hook.update!(web_hook_event_type_ids: [])
+
+          expect(WebHook.active_web_hooks(:user_created)).to eq([wildcard_hook])
+        end
 
         it "includes wildcard hooks" do
           expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])

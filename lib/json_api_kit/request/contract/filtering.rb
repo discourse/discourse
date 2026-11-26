@@ -13,30 +13,53 @@ module JsonApiKit
           validate :check_filter_values, if: -> { filter.present? }
         end
 
+        def to_hash
+          return super if filter.blank?
+          super.merge(filter: {}).deep_merge(filter_parameters)
+        end
+
         private
 
         def check_filter_names
-          refuse_unknown(
+          filter_paths.each_key { check_filter_name(it) }
+        end
+
+        def check_filter_name(path)
+          return if path.declared?
+          errors.add(
             :filter,
-            (filter.keys - resource.filter_names).map do |name|
-              Name::Filter.new(value: name.to_s, type: resource.type)
-            end,
+            :no_such_name,
+            name: path.filter,
+            parameter_member: path.member_name(glossary),
+            message: "no such name",
           )
         end
 
         def check_filter_values
-          filter.each_key do |name|
-            next if comparable?(filter[name]) || listed?(filter[name])
+          filter_paths.each do |path, value|
+            next if comparable?(value) || listed?(value)
             errors.add(
               :filter,
               :bad_value,
-              name: Name::Filter.new(value: name.to_s, type: resource.type),
+              name: path.filter,
+              parameter_member: path.member_name(glossary),
               message: "bad value",
             )
           end
         end
 
-        def listed?(value) = Array.wrap(value).all? { comparable?(it) }
+        def filter_paths
+          @filter_paths ||= filter.to_h.transform_keys { FilterPaths::Path.for(it, resource:) }
+        end
+
+        def filter_parameters
+          @filter_parameters ||=
+            filter_paths.reduce({}) do |params, (path, value)|
+              params.deep_merge(path.parameters(value))
+            end
+        end
+
+        def listed?(value) = value.present? && Array.wrap(value).all? { comparable?(it) }
       end
     end
   end

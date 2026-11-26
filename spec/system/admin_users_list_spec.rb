@@ -34,6 +34,17 @@ describe "Admin Users Page" do
   describe "bulk user delete" do
     let(:confirmation_modal) { PageObjects::Modals::BulkUserDeleteConfirmation.new }
 
+    def wait_for_bulk_delete_subscription
+      # The first poll starts at the latest message, so it must run before a delete publishes.
+      try_until_success do
+        expect(
+          page.evaluate_script(
+            "window.MessageBus.callbacks.find((c) => c.channel === '/bulk-user-delete')?.last_id ?? -1",
+          ),
+        ).to be >= 0
+      end
+    end
+
     it "disables checkboxes for users that can't be deleted or suspended" do
       admin_users_page.visit
 
@@ -83,6 +94,7 @@ describe "Admin Users Page" do
       confirmation_modal.fill_in_confirmation_phrase(user_count: 2)
       expect(confirmation_modal).to have_confirm_button_enabled
 
+      wait_for_bulk_delete_subscription
       confirmation_modal.confirm
 
       expect(confirmation_modal).to have_successful_log_entry_for_user(
@@ -122,9 +134,11 @@ describe "Admin Users Page" do
       admin_users_page.visit
       admin_users_page.bulk_select_button.click
       admin_users_page.search_input.fill_in(with: user_1.username)
+      expect(admin_users_page).to have_no_users([user_2.id, user_3.id])
       admin_users_page.user_row(user_1.id).bulk_select_checkbox.click
 
       admin_users_page.search_input.fill_in(with: user_2.username)
+      expect(admin_users_page).to have_no_users([user_1.id, user_3.id])
       admin_users_page.user_row(user_2.id).bulk_select_checkbox.click
 
       admin_users_page.search_input.fill_in(with: "")
@@ -140,6 +154,7 @@ describe "Admin Users Page" do
       expect(confirmation_modal).to be_open
 
       confirmation_modal.fill_in_confirmation_phrase(user_count: 2)
+      wait_for_bulk_delete_subscription
       confirmation_modal.confirm
 
       expect(confirmation_modal).to have_content("Starting bulk delete…")
@@ -278,12 +293,6 @@ describe "Admin Users Page" do
       expect(admin_users_page).to have_no_emails
       admin_users_page.click_show_emails
       expect(admin_users_page).to have_emails
-    end
-
-    it "redirects to groups page" do
-      admin_users_page.visit
-      admin_users_page.click_tab("groups")
-      expect(page).to have_current_path("/admin/groups")
     end
 
     it "redirect to invites page" do

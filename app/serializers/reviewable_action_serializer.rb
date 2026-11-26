@@ -6,6 +6,7 @@ class ReviewableActionSerializer < ApplicationSerializer
              :icon,
              :button_class,
              :label,
+             :confirm_title,
              :confirm_message,
              :confirm_destructive,
              :description,
@@ -13,10 +14,20 @@ class ReviewableActionSerializer < ApplicationSerializer
              :client_action,
              :require_reject_reason,
              :completed_message,
-             :penalty_effect
+             :penalty_effect,
+             :dsa_classification_required
 
   def label
     I18n.t(object.label)
+  end
+
+  def confirm_title
+    I18n.t(
+      object.confirm_title,
+      default: nil,
+      fallback: false,
+      **(object.confirm_message_args || {}),
+    )
   end
 
   def confirm_message
@@ -39,6 +50,10 @@ class ReviewableActionSerializer < ApplicationSerializer
     description.present?
   end
 
+  def include_confirm_title?
+    object.confirm_title.present? && confirm_title.present?
+  end
+
   def include_confirm_message?
     object.confirm_message.present?
   end
@@ -53,6 +68,10 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def include_require_reject_reason?
     object.require_reject_reason.present?
+  end
+
+  def include_dsa_classification_required?
+    object.dsa_classification_required && DsaStatementOfRecord.classification_enabled?
   end
 
   def include_penalty_effect?

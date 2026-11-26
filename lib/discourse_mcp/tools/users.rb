@@ -85,7 +85,7 @@ module DiscourseMcp
         {
           id: user.id,
           username: user.username,
-          name: user.name,
+          name: (SiteSetting.enable_names? || guardian.is_admin?) ? user.name : nil,
           email: include_emails && guardian.can_check_emails?(user) ? user.email : nil,
           avatar_template: user.avatar_template,
           trust_level: user.trust_level,

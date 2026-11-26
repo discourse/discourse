@@ -1,48 +1,150 @@
-.dsa-classification {
-  min-width: 0;
-  overflow-wrap: anywhere;
+@use "lib/viewport";
 
-  &__heading {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-block-end: 0.5em;
+.dsa-moderation-action {
+  .d-modal__title {
+    min-width: 0;
   }
 
-  h2 {
-    font-size: var(--font-up-2);
-    margin: 0;
+  .d-modal__title-text {
+    overflow-wrap: anywhere;
+  }
+
+  &__classification {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-3);
+
+    h2 {
+      margin: 0;
+      font-size: var(--font-up-1);
+      font-weight: var(--token-font-weight-semibold);
+      line-height: var(--line-height-medium);
+    }
   }
 }
 
-.dsa-classification-confirmation {
-  &__label {
+.dsa-moderation-action__user {
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  .avatar {
+    margin-right: var(--space-1);
+  }
+}
+
+html:has(.dsa-moderation-action) .fk-d-menu[data-identifier="usercard"] {
+  z-index: z("modal", "popover");
+}
+
+.dsa-moderation-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-6);
+  border-block-end: 1px solid var(--content-border-color);
+  color: var(--primary-medium);
+
+  @include viewport.until(sm) {
+    font-size: var(--font-down-1);
+  }
+
+  li {
+    display: flex;
+    gap: 0 var(--space-2);
+    align-items: center;
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
+    font-weight: normal;
+    font-size: var(--font-down-1);
+  }
+
+  .--current {
+    color: var(--primary);
     font-weight: bold;
   }
 
-  &__value {
-    margin: 0 0 var(--space-4);
+  &__back.btn {
+    min-height: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+
+    &:hover,
+    &:focus-visible {
+      background: transparent;
+      color: var(--primary);
+    }
+  }
+}
+
+.dsa-moderation-help {
+  color: var(--primary-medium);
+}
+
+.dsa-moderation-title-help {
+  margin-inline: var(--space-2) auto;
+}
+
+.dsa-moderation-details .form-kit__control-menu-trigger.btn {
+  width: 100%;
+  justify-content: space-between;
+  text-align: start;
+
+  .d-button-label {
+    @include ellipsis;
+    min-width: 0;
+  }
+
+  &[aria-expanded="true"] {
+    anchor-name: --dsa-classification-trigger;
+  }
+}
+
+.form-kit__control-menu-content:has(.dsa-classification-option) {
+  .dropdown-menu__item > .dsa-classification-option.btn {
+    height: auto;
+    min-height: var(--d-sidebar-row-height);
+    white-space: normal;
+    text-align: start;
     overflow-wrap: anywhere;
   }
-}
 
-.review-item__aside.--dsa-classification {
-  padding-block-start: 0;
-}
+  &.fk-d-menu {
+    z-index: z("modal", "popover");
 
-.review-item__classify {
-  margin-block-end: var(--space-4);
-  margin-inline-start: var(--review-item-padding);
+    @supports (width: anchor-size(width)) and (top: anchor(bottom)) {
+      // The trigger is inside a fixed dialog while the menu is portaled.
+      position: fixed;
+      position-anchor: --dsa-classification-trigger;
+      width: anchor-size(width, 400px);
+      max-width: calc(100dvw - 2 * var(--space-2)) !important;
+      left: anchor(left) !important;
+      top: calc(anchor(bottom) + 5px) !important;
 
-  &.--pending-notice {
-    inline-size: calc(100% - 2 * var(--review-item-padding));
-    justify-content: flex-start;
-    background: var(--highlight-low);
-    color: var(--primary);
-    border: 1px solid var(--highlight-medium);
+      &[data-placement^="top"] {
+        top: auto !important;
+        bottom: calc(anchor(top) + 5px);
+      }
+    }
+
+    .dropdown-menu {
+      flex: 1;
+      min-inline-size: 0;
+    }
+
+    .fk-d-menu__inner-content {
+      flex: 1;
+      max-height: 40dvh;
+    }
   }
 }
 
-.dsa-classification-modal__help {
-  margin-inline-end: auto;
+.dsa-classification-footer:not([hidden]) {
+  display: contents;
 }

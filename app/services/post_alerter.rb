@@ -100,7 +100,10 @@ class PostAlerter
       return
     end
 
-    return unless user.push_subscriptions.exists? || UserApiKey.push_clients_for(user).any?
+    unless user.push_subscriptions.with_unexpired_login.exists? ||
+             UserApiKey.push_clients_for(user).any?
+      return
+    end
 
     push_window = SiteSetting.push_notification_time_window_mins
     if push_window > 0 && user.seen_since?(push_window.minutes.ago)
@@ -122,11 +125,14 @@ class PostAlerter
   end
 
   def not_allowed?(user, post)
-    user.blank? || user.bot? || user.id == post.user_id
+    user.blank? || (user.bot? && !user.interactive_bot?) || user.id == post.user_id
   end
 
   def all_allowed_users(post)
-    @all_allowed_users ||= post.topic.all_allowed_users.reject { |u| not_allowed?(u, post) }
+    @all_allowed_users ||=
+      post.topic.all_allowed_users.reject do |user|
+        not_allowed?(user, post) || (user.bot? && !allowed_users(post).include?(user))
+      end
   end
 
   def allowed_users(post)
@@ -134,7 +140,9 @@ class PostAlerter
   end
 
   def allowed_group_users(post)
-    @allowed_group_users ||= post.topic.allowed_group_users.reject { |u| not_allowed?(u, post) }
+    # Bots only receive PM notifications through the direct recipient path.
+    @allowed_group_users ||=
+      post.topic.allowed_group_users.reject { |user| user.bot? || user.id == post.user_id }
   end
 
   def directly_targeted_users(post)
@@ -157,8 +165,9 @@ class PostAlerter
       (post.post_type == Post.types[:whisper] && post.action_code.nil?)
   end
 
-  def after_save_post(post, new_record = false, added_mentions: nil)
-    notified = [post.user, post.last_editor].uniq
+  def after_save_post(post, new_record = false, added_mentions: nil, editor_id: nil)
+    editor = new_record ? post.user : (editor_id ? User.find_by(id: editor_id) : post.last_editor)
+    notified = [post.user, editor].compact.uniq
 
     DiscourseEvent.trigger(:post_alerter_before_mentions, post, new_record, notified)
 
@@ -167,14 +176,13 @@ class PostAlerter
 
     if mentioned_groups || mentioned_users || mentioned_here
       mentioned_opts = {}
-      editor = post.last_editor
 
-      if post.last_editor_id != post.user_id
+      if !new_record && (editor_id || post.last_editor_id) != post.user_id
         # Mention comes from an edit by someone else, so notification should say who added the mention.
         mentioned_opts = {
-          user_id: editor.id,
-          original_username: editor.username,
-          display_username: editor.username,
+          user_id: editor_id || post.last_editor_id,
+          original_username: editor&.username,
+          display_username: editor&.username,
         }
       end
 
@@ -184,8 +192,21 @@ class PostAlerter
             mentioned_users.select { |user| added_mentions.include?(user.username_lower) }
         end
         mentioned_users = only_allowed_users(mentioned_users, post)
-        mentioned_users = mentioned_users - pm_watching_users(post)
-        notified += notify_users(mentioned_users - notified, :mentioned, post, mentioned_opts)
+        watching_users = pm_watching_users(post)
+        # Watching bots already received the PM, but edits can add a new mention.
+        if !new_record && added_mentions.present?
+          watching_users = watching_users.reject(&:interactive_bot?)
+        end
+        mentioned_users -= watching_users
+        mention_opts =
+          (
+            if !new_record && added_mentions.present?
+              mentioned_opts.merge(new_mention_on_edit: true)
+            else
+              mentioned_opts
+            end
+          )
+        notified += notify_users(mentioned_users - notified, :mentioned, post, mention_opts)
       end
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
@@ -361,9 +382,9 @@ class PostAlerter
     )
   end
 
-  def unread_posts(user, topic)
-    Post
-      .secured(Guardian.new(user))
+  def unread_posts(user, topic, guardian: user.guardian)
+    guardian
+      .filter_visible_posts(Post.all, topic: topic)
       .where(
         "post_number > COALESCE((
                SELECT last_read_post_number FROM topic_users tu
@@ -406,12 +427,12 @@ class PostAlerter
   # Bucket membership is the scope here — we don't re-apply the watching/reply_to
   # filters that #unread_posts uses, since a recipient is by definition the
   # parent author (or OP for bucket 1).
-  def unread_posts_in_bucket(user, topic, bucket_post_number)
+  def unread_posts_in_bucket(user, topic, bucket_post_number, guardian: user.guardian)
     last_read =
       TopicUser.where(user_id: user.id, topic_id: topic.id).pick(:last_read_post_number) || 0
 
     scope =
-      Post.secured(Guardian.new(user)).where(topic_id: topic.id).where("post_number > ?", last_read)
+      guardian.filter_visible_posts(Post.all, topic: topic).where("post_number > ?", last_read)
 
     if bucket_post_number == Notification::TOPIC_ROOT_BUCKET
       # Post 1 is the root itself, not a reply to it.
@@ -431,9 +452,10 @@ class PostAlerter
     unread_posts_in_bucket(user, topic, bucket_post_number).count
   end
 
-  def destroy_notifications(user, types, topic, bucket_post_number: nil)
+  def destroy_notifications(user, types, topic, bucket_post_number: nil, guardian: nil)
     return if user.blank?
-    return unless Guardian.new(user).can_see?(topic)
+    guardian ||= user.guardian
+    return unless guardian.can_see?(topic)
 
     User.transaction do
       scope = user.notifications.where(notification_type: types, topic_id: topic.id)
@@ -482,6 +504,8 @@ class PostAlerter
   end
 
   def notify_group_summary(user, topic, acting_user_id: nil)
+    return if user.bot?
+
     @group_stats ||= {}
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
@@ -557,8 +581,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:before_create_notification, user, type, post, opts)
 
-    return if user.blank? || user.bot? || post.blank?
+    return if user.blank? || post.blank?
+    return if user.bot? && !user.interactive_bot?
     return if (topic = post.topic).blank?
+    return if user.interactive_bot? && !direct_interactive_bot_notification?(user, type, post, opts)
 
     is_liked = type == Notification.types[:liked]
     if is_liked &&
@@ -569,7 +595,8 @@ class PostAlerter
 
     return if type == Notification.types[:linked] && !user.user_option.notify_on_linked_posts
 
-    return if !Guardian.new(user).can_receive_post_notifications?(post)
+    guardian = user.guardian
+    return if !guardian.can_receive_post_notifications?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
 
@@ -622,12 +649,15 @@ class PostAlerter
     end
 
     # linked, quoted, mentioned, chat_quoted may be suppressed if you already have a reply notification
-    if [
-         Notification.types[:quoted],
-         Notification.types[:linked],
-         Notification.types[:mentioned],
-         Notification.types[:chat_quoted],
-       ].include?(type)
+    new_bot_mention =
+      user.interactive_bot? && type == Notification.types[:mentioned] && opts[:new_mention_on_edit]
+    if !new_bot_mention &&
+         [
+           Notification.types[:quoted],
+           Notification.types[:linked],
+           Notification.types[:mentioned],
+           Notification.types[:chat_quoted],
+         ].include?(type)
       if existing_notifications.find { |n| n.notification_type == Notification.types[:replied] }
         return
       end
@@ -637,7 +667,7 @@ class PostAlerter
     bucket_post_number = nil
     consolidated_count = nil
 
-    if COLLAPSED_NOTIFICATION_TYPES.include?(type)
+    if !user.interactive_bot? && COLLAPSED_NOTIFICATION_TYPES.include?(type)
       if type == Notification.types[:replied] && topic.nested_view?
         bucket_post_number = post.reply_to_post_number || Notification::TOPIC_ROOT_BUCKET
         destroy_notifications(
@@ -645,11 +675,12 @@ class PostAlerter
           [Notification.types[:replied]],
           topic,
           bucket_post_number: bucket_post_number,
+          guardian: guardian,
         )
       else
         types = COLLAPSED_NOTIFICATION_TYPES
         types -= [Notification.types[:replied]] if topic.nested_view?
-        destroy_notifications(user, types, topic)
+        destroy_notifications(user, types, topic, guardian: guardian)
       end
       collapsed = true
     end
@@ -658,13 +689,14 @@ class PostAlerter
     original_username = opts[:display_username].presence || post.username
 
     if collapsed
-      if bucket_post_number
-        post = first_unread_post_in_bucket(user, topic, bucket_post_number) || post
-        count = unread_count_in_bucket(user, topic, bucket_post_number)
-      else
-        post = first_unread_post(user, topic) || post
-        count = unread_count(user, topic)
-      end
+      unread =
+        if bucket_post_number
+          unread_posts_in_bucket(user, topic, bucket_post_number, guardian: guardian)
+        else
+          unread_posts(user, topic, guardian: guardian)
+        end
+      post = unread.order(:post_number).first || post
+      count = unread.count
       if count > 1
         consolidated_count = count
         I18n.with_locale(user.effective_locale) do
@@ -677,9 +709,11 @@ class PostAlerter
 
     topic_title = topic.title
     # when sending a private message email, keep the original title
-    if topic.private_message? && modifications = post.revisions.map(&:modifications)
-      if first_title_modification = modifications.find { |m| m.has_key?("title") }
-        topic_title = first_title_modification["title"][0]
+    if topic.private_message?
+      title_revision = post.revisions.find { |revision| revision.modifications.has_key?("title") }
+
+      if title_revision && can_see_original_title?(user, post, title_revision)
+        topic_title = title_revision.modifications["title"][0]
       end
     end
 
@@ -708,7 +742,7 @@ class PostAlerter
       notification_data[:group_name] = group.name
     end
 
-    if opts[:skip_send_email_to]&.include?(user.email)
+    if user.bot? || opts[:skip_send_email_to]&.include?(user.email)
       skip_send_email = true
     elsif original_post.via_email && (incoming_email = original_post.incoming_email)
       skip_send_email =
@@ -732,7 +766,8 @@ class PostAlerter
         skip_send_email: skip_send_email,
       )
 
-    if created.id && existing_notifications.empty? && NOTIFIABLE_TYPES.include?(type)
+    if created.id && (existing_notifications.empty? || new_bot_mention) &&
+         NOTIFIABLE_TYPES.include?(type)
       create_notification_alert(
         user: user,
         post: original_post,
@@ -863,10 +898,19 @@ class PostAlerter
 
   def pm_watching_users(post)
     return [] if !post.topic.private_message?
-    directly_targeted_users(post).filter do |u|
-      notification_level = TopicUser.get(post.topic, u)&.notification_level
-      notification_level == TopicUser.notification_levels[:watching]
-    end
+    users = directly_targeted_users(post)
+    return [] if users.empty?
+
+    watching_ids =
+      TopicUser
+        .where(
+          topic_id: post.topic_id,
+          user_id: users.map(&:id),
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        .pluck(:user_id)
+        .to_set
+    users.select { |user| watching_ids.include?(user.id) }
   end
 
   def notify_pm_users(post, reply_to_user, quoted_users, notified, new_record = false)
@@ -885,8 +929,9 @@ class PostAlerter
     # is enabled).
     users = directly_targeted_users(post).reject { |u| notified.include?(u) }
     DiscourseEvent.trigger(:before_create_notifications_for_users, users, post)
+    watching_users = pm_watching_users(post).to_set
     users.each do |user|
-      if reply_to_user == user || pm_watching_users(post).include?(user) || user.staged?
+      if reply_to_user == user || watching_users.include?(user) || user.staged?
         create_notification(
           user,
           Notification.types[:private_message],
@@ -954,7 +999,7 @@ class PostAlerter
         .includes(user: :user_option)
         .order(:created_at)
         .reject do |tau|
-          not_allowed?(tau.user, post) ||
+          not_allowed?(tau.user, post) || tau.user.bot? ||
             tau.user.user_option.email_messages_level == UserOption.email_level_types[:never]
         end
     return emails_to_skip_send if topic_allowed_users_by_age.empty?
@@ -1134,6 +1179,46 @@ class PostAlerter
   end
 
   private
+
+  DIRECT_INTERACTIVE_BOT_NOTIFICATION_TYPES =
+    Notification.types.values_at(:mentioned, :replied, :private_message).freeze
+  private_constant :DIRECT_INTERACTIVE_BOT_NOTIFICATION_TYPES
+
+  def direct_interactive_bot_notification?(user, type, post, opts)
+    return false if DIRECT_INTERACTIVE_BOT_NOTIFICATION_TYPES.exclude?(type)
+
+    actor =
+      (
+        if opts[:user_id] && opts[:user_id] != post.user_id
+          User.find_by(id: opts[:user_id])
+        else
+          post.user
+        end
+      )
+    return false if !actor || actor.bot?
+    return false unless notify_about_reply?(post)
+    return false if post.whisper? && !user.guardian.can_see_whispers?(post.topic)
+
+    if post.topic.private_message?
+      return false unless post.topic.topic_allowed_users.exists?(user_id: user.id)
+    end
+
+    case type
+    when Notification.types[:mentioned]
+      post.raw_mentions.include?(user.username_lower)
+    when Notification.types[:replied]
+      post.reply_to_post&.user_id == user.id
+    when Notification.types[:private_message]
+      post.topic.private_message? &&
+        (user_watching_topic?(user, post.topic) || post.reply_to_post&.user_id == user.id)
+    end
+  end
+
+  def can_see_original_title?(user, post, title_revision)
+    guardian = Guardian.new(user)
+    guardian.can_see_post_revision?(title_revision) &&
+      guardian.can_view_post_version?(post, title_revision.number)
+  end
 
   def each_user_in_batches(users)
     # This is race-condition-safe, unlike #find_in_batches

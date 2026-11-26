@@ -36,6 +36,7 @@ class TranslationOverride < ActiveRecord::Base
       optional_cat
       optional_tags
     ],
+    %w[user_notifications.signup_after_reject] => %w[reject_reason],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
     %w[js.welcome_banner.header] => %w[site_name],
     %w[email_from] => %w[site_name],

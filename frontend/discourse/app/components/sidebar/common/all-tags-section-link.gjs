@@ -10,7 +10,7 @@ export default class SidebarCommonAllTagsSectionLink extends Component {
   get scrollIntoView() {
     return (
       this.args.scrollActiveLinkIntoView &&
-      isActiveLink({ route: "tags" }, this.router)
+      isActiveLink({ route: "tags.index" }, this.router)
     );
   }
 
@@ -20,7 +20,7 @@ export default class SidebarCommonAllTagsSectionLink extends Component {
       @linkName="all-tags"
       @prefixType="icon"
       @prefixValue="list"
-      @route="tags"
+      @route="tags.index"
       @scrollIntoView={{this.scrollIntoView}}
     />
   </template>

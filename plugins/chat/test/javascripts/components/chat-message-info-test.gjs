@@ -247,4 +247,50 @@ module("Component | ChatMessageInfo", function (hooks) {
     assert.dom(".chat-message-info__username.is-new-user").doesNotExist();
     assert.dom(".chat-message-info__username.group--foo").doesNotExist();
   });
+
+  test("broadcasted copy links between the channel copy and its thread", async function (assert) {
+    const fabricators = new ChatFabricators(getOwner(this));
+    const channel = fabricators.channel();
+    channel.threadingEnabled = true;
+    const thread = fabricators.thread({ channel });
+    this.message = fabricators.message({
+      channel,
+      thread,
+      broadcasted: true,
+      thread_id: thread.id,
+    });
+
+    await render(
+      <template><Info @message={{this.message}} @show={{true}} /></template>
+    );
+
+    assert
+      .dom(".chat-message-info__broadcast")
+      .hasAttribute(
+        "href",
+        `/chat/c/${channel.slugifiedTitle}/${channel.id}/t/${thread.id}/${this.message.id}`,
+        "the thread id in the payload is enough to reach the thread"
+      );
+    assert
+      .dom(".chat-message-info__broadcast__text")
+      .hasText(i18n("chat.thread.broadcast_sent_from_thread"));
+
+    await render(
+      <template>
+        <Info
+          @message={{this.message}}
+          @show={{true}}
+          @threadContext={{true}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-message-info__broadcast")
+      .hasAttribute(
+        "href",
+        `/chat/c/${channel.slugifiedTitle}/${channel.id}/${this.message.id}/t/${thread.id}`,
+        "from the thread view it links back to the copy in the channel"
+      );
+  });
 });

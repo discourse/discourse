@@ -168,6 +168,24 @@ RSpec.describe DiscourseDiff do
         "<div class=\"revision-content --previous\"><p data-attr=\"Some &quot;quoted&quot; string\"><del>x</del></p></div><div class=\"revision-content --current\"><p data-attr=\"Some &quot;quoted&quot; string\"><ins>y</ins></p></div>",
       )
     end
+
+    it "keeps the diff class out of an attribute value of an added block" do
+      before = "<p>keep</p>"
+      after =
+        "<p>keep</p><div data-x=\"z><div style='position:fixed;inset:0'>pwn</div>\">hello</div>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p>keep</p></div><div class=\"revision-content --current\"><p>keep</p><div data-x=\"z&gt;&lt;div style='position:fixed;inset:0'&gt;pwn&lt;/div&gt;\" class=\"diff-ins\">hello</div></div>",
+      )
+    end
+
+    it "merges the diff class into an existing class when an attribute value holds a chevron" do
+      before = "<p>keep</p>"
+      after =
+        "<p>keep</p><div data-x=\"z><div style='position:fixed'>pwn</div>\" class=\"real\">hi</div>"
+      expect(DiscourseDiff.new(before, after).side_by_side_html).to eq(
+        "<div class=\"revision-content --previous\"><p>keep</p></div><div class=\"revision-content --current\"><p>keep</p><div data-x=\"z&gt;&lt;div style='position:fixed'&gt;pwn&lt;/div&gt;\" class=\"diff-ins real\">hi</div></div>",
+      )
+    end
   end
 
   describe "side_by_side_markdown" do
@@ -221,6 +239,17 @@ RSpec.describe DiscourseDiff do
       after = "this is the second paragraph"
       expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
         "<table class=\"markdown\"><tr><td class=\"--previous diff-del\">this is the first paragraph\n</td><td class=\"--current\"></td></tr><tr><td class=\"--previous\">this is the second paragraph</td><td class=\"--current\">this is the second paragraph</td></tr></table>",
+      )
+    end
+  end
+
+  describe "side_by_side_markdown tokenization" do
+    it "groups word characters with trailing spaces/tabs while splitting leading spaces and symbols" do
+      before = "  configure `redis_1`   \tand **yjit**!\nsecond line"
+      after = "  configure `redis_2`   \tand **ruby_yjit**?\nsecond line"
+
+      expect(DiscourseDiff.new(before, after).side_by_side_markdown).to eq(
+        "<table class=\"markdown\"><tr><td class=\"--previous\">  configure `<del>redis_1</del>`   \tand **<del>yjit</del>**<del>!</del>\n</td><td class=\"--current\">  configure `<ins>redis_2</ins>`   \tand **<ins>ruby_yjit</ins>**<ins>?</ins>\n</td></tr><tr><td class=\"--previous\">second line</td><td class=\"--current\">second line</td></tr></table>",
       )
     end
   end

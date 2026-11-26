@@ -20,6 +20,7 @@ uk:
       logs:
         staff_actions:
           actions:
+            chat_bot_discoverability_change: "Видимість чат-бота змінена"
             chat_channel_status_change: "Статус каналу чату змінено"
             chat_channel_delete: "Канал чату видалено"
             chat_auto_remove_membership: "Підписки автоматично видаляються з каналів"
@@ -46,6 +47,8 @@ uk:
           many: "%{formatted_number} повідомлень чату"
           other: "%{formatted_number} повідомлень чату"
     chat:
+      new_chat: "Новий чат"
+      homepage_option: "Канал чату"
       edit_category:
         tab_title: "Чат"
         channel: "Канал"
@@ -86,6 +89,10 @@ uk:
       no_pinned_messages: "У цьому каналі немає закріплених повідомлень."
       pin_message: "Закріпити повідомлення"
       unpin_message: "Відкріпити повідомлення"
+      broadcast_to_channel: "Надіслати на адресу #%{channelName}"
+      remove_broadcast_from_channel: "Видалити з #%{channelName}"
+      broadcast_to_dm: "Також надішліть повідомлення в особисті повідомлення"
+      remove_broadcast_from_dm: "Видалити з основного повідомлення"
       pinned: "Закріплені"
       browse_all_channels: "Переглянути всі канали"
       see_in: "Дивіться в"
@@ -106,8 +113,7 @@ uk:
           other: "Ви впевнені, що хочете видалити ці %{count} повідомлень?"
       channel_settings:
         title: "Налаштування каналу"
-        edit: "Редагувати"
-        add: "Додати"
+        page_title: "%{channel} налаштування"
         star_channel: "Обраний канал"
         unstar_channel: "Зняти зірочку з каналу"
         close_channel: "Закрити канал"
@@ -116,10 +122,21 @@ uk:
         open_channel_disabled_read_only: "Канали лише для читання не можна повторно відкрити."
         archive_channel: "Архівувати канал"
         delete_channel: "Видалити канал"
+        danger_zone:
+          title: "Небезпечна зона"
+          archive_title: "Архівувати цей канал"
+          archive_description: "Перемістіть повідомлення цього каналу в тему та зробіть канал лише для читання."
+          close_title: "Закрити цей канал"
+          close_description: "Заборонити учасникам надсилати нові повідомлення. Ви можете знову відкрити канал у будь-який час."
+          open_title: "Знову відкрити цей канал"
+          open_description: "Дозвольте учасникам знову надсилати повідомлення в цьому каналі."
+          delete_title: "Видалити цей канал"
+          delete_description: "Після видалення цей канал та всі його повідомлення неможливо відновити."
+          leave_title: "Вийти з цього каналу"
+          leave_description: "Ви більше не будете отримувати повідомлення та сповіщення від цього каналу. Ви можете знову приєднатися до нього в будь-який час."
         join_channel: "Приєднатися до каналу"
         leave_channel: "Вийти з каналу"
         leave_groupchat_info: "Залишивши цей груповий чат, ви більше не матимете доступу до нього та не отримуватимете сповіщень, пов'язаних з ним. Щоб знову приєднатися, вас потрібно буде повторно запросити учасником групового чату."
-        notification_settings: "Налаштування сповіщень"
         notification_settings_context: "Сповіщення"
         join: "Приєднатися"
         leave: "Покинути"
@@ -348,6 +365,7 @@ uk:
         read_only: "Канал доступний лише для читання, зараз ви не можете надсилати нові повідомлення."
       placeholder_silenced: "В даний момент ви не можете надсилати повідомлення."
       remove_upload: "Видалити файл"
+      preview_upload: "Попередній перегляд %{filename}"
       react: "Реагувати з emoji"
       reply: "Відповідь"
       message_actions: "Дії з повідомленнями"
@@ -359,6 +377,8 @@ uk:
       message_too_long: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
       retry_staged_message:
         title: "Помилка мережі"
+        rate_limited_title: "Забагато повідомлень"
+        rate_limited_waiting: "Забагато повідомлень, зачекайте хвилинку"
         action: "Надіслати ще раз?"
       bookmark_message: "Додати закладку"
       bookmark_message_edit: "Редагувати закладку"
@@ -442,21 +462,23 @@ uk:
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
-        back_to_settings: "Повернутися до налаштувань"
       about_view:
         associated_topic: Пов'язана тема
         associated_category: Пов'язана категорія
-        title: Назва
         name: Імʼя
         description: Опис
       channel_info:
         back_to_all_channels: "Всі канали"
         back_to_channel: "Назад"
+        nav_label: "Інформація про канал"
         tabs:
           members: Учасники
+          preferences: Налаштування
           settings: Налаштування
           search: Пошук
         remove_member: "Вилучити"
+        members_title: "%{channel} учасників"
+        preferences_title: "%{channel} налаштування"
       new_message_modal:
         title: Надіслати повідомлення
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
@@ -476,7 +498,6 @@ uk:
         create_new_group_chat: "Створити груповий чат"
         group_with_too_many_members: "має забагато учасників (%{membersCount})"
       channel_edit_name_slug_modal:
-        title: Редагувати канал
         input_placeholder: Додайте назву
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
@@ -484,9 +505,7 @@ uk:
         emoji: Емодзі каналу
         reset_emoji: Скинути емодзі
       channel_edit_description_modal:
-        title: Редагувати опис
         input_placeholder: Додати опис
-        description: Розкажіть людям, про що цей канал
       direct_message_creator:
         add_to_channel: "Додати до каналу"
         title: Нове повідомлення
@@ -638,6 +657,8 @@ uk:
         bold_text: "Сильне виділення тексту"
         code_text: "текст коду"
         send: "Надіслати"
+        broadcast_label: "Також надішліть на адресу #%{channelName}"
+        broadcast_label_dm: "Також надсилати в основне особисте повідомлення"
       quote:
         original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитату чату скопійовано в буфер обміну"
@@ -650,7 +671,6 @@ uk:
         always: "Для всіх дій"
       settings:
         channel_wide_mentions_label: "Дозволити згадки @all та @here"
-        channel_wide_mentions_description: "Дозволити користувачам сповіщати всіх учасників #%{channel} за допомогою @all або лише тих, хто активний на даний момент, за допомогою @here"
         channel_threading_label: "Потоки/ланцюжки"
         channel_threading_description: "Якщо ланцюжки увімкнено, відповіді на повідомлення чату створюватимуть окрему бесіду, яка існуватиме поряд з основним каналом."
         auto_join_users_label: "Автоматично додавати користувачів"
@@ -662,6 +682,15 @@ uk:
         followed: "Приєднався(лась)"
         mute: "Вимкнути канал"
         unmute: "Увімкнути канал"
+        muted_until_hint: "Поки не буде %{until}"
+        mute_options:
+          "off": "Вимк."
+          15_minutes: "Протягом 15 хвилин"
+          1_hour: "Протягом 1 години"
+          8_hours: "Протягом 8 годин"
+          24_hours: "Протягом 24 годин"
+          until_unmuted: "Поки я його знову не ввімкну"
+          current: "До %{until}"
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
         muted_on: "Увімк"
@@ -671,9 +700,6 @@ uk:
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
-        admin_title: "Адміністратор"
-        settings_title: "Налаштування"
-        info_title: "Інформація про канал"
         category_label: "Категорія"
         history_label: "Історія"
         members_label: "Учасники"
@@ -689,6 +715,7 @@ uk:
         short_title: Пошук
         title: Пошук у чаті
         aria_label: "Перейти до пошуку в чаті"
+        channel_aria_label: "Пошук на цьому каналі"
         no_results: "Не знайдено результатів"
         sort:
           relevance: "За змістом"
@@ -699,12 +726,14 @@ uk:
       direct_messages:
         title: "DMs"
         aria_label: "Перейти на прямі повідомлення"
+        new: "Нове пряме повідомлення"
         new_group: "Новий груповий чат"
         create: "Створити"
         leave: "Вийти з каналу"
         close: "Закрити канал"
         cannot_create: "На жаль, ви не можете надсилати прямі повідомлення."
       channel_list:
+        apply_filters: "Застосування фільтрів до каналів"
         title: "Канали"
         aria_label: "Перемикнутися на список каналів"
         options:
@@ -725,6 +754,7 @@ uk:
           alphabetical: "В алфавітному порядку"
           recent_activity: "Нещодавня активність"
           priority: "Пріоритет"
+          priority_description: "Згадки, потім непрочитані, потім нещодавня активність, відсортовані в алфавітному порядку"
           priority_description_dms: "Згадки, потім непрочитані, а потім нещодавня активність"
         empty:
           filtered: "Жоден канал не відповідає цьому фільтру."
@@ -821,19 +851,8 @@ uk:
         notify_moderators: "Це повідомлення вимагає уваги модераторів з іншої причини, не зазначеної вище."
       flagging:
         action: "Поскаржитись на повідомлення"
-      emoji_picker:
-        favorites: "Часто використовувані"
-        smileys_&_emotion: "Смайлики та емоції"
-        objects: "Objects"
-        people_&_body: "Люди та частини тіл"
-        travel_&_places: "Подорожі та місця"
-        animals_&_nature: "Тварини та природа"
-        food_&_drink: "Їжа та напої"
-        activities: "Діяльність"
-        flags: "Скарги"
-        symbols: "Атрибутика"
-        search_placeholder: "Пошук за назвою та псевдонімом emoji..."
-        no_results: "Немає результатів"
+      anonymous_flagging:
+        description: "Щоб повідомити про незаконний контент, зверніться до <a href='mailto:%{email}?subject=Illegal content: %{channel_title}&body=This chat message %{url} contains illegal content.'>%{email}</a>"
       thread:
         title: "Назва"
         view_thread: Відкрити діалог
@@ -843,6 +862,8 @@ uk:
           many: "%{count} відповідь"
           other: "%{count} відповідь"
         label: Нитка
+        broadcast_also_sent_to: "Надіслано"
+        broadcast_sent_from_thread: "Надіслано з теми"
         close: "Закрити тему"
         original_message:
           started_by: "Розпочато"
@@ -991,6 +1012,7 @@ uk:
         "action:chat_approval": "Схвалення чату"
         "trigger:chat_message_created": "Повідомлення чату створено"
       node_descriptions:
+        "action:send_chat_message": "Надіслати повідомлення до каналу чату або пряме повідомлення одному чи кільком користувачам"
         "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
         "trigger:chat_message_created": "Спрацьовує при створенні нового повідомлення в чаті"
       chat_message_created:
@@ -1000,10 +1022,16 @@ uk:
         target: "Надіслати"
         targets:
           channel: "Канал"
+          user: "Користувачі (кожен з них має пряме повідомлення)"
+          group: "Група (одне пряме повідомлення з усіма)"
         channel_id: "Канал"
+        thread_id: "Ідентифікатор потоку"
+        thread_id_description: "Відповідайте в цій темі, а не в основному каналі. Залиште поле порожнім, щоб публікувати повідомлення в каналі."
         target_usernames: "Одержувачі"
+        target_usernames_description: "Користувачі для надсилання повідомлень. Використовуйте вираз типу $trigger.user.username, щоб вибрати їх з кожного елемента."
         message: "Повідомлення"
         actor_username: "Відправник"
+        actor_username_description: "Повідомлення надсилаються від імені цього користувача, і всі бачать їх як написані ним. Під час публікації в каналі користувач повинен бути його учасником."
       chat_approval:
         message: "Повідомлення"
         buttons: "Кнопки"

@@ -171,6 +171,22 @@ RSpec.describe Jobs::PublishTopicToCategory do
     end
   end
 
+  it "does nothing if the user can't edit the topic" do
+    readers = Fabricate(:group)
+    tl4_user = Fabricate(:trust_level_4)
+    readers.add(tl4_user)
+    category.set_permissions(readers => :readonly)
+    category.save!
+    topic.update!(visible: false)
+    topic.public_topic_timer.update!(user: tl4_user)
+
+    described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+    topic.reload
+    expect(topic.category).to eq(category)
+    expect(topic.visible).to eq(false)
+  end
+
   describe "when new category has a default auto-close" do
     it "applies the auto-close timer when publishing" do
       freeze_time

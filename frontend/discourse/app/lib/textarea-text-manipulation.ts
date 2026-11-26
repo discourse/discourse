@@ -10,6 +10,7 @@ import type {
   AddTextOptions,
   AutocompleteHandler,
   AutocompleteOptions,
+  InsertBlockOptions,
   PlaceholderHandler,
   ReplaceTextOptions,
   SelectedText,
@@ -159,8 +160,8 @@ export default class TextareaTextManipulation implements TextManipulation {
     this.textarea.focus({ preventScroll: true });
   }
 
-  insertBlock(text: string): void {
-    this._addBlock(this.getSelected(), text);
+  insertBlock(text: string, options?: InsertBlockOptions): void {
+    this._addBlock(options?.selected ?? this.getSelected(), text, options);
   }
 
   insertText(text: string, options?: AddTextOptions): void {
@@ -241,45 +242,36 @@ export default class TextareaTextManipulation implements TextManipulation {
     opts: ReplaceTextOptions = {}
   ): void {
     const val = this.value;
-    const needleStart = val.indexOf(oldVal);
+    let needleStart = val.indexOf(oldVal);
+    let needleLength = oldVal.length;
+
+    if (opts.index !== undefined && opts.regex) {
+      if (!opts.regex.global) {
+        throw new Error("Regex must be global");
+      }
+
+      const match = [...val.matchAll(opts.regex)][opts.index];
+      if (!match) {
+        return;
+      }
+      needleStart = match.index;
+      needleLength = match[0].length;
+    }
 
     if (needleStart === -1) {
-      // Nothing to replace.
       return;
     }
 
-    // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
       selection: {
         start: this.textarea.selectionStart,
         end: this.textarea.selectionEnd,
       },
-      needle: { start: needleStart, end: needleStart + oldVal.length },
+      needle: { start: needleStart, end: needleStart + needleLength },
       replacement: { start: needleStart, end: needleStart + newVal.length },
     });
 
-    if (opts.index && opts.regex) {
-      if (!opts.regex.global) {
-        throw new Error("Regex must be global");
-      }
-
-      const regex = new RegExp(opts.regex);
-      let match;
-      for (let i = 0; i <= opts.index; i++) {
-        match = regex.exec(val);
-      }
-
-      if (match) {
-        this._insertAt(
-          match.index,
-          match.index + match[0].length,
-          newVal,
-          opts
-        );
-      }
-    } else {
-      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
-    }
+    this._insertAt(needleStart, needleStart + needleLength, newVal, opts);
 
     if (
       (opts.forceFocus || this.textarea === document.activeElement) &&
@@ -1168,7 +1160,11 @@ export default class TextareaTextManipulation implements TextManipulation {
       .join("\n");
   }
 
-  _addBlock(sel: SelectedText, text: string): void {
+  _addBlock(
+    sel: SelectedText,
+    text: string,
+    options?: InsertBlockOptions
+  ): void {
     text = (text || "").trim();
     if (text.length === 0) {
       return;
@@ -1176,6 +1172,7 @@ export default class TextareaTextManipulation implements TextManipulation {
 
     let start = sel.start;
     let end = sel.end;
+    const firstLineEnd = text.indexOf("\n");
 
     const newLinesBeforeSelection = sel.pre?.match(/\n*$/)?.[0]?.length;
     if (newLinesBeforeSelection) {
@@ -1198,7 +1195,11 @@ export default class TextareaTextManipulation implements TextManipulation {
     }
 
     this._insertAt(start, end, text);
-    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    const cursorOffset =
+      options?.moveCursorInside && firstLineEnd !== -1
+        ? (sel.pre.length > 0 ? 2 : 0) + firstLineEnd + 1
+        : text.length;
+    this.textarea.setSelectionRange(start + cursorOffset, start + cursorOffset);
     schedule("afterRender", this, this.blurAndFocus);
   }
 
@@ -1333,7 +1334,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder,
-      placeholderData.processingPlaceholder
+      placeholderData.processingPlaceholder,
+      { skipFocus: true }
     );
 
     // Safari applies user-defined replacements to text inserted programmatically.
@@ -1341,7 +1343,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
     // where that transformation has been applied to the original placeholder
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder.replace("...", "…"),
-      placeholderData.processingPlaceholder
+      placeholderData.processingPlaceholder,
+      { skipFocus: true }
     );
   }
 
@@ -1356,7 +1359,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.processingPlaceholder,
-      placeholderData.uploadPlaceholder
+      placeholderData.uploadPlaceholder,
+      { skipFocus: true }
     );
     placeholderData.processingPlaceholder = undefined;
   }
@@ -1384,7 +1388,8 @@ class TextareaPlaceholderHandler implements PlaceholderHandler {
 
     this.textManipulation.replaceText(
       placeholderData.uploadPlaceholder.trim(),
-      markdown
+      markdown,
+      { skipFocus: true }
     );
   }
 

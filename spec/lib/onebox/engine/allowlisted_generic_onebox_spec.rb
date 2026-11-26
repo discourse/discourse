@@ -192,6 +192,32 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
     end
   end
 
+  describe "media oneboxes" do
+    it "escapes metadata in video and player attributes" do
+      payload = "x'\"><div class='injected'></div>"
+      stub_request(:get, "https://example.com/video").to_return(body: <<~HTML)
+        <meta property="og:type" content="video.other">
+        <meta property="og:video" content="https://example.com/video.mp4">
+        <meta property="og:video:type" content="video/mp4">
+        <meta name="twitter:title" content="#{CGI.escapeHTML(payload)}">
+      HTML
+      stub_request(:get, "https://example.com/player").to_return(body: <<~HTML)
+        <meta name="twitter:card" content="player">
+        <meta name="twitter:player" content="https://example.com/embed">
+        <meta name="twitter:player:width" content="#{CGI.escapeHTML(payload)}">
+      HTML
+
+      player_onebox = described_class.new("https://example.com/player")
+      player_onebox.options = { allowed_iframe_regexes: [%r{\Ahttps://example\.com/}] }
+
+      video = Nokogiri::HTML5.fragment(described_class.new("https://example.com/video").to_html)
+      player = Nokogiri::HTML5.fragment(player_onebox.to_html)
+
+      expect(video.at_css("video")["title"]).to eq(payload)
+      expect(player.at_css("iframe")["width"]).to eq(payload)
+    end
+  end
+
   describe "missing description" do
     let(:url) { "https://en-americas-support.nintendo.com/app/answers/detail/a_id/67660" }
 

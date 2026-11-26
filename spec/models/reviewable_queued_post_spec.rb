@@ -5,8 +5,62 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
 
+  describe "#actions_for" do
+    it "requires classification for rejecting queued content or restricting its author" do
+      reviewable = Fabricate(:reviewable_queued_post_topic)
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.select(&:dsa_classification_required).map(&:server_action)).to contain_exactly(
+        "reject_post",
+        "revise_and_reject_post",
+        "reject_and_suspend",
+        "reject_and_silence",
+        "delete_user",
+        "delete_user_block",
+      )
+    end
+
+    it "names the approve action outright once the queued post is rejected, with consistent answers" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:rejected])
+
+      actions = reviewable.actions_for(admin.guardian).to_a
+
+      expect(actions.map { |action| [action.server_action, action.label] }).to include(
+        %w[approve_post reviewables.actions.approve_post.action_title],
+      )
+    end
+
+    it "names both actions for a new topic" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post_topic)
+
+      actions = reviewable.actions_for(moderator.guardian)
+
+      expect(actions.bundles.first.label).to eq("reviewables.actions.deny_topic.title")
+      expect(actions.to_a.find { |action| action.server_action == "approve_post" }.label).to eq(
+        "reviewables.actions.approve_topic.title",
+      )
+    end
+
+    it "keeps the closed-topic confirmation on Approve post" do
+      SiteSetting.review_queue_consistent_answers = true
+      reviewable = Fabricate(:reviewable_queued_post, topic: Fabricate(:topic, closed: true))
+
+      action =
+        reviewable
+          .actions_for(moderator.guardian)
+          .to_a
+          .find { |candidate| candidate.server_action == "approve_post_closed" }
+
+      expect(action.label).to eq("reviewables.actions.approve_post.action_title")
+      expect(action.confirm_message).to eq("reviewables.actions.approve_post_closed.confirm")
+    end
+  end
+
   describe "creating a post" do
-    let!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:topic) { Fabricate(:topic, category: category) }
     let(:reviewable) { Fabricate(:reviewable_queued_post, topic: topic) }
 
     context "when creating" do
@@ -103,6 +157,81 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.success?).to eq(true)
         end
 
+        context "when the author is silenced" do
+          let(:author) { reviewable.target_created_by }
+
+          it "unsilences the author when a staff member approves" do
+            UserSilencer.silence(author, admin, reason: "unrelated")
+
+            reviewable.perform(moderator, :approve_post)
+
+            expect(author.reload).not_to be_silenced
+          end
+
+          context "with a category group moderator" do
+            fab!(:group_user)
+
+            let(:category_moderator) { group_user.user }
+
+            before do
+              SiteSetting.enable_category_group_moderation = true
+              Fabricate(:category_moderation_group, category:, group: group_user.group)
+              reviewable.update!(category:)
+            end
+
+            it "lifts the auto-silence triggered by the queued post" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).not_to be_silenced
+            end
+
+            it "keeps an unrelated silence" do
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              result = reviewable.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
+            it "keeps a silence imposed by staff rejecting the queued post" do
+              reviewable.perform(
+                admin,
+                :reject_and_silence,
+                reason: "spam",
+                silenced_till: 2.days.from_now,
+              )
+
+              result = reviewable.reload.perform(category_moderator, :approve_post)
+
+              expect(result.success?).to eq(true)
+              expect(author.reload).to be_silenced
+            end
+
+            it "keeps a silence imposed after the auto-silence" do
+              UserSilencer.auto_silence(
+                author,
+                Discourse.system_user,
+                keep_posts: true,
+                reviewable_id: reviewable.id,
+              )
+              author.update!(silenced_till: nil)
+              UserSilencer.silence(author, admin, reason: "unrelated")
+
+              reviewable.perform(category_moderator, :approve_post)
+
+              expect(author.reload).to be_silenced
+            end
+          end
+        end
+
         it "logs a staff action linked to the reviewable" do
           expect { reviewable.perform(moderator, :approve_post) }.to change {
             UserHistory.where(
@@ -163,7 +292,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
         context "when the dsa_reporting_enabled site setting is enabled" do
           before do
-            SiteSetting.dsa_reporting_enabled = true
+            enable_dsa_reporting
             SiteSetting.dsa_moderation_appeal_email = "appeals@example.com"
           end
 
@@ -297,6 +426,20 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
           expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
           expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
+        end
+
+        it "keeps flags the user shares with other flaggers" do
+          shared =
+            Fabricate(
+              :reviewable_flagged_post,
+              created_by: reviewable.target_created_by,
+              reviewable_scores: [Fabricate.build(:reviewable_score, status: :pending)],
+            )
+
+          result = reviewable.perform(moderator, :delete_user)
+
+          expect(result.remove_reviewable_ids).not_to include(shared.id)
+          expect(shared.reload).to be_pending
         end
       end
     end
@@ -434,7 +577,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
     end
 
     context "when updating an existing reviewable" do
-      let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
+      fab!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
       let(:user_stats) { reviewable.target_created_by.user_stat }
 
       context "when status changes from 'pending' to something else" do
@@ -635,12 +778,50 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   end
 
   describe "#perform" do
+    it "retains the classified decision when account deletion removes the queued review" do
+      enable_dsa_reporting
+      recipient = Fabricate(:user)
+      queued =
+        Fabricate(
+          :reviewable_queued_post_topic,
+          created_by: recipient,
+          target_created_by: recipient,
+        )
+      Fabricate(:reviewable_note, reviewable: queued)
+      rule = { "ground" => "Be respectful", "explanation" => "Personal attacks are not allowed." }
+
+      result =
+        queued.perform(
+          admin,
+          :delete_user,
+          dsa_classification: {
+            community_rule: rule,
+            category: "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          },
+        )
+
+      expect(result).to be_success
+      expect(User.exists?(recipient.id)).to eq(false)
+      expect(Reviewable.exists?(queued.id)).to eq(false)
+      expect(ReviewableNote.where(reviewable_id: queued.id)).to be_empty
+      expect(DsaStatementOfRecord.where(reviewable_id: queued.id).sole).to have_attributes(
+        status: "ready",
+        classified_by_id: admin.id,
+        payload:
+          include(
+            "decision_account" => "DECISION_ACCOUNT_TERMINATED",
+            "incompatible_content_ground" => rule["ground"],
+            "category" => "STATEMENT_CATEGORY_OTHER_VIOLATION_TC",
+          ),
+      )
+    end
+
     context "when the dsa_reporting_enabled site setting is enabled" do
-      let(:reviewable) { Fabricate(:reviewable_queued_post) }
+      fab!(:reviewable, :reviewable_queued_post)
 
       before do
         freeze_time
-        SiteSetting.dsa_reporting_enabled = true
+        enable_dsa_reporting
       end
 
       it "creates no statement when approve_post handles the queued post reviewable" do

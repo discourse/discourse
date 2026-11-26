@@ -18,6 +18,7 @@ end
 #
 # Indexes
 #
-#  index_anonymous_users_on_master_user_id  (master_user_id) UNIQUE WHERE active
-#  index_anonymous_users_on_user_id         (user_id) UNIQUE
+#  idx_anonymous_users_all_shadows_by_master  (master_user_id)
+#  index_anonymous_users_on_master_user_id    (master_user_id) UNIQUE WHERE active
+#  index_anonymous_users_on_user_id           (user_id) UNIQUE
 #

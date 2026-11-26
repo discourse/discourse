@@ -3,6 +3,8 @@
 class AiPostImageCaption < ActiveRecord::Base
   belongs_to :post
   belongs_to :upload
+
+  enum :source, { unknown: "unknown", ai: "ai", manual: "manual" }
 end
 
 # == Schema Information
@@ -16,6 +18,7 @@ end
 #  last_attempted_at :datetime
 #  last_error        :text
 #  locale            :string(20)       not null
+#  source            :string           default("unknown"), not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  post_id           :integer          not null

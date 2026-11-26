@@ -1,4 +1,5 @@
-import { render } from "@ember/test-helpers";
+import { trackedObject } from "@ember/reactive/collections";
+import { render, rerender } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DBadgeButton from "discourse/ui-kit/d-badge-button";
@@ -31,15 +32,16 @@ module("Integration | ui-kit | DBadgeButton", function (hooks) {
   });
 
   test("title", async function (assert) {
-    this.set("badge", { description: "a <a href>good</a> run" });
+    const badge = trackedObject({ description: "a <a href>good</a> run" });
 
-    await render(<template><DBadgeButton @badge={{this.badge}} /></template>);
+    await render(<template><DBadgeButton @badge={{badge}} /></template>);
 
     assert
       .dom(".user-badge")
       .hasAttribute("title", "a good run", "strips html");
 
-    this.set("badge", { description: "a bad run" });
+    badge.description = "a bad run";
+    await rerender();
 
     assert
       .dom(".user-badge")

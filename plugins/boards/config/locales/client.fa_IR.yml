@@ -28,7 +28,9 @@ fa_IR:
         topic_reply_count:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
-        created_by: "ایجاد شده توسط"
+        owners:
+          one: "مالک"
+          other: "مالکین"
       manage:
         name: "نام"
         slug: "نشانک (slug)"
@@ -39,6 +41,7 @@ fa_IR:
           column_title: "عنوان"
           icon: "آیکن"
           color: "رنگ"
+          icon_search_placeholder: "جستجو…"
           tag: "برچسب"
           move_to_status_open: "باز"
           move_to_status_closed: "بسته شده"

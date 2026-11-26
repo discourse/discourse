@@ -11,14 +11,6 @@ module PageObjects
         form.field("companyURL")
       end
 
-      def governing_law_input
-        form.field("governingLaw")
-      end
-
-      def city_for_disputes_input
-        form.field("cityForDisputes")
-      end
-
       def submit
         form.submit
       end

@@ -54,7 +54,7 @@ class DiscourseId::Revoke
   end
 
   def revoke_auth_tokens(associated_account:)
-    UserAuthToken.where(user_id: associated_account.user_id).destroy_all
+    associated_account.user&.revoke_family_sessions!
   end
 
   def log_revocation(associated_account:, params:)

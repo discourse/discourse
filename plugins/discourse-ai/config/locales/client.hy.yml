@@ -38,12 +38,23 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      review_bulk:
+        refresh: "Թարմացնել"
+        columns:
+          user: "Օգտատեր"
+          created: "Ստեղծված"
+          status: "Ստատուս"
       copied: "Պատճենված է"
       ai_decoded_transcript:
         type: "Տիպ"
         error: "Սխալ"
         response: "Արձագանք"
+      post_image_captions:
+        image_descriptions:
+          apply: "Կիրառել"
       discourse_workflows:
+        ai_tool:
+          list_item: "Ցանկի տարր"
         classify:
           text: "Տեքստ"
           upload_ids: "Նկարներ"
@@ -61,19 +72,21 @@ hy:
       llm_selector:
         none: "Ոչ մի"
       features:
-        disabled: "(անջատված)"
-        groups: "Խմբեր:"
+        table:
+          status: "Ստատուս"
+          groups: "Խմբեր"
+        chatbot:
+          places:
+            none: "Հասանելի չէ"
         no_groups: "Ոչ մի"
         edit: "Կարգավորումներ"
-        expand_list:
-          one: "(%{count} ավելի)"
-          other: "(%{count} ավելի)"
-        collapse_list: "(ցույց տալ ավելի քիչ)"
         filters:
-          all: "Բոլոր"
           reset: "Վերահաստատե;"
         search:
           name: "Որոնում"
+        review_queue:
+          setting_groups:
+            settings: "Կարգավորումներ"
         image_caption:
           setting_groups:
             settings: "Կարգավորումներ"
@@ -83,7 +96,17 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
-        category_scope: "Կատեգորիաներ"
+        settings:
+          ai_translation_category_scope:
+            label: "Կատեգորիաներ"
+          ai_translation_personal_messages:
+            choices:
+              none: "Ոչ մի"
+              all: "Բոլոր"
+          content_localization_language_switcher:
+            choices:
+              none: "Ոչ ոք"
+              all: "Բոլորը"
         model_progress:
           detail:
             columns:
@@ -114,6 +137,8 @@ hy:
             other: "%{count} գրառում"
       spam:
         short_title: "Սպամ"
+        no_llm_selected: "Ոչ մի"
+        no_decision_model_selected: "Ոչ մի"
         enable: "Միացնել"
         test_modal:
           spam: "Սպամ"
@@ -195,6 +220,30 @@ hy:
         edit: "Խմբագրել"
         delete: "Ջնջել"
         embedding: "Զետեղում"
+      concepts:
+        edit: "Խմբագրել"
+        seed:
+          refresh: "Թարմացնել"
+        delete: "Ջնջել"
+        columns:
+          status: "Ստատուս"
+          topics: "Թեմաներ"
+          posts: "Գրառումներ"
+        statuses:
+          active: "Ակտիվ"
+        form:
+          name: "Անուն"
+          description: "Նկարագրություն"
+          status: "Ստատուս"
+        shared_topics_count:
+          one: "%{count} թեմա"
+          other: "%{count} թեմա"
+        tagged_topics: "Թեգերով թեմաներ"
+        topic_columns:
+          topic: "Թեմա"
+          primary: "Հիմնական"
+          relevance: "Համապատասխանության"
+        primary_badge: "Հիմնական"
       decision_models:
         no_preset: "Ոչ մի"
         display_name: "Անուն"

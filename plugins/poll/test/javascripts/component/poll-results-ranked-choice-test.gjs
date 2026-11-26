@@ -34,9 +34,7 @@ module("Component | PollResultsRankedChoice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the ranked choice results component correctly", async function (assert) {
-    this.setProperties({
-      rankedChoiceOutcome: RANKED_CHOICE_OUTCOME,
-    });
+    this.rankedChoiceOutcome = RANKED_CHOICE_OUTCOME;
 
     await render(
       <template>

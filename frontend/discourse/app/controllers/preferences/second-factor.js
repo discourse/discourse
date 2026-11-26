@@ -42,10 +42,6 @@ export default class SecondFactorController extends Controller {
     set(this, "model.second_factor_backup_enabled", value);
   }
 
-  get isCurrentUser() {
-    return this.currentUser?.id === this.model.id;
-  }
-
   @computed
   get hasOAuth() {
     return findAll().length > 0;

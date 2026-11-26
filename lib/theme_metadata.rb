@@ -9,7 +9,6 @@ class ThemeMetadata
         discourse-clickable-topic
         discourse-custom-header-links
         Discourse-easy-footer
-        discourse-gifs
         discourse-tag-icons
         discourse-topic-thumbnails
         discourse-unanswered-filter

@@ -35,7 +35,9 @@ ur:
         assign: "تفویض"
         reassign: "دوبارہ تفویض"
         unassign: "غیر اسائین کریں"
-        created_by: "نے بنایا"
+        owners:
+          one: "مالک"
+          other: "مالکان"
       manage:
         name: "نام"
         slug: "سلگ"
@@ -47,6 +49,8 @@ ur:
           column_title: "عنوان"
           icon: "آئیکن"
           color: "رنگ"
+          color_palette: "رنگوں کا مجموعہ"
+          icon_search_placeholder: "تلاش۔۔۔"
           default_sort_priority: "ترجیح"
           tag: "ٹیگ"
           move_to_assigned_unassign: "غیر اسائین کریں"

@@ -78,6 +78,23 @@ RSpec.describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#index" do
+      def all_listed_queries
+        queries = []
+        loop do
+          expect(response.status).to eq(200)
+          page_queries = response_json.fetch("queries")
+          expect(queries.pluck("id") & page_queries.pluck("id")).to be_empty
+          queries.concat(page_queries)
+
+          next_page = response_json["load_more_queries"]
+          break unless next_page
+
+          expect(page_queries).not_to be_empty
+          get next_page
+        end
+        queries
+      end
+
       context "when default queries are synchronized" do
         include_context "with synchronized default queries"
 
@@ -140,24 +157,23 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         DiscourseDataExplorer::Query.destroy_all
         get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+        expect(all_listed_queries.size).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
       it "shows all available queries sorted by name when requested" do
         DiscourseDataExplorer::Query.destroy_all
-        make_query("SELECT 1 as value", name: "B")
-        make_query("SELECT 1 as value", name: "A")
+        query_b = make_query("SELECT 1 as value", name: "B")
+        query_a = make_query("SELECT 1 as value", name: "A")
         get "/admin/plugins/discourse-data-explorer/queries.json",
             params: {
               order: "name",
               ascending: "true",
             }
-        expect(response.status).to eq(200)
-        expect(response_json["queries"].length).to eq(
-          DiscourseDataExplorer::Queries.default.count + 2,
-        )
-        expect(response_json["queries"][0]["name"]).to eq("A")
-        expect(response_json["queries"][1]["name"]).to eq("B")
+        expected_count = DiscourseDataExplorer::Queries.default.count + 2
+        expect(response_json["total_rows_queries"]).to eq(expected_count)
+        queries = all_listed_queries
+        expect(queries.length).to eq(expected_count)
+        expect(queries.pluck("id") & [query_a.id, query_b.id]).to eq([query_a.id, query_b.id])
       end
 
       it "includes the query creator" do
@@ -167,25 +183,26 @@ RSpec.describe DiscourseDataExplorer::QueryController do
 
         get "/admin/plugins/discourse-data-explorer/queries.json"
 
-        expect(response.status).to eq(200)
-        serialized = response_json["queries"].find { |q| q["id"] == query.id }
-        expect(serialized["user"]).to include(
-          "id" => admin.id,
-          "username" => admin.username,
-          "avatar_template" => admin.avatar_template,
+        serialized = all_listed_queries.find { |candidate| candidate["id"] == query.id }
+        expect(serialized).to include(
+          "user" =>
+            include(
+              "id" => admin.id,
+              "username" => admin.username,
+              "avatar_template" => admin.avatar_template,
+            ),
         )
       end
 
       it "doesn't show hidden/deleted queries" do
         DiscourseDataExplorer::Query.destroy_all
-        make_query("SELECT 1 as value", name: "A", hidden: false)
+        visible_query = make_query("SELECT 1 as value", name: "A", hidden: false)
         make_query("SELECT 1 as value", name: "B", hidden: true)
         make_query("SELECT 1 as value", name: "C", hidden: true)
         get "/admin/plugins/discourse-data-explorer/queries.json"
-        expect(response.status).to eq(200)
-        expect(response_json["queries"].length).to eq(
-          DiscourseDataExplorer::Queries.default.count + 1,
-        )
+
+        default_ids = DiscourseDataExplorer::Queries.default.keys.map(&:to_i)
+        expect(all_listed_queries.pluck("id")).to contain_exactly(*default_ids, visible_query.id)
       end
 
       it "merges default query data with persisted last_run_at and groups" do
@@ -202,8 +219,9 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
 
-        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
-        default_in_response = response_json["queries"].find { |q| q["id"] == -1 }
+        queries = all_listed_queries
+        expect(queries.size).to eq(DiscourseDataExplorer::Queries.default.count)
+        default_in_response = queries.find { |query| query["id"] == -1 }
         expect(default_in_response).to be_present
         expect(Time.parse(default_in_response["last_run_at"])).to eq_time(3.days.ago)
         expect(default_in_response["group_ids"]).to eq([group.id])
@@ -215,7 +233,7 @@ RSpec.describe DiscourseDataExplorer::QueryController do
 
         get "/admin/plugins/discourse-data-explorer/queries.json"
         expect(response.status).to eq(200)
-        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+        expect(all_listed_queries.size).to eq(DiscourseDataExplorer::Queries.default.count)
       end
 
       it "filters by tag and applies text search within the active tag" do
@@ -1249,6 +1267,7 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+        expect(response.parsed_body.keys).not_to include("column_schema", "truncated")
       end
 
       it "does not include post relations the user cannot see" do
@@ -1431,6 +1450,93 @@ RSpec.describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+      end
+
+      it "describes the ordered types of a parameterized query with no rows" do
+        group.add(user)
+        query = make_query(<<~SQL, {}, [group.id])
+            -- [params]
+            -- int :value
+            SELECT CAST(:value AS bigint) AS id, 12.345::numeric(12,3) AS amount,
+                   NULL::date AS reported_on, SUM(1) OVER ()::numeric AS total
+          SQL
+
+        get "/data-explorer/queries/#{query.id}/run.json",
+            params: {
+              typed: true,
+              limit: 0,
+              params: { value: "42" }.to_json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "columns" => %w[id amount reported_on total],
+          "column_schema" => [
+            { "name" => "id", "type" => "int8" },
+            { "name" => "amount", "type" => "numeric", "precision" => 12, "scale" => 3 },
+            { "name" => "reported_on", "type" => "date" },
+            { "name" => "total", "type" => "numeric" },
+          ],
+          "rows" => [],
+          "result_count" => 0,
+        )
+      end
+
+      it "preserves the textual values and SQL nulls in typed rows" do
+        group.add(user)
+        query = make_query(<<~SQL, {}, [group.id])
+            SELECT 12345.123456789123456789::numeric(38,18) AS amount,
+                   '2025-11-30 10:30:00.123456'::timestamp AS observed_at,
+                   '{"value":1}'::json AS payload, NULL::int AS count
+          SQL
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["rows"]).to eq(
+          [["12345.123456789123456789", "2025-11-30 10:30:00.123456", '{"value":1}', nil]],
+        )
+      end
+
+      it "reports truncation only when there are more rows than the requested limit" do
+        group.add(user)
+        query =
+          make_query("SELECT id FROM generate_series(1, 2) AS ids(id) ORDER BY id", {}, [group.id])
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, limit: 2 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "rows" => [["1"], ["2"]],
+          "result_count" => 2,
+          "truncated" => false,
+        )
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, limit: 1 }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to include(
+          "rows" => [["1"]],
+          "result_count" => 1,
+          "truncated" => true,
+        )
+      end
+
+      it "rejects the download parameter for typed JSON" do
+        group.add(user)
+        query = make_query("SELECT 1 AS value", {}, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.json", params: { typed: true, download: true }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body.fetch("errors").join).to include("download")
+      end
+
+      it "rejects negative limits in CSV downloads" do
+        query = make_query("SELECT 1 AS value", {}, [group.id.to_s])
+
+        get "/data-explorer/queries/#{query.id}/run.csv", params: { download: 1, limit: -1 }
+
+        expect(response.status).to eq(400)
+        expect(response.body).to include("You supplied invalid parameters to the request: limit")
       end
 
       it "returns 404 when the user does not have access" do

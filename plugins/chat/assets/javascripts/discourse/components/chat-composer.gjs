@@ -76,6 +76,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked richEditorComponent;
+  @tracked contextualToolbar;
 
   formattingToolbar = this.#buildToolbar();
   richEditorExtensions;
@@ -127,7 +128,9 @@ export default class ChatComposer extends Component {
   get shouldRenderMessageDetails() {
     return (
       this.draft?.editing ||
-      (this.context === "channel" && this.draft?.inReplyTo)
+      (!!this.draft?.inReplyTo &&
+        (this.siteSettings.chat_thread_improvements ||
+          this.context === "channel"))
     );
   }
 
@@ -222,6 +225,21 @@ export default class ChatComposer extends Component {
     return keymap;
   }
 
+  get showBroadcastOption() {
+    return false;
+  }
+
+  get broadcastChecked() {
+    return false;
+  }
+
+  get broadcastOptionLabel() {
+    return "";
+  }
+
+  @action
+  toggleBroadcast() {}
+
   @action
   persistDraft() {}
 
@@ -271,10 +289,19 @@ export default class ChatComposer extends Component {
     // Removing a focused editor mid-render would flip isFocused during the
     // same render that reads it.
     this.editor?.element.blur();
+    this.contextualToolbar = null;
 
     setCompositionMode(this.currentUser, preference);
 
     next(() => this.composer.focus({ ensureAtEnd: true }));
+  }
+
+  @action
+  replaceToolbar(toolbar, owner) {
+    if (toolbar === null && owner && this.contextualToolbar !== owner) {
+      return;
+    }
+    this.contextualToolbar = toolbar;
   }
 
   @action
@@ -416,6 +443,7 @@ export default class ChatComposer extends Component {
       this.draft.uploads = cloneJSON(uploads);
       this.persistDraft();
     }
+    this.args.onUploadActivity?.(this.inProgressUploadsCount);
   }
 
   @action
@@ -450,7 +478,9 @@ export default class ChatComposer extends Component {
     }
 
     await this.args.onSendMessage(this.draft);
-    this.#refreshTextareaHeight();
+    if (!this.isDestroying) {
+      this.#refreshTextareaHeight();
+    }
   }
 
   async reactingToLastMessage() {
@@ -489,7 +519,7 @@ export default class ChatComposer extends Component {
   }
 
   reportReplyingPresence() {
-    if (!this.args.channel || !this.draft) {
+    if (!this.args.channel || !this.draft || !this.presenceChannelName) {
       return;
     }
 
@@ -578,7 +608,9 @@ export default class ChatComposer extends Component {
         ...getExtensions(),
         // the formatting bar already offers the same buttons
         selectionToolbarExtension(() =>
-          this.showFormattingBar ? null : selectionToolbar
+          this.showFormattingBar || this.contextualToolbar
+            ? null
+            : selectionToolbar
         ),
       ];
     }
@@ -778,7 +810,19 @@ export default class ChatComposer extends Component {
       >
         <div class="chat-composer__outer-container">
           <div class="chat-composer__inner-container">
-            {{#if this.showFormattingRow}}
+            {{#if
+              (and
+                this.useRichEditor this.contextualToolbar (not this.disabled)
+              )
+            }}
+              <div
+                aria-label={{i18n "chat.composer.formatting"}}
+                class="chat-composer__contextual-toolbar"
+                role="toolbar"
+              >
+                <ToolbarButtons @data={{this.contextualToolbar}} />
+              </div>
+            {{else if this.showFormattingRow}}
               <div
                 aria-label={{i18n "chat.composer.formatting"}}
                 class="chat-composer__formatting-bar"
@@ -818,6 +862,7 @@ export default class ChatComposer extends Component {
                     @onSetup={{this.setupEditor}}
                     @onSubmit={{this.onSend}}
                     @placeholder={{this.placeholder}}
+                    @replaceToolbar={{this.replaceToolbar}}
                     @submitOnEnter={{this.submitOnEnter}}
                     @toggleRichEditor={{this.toggleEditor}}
                     @trailingParagraph={{false}}
@@ -866,6 +911,17 @@ export default class ChatComposer extends Component {
             </div>
           </div>
         </div>
+
+        {{#if this.showBroadcastOption}}
+          <label class="chat-composer__broadcast-option checkbox-label">
+            <input
+              checked={{this.broadcastChecked}}
+              type="checkbox"
+              {{on "change" this.toggleBroadcast}}
+            />
+            <span>{{this.broadcastOptionLabel}}</span>
+          </label>
+        {{/if}}
       </div>
 
       {{#if this.canAttachUploads}}
@@ -879,11 +935,13 @@ export default class ChatComposer extends Component {
         />
       {{/if}}
 
-      <div class="chat-replying-indicator-container">
-        <ChatReplyingIndicator
-          @presenceChannelName={{this.presenceChannelName}}
-        />
-      </div>
+      {{#if this.presenceChannelName}}
+        <div class="chat-replying-indicator-container">
+          <ChatReplyingIndicator
+            @presenceChannelName={{this.presenceChannelName}}
+          />
+        </div>
+      {{/if}}
     </div>
   </template>
 }

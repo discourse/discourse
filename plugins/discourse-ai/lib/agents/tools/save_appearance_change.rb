@@ -1,0 +1,230 @@
+# frozen_string_literal: true
+
+module DiscourseAi
+  module Agents
+    module Tools
+      # Saves an approved appearance draft without making it live, so the
+      # administrator can preview it first.
+      class SaveAppearanceChange < AppearanceChangeTool
+        SERVICES = {
+          "palettes" => AppearanceChange::DraftPalettes,
+          "existing_palettes" => AppearanceChange::DraftExistingPalettes,
+          "theme" => AppearanceChange::DraftTheme,
+          "component" => AppearanceChange::DraftComponent,
+        }.freeze
+        SERVICE_PARAMS = %i[
+          theme_id
+          name
+          light_colors
+          dark_colors
+          light_palette_id
+          dark_palette_id
+          site_settings
+          styles
+          replaces_theme_id
+          parent_theme_id
+        ].freeze
+
+        def self.name
+          "save_appearance_change"
+        end
+
+        def self.signature
+          {
+            name:,
+            description:
+              "Requests approval to save an exact appearance draft without making it live, so the administrator can preview it. Never invent, alter, or reuse the draft token.",
+            parameters: [
+              {
+                name: "draft_token",
+                type: "string",
+                required: true,
+                description: "The draft token returned by generate_appearance_change",
+              },
+            ],
+          }
+        end
+
+        def approval_title
+          return I18n.t("discourse_ai.appearance_authoring.invalid_draft") if !valid_draft?
+
+          I18n.t(
+            "discourse_ai.ai_bot.chat_tool_approval.save_appearance_title.#{draft[:kind]}",
+            name: draft[:name],
+          )
+        end
+
+        def approval_changes
+          return [] if !valid_draft?
+
+          # new palettes replace their theme's; a new theme replaces what the
+          # site shows now
+          live_theme = theme_draft? ? Theme.find_default : target_theme
+          current = AppearanceAuthoring.theme_palettes(live_theme)
+          # a component may keep its theme's palettes
+          palettes = {
+            light: draft[:light_colors] || current[:light],
+            dark: draft[:dark_colors] || current[:dark],
+          }
+          AppearanceAuthoring.color_changes(before: current, after: palettes) +
+            AppearanceAuthoring.font_changes(draft[:site_settings]) +
+            AppearanceAuthoring.style_changes(draft[:styles], palettes:, previous: replaced_styles)
+        end
+
+        def approval_details
+          return I18n.t("discourse_ai.appearance_authoring.invalid_draft") if !valid_draft?
+
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.save_appearance_details.#{draft[:kind]}")
+        end
+
+        def approval_question
+          I18n.t("discourse_ai.ai_bot.chat_tool_approval.save_appearance_question")
+        end
+
+        def validation_error
+          refusal =
+            AppearanceAuthoring.denial(
+              user: context.user,
+              phase: execution_phase,
+              new_theme: theme_draft?,
+              new_component: component_draft?,
+              new_palettes:
+                valid_draft? &&
+                  (
+                    draft[:kind] == "palettes" ||
+                      (component_draft? && draft[:light_colors].present?)
+                  ),
+              styles: valid_draft? && draft[:styles].present?,
+            )
+          return error_response(refusal) if refusal
+          if !valid_draft?
+            return error_response(I18n.t("discourse_ai.appearance_authoring.invalid_draft"))
+          end
+
+          if !User.exists?(id: draft[:user_id], admin: true)
+            return error_response(I18n.t("discourse_ai.appearance_authoring.requester_not_admin"))
+          end
+          if context.reviewable_id.blank?
+            if draft[:user_id] != context.user.id
+              return error_response(I18n.t("discourse_ai.appearance_authoring.not_allowed"))
+            end
+            parameters[:requester_id] = draft[:user_id]
+          end
+
+          if !theme_draft? && !context.user.guardian.can_edit_theme?(target_theme)
+            return error_response(I18n.t("discourse_ai.appearance_authoring.theme_not_editable"))
+          end
+
+          nil
+        end
+
+        def invoke
+          if (error = validation_error)
+            return error
+          end
+
+          with_approval do |reviewable|
+            if !AppearanceAuthoring::Draft.claim(draft_token, reviewable_id: reviewable.id)
+              next error_response(I18n.t("discourse_ai.appearance_authoring.draft_used"))
+            end
+
+            save(reviewable)
+          end
+        rescue ActiveRecord::ActiveRecordError
+          error_response(I18n.t("discourse_ai.appearance_authoring.failed"))
+        end
+
+        private
+
+        def save(reviewable)
+          result =
+            SERVICES.fetch(draft[:kind]).call(
+              params: draft.slice(*SERVICE_PARAMS),
+              guardian: context.user.guardian,
+            )
+          if result.failure?
+            AppearanceAuthoring::Draft.release(draft_token, reviewable_id: reviewable.id)
+            return failure_response(result)
+          end
+
+          appearance_change = result[:appearance_change]
+          AppearanceAuthoring::Draft.complete_after_transaction(
+            draft_token,
+            reviewable_id: reviewable.id,
+            resource_id: appearance_change.id,
+          )
+
+          {
+            status: "success",
+            appearance_change_id: appearance_change.id,
+            name: appearance_change.name,
+            preview_url: AppearanceAuthoring.preview_url(appearance_change),
+            message: I18n.t("discourse_ai.appearance_authoring.saved"),
+          }
+        rescue StandardError
+          AppearanceAuthoring::Draft.release(draft_token, reviewable_id: reviewable.id)
+          raise
+        end
+
+        def approved_parameters?(tool_parameters)
+          tool_parameters["draft_token"] == draft_token &&
+            tool_parameters["requester_id"].to_i == draft&.dig(:user_id)
+        end
+
+        def draft_token
+          parameters[:draft_token].to_s
+        end
+
+        def draft
+          return @draft if defined?(@draft)
+          @draft = AppearanceAuthoring::Draft.read(draft_token)
+        end
+
+        # Drafts of existing palettes carry their colors too, for the approval
+        # card.
+        # The styles of the version a new version replaces, so the approval
+        # card shows what changes, styles it removes too.
+        def replaced_styles
+          return if draft[:replaces_theme_id].blank?
+          AppearanceChange
+            .where(kind: %i[theme component])
+            .find_by(theme_id: draft[:replaces_theme_id])
+            &.styles
+        end
+
+        def valid_draft?
+          return false if draft.blank? || !SERVICES.key?(draft[:kind]) || draft[:name].blank?
+          if draft[:kind] == "component"
+            # palettes are optional, but come in pairs
+            return(
+              draft[:parent_theme_id].is_a?(Integer) &&
+                draft[:light_colors].is_a?(Hash) == draft[:dark_colors].is_a?(Hash)
+            )
+          end
+
+          draft[:light_colors].is_a?(Hash) && draft[:dark_colors].is_a?(Hash) &&
+            (
+              draft[:kind] != "existing_palettes" ||
+                [draft[:light_palette_id], draft[:dark_palette_id]].all?(Integer)
+            )
+        end
+
+        def theme_draft?
+          valid_draft? && draft[:kind] == "theme"
+        end
+
+        def component_draft?
+          valid_draft? && draft[:kind] == "component"
+        end
+
+        # The theme the change gives palettes or a component to.
+        def target_theme
+          Theme.find_by(
+            id: draft[component_draft? ? :parent_theme_id : :theme_id],
+            component: false,
+          )
+        end
+      end
+    end
+  end
+end

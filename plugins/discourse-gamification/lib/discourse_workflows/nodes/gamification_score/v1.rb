@@ -88,7 +88,7 @@ if defined?(DiscourseWorkflows)
 
           def execute(exec_ctx)
             items =
-              exec_ctx.input_items.map.with_index do |_item, item_index|
+              exec_ctx.each_item do |_item, item_index|
                 config = {
                   "username" => exec_ctx.get_node_parameter("username", item_index),
                   "points" => exec_ctx.get_node_parameter("points", item_index),

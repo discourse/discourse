@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import { trackedSet } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,10 +12,24 @@ import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 const INPUT_DELIMITER = "\n";
+const NEW_ENTRY = Symbol("new entry");
+
+const RevealToggle = <template>
+  <DButton
+    class="btn-default btn-small secret-value-list__reveal"
+    @action={{@onToggle}}
+    @ariaLabel="admin.settings.unmask"
+    @icon={{if @masked "far-eye" "far-eye-slash"}}
+  />
+</template>;
 
 export default class SecretValueList extends Component {
   @tracked newKey;
   @tracked newSecret;
+
+  isMasked = (entry) => this.args.isSecret && !this.#revealedEntries.has(entry);
+
+  #revealedEntries = trackedSet();
 
   @cached
   get collection() {
@@ -52,11 +67,20 @@ export default class SecretValueList extends Component {
 
     this.newKey = "";
     this.newSecret = "";
+    this.#revealedEntries.delete(NEW_ENTRY);
   }
 
   @action
   removeValue(value) {
+    this.#revealedEntries.delete(value.key);
     this.#removeValue(value);
+  }
+
+  @action
+  toggleReveal(entry) {
+    if (!this.#revealedEntries.delete(entry)) {
+      this.#revealedEntries.add(entry);
+    }
   }
 
   #checkInvalidInput(inputs) {
@@ -141,7 +165,7 @@ export default class SecretValueList extends Component {
     <div class="value-list secret-value-list">
       {{#if this.collection}}
         <div class="values">
-          {{#each this.collection as |value index|}}
+          {{#each this.collection key="@index" as |value index|}}
             <div class="value" data-index={{index}}>
               <DButton
                 class="btn-default remove-value-btn btn-small"
@@ -154,11 +178,17 @@ export default class SecretValueList extends Component {
                 {{on "focusout" (fn this.changeKey index)}}
               />
               <Input
-                class="value-input"
-                @type={{if @isSecret "password" "text"}}
+                class="value-input secret"
+                @type={{if (this.isMasked value.key) "password" "text"}}
                 @value={{value.secret}}
                 {{on "focusout" (fn this.changeSecret index)}}
               />
+              {{#if @isSecret}}
+                <RevealToggle
+                  @masked={{this.isMasked value.key}}
+                  @onToggle={{fn this.toggleReveal value.key}}
+                />
+              {{/if}}
             </div>
           {{/each}}
         </div>
@@ -167,15 +197,21 @@ export default class SecretValueList extends Component {
       <div class="value">
         <DTextField
           class="new-value-input key"
-          @placeholder={{this.setting.placeholder.key}}
+          @placeholder={{@placeholder.key}}
           @value={{this.newKey}}
         />
         <Input
           class="new-value-input secret"
-          placeholder={{this.setting.placeholder.value}}
-          @type={{if @isSecret "password" "text"}}
+          placeholder={{@placeholder.value}}
+          @type={{if (this.isMasked NEW_ENTRY) "password" "text"}}
           @value={{this.newSecret}}
         />
+        {{#if @isSecret}}
+          <RevealToggle
+            @masked={{this.isMasked NEW_ENTRY}}
+            @onToggle={{fn this.toggleReveal NEW_ENTRY}}
+          />
+        {{/if}}
         <DButton
           class="add-value-btn btn-small"
           @action={{this.addValue}}

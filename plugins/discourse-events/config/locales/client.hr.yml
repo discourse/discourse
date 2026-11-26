@@ -13,6 +13,10 @@ hr:
             topic_id:
               label: ID teme
     discourse_events:
+      livestream:
+        zoom:
+          guest_prompt:
+            register: "Registracija"
       preferences:
         reminders:
           preferences:
@@ -54,13 +58,14 @@ hr:
         status: "Statust"
       models:
         event:
-          expired: "Isteklo"
           closed: "Zatvoreno"
           status:
             public:
               title: "Javnost"
             private:
               title: "Privatno"
+      recording_modal:
+        save: "Spremi"
       composer:
         url_placeholder: "Dodaj URL"
         reminder:
