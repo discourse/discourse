@@ -29,14 +29,27 @@ class TopicNavigationInfo {
   @tracked topicProgressExpanded = false;
 
   /** @type {{ postIndex: number | null, percent: number } | null} */
-  @tracked prevEvent = null;
-
+  #prevEvent = null;
   #postCountFetcher;
   #renderTimelineFetcher;
 
   constructor(postCountFetcher, renderTimelineFetcher) {
     this.#postCountFetcher = postCountFetcher;
     this.#renderTimelineFetcher = renderTimelineFetcher;
+  }
+
+  /**
+   * The latest scroll event, read by the timeline or progress bar as it mounts.
+   * Untracked, so scrolling invalidates nothing. Consuming `renderTimeline`
+   * refreshes the value when the two swap.
+   */
+  get prevEvent() {
+    void this.renderTimeline;
+    return this.#prevEvent;
+  }
+
+  set prevEvent(event) {
+    this.#prevEvent = event;
   }
 
   get renderTimeline() {
