@@ -293,6 +293,60 @@ RSpec.describe Auth::ManagedAuthenticator do
       end
     end
 
+    describe "when the matched user is suspended" do
+      fab!(:user)
+      let!(:associated) do
+        UserAssociatedAccount.create!(user: user, provider_name: "myauth", provider_uid: "1234")
+      end
+
+      before { user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now) }
+
+      it "does not download or select the provider avatar" do
+        SiteSetting.auth_overrides_avatar = true
+
+        expect {
+          authenticator.after_authenticate(
+            hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
+          )
+        }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+
+        expect(user.user_avatar&.selected_user_associated_account_id).to be_nil
+      end
+
+      it "does not import the provider profile" do
+        authenticator.after_authenticate(
+          hash.deep_merge(info: { description: "New bio", location: "New location" }),
+        )
+
+        user.user_profile.reload
+        expect(user.user_profile.bio_raw).to be_nil
+        expect(user.user_profile.location).to be_nil
+      end
+
+      it "still stores the provider data and imports it once the suspension ends" do
+        authenticator.after_authenticate(
+          hash.deep_merge(info: { image: "https://some.domain/image.jpg", description: "New bio" }),
+        )
+
+        associated.reload
+        expect(associated.info["description"]).to eq("New bio")
+
+        user.update!(suspended_till: 1.minute.ago)
+
+        expect {
+          authenticator.after_authenticate(
+            hash.deep_merge(
+              info: {
+                image: "https://some.domain/image.jpg",
+                description: "New bio",
+              },
+            ),
+          )
+        }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
+        expect(user.user_profile.reload.bio_raw).to eq("New bio")
+      end
+    end
+
     describe "avatar on create" do
       fab!(:user)
       let!(:association) do

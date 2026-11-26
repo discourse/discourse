@@ -1267,6 +1267,142 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
   end
 
+  describe "when the matched user is suspended" do
+    fab!(:user) { Fabricate(:user, username: "mallory", name: "Old Name") }
+
+    fab!(:associated_account) do
+      Fabricate(
+        :user_associated_account,
+        user: user,
+        provider_name: "twitter",
+        provider_uid: "1234",
+        info: {
+          "image" => "https://example.com/signup-avatar.png",
+        },
+      )
+    end
+
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+
+    let(:new_image_url) { "https://example.com/new-avatar.png" }
+
+    before do
+      enable_auth_provider(:twitter)
+      SiteSetting.auth_overrides_avatar = true
+      user.update!(suspended_at: Time.zone.now, suspended_till: 1.year.from_now)
+
+      OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
+        provider: "twitter",
+        uid: "1234",
+        info:
+          OmniAuth::AuthHash::InfoHash.new(
+            email: "provider@example.com",
+            nickname: "provider_username",
+            name: "Provider Name",
+            image: new_image_url,
+            description: "provider bio",
+            location: "provider location",
+          ),
+        credentials: {
+          token: "token",
+          secret: "secret",
+        },
+      )
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+    end
+
+    after do
+      Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter] = nil
+    end
+
+    def avatar_template_in_topic
+      get "/t/#{topic.id}.json"
+      expect(response.status).to eq(200)
+      JSON.parse(response.body)["post_stream"]["posts"].find { |p| p["id"] == post.id }[
+        "avatar_template"
+      ]
+    end
+
+    it "refuses the login without importing the provider avatar or profile" do
+      stub_request(:get, new_image_url).to_return(
+        body: file_from_fixtures("logo.png", "images"),
+        headers: {
+          "Content-Type" => "image/png",
+        },
+      )
+      before_avatar_template = avatar_template_in_topic
+
+      Jobs.run_immediately!
+      expect { get "/auth/twitter/callback.json" }.not_to change {
+        Jobs::DownloadAvatarFromUrl.jobs.count
+      }
+
+      data = JSON.parse(cookies[:authentication_data])
+      expect(data["suspended"]).to eq(true)
+      expect(data["authenticated"]).to be_falsey
+
+      get "/session/current.json"
+      expect(response.status).to eq(404)
+      expect(session[:current_user_id]).to be_nil
+
+      put "/u/mallory.json", params: { bio_raw: "changed directly" }
+      expect(response.status).to eq(403)
+
+      user.reload
+      expect(user.uploaded_avatar_id).to be_nil
+      expect(user.user_avatar&.selected_user_associated_account_id).to be_nil
+      expect(user.user_profile.bio_raw).to be_nil
+      expect(user.user_profile.location).to be_nil
+      expect(avatar_template_in_topic).to eq(before_avatar_template)
+    end
+
+    it "does not apply the provider's name, username or email" do
+      SiteSetting.auth_overrides_name = true
+      SiteSetting.auth_overrides_username = true
+      SiteSetting.email_editable = false
+      SiteSetting.auth_overrides_email = true
+
+      get "/auth/twitter/callback.json"
+
+      data = JSON.parse(cookies[:authentication_data])
+      expect(data["suspended"]).to eq(true)
+
+      user.reload
+      expect(user.name).to eq("Old Name")
+      expect(user.username).to eq("mallory")
+      expect(user.email).not_to eq("provider@example.com")
+    end
+
+    context "when the user is not suspended" do
+      before { user.update!(suspended_at: nil, suspended_till: nil) }
+
+      it "imports the provider avatar and profile" do
+        stub_request(:get, new_image_url).to_return(
+          body: file_from_fixtures("logo.png", "images"),
+          headers: {
+            "Content-Type" => "image/png",
+          },
+        )
+        before_avatar_template = avatar_template_in_topic
+
+        Jobs.run_immediately!
+        expect { get "/auth/twitter/callback.json" }.to change {
+          user.reload.uploaded_avatar_id
+        }.from(nil)
+
+        data = JSON.parse(cookies[:authentication_data])
+        expect(data["authenticated"]).to eq(true)
+
+        user.reload
+        expect(user.uploaded_avatar.origin).to eq(new_image_url)
+        expect(user.user_profile.bio_raw).to eq("provider bio")
+        expect(user.user_profile.location).to eq("provider location")
+        expect(avatar_template_in_topic).not_to eq(before_avatar_template)
+      end
+    end
+  end
+
   describe "with a fake provider" do
     class FakeAuthenticator < Auth::ManagedAuthenticator
       class Strategy
