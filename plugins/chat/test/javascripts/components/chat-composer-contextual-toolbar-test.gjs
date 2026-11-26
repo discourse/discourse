@@ -2,6 +2,7 @@ import { click, render, settled, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
+import KeyValueStore from "discourse/lib/key-value-store";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChatComposerPendingThread from "discourse/plugins/chat/discourse/components/chat/composer/pending-thread";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
@@ -9,6 +10,12 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 module("Component | ChatComposer | ContextualToolbar", function (hooks) {
   setupRenderingTest(hooks);
+
+  const store = new KeyValueStore("discourse_chat_composer_");
+
+  hooks.afterEach(function () {
+    store.remove("formatting_bar");
+  });
 
   hooks.beforeEach(function () {
     this.siteSettings.enable_composer_picker_and_rich_chat = true;
@@ -28,7 +35,8 @@ module("Component | ChatComposer | ContextualToolbar", function (hooks) {
     this.site.hashtag_configurations = { "chat-composer": [] };
   });
 
-  test("offers link controls on narrow screens and removes the link", async function (assert) {
+  test("temporarily replaces the formatting bar with link controls on narrow screens", async function (assert) {
+    store.setObject({ key: "formatting_bar", value: true });
     await render(
       <template>
         <ChatComposerPendingThread
@@ -50,7 +58,10 @@ module("Component | ChatComposer | ContextualToolbar", function (hooks) {
 
     assert
       .dom(".chat-composer__contextual-toolbar .composer-link-toolbar__edit")
-      .exists("link editing is available without a formatting bar");
+      .exists("link editing is available on narrow screens");
+    assert
+      .dom(".chat-composer__formatting-bar")
+      .doesNotExist("contextual controls take precedence");
     await click(
       ".chat-composer__contextual-toolbar .composer-link-toolbar__unlink"
     );
@@ -61,6 +72,9 @@ module("Component | ChatComposer | ContextualToolbar", function (hooks) {
     assert
       .dom(".chat-composer__contextual-toolbar")
       .doesNotExist("the contextual controls close when the link is removed");
+    assert
+      .dom(".chat-composer__formatting-bar")
+      .exists("the preferred formatting bar is restored");
     assert.strictEqual(
       this.draft.message,
       "example after",

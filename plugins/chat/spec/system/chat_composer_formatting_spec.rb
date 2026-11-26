@@ -66,6 +66,29 @@ RSpec.describe "Chat composer formatting" do
       expect(channel_page.composer).to have_value("ship it **now**")
     end
 
+    it "keeps the selection while navigating and activating the floating toolbar by keyboard" do
+      chat_page.visit_channel(channel_1)
+      channel_page.composer.input.send_keys("ship it now")
+      channel_page.composer.input.send_keys(*Array.new(3) { %i[shift left] })
+
+      toolbar = ".fk-d-menu[data-identifier='chat-selection-toolbar']"
+      expect(page).to have_css("#{toolbar} .bold")
+      channel_page.composer.input.send_keys(:tab)
+      expect(page).to have_css("#{toolbar} .bold:focus")
+      find("#{toolbar} .bold:focus").send_keys(:right)
+      expect(page).to have_css("#{toolbar} .italic:focus")
+      find("#{toolbar} .italic:focus").send_keys(:enter)
+      expect(channel_page.composer).to have_value("ship it *now*")
+
+      channel_page.composer.input.send_keys(:tab)
+      expect(page).to have_css("#{toolbar} .bold:focus")
+      find("#{toolbar} .bold:focus").send_keys(:escape)
+      expect(page).to have_css(".chat-composer__input:focus")
+      expect(page).to have_no_css(toolbar)
+      channel_page.composer.input.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "b"])
+      expect(channel_page.composer).to have_value("ship it ***now***")
+    end
+
     it "leaves a selected image to its own toolbar" do
       chat_page.visit_channel(channel_1)
       expect(channel_page.composer).to have_rich_editor

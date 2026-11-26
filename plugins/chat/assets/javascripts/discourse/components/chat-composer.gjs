@@ -728,7 +728,9 @@ export default class ChatComposer extends Component {
         ...getExtensions(),
         // the formatting bar already offers the same buttons
         richEditorSelectionToolbar(() =>
-          this.showFormattingBar || this.contextualToolbar ? null : selectionToolbar
+          this.showFormattingBar || this.contextualToolbar
+            ? null
+            : selectionToolbar
         ),
       ];
     }
@@ -1059,12 +1061,29 @@ export default class ChatComposer extends Component {
         {{willDestroy this.teardown}}
         {{willDestroy this.cancelPersistDraft}}
       >
-        {{#if (and this.useRichEditor this.contextualToolbar (not this.disabled))}}
-          <div aria-label={{i18n "chat.composer.formatting"}} class="chat-composer__contextual-toolbar" role="toolbar">
+        {{#if
+          (and this.useRichEditor this.contextualToolbar (not this.disabled))
+        }}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__contextual-toolbar"
+            role="toolbar"
+          >
             <ToolbarButtons @data={{this.contextualToolbar}} />
           </div>
-        {{else if (and this.canUseRichEditor this.showFormattingBar this.editor (not this.disabled))}}
-          <div aria-label={{i18n "chat.composer.formatting"}} class="chat-composer__formatting-bar" role="toolbar">
+        {{else if
+          (and
+            this.canUseRichEditor
+            this.showFormattingBar
+            this.editor
+            (not this.disabled)
+          )
+        }}
+          <div
+            aria-label={{i18n "chat.composer.formatting"}}
+            class="chat-composer__formatting-bar"
+            role="toolbar"
+          >
             <ToolbarButtons @data={{this.formattingToolbar}} />
           </div>
         {{/if}}

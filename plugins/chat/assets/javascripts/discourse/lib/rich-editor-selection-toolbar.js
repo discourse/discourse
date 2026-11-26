@@ -15,11 +15,33 @@ class SelectionToolbarView {
   #getToolbar;
   #menuInstance;
   #showing = false;
+  #generation = 0;
+  #destroyed = false;
+
+  #focusChanged = (event) => this.#checkFocus(event.target);
+
+  #toolbarKeydown = (event) => {
+    if (
+      this.#menuInstance?.content?.contains(event.target) &&
+      (event.key === "Escape" || event.key === "Tab")
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.#view.focus();
+      this.hide();
+    }
+  };
 
   constructor(view, { getContext, getToolbar }) {
     this.#view = view;
     this.#getContext = getContext;
     this.#getToolbar = getToolbar;
+    view.dom.ownerDocument.addEventListener("focusin", this.#focusChanged);
+    view.dom.ownerDocument.addEventListener(
+      "keydown",
+      this.#toolbarKeydown,
+      true
+    );
   }
 
   update(view) {
@@ -33,13 +55,64 @@ class SelectionToolbarView {
   }
 
   destroy() {
+    this.#destroyed = true;
+    this.#view.dom.ownerDocument.removeEventListener(
+      "focusin",
+      this.#focusChanged
+    );
+    this.#view.dom.ownerDocument.removeEventListener(
+      "keydown",
+      this.#toolbarKeydown,
+      true
+    );
     this.hide();
   }
 
   hide() {
+    this.#generation++;
     this.#showing = false;
     this.#menuInstance?.destroy();
     this.#menuInstance = null;
+  }
+
+  blur(event) {
+    if (event.relatedTarget) {
+      this.#checkFocus(event.relatedTarget);
+    } else {
+      queueMicrotask(() => {
+        if (!this.#destroyed) {
+          this.#checkFocus(this.#view.dom.ownerDocument.activeElement);
+        }
+      });
+    }
+  }
+
+  keydown(event) {
+    if (
+      event.key !== "Tab" ||
+      event.shiftKey ||
+      !this.#menuInstance?.expanded
+    ) {
+      return false;
+    }
+    const button = this.#menuInstance.content?.querySelector(
+      'button[tabindex="0"]'
+    );
+    if (!button) {
+      return false;
+    }
+    event.preventDefault();
+    button.focus();
+    return true;
+  }
+
+  #checkFocus(target) {
+    if (
+      !this.#view.dom.contains(target) &&
+      !this.#menuInstance?.content?.contains(target)
+    ) {
+      this.hide();
+    }
   }
 
   #shouldShow() {
@@ -51,7 +124,10 @@ class SelectionToolbarView {
       !this.#getToolbar() ||
       selection.empty ||
       selection.node ||
-      !this.#view.hasFocus() ||
+      (!this.#view.hasFocus() &&
+        !this.#menuInstance?.content?.contains(
+          this.#view.dom.ownerDocument.activeElement
+        )) ||
       !selection.$from.parent.inlineContent ||
       selection.$from.parent.type.spec.code
     ) {
@@ -78,6 +154,7 @@ class SelectionToolbarView {
     }
 
     this.#showing = true;
+    const generation = ++this.#generation;
     this.#getContext()
       .menu.show(trigger, {
         identifier: IDENTIFIER,
@@ -88,10 +165,10 @@ class SelectionToolbarView {
         closeOnEscape: false,
       })
       .then((instance) => {
-        if (this.#showing) {
+        if (generation === this.#generation && !this.#destroyed) {
           this.#menuInstance = instance;
         } else {
-          instance.destroy();
+          instance?.destroy();
         }
       });
   }
@@ -133,8 +210,11 @@ export default function richEditorSelectionToolbar(getToolbar) {
         },
         props: {
           handleDOMEvents: {
-            blur() {
-              toolbarView?.hide();
+            keydown(_view, event) {
+              return toolbarView?.keydown(event) ?? false;
+            },
+            blur(_view, event) {
+              toolbarView?.blur(event);
               return false;
             },
           },
